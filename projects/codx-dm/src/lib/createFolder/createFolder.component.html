@@ -63,7 +63,7 @@
                 <ng-container *ngIf="fileEditing != null && fileEditing.permissions != null">
                   <ng-container *ngFor="let perm of fileEditing.permissions; index as i">
                     <ng-container *ngIf="
-                        perm.isActive != false && !modeSharing
+                        perm.isActive && !modeSharing
                       ">
                       <!-- perm.isActive != false &&
                         ((!modeSharing &&

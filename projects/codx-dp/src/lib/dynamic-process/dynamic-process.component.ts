@@ -81,7 +81,7 @@ export class DynamicProcessComponent
   readonly className = 'ProcessesBusiness';
 
   // Method API dynamic proccess
-  readonly methodGetList = 'GetListDynProcessesAsync';
+  readonly methodGetList = 'GetListProcessesAsync';
 
   // Get idField
   readonly idField = 'processNo';
@@ -234,8 +234,7 @@ export class DynamicProcessComponent
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
-    // chưa có api
-    opt.methodName = 'DeletedDynamicProcessesAsync';
+    opt.methodName = 'DeletedProcessesAsync';
     opt.data = [itemSelected.recID, true];
     return true;
   }

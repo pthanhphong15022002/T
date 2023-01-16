@@ -1,3 +1,4 @@
+import { DP_Steps_Roles } from './../../models/models';
 import { CodxDpService } from './../../codx-dp.service';
 import { log } from 'console';
 import {
@@ -12,6 +13,7 @@ import {
   Input,
   OnInit,
   Optional,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -57,7 +59,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   process = new DP_Processes();
   permissions = [];
   dialog: any;
-  currentTab = 0; //Bước hiện tại
+  currentTab = 1; //Bước hiện tại
   processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
@@ -88,6 +90,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isTurnOnNoFailure: boolean = false; //Create variable Click no for reason failure
   listRoleInStep: DP_Processes_Permission[] = []; // creat list user role in step
   userPermissions: DP_Processes_Permission; // create object user in step
+  gridViewSetupStep: any; // grid view setup
 
   // const value string
   readonly strEmpty: string = ''; // value empty for methond have variable is null
@@ -103,12 +106,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly titlecheckBoxStepReasonSuccess: string = 'Thành công'; // title form step reason failure
   readonly titleCheckBoxSat: string = 'Thứ 7'; // title checkbox saturday form duration
   readonly titleCheckBoxSun: string = 'Chủ nhật'; // title checkbox sunday form duration
+  readonly formNameSteps: string = 'DPSteps';
+  readonly gridViewNameSteps: string = 'grvDPSteps';
 
   //stage-nvthuan
   user: any;
   userId: string;
+
   taskGroup = {};
   taskGroupList = [];
+
+  step: DP_Steps;
+  stepSelect: DP_Steps;
+  stepList: DP_Steps[] = [];
+
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
@@ -119,33 +130,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   userGroupJob = [];
   nameStage = '';
   isAddStage = true;
-  processNo: any;
-  dataStage = [
-    {
-      id: 1,
-      name: 'Tiếp nhận yêu cầu',
-      time: '5',
-      phase: 3,
-    },
-    {
-      id: 12,
-      name: 'Đánh giá giả năng',
-      time: '5',
-      phase: 3,
-    },
-    {
-      id: 13,
-      name: 'Giới thiệu sản phẩm',
-      time: 'N/A',
-      phase: 3,
-    },
-    {
-      id: 16,
-      name: 'Ký hợp đồng',
-      time: '5',
-      phase: 3,
-    },
-  ];
+
   listJobType = [
     {
       id: 'P',
@@ -288,18 +273,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ];
   fieldNew: DP_Steps_Fields;
   crrDataStep: any;
-  dataStepCrr :DP_Steps = new DP_Steps();
+  dataStepCrr: DP_Steps = new DP_Steps();
   isHover = '';
-  vllType ='DP022'
+  vllType = 'DP022';
   dataChild = [];
-
   //end data Test
-
-  isTurnOnYesNo: boolean = false; //Create variable Click yes/no for reason success/failure
-  viewReasonSuccess: string = 'viewReasonSuccess'; // test click view Reason Success
-  viewReasonFail: string = 'viewReasonFail'; // test click view Reason Success
-  ngTemplateOutlet: any;
-
   isShowstage = true;
 
   constructor(
@@ -314,14 +292,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
-    this.initForm();
-
     this.funcID = this.dialog.formModel.funcID;
+
     this.process = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
+
     this.action = dt.data.action;
     if (this.action != 'add') {
+      this.permissions = this.process.permissions;
       this.getAvatar(this.process);
-
+    } else {
+      this.process.instanceNoSetting = this.process.processNo;
     }
 
     this.cache
@@ -334,106 +314,35 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-
-      this.dataStepCrr = JSON.parse(JSON.stringify(this.arrSteps[0]))
+    this.dataStepCrr = JSON.parse(JSON.stringify(this.arrSteps[0]));
+    this.getGrvStep();
   }
 
-  data = [
-    {
-      item: 'Spacing utilities that apply',
-      name: 'Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ',
-      data: [
-        {
-          item: 'Item 112',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-        {
-          item: 'Spacing utilities that apply',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-        {
-          item: 'Item 117',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-      ],
-    },
-    {
-      item: 'Item 2',
-      name: 'Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ',
-      data: [
-        {
-          item: 'Item 118',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-        {
-          item: 'Item 119',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-        {
-          item: 'Item 116',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-      ],
-    },
-    {
-      item: 'Item 3',
-      name: 'Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ',
-      data: [
-        {
-          item: 'Item 1111',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-        {
-          item: 'Item 1131',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-        {
-          item: 'Item 11134',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-      ],
-    },
-  ];
+  data = [];
 
   ngAfterViewInit(): void {
+    this.genAutoNumber();
+    this.api
+      .execSv<any>(
+        'SYS',
+        'AD',
+        'AutoNumberDefaultsBusiness',
+        'GetFieldAutoNoAsync',
+        [this.funcID, this.dialog.formModel.entityName]
+      )
+      .subscribe((res) => {
+        if (res && !res.stop && res.autoAssignRule == '1') {
+          this.showID = true;
+        } else {
+          this.showID = false;
+        }
+      });
   }
 
   //genAutoNumber
   genAutoNumber() {
     this.dpService
-      .genAutoNumber(
-        'DPProcesses',
-        this.funcID,
-        'grvDPProcesses',
-        'processNo'
-      )
+      .genAutoNumber('DPProcesses', this.funcID, 'grvDPProcesses', 'processNo')
       .subscribe((res) => {
         if (res) {
           this.showID = true;
@@ -447,12 +356,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ngOnInit(): void {
     // this.updateNodeStatus(0,1);
     this.getTitleStepViewSetup();
+    this.initForm();
     // this.isTurnOnYesFailure = true;
+    this.process.instanceNoSetting = this.process.processNo;
     console.log(this.isTurnOnYesFailure);
   }
 
   //#region setup formModels and formGroup
-  async initForm(){
+  async initForm() {
     this.formModel = new FormModel();
     this.formModel.entityName = this.dialog.formModel.entityName;
     this.formModel.formName = this.dialog.formModel.formName;
@@ -460,16 +371,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.dpService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then(async (fg) => {
-        if(this.process.processNo == undefined){
-          this.dpService.getAutonumber(this.funcID, this.dialog.formModel.entityName, 'processNo').subscribe((key)=>{
-            if(key && this.action == 'add'){
-              this.process.processNo = key;
-              this.isShow = true;
-            }else{
-              this.isShow = false;
-            }
-          })
-        }
+        this.formGroup = fg;
       });
   }
   //#endregion
@@ -509,10 +411,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   async onSave() {
-    if (
-      this.process.processNo == null ||
-      this.process.processNo.trim() == ''
-    ) {
+    if (this.process.processNo == null || this.process.processNo.trim() == '') {
       this.notiService.notify('Test mã');
       return;
     }
@@ -688,6 +587,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.vllShare = 'DM001';
         this.typeShare = '3';
         break;
+      case 'participants-2':
+        this.vllShare = 'TM003';
+        this.typeShare = '4';
+        break;
     }
     this.callfc.openForm(share, '', 420, window.innerHeight);
   }
@@ -695,47 +598,82 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   applyShare(e, type) {
     if (e.length > 0) {
       console.log(e);
-      var value = e;
-      for (var i = 0; i < value.length; i++) {
-        var data = value[i];
-        var perm = new DP_Processes_Permission();
-        perm.objectName = data.text != null ? data.text : data.objectName;
-        perm.objectID = data.id != null ? data.id : null;
-        perm.objectType = data.objectType;
-        if (type === '1') {
-          perm.full = true;
-          perm.create = true;
-          perm.read = true;
-          perm.update = true;
-          perm.assign = true;
-          perm.delete = true;
-          perm.share = true;
-          perm.upload = true;
-          perm.download = true;
-          perm.roleType = 'O';
-        }
-        if (type === '2') {
-          perm.roleType = 'P';
-          perm.create = true;
-        }
-        if (type === '3') {
-          perm.roleType = 'F';
-          perm.read = true;
-        }
-        this.permissions = this.checkUserPermission(this.permissions, perm);
+      switch (type) {
+        case '1':
+          var value = e;
+          for (var i = 0; i < value.length; i++) {
+            var data = value[i];
+            var perm = new DP_Processes_Permission();
+            perm.objectName = data.text != null ? data.text : data.objectName;
+            perm.objectID = data.id != null ? data.id : null;
+            perm.objectType = data.objectType;
+            perm.full = true;
+            perm.create = true;
+            perm.read = true;
+            perm.update = true;
+            perm.assign = true;
+            perm.delete = true;
+            perm.share = true;
+            perm.upload = true;
+            perm.download = true;
+            perm.roleType = 'O';
+            this.permissions = this.checkUserPermission(this.permissions, perm);
+          }
+          this.process.permissions = this.permissions;
+          break;
+        case '2':
+          var value = e;
+          for (var i = 0; i < value.length; i++) {
+            var data = value[i];
+            var perm = new DP_Processes_Permission();
+            perm.objectName = data.text != null ? data.text : data.objectName;
+            perm.objectID = data.id != null ? data.id : null;
+            perm.objectType = data.objectType;
+            perm.roleType = 'P';
+            perm.create = true;
+
+            this.permissions = this.checkUserPermission(this.permissions, perm);
+          }
+          this.process.permissions = this.permissions;
+          break;
+        case '3':
+          var value = e;
+          for (var i = 0; i < value.length; i++) {
+            var data = value[i];
+            var perm = new DP_Processes_Permission();
+            perm.objectName = data.text != null ? data.text : data.objectName;
+            perm.objectID = data.id != null ? data.id : null;
+            perm.objectType = data.objectType;
+            perm.roleType = 'F';
+            perm.read = true;
+            this.permissions = this.checkUserPermission(this.permissions, perm);
+          }
+          this.process.permissions = this.permissions;
+          break;
+        case '4':
+          var value = e;
+          for (var i = 0; i < value.length; i++) {
+            var data = value[i];
+            var roles = new DP_Steps_Roles();
+            roles.objectName = data.text != null ? data.text : data.objectName;
+            roles.objectID = data.id != null ? data.id : null;
+            roles.objectType = data.objectType;
+            roles.roleType = 'O';
+            this.dataStepCrr.roles = this.checkRolesStep(this.dataStepCrr.roles, roles);
+          }
+          break;
       }
-      this.process.permissions = this.permissions;
     }
   }
 
   checkUserPermission(
-    list: DP_Processes_Permission[],
-    perm: DP_Processes_Permission
+    listPerm: DP_Processes_Permission[],
+    perm: DP_Processes_Permission,
   ) {
     var index = -1;
-    if (list != null) {
-      if (perm != null && list.length > 0) {
-        index = list.findIndex(
+    if (listPerm != null) {
+      if (perm != null && listPerm.length > 0) {
+        index = listPerm.findIndex(
           (x) =>
             (x.objectID != null &&
               x.objectID === perm.objectID &&
@@ -746,13 +684,40 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         );
       }
     } else {
-      list = [];
+      listPerm = [];
     }
     if (index == -1) {
-      list.push(Object.assign({}, perm));
+      listPerm.push(Object.assign({}, perm));
     }
-    return list;
+    return listPerm;
   }
+
+  checkRolesStep(
+    listPerm: DP_Steps_Roles[],
+    perm: DP_Steps_Roles,
+  ) {
+    var index = -1;
+    if (listPerm != null) {
+      if (perm != null && listPerm.length > 0) {
+        index = listPerm.findIndex(
+          (x) =>
+            (x.objectID != null &&
+              x.objectID === perm.objectID &&
+              x.roleType == perm.roleType) ||
+            (x.objectID == null &&
+              x.objectType == perm.objectType &&
+              x.roleType == perm.roleType)
+        );
+      }
+    } else {
+      listPerm = [];
+    }
+    if (index == -1) {
+      listPerm.push(Object.assign({}, perm));
+    }
+    return listPerm;
+  }
+
   addFile(e) {
     this.attachment.uploadFile();
   }
@@ -773,7 +738,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //end
 
   //Popup setiing autoNumber
-   openAutoNumPopup() {
+  openAutoNumPopup() {
     if (this.process.instanceNoSetting != this.process.processNo) {
       //save new autoNumber
       let popupAutoNum = this.callfc.openForm(
@@ -792,7 +757,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       );
       popupAutoNum.closed.subscribe((res) => {
         if (res?.event) {
-
         }
       });
     } else {
@@ -865,14 +829,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           );
           dialogCustomField.closed.subscribe((e) => {
             if (e && e.event != null) {
-              //xu ly data đổ về 
-              this.fieldNew = e.event ;
-              if(this.dataStepCrr.recID ==  this.fieldNew.stepID){
-                this.dataStepCrr.fields.push(this.fieldNew)
+              //xu ly data đổ về
+              this.fieldNew = e.event;
+              if (this.dataStepCrr.recID == this.fieldNew.stepID) {
+                this.dataStepCrr.fields.push(this.fieldNew);
               }
-              this.arrSteps.forEach(x=>{
-                if(x.recID == this.fieldNew.stepID) x.fields.push(this.fieldNew)
-              })
+              this.arrSteps.forEach((x) => {
+                if (x.recID == this.fieldNew.stepID)
+                  x.fields.push(this.fieldNew);
+              });
               this.changeDetectorRef.detectChanges();
             }
           });
@@ -908,14 +873,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
 
   //#stage -- nvthuan
-  openAddStage(type) {
-    this.isAddStage = type == 'add' ? true : false;
-    this.nameStage = type == 'add' ? '' : 'Thuan nè';
-
-    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
+  async openAddStep(type) {
+    if(type === 'add'){
+      this.step = new DP_Steps();
+      this.step['processID'] = this.process?.recID;
+      this.step['stepNo'] = this.stepList.length + 1;
+      this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
+    }else{
+      
+    }
   }
 
-  saveAddStage() {}
+  saveAddStep() {
+    this.stepList.push(this.step);
+    this.popupAddStage.close();
+  }
 
   drop(event: CdkDragDrop<string[]>, data = null) {
     if (event.previousContainer === event.container) {
@@ -975,6 +947,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.taskGroup['recID'] = Util.uid();
     this.taskGroup['createdOn'] = Date.now();
     this.taskGroup['createdBy'] = this.userId;
+    this.taskGroup['stepID'] = this.stepSelect['recID'];
     this.taskGroup['task'] = [];
     this.popupGroupJob = this.callfc.openForm(
       this.addGroupJobPopup,
@@ -987,8 +960,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.popupGroupJob.close();
     this.taskGroupList.push(this.taskGroup);
   }
-  changeValueInput(event) {
-    this.taskGroup[event?.field] = event?.data;
+  changeValueInput(event, data) {
+    data[event?.field] = event?.data;
   }
   shareUser(share) {
     this.callfc.openForm(share, '', 500, 500);
@@ -1035,7 +1008,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  clickViewReason($event: any, view: any, data: any) {
+  clickViewStep($event: any, view: any, data: any) {
     if ($event && $event != null) {
       if (
         view === this.viewStepReasonSuccess ||
@@ -1059,18 +1032,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.viewStepCrr = this.viewStepCustom;
         if (data) {
           // gán tạm name để test
-          this.titleViewStepCrr = data.name;
+          this.titleViewStepCrr = data.stepName;
 
           // hidden swtich reason change
           this.isSwitchReason = false;
           // this.crrDataStep = data;
+          this.stepSelect = data;
         }
       }
     }
     this.changeDetectorRef.detectChanges();
   }
   getTitleStepViewSetup() {
-    this.titleViewStepCrr = this.dataStage[0].name;
+    if(this.stepList.length > 0){
+      this.titleViewStepCrr = this.stepList[0].stepName;
+    }
 
     // test nha
     // for(let i=0; i<10; i++){
@@ -1078,6 +1054,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     //   this.listRoleInStep.push(this.userPermissions);
     // }
   }
+
+  getGrvStep() {
+    this.cache
+      .gridViewSetup(this.formNameSteps, this.gridViewNameSteps)
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetupStep = res;
+        }
+      });
+  }
+  valueChangeAssignCtrl($event){
+    if($event && $event != null){
+   //  let secleted = $event.data;
+    }
+  }
+
   valueMemoSetup($event) {}
 
   //#endregion

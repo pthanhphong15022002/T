@@ -1580,3 +1580,9 @@ ejs-listview .e-ul li {
 .card .card-header {
   border-color: var(--border-list) !important;
 }
+
+.e-ul,
+.e-ul li {
+  padding: 0;
+  margin: 0;
+}
