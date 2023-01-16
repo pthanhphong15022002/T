@@ -91,7 +91,7 @@ export class ApprovalRoomViewDetailComponent
           'ERM.Business.DM',
           'FileBussiness',
           'GetFilesForOutsideAsync',
-          [this.funcID, this.itemDetail.recID, 'EP_Bookings']
+          [this.itemDetail.recID, 'EP_Bookings']
         )
         .subscribe((res: []) => {
           if (res) {

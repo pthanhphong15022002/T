@@ -111,7 +111,7 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
           'ERM.Business.DM',
           'FileBussiness',
           'GetFilesForOutsideAsync',
-          [this.funcID, this.itemDetail.recID, 'EP_BookingRooms']
+          [this.itemDetail.recID, 'EP_BookingRooms']
         ).subscribe((res:[])=>{
           if(res){
             this.files=res;

@@ -587,6 +587,11 @@ export class CodxShareService {
       [resourceType]
     );
   }
+
+  getThumnailByObjectID(objectID:any , referType:any , width :any = 30)
+  {
+
+  }
 }
 
 //#region Model

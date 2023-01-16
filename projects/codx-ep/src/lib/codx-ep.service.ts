@@ -499,7 +499,7 @@ export class CodxEpService {
       'ERM.Business.DM',
       'FileBussiness',
       'GetFilesForOutsideAsync',
-      [funcID, objectId, objectType]
+      [objectId, objectType]
     );
   }
 
