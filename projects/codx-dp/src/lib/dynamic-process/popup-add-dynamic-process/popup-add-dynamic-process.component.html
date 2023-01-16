@@ -808,10 +808,10 @@
 
 <!-- Quy trình động - All in ------------------------------------------------------------------------------- -->
 <ng-template #dynamicFieldsAllSteps>
-  <ng-container *ngFor="let step of arrSteps">
+  <ng-container *ngFor="let st of stepList">
     <ng-container
       [ngTemplateOutlet]="dynamicFields"
-      [ngTemplateOutletContext]="{ $implicit: step }"
+      [ngTemplateOutletContext]="{ $implicit: st }"
     ></ng-container>
   </ng-container>
 </ng-template>
@@ -819,7 +819,7 @@
 <ng-template #dynamicFieldsOneSteps>
   <ng-container
     [ngTemplateOutlet]="dynamicFields"
-    [ngTemplateOutletContext]="{ $implicit: dataStepCrr }"
+    [ngTemplateOutletContext]="{ $implicit: step }"
   >
   </ng-container>
 </ng-template>
@@ -2096,9 +2096,9 @@
         </div>
         <div
           class="col-6 group-permission witdh-roles scroll-user"
-          *ngIf="dataStepCrr.roles != null && dataStepCrr.roles.length > 0"
+          *ngIf="step.roles != null && step.roles.length > 0"
         >
-          <ng-container *ngFor="let perm of dataStepCrr.roles; index as i">
+          <ng-container *ngFor="let perm of step.roles; index as i">
             <div
               *ngIf="perm.roleType == 'O'"
               class="me-4 d-flex align-items-center margin-form mb-4"
@@ -2142,9 +2142,9 @@
         </div>
         <div
           class="col-6 group-permission witdh-roles scroll-user"
-          *ngIf="dataStepCrr.roles != null && dataStepCrr.roles.length > 0"
+          *ngIf="step.roles != null && step.roles.length > 0"
         >
-          <ng-container *ngFor="let perm of dataStepCrr.roles; index as i">
+          <ng-container *ngFor="let perm of step.roles; index as i">
             <div
               *ngIf="perm.roleType == 'O'"
               class="me-4 d-flex align-items-center margin-form mb-4"
