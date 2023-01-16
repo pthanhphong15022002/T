@@ -1,0 +1,18 @@
+<codx-views
+  #view
+  idField="recID"
+  [views]="views"
+  [button]="buttons"
+  entityName="GL_ChartOfAccounts"
+  (buttonClick)="toolBarClick($event)"
+>
+</codx-views>
+<ng-template #templateMore let-data>
+  <div class="has-action-menu" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    ></codx-mfunc></div
+></ng-template>

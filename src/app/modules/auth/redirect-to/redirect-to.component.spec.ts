@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopupAddNotifyComponent } from './popup-add-notify.component';
+import { RedirectToComponent } from './redirect-to.component';
 
-describe('PopupAddNotifyComponent', () => {
-  let component: PopupAddNotifyComponent;
-  let fixture: ComponentFixture<PopupAddNotifyComponent>;
+describe('RedirectToComponent', () => {
+  let component: RedirectToComponent;
+  let fixture: ComponentFixture<RedirectToComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopupAddNotifyComponent ]
+      declarations: [ RedirectToComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopupAddNotifyComponent);
+    fixture = TestBed.createComponent(RedirectToComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

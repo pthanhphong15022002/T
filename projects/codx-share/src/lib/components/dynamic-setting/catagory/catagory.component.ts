@@ -480,21 +480,20 @@ export class CatagoryComponent implements OnInit {
       }
       var auto = autoDefault[fieldName];
       if (!auto) {
-        //Chị Thương bảo nếu chưa có số tự động thì cảnh báo và báo C Thương thiết lập.
-        // this.api
-        //   .execSv(
-        //     'SYS',
-        //     'ERM.Business.AD',
-        //     'AutoNumberDefaultsBusiness',
-        //     'GenAutoDefaultAsync',
-        //     [fieldName]
-        //   )
-        //   .subscribe((res) => {
-        //     if (res) {
-        //       auto = autoDefault[fieldName] = res;
-        //       this.changeDetectorRef.detectChanges();
-        //     }
-        //   });
+        this.api
+          .execSv(
+            'SYS',
+            'ERM.Business.AD',
+            'AutoNumberDefaultsBusiness',
+            'GenAutoDefaultAsync',
+            [fieldName]
+          )
+          .subscribe((res) => {
+            if (res) {
+              auto = autoDefault[fieldName] = res;
+              this.changeDetectorRef.detectChanges();
+            }
+          });
       } else {
         if (!value === auto.stop) return;
         auto.stop = !value;
@@ -508,7 +507,12 @@ export class CatagoryComponent implements OnInit {
           });
       }
     } else {
-      if (typeof value == 'boolean') {
+      if (
+        (typeof value == 'boolean' &&
+          data.dataType.toLowerCase() != 'boolean' &&
+          data.dataType.toLowerCase() != 'bool') ||
+        !data.dataType
+      ) {
         value = +value + '';
       }
       if (this.category === '5') {

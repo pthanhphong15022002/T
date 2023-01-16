@@ -62,7 +62,6 @@ import { CodxApprovalComponent } from './components/codx-approval/codx-approval.
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
 import { LayoutNoAsideToolbarFluidComponent } from './_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { DynamicSettingComponent } from './components/dynamic-setting/dynamic-setting.component';
-import { CodxFilesComponent } from './components/codx-files/codx-files.component';
 import { ApprovalTabsComponent } from './components/codx-approval/tab/tabs.component';
 import { CodxApprovalStepComponent } from './components/codx-approval-step/codx-approval-step.component';
 import { NotifyDrawerComponent } from './layout/drawers/notify-drawer/notify-drawer.component';
@@ -71,8 +70,6 @@ import { ChatInnerComponent } from './layout/drawers/messenger-drawer/chat-inner
 import { CodxReferencesComponent } from './components/codx-references/codx-references.component';
 import { CodxImportAddTemplateComponent } from './components/codx-import/codx-import-add-template/codx-import-add-template.component';
 import { CodxImportAddMappingComponent } from './components/codx-import/codx-import-add-template/codx-import-add-mapping/codx-import-add-mapping.component';
-import { SettingNotifyDrawerComponent } from './layout/drawers/notify-drawer/setting-notify-drawer/setting-notify-drawer.component';
-import { PopupAddNotifyComponent } from './layout/drawers/notify-drawer/popup-add-notify/popup-add-notify.component';
 import { PopupUpdateStatusComponent } from './components/codx-tasks/popup-update-status/popup-update-status.component';
 import { CodxNoteComponent } from './components/codx-note/codx-note.component';
 import { ViewDetailComponent } from './components/codx-tasks/view-detail/view-detail.component';
@@ -143,6 +140,7 @@ import { CalendarCenterComponent } from './components/codx-calendar/calendar-cen
 import { CodxViewCardComponent } from './components/codx-view-card/codx-view-card.component';
 import { CodxJsonformatterComponent } from './components/codx-history/codx-history-item/codx-jsonformatter/codx-jsonformatter.component';
 import { CodxViewFilesComponent } from './components/codx-view-files/codx-view-files.component';
+import { PopupAddEducationsComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/popup/popup-add-educations/popup-add-educations.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -179,7 +177,6 @@ const T_Component: Type<any>[] = [
   CodxCommentsComponent,
   DynamicSettingComponent,
   DynamicFormComponent,
-  CodxFilesComponent,
   ApprovalTabsComponent,
   CodxApprovalStepComponent,
   CodxApproveStepsComponent,
@@ -191,8 +188,6 @@ const T_Component: Type<any>[] = [
   CodxImportAddTemplateComponent,
   CodxImportAddMappingTemplateComponent,
   CodxImportAddMappingComponent,
-  SettingNotifyDrawerComponent,
-  PopupAddNotifyComponent,
   PopupUpdateStatusComponent,
   CodxNoteComponent,
   ViewDetailComponent,
@@ -242,7 +237,8 @@ const T_Component: Type<any>[] = [
   CalendarCenterComponent,
   CodxViewCardComponent,
   CodxJsonformatterComponent,
-  CodxViewFilesComponent
+  CodxViewFilesComponent,
+  PopupAddEducationsComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];

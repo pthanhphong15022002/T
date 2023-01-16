@@ -93,7 +93,12 @@ export class InvoicesComponent extends UIComponent {
   }
 
   clickMF(e, data) {
-    this.edit(data);
+    switch (e.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
+    }
+    this.edit(e, data);
   }
 
   activeMore(e) {
@@ -135,7 +140,7 @@ export class InvoicesComponent extends UIComponent {
     });
   }
 
-  edit(data?) {
+  edit(e, data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
       // this.view.dataService.dataSelected.userID = data._uuid;
@@ -153,7 +158,7 @@ export class InvoicesComponent extends UIComponent {
           null,
           null,
           this.view.funcID,
-          ['edit', this.moreFuncName + ' ' + this.funcName],
+          ['edit', e.text + ' ' + this.funcName],
           '',
           op
         );
@@ -161,6 +166,13 @@ export class InvoicesComponent extends UIComponent {
           if (!x?.event) this.view.dataService.clear();
         });
       });
+  }
+
+  delete(data) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected])
+      .subscribe();
   }
   //#endregion
 }

@@ -1,37 +1,32 @@
 <div class="row mx-0 h-100">
-    <div class="col-8 p-5 bg-gray-200 show-pic position-relative">
-        <ng-container [ngSwitch]="file.referType">
-            <ng-container *ngSwitchCase="FILE_REFERTYPE.IMAGE">
-                <div class="w-100 h-100 img-full">
-                    <codx-img [recId]="file.recID" [objectId]="file.objectID" objectType="WP_Comments"
-                        imageType="square" [width]="800" [referType]="'image'" cssClass="w-100 h-auto image">
-                    </codx-img>
+    <!-- file -->
+    <div class="col-8 p-5 bg-gray-200 position-relative d-flex felx-columns flex-wrap align-items-center">
+        <ng-container *ngIf="fileSelected">
+            <ng-container [ngSwitch]="fileSelected.referType">
+                <div class="d-flex flex-columns flex-wap align-items-center w-100 h-500px position-relative">
+                    <ng-container *ngSwitchCase="FILE_REFERTYPE.IMAGE">
+                        <img class="w-100 h-100" [src]="fileSelected.source">
+                    </ng-container>
+                    <ng-container *ngSwitchCase="FILE_REFERTYPE.VIDEO">
+                        <video class="w-100 h-100 " [autoplay]="true">
+                            <source [src]="fileSelected.source" type="video/mp4">
+                        </video>
+                    </ng-container>
+                    <ng-container *ngIf="files.length > 1">
+                        <div class="next-previrous">
+                            <span class="icon-arrow_back_ios next-previrous-btn" (click)="previousFile()"></span>
+                            <span class="icon-arrow_forward_ios next-previrous-btn" (click)="nextFile()"></span>
+                        </div>
+                    </ng-container>
                 </div>
             </ng-container>
-            <ng-container *ngSwitchCase="FILE_REFERTYPE.VIDEO">
-                <div class="w-100 vh-100 video-full">
-                    <video class="w-100 h-auto video" [autoplay]="true">
-                        <source [src]="file.source" type="video/mp4">
-                    </video>
-                </div>
-            </ng-container>
-            <ng-container *ngSwitchDefault>
-                <div class="mt-2 d-flex">
-                    <div class="me-2">
-                        <codx-temp-full imageSrc="{{file.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
-                            title="{{file.fileName}}" [descLine]="1">
-                        </codx-temp-full>
-                    </div>
-                </div>
-            </ng-container>
+            
         </ng-container>
-        <div class="position-absolute img-btntop">
+        <div class="moreFC-top">
             <div class="d-flex justify-content-between">
-                <div class="btn btn-icon rounded-circle btn-light-danger">
-                    <a href="javascript:void(0);" (click)="clickClosePopup()">
-                        <i class="icon-close"></i>
-                    </a>
-                </div>
+                <button class="btn btn-icon btn-md" (click)="clickClosePopup()">
+                    <i class="icon-close icon-18 text-danger"></i>
+                </button>
                 <!-- <div class="">
                     <span class="btn rounded-circle btn-icon btn-light-primary ms-1">
                         <a href="javascript:void(0)">
@@ -52,39 +47,56 @@
             </div>
         </div>
     </div>
-    <div class="col-4 mt-5 ps-6" *ngIf="post">
-        <div class="d-flex">
-            <div class="me-2">
-                <codx-img [objectId]="post.createdBy" [objectName]="post.createdName" [imageType]="'circle'"
-                    objectType="AD_Users" [width]="40">
-                </codx-img>
-            </div>
-            <div class="text-info-date ms-2">
-                <div class="">
-                    <span class="fw-bolder fs-7 me-2">{{post.createdName}}</span>
-                    <ng-container *ngIf="post.tagName">
-                        <span [innerHTML]="post.tagName"></span>
-                    </ng-container>
+    <!-- post -->
+    <div class="col-4 mt-5 ps-6">
+        <ng-container *ngIf="post">
+            <div class="d-flex">
+                <div class="me-2">
+                    <codx-img 
+                        [objectId]="post.createdBy" 
+                        [objectName]="post.createdName" 
+                        [imageType]="'circle'"
+                        objectType="AD_Users" 
+                        [width]="40">
+                    </codx-img>
                 </div>
-                <div class="mt-2">
-                    <span class="text-gray-600 fs-7 me-2">{{post.createdOn | timefrom}}</span>
-                    <span *ngIf="post.shareControl" class="rounded-1 py-1 px-2 bg-gray-200">
-                        <codx-vll [name]="'WP001'" [value]="post.shareControl" [showText]="true" [showIcon]="true"
-                            [path]="'assets/themes/sys/default/img/'" [icoCss]="'symbol-12px symbol-circle'"
-                            [showBgColor]="true">
-                        </codx-vll>
-                    </span>
-                    <ng-container *ngIf="post.shareName">
-                        <span [innerHTML]="post.shareName"></span>
-                    </ng-container>
+                <div class="text-info-date ms-2">
+                    <div class="">
+                        <span class="fw-bolder fs-7 me-2">{{post.createdName}}</span>
+                        <ng-container *ngIf="post.tagName">
+                            <span [innerHTML]="post.tagName"></span>
+                        </ng-container>
+                    </div>
+                    <div class="mt-2">
+                        <span class="text-gray-600 fs-7 me-2">{{post.createdOn | timefrom}}</span>
+                        <span *ngIf="post.shareControl" class="rounded-1 py-1 px-2 bg-gray-200">
+                            <codx-vll 
+                                [name]="'WP001'" 
+                                [value]="post.shareControl" 
+                                [showText]="true" 
+                                [showIcon]="true"
+                                [path]="'assets/themes/sys/default/img/'" 
+                                [icoCss]="'symbol-12px symbol-circle'"
+                                [showBgColor]="true">
+                            </codx-vll>
+                        </span>
+                        <ng-container *ngIf="post.shareName">
+                            <span [innerHTML]="post.shareName"></span>
+                        </ng-container>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- comment -->
-        <div>
-            <treeview-comment [funcID]="'WP'" [fromModel]="dialogRef.formModel" [objectType]="'WP_Comments'"
-                [dataComment]="post" [objectID]="post.recID">
-            </treeview-comment>
-        </div>
+            <!-- comment -->
+            <div>
+                <treeview-comment 
+                    [funcID]="'WP'" 
+                    [fromModel]="dialogRef.formModel" 
+                    [objectType]="'WP_Comments'"
+                    [dataComment]="post" 
+                    [objectID]="post.recID">
+                </treeview-comment>
+            </div>
+        </ng-container>
+        
     </div>
 </div>

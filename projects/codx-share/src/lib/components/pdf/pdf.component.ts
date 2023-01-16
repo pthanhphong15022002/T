@@ -60,8 +60,7 @@ import { NgxExtendedPdfViewerCommonModule } from 'ngx-extended-pdf-viewer/lib/ng
 })
 export class PdfComponent
   extends UIComponent
-  implements AfterViewInit, OnChanges, OnDestroy
-{
+  implements AfterViewInit, OnChanges, OnDestroy {
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -131,7 +130,7 @@ export class PdfComponent
   curSelectedHLA: highLightTextArea;
   curCmtContent = '';
   deleteHLAMode = false;
-
+  sfEdited = false
   defaultColor = 'rgb(255, 255, 40)';
   defaultAddedColor = 'transparent';
   selectedColor = 'rgb(114, 255, 234)';
@@ -252,6 +251,7 @@ export class PdfComponent
   hideThumbnail: boolean = false;
 
   vllSupplier: any;
+  oSignfile: any;
   onInit() {
     this.curSelectedHLA = null;
     this.cache.valueList('ES029').subscribe((res) => {
@@ -557,33 +557,33 @@ export class PdfComponent
           this.isEditable == false
             ? false
             : area.allowEditAreas == false
-            ? false
-            : area.isLock == true
-            ? false
-            : true
+              ? false
+              : area.isLock == true
+                ? false
+                : true
         );
 
         this.tr?.enabledAnchors(
           this.isEditable == false
             ? []
             : area.allowEditAreas == false
-            ? []
-            : area.isLock == true
-            ? []
-            : this.imgConfig.includes(area.labelType)
-            ? this.checkIsUrl(area.labelValue)
-              ? this.fullAnchor
-              : this.textAnchor
-            : this.textAnchor
+              ? []
+              : area.isLock == true
+                ? []
+                : this.imgConfig.includes(area.labelType)
+                  ? this.checkIsUrl(area.labelValue)
+                    ? this.fullAnchor
+                    : this.textAnchor
+                  : this.textAnchor
         );
         this.tr?.draggable(
           this.isEditable == false
             ? false
             : area.allowEditAreas == false
-            ? false
-            : area.isLock == true
-            ? false
-            : true
+              ? false
+              : area.isLock == true
+                ? false
+                : true
         );
         this.tr?.forceUpdate();
         this.curSelectedArea.draggable(this.tr.draggable());
@@ -828,7 +828,7 @@ export class PdfComponent
       virtual.id = id;
       virtual.className = 'manualCanvasLayer';
       virtual.style.zIndex = this.isInteractPDF ? '-1' : '2';
-      virtual.style.border = '1px solid blue';
+      virtual.style.border = '1px solid #eee';
       virtual.style.position = 'absolute';
       virtual.style.top = '0';
 
@@ -879,8 +879,8 @@ export class PdfComponent
             this.isEditable == false
               ? false
               : area.allowEditAreas == false
-              ? false
-              : !area.isLock;
+                ? false
+                : !area.isLock;
           if (isRender) {
             let curSignerInfo = this.lstSigners.find(
               (signer) => signer.authorID == area.signer
@@ -995,7 +995,7 @@ export class PdfComponent
               }
               this.esService
                 .addOrEditSignArea(this.recID, this.curFileID, area, area.recID)
-                .subscribe((res) => {});
+                .subscribe((res) => { });
             } else {
             }
           }
@@ -1052,18 +1052,18 @@ export class PdfComponent
               this.isEditable == false
                 ? false
                 : this.signerInfo.allowEdit == false
-                ? false
-                : true;
+                  ? false
+                  : true;
             this.tr?.rotateEnabled(false);
             this.tr?.draggable(transformable);
             this.tr?.enabledAnchors(
               !transformable
                 ? []
                 : name.Type == 'img'
-                ? this.checkIsUrl(name.LabelValue)
-                  ? this.fullAnchor
+                  ? this.checkIsUrl(name.LabelValue)
+                    ? this.fullAnchor
+                    : this.textAnchor
                   : this.textAnchor
-                : this.textAnchor
             );
             this.tr?.resizeEnabled(transformable);
             this.tr?.nodes([this.needAddKonva]);
@@ -1671,7 +1671,7 @@ export class PdfComponent
       fontFormat: this.imgConfig.includes(type)
         ? ''
         : this.curAnnotFontStyle + this.curSelectedArea.attrs?.textDecoration ??
-          '',
+        '',
       fontSize: this.imgConfig.includes(type) ? '' : this.curAnnotFontSize,
       signatureType: 2,
       comment: '',
@@ -2429,11 +2429,11 @@ export class PdfComponent
               span.style.width = location.width * this.xScale + 'px';
               span.style.top =
                 (location.top - location.height * isFromAnotherApp) *
-                  this.yScale +
+                this.yScale +
                 'px';
               span.style.left =
                 (location.left - location.width * isFromAnotherApp) *
-                  this.xScale +
+                this.xScale +
                 'px';
               span.style.zIndex = '2';
               span.dataset.id = key;
@@ -2453,7 +2453,6 @@ export class PdfComponent
             this.lstHighlightTextArea.push(value);
           }
         }
-        console.log('get list highlight');
       });
   }
 
@@ -2462,6 +2461,7 @@ export class PdfComponent
   }
 
   removeUnsaveHLA() {
+    window.getSelection().empty()
     let lstUnsave = this.lstHighlightTextArea.filter(
       (hla) => hla.isAdded == false
     );
@@ -2526,6 +2526,8 @@ export class PdfComponent
     if (needHLList.length < 1 && !isClearHLA) return;
     this.esService
       .highlightText(
+        this.transRecID,
+        this.sfEdited,
         this.curFileUrl.replace(environment.urlUpload + '/', ''),
         this.fileInfo.fileID,
         this.fileInfo.fileName,
@@ -2535,6 +2537,7 @@ export class PdfComponent
       )
       .subscribe((res) => {
         // this.detectorRef.detectChanges();
+        this.sfEdited = true;
         this.curFileUrl = '';
         setTimeout(
           (tmpUrl) => {
@@ -2679,11 +2682,12 @@ export class PdfComponent
       this.lstHighlightTextArea = this.lstHighlightTextArea.concat(tmpLstHLA);
       this.detectorRef.detectChanges();
     }
+    
   }
 
-  addComment() {}
+  addComment() { }
 
-  ngOnDestroy() {}
+  ngOnDestroy() { }
   //#endregion
 }
 //create new guid

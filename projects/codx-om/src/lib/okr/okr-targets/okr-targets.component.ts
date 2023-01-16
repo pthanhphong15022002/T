@@ -1,6 +1,14 @@
+import { text } from 'stream/consumers';
+declare var window: any;
 import { CodxOmService } from './../../codx-om.service';
 import { OMCONST } from './../../codx-om.constant';
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   CacheService,
   CallFuncService,
@@ -27,6 +35,7 @@ import { PopupAssignmentOKRCComponent } from '../../popup/popup-assigment-okr-c/
   styleUrls: ['./okr-targets.component.scss'],
 })
 export class OkrTargetsComponent implements OnInit {
+  @ViewChild('omTab') omTab: any;
   @Input() dataOKRPlans: any;
   @Input() dataOKR: any;
   @Input() formModel: any;
@@ -37,12 +46,12 @@ export class OkrTargetsComponent implements OnInit {
   @Input() obFuncID: any;
   @Input() funcID: any;
   @Input() isHiddenChart: boolean;
-  
+
   dtStatus = [];
   openAccordion = [];
-  krTitle='';
-  obTitle='';
-  isCollaped=false;
+  krTitle = '';
+  obTitle = '';
+  isCollaped = false;
   chartSettings: ChartSettings = {
     title: '',
     primaryXAxis: {
@@ -127,7 +136,7 @@ export class OkrTargetsComponent implements OnInit {
   Objs = [];
   ObjQty = 0;
   Krs = [];
-  KrQty = 0;  
+  KrQty = 0;
   progress: number = 0;
 
   constructor(
@@ -135,28 +144,27 @@ export class OkrTargetsComponent implements OnInit {
     private cache: CacheService,
     private codxOmService: CodxOmService,
     private api: ApiHttpService,
-    private notificationsService :NotificationsService,
-    private detec :ChangeDetectorRef,
-
-  ) {
-  }
-
+    private notificationsService: NotificationsService,
+    private detec: ChangeDetectorRef
+  ) {}
+  //_______________________Base Func_________________________//
   ngOnInit(): void {
-    this.formModel=this.formModel;
+    this.formModel = this.formModel;
     //Lấy tiêu đề theo FuncID cho Popup
     this.cache.functionList(this.krFuncID).subscribe((res) => {
       if (res) {
-        this.krTitle = res.description.charAt(0).toLowerCase() + res.description.slice(1);
+        this.krTitle =
+          res.description.charAt(0).toLowerCase() + res.description.slice(1);
       }
     });
     this.cache.functionList(this.obFuncID).subscribe((res) => {
       if (res) {
-        this.obTitle = res.description.charAt(0).toLowerCase() + res.description.slice(1);
-        
+        this.obTitle =
+          res.description.charAt(0).toLowerCase() + res.description.slice(1);
       }
     });
     this.progress = this.dataOKRPlans?.progress;
-    
+
     this.api
       .exec('OM', 'DashBoardBusiness', 'GetOKRDashboardByPlanAsync', [
         this.dataOKRPlans?.periodID,
@@ -186,17 +194,12 @@ export class OkrTargetsComponent implements OnInit {
       if (item?.datas) this.dtStatus = item?.datas;
     });
   }
-  //Lấy danh sách kr của mục tiêu
-  getItemOKR(i: any, recID: any) {
-    this.openAccordion[i] = !this.openAccordion[i];
-    // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
-    //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
-    //     if(item) this.dataOKR[i].child = item
-    //   });
-  }
 
-  clickMF(e: any,data:any) {
-    debugger;
+  //-----------------------End-------------------------------//
+
+  //_______________________Base Event________________________//
+
+  clickMF(e: any, data: any) {
     var funcID = e?.functionID;
     switch (funcID) {
       //Chỉnh sửa
@@ -204,27 +207,143 @@ export class OkrTargetsComponent implements OnInit {
         let dialog = this.callfunc.openSide(OkrAddComponent, [
           this.gridView,
           this.formModelKR,
-          "edit",
-          "",
-          data
+          'edit',
+          '',
+          data,
         ]);
         break;
       }
       //Phân công mục tiêu
-      case 'OMT022': //site tester
-      case 'OMT012':
-        {
-          let option = new DialogModel();
-          option.IsFull = true;
-          this.callfunc.openForm(PopupAssignmentOKRCComponent,"",null,null,this.formModel.funcID,
-          [
-            "Phân công mục tiêu",
-            data
-          ],"",option);
-          break;
-        }
+      // case 'OMT022': //site tester
+      // case 'OMT012':
+      //   {
+      //     let option = new DialogModel();
+      //     option.IsFull = true;
+      //     this.callfunc.openForm(PopupAssignmentOKRCComponent,"",null,null,this.formModel.funcID,
+      //     [
+      //       "Phân công mục tiêu",
+      //       data
+      //     ],"",option);
+      //     break;
+      //   }
+      //phân bổ OB
+      case OMCONST.MFUNCID.DOBComp:
+      case OMCONST.MFUNCID.DOBDept:
+      case OMCONST.MFUNCID.DOBOrg:
+      case OMCONST.MFUNCID.DOBPers: {
+        this.distributeOKR(data, e?.text);
+        break;
+      }
+
+      //phân công OB
+      case OMCONST.MFUNCID.AOBComp:
+      case OMCONST.MFUNCID.AOBDept:
+      case OMCONST.MFUNCID.AOBOrg:
+      case OMCONST.MFUNCID.AOBPers: {
+        this.assignmentOKR(data, e?.text);
+        break;
+      }
     }
   }
+  clickKRMF(e: any, kr: any, o: any) {
+    let popupTitle = e.text + ' ' + this.krTitle;
+    var funcID = e?.functionID;
+    switch (funcID) {
+      case OMCONST.MFUNCID.Edit: {
+        this.editKR(kr, o, popupTitle);
+        break;
+      }
+      case OMCONST.MFUNCID.Copy: {
+        this.copyKR(kr, o, popupTitle);
+        break;
+      }
+      case OMCONST.MFUNCID.Delete: {
+        this.deleteKR(kr);
+        break;
+      }
+
+      //phân bổ KR
+      case OMCONST.MFUNCID.DKRComp:
+      case OMCONST.MFUNCID.DKRDept:
+      case OMCONST.MFUNCID.DKROrg:
+      case OMCONST.MFUNCID.DKRPers: {
+        this.distributeOKR(kr, e.text);
+        break;
+      }
+
+      //phân công KR
+      case OMCONST.MFUNCID.AKRComp:
+      case OMCONST.MFUNCID.AKRDept:
+      case OMCONST.MFUNCID.AKROrg:
+      case OMCONST.MFUNCID.AKRPers: {
+        this.assignmentOKR(kr, e.text);
+        break;
+      }
+    }
+  }
+  //-----------------------End-------------------------------//
+
+  //_______________________Get Data Func_____________________//
+
+  //-----------------------End-------------------------------//
+
+  //_______________________Validate Func_____________________//
+
+  //-----------------------End-------------------------------//
+
+  //_______________________Logic Func________________________//
+
+  //-----------------------End-------------------------------//
+
+  //_______________________Logic Event_______________________//
+
+  //-----------------------End-------------------------------//
+
+  //_______________________Custom Func_______________________//
+
+  //-----------------------End-------------------------------//
+
+  //_______________________Custom Event______________________//
+
+  //Lấy danh sách kr của mục tiêu
+  getItemOKR(i: any, recID: any) {
+    this.openAccordion[i] = !this.openAccordion[i];
+    // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
+    //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
+    //     if(item) this.dataOKR[i].child = item
+    //   });
+    if (this.openAccordion.every((item) => item === true)) {
+      this.isCollaped = true;
+    } else if (this.openAccordion.every((item) => item === false)) {
+      this.isCollaped = false;
+    }
+    this.detec.detectChanges();
+  }
+  collapeKR(collape: boolean) {
+    if (this.dataOKR && this.openAccordion.length != this.dataOKR.length) {
+      this.openAccordion = new Array(this.dataOKR.length).fill(false);
+    }
+    this.isCollaped = collape;
+    let i = 0;
+    this.openAccordion.forEach((item) => {
+      this.openAccordion[i] = collape;
+      i++;
+      this.detec.detectChanges();
+    });
+    this.detec.detectChanges();
+  }
+
+  showTabItem(tabIndex: number, tabItemIndex: number) {
+    this.openAccordion[tabIndex] = true;
+    window.ng.getComponent(
+      document.getElementsByClassName('tab-child-' + tabIndex)[0]
+    ).selectedItem = tabItemIndex;
+    this.detec.detectChanges();
+  }
+  //-----------------------End-------------------------------//
+
+  //_______________________Popup_____________________________//
+
   // Thêm/sửa  KR
   // addKR(o: any) {
   //   let option = new SidebarModel();
@@ -233,7 +352,7 @@ export class OkrTargetsComponent implements OnInit {
 
   //   let dialogKR = this.callfunc.openSide(
   //     PopupAddKRComponent,
-  //     [null, o, this.formModelKR, true, 'Thêm mới kết quả chính',this.dataOKRPlans],
+  //     [OMCONST.MFUNCID.Add, popupTitle, o, kr],
   //     option
   //   );
   // }
@@ -242,104 +361,41 @@ export class OkrTargetsComponent implements OnInit {
     let option = new SidebarModel();
     option.FormModel = this.formModelKR;
 
-    let dialogKR = this.callfunc.openSide(
+    let dialogEditKR = this.callfunc.openSide(
       PopupAddKRComponent,
       [OMCONST.MFUNCID.Edit, popupTitle, o, kr],
       option
     );
   }
-  
-  
+
   copyKR(kr: any, o: any, popupTitle: any) {
     let option = new SidebarModel();
     option.FormModel = this.formModelKR;
 
-    let dialogKR = this.callfunc.openSide(
+    let dialogCopyKR = this.callfunc.openSide(
       PopupAddKRComponent,
       [OMCONST.MFUNCID.Copy, popupTitle, o, kr],
       option
     );
   }
-  
+
   deleteKR(kr: any) {
-    if(false){//Cần thêm kịch bản khi xóa KR
-      this.codxOmService.deleteKR(kr).subscribe((res:any)=>{
-        if(res){          
+    if (false) {
+      //Cần thêm kịch bản khi xóa KR
+      this.codxOmService.deleteKR(kr).subscribe((res: any) => {
+        if (res) {
           this.notificationsService.notifyCode('SYS008');
-        }
-        else{
-          
+        } else {
           this.notificationsService.notifyCode('SYS022');
         }
-      })
-    }
-  }
-
-  clickKRMF(e: any, kr: any, o: any) {
-    let popupTitle = e.text + ' '+ this.krTitle;
-    var funcID = e?.functionID;
-    switch (funcID) {
-      case OMCONST.MFUNCID.Edit: {
-        this.editKR(kr, o, popupTitle);
-        break;
-      }
-      case OMCONST.MFUNCID.Copy: {
-        //this.copyKR(kr, o, popupTitle);
-        this.distributeOKR(kr);
-        break;
-      }
-      case OMCONST.MFUNCID.Delete: {
-        this.deleteKR(kr);
-        break;
-      }
-
-      //phân bổ OB
-      case OMCONST.MFUNCID.DOBComp: 
-      case OMCONST.MFUNCID.DOBDept: 
-      case OMCONST.MFUNCID.DOBOrg: 
-      case OMCONST.MFUNCID.DOBPers:       
-      {
-        
-        break;
-      }
-
-      //phân công OB
-      case OMCONST.MFUNCID.AOBComp: 
-      case OMCONST.MFUNCID.AOBDept: 
-      case OMCONST.MFUNCID.AOBOrg: 
-      case OMCONST.MFUNCID.AOBPers:       
-      {
-        
-        break;
-      }
-
-      //phân bổ KR
-      case OMCONST.MFUNCID.DKRComp: 
-      case OMCONST.MFUNCID.DKRDept: 
-      case OMCONST.MFUNCID.DKROrg: 
-      case OMCONST.MFUNCID.DKRPers:       
-      {
-        this.distributeOKR(kr);
-        break;
-      }
-      
-      //phân công KR
-      case OMCONST.MFUNCID.AKRComp: 
-      case OMCONST.MFUNCID.AKRDept: 
-      case OMCONST.MFUNCID.AKROrg: 
-      case OMCONST.MFUNCID.AKRPers:       
-      {
-        this.assignmentOKR(kr);
-        break;
-      }
-      
+      });
     }
   }
   //Xem chi tiết OB
   showOB(obj: any) {
     let dModel = new DialogModel();
     dModel.IsFull = true;
-    dModel.FormModel= this.formModelOB;
+    dModel.FormModel = this.formModelOB;
     let dialogShowOB = this.callfunc.openForm(
       PopupShowOBComponent,
       '',
@@ -355,7 +411,7 @@ export class OkrTargetsComponent implements OnInit {
   showKR(kr: any) {
     let dModel = new DialogModel();
     dModel.IsFull = true;
-    dModel.FormModel= this.formModelKR;
+    dModel.FormModel = this.formModelKR;
     let dialogShowKR = this.callfunc.openForm(
       PopupShowKRComponent,
       '',
@@ -367,8 +423,9 @@ export class OkrTargetsComponent implements OnInit {
       dModel
     );
   }
-  distributeOKR(kr:any){
-    let dModel = new DialogModel();    
+  distributeOKR(okr: any, title: any) {
+    
+    let dModel = new DialogModel();
     dModel.IsFull = true;
     let dialogDisKR = this.callfunc.openForm(
       PopupDistributeOKRComponent,
@@ -376,37 +433,24 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult,this.funcID],
+      [okr.okrName, okr.recID, okr.okrType, this.funcID, title],
       '',
       dModel
     );
   }
-  assignmentOKR(kr:any){
-    let dModel = new DialogModel();    
-    dModel.IsFull = true;
+  assignmentOKR(okr: any, title: any) {
+    let dModel = new DialogModel();
     let dialogAssgKR = this.callfunc.openForm(
-      PopupDistributeOKRComponent,
+      PopupAssignmentOKRComponent,
       '',
       null,
+      450,
       null,
-      null,
-      [kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult,this.funcID],
+      [okr.okrName, okr.recID, okr.okrType, this.funcID, title],
       '',
       dModel
     );
   }
-  collapeKR(collape:boolean){
-    debugger;
-    if(this.dataOKR && this.openAccordion.length==0){
-      this.openAccordion = new Array(this.dataOKR.length).fill(false);
-    }
-    this.isCollaped= collape;
-    let i=0;
-    this.openAccordion.forEach(item=>{
-      this.openAccordion[i]=collape;
-      i++;
-      this.detec.detectChanges();
-    });
-    this.detec.detectChanges();
-  }
+
+  //-----------------------End-------------------------------//
 }

@@ -1,200 +1,156 @@
 <ng-container *ngIf="images">
-    <div class="codx-view-files">
+    <div class="codx-view-files cursor-pointer">
         <ng-container [ngSwitch]="images">
             <!-- 1 hình -->
             <ng-container *ngSwitchCase="1">
-                <div class="pic-1">
+                <div class="row w-100 h-100 m-0">
                     <ng-container *ngIf="files[0].referType == FILE_REFERTYPE.IMAGE;else video_1_0">
                         <ng-container *ngTemplateOutlet="image;context: { $implicit: files[0] }"></ng-container>
                     </ng-container>
                     <ng-template #video_1_0>
                         <ng-container *ngTemplateOutlet="video;context: { $implicit: files[0] }"></ng-container>
                     </ng-template>
-                    <ng-container *ngIf="allowEdit">
-                        <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: files[0] }"></ng-container>
-                    </ng-container>
                 </div>
             </ng-container>
             <!-- end 1 hình -->
             <!-- 2 hình -->
             <ng-container *ngSwitchCase="2">
-                <div class="pic-1">
-                    <div class="pic-2">
+                <div class="row w-100 h-100 m-0">
+                    <div class="col-6 h-100 p-0 pe-1">
                         <ng-container *ngIf="files[0].referType == FILE_REFERTYPE.IMAGE;else video_2_0">
                             <ng-container *ngTemplateOutlet="image;context: { $implicit: files[0] }"></ng-container>
                         </ng-container>
                         <ng-template #video_2_0>
                             <ng-container *ngTemplateOutlet="video;context: { $implicit: files[0] }"></ng-container>
                         </ng-template>
-                        <ng-container *ngIf="allowEdit">
-                            <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: files[0] }"></ng-container>
-                        </ng-container>
                     </div>
-                    <div class="pic-2">
+                    <div class="col-6 h-100 p-0 pe-1">
                         <ng-container *ngIf="files[1].referType == FILE_REFERTYPE.IMAGE;else video_2_1">
                             <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
                         </ng-container>
                         <ng-template #video_2_1>
                             <ng-container *ngTemplateOutlet="video;context: { $implicit: files[1]}"></ng-container>
                         </ng-template>
-                        <ng-container *ngIf="allowEdit">
-                            <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: files[1]}"></ng-container>
-                        </ng-container>
                     </div>
                 </div>
             </ng-container>
             <!-- end 2 hình -->
             <!-- 3 hình -->
             <ng-container *ngSwitchCase="3">
-                <div class="pic-1">
-                    <div class="pic-2">
+                <div class="row w-100 h-50 m-0">
+                    <div class="col-12 h-100 p-0">
                         <ng-container *ngIf="files[0].referType == FILE_REFERTYPE.IMAGE;else video_3_0">
                             <ng-container *ngTemplateOutlet="image;context: { $implicit: files[0] }"></ng-container>
                         </ng-container>
                         <ng-template #video_3_0>
                             <ng-container *ngTemplateOutlet="video;context: { $implicit: files[0] }"></ng-container>
                         </ng-template>
-                        <ng-container *ngIf="allowEdit">
-                            <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: files[0] }"></ng-container>
-                        </ng-container>
                     </div>
-                    <div class="pic-2">
-                        <div class="pic-3">
-                            <ng-container *ngIf="files[1].referType == FILE_REFERTYPE.IMAGE;else video_3_1">
-                                <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                            <ng-template #video_3_1>
-                                <ng-container *ngTemplateOutlet="video;context: { $implicit: files[1]}"></ng-container>
-                            </ng-template>
-                            <ng-container *ngIf="allowEdit">
-                                <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                        </div>
-                        <div class="pic-3">
-                            <ng-container *ngIf="files[1].referType == FILE_REFERTYPE.IMAGE;else video_3_2">
-                                <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                            <ng-template #video_3_2>
-                                <ng-container *ngTemplateOutlet="video;context: { $implicit: files[1]}"></ng-container>
-                            </ng-template>
-                            <ng-container *ngIf="allowEdit">
-                                <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                        </div>
+                    
+                </div>
+                <div class="row w-100 h-50 m-0 mt-1">
+                    <div class="col-6 h-100 p-0 pe-1">
+                        <ng-container *ngIf="files[1].referType == FILE_REFERTYPE.IMAGE;else video_3_1">
+                            <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
+                        </ng-container>
+                        <ng-template #video_3_1>
+                            <ng-container *ngTemplateOutlet="video;context: { $implicit: files[1]}"></ng-container>
+                        </ng-template>
+                    </div>
+                    <div class="col-6 h-100 p-0">
+                        <ng-container *ngIf="files[2].referType == FILE_REFERTYPE.IMAGE;else video_3_2">
+                            <ng-container *ngTemplateOutlet="image;context: { $implicit: files[2]}"></ng-container>
+                        </ng-container>
+                        <ng-template #video_3_2>
+                            <ng-container *ngTemplateOutlet="video;context: { $implicit: files[2]}"></ng-container>
+                        </ng-template>
                     </div>
                 </div>
             </ng-container>
             <!-- end 3 hình -->
             <!-- 4 hình -->
             <ng-container *ngSwitchCase="4">
-                <div class="pic-1">
-                    <div class="pic-2">
-                        <div class="pic-3">
-                            <ng-container *ngIf="files[0].referType == FILE_REFERTYPE.IMAGE;else video_4_0">
-                                <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                            <ng-template #video_4_0>
-                                <ng-container *ngTemplateOutlet="video;context: { $implicit: files[1]}"></ng-container>
-                            </ng-template>
-                            <ng-container *ngIf="allowEdit">
-                                <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                        </div>
-                        <div class="pic-3">
-                            <ng-container *ngIf="files[2].referType == FILE_REFERTYPE.IMAGE;else video_4_1">
-                                <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                            <ng-template #video_4_1>
-                                <ng-container *ngTemplateOutlet="video;context: { $implicit: files[1]}"></ng-container>
-                            </ng-template>
-                            <ng-container *ngIf="allowEdit">
-                                <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                        </div>
+                <div class="row w-100 h-50 m-0">
+                    <div class="col-6 h-100 p-0 pe-1">
+                        <ng-container *ngIf="files[0].referType == FILE_REFERTYPE.IMAGE;else video_4_0">
+                            <ng-container *ngTemplateOutlet="image;context: { $implicit: files[0]}"></ng-container>
+                        </ng-container>
+                        <ng-template #video_4_0>
+                            <ng-container *ngTemplateOutlet="video;context: { $implicit: files[0]}"></ng-container>
+                        </ng-template>
                     </div>
-                    <div class="pic-2">
-                        <div class="pic-3">
-                            <ng-container *ngIf="files[3].referType == FILE_REFERTYPE.IMAGE;else video_4_2">
-                                <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                            <ng-template #video_4_2>
-                                <ng-container *ngTemplateOutlet="video;context: { $implicit: files[1]}"></ng-container>
-                            </ng-template>
-                            <ng-container *ngIf="allowEdit">
-                                <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                        </div>
-                        <div class="pic-3">
-                            <ng-container *ngIf="files[4].referType == FILE_REFERTYPE.IMAGE;else video_4_3">
-                                <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                            <ng-template #video_4_3>
-                                <ng-container *ngTemplateOutlet="video;context: { $implicit: files[1]}"></ng-container>
-                            </ng-template>
-                            <ng-container *ngIf="allowEdit">
-                                <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                        </div>
+                    <div class="col-6 h-100 p-0">
+                        <ng-container *ngIf="files[1].referType == FILE_REFERTYPE.IMAGE;else video_4_1">
+                            <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
+                        </ng-container>
+                        <ng-template #video_4_1>
+                            <ng-container *ngTemplateOutlet="video;context: { $implicit: files[1]}"></ng-container>
+                        </ng-template>
+                    </div>
+                </div>
+                <div class="row w-100 h-50 m-0 mt-1">
+                    <div class="col-6 h-100 p-0 pe-1">
+                        <ng-container *ngIf="files[2].referType == FILE_REFERTYPE.IMAGE;else video_4_2">
+                            <ng-container *ngTemplateOutlet="image;context: { $implicit: files[2]}"></ng-container>
+                        </ng-container>
+                        <ng-template #video_4_2>
+                            <ng-container *ngTemplateOutlet="video;context: { $implicit: files[2]}"></ng-container>
+                        </ng-template>
+                    </div>
+                    <div class="col-6 h-100 p-0">
+                        <ng-container *ngIf="files[3].referType == FILE_REFERTYPE.IMAGE;else video_4_3">
+                            <ng-container *ngTemplateOutlet="image;context: { $implicit: files[3]}"></ng-container>
+                        </ng-container>
+                        <ng-template #video_4_3>
+                            <ng-container *ngTemplateOutlet="video;context: { $implicit: files[3]}"></ng-container>
+                        </ng-template>
                     </div>
                 </div>
             </ng-container>
             <!-- end 4 hình -->
             <!-- > 4 hình -->
             <ng-container *ngSwitchDefault>
-                <div class="pic-1">
-                    <div class="pic-2">
-                        <div class="pic-3">
-                            <ng-container *ngIf="files[0].referType == FILE_REFERTYPE.IMAGE;else video_4_0">
-                                <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                            <ng-template #video_4_0>
-                                <ng-container *ngTemplateOutlet="video;context: { $implicit: files[1]}"></ng-container>
-                            </ng-template>
-                            <ng-container *ngIf="allowEdit">
-                                <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                        </div>
-                        <div class="pic-3">
-                            <ng-container *ngIf="files[2].referType == FILE_REFERTYPE.IMAGE;else video_4_1">
-                                <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                            <ng-template #video_4_1>
-                                <ng-container *ngTemplateOutlet="video;context: { $implicit: files[1]}"></ng-container>
-                            </ng-template>
-                            <ng-container *ngIf="allowEdit">
-                                <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                        </div>
+                <div class="row w-100 h-50 m-0">
+                    <div class="col-6 h-100 p-0 pe-1">
+                        <ng-container *ngIf="files[0].referType == FILE_REFERTYPE.IMAGE;else video_4_0">
+                            <ng-container *ngTemplateOutlet="image;context: { $implicit: files[0]}"></ng-container>
+                        </ng-container>
+                        <ng-template #video_4_0>
+                            <ng-container *ngTemplateOutlet="video;context: { $implicit: files[0]}"></ng-container>
+                        </ng-template>
                     </div>
-                    <div class="pic-2">
-                        <div class="pic-3">
-                            <ng-container *ngIf="files[3].referType == FILE_REFERTYPE.IMAGE;else video_4_2">
-                                <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                            <ng-template #video_4_2>
-                                <ng-container *ngTemplateOutlet="video;context: { $implicit: files[1]}"></ng-container>
-                            </ng-template>
-                            <ng-container *ngIf="allowEdit">
-                                <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                        </div>
-                        <div class="pic-3">
-                            <ng-container *ngIf="files[4].referType == FILE_REFERTYPE.IMAGE;else video_4_3">
-                                <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                            <ng-template #video_4_3>
-                                <ng-container *ngTemplateOutlet="video;context: { $implicit: files[1]}"></ng-container>
-                            </ng-template>
-                            <ng-container *ngIf="allowEdit">
-                                <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: files[1]}"></ng-container>
-                            </ng-container>
-                            <div class="overlay-wrapper-opacity h-100 w-100">
-                                <span class="text-number">+ {{images - 4}}</span>
-                              </div>
+                    <div class="col-6 h-100 p-0">
+                        <ng-container *ngIf="files[1].referType == FILE_REFERTYPE.IMAGE;else video_4_1">
+                            <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
+                        </ng-container>
+                        <ng-template #video_4_1>
+                            <ng-container *ngTemplateOutlet="video;context: { $implicit: files[1]}"></ng-container>
+                        </ng-template>
+                    </div>
+                </div>
+                <div class="row w-100 h-50 m-0 mt-1">
+                    <div class="col-6 h-100 p-0 pe-1">
+                        <ng-container *ngIf="files[2].referType == FILE_REFERTYPE.IMAGE;else video_4_2">
+                            <ng-container *ngTemplateOutlet="image;context: { $implicit: files[2]}"></ng-container>
+                        </ng-container>
+                        <ng-template #video_4_2>
+                            <ng-container *ngTemplateOutlet="video;context: { $implicit: files[2]}"></ng-container>
+                        </ng-template>
+                    </div>
+                    <div class="col-6 h-100 p-0 position-relative">
+                        <ng-container *ngIf="files[3].referType == FILE_REFERTYPE.IMAGE;else video_4_3">
+                            <ng-container *ngTemplateOutlet="image;context: { $implicit: files[3]}"></ng-container>
+                        </ng-container>
+                        <ng-template #video_4_3>
+                            <ng-container *ngTemplateOutlet="video;context: { $implicit: files[3]}"></ng-container>
+                        </ng-template>
+                        <div class="more-image">
+                            <span class="text-white fw-bolder">+{{images - 4}}</span>
                         </div>
                     </div>
                 </div>
             </ng-container>
+            
             <!-- end > 4 hình -->
         </ng-container>
     </div>
@@ -215,38 +171,35 @@
 </div>
 
 <!-- template view image -->
-<ng-template #image let-data>
-    <ng-container *ngIf="data.recID;else imageNoSource">
-        <!-- hình đã lưu. 
-            tạm thời lấy full thumb của ảnh - đợi a chung bổ sung sau -->
-        <img (click)="clickViewDetail(data)" [src]="data.source" class="codx-view-file_image"/>
-    </ng-container>
-    <ng-template #imageNoSource>
-        <!-- hình chưa lưu -->
-        <img (click)="clickViewDetail(data)" [src]="data.avatar" class="codx-view-file_image"/>
-    </ng-template>
+<ng-template #image let-file>
+    <div class="position-relative w-100 h-100 p-0">
+        <ng-container>
+            <img (click)="clickViewDetail(file)" [src]="file.source" class="codx-view-file_image"/>
+        </ng-container>
+        <ng-container *ngIf="allowEdit">
+            <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: file}"></ng-container>
+        </ng-container>
+    </div>
 </ng-template>  
 
 <!-- template video -->
-<ng-template #video let-data>
-    <ng-container *ngIf="data.source;else videoNoSource">
-        <video (click)="clickViewDetail(data)" [autoplay]="false" controls class="codx-view-file_video">
-            <source [src]="data.source" type="video/mp4" />
+<ng-template #video let-file>
+    <div class="position-relative w-100 h-100 p-0">
+        <video (click)="clickViewDetail(file)" [autoplay]="false" controls class="codx-view-file_video">
+            <source [src]="file.source | safe:'url'" />
         </video>
-    </ng-container>
-    <ng-template #videoNoSource>
-        <video (click)="clickViewDetail(data)" [autoplay]="false" controls class="codx-view-file_video">
-            <source [src]="data.data" type="video/mp4" />
-        </video>
-    </ng-template>
+        <ng-container *ngIf="allowEdit">
+            <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: file}"></ng-container>
+        </ng-container>
+    </div>
 </ng-template>
 
 <!-- template remove file -->
 <ng-template #removeFile let-data>
     <div class="remove-file">
-      <a href="javascript:void(0)" class="h-100" (click)="removeFiles(data)">
+      <button class="btn btn-icon btn-md" (click)="removeFiles(data)">
         <i class="icon-close icon-18 text-danger"></i>
-      </a>
+      </button>
     </div>
   </ng-template>
  

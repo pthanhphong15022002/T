@@ -1,8 +1,7 @@
-import { X } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { async } from '@firebase/util';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ApiHttpService, AuthService, AuthStore, CallFuncService, FormModel } from 'codx-core';
-import { Observable,forkJoin, map, from } from 'rxjs';
+import { Observable,forkJoin, map, from, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AttachmentComponent } from '../attachment/attachment.component';
 
@@ -36,6 +35,7 @@ export class CodxViewFilesComponent implements OnInit {
     private api:ApiHttpService,
     private auth: AuthStore,
     private callfc: CallFuncService,
+    private sanitizer: DomSanitizer,
     private dt: ChangeDetectorRef
   )
   {
@@ -47,7 +47,13 @@ export class CodxViewFilesComponent implements OnInit {
   }
   // get files by objectID
   getFileByObjectID(objectID:string){
-    if(objectID){
+    if(objectID)
+    {
+      let size = 500;
+      if(this.images != 0)
+      {
+        
+      }
       this.api
       .execSv(
       'DM',
@@ -56,13 +62,14 @@ export class CodxViewFilesComponent implements OnInit {
       'GetFilesByIbjectIDAsync',
       [this.objectID])
       .subscribe((res:any[]) => {
-        if(res?.length > 0){
+        if(res?.length > 0)
+        {
           if(this.images == 0)
           {
-            this.images == res.length;
+            this.images = res.length;
           }
           res.forEach((f: any) => {
-            if(f.referType == this.FILE_REFERTYPE.VIDEO)
+            if(f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO)
             {
               f["source"] = `${environment.urlUpload}/${f.url}`; 
             }
@@ -75,61 +82,12 @@ export class CodxViewFilesComponent implements OnInit {
 
   // click filed
   clickViewDetail(fileSelected: any) {
-    if(fileSelected){
-      this.fileClicked.emit(fileSelected);
-    }
+    this.fileClicked.emit(fileSelected);
   }
-  // add files
-  addFiles(files:any[]){
-    if(files.length > 0){
-      files.forEach((f) => {
-        if(f.mimeType.includes('image'))
-        {
-          f['referType'] = this.FILE_REFERTYPE.IMAGE;
-        }
-        else if(f.mimeType.includes('video'))
-        {
-          f['referType'] = this.FILE_REFERTYPE.VIDEO;
-        }
-        else 
-        {
-          f['referType'] = this.FILE_REFERTYPE.APPLICATION;
-        }
-      });
-      this.filesAdd = this.filesAdd.concat(files);
-      this.files = this.filesAdd.slice();
-      let fileImages = this.files.filter(x => x.referType == this.FILE_REFERTYPE.IMAGE);
-      this.images = fileImages.length;
-      this.dt.detectChanges();
-      }
-  }
-  // remove files
-  removeFiles(file: any) {
-    if(file)
-    {
-      if(file.hasOwnProperty('recID')){
-        let _index = this.files.findIndex(x => x.recID == file.recID);
-        if(_index >=0)
-        {
-          this.filesDelete.push(file);
-          this.files.splice(_index,1);
-        }
-      }
-      else
-      {
-        let _index = this.files.findIndex(x => x.fileName == file.fileName && !file.hasOwnProperty('recID'));
-        if(_index >=0)
-        {
-          this.files.splice(_index,1);
-        }
-      }
-      this.dt.detectChanges();
-    }
-  }
+  
 
   // click upload file
   uploadFiles(){
-    debugger
     this.codxATM.uploadFile();
   }
   // attachment return file
@@ -139,36 +97,94 @@ export class CodxViewFilesComponent implements OnInit {
       this.addFiles(arrFiles.data);
     }
   }
-
-  // save files
-  saveFiles(){
-    let _$obs1 = new Observable<any>();
-    let _$obs2 = new Observable<any>();
-
-    // kiểm tra thêm file mới
-    if(this.filesAdd.length > 0)
-    {
-      this.codxATM.objectId = this.objectID;
-      this.codxATM.fileUploadList = JSON.parse(JSON.stringify(this.filesAdd));
-      _$obs1 = from(this.codxATM.saveFilesObservable());
-    }
-    // kiểm tra xóa file cũ
-    if(this.filesDelete.length > 0)
-    {
-      let _arrRecID = this.filesDelete.map(x => {
-        if(X.hasOwnProperty('recID')){
-          return x.recID;
+  // add files
+  addFiles(files:any[]){
+    if(files.length > 0){
+      files.forEach((f) => {
+        if(f.mimeType.includes('image'))
+        {
+          f["source"] = f.avatar;
+          f['referType'] = this.FILE_REFERTYPE.IMAGE;
+          this.images++;
+        }
+        else if(f.mimeType.includes('video'))
+        {
+          f['source'] = f.data;
+          f['referType'] = this.FILE_REFERTYPE.VIDEO;
+          this.images++;
+        }
+        else 
+        {
+          f['referType'] = this.FILE_REFERTYPE.APPLICATION;
         }
       });
-      _$obs2 = this.api.execSv(
-        "DM",
-        "ERM.Business.DM",
-        "FileBussiness",
-        "DeleteFileAsync",
-        [_arrRecID]);
+      this.filesAdd = this.filesAdd.concat(files);
+      this.files = JSON.parse(JSON.stringify(this.filesAdd));
+      this.dt.detectChanges();
+      }
+  }
+  // remove files
+  removeFiles(file: any) {
+    if(file)
+    {
+      let _index = -1;
+      if(file.hasOwnProperty('recID')){
+        _index = this.files.findIndex(x => x.recID == file.recID);
+        this.filesDelete.push(file);
+      }
+      else
+      {
+        _index = this.files.findIndex(x => x.fileName == file.fileName && !file.hasOwnProperty('recID'));
+        
+      }
+      if(_index >=0)
+      {
+        this.files.splice(_index,1);
+        let _fileImages = this.files.filter(x => (x.referType == this.FILE_REFERTYPE.IMAGE || x.referType == this.FILE_REFERTYPE.VIDEO));
+        this.images = _fileImages.length;
+      }
+      
+      this.dt.detectChanges();
     }
-    return forkJoin([_$obs1,_$obs2]).pipe(map(result => {
-      console.log(result);
+  }
+  // save
+  save():Observable<any>{
+    if(this.filesDelete.length > 0) // delete files
+    {
+        this.deleteFiles(this.filesDelete);
+    }
+    return this.saveFiles(this.filesAdd).pipe(map(res => {
+        return res;
     }));
   }
+  // delete files
+  deleteFiles(arrFiles:any[]){
+    if(arrFiles.length > 0)
+    {
+      let _fileIDs = arrFiles.map(x => x.recID);
+      this.api.execSv<any>(
+        "DM",
+        "ERM.Business.DM",
+        "FilesBusiness",
+        "DeleteFilesAsync",
+        [_fileIDs])
+        .subscribe();
+    }
+  }
+  saveFiles(arrFiles:any[]):Observable<boolean>{
+    if(arrFiles.length > 0){
+      this.codxATM.objectId = this.objectID;
+      this.codxATM.fileUploadList = JSON.parse(JSON.stringify(arrFiles));
+      return this.codxATM.saveFilesMulObservable().pipe(map(res => {
+        if(res)
+        {
+          return true;
+        }
+        else return false;
+      }));
+    }
+    return of(true);
+  }
 }
+
+  

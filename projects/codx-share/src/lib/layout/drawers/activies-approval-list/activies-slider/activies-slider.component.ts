@@ -59,11 +59,13 @@ export class ActiviesSliderComponent implements OnInit {
       'GetApprovalAsync',
       [this.model])
       .subscribe((res:any[]) => {
-      if(res){
+      if(res)
+      {
         this.lstApproval = res[0];
         let totalRecord = res[1];
         this.totalPage = totalRecord / this.model.pageSize;
         this.isScroll = false;
+        this.loaded = false;
         this.dt.detectChanges();
       }
       else
@@ -91,8 +93,8 @@ export class ActiviesSliderComponent implements OnInit {
       'ERM.Business.BG',
       'NotificationBusinesss',
       'GetApprovalAsync',
-      [this.model]
-    ).subscribe((res:any[]) => {
+      [this.model])
+      .subscribe((res:any[]) => {
       if(res && res[0].length > 0){
         let notifications = res[0];
         this.lstApproval = this.lstApproval.concat(notifications);
@@ -114,9 +116,10 @@ export class ActiviesSliderComponent implements OnInit {
       this.codxService.openUrlNewTab(item.function,"",query);
     }
   }
-  approvalAsync(recID:string ,transID:string, status:string){
-    if(recID && transID && status)
+  approvalAsync(item:any,status:string){
+    if(item.recID && item.transID && status)
     {
+      item["blocked"] = true;
       if(status == ApprovalStatus.approved || status == ApprovalStatus.denied)
       {
         this.api
@@ -125,13 +128,13 @@ export class ActiviesSliderComponent implements OnInit {
           'ERM.Business.ES',
           'ApprovalTransBusiness',
           'ApproveAsync',
-          [transID, status, '', ''])
+          [item.transID, status, '', ''])
           .subscribe((res: any) => {
           if (!res?.msgCodeError) 
           {
             let mssgCodeNoti = status == ApprovalStatus.approved ? "WP005" : "WP007";
             this.notiSV.notifyCode(mssgCodeNoti);
-            let index = this.lstApproval.findIndex(x => x.recID == recID);
+            let index = this.lstApproval.findIndex(x => x.recID == item.recID);
             if(index > -1)
             {
               this.lstApproval.splice(index,1);
@@ -141,10 +144,11 @@ export class ActiviesSliderComponent implements OnInit {
                 'ERM.Business.BG',
                 'NotificationBusinesss',
                 'UpdateNotificationAsync', 
-                [recID]).subscribe();
+                [item.recID]).subscribe();
             }
-            this.dt.detectChanges();
-          } 
+          }
+          item["blocked"] = false;
+          this.dt.detectChanges();
         });
       }
     }

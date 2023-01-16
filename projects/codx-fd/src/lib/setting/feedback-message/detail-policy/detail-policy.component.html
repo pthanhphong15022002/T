@@ -85,7 +85,7 @@
                 <div class="text-dark-50">{{ policy?.memo }}</div>
               </div>
             </div>
-            <div class="list-ranking mt-10">
+            <div class="list-ranking mt-10" *ngIf="this.isGroup != 0">
               <table class="table list-ranking">
                 <thead>
                   <tr *ngIf="policy">

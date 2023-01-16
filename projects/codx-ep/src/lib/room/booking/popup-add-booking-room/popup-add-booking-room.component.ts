@@ -688,14 +688,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       if (this.isAdd) {
         this.data.requester = this.authService?.userValue?.userName;
       }
-      this.fGroupAddBookingRoom.patchValue(this.data);
-      if (this.fGroupAddBookingRoom.invalid == true) {
-        this.codxEpService.notifyInvalid(
-          this.fGroupAddBookingRoom,
-          this.formModel
-        );
-        return;
-      }
       if (!this.bookingOnCheck()) {
         this.notificationsService.notifyCode('EP001');
         return;
@@ -712,6 +704,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.notificationsService.notifyCode('EP002');
         return;
       }
+      this.fGroupAddBookingRoom.patchValue(this.data);
+      if (this.fGroupAddBookingRoom.invalid == true) {
+        this.codxEpService.notifyInvalid(
+          this.fGroupAddBookingRoom,
+          this.formModel
+        );
+        return;
+      }
+      
 
       this.tmpAttendeesList = [];
       this.attendeesList.forEach((item) => {
@@ -790,9 +791,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     //Check số lượng VPP đi kèm
     this.tmplstStationery = [];
     this.lstStationery.forEach((item) => {
-      this.tmplstStationery.push(item);
-    });
-
+      if(item.quantity>0){
+        this.tmplstStationery.push(item);
+      }
+    });    
     if (this.lstStationery.length > 0) {
       this.api
         .exec('EP', 'ResourcesBusiness', 'CheckAvailableResourceAsync', [
@@ -1121,7 +1123,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   valueAttendeesChange(event: any) {
-    if (event?.data) {
+    if (event?.data!=null) {
+      if(event.data<0){
+        event.data=0;
+      }
       this.data.attendees = event.data;
       this.changeDetectorRef.detectChanges();
     }
@@ -1340,14 +1345,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   valueQuantityChange(event?) {
-    if (event?.data && event?.field) {
+    if (event?.data !=null && event?.field) {
+      if(event?.data<0){
+        event.data=0;
+      }
       this.lstStationery.forEach((item) => {
         if (item.id === event?.field) {
-          if (event.data > 0) {
+          
             item.quantity = event.data;
-          } else {
-            item.quantity = 0;
-          }
+          
         }
       });
       this.changeDetectorRef.detectChanges();

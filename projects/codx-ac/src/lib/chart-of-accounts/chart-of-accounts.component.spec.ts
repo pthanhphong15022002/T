@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodxFilesComponent } from './codx-files.component';
+import { ChartOfAccountsComponent } from './chart-of-accounts.component';
 
-describe('CodxFilesComponent', () => {
-  let component: CodxFilesComponent;
-  let fixture: ComponentFixture<CodxFilesComponent>;
+describe('ChartOfAccountsComponent', () => {
+  let component: ChartOfAccountsComponent;
+  let fixture: ComponentFixture<ChartOfAccountsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CodxFilesComponent ]
+      declarations: [ ChartOfAccountsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CodxFilesComponent);
+    fixture = TestBed.createComponent(ChartOfAccountsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

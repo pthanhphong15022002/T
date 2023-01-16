@@ -194,7 +194,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------Get Data Func---------------------//
   getKRData(){
     this.codxOmService
-        .getKRByID(this.krRecID)
+        .getOKRByID(this.krRecID)
         .subscribe((res: any) => {
           if (res) {
             this.dataKR = res;      
@@ -220,7 +220,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   }
   getListAlign(){
     this.codxOmService
-        .getListAlign(this.krParentID)
+        .getListAlignAssign(this.krParentID, OMCONST.VLL.RefType_Link.Align)
         .subscribe((res: any) => {
           if (res) {
             this.listAlign = res;           
@@ -229,7 +229,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   }
   getListAssign(){
     this.codxOmService
-        .getListAssign(this.krRecID)
+        .getListAlignAssign(this.krParentID, OMCONST.VLL.RefType_Link.Assign)
         .subscribe((res: any) => {
           if (res) {
             this.listAssign = res;           

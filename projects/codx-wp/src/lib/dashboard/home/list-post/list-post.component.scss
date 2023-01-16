@@ -61,7 +61,7 @@ codx-view-content {
 
 ejs-listview .e-ul>li {
     margin-bottom: 1px;
-    background-color: #fff;
+    // background-color: #fff;
 
 }
 
@@ -319,4 +319,15 @@ ejs-listview .e-ul>li {
     .post-new {
         border-color: var(--border-gray) !important;
     }
+}
+
+.wp-contents {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.WP_News-contents {
+    padding: 4px;
+    border-radius: 0px 0px 4px 4px;
+    background: rgb(240, 248, 255);
 }

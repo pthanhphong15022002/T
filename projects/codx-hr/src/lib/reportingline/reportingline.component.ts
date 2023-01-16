@@ -77,11 +77,8 @@ export class ReportinglineComponent extends UIComponent {
     this.funcID = this.router.snapshot.params['funcID'];
     this.request = new ResourceModel();
     this.request.service = 'HR';
-    // this.request.assemblyName = 'CO';
-    // this.request.className = 'MeetingsBusiness';
-    // this.request.method = 'GetListMeetingsAsync';
-    //this.request.idField = 'meetingID';
-    this.adService.getListCompanySettings().subscribe((res) => {
+    this.adService.getListCompanySettings()
+    .subscribe((res) => {
       if (res) {
         this.isCorporation = res.isCorporation;
       }
@@ -139,20 +136,21 @@ export class ReportinglineComponent extends UIComponent {
           this.codxTreeView = currentView.currentComponent?.treeView;
         }
       }
-      this.view.dataService.addNew().subscribe((result: any) => {
+      this.view.dataService.addNew()
+      .subscribe((result: any) => {
         if (result) {
-          let data = {
+          let object = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: result,
             function: this.funcID,
             isAddMode: true,
             titleMore: event.text,
-            isCorporation: this.isCorporation,
+            isCorporation: this.isCorporation, 
           };
           let form = this.callfc.openSide(
             PopupAddPositionsComponent,
-            data,
+            object,
             option,
             this.funcID
           );
@@ -182,6 +180,7 @@ export class ReportinglineComponent extends UIComponent {
       }
     }
   }
+  // edit position
   edit(event: any, data: any) {
     if (this.view && data && event) {
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
@@ -191,24 +190,28 @@ export class ReportinglineComponent extends UIComponent {
       option.Width = '550px';
       this.view.dataService
         .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
+        .subscribe((result) => {
           let object = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,
-            data: res,
+            data: result,
             function: this.view.formModel.funcID,
             isAddMode: false,
             titleMore: event.text,
+            isCorporation: this.isCorporation, 
           };
           this.callfc.openSide(
-            CodxFormDynamicComponent,
-            object,
-            option,
-            this.view.formModel.funcID
-          );
+            PopupAddPositionsComponent,object,option,this.funcID)
+            .closed.subscribe( res=>{
+              if(res){
+
+              }
+            });
+
         });
     }
   }
+  // coppy position
   copy(event: any, data: any) {
     if (event && data) {
       this.view.dataService.dataSelected = data;
@@ -226,12 +229,13 @@ export class ReportinglineComponent extends UIComponent {
             isAddMode: true,
             titleMore: event.text,
           };
-          this.callfc.openSide(
-            CodxFormDynamicComponent,
-            object,
-            option,
-            this.view.formModel.funcID
-          );
+          this.callfc.openSide(PopupAddPositionsComponent,object,option,this.view.formModel.funcID)
+          .closed.subscribe((res)=>{
+            if (res?.event?.save) {
+              let node = res.event.save.data;
+              this.codxTreeView.setNodeTree(node);
+            }
+          });
         }
       });
     }

@@ -28,7 +28,10 @@
 #om-tab-child .e-tab-header {
   text-align: left !important;
 }
-
+#om-tab .e-tab-header .e-toolbar-item.e-active
+{
+    border-bottom: solid 2px var(--text-primary) !important;
+}
 #om-tab-child {
   padding: 0 5rem;
 }
@@ -55,7 +58,7 @@
 }
 
 .p-om-okr {
-  height: calc(100% - 97px);
+  height: calc(100% - 128px);
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
