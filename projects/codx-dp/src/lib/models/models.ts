@@ -64,7 +64,6 @@ export class DP_Processes_Permission {
 }
 export class DP_Steps {
   recID: string = Util.uid();
-  recID: string = Util.uid();
   processID: string;
   stepNo: number;
   stepName: string;
@@ -339,7 +338,6 @@ export class DP_Instances_Steps_TaskGroups {
   actualStart: Date;
   actualEnd: Date;
   actualHours: number;
-  roles: DP_Instances_Steps_TaskGroups_Roles[] = [];
   roles: DP_Instances_Steps_TaskGroups_Roles[] = [];
   statusCodeID: string;
   memo: string;
