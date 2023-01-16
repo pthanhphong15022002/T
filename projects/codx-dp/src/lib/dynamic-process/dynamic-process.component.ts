@@ -84,7 +84,7 @@ export class DynamicProcessComponent
   readonly methodGetList = 'GetListProcessesAsync';
 
   // Get idField
-  readonly idField = 'processNo';
+  readonly idField = 'recID';
 
   constructor(
     private inject: Injector,
@@ -94,12 +94,13 @@ export class DynamicProcessComponent
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
     private callFunc: CallFuncService,
-    private dpService: CodxDpService,
+    private dpService: CodxDpService
   ) {
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // this.genAutoNumber();
   }
 
   onInit(): void {
@@ -110,14 +111,13 @@ export class DynamicProcessComponent
     this.getListUser();
   }
 
-
-
   afterLoad() {}
   onDragDrop(e: any) {}
 
   click(evt: ButtonModel) {
     switch (evt.id) {
       case this.btnAdd:
+        this.genAutoNumber();
         this.add();
         break;
     }
@@ -143,11 +143,25 @@ export class DynamicProcessComponent
     if ($event) this.changeDetectorRef.detectChanges();
   }
 
+  async genAutoNumber() {
+    this.dpService
+      .genAutoNumber(this.funcID, 'grvDPProcesses', 'processNo')
+      .subscribe((res) => {
+        if (res) {
+          this.processNo = res;
+          this.showID = true;
+        } else {
+          this.showID = false;
+        }
+      });
+  }
   // CRUD methods
   add() {
     this.view.dataService.addNew().subscribe((res) => {
       var obj = {
         action: 'add',
+        processNo: this.processNo,
+        showID: this.showID
       };
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
