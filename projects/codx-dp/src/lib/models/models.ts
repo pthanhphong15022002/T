@@ -64,6 +64,7 @@ export class DP_Processes_Permission {
 }
 export class DP_Steps {
   recID: string = Util.uid();
+  recID: string = Util.uid();
   processID: string;
   stepNo: number;
   stepName: string;
@@ -339,6 +340,7 @@ export class DP_Instances_Steps_TaskGroups {
   actualEnd: Date;
   actualHours: number;
   roles: DP_Instances_Steps_TaskGroups_Roles[] = [];
+  roles: DP_Instances_Steps_TaskGroups_Roles[] = [];
   statusCodeID: string;
   memo: string;
   createdOn: Date;
@@ -452,4 +454,11 @@ export class DP_Instances_Steps_Reasons {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+}
+
+export class TabModel {
+  name: 'Nhiệm vụ' | 'Dashboard' | string;
+  textDefault: string;
+  template?: any;
+  isActive: boolean = false;
 }

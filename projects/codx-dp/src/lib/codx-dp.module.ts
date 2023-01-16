@@ -24,6 +24,7 @@ import { PopupAddDynamicProcessComponent } from './dynamic-process/popup-add-dyn
 import { PopupJobComponent } from './dynamic-process/popup-add-dynamic-process/popup-job/popup-job.component';
 import { PopupAddCustomFieldComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-custom-field.component';
 import { PopupRolesDynamicComponent } from './dynamic-process/popup-add-dynamic-process/popup-roles-dynamic/popup-roles-dynamic.component';
+import { PopupViewsDetailsProcessComponent } from './dynamic-process/popup-views-details-process/popup-views-details-process.component';
 
 const routes: Routes = [
   {
@@ -57,6 +58,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupJobComponent,
     PopupAddCustomFieldComponent,
     PopupRolesDynamicComponent,
+    PopupViewsDetailsProcessComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

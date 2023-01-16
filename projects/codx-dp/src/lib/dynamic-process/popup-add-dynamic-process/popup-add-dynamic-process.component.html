@@ -419,7 +419,7 @@
               ></i>
               <i
                 class="icon-settings icon-20 margin-user"
-                (click)="clickRoles(data)"
+                (click)="clickRoles('O')"
               ></i>
             </div>
             <div>
@@ -436,7 +436,7 @@
         </div>
         <div
           class="col-6 group-permission witdh-permission scroll-user"
-          *ngIf="permissions != null && permissions.length > 0"
+          *ngIf="process.permissions != null && process.permissions.length > 0"
         >
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div
@@ -475,7 +475,7 @@
               ></i>
               <i
                 class="icon-settings icon-20 margin-user"
-                (click)="clickRoles(data)"
+                (click)="clickRoles('P')"
               ></i>
             </div>
             <div>
@@ -490,7 +490,7 @@
         </div>
         <div
           class="col-6 group-permission witdh-permission scroll-user"
-          *ngIf="permissions != null && permissions.length > 0"
+          *ngIf="process.permissions != null && process.permissions.length > 0"
         >
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div
@@ -529,7 +529,7 @@
               ></i>
               <i
                 class="icon-settings icon-20 margin-user"
-                (click)="clickRoles(data)"
+                (click)="clickRoles('F')"
               ></i>
             </div>
             <div>
@@ -544,7 +544,7 @@
         </div>
         <div
           class="col-6 group-permission witdh-permission scroll-user"
-          *ngIf="permissions != null && permissions.length > 0"
+          *ngIf="process.permissions != null && process.permissions.length > 0"
         >
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div
@@ -808,10 +808,10 @@
 
 <!-- Quy trình động - All in ------------------------------------------------------------------------------- -->
 <ng-template #dynamicFieldsAllSteps>
-  <ng-container *ngFor="let step of arrSteps">
+  <ng-container *ngFor="let st of stepList">
     <ng-container
       [ngTemplateOutlet]="dynamicFields"
-      [ngTemplateOutletContext]="{ $implicit: step }"
+      [ngTemplateOutletContext]="{ $implicit: st }"
     ></ng-container>
   </ng-container>
 </ng-template>
@@ -819,7 +819,7 @@
 <ng-template #dynamicFieldsOneSteps>
   <ng-container
     [ngTemplateOutlet]="dynamicFields"
-    [ngTemplateOutletContext]="{ $implicit: dataStepCrr }"
+    [ngTemplateOutletContext]="{ $implicit: step }"
   >
   </ng-container>
 </ng-template>
@@ -873,16 +873,22 @@
       </div>
     </div>
     <div id="{{ item.recID }}" class="main show-main">
-      <div *ngIf="item?.fields?.length == 0" class="position-relative p-9">
+      <div
+        *ngIf="!item?.fields || item?.fields?.length == 0"
+        class="position-relative p-9"
+      >
         <div class="position-absolute top-50 start-50 translate-middle">
           <button
             type="button"
-            class="btn btn-light-primary cursor-pointer text-hover-primary d-flex"
+            class="btn btn-outline-primary btn-sm pb-5 d-flex align-items-center justify-content-between"
             (click)="addCustomField(item.recID, item.processID)"
           >
-            <i class="icon-add icon-18"> </i>
+            <span class="icon-add icon-20 text-primary-600 py-2"></span>
             <codx-label
-              [name]="''"
+             class="text-primary-600"
+              [name]="'lblAddCustomField'"
+              [formName]="'DPStepsFields'"
+              [gridViewName]="'grvDPStepsFields'"
               [default]="'Thêm trường tùy chỉnh'"
             ></codx-label>
           </button>
@@ -898,7 +904,7 @@
         >
           <ng-container *ngFor="let item1 of item?.fields">
             <div
-              class="col-{{ 12 / item.showColumnControl }} p-3"
+              class="col-{{ 12 / item.showColumnControl }} p-3 has-action-menu"
               cdkDrag
               [cdkDragStartDelay]="200"
               [cdkDragData]="item1"
@@ -924,6 +930,16 @@
                 ></codx-label>
                 <codx-input type="switch" field="isRequired" [checked]="true">
                 </codx-input>
+              </div>
+              <div class="action-menu">
+                <codx-mfunc
+                [formModel]="dialog.formModel"
+                (clickMF)="clickMFStep($event, item)"
+                [isBookMark]="true"
+                [dataItem]="action !='edit'? moreDefaut : item"
+                [type]="'hover'"
+              >
+              </codx-mfunc>
               </div>
             </div>
           </ng-container>
@@ -1100,9 +1116,9 @@
             >
               <codx-mfunc
                 [formModel]="dialog.formModel"
-                (clickMF)="clickMFStep($event, data)"
+                (clickMF)="clickMFStep($event, step)"
                 [isBookMark]="true"
-                [dataItem]="data"
+                [dataItem]="step"
                 [type]="'hover'"
               >
               </codx-mfunc>
@@ -1126,7 +1142,6 @@
 </ng-template>
 
 <!-- Thiết lập giai đoạn -- main -- nvthuan -->
-
 <ng-template #task>
   <div *ngIf="stepList.length > 0 && stepList">
     <ng-container [ngTemplateOutlet]="rolesInStep"> </ng-container>
@@ -1183,10 +1198,7 @@
               style="font-weight: 500"
             ></span>
           </button>
-          <button
-            class="button-custom"
-            (click)="clickShow($event, 'job-main')"
-          >
+          <button class="button-custom" (click)="clickShow($event, 'job-main')">
             <span
               class="icon-expand_less icon-20 text-primary-600 py-2"
               style="font-weight: 500"
@@ -1224,11 +1236,7 @@
         <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
           <div cdkDropListGroup>
             <ng-container *ngFor="let taskList of taskGroupList">
-              <div
-                class="mb-3 card-job-list"
-                cdkDrag
-                [cdkDragData]="taskList"
-              >
+              <div class="mb-3 card-job-list" cdkDrag [cdkDragData]="taskList">
                 <div class="card-job">
                   <div
                     class="d-flex justify-content-start align-items-center has-action-menu"
@@ -1255,10 +1263,7 @@
                           style="color: #06a9f7"
                         ></span>
                       </div>
-                      <div
-                        class=""
-                        style="font-weight: 400; font-size: 1.1rem"
-                      >
+                      <div class="" style="font-weight: 400; font-size: 1.1rem">
                         <!-- TODO -->
                         <span style="color: #06a9f7">0% </span>
                         <codx-label
@@ -1282,9 +1287,9 @@
                     </div>
                     <codx-mfunc
                       [formModel]="dialog.formModel"
-                      (clickMF)="clickMFStep($event, data)"
+                      (clickMF)="clickMFStep($event, taskList)"
                       [isBookMark]="true"
-                      [dataItem]="data"
+                      [dataItem]="taskList"
                       [type]="'hover'"
                     >
                     </codx-mfunc>
@@ -1376,9 +1381,9 @@
                           </div>
                           <codx-mfunc
                             [formModel]="dialog.formModel"
-                            (clickMF)="clickMFStep($event, data)"
+                            (clickMF)="clickMFStep($event, task)"
                             [isBookMark]="true"
-                            [dataItem]="data"
+                            [dataItem]="task"
                             [type]="'hover'"
                           >
                           </codx-mfunc>
@@ -1471,13 +1476,13 @@
       <div>
         <codx-label
           fiedName="taskGroupName"
-          [formModel]=""
+          [formModel]="dialog.formModel"
           default="Tên nhóm công việc"
         ></codx-label>
       </div>
       <codx-input
         field="taskGroupName"
-        [formModel]=""
+        [formModel]="dialog.formModel"
         [Group]=""
         type="text"
         [height]="'100'"
@@ -1491,14 +1496,14 @@
         <div>
           <codx-label
             fiedName="durationDay"
-            [formModel]=""
+            [formModel]="dialog.formModel"
             default="Thời gian dự kiến"
           ></codx-label>
         </div>
         <div class="position-relative">
           <codx-input
             field="durationDay"
-            [formModel]=""
+            [formModel]="dialog.formModel"
             [Group]=""
             type="text"
             [height]="'100'"
@@ -1511,7 +1516,7 @@
           >
             <codx-label
               fiedName="StepName"
-              [formModel]=""
+              [formModel]="dialog.formModel"
               default="Ngày"
             ></codx-label>
           </div>
@@ -1529,7 +1534,7 @@
         <div class="position-relative">
           <codx-input
             field="durationHour"
-            [formModel]=""
+            [formModel]="dialog.formModel"
             [Group]=""
             type="text"
             [height]="'100'"
@@ -1582,13 +1587,13 @@
       <div>
         <codx-label
           fiedName="memo"
-          [formModel]=""
+          [formModel]="dialog.formModel"
           default="Ghi chú"
         ></codx-label>
       </div>
       <codx-input
         field="memo"
-        [formModel]=""
+        [formModel]="dialog.formModel"
         [Group]=""
         type="textarea"
         [height]="'100'"
@@ -1673,13 +1678,13 @@
       <div>
         <codx-label
           fiedName="StepName"
-          [formModel]=""
+          [formModel]="dialog.formModel"
           default="Tên giai đoạn"
         ></codx-label>
       </div>
       <codx-input
         field="stepName"
-        [formModel]=""
+        [formModel]="dialog.formModel"
         [Group]=""
         type="text"
         [crrValue]="stepName"
@@ -1690,7 +1695,7 @@
     <div class="form-group text-gray-400" *ngIf="isAddStage">
       <codx-label
         fiedName="StepName"
-        [formModel]=""
+        [formModel]="dialog.formModel"
         default="Mặc định giai đoạn sẽ được thêm vào vị trí cuối cùng (trước giai đoạn hoàn tất)"
       ></codx-label>
     </div>
@@ -2107,9 +2112,9 @@
         </div>
         <div
           class="col-6 group-permission witdh-roles scroll-user"
-          *ngIf="dataStepCrr.roles != null && dataStepCrr.roles.length > 0"
+          *ngIf="step.roles != null && step.roles.length > 0"
         >
-          <ng-container *ngFor="let perm of dataStepCrr.roles; index as i">
+          <ng-container *ngFor="let perm of step.roles; index as i">
             <div
               *ngIf="perm.roleType == 'O'"
               class="me-4 d-flex align-items-center margin-form mb-4"
@@ -2153,9 +2158,9 @@
         </div>
         <div
           class="col-6 group-permission witdh-roles scroll-user"
-          *ngIf="dataStepCrr.roles != null && dataStepCrr.roles.length > 0"
+          *ngIf="step.roles != null && step.roles.length > 0"
         >
-          <ng-container *ngFor="let perm of dataStepCrr.roles; index as i">
+          <ng-container *ngFor="let perm of step.roles; index as i">
             <div
               *ngIf="perm.roleType == 'O'"
               class="me-4 d-flex align-items-center margin-form mb-4"
@@ -2232,6 +2237,7 @@
                         class="text-muted text-opacity-25"
                         fiedName="AssignControl"
                         default="Phân bố người phụ trách cho nhiệm vụ"
+                        [formModel]="dialog.formModel"
                       >
                       </codx-label>
                     </strong>
@@ -2249,8 +2255,13 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input type="valuelist" field="AssignControl" refValue="DP019" [crrValue]="step.assignControl"
-            (valueChange)="valueChangeAssignCtrl($event)"> </codx-input>
+            <codx-input
+              field=""
+              type="valuelist"
+              field="AssignControl"
+              refValue="DP019"
+            >
+            </codx-input>
           </div>
         </div>
         <div class="row pb-5">
@@ -2262,6 +2273,7 @@
                     class="text-muted text-opacity-25"
                     fiedName=""
                     default="Tự động chuyển nhiệm vụ qua giai đoạn tiếp theo khi"
+                    [formModel]="dialog.formModel"
                   >
                   </codx-label>
                 </strong>
@@ -2272,10 +2284,10 @@
             <!-- Gán tạm chờ refvalue -->
             <codx-input
               field="transferControl"
+              crrValue="1"
               type="valuelist"
               refValue="DP020"
-              [crrValue]="step.transferControl"
-              (valueChange)="valueChangeTransferCtrl($event)"
+              crrValue="0"
             >
             </codx-input>
           </div>
@@ -2355,15 +2367,13 @@
               <div class="col-6">
                 <div class="position-relative">
                   <codx-input
-                    field="durationDay"
+                    field="DurationDay"
                     [formModel]=""
                     [Group]=""
                     type="text"
                     [height]="'100'"
                     [min]="0"
                     [placeholder]="0"
-                    [crrValue]="step.durationDay"
-                    (valueChange)="valueChangeDuraDay($event)"
                   ></codx-input>
                   <div
                     class="position-absolute text-muted"
@@ -2387,8 +2397,6 @@
                     [height]="'100'"
                     [min]="0"
                     [placeholder]="'00.00'"
-                    [crrValue]="step.durationHour"
-                    (valueChange)="valueChangeDuraHour($event)"
                   ></codx-input>
                   <div
                     class="position-absolute text-gray-400"
@@ -2467,6 +2475,7 @@
             <!-- Gán tạm chờ refvalue -->
             <codx-input
               field="startControl"
+              [formModel]="dialog.formModel"
               type="valuelist"
               refValue="DP021"
               [crrValue]="step.startControl"
@@ -2479,14 +2488,11 @@
         <div class="row pb-5">
           <div class="col-6">
             <div class="title-switch">
-              <strong>
-                <codx-label
+              <codx-label
                 class="text-muted"
                 default="Cho phép người phụ trách chỉnh sửa thời gian hoành thành giai đoạn thực tế"
               >
               </codx-label>
-              </strong>
-
             </div>
           </div>
           <div class="col-6">
@@ -2523,13 +2529,10 @@
         <div class="row pb-5">
           <div class="col-6">
             <div class="title-switch">
-              <strong>
-                <codx-label
+              <codx-label
                 class="text-muted"
                 default="Cho phép người phụ trách chỉnh sửa thời hạn công việc mặc định"
               ></codx-label>
-              </strong>
-
             </div>
           </div>
           <div class="col-6">
