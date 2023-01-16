@@ -320,11 +320,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   //-----------------------Custom Event-----------------------//
   hiddenChart(evt: any) {
-    // this.isHiddenChart=evt;
-    // this.detectorRef.detectChanges();
-    window.ng.getComponent(
-      document.getElementById('om-tab-child')
-    ).selectingID = '2';
+    this.isHiddenChart=evt;
+    this.detectorRef.detectChanges();
   }
   //-----------------------End-------------------------------//
 

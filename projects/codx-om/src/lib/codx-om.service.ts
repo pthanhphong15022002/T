@@ -358,26 +358,14 @@ export class CodxOmService {
       dataRequest
     );
   }
-  //Lấy danh sách liên kết OKR 
-  //(Bao gồm danh sách các OB có cùng ParentID với OB hiện tại, kèm theo tất cả KR con của từng OB)
-  getListAlign(recID:string) {
+  //Lấy danh sách liên kết/phụ thuộc OKR 
+  getListAlignAssign(recID:string,refType:string) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
-      'GetListAlignAsync',
-      [recID]
-    );
-  }
-  //Lấy danh sách OKR phụ thuộc
-  //(Bao gồm danh sách các OB được phân công, phân bổ từ OB hiện tại)
-  getListAssign(recID:string) {
-    return this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR,
-      'GetListAssignAsync',
-      [recID]
+      'GetListAlignAssignAsync',
+      [recID,refType]
     );
   }
   //Thêm một mục tiêu

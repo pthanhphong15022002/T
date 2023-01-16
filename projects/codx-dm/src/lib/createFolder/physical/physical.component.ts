@@ -31,16 +31,9 @@ export class PhysicalComponent implements OnInit {
   dialog: any;
   
   constructor(  
-    private domSanitizer: DomSanitizer,
-    private tenantService: TenantService,
-    private api: ApiHttpService,
     public dmSV: CodxDMService,
-    private callfc: CallFuncService,
-    private modalService: NgbModal,
-    private auth: AuthStore,
     private notificationsService: NotificationsService,
    // private confirmationDialogService: ConfirmationDialogService,
-    private changeDetectorRef: ChangeDetectorRef,    
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
     ) {      
@@ -66,13 +59,27 @@ export class PhysicalComponent implements OnInit {
   }  
 
   onSavePhysical() {
+    if(this.checkRequired()) return ;
     this.location = this.floor + "|" + this.range + "|" + this.shelf + "|" + this.compartment;
-    this.dmSV.Location.next(this.location);
-    this.dialog.close();
+    this.dialog.close(this.location);
   }
 
+  checkRequired()
+  {
+    var arr = [];
+    if(!this.floor) arr.push("tầng");
+    if(!this.range) arr.push("dãy");
+    if(!this.shelf) arr.push("kệ");
+    if(!this.compartment) arr.push("ngăn");
+    if(arr.length>0)
+    {
+      var name = arr.join(" , ");
+      this.notificationsService.notifyCode("SYS009",0,name);
+      return true;
+    }
+    return false;
+  }
   changeValue($event, type) {
-    console.log($event);
     switch(type) {
       case "floor":
         this.floor = $event.data;    
