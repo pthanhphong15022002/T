@@ -118,7 +118,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   taskGroupList: DP_Steps_TaskGroups[] = [];
 
   step: DP_Steps; //data step dc chọn
-  stepList: DP_Steps[] = [];  //danh sách step
+  stepList: DP_Steps[] = []; //danh sách step
   stepName = '';
 
   popupJob: DialogRef;
@@ -178,7 +178,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     download: true,
     delete: true,
   };
-  //data test Thao 
+  //data test Thao
   fieldNew: DP_Steps_Fields;
   stepOfFields: any;
   isHover = '';
@@ -566,10 +566,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             roles.objectID = data.id != null ? data.id : null;
             roles.objectType = data.objectType;
             roles.roleType = 'O';
-            this.step.roles = this.checkRolesStep(
-              this.step.roles,
-              roles
-            );
+            this.step.roles = this.checkRolesStep(this.step.roles, roles);
           }
           break;
       }
@@ -864,10 +861,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.jobType = value;
   }
   openPopupJob() {
+    let frmModel: FormModel = {
+      entityName: 'DP_Steps_Tasks',
+      formName: 'DPStepsTasks',
+      gridViewName: 'grvDPStepsTasks',
+    };
     this.popupJob.close();
     let option = new SidebarModel();
     option.Width = '550px';
     option.zIndex = 1001;
+    option.FormModel = frmModel;
     let dialog = this.callfc.openSide(
       PopupJobComponent,
       ['add', this.jobType, this.taskGroupList],
