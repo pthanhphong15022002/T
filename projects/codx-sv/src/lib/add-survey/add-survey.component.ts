@@ -1,25 +1,21 @@
 import {
-  ChangeDetectorRef,
   Component,
   Injector,
-  OnInit,
   TemplateRef,
   ViewChild,
-  OnChanges,
-  SimpleChanges,
   ComponentRef,
 } from '@angular/core';
-import { CodxService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxSvService } from '../codx-sv.service';
-import { SV_Questions } from '../model/SV_Questions';
-import { SV_Surveys } from '../model/SV_Surveys';
+import { SV_Questions } from '../models/SV_Questions';
+import { SV_Surveys } from '../models/SV_Surveys';
 
 @Component({
   selector: 'app-add-survey',
   templateUrl: './add-survey.component.html',
   styleUrls: ['./add-survey.component.scss'],
 })
-export class AddSurveyComponent extends UIComponent implements OnInit {
+export class AddSurveyComponent extends UIComponent {
   isModeAdd = true;
   funcID = '';
   functionList: any;
@@ -30,15 +26,13 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   title: any;
   signal: any = null;
   url: any;
+  questions: SV_Questions = new SV_Questions();
+  surveys: SV_Surveys = new SV_Surveys();
 
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
 
-  constructor(
-    private injector: Injector,
-    private change: ChangeDetectorRef,
-    private SVService: CodxSvService
-  ) {
+  constructor(private injector: Injector, private SvService: CodxSvService) {
     super(injector);
     this.router.queryParams.subscribe((queryParams) => {
       if (queryParams?.funcID) this.funcID = queryParams.funcID;
@@ -56,6 +50,9 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    if (!this.funcID) {
+      this.codxService.navigate('SVT01');
+    }
     this.getSignalAfterSave();
   }
 
@@ -85,9 +82,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     ));
   }
 
-  questionAdd: SV_Questions = new SV_Questions();
-
-  surveys: SV_Surveys = new SV_Surveys();
   addSV() {
     this.surveys.title = 'Đăng ký sự kiện';
     this.surveys.memo = 'Đăng ký sự kiện';
@@ -98,43 +92,43 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         true,
       ])
       .subscribe((res) => {
-        debugger;
         if (res) {
         }
       });
   }
-  add() {
-    var dataAnswerTemp = [
-      {
-        seqNo: 0,
-        answer: `Tùy chọn 1`,
-      },
-    ];
-    this.questionAdd.transID = 'dced3e82-8d71-11ed-9499-00155d035517';
-    this.questionAdd.seqNo = 0;
-    this.questionAdd.category = 'S';
-    this.questionAdd.question = 'Câu hỏi session 1';
-    this.questionAdd.answers = null;
-    this.questionAdd.answerType = null;
-    this.questionAdd.parentID = null;
 
-    this.api
-      .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
-        'dced3e82-8d71-11ed-9499-00155d035517',
-        [this.questionAdd],
-        true,
-      ])
-      .subscribe((res) => {
-        if (res) {
-        }
-      });
-  }
+  // add() {
+  //   var dataAnswerTemp = [
+  //     {
+  //       seqNo: 0,
+  //       answer: `Tùy chọn 1`,
+  //     },
+  //   ];
+  //   this.questions.transID = 'dced3e82-8d71-11ed-9499-00155d035517';
+  //   this.questions.seqNo = 0;
+  //   this.questions.category = 'S';
+  //   this.questions.question = 'Câu hỏi session 1';
+  //   this.questions.answers = null;
+  //   this.questions.answerType = null;
+  //   this.questions.parentID = null;
+
+  //   this.api
+  //     .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
+  //       'dced3e82-8d71-11ed-9499-00155d035517',
+  //       [this.questions],
+  //       true,
+  //     ])
+  //     .subscribe((res) => {
+  //       if (res) {
+  //       }
+  //     });
+  // }
 
   getSignalAfterSave() {
-    this.SVService.signalSave.subscribe((res) => {
+    this.SvService.signalSave.subscribe((res) => {
       if (res) {
         this.signal = res;
-        this.change.detectChanges();
+        this.detectorRef.detectChanges();
       }
     });
   }
@@ -151,13 +145,13 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           },
         },
       ];
-      this.change.detectChanges();
+      this.detectorRef.detectChanges();
     }
   }
 
   onChangeMode(mode) {
     this.mode = mode;
-    this.change.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   onSelected(e: any) {
