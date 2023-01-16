@@ -274,7 +274,11 @@
         <div class="col-6">
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="ProcessNo" [formModel]="dialog.formModel" default="Mã quy trình">
+              <codx-label
+                fiedName="ProcessNo"
+                [formModel]="dialog.formModel"
+                default="Mã quy trình"
+              >
               </codx-label>
             </div>
             <codx-input
@@ -291,7 +295,11 @@
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="GroupID" [formModel]="dialog.formModel" default="Nhóm quy trình">
+              <codx-label
+                fiedName="GroupID"
+                [formModel]="dialog.formModel"
+                default="Nhóm quy trình"
+              >
               </codx-label>
             </div>
             <!-- <codx-input field="groupID" [crrValue]="process.groupID" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
@@ -308,7 +316,11 @@
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="ProcessName" [formModel]="dialog.formModel" default="Tên quy trình">
+              <codx-label
+                fiedName="ProcessName"
+                [formModel]="dialog.formModel"
+                default="Tên quy trình"
+              >
               </codx-label>
             </div>
             <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
@@ -324,8 +336,11 @@
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="ApplyFor" [formModel]="dialog.formModel"
-                default="Đối tượng nhiệm vụ áp dụng trong quy trình">
+              <codx-label
+                fiedName="ApplyFor"
+                [formModel]="dialog.formModel"
+                default="Đối tượng nhiệm vụ áp dụng trong quy trình"
+              >
               </codx-label>
             </div>
             <!-- <codx-input field="applyFor" [crrValue]="process.applyFor" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup">
@@ -593,18 +608,28 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label fiedName="InstanceNoSetting" [formModel]="dialog.formModel"
-              default="Định dạng đánh số tự động cho nhiệm vụ khi tạo mới">
+            <codx-label
+              fiedName="InstanceNoSetting"
+              [formModel]="dialog.formModel"
+              default="Định dạng đánh số tự động cho nhiệm vụ khi tạo mới"
+            >
             </codx-label>
           </div>
           <div class="col-6">
             <div class="position-relative">
-              <codx-input type="text" [crrValue]="process.instanceNoSetting"
-                [placeholder]="gridViewSetup['InstanceNoSetting']?.description" (valueChange)="valueChange($event)"
-                field="instanceNoSetting">
+              <codx-input
+                type="text"
+                [crrValue]="process.instanceNoSetting"
+                [placeholder]="gridViewSetup['InstanceNoSetting']?.description"
+                (valueChange)="valueChange($event)"
+                field="instanceNoSetting"
+              >
               </codx-input>
               <div class="position-absolute" style="top: 7px; right: 7px">
-                <i class="icon-settings form-control-feedback" (click)="openAutoNumPopup()"></i>
+                <i
+                  class="icon-settings form-control-feedback"
+                  (click)="openAutoNumPopup()"
+                ></i>
               </div>
             </div>
           </div>
@@ -613,7 +638,11 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label fiedName="ShowInstanceControl" [formModel]="dialog.formModel" default="Chỉ xem nhiệm vụ ở tình trạng">
+            <codx-label
+              fiedName="ShowInstanceControl"
+              [formModel]="dialog.formModel"
+              default="Chỉ xem nhiệm vụ ở tình trạng"
+            >
             </codx-label>
           </div>
           <div class="col-6">
@@ -634,8 +663,11 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label fiedName="CloseInstanceControl" [formModel]="dialog.formModel"
-              default="Tự đóng nhiệm vụ khi không có bất kỳ hoạt động nào sau">
+            <codx-label
+              fiedName="CloseInstanceControl"
+              [formModel]="dialog.formModel"
+              default="Tự đóng nhiệm vụ khi không có bất kỳ hoạt động nào sau"
+            >
             </codx-label>
           </div>
           <div class="col-6">
@@ -669,7 +701,12 @@
     <div class="header-job">
       <div class="left">
         <div>
-          <codx-label class="title" name="Memo" [formModel]="dialog.formModel" default="Hướng dẫn làm việc với quy trình">
+          <codx-label
+            class="title"
+            name="Memo"
+            [formModel]="dialog.formModel"
+            default="Hướng dẫn làm việc với quy trình"
+          >
           </codx-label>
         </div>
         <div>
@@ -733,10 +770,25 @@
       </ng-container>
     </div>
   </div>
-  <codx-attachment #imageAvatar [objectId]="process.recID" [objectType]="dialog.formModel.entityName" hideFolder="1"
-    hideImageUpload="1" hideImageThumb="1" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="0"
-    [formModel]="dialog.formModel" allowExtensions=".jpg,.png" [isSaveSelected]="0" (fileAdded)="fileImgAdded($event)"
-    displayThumb="full" showMessage="0" category="0">
+  <codx-attachment
+    #imageAvatar
+    [objectId]="process.recID"
+    [objectType]="dialog.formModel.entityName"
+    hideFolder="1"
+    hideImageUpload="1"
+    hideImageThumb="1"
+    hideUploadBtn="1"
+    hideDes="1"
+    type="inline"
+    allowMultiFile="0"
+    [formModel]="dialog.formModel"
+    allowExtensions=".jpg,.png"
+    [isSaveSelected]="0"
+    (fileAdded)="fileImgAdded($event)"
+    displayThumb="full"
+    showMessage="0"
+    category="0"
+  >
   </codx-attachment>
 </ng-template>
 
@@ -1042,17 +1094,26 @@
               </codx-input>
             </div>
             <div
-              class="icon-more_vert"
+              *ngIf="step"
+              class="icon-more_vert has-action-menu more-funtion-step"
               style="cursor: pointer"
-              (click)="openAddStep('edit')"
-            ></div>
+            >
+              <codx-mfunc
+                [formModel]="dialog.formModel"
+                (clickMF)="clickMFStep($event, data)"
+                [isBookMark]="true"
+                [dataItem]="data"
+                [type]="'hover'"
+              >
+              </codx-mfunc>
+            </div>
           </div>
         </div>
         <div class="main">
           <ng-container
             [ngTemplateOutlet]="
               viewStepCrr === viewStepCustom
-                ? job
+                ? task
                 : viewStepCrr === viewStepReasonSuccess
                 ? reasonSuccess
                 : reasonFail
@@ -1064,14 +1125,21 @@
   </div>
 </ng-template>
 
-<!-- Công Việc -- nvthuan -->
+<!-- Thiết lập giai đoạn -- main -- nvthuan -->
 
-<ng-template #job>
+<ng-template #task>
   <div *ngIf="stepList.length > 0 && stepList">
     <ng-container [ngTemplateOutlet]="rolesInStep"> </ng-container>
     <ng-container [ngTemplateOutlet]="setupInStep"> </ng-container>
     <ng-container [ngTemplateOutlet]="durationInStep"> </ng-container>
+    <ng-container [ngTemplateOutlet]="job"> </ng-container>
+    <ng-container [ngTemplateOutlet]="dynamicFieldsOneSteps"> </ng-container>
+    <ng-container [ngTemplateOutlet]="memoInStep"> </ng-container>
+  </div>
+</ng-template>
 
+<!-- template công việc -->
+<ng-template #job>
   <div class="background-job">
     <div class="header-job mb-5">
       <div class="left" style="margin: auto 10px">
@@ -1109,13 +1177,16 @@
               style="font-weight: 500"
             ></span>
           </button>
-          <button class="button-custom" (click)="setJob()">
+          <button class="button-custom" (click)="openJob()">
             <span
               class="icon-add_task icon-20 text-primary-600 py-2"
               style="font-weight: 500"
             ></span>
           </button>
-          <button class="button-custom" (click)="clickShow($event, 'job-main')">
+          <button
+            class="button-custom"
+            (click)="clickShow($event, 'job-main')"
+          >
             <span
               class="icon-expand_less icon-20 text-primary-600 py-2"
               style="font-weight: 500"
@@ -1136,14 +1207,14 @@
         *ngIf="taskGroupList.length === 0"
       >
         <div>
-          <button class="button-custom">
-            <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
+          <button class="button-custom" (click)="openGroupJob()">
+            <span class="icon-add icon-20 text-primary-600 py-2"></span>
             <span>Thêm nhóm công việc</span>
           </button>
         </div>
         <div>
-          <button class="button-custom">
-            <span class="icon-add icon-20 text-primary-600 py-2"></span>
+          <button class="button-custom" (click)="openJob()">
+            <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
             <span>Thêm công việc</span>
           </button>
         </div>
@@ -1153,9 +1224,15 @@
         <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
           <div cdkDropListGroup>
             <ng-container *ngFor="let taskList of taskGroupList">
-              <div class="mb-3 card-job-list" cdkDrag [cdkDragData]="taskList">
+              <div
+                class="mb-3 card-job-list"
+                cdkDrag
+                [cdkDragData]="taskList"
+              >
                 <div class="card-job">
-                  <div class="d-flex justify-content-start align-items-center">
+                  <div
+                    class="d-flex justify-content-start align-items-center has-action-menu"
+                  >
                     <div class="icon-container">
                       <span
                         class="icon-add_circle icon-20 text-primary-600 py-2"
@@ -1178,7 +1255,10 @@
                           style="color: #06a9f7"
                         ></span>
                       </div>
-                      <div class="" style="font-weight: 400; font-size: 1.1rem">
+                      <div
+                        class=""
+                        style="font-weight: 400; font-size: 1.1rem"
+                      >
                         <!-- TODO -->
                         <span style="color: #06a9f7">0% </span>
                         <codx-label
@@ -1200,6 +1280,14 @@
                         </codx-label>
                       </div>
                     </div>
+                    <codx-mfunc
+                      [formModel]="dialog.formModel"
+                      (clickMF)="clickMFStep($event, data)"
+                      [isBookMark]="true"
+                      [dataItem]="data"
+                      [type]="'hover'"
+                    >
+                    </codx-mfunc>
                   </div>
                   <!-- kéo thả ở trong  -->
                   <div
@@ -1214,7 +1302,7 @@
                         [cdkDragData]="task"
                         class="drap-drop"
                       >
-                        <div style="margin-left: 50px">
+                        <div style="margin-left: 50px" class="has-action-menu">
                           <div
                             class="d-flex justify-content-start align-items-center"
                             style="font-size: 1rem"
@@ -1286,6 +1374,14 @@
                             >
                             </codx-attachment>
                           </div>
+                          <codx-mfunc
+                            [formModel]="dialog.formModel"
+                            (clickMF)="clickMFStep($event, data)"
+                            [isBookMark]="true"
+                            [dataItem]="data"
+                            [type]="'hover'"
+                          >
+                          </codx-mfunc>
                         </div>
                       </div>
                     </ng-container>
@@ -1298,12 +1394,8 @@
       </div>
     </div>
   </div>
-
-    <ng-container [ngTemplateOutlet]="dynamicFieldsOneSteps"> </ng-container>
-    <ng-container [ngTemplateOutlet]="memoInStep"> </ng-container>
-  </div>
 </ng-template>
-<!-- popup them cong viec -- nvthuan -->
+<!-- template công việc -->
 <ng-template #setJobPopup>
   <codx-form
     [headerText]="'Chọn Loại Công Việc'"
@@ -1566,8 +1658,12 @@
 <!-- chon loai cong viec -- nvthuan -->
 <!-- Popup thêm giai đoạn  -->
 <ng-template #addStage>
-  <codx-form [headerText]="'Thêm Giai Đoạn'" [body]="addStageBody" [footer]="addStageFooter"
-    [dialog]="popupAddStage">
+  <codx-form
+    [headerText]="headerText"
+    [body]="addStageBody"
+    [footer]="addStageFooter"
+    [dialog]="popupAddStage"
+  >
   </codx-form>
 </ng-template>
 
@@ -1581,8 +1677,14 @@
           default="Tên giai đoạn"
         ></codx-label>
       </div>
-      <codx-input field="stepName" [formModel]="" [Group]="" type="text" [value]="isAddStage"
-        (valueChange)="changeValueInput($event,step)">
+      <codx-input
+        field="stepName"
+        [formModel]=""
+        [Group]=""
+        type="text"
+        [crrValue]="stepName"
+        (valueChange)="changeValueInput($event, step)"
+      >
       </codx-input>
     </div>
     <div class="form-group text-gray-400" *ngIf="isAddStage">
@@ -2308,9 +2410,12 @@
           <div class="col-6">
             <div class="title-switch">
               <strong>
-                <codx-label class="text-muted" default="Bỏ qua ngày nghỉ trong tuần khi tính toán ngày đến hạn cho nhiệm vụ trong giai đoạn">
+                <codx-label
+                  class="text-muted"
+                  default="Bỏ qua ngày nghỉ trong tuần khi tính toán ngày đến hạn cho nhiệm vụ trong giai đoạn"
+                >
                 </codx-label>
-               </strong>
+              </strong>
             </div>
           </div>
           <div class="col-6">

@@ -1502,6 +1502,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupEmployeePartyInfoComponent,
       {
+        funcID : 'HRT03020102',
         headerText: 'Thông tin Đảng - Đoàn',
       },
       option

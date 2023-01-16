@@ -878,17 +878,49 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.step = new DP_Steps();
       this.step['processID'] = this.process?.recID;
       this.step['stepNo'] = this.stepList.length + 1;
-      this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
+      this.popupAddStage = this.callfc.openForm(
+        this.addStagePopup,
+        '',
+        500,
+        280
+      );
       this.stepName = '';
       this.headerText = 'Thêm Giai Đoạn';
-    }else{
+    } else {
       this.headerText = 'Sửa Giai Đoạn';
       this.stepName = this.step['stepName'];
+      this.popupAddStage = this.callfc.openForm(
+        this.addStagePopup,
+        '',
+        500,
+        280
+      );
+    }
+  }
+
+  clickMFStep(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'SYS01':
+        // this.add();
+        break;
+      case 'SYS03':
+        this.openAddStep('edit');
+        break;
+      case 'SYS04':
+        // this.copy(data);
+        this.openAddStep('edit');
+        break;
+      case 'SYS02':
+        // this.delete(data);
+        break;
     }
   }
 
   saveAddStep() {
-    this.stepList.push(this.step);
+    if (!this.stepName) {
+      this.stepList.push(this.step);
+      this.titleViewStepCrr = this.step?.stepName;
+    }
     this.popupAddStage.close();
   }
 
@@ -914,7 +946,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //job -- nvthuan
-  setJob() {
+  openJob() {
     this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
   }
   selectJob(id) {
@@ -1048,7 +1080,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   getTitleStepViewSetup() {
     if (this.stepList.length > 0) {
-      this.titleViewStepCrr = this.stepList[0].stepName;
+      this.titleViewStepCrr = this.step?.stepName;
     }
 
     // test nha
