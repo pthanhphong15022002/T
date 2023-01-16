@@ -79,6 +79,10 @@ export const OMCONST = {
       Month: 'M',
       Quarter: 'Q',
     },
+    RefType_Link:{
+      Align:'1',
+      Assign:'2',
+    },
   },
   GRVNAME: {},
   FORMMODEL: {},

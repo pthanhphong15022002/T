@@ -73,7 +73,7 @@
         >
         </codx-input>
       </div>
-      <div class="form-group">
+      <div class="form-group" *ngIf="field.dataType && field.dataType != 'A'">
         <codx-label
           fiedName="DataFormat"
           [formModel]="form.formModel"
@@ -88,37 +88,47 @@
         >
         </codx-input>
       </div>
-      <div class="form-group">
-        <codx-label
-          fiedName="RefType"
-          [formModel]="form.formModel"
-          [default]="'Định dạng dữ liệu'"
-        >
-        </codx-label>
-        <codx-input
-          field="refType"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
-      <div class="form-group">
-        <codx-label
-          fiedName="RefValue"
-          [formModel]="form.formModel"
-          [default]="'Danh sách tùy chọn'"
-        >
-        </codx-label>
-        <codx-input
-          field="refValue"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
-      <div class="form-group">
+      <ng-container
+        *ngIf="
+          field.dataType == 'C' ||
+          field.dataType == 'V' ||
+          field.dataType == 'M' ||
+          field.dataType == '1'
+        "
+      >
+        <div class="form-group">
+          <codx-label
+            fiedName="RefType"
+            [formModel]="form.formModel"
+            [default]="'Danh sách tùy chọn'"
+          >
+          </codx-label>
+          <codx-input
+            field="refType"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label
+            fiedName="RefValue"
+            [formModel]="form.formModel"
+            [default]="'Danh sách tùy chọn'"
+          >
+          </codx-label>
+          <codx-input
+            field="refValue"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </ng-container>
+
+      <div class="form-group" *ngIf="field.dataType == 'A'">
         <codx-input
           type="checkbox"
           (valueChange)="valueChange($event)"
@@ -128,7 +138,7 @@
         ></codx-input>
       </div>
 
-      <div class="form-group row">
+      <div class="form-group row" *ngIf="field.dataFormat == 'R'">
         <div class="col-6">
           <codx-label
             fiedName="Rank"
@@ -136,15 +146,24 @@
             default="Loại icon hiển thị"
           >
           </codx-label>
-          <codx-valuelist [name]="'L1470'" [iconOnly]="true" (valueChange)="valueChangeIcon($event)">
-          </codx-valuelist>
-          <codx-input
+          <div>
+            <codx-valuelist
+              field="rank"
+              [name]="'L1470'"
+              [iconOnly]="true"
+              [crrValue]="field?.rankIcon"
+              (valueChange)="valueChangeIcon($event)"
+            >
+            </codx-valuelist>
+          </div>
+
+          <!-- <codx-input
             field="rank"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
           >
-          </codx-input>
+          </codx-input> -->
         </div>
         <div class="col-6">
           <codx-label

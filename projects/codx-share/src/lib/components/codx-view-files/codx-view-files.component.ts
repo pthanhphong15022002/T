@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ApiHttpService, AuthService, AuthStore, CallFuncService, FormModel } from 'codx-core';
 import { Observable,forkJoin, map, from, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -34,6 +35,7 @@ export class CodxViewFilesComponent implements OnInit {
     private api:ApiHttpService,
     private auth: AuthStore,
     private callfc: CallFuncService,
+    private sanitizer: DomSanitizer,
     private dt: ChangeDetectorRef
   )
   {
@@ -45,7 +47,13 @@ export class CodxViewFilesComponent implements OnInit {
   }
   // get files by objectID
   getFileByObjectID(objectID:string){
-    if(objectID){
+    if(objectID)
+    {
+      let size = 500;
+      if(this.images != 0)
+      {
+        
+      }
       this.api
       .execSv(
       'DM',
@@ -91,16 +99,19 @@ export class CodxViewFilesComponent implements OnInit {
   }
   // add files
   addFiles(files:any[]){
-    debugger
     if(files.length > 0){
       files.forEach((f) => {
         if(f.mimeType.includes('image'))
         {
+          f["source"] = f.avatar;
           f['referType'] = this.FILE_REFERTYPE.IMAGE;
+          this.images++;
         }
         else if(f.mimeType.includes('video'))
         {
+          f['source'] = f.data;
           f['referType'] = this.FILE_REFERTYPE.VIDEO;
+          this.images++;
         }
         else 
         {
@@ -109,8 +120,6 @@ export class CodxViewFilesComponent implements OnInit {
       });
       this.filesAdd = this.filesAdd.concat(files);
       this.files = JSON.parse(JSON.stringify(this.filesAdd));
-      let _fileImages = this.files.filter(x => x.referType == this.FILE_REFERTYPE.IMAGE);
-      this.images = _fileImages.length;
       this.dt.detectChanges();
       }
   }
@@ -138,37 +147,44 @@ export class CodxViewFilesComponent implements OnInit {
       this.dt.detectChanges();
     }
   }
-  // save files
-  saveFiles(){
-    // if(this.objectID){
-    //   if(this.filesDelete.length > 0) // xóa files
-    //   {
-    //     let _arrID = this.filesDelete.map(x => x.recID);
-    //     this.api.execSv<any>(
-    //       "DM",
-    //       "ERM.Business.DM",
-    //       "FilesBusiness",
-    //       "DeleteFilesAsync",
-    //       [_arrID])
-    //       .subscribe();
-    //       if(this.filesAdd.length > 0){
-    //        return this.codxATM.saveFilesObservable().then(x => {
-    //           return x.pipe(map(x => {
-    //             return x;
-    //           }))
-    //         });
-    //       }
-    //   }
-    //   else
-    //   {
-    //     this.codxATM.objectId = this.objectID;
-    //     this.codxATM.fileUploadList = JSON.parse(JSON.stringify(this.filesAdd));
-    //     return this.codxATM.saveFilesObservable().then(x => {
-    //       return x.pipe(map(x => {
-    //         return x;
-    //       }))
-    //     });
-    //   }
-    // }
+  // save
+  save():Observable<any>{
+    if(this.filesDelete.length > 0) // delete files
+    {
+        this.deleteFiles(this.filesDelete);
+    }
+    return this.saveFiles(this.filesAdd).pipe(map(res => {
+        return res;
+    }));
+  }
+  // delete files
+  deleteFiles(arrFiles:any[]){
+    if(arrFiles.length > 0)
+    {
+      let _fileIDs = arrFiles.map(x => x.recID);
+      this.api.execSv<any>(
+        "DM",
+        "ERM.Business.DM",
+        "FilesBusiness",
+        "DeleteFilesAsync",
+        [_fileIDs])
+        .subscribe();
+    }
+  }
+  saveFiles(arrFiles:any[]):Observable<boolean>{
+    if(arrFiles.length > 0){
+      this.codxATM.objectId = this.objectID;
+      this.codxATM.fileUploadList = JSON.parse(JSON.stringify(arrFiles));
+      return this.codxATM.saveFilesMulObservable().pipe(map(res => {
+        if(res)
+        {
+          return true;
+        }
+        else return false;
+      }));
+    }
+    return of(true);
   }
 }
+
+  

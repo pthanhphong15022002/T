@@ -114,11 +114,18 @@
   height: 10vh;
   display: flex;
   flex-direction: row;
-  width: 91vh;
   justify-content: flex-start;
   list-style: none;
   padding: 0;
   white-space: nowrap;
+}
+
+.witdh-permission{
+  width: 91vh;
+}
+
+.witdh-roles{
+  width: 60vh;
 }
 
 .button-custom {

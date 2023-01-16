@@ -10,7 +10,7 @@ import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
 import { AuthService, AuthStore, UIComponent } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { CodxSvService } from '../../codx-sv.service';
-import { SV_Respondents } from '../../model/SV_Respondents';
+import { SV_Respondents } from '../../models/SV_Respondents';
 
 @Component({
   selector: 'app-review',

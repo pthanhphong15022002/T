@@ -21,6 +21,7 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { PopSettingExchangeComponent } from './currency-form/pop-setting-exchange/pop-setting-exchange.component';
 import { PopAddExchangerateComponent } from './currency-form/pop-add-exchangerate/pop-add-exchangerate.component';
 import { ChartOfAccountsComponent } from './chart-of-accounts/chart-of-accounts.component';
+import { PopAddAccountsComponent } from './chart-of-accounts/pop-add-accounts/pop-add-accounts.component';
 
 export const routes: Routes = [
   {
@@ -48,6 +49,7 @@ export const routes: Routes = [
     PopSettingExchangeComponent,
     PopAddExchangerateComponent,
     ChartOfAccountsComponent,
+    PopAddAccountsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
