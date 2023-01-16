@@ -589,7 +589,7 @@ export class CodxShareService {
     );
   }
 
-  getThumnailByUrl(url:any, width = 30)
+  getThumbByUrl(url:any, width = 30)
   {
     if(url)
     {
