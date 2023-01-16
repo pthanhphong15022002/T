@@ -885,7 +885,7 @@
           >
             <span class="icon-add icon-20 text-primary-600 py-2"></span>
             <codx-label
-             class="text-primary-600"
+              class="text-primary-600"
               [name]="'lblAddCustomField'"
               [formName]="'DPStepsFields'"
               [gridViewName]="'grvDPStepsFields'"
@@ -897,14 +897,14 @@
 
       <div *ngIf="item?.fields?.length > 0">
         <div
-          class="d-flex row"
+          class="d-flex row class-field"
           cdkDropList
           [cdkDropListData]="item?.fields || []"
           (cdkDropListDropped)="dropFile($event, item.recID)"
         >
           <ng-container *ngFor="let item1 of item?.fields">
             <div
-              class="col-{{ 12 / item.showColumnControl }} p-3 has-action-menu"
+              class="col-{{ 12 / item.showColumnControl }} p-3 has-action-menu crr-fiels "
               cdkDrag
               [cdkDragStartDelay]="200"
               [cdkDragData]="item1"
@@ -931,16 +931,13 @@
                 <codx-input type="switch" field="isRequired" [checked]="true">
                 </codx-input>
               </div>
-              <div class="action-menu">
-                <codx-mfunc
+              <codx-mfunc
                 [formModel]="dialog.formModel"
-                (clickMF)="clickMFStep($event, item)"
-                [isBookMark]="true"
-                [dataItem]="action !='edit'? moreDefaut : item"
+                (clickMF)="clickMFFields($event, item1)"
+                [dataItem]="action != 'edit' ? moreDefaut : item"
                 [type]="'hover'"
               >
               </codx-mfunc>
-              </div>
             </div>
           </ng-container>
         </div>

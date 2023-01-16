@@ -94,7 +94,7 @@ export class DP_Steps {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-  showColumnControl: number;
+  showColumnControl: number = 1;
   constructor(){
     this.recID = Util.uid();
     this.durationDay = 0;
