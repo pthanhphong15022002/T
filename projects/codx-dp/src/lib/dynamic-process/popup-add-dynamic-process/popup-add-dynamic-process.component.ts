@@ -85,10 +85,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   viewStepCrr: string = 'custom'; // default view step custom settings
   titleViewStepCrr: string = ''; // default title view step custom settings
   isTurnOnYesSuccess: boolean = false; //Create variable Click yes for reason success
-  isTurnOnNoSuccess: boolean = false; //Create variable Click no for reason success
+  isTurnOnNoSuccess: boolean = true; // default reason control is no
   isSwitchReason: boolean = false; // hidden switch of the reason success/failure
   isTurnOnYesFailure: boolean = false; //Create variable Click yes for reason failure
-  isTurnOnNoFailure: boolean = false; //Create variable Click no for reason failure
+  isTurnOnNoFailure: boolean = true; // default reason control is no
   listRoleInStep: DP_Processes_Permission[] = []; // creat list user role in step
   userPermissions: DP_Processes_Permission; // create object user in step
   gridViewSetupStep: any; // grid view setup
@@ -115,8 +115,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly titlecheckBoxStepReasonSuccess: string = 'Thành công'; // title form step reason failure
   readonly saturday: string = 'Thứ 7'; // title checkbox saturday form duration when value list is empty
   readonly sunday: string = 'Chủ nhật'; // title checkbox sunday form duration when value list is empty
-  readonly viewSaturday: string = 'ExcludeDayoffSat' // view staturday when selected value
-  readonly viewSunday: string = 'ExcludeDayoffSun' // view sunday when selected value
+  readonly viewSaturday: string = '7' // view staturday when selected value
+  readonly viewSunday: string = '8' // view sunday when selected value
   readonly formNameSteps: string = 'DPSteps';
   readonly gridViewNameSteps: string = 'grvDPSteps';
   readonly formDurationCtrl: string = 'DurationControl'; // form duration control
@@ -1125,33 +1125,38 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.step.memo = $event.data;
     }
   }
-  valueChangeDayoff($event, view:any) {
+  valueChangeDayoff($event, view:any, value:any) {
     if ($event && $event != null) {
       if($event.data){
-        if(view == this.viewSaturday) {
-          this.step.excludeDayoff = this.step?.excludeDayoff && this.step?.excludeDayoff !== '' ? this.step?.excludeDayoff+';8':'7';
-        }
-        else if(view == this.viewSunday) {
-          this.step.excludeDayoff = this.step?.excludeDayoff && this.step?.excludeDayoff !== '' ? '7;8':'8';
-        }
+          if(view == value && $event?.component.checked ) {
+            if(!this.step?.excludeDayoff || this.step?.excludeDayoff?.trim()==''){
+              this.step.excludeDayoff = value
+            }else{
+              this.step.excludeDayoff = this.step?.excludeDayoff.split(";").includes(value) ? this.step?.excludeDayoff : (this.step?.excludeDayoff +";" + value)
+            }
+          }
       }
       else {
-        if(view == this.viewSaturday) {
-          this.step.excludeDayoff = this.step?.excludeDayoff && this.step?.excludeDayoff !== ''  ? '8':'';
-        }
-        else if(view == this.viewSunday) {
-          this.step.excludeDayoff = this.step?.excludeDayoff && this.step?.excludeDayoff !== '' ? '7':'';
+        if(view == value && !$event.component.checked ) {
+          if( (!this.step?.excludeDayoff && this.step?.excludeDayoff.trim()=='' )|| !this.step?.excludeDayoff.split(";").includes(value) ) return
+           let arr =  this.step?.excludeDayoff.split(";").filter(x=>x!=value) ;
+           arr.sort();
+           this.step.excludeDayoff =arr.join(";")??'';
         }
       }
 
     }
-
+    this.checkedDayOff(this.step?.excludeDayoff);
     this.changeDetectorRef.detectChanges();
   }
   checkedDayOff(value:string){
     if(value !== '' && value) {
-      this.checkedSat= ((value?.split(';').length == 1 && value?.split(';')[0] == this.valueCheckBoxSat) || value?.split(';').length > 1 ) ? true:false;
-      this.checkedSun= ((value?.split(';').length == 1 && value?.split(';')[0] == this.valueCheckBoxSun) || value?.split(';').length > 1 ) ? true:false;
+      this.checkedSat = ((value?.split(';').length == 1 && value?.split(';')[0] == this.valueCheckBoxSat) || value?.split(';').length > 1 ) ? true:false;
+      this.checkedSun = ((value?.split(';').length == 1 && value?.split(';')[0] == this.valueCheckBoxSun) || value?.split(';').length > 1 ) ? true:false;
+    }
+    else {
+      this.checkedSat = false;
+      this.checkedSun = false;
     }
     this.changeDetectorRef.detectChanges();
   }

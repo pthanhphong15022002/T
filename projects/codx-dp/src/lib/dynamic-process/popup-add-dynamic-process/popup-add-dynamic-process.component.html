@@ -1065,7 +1065,7 @@
             (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)"
           >
             <div class="order">T</div>
-            <div class="content">
+            <div class="content p-3">
               <div style="font-weight: 600; font-size: 1.2rem">
                 <codx-label default="Thành công"></codx-label>
               </div>
@@ -1079,7 +1079,7 @@
             (click)="clickViewStep($event, viewStepReasonFail, strEmpty)"
           >
             <div class="order">F</div>
-            <div class="content">
+            <div class="content p-3">
               <div style="font-weight: 600; font-size: 1.2rem">
                 <codx-label default="Thất bại"></codx-label>
               </div>
@@ -2373,7 +2373,9 @@
                     type="text"
                     [height]="'100'"
                     [min]="0"
-                    [placeholder]="0"
+                    [placeholder]="step?.durationDay"
+                    [crrValue]="step?.durationDay"
+                    (valueChange)="valueChangeDuraDay($event)"
                   ></codx-input>
                   <div
                     class="position-absolute text-muted"
@@ -2397,6 +2399,8 @@
                     [height]="'100'"
                     [min]="0"
                     [placeholder]="'00.00'"
+                    [crrValue]="step?.durationHour"
+                    (valueChange)="valueChangeDuraHour($event)"
                   ></codx-input>
                   <div
                     class="position-absolute text-gray-400"
@@ -2436,7 +2440,7 @@
                   field="excludeDayoff"
                   [label]="titleCheckBoxSat"
                   [checked]="checkedSat"
-                  (valueChange)="valueChangeDayoff($event,viewSaturday)"
+                  (valueChange)="valueChangeDayoff($event,viewSaturday,'7')"
                 >
                 </codx-input>
               </div>
@@ -2448,7 +2452,7 @@
                   style="width: 100%"
                   [checked]="checkedSun"
                   [label]="titleCheckBoxSun"
-                  (valueChange)="valueChangeDayoff($event,viewSunday)"
+                  (valueChange)="valueChangeDayoff($event,viewSunday,'8')"
                 >
                 </codx-input>
               </div>
