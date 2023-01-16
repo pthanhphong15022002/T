@@ -419,7 +419,7 @@
               ></i>
               <i
                 class="icon-settings icon-20 margin-user"
-                (click)="clickRoles(data, 'O')"
+                (click)="clickRoles('O')"
               ></i>
             </div>
             <div>
@@ -475,7 +475,7 @@
               ></i>
               <i
                 class="icon-settings icon-20 margin-user"
-                (click)="clickRoles(data, 'P')"
+                (click)="clickRoles('P')"
               ></i>
             </div>
             <div>
@@ -529,7 +529,7 @@
               ></i>
               <i
                 class="icon-settings icon-20 margin-user"
-                (click)="clickRoles(data, 'F')"
+                (click)="clickRoles('F')"
               ></i>
             </div>
             <div>
@@ -1100,9 +1100,9 @@
             >
               <codx-mfunc
                 [formModel]="dialog.formModel"
-                (clickMF)="clickMFStep($event, data)"
+                (clickMF)="clickMFStep($event, step)"
                 [isBookMark]="true"
-                [dataItem]="data"
+                [dataItem]="step"
                 [type]="'hover'"
               >
               </codx-mfunc>
@@ -1271,9 +1271,9 @@
                     </div>
                     <codx-mfunc
                       [formModel]="dialog.formModel"
-                      (clickMF)="clickMFStep($event, data)"
+                      (clickMF)="clickMFStep($event, taskList)"
                       [isBookMark]="true"
-                      [dataItem]="data"
+                      [dataItem]="taskList"
                       [type]="'hover'"
                     >
                     </codx-mfunc>
@@ -1365,9 +1365,9 @@
                           </div>
                           <codx-mfunc
                             [formModel]="dialog.formModel"
-                            (clickMF)="clickMFStep($event, data)"
+                            (clickMF)="clickMFStep($event, task)"
                             [isBookMark]="true"
-                            [dataItem]="data"
+                            [dataItem]="task"
                             [type]="'hover'"
                           >
                           </codx-mfunc>
@@ -1460,13 +1460,13 @@
       <div>
         <codx-label
           fiedName="taskGroupName"
-          [formModel]=""
+          [formModel]="dialog.formModel"
           default="Tên nhóm công việc"
         ></codx-label>
       </div>
       <codx-input
         field="taskGroupName"
-        [formModel]=""
+        [formModel]="dialog.formModel"
         [Group]=""
         type="text"
         [height]="'100'"
@@ -1480,14 +1480,14 @@
         <div>
           <codx-label
             fiedName="durationDay"
-            [formModel]=""
+            [formModel]="dialog.formModel"
             default="Thời gian dự kiến"
           ></codx-label>
         </div>
         <div class="position-relative">
           <codx-input
             field="durationDay"
-            [formModel]=""
+            [formModel]="dialog.formModel"
             [Group]=""
             type="text"
             [height]="'100'"
@@ -1500,7 +1500,7 @@
           >
             <codx-label
               fiedName="StepName"
-              [formModel]=""
+              [formModel]="dialog.formModel"
               default="Ngày"
             ></codx-label>
           </div>
@@ -1518,7 +1518,7 @@
         <div class="position-relative">
           <codx-input
             field="durationHour"
-            [formModel]=""
+            [formModel]="dialog.formModel"
             [Group]=""
             type="text"
             [height]="'100'"
@@ -1571,13 +1571,13 @@
       <div>
         <codx-label
           fiedName="memo"
-          [formModel]=""
+          [formModel]="dialog.formModel"
           default="Ghi chú"
         ></codx-label>
       </div>
       <codx-input
         field="memo"
-        [formModel]=""
+        [formModel]="dialog.formModel"
         [Group]=""
         type="textarea"
         [height]="'100'"
@@ -1662,13 +1662,13 @@
       <div>
         <codx-label
           fiedName="StepName"
-          [formModel]=""
+          [formModel]="dialog.formModel"
           default="Tên giai đoạn"
         ></codx-label>
       </div>
       <codx-input
         field="stepName"
-        [formModel]=""
+        [formModel]="dialog.formModel"
         [Group]=""
         type="text"
         [crrValue]="stepName"
@@ -1679,7 +1679,7 @@
     <div class="form-group text-gray-400" *ngIf="isAddStage">
       <codx-label
         fiedName="StepName"
-        [formModel]=""
+        [formModel]="dialog.formModel"
         default="Mặc định giai đoạn sẽ được thêm vào vị trí cuối cùng (trước giai đoạn hoàn tất)"
       ></codx-label>
     </div>

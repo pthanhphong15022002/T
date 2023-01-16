@@ -228,8 +228,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getGrvStep();
   }
 
-  data = [];
-
   ngAfterViewInit(): void {
     // if (this.action != 'edit') this.genAutoNumber();
     this.api
@@ -632,7 +630,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //Popup roles process
-  clickRoles(e, type) {
+  clickRoles(type) {
     this.callfc.openForm(
       PopupRolesDynamicComponent,
       '',
