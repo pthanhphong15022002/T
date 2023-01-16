@@ -659,7 +659,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             roles.objectID = data.id != null ? data.id : null;
             roles.objectType = data.objectType;
             roles.roleType = 'O';
-            this.dataStepCrr.roles = this.checkRolesStep(this.dataStepCrr.roles, roles);
+            this.dataStepCrr.roles = this.checkRolesStep(
+              this.dataStepCrr.roles,
+              roles
+            );
           }
           break;
       }
@@ -668,7 +671,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   checkUserPermission(
     listPerm: DP_Processes_Permission[],
-    perm: DP_Processes_Permission,
+    perm: DP_Processes_Permission
   ) {
     var index = -1;
     if (listPerm != null) {
@@ -692,10 +695,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return listPerm;
   }
 
-  checkRolesStep(
-    listPerm: DP_Steps_Roles[],
-    perm: DP_Steps_Roles,
-  ) {
+  checkRolesStep(listPerm: DP_Steps_Roles[], perm: DP_Steps_Roles) {
     var index = -1;
     if (listPerm != null) {
       if (perm != null && listPerm.length > 0) {
@@ -874,13 +874,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //#stage -- nvthuan
   async openAddStep(type) {
-    if(type === 'add'){
+    if (type === 'add') {
       this.step = new DP_Steps();
       this.step['processID'] = this.process?.recID;
       this.step['stepNo'] = this.stepList.length + 1;
-      this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
-    }else{
-      
+      this.popupAddStage = this.callfc.openForm(
+        this.addStagePopup,
+        '',
+        500,
+        280
+      );
+    } else {
     }
   }
 
@@ -1044,7 +1048,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
   getTitleStepViewSetup() {
-    if(this.stepList.length > 0){
+    if (this.stepList.length > 0) {
       this.titleViewStepCrr = this.stepList[0].stepName;
     }
 
@@ -1064,9 +1068,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       });
   }
-  valueChangeAssignCtrl($event){
-    if($event && $event != null){
-   //  let secleted = $event.data;
+  valueChangeAssignCtrl($event) {
+    if ($event && $event != null) {
+      //  let secleted = $event.data;
     }
   }
 

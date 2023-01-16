@@ -98,8 +98,9 @@ export class DP_Steps {
   constructor(){
     this.recID = Util.uid();
     this.durationDay = 0;
-    this.durationHour = 0; 
+    this.durationHour = 0;
     this.taskGroups = [];
+    this.assignControl='0'
   }
 }
 export class DP_Steps_Roles {
