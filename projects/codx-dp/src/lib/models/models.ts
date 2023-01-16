@@ -31,7 +31,7 @@ export class DP_Processes {
   options: string; // json
   attachments: number;
   comments: number;
-  permissions: DP_Processes_Permission[]; // string
+  permissions: DP_Processes_Permission[] = []; // string
   owner: string;
   bUID: string;
   createdOn: Date;
@@ -63,50 +63,38 @@ export class DP_Processes_Permission {
   modifiedBy: string;
 }
 export class DP_Steps {
-  recID: string;
+  recID: string = Util.uid();
   processID: string;
   stepNo: number;
   stepName: string;
-  memo: string;
-  durationDay: number;
-  durationHour: number;
+  memo: string = '';
+  durationDay: number = 0;
+  durationHour: number = 0;
   numbererval: string;
   excludeDayoff: string;
   note: string;
-  assignControl: string;
-  transferControl: string;
+  assignControl: string ='1';
+  transferControl: string = '0';
   taskControl: string;
-  leadtimeControl: boolean;
-  durationControl: boolean;
-  startControl: string; // update bit to string
-  reScheduleTasks: boolean;
+  leadtimeControl: boolean = true;
+  durationControl: boolean = true;
+  startControl: string = '0'; // update bit to string
+  reScheduleTasks: boolean = true;
   options: string; // json
-  roles: DP_Steps_Roles[]; // objects
+  roles: DP_Steps_Roles[] = []; // objects
   isSuccessStep: boolean;
   isFailStep: boolean;
   reasonControl: boolean;
-  reasons: DP_Steps_Reasons[]; // objects
-  taskGroups: DP_Steps_TaskGroups[]; // objects
-  tasks: DP_Steps_Tasks[]; // objects
-  fields: DP_Steps_Fields[]; // objects
+  reasons: DP_Steps_Reasons[] = []; // objects
+  taskGroups: DP_Steps_TaskGroups[] = []; // objects
+  tasks: DP_Steps_Tasks[] = []; // objects
+  fields: DP_Steps_Fields[] = []; // objects
   isUsed: boolean;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-  showColumnControl: number;
-  constructor(){
-    this.recID = Util.uid();
-    this.durationDay = 0;
-    this.durationHour = 0;
-    this.taskGroups = [];
-    this.assignControl='1';
-    this.transferControl = '0';
-    this.durationDay = 0;
-    this.reScheduleTasks = true;
-    this.leadtimeControl = true;
-    this.startControl ='0'
-  }
+  showColumnControl: number = 1;
 }
 export class DP_Steps_Roles {
   recID: string;
@@ -142,7 +130,7 @@ export class DP_Steps_TaskGroups {
   durationDay: number;
   durationHour: number;
   numbererval: string;
-  roles: DP_Steps_TaskGroups_Roles[]; // objects
+  roles: DP_Steps_TaskGroups_Roles[] = []; // objects
   statusCodeID: string;
   memo: string;
   createdOn: Date;
@@ -181,7 +169,7 @@ export class DP_Steps_Tasks {
   reminderBy: string;
   dependOnTasks: string;
   dependRule: string;
-  roles: DP_Steps_Tasks_Roles[]; // objects;
+  roles: DP_Steps_Tasks_Roles[] = []; // objects;
   assignControl: string;
   memo: string;
   requireCompleted: boolean;
@@ -240,8 +228,8 @@ export class DP_Instances {
   title: string;
   memo: string;
   datas: string; // Json;
-  taskGroups: DP_Instances_Steps_TaskGroups[]; // objects;
-  tasks: DP_Instances_Steps_Tasks[]; // objects;
+  taskGroups: DP_Instances_Steps_TaskGroups[] = []; // objects;
+  tasks: DP_Instances_Steps_Tasks[] = []; // objects;
   currentStep: number;
   statusCodeID: string;
   status: string;
@@ -261,7 +249,7 @@ export class DP_Instances {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-  permissions: DP_Instances_Permissions[];
+  permissions: DP_Instances_Permissions[] = [];
 }
 
 export class DP_Instances_Permissions {
@@ -307,17 +295,17 @@ export class DP_Instances_Steps {
   actualStart: Date;
   actualEnd: Date;
   actualHours: number;
-  roles: DP_Instances_Steps_Roles[]; // objects;
-  taskGroups: DP_Instances_Steps_TaskGroups[]; // objects;
-  tasks: DP_Instances_Steps_Tasks[]; // objects;
-  fields: DP_Instance_Steps_Fields[]; //	objects;
+  roles: DP_Instances_Steps_Roles[] = []; // objects;
+  taskGroups: DP_Instances_Steps_TaskGroups[] = []; // objects;
+  tasks: DP_Instances_Steps_Tasks[] = []; // objects;
+  fields: DP_Instance_Steps_Fields[] = []; //	objects;
   owner: string;
   bUID: string;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-  reasons: DP_Instances_Steps_Reasons[]; // objects
+  reasons: DP_Instances_Steps_Reasons[] = []; // objects
 }
 
 export class DP_Instances_Steps_Roles {
@@ -350,7 +338,7 @@ export class DP_Instances_Steps_TaskGroups {
   actualStart: Date;
   actualEnd: Date;
   actualHours: number;
-  roles: DP_Instances_Steps_TaskGroups_Roles[];
+  roles: DP_Instances_Steps_TaskGroups_Roles[] = [];
   statusCodeID: string;
   memo: string;
   createdOn: Date;
@@ -399,7 +387,7 @@ export class DP_Instances_Steps_Tasks {
   dependRule: string;
   assignControl: string;
   requireCompleted: boolean;
-  roles: DP_Instances_Steps_Tasks_Roles[];
+  roles: DP_Instances_Steps_Tasks_Roles[] = [];
   memo: string;
   createTask: boolean;
   createTaskControl: string;
@@ -464,4 +452,11 @@ export class DP_Instances_Steps_Reasons {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+}
+
+export class TabModel {
+  name: 'Nhiệm vụ' | 'Dashboard' | string;
+  textDefault: string;
+  template?: any;
+  isActive: boolean = false;
 }

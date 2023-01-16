@@ -873,16 +873,22 @@
       </div>
     </div>
     <div id="{{ item.recID }}" class="main show-main">
-      <div *ngIf="item?.fields?.length == 0" class="position-relative p-9">
+      <div
+        *ngIf="!item?.fields || item?.fields?.length == 0"
+        class="position-relative p-9"
+      >
         <div class="position-absolute top-50 start-50 translate-middle">
           <button
             type="button"
-            class="btn btn-light-primary cursor-pointer text-hover-primary d-flex"
+            class="btn btn-outline-primary btn-sm pb-5 d-flex align-items-center justify-content-between"
             (click)="addCustomField(item.recID, item.processID)"
           >
-            <i class="icon-add icon-18"> </i>
+            <span class="icon-add icon-20 text-primary-600 py-2"></span>
             <codx-label
-              [name]="''"
+              class="text-primary-600"
+              [name]="'lblAddCustomField'"
+              [formName]="'DPStepsFields'"
+              [gridViewName]="'grvDPStepsFields'"
               [default]="'Thêm trường tùy chỉnh'"
             ></codx-label>
           </button>
@@ -891,14 +897,14 @@
 
       <div *ngIf="item?.fields?.length > 0">
         <div
-          class="d-flex row"
+          class="d-flex row class-field"
           cdkDropList
           [cdkDropListData]="item?.fields || []"
           (cdkDropListDropped)="dropFile($event, item.recID)"
         >
           <ng-container *ngFor="let item1 of item?.fields">
             <div
-              class="col-{{ 12 / item.showColumnControl }} p-3"
+              class="col-{{ 12 / item.showColumnControl }} p-3 has-action-menu crr-fiels "
               cdkDrag
               [cdkDragStartDelay]="200"
               [cdkDragData]="item1"
@@ -925,6 +931,13 @@
                 <codx-input type="switch" field="isRequired" [checked]="true">
                 </codx-input>
               </div>
+              <codx-mfunc
+                [formModel]="dialog.formModel"
+                (clickMF)="clickMFFields($event, item1)"
+                [dataItem]="action != 'edit' ? moreDefaut : item"
+                [type]="'hover'"
+              >
+              </codx-mfunc>
             </div>
           </ng-container>
         </div>
@@ -2411,29 +2424,28 @@
             </div>
           </div>
           <div class="col-6">
-            <div class="row">
+            <div class="row" >
               <div class="col-6">
                 <codx-input
-                  name="checkbox"
+                  [name]="viewSaturday"
                   type="checkbox"
                   style="width: 100%"
-                  field=""
+                  field="excludeDayoff"
                   [label]="titleCheckBoxSat"
-                  [checked]=""
-                  [crrValue]=""
-                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
+                  [checked]="checkedSat"
+                  (valueChange)="valueChangeDayoff($event,viewSaturday)"
                 >
                 </codx-input>
               </div>
               <div class="col-6">
                 <codx-input
                   type="checkbox"
-                  name="checkbox-radio"
-                  field=""
-                  [checked]=""
-                  [crrValue]=""
+                  [name]="viewSunday"
+                  field="excludeDayoff"
+                  style="width: 100%"
+                  [checked]="checkedSun"
                   [label]="titleCheckBoxSun"
-                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
+                  (valueChange)="valueChangeDayoff($event,viewSunday)"
                 >
                 </codx-input>
               </div>
@@ -2462,7 +2474,9 @@
               field="startControl"
               [formModel]="dialog.formModel"
               type="valuelist"
-              refValue="DP019"
+              refValue="DP021"
+              [crrValue]="step.startControl"
+              (valueChange)="valueChangeStartCtrl($event)"
             >
             </codx-input>
           </div>
@@ -2482,26 +2496,26 @@
             <div class="row">
               <div class="col-6">
                 <codx-input
-                  name="fail-radio"
+                  [name]="formDurationCtrl"
                   type="radio"
                   style="width: 100%"
                   field="yes"
                   [label]="titleRadioYes"
-                  [checked]="isTurnOnYesFailure"
-                  [crrValue]="isTurnOnYesFailure"
-                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
+                  [checked]="step.durationControl"
+                  [crrValue]="step.durationControl"
+                  (valueChange)="valueChangeDuraCtrl($event,formDurationCtrl)"
                 >
                 </codx-input>
               </div>
               <div class="col-6">
                 <codx-input
                   type="radio"
-                  name="fail-radio"
+                  [name]="formDurationCtrl"
                   field="no"
-                  [checked]="isTurnOnNoFailure"
-                  [crrValue]="isTurnOnNoFailure"
+                  [checked]="!step.durationControl"
+                  [crrValue]="step.durationControl"
                   [label]="titleRadioNo"
-                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
+                  (valueChange)="valueChangeDuraCtrl($event,formDurationCtrl)"
                 >
                 </codx-input>
               </div>
@@ -2522,26 +2536,26 @@
             <div class="row">
               <div class="col-6">
                 <codx-input
-                  name="fail-radio"
+                  [name]="formLeaTimeCtrl"
                   type="radio"
                   style="width: 100%"
                   field="yes"
                   [label]="titleRadioYes"
-                  [checked]=""
-                  [crrValue]=""
-                  (valueChange)="valueChangeRadio($event, '')"
+                  [checked]="step.leadtimeControl"
+                  [crrValue]="step.leadtimeControl"
+                  (valueChange)="valueChangeDuraCtrl($event,formLeaTimeCtrl)"
                 >
                 </codx-input>
               </div>
               <div class="col-6">
                 <codx-input
                   type="radio"
-                  name="fail-radio"
+                  [name]="formLeaTimeCtrl"
                   field="no"
-                  [checked]=""
-                  [crrValue]=""
+                  [checked]="!step.leadtimeControl"
+                  [crrValue]="step.leadtimeControl"
                   [label]="titleRadioNo"
-                  (valueChange)="valueChangeRadio($event, '')"
+                  (valueChange)="valueChangeDuraCtrl($event,formLeaTimeCtrl)"
                 >
                 </codx-input>
               </div>
@@ -2598,11 +2612,10 @@
         <div class="row pt-3 pb-5">
           <codx-input
             field="memo"
-            [formModel]="dialog.formModel"
             type="textarea"
             [placeholder]=""
-            [crrValue]="''"
-            (valueChange)="valueMemoSetup($event)"
+            [crrValue]="step.memo"
+            (valueChange)="valueChangeMemo($event)"
           >
           </codx-input>
         </div>
