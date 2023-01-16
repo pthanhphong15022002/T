@@ -59,7 +59,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   process = new DP_Processes();
   permissions = [];
   dialog: any;
-  currentTab = 0; //Bước hiện tại
+  currentTab = 1; //Bước hiện tại
   processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
@@ -116,7 +116,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   taskGroup = {};
   taskGroupList = [];
 
-  step: DP_Steps; 
+  step: DP_Steps;
   stepList: DP_Steps[] = [];
   stepName = '';
 
@@ -1070,6 +1070,24 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   valueChangeAssignCtrl($event) {
     if ($event && $event != null) {
       //  let secleted = $event.data;
+      this.step.assignControl = $event.data;
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+  valueChangeTransferCtrl($event){
+    if ($event && $event != null) {
+      //  let secleted = $event.data;
+      this.step.transferControl = $event.data;
+    }
+  }
+  valueChangeDuraDay($event) {
+    if ($event && $event != null) {
+      this.step.durationDay = $event.data;
+    }
+  }
+  valueChangeDuraHour($event) {
+    if ($event && $event != null) {
+      this.step.durationHour = $event.data;
     }
   }
 

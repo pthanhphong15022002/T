@@ -78,7 +78,7 @@ export class DP_Steps {
   taskControl: string;
   leadtimeControl: boolean;
   durationControl: boolean;
-  startControl: boolean;
+  startControl: string; // update bit to string
   reScheduleTasks: boolean;
   options: string; // json
   roles: DP_Steps_Roles[]; // objects
@@ -100,7 +100,12 @@ export class DP_Steps {
     this.durationDay = 0;
     this.durationHour = 0;
     this.taskGroups = [];
-    this.assignControl='0'
+    this.assignControl='1';
+    this.transferControl = '0';
+    this.durationDay = 0;
+    this.reScheduleTasks = true;
+    this.leadtimeControl = true;
+    this.startControl ='0'
   }
 }
 export class DP_Steps_Roles {
