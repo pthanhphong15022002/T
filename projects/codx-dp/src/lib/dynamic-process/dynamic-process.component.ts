@@ -325,7 +325,7 @@ export class DynamicProcessComponent
 
   doubleClickViewProcess(data){
     let obj = {
-    //can gi nem qua
+      data: data
     };
 
     let dialogModel = new DialogModel();

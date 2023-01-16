@@ -121,4 +121,14 @@ export class CodxDpService {
       });
     return subject.asObservable();
   }
+
+  GetInstanceByRecID(recID){
+    return this.api.execSv<any>(
+      'DP',
+      'ERM.Business.DP',
+      'InstancesBusiness',
+      'GetAsync',
+      [recID]
+    );
+  }
 }

@@ -1,35 +1,37 @@
 export class ChartOfAccounts {
-AccountName :any 
+accountID :any
+accountName :any 
 AccountName2 :any 
 AccountType :any 
-ParentID :any 
+parentID :any 
 Consolidate :any 
-Detail :any 
-MultiCurrency :any
-SubLGControl :any 
-SubLGType :any 
+detail :any 
+multiCurrency :any
+subLGControl :any 
+subLGType :any 
 ObjectType :any
 ObjectID :any 
-InvoiceDetail :any 
-DIM1Control :any 
-DIM2Control :any 
-DIM3Control :any 
-LoanControl :any 
-AssetControl :any 
+invoiceDetail :any 
+diM1Control :any 
+diM2Control :any 
+diM3Control :any 
+loanControl :any 
+assetControl :any 
 PostControl :any 
-BudgetControl :any
+budgetControl :any
+balControl:any
 VATControl :any
 DIM1 :any 
 DIM2 :any 
 DIM3 :any 
-Note :any 
-Stop :any 
+note :any 
+stop :any 
 Owner :any
 BUID :any 
 CreatedOn :any 
 CreatedBy :any 
 ModifiedOn :any 
 ModifiedBy :any 
-ProjectControl :any
+projectControl :any
   }
   

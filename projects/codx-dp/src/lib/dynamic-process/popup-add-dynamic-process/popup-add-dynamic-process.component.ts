@@ -197,6 +197,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   dataChild = [];
   //end data Test
   isShowstage = true;
+  titleAdd ='Thêm'
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -235,7 +236,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    //this.step = JSON.parse(JSON.stringify(this.stepList[0]));
+    this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
+      if (mf) {
+        var mfAdd = mf.find((f) => f.functionID == 'SYS01');
+        if (mfAdd) this.titleAdd = mfAdd?.customName;
+      }
+    });
     this.getGrvStep();
     this.getValListDayoff();
   }
@@ -720,6 +726,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //add trường tùy chỉnh
+
+  clickMFFields(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        // this.delete(data);
+        break;
+      case 'SYS03':
+        this.editCustomField(data, e.text);
+        break;
+      case 'SYS04':
+        // this.copy(data, e.text);
+        break;
+    }
+  }
+
   addCustomField(stepID, processID) {
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
       this.cache
@@ -728,7 +749,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.fieldCrr = new DP_Steps_Fields();
           this.fieldCrr.stepID = stepID;
           this.fieldCrr.processID = processID;
-          let titleAction = '';
+          let titleAction = this.titleAdd;
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
           formModel.formName = 'DPStepsFields';
@@ -760,13 +781,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
-  editCustomField(field) {
+  editCustomField(field, textTitle) {
     this.fieldCrr = field;
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
       this.cache
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
         .subscribe((res) => {
-          let titleAction = '';
+          let titleAction = textTitle  ;
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
           formModel.formName = 'DPStepsFields';
@@ -921,10 +942,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.jobType = value;
   }
   openPopupJob() {
+    let frmModel: FormModel = {
+      entityName: 'DP_Steps_Tasks',
+      formName: 'DPStepsTasks',
+      gridViewName: 'grvDPStepsTasks',
+    };
     this.popupJob.close();
     let option = new SidebarModel();
     option.Width = '550px';
     option.zIndex = 1001;
+    option.FormModel = frmModel;
     let dialog = this.callfc.openSide(
       PopupJobComponent,
       ['add', this.jobType, this.taskGroupList],
