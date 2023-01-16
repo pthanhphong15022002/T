@@ -956,6 +956,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.taskGroup['recID'] = Util.uid();
     this.taskGroup['createdOn'] = Date.now();
     this.taskGroup['createdBy'] = this.userId;
+    this.taskGroup['stepID'] = this.stepSelect['recID'];
     this.taskGroup['task'] = [];
     this.popupGroupJob = this.callfc.openForm(
       this.addGroupJobPopup,
@@ -1040,11 +1041,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.viewStepCrr = this.viewStepCustom;
         if (data) {
           // gán tạm name để test
-          this.titleViewStepCrr = data.name;
+          this.titleViewStepCrr = data.stepName;
 
           // hidden swtich reason change
           this.isSwitchReason = false;
           // this.crrDataStep = data;
+          this.stepSelect = data;
         }
       }
     }
