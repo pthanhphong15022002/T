@@ -1271,9 +1271,9 @@
                     </div>
                     <codx-mfunc
                       [formModel]="dialog.formModel"
-                      (clickMF)="clickMFStep($event, data)"
+                      (clickMF)="clickMFStep($event, taskList)"
                       [isBookMark]="true"
-                      [dataItem]="data"
+                      [dataItem]="taskList"
                       [type]="'hover'"
                     >
                     </codx-mfunc>
@@ -1365,9 +1365,9 @@
                           </div>
                           <codx-mfunc
                             [formModel]="dialog.formModel"
-                            (clickMF)="clickMFStep($event, data)"
+                            (clickMF)="clickMFStep($event, task)"
                             [isBookMark]="true"
-                            [dataItem]="data"
+                            [dataItem]="task"
                             [type]="'hover'"
                           >
                           </codx-mfunc>
