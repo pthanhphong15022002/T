@@ -898,7 +898,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  clickMF(e: any, data?: any) {
+  clickMFStep(e: any, data?: any) {
     switch (e.functionID) {
       case 'SYS01':
         // this.add();
@@ -946,7 +946,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //job -- nvthuan
-  setJob() {
+  openJob() {
     this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
   }
   selectJob(id) {

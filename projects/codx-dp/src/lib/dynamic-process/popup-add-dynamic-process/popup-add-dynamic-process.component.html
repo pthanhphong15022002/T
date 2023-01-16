@@ -1095,12 +1095,12 @@
             </div>
             <div
               *ngIf="step"
-              class="icon-more_vert has-action-menu"
+              class="icon-more_vert has-action-menu more-funtion-step"
               style="cursor: pointer"
             >
               <codx-mfunc
                 [formModel]="dialog.formModel"
-                (clickMF)="clickMF($event, data)"
+                (clickMF)="clickMFStep($event, data)"
                 [isBookMark]="true"
                 [dataItem]="data"
                 [type]="'hover'"
@@ -1170,7 +1170,7 @@
                 style="font-weight: 500"
               ></span>
             </button>
-            <button class="button-custom" (click)="setJob()">
+            <button class="button-custom" (click)="openJob()">
               <span
                 class="icon-add_task icon-20 text-primary-600 py-2"
                 style="font-weight: 500"
@@ -1200,14 +1200,14 @@
           *ngIf="taskGroupList.length === 0"
         >
           <div>
-            <button class="button-custom">
-              <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
+            <button class="button-custom" (click)="openGroupJob()">
+              <span class="icon-add icon-20 text-primary-600 py-2"></span>
               <span>Thêm nhóm công việc</span>
             </button>
           </div>
           <div>
-            <button class="button-custom">
-              <span class="icon-add icon-20 text-primary-600 py-2"></span>
+            <button class="button-custom" (click)="openJob()">
+              <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
               <span>Thêm công việc</span>
             </button>
           </div>
@@ -1224,7 +1224,7 @@
                 >
                   <div class="card-job">
                     <div
-                      class="d-flex justify-content-start align-items-center"
+                      class="d-flex justify-content-start align-items-center has-action-menu"
                     >
                       <div class="icon-container">
                         <span
@@ -1273,6 +1273,14 @@
                           </codx-label>
                         </div>
                       </div>
+                      <codx-mfunc
+                        [formModel]="dialog.formModel"
+                        (clickMF)="clickMFStep($event, data)"
+                        [isBookMark]="true"
+                        [dataItem]="data"
+                        [type]="'hover'"
+                      >
+                      </codx-mfunc>
                     </div>
                     <!-- kéo thả ở trong  -->
                     <div
@@ -1287,7 +1295,7 @@
                           [cdkDragData]="task"
                           class="drap-drop"
                         >
-                          <div style="margin-left: 50px">
+                          <div style="margin-left: 50px" class="has-action-menu"> 
                             <div
                               class="d-flex justify-content-start align-items-center"
                               style="font-size: 1rem"
@@ -1359,6 +1367,14 @@
                               >
                               </codx-attachment>
                             </div>
+                            <codx-mfunc
+                              [formModel]="dialog.formModel"
+                              (clickMF)="clickMFStep($event, data)"
+                              [isBookMark]="true"
+                              [dataItem]="data"
+                              [type]="'hover'"
+                            >
+                            </codx-mfunc>
                           </div>
                         </div>
                       </ng-container>
