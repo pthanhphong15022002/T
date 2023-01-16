@@ -116,10 +116,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   taskGroup = {};
   taskGroupList = [];
 
-  step = {};
-  stepSelect = {}; // step click
-  stepList = []; // step list
-  // stepList: DP_Steps[];
+  step: DP_Steps;
+  stepSelect: DP_Steps;
+  stepList: DP_Steps[] = [];
 
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
@@ -875,16 +874,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //#stage -- nvthuan
   async openAddStep(type) {
-    this.step = {};
-    this.step['recID'] = Util.uid();
-    this.step['processID'] = this.process?.recID;
-    this.step['stepNo'] = this.stepList.length + 1;
-    this.step['createdOn'] = new Date();
-    this.step['durationDay'] = 0;
-    this.step['durationHour'] = 0;
-    this.step['createdBy'] = this.userId;
-    this.step['taskGroups'] = [];
-    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
+    if(type === 'add'){
+      this.step = new DP_Steps();
+      this.step['processID'] = this.process?.recID;
+      this.step['stepNo'] = this.stepList.length + 1;
+      this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
+    }else{
+      
+    }
   }
 
   saveAddStep() {
