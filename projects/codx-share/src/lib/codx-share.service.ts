@@ -605,7 +605,7 @@ export class CodxShareService {
       else if (width <= 500 * widthThumb) wt = 500;
       else if (width <= 650 * widthThumb) wt = 600;
 
-      return environment.apiUrl + "/api/" + environment.appName + "/thumbs/" + uploadID + "/" + wt + ".webp";
+      return environment.urlUpload + "/api/" + environment.appName + "/thumbs/" + uploadID + "/" + wt + ".webp";
     }
     return ""
   }
