@@ -56,6 +56,7 @@ export class DynamicProcessComponent
   gridViewSetup: any;
   showID = false;
   processNo: any;
+  instanceNo: any;
   // const set value
   readonly btnAdd: string = 'btnAdd';
 
@@ -145,7 +146,7 @@ export class DynamicProcessComponent
 
   async genAutoNumber() {
     this.dpService
-      .genAutoNumber(this.funcID, 'grvDPProcesses', 'processNo')
+      .genAutoNumber(this.funcID, 'DP_Processes', 'processNo')
       .subscribe((res) => {
         if (res) {
           this.processNo = res;
@@ -161,7 +162,8 @@ export class DynamicProcessComponent
       var obj = {
         action: 'add',
         processNo: this.processNo,
-        showID: this.showID
+        showID: this.showID,
+        instanceNo: this.instanceNo
       };
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;

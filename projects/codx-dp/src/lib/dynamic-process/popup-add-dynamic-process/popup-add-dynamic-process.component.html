@@ -404,7 +404,7 @@
               ></i>
               <i
                 class="icon-settings icon-20 margin-user"
-                (click)="clickRoles(data)"
+                (click)="clickRoles(data, 'O')"
               ></i>
             </div>
             <div>
@@ -421,7 +421,7 @@
         </div>
         <div
           class="col-6 group-permission witdh-permission scroll-user"
-          *ngIf="permissions != null && permissions.length > 0"
+          *ngIf="process.permissions != null && process.permissions.length > 0"
         >
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div
@@ -460,7 +460,7 @@
               ></i>
               <i
                 class="icon-settings icon-20 margin-user"
-                (click)="clickRoles(data)"
+                (click)="clickRoles(data, 'P')"
               ></i>
             </div>
             <div>
@@ -475,7 +475,7 @@
         </div>
         <div
           class="col-6 group-permission witdh-permission scroll-user"
-          *ngIf="permissions != null && permissions.length > 0"
+          *ngIf="process.permissions != null && process.permissions.length > 0"
         >
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div
@@ -514,7 +514,7 @@
               ></i>
               <i
                 class="icon-settings icon-20 margin-user"
-                (click)="clickRoles(data)"
+                (click)="clickRoles(data, 'F')"
               ></i>
             </div>
             <div>
@@ -529,7 +529,7 @@
         </div>
         <div
           class="col-6 group-permission witdh-permission scroll-user"
-          *ngIf="permissions != null && permissions.length > 0"
+          *ngIf="process.permissions != null && process.permissions.length > 0"
         >
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div

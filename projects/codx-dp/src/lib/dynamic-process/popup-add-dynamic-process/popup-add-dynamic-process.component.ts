@@ -65,6 +65,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   newNode: number; //vị trí node mới
   oldNode: number; // Vị trí node cũ
   funcID: any;
+  entityName: any;
   isShow = false; //Check mở form
   action = '';
   attachment: any;
@@ -292,15 +293,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
+    this.entityName = this.dialog.formModel.entityName;
     this.action = dt.data.action;
     this.showID = dt.data.showID;
+
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     if (this.action != 'add') {
-      this.showID = true;
-      this.permissions = this.process.permissions;
+      // this.showID = true;
       this.getAvatar(this.process);
     } else {
       this.process.processNo = dt.data.processNo;
+      this.process.instanceNoSetting = dt.data.instanceNo;
       // this.process.instanceNoSetting = this.process.processNo;
     }
 
@@ -322,27 +325,27 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   ngAfterViewInit(): void {
     // if (this.action != 'edit') this.genAutoNumber();
-    // this.api
-    //   .execSv<any>(
-    //     'SYS',
-    //     'AD',
-    //     'AutoNumberDefaultsBusiness',
-    //     'GetFieldAutoNoAsync',
-    //     [this.funcID, this.dialog.formModel.entityName]
-    //   )
-    //   .subscribe((res) => {
-    //     if (res && !res.stop && res.autoAssignRule == '1') {
-    //       this.showID = true;
-    //     } else {
-    //       this.showID = false;
-    //     }
-    //   });
+    this.api
+      .execSv<any>(
+        'SYS',
+        'AD',
+        'AutoNumberDefaultsBusiness',
+        'GetFieldAutoNoAsync',
+        [this.funcID, this.entityName]
+      )
+      .subscribe((res) => {
+        if (res && !res.stop && res.autoAssignRule == '1') {
+          this.showID = true;
+        } else {
+          this.showID = false;
+        }
+      });
   }
 
   //genAutoNumber
   async genAutoNumber() {
     this.dpService
-      .genAutoNumber(this.funcID, 'grvDPProcesses', 'processNo')
+      .genAutoNumber(this.funcID, 'DP_Processes', 'processNo')
       .subscribe((res) => {
         if (res) {
           this.process.processNo = res;
@@ -722,14 +725,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //Popup roles process
-  clickRoles(e) {
+  clickRoles(e, type) {
     this.callfc.openForm(
       PopupRolesDynamicComponent,
       '',
       950,
       650,
       '',
-      this.permissions,
+      [this.process.permissions, type],
       '',
       this.dialog
     );
@@ -749,7 +752,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         {
           formModel: this.dialog.formModel,
           autoNoCode: this.process.processNo,
-          description: this.dialog.formMode.entityName,
+          description: this.entityName,
           newAutoNoCode: this.process.processNo,
           isSaveNew: '1',
         }
@@ -770,7 +773,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           formModel: this.dialog.formModel,
           autoNoCode: this.process.processNo,
 
-          description: this.dialog.formMode.entityName,
+          description: this.entityName,
         }
       );
       popupAutoNum.closed.subscribe((res) => {

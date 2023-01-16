@@ -172,6 +172,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       delete this.data.id;
       delete this.data.recID;
       this.data.autoNoCode = this.newAutoNoCode;
+      this.data.description = this.description;
       this.esService.addEditAutoNumbers(this.data, true).subscribe((res) => {
         if (res) {
           this.dialogAutoNum.patchValue(this.data);
