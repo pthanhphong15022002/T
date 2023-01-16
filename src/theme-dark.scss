@@ -190,6 +190,14 @@ textarea.codx-textarea {
     color: var(--text-body);
 }
 
+.feed-box .e-float-input {
+    background-color: transparent;
+}
+
+.feed-box .btn span[class*=icon-] {
+    color: var(--text-body);
+}
+
 .btn.btn-white {
     background-color: var(--bg-card);
 
@@ -690,6 +698,18 @@ label,
     background-color: rgba(255, 255, 255, 0.04);
     border-color: var(--border-list);
     color: inherit;
+}
+
+.btn {
+    color: var(--primary);
+}
+
+.e-schedule .e-schedule-table .e-auto-height {
+    border-color: var(--border-list);
+}
+
+codx-attachment .card {
+    background-color: transparent;
 }
 
 //end dark
