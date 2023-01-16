@@ -116,9 +116,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   taskGroup = {};
   taskGroupList = [];
 
-  step: DP_Steps;
-  stepSelect: DP_Steps;
+  step: DP_Steps; 
   stepList: DP_Steps[] = [];
+  stepName = '';
 
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
@@ -130,6 +130,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   userGroupJob = [];
   nameStage = '';
   isAddStage = true;
+  headerText = '';
 
   listJobType = [
     {
@@ -879,8 +880,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.step['processID'] = this.process?.recID;
       this.step['stepNo'] = this.stepList.length + 1;
       this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
+      this.stepName = '';
+      this.headerText = 'Thêm Giai Đoạn';
     }else{
-      
+      this.headerText = 'Sửa Giai Đoạn';
+      this.stepName = this.step['stepName'];
     }
   }
 
@@ -947,7 +951,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.taskGroup['recID'] = Util.uid();
     this.taskGroup['createdOn'] = Date.now();
     this.taskGroup['createdBy'] = this.userId;
-    this.taskGroup['stepID'] = this.stepSelect['recID'];
+    this.taskGroup['stepID'] = this.step['recID'];
     this.taskGroup['task'] = [];
     this.popupGroupJob = this.callfc.openForm(
       this.addGroupJobPopup,
@@ -1037,7 +1041,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           // hidden swtich reason change
           this.isSwitchReason = false;
           // this.crrDataStep = data;
-          this.stepSelect = data;
+          this.step = data;
         }
       }
     }
