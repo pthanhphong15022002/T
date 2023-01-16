@@ -100,12 +100,13 @@ export class CurrencyFormComponent extends UIComponent {
       option.Width = '550px';
       this.dialog = this.callfunc.openSide(PopAddCurrencyComponent, obj, option,this.view.funcID);
       this.dialog.closed.subscribe((x) => {
-        if (x.event == null && this.view.dataService.hasSaved)
+        if (x.event == null)
           this.view.dataService
-            .delete([this.view.dataService.dataSelected])
+            .add([this.view.dataService.dataSelected])
             .subscribe(x => {
               this.dt.detectChanges();
             });
+        
       });
     });
   }

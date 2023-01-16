@@ -8,6 +8,7 @@ import {
   DialogRef,
   CallFuncService,
   SidebarModel,
+  RequestOption,
 } from 'codx-core';
 import { PopAddAccountsComponent } from './pop-add-accounts/pop-add-accounts.component';
 
@@ -22,6 +23,7 @@ export class ChartOfAccountsComponent extends UIComponent {
   buttons: ButtonModel = { id: 'btnAdd' };
   funcName = '';
   moreFuncName = '';
+  columnsGrid = [];
   headerText :any;
   dialog: DialogRef;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
@@ -36,9 +38,7 @@ export class ChartOfAccountsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.api.exec<any>('GL','TestBusiness','Get').subscribe(res=>{
-      console.log(res)
-    })
+    
   }
 
   ngAfterViewInit() {
@@ -54,19 +54,22 @@ export class ChartOfAccountsComponent extends UIComponent {
         active: true,
         sameData: true,
         model: {
-          frozenColumns: 1,
+          resources:this.columnsGrid,
           template2: this.templateMore,
+          frozenColumns: 1,
         },
       },
     ];
     this.view.dataService.methodSave = 'AddAsync';
     this.view.dataService.methodUpdate = 'EditAsync';
+    this.view.dataService.methodDelete = 'DeleteAsync'
   }
 
   //#region Init
 
   //#region Event
   toolBarClick(e) {
+    console.log(e)
     switch (e.id) {
       case 'btnAdd':
         this.add();
@@ -77,17 +80,19 @@ export class ChartOfAccountsComponent extends UIComponent {
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        this.delete();
+        this.delete(data);
+        break;
+      case 'SYS03':
+        this.edit(data);
         break;
     }
-    this.edit();
+    
   }
 
   //#endregion
 
   //#region Function
   add() {
-    console.log(this.view);
     this.headerText = "Thêm tài khoản";
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
@@ -100,9 +105,9 @@ export class ChartOfAccountsComponent extends UIComponent {
       option.Width = '850px';
       this.dialog = this.callfunc.openSide(PopAddAccountsComponent, obj, option,this.view.funcID);
       this.dialog.closed.subscribe((x) => {
-        if (x.event == null && this.view.dataService.hasSaved)
+        if (x.event)
           this.view.dataService
-            .delete([this.view.dataService.dataSelected])
+            .add([this.view.dataService.dataSelected])
             .subscribe(x => {
               this.dt.detectChanges();
             });
@@ -110,8 +115,38 @@ export class ChartOfAccountsComponent extends UIComponent {
     });
   }
 
-  edit() {}
+  edit(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      var obj = {
+        formType: 'edit',
+        headerText: data.accountID,
+      };
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '850px';
+      this.dialog = this.callfunc.openSide(PopAddAccountsComponent, obj, option);
+    });
+  }
 
-  delete() {}
+  delete(data){
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.delete([data], true, (option: RequestOption) =>
+    this.beforeDelete(option,data)
+  ).subscribe(() => {});
+  }
+  beforeDelete(opt: RequestOption,data) {
+    opt.methodName = 'DeleteAsync';
+    opt.className = 'AccountsBusiness';
+    opt.assemblyName = 'GL';
+    opt.service = 'GL';
+    opt.data = data;
+    return true;
+  }
   //#endregion
 }
