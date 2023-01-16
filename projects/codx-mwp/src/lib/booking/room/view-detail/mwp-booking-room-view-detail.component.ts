@@ -113,7 +113,7 @@ export class MWPBookingRoomViewDetailComponent extends UIComponent implements On
         'ERM.Business.DM',
         'FileBussiness',
         'GetFilesForOutsideAsync',
-        [this.itemDetail.recID, 'EP_BookingRooms']
+        [this.funcID, this.itemDetail.recID, 'EP_BookingRooms']
       ).subscribe((res: []) => {
         if (res) {
           this.files = res;

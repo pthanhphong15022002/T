@@ -1403,7 +1403,7 @@ export class CodxEsService {
       'ERM.Business.DM',
       'FileBussiness',
       'GetFilesForOutsideAsync',
-      [objectId, objectType]
+      [funcID, objectId, objectType]
     );
   }
 

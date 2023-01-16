@@ -588,9 +588,13 @@ export class CodxShareService {
     );
   }
 
-  getThumnailByObjectID(objectID:any , referType:any , width :any = 30)
+  getThumnailByUrl(url:any, width = 30)
   {
-
+    if(url)
+    {
+      var arr = url.split()
+    }
+    return ""
   }
 }
 
