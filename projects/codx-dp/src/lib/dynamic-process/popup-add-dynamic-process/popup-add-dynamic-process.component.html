@@ -152,7 +152,7 @@
         <div class="col-6">
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="ProcessNo" [formModel]="formModel" default="Mã quy trình">
+              <codx-label fiedName="ProcessNo" [formModel]="dialog.formModel" default="Mã quy trình">
               </codx-label>
             </div>
             <codx-input field="processNo" type="text" [placeholder]="gridViewSetup['ProcessNo']?.description"
@@ -163,7 +163,7 @@
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="GroupID" [formModel]="formModel" default="Nhóm quy trình">
+              <codx-label fiedName="GroupID" [formModel]="dialog.formModel" default="Nhóm quy trình">
               </codx-label>
             </div>
             <!-- <codx-input field="groupID" [crrValue]="process.groupID" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
@@ -175,7 +175,7 @@
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="ProcessName" [formModel]="formModel" default="Tên quy trình">
+              <codx-label fiedName="ProcessName" [formModel]="dialog.formModel" default="Tên quy trình">
               </codx-label>
             </div>
             <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
@@ -186,7 +186,7 @@
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="ApplyFor" [formModel]="formModel"
+              <codx-label fiedName="ApplyFor" [formModel]="dialog.formModel"
                 default="Đối tượng nhiệm vụ áp dụng trong quy trình">
               </codx-label>
             </div>
@@ -350,21 +350,19 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label fiedName="InstanceNoSetting" [formModel]="formModel"
+            <codx-label fiedName="InstanceNoSetting" [formModel]="dialog.formModel"
               default="Định dạng đánh số tự động cho nhiệm vụ khi tạo mới">
             </codx-label>
           </div>
-          <div class="col-6 row">
-            <div class="col-11">
-              <!-- <codx-input [crrValue]="process.instanceNoSetting" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup"  field="instanceNoSetting">
-              </codx-input> -->
+          <div class="col-6">
+            <div class="position-relative">
               <codx-input type="text" [crrValue]="process.instanceNoSetting"
                 [placeholder]="gridViewSetup['InstanceNoSetting']?.description" (valueChange)="valueChange($event)"
                 field="instanceNoSetting">
               </codx-input>
-            </div>
-            <div class="col-1">
-              <i class="icon-settings form-control-feedback" (click)="openAutoNumPopup()"></i>
+              <div class="position-absolute" style="top: 7px; right: 7px">
+                <i class="icon-settings form-control-feedback" (click)="openAutoNumPopup()"></i>
+              </div>
             </div>
           </div>
         </div>
@@ -372,7 +370,7 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label fiedName="ShowInstanceControl" [formModel]="formModel" default="Chỉ xem nhiệm vụ ở tình trạng">
+            <codx-label fiedName="ShowInstanceControl" [formModel]="dialog.formModel" default="Chỉ xem nhiệm vụ ở tình trạng">
             </codx-label>
           </div>
           <div class="col-6">
@@ -388,7 +386,7 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label fiedName="CloseInstanceControl" [formModel]="formModel"
+            <codx-label fiedName="CloseInstanceControl" [formModel]="dialog.formModel"
               default="Tự đóng nhiệm vụ khi không có bất kỳ hoạt động nào sau">
             </codx-label>
           </div>
@@ -414,7 +412,7 @@
     <div class="header-job">
       <div class="left">
         <div>
-          <codx-label class="title" name="Memo" [formModel]="formModel" default="Hướng dẫn làm việc với quy trình">
+          <codx-label class="title" name="Memo" [formModel]="dialog.formModel" default="Hướng dẫn làm việc với quy trình">
           </codx-label>
         </div>
         <div>
@@ -457,9 +455,9 @@
       </ng-container>
     </div>
   </div>
-  <codx-attachment #imageAvatar [objectId]="process.recID" [objectType]="formModel.entityName" hideFolder="1"
+  <codx-attachment #imageAvatar [objectId]="process.recID" [objectType]="dialog.formModel.entityName" hideFolder="1"
     hideImageUpload="1" hideImageThumb="1" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="0"
-    [formModel]="formModel" allowExtensions=".jpg,.png" [isSaveSelected]="0" (fileAdded)="fileImgAdded($event)"
+    [formModel]="dialog.formModel" allowExtensions=".jpg,.png" [isSaveSelected]="0" (fileAdded)="fileImgAdded($event)"
     displayThumb="full" showMessage="0" category="0">
   </codx-attachment>
 </ng-template>
@@ -1384,7 +1382,7 @@
                         class="text-muted text-opacity-25"
                         fiedName="AssignControl"
                         default="Phân bố người phụ trách cho nhiệm vụ"
-                        [formModel]="formModel"
+                        [formModel]="dialog.formModel"
                       >
                       </codx-label>
                     </strong>
@@ -1412,7 +1410,7 @@
                     class="text-muted text-opacity-25"
                     fiedName=""
                     default="Tự động chuyển nhiệm vụ qua giai đoạn tiếp theo khi"
-                    [formModel]="formModel"
+                    [formModel]="dialog.formModel"
 
                   >
                   </codx-label>
@@ -1536,10 +1534,8 @@
         <div class="row pb-5">
           <div class="col-6">
             <div class="title-switch">
-              <strong>
-                <codx-label class="text-muted" default="Bỏ qua ngày nghỉ trong tuần khi tính toán ngày đến hạn cho nhiệm vụ trong giai đoạn">
-                </codx-label>
-               </strong>
+              <codx-label class="text-muted" default="Bỏ qua ngày nghỉ trong tuần khi tính toán ngày đến hạn cho nhiệm vụ trong giai đoạn">
+              </codx-label>
             </div>
           </div>
           <div class="col-6">
