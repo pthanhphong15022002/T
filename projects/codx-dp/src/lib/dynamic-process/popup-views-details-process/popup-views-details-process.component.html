@@ -1,7 +1,7 @@
 <div class="process-body popup-process-detail no-header page-viewdetail">
   <div class="my-3 mx-6 popup-process-header">
     <div class="d-flex justify-content-between">
-      <div class="d-flex align-items-center">Nội dung của nhiệm vụ vào đây</div>
+      <div class="d-flex align-items-center">{{title}}</div>
       <div>
         <button
           class="btn text-dark-75 text-hover-danger cursor-pointer px-0"
@@ -52,7 +52,7 @@
           [attr.data-kt-scroll-offset]="'0px'"
         >
           <ng-container *ngIf="name == 'Mission'">
-            nem view instancente vao day
+            <codx-instances [process]="process"></codx-instances>
           </ng-container>
           <ng-container *ngIf="name == 'Dashboard'">
             <ng-container> nem view Dashboard vao day </ng-container>

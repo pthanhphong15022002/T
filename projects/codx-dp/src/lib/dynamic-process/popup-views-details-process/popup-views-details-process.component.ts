@@ -1,3 +1,4 @@
+import { DP_Processes } from './../../models/models';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
 import { TabModel } from '../../models/models';
@@ -10,6 +11,8 @@ import { TabModel } from '../../models/models';
 export class PopupViewsDetailsProcessComponent implements OnInit {
   dialog: DialogRef;
   name = 'Mission';
+  title = '';
+  process = new DP_Processes();
   tabControl: TabModel[] = [
     { name: 'Mission', textDefault: 'Nhiệm vụ', isActive: true },
     { name: 'Dashboard', textDefault: 'Dashboard', isActive: false },
@@ -20,6 +23,8 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
+    this.process = dt.data.data;
+    this.title = this.process.processName;
   }
 
   ngOnInit(): void {}
