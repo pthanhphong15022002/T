@@ -84,7 +84,7 @@ export class DP_Steps {
   roles: DP_Steps_Roles[] = []; // objects
   isSuccessStep: boolean;
   isFailStep: boolean;
-  reasonControl: boolean;
+  reasonControl: boolean = false;
   reasons: DP_Steps_Reasons[] = []; // objects
   taskGroups: DP_Steps_TaskGroups[] = []; // objects
   tasks: DP_Steps_Tasks[] = []; // objects
