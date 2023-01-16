@@ -108,7 +108,24 @@
 
 .scroll-user {
   overflow: scroll;
-  height: 20vh;
+}
+
+.group-permission{
+  height: 10vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  list-style: none;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.witdh-permission{
+  width: 91vh;
+}
+
+.witdh-roles{
+  width: 60vh;
 }
 
 .button-custom {
@@ -358,6 +375,10 @@
   box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
   border-radius: 5px;
   background-color: #f0f8ff;
+}
+codx-mfunc{
+  top: -5px !important;
+  right: -5px !important;
 }
 // End Drop drap -- nvthuan
 

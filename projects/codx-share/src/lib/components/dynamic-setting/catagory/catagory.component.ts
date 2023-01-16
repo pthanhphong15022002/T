@@ -507,7 +507,12 @@ export class CatagoryComponent implements OnInit {
           });
       }
     } else {
-      if (typeof value == 'boolean') {
+      if (
+        (typeof value == 'boolean' &&
+          data.dataType.toLowerCase() != 'boolean' &&
+          data.dataType.toLowerCase() != 'bool') ||
+        !data.dataType
+      ) {
         value = +value + '';
       }
       if (this.category === '5') {

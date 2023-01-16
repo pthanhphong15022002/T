@@ -8,8 +8,8 @@ import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { Invoices } from 'projects/codx-ei/src/lib/models/invoice.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CurrencyFormComponent } from '../currency-form.component';
-import { Currency } from '../models/Currency.model';
-import { ExchangeRates } from '../models/ExchangeRates.model';
+import { Currency } from '../../models/Currency.model';
+import { ExchangeRates } from '../../models/ExchangeRates.model';
 import { PopAddExchangerateComponent } from '../pop-add-exchangerate/pop-add-exchangerate.component';
 import { PopSettingExchangeComponent } from '../pop-setting-exchange/pop-setting-exchange.component';
 

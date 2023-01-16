@@ -54,36 +54,37 @@ export class DynamicProcessComponent
   crrFunID: string = '';
   funcID: string = '';
   gridViewSetup: any;
-
+  showID = false;
+  processNo: any;
   // const set value
   readonly btnAdd: string = 'btnAdd';
 
- heightWin: any;
- widthWin: any;
- itemSelected: any;
- titleAction:any;
- moreFunc: any;
+  heightWin: any;
+  widthWin: any;
+  itemSelected: any;
+  titleAction: any;
+  moreFunc: any;
 
   // create variables for list
   listDynamicProcess: DP_Processes[] = [];
   listUserInUse: DP_Processes_Permission[] = [];
 
- //test chưa có api
- popoverDetail: any;
- popupOld: any;
- popoverList: any;
+  //test chưa có api
+  popoverDetail: any;
+  popupOld: any;
+  popoverList: any;
 
-// Call API Dynamic Proccess
-readonly service = 'DP';
-readonly assemblyName = 'ERM.Business.DP';
-readonly entityName = 'DP_Processes';
-readonly className = 'ProcessesBusiness'
+  // Call API Dynamic Proccess
+  readonly service = 'DP';
+  readonly assemblyName = 'ERM.Business.DP';
+  readonly entityName = 'DP_Processes';
+  readonly className = 'ProcessesBusiness';
 
- // Method API dynamic proccess
-readonly methodGetList = 'GetListDynProcessesAsync';
+  // Method API dynamic proccess
+  readonly methodGetList = 'GetListProcessesAsync';
 
-// Get idField
-readonly idField = 'recID'
+  // Get idField
+  readonly idField = 'recID';
 
   constructor(
     private inject: Injector,
@@ -92,19 +93,20 @@ readonly idField = 'recID'
     private codxDpService: CodxDpService,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
-    private callFunc: CallFuncService
+    private callFunc: CallFuncService,
+    private dpService: CodxDpService
   ) {
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // this.genAutoNumber();
   }
 
   onInit(): void {
     this.button = {
       id: this.btnAdd,
     };
-
     // gán tạm để test
     this.getListUser();
   }
@@ -115,6 +117,7 @@ readonly idField = 'recID'
   click(evt: ButtonModel) {
     switch (evt.id) {
       case this.btnAdd:
+        this.genAutoNumber();
         this.add();
         break;
     }
@@ -140,11 +143,25 @@ readonly idField = 'recID'
     if ($event) this.changeDetectorRef.detectChanges();
   }
 
+  async genAutoNumber() {
+    this.dpService
+      .genAutoNumber(this.funcID, 'grvDPProcesses', 'processNo')
+      .subscribe((res) => {
+        if (res) {
+          this.processNo = res;
+          this.showID = true;
+        } else {
+          this.showID = false;
+        }
+      });
+  }
   // CRUD methods
   add() {
     this.view.dataService.addNew().subscribe((res) => {
       var obj = {
         action: 'add',
+        processNo: this.processNo,
+        showID: this.showID
       };
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
@@ -176,27 +193,29 @@ readonly idField = 'recID'
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res) => {
-      var obj = {
-        action: 'edit',
-      };
-      let dialogModel = new DialogModel();
-      dialogModel.IsFull = true;
-      dialogModel.zIndex = 999;
-      dialogModel.DataService = this.view?.dataService;
-      dialogModel.FormModel = this.view.formModel;
-      this.dialog = this.callfc.openForm(
-        PopupAddDynamicProcessComponent,
-        '',
-        this.widthWin,
-        this.heightWin,
-        '',
-        obj,
-        '',
-        dialogModel
-      );
-      this.dialog.closed.subscribe((e) => {
-        if (!e?.event) this.view.dataService.clear();
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        var obj = {
+          action: 'edit',
+        };
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        dialogModel.zIndex = 999;
+        dialogModel.DataService = this.view?.dataService;
+        dialogModel.FormModel = this.view.formModel;
+        this.dialog = this.callfc.openForm(
+          PopupAddDynamicProcessComponent,
+          '',
+          this.widthWin,
+          this.heightWin,
+          '',
+          obj,
+          '',
+          dialogModel
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
           if (e?.event == null)
             this.view.dataService.delete(
               [this.view.dataService.dataSelected],
@@ -206,8 +225,8 @@ readonly idField = 'recID'
             this.view.dataService.update(e.event).subscribe();
             this.detectorRef.detectChanges();
           }
+        });
       });
-    });
     this.changeDetectorRef.detectChanges();
   }
   copy(data: any) {
@@ -229,8 +248,7 @@ readonly idField = 'recID'
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
-    // chưa có api
-    opt.methodName = 'DeletedDynamicProcessesAsync';
+    opt.methodName = 'DeletedProcessesAsync';
     opt.data = [itemSelected.recID, true];
     return true;
   }

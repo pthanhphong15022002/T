@@ -161,10 +161,10 @@
 
               <e-item (click)="clickHighlightText()"
                 prefixIcon="e-style btn btn-icon btn-white btn-sm border-0 btn-tool-custom"></e-item>
-              <e-item (click)="confirmHighlightText(false)" prefixIcon="e-circle-check
+              <!-- <e-item (click)="confirmHighlightText(false)" prefixIcon="e-circle-check
                 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"></e-item>
               <e-item (click)="removeUnsaveHLA()" prefixIcon="e-close
-              btn btn-icon btn-white btn-sm border-0 btn-tool-custom"></e-item>
+              btn btn-icon btn-white btn-sm border-0 btn-tool-custom"></e-item> -->
 
               <e-item (click)="changeEditMode()"
                 prefixIcon="e-repeat btn btn-icon btn-white btn-sm border-0 btn-tool-custom">
@@ -212,9 +212,9 @@
     <div class="actions flex-column flex-lg-row-auto main-right" [class.hideCol]="hideActions"
       style="user-select: none">
       <ejs-tab #rightToolbar id="rightToolbar" [class.d-none]="hideActions" heightAdjustMode="Fill"
-        (selecting)="changeRightTab($event)">
+        (selecting)="changeRightTab($event)" [selectedItem]="isInteractPDF ? 2 : 0">
         <e-tabitems>
-          <e-tabitem *ngIf="isEditable && !isPublic">
+          <e-tabitem *ngIf="isEditable && !isPublic && !isInteractPDF">
             <ng-template #headerText>
               <codx-label name="lblHeaderRight0" [formModel]="" [default]="headerRightName[0].text"
                 class="text-header d-block"></codx-label>
@@ -287,7 +287,7 @@
             </ng-template>
           </e-tabitem>
 
-          <e-tabitem *ngIf="inputUrl == null">
+          <e-tabitem *ngIf="inputUrl == null && !isInteractPDF">
             <ng-template #headerText>
               <codx-label name="lblHeaderRight1" [formModel]="" [default]="headerRightName[1].text"
                 class="text-header d-block"></codx-label>
@@ -550,7 +550,7 @@
             <ng-template #content>
               <ejs-toolbar>
                 <e-items>
-                  <e-item [prefixIcon]="'e-circle-remove'" (click)="confirmRemoveHLA()"></e-item>
+                  <!-- <e-item [prefixIcon]="'e-circle-remove'" (click)="confirmRemoveHLA()"></e-item> -->
                 </e-items>
               </ejs-toolbar>
 
@@ -571,6 +571,11 @@
                     name="select">
                   </codx-input>
                 </div>
+              </div>
+              <div class="me-1 ms-1 d-flex justify-content-between">
+                <button class="btnsave" (click)="confirmHighlightText(false)">Lưu</button>
+                <button class="btnsave" (click)="removeUnsaveHLA()">Hủy</button>
+                <button class="btnsave" (click)="confirmRemoveHLA()">Xóa</button>
               </div>
             </ng-template>
           </e-tabitem>

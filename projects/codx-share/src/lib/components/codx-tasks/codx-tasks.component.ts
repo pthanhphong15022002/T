@@ -241,7 +241,9 @@ export class CodxTasksComponent
       this.funcID != 'TMT0206' &&
       this.funcID != 'TMT0202' &&
       this.funcID != 'MWP0063' &&
-      this.funcID != 'MWP0064';
+      this.funcID != 'MWP0064' &&
+      this.funcID != 'TMT0402' &&
+      this.funcID != 'TMT0403' ;
 
     this.modelResource = new ResourceModel();
     if (this.funcID != 'TMT03011' && this.funcID != 'TMT05011') {

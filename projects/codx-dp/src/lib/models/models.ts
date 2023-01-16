@@ -1,3 +1,5 @@
+import { Util } from "codx-core";
+
 export class DP_ProcessGroups {
   recID: string;
   groupID: string;
@@ -24,7 +26,7 @@ export class DP_Processes {
   activedOn: Date;
   stopOn: Date;
   closeInstanceControl: number;
-  showInstanceControl: boolean;
+  showInstanceControl: string;
   note: string;
   options: string; // json
   attachments: number;
@@ -93,6 +95,13 @@ export class DP_Steps {
   modifiedOn: Date;
   modifiedBy: string;
   showColumnControl: number;
+  constructor(){
+    this.recID = Util.uid();
+    this.durationDay = 0;
+    this.durationHour = 0;
+    this.taskGroups = [];
+    this.assignControl='0'
+  }
 }
 export class DP_Steps_Roles {
   recID: string;
