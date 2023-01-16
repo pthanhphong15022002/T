@@ -91,6 +91,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listRoleInStep: DP_Processes_Permission[] = []; // creat list user role in step
   userPermissions: DP_Processes_Permission; // create object user in step
   gridViewSetupStep: any; // grid view setup
+  listDayoff: any; // List day off
+
+  titleCheckBoxSat: string = ''; // title checkbox saturday form duration
+  titleCheckBoxSun: string = ''; // title checkbox sunday form duration
+  valueCheckBoxSat: string = ''; // title checkbox saturday form duration
+  valueCheckBoxSun: string = ''; // title checkbox sunday form duration
+  checkedSat: boolean = false; // title checkbox saturday form duration
+  checkedSun: boolean = false; // title checkbox sunday form duration
 
   // const value string
   readonly strEmpty: string = ''; // value empty for methond have variable is null
@@ -104,11 +112,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly titleViewStepReasonSuccess: string = 'Thành công'; // title form step reason failure
   readonly titleViewStepReasonFail: string = 'Thất bại'; // title form step reason failure
   readonly titlecheckBoxStepReasonSuccess: string = 'Thành công'; // title form step reason failure
-  readonly titleCheckBoxSat: string = 'Thứ 7'; // title checkbox saturday form duration
-  readonly titleCheckBoxSun: string = 'Chủ nhật'; // title checkbox sunday form duration
+  readonly saturday: string = 'Thứ 7'; // title checkbox saturday form duration when value list is empty
+  readonly sunday: string = 'Chủ nhật'; // title checkbox sunday form duration when value list is empty
+  readonly viewSaturday: string = 'ExcludeDayoffSat' // view staturday when selected value
+  readonly viewSunday: string = 'ExcludeDayoffSun' // view sunday when selected value
   readonly formNameSteps: string = 'DPSteps';
   readonly gridViewNameSteps: string = 'grvDPSteps';
-
+  readonly formDurationCtrl: string = 'DurationControl'; // form duration control
+  readonly formLeaTimeCtrl: string = 'LeadtimeControl'; // form leadtime control
   //stage-nvthuan
   user: any;
   userId: string;
@@ -317,6 +328,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       });
     this.dataStepCrr = JSON.parse(JSON.stringify(this.arrSteps[0]));
     this.getGrvStep();
+    this.getValListDayoff();
   }
 
   data = [];
@@ -359,8 +371,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // this.updateNodeStatus(0,1);
     this.getTitleStepViewSetup();
     this.initForm();
-    // this.isTurnOnYesFailure = true;
-    console.log(this.isTurnOnYesFailure);
+    this.checkedDayOff(this.step?.excludeDayoff);
   }
 
   //#region setup formModels and formGroup
@@ -1073,6 +1084,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.isSwitchReason = false;
           // this.crrDataStep = data;
           this.step = data;
+          this.checkedDayOff(this.step?.excludeDayoff);
         }
       }
     }
@@ -1082,12 +1094,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.stepList.length > 0) {
       this.titleViewStepCrr = this.step?.stepName;
     }
-
-    // test nha
-    // for(let i=0; i<10; i++){
-    //   this.userPermissions.objectName = 'test123'+i;
-    //   this.listRoleInStep.push(this.userPermissions);
-    // }
   }
 
   getGrvStep() {
@@ -1099,6 +1105,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       });
   }
+  getValListDayoff() {
+    this.cache.valueList('DP026').subscribe((res) => {
+      if (res) {
+        this.listDayoff = res.datas;
+        this.titleCheckBoxSat = this.listDayoff[0].default;
+        this.valueCheckBoxSat = this.listDayoff[0].value;
+
+        this.titleCheckBoxSun = this.listDayoff[1].default;
+        this.valueCheckBoxSun = this.listDayoff[1].value;
+      }
+    });
+  }
   valueChangeAssignCtrl($event) {
     if ($event && $event != null) {
       //  let secleted = $event.data;
@@ -1106,7 +1124,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     this.changeDetectorRef.detectChanges();
   }
-  valueChangeTransferCtrl($event){
+  valueChangeTransferCtrl($event) {
     if ($event && $event != null) {
       //  let secleted = $event.data;
       this.step.transferControl = $event.data;
@@ -1122,8 +1140,68 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.step.durationHour = $event.data;
     }
   }
+  valueChangeStartCtrl($event) {
+    if ($event && $event != null) {
+      this.step.startControl = $event.data;
+    }
+  }
+  valueChangeDuraCtrl($event, form: string) {
+    let checked = $event.component.checked;
+    if($event) {
+      if (form === this.formDurationCtrl) {
+        if ($event.field === this.radioYes && checked) {
+          this.step.durationControl = true;
+        } else if ($event.field === this.radioNo && checked) {
+          this.step.durationControl = false;
+        }
+      } else {
+        if ($event.field === this.radioYes && checked) {
+          this.step.leadtimeControl = true;
+        } else if ($event.field === this.radioNo && checked) {
+          this.step.leadtimeControl = false;
+        }
+      }
+    }
 
-  valueMemoSetup($event) {}
+
+    this.changeDetectorRef.detectChanges();
+  }
+
+  valueChangeMemo($event) {
+    if ($event && $event != null) {
+      this.step.memo = $event.data;
+    }
+  }
+  valueChangeDayoff($event, view:any) {
+    if ($event && $event != null) {
+      if($event.data){
+        if(view == this.viewSaturday) {
+          this.step.excludeDayoff = this.step?.excludeDayoff && this.step?.excludeDayoff !== '' ? this.step?.excludeDayoff+';8':'7';
+        }
+        else if(view == this.viewSunday) {
+          this.step.excludeDayoff = this.step?.excludeDayoff && this.step?.excludeDayoff !== '' ? '7;8':'8';
+        }
+      }
+      else {
+        if(view == this.viewSaturday) {
+          this.step.excludeDayoff = this.step?.excludeDayoff && this.step?.excludeDayoff !== ''  ? '8':'';
+        }
+        else if(view == this.viewSunday) {
+          this.step.excludeDayoff = this.step?.excludeDayoff && this.step?.excludeDayoff !== '' ? '7':'';
+        }
+      }
+
+    }
+
+    this.changeDetectorRef.detectChanges();
+  }
+  checkedDayOff(value:string){
+    if(value !== '' && value) {
+      this.checkedSat= ((value?.split(';').length == 1 && value?.split(';')[0] == this.valueCheckBoxSat) || value?.split(';').length > 1 ) ? true:false;
+      this.checkedSun= ((value?.split(';').length == 1 && value?.split(';')[0] == this.valueCheckBoxSun) || value?.split(';').length > 1 ) ? true:false;
+    }
+    this.changeDetectorRef.detectChanges();
+  }
 
   //#endregion
 }

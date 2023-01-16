@@ -2419,29 +2419,28 @@
             </div>
           </div>
           <div class="col-6">
-            <div class="row">
+            <div class="row" >
               <div class="col-6">
                 <codx-input
-                  name="checkbox"
+                  [name]="viewSaturday"
                   type="checkbox"
                   style="width: 100%"
-                  field=""
+                  field="excludeDayoff"
                   [label]="titleCheckBoxSat"
-                  [checked]=""
-                  [crrValue]=""
-                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
+                  [checked]="checkedSat"
+                  (valueChange)="valueChangeDayoff($event,viewSaturday)"
                 >
                 </codx-input>
               </div>
               <div class="col-6">
                 <codx-input
                   type="checkbox"
-                  name="checkbox-radio"
-                  field=""
-                  [checked]=""
-                  [crrValue]=""
+                  [name]="viewSunday"
+                  field="excludeDayoff"
+                  style="width: 100%"
+                  [checked]="checkedSun"
                   [label]="titleCheckBoxSun"
-                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
+                  (valueChange)="valueChangeDayoff($event,viewSunday)"
                 >
                 </codx-input>
               </div>
@@ -2470,9 +2469,8 @@
               field="startControl"
               type="valuelist"
               refValue="DP021"
-              [crrValue]=""
-              [label]="titleCheckBoxSun"
-              (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
+              [crrValue]="step.startControl"
+              (valueChange)="valueChangeStartCtrl($event)"
             >
             </codx-input>
           </div>
@@ -2495,26 +2493,26 @@
             <div class="row">
               <div class="col-6">
                 <codx-input
-                  name="fail-radio"
+                  [name]="formDurationCtrl"
                   type="radio"
                   style="width: 100%"
                   field="yes"
                   [label]="titleRadioYes"
-                  [checked]="isTurnOnYesFailure"
-                  [crrValue]="isTurnOnYesFailure"
-                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
+                  [checked]="step.durationControl"
+                  [crrValue]="step.durationControl"
+                  (valueChange)="valueChangeDuraCtrl($event,formDurationCtrl)"
                 >
                 </codx-input>
               </div>
               <div class="col-6">
                 <codx-input
                   type="radio"
-                  name="fail-radio"
+                  [name]="formDurationCtrl"
                   field="no"
-                  [checked]="isTurnOnNoFailure"
-                  [crrValue]="isTurnOnNoFailure"
+                  [checked]="!step.durationControl"
+                  [crrValue]="step.durationControl"
                   [label]="titleRadioNo"
-                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
+                  (valueChange)="valueChangeDuraCtrl($event,formDurationCtrl)"
                 >
                 </codx-input>
               </div>
@@ -2538,26 +2536,26 @@
             <div class="row">
               <div class="col-6">
                 <codx-input
-                  name="fail-radio"
+                  [name]="formLeaTimeCtrl"
                   type="radio"
                   style="width: 100%"
                   field="yes"
                   [label]="titleRadioYes"
-                  [checked]=""
-                  [crrValue]=""
-                  (valueChange)="valueChangeRadio($event, '')"
+                  [checked]="step.leadtimeControl"
+                  [crrValue]="step.leadtimeControl"
+                  (valueChange)="valueChangeDuraCtrl($event,formLeaTimeCtrl)"
                 >
                 </codx-input>
               </div>
               <div class="col-6">
                 <codx-input
                   type="radio"
-                  name="fail-radio"
+                  [name]="formLeaTimeCtrl"
                   field="no"
-                  [checked]=""
-                  [crrValue]=""
+                  [checked]="!step.leadtimeControl"
+                  [crrValue]="step.leadtimeControl"
                   [label]="titleRadioNo"
-                  (valueChange)="valueChangeRadio($event, '')"
+                  (valueChange)="valueChangeDuraCtrl($event,formLeaTimeCtrl)"
                 >
                 </codx-input>
               </div>
@@ -2614,11 +2612,10 @@
         <div class="row pt-3 pb-5">
           <codx-input
             field="memo"
-            [formModel]="dialog.formModel"
             type="textarea"
             [placeholder]=""
-            [crrValue]="''"
-            (valueChange)="valueMemoSetup($event)"
+            [crrValue]="step.memo"
+            (valueChange)="valueChangeMemo($event)"
           >
           </codx-input>
         </div>
