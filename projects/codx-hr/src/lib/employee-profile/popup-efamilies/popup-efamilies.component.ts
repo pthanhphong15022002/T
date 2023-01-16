@@ -35,6 +35,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   lstFamilyMembers;
   indexSelected;
   isEmployee = false;
+
   familyMemberObj;
   funcID;
   headerText: ''
@@ -194,8 +195,21 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
 
   onSelectEmployee(evt){
     console.log('sau khi chon nhan vien', evt);
+    this.familyMemberObj.relationName = evt.component.itemsSelected[0].EmployeeName
+    this.familyMemberObj.gender = evt.component.itemsSelected[0].Gender
+    this.familyMemberObj.birthday = evt.component.itemsSelected[0].Birthday
+    this.familyMemberObj.nationalityID = evt.component.itemsSelected[0].NationalityID
+    this.familyMemberObj.mobile = evt.component.itemsSelected[0].Mobile
+    this.familyMemberObj.personalEmail = evt.component.itemsSelected[0].PersonalEmail
+    this.familyMemberObj.idIssuedOn = evt.component.itemsSelected[0].IssuedOn
+    this.familyMemberObj.idCardNo = evt.component.itemsSelected[0].IDCardNo
+    this.familyMemberObj.idIssuedBy = evt.component.itemsSelected[0].IssuedBy
+    this.familyMemberObj.pitNumber = evt.component.itemsSelected[0].PITNumber
+    this.familyMemberObj.siRegisterNo = evt.component.itemsSelected[0].SIRegisterNo
+    console.log('this family obj', this.familyMemberObj);
+    this.formGroup.patchValue(this.familyMemberObj);
+    this.cr.detectChanges();
   }
-
   
   afterRenderListView(evt){
     this.listView = evt;
@@ -205,9 +219,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   UpdateRegisterFrom(e){
     this.fromdateVal = e
   }
-
   UpdateRegisterTo(e){
     this.todateVal = e
   }
-
 }

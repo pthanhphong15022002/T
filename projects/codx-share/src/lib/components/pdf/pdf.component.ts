@@ -52,6 +52,7 @@ import { environment } from 'src/environments/environment';
 import { style } from '@angular/animations';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { NgxExtendedPdfViewerCommonModule } from 'ngx-extended-pdf-viewer/lib/ngx-extended-pdf-viewer-common.module';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -60,7 +61,8 @@ import { NgxExtendedPdfViewerCommonModule } from 'ngx-extended-pdf-viewer/lib/ng
 })
 export class PdfComponent
   extends UIComponent
-  implements AfterViewInit, OnChanges, OnDestroy {
+  implements AfterViewInit, OnChanges, OnDestroy
+{
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -101,6 +103,7 @@ export class PdfComponent
   @ViewChildren('actions') actions: QueryList<ElementRef>;
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
   @ViewChild('ngxPdfView') ngxPdfView: NgxExtendedPdfViewerComponent;
+  @ViewChild('rightToolbar') rightToolbar: TabComponent;
 
   //core
   dialog: import('codx-core').DialogRef;
@@ -130,7 +133,7 @@ export class PdfComponent
   curSelectedHLA: highLightTextArea;
   curCmtContent = '';
   deleteHLAMode = false;
-  sfEdited = false
+  sfEdited = false;
   defaultColor = 'rgb(255, 255, 40)';
   defaultAddedColor = 'transparent';
   selectedColor = 'rgb(114, 255, 234)';
@@ -459,6 +462,23 @@ export class PdfComponent
       (document.getElementById('input-Cmt') as HTMLInputElement).value = '';
       this.changeHLComment();
     };
+
+    //this.hideShowTab();
+  }
+
+  hideShowTab() {
+    this.rightToolbar.hideTab(
+      0,
+      !(this.isEditable && !this.isPublic && !this.isInteractPDF)
+    );
+    this.rightToolbar.hideTab(
+      1,
+      !(this.inputUrl == null && !this.isInteractPDF)
+    );
+    this.rightToolbar.hideTab(2, !this.isApprover);
+    this.rightToolbar.hideTab(3, !this.isApprover);
+    if (this.lstKey) this.rightToolbar.hideTab(4, false);
+    else this.rightToolbar.hideTab(4, true);
   }
 
   //remove area
@@ -557,33 +577,33 @@ export class PdfComponent
           this.isEditable == false
             ? false
             : area.allowEditAreas == false
-              ? false
-              : area.isLock == true
-                ? false
-                : true
+            ? false
+            : area.isLock == true
+            ? false
+            : true
         );
 
         this.tr?.enabledAnchors(
           this.isEditable == false
             ? []
             : area.allowEditAreas == false
-              ? []
-              : area.isLock == true
-                ? []
-                : this.imgConfig.includes(area.labelType)
-                  ? this.checkIsUrl(area.labelValue)
-                    ? this.fullAnchor
-                    : this.textAnchor
-                  : this.textAnchor
+            ? []
+            : area.isLock == true
+            ? []
+            : this.imgConfig.includes(area.labelType)
+            ? this.checkIsUrl(area.labelValue)
+              ? this.fullAnchor
+              : this.textAnchor
+            : this.textAnchor
         );
         this.tr?.draggable(
           this.isEditable == false
             ? false
             : area.allowEditAreas == false
-              ? false
-              : area.isLock == true
-                ? false
-                : true
+            ? false
+            : area.isLock == true
+            ? false
+            : true
         );
         this.tr?.forceUpdate();
         this.curSelectedArea.draggable(this.tr.draggable());
@@ -879,8 +899,8 @@ export class PdfComponent
             this.isEditable == false
               ? false
               : area.allowEditAreas == false
-                ? false
-                : !area.isLock;
+              ? false
+              : !area.isLock;
           if (isRender) {
             let curSignerInfo = this.lstSigners.find(
               (signer) => signer.authorID == area.signer
@@ -995,7 +1015,7 @@ export class PdfComponent
               }
               this.esService
                 .addOrEditSignArea(this.recID, this.curFileID, area, area.recID)
-                .subscribe((res) => { });
+                .subscribe((res) => {});
             } else {
             }
           }
@@ -1052,18 +1072,18 @@ export class PdfComponent
               this.isEditable == false
                 ? false
                 : this.signerInfo.allowEdit == false
-                  ? false
-                  : true;
+                ? false
+                : true;
             this.tr?.rotateEnabled(false);
             this.tr?.draggable(transformable);
             this.tr?.enabledAnchors(
               !transformable
                 ? []
                 : name.Type == 'img'
-                  ? this.checkIsUrl(name.LabelValue)
-                    ? this.fullAnchor
-                    : this.textAnchor
+                ? this.checkIsUrl(name.LabelValue)
+                  ? this.fullAnchor
                   : this.textAnchor
+                : this.textAnchor
             );
             this.tr?.resizeEnabled(transformable);
             this.tr?.nodes([this.needAddKonva]);
@@ -1537,6 +1557,8 @@ export class PdfComponent
   }
 
   changeRightTab(e) {
+    console.log('change right tab', e);
+    
     if (e.isSwiped) {
       e.cancel = true;
     }
@@ -1671,7 +1693,7 @@ export class PdfComponent
       fontFormat: this.imgConfig.includes(type)
         ? ''
         : this.curAnnotFontStyle + this.curSelectedArea.attrs?.textDecoration ??
-        '',
+          '',
       fontSize: this.imgConfig.includes(type) ? '' : this.curAnnotFontSize,
       signatureType: 2,
       comment: '',
@@ -2332,6 +2354,11 @@ export class PdfComponent
       ele.style.zIndex = this.isInteractPDF ? '-1' : '2';
     });
     this.detectorRef.detectChanges();
+    //this.hideShowTab();
+
+    // if (!this.isInteractPDF) {
+    //   this.rightToolbar && this.rightToolbar.select(0);
+    // } else this.rightToolbar && this.rightToolbar.select(4);
   }
 
   getHLText(key): highLightTextArea {
@@ -2429,11 +2456,11 @@ export class PdfComponent
               span.style.width = location.width * this.xScale + 'px';
               span.style.top =
                 (location.top - location.height * isFromAnotherApp) *
-                this.yScale +
+                  this.yScale +
                 'px';
               span.style.left =
                 (location.left - location.width * isFromAnotherApp) *
-                this.xScale +
+                  this.xScale +
                 'px';
               span.style.zIndex = '2';
               span.dataset.id = key;
@@ -2461,7 +2488,7 @@ export class PdfComponent
   }
 
   removeUnsaveHLA() {
-    window.getSelection().empty()
+    window.getSelection().empty();
     let lstUnsave = this.lstHighlightTextArea.filter(
       (hla) => hla.isAdded == false
     );
@@ -2682,12 +2709,11 @@ export class PdfComponent
       this.lstHighlightTextArea = this.lstHighlightTextArea.concat(tmpLstHLA);
       this.detectorRef.detectChanges();
     }
-    
   }
 
-  addComment() { }
+  addComment() {}
 
-  ngOnDestroy() { }
+  ngOnDestroy() {}
   //#endregion
 }
 //create new guid

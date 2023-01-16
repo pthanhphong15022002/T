@@ -1,3 +1,5 @@
+import { Util } from "codx-core";
+
 export class DP_ProcessGroups {
   recID: string;
   groupID: string;
@@ -76,7 +78,7 @@ export class DP_Steps {
   taskControl: string;
   leadtimeControl: boolean;
   durationControl: boolean;
-  startControl: boolean;
+  startControl: string; // update bit to string
   reScheduleTasks: boolean;
   options: string; // json
   roles: DP_Steps_Roles[]; // objects
@@ -93,6 +95,18 @@ export class DP_Steps {
   modifiedOn: Date;
   modifiedBy: string;
   showColumnControl: number;
+  constructor(){
+    this.recID = Util.uid();
+    this.durationDay = 0;
+    this.durationHour = 0;
+    this.taskGroups = [];
+    this.assignControl='1';
+    this.transferControl = '0';
+    this.durationDay = 0;
+    this.reScheduleTasks = true;
+    this.leadtimeControl = true;
+    this.startControl ='0'
+  }
 }
 export class DP_Steps_Roles {
   recID: string;
