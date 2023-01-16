@@ -142,7 +142,8 @@ export class DynamicProcessComponent
   }
 
   searchDynamicProcess($event) {
-    if ($event) this.changeDetectorRef.detectChanges();
+    this.view.dataService.search($event).subscribe();
+    this.changeDetectorRef.detectChanges();
   }
 
   async genAutoNumber() {
