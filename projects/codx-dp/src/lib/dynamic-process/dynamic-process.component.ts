@@ -252,7 +252,7 @@ export class DynamicProcessComponent
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedProcessesAsync';
-    opt.data = [itemSelected.recID, true];
+    opt.data = [itemSelected.recID];
     return true;
   }
 
