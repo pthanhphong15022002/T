@@ -59,16 +59,26 @@
           </codx-label>
         </div>
         <div>
-          <select
-            class="w-100"
-            style="height: 32px; border: 1px solid #ced4da; border-radius: 3px"
-            aria-label="Default select example"
-            (change)="changeSelect($event)"
+          <ejs-dropdownlist
+            id="ddlelement"
+            #samples
+            [dataSource]="groupTackList"
+            [fields]="fields"
+            [placeholder]="''"
+            [(ngModel)]="tasksItem"
+            [itemTemplate]="itemTemplate"
+            [valueTemplate]="valueTemplate"
+            [(value)]="tasksItem"
+            (change)="filterText($event)"
+            [allowFiltering]="false"
           >
-            <option [value]="tack.recID" *ngFor="let tack of groupTackList">
-              {{ tack?.taskGroupName }}
-            </option>
-          </select>
+            <ng-template #itemTemplate="" let-data="">
+              <span>{{ data.taskGroupName }}</span>
+            </ng-template>
+            <ng-template #valueTemplate="" let-data="">
+              <span>{{ data.taskGroupName }}</span>
+            </ng-template>
+          </ejs-dropdownlist>
         </div>
       </div>
     </div>
