@@ -884,11 +884,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }else{
       this.headerText = 'Sửa Giai Đoạn';
       this.stepName = this.step['stepName'];
+      this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
     }
   }
 
   saveAddStep() {
-    this.stepList.push(this.step);
+    if(!this.stepName){
+      this.stepList.push(this.step);
+    }
     this.popupAddStage.close();
   }
 
