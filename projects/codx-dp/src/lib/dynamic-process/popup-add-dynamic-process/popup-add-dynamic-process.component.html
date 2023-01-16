@@ -1320,6 +1320,33 @@
           </ng-container>
         </div>
       </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="d-flex flex-column margin-form mb-4">
+            <div class="d-flex flex">
+              <codx-label class="fw-bolder" fiedName="Permission" default="Người liên quan">
+              </codx-label>
+            </div>
+            <div>
+              <codx-label class="fw-normal text-gray-400" fiedName="LocationControl" default="Người liên quan có thể cập nhật công việc mà họ đang phụ trách">
+              </codx-label>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 group-permission witdh-roles scroll-user" *ngIf="dataStepCrr.roles != null && dataStepCrr.roles.length > 0">
+          <ng-container *ngFor="let perm of dataStepCrr.roles; index as i">
+            <div *ngIf="perm.roleType == 'O'" class="me-4 d-flex align-items-center margin-form mb-4">
+              <div class="d-flex align-items-center position-relative">
+                <codx-img class="" [width]="25" [objectId]="perm.objectName" objectType="AD_Users">
+                </codx-img>
+              </div>
+              <div class="ms-1">
+                <div class="text-dark fw-bold">{{ perm.objectName }}</div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -1509,8 +1536,10 @@
         <div class="row pb-5">
           <div class="col-6">
             <div class="title-switch">
-              <codx-label class="text-muted" default="Bỏ qua ngày nghỉ trong tuần khi tính toán ngày đến hạn cho nhiệm vụ trong giai đoạn">
-              </codx-label>
+              <strong>
+                <codx-label class="text-muted" default="Bỏ qua ngày nghỉ trong tuần khi tính toán ngày đến hạn cho nhiệm vụ trong giai đoạn">
+                </codx-label>
+               </strong>
             </div>
           </div>
           <div class="col-6">

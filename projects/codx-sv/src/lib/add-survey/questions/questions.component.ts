@@ -32,9 +32,9 @@ import { Observable, Subscription } from 'rxjs';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { environment } from 'src/environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
-import { SV_Surveys } from '../../model/SV_Surveys';
+import { SV_Surveys } from '../../models/SV_Surveys';
 import { CodxSvService } from '../../codx-sv.service';
-import { SV_Questions } from '../../model/SV_Questions';
+import { SV_Questions } from '../../models/SV_Questions';
 import { TemplateSurveyOtherComponent } from './template-survey-other.component/template-survey-other.component';
 import { PopupQuestionOtherComponent } from './template-survey-other.component/popup-question-other/popup-question-other.component';
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
@@ -934,11 +934,10 @@ export class QuestionsComponent extends UIComponent implements OnInit {
                 t.questions[seqNoSession].children[seqNoQuestion].answers[
                   itemAnswer.seqNo
                 ].hasPicture = true;
+                // let index = t.questions.findIndex(x => x.recID == seqNoSession);
+                // t.questions[index]
                 t.questions[seqNoSession].children[seqNoQuestion].APicture =
                   true;
-                // t.questions[seqNoQuestion].children[seqNoQuestion].answers[
-                //   itemAnswer.seqNo
-                // ].recID = res.event?.dataUpload[0].objectID;
               } else {
                 if (modeFile == 'change') {
                   t.lstEditIV = t.lstEditIV.filter(
@@ -949,8 +948,6 @@ export class QuestionsComponent extends UIComponent implements OnInit {
                 }
                 this.questions[seqNoSession].children[seqNoQuestion].qPicture =
                   true;
-                // this.questions[seqNoSession].children[seqNoQuestion].recID =
-                //   res.event?.dataUpload[0].objectID;
               }
               this.lstEditIV.push(res.event?.dataUpload[0]);
               this.SVServices.signalSave.next('saving');
