@@ -209,7 +209,7 @@ export class PopupAddPermissionComponent implements OnInit {
 
   onUserEvent($event, type: string) {
     console.log($event);
-    if ($event.data != undefined) {
+    if ($event.data != undefined && $event.data.length > 0) {
       var data = $event.data;
       var list = [];
       for (var i = 0; i < data.length; i++) {

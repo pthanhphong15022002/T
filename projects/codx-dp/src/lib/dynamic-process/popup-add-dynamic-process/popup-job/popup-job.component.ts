@@ -1,5 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import {
+  CacheService,
   CallFuncService,
   DialogData,
   DialogRef,
@@ -7,6 +8,7 @@ import {
   Util,
 } from 'codx-core';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { DP_Steps_Tasks } from '../../../models/models';
 
 @Component({
   selector: 'lib-popup-job',
@@ -17,7 +19,7 @@ export class PopupJobComponent implements OnInit {
   title = 'thuan';
   dialog!: DialogRef;
   formModelMenu: FormModel;
-  job = [];
+  job: DP_Steps_Tasks;
   stepType = '';
   vllShare = 'BP021';
   taskName = 'Giới thiệu sản phẩm';
@@ -29,7 +31,11 @@ export class PopupJobComponent implements OnInit {
   isNewEmails = true;
   groupTackList = [];
   stepsTasks = {};
+  fields = { text: 'recID', value: 'taskGroupName' };
+  tasksItem = '';
+
   constructor(
+    private cache: CacheService,
     private callfunc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -48,12 +54,18 @@ export class PopupJobComponent implements OnInit {
   valueChangeText(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
-
-  changeSelect(event) {
-    this.stepsTasks['taskGroupID'] = event.target.value;
-    console.log(event.target.value);
+  valueChangeCombobox(event) {
+    this.stepsTasks[event?.field] = event?.data;
   }
-  valueChangeAlert(e) {}
+
+  filterText(value) {
+    if (value.itemData) {
+      this.stepsTasks['taskGroupID'] = value['itemData']['recID'];
+    }
+  }
+  valueChangeAlert(event) {
+    this.stepsTasks[event?.field] = event?.data;
+  }
   addFile(evt: any) {
     // this.attachment.uploadFile();
   }

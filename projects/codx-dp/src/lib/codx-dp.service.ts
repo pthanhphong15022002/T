@@ -31,13 +31,13 @@ export class CodxDpService {
     );
   }
 
-  genAutoNumber(formName: string, funcID: any, entityName: string, key: any) {
+  genAutoNumber(funcID: any, entityName: string, key: any) {
     return this.api.execSv<any>(
       'SYS',
       'AD',
       'AutoNumbersBusiness',
       'GenAutoNumberAsync',
-      [formName, funcID, entityName, key]
+      [funcID, entityName, key]
     );
   }
 
@@ -120,5 +120,15 @@ export class CodxDpService {
         else subject.next(null);
       });
     return subject.asObservable();
+  }
+
+  GetInstanceByRecID(recID){
+    return this.api.execSv<any>(
+      'DP',
+      'ERM.Business.DP',
+      'InstancesBusiness',
+      'GetAsync',
+      [recID]
+    );
   }
 }

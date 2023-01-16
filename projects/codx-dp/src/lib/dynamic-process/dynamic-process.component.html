@@ -35,6 +35,7 @@
     [footer]="footerbg"
     [typeMF]="'hover'"
     (clickMF)="clickMF($event, data)"
+    (dblclick)="doubleClickViewProcess(data)"
   >
   </codx-card-img>
   <ng-template #footerbg let-data>
