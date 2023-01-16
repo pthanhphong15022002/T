@@ -465,3 +465,10 @@ export class DP_Instances_Steps_Reasons {
   modifiedOn: Date;
   modifiedBy: string;
 }
+
+export class TabModel {
+  name: 'Nhiệm vụ' | 'Dashboard' | string;
+  textDefault: string;
+  template?: any;
+  isActive: boolean = false;
+}

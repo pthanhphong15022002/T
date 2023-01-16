@@ -27,6 +27,7 @@ import {
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
+import { PopupViewsDetailsProcessComponent } from './popup-views-details-process/popup-views-details-process.component';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -321,4 +322,24 @@ export class DynamicProcessComponent
   }
 
   //#endregion đang test
+
+  doubleClickViewProcess(data){
+    let obj = {
+    //can gi nem qua
+    };
+
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 999;
+    var dialog = this.callfc.openForm(
+      PopupViewsDetailsProcessComponent,
+      '',
+      this.widthWin,
+      this.heightWin,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+  }
 }
