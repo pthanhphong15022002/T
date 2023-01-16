@@ -873,16 +873,22 @@
       </div>
     </div>
     <div id="{{ item.recID }}" class="main show-main">
-      <div *ngIf="item?.fields?.length == 0" class="position-relative p-9">
+      <div
+        *ngIf="!item?.fields || item?.fields?.length == 0"
+        class="position-relative p-9"
+      >
         <div class="position-absolute top-50 start-50 translate-middle">
           <button
             type="button"
-            class="btn btn-light-primary cursor-pointer text-hover-primary d-flex"
+            class="btn btn-outline-primary btn-sm pb-5 d-flex align-items-center justify-content-between"
             (click)="addCustomField(item.recID, item.processID)"
           >
-            <i class="icon-add icon-18"> </i>
+            <span class="icon-add icon-20 text-primary-600 py-2"></span>
             <codx-label
-              [name]="''"
+             class="text-primary-600"
+              [name]="'lblAddCustomField'"
+              [formName]="'DPStepsFields'"
+              [gridViewName]="'grvDPStepsFields'"
               [default]="'Thêm trường tùy chỉnh'"
             ></codx-label>
           </button>
@@ -898,7 +904,7 @@
         >
           <ng-container *ngFor="let item1 of item?.fields">
             <div
-              class="col-{{ 12 / item.showColumnControl }} p-3"
+              class="col-{{ 12 / item.showColumnControl }} p-3 has-action-menu"
               cdkDrag
               [cdkDragStartDelay]="200"
               [cdkDragData]="item1"
@@ -924,6 +930,16 @@
                 ></codx-label>
                 <codx-input type="switch" field="isRequired" [checked]="true">
                 </codx-input>
+              </div>
+              <div class="action-menu">
+                <codx-mfunc
+                [formModel]="dialog.formModel"
+                (clickMF)="clickMFStep($event, item)"
+                [isBookMark]="true"
+                [dataItem]="action !='edit'? moreDefaut : item"
+                [type]="'hover'"
+              >
+              </codx-mfunc>
               </div>
             </div>
           </ng-container>

@@ -118,7 +118,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   taskGroupList: DP_Steps_TaskGroups[] = [];
 
   step: DP_Steps; //data step dc chọn
-  stepList: DP_Steps[] = [];  //danh sách step
+  stepList: DP_Steps[] = []; //danh sách step
   stepName = '';
 
   popupJob: DialogRef;
@@ -178,8 +178,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     download: true,
     delete: true,
   };
-  //data test Thao 
-  fieldNew: DP_Steps_Fields;
+  //data test Thao
+  fieldCrr: DP_Steps_Fields;
   stepOfFields: any;
   isHover = '';
   vllType = 'DP022';
@@ -566,10 +566,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             roles.objectID = data.id != null ? data.id : null;
             roles.objectType = data.objectType;
             roles.roleType = 'O';
-            this.step.roles = this.checkRolesStep(
-              this.step.roles,
-              roles
-            );
+            this.step.roles = this.checkRolesStep(this.step.roles, roles);
           }
           break;
       }
@@ -717,9 +714,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.cache
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
         .subscribe((res) => {
-          this.fieldNew = new DP_Steps_Fields();
-          this.fieldNew.stepID = stepID;
-          this.fieldNew.processID = processID;
+          this.fieldCrr = new DP_Steps_Fields();
+          this.fieldCrr.stepID = stepID;
+          this.fieldCrr.processID = processID;
           let titleAction = '';
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
@@ -731,19 +728,68 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           option.zIndex = 1010;
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
-            [this.fieldNew, 'add', titleAction],
+            [this.fieldCrr, 'add', titleAction],
             option
           );
           dialogCustomField.closed.subscribe((e) => {
             if (e && e.event != null) {
               //xu ly data đổ về
-              this.fieldNew = e.event;
-              if (this.step.recID == this.fieldNew.stepID) {
-                this.step.fields.push(this.fieldNew);
+              this.fieldCrr = e.event;
+              if (this.step.recID == this.fieldCrr.stepID) {
+                this.step.fields.push(this.fieldCrr);
               }
               this.stepList.forEach((x) => {
-                if (x.recID == this.fieldNew.stepID)
-                  x.fields.push(this.fieldNew);
+                if (x.recID == this.fieldCrr.stepID)
+                  x.fields.push(this.fieldCrr);
+              });
+              this.changeDetectorRef.detectChanges();
+            }
+          });
+        });
+    });
+  }
+
+  editCustomField(field) {
+    this.fieldCrr = field;
+    this.cache.gridView('grvDPStepsFields').subscribe((res) => {
+      this.cache
+        .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
+        .subscribe((res) => {
+          let titleAction = '';
+          let option = new SidebarModel();
+          let formModel = this.dialog?.formModel;
+          formModel.formName = 'DPStepsFields';
+          formModel.gridViewName = 'grvDPStepsFields';
+          formModel.entityName = 'DP_Steps_Fields';
+          option.FormModel = formModel;
+          option.Width = '550px';
+          option.zIndex = 1010;
+          var dialogCustomField = this.callfc.openSide(
+            PopupAddCustomFieldComponent,
+            [this.fieldCrr, 'edit', titleAction],
+            option
+          );
+          dialogCustomField.closed.subscribe((e) => {
+            if (e && e.event != null) {
+              //xu ly data đổ về
+              this.fieldCrr = e.event;
+              if (this.step.recID == this.fieldCrr.stepID) {
+                let index = this.step.fields.findIndex(
+                  (x) => x.recID == this.fieldCrr.recID
+                );
+                if (index != -1) {
+                  this.step.fields[index] = this.fieldCrr;
+                }
+              }
+              this.stepList.forEach((obj) => {
+                if (obj.recID == this.fieldCrr.stepID) {
+                  let index = obj.fields.findIndex(
+                    (x) => x.recID == this.fieldCrr.recID
+                  );
+                  if (index != -1) {
+                    obj.fields[index] = this.fieldCrr;
+                  }
+                }
               });
               this.changeDetectorRef.detectChanges();
             }
