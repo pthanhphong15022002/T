@@ -726,7 +726,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //Popup roles process
-  clickRoles(e, type) {
+  clickRoles(type) {
     this.callfc.openForm(
       PopupRolesDynamicComponent,
       '',
