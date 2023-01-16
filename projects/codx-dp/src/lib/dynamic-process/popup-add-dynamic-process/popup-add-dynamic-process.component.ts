@@ -116,10 +116,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   taskGroup = {};
   taskGroupList = [];
 
-  step = {};
-  stepSelect = {};
-  stepList = [];
-  // stepList: DP_Steps[];
+  step: DP_Steps;
+  stepSelect: DP_Steps;
+  stepList: DP_Steps[] = [];
 
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
@@ -278,12 +277,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   vllType = 'DP022';
   dataChild = [];
   //end data Test
-
-  isTurnOnYesNo: boolean = false; //Create variable Click yes/no for reason success/failure
-  viewReasonSuccess: string = 'viewReasonSuccess'; // test click view Reason Success
-  viewReasonFail: string = 'viewReasonFail'; // test click view Reason Success
-  ngTemplateOutlet: any;
-
   isShowstage = true;
 
   constructor(
@@ -880,16 +873,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //#stage -- nvthuan
   async openAddStep(type) {
-    this.step = {};
-    this.step['recID'] = Util.uid();
-    this.step['processID'] = this.process?.recID;
-    this.step['stepNo'] = this.stepList.length + 1;
-    this.step['createdOn'] = new Date();
-    this.step['durationDay'] = 0;
-    this.step['durationHour'] = 0;
-    this.step['createdBy'] = this.userId;
-    this.step['taskGroups'] = [];
-    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
+    if (type === 'add') {
+      this.step = new DP_Steps();
+      this.step['processID'] = this.process?.recID;
+      this.step['stepNo'] = this.stepList.length + 1;
+      this.popupAddStage = this.callfc.openForm(
+        this.addStagePopup,
+        '',
+        500,
+        280
+      );
+    } else {
+    }
   }
 
   saveAddStep() {
@@ -955,6 +950,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.taskGroup['recID'] = Util.uid();
     this.taskGroup['createdOn'] = Date.now();
     this.taskGroup['createdBy'] = this.userId;
+    this.taskGroup['stepID'] = this.stepSelect['recID'];
     this.taskGroup['task'] = [];
     this.popupGroupJob = this.callfc.openForm(
       this.addGroupJobPopup,
@@ -1015,7 +1011,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  clickViewReason($event: any, view: any, data: any) {
+  clickViewStep($event: any, view: any, data: any) {
     if ($event && $event != null) {
       if (
         view === this.viewStepReasonSuccess ||
@@ -1039,11 +1035,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.viewStepCrr = this.viewStepCustom;
         if (data) {
           // gán tạm name để test
-          this.titleViewStepCrr = data.name;
+          this.titleViewStepCrr = data.stepName;
 
           // hidden swtich reason change
           this.isSwitchReason = false;
           // this.crrDataStep = data;
+          this.stepSelect = data;
         }
       }
     }
@@ -1070,6 +1067,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       });
   }
+  valueChangeAssignCtrl($event) {
+    if ($event && $event != null) {
+      //  let secleted = $event.data;
+    }
+  }
+
   valueMemoSetup($event) {}
 
   //#endregion

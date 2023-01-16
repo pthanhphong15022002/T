@@ -81,7 +81,7 @@ export class DynamicProcessComponent
   readonly className = 'ProcessesBusiness';
 
   // Method API dynamic proccess
-  readonly methodGetList = 'GetListDynProcessesAsync';
+  readonly methodGetList = 'GetListProcessesAsync';
 
   // Get idField
   readonly idField = 'recID';
