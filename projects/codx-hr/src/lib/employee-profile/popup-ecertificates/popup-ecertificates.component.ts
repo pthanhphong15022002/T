@@ -50,12 +50,6 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    // if(!this.formModel){
-    //   this.formModel = new FormModel();
-    //   this.formModel.formName = 'ECertificates'
-    //   this.formModel.entityName = 'HR_ECertificates'
-    //   this.formModel.gridViewName = 'grvECertificates'
-    // }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID
@@ -133,10 +127,10 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm(){
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
     
     if(this.actionType === 'copy' || this.actionType === 'add'){
       delete this.certificateObj.recID
@@ -188,5 +182,17 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   afterRenderListView(evt){
     this.listView = evt;
     console.log(this.listView);
+  }
+
+  valueChange(event, cbxComponent: any = null){
+    if (event?.field && event?.component && event?.data != '') {
+      switch (event.field) {
+        case 'certificateType':{
+          (cbxComponent.ComponentCurrent.dataService as CRUDService).setPredicate('CertificateType==@0', [event.data]).subscribe();
+          console.log(cbxComponent);
+          break;
+        }
+      }
+    }
   }
 }

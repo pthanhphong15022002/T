@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
-import { CacheService, ApiHttpService, CallFuncService, NotificationsService, UIComponent, DialogData, DialogRef, FormModel, CodxFormComponent } from 'codx-core';
+import { CacheService, ApiHttpService, CallFuncService, NotificationsService, UIComponent, DialogData, DialogRef, FormModel, CodxFormComponent, DialogModel } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { Customers } from '../../models/Customers.model';
+import { PopAddBankComponent } from '../pop-add-bank/pop-add-bank.component';
+import { PopAddContactComponent } from '../pop-add-contact/pop-add-contact.component';
 
 @Component({
   selector: 'lib-pop-add-customers',
@@ -49,5 +51,57 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   setTitle(e: any) {
     this.title = this.headerText;
     this.dt.detectChanges();
+  }
+  openPopupBank(){
+    var obj = {
+      headerText: 'Thêm tài khoản ngân hàng',
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'BankAccounts';
+    dataModel.gridViewName = 'grvBankAccounts';
+    dataModel.entityName = 'BS_BankAccounts';
+    opt.FormModel = dataModel;
+    this.cache.gridViewSetup('BankAccounts','grvBankAccounts').subscribe(res=>{
+      if(res){  
+        var dialogexchange = this.callfc.openForm(
+          PopAddBankComponent,
+          '',
+          650,
+          550,
+          '',
+          obj,
+          '',
+          opt
+        );
+      
+      }
+    });
+  }
+  openPopupContact(){
+    var obj = {
+      headerText: 'Thêm người liên hệ',
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'ContactBook';
+    dataModel.gridViewName = 'grvContactBook';
+    dataModel.entityName = 'BS_ContactBook';
+    opt.FormModel = dataModel;
+    this.cache.gridViewSetup('ContactBook','grvContactBook').subscribe(res=>{
+      if(res){  
+        var dialogexchange = this.callfc.openForm(
+          PopAddContactComponent,
+          '',
+          650,
+          550,
+          '',
+          obj,
+          '',
+          opt
+        );
+      
+      }
+    });
   }
 }

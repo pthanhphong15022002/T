@@ -754,7 +754,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   clickMFFields(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        // this.delete(data);
+        this.deleteCustomField(data);
         break;
       case 'SYS03':
         this.editCustomField(data, e.text);
@@ -773,6 +773,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.fieldCrr = new DP_Steps_Fields();
           this.fieldCrr.stepID = stepID;
           this.fieldCrr.processID = processID;
+          this.fieldCrr.isRequired = false;
+          this.fieldCrr.rank = 5 ;
           let titleAction = this.titleAdd;
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
@@ -791,6 +793,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             if (e && e.event != null) {
               //xu ly data đổ về
               this.fieldCrr = e.event;
+              this.fieldCrr.sorting = this.step.fields.length + 1;
               if (this.step.recID == this.fieldCrr.stepID) {
                 this.step.fields.push(this.fieldCrr);
               }
@@ -854,6 +857,46 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
+  deleteCustomField(field) {
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.step.fields.splice(field.sorting - 1, 1);
+        this.step.fields.forEach((x) => {
+          if (x.sorting > field.sorting) x.sorting = x.sorting - 1;
+        });
+        this.stepList.forEach((obj) => {
+          if (obj.recID == this.fieldCrr.stepID) {
+            obj.fields.splice(field.sorting - 1, 1);
+            obj.fields.forEach((x) => {
+              if (x.sorting > field.sorting) x.sorting = x.sorting - 1;
+            });
+          }
+        });
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+
+  changeRequired(e, field) {
+    this.fieldCrr = field;
+    this.fieldCrr.isRequired = e.data;
+    if (this.step.recID == this.fieldCrr.stepID) {
+      let index = this.step.fields.findIndex(
+        (x) => x.recID == this.fieldCrr.recID
+      );
+      if (index != -1) {
+        this.step.fields[index] = this.fieldCrr;
+      }
+    }
+    this.stepList.forEach((obj) => {
+      if (obj.recID == this.fieldCrr.stepID) {
+        let index = obj.fields.findIndex((x) => x.recID == this.fieldCrr.recID);
+        if (index != -1) {
+          obj.fields[index] = this.fieldCrr;
+        }
+      }
+    });
+  }
   popoverSelectView(p, data) {
     this.stepOfFields = data;
     p.open();
