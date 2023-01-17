@@ -1,13 +1,124 @@
-<codx-views #view [service]="service" [entityName]="entityName" [idField]="idField" [funcID]="funcID"
-  [assemblyName]="assemblyName" [className]="className" [method]="method" [views]="views" [dataObj]="dataObj"
-  [button]="showButtonAdd ? button : ''" (buttonClick)="click($event)" (selectedChange)="selectedChange($event)" [selectedFirst]="true" [autoLoad]="true">
-
+<codx-views
+  #view
+  [service]="service"
+  [entityName]="entityName"
+  [idField]="idField"
+  [funcID]="funcID"
+  [assemblyName]="assemblyName"
+  [className]="className"
+  [method]="method"
+  [views]="views"
+  [dataObj]="dataObj"
+  [button]="showButtonAdd ? button : ''"
+  (buttonClick)="click($event)"
+  (selectedChange)="selectedChange($event)"
+  [selectedFirst]="true"
+  [autoLoad]="true"
+  (onActions)="onActions($event)"
+  (viewChanged)="changeView($event)"
+>
 </codx-views>
+<!-- KANBAN -->
+<ng-template #cardKanban let-data let-setting="setting">
+  <codx-card-img
+    cardCss="border h-100"
+    [hideMF]="hideMoreFC"
+    (clickMF)="clickMF($event, data)"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [typeMF]="'hover'"
+    [titleTmp]="cardTitleTmp"
+    [formModel]="view.formModel"
+    [setting]="setting"
+    [footer]="footerKanban"
+    [dataItem]="data"
+    [rootData]="data"
+    (dblclick)="dblClick($event, data)"
+  >
+  </codx-card-img>
+</ng-template>
+
+<ng-template #cardTitleTmp let-data>
+  <codx-temp-full [title]="data.title" [descTmp]="descTmp"> </codx-temp-full>
+  <ng-template #descTmp>
+    <div class="d-flex">
+      <div class="d-flex align-items-center">
+        <span class="text-gray-600 icon-14 icon-apartment me-1"></span
+        ><span>số tiền nè </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="text-gray-600"></span><span>70% la cai gi</span>
+      </div>
+      <div class="d-flex justify-content-end">
+        <span class="text-gray-600 icon-14 icon-apartment me-1"></span>
+        <span class="fs-7 text-gray-600" #createdOn>{{
+          data.createdOn
+            | formatvalue
+              : view.formModel
+              : "createdOn"
+              : createdOn
+              : "DPInstances"
+              : "grvDPInstances"
+            | async
+        }}</span>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #footerKanban let-data>
+  <div class="d-flex justify-content-between align-items-center mt-1">
+    <div class="d-flex align-items-end codx-badge">
+      <ng-container>
+        <codx-vll
+          [name]="vllStatus"
+          [field]="'Status'"
+          [value]="data.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7"
+        >
+        </codx-vll>
+      </ng-container>
+      <span>
+        <span class="fs-7 text-gray-600" #endDate>{{
+          data.endDate
+            | formatvalue
+              : view.formModel
+              : "endDate"
+              : endDate
+              : "DPInstances"
+              : "grvDPInstances"
+            | async
+        }}</span>
+      </span>
+    </div>
+
+    <codx-imgs
+      [isToolTip]="true"
+      [width]="25"
+      [objectId]="data.owner"
+      ojectType="AD_Users"
+      [numberImages]="1"
+    >
+    </codx-imgs>
+  </div>
+</ng-template>
+<!-- end kanban -->
+
 <!--list details tempfull-->
 <ng-template #itemTemplate let-data>
-  <codx-temp-full cardCss="card-template border-bottom p-3 list-task" (clickMF)="clickMF($event, data)"
-    [moreFuncCss]="'me-15'" (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'" [title]="data.title"
-    [desc]="convertHtmlAgency('50,000,000','70%',data.createdOn)" [formModel]="view.formModel" [footer]="footer" [dataItem]="data">
+  <codx-temp-full
+    cardCss="card-template border-bottom p-3 list-task"
+    (clickMF)="clickMF($event, data)"
+    [moreFuncCss]="'me-15'"
+    (changeDataMF)="changeDataMF($event, data)"
+    [typeMF]="'hover'"
+    [title]="data.title"
+    [desc]="convertHtmlAgency('50,000,000', '70%', data.createdOn)"
+    [formModel]="view.formModel"
+    [footer]="footer"
+    [dataItem]="data"
+  >
   </codx-temp-full>
 </ng-template>
 
@@ -15,30 +126,46 @@
   <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
       <ng-container>
-        <codx-vll [name]="'DP028'" [field]="'Status'" [value]="'0'" [showText]="true" [showBgColor]="true"
-          class="badge badge-light badge-md fs-7">
+        <codx-vll
+          [name]="'DP028'"
+          [field]="'Status'"
+          [value]="'0'"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7"
+        >
         </codx-vll>
       </ng-container>
       <span>
         <span class="fs-7 text-gray-600" #endDate>{{
           data.endDate
-          | formatvalue
-          : view.formModel
-          : "endDate"
-          : endDate
-          : "DPInstances"
-          : "grvDPInstances"
-          | async
-          }}</span>
+            | formatvalue
+              : view.formModel
+              : "endDate"
+              : endDate
+              : "DPInstances"
+              : "grvDPInstances"
+            | async
+        }}</span>
       </span>
     </div>
 
-    <codx-imgs [isToolTip]="true" [width]="25" [objectId]="'ADMIN'" ojectType="AD_Users" [numberImages]="1">
+    <codx-imgs
+      [isToolTip]="true"
+      [width]="25"
+      [objectId]="'ADMIN'"
+      ojectType="AD_Users"
+      [numberImages]="1"
+    >
     </codx-imgs>
   </div>
 </ng-template>
 
 <!--Detail-->
 <ng-template #templateDetail>
-  <codx-instance-detail [dataService]="view.dataService" [formModel]="view.formModel" [recID]="dataSelected.recID"></codx-instance-detail>
+  <codx-instance-detail
+    [dataService]="view.dataService"
+    [formModel]="view.formModel"
+    [recID]="dataSelected.recID"
+  ></codx-instance-detail>
 </ng-template>
