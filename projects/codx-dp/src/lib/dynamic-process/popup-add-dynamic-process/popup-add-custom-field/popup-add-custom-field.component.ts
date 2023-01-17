@@ -19,7 +19,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   action = 'add';
   titleAction = 'Thêm';
   //
-  // value: number = 5;
+  value: number = 5;
   min: number = 0;
   max: number = 10;
   step = '1';
@@ -38,6 +38,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.field = JSON.parse(JSON.stringify(dt?.data[0]));
     this.action = dt?.data[1];
     this.titleAction = dt?.data[2];
+    this.value =  this.field.rank
     this.cache
       .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
       .subscribe((res) => {

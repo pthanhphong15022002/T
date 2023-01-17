@@ -1,4 +1,5 @@
 <codx-form
+  #form
   [headerText]="title"
   [body]="body"
   [footer]="footer"
@@ -6,7 +7,6 @@
   [formModel]="dialog?.formModel"
   [data]="field"
   [openMore]="true"
-  #form
 >
   <ng-template #body>
     <div class="card-form">
@@ -175,7 +175,7 @@
           <div>
             <ejs-slider
               id="slider"
-              [value]="field.rank"
+              [value]="value"
               [min]="min"
               [max]="max"
               [type]="type"
