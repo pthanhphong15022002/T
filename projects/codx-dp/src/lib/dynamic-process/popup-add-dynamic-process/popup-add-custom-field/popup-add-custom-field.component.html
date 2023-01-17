@@ -141,14 +141,14 @@
       <div class="form-group row" *ngIf="field.dataFormat == 'R'">
         <div class="col-6">
           <codx-label
-            fiedName="Rank"
+            fiedName="RankIcon"
             [formModel]="form.formModel"
             default="Loại icon hiển thị"
           >
           </codx-label>
           <div>
             <codx-valuelist
-              field="rank"
+              field="rankIcon"
               [name]="'L1470'"
               [iconOnly]="true"
               [crrValue]="field?.rankIcon"
@@ -156,9 +156,9 @@
             >
             </codx-valuelist>
           </div>
-
           <!-- <codx-input
-            field="rank"
+            field="rankIcon"
+            [iconOnly]="true"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
@@ -167,7 +167,7 @@
         </div>
         <div class="col-6">
           <codx-label
-            fiedName="RankIcon"
+            fiedName="rank"
             [formModel]="form.formModel"
             default="Điểm tối đa"
           >
