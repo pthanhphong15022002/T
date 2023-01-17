@@ -1,7 +1,7 @@
 <codx-card-img (dblclick)="dbView()" cardCss="border w-200px h-100 card-folder-center" [imageSrc]="dmSV.getImage(data)"
   imgCss="card-img-center h-75px mt-5" [rootData]="data" [typeMF]="'hover'" [bookmark]="dmSV.showBookmark(data)"
   [formModel]="formModel" (clickMF)="clickMoreFunction($event,data)" [typeMF]="'hover'" [footer]="cardImgFooter"
-  (changeDataMF)="dmSV.filterMoreFunction($event, data)">
+  (changeDataMF)="dmSV.filterMoreFunction($event, data)" [hideMF]="(formModel.funcID == 'DMT06' && favoriteID == '3')?true:false">
 </codx-card-img>
 <ng-template #cardImgFooter let-data let-setting="setting">
   <div [title]="data.folderName != undefined ? data.folderName : data.fileName"

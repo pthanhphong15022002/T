@@ -256,11 +256,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.codxEpService
       .getEPStationerySetting('4')
       .subscribe((approvalSetting: any) => {
-        if (approvalSetting) {
-          this.approvalRuleStationery = JSON.parse(
-            approvalSetting.dataValue
-          )[0]?.ApprovalRule;
-        }
+        let settingVal = JSON.parse(approvalSetting.dataValue);
+        Array.from(settingVal).forEach((item:any)=>{
+          if(item.FieldName=="ES_EP001"){
+            this.approvalRule= item.ApprovalRule;
+            debugger
+          }
+        })
       });
     this.codxEpService.getEPRoomSetting('1').subscribe((setting: any) => {
       if (setting) {

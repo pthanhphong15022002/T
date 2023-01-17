@@ -11,30 +11,492 @@
           ></codx-label>
           <codx-input
           type="combobox"
-          refValue="custGroupID"
-          field="custGroupID"   
-          [dataSelected]="false" 
-          [multiple]="false"
-          [disabled]="false" 
-          loadFull="true"
+          refValue="CustomerGroups"
+          field="custGroupID" 
+          oadFull="true"
         >
         </codx-input>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="CustomerID"
+            default="Mã khách hàng"
+          ></codx-label>
+            <codx-input
+                    
+                    [formModel]="form.formModel"
+                    field="customerID"
+                    
+                  >
+            </codx-input>
+          </div>   
+        </div>
+        <div class="col-6 pe-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="CustTaxCode"
+            default="Mã số thuế"      
+          ></codx-label>
+          <codx-input
+          field="custTaxCode"
+          [formModel]="form.formModel"
+            >
+        </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="CustomerName"
+            default="Tên khách hàng"      
+          ></codx-label>
+          <codx-input
+          field="customerName"
+          [formModel]="form.formModel"
+          
+        >
+        </codx-input>
+      </div>
+       <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="Address"
+            default="Địa chỉ công ty"      
+          ></codx-label>
+          <codx-input
+          field="address"
+          [formModel]="form.formModel"
+          
+        >
+        </codx-input>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="Phone"
+            default="Điện thoại"
+          ></codx-label>
+            <codx-input
+                    
+                    [formModel]="form.formModel"
+                    field="phone"
+                    
+                  >
+            </codx-input>
+          </div>   
+        </div>
+        <div class="col-6 pe-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="Email"
+            default="Email"      
+          ></codx-label>
+          <codx-input
+          field="email"
+          [formModel]="form.formModel"
+            >
+        </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="WebPage"
+            default="WebPage"      
+          ></codx-label>
+          <codx-input
+          field="webPage"
+          [formModel]="form.formModel"
+          
+        >
+        </codx-input>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="EstablishYear"
+            default="Năm thành lập"
+          ></codx-label>
+            <codx-input
+                    
+                    [formModel]="form.formModel"
+                    field="establishYear"
+                    
+                  >
+            </codx-input>
+          </div>   
+        </div>
+        <div class="col-6 pe-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="NoOfEmployees"
+            default="Số lượng nhân viên"      
+          ></codx-label>
+          <codx-input
+          
+          field="noOfEmployees"
+          [formModel]="form.formModel"
+            >
+        </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="Note"
+            default="Diễn giải"      
+          ></codx-label>
+          <codx-input
+          field="note"
+          [formModel]="form.formModel"  
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-input
+        field="stop"
+        [formModel]="form.formModel"
+        
+      >
+      </codx-input>
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="Stop"
+            default="Ngừng sử dụng"      
+          ></codx-label>   
       </div>
 </ng-template>
 <ng-template #tabestablish>
 
 </ng-template>
 <ng-template #tabShipment>
-
+    <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        default="Thông tin giao hàng"
+      ></codx-label>
+      </div>  
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="DelTermID"
+            default="Điều khoản giao hàng"
+          ></codx-label>
+            <codx-input
+            type="combobox"
+            refValue="DeliveryTerms"
+            [formModel]="form.formModel"
+            field="delTermID"  
+            >
+            </codx-input>
+          </div>   
+        </div>
+        <div class="col-6 pe-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="DelModeID"
+            default="Hình thức giao hàng"      
+          ></codx-label>
+          <codx-input
+            type="combobox"
+            refValue="DeliveryModes"
+            field="delModeID"  
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="WarehouseID"
+            default="Kho xuất hàng mặc định"      
+          ></codx-label>
+          <codx-input
+            type="combobox"
+            refValue="Warehouses"
+            [formModel]="form.formModel"
+            field="warehouseID"  
+            >
+            </codx-input>
+          </div>   
+        </div>
+        <div class="col-6 pe-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="DelRouteID"
+            default="Tuyến giao hàng"      
+          ></codx-label>
+          <codx-input
+            type="combobox"
+            refValue="DeliveryRoutes"
+            [formModel]="form.formModel"
+            field="delRouteID"  
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="Distance"
+            default="Khoảng cách (km)"      
+          ></codx-label>
+          <codx-input
+            type="number"
+            [min]="0"
+            [formModel]="form.formModel"
+            field="distance"  
+            >
+            </codx-input>
+          </div>   
+        </div>
+        <div class="col-6 pe-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="Leadtime"
+            default="Thời gian (giờ)"      
+          ></codx-label>
+          <codx-input
+            type="number"
+            [min]="0"
+            [formModel]="form.formModel"
+            field="leadtime"  
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="WorkingDays"
+            default="Thời gian giao hàng"      
+          ></codx-label>
+          <codx-input
+          type="combobox"
+          refValue="CalendarsAC"
+          field="workingDays"  
+          [formModel]="form.formModel"
+          >
+          </codx-input>
+          </div>   
+        </div>
+      </div>
+      <div class="d-flex">
+        <codx-input
+        type="switch"
+        field="workingHour"  
+        >
+        </codx-input>
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="WorkingHour"
+        default="Giao hàng giờ hành chính"      
+      ></codx-label>
+     
+      </div>   
+      <div class="d-flex">
+        <codx-input
+        type="switch"
+        field="CalendarControl"  
+        >
+        </codx-input>
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="calendarControl"
+        default="Cảnh báo khi không đủ thời gian giao hàng"      
+      ></codx-label>
+     
+      </div>   
 </ng-template>
 <ng-template #tabLocation>
-
+    <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        default="Danh sách địa chỉ"
+      ></codx-label>
+      </div>        
+        <div class="fw-bold text-dark fs-5">
+            <span>Địa chỉ</span>
+          </div>
+        <div class="text-gray-500">
+            hahaasdasdasdsasdasdasdsad
+          </div>
+          <div class="text-gray-500">
+            Liên hệ
+          </div>
+          <div class="d-flex flex-wrap ms-14">
+            <div class="row pb-5">
+                <div class="col-6 ps-0">
+                  <div class="d-flex align-items-top">
+                    <div class="me-4">
+                      <div>
+                        <codx-img 
+                          [width]="50"
+                          imgSource="../../../assets/img/avatar.png">
+                        </codx-img>
+                      </div>
+                      <!-- <ng-template #imgDefault_personal>
+                        <img class="img_avatar" src="../../../assets/img/avatar.png" />
+                      </ng-template> -->
+                    </div>
+                    <div class="d-flex flex-column space_personal">
+                      <div class="fw-bold text-dark fs-5">
+                        <span>hihi</span>
+                      </div>
+                      <div class="me-2">
+                        haha
+                      </div>
+                      <div class="d-flex">
+                      <div class="row mx-0 mt-3">
+                        <div class="col-6 ps-0">
+                          <div class="d-flex">
+                            <span class="icon-email icon-16 me-1 text-gray-500"></span>
+                            <span>asdas@mail.com</span>   
+                          </div>   
+                        </div>
+                      </div>
+                      <div class="row mx-0 mt-3">
+                        <div class="col-6 pe-0">
+                            <div class="d-flex">
+                              <span class="icon-phone_android icon-16 me-1 text-gray-500"></span>
+                              <span>0966719787</span>       
+                            </div>
+                          </div>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
 </ng-template>
 <ng-template #tabContact>
-
+    <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            default="Danh sách người liên hệ"
+          ></codx-label>
+          </div>   
+        </div>
+        <div class="col-6 pe-0">
+          <div class="form-group">
+            <span>
+                <i class="icon-add"></i>
+                <i class="icon-perm_identity icon-user-temp text-gray-700">
+                </i>
+            </span>        
+          </div>
+        </div>
+      </div>
+      <div class="row pb-5">
+        <div class="col-6 ps-0">
+          <div class="d-flex align-items-top">
+            <div class="me-4">
+              <div>
+                <codx-img 
+                  [width]="50"
+                  imgSource="../../../assets/img/avatar.png">
+                </codx-img>
+              </div>
+              <!-- <ng-template #imgDefault_personal>
+                <img class="img_avatar" src="../../../assets/img/avatar.png" />
+              </ng-template> -->
+            </div>
+            <div class="d-flex flex-column space_personal">
+              <div class="fw-bold text-dark fs-5">
+                <span>hihi</span>
+              </div>
+              <div class="me-2">
+                haha
+              </div>
+              <div class="d-flex">
+              <div class="row mx-0 mt-3">
+                <div class="col-6 ps-0">
+                  <div class="d-flex">
+                    <span class="icon-email icon-16 me-1 text-gray-500"></span>
+                    <span>asdas@mail.com</span>   
+                  </div>   
+                </div>
+              </div>
+              <div class="row mx-0 mt-3">
+                <div class="col-6 pe-0">
+                    <div class="d-flex">
+                      <span class="icon-phone_android icon-16 me-1 text-gray-500"></span>
+                      <span>0966719787</span>       
+                    </div>
+                  </div>
+              </div>
+              </div>
+              <div class="d-flex">
+                <codx-label class="me-2" [formModel]="form.formModel" default="...">
+                </codx-label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 </ng-template>
 <ng-template #tabAtm>
-
+    <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        default="Tài khoản ngân hàng"
+      ></codx-label>
+      </div> 
+      <div class="row pb-5">
+        <div class="col-6 ps-0">
+          <div class="d-flex align-items-top">
+            <div class="me-4">
+              <div>
+                <codx-img 
+                  [width]="40"
+                  imgSource="https://bstyle.vn/wp-content/uploads/2019/10/ngan-hang-BIDV.jpg">
+                </codx-img>
+              </div>
+              <!-- <ng-template #imgDefault_personal>
+                <img class="img_avatar" src="../../../assets/img/avatar.png" />
+              </ng-template> -->
+            </div>
+            <div class="d-flex flex-column space_personal">
+              <div class="fw-bold text-dark fs-5">
+                <span>hihi</span>
+              </div>
+              <div class="me-2">
+                So tai khoan:1564853
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 </ng-template>
 <ng-template #tabinfo>
 

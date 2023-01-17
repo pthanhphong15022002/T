@@ -168,21 +168,33 @@ export class ShareComponent implements OnInit {
     }    
   }
 
-  onSaveRole($event, type: string) {    
+  onSaveRole($event, type: string) { 
    // console.log($event);
     var list = [];
-    if ($event.data != undefined) {
+    if ($event.data) {
       var data = $event.data;
       for(var i=0; i<data.length; i++) {
         var item = data[i];
-        var perm = new Permission;               
+        var perm = new Permission;
+        if(type == "by" && data[i].objectType == "1")
+        {
+          var o = this.fileEditing.permissions.filter(x=>x.objectType == "1") // Lấy owner;
+          perm.objectID = o[0].objectID;
+          perm.objectType = o[0].objectType;
+          perm.objectName = o[0].objectName;
+        }
+        else
+        {
+          perm.objectID = item.id;
+          perm.objectType = item.objectType;
+          perm.objectName = item.text ? item.text : item.objectName;
+        }               
         perm.startDate = this.startDate;       
         perm.endDate = this.endDate;
         perm.isSystem = false;
         perm.isActive = true;
-        perm.objectName = item.text ? item.text : item.objectName;
-        perm.objectID = item.id;
-        perm.objectType = item.objectType;
+       
+      
         perm.read = true;        
         list.push(Object.assign({}, perm));        
       //  this.fileEditing.permissions = this.addRoleToList(this.fileEditing.permissions, perm);

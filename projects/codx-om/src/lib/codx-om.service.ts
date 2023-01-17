@@ -319,13 +319,13 @@ export class CodxOmService {
   //endregion: KR
 
   //region: OKR
-  distributeOKR(recID:string,distributeToType:string, listDistribute:any ){
+  distributeOKR(recID:string,distributeToType:string, listDistribute:any,isAdd:boolean){
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'DistributeOKRAsync',
-      [recID,distributeToType,listDistribute]
+      [recID,distributeToType,listDistribute,isAdd]
     );
   }
   editOKRWeight(recID:string, type:string, listOKRWeight:any) {
@@ -419,7 +419,16 @@ export class CodxOmService {
       [recID]
     );
   }
-
+  //Lấy ds OKR_Links theo OKR RecID
+  getOKRLink(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetOKRLinkAsync',
+      [recID]
+    );
+  }
   //endregion
 
   //region get Data from HR
