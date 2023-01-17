@@ -1,5 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import {
+  CacheService,
   CallFuncService,
   DialogData,
   DialogRef,
@@ -7,6 +8,7 @@ import {
   Util,
 } from 'codx-core';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { DP_Steps_Tasks } from '../../../models/models';
 
 @Component({
   selector: 'lib-popup-job',
@@ -17,7 +19,6 @@ export class PopupJobComponent implements OnInit {
   title = 'thuan';
   dialog!: DialogRef;
   formModelMenu: FormModel;
-  job = [];
   stepType = '';
   vllShare = 'BP021';
   taskName = 'Giới thiệu sản phẩm';
@@ -28,35 +29,45 @@ export class PopupJobComponent implements OnInit {
   recIdEmail = '';
   isNewEmails = true;
   groupTackList = [];
-  stepsTasks = {};
-  fields = { text: "recID", value: "taskGroupName" };
+  stepsTasks:  DP_Steps_Tasks;
+  fields = { text: 'recID', value: 'taskGroupName' };
   tasksItem = '';
+  stepID = '';
+
   constructor(
+    private cache: CacheService,
     private callfunc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.title = dt?.data[1]['text'];
     this.stepType = dt?.data[1]['id'];
+    this.stepID = dt?.data[2];
     this.groupTackList = dt?.data[2];
     this.dialog = dialog;
   }
   ngOnInit(): void {
     this.stepsTasks['recID'] = Util.uid();
-    // this.stepsTasks['taskGroupID'] = this.groupTackList['recID'];
+    this.stepsTasks['taskType'] = this.stepType;
+    this.stepsTasks['stepID'] = this.stepID;
     // this.stepsTasks['createdOn'] = this.groupTackList['createdOn'];
     // this.stepsTasks['createdBy'] = this.groupTackList['createdBy'];
   }
   valueChangeText(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
+  valueChangeCombobox(event) {
+    this.stepsTasks[event?.field] = event?.data;
+  }
 
   filterText(value) {
-    if(value.itemData){
+    if (value.itemData) {
       this.stepsTasks['taskGroupID'] = value['itemData']['recID'];
-    } 
+    }
   }
-  valueChangeAlert(e) {}
+  valueChangeAlert(event) {
+    this.stepsTasks[event?.field] = event?.data;
+  }
   addFile(evt: any) {
     // this.attachment.uploadFile();
   }
