@@ -112,11 +112,10 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm(isClose: boolean) {
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
-
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.hrService.addEVaccine(this.data).subscribe((res) => {
         if (res) {
