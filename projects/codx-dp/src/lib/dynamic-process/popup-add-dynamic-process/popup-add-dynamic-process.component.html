@@ -212,18 +212,20 @@
             </button>
           </div>
           <div *ngIf="currentTab == 0"></div>
-          <button type="button" class="btn btn-primary" (click)="onSave()">
-            <codx-label
-              *ngIf="!(currentTab == 2)"
+          <button *ngIf="currentTab != 2" type="button" class="btn btn-primary" (click)="onSave()">
+            <codx-label             
               [name]="'lblContinue'"
               [default]="'Tiếp tục'"
             ></codx-label>
-            <codx-label
-              *ngIf="currentTab == 2"
+          </button>
+
+          <button *ngIf="currentTab == 2" type="button" class="btn btn-primary" (click)="handlerSave()">
+            <codx-label              
               [name]="'lblSave'"
               [default]="'Lưu'"
             ></codx-label>
           </button>
+
         </div>
       </div>
     </div>
@@ -1114,11 +1116,17 @@
               <codx-mfunc
                 [formModel]="dialog.formModel"
                 (clickMF)="clickMFStep($event, step)"
-                [isBookMark]="true"
                 [dataItem]="step"
                 [type]="'hover'"
               >
               </codx-mfunc>
+              <!-- <codx-mfunc
+              [formModel]="dialog.formModel"
+              (clickMF)="clickMFFields($event, item1)"
+              [dataItem]="action != 'edit' ? moreDefaut : item"
+              [type]="'hover'"
+            >
+            </codx-mfunc> -->
             </div>
           </div>
         </div>
@@ -1640,15 +1648,15 @@
           <codx-img
             [width]="25"
             class="me-2"
-            [objectId]="item?.id"
+            [objectId]="item?.objectID"
             objectType="AD_Users"
-            [objectName]="item?.name"
+            [objectName]="item?.objectName"
           >
           </codx-img>
         </span>
-        <span class="text-dark fw-bold"> {{ item?.name }} </span>
+        <span class="text-dark fw-bold"> {{ item?.objectName }} </span>
         <span class="mt-1">
-          <a (click)="onDeleteOwner(item?.id, data)" style="cursor: pointer">
+          <a (click)="onDeleteOwner(item?.objectID, data)" style="cursor: pointer">
             <span class="icon-close icon-16 text-danger ms-3"></span>
           </a>
         </span>
