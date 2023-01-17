@@ -768,6 +768,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.fieldCrr.stepID = stepID;
           this.fieldCrr.processID = processID;
           this.fieldCrr.isRequired = false;
+          this.fieldCrr.rank = 5 ;
           let titleAction = this.titleAdd;
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
