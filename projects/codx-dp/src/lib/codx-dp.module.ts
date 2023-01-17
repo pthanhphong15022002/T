@@ -27,6 +27,9 @@ import { PopupRolesDynamicComponent } from './dynamic-process/popup-add-dynamic-
 import { PopupViewsDetailsProcessComponent } from './dynamic-process/popup-views-details-process/popup-views-details-process.component';
 import { InstancesComponent } from './instances/instances.component';
 import { InstanceDetailComponent } from './instances/instance-detail/instance-detail.component';
+import { StagesDetailComponent } from './instances/stages-detail/stages-detail.component';
+import { FieldDetailComponent } from './instances/field-detail/field-detail.component';
+import { GanttChartComponent } from './instances/gantt-chart/gantt-chart.component';
 
 const routes: Routes = [
   {
@@ -63,6 +66,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupViewsDetailsProcessComponent,
     InstancesComponent,
     InstanceDetailComponent,
+    StagesDetailComponent,
+    FieldDetailComponent,
+    GanttChartComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
