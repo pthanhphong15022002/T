@@ -315,28 +315,25 @@
 
         <div class="form-group row">
             <div class="col-6">
-                <codx-label
+                <!-- <codx-label
                     fiedName="NewChildBirthType"
                     [formModel]="formModel"
-                ></codx-label>
+                ></codx-label> -->
                 <div>
                     <codx-input
-                type="radio" 
+                type="checkbox" 
                 [label]="lstPregnantType[0].text"
-                name="radio"
                 [checked]="isnormalPregnant"
-                (valueChange)="HandlePregnantTypeChange($event, lstPregnantType[0].text)"
+                (valueChange)="HandlePregnantTypeChange($event, lstPregnantType[0])"
                 ></codx-input>
                 </div>
 
                 <div>
                     <codx-input
-                    type="radio" 
-                    name="radio"
-
-                    [checked]="!isnormalPregnant"
+                    type="checkbox" 
+                    [checked]="isNotNormalPregnant"
                     [label]="lstPregnantType[1].text"
-                    (valueChange)="HandlePregnantTypeChange($event, lstPregnantType[1].text)"
+                    (valueChange)="HandlePregnantTypeChange($event, lstPregnantType[1])"
                     ></codx-input>
                 </div>
             </div>

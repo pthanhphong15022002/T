@@ -1,0 +1,158 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  [footer]="footer"
+  subToolbarCss="text-end"
+  [data]="contact"
+>
+</codx-form>
+<ng-template #body>
+    <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="ContactName"
+            default="Họ tên"
+          ></codx-label>
+            <codx-input
+                    
+                    [formModel]="form.formModel"
+                    field="contactName"
+                    
+                  >
+            </codx-input>
+          </div>   
+        </div>
+        <div class="col-6 pe-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="Gender"
+            default="Giới tính"      
+          ></codx-label>
+          <codx-input 
+          type="combobox" 
+          refValue=""
+          field="gender"
+          >
+        </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="JobTitle"
+        default="Chức danh"
+      ></codx-label>
+        <codx-input
+                
+                [formModel]="form.formModel"
+                field="jobTitle"
+                
+              >
+        </codx-input>
+      </div>  
+      <div class="d-flex">
+        <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="Phone"
+            default="Số di động"
+          ></codx-label>
+            <codx-input
+                    
+                    [formModel]="form.formModel"
+                    field="phone"
+                    
+                  >
+            </codx-input>
+          </div>  
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="HomePhone"
+            default="Số di động cố định"
+          ></codx-label>
+            <codx-input
+                    
+                    [formModel]="form.formModel"
+                    field="homePhone"
+                    
+                  >
+            </codx-input>
+          </div>  
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="PhoneExt"
+            default="Số ext."
+          ></codx-label>
+            <codx-input
+                    
+                    [formModel]="form.formModel"
+                    field="phoneExt"
+                    
+                  >
+            </codx-input>
+          </div>  
+      </div>
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="Email"
+        default="Email"
+      ></codx-label>
+        <codx-input
+                
+                [formModel]="form.formModel"
+                field="email"
+                
+              >
+        </codx-input>
+      </div>  
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="ContactType"
+        default="Loại liên hệ"      
+      ></codx-label>
+      <codx-input 
+      type="combobox" 
+      refValue=""
+      field="contactType"
+      >
+    </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="Note"
+        default="Ghi chú"
+      ></codx-label>
+        <codx-input
+                
+                [formModel]="form.formModel"
+                field="note"
+                
+              >
+        </codx-input>
+      </div>  
+</ng-template>
+<ng-template #footer>
+  
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary">
+            <codx-label  [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
+                default="Lưu & Thêm"></codx-label>
+        </button>
+        <button type="button" class="btn btn-primary">
+            <codx-label  [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
+                default="Lưu"></codx-label>
+        </button>
+    </div>
+</ng-template>

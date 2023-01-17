@@ -1,11 +1,16 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DataRequest } from '@shared/models/data.request';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { LayoutModel } from '@shared/models/layout.model';
 import {
   ApiHttpService,
   AuthStore,
   CacheService,
+  DataRequest,
   FormModel,
   NotificationsService,
   Util,
@@ -79,9 +84,7 @@ export class CodxHrService {
 
   getFormGroup(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
-      this.cache
-      .gridViewSetup(formName, gridView)
-      .subscribe((gv: any) => {
+      this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
         if (gv) {
           var arrgv = Object.values(gv) as any[];
           const group: any = {};
@@ -97,10 +100,9 @@ export class CodxHrService {
               : new FormControl(value);
           });
           group['updateColumn'] = new FormControl('');
-         var formGroup = new FormGroup(group);
-         resolve(formGroup);
+          var formGroup = new FormGroup(group);
+          resolve(formGroup);
         }
-       
       });
       // this.cache
       //   .gridViewSetup(formName, gridView)
@@ -133,9 +135,7 @@ export class CodxHrService {
       //       model['assign'].push(false);
       //       model['share'].push(false);
       //     }
-       
-      
-         
+
       //   });
     });
   }
@@ -1645,7 +1645,6 @@ export class CodxHrService {
 
   //#endregion
 
-
   //#region HR_EBusinessTravels
 
   getEBTravelDefaultAsync() {
@@ -1689,17 +1688,16 @@ export class CodxHrService {
   }
 
   //#endregion
+
   //#region
-  getDataDefault(
-    funcID: string,
-    entityName: string,
-    idField: string
-  ){
-    return this.api.execSv<any>('HR', 'Core', 'DataBusiness', 'GetDefaultAsync', [
-      funcID,
-      entityName,
-      idField,
-    ]);
+  getDataDefault(funcID: string, entityName: string, idField: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName, idField]
+    );
   }
 
   getFormModel(functionID): Promise<FormModel> {
@@ -1773,9 +1771,19 @@ export class CodxHrService {
         }
       });
   }
+
+  loadDataCbx(service: string, dataRequest: DataRequest = null) {
+    return this.api.execSv<any>(
+      service,
+      'ERM.Business.Core',
+      'DataBusiness',
+      'LoadDataCbxAsync',
+      [dataRequest]
+    );
+  }
   //#endregion
 
-  getFunctionList(funcID: string){
+  getFunctionList(funcID: string) {
     return this.api.execSv<any>(
       'SYS',
       'AD',
