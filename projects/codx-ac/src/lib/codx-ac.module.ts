@@ -24,6 +24,8 @@ import { ChartOfAccountsComponent } from './chart-of-accounts/chart-of-accounts.
 import { PopAddAccountsComponent } from './chart-of-accounts/pop-add-accounts/pop-add-accounts.component';
 import { CustomersComponent } from './customers/customers.component';
 import { PopAddCustomersComponent } from './customers/pop-add-customers/pop-add-customers.component';
+import { PopAddBankComponent } from './customers/pop-add-bank/pop-add-bank.component';
+import { PopAddContactComponent } from './customers/pop-add-contact/pop-add-contact.component';
 
 export const routes: Routes = [
   {
@@ -58,6 +60,8 @@ export const routes: Routes = [
     PopAddAccountsComponent,
     CustomersComponent,
     PopAddCustomersComponent,
+    PopAddBankComponent,
+    PopAddContactComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

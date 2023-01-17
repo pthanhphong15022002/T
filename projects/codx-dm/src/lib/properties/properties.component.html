@@ -64,7 +64,7 @@
                                 <ng-container *ngIf="fileEditing">
                                     <codx-label [default]="titleFiletype" fiedName="lblFileType"
                                         class="text-gray-600 me-2 w-100px"></codx-label>
-                                    <span class="">{{fileEditing.fileName}}</span>
+                                    <span class="">{{fileEditing.fileName + " ("+fileEditing.extension+")"}}</span>
                                 </ng-container>
                                 <ng-template #elseVersion>
                                     <span class="">{{messerror}}</span>
@@ -127,13 +127,13 @@
 
                             <div *ngIf="fileEditing" class="d-flex my-3">
                                 <span class="text-gray-600 me-2 w-100px">{{titlePublisher}}:</span>
-                                <ng-container *ngIf="fileEditing.publisher , else elsepublisher">
-                                    <span class="">{{fileEditing.publisher}}</span>
+                                <ng-container *ngIf="fileEditing.publisherName , else elsepublisher">
+                                    <span class="">{{fileEditing.publisherName}}</span>
                                 </ng-container>
                                 <ng-template #elsepublisher>
                                     <span class="">{{messerror}}</span>
                                 </ng-template>
-                                <!-- <span class="">{{fileEditing.publisher ? fileEditing.publisher : "Không có dữ liệu"}}</span> -->
+                              
                             </div>
 
                             <div *ngIf="fileEditing" class="d-flex my-3">

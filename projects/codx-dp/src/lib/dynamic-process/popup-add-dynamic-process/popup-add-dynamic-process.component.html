@@ -212,18 +212,20 @@
             </button>
           </div>
           <div *ngIf="currentTab == 0"></div>
-          <button type="button" class="btn btn-primary" (click)="onSave()">
-            <codx-label
-              *ngIf="!(currentTab == 2)"
+          <button *ngIf="currentTab != 2" type="button" class="btn btn-primary" (click)="onSave()">
+            <codx-label             
               [name]="'lblContinue'"
               [default]="'Tiếp tục'"
             ></codx-label>
-            <codx-label
-              *ngIf="currentTab == 2"
+          </button>
+
+          <button *ngIf="currentTab == 2" type="button" class="btn btn-primary" (click)="handlerSave()">
+            <codx-label              
               [name]="'lblSave'"
               [default]="'Lưu'"
             ></codx-label>
           </button>
+
         </div>
       </div>
     </div>
@@ -825,7 +827,7 @@
 </ng-template>
 
 <ng-template #dynamicFields let-item>
-  <div class="background-job form-setup-role mb-5">
+  <div class="background-job mb-5">
     <div class="header-job p-3">
       <div class="left">
         <div>
@@ -872,7 +874,7 @@
         </div>
       </div>
     </div>
-    <div id="{{ item.recID }}" class="main show-main">
+    <div id="{{ item.recID }}" class="show-main">
       <div
         *ngIf="!item?.fields || item?.fields?.length == 0"
         class="position-relative p-9"
@@ -917,7 +919,6 @@
               <div class="text-gray-400">{{ item1.note }}</div>
               <div class="d-flex">
                 <div class="datatypes me-4">
-                  <!-- {{ item1.dataType }} -->
                   <codx-vll
                     [name]="vllType"
                     [value]="item1?.dataType"
@@ -930,7 +931,7 @@
                   fiedName="IsRequired"
                   default="Bắt buộc *"
                 ></codx-label>
-                <codx-input type="switch" field="isRequired" [checked]="true">
+                <codx-input type="switch" field="isRequired" [checked]="item1?.isRequired" (valueChange)="changeRequired($event,item1)" >
                 </codx-input>
               </div>
               <codx-mfunc
@@ -1116,11 +1117,17 @@
               <codx-mfunc
                 [formModel]="dialog.formModel"
                 (clickMF)="clickMFStep($event, step)"
-                [isBookMark]="true"
                 [dataItem]="step"
                 [type]="'hover'"
               >
               </codx-mfunc>
+              <!-- <codx-mfunc
+              [formModel]="dialog.formModel"
+              (clickMF)="clickMFFields($event, item1)"
+              [dataItem]="action != 'edit' ? moreDefaut : item"
+              [type]="'hover'"
+            >
+            </codx-mfunc> -->
             </div>
           </div>
         </div>
@@ -1642,15 +1649,15 @@
           <codx-img
             [width]="25"
             class="me-2"
-            [objectId]="item?.id"
+            [objectId]="item?.objectID"
             objectType="AD_Users"
-            [objectName]="item?.name"
+            [objectName]="item?.objectName"
           >
           </codx-img>
         </span>
-        <span class="text-dark fw-bold"> {{ item?.name }} </span>
+        <span class="text-dark fw-bold"> {{ item?.objectName }} </span>
         <span class="mt-1">
-          <a (click)="onDeleteOwner(item?.id, data)" style="cursor: pointer">
+          <a (click)="onDeleteOwner(item?.objectID, data)" style="cursor: pointer">
             <span class="icon-close icon-16 text-danger ms-3"></span>
           </a>
         </span>

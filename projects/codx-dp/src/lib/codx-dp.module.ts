@@ -28,6 +28,10 @@ import { PopupViewsDetailsProcessComponent } from './dynamic-process/popup-views
 import { InstancesComponent } from './instances/instances.component';
 import { InstanceDetailComponent } from './instances/instance-detail/instance-detail.component';
 import { PopupAddInstanceComponent } from './instances/popup-add-instance/popup-add-instance.component';
+import { SliderModule } from '@syncfusion/ej2-angular-inputs';
+import { StagesDetailComponent } from './instances/stages-detail/stages-detail.component';
+import { FieldDetailComponent } from './instances/field-detail/field-detail.component';
+import { GanttChartComponent } from './instances/gantt-chart/gantt-chart.component';
 
 const routes: Routes = [
   {
@@ -65,6 +69,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     InstancesComponent,
     InstanceDetailComponent,
     PopupAddInstanceComponent,
+    StagesDetailComponent,
+    FieldDetailComponent,
+    GanttChartComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -79,6 +86,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxReportModule,
     NgbModule,
     DragDropModule,
+    SliderModule
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
