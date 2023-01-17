@@ -86,7 +86,7 @@ export class InstancesComponent
     this.dataObj = {
       processID: this.process?.recID ? this.process?.recID : '',
     };
-    
+
     //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
