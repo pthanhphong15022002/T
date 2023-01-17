@@ -141,4 +141,9 @@ export class CodxDpService {
       data
     );
   }
+
+  GetAutoNumberNo(formName: string , funcID: any ,entityName: string , key: any){
+      return this.api.execSv<any>('SYS','AD','AutoNumbersBusiness','GenAutoNumberAsync', [formName , funcID , entityName , key])
+
+  }
 }

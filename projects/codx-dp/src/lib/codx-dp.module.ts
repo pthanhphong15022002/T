@@ -27,6 +27,7 @@ import { PopupRolesDynamicComponent } from './dynamic-process/popup-add-dynamic-
 import { PopupViewsDetailsProcessComponent } from './dynamic-process/popup-views-details-process/popup-views-details-process.component';
 import { InstancesComponent } from './instances/instances.component';
 import { InstanceDetailComponent } from './instances/instance-detail/instance-detail.component';
+import { PopupAddInstanceComponent } from './instances/popup-add-instance/popup-add-instance.component';
 
 const routes: Routes = [
   {
@@ -63,6 +64,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupViewsDetailsProcessComponent,
     InstancesComponent,
     InstanceDetailComponent,
+    PopupAddInstanceComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
