@@ -19,7 +19,6 @@ export class PopupJobComponent implements OnInit {
   title = 'thuan';
   dialog!: DialogRef;
   formModelMenu: FormModel;
-  job: DP_Steps_Tasks;
   stepType = '';
   vllShare = 'BP021';
   taskName = 'Giới thiệu sản phẩm';
@@ -30,9 +29,10 @@ export class PopupJobComponent implements OnInit {
   recIdEmail = '';
   isNewEmails = true;
   groupTackList = [];
-  stepsTasks = {};
+  stepsTasks:  DP_Steps_Tasks;
   fields = { text: 'recID', value: 'taskGroupName' };
   tasksItem = '';
+  stepID = '';
 
   constructor(
     private cache: CacheService,
@@ -42,12 +42,14 @@ export class PopupJobComponent implements OnInit {
   ) {
     this.title = dt?.data[1]['text'];
     this.stepType = dt?.data[1]['id'];
+    this.stepID = dt?.data[2];
     this.groupTackList = dt?.data[2];
     this.dialog = dialog;
   }
   ngOnInit(): void {
     this.stepsTasks['recID'] = Util.uid();
-    // this.stepsTasks['taskGroupID'] = this.groupTackList['recID'];
+    this.stepsTasks['taskType'] = this.stepType;
+    this.stepsTasks['stepID'] = this.stepID;
     // this.stepsTasks['createdOn'] = this.groupTackList['createdOn'];
     // this.stepsTasks['createdBy'] = this.groupTackList['createdBy'];
   }

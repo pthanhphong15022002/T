@@ -1189,7 +1189,7 @@
               style="font-weight: 500"
             ></span>
           </button>
-          <button class="button-custom" (click)="openJob()">
+          <button class="button-custom" (click)="openTypeJob()">
             <span
               class="icon-add_task icon-20 text-primary-600 py-2"
               style="font-weight: 500"
@@ -1222,7 +1222,7 @@
           </button>
         </div>
         <div>
-          <button class="button-custom" (click)="openJob()">
+          <button class="button-custom" (click)="openTypeJob()">
             <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
             <span>Thêm công việc</span>
           </button>
@@ -1413,7 +1413,6 @@
     *ngFor="let item of listJobType"
     class="d-flex body-set-job"
     style="justify-content: space-between; padding: 10px 0"
-    (click)="selectJob(item?.id)"
   >
     <div style="display: flex; align-items: center" class="job">
       <span

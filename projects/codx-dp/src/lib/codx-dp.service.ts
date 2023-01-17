@@ -131,4 +131,14 @@ export class CodxDpService {
       [recID]
     );
   }
+
+  // #step
+  addStep(data) {
+    return this.api.exec<any>(
+      'DP',
+      'StepsBusiness',
+      'AddStepAsync',
+      data
+    );
+  }
 }

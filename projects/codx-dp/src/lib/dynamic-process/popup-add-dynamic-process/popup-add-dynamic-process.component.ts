@@ -145,7 +145,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   listJobType = [
     {
-      id: 'P',
+      id: 'C',
       icon: 'icon-i-layout-three-columns',
       text: 'Cuộc gọi',
       funcID: 'BPT101',
@@ -173,7 +173,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       color: { background: '#ff9adb' },
     },
     {
-      id: 'Q',
+      id: 'S',
       icon: 'icon-i-clipboard-check',
       text: 'Khảo sát',
       funcID: 'BPT106',
@@ -339,6 +339,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     //   this.notiService.notify('Test mã');
     //   return;
     // }
+    debugger
     if (
       this.process.processName == null ||
       this.process.processName.trim() == ''
@@ -360,9 +361,28 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (this.action == 'edit') {
         this.onUpdate();
       } else {
-        this.onAdd();
+        switch (this.currentTab) {
+          case 0:
+            this.onAdd();   
+            break;
+          case 1:
+            this.handleAddStep();
+            break;
+          case 2:           
+            break;
+        }
       }
+
     }
+  }
+
+  handleAddStep(){
+    this.dpService.addStep([this.step])
+    .subscribe((data) => {
+      if (data) {
+        this.dialog.close(data);
+      } else this.dialog.close();
+    });
   }
 
   valueChange(e) {
@@ -857,7 +877,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#endregion
 
-  //#stage -- nvthuan
+  //#Step - taskGroup - task -- nvthuan
   async openAddStep(type) {
     if (type === 'add') {
       this.step = new DP_Steps();
@@ -930,45 +950,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  //job -- nvthuan
-  openJob() {
-    this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
-  }
-  selectJob(id) {
-    let btn = document.getElementById(id);
-    console.log(btn);
-  }
-  getTypeJob(e, value) {
-    this.jobType = value;
-  }
-  openPopupJob() {
-    let frmModel: FormModel = {
-      entityName: 'DP_Steps_Tasks',
-      formName: 'DPStepsTasks',
-      gridViewName: 'grvDPStepsTasks',
-    };
-    this.popupJob.close();
-    let option = new SidebarModel();
-    option.Width = '550px';
-    option.zIndex = 1001;
-    option.FormModel = frmModel;
-    let dialog = this.callfc.openSide(
-      PopupJobComponent,
-      ['add', this.jobType, this.taskGroupList],
-      option
-    );
-    dialog.closed.subscribe((e) => {
-      if (e?.event) {
-        let taskData = e?.event;
-        let index = this.taskGroupList.findIndex(
-          (task) => task.recID == taskData.taskGroupID
-        );
-        this.taskGroupList[index]['task'].push(taskData);
-      }
-    });
-  }
-  //# group job
-  openGroupJob() {
+   //# group job
+   openGroupJob() {
     this.taskGroup = new DP_Steps_TaskGroups();
     this.taskGroup['recID'] = Util.uid();
     this.taskGroup['createdOn'] = new Date();
@@ -986,6 +969,42 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.popupGroupJob.close();
     this.taskGroupList.push(this.taskGroup);
   }
+
+  //job -- nvthuan
+  openTypeJob() {
+    this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
+  }
+  getTypeJob(e, value) {
+    this.jobType = value;
+  }
+
+  openPopupJob() {
+    let frmModel: FormModel = {
+      entityName: 'DP_Steps_Tasks',
+      formName: 'DPStepsTasks',
+      gridViewName: 'grvDPStepsTasks',
+    };
+    this.popupJob.close();
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.zIndex = 1001;
+    option.FormModel = frmModel;
+    let dialog = this.callfc.openSide(
+      PopupJobComponent,
+      ['add', this.jobType,this.step?.recID, this.taskGroupList],
+      option
+    );
+    dialog.closed.subscribe((e) => {
+      if (e?.event) {
+        let taskData = e?.event;
+        let index = this.taskGroupList.findIndex(
+          (task) => task.recID == taskData.taskGroupID
+        );
+        this.taskGroupList[index]['task'].push(taskData);
+      }
+    });
+  }
+ 
   changeValueInput(event, data) {
     data[event?.field] = event?.data;
   }
