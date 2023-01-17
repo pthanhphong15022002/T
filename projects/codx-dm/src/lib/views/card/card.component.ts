@@ -17,6 +17,7 @@ export class CardComponent implements OnInit , OnChanges {
   user: any;
   totalRating: number;
   totalViews: number;
+  favoriteID: any;
   @Input() data: any;
   @Input() view: any;
   @Output() viewFile = new EventEmitter<any>();
@@ -24,6 +25,7 @@ export class CardComponent implements OnInit , OnChanges {
     public dmSV: CodxDMService,
     private auth: AuthStore,
     private fileService: FileService,
+    private folderService: FolderService,
     private notificationsService: NotificationsService
   ) {
   }
@@ -34,6 +36,9 @@ export class CardComponent implements OnInit , OnChanges {
 
   ngOnInit(): void {
     this.user = this.auth.get();
+    this.favoriteID = this.fileService.options.favoriteID;
+    if(this.data.folderName)
+      this.favoriteID = this.folderService.options.favoriteID;
   }
   
   classRating(rating) {    
