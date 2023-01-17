@@ -241,7 +241,7 @@
           [formModel]="form?.formModel"
           default="Bắt buộc *"
         ></codx-label>
-        <codx-input type="switch" field="isRequired" [checked]="true">
+        <codx-input type="switch" field="isRequired" [checked]="field?.isRequired"  (valueChange)="changeRequired($event)">
         </codx-input>
       </div>
     </div>

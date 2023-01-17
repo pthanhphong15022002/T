@@ -27,6 +27,7 @@ import {
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
+import { PopupViewsDetailsProcessComponent } from './popup-views-details-process/popup-views-details-process.component';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -56,6 +57,7 @@ export class DynamicProcessComponent
   gridViewSetup: any;
   showID = false;
   processNo: any;
+  instanceNo: any;
   // const set value
   readonly btnAdd: string = 'btnAdd';
 
@@ -140,12 +142,13 @@ export class DynamicProcessComponent
   }
 
   searchDynamicProcess($event) {
-    if ($event) this.changeDetectorRef.detectChanges();
+    this.view.dataService.search($event).subscribe();
+    this.changeDetectorRef.detectChanges();
   }
 
   async genAutoNumber() {
     this.dpService
-      .genAutoNumber(this.funcID, 'grvDPProcesses', 'processNo')
+      .genAutoNumber(this.funcID, 'DP_Processes', 'processNo')
       .subscribe((res) => {
         if (res) {
           this.processNo = res;
@@ -161,7 +164,8 @@ export class DynamicProcessComponent
       var obj = {
         action: 'add',
         processNo: this.processNo,
-        showID: this.showID
+        showID: this.showID,
+        instanceNo: this.instanceNo
       };
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
@@ -249,7 +253,7 @@ export class DynamicProcessComponent
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedProcessesAsync';
-    opt.data = [itemSelected.recID, true];
+    opt.data = [itemSelected.recID];
     return true;
   }
 
@@ -319,4 +323,24 @@ export class DynamicProcessComponent
   }
 
   //#endregion đang test
+
+  doubleClickViewProcess(data){
+    let obj = {
+      data: data
+    };
+
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 999;
+    var dialog = this.callfc.openForm(
+      PopupViewsDetailsProcessComponent,
+      '',
+      this.widthWin,
+      this.heightWin,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+  }
 }
