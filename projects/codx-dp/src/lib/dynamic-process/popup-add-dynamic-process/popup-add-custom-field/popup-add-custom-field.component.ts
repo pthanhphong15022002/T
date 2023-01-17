@@ -1,5 +1,8 @@
-// import { Options } from '@angular-slider/ngx-slider';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import {
+  SliderTickEventArgs,
+  SliderTickRenderedEventArgs,
+} from '@syncfusion/ej2-angular-inputs';
 import { CacheService, DialogData, DialogRef, Util } from 'codx-core';
 import { DP_Steps_Fields } from '../../../models/models';
 
@@ -15,14 +18,16 @@ export class PopupAddCustomFieldComponent implements OnInit {
   grvSetup: any;
   action = 'add';
   titleAction = 'Thêm';
-  // value: number = 100;
-  // options: Options = {
-  //   floor: 0,
-  //   ceil: 10,
-  //   step: 1,
-  //   showTicks: true,
-  //   showTicksValues: true
-  // };
+  //
+  // value: number = 5;
+  min: number = 0;
+  max: number = 10;
+  step = '1';
+  type: string = 'MinRange';
+  format: string = 'n0';
+  ticks: Object = { placement: 'Both', largeStep: 1, smallStep: 1, showSmallTicks: true};
+  tooltip: Object = { isVisible: true, placement: 'Before', showOn: 'Hover' };
+
   constructor(
     private changdef: ChangeDetectorRef,
     private cache: CacheService,
@@ -33,7 +38,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.field = JSON.parse(JSON.stringify(dt?.data[0]));
     this.action = dt?.data[1];
     this.titleAction = dt?.data[2];
-
     this.cache
       .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
       .subscribe((res) => {
@@ -45,8 +49,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.field.recID) this.field.recID = Util.uid();
-    this.changdef.detectChanges() ;
-   
+    this.changdef.detectChanges();
   }
 
   valueChangeCbx(e) {}
@@ -55,14 +58,32 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (e && e.data && e.field) this.field[e.field] = e.data;
   }
   changeRequired(e) {
-    this.field.isRequired = e.data ;
+    this.field.isRequired = e.data;
   }
   valueChangeIcon(e) {
     if (e) this.field.rankIcon = e;
   }
-  valueChangeRating(e) {}
 
   saveData() {
     this.dialog.close(this.field);
   }
+
+  sliderChange(e) {
+   this.field.rank = e?.value
+  }
+  // khong dc xoa
+  // renderingTicks(args: SliderTickEventArgs) {
+  //   if (args.tickElement.classList.contains('e-large')) {
+  //     args.tickElement.classList.add('e-custom');
+  //   }
+  // }
+  //thay doi view duoiw
+  // renderedTicks(args: SliderTickRenderedEventArgs) {
+  //   let li = args.ticksWrapper.getElementsByClassName('e-large');
+  //   let remarks: any = ['', '', '', '', '', '', '', '', '', '', '', ''];
+  //   for (let i = 0; i < li.length; ++i) {
+  //     (li[i].querySelectorAll('.e-tick-both')[1] as HTMLElement).innerText =
+  //       remarks[i];
+  //   }
+  // }
 }
