@@ -24,7 +24,7 @@ export class ShareComponent implements OnInit {
   @Input() formModel: any;    
   //listFolders: FolderInfo[];
  // listFiles: FileInfo[];
-  selection = 0;
+  selection = true;
   listNodeMove: FileUpload[] = [];
   //listNodeMove: any;
   html: string;
@@ -114,7 +114,8 @@ export class ShareComponent implements OnInit {
 
   ngOnInit(): void { 
     this.shareGroup = this.formBuilder.group({
-      by: ''
+      by: '',
+      per: 'readonly'
     });  
     this.user = this.auth.get();       
     if(this.dmSV.breakCumArr.length>0 && this.dmSV.breakCumArr.includes(this.fullName)) this.fullName= null
@@ -284,7 +285,7 @@ export class ShareComponent implements OnInit {
       this.fileEditing.toPermission[i].startDate = this.startDate;
       this.fileEditing.toPermission[i].endDate = this.endDate;
       if (!this.isShare) {
-        if (this.selection) {
+        if (this.shareGroup.value.per == 'modified') {
           this.fileEditing.toPermission[i].create = true;
           this.fileEditing.toPermission[i].update = true;
           this.fileEditing.toPermission[i].share = true;
