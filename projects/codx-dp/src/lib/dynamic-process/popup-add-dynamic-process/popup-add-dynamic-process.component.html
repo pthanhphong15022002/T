@@ -904,7 +904,9 @@
         >
           <ng-container *ngFor="let item1 of item?.fields">
             <div
-              class="col-{{ 12 / item.showColumnControl }} p-3 has-action-menu crr-fiels "
+              class="col-{{
+                12 / item.showColumnControl
+              }} p-3 has-action-menu crr-fiels "
               cdkDrag
               [cdkDragStartDelay]="200"
               [cdkDragData]="item1"
@@ -2256,6 +2258,8 @@
               type="valuelist"
               field="AssignControl"
               refValue="DP019"
+              [crrValue]="step.assignControl"
+              (valueChange)="valueChangeAssignCtrl($event)"
             >
             </codx-input>
           </div>
@@ -2284,6 +2288,7 @@
               type="valuelist"
               refValue="DP020"
               crrValue="0"
+              (valueChange)="valueChangeTransferCtrl($event)"
             >
             </codx-input>
           </div>
@@ -2427,7 +2432,7 @@
             </div>
           </div>
           <div class="col-6">
-            <div class="row" >
+            <div class="row">
               <div class="col-6">
                 <codx-input
                   [name]="viewSaturday"
@@ -2436,7 +2441,7 @@
                   field="excludeDayoff"
                   [label]="titleCheckBoxSat"
                   [checked]="checkedSat"
-                  (valueChange)="valueChangeDayoff($event,viewSaturday,'7')"
+                  (valueChange)="valueChangeDayoff($event, viewSaturday, '7')"
                 >
                 </codx-input>
               </div>
@@ -2448,7 +2453,7 @@
                   style="width: 100%"
                   [checked]="checkedSun"
                   [label]="titleCheckBoxSun"
-                  (valueChange)="valueChangeDayoff($event,viewSunday,'8')"
+                  (valueChange)="valueChangeDayoff($event, viewSunday, '8')"
                 >
                 </codx-input>
               </div>
@@ -2506,7 +2511,7 @@
                   [label]="titleRadioYes"
                   [checked]="step.durationControl"
                   [crrValue]="step.durationControl"
-                  (valueChange)="valueChangeDuraCtrl($event,formDurationCtrl)"
+                  (valueChange)="valueChangeDuraCtrl($event, formDurationCtrl)"
                 >
                 </codx-input>
               </div>
@@ -2518,7 +2523,7 @@
                   [checked]="!step.durationControl"
                   [crrValue]="step.durationControl"
                   [label]="titleRadioNo"
-                  (valueChange)="valueChangeDuraCtrl($event,formDurationCtrl)"
+                  (valueChange)="valueChangeDuraCtrl($event, formDurationCtrl)"
                 >
                 </codx-input>
               </div>
@@ -2546,7 +2551,7 @@
                   [label]="titleRadioYes"
                   [checked]="step.leadtimeControl"
                   [crrValue]="step.leadtimeControl"
-                  (valueChange)="valueChangeDuraCtrl($event,formLeaTimeCtrl)"
+                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
                 >
                 </codx-input>
               </div>
@@ -2558,7 +2563,7 @@
                   [checked]="!step.leadtimeControl"
                   [crrValue]="step.leadtimeControl"
                   [label]="titleRadioNo"
-                  (valueChange)="valueChangeDuraCtrl($event,formLeaTimeCtrl)"
+                  (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
                 >
                 </codx-input>
               </div>
