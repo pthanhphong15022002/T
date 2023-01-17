@@ -85,10 +85,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   viewStepCrr: string = 'custom'; // default view step custom settings
   titleViewStepCrr: string = ''; // default title view step custom settings
   isTurnOnYesSuccess: boolean = false; //Create variable Click yes for reason success
-  isTurnOnNoSuccess: boolean = false; //Create variable Click no for reason success
+  isTurnOnNoSuccess: boolean = true; // default reason control is no
   isSwitchReason: boolean = false; // hidden switch of the reason success/failure
   isTurnOnYesFailure: boolean = false; //Create variable Click yes for reason failure
-  isTurnOnNoFailure: boolean = false; //Create variable Click no for reason failure
+  isTurnOnNoFailure: boolean = true; // default reason control is no
   listRoleInStep: DP_Processes_Permission[] = []; // creat list user role in step
   userPermissions: DP_Processes_Permission; // create object user in step
   gridViewSetupStep: any; // grid view setup
@@ -115,8 +115,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly titlecheckBoxStepReasonSuccess: string = 'Thành công'; // title form step reason failure
   readonly saturday: string = 'Thứ 7'; // title checkbox saturday form duration when value list is empty
   readonly sunday: string = 'Chủ nhật'; // title checkbox sunday form duration when value list is empty
-  readonly viewSaturday: string = 'ExcludeDayoffSat' // view staturday when selected value
-  readonly viewSunday: string = 'ExcludeDayoffSun' // view sunday when selected value
+  readonly viewSaturday: string = '7'; // view staturday when selected value
+  readonly viewSunday: string = '8'; // view sunday when selected value
   readonly formNameSteps: string = 'DPSteps';
   readonly gridViewNameSteps: string = 'grvDPSteps';
   readonly formDurationCtrl: string = 'DurationControl'; // form duration control
@@ -145,7 +145,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   listJobType = [
     {
-      id: 'P',
+      id: 'C',
       icon: 'icon-i-layout-three-columns',
       text: 'Cuộc gọi',
       funcID: 'BPT101',
@@ -173,7 +173,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       color: { background: '#ff9adb' },
     },
     {
-      id: 'Q',
+      id: 'S',
       icon: 'icon-i-clipboard-check',
       text: 'Khảo sát',
       funcID: 'BPT106',
@@ -197,7 +197,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   dataChild = [];
   //end data Test
   isShowstage = true;
-  titleAdd ='Thêm'
+  titleAdd = 'Thêm';
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -339,6 +339,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     //   this.notiService.notify('Test mã');
     //   return;
     // }
+    debugger;
     if (
       this.process.processName == null ||
       this.process.processName.trim() == ''
@@ -360,9 +361,26 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (this.action == 'edit') {
         this.onUpdate();
       } else {
-        this.onAdd();
+        switch (this.currentTab) {
+          case 0:
+            this.onAdd();
+            break;
+          case 1:
+            this.handleAddStep();
+            break;
+          case 2:
+            break;
+        }
       }
     }
+  }
+
+  handleAddStep() {
+    this.dpService.addStep([this.step]).subscribe((data) => {
+      if (data) {
+        this.dialog.close(data);
+      } else this.dialog.close();
+    });
   }
 
   valueChange(e) {
@@ -730,7 +748,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   clickMFFields(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        // this.delete(data);
+        this.deleteCustomField(data);
         break;
       case 'SYS03':
         this.editCustomField(data, e.text);
@@ -749,6 +767,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.fieldCrr = new DP_Steps_Fields();
           this.fieldCrr.stepID = stepID;
           this.fieldCrr.processID = processID;
+          this.fieldCrr.isRequired = false;
           let titleAction = this.titleAdd;
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
@@ -767,6 +786,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             if (e && e.event != null) {
               //xu ly data đổ về
               this.fieldCrr = e.event;
+              this.fieldCrr.sorting = this.step.fields.length + 1;
               if (this.step.recID == this.fieldCrr.stepID) {
                 this.step.fields.push(this.fieldCrr);
               }
@@ -787,7 +807,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.cache
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
         .subscribe((res) => {
-          let titleAction = textTitle  ;
+          let titleAction = textTitle;
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
           formModel.formName = 'DPStepsFields';
@@ -830,6 +850,46 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
+  deleteCustomField(field) {
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.step.fields.splice(field.sorting - 1, 1);
+        this.step.fields.forEach((x) => {
+          if (x.sorting > field.sorting) x.sorting = x.sorting - 1;
+        });
+        this.stepList.forEach((obj) => {
+          if (obj.recID == this.fieldCrr.stepID) {
+            obj.fields.splice(field.sorting - 1, 1);
+            obj.fields.forEach((x) => {
+              if (x.sorting > field.sorting) x.sorting = x.sorting - 1;
+            });
+          }
+        });
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+
+  changeRequired(e, field) {
+    this.fieldCrr = field;
+    this.fieldCrr.isRequired = e.data;
+    if (this.step.recID == this.fieldCrr.stepID) {
+      let index = this.step.fields.findIndex(
+        (x) => x.recID == this.fieldCrr.recID
+      );
+      if (index != -1) {
+        this.step.fields[index] = this.fieldCrr;
+      }
+    }
+    this.stepList.forEach((obj) => {
+      if (obj.recID == this.fieldCrr.stepID) {
+        let index = obj.fields.findIndex((x) => x.recID == this.fieldCrr.recID);
+        if (index != -1) {
+          obj.fields[index] = this.fieldCrr;
+        }
+      }
+    });
+  }
   popoverSelectView(p, data) {
     this.stepOfFields = data;
     p.open();
@@ -857,7 +917,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#endregion
 
-  //#stage -- nvthuan
+  //#Step - taskGroup - task -- nvthuan
   async openAddStep(type) {
     if (type === 'add') {
       this.step = new DP_Steps();
@@ -930,37 +990,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  //job -- nvthuan
-  openJob() {
-    this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
-  }
-  selectJob(id) {
-    let btn = document.getElementById(id);
-    console.log(btn);
-  }
-  getTypeJob(e, value) {
-    this.jobType = value;
-  }
-  openPopupJob() {
-    this.popupJob.close();
-    let option = new SidebarModel();
-    option.Width = '550px';
-    option.zIndex = 1001;
-    let dialog = this.callfc.openSide(
-      PopupJobComponent,
-      ['add', this.jobType, this.taskGroupList],
-      option
-    );
-    dialog.closed.subscribe((e) => {
-      if (e?.event) {
-        let taskData = e?.event;
-        let index = this.taskGroupList.findIndex(
-          (task) => task.recID == taskData.taskGroupID
-        );
-        this.taskGroupList[index]['task'].push(taskData);
-      }
-    });
-  }
   //# group job
   openGroupJob() {
     this.taskGroup = new DP_Steps_TaskGroups();
@@ -980,6 +1009,42 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.popupGroupJob.close();
     this.taskGroupList.push(this.taskGroup);
   }
+
+  //job -- nvthuan
+  openTypeJob() {
+    this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
+  }
+  getTypeJob(e, value) {
+    this.jobType = value;
+  }
+
+  openPopupJob() {
+    let frmModel: FormModel = {
+      entityName: 'DP_Steps_Tasks',
+      formName: 'DPStepsTasks',
+      gridViewName: 'grvDPStepsTasks',
+    };
+    this.popupJob.close();
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.zIndex = 1001;
+    option.FormModel = frmModel;
+    let dialog = this.callfc.openSide(
+      PopupJobComponent,
+      ['add', this.jobType, this.step?.recID, this.taskGroupList],
+      option
+    );
+    dialog.closed.subscribe((e) => {
+      if (e?.event) {
+        let taskData = e?.event;
+        let index = this.taskGroupList.findIndex(
+          (task) => task.recID == taskData.taskGroupID
+        );
+        this.taskGroupList[index]['task'].push(taskData);
+      }
+    });
+  }
+
   changeValueInput(event, data) {
     data[event?.field] = event?.data;
   }
@@ -1121,7 +1186,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   valueChangeDuraCtrl($event, form: string) {
     let checked = $event.component.checked;
-    if($event) {
+    if ($event) {
       if (form === this.formDurationCtrl) {
         if ($event.field === this.radioYes && checked) {
           this.step.durationControl = true;
@@ -1137,7 +1202,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     }
 
-
     this.changeDetectorRef.detectChanges();
   }
 
@@ -1146,33 +1210,59 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.step.memo = $event.data;
     }
   }
-  valueChangeDayoff($event, view:any) {
+  valueChangeDayoff($event, view: any, value: any) {
     if ($event && $event != null) {
-      if($event.data){
-        if(view == this.viewSaturday) {
-          this.step.excludeDayoff = this.step?.excludeDayoff && this.step?.excludeDayoff !== '' ? this.step?.excludeDayoff+';8':'7';
+      if ($event.data) {
+        if (view == value && $event?.component.checked) {
+          if (
+            !this.step?.excludeDayoff ||
+            this.step?.excludeDayoff?.trim() == ''
+          ) {
+            this.step.excludeDayoff = value;
+          } else {
+            this.step.excludeDayoff = this.step?.excludeDayoff
+              .split(';')
+              .includes(value)
+              ? this.step?.excludeDayoff
+              : this.step?.excludeDayoff + ';' + value;
+          }
         }
-        else if(view == this.viewSunday) {
-          this.step.excludeDayoff = this.step?.excludeDayoff && this.step?.excludeDayoff !== '' ? '7;8':'8';
+      } else {
+        if (view == value && !$event.component.checked) {
+          if (
+            (!this.step?.excludeDayoff &&
+              this.step?.excludeDayoff.trim() == '') ||
+            !this.step?.excludeDayoff.split(';').includes(value)
+          )
+            return;
+          let arr = this.step?.excludeDayoff
+            .split(';')
+            .filter((x) => x != value);
+          arr.sort();
+          this.step.excludeDayoff = arr.join(';') ?? '';
         }
       }
-      else {
-        if(view == this.viewSaturday) {
-          this.step.excludeDayoff = this.step?.excludeDayoff && this.step?.excludeDayoff !== ''  ? '8':'';
-        }
-        else if(view == this.viewSunday) {
-          this.step.excludeDayoff = this.step?.excludeDayoff && this.step?.excludeDayoff !== '' ? '7':'';
-        }
-      }
-
     }
-
+    this.checkedDayOff(this.step?.excludeDayoff);
     this.changeDetectorRef.detectChanges();
   }
-  checkedDayOff(value:string){
-    if(value !== '' && value) {
-      this.checkedSat= ((value?.split(';').length == 1 && value?.split(';')[0] == this.valueCheckBoxSat) || value?.split(';').length > 1 ) ? true:false;
-      this.checkedSun= ((value?.split(';').length == 1 && value?.split(';')[0] == this.valueCheckBoxSun) || value?.split(';').length > 1 ) ? true:false;
+  checkedDayOff(value: string) {
+    if (value !== '' && value) {
+      this.checkedSat =
+        (value?.split(';').length == 1 &&
+          value?.split(';')[0] == this.valueCheckBoxSat) ||
+        value?.split(';').length > 1
+          ? true
+          : false;
+      this.checkedSun =
+        (value?.split(';').length == 1 &&
+          value?.split(';')[0] == this.valueCheckBoxSun) ||
+        value?.split(';').length > 1
+          ? true
+          : false;
+    } else {
+      this.checkedSat = false;
+      this.checkedSun = false;
     }
     this.changeDetectorRef.detectChanges();
   }

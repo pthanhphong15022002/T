@@ -54,6 +54,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
   valueChange(e) {
     if (e && e.data && e.field) this.field[e.field] = e.data;
   }
+  changeRequired(e) {
+    this.field.isRequired = e.data ;
+  }
   valueChangeIcon(e) {
     if (e) this.field.rankIcon = e;
   }

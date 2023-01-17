@@ -142,7 +142,8 @@ export class DynamicProcessComponent
   }
 
   searchDynamicProcess($event) {
-    if ($event) this.changeDetectorRef.detectChanges();
+    this.view.dataService.search($event).subscribe();
+    this.changeDetectorRef.detectChanges();
   }
 
   async genAutoNumber() {
@@ -325,7 +326,7 @@ export class DynamicProcessComponent
 
   doubleClickViewProcess(data){
     let obj = {
-    //can gi nem qua
+      data: data
     };
 
     let dialogModel = new DialogModel();
