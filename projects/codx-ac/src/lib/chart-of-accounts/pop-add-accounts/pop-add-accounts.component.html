@@ -1,5 +1,5 @@
-<codx-layout-add #form [title]="headerText" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
-    [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabestablish]" [data]="chartOfAccounts">
+<codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
+    [dialog]="dialog" (setTitle)="setTitle($event)" [openMore]="true" [tabContent]="[tabDescription, tabestablish]" [data]="chartOfAccounts">
 </codx-layout-add>
 <ng-template #tabDescription>
     <div class="row mx-0 mt-3">
@@ -11,9 +11,10 @@
             default="Tài khoản"
           ></codx-label>
             <codx-input
+                    [crrValue]="accID"
                     [formModel]="form.formModel"
                     field="accountID"
-                    (valueChange)="valueChange($event)"
+                    (valueChange)="valueChangeAccID($event)"
                   >
             </codx-input>
           </div>   
@@ -25,9 +26,10 @@
             fiedName="parentID"
             default="Tài khoản cha"      
           ></codx-label>
-          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          <codx-input type="combobox" refValue="ParentAccounts"
+          [crrValue]="parID"
           field="parentID"
-          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          (valueChange)="valueChangeParID($event)" [dataSelected]="false" [multiple]="false"
           [disabled]="false" loadFull="true">
         </codx-input>
           </div>
@@ -41,6 +43,7 @@
           ></codx-label>
           <codx-input
           field="accountName"
+          [crrValue]="form.data.accountName"
           [formModel]="form.formModel"
           (valueChange)="valueChange($event)"
         >
@@ -52,7 +55,10 @@
             fiedName="accountType"
             default="Loại tài khoản"      
           ></codx-label>
-          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          <codx-input 
+          [crrValue]="form.data.accountType"
+          type="valuelist"  
+          refValue="AC001"
           field="accountType"
           (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
           [disabled]="false" loadFull="true">
@@ -65,7 +71,7 @@
         type="switch"
         field="detail"
         (valueChange)="valueChange($event)"
-        [checked]="true"
+        [checked]="form.data.detail"
       >
       </codx-input>
         <div>
@@ -85,6 +91,7 @@
         type="switch"
         field="multiCurrency"
         (valueChange)="valueChange($event)"
+        [checked]="form.data.multiCurrency"
       >
       </codx-input>
         <div>
@@ -104,6 +111,7 @@
         type="switch"
         field="subLGControl"
         (valueChange)="valueChange($event)"
+        [checked]="form.data.subLGControl"
       >
       </codx-input>
         <div>
@@ -124,9 +132,12 @@
             fiedName="subLGType"
             default="Loại công nợ"
           ></codx-label>
-          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          <codx-input 
+          [crrValue]="subLGType"
+          type="valuelist"
           field="subLGType"
-          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          refValue="AC002"
+          (valueChange)="valueChangeSubtype($event)" [dataSelected]="false" [multiple]="false"
           [disabled]="false" loadFull="true">
         </codx-input>
           </div>   
@@ -138,8 +149,10 @@
             fiedName="objectID"
             default="Đối tượng mặc định"      
           ></codx-label>
-          <codx-input type="combobox" field="recID"  refValue="UserRoles"
-          field="objectID"
+        <codx-input 
+          type="combobox"
+          field="objectID" 
+          refValue="Customers"
           (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
           [disabled]="false" loadFull="true">
         </codx-input>
@@ -153,6 +166,7 @@
         type="switch"
         field="invoiceDetail"
         (valueChange)="valueChange($event)"
+        [checked]="form.data.invoiceDetail"
       >
       </codx-input>
         <div>
@@ -177,8 +191,30 @@
         </div>
       <codx-input
         [formModel]="form.formModel"
+        [crrValue]="form.data.note"
         field="note"
         (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+        
+          </div>
+        </div>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+        <div>
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="stop"
+            default="Ngừng sử dụng"
+          ></codx-label> 
+        </div>
+      <codx-input
+        [formModel]="form.formModel"
+        field="stop"
+        (valueChange)="valueChange($event)"
+        [checked]="form.data.stop"
       >
       </codx-input>
         
@@ -199,7 +235,9 @@
             fiedName="diM1Control"
             default="Phòng ban"      
           ></codx-label>
-          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          <codx-input type="valuelist"
+          [crrValue]="form.data.diM1Control"
+          refValue="AC003"
           field="diM1Control"
           (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
           [disabled]="false" loadFull="true">
@@ -211,7 +249,10 @@
             fiedName="projectControl"
             default="Dự án"      
           ></codx-label>
-          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          <codx-input 
+          type="valuelist"  
+          refValue="AC003"
+          [crrValue]="form.data.projectControl"
           field="projectControl"
           (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
           [disabled]="false" loadFull="true">
@@ -223,7 +264,10 @@
             fiedName="diM2Control"
             default="Trung tâm chi phí"      
           ></codx-label>
-          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          <codx-input
+          type="valuelist" 
+          [crrValue]="form.data.diM2Control"
+          refValue="AC003"
           field="diM2Control"
           (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
           [disabled]="false" loadFull="true">
@@ -235,7 +279,10 @@
             fiedName="diM3Control"
             default="Mục phí"      
           ></codx-label>
-          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          <codx-input 
+          type="valuelist" 
+          [crrValue]="form.data.diM3Control"
+          refValue="AC003"
           field="diM3Control"
           (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
           [disabled]="false" loadFull="true">
@@ -247,9 +294,12 @@
             fiedName="loanControl"
             default="Khế ước vay"      
           ></codx-label>
-          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          <codx-input 
+          type="valuelist"
+          [crrValue]="form.data.loanControl"
+          refValue="AC004"
           field="loanControl"
-          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          (valueChange)="valueChangeloan($event)" [dataSelected]="false" [multiple]="false"
           [disabled]="false" loadFull="true">
         </codx-input>
       </div>
@@ -259,11 +309,13 @@
             fiedName="assetControl"
             default="Kiểm soát tài sản/CCDC/CPTT"      
           ></codx-label>
-          <codx-input
-          (valueChange)="valueChange($event)"
+          <codx-input 
+          type="valuelist"
+          [crrValue]="form.data.assetControl"
+          refValue="AC004"
           field="assetControl"
-          [formModel]="form.formModel"
-        >
+          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          [disabled]="false" loadFull="true">
         </codx-input>
       </div>
       <div class="form-group">
@@ -275,27 +327,31 @@
       <div class="form-group">
         <codx-label
             [formModel]="form.formModel"
-            fiedName="BudgetControl"
+            fiedName="budgetControl"
             default="Kiểm soát ngân sách"      
           ></codx-label>
-          <codx-input
-          (valueChange)="valueChange($event)"  
-          field="BudgetControl"
-          [formModel]="form.formModel"
-        >
+          <codx-input 
+          type="valuelist"
+          refValue="AC006"
+          [crrValue]="form.data.budgetControl"
+          field="budgetControl"
+          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          [disabled]="false" loadFull="true">
         </codx-input>
       </div>
       <div class="form-group">
         <codx-label
             [formModel]="form.formModel"
-            fiedName="BalControl"
+            fiedName="balControl"
             default="Kiểm soát số dư"      
           ></codx-label>
-          <codx-input
-          [Group]="form.formGroup"    
-          field="BalControl"
-          [formModel]="form.formModel"
-        >
+          <codx-input 
+          type="valuelist"
+          [crrValue]="form.data.balControl"
+          refValue="AC006"
+          field="balControl"
+          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          [disabled]="false" loadFull="true">
         </codx-input>
       </div>
 </ng-template>

@@ -13,11 +13,13 @@
         <div class="form-group row">
             <codx-label
                 fiedName="CertificateType"
+                [formModel]="formModel"
             ></codx-label>
             <codx-input
                 field="certificateType"
                 [formModel]="formModel"
                 [Group]="formGroup"
+                (valueChange)="valueChange($event, certificateID)"
             ></codx-input>
         </div>
 
@@ -27,7 +29,7 @@
                     fiedName="CertificateID"
                     [formModel]="formModel"
                 ></codx-label>
-                <codx-input
+                <codx-input #certificateID
                     field="certificateID"
                     [formModel]="formModel"
                     [Group]="formGroup"
@@ -49,6 +51,7 @@
         <div class="form-group row">
             <codx-label
                 fiedName="TrainSupplierID"
+                [formModel]="formModel"
             ></codx-label>
             <codx-input
                 field="trainSupplierID"
@@ -143,6 +146,7 @@
                     field="scoreListening"
                     [formModel]="formModel"
                     [Group]="formGroup"
+                    [showSpinButton]="false"
                 ></codx-input>
             </div>
             <div class="col-6">
@@ -154,6 +158,7 @@
                     field="scoreSpeaking"
                     [formModel]="formModel"
                     [Group]="formGroup"
+                    [showSpinButton]="false"
                 ></codx-input>
             </div>
         </div>
@@ -168,6 +173,7 @@
                     field="scoreReading"
                     [formModel]="formModel"
                     [Group]="formGroup"
+                    [showSpinButton]="false"
                 ></codx-input>
             </div>
             <div class="col-6">
@@ -179,6 +185,7 @@
                     field="scoreWriting"
                     [formModel]="formModel"
                     [Group]="formGroup"
+                    [showSpinButton]="false"
                 ></codx-input>
             </div>
         </div>
@@ -236,6 +243,7 @@
         <div class="form-group row">
             <codx-label
                 fiedName="IssuedPlace"
+                [formModel]="formModel"
             ></codx-label>
             <codx-input
                 field="issuedPlace"
@@ -247,6 +255,7 @@
         <div class="form-group row">
             <codx-label
                 fiedName="IssuedBy"
+                [formModel]="formModel"
             ></codx-label>
             <codx-input
                 field="issuedBy"
@@ -265,6 +274,7 @@
                     field="limitMonths"
                     [formModel]="formModel"
                     [Group]="formGroup"
+                    [showSpinButton]="false"
                 ></codx-input>
             </div>
             <div class="col-6">
@@ -308,6 +318,7 @@
         <div class="form-group row">
             <codx-label
                 fiedName="Note"
+                [formModel]="formModel"
             ></codx-label>
             <codx-input
                 field="note"

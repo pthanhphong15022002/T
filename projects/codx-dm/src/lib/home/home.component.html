@@ -16,7 +16,7 @@
 
   <ng-template #context>
     <div appDragDropFileFolder [dataDrapDrop]="data" (fileFolderDropped)="fileFolderDropped($event)"
-      class="d-flex align-items-center px-3 py-1 home bg-transparent">
+      class="d-flex align-items-center px-3 py-1 home ">
       <div [attr.id]="data.recID" class="leaf d-flex align-items-center" [innerHTML]="dmSV.setFullHtmlNode(data, '')">
       </div>
       <codx-temp-full class="float-start" imgCss="me-3 cursor-pointer" (clickMF)="dmSV.clickMF($event, data , codxview)"
@@ -34,7 +34,7 @@
   <div *ngIf="isSearch">
   </div>
   <div (scroll)="onScroll($event)" appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
-    class="w-100 scroll-y home rounded-2 bg-transparent" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+    class="w-100 scroll-y home rounded-2 " data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
     data-kt-scroll-height="auto" data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
     data-kt-scroll-offset="0">
     <ng-container *ngTemplateOutlet="empty"></ng-container>
@@ -108,7 +108,7 @@
     <ng-container *ngFor="let item of data ; trackBy: trackItem">
       <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
         [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item" [formModel]="view.formModel"
-        [view]="codxview">
+        [view]="codxview" >
       </card>
     </ng-container>
   </div>
