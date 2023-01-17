@@ -132,12 +132,20 @@ export class CodxDpService {
     );
   }
 
-  // #step
+  // #step -- nvthuan
   addStep(data) {
     return this.api.exec<any>(
       'DP',
       'StepsBusiness',
       'AddStepAsync',
+      data
+    );
+  }
+  getStep(data) {
+    return this.api.exec<any>(
+      'DP',
+      'StepsBusiness',
+      'GetStepAsync',
       data
     );
   }

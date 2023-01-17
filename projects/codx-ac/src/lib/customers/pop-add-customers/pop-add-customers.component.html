@@ -230,13 +230,12 @@
             fiedName="WarehouseID"
             default="Kho xuất hàng mặc định"      
           ></codx-label>
-          <codx-input
-            type="combobox"
-            refValue="Warehouses"
-            [formModel]="form.formModel"
-            field="warehouseID"  
-            >
-            </codx-input>
+          <codx-input 
+          type="combobox" 
+          refValue="Warehouses"
+          field="warehouseID"
+          >
+        </codx-input>
           </div>   
         </div>
         <div class="col-6 pe-0">
@@ -246,13 +245,12 @@
             fiedName="DelRouteID"
             default="Tuyến giao hàng"      
           ></codx-label>
-          <codx-input
-            type="combobox"
-            refValue="DeliveryRoutes"
-            [formModel]="form.formModel"
-            field="delRouteID"  
-            >
-            </codx-input>
+          <codx-input 
+          type="combobox" 
+          refValue="Warehouses"
+          field="warehouseID"
+          >
+        </codx-input>
           </div>
         </div>
       </div>
@@ -298,13 +296,12 @@
             fiedName="WorkingDays"
             default="Thời gian giao hàng"      
           ></codx-label>
-          <codx-input
-          type="combobox"
+          <codx-input 
+          type="combobox" 
           refValue="CalendarsAC"
-          field="workingDays"  
-          [formModel]="form.formModel"
+          field="workingDays"
           >
-          </codx-input>
+        </codx-input>
           </div>   
         </div>
       </div>
@@ -409,7 +406,7 @@
         </div>
         <div class="col-6 pe-0">
           <div class="form-group">
-            <span>
+            <span (click)="openPopupContact()">
                 <i class="icon-add"></i>
                 <i class="icon-perm_identity icon-user-temp text-gray-700">
                 </i>
@@ -471,6 +468,7 @@
         [formModel]="form.formModel"
         default="Tài khoản ngân hàng"
       ></codx-label>
+      <span (click)="openPopupBank()" class="icon-add_circle icon-16 me-1"></span>
       </div> 
       <div class="row pb-5">
         <div class="col-6 ps-0">
@@ -499,7 +497,85 @@
       </div>
 </ng-template>
 <ng-template #tabinfo>
-
+  <div class="form-group">
+    <codx-label
+        [formModel]="form.formModel"
+        fiedName="IndustryID"
+        default="Ngành công nghiệp"      
+      ></codx-label>
+      <codx-input
+      type="combobox"
+      refValue="Industries"
+      field="industries" 
+      
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label
+        [formModel]="form.formModel"
+        fiedName="ChannelID"
+        default="Kênh bán hàng"      
+      ></codx-label>
+      <codx-input
+      type="combobox"
+      refValue="SalesChannels"
+      field="channelID" 
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label
+        [formModel]="form.formModel"
+        fiedName="SalespersonID"
+        default="Nhân viên bán hàng"      
+      ></codx-label>
+      <codx-input
+      type="combobox"
+      refValue="Salespersons"
+      field="salespersonID" 
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label
+        [formModel]="form.formModel"
+        fiedName="SalesConsultantID"
+        default="Nhân viên tư vấn"      
+      ></codx-label>
+      <codx-input
+      type="combobox"
+      refValue="SalesConsultants"
+      field="salesConsultantID" 
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label
+        [formModel]="form.formModel"
+        fiedName="Owner"
+        default="Người sở hữu"      
+      ></codx-label>
+      <codx-input
+      type="combobox"
+      refValue="Users"
+      field="owner" 
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label
+        [formModel]="form.formModel"
+        fiedName="BUID"
+        default="Đơn vị/bộ phần"      
+      ></codx-label>
+      <codx-input
+      type="combobox"
+      refValue="BusinessUnits"
+      field="buid" 
+    >
+    </codx-input>
+  </div>
 </ng-template>
 <ng-template #footer>
     <div class="d-flex justify-content-end">

@@ -1,6 +1,5 @@
-import { style } from '@angular/animations';
 import { CodxDpService } from './../../codx-dp.service';
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { CRUDService } from 'codx-core';
 
 @Component({
@@ -12,6 +11,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() formModel: any;
   @Input() dataService: CRUDService;
   @Input() recID: any;
+  @ViewChild('locationCBB') locationCBB: any;
 
   dataSelect: any;
   id: any;
@@ -24,11 +24,33 @@ export class InstanceDetailComponent implements OnInit {
   progressThickness: Number = 24;
   value: Number = 30;
   cornerRadius: Number = 30;
-  constructor(private dpSv: CodxDpService) {
+  idCbx = "stage";
+  fields: Object = { text: 'name', value: 'id' };
+  listRoom = [{
+    name: 'Xem theo biểu đồ Gantt',
+    id: 'gantt'
+  },
+  {
+    name: 'Xem theo giai đoạn',
+    id: 'stage'
+  },
+  {
+    name: 'Xem theo trường nhập liệu',
+    id: 'field'
+  }]
 
+  constructor(private dpSv: CodxDpService) {
   }
 
   ngOnInit(): void {
+
+  }
+
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -39,6 +61,7 @@ export class InstanceDetailComponent implements OnInit {
       this.id = changes['recID'].currentValue;
       this.getInstanceByRecID(this.id);
     }
+
   }
 
 
@@ -50,5 +73,19 @@ export class InstanceDetailComponent implements OnInit {
     });
   }
 
+  cbxChange(e){
+    this.idCbx = e;
+  }
 
+  changeDataMF(e, data){
+    if(e){
+      e.forEach(element => {
+        if(element.functionID == "SYS002" || element.functionID == "SYS001" || element.functionID == "SYS004" || element.functionID == "SYS003" || element.functionID == "SYS005"
+        || element.functionID == "DP04" || element.functionID == "DP11" || element.functionID == "DP08" || element.functionID == "DP07" || element.functionID == "DP06" || element.functionID == "DP05"
+        || element.functionID == "DP01" || element.functionID == "DP03" || element.functionID == "SYS102" || element.functionID == "SYS02" || element.functionID == "SYS104" || element.functionID == "SYS04"
+        || element.functionID == "SYS103" || element.functionID == "SYS03" || element.functionID == "SYS101" || element.functionID == "SYS01")
+        element.disabled = true;
+      });
+    }
+  }
 }

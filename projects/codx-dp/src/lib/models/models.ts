@@ -153,7 +153,7 @@ export class DP_Steps_TaskGroups_Roles {
 }
 
 export class DP_Steps_Tasks {
-  recID: string;
+  recID: string = Util.uid();
   stepID: string;
   indexNo: number;
   taskType: string;
