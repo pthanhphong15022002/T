@@ -5,7 +5,6 @@ import { PopupEappointionsComponent } from './../../employee-profile/popup-eappo
 import { PopupEBasicSalariesComponent } from './../../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
 import { PopupETimeCardComponent } from './../../employee-profile/popup-etime-card/popup-etime-card.component';
 import { PopupECalculateSalaryComponent } from './../../employee-profile/popup-ecalculate-salary/popup-ecalculate-salary.component';
-import { DataRequest } from './../../../../../../src/shared/models/data.request';
 import { PopupEexperiencesComponent } from './../../employee-profile/popup-eexperiences/popup-eexperiences.component';
 import { PopupEJobSalariesComponent } from './../../employee-profile/popup-ejob-salaries/popup-ejob-salaries.component';
 import { PopupEWorkPermitsComponent } from './../../employee-profile/popup-ework-permits/popup-ework-permits.component';
@@ -38,6 +37,7 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -2080,15 +2080,14 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      // EmployeeDegreeDetailComponent,
       PopupEDegreesComponent,
       {
-        // isAdd: true,
         actionType: actionType,
         indexSelected: this.lstEDegrees.indexOf(data),
         lstEDegrees: this.lstEDegrees,
-        headerText: 'Bằng cấp',
         employeeId: this.data.employeeID,
+        dataSelected: data,
+        funcID: 'HRT03020501',
       },
       option
     );
