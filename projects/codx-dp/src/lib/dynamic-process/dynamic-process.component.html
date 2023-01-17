@@ -69,10 +69,10 @@
         </div>
         <div class="footerCard-item">
           <div class="d-flex justify-content-start mt-1">
-            <div class="me-2 mt-1"> <i class="icon-adjust"></i></div>
-            <div class="me-2 mt-1" *ngIf='data?.applyFor==0'>Tiêu chuẩn</div>
-            <div class="me-2 mt-1" *ngIf='data?.applyFor==1'>Lead</div>
-            <div class="me-2 mt-1" *ngIf='data?.applyFor==2'>Cơ hội</div>
+            <div class="me-2 mt-1"><i class="icon-adjust"></i></div>
+            <div class="me-2 mt-1">
+              {{ getNameAppyFor(data?.applyFor) }}
+            </div>
             <div class="ms-auto">
               <codx-imgs
                 [width]="25"

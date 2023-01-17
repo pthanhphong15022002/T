@@ -226,14 +226,10 @@
             <div *ngIf="!isShare" class="mt-4">
                 <div class="d-flex align-items-center">
                     <div class="me-5">
-                        <codx-input name="group" class="test-check" type="radio" style="width:100%"
-                            [checked]="selection == 0 ? true : false" [label]="titleReadonly"
-                            (valueChange)="txtValue($event, 'copyto')"></codx-input>
+                        <codx-input name="group" class="test-check" type="radio" style="width:100%" [label]="titleReadonly" [crrValue]="'readonly'" [Group]="shareGroup" [ControlName]="'per'"></codx-input>
                     </div>
                     <div class="me-5">
-                        <codx-input name="group" class="test-check" type="radio" style="width:100%"
-                            [checked]="selection == 1 ? true : false" [label]="titleModified"
-                            (valueChange)="txtValue($event, 'move')"></codx-input>
+                        <codx-input name="group" class="test-check" type="radio" style="width:100%" [label]="titleModified" [crrValue]="'modified'" [Group]="shareGroup" [ControlName]="'per'"></codx-input>
                     </div>
                 </div>
             </div>

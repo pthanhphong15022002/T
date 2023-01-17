@@ -628,8 +628,6 @@ export class EditFileComponent implements OnInit {
    
     if (this.fileEditing.fileName === "")
       return "1";
-    else if (this.fileEditing.fileName.indexOf(".") === -1)
-      return "2";
     else
       return "0";
   }

@@ -132,12 +132,25 @@ export class CodxDpService {
     );
   }
 
-  // #step
+  // #step -- nvthuan
   addStep(data) {
     return this.api.exec<any>(
       'DP',
       'StepsBusiness',
       'AddStepAsync',
+      data
+    );
+  }
+
+  GetAutoNumberNo(formName: string , funcID: any ,entityName: string , key: any){
+      return this.api.execSv<any>('SYS','AD','AutoNumbersBusiness','GenAutoNumberAsync', [formName , funcID , entityName , key])
+
+  }
+  getStep(data) {
+    return this.api.exec<any>(
+      'DP',
+      'StepsBusiness',
+      'GetStepAsync',
       data
     );
   }

@@ -91,7 +91,7 @@ export class PropertiesComponent implements OnInit {
   rating5: string;
   styleRating: string;
   historyFileName: string;
-  fileEditing: FileUpload;
+  fileEditing: FileUpload | any;
   commenttext: string = '';
   shareContent: string;
   requestContent: string;
@@ -274,7 +274,6 @@ export class PropertiesComponent implements OnInit {
     this.fileService.getFile(id, false).subscribe(async (res) => {
       if (res != null) {
         this.fileEditing = res;
-
         if (this.fileEditing.version != null) {
           this.fileEditing.version = this.fileEditing.version.replace(
             'Ver ',

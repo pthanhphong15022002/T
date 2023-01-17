@@ -1556,6 +1556,7 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupESelfInfoComponent,
       {
         headerText: 'Thông tin bản thân',
+        funcID: 'HRT03020101',
       },
       option
     );

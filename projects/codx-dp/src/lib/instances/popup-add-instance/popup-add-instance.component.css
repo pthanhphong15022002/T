@@ -1,0 +1,18 @@
+.footer-upload {
+  margin: -13px -20px -12px -15px;
+  padding: 13px 20px 12px 15px;
+  width: 559px;
+  margin-left: auto;
+  border-width: 0 1px 0 0;
+  border-color: #3333330f;
+  border-style: solid;
+  box-shadow: -2px 2px 4px RGBA(150, 152, 154, .2);
+}
+
+.tm-desc ejs-richtexteditor .e-content,
+.tm-desc ejs-richtexteditor .e-rte-content {
+  height: calc(100vh - 240px) !important;
+  border-bottom: 0 !important;
+  box-sizing: content-box;
+  max-height: none !important;
+}
