@@ -6,6 +6,7 @@ import {
   CodxFormComponent,
   CodxListviewComponent,
   CRUDService,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -36,6 +37,8 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   actionType: string;
   isSaved: boolean = false;
 
+  dataVllSupplier: any;
+
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
@@ -43,7 +46,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,
-    private notitfy: NotificationsService,
+    private notify: NotificationsService,
     private hrService: CodxHrService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
@@ -58,6 +61,23 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   }
 
   initForm() {
+    this.cache
+      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .subscribe((grvSetup) => {
+        if (grvSetup) {
+          console.log(grvSetup);
+          let dataRequest = new DataRequest();
+          dataRequest.comboboxName = grvSetup.TrainSupplierID.referedValue;
+          dataRequest.pageLoading = false;
+
+          this.hrService.loadDataCbx('HR', dataRequest).subscribe((data) => {
+            if (data) {
+              this.dataVllSupplier = JSON.parse(data[0]);
+            }
+            console.log(this.dataVllSupplier);
+          });
+        }
+      });
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
@@ -129,7 +149,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
 
       this.hrService.addETraincourse(this.data).subscribe((res) => {
         if (res) {
-          this.notitfy.notifyCode('SYS007');
+          this.notify.notifyCode('SYS007');
           this.actionType = 'edit';
           if (this.listView) {
             (this.listView.dataService as CRUDService).add(res).subscribe();
@@ -144,7 +164,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
         .updateEmployeeTrainCourseInfo(this.data)
         .subscribe((res) => {
           if (res) {
-            this.notitfy.notifyCode('SYS007');
+            this.notify.notifyCode('SYS007');
             if (this.listView) {
               (this.listView.dataService as CRUDService)
                 .update(res)
@@ -153,7 +173,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
             if (closeForm) {
               this.dialog && this.dialog.close();
             }
-          } else this.notitfy.notifyCode('DM034');
+          } else this.notify.notifyCode('DM034');
         });
     }
   }
@@ -161,9 +181,9 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   onSaveForm2() {
     this.hrService.AddECertificateInfo(this.dataForm2).subscribe((p) => {
       if (p) {
-        this.notitfy.notifyCode('SYS007');
+        this.notify.notifyCode('SYS007');
         this.dialog.close();
-      } else this.notitfy.notifyCode('DM034');
+      } else this.notify.notifyCode('DM034');
     });
   }
 
@@ -198,21 +218,27 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       });
     } else if (this.actionType == 'add' && this.isSaved == false) {
       //Thông báo lưu record trainning trước khi cập nhật Chứng chỉ
-      this.notitfy.notify(
-        'Bạn cần lưu thông tin đào tạo trước khi cập nhật chứng chỉ'
-      );
+      this.notify.notifyCode('HR005');
     }
     this.cr.detectChanges();
   }
 
   setIssuedPlace() {
     if (this.data.trainSupplierID) {
-      this.data.issuedPlace = this.data.trainSupplierID;
-      this.formGroup.patchValue({ issuedPlace: this.data.issuedPlace });
-      this.cr.detectChanges();
+      if (this.dataVllSupplier) {
+        let trainSupplier = this.dataVllSupplier.filter(
+          (p) => p.TrainSupplierID == this.data.trainSupplierID
+        );
+        if (trainSupplier) {
+          this.data.issuedPlace = trainSupplier[0]?.TrainSupplierName;
+          this.formGroup.patchValue({
+            issuedPlace: this.data.issuedPlace,
+          });
+          this.cr.detectChanges();
+        }
+      }
     } else {
-      //Thông báo chưa chọn nơi đào tạo
-      this.notitfy.notify('Chưa chọn nơi đào tạo');
+      this.notify.notifyCode('Chưa chọn nơi đào tạo');
     }
   }
 }
