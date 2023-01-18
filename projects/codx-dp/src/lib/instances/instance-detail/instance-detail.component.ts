@@ -37,8 +37,21 @@ export class InstanceDetailComponent implements OnInit {
   {
     name: 'Xem theo trường nhập liệu',
     id: 'field'
+  }];
+  lstTest = [{
+    name: 'test1'
+  },
+  {
+    name: 'test2'
+  },
+  {
+    name: 'test3'
+  },
+  {
+    name: 'test4'
   }]
 
+  currentStep = 0;
   constructor(private dpSv: CodxDpService) {
   }
 
@@ -87,5 +100,10 @@ export class InstanceDetailComponent implements OnInit {
         element.disabled = true;
       });
     }
+  }
+
+  click(i){
+    const element = document.getElementById('step-click');
+
   }
 }
