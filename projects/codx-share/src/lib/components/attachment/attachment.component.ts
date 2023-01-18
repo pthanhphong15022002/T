@@ -1585,13 +1585,14 @@ export class AttachmentComponent implements OnInit, OnChanges {
     // data.title = "test";
     // this.callfc.openSide(EditFileComponent, data, option);
     //  this.callfc.openSide(EditFileComponent, this.titleDialog, [this.functionID, file], null);
+    debugger;
     let dialog = this.callfc.openForm(
       EditFileComponent,
       this.titleDialog,
       800,
       800,
       '',
-      [this.functionID, file, this.dataFolder.copyrights],
+      [this.functionID, file, this.dataFolder?.copyrights],
       ''
     );
     dialog.closed.subscribe((item) => {
@@ -3038,7 +3039,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   public async handleFileInput(files: any[], drag = false) {
     var count = this.fileUploadList.length;
     //this.getFolderPath();
-    debugger;
     var addedList = [];
     for (var i = 0; i < files.length; i++) {
       if (
@@ -3093,16 +3093,16 @@ export class AttachmentComponent implements OnInit, OnChanges {
           ) || files[i].name;
         fileUpload.createdBy = this.user.userName;
         fileUpload.createdOn = this.getNow();
-        var arrName = files[i].name.split(".");
-        arrName.splice((arrName.length - 1), 1);
-        var name = arrName.join('.');
-        //fileUpload. = files[i].type;
+        // var arrName = files[i].name.split(".");
+        // arrName.splice((arrName.length - 1), 1);
+        // var name = arrName.join('.');
+        
         fileUpload.mimeType = this.GetMimeType(files[i].type);
         fileUpload.type = files[i].type;
         fileUpload.objectType = this.objectType;
         fileUpload.objectID = this.objectId;
         fileUpload.fileSize = files[i].size;
-        fileUpload.fileName = name;
+        fileUpload.fileName = files[i].name;
         fileUpload.order = count;
         fileUpload.description = files[i].description; //
 

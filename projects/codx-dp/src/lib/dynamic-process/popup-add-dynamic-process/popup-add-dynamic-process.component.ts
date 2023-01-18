@@ -927,7 +927,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
 
   //#Step - taskGroup - task -- nvthuan
-
   getStepByProcessID() {
     this.dpService.getStep([this.process?.recID]).subscribe((data) => {
       if (data) {
@@ -946,6 +945,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           });
           step['taskGroups'] = taskGroupConvert;
           this.stepList.push(step);
+          this.viewStepSelect(this.stepList[0]);
         });
       }
     });
@@ -975,6 +975,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       );
     }
   }
+  saveAddStep() {
+    if (!this.stepName) {
+      this.stepList.push(this.step);
+      this.viewStepSelect(this.step);
+    }
+    this.popupAddStage.close();
+  }
 
   clickMFStep(e: any, data?: any) {
     switch (e.functionID) {
@@ -994,12 +1001,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  saveAddStep() {
-    if (!this.stepName) {
-      this.stepList.push(this.step);
-      this.titleViewStepCrr = this.step?.stepName;
-    }
-    this.popupAddStage.close();
+  dropStep(event: CdkDragDrop<string[]>, data = null){
+    moveItemInArray(data, event.previousIndex, event.currentIndex);
   }
 
   drop(event: CdkDragDrop<string[]>, data = null) {
@@ -1021,6 +1024,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         event.currentIndex
       );
     }
+  }
+
+  viewStepSelect(step){
+    this.viewStepCrr = this.viewStepCustom;
+        if (step) {
+          this.titleViewStepCrr = step?.stepName || '';
+          // hidden swtich reason change
+          this.isSwitchReason = false;
+          this.step = step;
+          this.checkedDayOff(this.step?.excludeDayoff);
+          this.taskGroupList = this.step['taskGroups'];
+          this.taskList = this.step['tasks'];
+        }
+
   }
 
   //# group job
@@ -1160,7 +1177,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           // hidden swtich reason change
           this.isSwitchReason = false;
           // this.crrDataStep = data;
-          this.step = data;
+          this.step = JSON.parse(JSON.stringify(data));
           this.checkedDayOff(this.step?.excludeDayoff);
           this.taskGroupList = this.step['taskGroups'];
           this.taskList = this.step['tasks'];

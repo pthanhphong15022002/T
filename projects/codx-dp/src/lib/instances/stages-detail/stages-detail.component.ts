@@ -7,27 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StagesDetailComponent implements OnInit {
 
-  lstTest = [{
-    name: 'test1'
-  },
-  {
-    name: 'test2'
-  },
-  {
-    name: 'test3'
-  },
-  {
-    name: 'test4'
-  }]
-
   constructor() { }
 
   ngOnInit(): void {
   }
 
-
-  click(e, id){
-    const element = document.getElementById('step-click');
-
-  }
 }
