@@ -940,7 +940,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
 
   //#Step - taskGroup - task -- nvthuan
-
   getStepByProcessID() {
     this.dpService.getStep([this.process?.recID]).subscribe((data) => {
       if (data) {
@@ -959,60 +958,73 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           });
           step['taskGroups'] = taskGroupConvert;
           this.stepList.push(step);
+          this.viewStepSelect(this.stepList[0]);
         });
       }
     });
   }
 
-  openAddStep(type) {
+  openPopupAddEditStep(type) {
     if (type === 'add') {
       this.step = new DP_Steps();
       this.step['processID'] = this.process?.recID;
       this.step['stepNo'] = this.stepList.length + 1;
-      this.popupAddStage = this.callfc.openForm(
-        this.addStagePopup,
-        '',
-        500,
-        280
-      );
       this.stepName = '';
       this.headerText = 'Thêm Giai Đoạn';
     } else {
       this.headerText = 'Sửa Giai Đoạn';
       this.stepName = this.step['stepName'];
-      this.popupAddStage = this.callfc.openForm(
-        this.addStagePopup,
-        '',
-        500,
-        280
-      );
     }
+
+    this.popupAddStage = this.callfc.openForm(
+      this.addStagePopup,
+      '',
+      500,
+      280
+    );
+  }
+  addAndEditStep() {
+    if (!this.stepName) {
+      this.stepList.push(this.step);
+      this.viewStepSelect(this.step);
+    }
+    this.popupAddStage.close();
+  }
+  deleteStep(data){
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        let index = this.stepList.findIndex(step => step.recID = data.recID);
+        if(index >=0){
+          this.stepList.splice(index,1);
+          this.changeStepNo(this.stepList);
+        }
+      }
+    });
   }
 
   clickMFStep(e: any, data?: any) {
     switch (e.functionID) {
-      case 'SYS01':
-        // this.add();
+      case 'SYS02':
+        this.deleteStep(data);
         break;
       case 'SYS03':
-        this.openAddStep('edit');
+        this.openPopupAddEditStep('edit');
         break;
       case 'SYS04':
         // this.copy(data);
-        this.openAddStep('edit');
-        break;
-      case 'SYS02':
-        // this.delete(data);
         break;
     }
   }
+  dropStep(event: CdkDragDrop<string[]>) {
+    if(event.previousIndex == event.currentIndex) return;
+    moveItemInArray(this.stepList, event.previousIndex, event.currentIndex);
+    this.changeStepNo(this.stepList);
+  }
 
-  saveAddStep() {
-    if (!this.stepName) {
-      this.stepList.push(this.step);
-      this.titleViewStepCrr = this.step?.stepName;
-    }
-    this.popupAddStage.close();
+  changeStepNo(data = []){
+    data.forEach((step,index) =>{
+      step['stepNo'] = index + 1;
+    })
   }
 
   drop(event: CdkDragDrop<string[]>, data = null) {
@@ -1033,6 +1045,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
+    }
+  }
+
+  viewStepSelect(step) {
+    this.viewStepCrr = this.viewStepCustom;
+    if (step) {
+      this.titleViewStepCrr = step?.stepName || '';
+      this.isSwitchReason = false;
+      this.step = step;
+      this.checkedDayOff(this.step?.excludeDayoff);
+      this.taskGroupList = this.step['taskGroups'];
+      this.taskList = this.step['tasks'];
     }
   }
 
@@ -1173,7 +1197,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           // hidden swtich reason change
           this.isSwitchReason = false;
           // this.crrDataStep = data;
-          this.step = data;
+          this.step = JSON.parse(JSON.stringify(data));
           this.checkedDayOff(this.step?.excludeDayoff);
           this.taskGroupList = this.step['taskGroups'];
           this.taskList = this.step['tasks'];
