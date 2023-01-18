@@ -137,7 +137,7 @@ export class InstancesComponent
       this.cache
         .gridViewSetup('DPInstances', 'grvDPInstances')
         .subscribe((res) => {
-          let titleAction = 'Nhiệm vụ';
+          let titleAction = this.process.applyFor =='0'? 'Nhiệm vụ':'Cơ hội';
           let option = new SidebarModel();
 //        let formModel = this.dialog?.formModel;
           let formModel= new FormModel();
