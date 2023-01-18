@@ -18,7 +18,7 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     { name: 'Dashboard', textDefault: 'Dashboard', isActive: false },
   ];
   // value
-  nameAppyFor: string = '';
+  vllApplyFor ='DP002' ;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dialog: DialogRef,
@@ -27,7 +27,6 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     this.dialog = dialog;
     this.process = dt.data.data;
     this.title = this.process.processName;
-    this.nameAppyFor = dt.data.nameAppyFor;
   }
 
   ngOnInit(): void {}
