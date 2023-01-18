@@ -39,15 +39,19 @@ export class InstanceDetailComponent implements OnInit {
     id: 'field'
   }];
   lstTest = [{
+    stepNo: 1,
     name: 'test1'
   },
   {
+    stepNo: 2,
     name: 'test2'
   },
   {
+    stepNo: 3,
     name: 'test3'
   },
   {
+    stepNo: 4,
     name: 'test4'
   }]
 
@@ -90,6 +94,15 @@ export class InstanceDetailComponent implements OnInit {
     this.idCbx = e;
   }
 
+  clickMF(e, data){
+    console.log(e);
+    switch (e.functionID) {
+      case 'DP09':
+        this.continues(data);
+        break;
+    }
+  }
+
   changeDataMF(e, data){
     if(e){
       e.forEach(element => {
@@ -102,8 +115,18 @@ export class InstanceDetailComponent implements OnInit {
     }
   }
 
+
+
   click(i){
     const element = document.getElementById('step-click');
+
+  }
+
+  continues(data){
+    if(this.currentStep > this.lstTest.length - 2) return;
+  }
+
+  setHTMLCssStages(oldStage, newStage){
 
   }
 }
