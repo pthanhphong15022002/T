@@ -129,7 +129,7 @@
             </codx-input>
           </div>
           <button class="button-mail" *ngIf="stepType == 'E'"
-            (click)="handelMail()" disabled="{{isView}}" [ngStyle]="isView ?
+            (click)="handelMail()" [disabled]="isView" [ngStyle]="isView ?
             {'background': '#e9ecef'} : {}">
             <span class="icon-email icon-20 text-primary-600 py-2"></span>
           </button>
@@ -319,6 +319,7 @@
             [functionID]="funcIDparent"
             (fileAdded)="fileAdded($event)"
             (fileCount)="getfileCount($event)"
+            (viewFile)="getfileDelete($event)"
             displayThumb="full"
             showMessage="0"
             [fdID]="folderID"

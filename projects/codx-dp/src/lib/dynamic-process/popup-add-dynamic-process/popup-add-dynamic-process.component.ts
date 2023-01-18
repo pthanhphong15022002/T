@@ -129,6 +129,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   taskGroupList: DP_Steps_TaskGroups[] = [];
 
   taskList: DP_Steps_Tasks[] = [];
+
+  taskListSave: DP_Steps_Tasks[] = [];
   taskGroupListSave: DP_Steps_TaskGroups[] = [];
 
   step: DP_Steps; //data step dc chọn
@@ -288,7 +290,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getTitleStepViewSetup();
     this.initForm();
     this.checkedDayOff(this.step?.excludeDayoff);
-    if(this.action != "add"){
+    if (this.action != 'add') {
       this.getStepByProcessID();
     }
   }
@@ -376,17 +378,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   handleAddStep() {
-    let stepSave = JSON.parse(JSON.stringify(this.step));
-    stepSave['taskGroups'] = this.taskGroupListSave;
-    stepSave['tasks'] = this.taskList;
-    
-    this.dpService.addStep([stepSave])
-    .subscribe((data) => {
-      if (data) {
-        console.log(data);
-        
-      } 
+    let stepListSave = JSON.parse(JSON.stringify(this.stepList));
+    stepListSave.forEach((step) => {
+      delete step['taskGroups']['task'];
     });
+    this.dpService
+      .addStep([stepListSave, this.taskGroupListSave, this.taskListSave])
+      .subscribe((data) => {
+        if (data) {
+          console.log(data);
+        }
+      });
   }
 
   valueChange(e) {
@@ -774,7 +776,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.fieldCrr.stepID = stepID;
           this.fieldCrr.processID = processID;
           this.fieldCrr.isRequired = false;
-          this.fieldCrr.rank = 5 ;
+          this.fieldCrr.rank = 5;
           let titleAction = this.titleAdd;
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
@@ -926,12 +928,26 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //#Step - taskGroup - task -- nvthuan
 
-  getStepByProcessID(){
-    this.dpService.getStep([this.process?.recID])
-    .subscribe((data) => {
+  getStepByProcessID() {
+    this.dpService.getStep([this.process?.recID]).subscribe((data) => {
       if (data) {
-              
-      } 
+        data.forEach((step) => {
+          const taskGroupList = step?.tasks.reduce((group, product) => {
+            const { taskGroupID } = product;
+            group[taskGroupID] = group[taskGroupID] ?? [];
+            group[taskGroupID].push(product);
+            return group;
+          }, {});
+          const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
+            return {
+              ...taskGroup,
+              task: taskGroupList[taskGroup['recID']] ?? [],
+            };
+          });
+          step['taskGroups'] = taskGroupConvert;
+          this.stepList.push(step);
+        });
+      }
     });
   }
 
@@ -1063,6 +1079,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         );
         this.taskGroupList[index]['task'].push(taskData);
         this.taskList.push(taskData);
+        this.taskListSave.push(taskData);
       }
     });
   }
