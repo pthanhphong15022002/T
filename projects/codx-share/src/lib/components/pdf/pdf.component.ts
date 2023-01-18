@@ -101,7 +101,6 @@ export class PdfComponent
   @Output() changeSignerInfo = new EventEmitter();
   @Output() eventHighlightText = new EventEmitter();
 
-
   //View Child
   @ViewChildren('actions') actions: QueryList<ElementRef>;
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
@@ -1560,8 +1559,6 @@ export class PdfComponent
   }
 
   changeRightTab(e) {
-    console.log('change right tab', e);
-    
     if (e.isSwiped) {
       e.cancel = true;
     }
@@ -2351,7 +2348,7 @@ export class PdfComponent
 
   changeEditMode() {
     this.isInteractPDF = !this.isInteractPDF;
-    
+
     this.showHand = false;
     let lstLayer = document.getElementsByClassName('manualCanvasLayer');
     Array.from(lstLayer).forEach((ele: HTMLElement) => {
@@ -2359,7 +2356,6 @@ export class PdfComponent
     });
     this.detectorRef.detectChanges();
 
-    this.eventHighlightText.emit(this.isInteractPDF);
     //this.hideShowTab();
 
     // if (!this.isInteractPDF) {
@@ -2508,6 +2504,12 @@ export class PdfComponent
       this.lstKey = this.lstKey.filter((key) => key != hla.group);
     });
     this.changeEditMode();
+    this.eventHighlightText.emit({
+      event: 'cancel',
+      isInteractPDF: this.isInteractPDF,
+      isEdited: this.sfEdited,
+      fileInfo: this.fileInfo,
+    });
     this.detectorRef.detectChanges();
   }
   confirmRemoveHLA() {
@@ -2560,7 +2562,7 @@ export class PdfComponent
     if (needHLList.length < 1 && !isClearHLA) return;
     this.esService
       .highlightText(
-        this.transRecID,
+        this.recID,
         this.sfEdited,
         this.curFileUrl.replace(environment.urlUpload + '/', ''),
         this.fileInfo.fileID,
@@ -2580,10 +2582,18 @@ export class PdfComponent
             this.fileInfo.fileUrl = environment.urlUpload + '/' + res;
             this.curFileUrl = environment.urlUpload + '/' + res;
             this.getListHighlights();
+            this.eventHighlightText.emit({
+              event: 'save',
+              isInteractPDF: this.isInteractPDF,
+              isEdited: this.sfEdited,
+              fileInfo: this.fileInfo,
+            });
           },
           10,
           res
         );
+        
+
         // let rerenderPages = document.querySelectorAll('.canvasWrapper>canvas');
         // let times = Object.keys(res).length;
         // const pdfViewer: IPDFViewerApplication = (window as any)

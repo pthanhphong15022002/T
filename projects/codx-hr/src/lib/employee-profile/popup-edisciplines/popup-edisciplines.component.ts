@@ -65,34 +65,16 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.lstDiscipline = data?.data?.lstDiscipline;
-    this.indexSelected =
-      data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
+    this.indexSelected = data?.data?.indexSelected ?? -1;
 
     if (this.actionType === 'edit' || this.actionType === 'copy') {
       this.disciplineObj = JSON.parse(
         JSON.stringify(this.lstDiscipline[this.indexSelected])
       );
-      // this.formModel.currentData = this.disciplineObj
     }
   }
 
   initForm() {
-    // this.hrService
-    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    //   .then((item) => {
-    //     this.formGroup = item;
-    //     if(this.actionType == 'add'){
-    //       this.hrService.getEmployeeAwardModel().subscribe(p => {
-    //         this.disciplineObj = p;
-    //         this.formModel.currentData = this.disciplineObj
-    //         // this.dialog.dataService.dataSelected = this.data
-    //         console.log('du lieu formmodel',this.formModel.currentData);
-    //       })
-    //     }
-    //     this.formGroup.patchValue(this.disciplineObj)
-    //     this.isAfterRender = true
-    //   });
-
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
@@ -137,12 +119,17 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
 
-    if (this.actionType === 'copy' || this.actionType === 'add') {
+    if (this.disciplineObj.fromDate > this.disciplineObj.toDate) {
+      this.hrService.notifyInvalidFromTo('FromDate', 'ToDate', this.formModel);
+      return;
+    }
+
+    if (this.actionType === 'copy') {
       delete this.disciplineObj.recID;
     }
     this.disciplineObj.employeeID = this.employId;
@@ -152,7 +139,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.disciplineObj.recID = p.recID;
-            this.notify.notifyCode('SYS007');
+            this.notify.notifyCode('SYS006');
             this.lstDiscipline.push(
               JSON.parse(JSON.stringify(this.disciplineObj))
             );
@@ -186,9 +173,9 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     console.log('formdata', data);
     this.disciplineObj = data;
     this.formModel.currentData = JSON.parse(JSON.stringify(this.disciplineObj));
-    this.indexSelected = this.lstDiscipline.findIndex(
-      (p) => p.recID == this.disciplineObj.recID
-    );
+    // this.indexSelected = this.lstDiscipline.findIndex(
+    //   (p) => p.recID == this.disciplineObj.recID
+    // );
     this.actionType = 'edit';
     this.formGroup?.patchValue(this.disciplineObj);
     this.cr.detectChanges();
@@ -202,8 +189,45 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   valueChange(event) {
     if (event?.field && event?.component && event?.data != '') {
       switch (event.field) {
-        
+        case 'disciplineID': {
+          let itemSelected = event?.component?.itemsSelected[0];
+
+          if (itemSelected?.DisciplineFormCategory) {
+            this.disciplineObj.disciplineFormCategory =
+              itemSelected?.DisciplineFormCategory;
+            this.formGroup.patchValue({
+              disciplineFormCategory: this.disciplineObj.disciplineFormCategory,
+            });
+          }
+
+          break;
+        }
+        case 'signerID': {
+          let employee = event?.component?.itemsSelected[0];
+          if (employee) {
+            if (employee?.PositionID) {
+              this.hrService
+                .getPositionByID(employee.PositionID)
+                .subscribe((res) => {
+                  if (res) {
+                    this.disciplineObj.signerPosition = res.positionName;
+                    this.formGroup.patchValue({
+                      signerPosition: this.disciplineObj.signerPosition,
+                    });
+                    this.cr.detectChanges();
+                  }
+                });
+            } else {
+              this.disciplineObj.signerPosition = null;
+              this.formGroup.patchValue({
+                signerPosition: this.disciplineObj.signerPosition,
+              });
+            }
+          }
+          break;
+        }
       }
+      this.cr.detectChanges();
     }
   }
 }
