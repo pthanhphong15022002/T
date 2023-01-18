@@ -99,6 +99,9 @@ export class PdfComponent
 
   @Input() hideActions = false;
   @Output() changeSignerInfo = new EventEmitter();
+  @Output() eventHighlightText = new EventEmitter();
+
+
   //View Child
   @ViewChildren('actions') actions: QueryList<ElementRef>;
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
@@ -2348,12 +2351,15 @@ export class PdfComponent
 
   changeEditMode() {
     this.isInteractPDF = !this.isInteractPDF;
+    
     this.showHand = false;
     let lstLayer = document.getElementsByClassName('manualCanvasLayer');
     Array.from(lstLayer).forEach((ele: HTMLElement) => {
       ele.style.zIndex = this.isInteractPDF ? '-1' : '2';
     });
     this.detectorRef.detectChanges();
+
+    this.eventHighlightText.emit(this.isInteractPDF);
     //this.hideShowTab();
 
     // if (!this.isInteractPDF) {
@@ -2501,6 +2507,7 @@ export class PdfComponent
       });
       this.lstKey = this.lstKey.filter((key) => key != hla.group);
     });
+    this.changeEditMode();
     this.detectorRef.detectChanges();
   }
   confirmRemoveHLA() {
