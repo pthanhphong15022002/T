@@ -19,10 +19,10 @@
             default="Số tài khoản"
           ></codx-label>
             <codx-input
-                    
+                    [crrValue]="form.data != null ? form.data.bankAcctID : bankAcctID"
                     [formModel]="form.formModel"
                     field="bankAcctID"
-                    
+                    (valueChange)="valueChange($event,'bankAcctID')"
                   >
             </codx-input>
           </div>   
@@ -35,9 +35,11 @@
             default="Ngân hàng"      
           ></codx-label>
           <codx-input 
+          [crrValue]="form.data != null ? form.data.bankID : bankID"
           type="combobox" 
-          refValue="BanksAC"
+          refValue="Users"
           field="bankID"
+          (valueChange)="valueChange($event,'bankID')"
           >
         </codx-input>
           </div>
@@ -50,10 +52,10 @@
         default="Tên chủ tài khoản"
       ></codx-label>
         <codx-input
-                
+                [crrValue]="form.data != null ? form.data.owner : owner"
                 [formModel]="form.formModel"
                 field="owner"
-                
+                (valueChange)="valueChange($event,'owner')"
               >
         </codx-input>
       </div>   
@@ -64,10 +66,10 @@
         default="Ghi chú"
       ></codx-label>
         <codx-input
-                
+                [crrValue]="form.data != null ? form.data.description : ''"
                 [formModel]="form.formModel"
                 field="description"
-                
+                (valueChange)="valueChange($event,'description')"
               >
         </codx-input>
       </div>   
@@ -78,9 +80,10 @@
         default="Mặc định"
       ></codx-label>
         <codx-input
+                [checked]="form.data != null ? form.data.isDefault : false"
                 type="switch"
                 field="isDefault"
-                [checked]="true"
+                (valueChange)="valueChange($event,'isDefault')"
               >
         </codx-input>
       </div>   
@@ -92,7 +95,7 @@
             <codx-label  [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
                 default="Lưu & Thêm"></codx-label>
         </button>
-        <button type="button" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" (click)="onSave()">
             <codx-label  [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
                 default="Lưu"></codx-label>
         </button>

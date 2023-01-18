@@ -19,10 +19,10 @@
             default="Họ tên"
           ></codx-label>
             <codx-input
-                    
+                    [crrValue]="contactName"
                     [formModel]="form.formModel"
                     field="contactName"
-                    
+                    (valueChange)="valueChange($event,'contactName')"
                   >
             </codx-input>
           </div>   
@@ -35,9 +35,11 @@
             default="Giới tính"      
           ></codx-label>
           <codx-input 
+          [crrValue]="form.data != null ? form.data.gender : ''"
           type="combobox" 
-          refValue=""
+          refValue="Users"
           field="gender"
+          (valueChange)="valueChange($event,'gender')"
           >
         </codx-input>
           </div>
@@ -50,10 +52,10 @@
         default="Chức danh"
       ></codx-label>
         <codx-input
-                
+                [crrValue]="jobTitle"
                 [formModel]="form.formModel"
                 field="jobTitle"
-                
+                (valueChange)="valueChange($event,'jobTitle')"
               >
         </codx-input>
       </div>  
@@ -65,10 +67,10 @@
             default="Số di động"
           ></codx-label>
             <codx-input
-                    
+                    [crrValue]="phone"
                     [formModel]="form.formModel"
                     field="phone"
-                    
+                    (valueChange)="valueChange($event,'phone')"
                   >
             </codx-input>
           </div>  
@@ -79,10 +81,10 @@
             default="Số di động cố định"
           ></codx-label>
             <codx-input
-                    
+                    [crrValue]="form.data != null ? form.data.homePhone : ''"
                     [formModel]="form.formModel"
                     field="homePhone"
-                    
+                    (valueChange)="valueChange($event,'homePhone')"
                   >
             </codx-input>
           </div>  
@@ -93,10 +95,10 @@
             default="Số ext."
           ></codx-label>
             <codx-input
-                    
+                    [crrValue]="form.data != null ? form.data.phoneExt : ''"
                     [formModel]="form.formModel"
                     field="phoneExt"
-                    
+                    (valueChange)="valueChange($event,'phoneExt')"
                   >
             </codx-input>
           </div>  
@@ -108,10 +110,10 @@
         default="Email"
       ></codx-label>
         <codx-input
-                
+                [crrValue]="email"
                 [formModel]="form.formModel"
                 field="email"
-                
+                (valueChange)="valueChange($event,'email')"
               >
         </codx-input>
       </div>  
@@ -122,9 +124,11 @@
         default="Loại liên hệ"      
       ></codx-label>
       <codx-input 
+      [crrValue]="contactType"
       type="combobox" 
-      refValue=""
+      refValue="Users"
       field="contactType"
+      (valueChange)="valueChange($event,'contactType')"
       >
     </codx-input>
       </div>
@@ -135,10 +139,10 @@
         default="Ghi chú"
       ></codx-label>
         <codx-input
-                
+                [crrValue]="form.data != null ? form.data.note : ''"
                 [formModel]="form.formModel"
                 field="note"
-                
+                (valueChange)="valueChange($event,'note')"
               >
         </codx-input>
       </div>  
@@ -150,7 +154,7 @@
             <codx-label  [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
                 default="Lưu & Thêm"></codx-label>
         </button>
-        <button type="button" class="btn btn-primary">
+        <button (click)="onSave()" type="button" class="btn btn-primary">
             <codx-label  [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
                 default="Lưu"></codx-label>
         </button>
