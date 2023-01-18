@@ -1,4 +1,4 @@
-import { Util } from "codx-core";
+import { Util } from 'codx-core';
 
 export class DP_ProcessGroups {
   recID: string;
@@ -73,7 +73,7 @@ export class DP_Steps {
   numbererval: string;
   excludeDayoff: string;
   note: string;
-  assignControl: string ='1';
+  assignControl: string = '1';
   transferControl: string = '0';
   taskControl: string;
   leadtimeControl: boolean = true;
@@ -82,17 +82,17 @@ export class DP_Steps {
   reScheduleTasks: boolean = true;
   options: string; // json
   roles: DP_Steps_Roles[] = []; // objects
-  isSuccessStep: boolean;
-  isFailStep: boolean;
+  isSuccessStep: boolean = false;
+  isFailStep: boolean = false;
   reasonControl: boolean = false;
   reasons: DP_Steps_Reasons[] = []; // objects
   taskGroups: DP_Steps_TaskGroups[] = []; // objects
   tasks: DP_Steps_Tasks[] = []; // objects
   fields: DP_Steps_Fields[] = []; // objects
   isUsed: boolean;
-  createdOn: Date;
+  createdOn: Date = new Date();
   createdBy: string;
-  modifiedOn: Date;
+  modifiedOn: Date = new Date();
   modifiedBy: string;
   showColumnControl: number = 1;
 }
@@ -112,13 +112,14 @@ export class DP_Steps_Roles {
 }
 
 export class DP_Steps_Reasons {
-  recID: string;
+  recID: string = Util.uid();
+  processID: string;
   stepID: string;
   reasonName: string;
-  reasonType: boolean;
-  createdOn: Date;
+  reasonType: string;
+  createdOn: Date = new Date();
   createdBy: string;
-  modifiedOn: Date;
+  modifiedOn: Date = new Date();
   modifiedBy: string;
 }
 

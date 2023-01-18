@@ -1,4 +1,8 @@
-import { DP_Steps_Roles, DP_Steps_Tasks } from './../../models/models';
+import {
+  DP_Steps_Reasons,
+  DP_Steps_Roles,
+  DP_Steps_Tasks,
+} from './../../models/models';
 import { CodxDpService } from './../../codx-dp.service';
 import { log } from 'console';
 import {
@@ -90,7 +94,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isTurnOnYesFailure: boolean = false; //Create variable Click yes for reason failure
   isTurnOnNoFailure: boolean = true; // default reason control is no
   listRoleInStep: DP_Processes_Permission[] = []; // creat list user role in step
-  userPermissions: DP_Processes_Permission; // create object user in step
+  userPermissions: DP_Processes_Permission[] = []; // create object user in step
+  stepReaSuccess: DP_Steps_Reasons = new DP_Steps_Reasons(); // create object reason success in step
+  stepReaFail: DP_Steps_Reasons = new DP_Steps_Reasons(); // create object reason fail in step
+  stepFail: DP_Steps = new DP_Steps(); // create object step fail
+  stepSuccess: DP_Steps = new DP_Steps(); // create object step fail
   gridViewSetupStep: any; // grid view setup
   listDayoff: any; // List day off
 
@@ -100,6 +108,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   valueCheckBoxSun: string = ''; // title checkbox sunday form duration
   checkedSat: boolean = false; // title checkbox saturday form duration
   checkedSun: boolean = false; // title checkbox sunday form duration
+  stepNameSuccess: string = 'Thành công';
+  stepNameFail: string = 'Thất bại';
 
   // const value string
   readonly strEmpty: string = ''; // value empty for methond have variable is null
@@ -110,8 +120,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly radioNo: string = 'no'; // const click yes
   readonly titleRadioYes: string = 'Có'; // title radio button yes for reason success/failure
   readonly titleRadioNo: string = 'Không'; // title radio button no for reason success/failure
-  readonly titleViewStepReasonSuccess: string = 'Thành công'; // title form step reason failure
-  readonly titleViewStepReasonFail: string = 'Thất bại'; // title form step reason failure
   readonly titlecheckBoxStepReasonSuccess: string = 'Thành công'; // title form step reason failure
   readonly saturday: string = 'Thứ 7'; // title checkbox saturday form duration when value list is empty
   readonly sunday: string = 'Chủ nhật'; // title checkbox sunday form duration when value list is empty
@@ -135,6 +143,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   step: DP_Steps; //data step dc chọn
   stepList: DP_Steps[] = []; //danh sách step
+
+  stepListAdd: DP_Steps[] = [];
+  stepListDelete = [];
+
   stepName = '';
 
   popupJob: DialogRef;
@@ -220,6 +232,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.entityName = this.dialog.formModel.entityName;
     this.action = dt.data.action;
     this.showID = dt.data.showID;
+    this.user = this.authStore.get();
+    this.userId = this.user?.userID;
 
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     if (this.action != 'add') {
@@ -249,6 +263,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
     this.getGrvStep();
     this.getValListDayoff();
+    this.autoAddStepReason();
+    console.log(this.stepSuccess);
+    console.log(this.stepFail);
   }
 
   ngAfterViewInit(): void {
@@ -374,23 +391,45 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   handlerSave() {
-    this.handleAddStep();
+    if(this.action == 'add'){
+      this.handleAddStep();
+    }else if(this.action == 'edit'){
+      this.handleEditStep();
+    }   
   }
 
   handleAddStep() {
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
-    stepListSave.forEach((step) => {
-      delete step['taskGroups']['task'];
-    });
-    this.dpService
-      .addStep([stepListSave, this.taskGroupListSave, this.taskListSave])
-      .subscribe((data) => {
+    if (stepListSave.length > 0) {
+      stepListSave.forEach((step) => {
+        delete step['taskGroups']['task'];
+      });
+
+      this.dpService.addStep([stepListSave]).subscribe((data) => {
         if (data) {
-          console.log(data);
+          this.notiService.notifyCode('SYS006');
         }
       });
+    }
   }
 
+  handleEditStep() {
+    let stepListSave = JSON.parse(JSON.stringify(this.stepList));
+    if(stepListSave.length > 0 || this.stepListAdd.length > 0) {
+      stepListSave.forEach((step) => {
+        delete step['taskGroups']['task'];
+      });
+      debugger
+      this.dpService
+        .editStep([stepListSave, this.stepListAdd, this.stepListDelete])
+        .subscribe((data) => {
+          if (data) {
+            console.log(data);
+            this.notiService.notifyCode('SYS006');
+          }
+        });
+    }
+  }
   valueChange(e) {
     this.process[e.field] = e.data;
   }
@@ -963,27 +1002,39 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepName = this.step['stepName'];
     }
 
-    this.popupAddStage = this.callfc.openForm(
-      this.addStagePopup,
-      '',
-      500,
-      280
-    );
+    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
   }
   addAndEditStep() {
     if (!this.stepName) {
       this.stepList.push(this.step);
       this.viewStepSelect(this.step);
+      if (this.action == 'edit') {
+        this.stepListAdd.push(this.step);
+      }
     }
     this.popupAddStage.close();
   }
-  deleteStep(data){
+  deleteStep(data) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
-        let index = this.stepList.findIndex(step => step.recID = data.recID);
-        if(index >=0){
-          this.stepList.splice(index,1);
+        let index = this.stepList.findIndex(
+          (step) => (step.recID = data.recID)
+        );
+        if (index >= 0) {
+          this.stepList.splice(index, 1);
           this.changeStepNo(this.stepList);
+          this. viewStepSelect(this.stepList.length > 0 ? this.stepList[0] : []);
+          // lay danh sach step xoa
+          if (this.action == 'edit') {
+            let indexDelete = this.stepListAdd.findIndex(
+              (step) => (step.recID = data.recID)
+            );
+            if (indexDelete >= 0) {
+              this.stepListAdd.splice(indexDelete, 1);
+            } else {
+              this.stepListDelete.push(data.recID);
+            }
+          }
         }
       }
     });
@@ -1003,15 +1054,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   dropStep(event: CdkDragDrop<string[]>) {
-    if(event.previousIndex == event.currentIndex) return;
+    if (event.previousIndex == event.currentIndex) return;
     moveItemInArray(this.stepList, event.previousIndex, event.currentIndex);
     this.changeStepNo(this.stepList);
   }
 
-  changeStepNo(data = []){
-    data.forEach((step,index) =>{
+  changeStepNo(data = []) {
+    data.forEach((step, index) => {
       step['stepNo'] = index + 1;
-    })
+    });
   }
 
   drop(event: CdkDragDrop<string[]>, data = null) {
@@ -1171,8 +1222,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         // Title view reason change
         this.titleViewStepCrr =
           view === this.viewStepReasonSuccess
-            ? this.titleViewStepReasonSuccess
-            : this.titleViewStepReasonFail;
+            ? this.stepNameSuccess
+            : this.stepNameFail;
 
         // Show swtich reason change
         this.isSwitchReason = true;
@@ -1330,6 +1381,53 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     this.changeDetectorRef.detectChanges();
   }
+
+  autoAddStepReason() {
+    if (this.action === 'add' || this.action === 'copy') {
+      // create step reason fail with value is 1
+      this.createStepReason(this.stepSuccess, this.stepReaSuccess, '1');
+
+      // create step reason fail with value is 2
+      this.createStepReason(this.stepFail, this.stepReaFail, '2');
+    }
+    // edit step reason success/fail
+    else {
+    }
+  }
+
+  createStepReason(stepReason: any, reason: any, reasonValue: any) {
+    stepReason = this.handleStepReason(stepReason, reasonValue);
+    reason = this.handleReason(reason, reasonValue, stepReason, null);
+    stepReason.reasons.push(reason);
+  }
+
+  handleReason(
+    reason: DP_Steps_Reasons,
+    reasonValue: string,
+    step: any,
+    idProccess: any
+  ) {
+    reason.reasonType = reasonValue;
+    reason.stepID = step.recID;
+    // cbx proccess get id
+    reason.processID = idProccess ?? null;
+    reason.createdBy = this.userId;
+    reason.modifiedBy = this.userId;
+
+    return reason;
+  }
+
+  handleStepReason(stepReason: DP_Steps, stepReaValue: string) {
+    stepReason.stepName =
+      stepReaValue == '1' ? this.stepNameSuccess : this.stepNameFail;
+    stepReason.isSuccessStep = stepReaValue == '1' ? true : false;
+    stepReason.isFailStep = stepReaValue == '2' ? true : false;
+    stepReason.processID = this.process?.recID;
+
+    return stepReason;
+  }
+
+  addReason() {}
 
   //#endregion
 }
