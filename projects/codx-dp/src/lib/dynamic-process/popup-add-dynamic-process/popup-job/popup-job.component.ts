@@ -43,11 +43,11 @@ export class PopupJobComponent implements OnInit {
     this.title = dt?.data[1]['text'];
     this.stepType = dt?.data[1]['id'];
     this.stepID = dt?.data[2];
-    this.groupTackList = dt?.data[2];
+    this.groupTackList = dt?.data[3];
     this.dialog = dialog;
   }
   ngOnInit(): void {
-    this.stepsTasks['recID'] = Util.uid();
+    this.stepsTasks = new DP_Steps_Tasks();
     this.stepsTasks['taskType'] = this.stepType;
     this.stepsTasks['stepID'] = this.stepID;
     // this.stepsTasks['createdOn'] = this.groupTackList['createdOn'];

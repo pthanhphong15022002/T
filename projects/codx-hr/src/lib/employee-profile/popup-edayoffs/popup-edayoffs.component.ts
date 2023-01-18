@@ -27,7 +27,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   lstDayoffs: any;
   funcID: string;
   indexSelected
-  isnormalPregnant = true
+  isnormalPregnant = false
   isNotNormalPregnant = false
   actionType: string;
   employId: string;
@@ -150,29 +150,27 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     console.log('type', pregnantType);
     
     if(e.component.checked == true){
-      if(pregnantType == 'sinh thường'){
+      if(pregnantType.value == '1'){
         this.isnormalPregnant = true;
-        // this.isNotNormalPregnant = false;
+        this.isNotNormalPregnant = false;
       }
-      else {
+      else{
         this.isnormalPregnant = false;
-        // this.isNotNormalPregnant = true;
+        this.isNotNormalPregnant = true;
+      }
+    }else if(e.component.checked == false){
+      if(pregnantType.value == '1'){
+        this.isnormalPregnant = false;
+      }
+      else if(pregnantType.value == '2'){
+        this.isNotNormalPregnant = false;
       }
     }
-    else{
-      if(pregnantType == 'sinh thường'){
-        this.isnormalPregnant = false;
-      }
-      // else{
-      //   // this.isNotNormalPregnant = false;
-      // }
-    }
+    console.log('sinh thuong', this.isnormalPregnant);
+    console.log('sinh mo', this.isNotNormalPregnant);
     
   }
-
-
   HandleTotalDaysVal(){
-
   }
 
   HandleInputBeginDate(value){

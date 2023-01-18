@@ -1774,6 +1774,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     var count = this.fileUploadList.length;
     //this.getFolderPath();
     //console.log(files);
+   
     for (var i = 0; i < files.length; i++) {
       let index = this.fileUploadList.findIndex(
         (d) => d.fileName.toString() === files[i].name.toString()
@@ -3036,8 +3037,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   public async handleFileInput(files: any[], drag = false) {
     var count = this.fileUploadList.length;
-
     //this.getFolderPath();
+    debugger;
     var addedList = [];
     for (var i = 0; i < files.length; i++) {
       if (
@@ -3066,10 +3067,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
         }
 
         var fileUpload = new FileUpload();
-        fileUpload.order = count;
-        fileUpload.fileName = files[i].name;
-
-        fileUpload.description = files[i].description; //
         var type = files[i].type.toLowerCase();
         if (type == 'png' || type == 'jpg' || type == 'bmp') {
           fileUpload.avatar = data;
@@ -3096,14 +3093,17 @@ export class AttachmentComponent implements OnInit, OnChanges {
           ) || files[i].name;
         fileUpload.createdBy = this.user.userName;
         fileUpload.createdOn = this.getNow();
+        var arrName = files[i].name.split(".");
+        arrName.splice((arrName.length - 1), 1);
+        var name = arrName.join('.');
         //fileUpload. = files[i].type;
         fileUpload.mimeType = this.GetMimeType(files[i].type);
         fileUpload.type = files[i].type;
         fileUpload.objectType = this.objectType;
         fileUpload.objectID = this.objectId;
         fileUpload.fileSize = files[i].size;
-        fileUpload.fileName = files[i].name;
-
+        fileUpload.fileName = name;
+        fileUpload.order = count;
         fileUpload.description = files[i].description; //
 
         fileUpload.funcID = this.functionID;

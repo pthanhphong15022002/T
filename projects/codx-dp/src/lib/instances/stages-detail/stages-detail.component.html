@@ -1,0 +1,4 @@
+<div class="d-flex arrow-steps flex-container">
+  <div *ngFor="let item of lstTest; index as i;" id="step-click" [ngClass]="i == 0 ? 'step current' : 'step'" style="flex-grow: 1" (click)="click($event, 'step-click')">
+    <span> {{item.name}}</span> </div>
+</div>

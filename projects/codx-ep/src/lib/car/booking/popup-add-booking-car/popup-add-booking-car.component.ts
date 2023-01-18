@@ -234,7 +234,12 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.detectorRef.detectChanges();
     this.codxEpService.getEPCarSetting('4').subscribe((approvalSetting: any) => {
       if (approvalSetting) {
-        this.approvalRule = JSON.parse(approvalSetting.dataValue)[0]?.ApprovalRule;
+        let settingVal = JSON.parse(approvalSetting.dataValue);
+        Array.from(settingVal).forEach((item:any)=>{
+          if(item.FieldName=="ES_EP002"){
+            this.approvalRule= item.ApprovalRule;
+          }
+        })
       }
     });
     this.codxEpService.getEPCarSetting('1').subscribe((setting: any) => {

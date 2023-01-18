@@ -178,6 +178,7 @@ codx-view-list-detail .nav-link {
 
 textarea.codx-textarea {
     background-color: var(--bg-input);
+    color: var(--text-title);
 }
 
 .e-input-group,
@@ -618,9 +619,17 @@ codx-user-inner a.menu-link {
     color: var(--text-des) !important;
 }
 
-ejs-listview,
+ejs-listview {
+    background-color: var(--bg-card);
+}
+
 .popover {
     background-color: var(--bg-card);
+    border-color: var(--border-list);
+
+    .popover-body {
+        color: var(--text-body);
+    }
 }
 
 .codx-search {
@@ -710,6 +719,27 @@ label,
 
 codx-attachment .card {
     background-color: transparent;
+}
+
+.e-listview .e-list-item .note-option {
+    color: var(--black);
+}
+
+.checkbox-list input {
+    background-color: var(--bg-input);
+    color: var(--text-body);
+}
+
+codx-filter-form .list-group-item {
+    background-color: transparent;
+}
+
+.user-mini-nav.user-role .user-nav-item:hover {
+    background-color: var(--bg-card);
+}
+
+.e-schedule .e-month-agenda-view .e-current-date .e-date-header {
+    color: var(--text-body);
 }
 
 //end dark
