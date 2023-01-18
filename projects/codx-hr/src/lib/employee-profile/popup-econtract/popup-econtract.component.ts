@@ -32,6 +32,7 @@ import { PopupSubEContractComponent } from '../popup-sub-econtract/popup-sub-eco
 })
 export class PopupEContractComponent extends UIComponent implements OnInit {
   formModel: FormModel;
+  formModelPL: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
@@ -58,11 +59,11 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    if (!this.formModel) {
-      this.formModel = new FormModel();
-      this.formModel.entityName = 'HR_EContracts';
-      this.formModel.formName = 'EContracts';
-      this.formModel.gridViewName = 'grvEContracts';
+    if (!this.formModelPL) {
+      this.formModelPL = new FormModel();
+      this.formModelPL.entityName = 'HR_EContracts';
+      this.formModelPL.formName = 'EContracts';
+      this.formModelPL.gridViewName = 'grvEContracts';
     }
     console.log('data', data);
 
@@ -75,17 +76,19 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.hrSevice.getFormModel(this.funcID).then(formModel => {
-      if(formModel){
+    this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
         this.formModel = formModel;
-        this.hrSevice.getFormGroup(this.formModel.formName, this.formModel.gridViewName).then(fg => {
-          if(fg){
-            this.formGroup = fg;
-            this.initForm();
-          }
-        })
+        this.hrSevice
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
       }
-    })
+    });
   }
 
   initForm() {
@@ -110,6 +113,20 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm(closeForm: boolean) {
+    if (this.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
+    if (this.data.effectedDate > this.data.expiredDate) {
+      this.hrSevice.notifyInvalidFromTo(
+        'ExpiredDate',
+        'EffectedDate',
+        this.formModel
+      );
+      return;
+    }
+
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.data.contractTypeID = '1';
 
@@ -197,6 +214,59 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
       this.data = data;
       this.formModel.currentData = this.data;
       this.formGroup.patchValue(this.data);
+      this.cr.detectChanges();
+    }
+  }
+
+  valueChange(event) {
+    if (event?.field && event?.component && event?.data != '') {
+      switch (event.field) {
+        case 'contractTypeID': {
+          this.data.limitMonths =
+            event?.component?.itemsSelected[0]?.LimitMonths;
+          this.formGroup.patchValue({ limitMonths: this.data.limitMonths });
+          this.setExpiredDate();
+          break;
+        }
+        case 'effectedDate': {
+          this.setExpiredDate();
+          break;
+        }
+        case 'signerID': {
+          let employee = event?.component?.itemsSelected[0];
+          if (employee) {
+            if (employee.PositionID) {
+              this.hrSevice
+                .getPositionByID(employee.PositionID)
+                .subscribe((res) => {
+                  if (res) {
+                    this.data.signerPosition = res.positionName;
+                    this.formGroup.patchValue({
+                      signerPosition: this.data.signerPosition,
+                    });
+                    this.cr.detectChanges();
+                  }
+                });
+            } else {
+              this.data.signerPosition = null;
+              this.formGroup.patchValue({
+                signerPosition: this.data.signerPosition,
+              });
+            }
+          }
+          break;
+        }
+      }
+
+      this.cr.detectChanges();
+    }
+  }
+
+  setExpiredDate() {
+    if (this.data.effectedDate) {
+      let date = new Date(this.data.effectedDate);
+      this.data.expiredDate = new Date(date.setMonth(date.getMonth() + 14));
+      this.formGroup.patchValue({ expiredDate: this.data.expiredDate });
       this.cr.detectChanges();
     }
   }

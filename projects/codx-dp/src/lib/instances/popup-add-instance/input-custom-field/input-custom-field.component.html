@@ -1,0 +1,52 @@
+<div>
+  <codx-label
+    [fiedName]="customField.fieldName"
+    formName="DPInstancesStepsFields"
+    gridViewName="grvDPInstancesStepsFields"
+    [default]="customField.title"
+  >
+  </codx-label>
+</div>
+<ng-container *ngIf="customField.dataType == 'T'">
+  <codx-input
+    [field]="customField.fieldName"
+    type="text"
+    [placeholder]="customField.note"
+    [crrValue]=""
+    (valueChange)="valueChange($event, customField)"
+  >
+  </codx-input>
+</ng-container>
+<ng-container *ngIf="customField.dataType == 'N'">
+  <codx-input
+    [field]="customField.fieldName"
+    type="number"
+    [min]="min"
+    [max]="max"
+    [crrValue]="0"
+    [placeholder]="customField.note"
+    (valueChange)="valueChange($event, customField)"
+  >
+  </codx-input>
+</ng-container>
+
+<ng-container *ngIf="customField.dataType == 'R'">
+  <ngb-rating
+    [(rate)]="currentRate"
+    [max]="customField.rank"
+    (rateChange)="readonly = false"
+    (hover)="hovered = $event"
+    (leave)="hovered = currentRate"
+    [readonly]="readonly"
+    [starTemplate]="temp"
+  >
+    <ng-template #temp let-fill="fill" let-index="index">
+      <span class="rankIcon {{customField.rankIcon}} filled"  [class.filled]="fill === 100" [class.bad]="index < customField.rank"
+        ></span
+      >
+    </ng-template>
+  </ngb-rating>
+</ng-container>
+<div *ngIf="showErrMess" class="errorMessage text-danger ms-3" data-field="">
+  {{ errorMessage }}
+</div>

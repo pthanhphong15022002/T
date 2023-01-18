@@ -338,6 +338,16 @@ export class CodxOmService {
     );
   }
   //-------------------------Get Data OKR---------------------------------//
+  //Lấy ds OKR_Links theo OKR RecID
+  getOKRByORGUnit(recID:string,orgUnit:string,okrLevel:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetOKRByORGUnitAsync',
+      [recID,orgUnit,okrLevel]
+    );
+  }
   //Lấy danh sách chi tiết KR từ recID OKR
   getKRByOKR(recID: any) {
     return this.api.execSv(
@@ -429,16 +439,26 @@ export class CodxOmService {
       [recID]
     );
   }
+  //Lấy sơ đồ cây OKR
+  getOrgTreeOKR(planRecID:any, orgUnitID:string,okrLevelChild:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetOrgTreeOKRAsync',
+      [planRecID,orgUnitID,okrLevelChild]
+    );
+  }
   //endregion
 
   //region get Data from HR
-  getlistOrgUnit(recID:any) {
+  getlistOrgUnit(orgID:any) {
     return this.api.execSv(
       'HR',
       'HR',
       'OrganizationUnitsBusiness',
       'GetOrgIDHierarchyByOrgIDAsync',
-      [recID]
+      [orgID]
     );
   }
   

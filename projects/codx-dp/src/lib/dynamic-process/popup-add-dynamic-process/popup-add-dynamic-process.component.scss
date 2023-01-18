@@ -190,7 +190,6 @@
     }
 
     .stage-body-right {
-      padding: 0 0 0 20px !important;
       margin: 10px 0 0 0;
       .main {
         height: 63vh;
@@ -276,6 +275,11 @@
   height: 35px;
   text-align: center;
   border-radius: 50%;
+}
+.click{
+  box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
+  border-radius: 5px;
+  background-color: #f0f8ff !important;
 }
 //end thuan
 

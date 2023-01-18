@@ -338,61 +338,70 @@
         [formModel]="form.formModel"
         default="Danh sách địa chỉ"
       ></codx-label>
-      </div>        
+      <span (click)="openPopupAddress()" class="icon-add_circle icon-16 me-1"></span>
+      </div>    
+      <div *ngFor="let item of objectAddress">
         <div class="fw-bold text-dark fs-5">
-            <span>Địa chỉ</span>
-          </div>
+          
+          <span>{{item.adressTypeName}}</span>
+        </div>
+      <div class="text-gray-500">
+          {{item.adressName}}
+        </div>
         <div class="text-gray-500">
-            hahaasdasdasdsasdasdasdsad
-          </div>
-          <div class="text-gray-500">
-            Liên hệ
-          </div>
-          <div class="d-flex flex-wrap ms-14">
-            <div class="row pb-5">
-                <div class="col-6 ps-0">
-                  <div class="d-flex align-items-top">
-                    <div class="me-4">
-                      <div>
-                        <codx-img 
-                          [width]="50"
-                          imgSource="../../../assets/img/avatar.png">
-                        </codx-img>
-                      </div>
-                      <!-- <ng-template #imgDefault_personal>
-                        <img class="img_avatar" src="../../../assets/img/avatar.png" />
-                      </ng-template> -->
+          Liên hệ
+        </div>
+        <div class="d-flex flex-wrap ms-14">
+          <div class="row pb-5">
+              <div class="col-6 ps-0">
+                <div class="d-flex align-items-top">
+                  <div class="me-4">
+                    <div>
+                      <codx-img 
+                        [width]="50"
+                        imgSource="../../../assets/img/avatar.png">
+                      </codx-img>
                     </div>
-                    <div class="d-flex flex-column space_personal">
-                      <div class="fw-bold text-dark fs-5">
-                        <span>hihi</span>
+                    <!-- <ng-template #imgDefault_personal>
+                      <img class="img_avatar" src="../../../assets/img/avatar.png" />
+                    </ng-template> -->
+                  </div>
+                  <div class="d-flex flex-column space_personal">
+                    <div class="fw-bold text-dark fs-5">
+                      <span>hihi</span>
+                    </div>
+                    <div class="me-2">
+                      haha
+                    </div>
+                    <div class="d-flex">
+                    <div class="row mx-0 mt-3">
+                      <div class="col-6 ps-0">
+                        <div class="d-flex">
+                          <span class="icon-email icon-16 me-1 text-gray-500"></span>
+                          <span>asdas@mail.com</span>   
+                        </div>   
                       </div>
-                      <div class="me-2">
-                        haha
-                      </div>
-                      <div class="d-flex">
-                      <div class="row mx-0 mt-3">
-                        <div class="col-6 ps-0">
+                    </div>
+                    <div class="row mx-0 mt-3">
+                      <div class="col-6 pe-0">
                           <div class="d-flex">
-                            <span class="icon-email icon-16 me-1 text-gray-500"></span>
-                            <span>asdas@mail.com</span>   
-                          </div>   
-                        </div>
-                      </div>
-                      <div class="row mx-0 mt-3">
-                        <div class="col-6 pe-0">
-                            <div class="d-flex">
-                              <span class="icon-phone_android icon-16 me-1 text-gray-500"></span>
-                              <span>0966719787</span>       
-                            </div>
+                            <span class="icon-phone_android icon-16 me-1 text-gray-500"></span>
+                            <span>0966719787</span>       
                           </div>
-                      </div>
-                      </div>
+                        </div>
+                    </div>
                     </div>
                   </div>
                 </div>
               </div>
-          </div>
+            </div>
+            <div class="d-flex align-items-center">
+              <span (click)="editobject(item,'dataaddress')" class="icon-edit icon-16 py-1"></span>
+              <span (click)="deleteobject(item,'dataaddress')"  class="icon-delete icon-16"></span>
+            </div>
+        </div>
+      </div>    
+        
 </ng-template>
 <ng-template #tabContact>
     <div class="row mx-0 mt-3">
@@ -414,7 +423,7 @@
           </div>
         </div>
       </div>
-      <div class="row pb-5">
+      <div class="row pb-5" *ngFor="let item of objectContact">
         <div class="col-6 ps-0">
           <div class="d-flex align-items-top">
             <div class="me-4">
@@ -430,17 +439,17 @@
             </div>
             <div class="d-flex flex-column space_personal">
               <div class="fw-bold text-dark fs-5">
-                <span>hihi</span>
+                <span>{{item.contactName}}</span>
               </div>
               <div class="me-2">
-                haha
+                {{item.jobTitle}}
               </div>
               <div class="d-flex">
               <div class="row mx-0 mt-3">
                 <div class="col-6 ps-0">
                   <div class="d-flex">
                     <span class="icon-email icon-16 me-1 text-gray-500"></span>
-                    <span>asdas@mail.com</span>   
+                    <span>{{item.email}}</span>   
                   </div>   
                 </div>
               </div>
@@ -448,15 +457,18 @@
                 <div class="col-6 pe-0">
                     <div class="d-flex">
                       <span class="icon-phone_android icon-16 me-1 text-gray-500"></span>
-                      <span>0966719787</span>       
+                      <span>{{item.phone}}</span>       
                     </div>
                   </div>
               </div>
               </div>
               <div class="d-flex">
-                <codx-label class="me-2" [formModel]="form.formModel" default="...">
-                </codx-label>
+                <span class="me-2">{{item.contactType}}</span>     
               </div>
+            </div>
+            <div class="d-flex align-items-center">
+              <span (click)="editobject(item,'datacontact')" class="icon-edit icon-16 py-1"></span>
+              <span (click)="deleteobject(item,'datacontact')"  class="icon-delete icon-16"></span>
             </div>
           </div>
         </div>
@@ -470,7 +482,7 @@
       ></codx-label>
       <span (click)="openPopupBank()" class="icon-add_circle icon-16 me-1"></span>
       </div> 
-      <div class="row pb-5">
+      <div class="row pb-5" *ngFor="let item of objectBankaccount">
         <div class="col-6 ps-0">
           <div class="d-flex align-items-top">
             <div class="me-4">
@@ -486,13 +498,18 @@
             </div>
             <div class="d-flex flex-column space_personal">
               <div class="fw-bold text-dark fs-5">
-                <span>hihi</span>
+                <span>{{item.bankID}}</span>
               </div>
               <div class="me-2">
-                So tai khoan:1564853
+                {{item.bankAcctID}}
               </div>
             </div>
+          <div class="d-flex align-items-center">
+            <span (click)="editobject(item,'databank')" class="icon-edit icon-16 py-1"></span>
+            <span (click)="deleteobject(item,'databank')"  class="icon-delete icon-16"></span>
           </div>
+          </div>
+          
         </div>
       </div>
 </ng-template>

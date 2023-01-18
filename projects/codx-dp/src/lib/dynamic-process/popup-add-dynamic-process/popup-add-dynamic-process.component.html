@@ -212,20 +212,26 @@
             </button>
           </div>
           <div *ngIf="currentTab == 0"></div>
-          <button *ngIf="currentTab != 2" type="button" class="btn btn-primary" (click)="onSave()">
-            <codx-label             
+          <button
+            *ngIf="currentTab != 2"
+            type="button"
+            class="btn btn-primary"
+            (click)="onSave()"
+          >
+            <codx-label
               [name]="'lblContinue'"
               [default]="'Tiếp tục'"
             ></codx-label>
           </button>
 
-          <button *ngIf="currentTab == 2" type="button" class="btn btn-primary" (click)="handlerSave()">
-            <codx-label              
-              [name]="'lblSave'"
-              [default]="'Lưu'"
-            ></codx-label>
+          <button
+            *ngIf="currentTab == 2"
+            type="button"
+            class="btn btn-primary"
+            (click)="handlerSave()"
+          >
+            <codx-label [name]="'lblSave'" [default]="'Lưu'"></codx-label>
           </button>
-
         </div>
       </div>
     </div>
@@ -931,7 +937,12 @@
                   fiedName="IsRequired"
                   default="Bắt buộc *"
                 ></codx-label>
-                <codx-input type="switch" field="isRequired" [checked]="item1?.isRequired" (valueChange)="changeRequired($event,item1)" >
+                <codx-input
+                  type="switch"
+                  field="isRequired"
+                  [checked]="item1?.isRequired"
+                  (valueChange)="changeRequired($event, item1)"
+                >
                 </codx-input>
               </div>
               <codx-mfunc
@@ -993,7 +1004,7 @@
             type="button"
             class="btn btn-primary d-flex align-items-center"
             style="padding: 0 15px 0 0 !important"
-            (click)="openAddStep('add')"
+            (click)="openPopupAddEditStep('add')"
           >
             <span
               class="icon-add icon-20 text-primary-600 py-2"
@@ -1036,30 +1047,31 @@
         <div
           class="example-list stage-body-left-main"
           cdkDropList
-          (cdkDropListDropped)="drop($event, stepList)"
+          (cdkDropListDropped)="dropStep($event)"
         >
           <!-- danh sách giai đoạn -->
           <div
             cdkDrag
-            *ngFor="let step of stepList; let i = index"
+            *ngFor="let itemStep of stepList; let i = index"
             class="list-stage example-box drap-drop"
-            (click)="clickViewStep($event, viewStepCustom, step ?? strEmpty)"
+            [ngClass]="itemStep?.recID == step.recID ? 'click' : ''"
+            (click)="clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)"
           >
             <div class="order">{{ i + 1 }}</div>
             <div class="p-3 content">
               <div style="font-weight: 600; font-size: 1.2rem">
-                {{ step?.stepName }}
+                {{ itemStep?.stepName }}
               </div>
               <div style="font-size: 1.1rem; font-weight: 500">
-                Thời hạn {{ step?.durationDay || 0 }} ngày
-                {{ step?.durationHour || 0 }} giờ
+                Thời hạn {{ itemStep?.durationDay || 0 }} ngày
+                {{ itemStep?.durationHour || 0 }} giờ
               </div>
               <div style="font-size: 1.1rem; font-weight: 500">
-                Công việc {{ step?.taskGroups.length }}
+                Công việc {{ itemStep?.taskGroups.length }}
               </div>
             </div>
           </div>
-          <!-- Reason successs -->
+          <!-- Step Reason successs -->
           <div
             class="list-stage cursor-pointer drap-drop"
             (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)"
@@ -1067,7 +1079,7 @@
             <div class="order">T</div>
             <div class="content p-3">
               <div style="font-weight: 600; font-size: 1.2rem">
-                <codx-label default="Thành công"></codx-label>
+                <codx-label [default]="stepSuccess?.stepName"></codx-label>
               </div>
               <codx-label default="Hoàn thành tất cả giai đoạn"></codx-label>
             </div>
@@ -1081,7 +1093,7 @@
             <div class="order">F</div>
             <div class="content p-3">
               <div style="font-weight: 600; font-size: 1.2rem">
-                <codx-label default="Thất bại"></codx-label>
+                <codx-label [default]="stepFail?.stepName"></codx-label>
               </div>
               <codx-label
                 default="Thất bại ở một giai đoạn bất kỳ"
@@ -1094,7 +1106,7 @@
       </div>
       <div class="stage-body-right col-9">
         <div>
-          <div class="d-flex justify-content-end">
+          <div class="d-flex justify-content-end ms-3">
             <div class="me-auto">
               <h2>
                 <strong>{{ titleViewStepCrr }}</strong>
@@ -1115,19 +1127,12 @@
               style="cursor: pointer"
             >
               <codx-mfunc
-                [formModel]="dialog.formModel"
-                (clickMF)="clickMFStep($event, step)"
-                [dataItem]="step"
-                [type]="'hover'"
-              >
-              </codx-mfunc>
-              <!-- <codx-mfunc
               [formModel]="dialog.formModel"
-              (clickMF)="clickMFFields($event, item1)"
-              [dataItem]="action != 'edit' ? moreDefaut : item"
+              (clickMF)="clickMFStep($event, step)"
+              [dataItem]="action != 'edit' ? moreDefaut : step"
               [type]="'hover'"
             >
-            </codx-mfunc> -->
+            </codx-mfunc>
             </div>
           </div>
         </div>
@@ -1657,7 +1662,10 @@
         </span>
         <span class="text-dark fw-bold"> {{ item?.objectName }} </span>
         <span class="mt-1">
-          <a (click)="onDeleteOwner(item?.objectID, data)" style="cursor: pointer">
+          <a
+            (click)="onDeleteOwner(item?.objectID, data)"
+            style="cursor: pointer"
+          >
             <span class="icon-close icon-16 text-danger ms-3"></span>
           </a>
         </span>
@@ -1722,7 +1730,7 @@
         name="Save"
         formName="Tasks"
         default="Đồng ý"
-        (click)="saveAddStep()"
+        (click)="addAndEditStep()"
       ></codx-label>
     </button>
   </div>
@@ -2037,7 +2045,7 @@
             <button
               type="button"
               class="btn btn-outline-primary btn-sm pb-5"
-              (click)="onSave()"
+              (click)="addReason()"
             >
               <i class="icon-add icon-18"> </i>
               <codx-label [name]="''" [default]="'Thêm lý do'"></codx-label>
