@@ -127,22 +127,7 @@
 </ng-template>
 
 <ng-template #tabInputInfo>
-  <!-- <div class="form-group">
-    <div>
-      <codx-label
-        fiedName="TaskName"
-        formName="Tasks"
-        gridViewName="grvTasks"
-        default="Địa chỉ"
-      >
-      </codx-label>
-    </div>
-
-    <codx-input
-      field="taskName"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-    >
-    </codx-input>
-  </div> -->
+  <div class="form-group">
+    <codx-input-custom-field [customField]="" (valueChangeCustom)="valueChangeCustom($event)"></codx-input-custom-field>
+  </div>
 </ng-template>
