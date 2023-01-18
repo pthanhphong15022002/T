@@ -228,23 +228,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     if (missingImgArea || this.pdfView.lstAreas.length == 0) {
       this.notify.alertCode('ES019').subscribe((x) => {
         if (x.event.status == 'Y') {
-          //this.mode = mode;
-          //let title = '';
           let subTitle = 'Comment khi duyệt';
-          // switch (this.mode) {
-          //   case 5:
-          //     title = 'Duyệt';
-          //     break;
-          //   case 4:
-          //     title = 'Từ chối';
-          //     break;
-          //   case 2:
-          //     title = 'Làm lại';
-          //     break;
-          //   default:
-          //     return;
-          // }
-          //this.title = title;
           this.subTitle = subTitle;
           if (
             this.data.stepType == 'S' &&
@@ -274,22 +258,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
       //   }
       // });
     } else {
-      //this.mode = mode;
-      //let title = '';
+
       let subTitle = 'Comment khi duyệt';
-      // switch (mode) {
-      //   case 5:
-      //     title = 'Duyệt';
-      //     break;
-      //   case 4:
-      //     title = 'Từ chối';
-      //     break;
-      //   case 2:
-      //     title = 'Làm lại';
-      //     break;
-      //   default:
-      //     return;
-      // }
       this.subTitle = subTitle;
       if (
         this.data.stepType == 'S' &&
@@ -541,5 +511,10 @@ export class PopupSignForApprovalComponent extends UIComponent {
     } else {
       this.dialog && this.dialog.close();
     }
+  }
+
+  eventHighlightText(event){
+    this.disabled = event;
+    this.detectorRef.detectChanges();
   }
 }

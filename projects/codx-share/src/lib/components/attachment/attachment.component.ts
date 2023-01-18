@@ -1585,13 +1585,14 @@ export class AttachmentComponent implements OnInit, OnChanges {
     // data.title = "test";
     // this.callfc.openSide(EditFileComponent, data, option);
     //  this.callfc.openSide(EditFileComponent, this.titleDialog, [this.functionID, file], null);
+    debugger;
     let dialog = this.callfc.openForm(
       EditFileComponent,
       this.titleDialog,
       800,
       800,
       '',
-      [this.functionID, file, this.dataFolder.copyrights],
+      [this.functionID, file, this.dataFolder?.copyrights],
       ''
     );
     dialog.closed.subscribe((item) => {

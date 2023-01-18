@@ -104,20 +104,29 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
-
     this.benefitObj.benefitID = '1'; // test combobox chua co
-    if (this.benefitObj.expiredDate < this.benefitObj.effectedDate) {
-      this.notify.notifyCode('HR002');
+    this.formGroup.patchValue({ benefitID: this.benefitObj.benefitID }); // test combobox chua co
+
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
 
-    if (this.actionType === 'copy') {
-      delete this.benefitObj.recID;
+    if (this.benefitObj.expiredDate < this.benefitObj.effectedDate) {
+      // this.notify.notifyCode('HR002');
+      this.hrService.notifyInvalidFromTo(
+        'ExpiredDate',
+        'EffectedDate',
+        this.formModel
+      );
+      return;
     }
+
+    // Gọi hàm copy
+    // if (this.actionType === 'copy') {
+    //   delete this.benefitObj.recID;
+    // }
+
     this.benefitObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddEBenefit(this.benefitObj).subscribe((p) => {
@@ -147,6 +156,38 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
           // this.dialog.close(this.data)
         } else this.notify.notifyCode('DM034');
       });
+    }
+  }
+
+  valueChange(event) {
+    if (event?.field && event?.component && event?.data != '') {
+      switch (event.field) {
+        case 'SignerID': {
+          let employee = event?.component?.itemsSelected[0];
+          if (employee) {
+            if (employee?.PositionID) {
+              this.hrService
+                .getPositionByID(employee.PositionID)
+                .subscribe((res) => {
+                  if (res) {
+                    this.benefitObj.signerPosition = res.positionName;
+                    this.formGroup.patchValue({
+                      signerPosition: this.benefitObj.signerPosition,
+                    });
+                    this.cr.detectChanges();
+                  }
+                });
+            } else {
+              this.benefitObj.signerPosition = null;
+              this.formGroup.patchValue({
+                signerPosition: this.benefitObj.signerPosition,
+              });
+            }
+          }
+          break;
+        }
+      }
+      this.cr.detectChanges();
     }
   }
 }

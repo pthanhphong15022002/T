@@ -232,16 +232,16 @@ export class PopupAddKRComponent extends UIComponent {
   OKRLevel() {
     switch (this.funcID) {
       case OMCONST.FUNCID.COMP:
-        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Company;
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.COMP;
         break;
       case OMCONST.FUNCID.DEPT:
-        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Department;
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.DEPT;
         break;
       case OMCONST.FUNCID.ORG:
-        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Team;
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.ORG;
         break;
       case OMCONST.FUNCID.PERS:
-        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Person;
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.PERS;
         break;
     }
     this.detectorRef.detectChanges();
