@@ -1,0 +1,190 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  [footer]="footer"
+  [data]="address"
+  subToolbarCss="text-end"
+>
+</codx-form>
+<ng-template #body>
+    <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="AdressType"
+        default="Loại địa chỉ"      
+      ></codx-label>
+      <codx-input 
+      [crrValue]="adressType"
+      type="valuelist" 
+      refValue="AC015"
+      field="adressType"
+      (valueChange)="valueChange($event,'adressType')"
+      >
+    </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="AdressName"
+        default="Địa chỉ"      
+      ></codx-label>
+      <codx-input 
+      [crrValue]="adressName"
+      [formModel]="form.formModel"
+      field="adressName"
+      (valueChange)="valueChange($event,'adressName')"
+      >
+    </codx-input>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="CountryID"
+            default="Quốc gia"
+          ></codx-label>
+            <codx-input
+                    [crrValue]="countryID"
+                    type="combobox"
+                    refValue="Countries"
+                    field="countryID"
+                    (valueChange)="valueChange($event,'countryID')"
+                  >
+            </codx-input>
+          </div>   
+        </div>
+        <div class="col-6 pe-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="ProvinceID"
+            default="Tỉnh/thành"      
+          ></codx-label>
+          <codx-input
+          [crrValue]="provinceID"
+          type="combobox"
+          refValue="Provinces"
+          field="provinceID"
+          (valueChange)="valueChange($event,'provinceID')"
+            >
+        </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="DistrictID"
+            default="Quận/huyện"
+          ></codx-label>
+            <codx-input
+                    [crrValue]="districtID"
+                    type="combobox"
+                    refValue="DistrictsAC"
+                    field="districtID"
+                    (valueChange)="valueChange($event,'districtID')"
+                  >
+            </codx-input>
+          </div>   
+        </div>
+        <div class="col-6 pe-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="PostalCode"
+            default="Phường/xã"      
+          ></codx-label>
+          <codx-input
+          [crrValue]="postalCode"
+          type="combobox"
+          refValue="PostalCodes"
+          field="postalCode"
+          (valueChange)="valueChange($event,'postalCode')"
+            >
+        </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="Note"
+        default="Ghi chú"      
+      ></codx-label>
+      <codx-input 
+      [crrValue]="form.data != null ? form.data.note : ''"
+      [formModel]="form.formModel"
+      field="note"
+      (valueChange)="valueChange($event,'note')"
+      >
+    </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        default="Người liên hệ"      
+      ></codx-label>
+      </div>
+      <div class="row pb-5">
+        <div class="col-6 ps-0">
+          <div class="d-flex align-items-top">
+            <div class="me-4">
+              <div>
+                <codx-img 
+                  [width]="50"
+                  imgSource="../../../assets/img/avatar.png">
+                </codx-img>
+              </div>
+              <!-- <ng-template #imgDefault_personal>
+                <img class="img_avatar" src="../../../assets/img/avatar.png" />
+              </ng-template> -->
+            </div>
+            <div class="d-flex flex-column space_personal">
+              <div class="fw-bold text-dark fs-5">
+                <span>hihi</span>
+              </div>
+              <div class="me-2">
+                haha
+              </div>
+              <div class="d-flex">
+              <div class="row mx-0 mt-3">
+                <div class="col-6 ps-0">
+                  <div class="d-flex">
+                    <span class="icon-email icon-16 me-1 text-gray-500"></span>
+                    <span>asdas@mail.com</span>   
+                  </div>   
+                </div>
+              </div>
+              <div class="row mx-0 mt-3">
+                <div class="col-6 pe-0">
+                    <div class="d-flex">
+                      <span class="icon-phone_android icon-16 me-1 text-gray-500"></span>
+                      <span>0966719787</span>       
+                    </div>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</ng-template>
+<ng-template #footer>
+  
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary">
+            <codx-label  [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
+                default="Lưu & Thêm"></codx-label>
+        </button>
+        <button (click)="onSave()" type="button" class="btn btn-primary">
+            <codx-label  [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
+                default="Lưu"></codx-label>
+        </button>
+    </div>
+</ng-template>

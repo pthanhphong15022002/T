@@ -1,1 +1,84 @@
-aaaaaaaaaaaaaaa
+<div class="back-ground">
+  <div class="header-job">
+    <div>
+      <span class="title-train">3. Giới thiệu sản phẩm</span>
+      <i class="icon-work_outline text-primary-600"></i>
+    </div>
+    <div class="ms-3">
+      <div class="d-flex justify-content-between">
+        <div>
+          <span>Ngày chuyển đến giai đoạn: 09:00 11/10/2022</span>
+        </div>
+        <div class="d-flex align-items-start">
+          <span>Bắt đầu lúc: 12:00 13/10/2022</span>
+        </div>
+      </div>
+      <div>
+        <div class="progress">
+          <div class="progress-done" role="progressbar" [style.width]="'70%'" aria-valuenow="50" aria-valuemin="0"
+            aria-valuemax="100">
+            70%</div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between">
+        <div>
+          <i class="icon-work_outline text-primary-600"></i>
+          <span>Kỳ vọng: 4 ngày</span>
+        </div>
+        <div class="d-flex align-items-start">
+          <i class="icon-work_outline text-primary-600"></i>
+          <span>Đã sử dụng: 2 ngày 03.00 giờ</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between">
+      <div>
+        <span style="margin-right: 5px;">Người liên quan: </span>
+        <codx-img [objectId]="'ADMIN'" [isToolTip]="true" [width]="25" objectType="AD_Users" [numberImages]="3">
+        </codx-img>
+      </div>
+      <div class="d-flex align-items-start">
+        <span style="margin-right: 5px;">Người phụ trách: </span>
+        <codx-img [objectId]="'ADMIN'" [isToolTip]="true" [width]="25" objectType="AD_Users" [numberImages]="3">
+        </codx-img>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="back-info">
+  <div class="header-info">
+    <div class="left">
+      <span class="title">Thông tin nhập liệu</span>
+    </div>
+    <div class="right">
+      <div class="group-button">
+        <button class="button-custom" >
+          <span class="icon-edit icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
+        </button>
+        <button class="button-custom" (click)="clickShow($event, 'role-main')">
+          <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="role-main" class="main" [ngClass]="'show-main'">
+    <div class="ms-4 mt-2 mb-2">
+      <span class="text-gray-400">
+        Ngày tiếp nhận
+      </span>
+    <br>
+      <span class="text-dark">
+        24/10/2022
+      </span>
+    </div>
+    <div class="ms-4 mt-2 mb-2">
+      <span class="text-gray-400">
+        Ngày tiếp nhận
+      </span>
+      <br>
+      <span class="text-dark">
+        24/10/2022
+      </span>
+    </div>
+  </div>
+</div>

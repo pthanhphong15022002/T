@@ -123,7 +123,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
-                field="fromDate"
+                field="FromDate"
                 [Group]="formGroup"
                 [formModel]="formModel"
             ></codx-input>
@@ -134,7 +134,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
-                field="toDate"
+                field="ToDate"
                 [Group]="formGroup"
                 [formModel]="formModel"
             ></codx-input>
@@ -185,6 +185,7 @@
             field="signerID"
             [Group]="formGroup"
             [formModel]="formModel"
+            (valueChange)="valueChange($event)"
         ></codx-input>
     </div>
 

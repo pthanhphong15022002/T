@@ -212,20 +212,26 @@
             </button>
           </div>
           <div *ngIf="currentTab == 0"></div>
-          <button *ngIf="currentTab != 2" type="button" class="btn btn-primary" (click)="onSave()">
-            <codx-label             
+          <button
+            *ngIf="currentTab != 2"
+            type="button"
+            class="btn btn-primary"
+            (click)="onSave()"
+          >
+            <codx-label
               [name]="'lblContinue'"
               [default]="'Tiếp tục'"
             ></codx-label>
           </button>
 
-          <button *ngIf="currentTab == 2" type="button" class="btn btn-primary" (click)="handlerSave()">
-            <codx-label              
-              [name]="'lblSave'"
-              [default]="'Lưu'"
-            ></codx-label>
+          <button
+            *ngIf="currentTab == 2"
+            type="button"
+            class="btn btn-primary"
+            (click)="handlerSave()"
+          >
+            <codx-label [name]="'lblSave'" [default]="'Lưu'"></codx-label>
           </button>
-
         </div>
       </div>
     </div>
@@ -931,7 +937,12 @@
                   fiedName="IsRequired"
                   default="Bắt buộc *"
                 ></codx-label>
-                <codx-input type="switch" field="isRequired" [checked]="item1?.isRequired" (valueChange)="changeRequired($event,item1)" >
+                <codx-input
+                  type="switch"
+                  field="isRequired"
+                  [checked]="item1?.isRequired"
+                  (valueChange)="changeRequired($event, item1)"
+                >
                 </codx-input>
               </div>
               <codx-mfunc
@@ -1060,7 +1071,7 @@
               </div>
             </div>
           </div>
-          <!-- Reason successs -->
+          <!-- Step Reason successs -->
           <div
             class="list-stage cursor-pointer drap-drop"
             (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)"
@@ -1068,7 +1079,7 @@
             <div class="order">T</div>
             <div class="content p-3">
               <div style="font-weight: 600; font-size: 1.2rem">
-                <codx-label default="Thành công"></codx-label>
+                <codx-label [default]="stepSuccess?.stepName"></codx-label>
               </div>
               <codx-label default="Hoàn thành tất cả giai đoạn"></codx-label>
             </div>
@@ -1082,7 +1093,7 @@
             <div class="order">F</div>
             <div class="content p-3">
               <div style="font-weight: 600; font-size: 1.2rem">
-                <codx-label default="Thất bại"></codx-label>
+                <codx-label [default]="stepFail?.stepName"></codx-label>
               </div>
               <codx-label
                 default="Thất bại ở một giai đoạn bất kỳ"
@@ -1651,7 +1662,10 @@
         </span>
         <span class="text-dark fw-bold"> {{ item?.objectName }} </span>
         <span class="mt-1">
-          <a (click)="onDeleteOwner(item?.objectID, data)" style="cursor: pointer">
+          <a
+            (click)="onDeleteOwner(item?.objectID, data)"
+            style="cursor: pointer"
+          >
             <span class="icon-close icon-16 text-danger ms-3"></span>
           </a>
         </span>
@@ -2031,7 +2045,7 @@
             <button
               type="button"
               class="btn btn-outline-primary btn-sm pb-5"
-              (click)="onSave()"
+              (click)="addReason()"
             >
               <i class="icon-add icon-18"> </i>
               <codx-label [name]="''" [default]="'Thêm lý do'"></codx-label>
