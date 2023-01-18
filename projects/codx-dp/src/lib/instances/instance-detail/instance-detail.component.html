@@ -75,6 +75,10 @@
         <codx-gantt></codx-gantt>
       </ng-container>
       <ng-container *ngIf="idCbx == 'stage'">
+        <div class="d-flex arrow-steps flex-container">
+          <div *ngFor="let item of lstTest; index as i;" id="step-click" [ngClass]="i == 0 ? 'step current' : 'step'" style="flex-grow: 1" (click)="click(i)">
+            <span> {{item.name}}</span> </div>
+        </div>
         <codx-stages-detail></codx-stages-detail>
       </ng-container>
       <ng-container *ngIf="idCbx == 'field'">
