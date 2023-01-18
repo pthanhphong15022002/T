@@ -15,6 +15,9 @@ export class StagesDetailComponent implements OnInit {
   },
   {
     name: 'test3'
+  },
+  {
+    name: 'test4'
   }]
 
   constructor() { }
@@ -22,4 +25,9 @@ export class StagesDetailComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
+  click(e, id){
+    const element = document.getElementById('step-click');
+
+  }
 }
