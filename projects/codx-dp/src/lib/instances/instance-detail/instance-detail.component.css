@@ -99,3 +99,10 @@
 .arrow-steps .step.old:after {
 	border-left: 17px solid #cca00f;
 }
+
+
+.text-body{
+  color: #1b4ab0 !important;
+  font-size: 14px;
+  font-weight: 700;
+}

@@ -3067,6 +3067,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         }
 
         var fileUpload = new FileUpload();
+        fileUpload.fileName = files[i].name;
         var type = files[i].type.toLowerCase();
         if (type == 'png' || type == 'jpg' || type == 'bmp') {
           fileUpload.avatar = data;
@@ -3102,7 +3103,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.objectType = this.objectType;
         fileUpload.objectID = this.objectId;
         fileUpload.fileSize = files[i].size;
-        fileUpload.fileName = files[i].name;
+       
         fileUpload.order = count;
         fileUpload.description = files[i].description; //
 

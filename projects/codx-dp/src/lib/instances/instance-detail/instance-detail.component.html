@@ -1,6 +1,6 @@
 <ng-container *ngIf="dataSelect?.recID">
   <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [dataItem]="dataSelect"
-    [hideMF]="false" (changeDataMF)="changeDataMF($event, dataSelect)">
+    [hideMF]="false" (changeDataMF)="changeDataMF($event, dataSelect)" (clickMF)="clickMF($event, dataSelect)">
     <ng-template #header>
       <div class="container_detail mt-3">
         <div class="d-flex flex-grow-1 mb-4">
@@ -12,8 +12,8 @@
                 </h2>
                 <div class="mb-6">
                   <div>
-                    <span>Tổ chức/Khách hàng: </span>
-
+                    <span class="">Tổ chức/Khách hàng: </span>
+                    <span class="me-2 text-body">Tập đoàn PHÚC TÚ</span>
                   </div>
                   <div class="d-flex flex-grow-1 mb-4">
                     <span>Liên hệ: </span>
@@ -23,10 +23,10 @@
                         </codx-img>
                       </div>
                       <div class="d-flex flex-column">
-                        <span class="ms-3">Trần Đoàn Tuyết Khanh</span>
+                        <span class="ms-3 text-body">Trần Đoàn Tuyết Khanh</span>
                         <div class="row">
-                          <span class="col-3 ms-3">012344556</span>
-                          <span class="col-3 ms-3" style="margin-right: 50px;">lacviet@lacviet.com</span>
+                          <span class="col-3 ms-3 text-body">012344556</span>
+                          <span class="col-3 ms-3 text-body" style="margin-right: 50px;">lacviet@lacviet.com</span>
                         </div>
                       </div>
                     </ng-container>
@@ -76,7 +76,7 @@
       </ng-container>
       <ng-container *ngIf="idCbx == 'stage'">
         <div class="d-flex arrow-steps flex-container">
-          <div *ngFor="let item of lstTest; index as i;" id="step-click" [ngClass]="i == 0 ? 'step current' : 'step'" style="flex-grow: 1" (click)="click(i)">
+          <div *ngFor="let item of lstTest; index as i;" id="step-click" [ngClass]="item.stepNo == 1 ? 'step current' : 'step'" style="flex-grow: 1" (click)="click(item.stepNo)">
             <span> {{item.name}}</span> </div>
         </div>
         <codx-stages-detail></codx-stages-detail>
