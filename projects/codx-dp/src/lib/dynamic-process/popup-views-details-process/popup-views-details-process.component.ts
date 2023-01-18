@@ -11,12 +11,14 @@ import { TabModel } from '../../models/models';
 export class PopupViewsDetailsProcessComponent implements OnInit {
   dialog: DialogRef;
   name = 'Mission';
-  title = '';
+
   process = new DP_Processes();
   tabControl: TabModel[] = [
     { name: 'Mission', textDefault: 'Nhiệm vụ', isActive: true },
     { name: 'Dashboard', textDefault: 'Dashboard', isActive: false },
   ];
+  // value
+  vllApplyFor ='DP002' ;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dialog: DialogRef,
@@ -24,7 +26,6 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.process = dt.data.data;
-    this.title = this.process.processName;
   }
 
   ngOnInit(): void {}

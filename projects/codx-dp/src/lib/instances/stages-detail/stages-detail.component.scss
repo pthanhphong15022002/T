@@ -1,0 +1,87 @@
+.back-ground{
+  font-size: 16px;
+  box-shadow: #e4e4e4 5px 5px 15px 5px;
+  margin-top: 50px;
+  .header-job {
+    background-color: #cde7f1;
+    padding: 0.3rem;
+    margin-left: 0, 5rem;
+
+    .title-train{
+      font-weight: 600;
+      color: #000000;
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.progress {
+	background-color: #d8d8d8;
+	border-radius: 20px;
+	position: relative;
+	margin: 15px 0;
+	height: 30px;
+	width: 100%;
+}
+
+.progress-done {
+	background: linear-gradient(to left, #F2709C, #FF9472);
+	box-shadow: 0 3px 3px -5px #F2709C, 0 2px 5px #F2709C;
+	border-radius: 20px;
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+
+	transition: 1s ease 0.3s;
+}
+
+.back-info{
+  font-size: 16px;
+  box-shadow: #e4e4e4 5px 5px 15px 5px;
+  margin-top: 50px;
+
+  .header-info {
+    background-color: #cde7f1;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3rem;
+    margin-left: 0, 5rem;
+
+    .left {
+      .title {
+        font-weight: 600;
+        color: #2392ef;
+        font-size: 1.2rem;
+      }
+    }
+
+    .right {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .show-main {
+    display: block;
+    transition: display 12s;
+    padding-bottom: 10px;
+  }
+
+  .hidden-main {
+    display: none;
+    transition: display 12s;
+  }
+}
+
+
+.button-custom {
+  border: none;
+  outline: none;
+  background: none;
+  color: #0077b1;
+  span {
+    font-weight: 400;
+  }
+}

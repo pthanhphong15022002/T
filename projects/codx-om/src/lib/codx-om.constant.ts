@@ -69,10 +69,10 @@ export const OMCONST = {
     },
 
     OKRLevel: {
-      Company: '1',
-      Department: '3',
-      Team: '4',
-      Person: '5',
+      COMP: '1',
+      DEPT: '3',
+      ORG: '5',
+      PERS: '9',
     },
 
     Plan: {

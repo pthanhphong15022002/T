@@ -14,6 +14,7 @@ import { PopupVoteComponent } from './popup-vote/popup-vote.component';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { ImageGridComponent } from '../image-grid/image-grid.component';
 import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
+import { CodxShareService } from '../../codx-share.service';
 @Component({
   selector: 'treeview-comment',
   templateUrl: './treeview-comment.component.html',
@@ -57,14 +58,16 @@ export class TreeviewCommentComponent implements OnInit {
   dataSelected: any[];
   vllL1480:any = null;
   dVll: any = {};
+  totalComment:number = 0;
+
   constructor(
     private dt: ChangeDetectorRef,
-    private signalRApi: WPService,
     private cache: CacheService,
     private api: ApiHttpService,
     private auth: AuthService,
     private notifySvr: NotificationsService,
     private callFuc: CallFuncService,
+
   ) {
     
   }
@@ -74,7 +77,7 @@ export class TreeviewCommentComponent implements OnInit {
     this.getValueIcon();
     this.getDataComment();
   }
-
+  // get vll icon
   getValueIcon(){
     this.cache.valueList("L1480").subscribe((res) => {
       if (res) {
@@ -88,7 +91,7 @@ export class TreeviewCommentComponent implements OnInit {
       }
     });
   }
-  totalComment:number = 0;
+  // get total comment
   getDataComment()
   {
     if(this.objectID){
@@ -107,6 +110,7 @@ export class TreeviewCommentComponent implements OnInit {
     } 
     
   }
+  // click show votes
   showVotes(data: any) {
     let object = {
       data: data,
@@ -150,6 +154,7 @@ export class TreeviewCommentComponent implements OnInit {
         });
     }
   }
+  // send comment
   sendComment(event:any,data:any = null){
     this.comments = "";
     this.repComment = "";

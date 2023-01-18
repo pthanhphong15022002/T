@@ -377,6 +377,9 @@ export class PopupAddProcessStepsComponent
     )
       this.showLabelAttachment = this.isHaveFile;
   }
+  getfileDelete(event){
+    event.data.length
+  }
   valueChangeAlert(e) {
     this.processSteps[e?.field] = e.data;
   }

@@ -1,6 +1,6 @@
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxHrService } from './../../codx-hr.service';
-import { Injector } from '@angular/core';
+import { ChangeDetectorRef, Injector } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
@@ -10,6 +10,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-popup-eself-info',
@@ -17,42 +18,53 @@ import {
   styleUrls: ['./popup-eself-info.component.css']
 })
 export class PopupESelfInfoComponent extends UIComponent implements OnInit {
-
+  funcID;
+  idField = 'RecID';
+  formGroup: FormGroup
   formModel: FormModel;
-  grvSetup
   dialog: DialogRef;
   data;
   isAfterRender = false;
+  headerText: ''
   @ViewChild('form') form: CodxFormComponent;
 
   constructor(
     private injector: Injector,
     private notitfy: NotificationsService,
+    private cr: ChangeDetectorRef,
     private hrService: CodxHrService,
     @Optional() dialog?: DialogRef,
-    @Optional() dt?: DialogData
+    @Optional() data?: DialogData
   ) {
     super(injector);
     this.dialog = dialog;
-    this.formModel = dialog?.formModel;
-    if(this.formModel){
-      this.isAfterRender = true
-    }
+    this.headerText = data?.data?.headerText;
+    this.funcID = data?.data?.funcID;
     this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected))
   }
 
+  initForm(){
+    this.formGroup.patchValue(this.data);
+    this.formModel.currentData = this.data;
+    this.cr.detectChanges();
+    this.isAfterRender = true;
+  }
+
+
   onInit(): void {
-    console.log('form', this.form);
-    
-    this.cache
-      .gridViewSetup(
-        this.dialog?.formModel?.formName,
-        this.dialog?.formModel?.gridViewName
-      )
-      .subscribe((res) => {
-        // this.grvSetup = res;
-        // console.log('form model', this.formModel);
-      });
+    this.hrService.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
   }
 
   ngAfterViewInit() {

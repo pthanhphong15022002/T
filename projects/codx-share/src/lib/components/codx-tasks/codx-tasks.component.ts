@@ -1049,7 +1049,7 @@ export class CodxTasksComponent
   }
 
   receiveMF(e: any) {
-    this.clickMF(e.e, this.itemSelected);
+    this.clickMF(e.e, e?.data);
   }
 
   getParam(callback = null) {

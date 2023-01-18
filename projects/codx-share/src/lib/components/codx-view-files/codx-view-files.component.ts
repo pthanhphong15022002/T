@@ -1,8 +1,11 @@
+import { I } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, AuthService, AuthStore, CallFuncService, FormModel } from 'codx-core';
 import { Observable,forkJoin, map, from, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { CodxShareService } from '../../codx-share.service';
 import { AttachmentComponent } from '../attachment/attachment.component';
 
 @Component({
@@ -26,6 +29,7 @@ export class CodxViewFilesComponent implements OnInit {
   files:any[] = [];
   filesDelete:any[] = [];
   filesAdd:any[] = [];
+  size:number = 0;
   FILE_REFERTYPE = {
     IMAGE: 'image',
     VIDEO: 'video',
@@ -35,8 +39,10 @@ export class CodxViewFilesComponent implements OnInit {
     private api:ApiHttpService,
     private auth: AuthStore,
     private callfc: CallFuncService,
+    private dt: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
-    private dt: ChangeDetectorRef
+    private codxShareSV: CodxShareService,
+
   )
   {
     this.user = this.auth.get();
@@ -49,11 +55,6 @@ export class CodxViewFilesComponent implements OnInit {
   getFileByObjectID(objectID:string){
     if(objectID)
     {
-      let size = 500;
-      if(this.images != 0)
-      {
-        
-      }
       this.api
       .execSv(
       'DM',
@@ -66,12 +67,33 @@ export class CodxViewFilesComponent implements OnInit {
         {
           if(this.images == 0)
           {
-            this.images = res.length;
+            let _fileImgVid = res.filter(f => f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO);
+            this.images = _fileImgVid.length;
           }
-          res.forEach((f: any) => {
-            if(f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO)
-            {
-              f["source"] = `${environment.urlUpload}/${f.url}`; 
+          let _files = res.filter(f => f.referType === this.FILE_REFERTYPE.IMAGE);
+          switch(_files.length)
+          {
+            case 1:
+              _files[0]["source"] = this.codxShareSV.getThumbByUrl(_files[0].url,600);
+              break;
+            case 2:
+              _files[0]["source"] = this.codxShareSV.getThumbByUrl(_files[0].url,300);
+              _files[1]["source"] = this.codxShareSV.getThumbByUrl(_files[1].url,300);
+              break;
+            case 3:
+              _files[0]["source"] = this.codxShareSV.getThumbByUrl(_files[0].url,600);
+              _files[1]["source"] = this.codxShareSV.getThumbByUrl(_files[1].url,300);
+              _files[2]["source"] = this.codxShareSV.getThumbByUrl(_files[2].url,300);
+              break;
+            default:
+              _files.map(f => {
+                f["source"] = this.codxShareSV.getThumbByUrl(f.url,300);
+              })   
+              break
+          }
+          res.map(f => {
+            if(f.referType == this.FILE_REFERTYPE.VIDEO){
+              f["source"] = `${environment.urlUpload}`+"/"+f.url; 
             }
           });
           this.files = res;
@@ -99,29 +121,27 @@ export class CodxViewFilesComponent implements OnInit {
   }
   // add files
   addFiles(files:any[]){
-    if(files.length > 0){
-      files.forEach((f) => {
-        if(f.mimeType.includes('image'))
-        {
-          f["source"] = f.avatar;
-          f['referType'] = this.FILE_REFERTYPE.IMAGE;
-          this.images++;
-        }
-        else if(f.mimeType.includes('video'))
-        {
-          f['source'] = f.data;
-          f['referType'] = this.FILE_REFERTYPE.VIDEO;
-          this.images++;
-        }
-        else 
-        {
-          f['referType'] = this.FILE_REFERTYPE.APPLICATION;
-        }
-      });
-      this.filesAdd = this.filesAdd.concat(files);
-      this.files = JSON.parse(JSON.stringify(this.filesAdd));
-      this.dt.detectChanges();
+    files.forEach((f) => {
+      if(f.mimeType.includes('image'))
+      {
+        f["source"] = f.avatar;
+        f['referType'] = this.FILE_REFERTYPE.IMAGE;
+        this.images++;
       }
+      else if(f.mimeType.includes('video'))
+      {
+        f['source'] = f.data.changingThisBreaksApplicationSecurity;
+        f['referType'] = this.FILE_REFERTYPE.VIDEO;
+        this.images++;
+      }
+      else 
+      {
+        f['referType'] = this.FILE_REFERTYPE.APPLICATION;
+      }
+    });
+    this.filesAdd = this.filesAdd.concat(files);
+    this.files = JSON.parse(JSON.stringify(this.filesAdd));
+    this.dt.detectChanges();
   }
   // remove files
   removeFiles(file: any) {

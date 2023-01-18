@@ -71,6 +71,12 @@ export class DynamicProcessComponent
   listDynamicProcess: DP_Processes[] = [];
   listUserInUse: DP_Processes_Permission[] = [];
 
+  // create variables is any;
+  listAppyFor: any; // list Apply For
+
+  // value
+  nameAppyFor: string = '';
+
   //test chưa có api
   popoverDetail: any;
   popupOld: any;
@@ -103,6 +109,7 @@ export class DynamicProcessComponent
     this.widthWin = Util.getViewPort().width - 100;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     // this.genAutoNumber();
+    this.getListAppyFor();
   }
 
   onInit(): void {
@@ -165,7 +172,7 @@ export class DynamicProcessComponent
         action: 'add',
         processNo: this.processNo,
         showID: this.showID,
-        instanceNo: this.instanceNo
+        instanceNo: this.instanceNo,
       };
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
@@ -282,7 +289,7 @@ export class DynamicProcessComponent
     }
   }
 
-  //#region đang test
+  //#region đang test ai cần list phần quyền la vô đâyu nha
   setTextPopover(text) {
     return text;
   }
@@ -322,11 +329,25 @@ export class DynamicProcessComponent
       });
   }
 
+  //#region Của Bảo
+  getListAppyFor() {
+    this.cache.valueList('DP002').subscribe((res) => {
+      if (res) {
+        this.listAppyFor = res.datas;
+      }
+    });
+  }
+  //#endregion
+
+  getNameAppyFor(value: string) {
+    return this.listAppyFor.find((x) => x.value === value).default ?? '';
+  }
   //#endregion đang test
 
-  doubleClickViewProcess(data){
+  doubleClickViewProcess(data) {
     let obj = {
-      data: data
+      data: data,
+      nameAppyFor: this.getNameAppyFor(data.applyFor),
     };
 
     let dialogModel = new DialogModel();
