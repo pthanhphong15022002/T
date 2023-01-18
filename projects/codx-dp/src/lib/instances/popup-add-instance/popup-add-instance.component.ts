@@ -1,25 +1,37 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { CacheService, DialogData, DialogRef, NotificationsService, SidebarModel } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  CacheService,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  SidebarModel,
+} from 'codx-core';
 import { CodxDpService } from '../../codx-dp.service';
 import { DP_Instances } from '../../models/models';
 
 @Component({
   selector: 'lib-popup-add-instance',
   templateUrl: './popup-add-instance.component.html',
-  styleUrls: ['./popup-add-instance.component.css']
+  styleUrls: ['./popup-add-instance.component.css'],
 })
 export class PopupAddInstanceComponent implements OnInit {
-
   @ViewChild('tabGeneralInfo') tabGeneralInfo: TemplateRef<any>;
   @ViewChild('tabLocation') tabLocation: TemplateRef<any>;
   @ViewChild('tabInputInfo') tabInputInfo: TemplateRef<any>;
 
-  title = 'Tạo cơ hội';
+  title = 'Nhiệm vụ';
   titleAction = '';
 
   tabInfo: any[] = [];
   tabContent: any[] = [];
-  listInstances: DP_Instances[]=[];
+  listInstances: DP_Instances[] = [];
 
   gridViewSetup: any;
   instanceNo: string;
@@ -50,9 +62,6 @@ export class PopupAddInstanceComponent implements OnInit {
     subText: 'Input information',
   };
 
-
-
-
   dialog: DialogRef;
 
   constructor(
@@ -64,28 +73,21 @@ export class PopupAddInstanceComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-
     this.dialog = dialog;
     this.instanceNo = dt?.data[2]?.instanceNo ?? '';
     console.log(this.instanceNo);
-   }
-
-  ngOnInit(): void {
   }
 
+  ngOnInit(): void {}
+
   ngAfterViewInit(): void {
-    this.tabInfo = [
-      this.menuGeneralInfo,
-      this.menuAddress,
-      this.menuInputInfo
-    ];
+    this.tabInfo = [this.menuGeneralInfo, this.menuAddress, this.menuInputInfo];
 
     this.tabContent = [
       this.tabGeneralInfo,
       this.tabLocation,
-      this.tabInputInfo
+      this.tabInputInfo,
     ];
-
   }
 
   buttonClick(e: any) {
@@ -98,8 +100,8 @@ export class PopupAddInstanceComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  valueChange($event){
-    if($event) {
+  valueChange($event) {
+    if ($event) {
       this.instance[$event.field] = $event.data;
     }
   }
@@ -143,5 +145,4 @@ export class PopupAddInstanceComponent implements OnInit {
   //       });
   //   });
   // }
-
 }
