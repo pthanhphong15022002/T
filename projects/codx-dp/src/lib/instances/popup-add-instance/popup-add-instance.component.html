@@ -37,17 +37,23 @@
 </ng-template>
 
 <ng-template #tabGeneralInfo>
-
-      <div class="form-group">
-        <codx-label fiedName="InstanceNo" [formModel]="form.formModel" default="Mã nhiệm vụ">
-        </codx-label>
-        <codx-input field="instanceNo" [formModel]="form.formModel" [Group]="form.formGroup"
-        type="text"
-        [placeholder]="'Mã tự sinh'"
-        (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
+  <div class="form-group">
+    <codx-label
+      fiedName="InstanceNo"
+      [formModel]="form.formModel"
+      default="Mã nhiệm vụ"
+    >
+    </codx-label>
+    <codx-input
+      field="instanceNo"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      type="text"
+      [placeholder]="'Mã tự sinh'"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
 
   <div class="form-group">
     <codx-label [formModel]="form.formModel" default="Tên nhiệm vụ">
@@ -96,36 +102,48 @@
     </codx-input>
   </div>
 
-      <div class="form-group">
-        <codx-label fiedName="" [formModel]="form.formModel" default="Tên nhiệm vụ">
-        </codx-label>
-        <codx-input field="" [formModel]="form.formModel" [Group]="form.formGroup"
-        type="text"
-        (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
+  <div class="form-group">
+    <codx-label fiedName="" [formModel]="form.formModel" default="Tên nhiệm vụ">
+    </codx-label>
+    <codx-input
+      field=""
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      type="text"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
 
-      <div class="form-group">
-        <codx-label fiedName="EndDate" [formModel]="form.formModel" default="Ngày đến hạn">
-        </codx-label>
-        <codx-input field="endDate" [formModel]="form.formModel" [Group]="form.formGroup"
-        type="text"
-        (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
+  <div class="form-group">
+    <codx-label
+      fiedName="EndDate"
+      [formModel]="form.formModel"
+      default="Ngày đến hạn"
+    >
+    </codx-label>
+    <codx-input
+      field="endDate"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      type="text"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
 
-      <div class="form-group">
-        <codx-label fiedName="" [formModel]="form.formModel" default="Tên nhiệm vụ">
-        </codx-label>
-        <codx-input field="" [formModel]="form.formModel" [Group]="form.formGroup"
-        type="text"
-        (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
-
+  <div class="form-group">
+    <codx-label fiedName="" [formModel]="form.formModel" default="Tên nhiệm vụ">
+    </codx-label>
+    <codx-input
+      field=""
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      type="text"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
 </ng-template>
 
 <ng-template #tabLocation>
