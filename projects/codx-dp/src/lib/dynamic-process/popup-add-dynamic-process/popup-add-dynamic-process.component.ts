@@ -135,6 +135,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   step: DP_Steps; //data step dc chọn
   stepList: DP_Steps[] = []; //danh sách step
+
+  stepListAdd: DP_Steps[] = [];
+  stepListDelete = [];
+
   stepName = '';
 
   popupJob: DialogRef;
@@ -374,23 +378,45 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   handlerSave() {
-    this.handleAddStep();
+    if(this.action == 'add'){
+      this.handleAddStep();
+    }else if(this.action == 'edit'){
+      this.handleEditStep();
+    }   
   }
 
   handleAddStep() {
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
-    stepListSave.forEach((step) => {
-      delete step['taskGroups']['task'];
-    });
-    this.dpService
-      .addStep([stepListSave, this.taskGroupListSave, this.taskListSave])
-      .subscribe((data) => {
+    if (stepListSave.length > 0) {
+      stepListSave.forEach((step) => {
+        delete step['taskGroups']['task'];
+      });
+
+      this.dpService.addStep([stepListSave]).subscribe((data) => {
         if (data) {
-          console.log(data);
+          this.notiService.notifyCode('SYS006');
         }
       });
+    }
   }
 
+  handleEditStep() {
+    let stepListSave = JSON.parse(JSON.stringify(this.stepList));
+    if(stepListSave.length > 0 || this.stepListAdd.length > 0) {
+      stepListSave.forEach((step) => {
+        delete step['taskGroups']['task'];
+      });
+      debugger
+      this.dpService
+        .editStep([stepListSave, this.stepListAdd, this.stepListDelete])
+        .subscribe((data) => {
+          if (data) {
+            console.log(data);
+            this.notiService.notifyCode('SYS006');
+          }
+        });
+    }
+  }
   valueChange(e) {
     this.process[e.field] = e.data;
   }
@@ -963,27 +989,39 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepName = this.step['stepName'];
     }
 
-    this.popupAddStage = this.callfc.openForm(
-      this.addStagePopup,
-      '',
-      500,
-      280
-    );
+    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
   }
   addAndEditStep() {
     if (!this.stepName) {
       this.stepList.push(this.step);
       this.viewStepSelect(this.step);
+      if (this.action == 'edit') {
+        this.stepListAdd.push(this.step);
+      }
     }
     this.popupAddStage.close();
   }
-  deleteStep(data){
+  deleteStep(data) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
-        let index = this.stepList.findIndex(step => step.recID = data.recID);
-        if(index >=0){
-          this.stepList.splice(index,1);
+        let index = this.stepList.findIndex(
+          (step) => (step.recID = data.recID)
+        );
+        if (index >= 0) {
+          this.stepList.splice(index, 1);
           this.changeStepNo(this.stepList);
+          this. viewStepSelect(this.stepList.length > 0 ? this.stepList[0] : []);
+          // lay danh sach step xoa
+          if (this.action == 'edit') {
+            let indexDelete = this.stepListAdd.findIndex(
+              (step) => (step.recID = data.recID)
+            );
+            if (indexDelete >= 0) {
+              this.stepListAdd.splice(indexDelete, 1);
+            } else {
+              this.stepListDelete.push(data.recID);
+            }
+          }
         }
       }
     });
@@ -1003,15 +1041,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   dropStep(event: CdkDragDrop<string[]>) {
-    if(event.previousIndex == event.currentIndex) return;
+    if (event.previousIndex == event.currentIndex) return;
     moveItemInArray(this.stepList, event.previousIndex, event.currentIndex);
     this.changeStepNo(this.stepList);
   }
 
-  changeStepNo(data = []){
-    data.forEach((step,index) =>{
+  changeStepNo(data = []) {
+    data.forEach((step, index) => {
       step['stepNo'] = index + 1;
-    })
+    });
   }
 
   drop(event: CdkDragDrop<string[]>, data = null) {
