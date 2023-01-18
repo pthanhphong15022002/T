@@ -1184,7 +1184,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           // hidden swtich reason change
           this.isSwitchReason = false;
           // this.crrDataStep = data;
-          this.step = data;
+          this.step = JSON.parse(JSON.stringify(data));
           this.checkedDayOff(this.step?.excludeDayoff);
           this.taskGroupList = this.step['taskGroups'];
           this.taskList = this.step['tasks'];
