@@ -892,6 +892,7 @@ export class CodxDMService {
   }
 
   getImage(data: any) {
+    debugger;
     if (data?.folderName && !data?.extension)
       return '../../../assets/themes/dm/default/img/icon-folder.svg';
     else {
