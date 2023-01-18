@@ -1792,4 +1792,11 @@ export class CodxDMService {
         }
       });
   }
+  getFileName(name:any)
+  {
+    if(!name) return ""
+    var arrName = name.split(".");
+    if(arrName.length >1) arrName.splice((arrName.length - 1), 1);
+    return arrName.join('.')
+  }
 }
