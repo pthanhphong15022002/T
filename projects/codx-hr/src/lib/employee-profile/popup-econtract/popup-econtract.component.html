@@ -38,6 +38,7 @@
           field="contractTypeID"
           [formModel]="formModel"
           [Group]="formGroup"
+          (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
       <div class="col-6">
@@ -46,6 +47,7 @@
           field="limitMonths"
           [formModel]="formModel"
           [Group]="formGroup"
+          [showSpinButton]="false"
         ></codx-input>
       </div>
     </div>
@@ -59,6 +61,7 @@
           field="effectedDate"
           [formModel]="formModel"
           [Group]="formGroup"
+          (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
       <div class="col-6">
@@ -135,6 +138,7 @@
         field="signerID"
         [formModel]="formModel"
         [Group]="formGroup"
+        (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
 
