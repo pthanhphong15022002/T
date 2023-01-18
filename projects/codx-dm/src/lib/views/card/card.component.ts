@@ -31,7 +31,16 @@ export class CardComponent implements OnInit , OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes["data"] && changes["data"].currentValue != changes["data"].previousValue )
-      this.data = changes["data"].currentValue 
+    {
+      this.data = changes["data"].currentValue ;
+      if(this.data.fileName)
+      {
+        var arrName = this.data.fileName.split(".");
+        if(arrName.length >1)
+          arrName.splice((arrName.length - 1), 1);
+        this.data.fileName = arrName.join('.')  + this.data.extension;
+      } 
+    } 
   }
 
   ngOnInit(): void {

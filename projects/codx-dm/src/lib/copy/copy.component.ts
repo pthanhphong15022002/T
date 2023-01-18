@@ -60,18 +60,14 @@ export class CopyComponent implements OnInit {
   
   @Output() eventShow = new EventEmitter<boolean>();
   constructor(  
-    private domSanitizer: DomSanitizer,
-    private tenantService: TenantService,
     private folderService: FolderService,
     private fileService: FileService,
     private api: ApiHttpService,
     public dmSV: CodxDMService,
-    private modalService: NgbModal,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
-    private systemDialogService: SystemDialogService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
     ) {
@@ -84,10 +80,13 @@ export class CopyComponent implements OnInit {
       this.copy = data.data[3];
       if (this.data != null) {
         if (this.objectType == "file") {
-          this.fullName = this.data.fileName;
+          this.fullName = this.dmSV.getFileName(this.data.fileName)
           if (this.copy)
             this.fileService.getFileDuplicate(this.data.fileName ,this.data.folderId).subscribe(item => {
-              this.fullName = item;
+              if(item)
+              {
+                this.fullName = this.dmSV.getFileName(item)
+              }
               this.changeDetectorRef.detectChanges();
             });
         }  
@@ -103,6 +102,8 @@ export class CopyComponent implements OnInit {
     this.user = this.auth.get();
   }
 
+  
+
   displayThumbnail(data) {
     this.dmSV.setThumbnailWait.next(data);
   }
@@ -114,7 +115,8 @@ export class CopyComponent implements OnInit {
       return;      
     }
     if (this.objectType == 'file') {
-      // doi ten file   
+      // doi ten file
+      that.fullName = that.fullName + that.data.extension;
       if (this.copy) {
         this.fileService.copyFile(that.id, that.fullName, "").subscribe(async res => {
           if (res.status == 0) {
