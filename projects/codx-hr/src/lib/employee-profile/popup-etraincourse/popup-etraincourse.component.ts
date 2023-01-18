@@ -142,6 +142,20 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm(closeForm: boolean) {
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
+    if (this.data.contractFrom > this.data.contractTo) {
+      this.hrService.notifyInvalidFromTo(
+        'ContractFrom',
+        'ContractTo',
+        this.formModel
+      );
+      return;
+    }
+
     if (this.actionType == 'add' || this.actionType == 'copy') {
       //Code cung
       this.data.trainCourseID = '123';
