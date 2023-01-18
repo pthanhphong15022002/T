@@ -27,6 +27,7 @@ import { PopupRolesDynamicComponent } from './dynamic-process/popup-add-dynamic-
 import { PopupViewsDetailsProcessComponent } from './dynamic-process/popup-views-details-process/popup-views-details-process.component';
 import { InstancesComponent } from './instances/instances.component';
 import { InstanceDetailComponent } from './instances/instance-detail/instance-detail.component';
+import { PopupAddInstanceComponent } from './instances/popup-add-instance/popup-add-instance.component';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { StagesDetailComponent } from './instances/stages-detail/stages-detail.component';
 import { FieldDetailComponent } from './instances/field-detail/field-detail.component';
@@ -67,6 +68,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupViewsDetailsProcessComponent,
     InstancesComponent,
     InstanceDetailComponent,
+    PopupAddInstanceComponent,
     StagesDetailComponent,
     FieldDetailComponent,
     GanttChartComponent,

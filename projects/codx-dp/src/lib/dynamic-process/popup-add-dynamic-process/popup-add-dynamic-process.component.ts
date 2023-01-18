@@ -1,4 +1,4 @@
-import { DP_Steps_Roles } from './../../models/models';
+import { DP_Steps_Roles, DP_Steps_Tasks } from './../../models/models';
 import { CodxDpService } from './../../codx-dp.service';
 import { log } from 'console';
 import {
@@ -59,7 +59,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   process = new DP_Processes();
   permissions = [];
   dialog: any;
-  currentTab = 1; //Bước hiện tại
+  currentTab = 0; //Bước hiện tại
   processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
@@ -127,6 +127,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   taskGroup: DP_Steps_TaskGroups;
   taskGroupList: DP_Steps_TaskGroups[] = [];
+
+  taskList: DP_Steps_Tasks[] = [];
+
+  taskListSave: DP_Steps_Tasks[] = [];
+  taskGroupListSave: DP_Steps_TaskGroups[] = [];
 
   step: DP_Steps; //data step dc chọn
   stepList: DP_Steps[] = []; //danh sách step
@@ -285,6 +290,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getTitleStepViewSetup();
     this.initForm();
     this.checkedDayOff(this.step?.excludeDayoff);
+    if (this.action != 'add') {
+      this.getStepByProcessID();
+    }
   }
 
   //#region setup formModels and formGroup
@@ -339,7 +347,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     //   this.notiService.notify('Test mã');
     //   return;
     // }
-    debugger;
     if (
       this.process.processName == null ||
       this.process.processName.trim() == ''
@@ -361,26 +368,27 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (this.action == 'edit') {
         this.onUpdate();
       } else {
-        switch (this.currentTab) {
-          case 0:
-            this.onAdd();
-            break;
-          case 1:
-            this.handleAddStep();
-            break;
-          case 2:
-            break;
-        }
+        this.onAdd();
       }
     }
   }
 
+  handlerSave() {
+    this.handleAddStep();
+  }
+
   handleAddStep() {
-    this.dpService.addStep([this.step]).subscribe((data) => {
-      if (data) {
-        this.dialog.close(data);
-      } else this.dialog.close();
+    let stepListSave = JSON.parse(JSON.stringify(this.stepList));
+    stepListSave.forEach((step) => {
+      delete step['taskGroups']['task'];
     });
+    this.dpService
+      .addStep([stepListSave, this.taskGroupListSave, this.taskListSave])
+      .subscribe((data) => {
+        if (data) {
+          console.log(data);
+        }
+      });
   }
 
   valueChange(e) {
@@ -768,7 +776,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.fieldCrr.stepID = stepID;
           this.fieldCrr.processID = processID;
           this.fieldCrr.isRequired = false;
-          this.fieldCrr.rank = 5 ;
+          this.fieldCrr.rank = 5;
           let titleAction = this.titleAdd;
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
@@ -919,7 +927,31 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
 
   //#Step - taskGroup - task -- nvthuan
-  async openAddStep(type) {
+
+  getStepByProcessID() {
+    this.dpService.getStep([this.process?.recID]).subscribe((data) => {
+      if (data) {
+        data.forEach((step) => {
+          const taskGroupList = step?.tasks.reduce((group, product) => {
+            const { taskGroupID } = product;
+            group[taskGroupID] = group[taskGroupID] ?? [];
+            group[taskGroupID].push(product);
+            return group;
+          }, {});
+          const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
+            return {
+              ...taskGroup,
+              task: taskGroupList[taskGroup['recID']] ?? [],
+            };
+          });
+          step['taskGroups'] = taskGroupConvert;
+          this.stepList.push(step);
+        });
+      }
+    });
+  }
+
+  openAddStep(type) {
     if (type === 'add') {
       this.step = new DP_Steps();
       this.step['processID'] = this.process?.recID;
@@ -993,6 +1025,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //# group job
   openGroupJob() {
+    this.userGroupJob = [];
     this.taskGroup = new DP_Steps_TaskGroups();
     this.taskGroup['recID'] = Util.uid();
     this.taskGroup['createdOn'] = new Date();
@@ -1009,6 +1042,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   savePopupGroupJob() {
     this.popupGroupJob.close();
     this.taskGroupList.push(this.taskGroup);
+    let taskGroupList = JSON.parse(JSON.stringify(this.taskGroup));
+    delete taskGroupList['task'];
+    this.taskGroupListSave.push(taskGroupList);
   }
 
   //job -- nvthuan
@@ -1042,6 +1078,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           (task) => task.recID == taskData.taskGroupID
         );
         this.taskGroupList[index]['task'].push(taskData);
+        this.taskList.push(taskData);
+        this.taskListSave.push(taskData);
       }
     });
   }
@@ -1062,9 +1100,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     listUser.forEach((element) => {
       if (!datas.some((item) => item.id == element.id)) {
         datas.push({
-          id: element.id,
-          name: element.text,
-          type: element.objectType,
+          objectID: element.id,
+          objectName: element.text,
+          objectType: element.objectType,
         });
       }
     });
@@ -1125,6 +1163,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.step = data;
           this.checkedDayOff(this.step?.excludeDayoff);
           this.taskGroupList = this.step['taskGroups'];
+          this.taskList = this.step['tasks'];
         }
       }
     }

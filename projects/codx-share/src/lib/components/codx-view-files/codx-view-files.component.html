@@ -24,7 +24,7 @@
                             <ng-container *ngTemplateOutlet="video;context: { $implicit: files[0] }"></ng-container>
                         </ng-template>
                     </div>
-                    <div class="col-6 h-100 p-0 pe-1">
+                    <div class="col-6 h-100 p-0">
                         <ng-container *ngIf="files[1].referType == FILE_REFERTYPE.IMAGE;else video_2_1">
                             <ng-container *ngTemplateOutlet="image;context: { $implicit: files[1]}"></ng-container>
                         </ng-container>
@@ -144,7 +144,7 @@
                         <ng-template #video_4_3>
                             <ng-container *ngTemplateOutlet="video;context: { $implicit: files[3]}"></ng-container>
                         </ng-template>
-                        <div class="more-image">
+                        <div class="more-image" (click)="clickViewDetail(files[3])">
                             <span class="text-white fw-bolder">+{{images - 4}}</span>
                         </div>
                     </div>
@@ -185,8 +185,11 @@
 <!-- template video -->
 <ng-template #video let-file>
     <div class="position-relative w-100 h-100 p-0">
-        <video (click)="clickViewDetail(file)" [autoplay]="false" controls class="codx-view-file_video">
-            <source [src]="file.source | safe:'url'" />
+        <video 
+            (click)="clickViewDetail(file)" 
+            [autoplay]="false" 
+            controls class="codx-view-file_video" 
+            [src]="file.source | safe:'resourceUrl'">
         </video>
         <ng-container *ngIf="allowEdit">
             <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: file}"></ng-container>
