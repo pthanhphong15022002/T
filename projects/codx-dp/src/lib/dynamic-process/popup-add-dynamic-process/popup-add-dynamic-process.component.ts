@@ -360,10 +360,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   async onSave() {
-    // if (this.process.processNo == null || this.process.processNo.trim() == '') {
-    //   this.notiService.notify('Test mã');
-    //   return;
-    // }
     if (
       this.process.processName == null ||
       this.process.processName.trim() == ''
@@ -374,27 +370,23 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          if (this.action == 'edit') {
-            this.onUpdate();
-          } else {
-            this.onAdd();
-          }
+          this.handlerSave();
         }
       });
     } else {
-      if (this.action == 'edit') {
-        this.onUpdate();
-      } else {
-        this.onAdd();
-      }
+      this.handlerSave();
     }
   }
 
   handlerSave() {
     if (this.action == 'add') {
+      this.onAdd();
       this.handleAddStep();
+      this.notiService.notifyCode('SYS006');
     } else if (this.action == 'edit') {
-      this.handleEditStep();
+      this.onUpdate();
+      this.handleUpdateStep();
+      this.notiService.notifyCode('SYS006');
     }
   }
 
@@ -407,13 +399,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
       this.dpService.addStep([stepListSave]).subscribe((data) => {
         if (data) {
-          this.notiService.notifyCode('SYS006');
         }
       });
     }
   }
 
-  handleEditStep() {
+  handleUpdateStep() {
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0 || this.stepListAdd.length > 0) {
       stepListSave.forEach((step) => {
@@ -423,8 +414,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         .editStep([stepListSave, this.stepListAdd, this.stepListDelete])
         .subscribe((data) => {
           if (data) {
-            console.log(data);
-            this.notiService.notifyCode('SYS006');
           }
         });
     }
@@ -443,13 +432,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.currentTab = tabNo;
     }
   }
-
   //#region Open form
   show() {
     this.isShow = !this.isShow;
-  }
-  showStage() {
-    this.isShowstage = !this.isShowstage;
   }
   //#endregion
   //Setting class status Active
@@ -487,10 +472,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //Tiếp tục qua tab
   async continue(currentTab) {
     if (this.currentTab > 2) return;
-
     let oldNode = currentTab;
     let newNode = oldNode + 1;
-
     switch (currentTab) {
       case 0:
         this.updateNodeStatus(oldNode, newNode);
@@ -502,6 +485,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.oldNode = oldNode;
         this.updateNodeStatus(oldNode, newNode);
         this.processTab++;
+        this.currentTab++;
         break;
       case 2:
         this.updateNodeStatus(oldNode, newNode);
@@ -509,7 +493,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.processTab++;
         break;
     }
-
     this.changeDetectorRef.detectChanges();
   }
 
