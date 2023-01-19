@@ -1792,8 +1792,8 @@
                   style="width: 100%"
                   field="yes"
                   [label]="titleRadioYes"
-                  [checked]="isTurnOnYesSuccess"
-                  [crrValue]="isTurnOnYesSuccess"
+                  [checked]="step.reasonControl"
+                  [crrValue]="step.reasonControl"
                   (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   "
@@ -1807,8 +1807,8 @@
                   style="width: 100%"
                   field="no"
                   [label]="titleRadioNo"
-                  [checked]="isTurnOnNoSuccess"
-                  [crrValue]="isTurnOnNoSuccess"
+                  [checked]="!step.reasonControl"
+                  [crrValue]="step.reasonControl"
                   (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   "
@@ -1965,8 +1965,8 @@
                   style="width: 100%"
                   field="yes"
                   [label]="titleRadioYes"
-                  [checked]="isTurnOnYesFailure"
-                  [crrValue]="isTurnOnYesFailure"
+                  [checked]="step.reasonControl"
+                  [crrValue]="step.reasonControl"
                   (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
                 >
                 </codx-input>
@@ -1976,8 +1976,8 @@
                   type="radio"
                   name="fail-radio"
                   field="no"
-                  [checked]="isTurnOnNoFailure"
-                  [crrValue]="isTurnOnNoFailure"
+                  [checked]="!step.reasonControl"
+                  [crrValue]="step.reasonControl"
                   [label]="titleRadioNo"
                   (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
                 >
