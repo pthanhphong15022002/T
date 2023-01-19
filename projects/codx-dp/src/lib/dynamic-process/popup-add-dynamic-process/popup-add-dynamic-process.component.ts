@@ -389,6 +389,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.handleAddStep();
       this.notiService.notifyCode('SYS006');
     } else if (this.action == 'edit') {
+      this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
       this.onUpdate();
       this.handleUpdateStep();
       this.notiService.notifyCode('SYS006');
