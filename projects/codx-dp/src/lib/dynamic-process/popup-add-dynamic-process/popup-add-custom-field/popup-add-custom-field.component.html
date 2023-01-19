@@ -21,7 +21,7 @@
           [dataSource]="stepList"
           [fields]="fields"
           [value]="field.stepID"
-          [placeholder]="'Giai đoạn liên kết'"
+          [placeholder]="grvSetup['StepID'].description"
           (valueChange)="cbxChange($event)"
           [readonly]="true"
         ></ejs-dropdownlist>
