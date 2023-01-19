@@ -822,9 +822,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               //xu ly data đổ về
               this.fieldCrr = e.event;
               this.fieldCrr.sorting = this.step.fields.length + 1;
-              if (this.step.recID == this.fieldCrr.stepID) {
-                this.step.fields.push(this.fieldCrr);
-              }
+              // if (this.step.recID == this.fieldCrr.stepID) {
+              //   this.step.fields.push(this.fieldCrr);
+              // }
               this.stepList.forEach((x) => {
                 if (x.recID == this.fieldCrr.stepID)
                   x.fields.push(this.fieldCrr);
@@ -860,14 +860,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             if (e && e.event != null) {
               //xu ly data đổ về
               this.fieldCrr = e.event;
-              if (this.step.recID == this.fieldCrr.stepID) {
-                let index = this.step.fields.findIndex(
-                  (x) => x.recID == this.fieldCrr.recID
-                );
-                if (index != -1) {
-                  this.step.fields[index] = this.fieldCrr;
-                }
-              }
+              // if (this.step.recID == this.fieldCrr.stepID) {
+              //   let index = this.step.fields.findIndex(
+              //     (x) => x.recID == this.fieldCrr.recID
+              //   );
+              //   if (index != -1) {
+              //     this.step.fields[index] = this.fieldCrr;
+              //   }
+              // }
               this.stepList.forEach((obj) => {
                 if (obj.recID == this.fieldCrr.stepID) {
                   let index = obj.fields.findIndex(
@@ -888,10 +888,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   deleteCustomField(field) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
-        this.step.fields.splice(field.sorting - 1, 1);
-        this.step.fields.forEach((x) => {
-          if (x.sorting > field.sorting) x.sorting = x.sorting - 1;
-        });
+        // this.step.fields.splice(field.sorting - 1, 1);
+        // this.step.fields.forEach((x) => {
+        //   if (x.sorting > field.sorting) x.sorting = x.sorting - 1;
+        // });
         this.stepList.forEach((obj) => {
           if (obj.recID == this.fieldCrr.stepID) {
             obj.fields.splice(field.sorting - 1, 1);
@@ -1082,7 +1082,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (step) {
       this.titleViewStepCrr = step?.stepName || '';
       this.isSwitchReason = false;
-      this.step = JSON.parse(JSON.stringify(step));
+      this.step = step;
       this.checkedDayOff(this.step?.excludeDayoff);
       this.taskGroupList = this.step['taskGroups'];
       this.taskList = this.step['tasks'];
@@ -1227,7 +1227,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           // hidden swtich reason change
           this.isSwitchReason = false;
           // this.crrDataStep = data;
-          this.step = JSON.parse(JSON.stringify(data));
+          this.step = data;
           this.checkedDayOff(this.step?.excludeDayoff);
           this.taskGroupList = this.step['taskGroups'];
           this.taskList = this.step['tasks'];
@@ -1257,7 +1257,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listDayoff = res.datas;
         this.titleCheckBoxSat = this.listDayoff[0].default;
         this.valueCheckBoxSat = this.listDayoff[0].value;
-
         this.titleCheckBoxSun = this.listDayoff[1].default;
         this.valueCheckBoxSun = this.listDayoff[1].value;
       }

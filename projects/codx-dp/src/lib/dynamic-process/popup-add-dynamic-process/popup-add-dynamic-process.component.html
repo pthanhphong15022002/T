@@ -903,7 +903,7 @@
 
       <div *ngIf="item?.fields?.length > 0">
         <div
-          class="d-flex row class-field"
+          class="d-flex row class-field m-5"
           cdkDropList
           [cdkDropListData]="item?.fields || []"
           (cdkDropListDropped)="dropFile($event, item.recID)"
@@ -912,7 +912,7 @@
             <div
               class="col-{{
                 12 / item.showColumnControl
-              }} p-3 has-action-menu crr-fiels "
+              }} p-3 has-action-menu crr-fiels mb-5"
               cdkDrag
               [cdkDragStartDelay]="200"
               [cdkDragData]="item1"
