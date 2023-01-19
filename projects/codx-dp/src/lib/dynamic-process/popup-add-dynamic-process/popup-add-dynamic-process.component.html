@@ -1858,7 +1858,9 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button class="button-custom">
+          <button class="button-custom"
+          (click)="openPopupReason(viewStepReasonSuccess)"
+          >
             <span
               class="icon-add icon-20 text-primary-600 py-2"
               style="font-weight: 500"
@@ -1883,17 +1885,27 @@
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
       #view
     >
-      <div class="main-body pt-5 ps-5">
+      <div class="main-body" >
+        <div class="position-relative p-9" *ngIf="step.reasons.length == 0">
+          <div class="position-absolute top-50 start-50 translate-middle">
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm pb-5"
+              (click)="openPopupReason(viewStepReasonSuccess)"
+            >
+              <i class="icon-add icon-18"> </i>
+              <codx-label [name]="''" [default]="'Thêm lý do'"></codx-label>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-body pt-5 ps-5" *ngIf="step.reasons.length > 0">
         <ul
           class="text-left"
           style="display: inline-block; vertical-align: middle"
         >
-          <li class="pb-3">Khách hàng thích sản phẩm mà công ty cung cấp</li>
-          <li class="pb-3">Khách hàng không còn lựa chọn nào khác</li>
-          <li class="pb-3">
-            Sản phẩm công ty cuung cấp vượt mức mong đợi của khách hàng
-          </li>
-          <li class="pb-3">Khác</li>
+          <li class="pb-3"  *ngFor="let item of step.reasons ">{{item.reasonName}}</li>
         </ul>
       </div>
     </div>
@@ -2014,7 +2026,9 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button class="button-custom">
+          <button class="button-custom"
+          (click)="openPopupReason(viewStepReasonFail)"
+          >
             <span
               class="icon-add icon-20 text-primary-600 py-2"
               style="font-weight: 500"
@@ -2039,13 +2053,13 @@
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
       #view
     >
-      <div class="main-body">
-        <div class="position-relative p-9">
+      <div class="main-body" >
+        <div class="position-relative p-9" *ngIf="step.reasons.length == 0">
           <div class="position-absolute top-50 start-50 translate-middle">
             <button
               type="button"
               class="btn btn-outline-primary btn-sm pb-5"
-              (click)="addReason()"
+              (click)="openPopupReason(viewStepReasonFail)"
             >
               <i class="icon-add icon-18"> </i>
               <codx-label [name]="''" [default]="'Thêm lý do'"></codx-label>
@@ -2053,6 +2067,16 @@
           </div>
         </div>
       </div>
+
+      <div class="main-body pt-5 ps-5" *ngIf="step.reasons.length > 0">
+        <ul
+          class="text-left"
+          style="display: inline-block; vertical-align: middle"
+        >
+          <li class="pb-3"  *ngFor="let item of step.reasons ">{{item.reasonName}}</li>
+        </ul>
+      </div>
+
     </div>
   </div>
 </ng-template>
@@ -2644,6 +2668,58 @@
         </div>
       </div>
     </div>
+  </div>
+</ng-template>
+<ng-template #addReasonPopup>
+  <codx-form
+    [headerText]="headerText"
+    [body]="addReasonContent"
+    [footer]="addReasonFooter"
+    [dialog]="popupAddReason"
+  >
+  </codx-form>
+</ng-template>
+<ng-template #addReasonContent>
+  <div class="mt-5">
+    <div class="form-group">
+      <div>
+        <codx-label
+          fiedName="ReasonName"
+          [formModel]="dialog.formModel"
+          default="Tên lý do"
+        ></codx-label>
+      </div>
+      <codx-input
+        field="reasonName"
+        [formModel]="dialog.formModel"
+        [Group]=""
+        type="text"
+        [crrValue]="reasonName"
+        (valueChange)="changeValueReaName($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #addReasonFooter>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-outline-primary me-5">
+      <codx-label
+        name="Save"
+        formName="DPStepsReasons"
+        default="Hủy"
+        (click)="popupAddReason.close()"
+      ></codx-label>
+    </button>
+    <button type="button" class="btn btn-primary">
+      <codx-label
+        name="Save"
+        formName="DPStepsReasons"
+        default="Đồng ý"
+        (click)="addReason()"
+      ></codx-label>
+    </button>
   </div>
 </ng-template>
 <!-- End Thiết lập giai đoạn -->
