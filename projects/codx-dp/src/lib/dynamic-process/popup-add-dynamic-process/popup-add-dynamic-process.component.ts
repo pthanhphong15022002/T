@@ -958,25 +958,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.dpService.getStep([this.process?.recID]).subscribe((data) => {
       if (data) {
         this.editTest(data);
-        for(let step of data){
-          if(step['isSuccessStep'] || step['isFailStep']){        
-             continue           
+        data.forEach(step => {         
+          if(!step['isSuccessStep'] && !step['isFailStep']){        
+            const taskGroupList = step?.tasks.reduce((group, product) => {
+              const { taskGroupID } = product;
+              group[taskGroupID] = group[taskGroupID] ?? [];
+              group[taskGroupID].push(product);
+              return group;
+            }, {});
+            const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
+              return {
+                ...taskGroup,
+                task: taskGroupList[taskGroup['recID']] ?? [],
+              };
+            });
+            step['taskGroups'] = taskGroupConvert;
+            this.stepList.push(step);     
           }         
-          const taskGroupList = step?.tasks.reduce((group, product) => {
-            const { taskGroupID } = product;
-            group[taskGroupID] = group[taskGroupID] ?? [];
-            group[taskGroupID].push(product);
-            return group;
-          }, {});
-          const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
-            return {
-              ...taskGroup,
-              task: taskGroupList[taskGroup['recID']] ?? [],
-            };
-          });
-          step['taskGroups'] = taskGroupConvert;
-          this.stepList.push(step);
-        }
+         
+        });
         this.stepList.sort((a, b) => a['stepNo'] - b['stepNo']);
         this.viewStepSelect(this.stepList[0]);
         console.log(this.stepList);

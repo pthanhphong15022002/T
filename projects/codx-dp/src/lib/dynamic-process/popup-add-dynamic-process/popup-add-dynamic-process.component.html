@@ -1062,8 +1062,9 @@
             <div class="order">{{ i + 1 }}</div>
             <div class="p-3 content">
               <div style="font-weight: 600; font-size: 1.2rem">
-                {{ itemStep?.stepName }}
+                <codx-label [default]="itemStep?.stepName"></codx-label>
               </div>
+
               <div style="font-size: 1.1rem; font-weight: 500">
                 Thời hạn {{ itemStep?.durationDay || 0 }} ngày
                 {{ itemStep?.durationHour || 0 }} giờ
