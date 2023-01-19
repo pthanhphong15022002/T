@@ -269,9 +269,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
     this.getGrvStep();
     this.getValListDayoff();
-    this.autoAddStepReason();
-    // console.log(this.stepSuccess);
-    // console.log(this.stepFail);
+    this.autoHandleStepReason();
   }
 
   ngAfterViewInit(): void {
@@ -1178,19 +1176,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   valueChangeRadio($event, view: string) {
     if (view === this.viewStepReasonSuccess) {
       if ($event.field === 'yes' && $event.component.checked === true) {
-        this.isTurnOnYesSuccess = true;
-        this.isTurnOnNoSuccess = false;
+        this.step.reasonControl = true;
       } else if ($event.field == 'no' && $event.component.checked === true) {
-        this.isTurnOnYesSuccess = false;
-        this.isTurnOnNoSuccess = true;
+        this.step.reasonControl = false;
       }
     } else {
       if ($event.field == 'yes' && $event.component.checked === true) {
-        this.isTurnOnYesFailure = true;
-        this.isTurnOnNoFailure = false;
+        this.step.reasonControl = true;
       } else if ($event.field == 'no' && $event.component.checked === true) {
-        this.isTurnOnNoFailure = true;
-        this.isTurnOnYesFailure = false;
+        this.step.reasonControl = false;
       }
     }
     this.changeDetectorRef.detectChanges();
@@ -1376,8 +1370,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  autoAddStepReason() {
-    if (this.action === 'add' || this.action === 'copy') {
+  autoHandleStepReason() {
+    if (this.action === 'add') {
       // create step reason fail with value is 1
       this.createStepReason(this.stepSuccess, '1');
 
@@ -1386,6 +1380,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     // edit step reason success/fail
     else {
+      // this.stepSuccess = this.stepList.find(x=>x.isSuccessStep == true);
+      // this.stepFail = this.stepList.find(x=>x.isFailStep == true);
+      // console.log(this.stepSuccess);
+      // console.log(this.stepFail);
     }
   }
 
@@ -1414,7 +1412,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     stepReason.isSuccessStep = stepReaValue == '1' ? true : false;
     stepReason.isFailStep = stepReaValue == '2' ? true : false;
     stepReason.processID = this.process?.recID;
-
+    stepReason.stepNo = 0;
     return stepReason;
   }
 
