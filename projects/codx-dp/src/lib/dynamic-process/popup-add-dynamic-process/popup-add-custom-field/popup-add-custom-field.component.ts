@@ -1,9 +1,21 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import {
   SliderTickEventArgs,
   SliderTickRenderedEventArgs,
 } from '@syncfusion/ej2-angular-inputs';
-import { CacheService, DialogData, DialogRef, Util } from 'codx-core';
+import {
+  CacheService,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  Util,
+} from 'codx-core';
 import { DP_Steps_Fields } from '../../../models/models';
 
 @Component({
@@ -25,12 +37,21 @@ export class PopupAddCustomFieldComponent implements OnInit {
   step = '1';
   type: string = 'MinRange';
   format: string = 'n0';
-  ticks: Object = { placement: 'Both', largeStep: 1, smallStep: 1, showSmallTicks: true};
+  ticks: Object = {
+    placement: 'Both',
+    largeStep: 1,
+    smallStep: 1,
+    showSmallTicks: true,
+  };
   tooltip: Object = { isVisible: true, placement: 'Before', showOn: 'Hover' };
 
+  fields = { text: 'stepName', value: 'recID' };
+  stepList = [];
+  itemView = '';
   constructor(
     private changdef: ChangeDetectorRef,
     private cache: CacheService,
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -38,7 +59,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.field = JSON.parse(JSON.stringify(dt?.data[0]));
     this.action = dt?.data[1];
     this.titleAction = dt?.data[2];
-    this.value =  this.field.rank
+    this.stepList = dt?.data[3];
+
+    this.value = this.field.rank;
     this.cache
       .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
       .subscribe((res) => {
@@ -65,12 +88,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (e) this.field.rankIcon = e;
   }
 
-  saveData() {
-    this.dialog.close(this.field);
-  }
-
   sliderChange(e) {
-   this.field.rank = e?.value
+    this.field.rank = e?.value;
   }
   // khong dc xoa
   // renderingTicks(args: SliderTickEventArgs) {
@@ -87,4 +106,45 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //       remarks[i];
   //   }
   // }
+  cbxChange(value) {
+    if (value) this.field['stepID'] = value;
+  }
+
+  saveData() {
+    if (this.field.fieldName == null || this.field.fieldName.trim() == '') {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['FieldName']?.headerText + '"'
+      );
+      return;
+    }
+    if (!this.field.dataType) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['DataType']?.headerText + '"'
+      );
+      return;
+    }
+    if (!this.field.dataFormat) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['DataFormat']?.headerText + '"'
+      );
+      return;
+    }
+
+    if (this.field.note == null || this.field.note.trim() == '') {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['Note']?.headerText + '"'
+      );
+      return;
+    }
+  
+    this.dialog.close(this.field);
+  }
 }

@@ -799,8 +799,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
       this.cache
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
-        .subscribe((res) => {
-          this.fieldCrr = new DP_Steps_Fields();
+        .subscribe((res) => {    
+         this.fieldCrr = new DP_Steps_Fields();
           this.fieldCrr.stepID = stepID;
           this.fieldCrr.processID = processID;
           this.fieldCrr.isRequired = false;
@@ -816,7 +816,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           option.zIndex = 1010;
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
-            [this.fieldCrr, 'add', titleAction],
+            [this.fieldCrr, 'add', titleAction,this.stepList],
             option
           );
           dialogCustomField.closed.subscribe((e) => {
@@ -855,7 +855,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           option.zIndex = 1010;
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
-            [this.fieldCrr, 'edit', titleAction],
+            [this.fieldCrr, 'edit', titleAction,this.stepList],
             option
           );
           dialogCustomField.closed.subscribe((e) => {
@@ -1080,7 +1080,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (step) {
       this.titleViewStepCrr = step?.stepName || '';
       this.isSwitchReason = false;
-      this.step = step;
+      this.step = JSON.parse(JSON.stringify(step));
       this.checkedDayOff(this.step?.excludeDayoff);
       this.taskGroupList = this.step['taskGroups'];
       this.taskList = this.step['tasks'];
