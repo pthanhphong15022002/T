@@ -172,10 +172,14 @@
 <ng-template #tabLocation> </ng-template>
 
 <ng-template #tabInputInfo>
-  <div class="form-group">
-    <codx-input-custom-field
-      [customField]=""
-      (valueChangeCustom)="valueChangeCustom($event)"
-    ></codx-input-custom-field>
-  </div>
+  <ng-container *ngIf="step.fields?.length > 0">
+    <ng-container *ngFor="let item of step.fields">
+      <div class="form-group">
+        <codx-input-custom-field
+          [customField]="item"
+          (valueChangeCustom)="valueChangeCustom($event)"
+        ></codx-input-custom-field>
+      </div>
+    </ng-container>
+  </ng-container>
 </ng-template>

@@ -14,7 +14,7 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { CodxDpService } from '../../codx-dp.service';
-import { DP_Instances } from '../../models/models';
+import { DP_Instances, DP_Instances_Steps } from '../../models/models';
 
 @Component({
   selector: 'lib-popup-add-instance',
@@ -63,6 +63,7 @@ export class PopupAddInstanceComponent implements OnInit {
   };
 
   dialog: DialogRef;
+  step : DP_Instances_Steps ;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -73,6 +74,7 @@ export class PopupAddInstanceComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
     this.instanceNo = dt?.data[2]?.instanceNo ?? '';
     console.log(this.instanceNo);
