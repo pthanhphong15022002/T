@@ -967,6 +967,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           step['taskGroups'] = taskGroupConvert;
           this.stepList.push(step);
         });
+        this.stepList.sort((a, b) => a['stepNo'] - b['stepNo']);
         this.viewStepSelect(this.stepList[0]);
         console.log(this.stepList);
       }
