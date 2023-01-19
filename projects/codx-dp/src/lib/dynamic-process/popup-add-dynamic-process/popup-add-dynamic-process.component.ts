@@ -957,7 +957,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   getStepByProcessID() {
     this.dpService.getStep([this.process?.recID]).subscribe((data) => {
       if (data) {
-        data.forEach((step) => {
+        this.editTest(data);
+        for(let step of data){
+          if(step['isSuccessStep'] || step['isFailStep']){        
+             continue           
+          }         
           const taskGroupList = step?.tasks.reduce((group, product) => {
             const { taskGroupID } = product;
             group[taskGroupID] = group[taskGroupID] ?? [];
@@ -972,7 +976,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           });
           step['taskGroups'] = taskGroupConvert;
           this.stepList.push(step);
-        });
+        }
         this.stepList.sort((a, b) => a['stepNo'] - b['stepNo']);
         this.viewStepSelect(this.stepList[0]);
         console.log(this.stepList);
@@ -1386,6 +1390,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       // console.log(this.stepSuccess);
       // console.log(this.stepFail);
     }
+  }
+  editTest(data){
+      this.stepSuccess = data.find(x=>x.isSuccessStep == true);
+      this.stepFail = data.find(x=>x.isFailStep == true);
   }
 
   createStepReason(stepReason: any, reasonValue: any) {
