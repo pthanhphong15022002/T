@@ -103,8 +103,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   gridViewSetupStep: any; // grid view setup
   listDayoff: any; // List day off
   popupAddReason: DialogRef;
-  reasonList: DP_Steps_Reasons []=[];
-  reason:DP_Steps_Reasons = new DP_Steps_Reasons();
+  reasonList: DP_Steps_Reasons[] = [];
+  reason: DP_Steps_Reasons = new DP_Steps_Reasons();
 
   titleCheckBoxSat: string = ''; // title checkbox saturday form duration
   titleCheckBoxSun: string = ''; // title checkbox sunday form duration
@@ -126,7 +126,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly radioNo: string = 'no'; // const click yes
   readonly titleRadioYes: string = 'Có'; // title radio button yes for reason success/failure
   readonly titleRadioNo: string = 'Không'; // title radio button no for reason success/failure
-  readonly titlecheckBoxStepReasonSuccess: string = 'Thành công'; // title form step reason failure
   readonly saturday: string = 'Thứ 7'; // title checkbox saturday form duration when value list is empty
   readonly sunday: string = 'Chủ nhật'; // title checkbox sunday form duration when value list is empty
   readonly viewSaturday: string = '7'; // view staturday when selected value
@@ -269,9 +268,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
     this.getGrvStep();
     this.getValListDayoff();
-    this.autoAddStepReason();
-    // console.log(this.stepSuccess);
-    // console.log(this.stepFail);
+    this.autoHandleStepReason();
   }
 
   ngAfterViewInit(): void {
@@ -391,6 +388,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.handleAddStep();
       this.notiService.notifyCode('SYS006');
     } else if (this.action == 'edit') {
+      this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
       this.onUpdate();
       this.handleUpdateStep();
       this.notiService.notifyCode('SYS006');
@@ -958,21 +956,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   getStepByProcessID() {
     this.dpService.getStep([this.process?.recID]).subscribe((data) => {
       if (data) {
-        data.forEach((step) => {
-          const taskGroupList = step?.tasks.reduce((group, product) => {
-            const { taskGroupID } = product;
-            group[taskGroupID] = group[taskGroupID] ?? [];
-            group[taskGroupID].push(product);
-            return group;
-          }, {});
-          const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
-            return {
-              ...taskGroup,
-              task: taskGroupList[taskGroup['recID']] ?? [],
-            };
-          });
-          step['taskGroups'] = taskGroupConvert;
-          this.stepList.push(step);
+        this.editTest(data);
+        data.forEach(step => {
+          if(!step['isSuccessStep'] && !step['isFailStep']){
+            const taskGroupList = step?.tasks.reduce((group, product) => {
+              const { taskGroupID } = product;
+              group[taskGroupID] = group[taskGroupID] ?? [];
+              group[taskGroupID].push(product);
+              return group;
+            }, {});
+            const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
+              return {
+                ...taskGroup,
+                task: taskGroupList[taskGroup['recID']] ?? [],
+              };
+            });
+            step['taskGroups'] = taskGroupConvert;
+            this.stepList.push(step);
+          }
+
         });
         this.stepList.sort((a, b) => a['stepNo'] - b['stepNo']);
         this.viewStepSelect(this.stepList[0]);
@@ -1178,19 +1180,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   valueChangeRadio($event, view: string) {
     if (view === this.viewStepReasonSuccess) {
       if ($event.field === 'yes' && $event.component.checked === true) {
-        this.isTurnOnYesSuccess = true;
-        this.isTurnOnNoSuccess = false;
+        this.step.reasonControl = true;
       } else if ($event.field == 'no' && $event.component.checked === true) {
-        this.isTurnOnYesSuccess = false;
-        this.isTurnOnNoSuccess = true;
+        this.step.reasonControl = false;
       }
     } else {
       if ($event.field == 'yes' && $event.component.checked === true) {
-        this.isTurnOnYesFailure = true;
-        this.isTurnOnNoFailure = false;
+        this.step.reasonControl = true;
       } else if ($event.field == 'no' && $event.component.checked === true) {
-        this.isTurnOnNoFailure = true;
-        this.isTurnOnYesFailure = false;
+        this.step.reasonControl = false;
       }
     }
     this.changeDetectorRef.detectChanges();
@@ -1217,10 +1215,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         // Show swtich reason change
         this.isSwitchReason = true;
 
-        this.step = view === this.viewStepReasonSuccess
-        ? this.stepSuccess
-        : this.stepFail;
-
+        this.step =
+          view === this.viewStepReasonSuccess
+            ? this.stepSuccess
+            : this.stepFail;
       } else {
         this.viewStepCrr = this.viewStepCustom;
         if (data) {
@@ -1376,8 +1374,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  autoAddStepReason() {
-    if (this.action === 'add' || this.action === 'copy') {
+  autoHandleStepReason() {
+    if (this.action === 'add') {
       // create step reason fail with value is 1
       this.createStepReason(this.stepSuccess, '1');
 
@@ -1386,7 +1384,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     // edit step reason success/fail
     else {
+      // this.stepSuccess = this.stepList.find(x=>x.isSuccessStep == true);
+      // this.stepFail = this.stepList.find(x=>x.isFailStep == true);
+      // console.log(this.stepSuccess);
+      // console.log(this.stepFail);
     }
+  }
+  editTest(data) {
+    this.stepSuccess = data.find((x) => x.isSuccessStep == true);
+    this.stepFail = data.find((x) => x.isFailStep == true);
+    console.log(this.stepSuccess);
+    console.log(this.stepFail);
+    this.changeDetectorRef.detectChanges();
   }
 
   createStepReason(stepReason: any, reasonValue: any) {
@@ -1410,44 +1419,55 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   handleStepReason(stepReason: DP_Steps, stepReaValue: string) {
-    stepReason.stepName =stepReaValue == '1' ? this.stepNameSuccess : this.stepNameFail;
+    stepReason.stepName =
+      stepReaValue == '1' ? this.stepNameSuccess : this.stepNameFail;
     stepReason.isSuccessStep = stepReaValue == '1' ? true : false;
     stepReason.isFailStep = stepReaValue == '2' ? true : false;
     stepReason.processID = this.process?.recID;
-
+    stepReason.stepNo = 0;
     return stepReason;
   }
 
-  addReasonInStep(stepList: any, stepReason: any, stepFail: any): void{
+  addReasonInStep(stepList: any, stepReason: any, stepFail: any): void {
     stepList.push(stepReason);
     stepList.push(stepFail);
   }
 
   addReason() {
-    this.reason = this.handleReason(this.reason,this.dataValueview === this.viewStepReasonSuccess?'1':'2',this.step,null);
+    this.reason = this.handleReason(
+      this.reason,
+      this.dataValueview === this.viewStepReasonSuccess ? '1' : '2',
+      this.step,
+      null
+    );
     this.step.reasons.push(this.reason);
     this.changeDetectorRef.detectChanges();
     this.popupAddReason.close();
   }
 
-  openPopupReason(viewReason:string) {
+  openPopupReason(viewReason: string) {
     if (this.action === 'add') {
-      this.headerText = viewReason === this.viewStepReasonSuccess?'Thêm lý do thành công':'Thêm lý do thất bại';
+      this.headerText =
+        viewReason === this.viewStepReasonSuccess
+          ? 'Thêm lý do thành công'
+          : 'Thêm lý do thất bại';
       this.dataValueview = viewReason;
     }
-    this.popupAddReason = this.callfc.openForm(this.addReasonPopup, '', 500, 280);
+    this.popupAddReason = this.callfc.openForm(
+      this.addReasonPopup,
+      '',
+      500,
+      280
+    );
   }
 
-  changeValueReaName($event){
-    if($event) {
-
-      if(this.action === 'add') {
+  changeValueReaName($event) {
+    if ($event) {
+      if (this.action === 'add') {
         this.reason = new DP_Steps_Reasons();
         this.reason.reasonName = $event.data;
-
       }
     }
-
   }
 
   //#endregion

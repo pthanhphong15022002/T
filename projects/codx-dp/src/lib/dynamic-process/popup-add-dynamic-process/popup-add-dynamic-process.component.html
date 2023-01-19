@@ -1062,8 +1062,9 @@
             <div class="order">{{ i + 1 }}</div>
             <div class="p-3 content">
               <div style="font-weight: 600; font-size: 1.2rem">
-                {{ itemStep?.stepName }}
+                <codx-label [default]="itemStep?.stepName"></codx-label>
               </div>
+
               <div style="font-size: 1.1rem; font-weight: 500">
                 Thời hạn {{ itemStep?.durationDay || 0 }} ngày
                 {{ itemStep?.durationHour || 0 }} giờ
@@ -1081,7 +1082,7 @@
             <div class="order">T</div>
             <div class="content p-3">
               <div style="font-weight: 600; font-size: 1.2rem">
-                <codx-label [default]="stepSuccess?.stepName"></codx-label>
+                <codx-label [default]="stepNameSuccess"></codx-label>
               </div>
               <codx-label default="Hoàn thành tất cả giai đoạn"></codx-label>
             </div>
@@ -1095,7 +1096,7 @@
             <div class="order">F</div>
             <div class="content p-3">
               <div style="font-weight: 600; font-size: 1.2rem">
-                <codx-label [default]="stepFail?.stepName"></codx-label>
+                <codx-label [default]="stepNameFail"></codx-label>
               </div>
               <codx-label
                 default="Thất bại ở một giai đoạn bất kỳ"
@@ -1792,8 +1793,8 @@
                   style="width: 100%"
                   field="yes"
                   [label]="titleRadioYes"
-                  [checked]="isTurnOnYesSuccess"
-                  [crrValue]="isTurnOnYesSuccess"
+                  [checked]="step.reasonControl"
+                  [crrValue]="step.reasonControl"
                   (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   "
@@ -1807,8 +1808,8 @@
                   style="width: 100%"
                   field="no"
                   [label]="titleRadioNo"
-                  [checked]="isTurnOnNoSuccess"
-                  [crrValue]="isTurnOnNoSuccess"
+                  [checked]="!step.reasonControl"
+                  [crrValue]="step.reasonControl"
                   (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   "
@@ -1965,8 +1966,8 @@
                   style="width: 100%"
                   field="yes"
                   [label]="titleRadioYes"
-                  [checked]="isTurnOnYesFailure"
-                  [crrValue]="isTurnOnYesFailure"
+                  [checked]="step.reasonControl"
+                  [crrValue]="step.reasonControl"
                   (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
                 >
                 </codx-input>
@@ -1976,8 +1977,8 @@
                   type="radio"
                   name="fail-radio"
                   field="no"
-                  [checked]="isTurnOnNoFailure"
-                  [crrValue]="isTurnOnNoFailure"
+                  [checked]="!step.reasonControl"
+                  [crrValue]="step.reasonControl"
                   [label]="titleRadioNo"
                   (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
                 >
