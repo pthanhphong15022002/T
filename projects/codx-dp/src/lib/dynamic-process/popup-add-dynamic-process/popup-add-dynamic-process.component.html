@@ -136,19 +136,12 @@
     <!-- body rieng -->
     <div class="stepper-body pt-2 w-100">
       <div class="card shadow-none border-0 rounded-0 mx-auto w-100 witdh-body">
-        <div class="mt-10 text-center tab-pane-header" *ngIf="currentTab != 1">
-          <h2 class="h2-title float-left">
+        <div class="mt-10 text-center tab-pane-header">
+          <h2 *ngIf="currentTab != 1" class="h2-title float-left">
             <codx-label
               *ngIf="currentTab == 0"
               name="lblGeneral"
               default="Thông tin quy trình"
-            >
-            </codx-label>
-            <codx-label
-              *ngIf="currentTab == 1"
-              name="lblSettingStage"
-              [formModel]="'Khanh thêm thì phải sửa'"
-              default="Thiết lập giai đoạn"
             >
             </codx-label>
             <codx-label
@@ -159,9 +152,14 @@
             >
             </codx-label>
           </h2>
+          <ng-container
+            *ngIf="currentTab == 1"
+            [ngTemplateOutlet]="stageHeader"
+          ></ng-container>
         </div>
         <div
-          class="card-body scroll"
+          [ngClass]="currentTab == 1 ? 'scroll-stask' : 'scroll'"
+          class="card-body"
           data-kt-scroll="true"
           data-kt-scroll-activate="{default: true}"
           data-kt-scroll-height="auto"
@@ -216,7 +214,7 @@
             *ngIf="currentTab != 2"
             type="button"
             class="btn btn-primary"
-            (click)="onSave()"
+            (click)="continue(currentTab)"
           >
             <codx-label
               [name]="'lblContinue'"
@@ -228,7 +226,7 @@
             *ngIf="currentTab == 2"
             type="button"
             class="btn btn-primary"
-            (click)="handlerSave()"
+            (click)="onSave()"
           >
             <codx-label [name]="'lblSave'" [default]="'Lưu'"></codx-label>
           </button>
@@ -992,39 +990,36 @@
 </ng-template>
 
 <!-- Thiết lập giai đoạn của nvthuan + Bảo -->
-<ng-template #stage>
-  <div class="background-stage">
-    <div class="stage-top">
-      <div class="lefts">
-        <span>Thiết lập giai đoạn</span>
-      </div>
-      <div class="rights">
-        <div class="button-group">
-          <button
-            type="button"
-            class="btn btn-primary d-flex align-items-center"
-            style="padding: 0 15px 0 0 !important"
-            (click)="openPopupAddEditStep('add')"
+
+<ng-template #stageHeader>
+  <div>
+    <div class="d-flex justify-content-between align-items-center">
+      <h2 class="h2-title float-left">Thiết lập giai đoạn</h2>
+      <div class="d-flex align-items-center">
+        <button
+          type="button"
+          class="btn btn-primary d-flex align-items-center"
+          style="padding: 0 15px 0 0 !important"
+          (click)="openPopupAddEditStep('add')"
+        >
+          <span
+            class="icon-add icon-20 text-primary-600 py-2"
+            style="font-weight: 600; margin-left: 5px; color: white"
           >
-            <span
-              class="icon-add icon-20 text-primary-600 py-2"
-              style="font-weight: 600; margin-left: 5px; color: white"
-            >
-            </span>
-            <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>
-          </button>
-          <button class="button-custom">
-            <span
-              class="icon-replay icon-22 text-primary-600 py-2"
-              style="font-weight: 600; margin-left: 5px"
-            >
-            </span>
-          </button>
-        </div>
+          </span>
+          <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>
+        </button>
+        <button class="button-custom">
+          <span
+            class="icon-replay icon-22 text-primary-600 py-2"
+            style="font-weight: 600; margin-left: 5px"
+          >
+          </span>
+        </button>
       </div>
     </div>
-    <div style="font-weight: 500">
-      <span>Mẫu giai đoạn: cơ hội</span>
+    <div style="font-weight: 500; margin-left: 30px" class="float-left">
+      <span style="font-size: 1rem">Mẫu giai đoạn: cơ hội</span>
       <button type="button" class="btn btn-outline-primary ms-2">
         Đổi mẫu
       </button>
@@ -1032,6 +1027,11 @@
         Lưu mẫu mới
       </button>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #stage>
+  <div class="background-stage">
     <div class="stage-body row">
       <div class="stage-body-left col-3">
         <div class="header">
@@ -1055,7 +1055,9 @@
             *ngFor="let itemStep of stepList; let i = index"
             class="list-stage example-box drap-drop"
             [ngClass]="itemStep?.recID == step.recID ? 'click' : ''"
-            (click)="clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)"
+            (click)="
+              clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)
+            "
           >
             <div class="order">{{ i + 1 }}</div>
             <div class="p-3 content">
@@ -1127,12 +1129,12 @@
               style="cursor: pointer"
             >
               <codx-mfunc
-              [formModel]="dialog.formModel"
-              (clickMF)="clickMFStep($event, step)"
-              [dataItem]="action != 'edit' ? moreDefaut : step"
-              [type]="'hover'"
-            >
-            </codx-mfunc>
+                [formModel]="dialog.formModel"
+                (clickMF)="clickMFStep($event, step)"
+                [dataItem]="action != 'edit' ? moreDefaut : step"
+                [type]="'hover'"
+              >
+              </codx-mfunc>
             </div>
           </div>
         </div>
