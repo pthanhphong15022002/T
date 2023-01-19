@@ -391,11 +391,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   handlerSave() {
-    if(this.action == 'add'){
+    if (this.action == 'add') {
       this.handleAddStep();
-    }else if(this.action == 'edit'){
+    } else if (this.action == 'edit') {
       this.handleEditStep();
-    }   
+    }
   }
 
   handleAddStep() {
@@ -415,11 +415,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   handleEditStep() {
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
-    if(stepListSave.length > 0 || this.stepListAdd.length > 0) {
+    if (stepListSave.length > 0 || this.stepListAdd.length > 0) {
       stepListSave.forEach((step) => {
         delete step['taskGroups']['task'];
       });
-      debugger
       this.dpService
         .editStep([stepListSave, this.stepListAdd, this.stepListDelete])
         .subscribe((data) => {
@@ -984,8 +983,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           });
           step['taskGroups'] = taskGroupConvert;
           this.stepList.push(step);
-          this.viewStepSelect(this.stepList[0]);
         });
+        this.viewStepSelect(this.stepList[0]);
+        console.log(this.stepList);
       }
     });
   }
@@ -1017,13 +1017,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   deleteStep(data) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
-        let index = this.stepList.findIndex(
-          (step) => (step.recID = data.recID)
-        );
+        let index = this.stepList.findIndex((step) => step.recID == data.recID);
         if (index >= 0) {
           this.stepList.splice(index, 1);
           this.changeStepNo(this.stepList);
-          this. viewStepSelect(this.stepList.length > 0 ? this.stepList[0] : []);
+          this.viewStepSelect(this.stepList.length > 0 ? this.stepList[0] : []);
           // lay danh sach step xoa
           if (this.action == 'edit') {
             let indexDelete = this.stepListAdd.findIndex(
