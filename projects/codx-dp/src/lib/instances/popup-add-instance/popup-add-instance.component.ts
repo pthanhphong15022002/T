@@ -63,7 +63,7 @@ export class PopupAddInstanceComponent implements OnInit {
   };
 
   dialog: DialogRef;
-  step : DP_Instances_Steps ;
+  step = new DP_Instances_Steps() ;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
