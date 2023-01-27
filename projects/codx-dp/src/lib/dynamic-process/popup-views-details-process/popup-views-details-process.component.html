@@ -81,7 +81,7 @@
           data-kt-scroll-wrappers=".process-body .no-header"
           [attr.data-kt-scroll-offset]="'0px'"
         >
-          <ng-container *ngIf="name == 'Mission'">
+          <ng-container *ngIf="name == 'Mission' && process">
             <codx-instances [process]="process"></codx-instances>
           </ng-container>
           <ng-container *ngIf="name == 'Dashboard'">

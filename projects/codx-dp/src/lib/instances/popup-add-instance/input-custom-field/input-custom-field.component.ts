@@ -45,15 +45,15 @@ export class InputCustomFieldComponent implements OnInit {
 
   ngOnInit(): void {
     //data test
-    this.customField.isRequired = true;
-    this.customField.note = 'Nhập số lượng';
-    this.customField.fieldName = 'số lượng';
-    this.customField.title = 'Số lượng nhân viên làm việc';
-    this.customField.rank = 10;
-    this.customField.rankIcon = 'fas fa-ambulance';
-    this.customField.multiselect = true;
-    this.customField.dataType = 'D';
-    this.customField.dataFormat = 'D';
+    // this.customField.isRequired = true;
+    // this.customField.note = 'Nhập số lượng';
+    // this.customField.fieldName = 'số lượng';
+    // this.customField.title = 'Số lượng nhân viên làm việc';
+    // this.customField.rank = 10;
+    // this.customField.rankIcon = 'fas fa-ambulance';
+    // this.customField.multiselect = true;
+    // this.customField.dataType = 'D';
+    // this.customField.dataFormat = 'D';
 
     this.allowMultiFile = this.customField.multiselect ? '1' : '0';
     if (this.customField.dataFormat == 'D') this.formatDate = 'd';

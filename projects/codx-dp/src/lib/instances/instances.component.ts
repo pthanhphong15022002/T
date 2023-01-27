@@ -75,10 +75,6 @@ export class InstancesComponent
   ) {
     super(inject);
     this.dialog = dialog;
-    if (this.process)
-      this.codxDpService.getStep(this.process?.processID).subscribe((dt) => {
-        if (dt && dt.length > 0) this.listSteps = dt;
-      });
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -110,7 +106,10 @@ export class InstancesComponent
     this.dataObj = {
       processID: this.process?.recID ? this.process?.recID : '',
     };
-
+    if (this.process)
+      this.codxDpService.getStep(this.process?.recID).subscribe((dt) => {
+        if (dt && dt?.length > 0) this.listSteps = dt;
+      });
     //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
@@ -149,7 +148,7 @@ export class InstancesComponent
       option.Width = '850px';
       option.zIndex = 1010;
 
-      let stepCrr = this.listSteps[0] || undefined
+      let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
       var dialogCustomField = this.callfc.openSide(
         PopupAddInstanceComponent,
         ['add', titleAction, stepCrr],

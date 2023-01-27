@@ -25,7 +25,7 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
-    this.process = dt.data.data;
+    this.process = dt?.data?.data;
   }
 
   ngOnInit(): void {}
