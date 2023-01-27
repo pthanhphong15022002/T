@@ -224,7 +224,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (this.action == 'add') {
-      if (this.functionID == 'TMT0203' || this.functionID == 'MWP0062' || this.functionID == 'OMT013') {
+      if (
+        this.functionID == 'TMT0203' ||
+        this.functionID == 'MWP0062' ||
+        this.functionID == 'OMT013'
+      ) {
         this.task.category = '3';
       } else {
         this.task.category = '1';
@@ -232,7 +236,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.openTask();
     } else if (this.action == 'copy') {
       this.task.status = '10';
-      if (this.functionID == 'TMT0203' || this.functionID == 'MWP0062'|| this.functionID == 'OMT013') {
+      if (
+        this.functionID == 'TMT0203' ||
+        this.functionID == 'MWP0062' ||
+        this.functionID == 'OMT013'
+      ) {
         this.task.category = '3';
       } else {
         this.task.category = '1';
@@ -952,13 +960,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     console.log(e);
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true;
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if (
-      this.action != 'edit' ||
-      (this.action == 'edit' && !this.showLabelAttachment)
-    )
-      this.showLabelAttachment = this.isHaveFile;
+    this.showLabelAttachment = this.isHaveFile;
   }
   showPoppoverDelete(p, i) {
     if (i == null) return;
