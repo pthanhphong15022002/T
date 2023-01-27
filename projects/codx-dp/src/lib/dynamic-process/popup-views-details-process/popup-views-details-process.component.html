@@ -11,7 +11,15 @@
               : "DPProcesses"
               : "grvDPProcesses"
             | async
-        }}</span>
+        }}</span
+        ><span
+          class="icon-event_notes text-hover-primary cursor-pointer" [ngbPopover]="popperMemo"
+          #p="ngbPopover"
+          (mouseenter)="p.open()"
+          (mouseleave)="p.close()"
+          placement="right bottom left"
+          container="body"
+        ></span>
       </div>
       <div>
         <span class="me-5">
@@ -92,3 +100,6 @@
     </div>
   </div>
 </div>
+<ng-template #popperMemo>
+  <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(process?.memo)"></div>
+</ng-template>
