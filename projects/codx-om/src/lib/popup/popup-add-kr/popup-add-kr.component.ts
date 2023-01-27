@@ -61,7 +61,6 @@ export class PopupAddKRComponent extends UIComponent {
   dialogTargets: DialogRef;
   funcID: any;
   tempTarget: any;
-  dataOKRPlans: any;
   funcType:any;
   constructor(
     private injector: Injector,
@@ -77,7 +76,6 @@ export class PopupAddKRComponent extends UIComponent {
     this.headerText = dialogData?.data[1];
     this.o = dialogData.data[2];
     this.kr = dialogData.data[3];
-    this.dataOKRPlans = dialogData?.data[4];
     this.dialogRef= dialogRef;
     this.formModel= dialogRef.formModel;
     if (this.funcType == OMCONST.MFUNCID.Edit || this.funcType == OMCONST.MFUNCID.Copy ) {
@@ -171,7 +169,6 @@ export class PopupAddKRComponent extends UIComponent {
     this.kr.approveStatus='1';
     this.kr.approveControl='1';
     this.kr.okrType=OMCONST.VLL.OKRType.KResult;
-    this.kr.transID = this.dataOKRPlans.recID;
     //---------------------------------------
     this.OKRLevel();
     this.fGroupAddKR.patchValue(this.kr);
@@ -234,17 +231,17 @@ export class PopupAddKRComponent extends UIComponent {
   //Thiết lập OKRLevel theo funcID
   OKRLevel() {
     switch (this.funcID) {
-      case OMCONST.FUNCID.Company:
-        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Company;
+      case OMCONST.FUNCID.COMP:
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.COMP;
         break;
-      case OMCONST.FUNCID.Department:
-        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Department;
+      case OMCONST.FUNCID.DEPT:
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.DEPT;
         break;
-      case OMCONST.FUNCID.Team:
-        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Team;
+      case OMCONST.FUNCID.ORG:
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.ORG;
         break;
-      case OMCONST.FUNCID.Person:
-        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Person;
+      case OMCONST.FUNCID.PERS:
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.PERS;
         break;
     }
     this.detectorRef.detectChanges();

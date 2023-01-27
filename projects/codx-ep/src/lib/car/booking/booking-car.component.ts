@@ -1,3 +1,5 @@
+declare var window: any;
+
 import {
   Component,
   TemplateRef,
@@ -14,6 +16,7 @@ import {
   CallFuncService,
   NotificationsService,
   AuthService,
+  CodxScheduleComponent,
 } from 'codx-core';
 import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
@@ -78,6 +81,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   listDriver: any[];
   tempDriverName='';  
   driverName='';
+  queryParams: any;
+  navigated=false;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -98,6 +103,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       }
     });
     this.funcID = this.router.snapshot.params['funcID'];
+    this.queryParams = this.router.snapshot.queryParams;
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
@@ -114,6 +120,10 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     this.request.predicate = 'ResourceType=@0';
     this.request.dataValue = '2';
     this.request.idField = 'recID';
+    if(this.queryParams?.predicate && this.queryParams?.dataValue){
+      this.request.predicate=this.queryParams?.predicate;
+      this.request.dataValue=this.queryParams?.dataValue;
+    }
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
@@ -142,7 +152,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     ];
 
     this.fields = {
-      id: 'bookingNo',
+      id: 'recID',
       subject: { name: 'title' },
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
@@ -183,6 +193,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    
     this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
     this.views = [
       {
@@ -227,11 +238,30 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       //   },
       // },
     ];
+    if(this.queryParams?.predicate && this.queryParams?.dataValue){    
+      this.codxEpService.getBookingByRecID(this.queryParams?.dataValue).subscribe((res:any)=>{
+        if(res){
+          setInterval(()=> this.navigate(res.startDate),2000);
+        }
+      });
+    }  
     this.detectorRef.detectChanges();
   }
   onActionClick(evt?) {
-    if (evt.type == 'add') {
+    if (evt.type == 'add' && evt.data?.resourceId!=null) {
+      this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(evt.data);
+    }
+  }
+  navigate(date) {
+    if(!this.navigated){
+      let ele = document.getElementsByTagName('codx-schedule')[0];
+      if (ele) {
+        if((window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj.first.element.id=='Schedule'){
+          (window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj.first.selectedDate = new Date(date);
+          this.navigated=true;
+        }        
+      }
     }
   }
   changeDataMF(event, data: any) {

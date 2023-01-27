@@ -49,10 +49,19 @@ export class OrganizationOrgchartComponent implements OnInit {
   //onChange dataSource
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.orgUnitID.currentValue != changes.orgUnitID.previousValue){
-      this.dataService.setPredicates([],[this.orgUnitID]).subscribe(() => {
-        //this.setDataOrg(this.dataService.data);
-        this.dataSource = this.newDataManager(this.dataService.data);
-      })
+      this.dataService.setPredicates([],[this.orgUnitID]).subscribe((res) => {
+        if(res)
+        {
+          res.forEach(x => {
+            if(x.orgUnitID === this.orgUnitID)
+            {
+              x.parentID = "";
+              return;
+            }
+          });
+        }
+        this.dataSource = this.newDataManager(res);
+      });
     }
   }
   setDataOrg(data: any[]) {

@@ -20,6 +20,7 @@
                 field="disciplineID"
                 [formModel]="formModel"
                 [Group]="formGroup"
+                (valueChange)="valueChange($event)"
             ></codx-input>
         </div>
         <div class="col-6">
@@ -86,15 +87,20 @@
 
     <div class="form-group row">
         <div class="col-6">
-            <codx-label
+            <div>
+                <codx-label
                 fiedName="IsLimit"
                 [formModel]="formModel"
             ></codx-label>
-            <codx-input
+            </div>
+            <div>
+                <codx-input
                 field="isLimit"
                 [Group]="formGroup"
                 [formModel]="formModel"
             ></codx-input>
+            </div>
+            
         </div>
         <div class="col-6">
             <codx-label
@@ -105,6 +111,7 @@
                 field="limitMonths"
                 [Group]="formGroup"
                 [formModel]="formModel"
+                [showSpinButton]="false"
             ></codx-input>
         </div>
     </div>
@@ -116,7 +123,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
-                field="fromDate"
+                field="FromDate"
                 [Group]="formGroup"
                 [formModel]="formModel"
             ></codx-input>
@@ -127,12 +134,22 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
-                field="toDate"
+                field="ToDate"
                 [Group]="formGroup"
                 [formModel]="formModel"
             ></codx-input>
         </div>
     </div>
+
+    <div class="extend-function">
+        <hr>
+        <div class="d-flex justify-content-center">
+          <div class="d-flex align-items-center w-auto extend-title">
+            <span class="text-primary text-hover-primary_darker fw-bold me-1">
+            </span>
+          </div>
+        </div>
+      </div>
 
     <div class="form-group row">
         <div class="col-6">
@@ -168,6 +185,7 @@
             field="signerID"
             [Group]="formGroup"
             [formModel]="formModel"
+            (valueChange)="valueChange($event)"
         ></codx-input>
     </div>
 
@@ -240,231 +258,24 @@
 </ng-template>
 
 <ng-template #tmplateEdisciplineTitleMenuList let-data>
-    <div>
-        <i class="icon-i-arrow-down-left-circle-fill"></i>
+    <div class="d-flex align-items-center pb-1">
+        <i class="icon-i-arrow-down-left-circle-fill text-info me-1"></i>
         {{data.disciplineID}}
-        <i class="icon-i-arrow-down-left-circle-fill"></i>
+        <i class="icon-i-arrow-down-left-circle-fill icon_style ms-1 me-1"></i>
         {{data.disciplineDate | fmDT}}
     </div>
 </ng-template>
 
 <ng-template #tmplateEdisciplineBodyMenuList let-data>
-    <div class="d-flex flex-column">
-        <div>
+    <div class="d-flex flex-column ms-1">
+        <div class="d-flex align-items-center">
             <span *ngIf="data.decisionNo != null">
-                <i class ="icon-calendar_today"></i>
+                <i class ="icon-i-layout-text-sidebar-reverse icon-14"></i>
                 {{data.decisionNo}}
             </span>
-            <i class="icon-i-arrow-down-left-circle-fill"></i>
+            <i class="icon-i-arrow-down-left-circle-fill icon_style ps-1 pe-1"></i>
             {{data.signedDate | fmDT}}
         </div>
-        <div><i class = "icon-edit_fill"></i>{{data.disciplineFormCategory}}</div>
+        <div class="d-flex align-items-center"><i class = "icon-edit"></i>{{data.disciplineFormCategory}}</div>
     </div>
 </ng-template>
-
-<!-- <ng-template #footer>
-    <div class="d-flex justify-content-end">
-        <button class="btn btn-primary" (click)="onSaveForm()">
-            <i class="icon-save"></i>
-        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
-        </button>
-    </div>
-</ng-template>
-
-<codx-form
-    #form
-    [headerText]="headerText"
-    [body]="body"
-    [formModel]="formModel"
-    [footer]="footer"
-    [dialog]="dialog"
-    [data]="disciplineObj"
-    *ngIf="isAfterRender"
->
-    <ng-template #body>
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label
-                    fiedName="DisciplineID"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="disciplineID"
-                    [formModel]="formModel"
-                    [Group]="formGroup"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label
-                    fiedName="DisciplineDate"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="disciplineDate"
-                    [formModel]="formModel"
-                    [Group]="formGroup"
-                ></codx-input>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label
-                    fiedName="DisciplineFormCategory"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="disciplineFormCategory"
-                    [formModel]="formModel"
-                    [Group]="formGroup"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label
-                    fiedName="DisciplinePlace"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="disciplinePlace"
-                    [formModel]="formModel"
-                    [Group]="formGroup"
-                ></codx-input>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <codx-label
-                fiedName="Reason"
-                [formModel]="formModel"
-            ></codx-label>
-            <codx-input
-                field="reason"
-                [formModel]="formModel"
-                [Group]="formGroup"
-            ></codx-input>
-        </div>
-
-        <div class="form-group row">
-            <codx-label
-                fiedName="Content"
-                [formModel]="formModel"
-            ></codx-label>
-            <codx-input
-                field="content"
-                [formModel]="formModel"
-                [Group]="formGroup"
-            ></codx-input>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label
-                    fiedName="IsLimit"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="isLimit"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label
-                    fiedName="LimitMonths"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="limitMonths"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label
-                    fiedName="FromDate"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="fromDate"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label
-                    fiedName="ToDate"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="toDate"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label
-                    fiedName="DecisionNo"
-                    [formModel] = "formModel"
-                ></codx-label>
-                <codx-input
-                    field="decisionNo"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label
-                    fiedName="SignedDate"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="signedDate"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <codx-label
-                fiedName="SignerID"
-                [formModel]="formModel"
-            ></codx-label>
-            <codx-input
-                field="signerID"
-                [Group]="formGroup"
-                [formModel]="formModel"
-            ></codx-input>
-        </div>
-
-        <div class="form-group row">
-            <codx-label
-                fiedName="SignerPosition"
-                [formModel]="formModel"
-            ></codx-label>
-            <codx-input
-                field="signerPosition"
-                [Group]="formGroup"
-                [formModel]="formModel"
-            ></codx-input>
-        </div>
-
-        <div class="form-group row">
-            <codx-label
-                fiedName="Note"
-                [formModel]="formModel"
-            ></codx-label>
-            <codx-input
-                field="note"
-                [Group]="formGroup"
-                [formModel]="formModel"
-            ></codx-input>
-        </div>
-    </ng-template>
-</codx-form> -->

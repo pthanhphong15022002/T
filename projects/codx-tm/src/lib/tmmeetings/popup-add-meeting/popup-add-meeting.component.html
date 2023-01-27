@@ -13,8 +13,8 @@
       <codx-label fiedName="MeetingName" formName="TMMeetings" gridViewName="grvTMMeetings" default="Tên buổi họp">
       </codx-label>
     </div>
-    <codx-input field="meetingName" type="text" [crrValue]="meeting?.meetingName" [placeholder]="gridViewSetup['MeetingName']?.description"
-      (valueChange)="valueChange($event)">
+    <codx-input field="meetingName" type="text" [crrValue]="meeting?.meetingName"
+      [placeholder]="gridViewSetup['MeetingName']?.description" (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 
@@ -58,8 +58,8 @@
       <codx-label fiedName="Location" formName="TMMeetings" gridViewName="grvTMMeetings" default="Địa điểm">
       </codx-label>
     </div>
-    <codx-input field="location" type="text" [placeholder]="gridViewSetup['Location']?.description" [crrValue]="meeting?.location"
-      (valueChange)="valueChange($event)">
+    <codx-input field="location" type="text" [placeholder]="gridViewSetup['Location']?.description"
+      [crrValue]="meeting?.location" (valueChange)="valueChange($event)">
     </codx-input>
   </div>
   <div *ngIf="isRoom" class="form-group">
@@ -70,9 +70,15 @@
         data?.status | vll: "VL003":"text" | async
         }}</span> -->
     </div>
-    <ejs-combobox id='location' #samples [dataSource]='listRoom' [value]="meeting.location" [fields]='fields'
-    [placeholder]="gridViewSetup['Location']?.description" (valueChange)="cbxChange($event)"></ejs-combobox>
-
+    <!-- <ejs-combobox id='locationCBB' #locationCBB [dataSource]='listRoom' [fields]='fields'
+      [placeholder]="gridViewSetup['Location']?.description" (valueChange)="cbxChange($event)"></ejs-combobox> -->
+      <ejs-dropdownlist
+        id='locationCBB'
+        #locationCBB [dataSource]='listRoom'
+        [fields]='fields'
+        [placeholder]="'Phòng họp'"
+        (valueChange)="cbxChange($event)"
+      ></ejs-dropdownlist>
   </div>
   <div class="form-group">
     <div class="d-flex align-items-end justify-content-between mb-2">
@@ -80,7 +86,7 @@
         <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung họp">
         </codx-label>
       </div>
-      <button type="button" (click)="openPopupTemplate(meeting)" class="btn btn-sm btn-icon btn-light">
+      <button type="button" (click)="openPopupTemplate(meeting)" class="btn btn-icon btn-light">
         <span class="icon-check_box icon-18"></span>
       </button>
     </div>
@@ -145,8 +151,7 @@
         </div>
       </div>
       <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="resources" [dataShared]="[]"
-      [multiple]="true" [showInput]="false" [disabled]="readOnly"
-        >
+        [multiple]="true" [showInput]="false" [disabled]="readOnly">
       </codx-input>
     </div>
     <div class="d-flex flex-wrap">

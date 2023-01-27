@@ -1,11 +1,15 @@
+import { D } from '@angular/cdk/keycodes';
 import { AfterViewInit, Component, Injector, Optional, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AuthService, CRUDService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
+import { AuthService, CodxFormDynamicComponent, CRUDService, DataService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
+import { HRParametersComponent } from 'projects/codx-hr/src/lib/hrparameters/hrparameters.component';
 import { CodxMwpService } from '../codx-mwp.service';
+import { HR_EmployeeEducations } from '../model/HR_EmployeeEducations';
 import { EditExperenceComponent } from './edit-experence/edit-experence.component';
 import { EditHobbyComponent } from './edit-hobby/edit-hobby.component';
 import { EditInfoComponent } from './edit-info/edit-info.component';
 import { EditRelationComponent } from './edit-relation/edit-relation.component';
 import { EditSkillComponent } from './edit-skill/edit-skill.component';
+import { PopupAddEducationsComponent } from './popup/popup-add-educations/popup-add-educations.component';
 
 @Component({
   selector: 'lib-employee-infomation',
@@ -20,6 +24,7 @@ export class EmployeeInfomationComponent extends UIComponent {
     dataRoot: {},
     employeeInfo: {},
   };
+
   employeeInfo: any = null;
   employeeHobbie: any = null;
   employeeContracts: any = null;
@@ -74,7 +79,6 @@ export class EmployeeInfomationComponent extends UIComponent {
   employeeID: any;
   width: number = 720;
   height: number = window.innerHeight;
-  educations:any[] = [];
   constructor(
     private injector: Injector,
     private codxMwpService: CodxMwpService,
@@ -91,10 +95,9 @@ export class EmployeeInfomationComponent extends UIComponent {
     this.router.params.subscribe((param: any) => {
       if (param) {
         this.functionID = param['funcID'];
-        let employeeID = this.router.snapshot.queryParams["employeeID"];
-        this.getEmployeeInfo(employeeID);
+        this.employeeID  = this.router.snapshot.queryParams["employeeID"];
+        this.getEmployeeInfo(this.employeeID);
         this.getDataAsync(this.functionID);
-        
         this.codxMwpService.modeEdit.subscribe(res => {
           this.editMode = res;
           this.editSkillMode = false;
@@ -137,6 +140,10 @@ export class EmployeeInfomationComponent extends UIComponent {
           edgeLabelPlacement: 'Shift',
           labelFormat: '{value}'
         };
+      }
+      else
+      {
+        this.getEmployeeInfo(this.employeeID);
       }
     });
     this.getParameterAsync("HRParameters", "1");
@@ -187,14 +194,6 @@ export class EmployeeInfomationComponent extends UIComponent {
           }
         });
     }
-  }
-  getContrastYIQ(item) {
-    var hexcolor = (item.color || "#ffffff").replace("#", "");
-    var r = parseInt(hexcolor.substr(0, 2), 16);
-    var g = parseInt(hexcolor.substr(2, 2), 16);
-    var b = parseInt(hexcolor.substr(4, 2), 16);
-    var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-    return (yiq >= 128) ? 'black' : 'white';
   }
   editSkill() {
     if (this.view) {
@@ -343,19 +342,11 @@ export class EmployeeInfomationComponent extends UIComponent {
       }
     }
   }
-
-
-
-  ngOnChanges() {
-
-  }
-
   onSectionChange(data: any) {
     console.log(data);
     this.codxMwpService.currentSection = data.current;
     this.detectorRef.detectChanges();
   }
-
   isCheck(data) {
     if (this.skillEmployee) {
       for (let index = 0; index < this.skillEmployee.length; index++) {
@@ -368,7 +359,6 @@ export class EmployeeInfomationComponent extends UIComponent {
     }
     return false;
   }
-
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'SYS03':
@@ -379,7 +369,6 @@ export class EmployeeInfomationComponent extends UIComponent {
         break;
     }
   }
-
   clickMFS(e: any, data?: any) {
     switch (e.functionID) {
       case 'SYS03':
@@ -632,22 +621,8 @@ export class EmployeeInfomationComponent extends UIComponent {
     opt.data = itemSelected.recID;
     return true;
   }
-  deleteEducation(data) {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
-      this.beforeDelEducation(opt)).subscribe((res) => {
-        if (res) {
-          this.codxMwpService.LoadData(this.employee.employeeID, "", "4").subscribe((response: any) => {
-            if (response) {
-              this.updateTraining(response);
-            }
-            this.detectorRef.detectChanges();
-          });
-        }
-      });
-  }
-
   
+
   getParameterAsync(formName: string, category: string) {
     if (!formName || !category) return;
     this.api.execSv("SYS",
@@ -661,7 +636,6 @@ export class EmployeeInfomationComponent extends UIComponent {
         }
       });
   }
-
 
   saveAddSkill(event: any) {
     if (!event || !event?.dataSelected) return;
@@ -712,9 +686,9 @@ export class EmployeeInfomationComponent extends UIComponent {
   clickOpenPopupAddSkill() {
     this.showCBB = !this.showCBB;
   }
-
-
   // load employee info
+  employeeInfor:any = null;
+
   getEmployeeInfo(employeeID:string){
     this.api.execSv(
       "HR",
@@ -723,27 +697,116 @@ export class EmployeeInfomationComponent extends UIComponent {
       "GetEmployeeInforAsync",
       [employeeID])
       .subscribe((res:any) => {
-
-        console.log(res);
+        if(res)
+        {
+          this.employeeInfor = res;
+        }
       });
   }
-
-  // get education
-  getEducation(employeeID:string){
-    this.api.execSv(
-      "HR",
-      "ERM.Business.HR",
-      "EducationsBusiness",
-      "GetEducationByEmpIDAsync",
-      [employeeID])
-      .subscribe((res:any) => {
-        console.log(res);
-      });
-  }
-
   // popup education
-  openPopupEducation(){
+  openPopupEducation()
+  { 
+    if(this.employeeInfor.employeeID)
+    {
+      this.cache.gridViewSetup("EmployeeEducations","grvEmployeeEducations")
+      .subscribe(grv => {
+        if(grv)
+        {
+          let _formModel = new FormModel();
+          _formModel.gridViewName = "grvEmployeeEducations";
+          _formModel.formName = "EmployeeEducations";
+          _formModel.entityName = "HR_EmployeeEducations";
+          let _options = new SidebarModel();
+          _options.Width = '550px';
+          _options.FormModel = _formModel;
+          let data = new HR_EmployeeEducations();
+          data.employeeID = this.employeeInfor.employeeID;
+          let _data = {
+            headerText:"Thêm mới nơi đào tạo",
+            isAdd:true,
+            grv:grv,
+            data : data
+          }
+          this.callfc.openSide(PopupAddEducationsComponent,_data,_options)
+          .closed.subscribe((res:any) => {
+            if(res.event){
+              if(!this.employeeInfor.educations || this.employeeInfor.educations.length == 0)
+              {
+                this.employeeInfor.educations = [];
+              }
+              this.employeeInfor.educations.unshift(res.event);
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+        
+      });
+    }
+  }
+  // open popup edit
+  openPopupEdit(item:any){
+    if(this.employeeInfor.employeeID)
+    {
+      this.cache.gridViewSetup("EmployeeEducations","grvEmployeeEducations")
+      .subscribe(grv => {
+        if(grv)
+        {
+          let _formModel = new FormModel();
+          _formModel.gridViewName = "grvEmployeeEducations";
+          _formModel.formName = "EmployeeEducations";
+          _formModel.entityName = "HR_EmployeeEducations";
+          let _options = new SidebarModel();
+          _options.Width = '550px';
+          _options.FormModel = _formModel;
+          let data = JSON.parse(JSON.stringify(item));
+          let _data = {
+            headerText:"Cập nhật nơi đào tạo",
+            isAdd:false,
+            grv:grv,
+            data : data
+          }
+          this.callfc.openSide(PopupAddEducationsComponent,_data,_options)
+          .closed.subscribe((res:any) => {
+            if(res.event){
+              let _index = this.employeeInfor.educations.findIndex(x => x.recID == item.recID);
+              if(_index >= 0)
+              {
+                this.employeeInfor.educations[_index] = JSON.parse(JSON.stringify(res.event));
+              }
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+        
+      });
+    }
+  }
+  // delete education
+  deleteEducation(item:any){
+    if(item.recID){
+      this.notifiSV.alertCode("SYS030").subscribe(res => {
+        debugger
+        if(res.event.status == "Y"){
+        this.api.execSv("HR","ERM.Business.HR","EducationsBusiness","DeleteAsync",[item])
+        .subscribe((res:any) => {
+          if(res){
+            this.notifiSV.notifyCode("SYS008");
+            let _index = this.employeeInfor.educations.findIndex(x => x.recID == item.recID);
+            if(_index > -1 )
+            {
+              this.employeeInfor.educations.splice(_index,1);
+            }
+          }
+          else
+          {
+            this.notifiSV.notifyCode("SYS022");
+          }
+        });
+        }
+      });
+    }
     
   }
+  
 }
 

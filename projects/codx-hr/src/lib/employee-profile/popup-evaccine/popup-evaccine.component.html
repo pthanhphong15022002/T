@@ -10,103 +10,75 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
-    <!-- <div class="form-group row">
-      <div class="col-6">
-        <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
-        <codx-input
-          field="decisionNo"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
-      <div class="col-6">
-        <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
-        <codx-input
-          disabled="true"
-          field="isCurrent"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
-    </div>
     <div class="form-group row">
       <div class="col-6">
         <codx-label
-          fiedName="EffectedDate"
+          fiedName="VaccineTypeID"
           [formModel]="formModel"
         ></codx-label>
         <codx-input
-          field="effectedDate"
+          field="VaccineTypeID"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="VaccineName" [formModel]="formModel"></codx-label>
         <codx-input
-          field="expiredDate"
+          field="VaccineName"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
       </div>
     </div>
     <div class="form-group row">
-      <codx-label fiedName="JSalary" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="jSalary"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
-
-    <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="HopitalID" [formModel]="formModel"></codx-label>
         <codx-input
-          field="signedDate"
+          field="HopitalID"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="SignStatus" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="InjectDate" [formModel]="formModel"></codx-label>
         <codx-input
-          field="signStatus"
+          field="InjectDate"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
       </div>
     </div>
-
     <div class="form-group row">
-      <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="signerID"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
+      <div class="col-6">
+        <codx-label fiedName="Cost" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="Cost"
+          [formModel]="formModel"
+          [Group]="formGroup"
+          [showSpinButton]="false"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label
+          fiedName="NextInjectDate"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+          field="NextInjectDate"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
     </div>
-
     <div class="form-group row">
-      <codx-label
-        fiedName="SignerPosition"
-        [formModel]="formModel"
-      ></codx-label>
-      <codx-input
-        field="signerPosition"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
-
-    <div class="form-group rpw">
       <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
       <codx-input
-        field="note"
+        field="Note"
         [formModel]="formModel"
         [Group]="formGroup"
       ></codx-input>
-    </div> -->
+    </div>
   </ng-template>
 
   <ng-template #footer>
@@ -126,9 +98,8 @@
 <ng-template #LeftTemlate>
   <codx-listview
     #listView
-    [type]="'cardView'"
     [service]="'HR'"
-    [assemblyName]="'CM'"
+    [assemblyName]="'Core'"
     [entityName]="'HR_EVaccines'"
     [className]="'DataBusiness'"
     [method]="'LoadDataAsync'"
@@ -145,10 +116,8 @@
   <codx-temp-full
     [formModel]="formModel"
     [typeMF]="'hover'"
-    [title]="data?.vaccineTypeID + ' - ' + (data.vaccineName ?? '')"
-    [icoTitleCss]="'icon-attach_money'"
     cardCss="card codx_cardcenter px-2 pt-4 pb-2"
-    [subTitleTmp]="tmplateEJobSalaries"
+    [footer]="footerEVaccines"
     [dataItem]="data"
     typeMF="hover"
     [hideMF]="true"
@@ -157,9 +126,50 @@
   </codx-temp-full>
 </ng-template>
 
-<ng-template #tmplateEJobSalaries let-data1>
-  <div class="d-flex flex-column">
-    <div><i class="icon-edit_fill"></i>{{ data1.injectDate | fmDT }}</div>
-    <div><i class="icon-list_alt"></i>{{ data1.note }}</div>
+<ng-template #footerEVaccines let-data1>
+  <div class="d-flex flex-column mt-1">
+    <div class="d-flex flex-wrap mb-1">
+      <div class="d-flex align-items-center">
+        <span
+          class="me-1 icon-i-arrow-down-left-circle-fill icon-14"
+          style="color: blueviolet"
+        ></span>
+        <span class="text-dark" #vaccineTypeID>
+          {{
+            data1?.vaccineTypeID
+              | formatvalue : formModel : "vaccineTypeID" : vaccineTypeID
+              | async
+          }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center" *ngIf="data1?.vaccineName && data1?.vaccineName!=''">
+        <span
+          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+        ></span>
+        <span class="text-primary">
+          <span #vaccineName>{{
+            data1?.vaccineName
+              | formatvalue : formModel : "vaccineName" : vaccineName
+              | async
+          }}</span>
+        </span>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap mb-1">
+      <div class="d-flex align-items-center">
+        <span class="me-1 icon-i-calendar4-event icon-14 text-gray-600"></span>
+        <span class="text-dark">
+          <span>{{ data1.injectDate | fmDT }}</span>
+        </span>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap mb-1">
+      <div class="d-flex align-items-center">
+        <span class="icon-edit_fill icon-14 me-1"></span>
+        <span class="text-dark" #note>
+          {{ data1?.note | formatvalue : formModel : "note" : note | async }}
+        </span>
+      </div>
+    </div>
   </div>
 </ng-template>

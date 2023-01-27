@@ -30,7 +30,7 @@ export class CodxTMService {
   toolbar = new BehaviorSubject<any>(null);
   childMenuClick = new BehaviorSubject<any>(null);
   urlback = '';
-  functionParent = "TMT0301"
+  functionParent = 'TMT0301';
   constructor(
     private api: ApiHttpService,
     private authStore: AuthStore,
@@ -72,11 +72,7 @@ export class CodxTMService {
   }
 
   loadTaskByAuthen(data) {
-    return this.execTM(
-      APICONSTANT.BUSINESS.TM.Task,
-      'GetTasksAsync',
-      [data]
-    );
+    return this.execTM(APICONSTANT.BUSINESS.TM.Task, 'GetTasksAsync', [data]);
   }
 
   loadTaskGroupByAuthen(data) {
@@ -135,10 +131,12 @@ export class CodxTMService {
   }
 
   setAutoStatusMeetings() {
-    return this.api.execSv<any>('CO',
+    return this.api.execSv<any>(
+      'CO',
       'CO',
       'MeetingsBusiness',
-      'SetAutoStatusMeetingAsync');
+      'SetAutoStatusMeetingAsync'
+    );
   }
 
   addTaskGroup(data) {
@@ -184,7 +182,7 @@ export class CodxTMService {
   getValueCMParameter(predicate, dataValue) {
     return this.api.execSv(
       'SYS',
-      'CM',
+      'Core',
       'ParametersBusiness',
       'GetByPredicate',
       [predicate, dataValue]
@@ -210,8 +208,6 @@ export class CodxTMService {
       [predicate, dataValue]
     );
   }
-
-
 
   //update status
   setStatusTask(
@@ -346,18 +342,24 @@ export class CodxTMService {
       data
     );
   }
-  getListUserIDByListPositionsID(listPositionID){
+  getListUserIDByListPositionsID(listPositionID) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmployeesBusiness',
       'GetListUserIDByListPositionsIDAsync',
       listPositionID
-    );  
+    );
   }
 
-  getResourcesTrackEvent(meetingID, data, startDate, endDate){
-    return this.api.execSv<any>('CO','CO','MeetingsBusiness','AddResourcesEventAsync',[meetingID, data,startDate,endDate]);
+  getResourcesTrackEvent(meetingID, data, startDate, endDate) {
+    return this.api.execSv<any>(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'AddResourcesEventAsync',
+      [meetingID, data, startDate, endDate]
+    );
   }
 
   convertListToObject(
@@ -399,27 +401,17 @@ export class CodxTMService {
     );
   }
 
-  getDeptDBData(model: Object) {
+  getAssignDBData(model: Object) {
     return this.api.execSv(
       'TM',
       'TM',
       'TaskBusiness',
-      'GetDataDeptDashboardAsync',
+      'GetDataAssignDashboardAsync',
       [model]
     );
   }
 
-  getCompDBData(model: Object) {
-    return this.api.execSv(
-      'TM',
-      'TM',
-      'TaskBusiness',
-      'GetDataCompDashboardAsync',
-      [model]
-    );
-  }
-
-  sendMailAlert(recID: string, valueRuleNo: string, funcID: string){
+  sendMailAlert(recID: string, valueRuleNo: string, funcID: string) {
     return this.api.execSv(
       'CO',
       'CO',
@@ -429,7 +421,13 @@ export class CodxTMService {
     );
   }
 
-  UpdateDateMeeting(meetingID: string, startDate, endDate, funcID: string, comment: string){
+  UpdateDateMeeting(
+    meetingID: string,
+    startDate,
+    endDate,
+    funcID: string,
+    comment: string
+  ) {
     return this.api.execSv(
       'CO',
       'CO',
@@ -439,17 +437,22 @@ export class CodxTMService {
     );
   }
 
-  SendMailNewResources(recID: string, valueNo: string, funcID: string, resources){
+  SendMailNewResources(
+    recID: string,
+    valueNo: string,
+    funcID: string,
+    resources
+  ) {
     return this.api.execSv(
       'CO',
       'CO',
       'MeetingsBusiness',
       'SendAlertMailNewResourcesAsync',
-      [recID, valueNo, funcID,resources]
+      [recID, valueNo, funcID, resources]
     );
   }
 
-  RPASendMailMeeting(valueNo: string, funcID: string){
+  RPASendMailMeeting(valueNo: string, funcID: string) {
     return this.api.execSv(
       'CO',
       'CO',
@@ -459,8 +462,14 @@ export class CodxTMService {
     );
   }
 
-  changeBookingDateTime(recID, startDate, endDate){
-    return this.api.execSv('CO','CO','MeetingsBusiness','ChangeBookingDateTimeAsync', [recID, startDate, endDate]);
+  changeBookingDateTime(recID, startDate, endDate) {
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'ChangeBookingDateTimeAsync',
+      [recID, startDate, endDate]
+    );
   }
 
   getFormModel(functionID): Promise<FormModel> {

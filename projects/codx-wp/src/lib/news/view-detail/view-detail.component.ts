@@ -1,7 +1,9 @@
 import { Component, HostBinding, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Post } from '@shared/models/post';
 import { ViewModel, ViewType, DialogModel, UIComponent } from 'codx-core';
-import { PopupAddPostComponents } from '../../dashboard/home/list-post/popup-add/popup-add.component';
+import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add-post.component';
+import { WP_Comments } from '../../models/WP_Comments.model';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from '../popup/popup-search/popup-search.component';
 
@@ -108,13 +110,13 @@ export class ViewDetailComponent extends UIComponent {
   clickTag(tag: any) {
     this.codxService.navigate('', '/wp/news/' + this.funcID + '/tag/' + tag.value);
   }
-  clickShowPopupCreate(newsType: string) {
+  openPopupAdd(newsType: string) {
     if(this.view){
       let option = new DialogModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.IsFull = true;
-      this.callfc.openForm(PopupAddComponent, '', 0, 0, '', { type: newsType }, '', option);
+      this.callfc.openForm(PopupAddComponent, '', 0, 0, '', newsType , '', option);
     }
   }
   clickShowPopupSearch() {
@@ -126,17 +128,24 @@ export class ViewDetailComponent extends UIComponent {
       this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", this.view.funcID, "", option);
     } 
   }
-  clickPopupShare(data: any) {
-    if (!data) return;
-    var obj = {
-      post: data,
-      refType: "WP_News",
-      status: 'share',
-      headerText: 'Chia sẻ bài viết',
-    };
-    let option = new DialogModel();
-    option.FormModel = this.view.formModel;
-    this.callfc.openForm(PopupAddPostComponents, '', 650, 550, '', obj, '', option);
+  // open popup share
+  openPopupShare(post: any) {
+    if (post)
+    {
+      let _data = new WP_Comments();
+      _data.news = JSON.parse(JSON.stringify(post));
+      _data.refID = post.recID;
+      let _obj = {
+        data: _data,
+        refType: "WP_News",
+        status: 'share',
+        headerText: 'Chia sẻ bài viết',
+      };
+      let _option = new DialogModel();
+      _option.FormModel = this.view.formModel;
+      this.callfc.openForm(PopupAddPostComponent, '', 650, 550, '', _obj, '', _option);
+    }
+    
   }
   showListShare(){
     this.isShowTemplateShare = !this.isShowTemplateShare;

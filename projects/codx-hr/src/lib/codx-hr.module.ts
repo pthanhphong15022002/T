@@ -68,6 +68,7 @@ import { PopupAddNewHRComponent } from './employee-list/popup-add-new-hr/popup-a
 import { TmpGridViewComponent } from './employee-list/employee-profile/tmp-grid-view/tmp-grid-view.component';
 import { PopupEAssetsComponent } from './employee-profile/popup-eassets/popup-eassets.component';
 import { PopupEPassportsComponent } from './employee-profile/popup-epassports/popup-epassports.component';
+import { EmployeePositionsComponent } from './employee-list/employee-profile/employee-positions/employee-positions.component';
 import { PopupEexperiencesComponent } from './employee-profile/popup-eexperiences/popup-eexperiences.component';
 import { OrganizationOrgchartComponent } from './organization/organization-orgchart/organization-orgchart.component';
 import { OrganizationMasterDetailComponent } from './organization/organization-master-detail/organization-master-detail.component';
@@ -80,6 +81,10 @@ import { PopupEDiseasesComponent } from './employee-profile/popup-ediseases/popu
 import { PopupEappointionsComponent } from './employee-profile/popup-eappointions/popup-eappointions.component';
 import { PopupEContractComponent } from './employee-profile/popup-econtract/popup-econtract.component';
 import { PopupEaccidentsComponent } from './employee-profile/popup-eaccidents/popup-eaccidents.component';
+import { PopupSubEContractComponent } from './employee-profile/popup-sub-econtract/popup-sub-econtract.component';
+import { PopupEdayoffsComponent } from './employee-profile/popup-edayoffs/popup-edayoffs.component';
+import { PopupEmpBusinessTravelsComponent } from './employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
+import { PopupEbenefitComponent } from './employee-profile/popup-ebenefit/popup-ebenefit.component';
 
 export const routes: Routes = [
   {
@@ -257,6 +262,7 @@ const T_Component: Type<any>[] = [
   PopupETraincourseComponent,
   PopupEVisasComponent,
   PopupEWorkPermitsComponent,
+  EmployeePositionsComponent,
   PopupEJobSalariesComponent,
   PopupEBasicSalariesComponent,
   PopupEexperiencesComponent,
@@ -270,7 +276,11 @@ const T_Component: Type<any>[] = [
   PopupEDiseasesComponent,
   PopupEappointionsComponent,
   PopupEContractComponent,
-  PopupEaccidentsComponent
+  PopupEaccidentsComponent,
+  PopupSubEContractComponent,
+  PopupEdayoffsComponent,
+  PopupEmpBusinessTravelsComponent,
+  PopupEbenefitComponent,
 ];
 @NgModule({
   imports: [

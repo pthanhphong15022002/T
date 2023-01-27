@@ -1,5 +1,5 @@
 .bgEDEDED {
-  background-color: #ededed !important;
+  background-color: #EDEDED;
 }
 
 #om-tab .e-tab-header {
@@ -11,9 +11,16 @@
 #om-tab .e-tab-header::before {
   border-style: none;
 }
-#om-tab .e-tab-header .e-toolbar-item.e-active {
-  border-bottom: solid 2px #0379ff !important;
-  color: #0379ff !important;
+#om-tab .e-tab-header .e-toolbar-item.e-active  {
+  border-bottom: solid 2px var(--text-primary) !important;
+  color: var(--text-primary) !important;
+}
+#om-tab .e-tab-header .e-toolbar-item.e-active span, #om-tab .e-tab-header .e-toolbar-item.e-active codx-label .codx-label{
+  
+  color: var(--text-primary) !important;
+}
+.e-tab .e-tab-header .e-toolbar-item.e-active span {
+  color: var(--text-primary) !important;
 }
 #om-tab > .e-content 
 {
@@ -173,4 +180,15 @@
 }
 .e-tab-header {
   z-index: 1;
+}
+.disabledCss {
+  pointer-events: none;
+  
+}
+.ob-kr:hover{
+  cursor: pointer;    
+  color: var(--text-primary) !important;
+}
+.bg-color{   
+  background-color: var(--text-primary) !important;
 }

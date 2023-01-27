@@ -1,0 +1,21 @@
+.user-mini-nav {
+    display: inline-flex;
+    align-items: center;
+    height: 29px;
+    padding: 2px 10px 2px 2px !important;
+    border-radius: 20px;
+    margin-bottom: 3px;
+    background-color: #f3f3f3;
+    margin-right: 3px;
+  }
+  .button-mail {
+    border: 1px solid #ced4da;
+    background: none;
+    outline: none;
+    border-radius: 2px;
+    height: 31.5px;
+    margin-left: 5px;
+  }
+  .e-input-value{
+    display: flex ; align-items: center; padding-left: 10px;
+  }

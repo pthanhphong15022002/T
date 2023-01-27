@@ -1,8 +1,20 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DataRequest } from '@shared/models/data.request';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { LayoutModel } from '@shared/models/layout.model';
-import { ApiHttpService, AuthStore, CacheService } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  DataRequest,
+  FormModel,
+  NotificationsService,
+  Util,
+} from 'codx-core';
 import {
   BehaviorSubject,
   finalize,
@@ -28,7 +40,8 @@ export class CodxHrService {
     private api: ApiHttpService,
     private cache: CacheService,
     private auth: AuthStore,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private notiService: NotificationsService
   ) {}
   loadEmployByPosition(positionID: string, _status: string): Observable<any> {
     return this.api
@@ -67,69 +80,6 @@ export class CodxHrService {
     //   }),
     //   finalize(() => null)
     // );
-  }
-
-  getFormGroup(formName, gridView): Promise<FormGroup> {
-    return new Promise<FormGroup>((resolve, reject) => {
-      this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
-        var model = {};
-        model['write'] = [];
-        model['delete'] = [];
-        model['assign'] = [];
-        model['share'] = [];
-        if (gv) {
-          const user = this.auth.get();
-          for (const key in gv) {
-            const element = gv[key];
-            element.fieldName =
-              element.fieldName.charAt(0).toLowerCase() +
-              element.fieldName.slice(1);
-            model[element.fieldName] = [];
-            if (element.fieldName == 'owner') {
-              model[element.fieldName].push(user.userID);
-            } else if (element.fieldName == 'bUID') {
-              model[element.fieldName].push(user['buid']);
-            } else if (element.fieldName == 'createdOn') {
-              model[element.fieldName].push(new Date());
-            } else if (element.fieldName == 'stop') {
-              model[element.fieldName].push(false);
-            } else if (element.fieldName == 'orgUnitID') {
-              model[element.fieldName].push(user['buid']);
-            } else if (
-              element.dataType == 'Decimal' ||
-              element.dataType == 'Int'
-            ) {
-              model[element.fieldName].push(0);
-            } else if (
-              element.dataType == 'Bool' ||
-              element.dataType == 'Boolean'
-            )
-              model[element.fieldName].push(false);
-            else if (element.fieldName == 'createdBy') {
-              model[element.fieldName].push(user.userID);
-            } else {
-              model[element.fieldName].push(null);
-            }
-
-            let modelValidator = [];
-            if (element.isRequire) {
-              modelValidator.push(Validators.required);
-            }
-            if (element.fieldName == 'email') {
-              modelValidator.push(Validators.email);
-            }
-            if (modelValidator.length > 0) {
-              model[element.fieldName].push(modelValidator);
-            }
-          }
-          model['write'].push(false);
-          model['delete'].push(false);
-          model['assign'].push(false);
-          model['share'].push(false);
-        }
-        resolve(this.fb.group(model, { updateOn: 'blur' }));
-      });
-    });
   }
 
   loadPosInfo(positionID: string): Observable<any> {
@@ -406,15 +356,49 @@ export class CodxHrService {
     );
   }
 
+  //#region HR_ETrainCourses
+
+  getDataETrainDefault() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ETrainCoursesBusiness',
+      'GetDataETrainDefaultAsync',
+      null
+    );
+  }
+
   getEmployeeTrainCourse(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'ETrainCoursesBusiness',
-      'GetEmployeeTrainCoursesInfoAsync',
+      'GetETrainCoursesByEmpIDAsync',
       data
     );
   }
+
+  updateEmployeeTrainCourseInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ETrainCoursesBusiness',
+      'EditETraincourseAsync',
+      data
+    );
+  }
+
+  addETraincourse(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ETrainCoursesBusiness',
+      'AddETraincourseAsync',
+      data
+    );
+  }
+  //#endregion
+
   //#region EWorkPermitsBusiness
   // getListWorkPermitByEmployeeID(employeeID: string) {
   //   return this.api.execSv<any>(
@@ -481,16 +465,6 @@ export class CodxHrService {
       'HR',
       'EPassportsBusiness',
       'DeleteEmployeePassportInfoAsync',
-      data
-    );
-  }
-
-  updateEmployeeTrainCourseInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'ETrainCoursesBusiness',
-      'EditEmployeeTraincourseInfoAsync',
       data
     );
   }
@@ -674,6 +648,58 @@ export class CodxHrService {
       'HR',
       'EAccidentsBusiness',
       'LoadDataEAccidentAsync',
+      data
+    );
+  }
+
+  //#endregion
+
+  //#region EDayOffBusiness
+  getEmployeeDayOffModel() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDayOffsBusiness',
+      'GetEmployeeDayOffModelAsync'
+    );
+  }
+
+  UpdateEmployeeDayOffInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDayOffsBusiness',
+      'UpdateEmployeeDayOffInfoAsync',
+      data
+    );
+  }
+
+  AddEmployeeDayOffInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDayOffsBusiness',
+      'AddEmployeeDayOffInfoAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeDayOffInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDayOffsBusiness',
+      'DeleteEmployeeDayOffInfoAsync',
+      data
+    );
+  }
+
+  getListDayOffByDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDayOffsBusiness',
+      'GetListDayOffByDataRequestAsync',
       data
     );
   }
@@ -1141,21 +1167,9 @@ export class CodxHrService {
   }
   //#endregion
 
-  //#region HR_EBenefits
-  GetCurrentBenefit(empID: string) {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.HR',
-      'EBenefitsBusiness',
-      'GetCurrentBenefitAsync',
-      [empID]
-    );
-  }
-  //#endregion
-
   //#region HR_EHealths
 
-  loadDataEHealths(dataRequest: DataRequest) {
+  loadListDataEHealthsByDatarequest(dataRequest: DataRequest) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
@@ -1170,7 +1184,7 @@ export class CodxHrService {
       'HR',
       'ERM.Business.HR',
       'EHealthsBusiness',
-      'AddEHealthsAsync',
+      'AddEHealthAsync',
       [data]
     );
   }
@@ -1180,7 +1194,7 @@ export class CodxHrService {
       'HR',
       'ERM.Business.HR',
       'EHealthsBusiness',
-      'EditEHealthsAsync',
+      'EditEHealthAsync',
       data
     );
   }
@@ -1190,7 +1204,7 @@ export class CodxHrService {
       'HR',
       'ERM.Business.HR',
       'EHealthsBusiness',
-      'DeleteEHealthsAsync',
+      'DeleteEmployeEHealthInfoAsync',
       data
     );
   }
@@ -1385,6 +1399,26 @@ export class CodxHrService {
     );
   }
 
+  addESlkillInfo(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'ESkillsBusiness',
+      'AddEmployeeSkillInfoAsync',
+      [data]
+    );
+  }
+
+  updateEskillInfo(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'ESkillsBusiness',
+      'UpdateEmployeeSkillInfoAsync',
+      data
+    );
+  }
+
   deleteESkill(recID: string) {
     return this.api.execSv<any>(
       'HR',
@@ -1397,11 +1431,13 @@ export class CodxHrService {
   //#endregion
 
   getHRDataDefault(funcID: string, entityName: string, idField: string) {
-    return this.api.execSv<any>('HR', 'CM', 'DataBusiness', 'GetDefaultAsync', [
-      funcID,
-      entityName,
-      idField,
-    ]);
+    return this.api.execSv<any>(
+      'HR',
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName, idField]
+    );
   }
   //#region HR_EAccidents
   loadDataEAccident(dataRequest: DataRequest) {
@@ -1456,6 +1492,16 @@ export class CodxHrService {
     );
   }
 
+  getCrrEContract(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EContractsBusiness',
+      'GetCrrEContractAsync',
+      dataRequest
+    );
+  }
+
   loadDataEContract(dataRequest: DataRequest) {
     return this.api.execSv<any>(
       'HR',
@@ -1497,17 +1543,300 @@ export class CodxHrService {
   }
   //#endregion
 
-  //#region
-  getDataDefault(
-    funcID: string,
-    entityName: string,
-    idField: string
-  ): Observable<object> {
-    return this.api.execSv('HR', 'CM', 'DataBusiness', 'GetDefaultAsync', [
-      funcID,
-      entityName,
-      idField,
-    ]);
+  //#region HR_EBenefit
+
+  GetCurrentBenefit(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBenefitsBusiness',
+      'GetCurrentBenefitAsync',
+      data
+    );
   }
+
+  AddEBenefit(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBenefitsBusiness',
+      'AddEBenefitAsync',
+      [data]
+    );
+  }
+
+  EditEBenefit(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBenefitsBusiness',
+      'EditEBenefitAsync',
+      data
+    );
+  }
+
+  DeleteEBenefit(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBenefitsBusiness',
+      'DeleteEBenefitAsync',
+      data
+    );
+  }
+
+  //#endregion
+
+  //#region HR_EBusinessTravels
+
+  getEBTravelDefaultAsync() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBusinessTravelsBusiness',
+      'GetEBTravelDefaultAsync',
+      null
+    );
+  }
+
+  addEBusinessTravels(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'AddEBusinessTravelsAsync',
+      [data]
+    );
+  }
+
+  editEBusinessTravels(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'EditEBusinessTravelsAsync',
+      data
+    );
+  }
+
+  deleteEBusinessTravels(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'DeleteEBusinessTravelsAsync',
+      data
+    );
+  }
+
+  //#endregion
+
+  //#region Common
+  getFormGroup(formName, gridView): Promise<FormGroup> {
+    return new Promise<FormGroup>((resolve, reject) => {
+      this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
+        if (gv) {
+          var arrgv = Object.values(gv) as any[];
+          const group: any = {};
+          arrgv.forEach((element) => {
+            var keytmp = Util.camelize(element.fieldName);
+            var value = null;
+            var type = element.dataType.toLowerCase();
+            if (type === 'bool') value = false;
+            if (type === 'datetime') value = new Date();
+            if (type === 'int' || type === 'decimal') value = 0;
+            group[keytmp] = element.isRequire
+              ? new FormControl(value, Validators.required)
+              : new FormControl(value);
+          });
+          group['updateColumn'] = new FormControl('');
+          var formGroup = new FormGroup(group);
+          resolve(formGroup);
+        }
+      });
+      // this.cache
+      //   .gridViewSetup(formName, gridView)
+      //   .subscribe((grvSetup: any) => {
+      //     let gv = Util.camelizekeyObj(grvSetup);
+      //     var model = {};
+      //     model['write'] = [];
+      //     model['delete'] = [];
+      //     model['assign'] = [];
+      //     model['share'] = [];
+      //     if (gv) {
+      //       const user = this.auth.get();
+      //       for (const key in gv) {
+      //         const element = gv[key];
+      //         element.fieldName = Util.camelize(element.fieldName);
+      //         model[element.fieldName] = [];
+      //         let modelValidator = [];
+      //         if (element.isRequire) {
+      //           modelValidator.push(Validators.required);
+      //         }
+      //         if (element.fieldName == 'email') {
+      //           modelValidator.push(Validators.email);
+      //         }
+      //         if (modelValidator.length > 0) {
+      //           model[element.fieldName].push(modelValidator);
+      //         }
+      //       }
+      //       model['write'].push(false);
+      //       model['delete'].push(false);
+      //       model['assign'].push(false);
+      //       model['share'].push(false);
+      //     }
+
+      //   });
+    });
+  }
+
+  getDataDefault(funcID: string, entityName: string, idField: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName, idField]
+    );
+  }
+
+  getFormModel(functionID): Promise<FormModel> {
+    return new Promise<FormModel>((resolve, rejects) => {
+      this.cache.functionList(functionID).subscribe((funcList) => {
+        var formModel = new FormModel();
+        if (funcList) {
+          formModel.entityName = funcList?.entityName;
+          formModel.formName = funcList?.formName;
+          formModel.gridViewName = funcList?.gridViewName;
+          formModel.funcID = funcList?.functionID;
+          formModel.entityPer = funcList?.entityPer;
+
+          this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
+            this.cache.setGridView(formModel.gridViewName, gridView);
+            this.cache
+              .gridViewSetup(formModel.formName, formModel.gridViewName)
+              .subscribe((gridViewSetup) => {
+                this.cache.setGridViewSetup(
+                  formModel.formName,
+                  formModel.gridViewName,
+                  gridViewSetup
+                );
+                resolve(formModel);
+              });
+          });
+        }
+      });
+    });
+  }
+
+  setCacheFormModel(formModel: FormModel) {
+    this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
+      this.cache.setGridView(formModel.gridViewName, gridView);
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((gridViewSetup) => {
+          this.cache.setGridViewSetup(
+            formModel.formName,
+            formModel.gridViewName,
+            gridViewSetup
+          );
+        });
+    });
+  }
+
+  notifyInvalid(formGroup: FormGroup, formModel: FormModel) {
+    let gridViewSetup;
+    const invalid = [];
+    const controls = formGroup.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+        break;
+      }
+    }
+    let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+
+    this.cache
+      .gridViewSetup(formModel.formName, formModel.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          gridViewSetup = res;
+          let headerText = gridViewSetup[fieldName]?.headerText ?? fieldName;
+
+          if (fieldName == 'Email' && formGroup.value.email != null) {
+            this.notiService.notifyCode('E0003', 0, '"' + headerText + '"');
+          } else {
+            this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
+          }
+        }
+      });
+  }
+
+  notifyInvalidFromTo(
+    FromDateField: string,
+    ToDateField: string,
+    formModel: FormModel
+  ) {
+    let gridViewSetup;
+    this.cache
+      .gridViewSetup(formModel.formName, formModel.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          gridViewSetup = res;
+          let text1 = gridViewSetup[FromDateField]?.headerText ?? FromDateField;
+          let text2 = gridViewSetup[ToDateField]?.headerText ?? ToDateField;
+
+          this.notiService.notifyCode(
+            'HR003',
+            0,
+            '"' + text2 + '"',
+            '"' + text1 + '"'
+          );
+        }
+      });
+  }
+
+  loadDataCbx(service: string, dataRequest: DataRequest = null) {
+    return this.api.execSv<any>(
+      service,
+      'ERM.Business.Core',
+      'DataBusiness',
+      'LoadDataCbxAsync',
+      [dataRequest]
+    );
+  }
+  //#endregion
+
+  getFunctionList(funcID: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'SystemSettingsBusiness',
+      'GetFunctionAsync',
+      funcID
+    );
+  }
+
+  addTest() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBusinessTravelsBusiness',
+      'AddTestAsync',
+      null
+    );
+  }
+
+  //#region HR_Positions
+  getPositionByID(positionID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PositionsBusiness',
+      'GetAsync',
+      positionID
+    );
+  }
+
   //#endregion
 }

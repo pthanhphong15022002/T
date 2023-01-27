@@ -1,342 +1,324 @@
 <layout-list-detail
-    #lstDetail
-    [title]="headerText"
-    [formModel]="formModel"
-    [footer]="footer"
-    [dialog]="dialog"
-    [data]="degreeObj"
-    [leftTemlate]="LeftTemlate"
-    [RightTemlate]="body"
-    *ngIf="isAfterRender"
+  #lstDetail
+  [title]="headerText"
+  [formModel]="formModel"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="degreeObj"
+  [leftTemlate]="LeftTemlate"
+  [RightTemlate]="body"
+  *ngIf="isAfterRender"
 >
-    <ng-template #body>
-        <div class="form-group row">
+  <ng-template #body>
+    <div class="form-group row">
+      <codx-label fiedName="DegreeName" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="degreeName"
+        [Group]="formGroup"
+        [formModel]="formModel"
+      ></codx-input>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label
+          fiedName="TrainFieldID"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+          field="trainFieldID"
+          [Group]="formGroup"
+          [formModel]="formModel"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="TrainLevel" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="trainLevel"
+          [Group]="formGroup"
+          [formModel]="formModel"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <codx-label
+        fiedName="TrainFieldDetail"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="trainFieldDetail"
+        [Group]="formGroup"
+        [formModel]="formModel"
+      ></codx-input>
+    </div>
+
+    <div class="form-group row">
+      <codx-label
+        fiedName="TrainSupplierID"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="trainSupplierID"
+        [Group]="formGroup"
+        [formModel]="formModel"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="CourseName" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="courseName"
+          [Group]="formGroup"
+          [formModel]="formModel"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="TrainForm" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="trainForm"
+          [Group]="formGroup"
+          [formModel]="formModel"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="TrainFrom" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="trainFrom"
+          [Group]="formGroup"
+          [formModel]="formModel"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="TrainTo" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="trainTo"
+          [Group]="formGroup"
+          [formModel]="formModel"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="ExamDate" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="examDate"
+          [Group]="formGroup"
+          [formModel]="formModel"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label
+          fiedName="YearGraduated"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+          field="yearGraduated"
+          [Group]="formGroup"
+          [formModel]="formModel"
+          [showSpinButton]="false"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="TotalScore" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="totalScore"
+          [Group]="formGroup"
+          [formModel]="formModel"
+          [showSpinButton]="false"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="Ranking" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="ranking"
+          [Group]="formGroup"
+          [formModel]="formModel"
+          [showSpinButton]="false"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="IsGraduated" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="isGraduated"
+          [Group]="formGroup"
+          [formModel]="formModel"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="IsMain" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="isMain"
+          [Group]="formGroup"
+          [formModel]="formModel"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="decisionNo"
+          [Group]="formGroup"
+          [formModel]="formModel"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="IssuedDate" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="issuedDate"
+          [Group]="formGroup"
+          [formModel]="formModel"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="DegreeNo" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="degreeNo"
+          [Group]="formGroup"
+          [formModel]="formModel"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="BookNo" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="bookNo"
+          [Group]="formGroup"
+          [formModel]="formModel"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="d-flex flex-stack">
+        <codx-label fiedName="IssuedPlace" [formModel]="formModel"></codx-label>
+        <span class="text-end align-items-end mb-1">
+          <a
+            class="btn btn-sm border border-gray-300 btn-active-light-primary align-items-center d-flex flex-row text-italic"
+            (click)="setIssuedPlace()"
+          >
+            <span class="icon-south text-danger btn-text-primary me-2"></span>
             <codx-label
-                fiedname = "DegreeName"
-                [formModel] = "formModel"
+              name="lblSetIssuedPlace"
+              default="(=Nơi đào tạo)"
+              [formModel]="formModel"
             ></codx-label>
-            <codx-input
-                field="degreeName"
-                [Group]="formGroup"
-                [formModel]="formModel"
-            ></codx-input>
-        </div>
+          </a>
+        </span>
+      </div>
 
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label
-                    fiedname="TrainFieldID"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="trainFieldID"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label
-                    fiedName="TrainLevel"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="trainLevel"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-        </div>
+      <codx-input
+        field="issuedPlace"
+        [Group]="formGroup"
+        [formModel]="formModel"
+      ></codx-input>
+    </div>
 
-        <div class="form-group row">
-            <codx-label
-                fiedname = "TrainFieldDetail"
-                [formModel] = "formModel"
-            ></codx-label>
-            <codx-input
-                field="trainFieldDetail"
-                [Group]="formGroup"
-                [formModel]="formModel"
-            ></codx-input>
-        </div>
+    <div class="form-group row">
+      <codx-label fiedName="IssuedBy" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="issuedBy"
+        [Group]="formGroup"
+        [formModel]="formModel"
+      ></codx-input>
+    </div>
 
-        <div class="form-group row">
-            <codx-label
-                fiedname = "TrainSupplierID"
-                [formModel] = "formModel"
-            ></codx-label>
-            <codx-input
-                field="trainSupplierID"
-                [Group]="formGroup"
-                [formModel]="formModel"
-            ></codx-input>
-        </div>
+    <div class="form-group row">
+      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="note"
+        [Group]="formGroup"
+        [formModel]="formModel"
+      ></codx-input>
+    </div>
+  </ng-template>
 
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label
-                    fiedname="CourseName"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="courseName"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label
-                    fiedName="TrainForm"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="trainForm"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label
-                    fiedname="TrainFrom"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="trainFrom"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label
-                    fiedName="TrainTo"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="trainTo"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label
-                    fiedname="ExamDate"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="examDate"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label
-                    fiedName="YearGraduated"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="yearGraduated"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label
-                    fiedname="TotalScore"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="totalScore"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label
-                    fiedName="Ranking"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="ranking"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label
-                    fiedname="IsGraduated"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="isGraduated"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label
-                    fiedName="IsMain"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="isMain"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label
-                    fiedname="DecisionNo"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="decisionNo"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label
-                    fiedName="IssuedDate"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="issuedDate"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label
-                    fiedname="DegreeNo"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="degreeNo"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label
-                    fiedName="BookNo"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="bookNo"
-                    [Group]="formGroup"
-                    [formModel]="formModel"
-                ></codx-input>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <codx-label
-                fiedname = "IssuedPlace"
-                [formModel] = "formModel"
-            ></codx-label>
-            <codx-input
-                field="issuedPlace"
-                [Group]="formGroup"
-                [formModel]="formModel"
-            ></codx-input>
-        </div>
-
-        <div class="form-group row">
-            <codx-label
-                fiedname = "IssuedBy"
-                [formModel] = "formModel"
-            ></codx-label>
-            <codx-input
-                field="issuedBy"
-                [Group]="formGroup"
-                [formModel]="formModel"
-            ></codx-input>
-        </div>
-
-        <div class="form-group row">
-            <codx-label
-                fiedname = "Note"
-                [formModel] = "formModel"
-            ></codx-label>
-            <codx-input
-                field="note"
-                [Group]="formGroup"
-                [formModel]="formModel"
-            ></codx-input>
-        </div>
-    </ng-template>
-
-    <ng-template #footer>
-        <div class="d-flex justify-content-end">
-            <button class="btn btn-primary" (click)="onSaveForm()">
-                <i class="icon-save"></i>
-            <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
-            </button>
-        </div>
-    </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="onSaveForm()">
+        <i class="icon-save"></i>
+        <codx-label
+          default="Lưu"
+          name="lblSave"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
 </layout-list-detail>
 
 <ng-template #LeftTemlate>
-    <codx-listview
-        #listView
-        [type]="'cardView'"
-        [service]="'HR'"
-        [assemblyName]="'HR'"
-        [entityName]="'HR_EDegrees'"
-        [className]="'EDegreesBusiness'"
-        [method]="'LoadEDegreesAsync'"
-        [predicate]="'EmployeeID=@0'"
-        [dataValue]="employId"
-        [itemTemplate]="itemTemplate"
-        (afterRender) = "afterRenderListView($event)"
-        [selectFirst]="true"
-    ></codx-listview>
+  <codx-listview
+    #listView
+    [type]="'cardView'"
+    [service]="'HR'"
+    [assemblyName]="'HR'"
+    [entityName]="'HR_EDegrees'"
+    [className]="'EDegreesBusiness'"
+    [method]="'LoadEDegreesAsync'"
+    [predicate]="'EmployeeID=@0'"
+    [dataValue]="employId"
+    [itemTemplate]="itemTemplate"
+    (afterRender)="afterRenderListView($event)"
+    [selectFirst]="true"
+  ></codx-listview>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-    <!-- <i class="icon-i-arrow-down-left-circle-fill"></i> + data.issuedDate -->
-    <codx-temp-full
-        [formModel]="formModel"
-        [typeMF]="'hover'"
-        [titleTmp] = "titleTemplate"
-        [subTitleTmp]="tmplateEDegreesMenuList"
-        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
-        [hideMF]="true"
-        typeMF="hover"
-        [dataItem]="data"
-        (click)="click(data)"
-    ></codx-temp-full>
+  <!-- <i class="icon-i-arrow-down-left-circle-fill"></i> + data.issuedDate -->
+  <codx-temp-full
+    [formModel]="formModel"
+    [typeMF]="'hover'"
+    [titleTmp]="titleTemplate"
+    [subTitleTmp]="tmplateEDegreesMenuList"
+    cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+    [hideMF]="true"
+    typeMF="hover"
+    [dataItem]="data"
+    (click)="click(data)"
+  ></codx-temp-full>
 </ng-template>
 
 <ng-template #tmplateEDegreesMenuList let-data>
-    <div class="d-flex flex-column">
-        <div><i class ="icon-home_work"></i>{{data.trainSupplierID}}</div>
-        <div><i class ="icon-calendar_today"></i>{{data.courseName}} <i class="icon-i-arrow-down-left-circle-fill"></i>{{data.trainForm}} |
-            <i class="icon-airplanemode_active"></i> {{data.ranking}} <i class="icon-i-arrow-down-left-circle-fill"></i> {{data.totalScore}}</div>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center pb-2">
+      <i class="icon-home_work"></i>{{ data.trainSupplierID }}
     </div>
+    <div class="d-flex align-items-center">
+      <i class="icon-calendar_today pe-1"></i>{{ data.courseName }}
+      <i class="icon-i-arrow-down-left-circle-fill icon_style pe-1 ps-1"></i
+      >{{ data.trainForm }} |
+      <i class="icon-airplanemode_active pe-1 ps-1"></i> {{ data.ranking }}
+      <i class="icon-i-arrow-down-left-circle-fill icon_style pe-1 ps-1"></i>
+      {{ data.totalScore }}
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #titleTemplate let-data>
-    <div class="d-flex flex-column">
-        <div><i class ="icon-school"></i>{{data.degreeName}}
-            <i class="icon-i-arrow-down-left-circle-fill"></i>{{data.issuedDate | fmDT}}
-        </div>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center pb-2">
+      <i class="icon-school me-1"></i>{{ data.degreeName }}
+      <i class="icon-i-arrow-down-left-circle-fill icon_style me-1 ms-1"></i
+      >{{ data.issuedDate | fmDT }}
     </div>
+  </div>
 </ng-template>

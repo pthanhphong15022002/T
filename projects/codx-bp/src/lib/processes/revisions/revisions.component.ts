@@ -5,27 +5,23 @@ import {
   Optional,
   ViewChild,
   ChangeDetectorRef,
-  inject,
-  Injector,
 } from '@angular/core';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   DialogData,
   DialogRef,
-  ApiHttpService,
   NotificationsService,
-  AuthStore,
-  UIComponent,
   CacheService,
   Util,
+  AuthStore,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { filter, from, map } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
 import { CodxBpService } from '../../codx-bp.service';
 import {
   BP_Processes,
   BP_ProcessRevisions,
 } from '../../models/BP_Processes.model';
-
 @Component({
   selector: 'lib-revisions',
   templateUrl: './revisions.component.html',
@@ -57,10 +53,13 @@ export class RevisionsComponent implements OnInit {
   fucntionIdMain: any;
   enterComment: any;
   enterName: any;
+  msgCodeNameVersionIsExist: string = 'BP002';
+  user: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private cache: CacheService,
+    private authStore: AuthStore,
     private change: ChangeDetectorRef,
     private bpService: CodxBpService,
     @Optional() dt?: DialogData,
@@ -74,6 +73,7 @@ export class RevisionsComponent implements OnInit {
     this.process = this.data?.data;
     this.fucntionIdMain = this.data?.funcIdMain;
     this.revisions = this.process?.versions;
+    this.user = this.authStore.get();
     this.headerText = dt?.data.more.defaultName;
     this.verNo = 'V' + this.revisions.length.toString() + '.0';
     this.cache.message('BP001').subscribe((res) => {
@@ -114,16 +114,37 @@ export class RevisionsComponent implements OnInit {
   }
   //#endregion
   checkValiName(nameVersion: string) {
-    if (nameVersion == null || nameVersion.trim() == '') {
+    let check = true;
+    if (nameVersion === null || nameVersion.trim() === '') {
       return this.msgErrorValidIsNull;
     }
-    let check = true;
-    this.revisions.forEach((element) => {
-      if (element.versionName == nameVersion.trim()) {
+    // filter array in rxjs
+    //  let revisions$: Observable<any>;
+    //  revisions$ = from(this.revisions);
+
+    //  revisions$.pipe(map(x=>{
+    //   if(x?.versionName){
+    //    x.versionName = x?.versionName.toUpperCase();
+    //   }
+    //  })).subscribe()
+    // let listCount:any=[];
+    // var result = revisions$.pipe(filter(x=>x.versionName == nameVersion.trim().toUpperCase())).subscribe(x=> listCount.push(x));
+    // console.log(listCount);
+    // if(listCount.length > 0 && listCount.length !== null) {
+    //   check = false;
+    //   return this.msgErrorValidExit;
+    // }
+
+    for (let element of this.revisions) {
+      if (
+        element.versionName &&
+        element?.versionName.toUpperCase() == nameVersion.trim().toUpperCase()
+      ) {
         check = false;
+        return this.msgErrorValidExit;
       }
-    });
-    return check ? this.msgSucess : this.msgErrorValidExit;
+    }
+    return this.msgSucess;
   }
 
   onSave() {
@@ -132,24 +153,15 @@ export class RevisionsComponent implements OnInit {
         this.notiService.notifyCode('SYS009', 0, '"' + this.enterName + '"');
         break;
       case this.msgErrorValidExit:
-        this.notiService.alertCode('BP004').subscribe((x) => {
-          if (x.event?.status == 'N') {
-            return;
-          } else {
-            this.isUpdate = true;
-            this.actionSave()
-          }
-        });
+        this.notiService.notifyCode(this.msgCodeNameVersionIsExist);
         break;
       case this.msgSucess:
         this.isUpdate = true;
-        this.actionSave()
+        this.actionSave();
         break;
     }
-
-
   }
-  actionSave(){
+  actionSave() {
     if (this.isUpdate) {
       this.bpService
         .updateRevision(

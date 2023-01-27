@@ -35,9 +35,9 @@
   margin-top: 10px;
 }
 
-.personal-container app-list-post .e-listview .e-list-item {
-  border: 0 !important;
-}
+// .personal-container app-list-post .e-listview .e-list-item {
+//   border: 0 !important;
+// }
 
 .personal-container .e-listview .e-list-item:hover,
 .personal-container .e-listview .e-list-item.e-active {
@@ -80,9 +80,10 @@
 app-personals .pw-content {
   margin-top: 12px;
   min-width: 760px;
+  padding-bottom: 0 !important;
   height: calc(100vh - 240px) !important;
   overflow: auto;
-  background-color: white;
+  //background-color: white;
   box-shadow: none;
 }
 
@@ -211,4 +212,16 @@ codx-card-img .card-icon-nowrap {
 
 .personal-container app-list-post .e-listview .e-list-item {
   border-bottom: 1px #f2f3f7 solid !important;
+}
+
+.pw-storgae {
+  height: calc(100vh - 257px);
+}
+
+.pw-storgae .card-body {
+  height: 100% !important;
+}
+
+.pw-content.pw-feed .card-body {
+  height: 100% !important;
 }

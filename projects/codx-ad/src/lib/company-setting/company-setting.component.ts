@@ -35,6 +35,8 @@ import { PopupPersonalComponent } from './popup-personal/popup-personal.componen
 import { LowerCasePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
+import { TN_OrderModule } from '../models/tmpModule.model';
+import { PopupModuleDetailComponent } from './popup-module-detail/popup-module-detail.component';
 
 @Component({
   selector: 'lib-company-setting',
@@ -52,16 +54,21 @@ export class CompanySettingComponent
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('itemView') itemView: TemplateRef<any>;
   @ViewChild('leftMenu') leftMenu: TemplateRef<any>;
-  @ViewChild('paneleft') paneleft: TemplateRef<any>;
+  @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   items: any;
   views: Array<ViewModel> = [];
   data: AD_CompanySettings;
+  // data: any;
   // data = new AD_CompanySettings();
   dialog!: DialogRef;
   minType = 'MinRange';
   memory: number;
   storage: number;
+  curStorage: number;
+  maxStorage: number;
+  kbToGb = 1024 * 1024;
+  inner = '';
   // image main logo
   check?: string;
   imageUpload: UploadFile = new UploadFile();
@@ -79,7 +86,12 @@ export class CompanySettingComponent
   @Input() childProperty: any[];
   optionMailHeader: any = 'mailheader';
   tenant: any;
-
+  vllL1449;
+  setting;
+  //bought modules
+  lstModule: Array<TN_OrderModule> = [];
+  lstInstalledModule: Array<TN_OrderModule> = [];
+  lstNotInstallModule: Array<TN_OrderModule> = [];
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -93,6 +105,8 @@ export class CompanySettingComponent
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     var auth = authStore as any;
     this.tenant = auth.tenantStore?.activeTenant;
+    this.loadData();
+
   }
 
   onInit(): void {
@@ -101,19 +115,42 @@ export class CompanySettingComponent
         this.moreFunc = res;
       }
     });
-    this.loadData();
+    this.cache.valueList('L1449').subscribe((res) => {
+      this.vllL1449 = res?.datas;
+    });
+    this.adService.getTenantDefaultSetting().subscribe((res) => {
+      this.setting = JSON.parse(res.dataValue);
+    });
+    this.adService
+      .getLstBoughtModule()
+      .subscribe((res: Array<TN_OrderModule>) => {
+        if (res) {
+          this.lstModule = res;
+          this.lstModule.forEach((md) => {
+            if (md.boughtModule.refID == null) {
+              if (md.bought) {
+                this.lstInstalledModule.push(md);
+              } else {
+                this.lstNotInstallModule.push(md);
+              }
+            }
+          });
+        }
+      });
   }
   ngAfterViewInit(): void {
     this.views = [
       {
         type: ViewType.content,
         active: true,
-        sameData: false,
+        sameData: true,
         model: {
-          panelRightRef: this.paneleft,
+          panelRightRef: this.templateRight,
         },
       },
     ];
+    this.changeDetectorRef.detectChanges();
+
   }
   valueChange(e) {
     if (e.data) {
@@ -196,45 +233,56 @@ export class CompanySettingComponent
   loadData() {
     this.adService.getListCompanySettings().subscribe((response) => {
       if (response) {
-        if (response) {
-          this.data = response;
-          if (this.data.logoFull) {
-            var bytes = this.base64ToArrayBuffer(this.data.logoFull);
-            let blob = new Blob([bytes], { type: 'image/jpeg' });
-            let url = window.URL.createObjectURL(blob);
-            let image = this.sanitizer.bypassSecurityTrustUrl(url);
-            this.image = image;
-          }
-
-          if (this.data.logo) {
-            var bytes = this.base64ToArrayBuffer(this.data.logo);
-            let blob = new Blob([bytes], { type: 'image/jpeg' });
-            let url = window.URL.createObjectURL(blob);
-            let image = this.sanitizer.bypassSecurityTrustUrl(url);
-            this.imageLogo = image;
-          }
-
-          if (this.data.timeZone) this.getURLEmbed(this.data.timeZone);
-          // this.data.companyCode.toString().toLowerCase();
-          this.detectorRef.detectChanges();
+        this.data = response;
+        if (this.data.logoFull) {
+          var bytes = this.base64ToArrayBuffer(this.data.logoFull);
+          let blob = new Blob([bytes], { type: 'image/jpeg' });
+          let url = window.URL.createObjectURL(blob);
+          let image = this.sanitizer.bypassSecurityTrustUrl(url);
+          this.image = image;
         }
+
+        if (this.data.logo) {
+          var bytes = this.base64ToArrayBuffer(this.data.logo);
+          let blob = new Blob([bytes], { type: 'image/jpeg' });
+          let url = window.URL.createObjectURL(blob);
+          let image = this.sanitizer.bypassSecurityTrustUrl(url);
+          this.imageLogo = image;
+        }
+        if (this.data.storage < 0) {
+          this.maxStorage = Number(this.data.memory);
+          this.cache.message('AD016').subscribe((res) => {
+            this.inner = res.customName;
+          });
+        } else {
+          this.cache.message('AD015').subscribe((res) => {
+            this.maxStorage = Number(this.data.storage);
+            this.inner = res.customName;
+          });
+        }
+        this.curStorage = Number(this.data.memory);
+        if (this.data.timeZone) this.getURLEmbed(this.data.timeZone);
+        // this.data.companyCode.toString().toLowerCase();
+        this.detectorRef.detectChanges();
       }
     });
   }
 
-  formatBytes(bytes) {
-    var gb = (bytes / (1024 * 1024 * 1024)).toFixed(0);
+  formatBytes(kbytes) {
+    let gb = (kbytes / this.kbToGb).toFixed(0);
     return gb;
   }
 
   innerHTML(memory, storage) {
-    var me = (memory / (1024 * 1024 * 1024)).toFixed(1) + ' GB ';
-    var sto = (storage / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
-    var inner = '';
-    if (memory && storage) {
-      inner += '<div>Đã dùng ' + me + 'trong số ' + sto + '</div>';
-    }
-    return inner;
+    let me = (memory / this.kbToGb).toFixed(1);
+    me = Number(me) < 1 ? memory + ' KB' : me + ' GB ';
+
+    let sto = (storage / this.kbToGb).toFixed(1);
+    sto = Number(sto) < 1 ? storage + ' KB' : sto + ' GB ';
+
+    this.inner = this.inner.replace('{0}', me).replace('{1}', sto);
+
+    return this.inner;
   }
 
   txtToLower(e: any) {
@@ -348,5 +396,26 @@ export class CompanySettingComponent
       this.urlEmbedSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url);
       this.changeDetectorRef.detectChanges();
     }
+  }
+
+  openModuleDetail(module) {
+    let data = {
+      module: module,
+      lstModule: this.lstModule,
+      currency: this.setting?.CurrencyID,
+      vllL1449: this.vllL1449,
+    };
+    let popuMD = this.callfc.openForm(
+      PopupModuleDetailComponent,
+      '',
+      900,
+      900,
+      this.funcID,
+      data
+    );
+  }
+
+  viewChanged(e){
+    console.log(e);
   }
 }

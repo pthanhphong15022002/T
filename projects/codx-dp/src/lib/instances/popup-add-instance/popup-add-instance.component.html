@@ -1,0 +1,185 @@
+<codx-layout-add
+  [title]="title"
+  [subHeader]="subHeader"
+  [tabInfo]="tabInfo"
+  [tabContent]="tabContent"
+  [openMore]="true"
+  (buttonClick)="buttonClick($event)"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+  [footer]="footer"
+  (setTitle)="setTitle($event)"
+  #form
+></codx-layout-add>
+
+<ng-template #subHeader>
+  <codx-tag
+    [entityName]="dialog.formModel.entityName"
+    [isEdit]="true"
+    [disabled]="false"
+    [value]="''"
+    (valueChange)="valueChange($event)"
+  ></codx-tag>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-between">
+    <button type="button" class="btn btn-light-primary me-3">
+      <i class="icon-cloud_upload fs-5"></i
+      ><span>
+        <codx-label default="Đính kèm"></codx-label>
+      </span>
+    </button>
+    <button type="button" class="btn btn-primary ms-1">
+      <codx-label default="Lưu"></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #tabGeneralInfo>
+  <div class="form-group">
+    <codx-label
+      fiedName="InstanceNo"
+      [formModel]="form.formModel"
+      default="Mã nhiệm vụ"
+    >
+    </codx-label>
+    <codx-input
+      field="instanceNo"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      type="text"
+      [placeholder]="'Mã tự sinh'"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" default="Tên nhiệm vụ">
+    </codx-label>
+    <codx-input
+      field=""
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      type="text"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+
+  <div class="form-group">
+    <codx-label
+      fiedName=""
+      [formModel]="form.formModel"
+      default="Người phụ trách"
+    >
+    </codx-label>
+    <codx-input
+      field=""
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      type="valuelist"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+
+  <div class="form-group">
+    <codx-label
+      fiedName=""
+      [formModel]="form.formModel"
+      default="Giai đoạn quy trình"
+    >
+    </codx-label>
+    <codx-input
+      field=""
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      type="valuelist"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+
+  <div class="form-group">
+    <codx-label fiedName="" [formModel]="form.formModel" default="Tên nhiệm vụ">
+    </codx-label>
+    <codx-input
+      field=""
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      type="text"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+
+  <div class="form-group">
+    <codx-label
+      fiedName="EndDate"
+      [formModel]="form.formModel"
+      default="Ngày đến hạn"
+    >
+    </codx-label>
+    <codx-input
+      field="endDate"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      type="text"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+
+  <div class="form-group">
+    <codx-label fiedName="" [formModel]="form.formModel" default="Tên nhiệm vụ">
+    </codx-label>
+    <codx-input
+      field=""
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      type="text"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+</ng-template>
+
+<ng-template #tabLocation>
+  <!-- <div class="form-group">
+    <div>
+      <codx-label
+        fiedName="TaskName"
+        formName="Tasks"
+        gridViewName="grvTasks"
+        default="Địa chỉ"
+      >
+      </codx-label>
+    </div>
+
+    <codx-input
+      field=""
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      type="text"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div> -->
+</ng-template>
+
+<ng-template #tabLocation> </ng-template>
+
+<ng-template #tabInputInfo>
+  <ng-container *ngIf="step.fields?.length > 0">
+    <ng-container *ngFor="let item of step.fields">
+      <div class="form-group">
+        <codx-input-custom-field
+          [customField]="item"
+          (valueChangeCustom)="valueChangeCustom($event)"
+        ></codx-input-custom-field>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>

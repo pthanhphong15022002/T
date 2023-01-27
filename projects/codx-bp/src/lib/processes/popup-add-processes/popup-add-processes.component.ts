@@ -81,6 +81,7 @@ export class PopupAddProcessesComponent implements OnInit {
   moreFunctionEdit: string = 'edit';
   listPermissionCopy: BP_ProcessPermissions[] = [];
   onwerOldCoppy: string = '';
+  msgCodeExistNameProcess='BP008';
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -101,6 +102,7 @@ export class PopupAddProcessesComponent implements OnInit {
     this.entity = this.dialog.formModel.entityName;
 
     this.user = this.authStore.get();
+
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
         this.title =
@@ -154,7 +156,7 @@ export class PopupAddProcessesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.acceptEdit();
+    // this.acceptEdit();
     this.isDisable = true;
     if (this.action === this.moreFunctionEdit) {
       this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
@@ -193,7 +195,7 @@ export class PopupAddProcessesComponent implements OnInit {
           for (let i = 0; i < countArray; i++) {
             if (
               this.listPermissionCopy[i].autoCreate &&
-              this.listPermissionCopy[i].objectID != this.onwerOldCoppy
+             (this.listPermissionCopy[i].objectID != this.onwerOldCoppy || (this.listPermissionCopy[i].objectID == this.onwerOldCoppy && this.listPermissionCopy[i].memberType == '1'))
             ) {
               this.process.permissions.push(this.listPermissionCopy[i]);
             }
@@ -215,6 +217,13 @@ export class PopupAddProcessesComponent implements OnInit {
     } else if (this.action == this.moreFunctionEdit) {
       op.method = 'UpdateProcessesAsync';
       op.className = 'ProcessesBusiness';
+      if(this.process.versions.length > 0 && this.process.versions !== null ) {
+        this.process.versions.forEach(x=> {
+          if(x.versionNo === this.process.versionNo) {
+            x.activedOn = this.process.activedOn;
+          }
+        });
+      }
       data = [this.process, this.funcID, this.entity, this.ownerOld];
     }
 
@@ -341,20 +350,12 @@ export class PopupAddProcessesComponent implements OnInit {
       .isCheckExitName(this.process.processName, id)
       .subscribe((res) => {
         if (res) {
-          this.CheckExistNameProccess();
+          this.notiService.notifyCode(this.msgCodeExistNameProcess);
+          return;
         } else {
           this.actionSave();
         }
       });
-  }
-  CheckExistNameProccess() {
-    this.notiService.alertCode('BP008').subscribe((x) => {
-      if (x.event?.status == 'N') {
-        return;
-      } else if (x.event?.status == 'Y') {
-        this.actionSave();
-      }
-    });
   }
   //#endregion method
   isUpdateCreateProcess() {
@@ -367,13 +368,6 @@ export class PopupAddProcessesComponent implements OnInit {
       this.onUpdate();
     }
   }
-  //#region check date
-  isCheckFromToDate(toDate) {
-    var to = new Date(toDate);
-    if (to <= new Date()) return true;
-    else return false;
-  }
-  ////#endregion
 
   //#region event
   valueChange(e) {
@@ -402,11 +396,14 @@ export class PopupAddProcessesComponent implements OnInit {
   //#endregion event
 
   valueChangeUser(e) {
-    this.process.owner = e?.data;
-    this.isAddPermission(this.process.owner);
+    if(e.data){
+      this.process.owner = e?.data;
+      this.isAddPermission(this.process.owner);
+    }
   }
   isAddPermission(id) {
-    this.api
+    if(id!=null){
+      this.api
       .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
       .subscribe((res) => {
         if (res) {
@@ -415,47 +412,47 @@ export class PopupAddProcessesComponent implements OnInit {
           this.updatePermission(this.emp, this.tmpPermission, this.onwerRole);
         }
       });
+    }
+
   }
   updateOrCreatProccess(emp: tmpUser) {
-    if (
-      this.process?.permissions != null &&
-      this.process?.permissions.length > 0
-    ) {
-      this.process.permissions
-        .filter((x) => x.objectID === this.tmpPermission.objectID)
-        .forEach((element) => {
-          this.updatePermission(emp, element, this.onwerRole);
-          this.isExitUserPermiss = true;
-        });
-      if (!this.isExitUserPermiss) {
-        this.process.permissions.push(this.tmpPermission);
+      if (
+        this.process?.permissions != null &&
+        this.process?.permissions.length > 0
+      ) {
+        // member type is zero for onwer of proccess
+        this.process.permissions
+          .filter((x) => x.objectID === this.tmpPermission.objectID && x.memberType =="0")
+          .forEach((element) => {
+            this.updatePermission(emp, element, this.onwerRole);
+            this.isExitUserPermiss = true;
+          });
+        if (!this.isExitUserPermiss) {
+          this.process.permissions.push(this.tmpPermission);
+        }
+      } else {
+        this.perms.push(this.tmpPermission);
+        this.process.permissions = this.perms;
       }
-    } else {
-      this.perms.push(this.tmpPermission);
-      this.process.permissions = this.perms;
-    }
-    this.callActionSave();
+      this.callActionSave();
   }
 
-  updatePermission(
+  async updatePermission(
     emp: tmpUser,
     tmpPermission: BP_ProcessPermissions,
     role: string
   ) {
+    // BE handle update onwer
+    tmpPermission.memberType = '0';
     if (role === this.onwerRole) {
+      tmpPermission.objectType = '1';
       tmpPermission.objectID = emp?.userID;
       tmpPermission.objectName = emp?.userName;
       if (emp.administrator) {
         tmpPermission.objectType = '7';
-      } else if (this.checkAdminOfBP(emp.userID)) {
-        tmpPermission.objectType = '7';
       }
     }
-    // BE handle update onwer
-    tmpPermission.objectType = '1';
-    tmpPermission.memberType = '0';
     tmpPermission.autoCreate = true;
-
     tmpPermission.edit = true;
     tmpPermission.create = true;
     tmpPermission.publish = true;
@@ -472,34 +469,33 @@ export class PopupAddProcessesComponent implements OnInit {
       this.action == this.moreFunctionEdit
     ) {
       this.actionSave();
-    } else if (
-      this.process?.processName.trim().toLocaleLowerCase() ===
-      this.nameOld?.trim().toLocaleLowerCase()
-    ) {
-      this.CheckExistNameProccess();
-    } else {
+    }
+    else {
       this.CheckAllExistNameProccess(this.process.recID);
     }
   }
-  checkAdminOfBP(userid: any) {
-    let check: boolean;
-    this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
-    return check;
-  }
 
-  acceptEdit() {
-    if (this.user.administrator) {
-      this.isAcceptEdit = true;
-    } else if (this.checkAdminOfBP(this.user.userId)) {
-      this.isAcceptEdit = true;
-    } else {
-      this.isAcceptEdit = false;
-    }
-  }
+  // async acceptEdit() {
+  //   if (this.user.administrator) {
+  //     this.isAcceptEdit = true;
+  //     return;
+  //   }
+  //   (await this.bpService.checkAdminOfBP(this.user?.userID)).subscribe((res) => {
+  //     if(res){
+  //       this.isAcceptEdit = true;
+  //     return;
+  //     }
+  //     else {
+  //       this.isAcceptEdit = false;
+  //       return;
+  //     }
+
+  //   });
+  // }
 
   addAvatar() {
     //this.imageAvatar.clearData();
-    //this.imageAvatar.referType = this.process.versionNo; 
+    //this.imageAvatar.referType = this.process.versionNo;
     this.imageAvatar.referType = 'avt';
     this.imageAvatar.uploadFile();
   }

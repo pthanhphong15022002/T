@@ -17,40 +17,60 @@
                 </div>
             </div>
         </div>
-        <codx-attachment #codxATM [functionID]="funcID" [objectType]="objectType" [hideFolder]="'1'"
-            [hideUploadBtn]="'1'" [hideDes]="'1'" [type]="'inline'" allowExtensions=".jpg,.png" [allowMultiFile]="'0'"
-            [hideImageUpload]="'1'" [hideBtnSave]="'1'" [hideImageThumb]="'1'" [showMessage]="'0'"
+        <codx-attachment #codxATM 
+            [functionID]="funcID" 
+            [objectType]="objectType" 
+            [hideFolder]="'1'"
+            [hideUploadBtn]="'1'" 
+            [hideDes]="'1'" 
+            [type]="'inline'" 
+            [allowMultiFile]="'0'"
+            [hideImageUpload]="'1'" 
+            [hideBtnSave]="'1'" 
+            [hideImageThumb]="'1'" 
+            [showMessage]="'0'"
             (fileCount)="getFileCount($event)">
         </codx-attachment>
-        <div *ngIf="fileUpload" class="d-flex position-relative ms-10">
-            <div class="my-3">
-                <ng-container *ngIf="fileUpload.referType == REFERTYPE.IMAGE">
-                    <ng-container *ngIf="fileUpload.recID;else imageSrc">
-                        <codx-img [recId]="fileUpload.recID" [objectId]="fileUpload.objectID" [width]="100"
-                            cssClass="pic" imageType="square" [imgOn]="date">
-                        </codx-img>
+        <ng-container *ngIf="files">
+            <div class="d-flex position-relative ms-10">
+                <div class="my-3">
+                    <ng-container *ngIf="files.referType == REFERTYPE.IMAGE">
+                        <ng-container *ngIf="files.recID;else imageSrc">
+                            <codx-img 
+                                [recId]="files.recID" 
+                                [objectId]="files.objectID" 
+                                [width]="100"
+                                cssClass="pic" 
+                                imageType="square" 
+                                [imgOn]="date"
+                                [referType]="'image'">
+                            </codx-img>
+                        </ng-container>
+                        <ng-template #imageSrc>
+                            <img [src]="files.source" alt="" class="codx-comments-image" >
+                        </ng-template>
                     </ng-container>
-                    <ng-template #imageSrc>
-                        <img [src]="fileUpload.data || fileUpload.avatar" alt="" class="codx-comments-image" >
-                    </ng-template>
-                </ng-container>
-                <ng-container *ngIf="fileUpload.referType == REFERTYPE.VIDEO">
-                    <video #video controls class="w-100 rounded min-h-250px">
-                        <source [src]="fileUpload.srcVideo || fileUpload.data" type="video/mp4">
-                    </video>
-                </ng-container>
-                <ng-container *ngIf="fileUpload.referType == REFERTYPE.APPLICATION">
-                    <codx-temp-full imageSrc="{{fileUpload.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
-                        title="{{fileUpload.fileName}}" [descLine]="1">
-                    </codx-temp-full>
-                </ng-container>
+                    <ng-container *ngIf="files.referType == REFERTYPE.VIDEO">
+                        <video #video controls class="w-100 rounded h-100px">
+                            <source [src]="files.source" type="video/mp4">
+                        </video>
+                    </ng-container>
+                    <ng-container *ngIf="files.referType == REFERTYPE.APPLICATION">
+                        <codx-temp-full 
+                            imageSrc="{{files.extension | avtFile}}" 
+                            imgCss="w-20px me-3 cursor-pointer"
+                            title="{{files.fileName}}" [descLine]="1">
+                        </codx-temp-full>
+                    </ng-container>
+                </div>
+                <div class="remove-file">
+                    <a href="javascript:void(0)" class="h-100" (click)="removeFile()">
+                        <i class="icon-close icon-18 text-danger"></i>
+                    </a>
+                </div>
             </div>
-            <div class="remove-file">
-                <a href="javascript:void(0)" class="h-100" (click)="removeFile()">
-                    <i class="icon-close icon-18 text-danger"></i>
-                </a>
-            </div>
-        </div>
+        </ng-container>
+        
     </ng-container>
 </div>
 
@@ -114,26 +134,26 @@
                     </div>
                 </ng-container>
             </div>
-            <ng-container *ngIf="fileUpload">
-                <div class="d-flex my-3" (click)="clickViewDetail(fileUpload)">
-                    <ng-container *ngIf="fileUpload.referType == REFERTYPE.IMAGE">
-                        <ng-container *ngIf="fileUpload.recID;else imageSrc">
-                            <codx-img [recId]="fileUpload.recID" [objectId]="fileUpload.objectID" [width]="100"
-                                cssClass="pic" imageType="square"  [imgOn]="date">
+            <ng-container *ngIf="files">
+                <div class="d-flex my-3" (click)="clickViewDetail(files)">
+                    <ng-container *ngIf="files.referType == REFERTYPE.IMAGE">
+                        <ng-container *ngIf="files.recID;else imageSrc">
+                            <codx-img [recId]="files.recID" [objectId]="files.objectID" [width]="100"
+                                cssClass="pic" imageType="square"  [referType]="'image'" [imgOn]="date">
                             </codx-img>
                         </ng-container>
                         <ng-template #imageSrc>
-                            <img [src]="fileUpload.data || fileUpload.avatar" alt="" class="image">
+                            <img [src]="files.source" alt="" class="image">
                         </ng-template>
                     </ng-container>
-                    <ng-container *ngIf="fileUpload.referType == REFERTYPE.VIDEO">
+                    <ng-container *ngIf="files.referType == REFERTYPE.VIDEO">
                         <video #video controls class="w-100 rounded min-h-250px">
-                            <source [src]="fileUpload.srcVideo || fileUpload.data" type="video/mp4">
+                            <source [src]="files.source" type="video/mp4">
                         </video>
                     </ng-container>
-                    <ng-container *ngIf="fileUpload.referType == REFERTYPE.APPLICATION">
-                        <codx-temp-full imageSrc="{{fileUpload.extension | avtFile}}"
-                            imgCss="w-20px me-3 cursor-pointer" title="{{fileUpload.fileName}}" [descLine]="1">
+                    <ng-container *ngIf="files.referType == REFERTYPE.APPLICATION">
+                        <codx-temp-full imageSrc="{{files.extension | avtFile}}"
+                            imgCss="w-20px me-3 cursor-pointer" title="{{files.fileName}}" [descLine]="1">
                         </codx-temp-full>
                     </ng-container>
                 </div>
@@ -150,7 +170,7 @@
                             </div>
                         </div>
                         <div class="d-flex mod icon-like">
-                            <ng-container *ngFor="let item of lstData">
+                            <ng-container *ngFor="let item of iCons">
                                 <a class="mod-icon" (click)="votePost(data, item.value)">
                                     <img src="/assets/themes/wp/default/img/{{item.icon}}"
                                         alt="Kiwi standing on oval"></a>
@@ -165,7 +185,7 @@
                         </ng-template>
                     </div>
                     <span class="d-flex align-items-center text-gray-600 text-hover-underline" (click)="replyTo(data)">
-                        <codx-label formName="WPW_Comments" name="lblReply" default="Trả lời"></codx-label>
+                        <codx-label formName="WP_Comments" name="lblReply" default="Trả lời"></codx-label>
                     </span>
                 </div>
 

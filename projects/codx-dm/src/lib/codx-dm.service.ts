@@ -892,6 +892,7 @@ export class CodxDMService {
   }
 
   getImage(data: any) {
+    debugger;
     if (data?.folderName && !data?.extension)
       return '../../../assets/themes/dm/default/img/icon-folder.svg';
     else {
@@ -1790,5 +1791,12 @@ export class CodxDMService {
           this.notificationsService.notify(res.message);
         }
       });
+  }
+  getFileName(name:any)
+  {
+    if(!name) return ""
+    var arrName = name.split(".");
+    if(arrName.length >1) arrName.splice((arrName.length - 1), 1);
+    return arrName.join('.')
   }
 }

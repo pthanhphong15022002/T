@@ -129,6 +129,16 @@ export class CodxSvService {
     );
   }
 
+  deleteListFile(lstObjectID) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'DeleteListFileByListObjectIDAsync',
+      [lstObjectID, true]
+    );
+  }
+
   getFileByObjectID(recID) {
     return this.api.execSv(
       'DM',
@@ -204,6 +214,32 @@ export class CodxSvService {
       'QuestionsBusiness',
       'SaveAsync',
       [transID, data, isModeAdd]
+    );
+  }
+
+  onSaveFile(dataUpload) {
+    return this.api.execSv(
+      'DM',
+      'DM',
+      'FileBussiness',
+      'CopyAsync',
+      dataUpload
+    );
+  }
+
+  onSaveListFile(lstDataUpload) {
+    return this.api.execSv('DM', 'DM', 'FileBussiness', 'CopyListFileAsync', [
+      lstDataUpload,
+    ]);
+  }
+
+  onSubmit(data) {
+    return this.api.execSv(
+      'SV',
+      'SV',
+      'RespondentsBusiness',
+      'SaveAsync',
+      [data, true]
     );
   }
 }

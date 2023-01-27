@@ -1,0 +1,323 @@
+<layout-list-detail
+  #lstDetail
+  [title]="headerText"
+  [formModel]="formModel"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="data"
+  [leftTemlate]="LeftTemlate"
+  [RightTemlate]="body"
+  *ngIf="isAfterRender"
+  [headerTemplate]="filterTemlate"
+>
+</layout-list-detail>
+<ng-template #body>
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="RegisteredDate"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="registeredDate"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label fiedName="RegisteredBy" [formModel]="formModel"></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="registeredBy"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="form-group row">
+    <codx-label fiedName="KowID" [formModel]="formModel"></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="kowID"
+    ></codx-input>
+  </div>
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label fiedName="BeginDate" [formModel]="formModel"></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="beginDate"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label fiedName="EndDate" [formModel]="formModel"></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="endDate"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label fiedName="PeriodType" [formModel]="formModel"></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="periodType"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label fiedName="Days" [formModel]="formModel"></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="days"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="form-group row">
+    <codx-label fiedName="BusinessPlace" [formModel]="formModel"></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="businessPlace"
+    ></codx-input>
+  </div>
+  <div class="form-group row">
+    <codx-label fiedName="Address" [formModel]="formModel"></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="address"
+    ></codx-input>
+  </div>
+  <div class="form-group row">
+    <codx-label fiedName="BusinessPurpose" [formModel]="formModel"></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="businessPurpose"
+    ></codx-input>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label fiedName="TransportType" [formModel]="formModel"></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="transportType"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <div class="d-flex justify-content-between">
+        <codx-label fiedName="IsOversea" [formModel]="formModel"></codx-label>
+        <codx-input
+          [Group]="formGroup"
+          [formModel]="formModel"
+          field="isOversea"
+        ></codx-input>
+      </div>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="country"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label fiedName="Cost" [formModel]="formModel"></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="cost"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label fiedName="ChargeObject" [formModel]="formModel"></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="chargeObject"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="decisionNo"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
+      <codx-input
+        [Group]="formGroup"
+        [formModel]="formModel"
+        field="signedDate"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="signerID"
+    ></codx-input>
+  </div>
+
+  <div class="form-group row">
+    <codx-label
+      fiedName="SignerPositionID"
+      [formModel]="formModel"
+    ></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="signerPositionID"
+    ></codx-input>
+  </div>
+  <div class="form-group row">
+    <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+    <codx-input
+      [Group]="formGroup"
+      [formModel]="formModel"
+      field="note"
+    ></codx-input>
+  </div>
+</ng-template>
+
+<ng-template #filterTemlate>
+  <div class="d-flex me-3">
+    <codx-dropdown-select
+      [cssClass]="'rounded-pill border-1'"
+      cssPopup="h-350px w-300px"
+      [isMulti]="true"
+      type="valuelist"
+      field="PeriodType"
+      [refValue]="'HR009'"
+      (valueChange)="valueChange($event)"
+    ></codx-dropdown-select>
+    <codx-dropdown-calendar
+      [value]="date"
+      [displayOption]="ops"
+      [selectedType]="'y'"
+    ></codx-dropdown-calendar>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveForm(false)">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #footer1>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveForm(false)">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #LeftTemlate>
+  <codx-listview
+    #listView
+    [service]="'HR'"
+    [assemblyName]="'HR'"
+    [entityName]="'HR_EBusinessTravels'"
+    [className]="'EBusinessTravelsBusiness'"
+    [method]="'LoadDataEBTravelsAsync'"
+    [predicates]="predicates"
+    [dataValues]="dataValues"
+    [itemTemplate]="itemTemplate"
+    (afterRender)="afterRenderListView($event)"
+    [selectFirst]="true"
+  ></codx-listview>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+  <codx-temp-full
+    [formModel]="formModel"
+    [typeMF]="'hover'"
+    [icoTitleCss]="'icon-i-arrow-down-left-circle-fill icon-14 '"
+    cardCss="card codx_cardcenter px-4 py-3 w-100"
+    [hideMF]="true"
+    typeMF="hover"
+    [dataItem]="data"
+    [footer]="footerItemList"
+    (click)="click(data)"
+  ></codx-temp-full>
+</ng-template>
+
+<ng-template #footerItemList let-dataEBTravels>
+  <div class="d-flex flex-column mt-1">
+    <div class="d-flex align-items-center mb-1">
+      <span
+        class="me-1 icon-home_work icon-14"
+        style="color: gray"
+      ></span>
+      <span #trainCourseID class="text-dark">
+        {{ dataEBTravels?.businessPlace }}
+      </span>
+    </div>
+    <div class="d-flex flex-wrap mb-1">
+      <div class="d-flex align-items-center">
+        <span class="me-1 icon-event icon-14 text-gray-600"></span>
+        <span class="text-dark">
+          <span
+            >{{ dataEBTravels?.beginDate | fmDT }} -
+            {{ dataEBTravels?.endDate | fmDT }}</span
+          >
+        </span>
+      </div>
+      <div class="d-flex align-items-center ms-7">
+        <span
+          class="icon-access_time  ms-2 me-2 text-gray-600" 
+        ></span>
+        <span class="fw-bold text-primary">
+          <span>{{ dataEBTravels?.days }}</span>
+        </span>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap mb-1">
+      <div class="d-flex align-items-center">
+        <span class="icon-edit icon-14 text-gray-600 me-1"></span>
+        <span class="text-primary"> {{ dataEBTravels?.businessPurpose }} </span>
+      </div>
+      <ng-container *ngIf="dataEBTravels.isOversea">
+        <span class="text-gray-500 me-1 ms-1">|</span>
+        <div class="d-flex align-items-center">
+          <span class="icon-flight_takeoff icon-14 text-primary me-1"></span>
+          <span class="text-primary" #country>
+            {{ dataEBTravels?.country }}
+            {{
+              dataEBTravels?.country
+                | formatvalue : this.formModel : "country" : country
+                | async
+            }}</span
+          >
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>

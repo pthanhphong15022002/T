@@ -12,6 +12,7 @@ import { SystemDialogService } from 'projects/codx-share/src/lib/components/view
 import { FileInfo, FileUpload, ItemInterval, Permission } from '@shared/models/file.model';
 import { resetInfiniteBlocks } from '@syncfusion/ej2-grids';
 import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'share',
@@ -23,7 +24,7 @@ export class ShareComponent implements OnInit {
   @Input() formModel: any;    
   //listFolders: FolderInfo[];
  // listFiles: FileInfo[];
-  selection = 0;
+  selection = true;
   listNodeMove: FileUpload[] = [];
   //listNodeMove: any;
   html: string;
@@ -71,10 +72,13 @@ export class ShareComponent implements OnInit {
   shareContent = '';
   isShare = true;
   requestTitle = '';
+  ownerID :any;
   toPermission: Permission[];
   byPermission: Permission[];
   ccPermission: Permission[];
   bccPermission: Permission[];  
+
+  shareGroup: FormGroup
 //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
   @ViewChild('view') view!: ViewsComponent; 
   
@@ -87,6 +91,7 @@ export class ShareComponent implements OnInit {
     private api: ApiHttpService,
     public dmSV: CodxDMService,
     private modalService: NgbModal,
+    private formBuilder: FormBuilder,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
    // private confirmationDialogService: ConfirmationDialogService,
@@ -107,9 +112,14 @@ export class ShareComponent implements OnInit {
     //  this.id = this.data.recID;     
   }
 
-  ngOnInit(): void {   
+  ngOnInit(): void { 
+    this.shareGroup = this.formBuilder.group({
+      by: '',
+      per: 'readonly'
+    });  
     this.user = this.auth.get();       
     if(this.dmSV.breakCumArr.length>0 && this.dmSV.breakCumArr.includes(this.fullName)) this.fullName= null
+    this.getOwner();
   }
 
 
@@ -119,6 +129,21 @@ export class ShareComponent implements OnInit {
     return true;
   }
 
+  getOwner()
+  {
+    if(this.fileEditing && Array.isArray(this.fileEditing.permissions))
+    { 
+      var f = this.fileEditing.permissions.filter(x=>x.objectType == "1");
+      if(f) 
+      { 
+        let o: any = {};
+        o.objectType = f[0].objectType
+        o.objectName = f[0].objectName;
+        o.id = f[0].objectID;
+        this.ownerID = [o]
+      }
+    }
+  }
   validate(item) {
     //  fileName
    // this.errorshow = true;  
@@ -144,21 +169,33 @@ export class ShareComponent implements OnInit {
     }    
   }
 
-  onSaveRole($event, type: string) {    
+  onSaveRole($event, type: string) { 
    // console.log($event);
     var list = [];
-    if ($event.data != undefined) {
+    if ($event.data) {
       var data = $event.data;
       for(var i=0; i<data.length; i++) {
         var item = data[i];
-        var perm = new Permission;               
+        var perm = new Permission;
+        if(type == "by" && data[i].objectType == "1")
+        {
+          var o = this.fileEditing.permissions.filter(x=>x.objectType == "1") // Lấy owner;
+          perm.objectID = o[0].objectID;
+          perm.objectType = o[0].objectType;
+          perm.objectName = o[0].objectName;
+        }
+        else
+        {
+          perm.objectID = item.id;
+          perm.objectType = item.objectType;
+          perm.objectName = item.text ? item.text : item.objectName;
+        }               
         perm.startDate = this.startDate;       
         perm.endDate = this.endDate;
         perm.isSystem = false;
         perm.isActive = true;
-        perm.objectName = item.text ? item.text : item.objectName;
-        perm.objectID = item.id;
-        perm.objectType = item.objectType;
+       
+      
         perm.read = true;        
         list.push(Object.assign({}, perm));        
       //  this.fileEditing.permissions = this.addRoleToList(this.fileEditing.permissions, perm);
@@ -248,7 +285,7 @@ export class ShareComponent implements OnInit {
       this.fileEditing.toPermission[i].startDate = this.startDate;
       this.fileEditing.toPermission[i].endDate = this.endDate;
       if (!this.isShare) {
-        if (this.selection) {
+        if (this.shareGroup.value.per == 'modified') {
           this.fileEditing.toPermission[i].create = true;
           this.fileEditing.toPermission[i].update = true;
           this.fileEditing.toPermission[i].share = true;

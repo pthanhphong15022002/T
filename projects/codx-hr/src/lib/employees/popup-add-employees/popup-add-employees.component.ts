@@ -28,7 +28,6 @@ import { HR_Employees } from '../../model/HR_Employees.model';
   styleUrls: ['./popup-add-employees.component.css'],
 })
 export class PopupAddEmployeesComponent implements OnInit {
-  title = '';
   tabInfo: any[] = [
     {
       icon: 'icon-info',
@@ -51,27 +50,23 @@ export class PopupAddEmployeesComponent implements OnInit {
       name: 'tabInfoLaw',
     },
   ];
+  isCorporation = false;
   dialogRef: any;
   dialogData: any = null;
   employee: HR_Employees;
-  defaultEmployeeID: string = '';
-  readOnly = false;
-  showAssignTo = false;
-  isSaving: boolean = false;
-  isNew: boolean = true;
+  isAdd: boolean = true;
   currentSection = 'InfoPersonal';
   user: any;
-  formName = '';
-  gridViewName = '';
-  functionID: string;
+  action = '';
+  funcID: string;
   isAfterRender = false;
   gridViewSetup: any;
-  action: 'add' | 'edit' | 'copy' = 'add';
   paramaterHR: any = null;
-  grvSetup:any = {};
-  arrFieldRequire:any[] = [];
-  mssgCode:string = "SYS009";
-  @ViewChild("form") form:LayoutAddComponent;
+  grvSetup: any = {};
+  arrFieldRequire: any[] = [];
+  mssgCode: string = 'SYS009';
+  functionName:string ="";
+  @ViewChild('form') form: LayoutAddComponent;
   constructor(
     private auth: AuthService,
     private notifiSV: NotificationsService,
@@ -79,6 +74,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     private fb: FormBuilder,
     private cache: CacheService,
     private api: ApiHttpService,
+
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -88,190 +84,129 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isAdd = this.dialogData.isAdd;
     this.action = this.dialogData.action;
-    this.title = this.dialogData.title;
-    this.functionID = this.dialogRef.formModel.funcID;
+    this.funcID = this.dialogData.funcID;
     this.employee = JSON.parse(JSON.stringify(this.dialogData.employee));
-    this.getParamerAsync(this.functionID);
-    this.getGridViewSetup(this.dialogRef.formModel);
+    this.getFunction(this.funcID);
   }
-  // get parameter auto default number
-  getParamerAsync(funcID: string) {
-    if (funcID) {
-      this.api
-        .execSv(
-          'SYS',
-          'ERM.Business.AD',
-          'AutoNumberDefaultsBusiness',
-          'GenAutoDefaultAsync',
-          [funcID]
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.paramaterHR = JSON.parse(JSON.stringify(res));
-          }
-        });
-    }
-  }
-
-  getGridViewSetup(formModel:FormModel){
-    if(formModel)
-    { 
-      this.cache.gridViewSetup(formModel.formName, formModel.gridViewName).subscribe((grd:any) => {
-        if(grd){
-          this.grvSetup = grd;
-          let arrField =  Object.values(grd).filter((x:any) => x.isRequire);
-          if(arrField){
-            this.arrFieldRequire = arrField.map((x:any) => x.fieldName);
-          }
+  //get function
+  getFunction(functionID: string) {
+    if (functionID) {
+      this.cache.functionList(functionID).subscribe((func: any) => {
+        if (func){
+          this.functionName = func.description;
+          this.getGridViewSetup(func.formName,func.gridViewName);
         }
       });
     }
   }
-  // set title popup
-  setTile(event, form) {
-    form.title = this.title;
-    this.detectorRef.detectChanges();
-  }
-  getDefaultEmployeeID(
-    funcID: string,
-    entityName: string,
-    fieldName: string,
-    data: any = null
-  ) {
-    if (funcID && entityName && fieldName) {
-      this.api
-        .execSv(
-          'SYS',
-          'ERM.Business.AD',
-          'AutoNumbersBusiness',
-          'GenAutoNumberAsync',
-          [funcID, entityName, fieldName, null]
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.defaultEmployeeID = res;
-            this.employee.employeeID = this.defaultEmployeeID;
-          } else {
-            this.notifiSV.notifyCode('SYS020');
+  // get grvsetup
+  getGridViewSetup(formName: string,gridViewName:string) {
+    if (formName && gridViewName) {
+      this.cache
+        .gridViewSetup(formName,gridViewName)
+        .subscribe((grd: any) => {
+          if (grd) {
+            this.grvSetup = grd;
+            let arrField = Object.values(grd).filter((x: any) => x.isRequire);
+            if (arrField) {
+              this.arrFieldRequire = arrField.map((x: any) => x.fieldName);
+            }
           }
         });
     }
   }
-
-  getAutonumber(functionID, entityName, fieldName): Observable<any> {
-    var subject = new Subject<any>();
-    this.api
-      .execSv<any>(
-        'SYS',
-        'ERM.Business.AD',
-        'AutoNumbersBusiness',
-        'GenAutoNumberAsync',
-        [functionID, entityName, fieldName, null]
-      )
-      .subscribe((item) => {
-        if (item) subject.next(item);
-        else subject.next(null);
-      });
-    return subject.asObservable();
-  }
-
-  beforeSave(op: any) {
-    var data = [];
-    op.methodName = 'UpdateAsync';
-    op.className = 'EmployeesBusiness';
-
-    if (this.action === 'add') {
-      this.isNew = true;
-    } else if (this.action === 'edit') {
-      this.isNew = false;
-    }
-    data = [this.employee, this.isNew];
-    op.data = data;
-    return true;
+  // set title popup
+  setTile(form) {
+    form.title = this.action;
+    this.detectorRef.detectChanges();
   }
 
   // btn save
   OnSaveForm() {
-    let arrFieldUnValid:string = "";
-    if(this.arrFieldRequire.length > 0)
-    {
+    let arrFieldUnValid: string = '';
+    if (this.arrFieldRequire.length > 0) {
       this.arrFieldRequire.forEach((field) => {
         let key = Util.camelize(field);
-        if (!this.employee[key])
-        {
-          arrFieldUnValid += this.grvSetup[field]['headerText'] + ";";
+        if (!this.employee[key]) {
+          arrFieldUnValid += this.grvSetup[field]['headerText'] + ';';
         }
       });
     }
-    if(arrFieldUnValid){
-      this.notifiSV.notifyCode(this.mssgCode,0,arrFieldUnValid);
-    }
-    else
+    if (arrFieldUnValid) {
+      this.notifiSV.notifyCode(this.mssgCode, 0, arrFieldUnValid);
+    } else 
     {
-      if (this.action == 'edit') {
-        this.updateEmployeeAsync(this.employee);
-      } else {
+      if (this.isAdd) 
+      {
         this.addEmployeeAsync(this.employee);
+      } 
+      else {
+        this.updateEmployeeAsync(this.employee);
       }
     }
   }
-
+  // update employee
   updateEmployeeAsync(employee: any) {
     if (employee) {
       this.api
-        .execAction<boolean>('HR_Employees', [employee], 'UpdateAsync', true)
+        .execSv("HR","ERM.Business.HR","EmployeesBusiness","UpdateAsync",[employee])
         .subscribe((res: any) => {
-          if (!res?.error) {
-            this.dialogRef.close(res.data);
-          } else {
+          if (res) 
+          {
+            this.notifiSV.notifyCode('SYS007');
+          } 
+          else 
+          {
             this.notifiSV.notifyCode('SYS021');
-            this.dialogRef.close(null);
           }
+          this.dialogRef.close(res);
         });
     }
   }
+  // add employee
   addEmployeeAsync(employee: any) {
     if (employee) {
-      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","InsertAsync",[employee])
-      .subscribe((res:any[]) => {
-        if(res[0]){
-          let data = res[1];
+      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","SaveAsync",[employee])
+      .subscribe((res:any) => {
+        if(res)
+        {
           this.notifiSV.notifyCode("SYS006");
-          this.dialogRef.close(data);
         }
         else
         {
           this.notifiSV.notifyCode('SYS023');
-          this.dialogRef.close(null);
         }
+        this.dialogRef.close(res);
       });
     }
   }
-
+  //value change
   dataChange(e: any) {
-    debugger
-    if (this.form && e) 
+    if (e) 
     {
       let field = Util.camelize(e.field);
       let data = e.data;
-      if(field)
+      this.employee[field] = data;
+      if(field == "positionID")
       {
-        switch(field){
-          case "positionID":
-            break;
-          case "":
-            break;
-          case "":
-            break;
-          case "":
-            break;
+        let itemSelected = e.component?.itemsSelected[0];
+        if(itemSelected)
+        {
+          if(itemSelected.hasOwnProperty("OrgUnitID"))
+          {
+            let orgUnitID = itemSelected["OrgUnitID"];
+            this.form.formGroup.patchValue({"orgUnitID":orgUnitID});
+            this.employee["orgUnitID"] = orgUnitID;
+          }
+          if(itemSelected.hasOwnProperty("DepartmentID"))
+          {
+            let departmentID = itemSelected["DepartmentID"];
+            this.form.formGroup.patchValue({"departmentID":departmentID});
+            this.employee["departmentID"] = departmentID;
+          }
         }
-        if (typeof e.data !== 'string') {
-          this.employee[field] = e.data.fromDate
-            ? e.data.fromDate.toISOString()
-            : null;
-        } else this.employee[field] = e.data;
       }
     }
   }

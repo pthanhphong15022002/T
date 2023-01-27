@@ -12,8 +12,7 @@ export const environment = {
   urlUpload: '',
   office365: '',
   appName: '',
-  saas: 1,
-  tenantFirst: false,
+  saas: 0,
   layoutCZ: 'qtsc',
   themeMode: 'body', //layout
   SureMeet: {

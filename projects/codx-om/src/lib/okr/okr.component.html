@@ -1,14 +1,43 @@
-<codx-views #view [views]="views"> </codx-views>
+<codx-views
+  #view
+  [views]="views"
+  (viewChanged)="viewChanged($event)"
+  [autoLoad]="false"
+  [toolbarDisplay]="false"
+>
+</codx-views>
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white px-5">
-    <lib-okr-toolbar (click)="click($event)" [data]="dataOKRPlans" [dataChild]="dataOKR"></lib-okr-toolbar>
-    <div class="pt-5 pb-2 text-center">
+    <lib-okr-toolbar (click)="click($event)" (hiddenChart)="hiddenChart($event)" [data]="dataOKRPlans" [dataChild]="dataOKR" [formModel]="view?.formModel"></lib-okr-toolbar>
+    <div class="pt-5 pb-2 text-center" *ngIf="funcID==compFuncID">
       <codx-label
-        [default]="titleRoom"
+        [default]="compName"
         fiedName="titleRoom"
         class="fw-bold fs-2"
       ></codx-label>
     </div>
+    <div class="pt-5 pb-2 text-center" *ngIf="funcID == deptFuncID">
+      <codx-label
+        [default]="deptName"
+        fiedName="titleRoom"
+        class="fw-bold fs-2"
+      ></codx-label>
+    </div>
+    <div class="pt-5 pb-2 text-center" *ngIf="funcID == orgFuncID">
+      <codx-label
+        [default]="orgName"
+        fiedName="titleRoom"
+        class="fw-bold fs-2"
+      ></codx-label>
+    </div>
+    <div class="pt-5 pb-2 text-center" *ngIf="funcID == persFuncID">
+      <codx-label
+        [default]="persName"
+        fiedName="titleRoom"
+        class="fw-bold fs-2"
+      ></codx-label>
+    </div>
+
     <div class="p-om-okr d-flex justify-content-center">
       <ejs-tab id="om-tab">
         <e-tabitems>
@@ -24,12 +53,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <ng-container
-                *ngIf="
-                  dataOKRPlans && dataOKR && dataOKR.length > 0;
-                  else elseOKR
-                "
-              >
+              <ng-container *ngIf="dataOKRPlans != null; else elseOKR">
                 <lib-okr-targets
                   [dataOKRPlans]="dataOKRPlans"
                   [dataOKR]="dataOKR"
@@ -37,8 +61,10 @@
                   [gridView]="gridView"
                   [obFuncID]="obFuncID"
                   [krFuncID]="krFuncID"
-                  [formModelKR]="formModelKR"                  
+                  [formModelKR]="formModelKR"
                   [formModelOB]="formModelOB"
+                  [funcID]="funcID"
+                  [isHiddenChart]="isHiddenChart"
                 ></lib-okr-targets>
               </ng-container>
               <ng-template #elseOKR>
@@ -48,7 +74,7 @@
                   <div>
                     <div class="my-2">
                       <span
-                        >{{ titleRoom }} chưa thiết lập mục tiêu cho
+                        >{{ compName }} chưa thiết lập mục tiêu cho
                         Q2/2022</span
                       >
                     </div>
@@ -60,7 +86,7 @@
                     <div class="d-flex justify-content-center">
                       <div
                         class="d-flex align-items-center cursor-pointer border rounded p-2"
-                        (click)="click({ id: 'btnAdd' })"
+                        (click)="click({ id: 'btnAddPlan' })"
                       >
                         <i class="fa-solid fa-bullseye me-3 ms-1"></i>
                         <codx-label
@@ -85,7 +111,9 @@
                 ></codx-label>
               </div>
             </ng-template>
-            <ng-template #content> Cây mục tiêu </ng-template>
+            <ng-template #content>
+            <lib-okr-trees [funcID]="funcID" [planRecID]="dataOKRPlans?.recID" ></lib-okr-trees>  
+            </ng-template>
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>
@@ -99,7 +127,11 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <lib-okr-tasks></lib-okr-tasks>
+              <codx-tasks-share
+                [funcID]="'OMT013'"
+                [showButtonAdd]="true"
+                [showMoreFunc]="true"
+              ></codx-tasks-share>
             </ng-template>
           </e-tabitem>
           <e-tabitem>

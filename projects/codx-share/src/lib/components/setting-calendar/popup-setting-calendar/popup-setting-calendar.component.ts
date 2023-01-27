@@ -95,7 +95,7 @@ export class PopupSettingCalendarComponent extends UIComponent {
     this.api
       .execSv<any>(
         'SYS',
-        'ERM.Business.CM',
+        'ERM.Business.Core',
         'ParametersBusiness',
         'GetOneField',
         ['TMParameters', null, 'CalendarID']

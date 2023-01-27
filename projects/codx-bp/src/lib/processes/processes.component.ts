@@ -48,8 +48,7 @@ import { RevisionsComponent } from './revisions/revisions.component';
 })
 export class ProcessesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
@@ -140,6 +139,8 @@ export class ProcessesComponent
   employee: any;
   checkGroupPerm = '';
   popupOld: any;
+  msgCodeExistNameProcess = 'BP008'; // gán tạm chờ message code
+  isRename = false;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -181,18 +182,17 @@ export class ProcessesComponent
       id: 'btnAdd',
     };
     this.columnsGrid = [
-      { headerTemplate: this.itemProcessName, width: 300 },
+      { headerTemplate: this.itemProcessName, width: 250 },
       { headerTemplate: null, width: 100 },
-      { headerTemplate: this.itemOwner, width: 300 },
+      { headerTemplate: this.itemOwner, width: 200 },
       { headerTemplate: this.itemStatus, width: 100 },
       { headerTemplate: this.itemVersionNo, width: 100 },
-      { headerTemplate: this.itemActivedOn, width: 150 },
-      { headerTemplate: this.itemMemo, width: 300 },
-      { field: '', headerText: '', width: 100 },
+      { headerTemplate: this.itemActivedOn, width: 120 },
+      { headerTemplate: this.itemMemo, width: 200 },
+      { field: '', headerText: '', width: 10 },
     ];
     this.afterLoad();
     this.acceptEdit();
-    this.isAdminBp = this.checkAdminOfBP(this.userId);
   }
 
   afterLoad() {
@@ -328,32 +328,6 @@ export class ProcessesComponent
   }
 
   searchChange($event) {
-    // try {
-    //   this.textSearch = $event;
-    //   this.searchKey.next($event);
-    //   this.isSearch == true;
-    //   if (this.textSearch == null || this.textSearch == '') {
-    //     this.views.forEach((item) => {
-    //       item.active = false;
-    //       item.hide = false;
-    //       if (item.text == 'Search') item.hide = true;
-    //       if (item.text == this.viewActive.text) item.active = true;
-    //     });
-    //     this.changeDetectorRef.detectChanges();
-    //   } else {
-    // this.views.forEach((item) => {
-    //   item.hide = true;
-    //   if (item.text == 'Search') item.hide = false;
-    // });
-    // this.changeDetectorRef.detectChanges();
-    // this.isSearch = true;
-    //     this.pageNumberCliked= this.pageNumberDefault;
-    //     this.getHomeProcessSearch();
-    //   }
-    // } catch (ex) {
-    //   this.changeDetectorRef.detectChanges();
-    // }
-    // this.view.dataService.searchText
     this.view.dataService.search($event).subscribe();
     this.changeDetectorRef.detectChanges();
   }
@@ -372,6 +346,7 @@ export class ProcessesComponent
         option
       );
       this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
@@ -566,6 +541,8 @@ export class ProcessesComponent
       this.moreFunc == 'BPT205' ||
       this.moreFunc == 'BPT305' ||
       this.moreFunc == 'BPT605' ||
+      this.moreFunc == 'BPT304' ||
+      this.moreFunc == 'BPT604' ||
       this.moreFunc == 'BPT204'
     ) {
       let option = new SidebarModel();
@@ -605,6 +582,8 @@ export class ProcessesComponent
   }
 
   roles(e: any) {
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 999;
     this.callfc
       .openForm(
         PopupRolesComponent,
@@ -612,8 +591,9 @@ export class ProcessesComponent
         950,
         650,
         '',
-        [this.titleAction, e],
-        ''
+        [this.titleAction, e, this.view?.formModel],
+        '',
+        dialogModel
       )
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
@@ -688,9 +668,9 @@ export class ProcessesComponent
         this.Updaterevisions(e?.data, data);
         break;
       case 'BPT105':
-      case 'BPT605':
-      case 'BPT305':
       case 'BPT205':
+      case 'BPT305':
+      case 'BPT605':
       case 'BPT104':
       case 'BPT204':
       case 'BPT304':
@@ -735,32 +715,24 @@ export class ProcessesComponent
       return;
     }
     if (this.oldName.trim() === this.newName.trim()) {
-      this.notification.notifyCode('SYS007');
-      this.changeDetectorRef.detectChanges();
-      this.dialogPopup.close();
-    } else if (
-      this.oldName.trim().toLocaleUpperCase() ===
-      this.newName.trim().toLocaleUpperCase()
-    ) {
-      this.CheckExistNameProccess(this.oldName);
-    } else {
+      if (this.isRename) {
+        this.notificationsService.notifyCode(this.msgCodeExistNameProcess);
+      } else {
+        this.notification.notifyCode('SYS007');
+        this.changeDetectorRef.detectChanges();
+        this.dialogPopup.close();
+      }
+    }
+    else {
       this.CheckAllExistNameProccess(this.newName, this.idProccess);
     }
   }
   CheckAllExistNameProccess(newName, idProccess) {
     this.bpService.isCheckExitName(newName, idProccess).subscribe((res) => {
       if (res) {
-        this.CheckExistNameProccess(newName);
-      } else {
-        this.actionReName(newName);
-      }
-    });
-  }
-  CheckExistNameProccess(newName) {
-    this.notificationsService.alertCode('BP008').subscribe((x) => {
-      if (x.event?.status == 'N') {
+        this.notificationsService.notifyCode(this.msgCodeExistNameProcess);
         return;
-      } else if (x.event?.status == 'Y') {
+      } else {
         this.actionReName(newName);
       }
     });
@@ -776,21 +748,19 @@ export class ProcessesComponent
           this.dataSelected.processName = newName;
           this.view.dataService.update(this.dataSelected).subscribe();
           this.notification.notifyCode('SYS007');
+          if (this.isRename) {
+            this.beforeRestoreBinById(this.itemSelected);
+          }
           this.changeDetectorRef.detectChanges();
         }
         this.dialogPopup.close();
       });
   }
 
-  onDragDrop(e: any) {}
+  onDragDrop(e: any) { }
 
   async changeDataMF(e, data) {
     if (e != null && data != null) {
-      let isOwner = data?.owner == this.userId ? true : false;
-      let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
-
-      // checkGroup = await this.checkGroupId(data);
-      // this.checkGroupPerm = checkGroup;
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS005':
@@ -1014,7 +984,7 @@ export class ProcessesComponent
     });
   }
 
-  approval($event) {}
+  approval($event) { }
   //tesst
   // getFlowchart(data) {
   //   this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
@@ -1038,8 +1008,10 @@ export class ProcessesComponent
   //   return strTime;
   // }
 
-  PopoverDetail(p: any, emp) {
-    if(this.popupOld?.popoverClass !== p?.popoverClass ) {
+  PopoverDetail(e, p: any, emp) {
+    let parent = e.currentTarget.parentElement.offsetWidth;
+    let child = e.currentTarget.offsetWidth;
+    if (this.popupOld?.popoverClass !== p?.popoverClass) {
       this.popupOld?.close();
     }
 
@@ -1047,7 +1019,7 @@ export class ProcessesComponent
       this.popoverList?.close();
       this.popoverDetail = emp;
       if (emp.memo != null || emp.processName != null) {
-        p.open();
+        if (parent <= child) { p.open(); }
       }
     } else p.close();
     this.popupOld = p;
@@ -1057,7 +1029,7 @@ export class ProcessesComponent
     this.popupOld?.close();
   }
 
-  setTextPopover(text){
+  setTextPopover(text) {
     return (text);
   }
 
@@ -1106,94 +1078,65 @@ export class ProcessesComponent
       });
   }
 
-  acceptEdit() {
+  async acceptEdit() {
     if (this.user.administrator) {
       this.isAcceptEdit = true;
-    } else if (this.checkAdminOfBP(this.user.userId)) {
-      this.isAcceptEdit = true;
-    } else if (!this.user.edit) {
-      this.isAcceptEdit = false;
+      return;
     }
+    (await this.bpService.checkAdminOfBP(this.user.userId)).subscribe((res) => {
+      if (res) {
+        this.isAcceptEdit = true;
+      }
+      else if (!this.user.edit) {
+        this.isAcceptEdit = false;
+      }
+      this.isAdminBp = res;
+      return;
+    });
   }
 
-  checkAdminOfBP(userid: any) {
-    let check: boolean;
-    this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
-    return check;
-  }
+  // async checkAdminOfBP(userid: any) {
+  //   let check: boolean;
+  //   (await this.bpService.checkAdminOfBP(userid)).subscribe((res) => (check = res));
+  //   return check;
+  // }
 
-  deleteBin() {
-    // xoa toan bo thung rac ham nay chưa dung
-    if (this.view.dataService?.data.length > 0) {
-      var config = new AlertConfirmInputConfig();
-      config.type = 'YesNo';
-      let title = `Bạn có muốn xóa hẳn ${this.view.dataService?.data.length} hai quy trình này không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?`;
-      this.notificationsService
-        .alert('Thông báo', title, config)
-        .closed.subscribe((x) => {
-          if (x.event.status == 'Y') {
-            this.bpService.deleteBin([true]).subscribe((res) => {
-              if (res) {
-                this.notification.notifyCode('SYS008');
-                this.view.dataService.data = [];
-                this.detectorRef.detectChanges();
-              }
-            });
-          }
-        });
-    }
-  }
-  deleteProcessesById(data) {
-    //delete ham nay chua dung
-    this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) => {
-        var itemSelected = opt.data[0];
-        opt.methodName = 'DeleteProcessesAsync';
-        opt.data = [itemSelected.recID];
-        return true;
-      })
-      .subscribe((res) => {
-        if (res) {
-          this.view.dataService.onAction.next({ type: 'delete', data: data });
-        }
-      });
-  }
 
   restoreBinById(data) {
     if (data.recID) {
-      this.view.dataService.dataSelected = data;
-      this.bpService.restoreBinById(data.recID).subscribe((res) => {
+      let newName = data?.processName;
+      let processID = data?.recID;
+      this.bpService.isCheckExitName(newName, processID).subscribe((res) => {
         if (res) {
-          this.notification.notifyCode('SYS034');
-          this.view.dataService.remove(data).subscribe();
-          this.detectorRef.detectChanges();
+          this.notificationsService.alertCode('BP009').subscribe((x) => {
+            if (x.event?.status == 'N') {
+              return;
+            } else if (x.event?.status == 'Y') {
+              // mở form
+              this.isRename = true;
+              this.reName(data);
+            }
+          });
+        } else {
+          this.beforeRestoreBinById(data);
         }
       });
     }
   }
-  // getAvatar(process) {
-  //   let avatar = [
-  //     '',
-  //     this.funcID,
-  //     process?.recID,
-  //     'BP_Processes',
-  //     'inline',
-  //     1000,
-  //     process?.processName,
-  //     'avt',
-  //     false,
-  //   ];
-  //   this.api
-  //     .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', avatar)
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         // this.linkAvatar = environment.urlUpload + '/' + res?.url;
-  //         this.changeDetectorRef.detectChanges();
-  //       } else {
-  //       }
-  //     });
-  // }
+
+  beforeRestoreBinById(data) {
+    this.view.dataService.dataSelected = data;
+    this.bpService.restoreBinById(data.recID).subscribe((res) => {
+      if (res) {
+        if (!this.isRename) {
+          this.notification.notifyCode('SYS034');
+        }
+        this.view.dataService.remove(data).subscribe();
+        this.isRename = false;
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
 
   //chang data
   viewChanged(e) {

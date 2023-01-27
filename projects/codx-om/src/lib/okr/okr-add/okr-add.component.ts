@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ApiHttpService, AuthStore, DialogData, DialogRef, FormModel } from 'codx-core';
+import { ApiHttpService, AuthStore, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import { share } from 'rxjs';
 import { OMCONST } from '../../codx-om.constant';
 import { CodxOmService } from '../../codx-om.service';
@@ -20,9 +20,9 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
   gridView: any;
   formModel: any;
   okrAddGroup: FormGroup;
-  ops = ['q'];
+  ops = ['m','q','y'];
   date = new Date();
-  parentID: any;
+  okrPlans: any;
   userID:any;
   objRequied = [];
   //Chờ c thương thiết lập vll
@@ -55,6 +55,7 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
   constructor(
     private codxOmService: CodxOmService,
     private formBuilder: FormBuilder,
+    private notifySvr: NotificationsService,
     private auth: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -63,7 +64,7 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
     if(dt?.data[0]) this.gridView = dt?.data[0];
     if(dt?.data[1]) this.formModel = dt?.data[1];
     if(dt?.data[2]) this.type = dt?.data[2];
-    if(dt?.data[3]) this.parentID = dt?.data[3];
+    if(dt?.data[3]) this.okrPlans = dt?.data[3];
     if(this.type == "edit") {
       this.headerText = "Chỉnh sửa mục tiêu"
       this.dataOKR =  dt?.data[4];
@@ -112,21 +113,33 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
     //Thêm
     if(this.type == "add")
     {
-      if(this.formModel.functionID == OMCONST.FUNCID.Company)
+      if(this.formModel.functionID == OMCONST.FUNCID.COMP)
         this.dataOKR.oKRLevel = "1";
-      else if(this.formModel.functionID == OMCONST.FUNCID.Department)
+      else if(this.formModel.functionID == OMCONST.FUNCID.DEPT)
         this.dataOKR.oKRLevel = "3";
-      else if(this.formModel.functionID == OMCONST.FUNCID.Team)
+      else if(this.formModel.functionID == OMCONST.FUNCID.ORG)
         this.dataOKR.oKRLevel = "5";
-      else if(this.formModel.functionID == OMCONST.FUNCID.Person)
+      else if(this.formModel.functionID == OMCONST.FUNCID.PERS)
         this.dataOKR.oKRLevel = "9";
       this.dataOKR.interval = "Q";
-      this.dataOKR.parentID = this.parentID;
-      this.codxOmService.addOKR(this.dataOKR).subscribe();
+      this.dataOKR.parentID = this.okrPlans?.recID;
+      this.codxOmService.addOKR(this.dataOKR).subscribe(item=>{
+        if(item) 
+        {
+          this.notifySvr.notifyCode("");
+          this.dialog.close(item);
+        }
+      });
     }
     else
     {
       this.codxOmService.updateOKR(this.dataOKR).subscribe();
     }
+  }
+
+  formatInterval(val:any)
+  {
+    if(val) return val.toLowerCase();
+    return ""
   }
 }

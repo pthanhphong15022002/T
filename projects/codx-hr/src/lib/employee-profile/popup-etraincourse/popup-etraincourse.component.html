@@ -54,7 +54,8 @@
                 [Group]="formGroup"
                 [formModel]="formModel"
                 field="trainFrom"
-              ></codx-input>
+              >
+              </codx-input>
             </div>
             <div class="col-6">
               <codx-label
@@ -91,6 +92,7 @@
                 [Group]="formGroup"
                 [formModel]="formModel"
                 field="trainForm"
+                valueCj
               ></codx-input>
             </div>
             <div class="col-6">
@@ -115,7 +117,8 @@
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                field="inYear"
+                field="InYear"
+                [showSpinButton]="false"
               >
               </codx-input>
             </div>
@@ -127,7 +130,8 @@
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                field="totalScore"
+                field="TotalScore"
+                [showSpinButton]="false"
               ></codx-input>
             </div>
           </div>
@@ -141,7 +145,7 @@
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                field="ranking"
+                field="Ranking"
               ></codx-input>
             </div>
             <div class="col-6">
@@ -152,7 +156,7 @@
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                field="result"
+                field="Result"
               ></codx-input>
             </div>
           </div>
@@ -190,8 +194,8 @@
             <span class="text-end align-items-end">
               <a
                 class="btn btn-sm border border-gray-300 btn-active-light-primary align-items-center d-flex flex-row text-italic"
-              (click)="insertECertificate()"
-                >
+                (click)="insertECertificate()"
+              >
                 <span
                   class="icon-trending_up text-danger btn-text-primary me-2"
                 ></span>
@@ -201,10 +205,12 @@
                   [formModel]="dialog.formModel"
                 ></codx-label>
               </a>
-              
             </span>
           </div>
-          <div class="d-flex justify-content-end" *ngIf="data.isUpdateCertificate">
+          <div
+            class="d-flex justify-content-end"
+            *ngIf="data.isUpdateCertificate"
+          >
             <span class="icon-check icon-16 text-primary me-1"></span>
             <div class="b text-primary text-italic">
               <codx-label
@@ -252,17 +258,41 @@
               </codx-input>
             </div>
           </div>
-
           <div class="form-group row">
             <div class="col-6">
               <codx-label
-                fiedName="DegreeNo"
+                fiedName="DecisionNo"
                 [formModel]="formModel"
               ></codx-label>
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                field="degreeNo"
+                field="DecisionNo"
+              ></codx-input>
+            </div>
+            <div class="col-6">
+              <codx-label
+                fiedName="IssuedDate"
+                [formModel]="formModel"
+              ></codx-label>
+              <codx-input
+                [Group]="formGroup"
+                [formModel]="formModel"
+                field="IssuedDate"
+              ></codx-input>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-6">
+              <codx-label
+                fiedName="CertificateNo"
+                [formModel]="formModel"
+              ></codx-label>
+              <codx-input
+                [Group]="formGroup"
+                [formModel]="formModel"
+                field="CertificateNo"
               ></codx-input>
             </div>
             <div class="col-6">
@@ -287,6 +317,7 @@
               <span class="text-end align-items-end mb-1">
                 <a
                   class="btn btn-sm border border-gray-300 btn-active-light-primary align-items-center d-flex flex-row text-italic"
+                  (click)="setIssuedPlace()"
                 >
                   <span
                     class="icon-south text-danger btn-text-primary me-2"
@@ -328,6 +359,7 @@
                 [Group]="formGroup"
                 [formModel]="formModel"
                 field="limitMonths"
+                [showSpinButton]="false"
               ></codx-input>
             </div>
           </div>
@@ -387,7 +419,7 @@
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                field="contractNo"
+                field="ContractNo"
               >
               </codx-input>
             </div>
@@ -414,7 +446,8 @@
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                field="contractAmount"
+                field="ContractAmount"
+                [showSpinButton]="false"
               >
               </codx-input>
             </div>
@@ -426,8 +459,8 @@
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                [data]=""
-                field="contractMonths"
+                field="ContractMonths"
+                [showSpinButton]="false"
               >
               </codx-input>
             </div>
@@ -467,8 +500,8 @@
 </ng-template>
 
 <ng-template #footer>
-  <div class="d-flex justify-content-end" (click)="onSaveForm2()">
-    <button class="btn btn-primary" (click)="onSaveForm()">
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveForm(false)">
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"
@@ -481,7 +514,7 @@
 
 <ng-template #footer1>
   <div class="d-flex justify-content-end">
-    <button class="btn btn-primary" (click)="onSaveForm()">
+    <button class="btn btn-primary" (click)="onSaveForm(false)">
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"
@@ -497,9 +530,9 @@
     #listView
     [service]="'HR'"
     [assemblyName]="'HR'"
-    [entityName]="'HR_ESkills'"
-    [className]="'ESkillsBusiness'"
-    [method]="'LoadDataESkillAsync'"
+    [entityName]="'HR_ETrainCourses'"
+    [className]="'ETrainCoursesBusiness'"
+    [method]="'LoadDataETrainAsync'"
     [predicate]="'EmployeeID=@0'"
     [dataValue]="employId"
     [itemTemplate]="itemTemplate"
@@ -523,57 +556,87 @@
 </ng-template>
 
 <ng-template #footerItemList let-data>
-  <div class="d-flex flex-column mt-1">
-    <div class="d-flex align-items-center mb-1">
+  <div class="list_icon">
+    <div class="d-flex align-items-baseline">
       <span
-        class="me-1 icon-i-arrow-down-left-circle-fill icon-14"
-        style="color: blueviolet"
+        class="me-1 icon-i-layout-text-sidebar-reverse icon-14 text-danger me-2"
       ></span>
-      <span class="text-dark">
-        <span>{{ data?.trainCourseID }}</span>
-      </span>
-    </div>
-    <div class="d-flex flex-wrap mb-1">
-      <div class="d-flex align-items-center">
-        <span class="me-1 icon-date_range icon-14 text-gray-800"></span>
-        <span class="text-dark">
-          <span>{{ data?.trainFrom | fmDT }} - {{ data?.trainTo | fmDT }}</span>
-        </span>
-      </div>
-      <div class="d-flex align-items-center">
-        <span
-          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
-        ></span>
-        <span class="fw-bold text-primary">
-          <span>{{ data?.inYear }}</span>
-        </span>
-      </div>
-    </div>
-    <div class="d-flex flex-wrap mb-1">
-      <div class="d-flex align-items-center">
-        <span class="icon-connection-point icon-14 text-primary me-1"></span>
-        <span class="text-primary"> {{ data?.trainCourseID }} </span>
-      </div>
-      <span class="text-gray-500 me-1 ms-1">|</span>
-      <div class="d-flex align-items-center">
-        <span class="icon-connection-point icon-14 text-primary me-1"></span>
-        <span class="text-primary"> {{ data?.ranking }} </span>
-      </div>
-      <div class="d-flex align-items-center">
-        <span
-          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
-        ></span>
-        <span class="fw-bold text-primary">
-          <span>{{ data?.totalScore }}</span>
-        </span>
-      </div>
-      <div class="d-flex align-items-center">
-        <span
-          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
-        ></span>
-        <span class="fw-bold">
-          <span>{{ data?.result }}</span>
-        </span>
+      <div class="d-flex flex-column mt-1">
+        <div class="d-flex align-items-center mb-1">
+          <span
+            class="me-1 icon-i-arrow-down-left-circle-fill icon-14"
+            style="color: blueviolet"
+          ></span>
+          <span #trainCourseID class="text-dark">
+            {{
+              data?.trainCourseID
+                | formatvalue : formModel : "trainCourseID" : trainCourseID
+                | async
+            }}
+          </span>
+        </div>
+        <div class="d-flex flex-wrap mb-1">
+          <div class="d-flex align-items-center">
+            <span
+              class="me-1 icon-i-calendar4-event icon-14 text-gray-600"
+            ></span>
+            <span class="text-dark">
+              <span
+                >{{ data?.trainFrom | fmDT }} - {{ data?.trainTo | fmDT }}</span
+              >
+            </span>
+          </div>
+          <div class="d-flex align-items-center">
+            <span
+              class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+            ></span>
+            <span class="fw-bold text-primary">
+              <span>{{ data?.inYear }}</span>
+            </span>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap mb-1">
+          <div class="d-flex align-items-center">
+            <span class="icon-menu_book icon-14 text-primary me-1"></span>
+            <span class="text-primary" #trainSupplierID>
+              {{
+                data?.trainSupplierID
+                  | formatvalue
+                    : formModel
+                    : "trainSupplierID"
+                    : trainSupplierID
+                  | async
+              }}
+            </span>
+          </div>
+          <span class="text-gray-500 me-1 ms-1">|</span>
+          <div class="d-flex align-items-center">
+            <span class="icon-insights icon-14 text-warning me-1"></span>
+            <span class="text-primary" #ranking>
+              {{
+                data?.ranking
+                  | formatvalue : formModel : "ranking" : ranking
+                  | async
+              }}
+            </span>
+          </div>
+          <div class="d-flex align-items-center">
+            <span
+              class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+            ></span>
+            <span class="fw-bold text-primary">
+              <span>{{ data?.totalScore }}</span>
+            </span>
+          </div>
+          <div class="d-flex align-items-center">
+            <span
+              class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+            ></span>
+            <span class="fw-bold">
+              <span>{{ data?.result }}</span>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>

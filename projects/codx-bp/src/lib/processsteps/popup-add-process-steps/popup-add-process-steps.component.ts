@@ -78,6 +78,7 @@ export class PopupAddProcessStepsComponent
   linkQuesiton = '';
   hideExtend = false;
   folderID = '';
+  isView = false;
   constructor(
     private inject: Injector,
     private bpService: CodxBpService,
@@ -101,6 +102,7 @@ export class PopupAddProcessStepsComponent
     this.formModelMenu = dt?.data[3];
     this.process = dt?.data[4];
     this.recIDCopied = dt?.data[5];
+    this.isView = dt?.data[6];
     if (this.processSteps.parentID && this.action == 'add') {
       this.lockParentId = true;
     }
@@ -152,8 +154,6 @@ export class PopupAddProcessStepsComponent
   }
 
   onInit(): void {
-    console.log(this.processSteps);
-
     this.loadData();
     this.getListUser();
 
@@ -377,6 +377,9 @@ export class PopupAddProcessStepsComponent
     )
       this.showLabelAttachment = this.isHaveFile;
   }
+  getfileDelete(event){
+    event.data.length
+  }
   valueChangeAlert(e) {
     this.processSteps[e?.field] = e.data;
   }
@@ -467,19 +470,22 @@ export class PopupAddProcessStepsComponent
   }
 
   changeQuestion(e) {
-    this.processSteps['reference'] = e?.data;
-    let url = window.location.href;
-    let index = url.indexOf('/bp/');
-    if (index != -1)
-      this.linkQuesiton =
-        url.substring(0, index) +
-        Util.stringFormat(
-          '/sv/add-survey?funcID={0}&title={1}&recID={2}',
-          'SVT01',
-          '',
-          e?.data
-        );
+    if(e?.data){
+      this.processSteps['reference'] = e?.data;
+      let url = window.location.href;
+      let index = url.indexOf('/bp/');
+      if (index != -1)
+        this.linkQuesiton =
+          url.substring(0, index) +
+          Util.stringFormat(
+            '/sv/add-survey?funcID={0}&title={1}&recID={2}',
+            'SVT01',
+            '',
+            e?.data
+          );       
     this.changeDef.detectChanges();
+    }
+   
   }
   viewDetailSurveys() {
     // let url = 'sv/surveys/SVT01';

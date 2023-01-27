@@ -89,169 +89,214 @@
           *ngIf="!isGroup"
           class="d-flex align-items-center ms-4 min-w-300px justify-content-end"
         >
-          <ng-container
+          <!-- <ng-container
             *ngIf="data.controlType && data.controlType != 'GroupControl'"
           >
-            <ng-container *ngIf="data.category == '6'; else basic">
-              <codx-input
-                type="Switch"
-                name="Switch"
-                placeholder=""
-                field="stop"
-                [crrValue]="
-                  schedules && schedules[data.fieldName]
-                    ? !schedules[data.fieldName].stop
-                    : false
-                "
-                (valueChange)="valueChange($event, data, null)"
+           
+          </ng-container> -->
+          <ng-container [ngSwitch]="data.category">
+            <ng-container *ngSwitchDefault>
+              <ng-container
+                *ngIf="data.controlType && data.controlType != 'GroupControl'"
               >
-              </codx-input>
+                <codx-input
+                  [style]="
+                    data.controlType == 'TextBox' ||
+                    data.controlType == 'Combobox'
+                      ? 'width: 200px'
+                      : ''
+                  "
+                  [type]="data | type"
+                  [name]="data.controlType"
+                  placeholder=""
+                  ngDefaultControl
+                  [refType]="data.referedType"
+                  [refValue]="data.referedValue || data.referdValue"
+                  [loadFull]="true"
+                  [field]="data.fieldName"
+                  [checked]="
+                    autoDefault && autoDefault[data.fieldName]
+                      ? !autoDefault[data.fieldName].stop
+                      : dataValue[data.fieldName] == '1'
+                  "
+                  [crrValue]="
+                    autoDefault && autoDefault[data.fieldName]
+                      ? !autoDefault[data.fieldName].stop
+                      : dataValue[data.fieldName] || ''
+                  "
+                  (valueChange)="valueChange($event, data, autoDefault)"
+                >
+                </codx-input>
+              </ng-container>
             </ng-container>
 
-            <ng-template #basic>
-              <codx-input
-                [style]="
-                  data.controlType == 'TextBox' ||
-                  data.controlType == 'Combobox'
-                    ? 'width: 200px'
-                    : ''
-                "
-                [type]="data | type"
-                [name]="data.controlType"
-                placeholder=""
-                ngDefaultControl
-                [refType]="data.referedType"
-                [refValue]="data.referedValue || data.referdValue"
-                [loadFull]="true"
-                [field]="data.fieldName"
-                [checked]="
-                  autoDefault && autoDefault[data.fieldName]
-                    ? !autoDefault[data.fieldName].stop
-                    : dataValue[data.fieldName] == '1'
-                "
-                [crrValue]="
-                  autoDefault && autoDefault[data.fieldName]
-                    ? !autoDefault[data.fieldName].stop
-                    : dataValue[data.fieldName] || ''
-                "
-                (valueChange)="valueChange($event, data, autoDefault)"
+            <ng-container *ngSwitchCase="'6'">
+              <ng-container
+                *ngIf="data.controlType && data.controlType != 'GroupControl'"
               >
-              </codx-input>
-            </ng-template>
-          </ng-container>
-          <ng-container *ngIf="data.category == '4'">
-            <codx-input
-              *ngIf="
-                data.isCustomize == '0' &&
-                (dataValue
-                  | value : 'FieldName' : data.fieldName : 'ApprovalRule')
-              "
-              [style]="
-                data.controlType == 'TextBox' || data.controlType == 'Combobox'
-                  ? 'width: 200px'
-                  : ''
-              "
-              [type]="data | type"
-              [name]="data.controlType"
-              placeholder=""
-              ngDefaultControl
-              [refType]="data.referedType"
-              [refValue]="data.referedValue || data.referdValue"
-              [loadFull]="true"
-              [field]="data.fieldName"
-              [crrValue]="
-                dataValue
-                  | value : 'FieldName' : data.fieldName : 'ApprovalRule'
-              "
-              (valueChange)="valueChange($event, data, autoDefault)"
-            >
-            </codx-input>
-          </ng-container>
-
-          <ng-container *ngIf="data.category == '2'">
-            <div
-              class="me-2 h-16px d-flex align-item-center"
-              *ngIf="data.isCustomize == '0'"
-            >
-              <codx-input
-                type="Switch"
-                name="Switch"
-                placeholder=""
-                [field]="data.fieldName"
-                [crrValue]="
-                  autoDefault && autoDefault[data.fieldName]
-                    ? !autoDefault[data.fieldName].stop
-                    : false
-                "
-                (valueChange)="valueChange($event, data, autoDefault)"
-              >
-              </codx-input>
-            </div>
-            <codx-label
-              name="lblUseAutoNumber"
-              formName="Settings"
-              default="Sử dụng số tự động"
-            >
-            </codx-label>
-            <span class="ms-3">
-              <a
-                href="javascript:void(0)"
-                (click)="
-                  autoDefault &&
-                    autoDefault[data.fieldName] &&
-                    openPopup($event, data, 'cpnAutoNumbers')
-                "
-                ><span class="w-30px d-flex justify-content-center"
-                  ><span class="icon-edit-one icon-18"></span></span
-              ></a>
-            </span>
-          </ng-container>
-
-          <ng-container *ngIf="data.category == '5'">
-            <div class="d-flex align-items-top me-3">
-              <span class="me-2">
                 <codx-input
-                  type="checkbox"
-                  name="checkbox"
-                  class="check-circle"
+                  type="Switch"
+                  name="Switch"
                   placeholder=""
-                  field="isAlert"
+                  field="stop"
                   [crrValue]="
-                    alertRules && alertRules[data.fieldName]
-                      ? alertRules[data.fieldName].isAlert
+                    schedules && schedules[data.fieldName]
+                      ? !schedules[data.fieldName].stop
                       : false
                   "
                   (valueChange)="valueChange($event, data, null)"
                 >
                 </codx-input>
-              </span>
-              <codx-label
-                name="lblAlert"
-                formName="Settings"
-                default="Thông báo"
+              </ng-container>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'4'">
+              <ng-container
+                *ngIf="
+                  data.controlType == 'CheckBox' ||
+                    data.controlType == 'Switch';
+                  text
+                "
               >
-              </codx-label>
-              <span class="me-2 ms-6">
                 <codx-input
-                  type="checkbox"
-                  name="checkbox"
-                  placeholder=""
-                  class="check-circle"
-                  field="isMail"
-                  [crrValue]="
-                    alertRules && alertRules[data.fieldName]
-                      ? alertRules[data.fieldName].isMail
-                      : false
+                  *ngIf="
+                    data.isCustomize == '0' &&
+                    (dataValue
+                      | value : 'FieldName' : data.fieldName : 'ApprovalRule')
                   "
-                  (valueChange)="valueChange($event, data, null)"
+                  [type]="data | type"
+                  [name]="data.controlType"
+                  placeholder=""
+                  ngDefaultControl
+                  [refType]="data.referedType"
+                  [refValue]="data.referedValue || data.referdValue"
+                  [loadFull]="true"
+                  [field]="data.fieldName"
+                  [checked]="
+                    (dataValue
+                      | value
+                        : 'FieldName'
+                        : data.fieldName
+                        : 'ApprovalRule') == '1'
+                  "
+                  (valueChange)="valueChange($event, data, autoDefault)"
                 >
                 </codx-input>
-              </span>
-              <codx-label name="lblEmail" formName="Settings" default="Email">
-              </codx-label>
-            </div>
-          </ng-container>
+              </ng-container>
+              <ng-template #text>
+                <codx-input
+                  *ngIf="
+                    data.isCustomize == '0' &&
+                    (dataValue
+                      | value : 'FieldName' : data.fieldName : 'ApprovalRule')
+                  "
+                  [style]="
+                    data.controlType == 'TextBox' ||
+                    data.controlType == 'Combobox'
+                      ? 'width: 200px'
+                      : ''
+                  "
+                  [type]="data | type"
+                  [name]="data.controlType"
+                  placeholder=""
+                  ngDefaultControl
+                  [refType]="data.referedType"
+                  [refValue]="data.referedValue || data.referdValue"
+                  [loadFull]="true"
+                  [field]="data.fieldName"
+                  [crrValue]="
+                    dataValue
+                      | value : 'FieldName' : data.fieldName : 'ApprovalRule'
+                  "
+                  (valueChange)="valueChange($event, data, autoDefault)"
+                >
+                </codx-input>
+              </ng-template>
+            </ng-container>
 
+            <ng-container *ngSwitchCase="'2'">
+              <ng-container *ngIf="data.isCustomize == '0'">
+                <div class="me-2 h-16px d-flex align-item-center">
+                  <codx-input
+                    type="Switch"
+                    name="Switch"
+                    placeholder=""
+                    [field]="data.fieldName"
+                    [crrValue]="
+                      autoDefault && autoDefault[data.fieldName]
+                        ? !autoDefault[data.fieldName].stop
+                        : false
+                    "
+                    (valueChange)="valueChange($event, data, autoDefault)"
+                  >
+                  </codx-input>
+                </div>
+                <codx-label
+                  name="lblUseAutoNumber"
+                  formName="Settings"
+                  default="Sử dụng số tự động"
+                >
+                </codx-label>
+                <span class="ms-3">
+                  <a
+                    href="javascript:void(0)"
+                    (click)="
+                      autoDefault &&
+                        autoDefault[data.fieldName] &&
+                        openPopup($event, data, 'cpnAutoNumbers')
+                    "
+                    ><span class="w-30px d-flex justify-content-center"
+                      ><span class="icon-edit-one icon-18"></span></span
+                  ></a>
+                </span>
+              </ng-container>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'5'">
+              <div class="d-flex align-items-top me-3">
+                <span class="me-2">
+                  <codx-input
+                    type="checkbox"
+                    name="checkbox"
+                    class="check-circle"
+                    placeholder=""
+                    field="isAlert"
+                    [crrValue]="
+                      alertRules && alertRules[data.fieldName]
+                        ? alertRules[data.fieldName].isAlert
+                        : false
+                    "
+                    (valueChange)="valueChange($event, data, null)"
+                  >
+                  </codx-input>
+                </span>
+                <codx-label
+                  name="lblAlert"
+                  formName="Settings"
+                  default="Thông báo"
+                >
+                </codx-label>
+                <span class="me-2 ms-6">
+                  <codx-input
+                    type="checkbox"
+                    name="checkbox"
+                    placeholder=""
+                    class="check-circle"
+                    field="isMail"
+                    [crrValue]="
+                      alertRules && alertRules[data.fieldName]
+                        ? alertRules[data.fieldName].isMail
+                        : false
+                    "
+                    (valueChange)="valueChange($event, data, null)"
+                  >
+                  </codx-input>
+                </span>
+                <codx-label name="lblEmail" formName="Settings" default="Email">
+                </codx-label>
+              </div>
+            </ng-container>
+          </ng-container>
           <div class="setting-btnright">
             <a
               [routerLink]="
@@ -330,7 +375,8 @@
         >
           {{
             (data.recID | shareSetting : settingFull : dataValue)?.objectName ==
-            "null"
+              "null" ||
+            !(data.recID | shareSetting : settingFull : dataValue)?.objectName
               ? ""
               : (data.recID | shareSetting : settingFull : dataValue)
                   ?.objectName ||

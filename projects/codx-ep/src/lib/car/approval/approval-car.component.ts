@@ -38,7 +38,7 @@ export class ApprovalCarsComponent extends UIComponent {
 
   // [entityName]="'ES_ApprovalTrans'"
   // [method]="'LoadDataAsync'"
-  // [assemblyName]="'CM'"
+  // [assemblyName]="'Core'"
   // [service]="'ES'"
   // [className]="'DataBusiness'"
   // [selectedFirst]="true"
@@ -71,6 +71,7 @@ export class ApprovalCarsComponent extends UIComponent {
   listDriver: any[];
   tempDriverName = '';
   driverName = '';
+  queryParams: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -79,6 +80,8 @@ export class ApprovalCarsComponent extends UIComponent {
     super(injector);
 
     this.funcID = this.router.snapshot.params['funcID'];
+
+    this.queryParams = this.router.snapshot.queryParams;
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
@@ -93,6 +96,10 @@ export class ApprovalCarsComponent extends UIComponent {
     this.request.service = 'EP';
     this.request.method = 'GetListApprovalAsync';
     this.request.idField = 'recID';
+    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
+      this.request.predicate = this.queryParams?.predicate;
+      this.request.dataValue = this.queryParams?.dataValue;
+    }
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
@@ -103,7 +110,7 @@ export class ApprovalCarsComponent extends UIComponent {
     this.modelResource.dataValue = '2';
 
     this.fields = {
-      id: 'bookingNo',
+      id: 'recID',
       subject: { name: 'title' },
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },

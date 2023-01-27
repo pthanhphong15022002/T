@@ -14,16 +14,17 @@ import { FileUpload, View } from '@shared/models/file.model';
 import { FileService } from '@shared/services/file.service';
 import {
   ApiHttpService,
+  AuthStore,
   CacheService,
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { CodxBpService } from '../codx-bp.service';
-import { B } from '@angular/cdk/keycodes';
-import { CodxTreeHistoryComponent } from 'projects/codx-share/src/lib/components/codx-tree-history/codx-tree-history.component';
 import { environment } from 'src/environments/environment';
 import { CodxHistoryComponent } from 'projects/codx-share/src/lib/components/codx-history/codx-history.component';
+import { tmpListUserName } from '../models/BP_UserPermission.model';
 
 @Component({
   selector: 'lib-properties',
@@ -58,12 +59,21 @@ export class PropertiesComponent implements OnInit {
   entityName: any;
   flowChart= '';
   objectID: any;
+  firstNameVersion:string = '';
+  listUserName:any;
+  userNameLogin:any;
+  isCheckNotUserNameLogin: boolean = false;
+  listUserShow:tmpListUserName[]=[];
+  index:number = 0;
+  user:any;
+  userIdLogin:any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private bpSV: CodxBpService,
     private cache: CacheService,
     private api: ApiHttpService,
+    private authStore: AuthStore,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -81,10 +91,42 @@ export class PropertiesComponent implements OnInit {
           new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
       );
     this.totalRating = 0;
+    this.user = this.authStore.get();
+    this.userIdLogin = this.user.userID;
+    this.userNameLogin= this.user.userName;
   }
 
   ngOnInit(): void {
+    this.cache.message('BP001').subscribe((res) => {
+      if (res) {
+        this.firstNameVersion = Util.stringFormat(
+          res.defaultName,''
+        ).trim()+': '+'V0.0';
+      }
+    });
     this.openProperties(this.data.recID);
+    let isCheck=this.process.versions.map(x=>
+      {
+      if(x.createdBy !== this.userIdLogin) {
+        this.isCheckNotUserNameLogin=true;
+        return;
+      }
+    });
+     if(this.isCheckNotUserNameLogin){
+      var listnew= this.process.versions.map(x => x.createdBy)
+      this.bpSV.getUserNameByListId(listnew).subscribe((res)=> {
+         res=res.map(x=>
+          {
+            let user= new tmpListUserName();
+            user.userName = x.userName;
+            user.userID = x.userID;
+            user.postion= this.index;
+            this.listUserShow.push(user);
+            this.index++;
+        },
+        );
+      });
+   }
     this.changeDetectorRef.detectChanges();
   }
 

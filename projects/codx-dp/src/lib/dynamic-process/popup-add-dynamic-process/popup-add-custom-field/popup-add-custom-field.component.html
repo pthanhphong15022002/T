@@ -1,0 +1,235 @@
+<codx-form
+  #form
+  [headerText]="title"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="dialog?.formModel"
+  [data]="field"
+  [openMore]="true"
+>
+  <ng-template #body>
+    <div class="card-form">
+      <div class="form-group">
+        <codx-label
+          fiedName="StepID"
+          [formModel]="form.formModel"
+          [default]="'Giai đoạn liên kết'"
+        >
+        </codx-label>
+        <ejs-dropdownlist
+          [dataSource]="stepList"
+          [fields]="fields"
+          [value]="field.stepID"
+          [placeholder]="grvSetup['StepID'].description"
+          (valueChange)="cbxChange($event)"
+          [readonly]="true"
+        ></ejs-dropdownlist>
+      </div>
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            fiedName="Title"
+            [formModel]="form.formModel"
+            default="Tên trường dữ liệu"
+          >
+          </codx-label>
+          <codx-input
+            field="title"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+        <!-- cai nay chua có -->
+        <div class="col-6">
+          <codx-label
+            fiedName="FieldName"
+            [formModel]="form.formModel"
+            default="ID trường dữ liệu"
+          >
+          </codx-label>
+          <codx-input
+            field="fieldName"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+          name="DataType"
+          [formModel]="form.formModel"
+          [default]="'Loại dữ liệu'"
+        ></codx-label>
+        <codx-input
+          field="dataType"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="field.dataType && field.dataType != 'A'">
+        <codx-label
+          fiedName="DataFormat"
+          [formModel]="form.formModel"
+          [default]="'Định dạng dữ liệu'"
+        >
+        </codx-label>
+        <codx-input
+          field="dataFormat"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <ng-container
+        *ngIf="
+          field.dataType == 'C' ||
+          field.dataType == 'V' ||
+          field.dataType == 'M' ||
+          field.dataType == '1'
+        "
+      >
+        <div class="form-group">
+          <codx-label
+            fiedName="RefType"
+            [formModel]="form.formModel"
+            [default]="'Danh sách tùy chọn'"
+          >
+          </codx-label>
+          <codx-input
+            field="refType"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label
+            fiedName="RefValue"
+            [formModel]="form.formModel"
+            [default]="'Danh sách tùy chọn'"
+          >
+          </codx-label>
+          <codx-input
+            field="refValue"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </ng-container>
+
+      <div class="form-group" *ngIf="field.dataType == 'A'">
+        <codx-input
+          type="checkbox"
+          (valueChange)="valueChange($event)"
+          labelPosition="After"
+          label="Cho phép chọn nhiều giá trị"
+          [crrValue]="field?.multiselect"
+        ></codx-input>
+      </div>
+
+      <div class="form-group row" *ngIf="field.dataFormat == 'R'">
+        <div class="col-6">
+          <codx-label
+            fiedName="RankIcon"
+            [formModel]="form.formModel"
+            default="Loại icon hiển thị"
+          >
+          </codx-label>
+          <div>
+            <codx-valuelist
+              field="rankIcon"
+              [name]="'L1470'"
+              [iconOnly]="true"
+              [crrValue]="field?.rankIcon"
+              (valueChange)="valueChangeIcon($event)"
+            >
+            </codx-valuelist>
+          </div>
+          <!-- <codx-input
+            field="rankIcon"
+            [iconOnly]="true"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input> -->
+        </div>
+        <div class="col-6">
+          <codx-label
+            fiedName="rank"
+            [formModel]="form.formModel"
+            default="Điểm tối đa"
+          >
+          </codx-label>
+          <div>
+            <ejs-slider
+              id="slider"
+              [value]="value"
+              [min]="min"
+              [max]="max"
+              [type]="type"
+              [ticks]="ticks"
+              [tooltip]="tooltip"
+              (change)="sliderChange($event)"
+            ></ejs-slider>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+          name="Note"
+          [formModel]="form.formModel"
+          default="Mô tả"
+        ></codx-label>
+
+        <div class="d-flex justify-content-between align-items-center">
+          <div style="width: 100%">
+            <codx-input
+              [field]="'note'"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+          class="text-danger"
+          fiedName="IsRequired"
+          [formModel]="form?.formModel"
+          default="Bắt buộc *"
+        ></codx-label>
+        <codx-input
+          type="switch"
+          field="isRequired"
+          [checked]="field?.isRequired"
+          (valueChange)="changeRequired($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="saveData()">
+        <codx-label
+          name="Save"
+          formName="StepsFields"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div> </ng-template
+></codx-form>

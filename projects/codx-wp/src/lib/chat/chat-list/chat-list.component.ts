@@ -1,3 +1,4 @@
+import { I } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   ApplicationRef,
@@ -23,7 +24,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
-import { ChatBoxComponent } from '../chat-box/chat-box.component';
+import { iif } from 'rxjs/internal/observable/iif';
 import { PopupAddGroupComponent } from './popup/popup-add-group/popup-add-group.component';
 
 @Component({
@@ -57,7 +58,6 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     if (this.funcID) {
       this.cache.functionList(this.funcID).subscribe((func: any) => {
         if (func) {
-          console.log(func);
           this.function = JSON.parse(JSON.stringify(func));
           this.formModel.funcID = func.functionID;
           this.formModel.entityName = func.entityName;
@@ -67,7 +67,6 @@ export class ChatListComponent implements OnInit, AfterViewInit {
             .gridViewSetup(func.formName, func.gridViewName)
             .subscribe((grd: any) => {
               if (grd) {
-                console.log(grd);
                 this.grdViewSetUp = JSON.parse(JSON.stringify(grd));
                 this.dt.detectChanges();
               }
@@ -76,7 +75,6 @@ export class ChatListComponent implements OnInit, AfterViewInit {
             .moreFunction(func.formName, func.gridViewName)
             .subscribe((mFC: any) => {
               if (mFC) {
-                console.log(mFC);
                 this.moreFC = JSON.parse(JSON.stringify(mFC));
               }
             });
@@ -99,8 +97,20 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
   // click group chat - chat box
   openChatBox(group: any) {
-    if (group?.groupID) 
+    if (group) 
     {
+      if(!group.isRead)
+      {
+        //update status message
+        this.api.execSv(
+          "WP",
+          "ERM.Business.WP",
+          "ChatBusiness",
+          "UpdateMessageAsync",
+          [group.lastMssgID])
+          .subscribe();
+        group.isRead = true;
+      }
       this.addBoxChat(group);
     }
   }

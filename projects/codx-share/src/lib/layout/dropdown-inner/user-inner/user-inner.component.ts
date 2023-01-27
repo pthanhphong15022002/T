@@ -41,11 +41,13 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   @Input() buttonMarginClass: any;
 
   tenant?: string;
+  themeMode: ThemeMode = themeModeDefault;
   language: LanguageFlag = langDefault;
   theme: ThemeFlag = themeDefault;
   user$: Observable<UserModel | null> = of(null);
   langs = languages;
   themes = themeDatas;
+  themeModes = themeModeDatas;
   private unsubscribe: Subscription[] = [];
   functionList: any;
   formModel: any;
@@ -76,7 +78,12 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     if (environment.themeMode == 'body')
       document.body.classList.add('codx-theme');
     if (!this.auth.userValue.theme) this.auth.userValue.theme = 'default';
-    this.setTheme(this.auth.userValue.theme.toLowerCase()); //('default');
+
+    var arr = this.auth.userValue.theme.split('|');
+    let th = arr[0], thMode = arr.length > 1 ? arr[1] : 'light';
+
+    this.setTheme(th.toLowerCase());
+    this.setThemeMode(thMode.toLowerCase());
     if (this.functionList) {
       this.formModel = {
         formName: this.functionList?.formName,
@@ -100,55 +107,36 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     });
   }
 
-  mouseEnter(ele: any, sub: any) {
-    // let menuInstance = MenuComponent.getInstance(ele);
-    // if (menuInstance) menuInstance.show(ele);
-  }
-
   logout() {
     this.auth.logout();
     document.location.reload();
   }
 
-  updateSettting(lang: string, theme: string) {
-    if (lang) this.setLanguage(lang);
-    if (theme) this.setTheme(theme);
-    var l = this.language.lang.toUpperCase();
+  updateSettting(lang: string, theme: string, themeMode: string) {
+    let l = '', t = '';
+    if (lang) {
+      this.setLanguage(lang);
+      l = this.language.lang.toUpperCase();
+    }
+    if (theme) {
+      this.setTheme(theme);
+      t = this.theme.id + "|" + this.themeMode.id;
+    }
+    if (themeMode) {
+      this.setThemeMode(themeMode);
+      t = this.theme.id + "|" + this.themeMode.id;
+    }
+
     this.api
-      .execSv('SYS', 'AD', 'SystemFormatBusiness', 'UpdateSettingAsync', [
-        l,
-        theme,
-      ])
-      .subscribe((res: UserModel) => {
-        this.auth.userSubject.next(res);
-        //this.auth.startRefreshTokenTimer();
-        this.authstore.set(res);
+      .execSv('SYS', 'AD', 'SystemFormatBusiness', 'UpdateSettingAsync', [l, t])
+      .subscribe((res: any) => {
+        var user = this.authstore.get();
+        user.language = l;
+        user.theme = t;
+        this.auth.userSubject.next(user);
+        this.authstore.set(user);
         if (lang) document.location.reload();
       });
-    this.cache.systemSetting().subscribe((systemSetting: any) => {
-      systemSetting.language = this.language.lang.toUpperCase();
-      var user = this.authstore.get();
-      // this.user$.subscribe((user) => {
-      //   user.language = this.language.lang.toUpperCase();
-      //   this.auth.userSubject.next(user);
-      //   //this.auth.startRefreshTokenTimer();
-      //   this.authstore.set(user);
-      // });
-      this.api
-        .execAction('AD_SystemSettings', [systemSetting], 'UpdateAsync')
-        .subscribe((res) => {
-          if (res) {
-            user.language = this.language.lang.toUpperCase();
-            //this.auth.stopRefreshTokenTimer();
-            //this.authstore.remove();
-            //this.auth.userValue = null;
-            this.auth.userSubject.next(user);
-            //this.auth.startRefreshTokenTimer();
-            this.authstore.set(user);
-            if (lang) document.location.reload();
-          }
-        });
-    });
   }
 
   setLanguage(lang?: string) {
@@ -164,7 +152,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
   selectTheme(theme: string) {
     //this.setTheme(theme);
-    this.updateSettting('', theme);
+    this.updateSettting('', theme, '');
     // document.location.reload();
   }
 
@@ -191,6 +179,34 @@ export class UserInnerComponent implements OnInit, OnDestroy {
         theme.active = false;
       }
     });
+  }
+
+  setThemeMode(value: string) {
+    //check exist list theme
+    let findThemeMode = this.themeModes.find((x) => x.id == value);
+    if (!findThemeMode) value = 'light';
+
+    //Remove Old
+    let elm =
+      environment.themeMode == 'body'
+        ? document.body
+        : this.element.nativeElement.closest('.codx-theme');
+    if (this.themeMode && elm) {
+      elm.classList.remove(this.themeMode.id);
+    }
+
+    this.themeModes.forEach((themeMode: ThemeMode) => {
+      if (themeMode.id === value) {
+        themeMode.active = true;
+        this.themeMode = themeMode;
+
+        elm.classList.add(this.themeMode.id);
+      } else {
+        themeMode.active = false;
+      }
+    });
+
+    this.changeCss();
   }
 
   avatarChanged(data: any) {
@@ -221,6 +237,14 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     this.tenant;
     var url = `auth/login`;
     this.codxService.navigate(null, url, { id: 'changePass' });
+  }
+
+  changeCss() {
+    var lsLinks = document.getElementsByClassName('ejcss');
+    for (let i = 0; i < lsLinks.length; i++) {
+      let l: any = lsLinks[i];
+      l.href =this.themeMode.id == 'dark'? l.href.replace('.css','-dark.css'):l.href.replace('-dark.css','.css');
+    }
   }
 }
 
@@ -257,6 +281,13 @@ interface ThemeFlag {
   active?: boolean;
 }
 
+interface ThemeMode {
+  id: string;
+  name: string;
+  icon: string;
+  active?: boolean;
+}
+
 const themeDatas: ThemeFlag[] = [
   {
     id: 'default',
@@ -273,7 +304,7 @@ const themeDatas: ThemeFlag[] = [
   {
     id: 'sapphire',
     name: 'Sapphire',
-    color: '#0b9b8d',
+    color: '#009384',
     enable: true,
   },
   {
@@ -282,6 +313,32 @@ const themeDatas: ThemeFlag[] = [
     color: '#0f8633',
     enable: true,
   },
+  {
+    id: 'purple',
+    name: 'Purple',
+    color: '#5710b2',
+    enable: true,
+  },
+  {
+    id: 'navy',
+    name: 'Navy',
+    color: '#192440',
+    enable: true,
+  },
 ];
 
 const themeDefault = themeDatas[0];
+
+const themeModeDatas: ThemeMode[] = [
+  {
+    id: 'light',
+    name: 'Light',
+    icon: './assets/media/svg/light.svg'
+  },
+  {
+    id: 'dark',
+    name: 'Dark',
+    icon: './assets/media/svg/dark.svg'
+  },
+];
+const themeModeDefault = themeModeDatas[0];

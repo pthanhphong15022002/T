@@ -319,27 +319,31 @@ div.offcanvas {
     overflow: hidden;
 }
 
-.margin{
-  margin-top: 15px;
+.margin {
+    margin-top: 15px;
 }
 
 .dropzone.dropzone-default {
-  padding: 20px;
-  text-align: center;
-  cursor: pointer;
-  border: 0.5px dashed #6C757D;
-  border-radius: 0.42rem;
-  height: 200px;
-  background: #F5F8FA;
-  margin-bottom: 10px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    border: 0.5px dashed #6C757D;
+    border-radius: 0.42rem;
+    height: 200px;
+    background: #F5F8FA;
+    margin-bottom: 10px;
 }
 
 .dropzone.dropzone-default.dropzone-primary {
-  border-color: #3699FF;
+    border-color: #3699FF;
 }
 
-.image-maxsize{
-  width: 490px !important;
-  height: 194px !important;
-  border-radius: 0.42rem;
+.image-maxsize {
+    width: 490px !important;
+    height: 194px !important;
+    border-radius: 0.42rem;
+}
+
+.process-rating {
+    padding-bottom: 10px;
 }

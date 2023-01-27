@@ -26,6 +26,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import moment from 'moment';
+import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
 import { CodxHrService } from '../codx-hr.service';
@@ -52,7 +53,6 @@ export class EmployeesComponent extends UIComponent {
   employStatus: any;
   urlView: string;
   listMoreFunc = [];
-  functionName: string = '';
 
   // @Input() formModel: any;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
@@ -73,6 +73,7 @@ export class EmployeesComponent extends UIComponent {
   ) {
     super(injector);
   }
+
   onInit(): void {
     this.router.params.subscribe((param: any) => {
       if (param) {
@@ -151,7 +152,6 @@ export class EmployeesComponent extends UIComponent {
     if (functionID) {
       this.cache.functionList(functionID).subscribe((func: any) => {
         if (func) {
-          this.functionName = func.description;
           this.cache
             .moreFunction(func.formName, func.gridViewName)
             .subscribe((res) => {
@@ -172,13 +172,9 @@ export class EmployeesComponent extends UIComponent {
   }
 
   btnClick(event: any) {
-    // this.codxService.openUrlNewTab(
-    //   '',
-    //   '/hr/employee/HRT03?predicate=employeeID=@0&dataValue=123'
-    // );
-
     if (event?.text) {
-      this.view.dataService.addNew().subscribe((res: any) => {
+      this.view.dataService.addNew()
+      .subscribe((res: any) => {
         if (res) {
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
@@ -186,8 +182,9 @@ export class EmployeesComponent extends UIComponent {
           option.Width = '800px';
           let object = {
             employee: res,
-            action: 'add',
-            title: `${event.text}  ${this.functionName}`,
+            isAdd: true,
+            funcID:this.view.funcID,
+            action: event.text,
           };
           let popup = this.callfc.openSide(
             PopupAddEmployeesComponent,
@@ -232,32 +229,30 @@ export class EmployeesComponent extends UIComponent {
     }
   }
   edit(event: any, data: any) {
-    if (event && data) {
+    if (event && data) 
+    {
       this.view.dataService.dataSelected = data;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res: any) => {
-          let option = new SidebarModel();
-          option.DataService = this.view.dataService;
-          option.FormModel = this.view.formModel;
-          option.Width = '800px';
-          let object = {
-            employee: data,
-            action: 'edit',
-            title: `${event.text}  ${this.functionName}`,
-          };
-          let popup = this.callfc.openSide(
-            PopupAddEmployeesComponent,
-            object,
-            option
-          );
-          popup.closed.subscribe((result) => {
-            if (result?.event) {
-              let dataUpdate = result.event;
-              this.view.dataService.update(dataUpdate).subscribe();
-            }
-          });
-        });
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '800px';
+      let object = {
+        employee: data,
+        isAdd: false,
+        funcID:this.view.funcID,
+        action: event.text,
+      };
+      let popup = this.callfc.openSide(
+        PopupAddEmployeesComponent,
+        object,
+        option
+      );
+      popup.closed.subscribe((result) => {
+        if (result?.event) {
+          let dataUpdate = result.event;
+          this.view.dataService.update(dataUpdate).subscribe();
+        }
+      });
     }
   }
 
@@ -271,8 +266,9 @@ export class EmployeesComponent extends UIComponent {
         option.Width = '800px';
         let object = {
           employee: res,
-          action: 'copy',
-          title: `${event.text}  ${this.functionName}`,
+          isAdd: true,
+          funcID:this.view.funcID,
+          action: event.text,
         };
         debugger;
         let popup = this.callfc.openSide(

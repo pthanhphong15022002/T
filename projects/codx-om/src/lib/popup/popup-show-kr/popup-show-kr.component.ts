@@ -22,6 +22,7 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
@@ -32,6 +33,7 @@ import { ChartSettings } from '../../model/chart.model';
 import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
 import { PopupDistributeOKRComponent } from '../popup-distribute-okr/popup-distribute-okr.component';
 import { OMCONST } from '../../codx-om.constant';
+import { PopupAddKRComponent } from '../popup-add-kr/popup-add-kr.component';
 
 @Component({
   selector: 'popup-show-kr',
@@ -49,7 +51,8 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   headerText: string;
   formModelCheckin = new FormModel();
   dtStatus: any;
-  openAccordion = [];
+  openAccordionAlign = [];
+  openAccordionAssign = [];
   dataKR: any;
   title='';
   krRecID:any;
@@ -122,6 +125,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     },
     offset: 0,
   };
+  listAssign: any;
 
   load(args: ILoadedEventArgs): void {
     // custom code start
@@ -150,6 +154,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     this.krRecID=dialogData.data[0];
     this.title = dialogData.data[1];
     this.krParentID = dialogData.data[2];
+    this.formModel=dialogRef.formModel;
 
     
   }
@@ -173,6 +178,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     
     this.getKRData();    
     this.getListAlign();
+    this.getListAssign()
   }
 
   //-----------------------End-------------------------------//
@@ -188,7 +194,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------Get Data Func---------------------//
   getKRData(){
     this.codxOmService
-        .getKRByID(this.krRecID)
+        .getOKRByID(this.krRecID)
         .subscribe((res: any) => {
           if (res) {
             this.dataKR = res;      
@@ -214,19 +220,31 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   }
   getListAlign(){
     this.codxOmService
-        .getListAlign(this.krParentID)
+        .getListAlignAssign(this.krParentID, OMCONST.VLL.RefType_Link.Align)
         .subscribe((res: any) => {
           if (res) {
             this.listAlign = res;           
           }
         });
   }
-  getItemOKR(i: any, recID: any) {
-    this.openAccordion[i] = !this.openAccordion[i];
+  getListAssign(){
+    this.codxOmService
+        .getListAlignAssign(this.krParentID, OMCONST.VLL.RefType_Link.Assign)
+        .subscribe((res: any) => {
+          if (res) {
+            this.listAssign = res;           
+          }
+        });
+  }
+  getItemOKRAlign(i: any, recID: any) {
+    this.openAccordionAlign[i] = !this.openAccordionAlign[i];
     // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
     //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
     //     if(item) this.dataOKR[i].child = item
     //   });
+  }
+  getItemOKRAssign(i: any, recID: any) {
+    this.openAccordionAssign[i] = !this.openAccordionAssign[i];
   }
 
   //#region Chart
@@ -367,6 +385,16 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     }
   }
 
+  editKR(kr: any, o: any, popupTitle: any) {
+    let option = new SidebarModel();
+    option.FormModel = this.formModel;
+
+    let dialogKR = this.callfc.openSide(
+      PopupAddKRComponent,
+      [OMCONST.MFUNCID.Edit, popupTitle, o, kr],
+      option
+    );
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Logic Event-----------------------//
@@ -394,19 +422,6 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Popup-----------------------------//
-  distributeKR(kr:any){
-    let dModel = new DialogModel();    
-    dModel.IsFull = true;
-    let dialogDisKR = this.callfc.openForm(
-      PopupDistributeOKRComponent,
-      '',
-      null,
-      null,
-      null,
-      [kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult],
-      '',
-      dModel
-    );
-  }
+  
   //-----------------------End-------------------------------//
 }

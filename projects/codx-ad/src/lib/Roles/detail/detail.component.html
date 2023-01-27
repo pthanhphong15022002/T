@@ -1,14 +1,11 @@
 <codx-views #view [funcID]="funcIDPara" [autoLoad]="false" [views]="views">
 </codx-views>
 <ng-template #template>
-  <div
-    class="content h-100 d-flex flex-column flex-column-fluid p-0 roledetail"
-    id="kt_content"
-  >
+  <div class="px-5 roledetail rounded-5 bg-body" id="kt_content">
     <div id="erm_content" class="d-flex flex-column-fluid h-100">
       <div class="d-flex h-100 w-100">
         <div
-          class="aside-detail h-100 hover-scroll-overlay-y w-250px min-w-250px me-3"
+          class="roledetail-aside aside-detail hover-scroll-overlay-y w-250px min-w-250px me-3 pe-3"
         >
           <div class="aside-menu pe-6 mt-4">
             <ng-container *ngFor="let data of myTree; let i = index">
@@ -61,9 +58,7 @@
           <div
             class="align-items-center justify-content-between setting-sticky menu-action-role"
           >
-            <div
-              class="role-detail rounded-3 p-5 pb-0 bg-body hover-scroll-overlay-y h-100"
-            >
+            <div class="role-detail bg-body hover-scroll-overlay-y h-100">
               <ul
                 ngbNav
                 #nav="ngbNav"
@@ -99,7 +94,7 @@
                             </th>
                             <th scope="col" class="w-170px">
                               <codx-label
-                                name="lblRecordLevelControl"
+                                name="lblpermissionControl"
                                 formName="Roles"
                                 default="
                               Quyền dữ liệu"
@@ -142,12 +137,7 @@
                               >
                               </codx-label>
                             </th>
-                            <!-- <th scope="col" class="w-170px">
-                              <codx-label name="lblIsRun" formName="Roles" default="
-                              Xem dữ liệu trên danh sách">
-                              </codx-label>
-                            </th> -->
-                            <th scope="col" class="w-100px">
+                            <th scope="col" class="w-120px">
                               <codx-label
                                 name="lblExport"
                                 formName="Roles"
@@ -169,16 +159,17 @@
                                   class="cotrol-vll"
                                   placeholder=""
                                   [disabled]="
-                                    !active || item.listTemplate | active : '0'
+                                    !active ||
+                                    (item.listTemplate | active : '0')
                                   "
                                   ngDefaultControl
                                   refValue="SYS029"
-                                  field="recordLevelControl"
+                                  field="permissionControl"
                                   [crrValue]="
                                     dataRole[item.functionID]?.DataPer
-                                      ?.recordLevelControl
+                                      ?.permissionControl
                                       ? dataRole[item.functionID]?.DataPer
-                                          ?.recordLevelControl
+                                          ?.permissionControl
                                       : 0
                                   "
                                   (valueChange)="
@@ -186,27 +177,13 @@
                                   "
                                 >
                                 </codx-input>
-                                <!-- <codx-input
-                                  type="checkbox"
-                                  [disabled]="
-                                    !active || item.listTemplate | active : '0'
-                                  "
-                                  [checked]="
-                                    dataRole[item.functionID]?.DataPer
-                                      ?.recordLevelControl || false
-                                  "
-                                  field="recordLevelControl"
-                                  (valueChange)="
-                                    valueChange($event, item.functionID)
-                                  "
-                                >
-                                </codx-input> -->
                               </td>
                               <td class="text-center">
                                 <codx-input
                                   type="checkbox"
                                   [disabled]="
-                                    !active || item.listTemplate | active : '1'
+                                    !active ||
+                                    (item.listTemplate | active : '1')
                                   "
                                   [checked]="
                                     dataRole[item.functionID]?.DataPer
@@ -228,7 +205,8 @@
                                   ngDefaultControl
                                   refValue="SYS026"
                                   [disabled]="
-                                    !active || item.listTemplate | active : '2'
+                                    !active ||
+                                    (item.listTemplate | active : '2')
                                   "
                                   [crrValue]="
                                     dataRole[item.functionID]?.DataPer?.read
@@ -249,7 +227,8 @@
                                   class="cotrol-vll"
                                   placeholder=""
                                   [disabled]="
-                                    !active || item.listTemplate | active : '3'
+                                    !active ||
+                                    (item.listTemplate | active : '3')
                                   "
                                   ngDefaultControl
                                   refValue="SYS026"
@@ -273,7 +252,8 @@
                                   class="cotrol-vll"
                                   placeholder=""
                                   [disabled]="
-                                    !active || item.listTemplate | active : '4'
+                                    !active ||
+                                    (item.listTemplate | active : '4')
                                   "
                                   ngDefaultControl
                                   refValue="SYS026"
@@ -290,24 +270,13 @@
                                 >
                                 </codx-input>
                               </td>
-                              <!-- <td>
-                                <codx-input type="valuelist" name="select" class="cotrol-vll" placeholder="" [disabled]="
-                                    !active || item.listTemplate | active: '5'
-                                  " ngDefaultControl refValue="SYS026" field="refer" [crrValue]="
-                                    dataRole[item.functionID]?.DataPer?.refer
-                                      ? dataRole[item.functionID]?.DataPer
-                                          ?.refer
-                                      : 0
-                                  " (valueChange)="
-                                    valueChange($event, item.functionID)
-                                  ">
-                                </codx-input>
-                              </td> -->
+
                               <td class="text-center">
                                 <codx-input
                                   type="checkbox"
                                   [disabled]="
-                                    !active || item.listTemplate | active : '5'
+                                    !active ||
+                                    (item.listTemplate | active : '5')
                                   "
                                   [checked]="
                                     dataRole[item.functionID]?.Export || false
@@ -341,7 +310,7 @@
                       <table class="w-100 table table-row-bordered gs-3 gy-3">
                         <thead>
                           <tr class="fw-bold text-dark bg-gray-100">
-                            <th scope="col" class="w-500px">
+                            <th scope="col" class="w-350px">
                               <codx-label
                                 name="lblNameReport"
                                 formName="Roles"
@@ -350,7 +319,7 @@
                               >
                               </codx-label>
                             </th>
-                            <th scope="col" class="w-80px">
+                            <th scope="col" class="w-150px">
                               <codx-label
                                 name="lblAllowView"
                                 formName="Roles"
@@ -440,7 +409,7 @@
                               >
                               </codx-label>
                             </th>
-                            <th scope="col" class="w-150px">
+                            <th scope="col" class="w-100px">
                               <codx-label
                                 name="lblAllowMore"
                                 formName="Roles"
@@ -449,7 +418,7 @@
                               >
                               </codx-label>
                             </th>
-                            <th scope="col" class="w-150px">
+                            <th scope="col" class="w-100px">
                               <codx-label
                                 name="lblSelectAll"
                                 formName="Roles"
@@ -497,7 +466,7 @@
                                 <codx-input
                                   type="checkbox"
                                   [disabled]="
-                                    !active ||
+                                    !active &&
                                     !(
                                       item.activeSysFuction &&
                                       item.activeMoreFunction

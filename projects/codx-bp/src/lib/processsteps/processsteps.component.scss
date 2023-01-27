@@ -114,7 +114,7 @@
 
   .processStep {
     padding: 12px 8px 0px 12px;
-  }
+   }
 
   .bg-footer {
     margin-left: -12px;
@@ -331,6 +331,7 @@ codx-views {
   width: 100%;
   .color-hover{
     background-color: aliceblue;
+    cursor: context-menu;
   }
   .psteps-item{
     margin: 0;
@@ -345,4 +346,74 @@ codx-views {
 
 .more-function codx-mfunc{
   top: -15px !important;
+}
+.user-mini-nav {
+  height: 29px;
+  padding: 2px 10px 2px 2px !important;
+  border-radius: 20px;
+  margin-bottom: 3px;
+  background-color: #f3f3f3;
+  margin-right: 3px;
+  float: left;
+}
+.contain{
+  display: flex;
+  position: relative;
+  position: relative;
+  padding-top: 2px;
+  .view-all{
+    background-color: #040404b7;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 2px;
+    left: 0;
+    color: white;
+    opacity: 0.6;
+    font-weight: 600;
+  }
+}
+.contain{
+  cursor: pointer;
+}
+.popup-search{
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  height: 400px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow:#e4e4e4 5px 5px 5px 5px;
+  padding: 20px;
+  position: absolute;
+  z-index: 100;
+  right: -15px;
+  .heard{
+    font-weight: 500;
+  }
+  .search{
+    margin: 10px 0;
+  }
+  .list-user{
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    .contains-user{
+      margin: 5px 0;
+    }
+  }
+}
+.user-mini{
+  height: 25px;
+  width: 25px;
+  border-radius: 20px;
+  background-color: #cbcbcb !important;
+  margin-right: 3px;
+  float: left;
+  img{
+    margin: auto;
+  }
 }

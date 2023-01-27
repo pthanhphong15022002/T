@@ -58,6 +58,7 @@ export class EditPatternComponent implements OnInit {
     private notificationsService: NotificationsService,
     private cache: CacheService,
     private auth: AuthService,
+    private route: ActivatedRoute,
     @Optional() dt: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -87,7 +88,7 @@ export class EditPatternComponent implements OnInit {
         this.change.detectChanges();
       }
     });
-    this.getCardType(this.formModel?.functionID);
+    if (data.data.funcID) this.getCardType(data.data.funcID);
   }
 
   ngOnInit(): void {}

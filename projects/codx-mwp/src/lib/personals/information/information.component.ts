@@ -1,4 +1,10 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Injector,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   ImageViewerComponent,
   UIComponent,
@@ -8,6 +14,7 @@ import {
 } from 'codx-core';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-information',
@@ -34,7 +41,8 @@ export class InformationComponent extends UIComponent implements OnInit {
     private auth: AuthService,
     private authstore: AuthStore,
     private mwpService: CodxMwpService,
-    private codxShareSV: CodxShareService
+    private codxShareSV: CodxShareService,
+    private element: ElementRef
   ) {
     super(injector);
     var data: any = this.auth.user$;
@@ -63,7 +71,10 @@ export class InformationComponent extends UIComponent implements OnInit {
         };
     });
     this.setLanguage(this.auth.userValue?.language?.toLowerCase());
-    this.selectTheme('default');
+    if (environment.themeMode == 'body')
+      document.body.classList.add('codx-theme');
+    if (!this.auth.userValue.theme) this.auth.userValue.theme = 'default';
+    this.setTheme(this.auth.userValue.theme.toLowerCase()); //('default');
   }
 
   onInit(): void {
@@ -125,14 +136,70 @@ export class InformationComponent extends UIComponent implements OnInit {
   }
 
   selectTheme(theme: string) {
-    this.setTheme(theme);
+    // this.setTheme(theme);
+    this.updateSettting('', theme);
+  }
+
+  updateSettting(lang: string, theme: string) {
+    if (lang) this.setLanguage(lang);
+    if (theme) this.setTheme(theme);
+    var l = this.language.lang.toUpperCase();
+    this.api
+      .execSv('SYS', 'AD', 'SystemFormatBusiness', 'UpdateSettingAsync', [
+        l,
+        theme,
+      ])
+      .subscribe((res: UserModel) => {
+        this.auth.userSubject.next(res);
+        //this.auth.startRefreshTokenTimer();
+        this.authstore.set(res);
+        if (lang) document.location.reload();
+      });
+    this.cache.systemSetting().subscribe((systemSetting: any) => {
+      systemSetting.language = this.language.lang.toUpperCase();
+      var user = this.authstore.get();
+      // this.user$.subscribe((user) => {
+      //   user.language = this.language.lang.toUpperCase();
+      //   this.auth.userSubject.next(user);
+      //   //this.auth.startRefreshTokenTimer();
+      //   this.authstore.set(user);
+      // });
+      this.api
+        .execAction('AD_SystemSettings', [systemSetting], 'UpdateAsync')
+        .subscribe((res) => {
+          if (res) {
+            user.language = this.language.lang.toUpperCase();
+            //this.auth.stopRefreshTokenTimer();
+            //this.authstore.remove();
+            //this.auth.userValue = null;
+            this.auth.userSubject.next(user);
+            //this.auth.startRefreshTokenTimer();
+            this.authstore.set(user);
+            if (lang) document.location.reload();
+          }
+        });
+    });
   }
 
   setTheme(value: string) {
+    //check exist list theme
+    let findtheme = this.themes.find((x) => x.id == value);
+    if (!findtheme) value = 'default';
+    //Remove Old
+    let elm =
+      environment.themeMode == 'body'
+        ? document.body
+        : this.element.nativeElement.closest('.codx-theme');
+    if (this.theme && elm) {
+      elm.classList.remove(this.theme.id);
+    }
+
     this.themes.forEach((theme: ThemeFlag) => {
       if (theme.id === value) {
         theme.active = true;
         this.theme = theme;
+
+        elm.classList.add(this.theme.id);
       } else {
         theme.active = false;
       }
@@ -225,18 +292,32 @@ const themeDatas: ThemeFlag[] = [
   {
     id: 'default',
     name: 'Default',
-    color: '#187de4',
+    color: '#005DC7',
     enable: true,
   },
   {
     id: 'orange',
     name: 'Orange',
-    color: '#f36519',
+    color: '#f15711',
+    enable: true,
   },
   {
-    id: 'pink',
-    name: 'Pink',
-    color: '#f70f8f',
+    id: 'sapphire',
+    name: 'Sapphire',
+    color: '#009384',
+    enable: true,
+  },
+  {
+    id: 'green',
+    name: 'Green',
+    color: '#0f8633',
+    enable: true,
+  },
+  {
+    id: 'purple',
+    name: 'Purple',
+    color: '#5710b2',
+    enable: true,
   },
 ];
 

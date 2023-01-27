@@ -1,4 +1,4 @@
-<div class="page-questions">
+<div class="page-questions w-100 mt-4">
   <div class="d-flex w-100">
     <div class="d-flex flex-column">
       <div class="box">
@@ -8,7 +8,7 @@
             [id]="'card-survey-' + itemSession.seqNo"
             (click)="clickToScroll(itemSession.seqNo, null, 'S')"
           >
-            <div class="count-session">
+            <div *ngIf="questions.length > 1" class="count-session">
               <div class="d-flex num-session">
                 <codx-label fiedName="AOS" default="Phần"></codx-label>
                 <span
@@ -23,11 +23,12 @@
               id="inplace-editor-control"
             >
               <div
-                [ngClass]="
-                  itemSession.active
-                    ? 'content-wrapper b-t b-l-session'
-                    : 'content-wrapper b-t'
-                "
+                [ngClass]="{
+                  'content-wrapper': true,
+                  'b-t b-l-session': itemSession.active,
+                  'b-t': !itemSession.active,
+                  'b-t-title': itemSession.category == 'T'
+                }"
               >
                 <form id="formSession" class="form-horizontal example-box">
                   <ng-container #body>
@@ -111,7 +112,7 @@
                             *ngTemplateOutlet="
                               template_card_image_video;
                               context: {
-                                seqNoSession: itemSession.seqNo,
+                                itemSession: itemSession,
                                 itemQuestion: itemQuestion
                               }
                             "
@@ -122,7 +123,7 @@
                             *ngTemplateOutlet="
                               template_card_title;
                               context: {
-                                seqNoSession: itemSession.seqNo,
+                                itemSession: itemSession,
                                 itemQuestion: itemQuestion
                               }
                             "
@@ -141,44 +142,43 @@
                         "
                       >
                         <hr />
-                        <div class="row pt-6 ps-3 pe-3 pb-3">
+                        <div class="d-flex justify-content-between p-3">
                           <div
-                            class="col-md-8 d-flex justify-content-start pointer"
+                            class="d-flex align-items-center pointer"
                             (click)="
                               showAnswer(itemSession.seqNo, itemQuestion.seqNo)
                             "
                           >
                             <span
-                              class="icon-check-correct icon-24 primary"
+                              class="icon-check-correct icon-22 primary me-1"
                               ngbPopover="Đáp án và điểm"
                               triggers="mouseenter:mouseleave"
                               placement="bottom"
                               [autoClose]="'outside'"
                             ></span>
-                            &nbsp;
                             <codx-label
                               fiedName="Answer"
                               default="Đáp án"
-                              class="primary"
+                              class="primary fw-bold"
                               [formModel]="formModel"
                             ></codx-label>
-                            <span>
-                              &nbsp; (&nbsp; {{ itemQuestion.scores }} &nbsp;
+                            <span class="ms-2"
+                              >({{ itemQuestion.scores }}
                               <codx-label
                                 fiedName="Scores"
                                 default="điểm"
                                 class=""
                                 [formModel]="formModel"
-                              ></codx-label>
-                              )
+                              ></codx-label
+                              >)
                             </span>
                           </div>
-                          <div class="col-md-4 d-flex justify-content-end">
+                          <div
+                            class="d-flex align-items-center justify-content-end"
+                          >
                             <span
-                              (click)="
-                                copyCard(itemSession.seqNo, itemQuestion, 'Q')
-                              "
-                              class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                              (click)="copyCard(itemSession, itemQuestion, 'Q')"
+                              class="icon-content_copy icon-20 me-2 btn btn-icon btn-active-light-primary position-relative"
                             ></span>
                             <span
                               (click)="
@@ -189,18 +189,20 @@
                                   'Not-S'
                                 )
                               "
-                              class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                              class="icon-delete_outline icon-22 me-2 btn btn-icon btn-active-light-primary position-relative"
                             ></span>
                             <span class="split"></span>
                             <codx-label
                               fiedName=""
                               default="Bắt buộc"
-                              class="pd-10"
+                              class="me-2"
                             ></codx-label>
                             <codx-input
                               type="switch"
                               class="pd-t-10"
-                              (valueChange)="valueChange($event, itemQuestion)"
+                              (valueChange)="
+                                valueChangeMandatory($event, itemQuestion)
+                              "
                               [crrValue]="itemQuestion.mandatory"
                             ></codx-input>
                             <div ngbDropdown class="dropdown" container="body">
@@ -212,7 +214,7 @@
                                 aria-expanded="false"
                               >
                                 <span
-                                  class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                                  class="icon-more_vert icon-22 me-2 btn btn-icon btn-active-light-primary position-relative"
                                 >
                                 </span>
                               </a>
@@ -236,7 +238,7 @@
                                     <div class="d-flex">
                                       <span
                                         *ngIf="itemQuestion?.hideComment"
-                                        class="icon-check icon-24 ps-6 pe-6"
+                                        class="icon-check icon-22 ps-6 pe-6"
                                       ></span>
                                       <codx-label
                                         fiedName="formatAlignLeft"
@@ -279,55 +281,73 @@
         </div>
       </div>
       <ng-container #moreFC *ngIf="questions && questions.length > 0">
-        <div class="moreFC rounded-4">
-          <div class="icon-MF" (click)="clickMF('LTN01')">
+        <div class="moreFC rounded-2 py-2">
+          <div
+            class="icon-MF d-flex justify-content-center"
+            (click)="clickMF('LTN01')"
+          >
             <span
-              class="icon-add_circle_outline icon-24"
+              class="icon-add_circle_outline icon-22 text-hover-primary"
               ngbPopover="Thêm câu hỏi"
               triggers="mouseenter:mouseleave"
               placement="right"
               [autoClose]="'outside'"
             ></span>
           </div>
-          <div class="icon-MF" (click)="clickMF('LTN02')">
+          <div
+            class="icon-MF d-flex justify-content-center"
+            (click)="clickMF('LTN02')"
+          >
             <span
-              class="icon-input icon-24"
+              class="icon-input icon-22 text-hover-primary"
               ngbPopover="Nhập câu hỏi"
               triggers="mouseenter:mouseleave"
               placement="right"
               [autoClose]="'outside'"
             ></span>
           </div>
-          <div class="icon-MF" (click)="clickMF('LTN03')">
+          <div
+            class="icon-MF d-flex justify-content-center"
+            (click)="clickMF('LTN03')"
+          >
             <span
-              class="icon-format_size icon-24"
+              class="icon-format_size icon-22 text-hover-primary"
               ngbPopover="Thêm tiêu đề và mô tả"
               triggers="mouseenter:mouseleave"
               placement="right"
               [autoClose]="'outside'"
             ></span>
           </div>
-          <div class="icon-MF" (click)="clickMF('LTN04', ATM_Image)">
+          <div
+            class="icon-MF d-flex justify-content-center"
+            (click)="clickMF('LTN04', ATM_Image)"
+          >
             <span
-              class="icon-image icon-24"
+              class="icon-image icon-22 text-hover-primary"
               ngbPopover="Thêm hình ảnh"
               triggers="mouseenter:mouseleave"
               placement="right"
               [autoClose]="'outside'"
             ></span>
           </div>
-          <div class="icon-MF" (click)="clickMF('LTN05')">
+          <div
+            class="icon-MF d-flex justify-content-center"
+            (click)="clickMF('LTN05')"
+          >
             <span
-              class="icon-video_library icon-24"
+              class="icon-video_library icon-22 text-hover-primary"
               ngbPopover="Thêm video"
               triggers="mouseenter:mouseleave"
               placement="right"
               [autoClose]="'outside'"
             ></span>
           </div>
-          <div class="icon-MF" (click)="clickMF('LTN06')">
+          <div
+            class="icon-MF d-flex justify-content-center"
+            (click)="clickMF('LTN06')"
+          >
             <span
-              class="icon-calendar_today icon-dns icon-24"
+              class="icon-calendar_today icon-dns icon-22 text-hover-primary"
               ngbPopover="Thêm phần"
               triggers="mouseenter:mouseleave"
               placement="right"
@@ -352,47 +372,47 @@
       ngbDropdownToggle
     >
       <div class="d-flex" *ngIf="answerType == 'T'">
-        <span class="icon-short_text icon-24"></span>
+        <span class="icon-short_text icon-22"></span>
         <codx-label fiedName="" default="Trả lời ngắn"></codx-label>
       </div>
       <div class="d-flex" *ngIf="answerType == 'T2'">
-        <span class="icon-text_snippet icon-24"></span>
+        <span class="icon-text_snippet icon-22"></span>
         <codx-label fiedName="" default="Trả lời đoạn"></codx-label>
       </div>
       <div class="d-flex" *ngIf="answerType == 'O'">
-        <span class="icon-radio_button_checked icon-24"></span>
+        <span class="icon-radio_button_checked icon-22"></span>
         <codx-label fiedName="" default="Trắc nghiệm"></codx-label>
       </div>
       <div class="d-flex" *ngIf="answerType == 'C'">
-        <span class="icon-check_box icon-24"></span>
+        <span class="icon-check_box icon-22"></span>
         <codx-label fiedName="" default="Hộp kiểm"></codx-label>
       </div>
       <div class="d-flex" *ngIf="answerType == 'L'">
-        <span class="icon-arrow_drop_down_circle icon-24"></span>
+        <span class="icon-arrow_drop_down_circle icon-22"></span>
         <codx-label fiedName="" default="Menu thả xuống"></codx-label>
       </div>
-      <div class="d-flex" *ngIf="answerType == 'A'">
-        <span class="icon-cloud_upload icon-24"></span>
+      <!-- <div class="d-flex" *ngIf="answerType == 'A'">
+        <span class="icon-cloud_upload icon-22"></span>
         <codx-label fiedName="" default="Tải tệp lên"></codx-label>
-      </div>
+      </div> -->
       <div class="d-flex" *ngIf="answerType == 'R'">
-        <span class="icon-24"></span>
+        <span class="icon-22"></span>
         <codx-label fiedName="" default="Phạm vi tuyến tính"></codx-label>
       </div>
       <div class="d-flex" *ngIf="answerType == 'O2'">
-        <span class="icon-24"></span>
+        <span class="icon-22"></span>
         <codx-label fiedName="" default="Lưới trắc nghiệm"></codx-label>
       </div>
       <div class="d-flex" *ngIf="answerType == 'C2'">
-        <span class="icon-view_module icon-24"></span>
+        <span class="icon-view_module icon-22"></span>
         <codx-label fiedName="" default="Lưới hộp kiểm"></codx-label>
       </div>
       <div class="d-flex" *ngIf="answerType == 'D'">
-        <span class="icon-calendar_today icon-24"></span>
+        <span class="icon-calendar_today icon-22"></span>
         <codx-label fiedName="" default="Ngày"></codx-label>
       </div>
       <div class="d-flex" *ngIf="answerType == 'H'">
-        <span class="icon-access_time icon-24"></span>
+        <span class="icon-access_time icon-22"></span>
         <codx-label fiedName="" default="Giờ"></codx-label>
       </div>
     </button>
@@ -402,7 +422,7 @@
         (click)="clickQuestionMF(seqNoSession, itemQuestion, 'T')"
       >
         <div class="d-flex">
-          <span class="icon-short_text icon-24"></span>
+          <span class="icon-short_text icon-22"></span>
           <codx-label fiedName="" default="Trả lời ngắn"></codx-label>
         </div>
       </button>
@@ -411,7 +431,7 @@
         (click)="clickQuestionMF(seqNoSession, itemQuestion, 'T2')"
       >
         <div class="d-flex">
-          <span class="icon-text_snippet icon-24"></span>
+          <span class="icon-text_snippet icon-22"></span>
           <codx-label fiedName="" default="Trả lời đoạn"></codx-label>
         </div>
       </button>
@@ -421,7 +441,7 @@
         (click)="clickQuestionMF(seqNoSession, itemQuestion, 'O')"
       >
         <div class="d-flex">
-          <span class="icon-radio_button_checked icon-24"></span>
+          <span class="icon-radio_button_checked icon-22"></span>
           <codx-label fiedName="" default="Trắc nghiệm"></codx-label>
         </div>
       </button>
@@ -430,7 +450,7 @@
         (click)="clickQuestionMF(seqNoSession, itemQuestion, 'C')"
       >
         <div class="d-flex">
-          <span class="icon-check_box icon-24"></span>
+          <span class="icon-check_box icon-22"></span>
           <codx-label fiedName="" default="Hộp kiểm"></codx-label>
         </div>
       </button>
@@ -439,27 +459,27 @@
         (click)="clickQuestionMF(seqNoSession, itemQuestion, 'L')"
       >
         <div class="d-flex">
-          <span class="icon-arrow_drop_down_circle icon-24"></span>
+          <span class="icon-arrow_drop_down_circle icon-22"></span>
           <codx-label fiedName="" default="Menu thả xuống"></codx-label>
         </div>
       </button>
       <hr />
-      <button
+      <!-- <button
         ngbDropdownItem
         (click)="clickQuestionMF(seqNoSession, itemQuestion, 'A')"
       >
         <div class="d-flex">
-          <span class="icon-cloud_upload icon-24"></span>
+          <span class="icon-cloud_upload icon-22"></span>
           <codx-label fiedName="" default="Tải tệp lên"></codx-label>
         </div>
       </button>
-      <hr />
+      <hr /> -->
       <button
         ngbDropdownItem
         (click)="clickQuestionMF(seqNoSession, itemQuestion, 'R')"
       >
         <div class="d-flex">
-          <span class="icon-24"></span>
+          <span class="icon-22"></span>
           <codx-label fiedName="" default="Phạm vi tuyến tính"></codx-label>
         </div>
       </button>
@@ -468,7 +488,7 @@
         (click)="clickQuestionMF(seqNoSession, itemQuestion, 'O2')"
       >
         <div class="d-flex">
-          <span class="icon-24"></span>
+          <span class="icon-22"></span>
           <codx-label fiedName="" default="Lưới trắc nghiệm"></codx-label>
         </div>
       </button>
@@ -477,7 +497,7 @@
         (click)="clickQuestionMF(seqNoSession, itemQuestion, 'C2')"
       >
         <div class="d-flex">
-          <span class="icon-view_module icon-24"></span>
+          <span class="icon-view_module icon-22"></span>
           <codx-label fiedName="" default="Lưới hộp kiểm"></codx-label>
         </div>
       </button>
@@ -487,7 +507,7 @@
         (click)="clickQuestionMF(seqNoSession, itemQuestion, 'D')"
       >
         <div class="d-flex">
-          <span class="icon-calendar_today icon-24"></span>
+          <span class="icon-calendar_today icon-22"></span>
           <codx-label fiedName="" default="Ngày"></codx-label>
         </div>
       </button>
@@ -496,7 +516,7 @@
         (click)="clickQuestionMF(seqNoSession, itemQuestion, 'H')"
       >
         <div class="d-flex">
-          <span class="icon-access_time icon-24"></span>
+          <span class="icon-access_time icon-22"></span>
           <codx-label fiedName="" default="Giờ"></codx-label>
         </div>
       </button>
@@ -551,15 +571,21 @@
         itemQuestion.answerType == 'L'
       "
     >
-      <input
-        class="e-input"
+      <!-- <input class="e-input" type="text" placeholder="{{ itemAnswer.other ? 'Khác...' : '' }}"
+        (focus)="focusIn($event.target)" (blur)="focusOut($event.target)" [value]="itemAnswer.answer"
+        [disabled]="itemAnswer.other ? true : false" (change)="changeInput($event)"/> -->
+      <codx-input
         type="text"
+        class="border-0"
         placeholder="{{ itemAnswer.other ? 'Khác...' : '' }}"
-        (focus)="focusIn($event.target)"
-        (blur)="focusOut($event.target)"
-        [value]="itemAnswer.answer"
         [disabled]="itemAnswer.other ? true : false"
-      />
+        [crrValue]="itemAnswer.answer"
+        field="answer"
+        (valueChange)="
+          valueChangeAnswer($event, seqNoSession, itemQuestion, itemAnswer)
+        "
+      >
+      </codx-input>
     </div>
     <div
       class="e-input-group short-text"
@@ -694,7 +720,7 @@
           </div>
         </div>
       </div>
-      <div class="d-flex e-input-group e-input-group-full pd-10">
+      <div class="d-flex e-input-group e-input-group-full me-2">
         <span>{{ valueFrom }}</span>
         <input
           class="e-input ps-6"
@@ -703,8 +729,18 @@
           (focus)="focusIn($event.target)"
           (blur)="focusOut($event.target)"
         />
+        <!-- <codx-input
+          type="text"
+          class="border-0"
+          placeholder="{{ itemAnswer.answer ? '' : 'Nhãn (không bắt buộc)' }}"
+          [disabled]="itemAnswer.other ? true : false"
+          [crrValue]="itemAnswer.answer"
+          field="R"
+          (valueChange)="valueChangeAnswer($event, seqNoSession, itemQuestion, itemAnswer)"
+        >
+        </codx-input> -->
       </div>
-      <div class="d-flex e-input-group e-input-group-full pd-10">
+      <div class="d-flex e-input-group e-input-group-full me-2">
         <span>{{ valueTo }}</span>
         <input
           class="e-input ps-6"
@@ -725,7 +761,7 @@
       <div class="has-action-menu" *ngIf="!itemAnswer.other">
         <div class="action-menu">
           <span
-            class="icon-image icon-24 pd-10"
+            class="icon-image icon-22 me-2"
             (click)="
               popupUploadFile(
                 'P',
@@ -744,7 +780,7 @@
         [ngClass]="itemAnswer.other ? 'm-l-6' : ''"
         *ngIf="itemQuestion.answers?.length > 1"
       >
-        <span class="icon-close icon-24 pd-s-e-10"></span>
+        <span class="icon-close icon-22 pd-s-e-10"></span>
       </div>
     </ng-container>
   </div>
@@ -775,7 +811,7 @@
         type="checkbox"
         field="check"
         (valueChange)="
-          valueChangeAnswer(
+          valueChangeShowAnswer(
             $event,
             seqNoSession,
             itemQuestion.seqNo,
@@ -859,6 +895,14 @@
             [model]="titleEditorModel"
             [validationRules]="commentRule"
             [value]="itemQuestion.question"
+            (valueChange)="
+              valueChangeQuestionEJS(
+                $event,
+                itemSession,
+                itemQuestion,
+                'question'
+              )
+            "
           >
           </ejs-inplaceeditor>
         </div>
@@ -876,6 +920,14 @@
             [model]="titleEditorModel"
             [validationRules]="commentRule"
             [value]="itemQuestion.comment"
+            (valueChange)="
+              valueChangeQuestionEJS(
+                $event,
+                itemSession,
+                itemQuestion,
+                'comment'
+              )
+            "
           >
           </ejs-inplaceeditor>
         </div>
@@ -911,8 +963,11 @@
     *ngIf="itemQuestion?.qPicture && lstEditIV.length > 0"
     class="pb-12"
   >
-    <div *ngFor="let item of lstEditIV" class="min-h-253px">
-      <div class="w-100" *ngIf="item.objectID == itemQuestion.recID">
+    <div *ngFor="let item of lstEditIV">
+      <div
+        class="w-100 min-h-253px"
+        *ngIf="item.objectID == itemQuestion.recID"
+      >
         <div
           [ngClass]="
             itemQuestion?.alignCenterImg
@@ -1021,7 +1076,7 @@
                 </li>
                 <li>
                   <a
-                    (click)="deleteFileInlineQ(item.objectID)"
+                    (click)="delFileInline(item.objectID)"
                     ngbDropdownItem
                     href="javascript:void(0)"
                   >
@@ -1074,7 +1129,7 @@
               </div>
               <span>{{ itemAnswerR.seqNo + 1 }}.</span>
               <input
-                class="e-input pd-10"
+                class="e-input me-2"
                 type="text"
                 placeholder="Thêm hàng"
                 [value]="itemAnswerR.answer"
@@ -1083,7 +1138,7 @@
                 [(ngModel)]="itemAnswerR.answer"
               />
               <span
-                class="icon-close icon-24 pd-s-e-10"
+                class="icon-close icon-22 pd-s-e-10"
                 (click)="
                   deleteAnswerRC(
                     itemSession.seqNo,
@@ -1100,7 +1155,7 @@
           <span>{{ amountOfRow }}.</span>
           <input
             (click)="addAnswerR(itemSession.seqNo, itemQuestion.seqNo)"
-            class="e-input pd-10"
+            class="e-input me-2"
             type="text"
             placeholder="Thêm hàng"
             (focus)="focusIn($event.target)"
@@ -1139,7 +1194,7 @@
                 <span class="icon-reorder"></span>
               </div>
               <span
-                class="icon-radio_button_unchecked icon-radio"
+                class="icon-radio_button_unchecked icon-radio pt-1 aqua"
                 *ngIf="itemQuestion.answerType == 'O2'"
               ></span>
               <span
@@ -1147,7 +1202,7 @@
                 *ngIf="itemQuestion.answerType == 'C2'"
               ></span>
               <input
-                class="e-input pd-10"
+                class="e-input me-2"
                 type="text"
                 [value]="itemAnswerC.answer"
                 placeholder="Thêm cột"
@@ -1155,7 +1210,7 @@
                 (blur)="focusOut($event.target)"
               />
               <span
-                class="icon-close icon-24 pd-s-e-10"
+                class="icon-close icon-22 pd-s-e-10"
                 (click)="
                   deleteAnswerRC(
                     itemSession.seqNo,
@@ -1170,7 +1225,7 @@
         </div>
         <div class="d-flex pd-t-5p ps-6">
           <span
-            class="icon-radio_button_unchecked icon-radio"
+            class="icon-radio_button_unchecked icon-radio mt-1 red"
             *ngIf="itemQuestion.answerType == 'O2'"
           ></span>
           <span
@@ -1179,7 +1234,7 @@
           ></span>
           <input
             (click)="addAnswerC(itemSession.seqNo, itemQuestion.seqNo)"
-            class="e-input pd-10"
+            class="e-input me-2"
             type="text"
             placeholder="Thêm cột"
             (focus)="focusIn($event.target)"
@@ -1212,7 +1267,7 @@
         </td>
         <td *ngFor="let itemC of filterDataColumn(itemQuestion.answers)">
           <span
-            class="icon-radio_button_unchecked icon-radio"
+            class="icon-radio_button_unchecked icon-radio red"
             *ngIf="itemQuestion.answerType == 'O2'"
           ></span>
           <span
@@ -1252,7 +1307,7 @@
               <span class="icon-reorder"></span>
             </div>
           </div>
-          <div class="d-flex size-input">
+          <div class="d-flex align-items-center size-input">
             <ng-container
               *ngTemplateOutlet="
                 tempIconAnswers;
@@ -1276,13 +1331,21 @@
           </div>
         </div>
         <div #imageInlineAnswer *ngIf="itemAnswer.hasPicture">
-          <div *ngFor="let item of lstEditIV">
-            <img
-              class="w-100px"
-              [src]="getSrcImage(item)"
-              alt=""
+          <div *ngFor="let item of lstEditIV" class="ms-12 mt-3">
+            <div
               *ngIf="item.objectID == itemAnswer.recID"
-            />
+              class="position-relative has-action-menu"
+            >
+              <img
+                class="w-100px border-gray"
+                [src]="getSrcImage(item)"
+                alt=""
+              />
+              <span
+                (click)="delFileInline(item.objectID)"
+                class="icon-close icon-20 icon-MF-image-outside-answer action-menu pointer"
+              ></span>
+            </div>
           </div>
         </div>
       </div>
@@ -1347,7 +1410,7 @@
 >
   <div class="pb-6">
     <div #header class="d-flex pb-6">
-      <span class="icon-check-correct icon-24 ps-6 pe-3"></span>
+      <span class="icon-check-correct icon-22 ps-6 pe-3"></span>
       <codx-label
         class="fs-18px"
         fiedName="ChooseAnswer"
@@ -1475,7 +1538,7 @@
 </ng-template>
 <ng-template
   #template_card_image_video
-  let-seqNoSession="seqNoSession"
+  let-itemSession="itemSession"
   let-itemQuestion="itemQuestion"
 >
   <div class="d-flex">
@@ -1496,22 +1559,22 @@
         </ejs-inplaceeditor>
         <ng-container #questionMF *ngIf="itemQuestion?.active" class="d-flex">
           <span
-            (click)="copyCard(seqNoSession, itemQuestion, 'P-V')"
-            class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+            (click)="copyCard(itemSession, itemQuestion, 'P-V')"
+            class="icon-content_copy icon-20 me-2 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
             (click)="
               deleteCard(
-                seqNoSession,
+                itemSession.seqNo,
                 itemQuestion.seqNo,
                 itemQuestion.recID,
                 'Not-S'
               )
             "
-            class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+            class="icon-delete_outline icon-22 me-2 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
-            class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+            class="icon-more_vert icon-22 me-2 btn btn-icon btn-active-light-primary position-relative"
           ></span>
         </ng-container>
       </div>
@@ -1520,7 +1583,7 @@
   <ng-container #editImage>
     <div class="position-relative">
       <div
-        class="row mt-2 justify-content-between pd-10"
+        class="row mt-2 justify-content-between me-2"
         *ngIf="lstEditIV.length > 0"
       >
         <ng-container *ngFor="let data of lstEditIV">
@@ -1585,7 +1648,11 @@
                   <li>
                     <a
                       (click)="
-                        deleteFile(seqNoSession, itemQuestion, data.objectID)
+                        deleteFile(
+                          itemSession.seqNo,
+                          itemQuestion,
+                          data.objectID
+                        )
                       "
                       ngbDropdownItem
                       href="javascript:void(0)"
@@ -1611,6 +1678,7 @@
                     [width]="150"
                     cssClass="pic"
                     imageType="square"
+                    referType="image"
                   >
                   </codx-img>
                 </ng-container>
@@ -1629,115 +1697,14 @@
       </div>
       <img
         [src]="getUrlImageOfVideo(itemQuestion.videoID)"
-        *ngIf="itemQuestion?.url"
+        *ngIf="itemQuestion?.url && itemQuestion?.videoID"
       />
     </div>
   </ng-container>
-  <!-- <ng-template #viewImage>
-    <div class="position-relative">
-      <div class="row mt-2 justify-content-between pd-10">
-        <div class="col-5 my-2 m-w-100">
-          <div class="d-flex align-items-center icon-MF-image-outside">
-            <div ngbDropdown class="dropdown" container="body">
-              <a
-                href="javascript:void(0)"
-                class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
-                ngbDropdownToggle
-                id="dropdownMenuButton1"
-                aria-expanded="false"
-              >
-                <span class="icon-more_vert icon-22"> </span>
-              </a>
-              <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                <li>
-                  <a ngbDropdownItem href="javascript:void(0)">
-                    <span class="icon-format_align_left"></span>
-                    <codx-label
-                      fiedName="formatAlignLeft"
-                      default="Căn trái"
-                    ></codx-label>
-                  </a>
-                </li>
-                <li>
-                  <a ngbDropdownItem href="javascript:void(0)">
-                    <span class="icon-format_align_right"></span>
-                    <codx-label
-                      fiedName="formatAlignRight"
-                      default="Căn phải"
-                    ></codx-label>
-                  </a>
-                </li>
-                <li>
-                  <a ngbDropdownItem href="javascript:void(0)">
-                    <span class="icon-format_align_center"></span>
-                    <codx-label
-                      fiedName="formatAlignCenter"
-                      default="Căn giữa"
-                    ></codx-label>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    (click)="
-                      popupUploadFile(itemQuestion.category, 'change', false)
-                    "
-                    ngbDropdownItem
-                    href="javascript:void(0)"
-                  >
-                    <span class="icon-image"></span>
-                    <codx-label
-                      fiedName="changeImage"
-                      default="Thay đổi"
-                    ></codx-label>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    (click)="
-                      deleteFile(seqNoSession, itemQuestion, data.objectID)
-                    "
-                    ngbDropdownItem
-                    href="javascript:void(0)"
-                  >
-                    <span class="icon-delete"></span>
-                    <codx-label
-                      fiedName="deleteImage"
-                      default="Xóa"
-                    ></codx-label>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="w-150">
-            <ng-container *ngIf="itemQuestion.category == 'P'">
-              <codx-img
-                [objectId]="itemQuestion.recID"
-                [objectType]="functionList.entityName"
-                [width]="150"
-                cssClass="pic"
-                imageType="square"
-              >
-              </codx-img>
-            </ng-container>
-            <ng-container *ngIf="itemQuestion.category == 'V'">
-              <video #video controls class="w-100 rounded h-auto">
-                <source [src]="getSrcVideo(itemQuestion)" type="video/mp4" />
-              </video>
-            </ng-container>
-          </div>
-        </div>
-      </div>
-      <img
-        [src]="getUrlImageOfVideo(itemQuestion.videoID)"
-        *ngIf="itemQuestion?.url"
-      />
-    </div>
-  </ng-template> -->
 </ng-template>
 <ng-template
   #template_card_title
-  let-seqNoSession="seqNoSession"
+  let-itemSession="itemSession"
   let-itemQuestion="itemQuestion"
 >
   <div class="d-flex">
@@ -1757,22 +1724,22 @@
         </ejs-inplaceeditor>
         <ng-container #questionMF *ngIf="itemQuestion?.active" class="d-flex">
           <span
-            (click)="copyCard(seqNoSession, itemQuestion, 'T')"
-            class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+            (click)="copyCard(itemSession, itemQuestion, 'T')"
+            class="icon-content_copy icon-20 me-2 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
             (click)="
               deleteCard(
-                seqNoSession,
+                itemSession.seqNo,
                 itemQuestion.seqNo,
                 itemQuestion.recID,
                 'Not-S'
               )
             "
-            class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+            class="icon-delete_outline icon-22 me-2 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
-            class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+            class="icon-more_vert icon-22 me-2 btn btn-icon btn-active-light-primary position-relative"
           ></span>
         </ng-container>
       </div>
@@ -1802,7 +1769,6 @@
         <ejs-inplaceeditor
           #inplaceCommentEditor
           mode="Inline"
-          emptyText="Mẫu không có tiêu đề"
           submitOnEnter="false"
           type="RTE"
           name="rte"
@@ -1810,13 +1776,17 @@
           [model]="titleEditorModel"
           [validationRules]=""
           [value]="itemSession.question"
+          (valueChange)="valueChangeSessionEJS($event, itemSession, 'question')"
         >
         </ejs-inplaceeditor>
         <ng-container #questionMF>
           <!-- <span
-            class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary"
+            class="icon-more_vert icon-22 me-2 btn btn-icon btn-active-light-primary"
           ></span> -->
-          <div class="d-flex align-items-center pd-10 left-100">
+          <div
+            *ngIf="itemSession.length > 0"
+            class="d-flex align-items-center me-2 left-100"
+          >
             <div ngbDropdown container="body">
               <a
                 href="javascript:void(0)"
@@ -1866,7 +1836,7 @@
                 </li>
                 <li *ngIf="itemSession.seqNo >= 1">
                   <a
-                    (click)="mergeSession(itemSession.seqNo)"
+                    (click)="mergeSession(itemSession)"
                     ngbDropdownItem
                     href="javascript:void(0)"
                   >
@@ -1888,13 +1858,14 @@
       <ejs-inplaceeditor
         #inplaceCommentEditor
         mode="Inline"
-        emptyText="Mô tả biểu mẫu"
         submitOnEnter="false"
         type="RTE"
         name="rte"
         data-underline="false"
         [model]="descriptionEditorModel"
         [validationRules]=""
+        [value]="itemSession.comment ? itemSession.comment : ''"
+        (valueChange)="valueChangeSessionEJS($event, itemSession, 'comment')"
       >
       </ejs-inplaceeditor>
     </div>

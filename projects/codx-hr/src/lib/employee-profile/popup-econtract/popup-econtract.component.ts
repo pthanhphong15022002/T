@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
+  CallFuncService,
   CodxFormComponent,
   CodxListviewComponent,
   CRUDService,
@@ -15,12 +16,14 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  SidebarModel,
   UIComponent,
 } from 'codx-core';
 import { max } from 'moment';
 import { CardType } from 'projects/codx-fd/src/lib/models/model';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxHrService } from '../../codx-hr.service';
+import { PopupSubEContractComponent } from '../popup-sub-econtract/popup-sub-econtract.component';
 
 @Component({
   selector: 'lib-popup-econtract',
@@ -29,6 +32,7 @@ import { CodxHrService } from '../../codx-hr.service';
 })
 export class PopupEContractComponent extends UIComponent implements OnInit {
   formModel: FormModel;
+  formModelPL: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
@@ -50,34 +54,41 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     private notify: NotificationsService,
     private hrSevice: CodxHrService,
     private codxShareService: CodxShareService,
+    private callfunc: CallFuncService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   ) {
     super(injector);
-    if (!this.formModel) {
-      this.formModel = new FormModel();
-      this.formModel.entityName = 'HR_EContracts';
-      this.formModel.formName = 'EContracts';
-      this.formModel.gridViewName = 'grvEContracts';
+    if (!this.formModelPL) {
+      this.formModelPL = new FormModel();
+      this.formModelPL.entityName = 'HR_EContracts';
+      this.formModelPL.formName = 'EContracts';
+      this.formModelPL.gridViewName = 'grvEContracts';
     }
+    console.log('data', data);
+
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
+    this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.salarySelected));
   }
 
   onInit(): void {
-    if (this.formModel) {
-      this.codxShareService
-        .getFormGroup(this.formModel?.formName, this.formModel?.gridViewName)
-        .then((res) => {
-          if (res) {
-            this.formGroup = res;
-            this.initForm();
-          }
-        });
-    }
+    this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrSevice
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
   }
 
   initForm() {
@@ -85,6 +96,7 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
       this.hrSevice.getEContractDefault().subscribe((res) => {
         if (res) {
           this.data = res;
+          this.data.employeeID = this.employeeId;
           this.formModel.currentData = this.data;
           console.log('default contract data', this.data);
           this.formGroup.patchValue(this.data);
@@ -100,14 +112,32 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     }
   }
 
-  onSaveForm(isClose: boolean) {
+  onSaveForm(closeForm: boolean) {
+    if (this.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
+    if (this.data.effectedDate > this.data.expiredDate) {
+      this.hrSevice.notifyInvalidFromTo(
+        'ExpiredDate',
+        'EffectedDate',
+        this.formModel
+      );
+      return;
+    }
+
     if (this.actionType == 'add' || this.actionType == 'copy') {
+      this.data.contractTypeID = '1';
+
       this.hrSevice.addEContract(this.data).subscribe((res) => {
         if (res) {
+          //code test
+
           this.data = res;
           (this.listView.dataService as CRUDService).add(res).subscribe();
           this.actionType = 'edit';
-          if (isClose) {
+          if (closeForm) {
             this.dialog && this.dialog.close();
           }
         }
@@ -116,7 +146,7 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
       this.hrSevice.editEContract(this.data).subscribe((res) => {
         if (res) {
           (this.listView.dataService as CRUDService).update(res).subscribe();
-          if (isClose) {
+          if (closeForm) {
             this.dialog && this.dialog.close();
           }
         }
@@ -178,5 +208,100 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     console.log(this.listView);
   }
 
-  click(data) {}
+  click(data) {
+    if (this.data) {
+      this.actionType = 'edit';
+      this.data = data;
+      this.formModel.currentData = this.data;
+      this.formGroup.patchValue(this.data);
+      this.cr.detectChanges();
+    }
+  }
+
+  valueChange(event) {
+    if (event?.field && event?.component && event?.data != '') {
+      switch (event.field) {
+        case 'contractTypeID': {
+          this.data.limitMonths =
+            event?.component?.itemsSelected[0]?.LimitMonths;
+          this.formGroup.patchValue({ limitMonths: this.data.limitMonths });
+          this.setExpiredDate();
+          break;
+        }
+        case 'effectedDate': {
+          this.setExpiredDate();
+          break;
+        }
+        case 'signerID': {
+          let employee = event?.component?.itemsSelected[0];
+          if (employee) {
+            if (employee.PositionID) {
+              this.hrSevice
+                .getPositionByID(employee.PositionID)
+                .subscribe((res) => {
+                  if (res) {
+                    this.data.signerPosition = res.positionName;
+                    this.formGroup.patchValue({
+                      signerPosition: this.data.signerPosition,
+                    });
+                    this.cr.detectChanges();
+                  }
+                });
+            } else {
+              this.data.signerPosition = null;
+              this.formGroup.patchValue({
+                signerPosition: this.data.signerPosition,
+              });
+            }
+          }
+          break;
+        }
+      }
+
+      this.cr.detectChanges();
+    }
+  }
+
+  setExpiredDate() {
+    if (this.data.effectedDate) {
+      let date = new Date(this.data.effectedDate);
+      this.data.expiredDate = new Date(date.setMonth(date.getMonth() + 14));
+      this.formGroup.patchValue({ expiredDate: this.data.expiredDate });
+      this.cr.detectChanges();
+    }
+  }
+
+  addSubContract() {
+    let optionSub = new SidebarModel();
+    // option.FormModel = this.view.formModel
+    optionSub.Width = '550px';
+    optionSub.zIndex = 1001;
+    // let popupSubContract = this.callfunc.openSide(
+    //   PopupSubEContractComponent,
+    //   {
+    //     actionType: 'add',
+    //     salarySelected: null,
+    //     headerText: 'Hợp đồng lao động',
+    //     employeeId: this.data.employeeID,
+    //   },
+    //   optionSub
+    // );
+    let popupSubContract = this.callfc.openForm(
+      PopupSubEContractComponent,
+      '',
+      550,
+      screen.height,
+      '',
+      {
+        employeeId: this.data.employeeID,
+        contractNo: this.data.contractNo,
+        formModel: this.formModel,
+        formGroup: this.formGroup,
+      }
+    );
+    popupSubContract.closed.subscribe((res) => {
+      if (res) {
+      }
+    });
+  }
 }

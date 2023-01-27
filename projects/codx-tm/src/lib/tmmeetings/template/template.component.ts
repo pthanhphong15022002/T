@@ -61,7 +61,7 @@ export class TemplateComponent extends UIComponent implements OnInit {
     this.api
       .execSv<any>(
         'CO',
-        'ERM.Business.CM',
+        'ERM.Business.Core',
         'DataBusiness',
         'LoadDataCbxAsync',
         data

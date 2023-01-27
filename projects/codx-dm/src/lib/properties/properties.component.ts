@@ -1,26 +1,20 @@
-import { NgForOf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Host,
   Input,
   OnInit,
   Optional,
   Output,
-  ViewChild,
 } from '@angular/core';
-import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
-  AlertConfirmInputConfig,
   ApiHttpService,
   AuthStore,
   CacheService,
   CallFuncService,
-  DataRequest,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -97,7 +91,7 @@ export class PropertiesComponent implements OnInit {
   rating5: string;
   styleRating: string;
   historyFileName: string;
-  fileEditing: FileUpload;
+  fileEditing: FileUpload | any;
   commenttext: string = '';
   shareContent: string;
   requestContent: string;
@@ -280,7 +274,6 @@ export class PropertiesComponent implements OnInit {
     this.fileService.getFile(id, false).subscribe(async (res) => {
       if (res != null) {
         this.fileEditing = res;
-
         if (this.fileEditing.version != null) {
           this.fileEditing.version = this.fileEditing.version.replace(
             'Ver ',

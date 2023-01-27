@@ -12,10 +12,12 @@ import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-
 export class OkrToolbarComponent implements OnInit {
   @Input() data:any;
   @Input() dataChild:any;
-
+  @Input() formModel:any;
   buttonAddKR: ButtonModel;
   buttonAddO: ButtonModel;
   button?: ButtonModel;
+  isHiddenChart=false;
+  @Output() hiddenChart=new EventEmitter<any>();
   @Output() click = new EventEmitter<any>();
   date:any = new Date();
   ops = ['m','q','y'];
@@ -47,6 +49,11 @@ export class OkrToolbarComponent implements OnInit {
   {
     this.click.emit(event);
   }
+  hiddenChartClick(hiddenChart:any)
+  {
+    this.isHiddenChart=hiddenChart;
+    this.hiddenChart.emit(hiddenChart);
+  }
   changeCalendar(event:any)
   {
     var obj = 
@@ -56,7 +63,15 @@ export class OkrToolbarComponent implements OnInit {
     };
     this.click.emit(obj);
   }
-
+  //Hàm chia sẻ tạm thời
+  sharePlan()
+  {
+    var obj = 
+    {
+      id : "SharePlan",
+    };
+    this.click.emit(obj);
+  }
   editWeight(planRecID: any) {
     //OM_WAIT: tiêu đề tạm thời gán cứng
     let popupTitle='Thay đổi trọng số cho mục tiêu';

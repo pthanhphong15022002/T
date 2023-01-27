@@ -40,7 +40,6 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
-import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -242,10 +241,12 @@ export class CodxTasksComponent
       this.funcID != 'TMT0206' &&
       this.funcID != 'TMT0202' &&
       this.funcID != 'MWP0063' &&
-      this.funcID != 'MWP0064';
+      this.funcID != 'MWP0064' &&
+      this.funcID != 'TMT0402' &&
+      this.funcID != 'TMT0403' ;
 
     this.modelResource = new ResourceModel();
-    if (this.funcID != 'TMT03011') {
+    if (this.funcID != 'TMT03011' && this.funcID != 'TMT05011') {
       this.modelResource.assemblyName = 'HR';
       this.modelResource.className = 'OrganizationUnitsBusiness';
       this.modelResource.service = 'HR';
@@ -265,6 +266,7 @@ export class CodxTasksComponent
     this.requestSchedule.className = 'TaskBusiness';
     this.requestSchedule.method = 'GetTasksWithScheduleAsync';
     this.requestSchedule.idField = 'taskID';
+    this.requestSchedule.dataObj = this.dataObj;
 
     // if (
     //   this.funcID != 'TMT0201' &&
@@ -293,6 +295,7 @@ export class CodxTasksComponent
         break;
       case 'TMT0203':
       case 'MWP0062':
+      case 'OMT013':
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
         this.requestSchedule.dataValue = '2;' + this.user.userID;
         break;
@@ -905,52 +908,63 @@ export class CodxTasksComponent
             this.itemSelected = res[0];
             this.detectorRef.detectChanges();
             this.notiService.notifyCode('TM009');
-            if (taskAction.category == '3' && status == '80')
-              this.tmSv
-                .sendAlertMail(taskAction.recID, 'TM_0004', this.funcID)
-                .subscribe();
-            if (status == '90') {
-              if (this.itemSelected.taskGroupID) {
-                this.api
-                  .execSv<any>(
-                    'TM',
-                    'ERM.Business.TM',
-                    'TaskGroupBusiness',
-                    'GetAsync',
-                    taskAction.taskGroupID
-                  )
-                  .subscribe((res) => {
-                    if (res && res.approveControl == '1') {
-                      this.tmSv
-                        .sendAlertMail(taskAction.recID, 'TM_0012', this.funcID)
-                        .subscribe();
-                    }
-                  });
-              } else {
-                this.api
-                  .execSv<any>(
-                    'SYS',
-                    'ERM.Business.SYS',
-                    'SettingValuesBusiness',
-                    'GetByModuleWithCategoryAsync',
-                    ['TMParameters', '1']
-                  )
-                  .subscribe((res) => {
-                    if (res) {
-                      let param = JSON.parse(res.dataValue);
-                      if (param?.ApproveControl == '1') {
-                        this.tmSv
-                          .sendAlertMail(
-                            taskAction.recID,
-                            'TM_0012',
-                            this.funcID
-                          )
-                          .subscribe();
-                      }
-                    }
-                  });
-              }
-            }
+            //send mail BE
+            // if (taskAction.category == '3' && status == '80')
+            //   this.tmSv
+            //     .sendAlertMail(taskAction.recID, 'TM_0004', this.funcID)
+            //     .subscribe();
+            // if (status == '90') {
+            //   if (this.itemSelected.taskGroupID) {
+            //     this.api
+            //       .execSv<any>(
+            //         'TM',
+            //         'ERM.Business.TM',
+            //         'TaskGroupBusiness',
+            //         'GetAsync',
+            //         taskAction.taskGroupID
+            //       )
+            //       .subscribe((res) => {
+            //         if (res && res.approveControl == '1') {
+            //           this.tmSv
+            //             .sendAlertMail(taskAction.recID, 'TM_0012', this.funcID)
+            //             .subscribe();
+            //         } else
+            //           this.tmSv
+            //             .sendAlertMail(taskAction.recID, 'TM_0005', this.funcID)
+            //             .subscribe();
+            //       });
+            //   } else {
+            //     this.api
+            //       .execSv<any>(
+            //         'SYS',
+            //         'ERM.Business.SYS',
+            //         'SettingValuesBusiness',
+            //         'GetByModuleWithCategoryAsync',
+            //         ['TMParameters', '1']
+            //       )
+            //       .subscribe((res) => {
+            //         if (res) {
+            //           let param = JSON.parse(res.dataValue);
+            //           if (param?.ApproveControl == '1') {
+            //             this.tmSv
+            //               .sendAlertMail(
+            //                 taskAction.recID,
+            //                 'TM_0012',
+            //                 this.funcID
+            //               )
+            //               .subscribe();
+            //           } else
+            //             this.tmSv
+            //               .sendAlertMail(
+            //                 taskAction.recID,
+            //                 'TM_0005',
+            //                 this.funcID
+            //               )
+            //               .subscribe();
+            //         }
+            //       });
+            //   }
+            // }
             if (kanban) kanban.updateCard(taskAction);
           } else this.notiService.notifyCode('SYS021');
         });
@@ -1035,7 +1049,7 @@ export class CodxTasksComponent
   }
 
   receiveMF(e: any) {
-    this.clickMF(e.e, this.itemSelected);
+    this.clickMF(e.e, e?.data);
   }
 
   getParam(callback = null) {
@@ -1375,9 +1389,10 @@ export class CodxTasksComponent
           );
           this.dialogExtends.closed.subscribe((e) => {
             if (e?.event && e?.event != null) {
-              this.tmSv
-                .sendAlertMail(data?.recID, 'TM_0015', this.funcID)
-                .subscribe();
+              //gửi mail FE
+              // this.tmSv
+              //   .sendAlertMail(data?.recID, 'TM_0015', this.funcID)
+              //   .subscribe();
               e?.event.forEach((obj) => {
                 this.view.dataService.update(obj).subscribe();
               });
@@ -1574,7 +1589,16 @@ export class CodxTasksComponent
           (x.functionID == 'SYS02' ||
             x.functionID == 'SYS03' ||
             x.functionID == 'SYS04') &&
-          (this.funcID == 'TMT0206' || this.funcID != 'MWP0063')
+          (this.funcID == 'TMT0206' || this.funcID == 'MWP0063') // Hảo sửa k hiện more function 3/1/2023 => ok lỗi do anh đặt điều kiện sai nên a bật lại :v
+        ) {
+          x.disabled = true;
+        }
+        //an voi ca TMT03011
+        if (
+          this.funcID == 'TMT03011' &&
+          data.category == '1' &&
+          data.createdBy != this.user?.userID && !this.user?.administrator && 
+          (x.functionID == 'SYS02' || x.functionID == 'SYS03')
         ) {
           x.disabled = true;
         }
@@ -1584,7 +1608,11 @@ export class CodxTasksComponent
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
-    if (this.funcID == 'TMT0203' || this.funcID == 'MWP0062')
+    if (
+      this.funcID == 'TMT0203' ||
+      this.funcID == 'MWP0062' ||
+      this.funcID == 'OMT013'
+    )
       this.isAssignTask = true;
     else this.isAssignTask = false;
     switch (evt.id) {
@@ -1618,7 +1646,7 @@ export class CodxTasksComponent
       option.Width = '800px';
       this.callfc.openSide(
         PopupAddComponent,
-        [data, 'view', isAssignTask, funcID],
+        [data, 'view', isAssignTask, '', funcID],
         option
       );
     }

@@ -6,6 +6,7 @@ import {
   ApiHttpService,
   NotificationsService,
   CacheService,
+  AuthStore,
 } from 'codx-core';
 import {
   BP_Processes,
@@ -41,7 +42,9 @@ export class PopupAddPermissionComponent implements OnInit {
   popoverList: any;
   popoverDetail: any;
   entity: any;
+  user: any;
   per = new tmpPermission();
+  checkRoles = false;
   permission: BP_ProcessPermissions[];
   toPermission: BP_ProcessPermissions[];
   byPermission: BP_ProcessPermissions[];
@@ -51,6 +54,7 @@ export class PopupAddPermissionComponent implements OnInit {
     private api: ApiHttpService,
     private notificationsService: NotificationsService,
     private cache: CacheService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -64,6 +68,7 @@ export class PopupAddPermissionComponent implements OnInit {
     this.isShare = dt.data[2];
     this.funcID = this.dialog.formModel.funcID;
     this.entity = this.dialog.formModel.entityName;
+    this.user = this.authStore.get();
     this.cache
       .gridViewSetup(
         this.dialog.formModel.formName,
@@ -76,14 +81,28 @@ export class PopupAddPermissionComponent implements OnInit {
       });
   }
 
+  ngAfterViewInit(): void {
+    if (!this.user.administrator) {
+      this.api
+        .callSv('SYS', 'AD', 'UserRolesBusiness', 'CheckUserRolesAsync', [
+          this.user.userID,
+          'BP',
+        ])
+        .subscribe((res) => {
+          this.checkRoles = res.msgBodyData[0];
+        });
+    }
+  }
+
   ngOnInit(): void {
+    this.setToPermissionRequest(this.user);
     this.setByPermission(this.process);
   }
 
   //#region footer
   onShare() {
     this.per.recIDProcess = this.id;
-    if (this.toPermission == null) {
+    if (this.toPermission == null || this.toPermission.length == 0) {
       this.notificationsService.notifyCode('SYS028');
       return;
     }
@@ -169,9 +188,28 @@ export class PopupAddPermissionComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  setToPermissionRequest(data) {
+    if (data != null && !this.isShare) {
+      var lst = [];
+      var perm = new BP_ProcessPermissions();
+      perm.objectID = data.userID;
+      perm.objectName = data.userName;
+      perm.objectType = 'U';
+      if(data.administrator == true || this.checkRoles == true){
+        perm.objectType = '7';
+      }else if(data.userID == this.process.owner){
+        perm.objectType = '1';
+      }
+      perm.read = true;
+      lst.push(Object.assign({}, perm));
+      this.toPermission = lst;
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
   onUserEvent($event, type: string) {
     console.log($event);
-    if ($event.data != undefined) {
+    if ($event.data != undefined && $event.data.length > 0) {
       var data = $event.data;
       var list = [];
       for (var i = 0; i < data.length; i++) {
@@ -182,7 +220,7 @@ export class PopupAddPermissionComponent implements OnInit {
           perm.objectName = this.data.userName;
         } else {
           perm.objectID = item.id;
-          perm.objectName = item.text != null ? item.text : item.objectName;
+          perm.objectName = (item.text != null && item.text != '') ? item.text : item.objectName;
         }
         perm.objectType = item.objectType;
         perm.read = true;

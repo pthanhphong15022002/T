@@ -1,4 +1,3 @@
-import { environment } from './../environments/environment';
 import { DynamicFormComponent } from './../../projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -23,6 +22,14 @@ var childRoutes = [
     loadChildren: () =>
       import('projects/codx-bp/src/lib/codx-bp.module').then(
         (m) => m.CodxBpModule
+      ),
+  },
+  {
+    path: 'dp',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-dp/src/lib/codx-dp.module').then(
+        (m) => m.CodxDpModule
       ),
   },
   {
@@ -137,6 +144,12 @@ var childRoutes = [
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('projects/codx-ad/src/lib/codx-ad.module').then((m) => m.ADModule),
+  },
+  {
+    path: 'ac',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-ac/src/lib/codx-ac.module').then((m) => m.AcModule),
   },
   {
     path: 'report',

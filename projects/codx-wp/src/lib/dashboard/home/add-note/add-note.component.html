@@ -32,14 +32,15 @@
             </div>
             <div *ngIf="type == 'check' || type =='list'">
                 <ng-container *ngFor="let item of listNote; index as i">
-                    <div class="flex align-items-center">
+                    <div class="flex align-items-center mb-2">
                         <ng-container *ngIf="type == 'check'; else list">
                             <codx-input #noteAddText type="checkBox" [crrValue]="item?.status" field="status"
-                                labelPosition="Before" class="test-check" (valueChange)="valueChange($event, item, i)">
+                                labelPosition="Before" class="test-check me-2"
+                                (valueChange)="valueChange($event, item, i)">
                             </codx-input>
                         </ng-container>
                         <ng-template #list>
-                            <span class="dot-black"></span>
+                            <span class="dot-black me-2"></span>
                         </ng-template>
                         <div class="w-100" #txtNoteEdit name="txtTodoEdit">
                             <codx-input #txtNoteEdit type="text" name="txtTodoEdit"
@@ -123,7 +124,7 @@
         </div>
         <div class="test-datetime w-175px border-left">
             <codx-input type="datetime" field="StartDate" [crrValue]="currentDate" format="d"
-            (valueChange)="valueChangeDate($event)">
+                (valueChange)="valueChangeDate($event)">
             </codx-input>
         </div>
     </div>

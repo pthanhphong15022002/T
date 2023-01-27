@@ -457,7 +457,7 @@ export class BookingService {
   ): Observable<any> {
     return this.api.execSv(
       'EP',
-      'ERM.Business.CM',
+      'ERM.Business.Core',
       'DataBusiness',
       'ReleaseAsync',
       [
@@ -543,7 +543,7 @@ export class BookingService {
       'Calendar'
     );
   }
-  getCalendarWeekdays(calendarID:any) {
+  getCalendarWeekdays(calendarID: any) {
     return this.api.execSv(
       'BS',
       'ERM.Business.BS',

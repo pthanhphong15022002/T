@@ -245,6 +245,8 @@ export class CatagoryComponent implements OnInit {
           );
           break;
         case 'cpnapprovals':
+          let dtvalue = this.dataValue.find((x) => x.FieldName == value);
+          if (dtvalue.ApprovalRule == '0') return;
           dialogModel.IsFull = true;
           var category = this.categories[value];
           if (!category) return;
@@ -478,21 +480,20 @@ export class CatagoryComponent implements OnInit {
       }
       var auto = autoDefault[fieldName];
       if (!auto) {
-        //Chị Thương bảo nếu chưa có số tự động thì cảnh báo và báo C Thương thiết lập.
-        // this.api
-        //   .execSv(
-        //     'SYS',
-        //     'ERM.Business.AD',
-        //     'AutoNumberDefaultsBusiness',
-        //     'GenAutoDefaultAsync',
-        //     [fieldName]
-        //   )
-        //   .subscribe((res) => {
-        //     if (res) {
-        //       auto = autoDefault[fieldName] = res;
-        //       this.changeDetectorRef.detectChanges();
-        //     }
-        //   });
+        this.api
+          .execSv(
+            'SYS',
+            'ERM.Business.AD',
+            'AutoNumberDefaultsBusiness',
+            'GenAutoDefaultAsync',
+            [fieldName]
+          )
+          .subscribe((res) => {
+            if (res) {
+              auto = autoDefault[fieldName] = res;
+              this.changeDetectorRef.detectChanges();
+            }
+          });
       } else {
         if (!value === auto.stop) return;
         auto.stop = !value;
@@ -506,7 +507,12 @@ export class CatagoryComponent implements OnInit {
           });
       }
     } else {
-      if (typeof value == 'boolean') {
+      if (
+        (typeof value == 'boolean' &&
+          data.dataType.toLowerCase() != 'boolean' &&
+          data.dataType.toLowerCase() != 'bool') ||
+        !data.dataType
+      ) {
         value = +value + '';
       }
       if (this.category === '5') {
@@ -607,7 +613,7 @@ export class CatagoryComponent implements OnInit {
                 this.api
                   .execSv(
                     'SYS',
-                    'ERM.Business.CM',
+                    'ERM.Business.Core',
                     'DataBusiness',
                     'GetDefaultEntityAsync',
                     'SYS_SettingValues'
@@ -657,7 +663,7 @@ export class CatagoryComponent implements OnInit {
         this.api
           .execSv(
             'SYS',
-            'ERM.Business.CM',
+            'ERM.Business.Core',
             'DataBusiness',
             'GetDefaultEntityAsync',
             'SYS_SettingValues'
