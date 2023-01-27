@@ -25,6 +25,7 @@ export class PopupAddInstanceComponent implements OnInit {
   @ViewChild('tabGeneralInfo') tabGeneralInfo: TemplateRef<any>;
   @ViewChild('tabLocation') tabLocation: TemplateRef<any>;
   @ViewChild('tabInputInfo') tabInputInfo: TemplateRef<any>;
+  @ViewChild('tabOpporGeneralInfo') tabOpporGeneralInfo: TemplateRef<any>;
 
   title = 'Nhiệm vụ';
   titleAction = '';
@@ -37,6 +38,8 @@ export class PopupAddInstanceComponent implements OnInit {
   instanceNo: string;
 
   instance: DP_Instances;
+
+  isApplyFor: string = ''; // this is instance opportunity general
 
   menuGeneralInfo = {
     icon: 'icon-info',
@@ -76,22 +79,31 @@ export class PopupAddInstanceComponent implements OnInit {
   ) {
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
-  
+
     this.step = dt?.data[2]
-    // this.instanceNo = dt?.data[2]?.instanceNo ?? '';
-    console.log(this.instanceNo);
+    this.isApplyFor = dt?.data[1];
   }
 
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    this.tabInfo = [this.menuGeneralInfo, this.menuAddress, this.menuInputInfo];
 
-    this.tabContent = [
-      this.tabGeneralInfo,
-      this.tabLocation,
-      this.tabInputInfo,
-    ];
+    if(this.isApplyFor =='D') {
+      this.tabInfo = [this.menuGeneralInfo, this.menuAddress, this.menuInputInfo];
+      this.tabContent = [
+        this.tabOpporGeneralInfo,
+        this.tabLocation,
+        this.tabInputInfo,
+      ];
+    }
+    else {
+      this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo];
+      this.tabContent = [
+        this.tabGeneralInfo,
+        this.tabInputInfo,
+      ];
+    }
+
   }
 
   buttonClick(e: any) {

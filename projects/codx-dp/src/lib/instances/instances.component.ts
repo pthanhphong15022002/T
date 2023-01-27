@@ -24,6 +24,8 @@ import {
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
+import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
+import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
 
 @Component({
   selector: 'codx-instances',
@@ -64,6 +66,9 @@ export class InstancesComponent
   dialog: any;
   instanceNo: string;
   listSteps = [];
+
+  formModel: FormModel;
+  isMoveSuccess: boolean = true;
 
   constructor(
     private inject: Injector,
@@ -135,6 +140,8 @@ export class InstancesComponent
       case 'btnAdd':
         //   this.genAutoNumberNo();
         this.add();
+        // this.moveStage();
+        //  this.moveReason(this.isMoveSuccess);
         break;
     }
   }
@@ -142,7 +149,7 @@ export class InstancesComponent
   //CRUD
   add() {
     this.view.dataService.addNew().subscribe((res) => {
-      let titleAction = this.process.applyFor == '0' ? 'Nhiệm vụ' : 'Cơ hội';
+      const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
@@ -152,7 +159,7 @@ export class InstancesComponent
       let stepCrr = this.listSteps[0] || undefined
       var dialogCustomField = this.callfc.openSide(
         PopupAddInstanceComponent,
-        ['add', titleAction, stepCrr],
+        ['add', applyFor, stepCrr],
         option
       );
       dialogCustomField.closed.subscribe((e) => {
@@ -255,4 +262,65 @@ export class InstancesComponent
 
   changeView(e) {}
   // end code
+
+  moveStage(){
+    let formModel = new FormModel() ;
+    formModel.formName = 'DPInstances';
+    formModel.gridViewName = 'grvDPInstances';
+    formModel.entityName = 'DP_Instances';
+
+    var obj = {
+      // more: more,
+    //  data: data,
+      processName: this.process.processName,
+      funcIdMain: this.funcID,
+      formModel:formModel
+    };
+
+    var dialogRevision = this.callfc.openForm(
+      PopupMoveStageComponent,
+      '',
+      950,
+      1000,
+      '',
+      obj
+    );
+    dialogRevision.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        this.view.dataService.clear();
+        this.view.dataService.update(e?.event).subscribe();
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+  moveReason(isMoveSuccess: Boolean){
+    let formModel = new FormModel() ;
+    formModel.formName = 'DPInstancesStepsReasons';
+    formModel.gridViewName = 'grvDPInstancesStepsReasons';
+    formModel.entityName = 'DP_Instances_Steps_Reasons';
+    var obj = {
+      // more: more,
+    //  data: data,
+      processName: this.process.processName,
+      funcIdMain: this.funcID,
+      formModel:formModel,
+      isReason: isMoveSuccess
+    };
+
+    var dialogRevision = this.callfc.openForm(
+      PopupMoveReasonComponent,
+      '',
+      800,
+      600,
+      '',
+      obj
+    );
+    dialogRevision.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        this.view.dataService.clear();
+        this.view.dataService.update(e?.event).subscribe();
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
 }
