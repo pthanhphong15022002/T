@@ -12,7 +12,7 @@
               : "grvDPProcesses"
             | async
         }}</span
-        ><span
+        ><span *ngIf="process.memo"
           class="icon-event_notes text-hover-primary cursor-pointer" [ngbPopover]="popperMemo"
           #p="ngbPopover"
           (mouseenter)="p.open()"
