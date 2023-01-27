@@ -172,7 +172,7 @@
 <ng-template #tabLocation> </ng-template>
 
 <ng-template #tabInputInfo>
-  <ng-container *ngIf="step.fields?.length > 0">
+  <ng-container *ngIf="step?.fields?.length > 0">
     <ng-container *ngFor="let item of step.fields">
       <div class="form-group">
         <codx-input-custom-field

@@ -76,7 +76,9 @@ export class PopupAddInstanceComponent implements OnInit {
   ) {
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
-    this.instanceNo = dt?.data[2]?.instanceNo ?? '';
+  
+    this.step = dt?.data[2]
+    // this.instanceNo = dt?.data[2]?.instanceNo ?? '';
     console.log(this.instanceNo);
   }
 
