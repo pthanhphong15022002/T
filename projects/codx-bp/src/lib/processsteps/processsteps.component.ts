@@ -156,7 +156,7 @@ export class ProcessStepsComponent
   listUserSearch = [];
   listUser = [];
   isDragDrop = true;
-  iconUser = "";
+  iconUser = '';
   popupSearch: any;
 
   constructor(
@@ -171,19 +171,18 @@ export class ProcessStepsComponent
     this.user = this.authStore.get();
     this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
       if (mf) {
-        this.language = mf[0]["language"];
+        this.language = mf[0]['language'];
         var mfAdd = mf.find((f) => f.functionID == 'SYS01');
         if (mfAdd) this.titleAdd = mfAdd?.customName;
       }
     });
-    this.cache.valueList("BP021").subscribe((value) => {
-     if(value){
-        let userValue = value?.datas.find((u) => u.value =="P");
+    this.cache.valueList('BP021').subscribe((value) => {
+      if (value) {
+        let userValue = value?.datas.find((u) => u.value == 'P');
         this.iconUser = './assets/themes/sys/default/img/' + userValue?.icon;
         console.log(this.iconUser);
-        
-     }      
-    })
+      }
+    });
   }
   ngOnChanges(changes: SimpleChanges): void {
     // this.chgViewModel(this.viewMode);
@@ -247,9 +246,7 @@ export class ProcessStepsComponent
     this.childFunc.map((obj) => {
       if (obj.id != 'P' && obj.id != 'A') this.childFuncOfA.push(obj);
     });
-    this.isBlockClickMore=false;
-
-
+    this.isBlockClickMore = false;
   }
 
   ngAfterViewInit(): void {
@@ -342,7 +339,7 @@ export class ProcessStepsComponent
               });
               if (this.kanban) {
                 this.kanban.addCard(processStep);
-                if(this.kanban?.dataSource?.length==1)this.kanban.refresh();
+                if (this.kanban?.dataSource?.length == 1) this.kanban.refresh();
               }
             } else {
               this.view.dataService.data.forEach((obj) => {
@@ -498,7 +495,7 @@ export class ProcessStepsComponent
       phaseOld?.items.splice(index, 1);
       if (index < phaseOld?.items.length) {
         for (var i = index; i < phaseOld?.items.length; i++) {
-          phaseOld["items"][i].stepNo--;
+          phaseOld['items'][i].stepNo--;
         }
       }
       var indexParentNew = this.view.dataService.data.findIndex(
@@ -728,13 +725,10 @@ export class ProcessStepsComponent
 
   //#region event
   click(evt: ButtonModel) {
-    if(this.isBlockClickMore) {
+    if (this.isBlockClickMore) {
       this.blockClickMoreFunction();
     }
-    if (
-      this.listCountPhases <= 0 &&
-      evt.id != 'P'
-    ) {
+    if (this.listCountPhases <= 0 && evt.id != 'P') {
       return this.notiService.notify(this.msgBP001);
     }
     if (
@@ -791,23 +785,24 @@ export class ProcessStepsComponent
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
   }
-  async dblClick(e,data){
+  async dblClick(e, data) {
     e.stopPropagation();
-    if(!data.recID){
-      await this.bpService.getProcessStepDetailsByRecID(data?.keyField).subscribe(async (dt) => {
-        if (dt) {
-          this.openPopupViewProcessStep(dt);
-        }
-      });
-    }else{
+    if (!data.recID) {
+      await this.bpService
+        .getProcessStepDetailsByRecID(data?.keyField)
+        .subscribe(async (dt) => {
+          if (dt) {
+            this.openPopupViewProcessStep(dt);
+          }
+        });
+    } else {
       this.openPopupViewProcessStep(data);
     }
-    
   }
 
-  openPopupViewProcessStep(data){
+  openPopupViewProcessStep(data) {
     let stepType = data.stepType;
-    let title = this.language === "VN" ? "Xem" : "View";
+    let title = this.language === 'VN' ? 'Xem' : 'View';
     this.titleAction = this.getTitleAction(title, data.stepType);
     let funcMenu = this.childFunc.find((x) => x.id == stepType);
     if (funcMenu) {
@@ -903,8 +898,8 @@ export class ProcessStepsComponent
 
   onActions(e: any) {
     switch (e.type) {
-      case 'drop':     
-         this.onDragDrop(e.data);
+      case 'drop':
+        this.onDragDrop(e.data);
         break;
       case 'drag':
         this.crrParentID = e?.data?.parentID;
@@ -951,7 +946,7 @@ export class ProcessStepsComponent
           this.lockChild = false;
           this.notiService.notifyCode('SYS007');
         } else {
-          this.lockChild = false
+          this.lockChild = false;
           this.notiService.notifyCode(' SYS021');
         }
       });
@@ -1348,51 +1343,46 @@ export class ProcessStepsComponent
   }
 
   blockClickMoreFunction() {
-
     let kanban = this.kanban?.columns ?? [];
     let viewList = this.dataTreeProcessStep ?? [];
     this.isBlockClickMore = true;
-    let listData:any;
+    let listData: any;
     let viewType: string = '';
-    if(viewList.length>0){
+    if (viewList.length > 0) {
       listData = viewList;
-      viewType='viewList';
-    }
-    else {
+      viewType = 'viewList';
+    } else {
       listData = kanban;
-      viewType='kanban';
+      viewType = 'kanban';
     }
     const check = listData.length > 0 ? true : false;
     if (check) {
       this.listCountPhases = listData.length;
-      this.isBlock= this.isCheckViewKanbanList(listData, viewType)
+      this.isBlock = this.isCheckViewKanbanList(listData, viewType);
     } else {
-      this.listCountPhases=0;
-      this.listCountActivities=0;
+      this.listCountPhases = 0;
+      this.listCountActivities = 0;
       this.isBlock = true;
       this.isBlockClickMore = false;
     }
   }
-  isCheckViewKanbanList(listData:any, viewType:any){
-    let index:number = 0;
-    if(viewType =='kanban'){
-        while(listData.length>index){
-          if(listData[index].dataColums.length > 0)
-          {
-            this.listCountActivities=listData[index].dataColums.length;
-            return false;
-          }
-          index++;
+  isCheckViewKanbanList(listData: any, viewType: any) {
+    let index: number = 0;
+    if (viewType == 'kanban') {
+      while (listData.length > index) {
+        if (listData[index].dataColums.length > 0) {
+          this.listCountActivities = listData[index].dataColums.length;
+          return false;
+        }
+        index++;
       }
-    }
-    else if(viewType =='viewList'){
-      while(listData.length>index){
-          if(listData[index].items.length > 0 )
-          {
-            this.listCountActivities=listData[index].items.length;
-            return false;
-          }
-          index++;
+    } else if (viewType == 'viewList') {
+      while (listData.length > index) {
+        if (listData[index].items.length > 0) {
+          this.listCountActivities = listData[index].items.length;
+          return false;
+        }
+        index++;
       }
     }
     return true;
@@ -1477,15 +1467,15 @@ export class ProcessStepsComponent
     let dataColums = dt?.dataColums;
     return dataColums;
   }
-  showPoupStepName(e,p){
+  showPoupStepName(e, p) {
     let parent = e.currentTarget.parentElement.offsetWidth;
     let child = e.currentTarget.offsetWidth;
-    if(parent <= child){
-      p.open();   
+    if (parent <= child) {
+      p.open();
     }
   }
 
-  seachUser(e,value,p){
+  seachUser(e, value, p) {
     e.stopPropagation();
     // p.open();
     this.popupSearch = p;
@@ -1493,19 +1483,33 @@ export class ProcessStepsComponent
     this.listUser = value;
   }
   searchName(e) {
-      var resouscesSearch = [];
-      if (e.trim() == '') {
-        this.listUserSearch = this.listUser;
-      return; 
+    var resouscesSearch = [];
+    if (e.trim() == '') {
+      this.listUserSearch = this.listUser;
+      return;
     }
-    let value = e.trim().toLowerCase(); 
-    resouscesSearch = this.listUser.filter(item => item.objectName.toString().toLowerCase().search(value) >= 0)
+    let value = e.trim().toLowerCase();
+    resouscesSearch = this.listUser.filter(
+      (item) => item.objectName.toString().toLowerCase().search(value) >= 0
+    );
     this.listUserSearch = resouscesSearch;
   }
-  closePopup(){
-    console.log("thuan ----------");
-    
+  closePopup() {
+    console.log('thuan ----------');
+
     return true;
     // this.popupSearch.close();
+  }
+
+  getfileCount(e, id) {
+    let element = document.getElementById(id);
+    if (element) {
+      let isShow = element.classList.contains('show-main');
+
+      if (isShow && (e == 0 || e?.data?.length == 0)) {
+        element.classList.remove('show-main');
+        element.classList.add('hidden-main');
+      }
+    }
   }
 }
