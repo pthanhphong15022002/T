@@ -459,7 +459,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     console.log(e);
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true;
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
   }
   eventApply(e: any) {

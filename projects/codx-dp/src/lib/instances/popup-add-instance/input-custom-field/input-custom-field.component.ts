@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -36,8 +37,12 @@ export class InputCustomFieldComponent implements OnInit {
   formatDate = 'd';
   allowMultiFile = '1';
   isPopupUserCbb = false;
+  messCodeEmail = 'SYS037'; // Email ko hợp lê
 
-  constructor(private cache: CacheService) {
+  constructor(
+    private cache: CacheService,
+    private changeDef: ChangeDetectorRef
+  ) {
     this.cache.message('SYS028').subscribe((res) => {
       if (res) this.errorMessage = res.customName || res.defaultName;
     });
@@ -45,15 +50,15 @@ export class InputCustomFieldComponent implements OnInit {
 
   ngOnInit(): void {
     //data test
-    this.customField.isRequired = true;
-    this.customField.note = 'Nhập số lượng';
-    this.customField.fieldName = 'số lượng';
-    this.customField.title = 'Số lượng nhân viên làm việc';
-    this.customField.rank = 10;
-    this.customField.rankIcon = 'fas fa-ambulance';
-    this.customField.multiselect = true;
-    this.customField.dataType = 'D';
-    this.customField.dataFormat = 'D';
+    // this.customField.isRequired = true;
+    // this.customField.note = 'Nhập số lượng';
+    // this.customField.fieldName = 'số lượng';
+    // this.customField.title = 'Số lượng nhân viên làm việc';
+    // this.customField.rank = 10;
+    // this.customField.rankIcon = 'fas fa-ambulance';
+    // this.customField.multiselect = true;
+    // this.customField.dataType = 'T';
+    // this.customField.dataFormat = 'E';
 
     this.allowMultiFile = this.customField.multiselect ? '1' : '0';
     if (this.customField.dataFormat == 'D') this.formatDate = 'd';
@@ -61,10 +66,30 @@ export class InputCustomFieldComponent implements OnInit {
   }
 
   valueChange(e) {
-    this.valueChangeCustom.emit({ e: e, data: this.customField });
     if (this.customField.isRequired) {
-      if (!e || !e.data || e.data.trim() == '') this.showErrMess = true; else this.showErrMess = false
+      if (!e || !e.data || e.data.toString().trim() == '') {
+        this.showErrMess = true;
+        return;
+      } else this.showErrMess = false;
     }
+    if (
+      this.customField.dataType == 'T' &&
+      this.customField.dataFormat == 'E'
+    ) {
+      let email = e.data;
+      var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      if (!email.match(mailformat)) {
+        this.cache.message(this.messCodeEmail).subscribe((res) => {
+          if (res) {
+            this.errorMessage = res.customName || res.defaultName;
+            this.showErrMess = true;
+          }
+          this.changeDef.detectChanges();
+          return;
+        });
+      } else this.showErrMess = false;
+    }
+    this.valueChangeCustom.emit({ e: e, data: this.customField });
   }
   //combox user
   openUserPopup() {

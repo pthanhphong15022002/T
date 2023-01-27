@@ -386,7 +386,7 @@ export class PopupAddProcessesComponent implements OnInit {
     this.attachment.uploadFile();
   }
   getfileCount(e) {
-    if (e?.data.length > 0) this.isHaveFile = true;
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
   }
