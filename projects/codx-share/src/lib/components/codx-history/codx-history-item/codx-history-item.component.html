@@ -16,6 +16,10 @@
         <ng-container *ngSwitchCase="'T'">
             <ng-container *ngTemplateOutlet="T"></ng-container>
         </ng-container>
+        <!-- yêu cầu cấp quyền -->
+        <ng-container *ngSwitchCase="'RE'">
+            <ng-container *ngTemplateOutlet="T"></ng-container>
+        </ng-container>
         <!-- cập nhật -->
         <ng-container *ngSwitchCase="'U'">
             <ng-container *ngTemplateOutlet="U"></ng-container>
