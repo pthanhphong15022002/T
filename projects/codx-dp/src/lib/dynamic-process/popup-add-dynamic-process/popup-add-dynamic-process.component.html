@@ -1247,10 +1247,10 @@
       </div>
       <!-- drap drop công việc ngoài-->
       <div class="main-body" *ngIf="taskGroupList.length > 0">
-        <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
+        <div cdkDropList class="list" (cdkDropListDropped)="drop($event,taskGroupList)">
           <div cdkDropListGroup>
             <ng-container *ngFor="let taskList of taskGroupList">
-              <div class="mb-3 card-job-list" cdkDrag [cdkDragData]="taskList">
+              <div class="card-job-list" cdkDrag [cdkDragData]="taskList">
                 <div class="card-job">
                   <div
                     class="d-flex justify-content-start align-items-center has-action-menu"
@@ -1395,7 +1395,7 @@
                           </div>
                           <codx-mfunc
                             [formModel]="dialog.formModel"
-                            (clickMF)="clickMFTask($event, task)"
+                            (clickMF)="clickMFTask($event, taskList?.task, task)"
                             [isBookMark]="true"
                             [dataItem]="action != 'edit' ? moreDefaut : task"
                             [type]="'hover'"
@@ -1404,6 +1404,8 @@
                         </div>
                       </div>
                     </ng-container>
+                    <div *ngIf="taskList?.task.length === 0" style="height: 5px;">
+                    </div>
                   </div>
                 </div>
               </div>
