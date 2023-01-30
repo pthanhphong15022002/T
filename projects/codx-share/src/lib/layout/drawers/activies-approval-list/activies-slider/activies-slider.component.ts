@@ -24,7 +24,7 @@ export class ActiviesSliderComponent implements OnInit {
     pageSize:20,
     page: 1
   }
-  loaded:boolean = true;
+  loaded:boolean = false;
   totalPage:number = 0;
   isScroll = true;
   pageIndex:number = 0;
@@ -62,19 +62,8 @@ export class ActiviesSliderComponent implements OnInit {
       if(res)
       {
         this.lstApproval = res[0];
-        let totalRecord = res[1];
-        this.totalPage = totalRecord / this.model.pageSize;
-        this.isScroll = false;
-        this.loaded = false;
+        this.loaded = true;
         this.dt.detectChanges();
-      }
-      else
-      {
-        if(this.lstApproval.length == 0)
-        {
-          this.loaded = false;
-          this.dt.detectChanges();
-        }
       }
     });
   }
@@ -85,8 +74,6 @@ export class ActiviesSliderComponent implements OnInit {
   {
     let dcScroll = event.srcElement;
     if (dcScroll.scrollTop + dcScroll.clientHeight < dcScroll.scrollHeight - 150) return;
-    if(this.model.page > this.totalPage || this.isScroll) return;
-    this.isScroll = true;
     this.model.page = this.model.page + 1;
     this.api.execSv(
       'BG',
@@ -98,7 +85,6 @@ export class ActiviesSliderComponent implements OnInit {
       if(res && res[0].length > 0){
         let notifications = res[0];
         this.lstApproval = this.lstApproval.concat(notifications);
-        this.isScroll = false;
         this.dt.detectChanges();
       }
     });

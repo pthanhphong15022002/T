@@ -725,6 +725,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         this.fileUploadList[i].avatar = null;
         this.fileUploadList[i].data = '';
         this.fileUploadList[i].createdOn = new Date();
+        this.fileUploadList[i].source = null;
         if (total > 1)
           this.fileUploadList[i] = await this.addFileLargeLong(
             this.fileUploadList[i],
@@ -739,6 +740,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       }
       let countFile = this.fileUploadList.length;
       if (total > 1) {
+        
         return this.fileService
           .addMultiFileObservable(
             this.fileUploadList,
@@ -1107,6 +1109,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
 
   async uploadFileAsync(uploadFile: any,appName: any, chunkSizeInKB: any) {
+    lvFileClientAPI.setUrl(environment.urlUpload);
     var retUpload = await this.registerFile(appName,uploadFile,chunkSizeInKB);
     if(retUpload == "401") {
       await this.dmSV.getToken();
@@ -1143,6 +1146,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   
   async registerFile(appName: any, uploadFile: any , ChunkSizeInKB: any)
   {
+    lvFileClientAPI.setUrl(environment.urlUpload); //"http://192.168.18.36:8011");
     return await lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
       Data: {
         FileName: uploadFile?.name,
