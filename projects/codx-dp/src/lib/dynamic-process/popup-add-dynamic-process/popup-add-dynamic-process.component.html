@@ -1301,9 +1301,9 @@
                     </div>
                     <codx-mfunc
                       [formModel]="dialog.formModel"
-                      (clickMF)="clickMFStep($event, taskList)"
+                      (clickMF)="clickMFTaskGroup($event, taskList)"
                       [isBookMark]="true"
-                      [dataItem]="taskList"
+                      [dataItem]="action != 'edit' ? moreDefaut : taskList"
                       [type]="'hover'"
                     >
                     </codx-mfunc>
@@ -1395,9 +1395,9 @@
                           </div>
                           <codx-mfunc
                             [formModel]="dialog.formModel"
-                            (clickMF)="clickMFStep($event, task)"
+                            (clickMF)="clickMFTask($event, task)"
                             [isBookMark]="true"
-                            [dataItem]="task"
+                            [dataItem]="action != 'edit' ? moreDefaut : task"
                             [type]="'hover'"
                           >
                           </codx-mfunc>
@@ -1496,7 +1496,8 @@
       <codx-input
         field="taskGroupName"
         [formModel]="dialog.formModel"
-        [Group]=""
+        [Group]="dialog.formGroup"
+        [crrValue]="taskGroup?.taskGroupName"
         type="text"
         [height]="'100'"
         (valueChange)="changeValueInput($event, taskGroup)"
@@ -1517,7 +1518,8 @@
           <codx-input
             field="durationDay"
             [formModel]="dialog.formModel"
-            [Group]=""
+            [Group]="dialog.formGroup"
+            [crrValue]="taskGroup?.durationDay"
             type="text"
             [height]="'100'"
             [min]="0"
@@ -1549,6 +1551,7 @@
             field="durationHour"
             [formModel]="dialog.formModel"
             [Group]=""
+            [crrValue]="taskGroup?.durationHour"
             type="text"
             [height]="'100'"
             [min]="0"
@@ -1608,6 +1611,7 @@
         field="memo"
         [formModel]="dialog.formModel"
         [Group]=""
+        [crrValue]="taskGroup?.memo"
         type="textarea"
         [height]="'100'"
         (valueChange)="changeValueInput($event, taskGroup)"

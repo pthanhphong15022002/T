@@ -399,7 +399,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0) {
       stepListSave.forEach((step) => {
-        delete step['taskGroups']['task'];
+        if (step && step['taskGroups']) {
+          delete step['taskGroups']['task'];
+        }
       });
 
       this.dpService.addStep([stepListSave]).subscribe((data) => {
@@ -413,7 +415,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0 || this.stepListAdd.length > 0) {
       stepListSave.forEach((step) => {
-        delete step['taskGroups']['task'];
+        if (step && step['taskGroups']) {
+          delete step['taskGroups']['task'];
+        }
       });
       this.dpService
         .editStep([stepListSave, this.stepListAdd, this.stepListDelete])
@@ -797,8 +801,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
       this.cache
         .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
-        .subscribe((res) => {    
-         this.fieldCrr = new DP_Steps_Fields();
+        .subscribe((res) => {
+          this.fieldCrr = new DP_Steps_Fields();
           this.fieldCrr.stepID = stepID;
           this.fieldCrr.processID = processID;
           this.fieldCrr.isRequired = false;
@@ -814,7 +818,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           option.zIndex = 1010;
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
-            [this.fieldCrr, 'add', titleAction,this.stepList],
+            [this.fieldCrr, 'add', titleAction, this.stepList],
             option
           );
           dialogCustomField.closed.subscribe((e) => {
@@ -853,7 +857,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           option.zIndex = 1010;
           var dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
-            [this.fieldCrr, 'edit', titleAction,this.stepList],
+            [this.fieldCrr, 'edit', titleAction, this.stepList],
             option
           );
           dialogCustomField.closed.subscribe((e) => {
@@ -957,8 +961,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.dpService.getStep([this.process?.recID]).subscribe((data) => {
       if (data) {
         this.editTest(data);
-        data.forEach(step => {
-          if(!step['isSuccessStep'] && !step['isFailStep']){
+        data.forEach((step) => {
+          if (!step['isSuccessStep'] && !step['isFailStep']) {
             const taskGroupList = step?.tasks.reduce((group, product) => {
               const { taskGroupID } = product;
               group[taskGroupID] = group[taskGroupID] ?? [];
@@ -974,7 +978,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             step['taskGroups'] = taskGroupConvert;
             this.stepList.push(step);
           }
-
         });
         this.stepList.sort((a, b) => a['stepNo'] - b['stepNo']);
         this.viewStepSelect(this.stepList[0]);
@@ -1044,6 +1047,38 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         break;
     }
   }
+  clickMFTaskGroup(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deletepGroupJob(data);
+        break;
+      case 'SYS03':
+        this.openGroupJob(data);
+        break;
+      case 'SYS04':
+        // this.copy(data);
+        break;
+    }
+  }
+  clickMFTask(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'SYS02':
+        // this.deleteStep(data);
+        break;
+      case 'SYS03':
+        // this.openPopupAddEditStep('edit');
+        if (data.taskType) {
+          this.jobType = this.listJobType.find(
+            (type) => type.id === data.taskType
+          );
+        }
+        this.openPopupJob(data);
+        break;
+      case 'SYS04':
+        // this.copy(data);
+        break;
+    }
+  }
   dropStep(event: CdkDragDrop<string[]>) {
     if (event.previousIndex == event.currentIndex) return;
     moveItemInArray(this.stepList, event.previousIndex, event.currentIndex);
@@ -1090,14 +1125,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //# group job
-  openGroupJob() {
-    this.userGroupJob = [];
+  openGroupJob(data?: any) {
     this.taskGroup = new DP_Steps_TaskGroups();
-    this.taskGroup['recID'] = Util.uid();
-    this.taskGroup['createdOn'] = new Date();
-    this.taskGroup['createdBy'] = this.userId;
-    this.taskGroup['stepID'] = this.step['recID'];
-    this.taskGroup['task'] = [];
+    if (data) {
+      this.userGroupJob = data?.roles || [];
+      this.taskGroup = data;
+    } else {
+      this.userGroupJob = [];
+      this.taskGroup['createdOn'] = new Date();
+      this.taskGroup['createdBy'] = this.userId;
+      this.taskGroup['stepID'] = this.step['recID'];
+      this.taskGroup['task'] = [];
+    }
+
     this.popupGroupJob = this.callfc.openForm(
       this.addGroupJobPopup,
       '',
@@ -1107,10 +1147,26 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   savePopupGroupJob() {
     this.popupGroupJob.close();
-    this.taskGroupList.push(this.taskGroup);
-    let taskGroupList = JSON.parse(JSON.stringify(this.taskGroup));
-    delete taskGroupList['task'];
-    this.taskGroupListSave.push(taskGroupList);
+    if (!this.taskGroup['recID']) {
+      this.taskGroup['recID'] = Util.uid();
+      this.taskGroupList.push(this.taskGroup);
+      let taskGroupList = JSON.parse(JSON.stringify(this.taskGroup));
+      delete taskGroupList['task'];
+      this.taskGroupListSave.push(taskGroupList);
+    }
+  }
+
+  deletepGroupJob(data) {
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        let index = this.taskGroupList.findIndex(
+          (step) => step.recID == data.recID
+        );
+        if (index >= 0) {
+          this.taskGroupList.splice(index, 1);
+        }
+      }
+    });
   }
 
   //job -- nvthuan
@@ -1121,20 +1177,26 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.jobType = value;
   }
 
-  openPopupJob() {
+  openPopupJob(data?: any) {
+    console.log(data);
+
+    let status = 'edit';
     let frmModel: FormModel = {
       entityName: 'DP_Steps_Tasks',
       formName: 'DPStepsTasks',
       gridViewName: 'grvDPStepsTasks',
     };
-    this.popupJob.close();
+    if (!data) {
+      this.popupJob.close();
+      status = 'add';
+    }
     let option = new SidebarModel();
     option.Width = '550px';
     option.zIndex = 1001;
     option.FormModel = frmModel;
     let dialog = this.callfc.openSide(
       PopupJobComponent,
-      ['add', this.jobType, this.step?.recID, this.taskGroupList],
+      [status, this.jobType, this.step?.recID, this.taskGroupList, data || {}],
       option
     );
     dialog.closed.subscribe((e) => {
