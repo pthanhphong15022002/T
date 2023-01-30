@@ -669,7 +669,6 @@ export class CodxDMService {
         //     e[i].disabled = true;
         //   }
         // }
-
         if (this.idMenuActive != 'DMT06' && this.idMenuActive != 'DMT07') {
           if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
             e[i].disabled = true;
@@ -678,10 +677,10 @@ export class CodxDMService {
           //list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
           //list = "DMT0226;DMT0227;DMT0230;DMT0231";
           if (type == 'DM_FolderInfo') {
-            if (this.dmFavoriteID == '2') list = 'DMT0226;DMT0227';
+            if (this.folderService.options.favoriteID == '1') list = 'DMT0226;DMT0227';
             else list = 'DMT0227';
           } else {
-            if (this.dmFavoriteID == '2') list = 'DMT0230;DMT0231';
+            if (this.fileService.options.favoriteID == '1') list = 'DMT0230;DMT0231';
             else list = 'DMT0231';
           }
           if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
@@ -892,7 +891,6 @@ export class CodxDMService {
   }
 
   getImage(data: any) {
-    debugger;
     if (data?.folderName && !data?.extension)
       return '../../../assets/themes/dm/default/img/icon-folder.svg';
     else {
