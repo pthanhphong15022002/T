@@ -70,6 +70,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           (valueChange)="valueChange($event)"
+          [disabled]="action=='edit'"
         >
         </codx-input>
       </div>
