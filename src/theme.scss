@@ -46,6 +46,7 @@
         --bg-color: #005dc7;
         --border-light: #D3E8FF;
         --bg-aside-dark: #041b33;
+        --menu-acitve: #96addf;
 
 
     }
@@ -70,6 +71,7 @@
         --bg-color: #fd492a;
         --border-light: #ffdac8;
         --bg-aside-dark: #3f1704;
+        --menu-acitve: #fac696;
     }
 
     &.sapphire {
@@ -92,6 +94,7 @@
         --bg-color: #13a597;
         --border-light: #c8fffc;
         --bg-aside-dark: #032e2c;
+        --menu-acitve: #92ece5;
     }
 
     &.green {
@@ -114,6 +117,7 @@
         --bg-color: #0f8633;
         --border-light: #c8ffcd;
         --bg-aside-dark: #032909;
+        --menu-acitve: #a4da8b;
     }
 
     &.purple {
@@ -136,6 +140,7 @@
         --bg-color: #5710b2;
         --border-light: #dbc5f5;
         --bg-aside-dark: #1e033f;
+        --menu-acitve: #d29df3;
     }
 
     &.navy {
@@ -159,6 +164,7 @@
         --border-light: #dbc5f5;
         --bg-aside-dark: #1e033f;
         --bg-body: #f1f1f1;
+        --menu-active: #a0a1ec;
 
         codx-wrapper {
             background-color: var(--bg-body);
@@ -213,9 +219,11 @@
         --text-title: #ced3e5;
         --text-body: #9a9aa8;
         --text-des: #858597;
+        --menu-active: #2a2b3a;
 
         --bg-input: #29293e;
         --scrollbar-thumb: #333358;
+
 
         --gray-100: #1b1b29;
         --gray-150: #202031;
@@ -228,9 +236,11 @@
         --gray-800: #CDCDDE;
         --gray-900: #FFFFFF;
 
+
         @import "src/theme-dark.scss";
 
         color: var(--text-body);
+        --title-color: var(--primary);
     }
 
 
@@ -310,7 +320,7 @@
     }
 
     .menu-state-title-primary .menu-item .menu-link.active .menu-title {
-        color: var(--primary);
+        color: var(--menu-acitve);
     }
 
     .btn.btn-primary {

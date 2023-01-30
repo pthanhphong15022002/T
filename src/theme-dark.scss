@@ -143,7 +143,9 @@ app-list-post .e-listview .e-list-item {
 .border-bottom,
 .border-top,
 .border-start,
-.border-end {
+.border-end,
+.border-left,
+.border-right {
     border-color: var(--border-gray) !important;
 }
 
@@ -740,6 +742,10 @@ codx-filter-form .list-group-item {
 
 .e-schedule .e-month-agenda-view .e-current-date .e-date-header {
     color: var(--text-body);
+}
+
+.card-footer {
+    border-color: var(--border-gray);
 }
 
 //end dark

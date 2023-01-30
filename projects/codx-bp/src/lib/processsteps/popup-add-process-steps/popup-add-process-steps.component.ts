@@ -369,16 +369,12 @@ export class PopupAddProcessStepsComponent
   }
   fileAdded(e) {}
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true;
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if (
-      this.action != 'edit' ||
-      (this.action == 'edit' && !this.showLabelAttachment)
-    )
-      this.showLabelAttachment = this.isHaveFile;
+    this.showLabelAttachment = this.isHaveFile;
   }
-  getfileDelete(event){
-    event.data.length
+  getfileDelete(event) {
+    event.data.length;
   }
   valueChangeAlert(e) {
     this.processSteps[e?.field] = e.data;
@@ -470,7 +466,7 @@ export class PopupAddProcessStepsComponent
   }
 
   changeQuestion(e) {
-    if(e?.data){
+    if (e?.data) {
       this.processSteps['reference'] = e?.data;
       let url = window.location.href;
       let index = url.indexOf('/bp/');
@@ -482,10 +478,9 @@ export class PopupAddProcessStepsComponent
             'SVT01',
             '',
             e?.data
-          );       
-    this.changeDef.detectChanges();
+          );
+      this.changeDef.detectChanges();
     }
-   
   }
   viewDetailSurveys() {
     // let url = 'sv/surveys/SVT01';

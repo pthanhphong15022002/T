@@ -549,7 +549,6 @@ export class RolesComponent implements OnInit {
       .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
       .closed.subscribe((x) => {
         if (x.event.status == 'Y') {
-          debugger;
           if (list == null) {
             if (this.fileEditing && this.fileEditing.permissions && this.fileEditing.permissions.length > 0) {
               this.fileEditing.permissions.splice(index, 1);//remove element from array

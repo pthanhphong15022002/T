@@ -2,6 +2,7 @@ import { DP_Processes } from './../../models/models';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
 import { TabModel } from '../../models/models';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'lib-popup-views-details-process',
@@ -21,11 +22,12 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
   vllApplyFor ='DP002' ;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    public sanitizer: DomSanitizer,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
-    this.process = dt.data.data;
+    this.process = dt?.data?.data;
   }
 
   ngOnInit(): void {}

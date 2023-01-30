@@ -1,3 +1,4 @@
+import { DP_Steps } from './../../models/models';
 import { CodxDpService } from './../../codx-dp.service';
 import { Component, Input, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { CRUDService } from 'codx-core';
@@ -5,7 +6,7 @@ import { CRUDService } from 'codx-core';
 @Component({
   selector: 'codx-instance-detail',
   templateUrl: './instance-detail.component.html',
-  styleUrls: ['./instance-detail.component.css'],
+  styleUrls: ['./instance-detail.component.scss'],
 })
 export class InstanceDetailComponent implements OnInit {
   @Input() formModel: any;
@@ -15,7 +16,8 @@ export class InstanceDetailComponent implements OnInit {
 
   dataSelect: any;
   id: any;
-
+  totalInSteps: any;
+  @Input() listSteps: DP_Steps;
   //progressbar
   labelStyle = { color: '#FFFFFF' };
   showProgressValue = true;
@@ -60,6 +62,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.listSteps);
 
   }
 
@@ -89,6 +92,14 @@ export class InstanceDetailComponent implements OnInit {
       }
     });
   }
+
+  // getStepsByProcessID(recID){
+  //   this.dpSv.getStepsByProcessID(recID).subscribe((res) => {
+  //     if (res != null || res.length > 0) {
+  //       this.listSteps = res;
+  //     }
+  //   });
+  // }
 
   cbxChange(e){
     this.idCbx = e;

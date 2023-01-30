@@ -74,7 +74,7 @@ export class ShareComponent implements OnInit {
   requestTitle = '';
   ownerID :any;
   toPermission: Permission[];
-  byPermission: Permission[];
+  byPermission: Permission[] = [];
   ccPermission: Permission[];
   bccPermission: Permission[];  
 
@@ -134,13 +134,16 @@ export class ShareComponent implements OnInit {
     if(this.fileEditing && Array.isArray(this.fileEditing.permissions))
     { 
       var f = this.fileEditing.permissions.filter(x=>x.objectType == "1");
-      if(f) 
+      if(typeof f == "object" && f.length >0) 
       { 
-        let o: any = {};
+        let o : any = {};
         o.objectType = f[0].objectType
         o.objectName = f[0].objectName;
         o.id = f[0].objectID;
-        this.ownerID = [o]
+        this.ownerID = [o];
+        o.objectID = f[0].objectID;
+        this.byPermission.push(o);
+        
       }
     }
   }
