@@ -8,7 +8,7 @@ import {
   Util,
 } from 'codx-core';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-import { DP_Steps_Tasks } from '../../../models/models';
+import { DP_Steps_Tasks } from '../../../../models/models';
 
 @Component({
   selector: 'lib-popup-job',
@@ -16,7 +16,7 @@ import { DP_Steps_Tasks } from '../../../models/models';
   styleUrls: ['./popup-job.component.scss'],
 })
 export class PopupJobComponent implements OnInit {
-  title = 'thuan';
+  title = '';
   dialog!: DialogRef;
   formModelMenu: FormModel;
   stepType = '';

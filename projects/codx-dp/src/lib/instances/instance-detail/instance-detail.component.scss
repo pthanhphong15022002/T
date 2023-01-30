@@ -84,11 +84,11 @@
 
 .arrow-steps .step.current {
 	color: #fff;
-	background-color: #23468c;
+	background-color: #62c3fc;
 }
 
 .arrow-steps .step.current:after {
-	border-left: 17px solid #23468c;
+	border-left: 17px solid #62c3fc;
 }
 
 .arrow-steps .step.old {
@@ -120,7 +120,13 @@
   margin-top: 5px !important;
   overflow: hidden;
   position: relative;
-  .progress-bar {
+  .progress-current {
+    background: #62c3fc;
+    left: 0;
+    position: absolute;
+    top: 0;
+  }
+  .progress-bar{
     background: #23468c;
     left: 0;
     position: absolute;

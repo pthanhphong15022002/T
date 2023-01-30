@@ -5,9 +5,6 @@ any
 adressType
 : 
 any
-adressTypeName
-: 
-any
 buid
 : 
 any
