@@ -1180,8 +1180,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   openPopupJob(data?: any) {
-    console.log(data);
-
     let status = 'edit';
     let frmModel: FormModel = {
       entityName: 'DP_Steps_Tasks',
@@ -1203,13 +1201,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
     dialog.closed.subscribe((e) => {
       if (e?.event) {
-        let taskData = e?.event;
+        if(e.event?.status === 'add'){
+          let taskData = e?.event?.data;
         let index = this.taskGroupList.findIndex(
           (task) => task.recID == taskData.taskGroupID
         );
         this.taskGroupList[index]['task'].push(taskData);
         this.taskList.push(taskData);
         this.taskListSave.push(taskData);
+        } 
+      }else{
+        data = e?.event?.data;
       }
     });
   }
