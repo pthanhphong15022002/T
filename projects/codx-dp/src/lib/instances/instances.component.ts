@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Injector,
   Input,
@@ -21,8 +22,10 @@ import {
   DialogModel,
   FormModel,
   ResourceModel,
+  RequestOption,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
+import { DP_Instances } from '../models/models';
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
@@ -41,6 +44,7 @@ export class InstancesComponent
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
   views: Array<ViewModel> = [];
+  moreFuncs: Array<ButtonModel> = [];
 
   @Input() process: any;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
@@ -64,16 +68,20 @@ export class InstancesComponent
   vllStatus = 'DP028';
 
   dialog: any;
+  moreFunc: any;
   instanceNo: string;
   listSteps = [];
 
   formModel: FormModel;
   isMoveSuccess: boolean = true;
 
+  instances = new DP_Instances();
+
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
+    private changeDetectorRef: ChangeDetectorRef,
 
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
@@ -103,6 +111,8 @@ export class InstancesComponent
         },
       },
     ];
+
+    this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
   onInit(): void {
     this.button = {
@@ -139,6 +149,7 @@ export class InstancesComponent
       case 'btnAdd':
         //   this.genAutoNumberNo();
         this.add();
+        // this.delete(this.instances);
         // this.moveStage();
         //  this.moveReason(this.isMoveSuccess);
         break;
@@ -215,7 +226,25 @@ export class InstancesComponent
   //End
 
   //Event
-  clickMF(e, data) {}
+  clickMF(e, data?) {
+    // this.itemSelected = data;
+    // this.titleAction = e.text;
+    this.moreFunc = e.functionID;
+    switch (e.functionID) {
+      case 'SYS01':
+        this.add();
+        break;
+      case 'SYS03':
+        // this.edit(data);
+        break;
+      case 'SYS04':
+        //   this.copy(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+    }
+  }
 
   changeDataMF(e, data) {}
   //End
@@ -262,18 +291,19 @@ export class InstancesComponent
   changeView(e) {}
   // end code
 
-  moveStage(){
-    let formModel = new FormModel() ;
+  #region;
+  moveStage() {
+    let formModel = new FormModel();
     formModel.formName = 'DPInstances';
     formModel.gridViewName = 'grvDPInstances';
     formModel.entityName = 'DP_Instances';
 
     var obj = {
       // more: more,
-    //  data: data,
+      //  data: data,
       processName: this.process.processName,
       funcIdMain: this.funcID,
-      formModel:formModel
+      formModel: formModel,
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -292,18 +322,18 @@ export class InstancesComponent
       }
     });
   }
-  moveReason(isMoveSuccess: Boolean){
-    let formModel = new FormModel() ;
+  moveReason(isMoveSuccess: Boolean) {
+    let formModel = new FormModel();
     formModel.formName = 'DPInstancesStepsReasons';
     formModel.gridViewName = 'grvDPInstancesStepsReasons';
     formModel.entityName = 'DP_Instances_Steps_Reasons';
     var obj = {
       // more: more,
-    //  data: data,
+      //  data: data,
       processName: this.process.processName,
       funcIdMain: this.funcID,
-      formModel:formModel,
-      isReason: isMoveSuccess
+      formModel: formModel,
+      isReason: isMoveSuccess,
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -322,4 +352,27 @@ export class InstancesComponent
       }
     });
   }
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
+        }
+      });
+    this.changeDetectorRef.detectChanges();
+  }
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeletedInstanceAsync';
+    itemSelected.recID = 'fa6fe84a-9585-11ed-83ef-d493900707c4';
+    opt.data = [itemSelected.recID];
+    return true;
+  }
+
+  #endregion;
 }

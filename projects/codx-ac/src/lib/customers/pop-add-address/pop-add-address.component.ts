@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, CodxFormComponent, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, CodxFormComponent, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { Address } from '../../models/Address.model';
+import { Contact } from '../../models/Contact.model';
+import { PopAddContactComponent } from '../pop-add-contact/pop-add-contact.component';
 
 @Component({
   selector: 'lib-pop-add-address',
@@ -21,6 +23,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   postalCode:any;
   gridViewSetup:any;
   address: Address;
+  objectContactAddress:Array<Contact> = [];
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -55,6 +58,9 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
       this.districtID = dialogData.data?.data.districtID;
       this.postalCode = dialogData.data?.data.postalCode;
     }
+    if (dialogData.data?.datacontactaddress != null) {
+      this.objectContactAddress = dialogData.data?.datacontactaddress;
+    }
   }
 
   onInit(): void {
@@ -66,7 +72,6 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   valueChange(e:any,type:any){
     if (type == 'adressType') {
       this.adressType = e.data;
-      this.address.adressTypeName = e.component.dropdown.typedString;
     }
     if (type == 'adressName') {
       this.adressName = e.data;
@@ -84,6 +89,38 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
       this.postalCode = e.data;
     }
     this.address[e.field] = e.data;
+  }
+  openPopupContact(){
+    var obj = {
+      headerText: 'Thêm người liên hệ',
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'ContactBook';
+    dataModel.gridViewName = 'grvContactBook';
+    dataModel.entityName = 'BS_ContactBook';
+    opt.FormModel = dataModel;
+    this.cache.gridViewSetup('ContactBook','grvContactBook').subscribe(res=>{
+      if(res){  
+        var dialogcontact = this.callfc.openForm(
+          PopAddContactComponent,
+          '',
+          650,
+          550,
+          '',
+          obj,
+          '',
+          opt
+        );
+        dialogcontact.closed.subscribe((x) => {
+          var datacontact = JSON.parse(localStorage.getItem('datacontact'));
+          if (datacontact != null) {      
+            this.objectContactAddress.push(datacontact);
+          }
+          window.localStorage.removeItem("datacontact");
+        });
+      }
+    });
   }
   onSave(){
     if (this.adressType.trim() == '' || this.adressType == null) {
@@ -135,6 +172,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     //   return;
     // }
     window.localStorage.setItem("dataaddress",JSON.stringify(this.address));
+    window.localStorage.setItem("datacontactaddress",JSON.stringify(this.objectContactAddress));
     this.dialog.close();
   }
 }
