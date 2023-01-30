@@ -21,7 +21,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { PopupJobComponent } from './popup-job/popup-job.component';
+import { PopupJobComponent } from './step-task/popup-job/popup-job.component';
 import {
   DialogData,
   DialogRef,
@@ -48,6 +48,7 @@ import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dy
 import { format } from 'path';
 import { FormGroup } from '@angular/forms';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
+import { ViewJobComponent } from './step-task/view-job/view-job.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -1113,7 +1114,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.taskGroup = data;
     } else {
       this.userGroupJob = [];
-      // this.taskGroup['createdOn'] = new Date();
       this.taskGroup['createdBy'] = this.userId;
       this.taskGroup['stepID'] = this.step['recID'];
       this.taskGroup['task'] = [];
@@ -1127,18 +1127,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
   }
   savePopupGroupJob() {
-    // let reqiure = [];
-    // if (this.taskGroup?.taskGroupName || this.taskGroup?.taskGroupName.trim()) {
-    //   reqiure.push(this.grvTaskGroups['TaskGroupName']?.headerText ?? 'TaskGroupName');
-    // }
-    // if(reqiure.length > 0 ){
-    //   this.notiService.notifyCode(
-    //     'SYS009',
-    //     0,
-    //     '"' + reqiure.join(', ') + '"'
-    //   );
-    //   return;
-    // }
+    let reqiure = [];
+    if (!this.taskGroup?.taskGroupName || !this.taskGroup?.taskGroupName.trim()) {
+      reqiure.push(this.grvTaskGroups['TaskGroupName']?.headerText ?? 'TaskGroupName');
+    }
+    if(reqiure.length > 0 ){
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + reqiure.join(', ') + '"'
+      );
+      return;
+    }
     this.popupGroupJob.close();
     if (!this.taskGroup['recID']) {
       this.taskGroup['recID'] = Util.uid();
@@ -1220,6 +1220,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       case 'SYS04':
         // this.copy(data);
         break;
+      case 'DP01':
+        if (task.taskType) {
+          this.jobType = this.listJobType.find(
+            (type) => type.id === task.taskType
+          );
+        }
+        this.openPopupViewJob(task);
+        break;
     }
   }
   deleteTask(taskList, task) {
@@ -1232,6 +1240,43 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           taskList.splice(index, 1);
         }
         this.setIndex(taskList,'indexNo'); 
+      }
+    });
+  }
+  //View task
+  openPopupViewJob(data?: any) {
+    let status = 'edit';
+    let frmModel: FormModel = {
+      entityName: 'DP_Steps_Tasks',
+      formName: 'DPStepsTasks',
+      gridViewName: 'grvDPStepsTasks',
+    };
+    if (!data) {
+      this.popupJob.close();
+      status = 'add';
+    }
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.zIndex = 1001;
+    option.FormModel = frmModel;
+    let dialog = this.callfc.openSide(
+      ViewJobComponent,
+      [status, this.jobType, this.step?.recID, this.taskGroupList, data || {}],
+      option
+    );
+    dialog.closed.subscribe((e) => {
+      if (e?.event) {
+        if (e.event?.status === 'add') {
+          let taskData = e?.event?.data;
+          let index = this.taskGroupList.findIndex(
+            (task) => task.recID == taskData.taskGroupID
+          );
+          this.taskGroupList[index]['task'].push(taskData);
+          this.taskList.push(taskData);
+          this.taskListSave.push(taskData);
+        }
+      } else {
+        data = e?.event?.data;
       }
     });
   }

@@ -21,7 +21,7 @@ import { DynamicProcessComponent } from './dynamic-process/dynamic-process.compo
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { PopupAddDynamicProcessComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
-import { PopupJobComponent } from './dynamic-process/popup-add-dynamic-process/popup-job/popup-job.component';
+import { PopupJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/popup-job/popup-job.component';
 import { PopupAddCustomFieldComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-custom-field.component';
 import { PopupRolesDynamicComponent } from './dynamic-process/popup-add-dynamic-process/popup-roles-dynamic/popup-roles-dynamic.component';
 import { PopupViewsDetailsProcessComponent } from './dynamic-process/popup-views-details-process/popup-views-details-process.component';
@@ -34,6 +34,7 @@ import { FieldDetailComponent } from './instances/field-detail/field-detail.comp
 import { InputCustomFieldComponent } from './instances/popup-add-instance/input-custom-field/input-custom-field.component';
 import { PopupMoveStageComponent } from './instances/popup-move-stage/popup-move-stage.component';
 import { PopupMoveReasonComponent } from './instances/popup-move-reason/popup-move-reason.component';
+import { ViewJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/view-job/view-job.component';
 
 const routes: Routes = [
   {
@@ -76,6 +77,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     InputCustomFieldComponent,
     PopupMoveStageComponent,
     PopupMoveReasonComponent,
+    ViewJobComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
