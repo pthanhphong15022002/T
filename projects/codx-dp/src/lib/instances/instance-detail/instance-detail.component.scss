@@ -106,3 +106,24 @@
   font-size: 14px;
   font-weight: 700;
 }
+
+
+.progress-2{
+	min-width: 180px;
+  height: 10px;
+}
+
+.process-wrap{
+  background: #d9e3f7;
+  margin: 20px 0;
+  margin-left: 3px !important;
+  margin-top: 5px !important;
+  overflow: hidden;
+  position: relative;
+  .progress-bar {
+    background: #23468c;
+    left: 0;
+    position: absolute;
+    top: 0;
+  }
+}
