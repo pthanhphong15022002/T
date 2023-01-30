@@ -1,6 +1,6 @@
 <ng-container *ngIf="dataSelect?.recID">
-  <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [dataItem]="dataSelect"
-    [hideMF]="false" (changeDataMF)="changeDataMF($event, dataSelect)" (clickMF)="clickMF($event, dataSelect)">
+  <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [dataItem]="dataSelect" [hideMF]="false"
+    (changeDataMF)="changeDataMF($event, dataSelect)" (clickMF)="clickMF($event, dataSelect)">
     <ng-template #header>
       <div class="container_detail mt-3">
         <div class="d-flex flex-grow-1 mb-4">
@@ -36,7 +36,7 @@
               </div>
               <div class="d-flex flex-column align-items-start">
                 <div class="progress">
-                  <div class="progress-done" role="progressbar" [style.width]="'70%'" aria-valuenow="50"
+                  <div class="progress-done" role="progressbar" [style.width]="'70' + '%'" aria-valuenow="50"
                     aria-valuemin="0" aria-valuemax="100">
                     70%</div>
                 </div>
@@ -62,8 +62,8 @@
               </div>
             </div>
             <div class="d-flex justify-content-end">
-              <ejs-dropdownlist id='locationCBB' #locationCBB [value]="this.idCbx" [dataSource]='listRoom' [fields]='fields'
-                [placeholder]="'Phòng họp'" (valueChange)="cbxChange($event)"></ejs-dropdownlist>
+              <ejs-dropdownlist id='locationCBB' #locationCBB [value]="this.idCbx" [dataSource]='listRoom'
+                [fields]='fields' [placeholder]="'Phòng họp'" (valueChange)="cbxChange($event)"></ejs-dropdownlist>
             </div>
           </div>
         </div>
@@ -72,18 +72,26 @@
     </ng-template>
     <ng-template #body>
       <ng-container *ngIf="idCbx == 'gantt'">
-      <p>View gannt chưa làm để vậy</p> 
+        <p>View gannt chưa làm để vậy</p>
       </ng-container>
       <ng-container *ngIf="idCbx == 'stage'">
         <div class="d-flex arrow-steps flex-container">
-          <div *ngFor="let item of lstTest; index as i;" id="step-click" [ngClass]="item.stepNo == 1 ? 'step current' : 'step'" style="flex-grow: 1" (click)="click(item.stepNo)">
-            <span> {{item.name}}</span> </div>
+          <div *ngFor="let item of lstTest; index as i;" id="step-click" style="flex-grow: 1"
+            [ngClass]="item.stepNo == 1 ? 'step current' : 'step'" (click)="click(item.stepNo)">
+            <span> {{item.name}}</span>
+          </div>
         </div>
-        <codx-stages-detail></codx-stages-detail>
+        <div class="d-flex flex-container">
+          <div *ngFor="let item of lstTest; index as i;" class="process-wrap progress-2" style="flex-grow: 1"
+            role="progressbar" [style.width]="'70' + '%'" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar progress-2"></div>
+          </div>
+        </div>
+
+        <codx-stages-detail [listData]="lstTest"></codx-stages-detail>
       </ng-container>
       <ng-container *ngIf="idCbx == 'field'">
         <codx-field-detail></codx-field-detail>
-
       </ng-container>
     </ng-template>
 
