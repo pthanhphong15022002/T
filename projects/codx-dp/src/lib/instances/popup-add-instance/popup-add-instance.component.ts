@@ -66,7 +66,8 @@ export class PopupAddInstanceComponent implements OnInit {
   };
 
   dialog: DialogRef;
-  step = new DP_Instances_Steps() ;
+  // step = new DP_Instances_Steps() ;
+  listStep = [] ;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -80,7 +81,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
 
-    this.step = dt?.data[2]
+    this.listStep = dt?.data[2]
     this.isApplyFor = dt?.data[1];
   }
 

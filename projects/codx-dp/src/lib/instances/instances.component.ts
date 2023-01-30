@@ -155,10 +155,10 @@ export class InstancesComponent
       option.Width = '850px';
       option.zIndex = 1010;
 
-      let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
+      // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
       var dialogCustomField = this.callfc.openSide(
         PopupAddInstanceComponent,
-        ['add', applyFor, stepCrr],
+        ['add', applyFor, this.listSteps],
         option
       );
       dialogCustomField.closed.subscribe((e) => {

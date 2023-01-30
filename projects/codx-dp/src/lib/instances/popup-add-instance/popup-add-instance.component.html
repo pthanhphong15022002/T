@@ -269,22 +269,24 @@
 </ng-template>
 
 <ng-template #tabInputInfo>
-  <ng-container *ngIf="step?.fields?.length > 0">
-    <ng-container *ngFor="let item of step.fields">
-      <div class="form-group">
-        <codx-input-custom-field
-          [customField]="item"
-          (valueChangeCustom)="valueChangeCustom($event)"
-        ></codx-input-custom-field>
-      </div>
+  <ng-container *ngIf="listStep.length > 0">
+    <ng-container *ngFor="let step of listStep">
+      <ng-container *ngIf="step?.fields?.length > 0">
+        <ng-container *ngFor="let item of step.fields">
+          <div class="form-group">
+            <codx-input-custom-field
+              [customField]="item"
+              (valueChangeCustom)="valueChangeCustom($event)"
+            ></codx-input-custom-field>
+          </div>
+        </ng-container>
+      </ng-container>
     </ng-container>
   </ng-container>
 </ng-template>
 
-
 <!-- Opportunity general  -->
 <ng-template #tabOpporGeneralInfo>
-
   <div class="form-group">
     <codx-label
       [formModel]="dialog.formModel"

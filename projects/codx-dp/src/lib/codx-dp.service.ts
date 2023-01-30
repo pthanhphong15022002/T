@@ -162,4 +162,13 @@ export class CodxDpService {
       data
     );
   }
+
+  createListInstancesStepsByProcess(processID) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'CreateListInstancesStepsByProcess',
+      processID
+    );
+  }
 }
