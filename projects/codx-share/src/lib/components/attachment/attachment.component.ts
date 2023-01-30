@@ -725,6 +725,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         this.fileUploadList[i].avatar = null;
         this.fileUploadList[i].data = '';
         this.fileUploadList[i].createdOn = new Date();
+        this.fileUploadList[i].source = null;
         if (total > 1)
           this.fileUploadList[i] = await this.addFileLargeLong(
             this.fileUploadList[i],
@@ -739,6 +740,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       }
       let countFile = this.fileUploadList.length;
       if (total > 1) {
+        
         return this.fileService
           .addMultiFileObservable(
             this.fileUploadList,
