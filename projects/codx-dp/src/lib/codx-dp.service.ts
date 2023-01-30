@@ -163,6 +163,10 @@ export class CodxDpService {
     );
   }
 
+  getlistCbxProccess(){
+    return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetListCbxProcessesAsync');
+  }
+
   getStepsByProcessID(recID){
     return this.api.exec<any>(
       'DP',
