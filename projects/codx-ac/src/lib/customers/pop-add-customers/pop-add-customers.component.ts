@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
-import { CacheService, ApiHttpService, CallFuncService, NotificationsService, UIComponent, DialogData, DialogRef, FormModel, CodxFormComponent, DialogModel } from 'codx-core';
+import { CacheService, ApiHttpService, CallFuncService, NotificationsService, UIComponent, DialogData, DialogRef, FormModel, CodxFormComponent, DialogModel, RequestOption } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { Address } from '../../models/Address.model';
 import { BankAccount } from '../../models/BankAccount.model';
@@ -24,6 +24,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   objectBankaccount:Array<BankAccount> = [];
   objectContact:Array<Contact> = [];
   objectAddress:Array<Address> = [];
+  objectContactAddress:Array<Contact> = [];
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     { icon: 'icon-settings icon-20 me-3', text: 'Thiết lập', name: 'Establish' },
@@ -58,6 +59,12 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   setTitle(e: any) {
     this.title = this.headerText;
     this.dt.detectChanges();
+  }
+  valueChange(e:any,type:any){
+    if (type == 'establishYear') {
+      e.data = e.data.fromDate;
+    }
+    this.customers[e.field] = e.data;
   }
   openPopupBank(){
     var obj = {
@@ -126,6 +133,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   openPopupAddress(){
     var obj = {
       headerText: 'Thêm địa chỉ',
+      dataContact:this.objectContact
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -147,10 +155,18 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         );
         dialogaddress.closed.subscribe((x) => {
           var dataaddress = JSON.parse(localStorage.getItem('dataaddress'));
+          var datacontactaddress = JSON.parse(localStorage.getItem('datacontactaddress'));
           if (dataaddress != null) {      
             this.objectAddress.push(dataaddress);
           }
+          if (datacontactaddress != null) {   
+            datacontactaddress.forEach(element => {
+              element.reference = dataaddress.adressName;
+              this.objectContactAddress.push(element);
+            });
+          }
           window.localStorage.removeItem("dataaddress");
+          window.localStorage.removeItem("datacontactaddress");
         });
       }
     });
@@ -166,6 +182,11 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     }
     if (type == 'dataaddress') {
       let index = this.objectAddress.findIndex(x => x.adressType == data.adressType && x.adressName == data.adressName);
+      this.objectContactAddress.forEach((element,index) => {
+        if (element.reference == data.adressName) {
+          this.objectContactAddress.splice(index, 1);
+        }
+      });
       this.objectAddress.splice(index, 1);
     }
   }
@@ -242,7 +263,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       let index = this.objectAddress.findIndex(x => x.adressType == data.adressType && x.adressName == data.adressName);  
       var obs = {
         headerText: 'Chỉnh sửa địa chỉ',
-        data : data
+        data : data,
+        datacontactaddress:this.objectContactAddress
       };
       let opt = new DialogModel();
       let dataModel = new FormModel();
@@ -264,13 +286,40 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
           );
           dialogaddress.closed.subscribe((x) => {
             var dataaddress = JSON.parse(localStorage.getItem('dataaddress'));
-            if (dataaddress != null) {      
+            var datacontactaddress = JSON.parse(localStorage.getItem('datacontactaddress'));
+            if (dataaddress != null) {     
               this.objectAddress[index] = dataaddress;
             }
+            if (datacontactaddress != null) {   
+              datacontactaddress.forEach(element => {
+                if (element.reference == null) {
+                  element.reference = dataaddress.adressName;
+                  this.objectContactAddress.push(element);
+                }else{
+                  let index = this.objectContactAddress.findIndex(x => x.contactName == element.contactName && x.reference == element.reference);  
+                  this.objectContactAddress[index] = element;
+                }    
+              });
+            }
             window.localStorage.removeItem("dataaddress");
+            window.localStorage.removeItem("datacontactaddress");
           });
         }
       });
     }
+  }
+  onSave(){
+    this.dialog.dataService
+      .save((opt: RequestOption) => {
+        opt.methodName = 'AddAsync';
+        opt.className = 'CustomersBusiness';
+        opt.assemblyName = 'AR';
+        opt.service = 'AR';
+        opt.data = [this.customers,this.objectBankaccount,this.objectContact,this.objectAddress,this.objectContactAddress];
+        return true;
+      })
+      .subscribe((res) => {
+        
+      });
   }
 }
