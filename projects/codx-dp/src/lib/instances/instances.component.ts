@@ -122,7 +122,7 @@ export class InstancesComponent
       processID: this.process?.recID ? this.process?.recID : '',
     };
     if (this.process)
-      this.codxDpService.getStep(this.process?.recID).subscribe((dt) => {
+      this.codxDpService.createListInstancesStepsByProcess(this.process?.recID).subscribe((dt) => {
         if (dt && dt?.length > 0) this.listSteps = dt;
       });
     //kanban
