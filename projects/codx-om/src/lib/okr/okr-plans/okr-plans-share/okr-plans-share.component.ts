@@ -60,7 +60,6 @@ export class OkrPlanShareComponent implements OnInit , AfterViewInit{
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    debugger;
     this.dialog = dialog;
     if(dt?.data[0]) this.gridView = dt?.data[0];
     if(dt?.data[1]) this.formModel = dt?.data[1];
@@ -84,7 +83,6 @@ export class OkrPlanShareComponent implements OnInit , AfterViewInit{
 
   changeInput(value:any ,type:any)
   {
-    debugger;
     if(!value?.data) return;
     if(type=='from') this.data.from = value?.data; 
     else this.data.to = value?.data

@@ -5,7 +5,7 @@ import { CRUDService } from 'codx-core';
 @Component({
   selector: 'codx-instance-detail',
   templateUrl: './instance-detail.component.html',
-  styleUrls: ['./instance-detail.component.css'],
+  styleUrls: ['./instance-detail.component.scss'],
 })
 export class InstanceDetailComponent implements OnInit {
   @Input() formModel: any;
@@ -15,7 +15,7 @@ export class InstanceDetailComponent implements OnInit {
 
   dataSelect: any;
   id: any;
-
+  totalInSteps: any;
   //progressbar
   labelStyle = { color: '#FFFFFF' };
   showProgressValue = true;
@@ -86,6 +86,7 @@ export class InstanceDetailComponent implements OnInit {
     this.dpSv.GetInstanceByRecID(recID).subscribe((res) => {
       if (res) {
         this.dataSelect = res;
+
       }
     });
   }
