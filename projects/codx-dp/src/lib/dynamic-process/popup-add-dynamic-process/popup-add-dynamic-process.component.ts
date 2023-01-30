@@ -152,6 +152,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   stepListAdd: DP_Steps[] = [];
   stepListDelete = [];
 
+  grvTaskGroupsForm: FormModel;
+  grvTaskGroups: any;
+  
   stepName = '';
 
   popupJob: DialogRef;
@@ -313,6 +316,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.action != 'add') {
       this.getStepByProcessID();
     }
+
+    this.cache.gridView('grvDPStepsTaskGroups').subscribe((res) => {
+      this.cache
+        .gridViewSetup('DPStepsTaskGroups', 'grvDPStepsTaskGroups')
+        .subscribe((res) => {
+          this.grvTaskGroups = res;
+          this.grvTaskGroupsForm = {
+            entityName: 'DP_Steps_TaskGroups',
+            formName: 'DPStepsTaskGroups',
+            gridViewName: 'grvDPStepsTaskGroups',
+          }
+        });
+    });
+
   }
 
   //#region setup formModels and formGroup
@@ -1096,7 +1113,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.taskGroup = data;
     } else {
       this.userGroupJob = [];
-      this.taskGroup['createdOn'] = new Date();
+      // this.taskGroup['createdOn'] = new Date();
       this.taskGroup['createdBy'] = this.userId;
       this.taskGroup['stepID'] = this.step['recID'];
       this.taskGroup['task'] = [];
@@ -1110,6 +1127,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
   }
   savePopupGroupJob() {
+    // let reqiure = [];
+    // if (this.taskGroup?.taskGroupName || this.taskGroup?.taskGroupName.trim()) {
+    //   reqiure.push(this.grvTaskGroups['TaskGroupName']?.headerText ?? 'TaskGroupName');
+    // }
+    // if(reqiure.length > 0 ){
+    //   this.notiService.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + reqiure.join(', ') + '"'
+    //   );
+    //   return;
+    // }
     this.popupGroupJob.close();
     if (!this.taskGroup['recID']) {
       this.taskGroup['recID'] = Util.uid();

@@ -1107,6 +1107,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
 
   async uploadFileAsync(uploadFile: any,appName: any, chunkSizeInKB: any) {
+    lvFileClientAPI.setUrl(environment.urlUpload);
     var retUpload = await this.registerFile(appName,uploadFile,chunkSizeInKB);
     if(retUpload == "401") {
       await this.dmSV.getToken();
@@ -1143,6 +1144,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   
   async registerFile(appName: any, uploadFile: any , ChunkSizeInKB: any)
   {
+    lvFileClientAPI.setUrl(environment.urlUpload); //"http://192.168.18.36:8011");
     return await lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
       Data: {
         FileName: uploadFile?.name,
