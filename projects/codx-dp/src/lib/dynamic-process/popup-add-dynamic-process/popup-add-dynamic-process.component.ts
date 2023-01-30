@@ -105,7 +105,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   popupAddReason: DialogRef;
   reasonList: DP_Steps_Reasons[] = [];
   reason: DP_Steps_Reasons = new DP_Steps_Reasons();
-  listCbxProccess:any;
+  listCbxProccess: any;
 
   titleCheckBoxSat: string = ''; // title checkbox saturday form duration
   titleCheckBoxSun: string = ''; // title checkbox sunday form duration
@@ -138,8 +138,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly formLeaTimeCtrl: string = 'LeadtimeControl'; // form leadtime control
   readonly formEdit: string = 'edit'; // form edit
   readonly formAdd: string = 'add'; // form add
-  readonly fieldCbxProccess =  { text: 'processName', value: 'recID' };
-  
+  readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
+
   //stage-nvthuan
   user: any;
   userId: string;
@@ -160,7 +160,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   grvTaskGroupsForm: FormModel;
   grvTaskGroups: any;
-  
+
   stepName = '';
 
   popupJob: DialogRef;
@@ -279,6 +279,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getValListDayoff();
     this.autoHandleStepReason();
     this.loadCbxProccess();
+    this.defaultCbxProccess();
   }
 
   ngAfterViewInit(): void {
@@ -333,10 +334,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             entityName: 'DP_Steps_TaskGroups',
             formName: 'DPStepsTaskGroups',
             gridViewName: 'grvDPStepsTaskGroups',
-          }
+          };
         });
     });
-
   }
 
   //#region setup formModels and formGroup
@@ -1238,7 +1238,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (index >= 0) {
           taskList.splice(index, 1);
         }
-        this.setIndex(taskList,'indexNo'); 
+        this.setIndex(taskList, 'indexNo');
       }
     });
   }
@@ -1542,8 +1542,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   addReason() {
-
-    if(this.reasonAction === this.formAdd) {
+    if (this.reasonAction === this.formAdd) {
       this.reason = this.handleReason(
         this.reason,
         this.dataValueview === this.viewStepReasonSuccess ? '1' : '2',
@@ -1552,11 +1551,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       );
       this.reason.reasonName = this.reasonName;
       this.step.reasons.push(this.reason);
-    }
-    else if ( this.reasonAction === this.formEdit) {
+    } else if (this.reasonAction === this.formEdit) {
       this.reason.reasonName = this.reasonName;
     }
-    
+
     this.changeDetectorRef.detectChanges();
     this.popupAddReason.close();
   }
@@ -1567,7 +1565,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //       viewReason === this.viewStepReasonSuccess
   //         ? 'Thêm lý do thành công'
   //         : 'Thêm lý do thất bại';
-     
+
   //   }
   //   this.dataValueview = viewReason;
   //   this.popupAddReason = this.callfc.openForm(
@@ -1580,18 +1578,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   changeValueReaName($event) {
     if ($event) {
-        this.reasonName = $event.data;
+      this.reasonName = $event.data;
     }
   }
 
   clickMFReason(e, reason, viewStepReason) {
-
     switch (e.functionID) {
       case 'SYS02':
         this.deleteReason(reason);
         break;
       case 'SYS03':
-        this.openPopupReason(viewStepReason,reason,e.data);
+        this.openPopupReason(viewStepReason, reason, e.data);
         break;
       case 'SYS04':
         //this.openPopupReason(viewStepReason,data,e.data);
@@ -1600,16 +1597,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   // method for edit reason or copy reason
-  openPopupReason(viewReason,reason, clickMore){
+  openPopupReason(viewReason, reason, clickMore) {
     this.headerText =
-        viewReason === this.viewStepReasonSuccess
-          ? clickMore?.customName ?? 'Thêm'+' lý do thành công'
-          : clickMore?.customName ?? 'Thêm'+' lý do thất bại'
-    if(clickMore?.functionID === 'SYS03' || clickMore?.functionID === 'SYS04') {
+      viewReason === this.viewStepReasonSuccess
+        ? clickMore?.customName ?? 'Thêm' + ' lý do thành công'
+        : clickMore?.customName ?? 'Thêm' + ' lý do thất bại';
+    if (
+      clickMore?.functionID === 'SYS03' ||
+      clickMore?.functionID === 'SYS04'
+    ) {
       this.reasonAction = this.formEdit;
-     this.reason = reason;
-    }
-    else {
+      this.reason = reason;
+    } else {
       this.reason = new DP_Steps_Reasons();
       this.reasonAction = this.formAdd;
     }
@@ -1619,38 +1618,34 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       500,
       280
     );
-    
+
     this.changeDetectorRef.detectChanges();
   }
 
   deleteReason(data) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
-        this.step.reasons = this.step.reasons.filter(x=>x.recID !== data.recID);
+        this.step.reasons = this.step.reasons.filter(
+          (x) => x.recID !== data.recID
+        );
         this.changeDetectorRef.detectChanges();
       }
     });
   }
 
-  loadCbxProccess(){
-
-    this.cache.valueList('CRM009').subscribe((res) => {
+  loadCbxProccess() {
+    this.dpService.getlistCbxProccess().subscribe((res) => {
       if (res) {
-        console.log(res);
-        this.dpService.getlistCbxProccess().subscribe((res) => { 
-      
-
-      
-          this.listCbxProccess = res[0]; console.table(this.listCbxProccess)});
+        this.listCbxProccess = res[0];
       }
     });
-  
   }
 
-
-  cbxChange($event){
-
+  defaultCbxProccess() {
+    this.cache.valueList('').subscribe((res) => {});
   }
+
+  cbxChange($event) {}
 
   //#endregion
 }
