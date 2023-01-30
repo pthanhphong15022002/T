@@ -1,5 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { CacheService } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { DP_Steps_Fields } from '../../../models/models';
 
 @Component({
@@ -8,8 +17,14 @@ import { DP_Steps_Fields } from '../../../models/models';
   styleUrls: ['./input-custom-field.component.css'],
 })
 export class InputCustomFieldComponent implements OnInit {
-  @Input() customField: DP_Steps_Fields = new DP_Steps_Fields();
+  @Input() customField: any;
   @Output() valueChangeCustom = new EventEmitter<any>();
+  //file - đặc thù cần hỏi lại sau
+  @Input() objectId: any = '';
+  @Input() objectType: any = '';
+  @Input() funID: any = '';
+  @Input() formModel: any = null;
+  @ViewChild('attachment') attachment: AttachmentComponent;
   errorMessage = '';
   showErrMess = false;
   //data tesst
@@ -19,21 +34,77 @@ export class InputCustomFieldComponent implements OnInit {
   readonly = false;
   min = 0;
   max = 9999999;
-  constructor(private cache: CacheService) {
+  formatDate = 'd';
+  allowMultiFile = '1';
+  isPopupUserCbb = false;
+  messCodeEmail = 'SYS037'; // Email ko hợp lê
+
+  constructor(
+    private cache: CacheService,
+    private changeDef: ChangeDetectorRef
+  ) {
     this.cache.message('SYS028').subscribe((res) => {
-      this.errorMessage = res?.customName;
+      if (res) this.errorMessage = res.customName || res.defaultName;
     });
   }
 
   ngOnInit(): void {
-    this.customField.note = 'Nhập số lượng';
-    this.customField.fieldName = 'số lượng';
-    this.customField.title = 'Số lượng nhân viên làm việc';
-    this.customField.rank = 10;
-    this.customField.rankIcon = 'fas fa-ambulance';
+    //data test
+    // this.customField.isRequired = true;
+    // this.customField.note = 'Nhập số lượng';
+    // this.customField.fieldName = 'số lượng';
+    // this.customField.title = 'Số lượng nhân viên làm việc';
+    // this.customField.rank = 10;
+    // this.customField.rankIcon = 'fas fa-ambulance';
+    // this.customField.multiselect = true;
+    // this.customField.dataType = 'T';
+    // this.customField.dataFormat = 'E';
+
+    this.allowMultiFile = this.customField.multiselect ? '1' : '0';
+    if (this.customField.dataFormat == 'D') this.formatDate = 'd';
+    if (this.customField.dataFormat == 'DT') this.formatDate = 'F';
   }
 
-  valueChange(e, data) {
-    this.valueChangeCustom.emit({ e: e, data: data });
+  valueChange(e) {
+    if (this.customField.isRequired) {
+      if (!e || !e.data || e.data.toString().trim() == '') {
+        this.showErrMess = true;
+        return;
+      } else this.showErrMess = false;
+    }
+    if (
+      this.customField.dataType == 'T' &&
+      this.customField.dataFormat == 'E'
+    ) {
+      let email = e.data;
+      var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      if (!email.match(mailformat)) {
+        this.cache.message(this.messCodeEmail).subscribe((res) => {
+          if (res) {
+            this.errorMessage = res.customName || res.defaultName;
+            this.showErrMess = true;
+          }
+          this.changeDef.detectChanges();
+          return;
+        });
+      } else this.showErrMess = false;
+    }
+    this.valueChangeCustom.emit({ e: e, data: this.customField });
   }
+  //combox user
+  openUserPopup() {
+    this.isPopupUserCbb = true;
+  }
+
+  valueCbxUserChange(e) {
+    if (this.isPopupUserCbb) this.isPopupUserCbb = false;
+    this.valueChangeCustom.emit({ e: e, data: this.customField });
+  }
+
+  addFile() {
+    this.attachment.uploadFile();
+    debugger;
+  }
+  fileAdded(e) {}
+  getfileCount(e) {}
 }

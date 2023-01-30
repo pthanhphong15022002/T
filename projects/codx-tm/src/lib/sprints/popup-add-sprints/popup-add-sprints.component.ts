@@ -314,12 +314,8 @@ export class PopupAddSprintsComponent implements OnInit {
     console.log(e);
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true;
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if (
-      this.action != 'edit' ||
-      (this.action == 'edit' && !this.showLabelAttachment)
-    )
-      this.showLabelAttachment = this.isHaveFile;
+    this.showLabelAttachment = this.isHaveFile;
   }
 }

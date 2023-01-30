@@ -349,7 +349,7 @@ export class DynamicProcessComponent
       data: data,
       nameAppyFor: this.getNameAppyFor(data.applyFor),
     };
-
+    
     let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
     dialogModel.zIndex = 999;
