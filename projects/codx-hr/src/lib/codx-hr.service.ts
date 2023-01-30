@@ -82,64 +82,6 @@ export class CodxHrService {
     // );
   }
 
-  getFormGroup(formName, gridView): Promise<FormGroup> {
-    return new Promise<FormGroup>((resolve, reject) => {
-      this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
-        if (gv) {
-          var arrgv = Object.values(gv) as any[];
-          const group: any = {};
-          arrgv.forEach((element) => {
-            var keytmp = Util.camelize(element.fieldName);
-            var value = null;
-            var type = element.dataType.toLowerCase();
-            if (type === 'bool') value = false;
-            if (type === 'datetime') value = new Date();
-            if (type === 'int' || type === 'decimal') value = 0;
-            group[keytmp] = element.isRequire
-              ? new FormControl(value, Validators.required)
-              : new FormControl(value);
-          });
-          group['updateColumn'] = new FormControl('');
-          var formGroup = new FormGroup(group);
-          resolve(formGroup);
-        }
-      });
-      // this.cache
-      //   .gridViewSetup(formName, gridView)
-      //   .subscribe((grvSetup: any) => {
-      //     let gv = Util.camelizekeyObj(grvSetup);
-      //     var model = {};
-      //     model['write'] = [];
-      //     model['delete'] = [];
-      //     model['assign'] = [];
-      //     model['share'] = [];
-      //     if (gv) {
-      //       const user = this.auth.get();
-      //       for (const key in gv) {
-      //         const element = gv[key];
-      //         element.fieldName = Util.camelize(element.fieldName);
-      //         model[element.fieldName] = [];
-      //         let modelValidator = [];
-      //         if (element.isRequire) {
-      //           modelValidator.push(Validators.required);
-      //         }
-      //         if (element.fieldName == 'email') {
-      //           modelValidator.push(Validators.email);
-      //         }
-      //         if (modelValidator.length > 0) {
-      //           model[element.fieldName].push(modelValidator);
-      //         }
-      //       }
-      //       model['write'].push(false);
-      //       model['delete'].push(false);
-      //       model['assign'].push(false);
-      //       model['share'].push(false);
-      //     }
-
-      //   });
-    });
-  }
-
   loadPosInfo(positionID: string): Observable<any> {
     return this.api
       .call(
@@ -1689,7 +1631,65 @@ export class CodxHrService {
 
   //#endregion
 
-  //#region
+  //#region Common
+  getFormGroup(formName, gridView): Promise<FormGroup> {
+    return new Promise<FormGroup>((resolve, reject) => {
+      this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
+        if (gv) {
+          var arrgv = Object.values(gv) as any[];
+          const group: any = {};
+          arrgv.forEach((element) => {
+            var keytmp = Util.camelize(element.fieldName);
+            var value = null;
+            var type = element.dataType.toLowerCase();
+            if (type === 'bool') value = false;
+            if (type === 'datetime') value = new Date();
+            if (type === 'int' || type === 'decimal') value = 0;
+            group[keytmp] = element.isRequire
+              ? new FormControl(value, Validators.required)
+              : new FormControl(value);
+          });
+          group['updateColumn'] = new FormControl('');
+          var formGroup = new FormGroup(group);
+          resolve(formGroup);
+        }
+      });
+      // this.cache
+      //   .gridViewSetup(formName, gridView)
+      //   .subscribe((grvSetup: any) => {
+      //     let gv = Util.camelizekeyObj(grvSetup);
+      //     var model = {};
+      //     model['write'] = [];
+      //     model['delete'] = [];
+      //     model['assign'] = [];
+      //     model['share'] = [];
+      //     if (gv) {
+      //       const user = this.auth.get();
+      //       for (const key in gv) {
+      //         const element = gv[key];
+      //         element.fieldName = Util.camelize(element.fieldName);
+      //         model[element.fieldName] = [];
+      //         let modelValidator = [];
+      //         if (element.isRequire) {
+      //           modelValidator.push(Validators.required);
+      //         }
+      //         if (element.fieldName == 'email') {
+      //           modelValidator.push(Validators.email);
+      //         }
+      //         if (modelValidator.length > 0) {
+      //           model[element.fieldName].push(modelValidator);
+      //         }
+      //       }
+      //       model['write'].push(false);
+      //       model['delete'].push(false);
+      //       model['assign'].push(false);
+      //       model['share'].push(false);
+      //     }
+
+      //   });
+    });
+  }
+
   getDataDefault(funcID: string, entityName: string, idField: string) {
     return this.api.execSv<any>(
       'HR',
@@ -1772,6 +1772,30 @@ export class CodxHrService {
       });
   }
 
+  notifyInvalidFromTo(
+    FromDateField: string,
+    ToDateField: string,
+    formModel: FormModel
+  ) {
+    let gridViewSetup;
+    this.cache
+      .gridViewSetup(formModel.formName, formModel.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          gridViewSetup = res;
+          let text1 = gridViewSetup[FromDateField]?.headerText ?? FromDateField;
+          let text2 = gridViewSetup[ToDateField]?.headerText ?? ToDateField;
+
+          this.notiService.notifyCode(
+            'HR003',
+            0,
+            '"' + text2 + '"',
+            '"' + text1 + '"'
+          );
+        }
+      });
+  }
+
   loadDataCbx(service: string, dataRequest: DataRequest = null) {
     return this.api.execSv<any>(
       service,
@@ -1802,4 +1826,17 @@ export class CodxHrService {
       null
     );
   }
+
+  //#region HR_Positions
+  getPositionByID(positionID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'PositionsBusiness',
+      'GetAsync',
+      positionID
+    );
+  }
+
+  //#endregion
 }

@@ -1,0 +1,133 @@
+<codx-form #form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialog"
+  [formModel]="formModel"></codx-form>
+
+
+
+  <ng-template #body>
+    <div class="title-step pb-18">
+      <span>{{instance.currentStep}}</span>
+    </div>
+    <div class="content-step">
+      <div class="form-group">
+        <codx-label
+          fiedName=""
+          [formModel]=""
+          default="Giai đoạn chuyển đến"
+        >
+        </codx-label>
+        <codx-input
+          field=""
+          [formModel]=""
+          [Group]=""
+          type="valuelist"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+
+      <div class="form-group">
+        <div>
+          <codx-label fiedName="EndDate" [formModel]="form.formModel" default="Ngày hoành thành thực tế">
+          </codx-label>
+        </div>
+
+        <div class="col-12">
+          <div class="row">
+            <div class="col-6">
+              <div class="position-relative">
+                <codx-input
+                  field="DurationDay"
+                  [formModel]="form.formModel"
+                  [Group]=""
+                  type="text"
+                  [height]="'100'"
+                  [min]="0"
+                  [placeholder]="0"
+                  [crrValue]="instanceStep?.durationDay"
+                  (valueChange)="valueChange($event)"
+                ></codx-input>
+                <div
+                  class="position-absolute text-muted"
+                  style="top: 7px; right: 7px"
+                >
+                  <codx-label
+                    fiedName="StepName"
+                    [formModel]="form.formModel"
+                    default="Ngày"
+                  ></codx-label>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="position-relative">
+                <codx-input
+                  field="durationHour"
+                  [formModel]="form.formModel"
+                  [Group]=""
+                  type="text"
+                  [height]="'100'"
+                  [min]="0"
+                  [placeholder]="'00.00'"
+                  [crrValue]="instanceStep?.durationHour"
+                  (valueChange)="valueChange($event)"
+                ></codx-input>
+                <div
+                  class="position-absolute text-gray-400"
+                  style="top: 7px; right: 7px"
+                >
+                  <codx-label
+                    fiedName="StepName"
+                    [formModel]="form.formModel"
+                    default="Giờ"
+                  ></codx-label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div>
+          <codx-label fiedName="Memo" [formModel]="form.formModel" default="Ghi chú">
+          </codx-label>
+        </div>
+        <codx-input
+        [formModel]="form.formModel"
+        field="memo"
+        type="textarea"
+        [placeholder]=""
+        [crrValue]="instance.comments"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+      </div>
+
+      <!-- Tên nhóm công việc [TaskGroups] -->
+      <div class="form-group">
+        <div>
+          <codx-label fiedName="taskGroups" [formModel]="form.formModel" default="Công việc chưa hoàn tất">
+          </codx-label>
+        </div>
+      </div>
+
+       <!-- Tên công việc [Tasks] -->
+       <div class="form-group">
+        <div>
+          <codx-label fiedName="taskGroups" [formModel]="form.formModel" default="Công việc chưa hoàn tất">
+          </codx-label>
+        </div>
+      </div>
+
+    </div>
+
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+        <codx-label name="Save" [formModel]="form.formModel" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </ng-template>
+

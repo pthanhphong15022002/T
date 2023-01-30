@@ -5,7 +5,7 @@ import { CRUDService } from 'codx-core';
 @Component({
   selector: 'codx-instance-detail',
   templateUrl: './instance-detail.component.html',
-  styleUrls: ['./instance-detail.component.css'],
+  styleUrls: ['./instance-detail.component.scss'],
 })
 export class InstanceDetailComponent implements OnInit {
   @Input() formModel: any;
@@ -37,8 +37,25 @@ export class InstanceDetailComponent implements OnInit {
   {
     name: 'Xem theo trường nhập liệu',
     id: 'field'
+  }];
+  lstTest = [{
+    stepNo: 1,
+    name: 'test1'
+  },
+  {
+    stepNo: 2,
+    name: 'test2'
+  },
+  {
+    stepNo: 3,
+    name: 'test3'
+  },
+  {
+    stepNo: 4,
+    name: 'test4'
   }]
 
+  currentStep = 0;
   constructor(private dpSv: CodxDpService) {
   }
 
@@ -77,6 +94,15 @@ export class InstanceDetailComponent implements OnInit {
     this.idCbx = e;
   }
 
+  clickMF(e, data){
+    console.log(e);
+    switch (e.functionID) {
+      case 'DP09':
+        this.continues(data);
+        break;
+    }
+  }
+
   changeDataMF(e, data){
     if(e){
       e.forEach(element => {
@@ -87,5 +113,20 @@ export class InstanceDetailComponent implements OnInit {
         element.disabled = true;
       });
     }
+  }
+
+
+
+  click(i){
+    const element = document.getElementById('step-click');
+
+  }
+
+  continues(data){
+    if(this.currentStep > this.lstTest.length - 2) return;
+  }
+
+  setHTMLCssStages(oldStage, newStage){
+
   }
 }

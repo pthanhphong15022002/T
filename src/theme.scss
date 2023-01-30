@@ -217,6 +217,7 @@
         --bg-input: #29293e;
         --scrollbar-thumb: #333358;
 
+
         --gray-100: #1b1b29;
         --gray-150: #202031;
         --gray-200: #2B2B40;
@@ -231,6 +232,7 @@
         @import "src/theme-dark.scss";
 
         color: var(--text-body);
+        --title-color: var(--primary);
     }
 
 

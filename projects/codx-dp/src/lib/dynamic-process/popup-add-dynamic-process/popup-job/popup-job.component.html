@@ -109,6 +109,7 @@
           field="taskName"
           [formModel]="dialog?.formModel"
           type="text"
+          [crrValue]="stepsTasks?.taskName"
           (valueChange)="valueChangeText($event)"
         >
         </codx-input>
@@ -118,16 +119,17 @@
       <div *ngIf="stepType === 'P'" class="w-100 ms-4" style="flex-basis: 100%">
         <div>
           <codx-label
-            fiedName="taskType"
+            fiedName="callType"
             [formModel]="dialog?.formModel"
             default="Loại cuộc gọi"
           >
           </codx-label>
         </div>
         <codx-input
-          field="taskType"
+          field="callType"
           type="valuelist"
           refValue="DP023"
+          [crrValue]="stepsTasks?.callType"
           (valueChange)="valueChangeCombobox($event)"
         >
         </codx-input>
@@ -148,7 +150,7 @@
           <codx-input
             type="switch"
             class="test-check"
-            [checked]=""
+            [checked]="stepsTasks?.isOnline"
             field="isOnline"
             (valueChange)="valueChangeAlert($event)"
           >
@@ -220,6 +222,7 @@
               <codx-input
                 field="durationDay"
                 [formModel]="dialog?.formModel"
+                [crrValue]="stepsTasks?.durationDay"
                 type="text"
                 (valueChange)="valueChangeText($event)"
               >
@@ -231,6 +234,7 @@
                 field="durationHour"
                 [formModel]="dialog?.formModel"
                 type="text"
+                [crrValue]="stepsTasks?.durationHour"
                 (valueChange)="valueChangeText($event)"
               >
               </codx-input>
@@ -249,6 +253,7 @@
             <codx-input
               field="reminders"
               [formModel]="dialog?.formModel"
+              [crrValue]="stepsTasks?.reminders"
               refValue="DP024"
               type="valuelist"
               (valueChange)="valueChangeText($event)"
@@ -287,6 +292,7 @@
       </div>
       <codx-input
         field="dependRule"
+        [crrValue]="stepsTasks?.dependRule"
         refValue="DP024"
         type="valuelist"
         (valueChange)="valueChangeCombobox($event)"
@@ -363,6 +369,7 @@
       </div>
       <codx-input
         field="assignControl"
+        [crrValue]="stepsTasks?.assignControl"
         refValue="DP025"
         type="valuelist"
         (valueChange)="valueChangeCombobox($event)"
@@ -381,6 +388,7 @@
       <codx-input
         field="memo"
         [formModel]="dialog?.formModel"
+        [crrValue]="stepsTasks?.memo"
         [Group]=""
         type="text"
         [height]="'100'"
@@ -393,8 +401,8 @@
       <codx-input
         type="switch"
         class="test-check"
-        [checked]=""
-        field="isAlert"
+        [checked]="stepsTasks?.createTask"
+        field="createTask"
         (valueChange)="valueChangeAlert($event)"
       >
       </codx-input>
@@ -412,7 +420,7 @@
       <codx-input
         type="switch"
         class="test-check"
-        [checked]=""
+        [checked]="stepsTasks?.requireCompleted"
         field="createTask"
         (valueChange)="valueChangeAlert($event)"
       >

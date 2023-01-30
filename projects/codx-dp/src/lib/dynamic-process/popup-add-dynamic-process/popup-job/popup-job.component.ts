@@ -33,6 +33,8 @@ export class PopupJobComponent implements OnInit {
   fields = { text: 'recID', value: 'taskGroupName' };
   tasksItem = '';
   stepID = '';
+  status = 'add';
+
 
   constructor(
     private cache: CacheService,
@@ -40,18 +42,24 @@ export class PopupJobComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.status = dt?.data[0];
     this.title = dt?.data[1]['text'];
     this.stepType = dt?.data[1]['id'];
     this.stepID = dt?.data[2];
     this.groupTackList = dt?.data[3];
     this.dialog = dialog;
+    if(this.status == 'add'){
+      this.stepsTasks = new DP_Steps_Tasks();
+      this.stepsTasks['taskType'] = this.stepType;
+      this.stepsTasks['stepID'] = this.stepID;
+    }else{
+      this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
+      this.tasksItem = this.groupTackList.find(group => group.recID == this.stepsTasks.taskGroupID)?.taskGroupName || '';
+      this.stepType = this.stepsTasks.taskType;
+    }
   }
   ngOnInit(): void {
-    this.stepsTasks = new DP_Steps_Tasks();
-    this.stepsTasks['taskType'] = this.stepType;
-    this.stepsTasks['stepID'] = this.stepID;
-    // this.stepsTasks['createdOn'] = this.groupTackList['createdOn'];
-    // this.stepsTasks['createdBy'] = this.groupTackList['createdBy'];
+   
   }
   valueChangeText(event) {
     this.stepsTasks[event?.field] = event?.data;
@@ -91,7 +99,7 @@ export class PopupJobComponent implements OnInit {
   }
 
   saveData() {
-    this.dialog.close(this.stepsTasks);
+    this.dialog.close({data:this.stepsTasks, status: this.status});
 
     // let headerText = await this.checkValidate();
     // if (headerText.length > 0) {

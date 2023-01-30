@@ -417,3 +417,14 @@ codx-views {
     margin: auto;
   }
 }
+
+.show-main {
+  display: block;
+  transition: display 12s;
+  padding-bottom: 10px;
+}
+
+.hidden-main {
+  display: none;
+  transition: display 12s;
+}

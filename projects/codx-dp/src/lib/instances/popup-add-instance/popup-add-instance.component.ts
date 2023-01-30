@@ -1,30 +1,45 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { CacheService, DialogData, DialogRef, NotificationsService, SidebarModel } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  CacheService,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  SidebarModel,
+} from 'codx-core';
 import { CodxDpService } from '../../codx-dp.service';
-import { DP_Instances } from '../../models/models';
+import { DP_Instances, DP_Instances_Steps } from '../../models/models';
 
 @Component({
   selector: 'lib-popup-add-instance',
   templateUrl: './popup-add-instance.component.html',
-  styleUrls: ['./popup-add-instance.component.css']
+  styleUrls: ['./popup-add-instance.component.css'],
 })
 export class PopupAddInstanceComponent implements OnInit {
-
   @ViewChild('tabGeneralInfo') tabGeneralInfo: TemplateRef<any>;
   @ViewChild('tabLocation') tabLocation: TemplateRef<any>;
   @ViewChild('tabInputInfo') tabInputInfo: TemplateRef<any>;
+  @ViewChild('tabOpporGeneralInfo') tabOpporGeneralInfo: TemplateRef<any>;
 
-  title = 'Tạo cơ hội';
+  title = 'Nhiệm vụ';
   titleAction = '';
 
   tabInfo: any[] = [];
   tabContent: any[] = [];
-  listInstances: DP_Instances[]=[];
+  listInstances: DP_Instances[] = [];
 
   gridViewSetup: any;
   instanceNo: string;
 
   instance: DP_Instances;
+
+  isApplyFor: string = ''; // this is instance opportunity general
 
   menuGeneralInfo = {
     icon: 'icon-info',
@@ -50,10 +65,8 @@ export class PopupAddInstanceComponent implements OnInit {
     subText: 'Input information',
   };
 
-
-
-
   dialog: DialogRef;
+  step = new DP_Instances_Steps() ;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -64,27 +77,32 @@ export class PopupAddInstanceComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-
+    this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
-    this.instanceNo = dt?.data[2]?.instanceNo ?? '';
-    console.log(this.instanceNo);
-   }
 
-  ngOnInit(): void {
+    this.step = dt?.data[2]
+    this.isApplyFor = dt?.data[1];
   }
 
-  ngAfterViewInit(): void {
-    this.tabInfo = [
-      this.menuGeneralInfo,
-      this.menuAddress,
-      this.menuInputInfo
-    ];
+  ngOnInit(): void {}
 
-    this.tabContent = [
-      this.tabGeneralInfo,
-      this.tabLocation,
-      this.tabInputInfo
-    ];
+  ngAfterViewInit(): void {
+
+    if(this.isApplyFor =='D') {
+      this.tabInfo = [this.menuGeneralInfo, this.menuAddress, this.menuInputInfo];
+      this.tabContent = [
+        this.tabOpporGeneralInfo,
+        this.tabLocation,
+        this.tabInputInfo,
+      ];
+    }
+    else {
+      this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo];
+      this.tabContent = [
+        this.tabGeneralInfo,
+        this.tabInputInfo,
+      ];
+    }
 
   }
 
@@ -98,8 +116,8 @@ export class PopupAddInstanceComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  valueChange($event){
-    if($event) {
+  valueChange($event) {
+    if ($event) {
       this.instance[$event.field] = $event.data;
     }
   }
@@ -144,4 +162,10 @@ export class PopupAddInstanceComponent implements OnInit {
   //   });
   // }
 
+
+  //anh thao Code ne bao
+  // em thay roi
+  valueChangeCustom(e){
+
+  }
 }

@@ -31,7 +31,9 @@ import { PopupAddInstanceComponent } from './instances/popup-add-instance/popup-
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { StagesDetailComponent } from './instances/stages-detail/stages-detail.component';
 import { FieldDetailComponent } from './instances/field-detail/field-detail.component';
-import { GanttChartComponent } from './instances/gantt-chart/gantt-chart.component';
+import { InputCustomFieldComponent } from './instances/popup-add-instance/input-custom-field/input-custom-field.component';
+import { PopupMoveStageComponent } from './instances/popup-move-stage/popup-move-stage.component';
+import { PopupMoveReasonComponent } from './instances/popup-move-reason/popup-move-reason.component';
 
 const routes: Routes = [
   {
@@ -71,7 +73,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddInstanceComponent,
     StagesDetailComponent,
     FieldDetailComponent,
-    GanttChartComponent,
+    InputCustomFieldComponent,
+    PopupMoveStageComponent,
+    PopupMoveReasonComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

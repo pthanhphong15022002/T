@@ -1,0 +1,83 @@
+<codx-form #form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialog"
+  [formModel]="formModel"></codx-form>
+
+
+
+  <ng-template #body>
+    <div class="title-step pb-18">
+      <span>{{instance.currentStep}}</span>
+    </div>
+
+    <div class="form-group">
+      <div>
+        <codx-label fiedName="Memo" [formModel]="form.formModel" default="Ghi chú">
+        </codx-label>
+      </div>
+      <codx-input
+      [formModel]="form.formModel"
+      field="memo"
+      type="textarea"
+      [placeholder]=""
+      [crrValue]="instance.comments"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+    </div>
+
+    <div class="row pb-3">
+      <div class="col-12">
+        <div style="font-weight: 500 !important;">
+          <codx-label
+          fiedName="ProcessID"
+          [formModel]="form.formModel"
+          default="Quy trình được chuyển đến"
+        >
+        </codx-label>
+        </div>
+
+      <codx-input
+        field="processID"
+        [formModel]="form.formModel"
+        [Group]=""
+        type="valuelist"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+
+      <div class="col-12">
+        <codx-label
+          class="fst-italic fs-8 text-danger"
+          default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh dấu thành công"
+        ></codx-label>
+      </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="pb-0" style="font-weight: 500 !important;">
+          <codx-label fiedName="" [formModel]="form.formModel" default="Chon lý do thành công"  >
+          </codx-label>
+      </div>
+      <div *ngFor="let item of listReason">
+        <div class="form-check py-2">
+          <input
+          class="form-check-input rounded-circle"
+          type="checkbox"
+          />
+          <span class="form-check-label">
+            {{item.reasonName}}
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+        <codx-label name="Save" [formModel]="form.formModel" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </ng-template>
