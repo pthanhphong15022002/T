@@ -162,4 +162,8 @@ export class CodxDpService {
       data
     );
   }
+
+  getlistCbxProccess(){
+    return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetListCbxProcessesAsync');
+  }
 }
