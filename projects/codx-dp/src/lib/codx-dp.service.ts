@@ -162,4 +162,13 @@ export class CodxDpService {
       data
     );
   }
+
+  getStepsByProcessID(recID){
+    return this.api.exec<any>(
+      'DP',
+      'StepsBusiness',
+      'GetStepsByProcessIDAsync',
+      recID
+    );
+  }
 }
