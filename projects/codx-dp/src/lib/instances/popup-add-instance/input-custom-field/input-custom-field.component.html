@@ -22,8 +22,19 @@
 </div>
 <ng-container *ngIf="customField.dataType == 'T'">
   <codx-input
+    *ngIf="customField.dataFormat !='L'"
     [field]="customField.fieldName"
     type="text"
+    [placeholder]="customField.note"
+    [crrValue]=""
+    (valueChange)="valueChange($event)"
+  >
+  </codx-input>
+  <codx-input
+    *ngIf="customField.dataFormat=='L'"
+    [field]="customField.fieldName"
+    type="textarea"
+    format="ed2"
     [placeholder]="customField.note"
     [crrValue]=""
     (valueChange)="valueChange($event)"
@@ -82,19 +93,19 @@
     </codx-input>
   </ng-container>
 
-    <ng-container *ngIf="isPopupUserCbb && customField.dataFormat == 'M'">
-      <codx-combobox-popup
-        [comboboxName]="'Users'"
-        [field]="'cbbUser'"
-        [multiple]="true"
-        [width]="700"
-        [height]="600"
-        [value]=""
-        [formModel]="formModel"
-        (clickSave)="valueCbxUserChange($event)"
-      >
-      </codx-combobox-popup>
-    </ng-container>
+  <ng-container *ngIf="isPopupUserCbb && customField.dataFormat == 'M'">
+    <codx-combobox-popup
+      [comboboxName]="'Users'"
+      [field]="'cbbUser'"
+      [multiple]="true"
+      [width]="700"
+      [height]="600"
+      [value]=""
+      [formModel]="formModel"
+      (clickSave)="valueCbxUserChange($event)"
+    >
+    </codx-combobox-popup>
+  </ng-container>
 </ng-container>
 
 <ng-container *ngIf="customField.dataType == 'R'">
