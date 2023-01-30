@@ -985,7 +985,7 @@ export class CodxDMService {
   }
 
   getViews(data: HistoryFile[]) {
-    if (data != null) {
+    if (data) {
       // var list = data.filter(x => x.rating == 0);
       return data.filter(
         (x) =>
