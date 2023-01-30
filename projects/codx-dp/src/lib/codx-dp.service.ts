@@ -162,4 +162,17 @@ export class CodxDpService {
       data
     );
   }
+
+  getlistCbxProccess(){
+    return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetListCbxProcessesAsync');
+  }
+
+  getStepsByProcessID(recID){
+    return this.api.exec<any>(
+      'DP',
+      'StepsBusiness',
+      'GetStepsByProcessIDAsync',
+      recID
+    );
+  }
 }
