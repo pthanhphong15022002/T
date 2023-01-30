@@ -99,7 +99,7 @@ export class PopupJobComponent implements OnInit {
   }
 
   saveData() {
-    this.dialog.close(this.stepsTasks);
+    this.dialog.close({data:this.stepsTasks, status: this.status});
 
     // let headerText = await this.checkValidate();
     // if (headerText.length > 0) {
