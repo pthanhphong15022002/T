@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'codx-stages-detail',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./stages-detail.component.scss']
 })
 export class StagesDetailComponent implements OnInit {
+
+  @Input() listData: any;
 
   constructor() { }
 
