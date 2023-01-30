@@ -522,7 +522,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   saveAndClose() {}
 
   //#region THÔNG TIN QUY TRÌNH - PHÚC LÀM
+  checkContinue(){
 
+  }
   //Avt
   addAvatar() {
     this.imageAvatar.referType = 'avt';
