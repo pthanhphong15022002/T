@@ -15,7 +15,7 @@ export class InstanceDetailComponent implements OnInit {
 
   dataSelect: any;
   id: any;
-
+  totalInSteps: any;
   //progressbar
   labelStyle = { color: '#FFFFFF' };
   showProgressValue = true;
@@ -86,6 +86,7 @@ export class InstanceDetailComponent implements OnInit {
     this.dpSv.GetInstanceByRecID(recID).subscribe((res) => {
       if (res) {
         this.dataSelect = res;
+
       }
     });
   }
