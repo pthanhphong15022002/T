@@ -1689,23 +1689,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   loadCbxProccess() {
-    //this.cache.valueList('DP019').subscribe((valueList) => {
-      // console.log(valueList);
-      // this.dpService.getlistCbxProccess().subscribe((res) => {
-      //   if (res) {
-      //     this.listCbxProccess = res[0];
-      //     console.table(this.listCbxProccess);
-      //   }
-      // });
-
-
-   // });
-
+    this.dpService.getlistCbxProccess().subscribe((res) => {
+      if (res) {
+        this.listCbxProccess = res[0];
+      }
+    });
   }
 
-  defaultCbxProccess() {
-
-  }
+  defaultCbxProccess() {}
 
   cbxChange($event) {}
 
