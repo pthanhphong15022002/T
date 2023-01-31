@@ -4,7 +4,7 @@ import {
   DP_Steps_Tasks,
 } from './../../models/models';
 import { CodxDpService } from './../../codx-dp.service';
-import { log } from 'console';
+import console, { log } from 'console';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -1690,15 +1690,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   loadCbxProccess() {
-    this.dpService.getlistCbxProccess().subscribe((res) => {
-      if (res) {
-        this.listCbxProccess = res[0];
-      }
-    });
+    //this.cache.valueList('DP019').subscribe((valueList) => {
+      // console.log(valueList);
+      // this.dpService.getlistCbxProccess().subscribe((res) => {
+      //   if (res) {
+      //     this.listCbxProccess = res[0];
+      //     console.table(this.listCbxProccess);
+      //   }
+      // });
+
+
+   // });
+
   }
 
   defaultCbxProccess() {
-    this.cache.valueList('').subscribe((res) => {});
+
   }
 
   cbxChange($event) {}
