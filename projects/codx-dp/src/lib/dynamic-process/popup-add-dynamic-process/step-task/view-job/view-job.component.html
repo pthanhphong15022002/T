@@ -70,7 +70,20 @@
     </div>
     <hr />
 
-    <div>vai trò thực hiện</div>
+    <div>
+      <!-- <codx-label
+        fiedName="roles"
+        [formModel]="dialog?.formModel"
+        default="Vai trò thực hiện"
+      ></codx-label> -->
+      <h4>Vai trò thực hiện</h4>
+      <ng-container
+        *ngIf="listOwner.length > 0"
+        [ngTemplateOutlet]="showUser"
+        [ngTemplateOutletContext]="{ users: listOwner }"
+      ></ng-container>
+    </div>
+
     <hr />
 
     <div>file</div>
@@ -82,8 +95,29 @@
     <hr />
 
     <div>
-      <h3>Công việc liên kết</h3>
+      <h4>Công việc liên kết</h4>
     </div>
   </div>
 </ng-template>
 <!-- End Form Group -->
+<ng-template #showUser let-data="users">
+  <div class="mt-3">
+    <ng-container *ngFor="let item of data; index as i">
+      <div class="user-mini-nav">
+        <span>
+          <codx-img
+            [width]="45"
+            class="me-2"
+            [objectId]="item?.recID"
+            objectType="AD_Users"
+            [objectName]="item?.objectName"
+          ></codx-img>
+        </span>
+        <div>
+          <h4 class="m-0">{{ item?.objectName }}</h4>
+          <span class="text-primary-400"> {{ item?.roleType }} </span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
