@@ -1,6 +1,6 @@
 import { DP_Steps, DP_Instances_Steps, DP_Instances } from './../../models/models';
 import { CodxDpService } from './../../codx-dp.service';
-import { Component, Input, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { CRUDService, ApiHttpService } from 'codx-core';
 
 @Component({
@@ -17,7 +17,7 @@ export class InstanceDetailComponent implements OnInit {
   dataSelect: any;
   id: any;
   totalInSteps: any;
-  listSteps: DP_Instances_Steps;
+  listSteps: DP_Instances_Steps[] = [];
   //progressbar
   labelStyle = { color: '#FFFFFF' };
   showProgressValue = true;
@@ -58,7 +58,7 @@ export class InstanceDetailComponent implements OnInit {
   }]
 
   currentStep = 1;
-  constructor(private dpSv: CodxDpService, private api: ApiHttpService) {
+  constructor(private dpSv: CodxDpService, private api: ApiHttpService, private changeDetec: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -142,13 +142,19 @@ export class InstanceDetailComponent implements OnInit {
 
 
 
-  click(i){
-    const element = document.getElementById('step-click');
+  click(indexNo, recID){
+    if(this.currentStep < indexNo) return;
+    this.dpSv.GetStepInstance(recID).subscribe(res=>{
+      if(res){
 
+      }
+    })
   }
 
   continues(data){
-    if(this.currentStep > this.lstTest.length - 2) return;
+    if(this.currentStep > this.listSteps.length) return;
+    this.currentStep++;
+    this.changeDetec.detectChanges();
   }
 
   setHTMLCssStages(oldStage, newStage){
