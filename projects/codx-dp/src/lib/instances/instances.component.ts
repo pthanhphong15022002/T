@@ -128,9 +128,9 @@ export class InstancesComponent
         });
     }
 
-      // this.codxDpService.createListInstancesStepsByProcess(this.process?.recID).subscribe((dt) => {
-      //   if (dt && dt?.length > 0) this.listSteps = dt;
-      // });
+      this.codxDpService.createListInstancesStepsByProcess(this.process?.recID).subscribe((dt) => {
+        if (dt && dt?.length > 0) this.listSteps = dt;
+      });
     //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
