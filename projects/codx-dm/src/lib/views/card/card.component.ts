@@ -18,6 +18,7 @@ export class CardComponent implements OnInit , OnChanges {
   totalRating: number;
   totalViews: number;
   favoriteID: any;
+  viewc:number=0;
   @Input() data: any;
   @Input() view: any;
   @Output() viewFile = new EventEmitter<any>();
@@ -39,8 +40,9 @@ export class CardComponent implements OnInit , OnChanges {
         if(arrName.length >1)
           arrName.splice((arrName.length - 1), 1);
         this.data.fileName = arrName.join('.')  + this.data.extension;
-      } 
-    } 
+      }
+    }
+    this.viewc = this.dmSV.getViews(this.data.history); 
   }
 
   ngOnInit(): void {
