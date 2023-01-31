@@ -134,7 +134,7 @@ export class PdfComponent
   lstKey: Array<string> = [];
   curSelectedHLA: highLightTextArea;
   curCmtContent = '';
-  deleteHLAMode = false;
+  deleteHLAMode = true;
   sfEdited = false;
   defaultColor = 'rgb(255, 255, 40)';
   defaultAddedColor = 'transparent';
@@ -2436,6 +2436,7 @@ export class PdfComponent
       )
       .subscribe((lst: Map<string, Array<location>>) => {
         this.lstKey = [];
+        this.lstHighlightTextArea = []
         let lstTextLayer = document.getElementsByClassName('textLayer');
         for (let [key, value] of Object.entries(lst)) {
           let textLayer = Array.from(lstTextLayer).find(
