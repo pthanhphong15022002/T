@@ -84,12 +84,14 @@ codx-view-list-detail .codx-detail-main {
   overflow: auto !important;
 }
 
-.dt-es-view .codx-detail-header,
-.dt-es .codx-detail-header {
+.dt-es-view .codx-detail-header {
   max-height: 215px !important;
   overflow: auto !important;
 }
-
+.dt-es .codx-detail-header
+{
+  max-height: 215px !important;
+}
 .dt-es .codx-detail-main {
   position: relative !important;
   padding-bottom: 0;
