@@ -220,7 +220,7 @@ export class AddEditComponent implements OnInit {
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        this.grid.deleteRow(data);
+        this.grid.deleteRow();
         break;
     }
   }

@@ -121,10 +121,16 @@ export class InstancesComponent
     this.dataObj = {
       processID: this.process?.recID ? this.process?.recID : '',
     };
-    if (this.process)
-      this.codxDpService.createListInstancesStepsByProcess(this.process?.recID).subscribe((dt) => {
-        if (dt && dt?.length > 0) this.listSteps = dt;
-      });
+
+    if (this.process){
+      this.codxDpService.getStep(this.process?.recID).subscribe((dt) => {
+          if (dt && dt?.length > 0) this.listSteps = dt;
+        });
+    }
+
+      // this.codxDpService.createListInstancesStepsByProcess(this.process?.recID).subscribe((dt) => {
+      //   if (dt && dt?.length > 0) this.listSteps = dt;
+      // });
     //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
