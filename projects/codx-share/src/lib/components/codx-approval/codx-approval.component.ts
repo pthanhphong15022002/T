@@ -13,7 +13,7 @@ import {
   ViewEncapsulation,
   Injector,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
@@ -35,6 +35,7 @@ import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 import { CodxShareService } from '../../codx-share.service';
+import { Resolve } from '@angular/router';
 
 @Component({
   selector: 'codx-approval',
@@ -44,7 +45,7 @@ import { CodxShareService } from '../../codx-share.service';
 })
 export class CodxApprovalComponent
   extends UIComponent
-  implements OnChanges, AfterViewInit
+  implements OnChanges, AfterViewInit 
 {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;

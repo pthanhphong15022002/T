@@ -11,11 +11,13 @@
         </div>
         <div class="d-flex flex-wrap mt-3">
           <div class="d-flex align-items-center me-5 mb-1">
-            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="RefNo"
+            <ng-container *ngIf="formModel['gridViewName']">
+              <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="RefNo"
               ngClass="fw-bold label-colon"></codx-label>
-            <span class="text-gray-700">{{
-              data?.refNo ? data?.refNo : gridViewSetup?.RefNo?.headerText
-              }}</span>
+              <span class="text-gray-700">{{
+                data?.refNo ? data?.refNo : gridViewSetup?.RefNo?.headerText
+                }}</span>
+            </ng-container>
           </div>
           <div class="d-flex align-items-center me-5 mb-1">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
@@ -25,13 +27,17 @@
               }}</span>
           </div>
           <div class="d-flex align-items-center me-5 mb-1">
-            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
-              fiedName="CategoryID" class="fw-bold label-colon"></codx-label>
-            <span [class.text-gray-700]="!data?.category">{{
-              data?.category
-              ? data?.category
-              : gridViewSetup["CategoryID"]["headerText"]
-              }}</span>
+            <ng-container *ngIf="formModel['gridViewName']">
+              <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
+                fiedName="CategoryID" class="fw-bold label-colon"></codx-label>
+                <ng-container *ngIf="gridViewSetup?.CategoryID">
+                  <span [class.text-gray-700]="!data?.category">{{
+                    data?.category
+                    ? data?.category
+                    : gridViewSetup["CategoryID"]["headerText"]
+                    }}</span>
+                </ng-container>
+            </ng-container>
           </div>
           <div class="d-flex align-items-center me-5 mb-1">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="Urgency"
@@ -179,22 +185,19 @@
             </ng-container>
           </ng-template>
         </li>
-        <!-- <li [ngbNavItem]="2">
-          <a ngbNavLink>
-            <div class="d-flex align-item-center">
-              <i class="icon-format_list_numbered me-2" [ngClass]="{ 'text-primary': active === 2 }"></i><span>Công
-                việc</span>
-            </div>
-          </a>
-          <ng-template ngbNavContent>
-            <ng-container *ngIf="data?.tasks && data?.tasks.length > 0; else defaulEmpt">
-             <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks" [itemTemplate]="templateorg"
-                [enableCheck]="true" idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true"
-                [isLoadChild]="false"></codx-treeview>
-
-            </ng-container>
-          </ng-template>
-        </li> -->
+        <ng-container *ngIf="xd">
+          <li [ngbNavItem]="2">
+            <a ngbNavLink>
+              <div class="d-flex align-item-center">
+                <i class="icon-people_alt me-2" [ngClass]="{ 'text-primary': active === 2 }"></i><span>Quy trình duyệt</span>
+              </div>
+            </a>
+            <ng-template ngbNavContent>
+              <codx-approval-step [transID]="data?.recID" [approveStatus]="data?.approveStatus">
+              </codx-approval-step>
+            </ng-template>
+          </li>
+        </ng-container>
         <!-- <li [ngbNavItem]="3">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
