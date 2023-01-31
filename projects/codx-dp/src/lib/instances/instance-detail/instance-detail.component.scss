@@ -84,11 +84,11 @@
 
 .arrow-steps .step.current {
 	color: #fff;
-	background-color: #62c3fc;
+	background-color: #3699ff;
 }
 
 .arrow-steps .step.current:after {
-	border-left: 17px solid #62c3fc;
+	border-left: 17px solid #3699ff;
 }
 
 .arrow-steps .step.old {
@@ -108,6 +108,16 @@
 }
 
 
+.font {
+	font-size: 14px;
+  max-width: 180px;
+  text-align: center;
+  color: #fff;
+  background-color: #3699ff;
+  position: relative;
+  border-radius: 5px;
+}
+
 .process-wrap{
   background: #d9e3f7;
   margin: 20px 0;
@@ -121,7 +131,7 @@
 }
 
 .progress-current {
-  background: #62c3fc;
+  background: #3699ff;
   left: 0;
   position: absolute;
   height: 10px;
