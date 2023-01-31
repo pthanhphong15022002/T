@@ -213,6 +213,8 @@
           <button
             *ngIf="currentTab != 2"
             type="button"
+            [ngClass]="(this.process.processNo == null || this.process.processNo == '') || (this.process.processName == null || this.process.processName == '') ? 'disabled'
+            : ''"
             class="btn btn-primary"
             (click)="continue(currentTab)"
           >
@@ -1926,19 +1928,22 @@
       </div>
 
       <div class="main-body pt-5 ps-5" *ngIf="step.reasons.length > 0">
-        <div *ngFor="let item of step.reasons" class="pb-2">
-          <ul class="text-left drap-drop me-5 py-2 has-action-menu">
-            <li>
-              {{ item.reasonName }}
-              <codx-mfunc
-                [formModel]="dialog.formModel"
-                (clickMF)="clickMFReason($event, item, viewStepReasonSuccess)"
-                [dataItem]="action != 'edit' ? moreDefaut : item"
-                [type]="'hover'"
-              >
-              </codx-mfunc>
-            </li>
-          </ul>
+        <div *ngFor="let item of step.reasons" class="pb-2 ">
+          <ul
+          class="text-left drap-drop me-5 py-2 has-action-menu"
+        >
+          <li>
+            {{item.reasonName}}
+            <codx-mfunc
+            [formModel]="dialog.formModel"
+            (clickMF)="clickMFReason($event, item,viewStepReasonSuccess)"
+            [dataItem]="action != 'edit' ? moreDefaut : item"
+            [type]="'hover'"
+          >
+          </codx-mfunc>
+          </li>
+
+        </ul>
         </div>
       </div>
     </div>
@@ -2103,19 +2108,22 @@
       </div>
 
       <div class="main-body pt-5 ps-5" *ngIf="step.reasons.length > 0">
-        <div *ngFor="let item of step.reasons" class="pb-2">
-          <ul class="text-left drap-drop me-5 py-2 has-action-menu">
-            <li>
-              {{ item.reasonName }}
-              <codx-mfunc
-                [formModel]="dialog.formModel"
-                (clickMF)="clickMFReason($event, item, viewStepReasonFail)"
-                [dataItem]="action != 'edit' ? moreDefaut : item"
-                [type]="'hover'"
-              >
-              </codx-mfunc>
-            </li>
-          </ul>
+        <div *ngFor="let item of step.reasons" class="pb-2 ">
+          <ul
+          class="text-left drap-drop me-5 py-2 has-action-menu"
+        >
+          <li>
+            {{item.reasonName}}
+            <codx-mfunc
+            [formModel]="dialog.formModel"
+            (clickMF)="clickMFReason($event, item,viewStepReasonFail)"
+            [dataItem]="action != 'edit' ? moreDefaut : item"
+            [type]="'hover'"
+          >
+          </codx-mfunc>
+          </li>
+
+        </ul>
         </div>
       </div>
     </div>

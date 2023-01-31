@@ -533,4 +533,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     }
     this.detectorRef.detectChanges();
   }
+
+  ngAfterViewInit() {
+  }
 }

@@ -121,7 +121,13 @@ export class InstancesComponent
     this.dataObj = {
       processID: this.process?.recID ? this.process?.recID : '',
     };
-    if (this.process)
+
+    if (this.process){
+      this.codxDpService.getStep(this.process?.recID).subscribe((dt) => {
+          if (dt && dt?.length > 0) this.listSteps = dt;
+        });
+    }
+
       this.codxDpService.createListInstancesStepsByProcess(this.process?.recID).subscribe((dt) => {
         if (dt && dt?.length > 0) this.listSteps = dt;
       });

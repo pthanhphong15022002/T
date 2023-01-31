@@ -60,6 +60,11 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.contact = this.form.formGroup.value
+    this.contact.longitude = 0;
+    this.contact.income = 0;
+    this.contact.latitude = 0;
+    this.contact.counts = 0;
+    this.contact.recID = Guid.newGuid();
   }
   valueChange(e:any,type:any){
     if (type == 'contactName') {
@@ -122,5 +127,17 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     }
     window.localStorage.setItem("datacontact",JSON.stringify(this.contact));
     this.dialog.close();
+  }
+}
+class Guid {
+  static newGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
 }
