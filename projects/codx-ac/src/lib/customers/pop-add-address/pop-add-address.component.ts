@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, CodxFormComponent, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
+import { ChangeDetectorRef, Component, Injector, OnInit, Optional, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ApiHttpService, CacheService, CallFuncService, CodxFormComponent, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { Address } from '../../models/Address.model';
 import { Contact } from '../../models/Contact.model';
@@ -11,7 +11,7 @@ import { PopAddContactComponent } from '../pop-add-contact/pop-add-contact.compo
   styleUrls: ['./pop-add-address.component.css']
 })
 export class PopAddAddressComponent extends UIComponent implements OnInit {
-  @ViewChild('form') public form: CodxFormComponent;
+  @ViewChild('form',{ static:true})  form: CodxFormComponent;
   dialog!: DialogRef;
   headerText:string;
   formModel: FormModel;
@@ -67,7 +67,12 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    this.address = this.form?.formGroup.value;
+    this.address = this.form.formGroup.value;
+    this.address.longitude = 0;
+    this.address.distance = 0;
+    this.address.latitude = 0;
+    this.address.duration = 0;
+    this.address.recID = Guid.newGuid();
   }
   valueChange(e:any,type:any){
     if (type == 'adressType') {
@@ -174,5 +179,17 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     window.localStorage.setItem("dataaddress",JSON.stringify(this.address));
     window.localStorage.setItem("datacontactaddress",JSON.stringify(this.objectContactAddress));
     this.dialog.close();
+  } 
+}
+class Guid {
+  static newGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
 }
