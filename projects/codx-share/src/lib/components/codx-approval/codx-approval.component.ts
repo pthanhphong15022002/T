@@ -13,7 +13,7 @@ import {
   ViewEncapsulation,
   Injector,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
@@ -35,7 +35,12 @@ import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 import { CodxShareService } from '../../codx-share.service';
-
+import { Resolve } from '@angular/router';
+import { Observable } from 'rxjs';
+export interface Crisis {
+  id: number;
+  name: string;
+};
 @Component({
   selector: 'codx-approval',
   templateUrl: './codx-approval.component.html',
@@ -44,7 +49,7 @@ import { CodxShareService } from '../../codx-share.service';
 })
 export class CodxApprovalComponent
   extends UIComponent
-  implements OnChanges, AfterViewInit
+  implements OnChanges, AfterViewInit , Resolve<Crisis>
 {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
@@ -82,6 +87,11 @@ export class CodxApprovalComponent
       (this.notifySvr = inject.get(NotificationsService)),
       (this.callfunc = inject.get(CallFuncService)),
       (this.esService = inject.get(CodxEsService));
+  }
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Crisis | Observable<Crisis> | Promise<Crisis> {
+    debugger;
+    throw new Error('Method not implemented.');
+    
   }
 
   ngOnChanges(changes: SimpleChanges): void {}

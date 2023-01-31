@@ -63,6 +63,7 @@ const routes: Routes = [
           import('projects/codx-od/src/lib/codx-approvel.module').then(
             (m) => m.ApprovelModule
           ),
+        data: { noReuse: true },
       },
       {
         path: '',
