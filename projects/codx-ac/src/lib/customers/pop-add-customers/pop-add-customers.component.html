@@ -25,10 +25,11 @@
             fiedName="CustomerID"
             default="Mã khách hàng"
           ></codx-label>
-            <codx-input                 
+            <codx-input    
+                    [crrValue]="customerID"             
                     [formModel]="form.formModel"
                     field="customerID"
-                    (valueChange)="valueChange($event,'')"
+                    (valueChange)="valueChange($event,'customerID')"
                   >
             </codx-input>
           </div>   
@@ -237,6 +238,7 @@
           type="combobox" 
           refValue="Warehouses"
           field="warehouseID"
+          (valueChange)="valueChange($event,'')"
           >
         </codx-input>
           </div>   
@@ -252,6 +254,7 @@
           type="combobox" 
           refValue="Warehouses"
           field="warehouseID"
+          (valueChange)="valueChange($event,'')"
           >
         </codx-input>
           </div>
@@ -303,6 +306,7 @@
           type="combobox" 
           refValue="CalendarsAC"
           field="workingDays"
+          (valueChange)="valueChange($event,'')"
           >
         </codx-input>
           </div>   
@@ -312,6 +316,7 @@
         <codx-input
         type="switch"
         field="workingHour"  
+        (valueChange)="valueChange($event,'')"
         >
         </codx-input>
         <codx-label
@@ -324,7 +329,8 @@
       <div class="d-flex">
         <codx-input
         type="switch"
-        field="CalendarControl"  
+        field="CalendarControl" 
+        (valueChange)="valueChange($event,'')" 
         >
         </codx-input>
         <codx-label
@@ -354,7 +360,7 @@
           Liên hệ
         </div>
         <div class="d-flex flex-wrap ms-14" *ngFor="let itemcontact of objectContactAddress">
-          <div class="row pb-5" *ngIf="itemcontact.reference == item.adressName">
+          <div class="row pb-5" *ngIf="itemcontact.reference == item.recID">
               <div class="col-6 ps-0">
                 <div class="d-flex align-items-top">
                   <div class="me-4">
@@ -525,7 +531,7 @@
       type="combobox"
       refValue="Industries"
       field="industries" 
-      
+      (valueChange)="valueChange($event,'')"
     >
     </codx-input>
   </div>
@@ -539,6 +545,7 @@
       type="combobox"
       refValue="SalesChannels"
       field="channelID" 
+      (valueChange)="valueChange($event,'')"
     >
     </codx-input>
   </div>
@@ -552,6 +559,7 @@
       type="combobox"
       refValue="Salespersons"
       field="salespersonID" 
+      (valueChange)="valueChange($event,'')"
     >
     </codx-input>
   </div>
@@ -565,6 +573,7 @@
       type="combobox"
       refValue="SalesConsultants"
       field="salesConsultantID" 
+      (valueChange)="valueChange($event,'')"
     >
     </codx-input>
   </div>
@@ -578,6 +587,7 @@
       type="combobox"
       refValue="Users"
       field="owner" 
+      (valueChange)="valueChange($event,'')"
     >
     </codx-input>
   </div>
@@ -591,6 +601,7 @@
       type="combobox"
       refValue="BusinessUnits"
       field="buid" 
+      (valueChange)="valueChange($event,'')"
     >
     </codx-input>
   </div>
