@@ -4,7 +4,6 @@ import {
   DP_Steps_Tasks,
 } from './../../models/models';
 import { CodxDpService } from './../../codx-dp.service';
-import console, { log } from 'console';
 import {
   CdkDragDrop,
   moveItemInArray,
