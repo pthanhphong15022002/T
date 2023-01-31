@@ -134,7 +134,7 @@ export class PdfComponent
   lstKey: Array<string> = [];
   curSelectedHLA: highLightTextArea;
   curCmtContent = '';
-  deleteHLAMode = false;
+  deleteHLAMode = true;
   sfEdited = false;
   defaultColor = 'rgb(255, 255, 40)';
   defaultAddedColor = 'transparent';
