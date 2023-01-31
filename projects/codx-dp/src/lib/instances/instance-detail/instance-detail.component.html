@@ -78,14 +78,14 @@
         <div class="d-flex arrow-steps flex-container">
           <ng-container></ng-container>
           <div *ngFor="let item of listSteps; index as i;" id="step-click" style="flex-grow: 1"
-            [ngClass]="item.stepNo == 1 ? 'step current' : 'step'" (click)="click(item.stepNo)">
+            [ngClass]="item.indexNo == currentStep ? 'step current' : 'step'" (click)="click(item.stepNo)">
             <span> {{item.stepName}}</span>
           </div>
         </div>
         <div class="d-flex flex-container">
           <div *ngFor="let item of listSteps; index as i;" class="process-wrap progress-2" style="flex-grow: 1"
-            role="progressbar" [style.width]="'70' + '%'" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-            <div [ngClass]="item.stepNo == 1 ? 'progress-current progress-2' : 'progress-bar progress-2'">
+            role="progressbar" [style.width]="item.progress + '%'" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+            <div [ngClass]="item.indexNo == currentStep ? 'progress-current progress-2' : ''">
             </div>
           </div>
         </div>

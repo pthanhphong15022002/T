@@ -22,7 +22,7 @@
 </div>
 <ng-container *ngIf="customField.dataType == 'T'">
   <codx-input
-    *ngIf="customField.dataFormat !='L'"
+    *ngIf="customField.dataFormat != 'L'"
     [field]="customField.fieldName"
     type="text"
     [placeholder]="customField.note"
@@ -31,7 +31,7 @@
   >
   </codx-input>
   <codx-input
-    *ngIf="customField.dataFormat=='L'"
+    *ngIf="customField.dataFormat == 'L'"
     [field]="customField.fieldName"
     type="textarea"
     format="ed2"
@@ -78,7 +78,9 @@
 </ng-container>
 
 <ng-container *ngIf="customField.dataType == 'P'">
-  <ng-container *ngIf="customField.dataFormat == '1'">
+  <ng-container
+    *ngIf="customField.dataFormat == 'C' || customField.dataFormat == 'V'"
+  >
     <codx-input
       service="SYS"
       type="combobox"
@@ -93,11 +95,16 @@
     </codx-input>
   </ng-container>
 
-  <ng-container *ngIf="isPopupUserCbb && customField.dataFormat == 'M'">
+  <ng-container
+    *ngIf="
+      isPopupUserCbb &&
+      (customField.dataFormat == 'M' || customField.dataFormat == '1')
+    "
+  >
     <codx-combobox-popup
       [comboboxName]="'Users'"
       [field]="'cbbUser'"
-      [multiple]="true"
+      [multiple]="customField.dataFormat == 'M' ? true : false"
       [width]="700"
       [height]="600"
       [value]=""

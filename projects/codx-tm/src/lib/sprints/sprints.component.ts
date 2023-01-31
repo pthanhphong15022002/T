@@ -321,14 +321,14 @@ export class SprintsComponent extends UIComponent {
   changeDataMF(e, data) {
     if (e) {
       e.forEach((x) => {
-        if (
-          (x.functionID == 'SYS02' ||
-            x.functionID == 'SYS03' ||
-            x.functionID == 'SYS04') &&
-          data.iterationID == this.user.userID
-        ) {
-          x.disabled = true;
-        }
+        // if (
+        //   (x.functionID == 'SYS02' ||
+        //     x.functionID == 'SYS03' ||
+        //     x.functionID == 'SYS04') &&
+        //   data.iterationID == this.user.userID
+        // ) {
+        //   x.disabled = true;
+        // }
         // an edit và delete 
         if ((x.functionID == 'SYS02' || x.functionID == 'SYS03') && data?.createdBy != this.user?.userID && !this.user?.administrator) {
           x.disabled = true;

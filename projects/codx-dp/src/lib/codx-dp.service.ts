@@ -132,6 +132,14 @@ export class CodxDpService {
     );
   }
 
+  GetStepsByInstanceIDAsync(recID){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetStepsByInstanceIDAsync',
+      recID
+    );
+  }
   // #step -- nvthuan
   addStep(data) {
     return this.api.exec<any>(
@@ -167,12 +175,14 @@ export class CodxDpService {
     return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetListCbxProcessesAsync');
   }
 
-  getStepsByProcessID(recID){
+
+
+  createListInstancesStepsByProcess(processID) {
     return this.api.exec<any>(
       'DP',
-      'StepsBusiness',
-      'GetStepsByProcessIDAsync',
-      recID
+      'InstancesBusiness',
+      'CreateListInstancesStepsByProcessAsync',
+      processID
     );
   }
 }
