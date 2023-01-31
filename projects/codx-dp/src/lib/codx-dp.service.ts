@@ -140,6 +140,15 @@ export class CodxDpService {
       recID
     );
   }
+
+  GetStepInstance(recID){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetAsync',
+      recID
+    );
+  }
   // #step -- nvthuan
   addStep(data) {
     return this.api.exec<any>(
