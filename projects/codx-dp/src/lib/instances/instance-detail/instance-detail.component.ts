@@ -18,6 +18,7 @@ export class InstanceDetailComponent implements OnInit {
   id: any;
   totalInSteps: any;
   listSteps: DP_Instances_Steps[] = [];
+  tmpTeps: DP_Instances_Steps;
   //progressbar
   labelStyle = { color: '#FFFFFF' };
   showProgressValue = true;
@@ -27,6 +28,8 @@ export class InstanceDetailComponent implements OnInit {
   value: Number = 30;
   cornerRadius: Number = 30;
   idCbx = "stage";
+  stepName: string;
+  progress = '0';
   fields: Object = { text: 'name', value: 'id' };
   listRoom = [{
     name: 'Xem theo biểu đồ Gantt',
@@ -95,6 +98,7 @@ export class InstanceDetailComponent implements OnInit {
       if (res) {
         this.dataSelect = res;
         this.currentStep = this.dataSelect.currentStep;
+
       }
     });
   }
@@ -103,6 +107,26 @@ export class InstanceDetailComponent implements OnInit {
     this.dpSv.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
       if (res) {
         this.listSteps = res;
+        var total = 0;
+        this.listSteps.forEach(el =>{
+          if(this.currentStep == el.indexNo)
+            this.stepName = el.stepName;
+          total += el.progress;
+        })
+        if(this.listSteps != null && this.listSteps.length > 0){
+          this.progress = (total / this.listSteps.length).toFixed(1).toString();
+        }else{
+          this.progress = '0';
+        }
+        this.listSteps.forEach(element =>{
+          if(element.indexNo == this.currentStep){
+            this.dpSv.GetStepInstance(element.recID).subscribe(data=>{
+              if(data){
+                this.tmpTeps = data;
+              }
+            })
+          }
+        })
       }
     });
   }
@@ -146,7 +170,7 @@ export class InstanceDetailComponent implements OnInit {
     if(this.currentStep < indexNo) return;
     this.dpSv.GetStepInstance(recID).subscribe(res=>{
       if(res){
-
+        this.tmpTeps = res;
       }
     })
   }

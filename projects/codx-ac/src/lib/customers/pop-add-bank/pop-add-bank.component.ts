@@ -53,10 +53,12 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.bankaccount = this.form?.formGroup.value;
+    this.bankaccount.objectType= "1";
   }
   valueChange(e:any,type:any){
     if (type == 'bankAcctID') {
       this.bankAcctID = e.data;
+      this.bankaccount.bankAcctNo = e.data;
     }
     if (type == 'bankID') {
       this.bankID = e.data;
