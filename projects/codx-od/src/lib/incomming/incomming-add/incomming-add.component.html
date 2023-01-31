@@ -12,7 +12,7 @@
       </span>
     </div>
     <ng-template #elseSelected>
-      <span class="btn btn-sm btn-light btn-pill">
+      <span class="btn btn-sm btn-primary btn-pill">
         <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
       </span>
     </ng-template>
@@ -21,13 +21,12 @@
 </ng-template>
 <ng-template popup adde #body>
   <div class="py-2">
-    <codx-attachment #attachment  hideImageUpload="0" showMessage="0"
-      hideBtnSave="1" hideFolder="1" hideUploadBtn="1" hideDes="1" 
-      (fileAdded)="fileAdded($event)" (fileDelete)="handleDelete($event)" (fileCount)="getfileCount($event)"
-      (fileGet)="getfileCount($event)" isDeleteTemp="1"  [allowMultiFile]="0"
-      [idBrowse]="'add'" [hideDelete]="
+    <codx-attachment #attachment hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+      hideDes="1" (fileAdded)="fileAdded($event)" (fileDelete)="handleDelete($event)" (fileCount)="getfileCount($event)"
+      (fileGet)="getfileCount($event)" isDeleteTemp="1" [allowMultiFile]="0" [idBrowse]="'add'" [hideDelete]="
         this.dispatch?.status == '1' || this.dispatch?.status == '2' || this.dispatch?.status == '4' ? '0' : '1'
-      " hideMoreF="0" [permissions]="dispatch?.relations" [formModel]="formModel" [dataSelected]="dispatch" [idField]="'RecID'" >
+      " hideMoreF="0" [permissions]="dispatch?.relations" [formModel]="formModel" [dataSelected]="dispatch"
+      [idField]="'RecID'">
     </codx-attachment>
   </div>
   <div class="tab-horizone form-group">

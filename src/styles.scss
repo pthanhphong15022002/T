@@ -308,7 +308,7 @@ lib-nosubaside .aside-menu .menu .menu-item .menu-link.active {
 
 lib-nosubaside .aside-menu .menu .menu-item .menu-link.active .menu-title,
 lib-nosubaside .aside-menu .menu .menu-item .menu-link:hover .menu-title {
-  color: var(--primary-inverse) !important;
+  color: var(--menu-active) !important;
 }
 
 lib-nosubaside .aside-footer .menu .menu-item .menu-link {
