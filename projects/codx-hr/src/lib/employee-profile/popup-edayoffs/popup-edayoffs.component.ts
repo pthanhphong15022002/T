@@ -22,10 +22,13 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
+  lstPregnantType;
   dayoffObj: any;
   lstDayoffs: any;
   funcID: string;
   indexSelected
+  isnormalPregnant = false
+  isNotNormalPregnant = false
   actionType: string;
   employId: string;
   isAfterRender = false;
@@ -64,6 +67,15 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     }
 
     initForm() {
+      this.cache.gridViewSetup(this.formModel.formName, this.formModel.gridViewName).subscribe(p => {
+        this.cache.valueList(p.NewChildBirthType.referedValue).subscribe(p => {
+          this.lstPregnantType = p.datas;
+          console.log('pregnanttype', this.lstPregnantType);
+          
+        })
+      })
+
+
       this.hrSevice
         .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
         .then((item) => {
@@ -132,9 +144,33 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     this.listView = evt;
     console.log(this.listView);
   }
-
+  
+  HandlePregnantTypeChange(e, pregnantType){
+    console.log('e e ', e);
+    console.log('type', pregnantType);
+    
+    if(e.component.checked == true){
+      if(pregnantType.value == '1'){
+        this.isnormalPregnant = true;
+        this.isNotNormalPregnant = false;
+      }
+      else{
+        this.isnormalPregnant = false;
+        this.isNotNormalPregnant = true;
+      }
+    }else if(e.component.checked == false){
+      if(pregnantType.value == '1'){
+        this.isnormalPregnant = false;
+      }
+      else if(pregnantType.value == '2'){
+        this.isNotNormalPregnant = false;
+      }
+    }
+    console.log('sinh thuong', this.isnormalPregnant);
+    console.log('sinh mo', this.isNotNormalPregnant);
+    
+  }
   HandleTotalDaysVal(){
-
   }
 
   HandleInputBeginDate(value){

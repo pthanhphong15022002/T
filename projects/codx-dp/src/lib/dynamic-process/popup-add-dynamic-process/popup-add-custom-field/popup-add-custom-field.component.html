@@ -1,4 +1,5 @@
 <codx-form
+  #form
   [headerText]="title"
   [body]="body"
   [footer]="footer"
@@ -6,7 +7,6 @@
   [formModel]="dialog?.formModel"
   [data]="field"
   [openMore]="true"
-  #form
 >
   <ng-template #body>
     <div class="card-form">
@@ -17,14 +17,14 @@
           [default]="'Giai đoạn liên kết'"
         >
         </codx-label>
-        <codx-input
-          field="stepID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          [model]=""
-          (valueChange)="valueChangeCbx($event)"
-        >
-        </codx-input>
+        <ejs-dropdownlist
+          [dataSource]="stepList"
+          [fields]="fields"
+          [value]="field.stepID"
+          [placeholder]="grvSetup['StepID'].description"
+          (valueChange)="cbxChange($event)"
+          [readonly]="true"
+        ></ejs-dropdownlist>
       </div>
       <div class="form-group row">
         <div class="col-6">
@@ -70,6 +70,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           (valueChange)="valueChange($event)"
+          [disabled]="action=='edit'"
         >
         </codx-input>
       </div>
@@ -141,14 +142,14 @@
       <div class="form-group row" *ngIf="field.dataFormat == 'R'">
         <div class="col-6">
           <codx-label
-            fiedName="Rank"
+            fiedName="RankIcon"
             [formModel]="form.formModel"
             default="Loại icon hiển thị"
           >
           </codx-label>
           <div>
             <codx-valuelist
-              field="rank"
+              field="rankIcon"
               [name]="'L1470'"
               [iconOnly]="true"
               [crrValue]="field?.rankIcon"
@@ -156,9 +157,9 @@
             >
             </codx-valuelist>
           </div>
-
           <!-- <codx-input
-            field="rank"
+            field="rankIcon"
+            [iconOnly]="true"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
@@ -167,52 +168,23 @@
         </div>
         <div class="col-6">
           <codx-label
-            fiedName="RankIcon"
+            fiedName="rank"
             [formModel]="form.formModel"
             default="Điểm tối đa"
           >
           </codx-label>
-          <!-- <div class="progress">
-            <div
-              class="progress-bar"
-              role="progressbar"
-              style="width: 25%"
-              aria-valuenow="25"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            ></div>
-          </div> -->
           <div>
-            <input
-              id="progressInput"
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              value="25"
-              (click)="valueChangeRating('progressInput')"
-              style="width: 100%"
-            />
+            <ejs-slider
+              id="slider"
+              [value]="value"
+              [min]="min"
+              [max]="max"
+              [type]="type"
+              [ticks]="ticks"
+              [tooltip]="tooltip"
+              (change)="sliderChange($event)"
+            ></ejs-slider>
           </div>
-          <!-- <ngx-slider value="100" [options]="options"></ngx-slider> -->
-          <!-- <ion-range-slider #sliderElement
-          type="double"
-          [min]="0"
-          max="100"
-          from="28"
-          from_min="10"
-          from_max="30"
-          from_shadow="true"
-          to="40"
-          to_min="40"
-          to_max="90"
-          to_shadow="true"
-          grid="true"
-          grid_num="10"
-          prefix="Weight: "
-          postfix=" million pounds"
-          decorate_both="false"
-          (onChange)="valueChangeRating($event)"></ion-range-slider>-->
         </div>
       </div>
       <div class="form-group">
@@ -241,7 +213,12 @@
           [formModel]="form?.formModel"
           default="Bắt buộc *"
         ></codx-label>
-        <codx-input type="switch" field="isRequired" [checked]="true">
+        <codx-input
+          type="switch"
+          field="isRequired"
+          [checked]="field?.isRequired"
+          (valueChange)="changeRequired($event)"
+        >
         </codx-input>
       </div>
     </div>

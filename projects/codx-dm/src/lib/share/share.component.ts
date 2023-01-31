@@ -24,7 +24,7 @@ export class ShareComponent implements OnInit {
   @Input() formModel: any;    
   //listFolders: FolderInfo[];
  // listFiles: FileInfo[];
-  selection = 0;
+  selection = true;
   listNodeMove: FileUpload[] = [];
   //listNodeMove: any;
   html: string;
@@ -74,7 +74,7 @@ export class ShareComponent implements OnInit {
   requestTitle = '';
   ownerID :any;
   toPermission: Permission[];
-  byPermission: Permission[];
+  byPermission: Permission[] = [];
   ccPermission: Permission[];
   bccPermission: Permission[];  
 
@@ -114,7 +114,8 @@ export class ShareComponent implements OnInit {
 
   ngOnInit(): void { 
     this.shareGroup = this.formBuilder.group({
-      by: ''
+      by: '',
+      per: 'readonly'
     });  
     this.user = this.auth.get();       
     if(this.dmSV.breakCumArr.length>0 && this.dmSV.breakCumArr.includes(this.fullName)) this.fullName= null
@@ -133,13 +134,16 @@ export class ShareComponent implements OnInit {
     if(this.fileEditing && Array.isArray(this.fileEditing.permissions))
     { 
       var f = this.fileEditing.permissions.filter(x=>x.objectType == "1");
-      if(f) 
+      if(typeof f == "object" && f.length >0) 
       { 
-        let o: any = {};
+        let o : any = {};
         o.objectType = f[0].objectType
         o.objectName = f[0].objectName;
         o.id = f[0].objectID;
-        this.ownerID = [o]
+        this.ownerID = [o];
+        o.objectID = f[0].objectID;
+        this.byPermission.push(o);
+        
       }
     }
   }
@@ -168,21 +172,33 @@ export class ShareComponent implements OnInit {
     }    
   }
 
-  onSaveRole($event, type: string) {    
+  onSaveRole($event, type: string) { 
    // console.log($event);
     var list = [];
-    if ($event.data != undefined) {
+    if ($event.data) {
       var data = $event.data;
       for(var i=0; i<data.length; i++) {
         var item = data[i];
-        var perm = new Permission;               
+        var perm = new Permission;
+        if(type == "by" && data[i].objectType == "1")
+        {
+          var o = this.fileEditing.permissions.filter(x=>x.objectType == "1") // Lấy owner;
+          perm.objectID = o[0].objectID;
+          perm.objectType = o[0].objectType;
+          perm.objectName = o[0].objectName;
+        }
+        else
+        {
+          perm.objectID = item.id;
+          perm.objectType = item.objectType;
+          perm.objectName = item.text ? item.text : item.objectName;
+        }               
         perm.startDate = this.startDate;       
         perm.endDate = this.endDate;
         perm.isSystem = false;
         perm.isActive = true;
-        perm.objectName = item.text ? item.text : item.objectName;
-        perm.objectID = item.id;
-        perm.objectType = item.objectType;
+       
+      
         perm.read = true;        
         list.push(Object.assign({}, perm));        
       //  this.fileEditing.permissions = this.addRoleToList(this.fileEditing.permissions, perm);
@@ -272,7 +288,7 @@ export class ShareComponent implements OnInit {
       this.fileEditing.toPermission[i].startDate = this.startDate;
       this.fileEditing.toPermission[i].endDate = this.endDate;
       if (!this.isShare) {
-        if (this.selection) {
+        if (this.shareGroup.value.per == 'modified') {
           this.fileEditing.toPermission[i].create = true;
           this.fileEditing.toPermission[i].update = true;
           this.fileEditing.toPermission[i].share = true;

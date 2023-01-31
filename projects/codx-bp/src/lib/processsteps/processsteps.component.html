@@ -89,7 +89,7 @@
         </ng-container>
       </ng-container>
     </div>
-    <div class="Attachments mb-3" *ngIf="checkAttachment(data)">
+    <div id="{{data.recID}}" class="Attachments mb-3 {{checkAttachment(data) ? 'show-main' :'hidden-main'}}">
       <label class="text-primary fw-bold mb-2">
         <codx-label fiedName="lblAttachments" [formModel]="view.formModel" default="Tài liệu ">
         </codx-label>
@@ -97,7 +97,7 @@
       <div class="align-items-center">
         <codx-attachment #attachment [objectType]="view.formModel.entityName" [objectId]="data?.recID" hideFolder="1"
           hideImageUpload="1" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
-          [formModel]="view.formModel" [functionID]="funcID" displayThumb="full" pageSize="2" heightScroll="100">
+          [formModel]="view.formModel" [functionID]="funcID" displayThumb="full" pageSize="2" heightScroll="100" (fileCount)="getfileCount($event,data?.recID)">
         </codx-attachment>
       </div>
     </div>
@@ -128,11 +128,11 @@
         </div>
       </div>
       <ng-container *ngIf="data?.owners != null && data?.owners.length> 0">
-        <div class="d-flex align-items-center card-icon-nowrap me-1">
+        <!-- <div class="d-flex align-items-center card-icon-nowrap me-1">
           <span class="me-1 icon-person_pin_circle"></span><span class="fw-bolb">
             <codx-label name="lblRecruitmentStaff" default="Nhân viên tuyển dụng"></codx-label>
           </span>
-        </div>
+        </div> -->
         <div class="d-flex align-items-center mt-2">
           <codx-imgs
           *ngIf="viewMode == '6'"

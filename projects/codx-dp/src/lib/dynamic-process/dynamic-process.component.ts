@@ -27,6 +27,7 @@ import {
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
+import { PopupViewsDetailsProcessComponent } from './popup-views-details-process/popup-views-details-process.component';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -56,6 +57,7 @@ export class DynamicProcessComponent
   gridViewSetup: any;
   showID = false;
   processNo: any;
+  instanceNo: any;
   // const set value
   readonly btnAdd: string = 'btnAdd';
 
@@ -69,6 +71,12 @@ export class DynamicProcessComponent
   listDynamicProcess: DP_Processes[] = [];
   listUserInUse: DP_Processes_Permission[] = [];
 
+  // create variables is any;
+  listAppyFor: any; // list Apply For
+
+  // value
+  nameAppyFor: string = '';
+
   //test chưa có api
   popoverDetail: any;
   popupOld: any;
@@ -81,10 +89,10 @@ export class DynamicProcessComponent
   readonly className = 'ProcessesBusiness';
 
   // Method API dynamic proccess
-  readonly methodGetList = 'GetListDynProcessesAsync';
+  readonly methodGetList = 'GetListProcessesAsync';
 
   // Get idField
-  readonly idField = 'processNo';
+  readonly idField = 'recID';
 
   constructor(
     private inject: Injector,
@@ -94,12 +102,14 @@ export class DynamicProcessComponent
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
     private callFunc: CallFuncService,
-    private dpService: CodxDpService,
+    private dpService: CodxDpService
   ) {
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // this.genAutoNumber();
+    this.getListAppyFor();
   }
 
   onInit(): void {
@@ -110,14 +120,13 @@ export class DynamicProcessComponent
     this.getListUser();
   }
 
-
-
   afterLoad() {}
   onDragDrop(e: any) {}
 
   click(evt: ButtonModel) {
     switch (evt.id) {
       case this.btnAdd:
+        this.genAutoNumber();
         this.add();
         break;
     }
@@ -140,14 +149,30 @@ export class DynamicProcessComponent
   }
 
   searchDynamicProcess($event) {
-    if ($event) this.changeDetectorRef.detectChanges();
+    this.view.dataService.search($event).subscribe();
+    this.changeDetectorRef.detectChanges();
   }
 
+  async genAutoNumber() {
+    this.dpService
+      .genAutoNumber(this.funcID, 'DP_Processes', 'processNo')
+      .subscribe((res) => {
+        if (res) {
+          this.processNo = res;
+          this.showID = true;
+        } else {
+          this.showID = false;
+        }
+      });
+  }
   // CRUD methods
   add() {
     this.view.dataService.addNew().subscribe((res) => {
       var obj = {
         action: 'add',
+        processNo: this.processNo,
+        showID: this.showID,
+        instanceNo: this.instanceNo,
       };
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
@@ -235,7 +260,7 @@ export class DynamicProcessComponent
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedProcessesAsync';
-    opt.data = [itemSelected.recID, true];
+    opt.data = [itemSelected.recID];
     return true;
   }
 
@@ -264,7 +289,7 @@ export class DynamicProcessComponent
     }
   }
 
-  //#region đang test
+  //#region đang test ai cần list phần quyền la vô đâyu nha
   setTextPopover(text) {
     return text;
   }
@@ -304,5 +329,39 @@ export class DynamicProcessComponent
       });
   }
 
+  //#region Của Bảo
+  getListAppyFor() {
+    this.cache.valueList('DP002').subscribe((res) => {
+      if (res) {
+        this.listAppyFor = res.datas;
+      }
+    });
+  }
+  //#endregion
+
+  getNameAppyFor(value: string) {
+    return this.listAppyFor.find((x) => x.value === value).default ?? '';
+  }
   //#endregion đang test
+
+  doubleClickViewProcess(data) {
+    let obj = {
+      data: data,
+      nameAppyFor: this.getNameAppyFor(data.applyFor),
+    };
+    
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 999;
+    var dialog = this.callfc.openForm(
+      PopupViewsDetailsProcessComponent,
+      '',
+      this.widthWin,
+      this.heightWin,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+  }
 }

@@ -70,7 +70,7 @@
       </div>
       <div class="form-group" *ngIf="stepType == 'C'"
         (keyup.enter)="enterRefrence()">
-        <codx-label name="Reference" [formModel]="form.formModel" default="Đầu
+        <codx-label fiedName="Reference" [formModel]="form.formModel" default="Đầu
           mục thực hiện">
         </codx-label>
         <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus
@@ -119,7 +119,7 @@
       </ng-container>
 
       <div class="form-group" *ngIf="stepType != 'C' && stepType != 'Q'">
-        <codx-label name="Memo" [formModel]="form.formModel" default="Mô tả"></codx-label>
+        <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả"></codx-label>
         <div class="d-flex justify-content-between align-items-center">
           <div style="width: 100%">
             <codx-input [field]="stepType == 'E' ? 'stepName' : 'memo'"
@@ -129,7 +129,7 @@
             </codx-input>
           </div>
           <button class="button-mail" *ngIf="stepType == 'E'"
-            (click)="handelMail()" disabled="{{isView}}" [ngStyle]="isView ?
+            (click)="handelMail()" [disabled]="isView" [ngStyle]="isView ?
             {'background': '#e9ecef'} : {}">
             <span class="icon-email icon-20 text-primary-600 py-2"></span>
           </button>
@@ -224,7 +224,7 @@
 
       <div class="form-group" *ngIf="stepType == 'Q'">
         <div class="d-flex justify-content-between align-items-center mail">
-          <codx-label name="Reference" [formModel]="form.formModel"
+          <codx-label fiedName="Reference" [formModel]="form.formModel"
             default="Bảng khảo sát"></codx-label>
           <a class="d-flex justify-content-end align-items-center
             cursor-pointer" *ngIf="processSteps?.reference"
@@ -244,7 +244,7 @@
       <ng-container *ngIf="stepType == 'C' || stepType == 'E'">
         <div class="form-group">
           <div class="note">
-            <codx-label fiedName="note-label" [formModel]="form.formModel"
+            <codx-label fiedName="Note" [formModel]="form.formModel"
               default="Ghi chú">
             </codx-label>
           </div>
@@ -300,11 +300,6 @@
           </div>
         </div>
         <div>
-          <!-- <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="processSteps?.recID"
-            hideFolder="1" hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline"
-            allowMultiFile="1" [formModel]="dialog.formModel" [functionID]="funcID" (fileAdded)="fileAdded($event)"
-            (fileCount)="getfileCount($event)" displayThumb="full" showMessage="0">
-          </codx-attachment> -->
           <codx-attachment
             #attachment
             [objectType]="formModelMenu.entityName"
@@ -319,6 +314,7 @@
             [functionID]="funcIDparent"
             (fileAdded)="fileAdded($event)"
             (fileCount)="getfileCount($event)"
+            (viewFile)="getfileDelete($event)"
             displayThumb="full"
             showMessage="0"
             [fdID]="folderID"

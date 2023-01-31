@@ -1,0 +1,162 @@
+<div>
+  <codx-label
+    [fiedName]="customField.fieldName"
+    formName="DPInstancesStepsFields"
+    gridViewName="grvDPInstancesStepsFields"
+    [default]="customField.title"
+  >
+  </codx-label>
+  <span
+    *ngIf="customField.dataType == 'A'"
+    class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"
+    (click)="addFile()"
+  ></span>
+  <span
+    *ngIf="customField.dataType == 'P' && customField.dataFormat == 'M'"
+    class="mx-2 me-5"
+  >
+    <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
+      <span class="icon-group_add text-primary icon-18"></span>
+    </button>
+  </span>
+</div>
+<ng-container *ngIf="customField.dataType == 'T'">
+  <codx-input
+    *ngIf="customField.dataFormat != 'L'"
+    [field]="customField.fieldName"
+    type="text"
+    [placeholder]="customField.note"
+    [crrValue]=""
+    (valueChange)="valueChange($event)"
+  >
+  </codx-input>
+  <codx-input
+    *ngIf="customField.dataFormat == 'L'"
+    [field]="customField.fieldName"
+    type="textarea"
+    format="ed2"
+    [placeholder]="customField.note"
+    [crrValue]=""
+    (valueChange)="valueChange($event)"
+  >
+  </codx-input>
+</ng-container>
+<ng-container *ngIf="customField.dataType == 'N'">
+  <codx-input
+    [field]="customField.fieldName"
+    type="number"
+    [showSpinButton]="false"
+    [min]="min"
+    [max]="max"
+    [crrValue]="0"
+    [placeholder]="customField.note"
+    (valueChange)="valueChange($event)"
+  >
+  </codx-input>
+</ng-container>
+
+<ng-container *ngIf="customField.dataType == 'D'">
+  <codx-input
+    [field]="customField.fieldName"
+    type="datetime"
+    [format]="formatDate"
+    [placeholder]="customField.note"
+    (valueChange)="valueChange($event)"
+  >
+  </codx-input>
+</ng-container>
+
+<ng-container *ngIf="customField.dataType == 'L'">
+  <codx-input
+    [field]="customField.fieldName"
+    type="valuelist"
+    [refValue]="customField.refValue"
+    [placeholder]="customField.note"
+    (valueChange)="valueChange($event)"
+  >
+  </codx-input>
+</ng-container>
+
+<ng-container *ngIf="customField.dataType == 'P'">
+  <ng-container
+    *ngIf="customField.dataFormat == 'C' || customField.dataFormat == 'V'"
+  >
+    <codx-input
+      service="SYS"
+      type="combobox"
+      name="combobox"
+      ngDefaultControl
+      refValue="Users"
+      [loadFull]="true"
+      field="userID"
+      inputmode="text"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </ng-container>
+
+  <ng-container
+    *ngIf="
+      isPopupUserCbb &&
+      (customField.dataFormat == 'M' || customField.dataFormat == '1')
+    "
+  >
+    <codx-combobox-popup
+      [comboboxName]="'Users'"
+      [field]="'cbbUser'"
+      [multiple]="customField.dataFormat == 'M' ? true : false"
+      [width]="700"
+      [height]="600"
+      [value]=""
+      [formModel]="formModel"
+      (clickSave)="valueCbxUserChange($event)"
+    >
+    </codx-combobox-popup>
+  </ng-container>
+</ng-container>
+
+<ng-container *ngIf="customField.dataType == 'R'">
+  <ngb-rating
+    [(rate)]="currentRate"
+    [max]="customField.rank"
+    (rateChange)="readonly = false"
+    (hover)="hovered = $event"
+    (leave)="hovered = currentRate"
+    [readonly]="readonly"
+    [starTemplate]="temp"
+  >
+    <ng-template #temp let-fill="fill" let-index="index">
+      <span
+        class="rankIcon {{ customField.rankIcon }} filled"
+        [class.filled]="fill === 100"
+        [class.bad]="index < customField.rank"
+      ></span>
+    </ng-template>
+  </ngb-rating>
+</ng-container>
+
+<ng-container *ngIf="customField.dataType == 'A'">
+  <codx-attachment
+    #attachment
+    [objectId]="objectId"
+    [objectType]="objectType"
+    hideFolder="1"
+    hideImageUpload="0"
+    hideImageThumb="0"
+    hideUploadBtn="1"
+    hideDes="1"
+    type="inline"
+    [allowMultiFile]="allowMultiFile"
+    [functionID]="funID"
+    [formModel]="formModel"
+    (fileAdded)="fileAdded($event)"
+    (fileCount)="getfileCount($event)"
+    displayThumb="full"
+    showMessage="0"
+  >
+  </codx-attachment>
+</ng-container>
+
+<div *ngIf="showErrMess" class="errorMessage text-danger ms-3" data-field="">
+  {{ errorMessage }}
+</div>

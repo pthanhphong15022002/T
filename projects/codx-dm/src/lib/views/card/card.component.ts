@@ -17,6 +17,7 @@ export class CardComponent implements OnInit , OnChanges {
   user: any;
   totalRating: number;
   totalViews: number;
+  favoriteID: any;
   @Input() data: any;
   @Input() view: any;
   @Output() viewFile = new EventEmitter<any>();
@@ -24,16 +25,29 @@ export class CardComponent implements OnInit , OnChanges {
     public dmSV: CodxDMService,
     private auth: AuthStore,
     private fileService: FileService,
+    private folderService: FolderService,
     private notificationsService: NotificationsService
   ) {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes["data"] && changes["data"].currentValue != changes["data"].previousValue )
-      this.data = changes["data"].currentValue 
+    {
+      this.data = changes["data"].currentValue ;
+      if(this.data.fileName)
+      {
+        var arrName = this.data.fileName.split(".");
+        if(arrName.length >1)
+          arrName.splice((arrName.length - 1), 1);
+        this.data.fileName = arrName.join('.')  + this.data.extension;
+      } 
+    } 
   }
 
   ngOnInit(): void {
     this.user = this.auth.get();
+    this.favoriteID = this.fileService.options.favoriteID;
+    if(this.data.folderName)
+      this.favoriteID = this.folderService.options.favoriteID;
   }
   
   classRating(rating) {    

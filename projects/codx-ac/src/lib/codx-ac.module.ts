@@ -22,6 +22,11 @@ import { PopSettingExchangeComponent } from './currency-form/pop-setting-exchang
 import { PopAddExchangerateComponent } from './currency-form/pop-add-exchangerate/pop-add-exchangerate.component';
 import { ChartOfAccountsComponent } from './chart-of-accounts/chart-of-accounts.component';
 import { PopAddAccountsComponent } from './chart-of-accounts/pop-add-accounts/pop-add-accounts.component';
+import { CustomersComponent } from './customers/customers.component';
+import { PopAddCustomersComponent } from './customers/pop-add-customers/pop-add-customers.component';
+import { PopAddBankComponent } from './customers/pop-add-bank/pop-add-bank.component';
+import { PopAddContactComponent } from './customers/pop-add-contact/pop-add-contact.component';
+import { PopAddAddressComponent } from './customers/pop-add-address/pop-add-address.component';
 
 export const routes: Routes = [
   {
@@ -29,12 +34,16 @@ export const routes: Routes = [
     component: LayoutNoAsideComponent,
     children: [
       {
-        path: 'currency/:funcID',
+        path: 'currencies/:funcID',
         component: CurrencyFormComponent,
       },
       {
         path: 'chartofaccounts/:funcID',
         component: ChartOfAccountsComponent,
+      },
+      {
+        path: 'customers/:funcID',
+        component: CustomersComponent,
       },
     ],
   },
@@ -50,6 +59,11 @@ export const routes: Routes = [
     PopAddExchangerateComponent,
     ChartOfAccountsComponent,
     PopAddAccountsComponent,
+    CustomersComponent,
+    PopAddCustomersComponent,
+    PopAddBankComponent,
+    PopAddContactComponent,
+    PopAddAddressComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

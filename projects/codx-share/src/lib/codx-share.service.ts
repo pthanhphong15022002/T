@@ -15,6 +15,7 @@ import {
 import { AssignInfoComponent } from './components/assign-info/assign-info.component';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { PopupCommentComponent } from 'projects/codx-es/src/lib/sign-file/popup-comment/popup-comment.component';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -586,6 +587,27 @@ export class CodxShareService {
       'GetListResourceByTypeAsync',
       [resourceType]
     );
+  }
+
+  getThumbByUrl(url:any, width = 30)
+  {
+    if(url)
+    {
+      var wt = width;
+      var widthThumb = 1.2;
+      var arr = url.split("/");
+      var uploadID = arr[arr.length-2];
+      
+      if (width <= 30 * widthThumb) wt = 30;
+      else if (width <= 60 * widthThumb) wt = 60;
+      else if (width <= 120 * widthThumb) wt = 120;
+      else if (width <= 300 * widthThumb) wt = 300;
+      else if (width <= 500 * widthThumb) wt = 500;
+      else if (width <= 650 * widthThumb) wt = 600;
+
+      return environment.urlUpload + "/api/" + environment.appName + "/thumbs/" + uploadID + "/" + wt + ".webp";
+    }
+    return ""
   }
 }
 

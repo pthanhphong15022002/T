@@ -143,7 +143,9 @@ app-list-post .e-listview .e-list-item {
 .border-bottom,
 .border-top,
 .border-start,
-.border-end {
+.border-end,
+.border-left,
+.border-right {
     border-color: var(--border-gray) !important;
 }
 
@@ -178,6 +180,7 @@ codx-view-list-detail .nav-link {
 
 textarea.codx-textarea {
     background-color: var(--bg-input);
+    color: var(--text-title);
 }
 
 .e-input-group,
@@ -187,6 +190,14 @@ textarea.codx-textarea {
 .e-float-input.e-control-wrapper,
 .e-float-input.e-input-group.e-control-wrapper {
     background: var(--bg-input);
+    color: var(--text-body);
+}
+
+.feed-box .e-float-input {
+    background-color: transparent;
+}
+
+.feed-box .btn span[class*=icon-] {
     color: var(--text-body);
 }
 
@@ -610,9 +621,17 @@ codx-user-inner a.menu-link {
     color: var(--text-des) !important;
 }
 
-ejs-listview,
+ejs-listview {
+    background-color: var(--bg-card);
+}
+
 .popover {
     background-color: var(--bg-card);
+    border-color: var(--border-list);
+
+    .popover-body {
+        color: var(--text-body);
+    }
 }
 
 .codx-search {
@@ -690,6 +709,43 @@ label,
     background-color: rgba(255, 255, 255, 0.04);
     border-color: var(--border-list);
     color: inherit;
+}
+
+.btn {
+    color: var(--primary);
+}
+
+.e-schedule .e-schedule-table .e-auto-height {
+    border-color: var(--border-list);
+}
+
+codx-attachment .card {
+    background-color: transparent;
+}
+
+.e-listview .e-list-item .note-option {
+    color: var(--black);
+}
+
+.checkbox-list input {
+    background-color: var(--bg-input);
+    color: var(--text-body);
+}
+
+codx-filter-form .list-group-item {
+    background-color: transparent;
+}
+
+.user-mini-nav.user-role .user-nav-item:hover {
+    background-color: var(--bg-card);
+}
+
+.e-schedule .e-month-agenda-view .e-current-date .e-date-header {
+    color: var(--text-body);
+}
+
+.card-footer {
+    border-color: var(--border-gray);
 }
 
 //end dark

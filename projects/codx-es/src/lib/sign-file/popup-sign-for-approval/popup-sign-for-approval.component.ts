@@ -56,7 +56,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
   subTitle: string;
   lstMF: any;
 
-  disabled: boolean = false;
+  isInteractPDF: boolean = false;
+  isEdited: boolean;
 
   constructor(
     private inject: Injector,
@@ -72,7 +73,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.dialog = dialog;
     this.data = dt.data;
     this.lstMF = dt.data?.lstMF;
-    console.log('More function', this.lstMF);
 
     this.oApprovalTrans = dt?.data?.oTrans;
     if (this.oApprovalTrans?.confirmControl == '1') {
@@ -94,7 +94,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
       if (res) {
         let sf = res?.signFile;
         if (sf && sf.files) {
-          this.disabled = sf.files[0]?.isEdited;
+          this.isEdited = sf.files[0]?.isEdited;
         }
       }
     });
@@ -175,6 +175,12 @@ export class PopupSignForApprovalComponent extends UIComponent {
     if (!this.canOpenSubPopup) {
       return;
     }
+    if ((morefuncID != 'SYS206') && this.isInteractPDF) {
+      return;
+    }
+    if((morefuncID != 'SYS206') && (morefuncID != 'SYS208')  && this.isEdited){
+      return;
+    }
 
     let missingImgArea = this.pdfView?.lstAreas?.find((area) => {
       // !this.pdfView.checkIsUrl(area.labelValue) &&
@@ -204,13 +210,13 @@ export class PopupSignForApprovalComponent extends UIComponent {
         if (hasCA) {
           this.notify.alertCode('ES029').subscribe((x) => {
             if (x.event.status == 'Y') {
-              this.disabled = !this.disabled;
+              this.isInteractPDF = !this.isInteractPDF;
               this.pdfView && this.pdfView.changeEditMode();
             }
             return;
           });
         } else {
-          this.disabled = !this.disabled;
+          this.isInteractPDF = !this.isInteractPDF;
           this.pdfView && this.pdfView.changeEditMode();
         }
         return;
@@ -228,23 +234,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     if (missingImgArea || this.pdfView.lstAreas.length == 0) {
       this.notify.alertCode('ES019').subscribe((x) => {
         if (x.event.status == 'Y') {
-          //this.mode = mode;
-          //let title = '';
           let subTitle = 'Comment khi duyệt';
-          // switch (this.mode) {
-          //   case 5:
-          //     title = 'Duyệt';
-          //     break;
-          //   case 4:
-          //     title = 'Từ chối';
-          //     break;
-          //   case 2:
-          //     title = 'Làm lại';
-          //     break;
-          //   default:
-          //     return;
-          // }
-          //this.title = title;
           this.subTitle = subTitle;
           if (
             this.data.stepType == 'S' &&
@@ -274,22 +264,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
       //   }
       // });
     } else {
-      //this.mode = mode;
-      //let title = '';
+
       let subTitle = 'Comment khi duyệt';
-      // switch (mode) {
-      //   case 5:
-      //     title = 'Duyệt';
-      //     break;
-      //   case 4:
-      //     title = 'Từ chối';
-      //     break;
-      //   case 2:
-      //     title = 'Làm lại';
-      //     break;
-      //   default:
-      //     return;
-      // }
       this.subTitle = subTitle;
       if (
         this.data.stepType == 'S' &&
@@ -329,7 +305,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
     if (checkControl) {
       checkControl.closed.subscribe((res) => {
         let oComment = res?.event;
-        console.log('result', res?.event);
         this.dialogSignFile.patchValue({ comment: oComment.comment });
         this.dialogSignFile.patchValue({ reasonID: oComment.reasonID });
         this.approve(mode, title, subTitle, null);
@@ -521,7 +496,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   changeActiveOpenPopup(e) {
-    console.log('active', e);
   }
 
   changeSignerInfo(event) {
@@ -541,5 +515,22 @@ export class PopupSignForApprovalComponent extends UIComponent {
     } else {
       this.dialog && this.dialog.close();
     }
+  }
+
+  eventHighlightText(event){
+    console.log('eventHighlightText', event);
+    if(event){
+      switch(event.event){
+        case 'cancel':{
+          this.isInteractPDF = event.isInteractPDF;
+          break;
+        }
+        case 'save':{
+          this.isEdited = event.isEdited;
+          break;
+        }
+      }
+    }
+    this.detectorRef.detectChanges();
   }
 }

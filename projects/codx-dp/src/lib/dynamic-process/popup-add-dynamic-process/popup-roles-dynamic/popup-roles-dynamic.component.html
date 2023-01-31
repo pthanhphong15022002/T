@@ -5,9 +5,45 @@
   <div class="row" style="height: 100% !important;">
     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
       <div class="user-mini-nav">
-        <div>
-          <ng-container>
+        <div *ngIf="lstPermissions.length > 0">
+          <ng-container *ngFor="let perm of lstPermissions; index as i;">
+            <div *ngIf="perm.roleType == type" class="d-flex justify-content-between list-title w-100" (click)="changePermission(i)"
+            [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
+            class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item p-2">
+              <div class="d-flex align-items-top">
+                <div *ngIf="perm.objectType != '1' && perm.objectType != 'U' ; then thenAvatar1 else elsethenAvatar1">
+                </div>
+                <ng-template #thenAvatar1>
+                  <div class="me-3 d-flex align-items-center" style="margin-bottom: 10px">
+                    <div class="d-flex align-items-center position-relative">
+                      <img src="../../../assets/codx/user/user-admin.svg" alt=""
+                        style="width: 25px; border-radius: 50%;">
+                    </div>
+                  </div>
 
+                  <div class="ms-3">
+                    <div class="text-dark fw-bold">
+                      {{ perm.objectName }}
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template #elsethenAvatar1>
+                  <div class="me-3 d-flex align-items-center">
+                    <div class="d-flex align-items-center position-relative">
+                      <codx-img class="" [width]="25" [objectId]="perm.objectID" objectType="AD_Users">
+                      </codx-img>
+                    </div>
+                  </div>
+                  <div class="ms-3">
+                    <div class="text-dark fw-bold">
+                      {{ perm.objectName }}
+                    </div>
+                  </div>
+
+                </ng-template>
+              </div>
+
+            </div>
           </ng-container>
         </div>
       </div>
@@ -34,18 +70,21 @@
                 <codx-label [default]="'Toàn quyền'" [formModel]="dialog.formModel" [fiedName]="'Full'"></codx-label>
               </td>
               <td>
-                <codx-label [default]="'Người dùng có tất cả quyền trên quy trình'" [formModel]="dialog.formModel" [fiedName]="'DescriptionFull'">
+                <codx-label [default]="'Người dùng có tất cả quyền trên quy trình'" [formModel]="dialog.formModel"
+                  [fiedName]="'DescriptionFull'">
                 </codx-label>
               </td>
               <td class="text-center">
                 <codx-input class="test-check" type="switch" style="width:100%" [checked]="full" field="full"
-                  [disabled]="checkAdminUpdate()"  (valueChange)="valueChange($event, 'full')" (focus)="controlFocus(true)">
+                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'full')"
+                  (focus)="controlFocus(true)">
                 </codx-input>
               </td>
             </tr>
             <tr>
               <td class="font-size-lg text-dark">
-                <codx-label [default]="'Tạo qui trình'" [formModel]="dialog.formModel" [fiedName]="'Create'"></codx-label>
+                <codx-label [default]="'Tạo qui trình'" [formModel]="dialog.formModel" [fiedName]="'Create'">
+                </codx-label>
               </td>
               <td>
                 <codx-label [default]="'Cho phép tạo qui trình'" [fiedName]="'DescriptionCreate'"></codx-label>
@@ -61,7 +100,8 @@
                 <codx-label [default]="'Xem'" [formModel]="dialog.formModel" [fiedName]="'Read'"></codx-label>
               </td>
               <td>
-                <codx-label [default]="'Cho phép xem chi tiết quy trình'" [formModel]="dialog.formModel" [fiedName]="'DescriptionRead'">
+                <codx-label [default]="'Cho phép xem chi tiết quy trình'" [formModel]="dialog.formModel"
+                  [fiedName]="'DescriptionRead'">
                 </codx-label>
               </td>
               <td class="text-center">
@@ -117,7 +157,8 @@
                 <codx-label [default]="'Chia sẻ'" [formModel]="dialog.formModel" [fiedName]="'Share'"></codx-label>
               </td>
               <td>
-                <codx-label [default]="'Cho phép chia sẻ quy trình'" [formModel]="dialog.formModel" [fiedName]="'DescriptionShare'"></codx-label>
+                <codx-label [default]="'Cho phép chia sẻ quy trình'" [formModel]="dialog.formModel"
+                  [fiedName]="'DescriptionShare'"></codx-label>
               </td>
               <td class="text-center">
                 <codx-input class="test-check" type="switch" style="width:100%" [checked]="share" field="share"
@@ -130,7 +171,8 @@
                 <codx-label [default]="'Phân quyền'" [formModel]="dialog.formModel" [fiedName]="'Sssign'"></codx-label>
               </td>
               <td>
-                <codx-label [default]="'Cho phép chia sẻ và chỉnh sửa quyền'" [formModel]="dialog.formModel" [fiedName]="'DescriptionAssign'">
+                <codx-label [default]="'Cho phép chia sẻ và chỉnh sửa quyền'" [formModel]="dialog.formModel"
+                  [fiedName]="'DescriptionAssign'">
                 </codx-label>
               </td>
               <td class="text-center">
@@ -157,11 +199,12 @@
                 <codx-label [default]="'Download'" [formModel]="dialog.formModel" [fiedName]="'Download'"></codx-label>
               </td>
               <td>
-                <codx-label [default]="'Cho phép download file'" [formModel]="dialog.formModel" [fiedName]="'DescriptionDownload'"></codx-label>
+                <codx-label [default]="'Cho phép download file'" [formModel]="dialog.formModel"
+                  [fiedName]="'DescriptionDownload'"></codx-label>
               </td>
               <td class="text-center">
-                <codx-input class="test-check" type="switch" style="width:100%" [checked]="download"
-                  field="download" [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'download')">
+                <codx-input class="test-check" type="switch" style="width:100%" [checked]="download" field="download"
+                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'download')">
                 </codx-input>
               </td>
             </tr>

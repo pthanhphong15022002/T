@@ -270,6 +270,9 @@ export class EditFileComponent implements OnInit {
     {
       this.fileEditing.type = this.fileEditing.extension.replace('.', '');
     }
+    var arrName = this.fileEditing.fileName.split(".");
+    if(arrName.length >1) arrName.splice((arrName.length - 1), 1);
+    this.fileEditing.fileName = arrName.join('.');
 /* if(this.fileEditing.language)
         {
           this.cache.valueList("L1473").subscribe(item=>{
@@ -296,6 +299,7 @@ export class EditFileComponent implements OnInit {
       // $('#fileName').focus();
       
     }
+    this.fileEditing.fileName = this.fileEditing.fileName + this.fileEditing.extension
     // if(this.license == true){
     //   if(this.fileEditing.author == "" || this.fileEditing.publisher == "" || this.fileEditing.publishYear == null || this.fileEditing.copyRights == "" || this.fileEditing.publishDate == null){
     //     this.notificationsService.notify(this.editfilemessage);
@@ -628,8 +632,6 @@ export class EditFileComponent implements OnInit {
    
     if (this.fileEditing.fileName === "")
       return "1";
-    else if (this.fileEditing.fileName.indexOf(".") === -1)
-      return "2";
     else
       return "0";
   }

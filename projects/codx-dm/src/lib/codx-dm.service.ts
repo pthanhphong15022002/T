@@ -669,7 +669,6 @@ export class CodxDMService {
         //     e[i].disabled = true;
         //   }
         // }
-
         if (this.idMenuActive != 'DMT06' && this.idMenuActive != 'DMT07') {
           if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
             e[i].disabled = true;
@@ -678,10 +677,10 @@ export class CodxDMService {
           //list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
           //list = "DMT0226;DMT0227;DMT0230;DMT0231";
           if (type == 'DM_FolderInfo') {
-            if (this.dmFavoriteID == '2') list = 'DMT0226;DMT0227';
+            if (this.folderService.options.favoriteID == '1') list = 'DMT0226;DMT0227';
             else list = 'DMT0227';
           } else {
-            if (this.dmFavoriteID == '2') list = 'DMT0230;DMT0231';
+            if (this.fileService.options.favoriteID == '1') list = 'DMT0230;DMT0231';
             else list = 'DMT0231';
           }
           if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
@@ -986,7 +985,7 @@ export class CodxDMService {
   }
 
   getViews(data: HistoryFile[]) {
-    if (data != null) {
+    if (data) {
       // var list = data.filter(x => x.rating == 0);
       return data.filter(
         (x) =>
@@ -1790,5 +1789,12 @@ export class CodxDMService {
           this.notificationsService.notify(res.message);
         }
       });
+  }
+  getFileName(name:any)
+  {
+    if(!name) return ""
+    var arrName = name.split(".");
+    if(arrName.length >1) arrName.splice((arrName.length - 1), 1);
+    return arrName.join('.')
   }
 }

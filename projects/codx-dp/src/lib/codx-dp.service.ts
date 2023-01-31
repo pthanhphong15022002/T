@@ -31,13 +31,13 @@ export class CodxDpService {
     );
   }
 
-  genAutoNumber(formName: string, funcID: any, entityName: string, key: any) {
+  genAutoNumber(funcID: any, entityName: string, key: any) {
     return this.api.execSv<any>(
       'SYS',
       'AD',
       'AutoNumbersBusiness',
       'GenAutoNumberAsync',
-      [formName, funcID, entityName, key]
+      [funcID, entityName, key]
     );
   }
 
@@ -120,5 +120,68 @@ export class CodxDpService {
         else subject.next(null);
       });
     return subject.asObservable();
+  }
+
+  GetInstanceByRecID(recID){
+    return this.api.execSv<any>(
+      'DP',
+      'ERM.Business.DP',
+      'InstancesBusiness',
+      'GetAsync',
+      [recID]
+    );
+  }
+
+  // #step -- nvthuan
+  addStep(data) {
+    return this.api.exec<any>(
+      'DP',
+      'StepsBusiness',
+      'AddStepAsync',
+      data
+    );
+  }
+  editStep(data) {
+    return this.api.exec<any>(
+      'DP',
+      'StepsBusiness',
+      'EditStepAsync',
+      data
+    );
+  }
+
+  GetAutoNumberNo(formName: string , funcID: any ,entityName: string , key: any){
+      return this.api.execSv<any>('SYS','AD','AutoNumbersBusiness','GenAutoNumberAsync', [formName , funcID , entityName , key])
+
+  }
+  getStep(data) {
+    return this.api.exec<any>(
+      'DP',
+      'StepsBusiness',
+      'GetStepAsync',
+      data
+    );
+  }
+
+  getlistCbxProccess(){
+    return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetListCbxProcessesAsync');
+  }
+
+  getStepsByProcessID(recID){
+    return this.api.exec<any>(
+      'DP',
+      'StepsBusiness',
+      'GetStepsByProcessIDAsync',
+      recID
+    );
+  }
+
+  createListInstancesStepsByProcess(processID) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'CreateListInstancesStepsByProcess',
+      processID
+    );
   }
 }

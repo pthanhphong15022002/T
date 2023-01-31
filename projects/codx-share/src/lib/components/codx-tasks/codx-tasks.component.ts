@@ -241,7 +241,9 @@ export class CodxTasksComponent
       this.funcID != 'TMT0206' &&
       this.funcID != 'TMT0202' &&
       this.funcID != 'MWP0063' &&
-      this.funcID != 'MWP0064';
+      this.funcID != 'MWP0064' &&
+      this.funcID != 'TMT0402' &&
+      this.funcID != 'TMT0403' ;
 
     this.modelResource = new ResourceModel();
     if (this.funcID != 'TMT03011' && this.funcID != 'TMT05011') {
@@ -1047,7 +1049,7 @@ export class CodxTasksComponent
   }
 
   receiveMF(e: any) {
-    this.clickMF(e.e, this.itemSelected);
+    this.clickMF(e.e, e?.data);
   }
 
   getParam(callback = null) {
