@@ -1135,15 +1135,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   savePopupGroupJob() {
     let reqiure = [];
-    if (!this.taskGroup?.taskGroupName || !this.taskGroup?.taskGroupName.trim()) {
-      reqiure.push(this.grvTaskGroups['TaskGroupName']?.headerText ?? 'TaskGroupName');
-    }
-    if(reqiure.length > 0 ){
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + reqiure.join(', ') + '"'
+    if (
+      !this.taskGroup?.taskGroupName ||
+      !this.taskGroup?.taskGroupName.trim()
+    ) {
+      reqiure.push(
+        this.grvTaskGroups['TaskGroupName']?.headerText ?? 'TaskGroupName'
       );
+    }
+    if (reqiure.length > 0) {
+      this.notiService.notifyCode('SYS009', 0, '"' + reqiure.join(', ') + '"');
       return;
     }
     this.popupGroupJob.close();
@@ -1192,7 +1193,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     option.FormModel = frmModel;
     let dialog = this.callfc.openSide(
       PopupJobComponent,
-      [status, this.jobType, this.step?.recID, this.taskGroupList, data || {}],
+      [
+        status,
+        this.jobType,
+        this.step?.recID,
+        this.taskGroupList,
+        data || {},
+        this.taskList,
+      ],
       option
     );
     dialog.closed.subscribe((e) => {
@@ -1268,7 +1276,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     option.FormModel = frmModel;
     let dialog = this.callfc.openSide(
       ViewJobComponent,
-      [status, this.jobType, this.step?.recID, this.taskGroupList, data || {}],
+      [
+        status,
+        this.jobType,
+        this.step?.recID,
+        this.taskGroupList,
+        data || {},
+        this.taskList,
+      ],
       option
     );
     dialog.closed.subscribe((e) => {
@@ -1313,7 +1328,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.callfc.openForm(share, '', 500, 500);
   }
   onDeleteOwner(objectID, datas) {
-    let index = datas.findIndex((item) => item.id == objectID);
+    let index = datas.findIndex((item) => item.objectID == objectID);
     if (index != -1) datas.splice(index, 1);
   }
   applyUser(event, datas, status) {
@@ -1325,6 +1340,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           objectID: element.id,
           objectName: element.text,
           objectType: element.objectType,
+          roleType: element.objectName,
         });
       }
     });
