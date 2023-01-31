@@ -7,6 +7,7 @@ import {
   SimpleChanges,
   Injector,
   OnInit,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CacheService, Util } from 'codx-core';
@@ -18,6 +19,7 @@ import { DispatchService } from '../../services/dispatch.service';
   selector: 'app-od-approvel',
   templateUrl: './approvel.component.html',
   styleUrls: ['./approvel.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ODApprovelComponent
   implements OnInit , AfterViewInit, OnChanges {
@@ -45,7 +47,7 @@ export class ODApprovelComponent
   ngOnChanges(changes: SimpleChanges, ): void { }
   ngOnInit(): void {
     this.router.params.subscribe((params) => {
-      this.funcID = params['funcID'];
+      this.funcID = params['FuncID'];
       if(params['id']) this.getGridViewSetup(this.funcID , params['id']);
     });
   }

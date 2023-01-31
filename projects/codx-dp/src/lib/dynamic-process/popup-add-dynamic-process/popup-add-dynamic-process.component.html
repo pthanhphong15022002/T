@@ -213,6 +213,8 @@
           <button
             *ngIf="currentTab != 2"
             type="button"
+            [ngClass]="(this.process.processNo == null || this.process.processNo == '') || (this.process.processName == null || this.process.processName == '') ? 'disabled'
+            : ''"
             class="btn btn-primary"
             (click)="continue(currentTab)"
           >
@@ -1931,7 +1933,7 @@
           >
           </codx-mfunc>
           </li>
-         
+
         </ul>
         </div>
       </div>
@@ -2110,7 +2112,7 @@
           >
           </codx-mfunc>
           </li>
-         
+
         </ul>
         </div>
       </div>

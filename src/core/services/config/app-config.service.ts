@@ -27,7 +27,7 @@ export class AppConfigService extends AppConfig {
         environment.themeMode = res.themeMode;
         environment.SureMeet = res.sureMeet;
         environment.firebase = res.firebase;
-        this.tenantStore.initDefault();
+        // this.tenantStore.initDefault();
       })
     );
   }
