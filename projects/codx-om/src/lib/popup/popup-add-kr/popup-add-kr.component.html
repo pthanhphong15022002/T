@@ -12,7 +12,7 @@
   <ng-template #body>
     <ng-container *ngIf="form && form.formGroup">
     <div class="form-group">
-      <codx-label default="Mục tiêu" fiedName="" [formModel]="form.formModel">
+      <codx-label fiedName="ParentID" [formModel]="form.formModel">
       </codx-label>
       <codx-input type="combobox" [refValue]="'Objectives'" [crrValue]="kr.parentID" 
       (valueChange)="valueChange($event)" field="parentID">        
@@ -23,7 +23,7 @@
       <codx-label fiedName="OKRName" [formModel]="form.formModel">
       </codx-label>
       <codx-input
-        ControlName="oKRName"
+        ControlName="okrName"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
       >

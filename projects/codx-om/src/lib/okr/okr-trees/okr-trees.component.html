@@ -82,14 +82,14 @@
                     data?.notes ? data?.notes.length : 0
                     }}</span>
                 </button>
-                <!-- <codx-mfunc [formModel]="formModel" type="view" [dataItem]="data" class="ms-4"></codx-mfunc> -->
+                <codx-mfunc  type="view" [dataItem]="data" class="ms-4"></codx-mfunc> 
               </div>
             </div>
           </div>
-          <div [attr.id]="'collapse' + i" class="accordion-collapse collapse"
+          <div [attr.id]="'collapse' + i" class="accordion-collapse w-100 collapse"
             [class.show]="openAccordionAlign[i]" [attr.aria-labelledby]="'heading' + i"
-            data-bs-parent="#accordionExample">
-            <div class="ps-5 mt-2 cursor-pointer w-100 d-flex justify-content-end"
+            data-bs-parent="#accordionExample" >
+            <div class="ps-5 mt-2 cursor-pointer w-100"
               *ngFor="let item of data?.child">
               <!--show KR-->
               <div class="d-flex align-items-center justify-content-between w-95">
@@ -160,8 +160,8 @@
                         : 0
                         }}</span>
                     </button>
-                    <!-- <codx-mfunc [formModel]="formModel" type="view" [dataItem]="item"
-                      class="ms-4"></codx-mfunc> -->
+                     <codx-mfunc  type="view" [dataItem]="item"
+                      class="ms-4"></codx-mfunc> 
                   </div>
                 </div>
               </div>

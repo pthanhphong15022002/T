@@ -11,7 +11,7 @@ const routes: Routes = [
     component: CodxApprovalComponent,
     children: [
       {
-        path: 'dispatches/:funcID/:id',
+        path: 'dispatches/:FuncID/:id',
         component: ODApprovelComponent,
       },
     ],

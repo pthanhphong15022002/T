@@ -19,3 +19,23 @@
   .e-input-value{
     display: flex ; align-items: center; padding-left: 10px;
   }
+  .combobox-multi{
+    .input-container{ 
+      position: relative;
+      .combobox{
+        height: 32px;
+        width: 100%;
+        border: 1px solid #d8dbdd;
+        border-radius: 2px;
+      }
+      span{
+        position: absolute;
+        top: 5px;
+        right: 2px;
+        font-size: 25px !important;
+        color: #a3a8ad;
+        font-weight: 100;
+      }
+    }
+  }
+  
