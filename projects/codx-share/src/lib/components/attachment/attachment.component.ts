@@ -1615,7 +1615,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   sortBy() {
-    if (this.fileUploadList != null)
+    if (this.fileUploadList && this.fileUploadList.length >0)
       return this.fileUploadList.sort((a, b) => a.order - b.order);
     else return null;
   }

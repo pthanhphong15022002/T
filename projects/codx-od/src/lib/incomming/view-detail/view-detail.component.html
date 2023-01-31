@@ -11,11 +11,13 @@
         </div>
         <div class="d-flex flex-wrap mt-3">
           <div class="d-flex align-items-center me-5 mb-1">
-            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="RefNo"
+            <ng-container *ngIf="formModel['gridViewName']">
+              <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="RefNo"
               ngClass="fw-bold label-colon"></codx-label>
-            <span class="text-gray-700">{{
-              data?.refNo ? data?.refNo : gridViewSetup?.RefNo?.headerText
-              }}</span>
+              <span class="text-gray-700">{{
+                data?.refNo ? data?.refNo : gridViewSetup?.RefNo?.headerText
+                }}</span>
+            </ng-container>
           </div>
           <div class="d-flex align-items-center me-5 mb-1">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
@@ -25,13 +27,17 @@
               }}</span>
           </div>
           <div class="d-flex align-items-center me-5 mb-1">
-            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
-              fiedName="CategoryID" class="fw-bold label-colon"></codx-label>
-            <span [class.text-gray-700]="!data?.category">{{
-              data?.category
-              ? data?.category
-              : gridViewSetup["CategoryID"]["headerText"]
-              }}</span>
+            <ng-container *ngIf="formModel['gridViewName']">
+              <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
+                fiedName="CategoryID" class="fw-bold label-colon"></codx-label>
+                <ng-container *ngIf="gridViewSetup?.CategoryID">
+                  <span [class.text-gray-700]="!data?.category">{{
+                    data?.category
+                    ? data?.category
+                    : gridViewSetup["CategoryID"]["headerText"]
+                    }}</span>
+                </ng-container>
+            </ng-container>
           </div>
           <div class="d-flex align-items-center me-5 mb-1">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="Urgency"
