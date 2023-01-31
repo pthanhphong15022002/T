@@ -163,7 +163,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   grvTaskGroups: any;
 
   stepName = '';
-
+  isContinues = false;
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
@@ -461,8 +461,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //Click từng tab - mặc định thêm mới = 0
   clickTab(tabNo) {
     //if (tabNo <= this.processTab && tabNo != this.currentTab) {
-    if (tabNo != this.currentTab) {
-      this.updateNodeStatus(this.currentTab, tabNo);
+    let newNo = tabNo;
+    let oldNo = this.currentTab;
+    if (tabNo <= this.processTab && tabNo != this.currentTab) {
+      this.updateNodeStatus(oldNo, newNo);
       this.currentTab = tabNo;
     }
   }
@@ -510,6 +512,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let newNode = oldNode + 1;
     switch (currentTab) {
       case 0:
+        if (
+          this.process.processNo == null ||
+          this.process.processNo == '' ||
+          this.process.processName == null ||
+          this.process.processName == ''
+        ) {
+          this.isContinues = true;
+        }
         this.updateNodeStatus(oldNode, newNode);
         this.currentTab++;
         this.processTab == 0 && this.processTab++;
@@ -1135,15 +1145,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   savePopupGroupJob() {
     let reqiure = [];
-    if (!this.taskGroup?.taskGroupName || !this.taskGroup?.taskGroupName.trim()) {
-      reqiure.push(this.grvTaskGroups['TaskGroupName']?.headerText ?? 'TaskGroupName');
-    }
-    if(reqiure.length > 0 ){
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + reqiure.join(', ') + '"'
+    if (
+      !this.taskGroup?.taskGroupName ||
+      !this.taskGroup?.taskGroupName.trim()
+    ) {
+      reqiure.push(
+        this.grvTaskGroups['TaskGroupName']?.headerText ?? 'TaskGroupName'
       );
+    }
+    if (reqiure.length > 0) {
+      this.notiService.notifyCode('SYS009', 0, '"' + reqiure.join(', ') + '"');
       return;
     }
     this.popupGroupJob.close();
