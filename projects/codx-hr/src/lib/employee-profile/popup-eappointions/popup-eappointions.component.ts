@@ -73,7 +73,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.lstEAppointions = data?.data?.lstEAppointions;
-    console.log('lit input EApotins:', this.lstEAppointions);
 
     this.indexSelected =
       data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
@@ -179,7 +178,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   click(data) {
-    console.log('formdata', data);
     this.EAppointionObj = data;
     this.formModel.currentData = JSON.parse(
       JSON.stringify(this.EAppointionObj)
