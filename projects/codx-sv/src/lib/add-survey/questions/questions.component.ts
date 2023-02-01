@@ -217,54 +217,56 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.api
       .exec('ERM.Business.SV', 'QuestionsBusiness', 'GetByRecIDAsync', [recID])
       .subscribe((res: any) => {
-        if (res[0] && res[0].length > 0) {
-          this.questions = this.getHierarchy(res[0], res[1]);
-          this.SVServices.getFilesByObjectType(
-            this.functionList.entityName
-          ).subscribe((res: any) => {
-            if (res) {
-              res.forEach((x) => {
-                if (x.referType == this.REFER_TYPE.VIDEO)
-                  x['srcVideo'] = `${environment.urlUpload}/${x.pathDisk}`;
-              });
-              this.lstEditIV = res;
-            }
-            console.log('check lstFile', this.lstEditIV);
-          });
-        } else {
-          this.questions = [
-            {
-              seqNo: 0,
-              question: null,
-              answers: null,
-              other: false,
-              mandatory: false,
-              answerType: null,
-              category: 'S',
-              children: [
-                {
-                  seqNo: 0,
-                  question: 'Câu hỏi 1',
-                  answers: [
-                    {
-                      seqNo: 0,
-                      answer: 'Tùy chọn 1',
-                      other: false,
-                      isColumn: false,
-                      hasPicture: false,
-                    },
-                  ],
-                  other: true,
-                  mandatory: false,
-                  answerType: 'O',
-                  category: 'Q',
-                },
-              ],
-            },
-          ];
+        if (res) {
+          if (res[0] && res[0].length > 0) {
+            this.questions = this.getHierarchy(res[0], res[1]);
+            this.SVServices.getFilesByObjectType(
+              this.functionList.entityName
+            ).subscribe((res: any) => {
+              if (res) {
+                res.forEach((x) => {
+                  if (x.referType == this.REFER_TYPE.VIDEO)
+                    x['srcVideo'] = `${environment.urlUpload}/${x.pathDisk}`;
+                });
+                this.lstEditIV = res;
+              }
+              console.log('check lstFile', this.lstEditIV);
+            });
+          } else {
+            this.questions = [
+              {
+                seqNo: 0,
+                question: null,
+                answers: null,
+                other: false,
+                mandatory: false,
+                answerType: null,
+                category: 'S',
+                children: [
+                  {
+                    seqNo: 0,
+                    question: 'Câu hỏi 1',
+                    answers: [
+                      {
+                        seqNo: 0,
+                        answer: 'Tùy chọn 1',
+                        other: false,
+                        isColumn: false,
+                        hasPicture: false,
+                      },
+                    ],
+                    other: true,
+                    mandatory: false,
+                    answerType: 'O',
+                    category: 'Q',
+                  },
+                ],
+              },
+            ];
+          }
+          this.questions[0].children[0]['active'] = true;
+          this.itemActive = this.questions[0].children[0];
         }
-        this.questions[0].children[0]['active'] = true;
-        this.itemActive = this.questions[0].children[0];
       });
   }
 
