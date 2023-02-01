@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Injector,
   Input,
@@ -21,8 +22,10 @@ import {
   DialogModel,
   FormModel,
   ResourceModel,
+  RequestOption,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
+import { DP_Instances } from '../models/models';
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
@@ -41,6 +44,7 @@ export class InstancesComponent
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
   views: Array<ViewModel> = [];
+  moreFuncs: Array<ButtonModel> = [];
 
   @Input() process: any;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
@@ -64,16 +68,20 @@ export class InstancesComponent
   vllStatus = 'DP028';
 
   dialog: any;
+  moreFunc: any;
   instanceNo: string;
   listSteps = [];
 
   formModel: FormModel;
   isMoveSuccess: boolean = true;
 
+  instances = new DP_Instances();
+
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
+    private changeDetectorRef: ChangeDetectorRef,
 
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
@@ -103,6 +111,8 @@ export class InstancesComponent
         },
       },
     ];
+
+    this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
   onInit(): void {
     this.button = {
@@ -111,8 +121,16 @@ export class InstancesComponent
     this.dataObj = {
       processID: this.process?.recID ? this.process?.recID : '',
     };
-    if (this.process)
+
+    if (this.process) {
       this.codxDpService.getStep(this.process?.recID).subscribe((dt) => {
+        if (dt && dt?.length > 0) this.listSteps = dt;
+      });
+    }
+
+    this.codxDpService
+      .createListInstancesStepsByProcess(this.process?.recID)
+      .subscribe((dt) => {
         if (dt && dt?.length > 0) this.listSteps = dt;
       });
     //kanban
@@ -139,6 +157,7 @@ export class InstancesComponent
       case 'btnAdd':
         //   this.genAutoNumberNo();
         this.add();
+        // this.delete(this.instances);
         // this.moveStage();
         //  this.moveReason(this.isMoveSuccess);
         break;
@@ -148,60 +167,34 @@ export class InstancesComponent
   //CRUD
   add() {
     this.view.dataService.addNew().subscribe((res) => {
+      const funcIDApplyFor =
+        this.process.applyFor === 'D' ? 'DPT0406' : 'DPT0405';
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '850px';
-      option.zIndex = 1010;
-
-      let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
-      var dialogCustomField = this.callfc.openSide(
-        PopupAddInstanceComponent,
-        ['add', applyFor, stepCrr],
-        option
-      );
-      dialogCustomField.closed.subscribe((e) => {
-        if (e && e.event != null) {
-          //xu ly data đổ về
-          this.detectorRef.detectChanges();
-        }
+      this.cache.functionList(funcIDApplyFor).subscribe((res) => {
+        option.FormModel = this.view.formModel;
+        option.FormModel.funcID = res.functionID;
+        option.FormModel.entityName = res.entityName;
+        option.FormModel.formName = res.formName;
+        option.FormModel.gridViewName = res.gridViewName;
+        option.Width = '850px';
+        option.zIndex = 1010;
+        const titleForm = res.defaultName;
+        // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
+        var dialogCustomField = this.callfc.openSide(
+          PopupAddInstanceComponent,
+          ['add', applyFor, this.listSteps, titleForm],
+          option
+        );
+        dialogCustomField.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            //xu ly data đổ về
+            this.detectorRef.detectChanges();
+          }
+        });
       });
     });
-    // this.genAutoNumberNo();
-    // this.cache.gridView('grvDPInstances').subscribe((res) => {
-    //   this.cache
-    //     .gridViewSetup('DPInstances', 'grvDPInstances')
-    //     .subscribe((res) => {
-    //
-    //       let option = new SidebarModel();
-    //       //        let formModel = this.dialog?.formModel;
-    //       let formModel = new FormModel();
-    //       formModel.formName = 'DPInstances';
-    //       let stepCrr = this.listSteps[0] || undefined
-    //       var obj = {
-    //         instanceNo: this.instanceNo,
-    //         step : stepCrr
-    //       };
-    //       formModel.gridViewName = 'grvDPInstances';
-    //       formModel.entityName = 'DP_Instances';
-    //       option.FormModel = formModel;
-    //       option.Width = '800px';
-    //       option.zIndex = 1010;
-
-    //       var dialogCustomField = this.callfc.openSide(
-    //         PopupAddInstanceComponent,
-    //         ['add', titleAction, obj],
-    //         option
-    //       );
-    //       dialogCustomField.closed.subscribe((e) => {
-    //         if (e && e.event != null) {
-    //           //xu ly data đổ về
-    //           this.detectorRef.detectChanges();
-    //         }
-    //       });
-    //     });
-    // });
   }
   async genAutoNumberNo() {
     this.codxDpService
@@ -215,7 +208,25 @@ export class InstancesComponent
   //End
 
   //Event
-  clickMF(e, data) {}
+  clickMF(e, data?) {
+    // this.itemSelected = data;
+    // this.titleAction = e.text;
+    this.moreFunc = e.functionID;
+    switch (e.functionID) {
+      case 'SYS01':
+        this.add();
+        break;
+      case 'SYS03':
+        // this.edit(data);
+        break;
+      case 'SYS04':
+        //   this.copy(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+    }
+  }
 
   changeDataMF(e, data) {}
   //End
@@ -262,18 +273,19 @@ export class InstancesComponent
   changeView(e) {}
   // end code
 
-  moveStage(){
-    let formModel = new FormModel() ;
+  #region;
+  moveStage() {
+    let formModel = new FormModel();
     formModel.formName = 'DPInstances';
     formModel.gridViewName = 'grvDPInstances';
     formModel.entityName = 'DP_Instances';
 
     var obj = {
       // more: more,
-    //  data: data,
+      //  data: data,
       processName: this.process.processName,
       funcIdMain: this.funcID,
-      formModel:formModel
+      formModel: formModel,
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -292,18 +304,18 @@ export class InstancesComponent
       }
     });
   }
-  moveReason(isMoveSuccess: Boolean){
-    let formModel = new FormModel() ;
+  moveReason(isMoveSuccess: Boolean) {
+    let formModel = new FormModel();
     formModel.formName = 'DPInstancesStepsReasons';
     formModel.gridViewName = 'grvDPInstancesStepsReasons';
     formModel.entityName = 'DP_Instances_Steps_Reasons';
     var obj = {
       // more: more,
-    //  data: data,
+      //  data: data,
       processName: this.process.processName,
       funcIdMain: this.funcID,
-      formModel:formModel,
-      isReason: isMoveSuccess
+      formModel: formModel,
+      isReason: isMoveSuccess,
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -322,4 +334,27 @@ export class InstancesComponent
       }
     });
   }
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
+        }
+      });
+    this.changeDetectorRef.detectChanges();
+  }
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeletedInstanceAsync';
+    itemSelected.recID = 'fa6fe84a-9585-11ed-83ef-d493900707c4';
+    opt.data = [itemSelected.recID];
+    return true;
+  }
+
+  #endregion;
 }

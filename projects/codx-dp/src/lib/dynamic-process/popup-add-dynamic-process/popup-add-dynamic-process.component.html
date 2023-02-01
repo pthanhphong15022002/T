@@ -213,6 +213,8 @@
           <button
             *ngIf="currentTab != 2"
             type="button"
+            [ngClass]="(this.process.processNo == null || this.process.processNo == '') || (this.process.processName == null || this.process.processName == '') ? 'disabled'
+            : ''"
             class="btn btn-primary"
             (click)="continue(currentTab)"
           >
@@ -1247,7 +1249,11 @@
       </div>
       <!-- drap drop công việc ngoài-->
       <div class="main-body" *ngIf="taskGroupList.length > 0">
-        <div cdkDropList class="list" (cdkDropListDropped)="drop($event,taskGroupList)">
+        <div
+          cdkDropList
+          class="list"
+          (cdkDropListDropped)="drop($event, taskGroupList)"
+        >
           <div cdkDropListGroup>
             <ng-container *ngFor="let taskList of taskGroupList">
               <div class="card-job-list" cdkDrag [cdkDragData]="taskList">
@@ -1303,7 +1309,7 @@
                       [formModel]="dialog.formModel"
                       (clickMF)="clickMFTaskGroup($event, taskList)"
                       [isBookMark]="true"
-                      [dataItem]="action != 'edit' ? moreDefaut : taskList"
+                      [dataItem]="moreDefaut"
                       [type]="'hover'"
                     >
                     </codx-mfunc>
@@ -1395,17 +1401,21 @@
                           </div>
                           <codx-mfunc
                             [formModel]="dialog.formModel"
-                            (clickMF)="clickMFTask($event, taskList?.task, task)"
+                            (clickMF)="
+                              clickMFTask($event, taskList?.task, task)
+                            "
                             [isBookMark]="true"
-                            [dataItem]="action != 'edit' ? moreDefaut : task"
+                            [dataItem]="moreDefaut"
                             [type]="'hover'"
                           >
                           </codx-mfunc>
                         </div>
                       </div>
                     </ng-container>
-                    <div *ngIf="taskList?.task.length === 0" style="height: 10px;">
-                    </div>
+                    <div
+                      *ngIf="taskList?.task.length === 0"
+                      style="height: 10px"
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -1840,8 +1850,14 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input field="" type="valuelist" refValue=""> </codx-input>
-            <br />
+            <!-- <codx-input field="" type="valuelist" refValue="CRM009"> </codx-input> -->
+            <ejs-combobox
+              id="recID"
+              [dataSource]="listCbxProccess"
+              [fields]="fieldCbxProccess"
+              [placeholder]="'Không chuyển đến quy trình khác'"
+              (valueChange)="cbxChange($event)"
+            ></ejs-combobox>
             <codx-label
               class="text-danger fst-italic fs-6"
               default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại đối tượng áp dụng"
@@ -1868,8 +1884,9 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button class="button-custom"
-          (click)="openPopupReason(viewStepReasonSuccess)"
+          <button
+            class="button-custom"
+            (click)="openPopupReason(viewStepReasonSuccess, null, null)"
           >
             <span
               class="icon-add icon-20 text-primary-600 py-2"
@@ -1895,13 +1912,13 @@
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
       #view
     >
-      <div class="main-body" >
+      <div class="main-body">
         <div class="position-relative p-9" *ngIf="step.reasons.length == 0">
           <div class="position-absolute top-50 start-50 translate-middle">
             <button
               type="button"
               class="btn btn-outline-primary btn-sm pb-5"
-              (click)="openPopupReason(viewStepReasonSuccess)"
+              (click)="openPopupReason(viewStepReasonSuccess, null, null)"
             >
               <i class="icon-add icon-18"> </i>
               <codx-label [name]="''" [default]="'Thêm lý do'"></codx-label>
@@ -1911,12 +1928,23 @@
       </div>
 
       <div class="main-body pt-5 ps-5" *ngIf="step.reasons.length > 0">
-        <ul
-          class="text-left"
-          style="display: inline-block; vertical-align: middle"
+        <div *ngFor="let item of step.reasons" class="pb-2 ">
+          <ul
+          class="text-left drap-drop me-5 py-2 has-action-menu"
         >
-          <li class="pb-3"  *ngFor="let item of step.reasons ">{{item.reasonName}}</li>
+          <li>
+            {{item.reasonName}}
+            <codx-mfunc
+            [formModel]="dialog.formModel"
+            (clickMF)="clickMFReason($event, item,viewStepReasonSuccess)"
+            [dataItem]="action != 'edit' ? moreDefaut : item"
+            [type]="'hover'"
+          >
+          </codx-mfunc>
+          </li>
+
         </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -2036,8 +2064,9 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button class="button-custom"
-          (click)="openPopupReason(viewStepReasonFail)"
+          <button
+            class="button-custom"
+            (click)="openPopupReason(viewStepReasonFail, null, null)"
           >
             <span
               class="icon-add icon-20 text-primary-600 py-2"
@@ -2063,13 +2092,13 @@
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
       #view
     >
-      <div class="main-body" >
+      <div class="main-body">
         <div class="position-relative p-9" *ngIf="step.reasons.length == 0">
           <div class="position-absolute top-50 start-50 translate-middle">
             <button
               type="button"
               class="btn btn-outline-primary btn-sm pb-5"
-              (click)="openPopupReason(viewStepReasonFail)"
+              (click)="openPopupReason(viewStepReasonFail, null, null)"
             >
               <i class="icon-add icon-18"> </i>
               <codx-label [name]="''" [default]="'Thêm lý do'"></codx-label>
@@ -2079,14 +2108,24 @@
       </div>
 
       <div class="main-body pt-5 ps-5" *ngIf="step.reasons.length > 0">
-        <ul
-          class="text-left"
-          style="display: inline-block; vertical-align: middle"
+        <div *ngFor="let item of step.reasons" class="pb-2 ">
+          <ul
+          class="text-left drap-drop me-5 py-2 has-action-menu"
         >
-          <li class="pb-3"  *ngFor="let item of step.reasons ">{{item.reasonName}}</li>
-        </ul>
-      </div>
+          <li>
+            {{item.reasonName}}
+            <codx-mfunc
+            [formModel]="dialog.formModel"
+            (clickMF)="clickMFReason($event, item,viewStepReasonFail)"
+            [dataItem]="action != 'edit' ? moreDefaut : item"
+            [type]="'hover'"
+          >
+          </codx-mfunc>
+          </li>
 
+        </ul>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -2704,7 +2743,7 @@
         [formModel]="dialog.formModel"
         [Group]=""
         type="text"
-        [crrValue]="reasonName"
+        [crrValue]="reason?.reasonName"
         (valueChange)="changeValueReaName($event)"
       >
       </codx-input>

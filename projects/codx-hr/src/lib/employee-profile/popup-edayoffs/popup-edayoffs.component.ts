@@ -25,6 +25,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   lstPregnantType;
   dayoffObj: any;
   lstDayoffs: any;
+  idField = 'RecID';
   funcID: string;
   indexSelected
   isnormalPregnant = false
@@ -37,7 +38,19 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   @ViewChild('listView') listView: CodxListviewComponent;
 
   onInit(): void {
-    this.initForm();
+    this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrSevice
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
   }
 
   constructor(    
@@ -49,20 +62,22 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
     ) { 
       super(injector);
-      if (!this.formModel) {
-        this.formModel = new FormModel();
-        this.formModel.formName = 'EDayOffs';
-        this.formModel.entityName = 'HR_EDayOffs';
-        this.formModel.gridViewName = 'grvEDayOffs';
-      }
+      // if (!this.formModel) {
+      //   this.formModel = new FormModel();
+      //   this.formModel.formName = 'EDayOffs';
+      //   this.formModel.entityName = 'HR_EDayOffs';
+      //   this.formModel.gridViewName = 'grvEDayOffs';
+      // }
       this.dialog = dialog;
       this.headerText = data?.data?.headerText;
       this.employId = data?.data?.employeeId;
+      this.funcID = data?.data?.funcID;
       this.lstDayoffs = data?.data?.lstDayOffs
       this.actionType = data?.data?.actionType;
       if (this.actionType === 'edit' || this.actionType === 'copy') {
-        this.dayoffObj = JSON.parse(JSON.stringify(data?.data?.salarySelected));
-        this.formModel.currentData = this.dayoffObj;
+        this.dayoffObj = JSON.parse(
+          JSON.stringify(this.lstDayoffs[this.indexSelected])
+        );
       }      
     }
 
@@ -76,20 +91,34 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       })
 
 
-      this.hrSevice
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-        .then((item) => {
-          this.formGroup = item;  
-          if(this.actionType == 'add'){
-            this.hrSevice.getEmployeeDayOffModel().subscribe(p => {
-              this.dayoffObj = p;
-              this.formModel.currentData = this.dayoffObj
-              console.log('du lieu formmodel',this.formModel.currentData);
-            })  
-          }
-          this.formGroup.patchValue(this.dayoffObj)
-          this.isAfterRender = true
-        }); 
+      if (this.actionType == 'add') {
+        this.hrSevice
+          .getDataDefault(
+            this.formModel.funcID,
+            this.formModel.entityName,
+            this.idField
+          )
+          .subscribe((res: any) => {
+            if (res) {
+              this.dayoffObj = res?.data;
+              this.dayoffObj.employeeID = this.employId;
+              this.dayoffObj.periodType = '1'
+              this.dayoffObj.totalSubDays = 0
+              this.formModel.currentData = this.dayoffObj;
+              this.formGroup.patchValue(this.dayoffObj);
+              this.cr.detectChanges();
+              this.isAfterRender = true;
+            }
+          });
+      } else {
+        if (this.actionType === 'edit' || this.actionType === 'copy') {
+
+          this.formGroup.patchValue(this.dayoffObj);
+          this.formModel.currentData = this.dayoffObj;
+          this.cr.detectChanges();
+          this.isAfterRender = true;
+        }
+      }
     }
 
     onSaveForm(){
@@ -97,9 +126,10 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         delete this.dayoffObj.recID
       }
       this.dayoffObj.employeeID = this.employId 
+      this.dayoffObj.totalSubDays = 0
       if(this.actionType === 'add' || this.actionType === 'copy'){
         if(this.dayoffObj.beginDate > this.dayoffObj.endDate){
-          this.notify.notifyCode('HR002')
+          this.notify.notifyCode('HR003')
           return
         }
 
@@ -170,24 +200,59 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     console.log('sinh mo', this.isNotNormalPregnant);
     
   }
+
   HandleTotalDaysVal(){
+    if(this.dayoffObj.periodType == '2' || this.dayoffObj.periodType == '3'){
+      this.dayoffObj.totalDays = 0.5
+      console.log('obj ne', this.dayoffObj);
+    }
+    else{
+      let beginDate = new Date(this.dayoffObj.beginDate)
+      let endDate = new Date(this.dayoffObj.endDate)
+      console.log('ngay bat dau', beginDate);
+      console.log('ngay bat dau', endDate);
+      
+      let dif = endDate.getTime() - beginDate.getTime()
+      this.dayoffObj.totalDays = (dif / (1000*60*60*24)) + 1;  
+    }
+    console.log('tong ngay nghi la: ', this.dayoffObj.totalDays);
+    
+    this.formGroup.patchValue({totalDays: this.dayoffObj.totalDays})
   }
 
-  HandleInputBeginDate(value){
+  HandleInputBeginDate(evt){
+    this.dayoffObj.beginDate = evt.data;
     if(this.dayoffObj.endDate != null && this.dayoffObj.periodType != null){
       //https://www.geeksforgeeks.org/how-to-calculate-the-number-of-days-between-two-dates-in-javascript/
+      if(evt.data != this.dayoffObj.endDate){
+        this.dayoffObj.periodType = '1'
+        this.formGroup.patchValue({periodType : this.dayoffObj.periodType})
+      }
+      this.HandleTotalDaysVal()
     }
   }
 
-  HandleInputEndDate(value){
+  HandleInputEndDate(evt){
+    this.dayoffObj.endDate = evt.data;
     if(this.dayoffObj.beginDate != null && this.dayoffObj.periodType != null){
       //https://www.geeksforgeeks.org/how-to-calculate-the-number-of-days-between-two-dates-in-javascript/
+      if(this.dayoffObj.beginDate != evt.data){
+        this.dayoffObj.periodType = '1'
+        this.formGroup.patchValue({periodType : this.dayoffObj.periodType})
+      }
+      this.HandleTotalDaysVal()
     }
   }
 
-  HandleInputPeriodType(value){
-    if(this.dayoffObj.endDate != null && this.dayoffObj.beginDate != null){
-      //https://www.geeksforgeeks.org/how-to-calculate-the-number-of-days-between-two-dates-in-javascript/
+  HandleInputPeriodType(evt){
+    console.log(evt);
+    this.dayoffObj.periodType = evt.data;
+    console.log('gia tri period type', this.dayoffObj.periodType);
+    
+    if(evt.data == '2' || evt.data == '3'){
+      this.dayoffObj.endDate = this.dayoffObj.beginDate
+      this.formGroup.patchValue({endDate: this.dayoffObj.endDate})
     }
+    this.HandleTotalDaysVal()
   }
 }

@@ -308,7 +308,7 @@ lib-nosubaside .aside-menu .menu .menu-item .menu-link.active {
 
 lib-nosubaside .aside-menu .menu .menu-item .menu-link.active .menu-title,
 lib-nosubaside .aside-menu .menu .menu-item .menu-link:hover .menu-title {
-  color: var(--primary-inverse) !important;
+  color: var(--menu-active) !important;
 }
 
 lib-nosubaside .aside-footer .menu .menu-item .menu-link {
@@ -418,6 +418,11 @@ codx-user-inner .top-100.start-100 {
   left: 90% !important;
 }
 
+.content-tree .d-flex.user-card {
+  padding: 4px;
+  margin-top: 0px;
+}
+
 .role-group ejs-listview .e-ul>li {
   margin-bottom: 0px;
   margin-right: 5px;
@@ -483,7 +488,7 @@ codx-view-list-detail .codx-detail-footer {
 }
 
 .e-tab .e-tab-header .e-toolbar-item.e-active {
-  border-bottom: 2px #333 solid !important;
+  border-bottom: 2px var(--primary-dark) solid !important;
   border-radius: 0;
 }
 

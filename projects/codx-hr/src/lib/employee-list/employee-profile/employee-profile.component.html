@@ -9,12 +9,12 @@
 </codx-views>
 
 <ng-template #panelContent>
-  <div class="page-pw h-employee bg-body p-3 rounded-2">
+  <div class="page-pw h-employee  p-3 rounded-2">
     <div class="page-profile">
       <div class="d-flex">
-        <div class="user-left me-5 rounded border">
+        <div class="user-left me-5 rounded border min-w-300px w-300px bg-white">
           <div class="bg-sidebar">
-            <div class="d-flex flex-column">
+            <div class="d-flex flex-column" >
               <div class="mt-9 px-2">
                 <div class="d-flex flex-column text-center mb-4">
                   <div
@@ -553,7 +553,7 @@
             </ul>
           </div>
         </div>
-        <div class="d-flex flex-column-fluid">
+        <div class="d-flex flex-column-fluid w-75">
           <div class="container p-0">
             <div class="w-100 user-right">
               <div class="tab-content">
@@ -1057,7 +1057,7 @@
 
         <div class="user-profile overview d-block mb-3" id="MWP00201">
           <div id="1" #1="ngbCollapse" [(ngbCollapse)]="objCollapes['1']">
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                   <div class="user-status d-flex align-items-center">
@@ -1440,7 +1440,7 @@
                     </div>
                   </div>
                   <div class="row mb-2">
-                    <div class="d-flex ps-9">
+                    <div class="d-flex" style="margin-left: 25px;">
                       <codx-label
                         class="text-gray-600 me-2"
                         fiedName="FullAddress"
@@ -1468,22 +1468,22 @@
                   </div>
                   <div class="row mb-2">
                     <div class="d-flex align-items-center">
-                      <span class="icon-spa icon-18 text-success me-2"></span>
+                      <span class="icon-spa icon-18 text-success me-1"></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 fw-normal label-colon"
                         fiedName="Forte"
                         [formModel]="view.formModel"
                       >
                       </codx-label>
                       <span #Forte class="fw-bold"
-                        >: {{ infoPersonal.forte }}</span
+                        >{{ infoPersonal.forte }}</span
                       >
                     </div>
                   </div>
                   <div class="row mb-2">
                     <div class="d-flex">
                       <span
-                        class="icon-i-heart icon-18 text-danger me-2"
+                        class="icon-i-heart icon-16 text-danger me-2"
                       ></span>
                       <codx-label
                         class="text-gray-600 me-2 fw-normal label-colon"
@@ -1497,7 +1497,7 @@
                     </div>
                   </div>
                 </div>
-                <hr style="border: 1px dotted gray" />
+                <hr />
                 <div #DangDoan class="mb-1">
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
@@ -1516,20 +1516,20 @@
                     </a>
                   </div>
 
-                  <div class="row ">
+                  <div class="row pb-3">
                     <div class="col-4">
                       <div class="d-flex align-items-center">
                         <span
                           class="icon-star_border icon-18 text-primary me-2"
                         ></span>
                         <codx-label
-                          class="text-gray-600 me-2"
+                          class="text-gray-600 me-2 label-colon"
                           fiedName="yUnionDate"
                           [formModel]="view.formModel"
                         >
                         </codx-label>
                         <span class="text-dark">
-                          : {{ infoPersonal.yUnionDate | fmDT }}</span
+                          {{ infoPersonal.yUnionDate | fmDT }}</span
                         >
                       </div>
                     </div>
@@ -1581,7 +1581,7 @@
                     </div>
                   </div>
                 </div>
-                <hr style="border: 1px dotted gray" />
+                <hr />
                 <div #family class="mb-1">
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
@@ -1602,11 +1602,11 @@
                   <div class="d-flex flex-wrap py-3 px-4">
                     <ng-container *ngFor="let item of lstFamily">
                       <div
-                        class="border rounded min-w-250px mw-250px me-4 mb-2"
+                        class="border rounded min-w-250px mw-250px me-4 mb-4"
                       >
                         <codx-temp-full
                           (clickMF)="clickMF($event, item, 'family')"
-                          cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+                          cardCss="card codx_cardcenter px-2 pt-4 pb-4"
                           [imageId]="item.recID"
                           [imageObjType]="'HR_EFamilies'"
                           [imageWidth]="40"
@@ -1652,7 +1652,7 @@
                 <hr />
               </div>
             </div>
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white mt-5">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                   <div class="user-status d-flex align-items-center">
@@ -1716,23 +1716,23 @@
                       ></span>
                     </a>
                   </div>
-                  <div class="row form-group">
+                  <div class="row pb-3">
                     <!-- Ma so BHXH -->
-                    <div class="col">
+                    <div class="col-4">
                       <div class="d-flex align-items-center">
                         <codx-label
-                          class="text-gray-600 me-2"
+                          class="text-gray-600 me-2 label-colon"
                           fiedName="SIRegisterNo"
                           [formModel]="view.formModel"
                         >
                         </codx-label>
                         <span class="text-dark">
-                          : {{ infoPersonal.siRegisterNo }}</span
+                           {{ infoPersonal.siRegisterNo }}</span
                         >
                       </div>
                     </div>
                     <!-- Tình trạng hôn nhân -->
-                    <div class="col">
+                    <div class="col-8">
                       <div class="d-flex align-items-center">
                         <span
                           class="icon-i-info-circle-fill icon-circle-group text-gray-600 me-1"
@@ -1750,8 +1750,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row form-group">
-                    <div class="col">
+                  <div class="row pb-3">
+                    <div class="col-4">
                       <div class="d-flex align-items-center">
                         <codx-label
                           class="text-gray-600 me-2 fw-normal label-colon"
@@ -1762,7 +1762,7 @@
                         <span #HICardNo> {{ infoPersonal.hiCardNo }}</span>
                       </div>
                     </div>
-                    <div class="col">
+                    <div class="col-8">
                       <div class="d-flex align-items-center">
                         <span
                           class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 me-1"
@@ -1778,8 +1778,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row form-group">
-                    <div class="col">
+                  <div class="row pb-3">
+                    <div class="col-4">
                       <div class="d-flex align-items-center">
                         <codx-label
                           class="text-gray-600 me-2 fw-normal label-colon"
@@ -1791,7 +1791,7 @@
                       </div>
                     </div>
                     <!-- Ngày cấp -->
-                    <div class="col">
+                    <div class="col-8">
                       <div class="d-flex align-items-center">
                         <span
                           class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 me-1"
@@ -1808,9 +1808,9 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row form-group">
+                  <div class="row pb-3">
                     <!-- CMND/CCCD -->
-                    <div class="col">
+                    <div class="col-4">
                       <div class="d-flex align-items-center">
                         <codx-label
                           class="text-gray-600 me-2 fw-normal label-colon"
@@ -1821,7 +1821,7 @@
                         <span #idCardNo> {{ infoPersonal.idCardNo }}</span>
                       </div>
                     </div>
-                    <div class="col">
+                    <div class="col-8">
                       <div class="d-flex align-items-center">
                         <span
                           class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 me-1"
@@ -1860,7 +1860,7 @@
                   <div
                     [class]="lstPassport?.length > 0 ? 'has-action-menu' : ''"
                   >
-                    <div class="row form-group">
+                    <div class="row pb-3 ">
                       <div class="col-4">
                         <div class="d-flex align-items-center">
                           <span
@@ -1904,7 +1904,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="row form-group">
+                    <div class="row ">
                       <div class="col-4">
                         <div class="d-flex align-items-center">
                           <span
@@ -1985,7 +1985,7 @@
                   </div>
 
                   <div [class]="lstVisa?.length > 0 ? 'has-action-menu' : ''">
-                    <div class="row form-group">
+                    <div class="row pb-3">
                       <div class="col-4">
                         <div class="d-flex align-items-center">
                           <span
@@ -2016,55 +2016,61 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <div class="d-flex align-items-center">
-                            <span
-                              class="icon-i-info-circle-fill icon-circle-group text-gray-600 me-1"
-                            ></span>
-                            <codx-label
-                              class="text-gray-600 me-2 fw-normal label-colon"
-                              fiedName="IssuedDate"
-                              [formModel]="view.formModel"
-                            >
-                            </codx-label>
-                            <span #issuedDate
-                              >
-                              {{
-                                (lstVisa?.length > 0
-                                  ? lstVisa[0]?.issuedDate
-                                  : null
-                                ) | fmDT
-                              }}</span
-                            >
-                          </div>
+                         
                         </div>
-                        <div class="col-8">
-                          <div class="d-flex align-items-center">
-                            <span
-                              class="icon-i-info-circle-fill icon-circle-group text-gray-600 me-1"
-                            ></span>
-                            <codx-label
-                              class="text-gray-600 me-2 fw-normal label-colon"
-                              fiedName="EffectedDate"
-                              [formModel]="view.formModel"
+                       
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <div class="d-flex align-items-center">
+                          <span
+                            class="icon-i-info-circle-fill icon-circle-group text-gray-600 me-1"
+                          ></span>
+                          <codx-label
+                            class="text-gray-600 me-2 fw-normal label-colon"
+                            fiedName="IssuedDate"
+                            [formModel]="view.formModel"
+                          >
+                          </codx-label>
+                          <span #issuedDate
                             >
-                            </codx-label>
-                            <span #issuedOn
-                              >
-                              {{
-                                (lstVisa?.length > 0
-                                  ? lstVisa[0]?.effectedDate
-                                  : null
-                                ) | fmDT
-                              }}
-                              -
-                              {{
-                                (lstVisa?.length > 0
-                                  ? lstVisa[0]?.expiredDate
-                                  : null
-                                ) | fmDT
-                              }}
-                            </span>
-                          </div>
+                            {{
+                              (lstVisa?.length > 0
+                                ? lstVisa[0]?.issuedDate
+                                : null
+                              ) | fmDT
+                            }}</span
+                          >
+                        </div>
+                      </div>
+                      <div class="col-8">
+                        <div class="d-flex align-items-center">
+                          <span
+                            class="icon-i-info-circle-fill icon-circle-group text-gray-600 me-1"
+                          ></span>
+                          <codx-label
+                            class="text-gray-600 me-2 fw-normal label-colon"
+                            fiedName="EffectedDate"
+                            [formModel]="view.formModel"
+                          >
+                          </codx-label>
+                          <span #issuedOn
+                            >
+                            {{
+                              (lstVisa?.length > 0
+                                ? lstVisa[0]?.effectedDate
+                                : null
+                              ) | fmDT
+                            }}
+                            -
+                            {{
+                              (lstVisa?.length > 0
+                                ? lstVisa[0]?.expiredDate
+                                : null
+                              ) | fmDT
+                            }}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -2108,7 +2114,7 @@
                         lstWorkPermit?.length > 0 ? 'has-action-menu' : ''
                       "
                     >
-                      <div class="row form-group">
+                      <div class="row pb-3">
                         <div class="col-4">
                           <div class="d-flex align-items-center">
                             <span
@@ -2152,7 +2158,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="row form-group">
+                      <div class="row ">
                         <div class="col-4">
                           <div class="d-flex align-items-center">
                             <span
@@ -2284,7 +2290,7 @@
         <!-- thong tin chung -->
         <div class="user-profile overview d-block mb-3" id="MWP00201">
           <div #2="ngbCollapse" [(ngbCollapse)]="objCollapes['2']" class="">
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                   <div class="user-status d-flex align-items-center">
@@ -2346,13 +2352,13 @@
                     </a>
                   </div>
                   <!-- documentNo-status -->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="documentNo">
                       <span
-                        class="icon-article icon-14 text-gray-600 me-1"
+                        class="icon-article icon-18 text-gray-600 me-1"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="documentNo"
                       >
@@ -2367,7 +2373,7 @@
                         class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="status"
                       >
@@ -2387,13 +2393,13 @@
                     </div>
                   </div>
                   <!-- joinedOn-hiredOn -->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="joinedOn">
                       <span
-                        class="icon-i-calendar2-event-fill icon-14 text-gray-600 me-1"
+                        class="icon-event icon-18 text-gray-600 me-1"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="joinedOn"
                       >
@@ -2408,7 +2414,7 @@
                         class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="hiredOn"
                       >
@@ -2419,10 +2425,10 @@
                     </div>
                   </div>
                   <!-- userID-employeeID -->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="userID">
                       <span
-                        class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
+                        class="icon-assignment_ind icon-18 text-gray-600 me-1"
                       ></span>
                       <codx-label
                         [formModel]="view.formModel"
@@ -2441,7 +2447,7 @@
                       ></span>
                       <codx-label
                         [formModel]="view.formModel"
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         fiedName="employeeID"
                       >
                       </codx-label>
@@ -2451,18 +2457,18 @@
                     </div>
                   </div>
                   <!-- positionID-jobLevel -->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="positionID">
-                      <span class="icon-book icon-14 text-gray-600 me-1"></span>
+                      <span class="icon-book icon-18 text-primary me-1"></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="positionID"
                       >
                       </codx-label>
 
                       <span class="text-dark fw-bold">
-                        <span>{{ infoPersonal.positionName }}</span>
+                        <span>{{ infoPersonal.positionName }}</span>  
                       </span>
                     </div>
                     <div class="col d-flex align-items-center" id="jobLevel">
@@ -2470,7 +2476,7 @@
                         class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="jobLevel"
                       >
@@ -2482,13 +2488,13 @@
                   </div>
 
                   <!-- orgUnitID -->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="orgUnitID">
                       <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1 text-primary"
+                        class="icon-connection-point icon-18 text-gray-600 me-1 text-primary"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="orgUnitID"
                       >
@@ -2501,13 +2507,13 @@
                   </div>
 
                   <!-- lineManager-indirectManager -->
-                  <div class="row form-group">
+                  <div class="row mb-1">
                     <div class="col d-flex align-items-center" id="lineManager">
                       <span
-                        class="icon-supervised_user_circle icon-14 text-gray-600 me-1"
+                        class="icon-supervised_user_circle icon-18 text-gray-600 me-1"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="lineManager"
                       >
@@ -2525,7 +2531,7 @@
                         class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="indirectManager"
                       >
@@ -2537,10 +2543,10 @@
                   </div>
 
                   <!-- locationID -->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="locationID">
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 "
                         [formModel]="view.formModel"
                         fiedName=""
                       >
@@ -2552,13 +2558,13 @@
                   </div>
 
                   <!-- labourType-labourConditions -->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="labourType">
                       <span
-                        class="icon-person_pin_circle icon-14 text-gray-600 me-1"
+                        class="icon-person_pin_circle icon-18 text-gray-600 me-1"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="labourType"
                       >
@@ -2587,16 +2593,16 @@
                   </div>
 
                   <!-- isTUnion-tUnionDate -->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="isTUnion">
-                      <div class="bg-primary rounded-circle w-15px h-15px me-1">
+                    
                         <span
-                          class="icon-i-check icon-14 text-white me-1"
+                          class="icon-i-check-circle-fill icon-14 text-primary me-1"
                         ></span>
-                      </div>
+                     
 
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="isTUnion"
                       >
@@ -2611,7 +2617,7 @@
                         class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="tUnionDate"
                       >
@@ -2624,19 +2630,17 @@
                   </div>
 
                   <!-- isExpertRecruit-isExpertTrain -->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div
                       class="col d-flex align-items-center"
                       id="isExpertRecruit"
                     >
-                      <div class="bg-primary rounded-circle w-15px h-15px me-1">
-                        <span
-                          class="icon-i-check icon-14 text-white me-1"
-                        ></span>
-                      </div>
+                    <span
+                    class="icon-i-check-circle-fill icon-14 text-primary me-1"
+                  ></span>
 
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="isExpertRecruit"
                       >
@@ -2653,13 +2657,11 @@
                       <span
                         class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
                       ></span>
-                      <div class="bg-primary rounded-circle w-15px h-15px me-1">
-                        <span
-                          class="icon-i-check icon-14 text-white me-1"
-                        ></span>
-                      </div>
+                      <span
+                      class="icon-i-check-circle-fill icon-14 text-primary me-1"
+                    ></span>  
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="isExpertTrain"
                       >
@@ -2689,11 +2691,11 @@
                     </a>
                   </div>
                   <!-- timeCardNo-shiftCalendarID -->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="timeCardNo">
                       <span class="icon-fingerprint icon-14 me-1"></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="timeCardNo"
                       >
@@ -2711,7 +2713,7 @@
                         class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="shiftCalendarID"
                       >
@@ -2722,11 +2724,11 @@
                     </div>
                   </div>
                   <!-- aLObjectID-->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="aLObjectID">
                       <span class="icon-i-calendar2-month icon-14 me-1"></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="aLObjectID"
                       >
@@ -2738,16 +2740,14 @@
                     </div>
                   </div>
                   <!-- isNotScan-isNotOTKow -->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="isNotScan">
-                      <div class="bg-primary rounded-circle w-15px h-15px me-1">
-                        <span
-                          class="icon-i-check icon-14 text-white me-1"
+                      <span
+                          class="icon-i-check-circle-fill icon-14 text-primary me-1"
                         ></span>
-                      </div>
 
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="isNotScan"
                       >
@@ -2762,7 +2762,7 @@
                         class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="isNotOTKow"
                       >
@@ -2773,19 +2773,17 @@
                     </div>
                   </div>
                   <!-- isNotLateEarly-isNotCLeaveKow-->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div
                       class="col d-flex align-items-center"
                       id="isNotLateEarly"
                     >
-                      <div class="bg-primary rounded-circle w-15px h-15px me-1">
-                        <span
-                          class="icon-i-check icon-14 text-white me-1"
-                        ></span>
-                      </div>
+                    <span
+                    class="icon-i-check-circle-fill icon-14 text-primary me-1"
+                  ></span>
 
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="isNotLateEarly"
                       >
@@ -2803,7 +2801,7 @@
                         class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="isNotCLeaveKow"
                       >
@@ -2833,14 +2831,14 @@
                     </a>
                   </div>
                   <!-- payrollGroupID-currencyID -->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div
                       class="col d-flex align-items-center"
                       id="payrollGroupID"
                     >
                       <span class="icon-supervisor_account icon-14 me-1"></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="payrollGroupID"
                       >
@@ -2855,7 +2853,7 @@
                         class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="currencyID"
                       >
@@ -2866,19 +2864,16 @@
                     </div>
                   </div>
                   <!-- taxTableID-isSettleTax -->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="taxTableID">
-                      <div
-                        class="d-flex align-items-center border border-danger me-1"
-                        style="width: 13px; height: 11px"
-                      >
+                     
                         <span
-                          class="icon-u_dollar-sign-alt icon-10 text-danger me-1 fw-bold"
+                          class="icon-local_atm icon-16 text-danger me-1 fw-bold"
                         ></span>
-                      </div>
+                      
 
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="taxTableID"
                       >
@@ -2893,7 +2888,7 @@
                         class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
                       ></span>
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="isSettleTax"
                       >
@@ -2904,7 +2899,7 @@
                     </div>
                   </div>
                   <!-- advanceAmount -->
-                  <div class="row form-group">
+                  <div class="row mb-2">
                     <div
                       class="col d-flex align-items-center"
                       id="advanceAmount"
@@ -2914,7 +2909,7 @@
                       ></span>
 
                       <codx-label
-                        class="text-gray-600 me-2"
+                        class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
                         fiedName="advanceAmount"
                       >
@@ -2929,7 +2924,7 @@
                 <hr />
               </div>
             </div>
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                   <div
@@ -3027,7 +3022,7 @@
       <ng-container>
         <div class="user-profile overview d-block mb-3" id="MWP00201">
           <div id="3" #3="ngbCollapse" [(ngbCollapse)]="objCollapes['3']">
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -3079,6 +3074,7 @@
                     </a>
                   </div>
                   <div class="d-flex flex-wrap py-3 px-4">
+                    
                     <div
                       class="border rounded min-w-250px mw-300px me-4 mb-2"
                       *ngIf="crrEBSalary != null"
@@ -3094,15 +3090,15 @@
                       </codx-temp-full>
                       <ng-template #footerEBSalaries let-data>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="icon-attach_money"></span>Lương cơ bản:
+                          <span class="icon-attach_money text-gray-600 pe-2 icon-14 "></span>Lương cơ bản:
                           {{ crrEBSalary.bSalary }}
                         </div>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="icon-attach_money"></span>Lương đóng BH:
+                          <span class="icon-monetization_on text-danger pe-2 icon-14"></span>Lương đóng BH:
                           {{ crrEBSalary.siSalary }}
                         </div>
-                        <div class="d-flex align-items-center mt-3">
-                          <span class="icon-calendar_today"></span>Hiệu lực:
+                        <div class="d-flex align-items-center mt-1">
+                          <span class="icon-event text-gray-600 icon-14 pe-2 "></span>Hiệu lực:
                           {{ crrEBSalary.effectedDate | fmDT }}
                           -
                           {{ crrEBSalary.expiredDate | fmDT }}
@@ -3124,11 +3120,11 @@
                       </codx-temp-full>
                       <ng-template #footerJobSalaries let-data>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="icon-attach_money"></span>Lương chức
+                          <span class="icon-attach_money text-gray-600 pe-2 icon-14"></span>Lương chức
                           danh: {{ crrJobSalaries.jSalary }}
                         </div>
-                        <div class="d-flex align-items-center">
-                          <span class="icon-calendar_today"></span>Hiệu lực:
+                        <div class="d-flex align-items-center mt-1">
+                          <span class="icon-event text-gray-600 icon-14 pe-2"></span>Hiệu lực:
                           {{
                             crrJobSalaries.effectedDate | date : "MM/dd/yyyy"
                           }}
@@ -3186,17 +3182,17 @@
                         </codx-temp-full>
                         <ng-template #footerBenefit let-data>
                           <div class="d-flex align-items-center mt-1">
-                            <span class="icon-i-plus-circle me-1 icon-16"></span
+                            <span class="icon-i-plus-circle  text-success icon-12 text-gray-600 pe-2 "></span
                             >{{ data.benefitID }}
                           </div>
                           <div class="d-flex align-items-center mt-1">
-                            <span class="icon-attach_money"></span
+                            <span class="icon-attach_money text-gray-600 pe-2 icon-14"></span
                             >{{ data.benefitAmt }}
                           </div>
 
                           <div class="d-flex align-items-center mt-1">
                             <span
-                              class="icon-i-calendar2-event-fill me-2 text-gray-600 icon-12 ms-1"
+                              class="icon-event text-gray-600 icon-14 pe-2"
                             ></span
                             >Hiệu lực:
                             {{ data.effectedDate | fmDT }}
@@ -3212,7 +3208,7 @@
               </div>
             </div>
             <hr />
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -3273,7 +3269,7 @@
               </div>
             </div>
             <hr />
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -3337,7 +3333,7 @@
               </div>
             </div>
             <hr />
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -3478,7 +3474,7 @@
       <ng-container>
         <div class="user-profile overview d-block mb-3" id="MWP00201">
           <div id="4" #4="ngbCollapse" [(ngbCollapse)]="objCollapes['4']">
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -3542,7 +3538,7 @@
                       <div class="col">
                         <div class="d-flex align-items-center pt-2">
                           <i
-                            class="icon-home_work icon-14 text-gray-600 me-1"
+                            class="icon-i-circle-fill  icon-14 text-info me-1"
                           ></i
                           >{{ crrEContract.contractTypeID }}
                         </div>
@@ -3550,7 +3546,7 @@
                       <div class="col">
                         <div class="d-flex align-items-center pt-2">
                           <i
-                            class="icon-home_work icon-14 text-gray-600 me-1"
+                            class="icon-edit icon-14 text-gray-600 me-1"
                           ></i
                           >{{ crrEContract.effectedDate | fmDT }} -
                           {{ crrEContract.expiredDate | fmDT }}
@@ -3561,7 +3557,7 @@
                       <div class="col">
                         <div class="d-flex align-items-center pt-2">
                           <i
-                            class="icon-home_work icon-14 text-gray-600 me-1"
+                            class="icon-edit icon-14 text-gray-600 me-1"
                           ></i
                           >{{ crrEContract.note }}
                         </div>
@@ -3602,7 +3598,7 @@
               </div>
             </div>
             <hr />
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -3665,7 +3661,7 @@
               </div>
             </div>
             <hr />
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -3747,7 +3743,7 @@
               </div>
             </div>
             <hr />
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -3829,7 +3825,7 @@
               </div>
             </div>
             <hr />
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white ">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -3878,7 +3874,7 @@
                 #45="ngbCollapse"
                 [(ngbCollapse)]="objCollapes['4.5']"
               >
-                <div class="mb-1">
+                <div class="mb-1 overflow-scroll">
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
@@ -3961,7 +3957,7 @@
         <div class="user-profile overview d-block mb-3" id="MWP00201">
           <div id="5" #5="ngbCollapse" [(ngbCollapse)]="objCollapes['5']">
             <!-- Degree -->
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -4092,7 +4088,7 @@
             <hr />
 
             <!-- cer -->
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -4218,7 +4214,7 @@
             </div>
             <hr />
             <!-- skill -->
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -4361,7 +4357,7 @@
             <hr />
 
             <!-- training -->
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -4511,7 +4507,7 @@
           ></ngx-skeleton-loader>
 
           <div id="6" #6="ngbCollapse" [(ngbCollapse)]="objCollapes['6']">
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -4583,7 +4579,7 @@
               </div>
             </div>
             <hr />
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -4712,7 +4708,7 @@
       <ng-container>
         <div class="user-profile overview d-block mb-3" id="MWP00201">
           <div id="7" #7="ngbCollapse" [(ngbCollapse)]="objCollapes['7']">
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -4789,7 +4785,7 @@
               </div>
             </div>
             <hr />
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -4904,7 +4900,7 @@
               </div>
             </div>
             <hr />
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -4991,7 +4987,7 @@
               </div>
             </div>
             <hr />
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
@@ -5045,7 +5041,7 @@
                 #74="ngbCollapse"
                 [(ngbCollapse)]="objCollapes['7.4']"
               >
-                <div class="mb-1">
+                <div class="mb-1 overflow-scroll">
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >

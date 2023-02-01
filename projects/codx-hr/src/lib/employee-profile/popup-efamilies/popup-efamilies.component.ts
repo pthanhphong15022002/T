@@ -115,7 +115,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   onSaveForm(){
     let today = new Date()
     if(this.familyMemberObj.Birthday >= today){
-      this.notify.notifyCode('DM034')
+      this.notify.notifyCode('HR004')
       return;
     }
 
