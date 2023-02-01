@@ -53,7 +53,7 @@ export class CustomersComponent extends UIComponent {
         //this.delete(data);
         break;
       case 'SYS03':
-        //this.edit(data);
+        this.edit(data);
         break;
     }
     
@@ -78,6 +78,22 @@ export class CustomersComponent extends UIComponent {
               this.dt.detectChanges();
             });
       });
+    });
+  }
+  edit(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      var obj = {
+        formType: 'edit',
+        headerText: data.customerID,
+      };
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '850px';
+      this.dialog = this.callfunc.openSide(PopAddCustomersComponent, obj, option);
     });
   }
 }

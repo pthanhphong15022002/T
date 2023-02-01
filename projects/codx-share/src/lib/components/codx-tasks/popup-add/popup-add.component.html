@@ -290,18 +290,16 @@
       </div>
     </ng-container>
     <div class="d-flex justify-content-between align-items-center checkbox-item" *ngIf="!viewTask">
-      <div class="checkbox-list">
+      <div class="checkbox-list w-100">
         <div class="d-flex flex-column flex-grow-1 w-100">
-          <div class="row">
-            <input #txtTodoAdd name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1
-              (blur)="onAddToDo(txtTodoAdd)" placeholder="{{ planholderTaskGoal }}"
-              (keydown.enter)="onAddToDo(txtTodoAdd)" type="text" style="
-                border-width: thin;
-                border-style: none;
-                margin-top: 3px;
-                outline: none;
-              " />
-          </div>
+          <input #txtTodoAdd name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1
+            (blur)="onAddToDo(txtTodoAdd)" placeholder="{{ planholderTaskGoal }}"
+            (keydown.enter)="onAddToDo(txtTodoAdd)" type="text" style="
+            border-width: thin;
+            border-style: none;
+            padding: 3px 8px;
+            outline: none;
+          " />
         </div>
       </div>
     </div>
