@@ -192,9 +192,9 @@
         [formModel]="formModel"
         [typeMF]="'hover'"
         [title]="data.visaNo"
-        [icoTitleCss]="'icon-list_alt'"
+        [icoTitleCss]="'icon-i-layout-text-sidebar-reverse icon-14 '"
         [subTitleTmp]="tmplateEEvisasMenuList"
-        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+        cardCss="card codx_cardcenter px-2 pt-4 pb-2 "
         [hideMF]="true"
         typeMF="hover"
         [dataItem]="data"
@@ -204,8 +204,8 @@
 
 <ng-template #tmplateEEvisasMenuList let-data>
     <div class="d-flex flex-column">
-        <div><i class ="icon-calendar_today"></i>{{(data.effectedDate | fmDT) + ' - ' + (data.expiredDate | fmDT)}}</div>
-        <div><i class = "icon-edit_fill"></i>{{data.issuedPlace}}</div>
+        <div class="pt-1 pb-1"><i class ="icon-event"></i>{{(data.effectedDate | fmDT) + ' - ' + (data.expiredDate | fmDT)}}</div>
+        <div><i class ="icon-edit"></i>{{data.issuedPlace}}</div>
     </div>
 </ng-template>
 

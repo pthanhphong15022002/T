@@ -459,8 +459,8 @@
 <ng-template #tmplateEDayOffsMenuList let-data>
     <div class="d-flex flex-column">
         <div class="d-flex justify-content-center align-items-center pt-1 pb-1">
-            <div>
-                <i class ="icon-event icon-16 pe-1"></i> {{(data.beginDate | fmDT) + ' - ' + (data.endDate | fmDT)}}
+            <div class="d-flex align-items-center">
+                <i class ="icon-event icon-16"></i> {{(data.beginDate | fmDT) + ' - ' + (data.endDate | fmDT)}}
             </div>
           
             <div class="ms-7 d-flex align-items-center">
