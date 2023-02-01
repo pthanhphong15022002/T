@@ -56,6 +56,11 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
   onSaveForm(){
     console.log(this.data);
     
+    if(this.form.formGroup.invalid){
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
+      return;
+    }
+
     this.hrService.updateEmployeeAssurTaxBankAccountInfo(this.data).subscribe(p => {
       if(p =! null){
         this.notify.notifyCode('SYS007')
