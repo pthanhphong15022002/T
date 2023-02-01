@@ -45,6 +45,7 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
       this.bankAcctID =  dialogData.data?.data.bankAcctID;
       this.bankID = dialogData.data?.data.bankID;
       this.owner = dialogData.data?.data.owner;
+      console.log(this.bankaccount);
     }
   }
 
@@ -52,8 +53,10 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
   }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    this.bankaccount = this.form?.formGroup.value;
-    this.bankaccount.objectType= "1";
+    if (this.bankaccount == null) {
+      this.bankaccount = this.form?.formGroup.value;
+      this.bankaccount.objectType= "1";
+    } 
   }
   valueChange(e:any,type:any){
     if (type == 'bankAcctID') {
@@ -66,8 +69,7 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
     if (type == 'owner') {
       this.owner = e.data;
     }
-    this.bankaccount[e.field] = e.data;
-    console.log(this.bankaccount);
+    this.bankaccount[e.field] = e.data;   
   }
   onSave(){
     if (this.bankAcctID.trim() == '' || this.bankAcctID == null) {

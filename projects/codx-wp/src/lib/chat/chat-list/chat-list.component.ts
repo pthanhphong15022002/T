@@ -36,11 +36,14 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   
   @Input() isOpen: boolean; // check open dropdown
   @Output() isOpenChange = new EventEmitter<boolean>();
+  @Output() isNewMessage = new EventEmitter<any>();
+  
   funcID: string = 'WPT11';
   function: any = null;
   formModel: FormModel = new FormModel();
   grdViewSetUp: any = null;
   moreFC: any = null;
+
   @ViewChild('codxListView') codxListView: CodxListviewComponent;
   @ViewChild("chatBox") chatBox:TemplateRef<any>;
   constructor(
@@ -84,10 +87,23 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    // add group
     this.signalRSV.signalGroup.subscribe((res: any) => {
       if (res) 
       {
         (this.codxListView.dataService as CRUDService).add(res).subscribe();
+      }
+    });
+    // add mesage
+    this.signalRSV.signalChat.subscribe((res: any) => {
+      if (res) 
+      {
+        let _group = this.codxListView.dataService.data;
+        let _index = _group.findIndex(e => e['groupID'] == res.groupID);
+        if(_index > -1){
+          _group[_index].message = res.message;
+          this.isNewMessage.emit(res);
+        }
       }
     });
   }

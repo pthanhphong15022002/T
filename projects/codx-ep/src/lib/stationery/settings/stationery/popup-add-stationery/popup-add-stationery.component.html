@@ -10,7 +10,6 @@
   (setTitle)="setTitle($event)"
   [tabContent]="[tabGeneralInfo, tabQuotaInfo, tabMoreInfo]"
   [data]="data"
-  *ngIf="isAfterRender"
 >
   <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form && form.formGroup">
@@ -37,7 +36,7 @@
             >
             </codx-label>
             <codx-input
-              ControlName="uMID"
+              ControlName="umid"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
             ></codx-input>

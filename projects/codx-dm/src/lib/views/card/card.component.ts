@@ -18,7 +18,8 @@ export class CardComponent implements OnInit , OnChanges {
   totalRating: number;
   totalViews: number;
   favoriteID: any;
-  viewc:number=0;
+  viewc:number = 0;
+  downc:number = 0;
   @Input() data: any;
   @Input() view: any;
   @Output() viewFile = new EventEmitter<any>();
@@ -43,6 +44,7 @@ export class CardComponent implements OnInit , OnChanges {
       }
     }
     this.viewc = this.dmSV.getViews(this.data.history); 
+    this.downc = this.dmSV.showDownloadCount(this.data.countDownload)
   }
 
   ngOnInit(): void {
@@ -71,10 +73,12 @@ export class CardComponent implements OnInit , OnChanges {
         if(data)
         {
           this.viewFile.emit(data);
+          this.viewc += 1;
         }
       })
     }
     else this.dmSV.clickMF(e, data ,this.view)
+    if(e?.functionID == "DMT0211") this.downc += 1;
   }
   dbView()
   {
@@ -89,5 +93,6 @@ export class CardComponent implements OnInit , OnChanges {
       });
     }
     this.dmSV.openItem(this.data);
+    this.viewc += 1;
   }
 }

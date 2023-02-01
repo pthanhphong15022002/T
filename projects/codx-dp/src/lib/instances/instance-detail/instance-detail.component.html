@@ -7,9 +7,12 @@
           <div class="d-flex flex-column flex-grow-1">
             <div class="d-flex justify-content-between">
               <div class="d-flex flex-column">
-                <h2 class="h2-title">
+                <h2 class="h2-title" style="margin-bottom: 0px !important">
                   {{dataSelect?.title}}
                 </h2>
+                <div class="mb-5">
+                   tag
+                </div>
                 <div class="mb-6">
                   <div>
                     <span class="">Tổ chức/Khách hàng: </span>
@@ -94,7 +97,7 @@
         <codx-stages-detail [listData]="tmpTeps"></codx-stages-detail>
       </ng-container>
       <ng-container *ngIf="idCbx == 'field'">
-        <codx-field-detail></codx-field-detail>
+        <codx-field-detail [lstSteps]="listSteps"></codx-field-detail>
       </ng-container>
     </ng-template>
 

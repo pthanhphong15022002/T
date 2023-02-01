@@ -1,5 +1,5 @@
 import { DP_Instances_Steps } from './../../models/models';
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'codx-stages-detail',
@@ -8,10 +8,10 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 })
 export class StagesDetailComponent implements OnInit {
   @Input() listData: any;
-
   dateActual: any;
   startDate: any;
   progress: string = '0';
+  lstFields = [];
   constructor() {}
 
   ngOnInit(): void {}
@@ -40,6 +40,7 @@ export class StagesDetailComponent implements OnInit {
       var tasks = changes['listData'].currentValue?.tasks;
       var taskGroups = changes['listData'].currentValue?.taskGroups;
       this.totalProgress(tasks,taskGroups)
+      this.lstFields = changes['listData'].currentValue?.fields;
     }
   }
 
@@ -61,6 +62,8 @@ export class StagesDetailComponent implements OnInit {
       this.progress = '0';
     }
   }
+
+
 
   clickShow(e, id) {
     let children = e.currentTarget.children[0];
