@@ -119,11 +119,9 @@ export class PopupAddStationeryComponent extends UIComponent {
       //   width: 200,
       // },
     ];
-    this.epService
-      .getQuota(this.data.resourceID)
-      .subscribe((res) => {
-        this.quota = res;
-      });
+    this.epService.getQuota(this.data.resourceID).subscribe((res) => {
+      this.quota = res;
+    });
   }
 
   initForm() {
@@ -139,11 +137,13 @@ export class PopupAddStationeryComponent extends UIComponent {
               this.data.location = this.defaultWarehouse;
               this.epService
                 .getWarehousesOwner(this.defaultWarehouse)
-                .subscribe((res: string) => {
-                  this.warehouseOwner = res[0];
-                  this.data.owner = this.warehouseOwner;
-                  this.warehouseOwnerName = res[1];
-                  this.detectorRef.detectChanges();
+                .subscribe((res: any) => {
+                  if (res) {
+                    this.warehouseOwner = res[0];
+                    this.data.owner = this.warehouseOwner;
+                    this.warehouseOwnerName = res[1];
+                    this.detectorRef.detectChanges();
+                  }
                 });
               this.dialogAddStationery.patchValue({
                 reservedQty: 0,
