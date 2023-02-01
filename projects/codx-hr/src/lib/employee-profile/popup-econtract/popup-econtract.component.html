@@ -242,12 +242,12 @@
 
 <ng-template #templateEContractFooter let-dt>
   <div class="d-flex flex-column ms-7">
-    <div>
-      <i class="icon-i-calendar4-event icon-14"></i>
+    <div class="d-flex align-items-center pb-1">
+      <i class="icon-event icon-18 pe-1"></i>
       {{ (dt.effectedDate | fmDT) + " - " + (dt.expiredDate | fmDT) }}
     </div>
-    <div>
-      <i class="icon-i-layout-text-sidebar-reverse icon-14"></i>
+    <div class="d-flex align-items-center ">
+      <i class="icon-i-layout-text-sidebar-reverse icon-14 pe-1"></i>
       {{ dt.decisionNo + "*" + (dt.signedDate | fmDT) }}
     </div>
   </div>
