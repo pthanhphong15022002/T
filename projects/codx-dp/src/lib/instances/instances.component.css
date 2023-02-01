@@ -6,3 +6,7 @@
 .content-jus{
   justify-content: center;
 }
+
+.flex-body{
+  width: 100%;
+}
