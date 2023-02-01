@@ -29,6 +29,7 @@ export class PopupModuleDetailComponent extends UIComponent {
     this.module = dt.data.module as TN_OrderModule;
     this.currency = dt.data.currency;
     this.vllL1449 = dt.data.vllL1449;
+    this.tenantID = dt.data.tenantID;
     this.lstModule = dt.data.lstModule as Array<TN_OrderModule>;
     this.childMD = this.lstModule.find(
       (md: TN_OrderModule) =>
@@ -41,8 +42,19 @@ export class PopupModuleDetailComponent extends UIComponent {
   lstModule;
   currency: string = '';
   vllL1449;
+  tenantID;
 
-  onInit(): void {}
+  //userRole
+  fmUserRole: any;
+  lstUserRole: Array<any> = [];
+  predicate = '';
+  dataValue = '';
+  onInit(): void {
+    console.log('md', this.module);
+    console.log('child md', this.childMD);
+    this.predicate = 'TenantID=@0 and Module=@1';
+    this.dataValue = this.module.moduleID + ';' + this.tenantID;
+  }
   getInterval(interval) {
     return this.vllL1449?.find((x) => x.value == interval)?.text;
   }

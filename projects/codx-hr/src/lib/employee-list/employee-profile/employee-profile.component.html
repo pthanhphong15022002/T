@@ -375,7 +375,7 @@
                       <span class="icon-person icon-18"></span>
                     </span>
                     <div class="fw-bold">
-                      {{item.customName}}
+                      {{ item.customName }}
                     </div>
                   </a>
                 </li>
@@ -724,8 +724,10 @@
               >
               </codx-label>
             </div>
-            <div class="d-flex btn btn-hover-primary" (click)="handlEmployeeBenefit('add', null)">
-              
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="handlEmployeeBenefit('add', null)"
+            >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -942,7 +944,9 @@
 
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="DeleteEmployeeEHealths('0e55cdd5-a3e7-4da3-b2c4-700345d2ea07')"
+              (click)="
+                DeleteEmployeeEHealths('0e55cdd5-a3e7-4da3-b2c4-700345d2ea07')
+              "
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -955,7 +959,6 @@
               </codx-label>
             </div>
 
-            
             <div
               class="d-flex btn btn-hover-primary"
               (click)="addEditEVaccines('add', null)"
@@ -1147,7 +1150,7 @@
                         >
                         </codx-label>
                         <span class="text-dark fw-bold">
-                           {{ infoPersonal.employeeName2 }}</span
+                          {{ infoPersonal.employeeName2 }}</span
                         >
                       </div>
                     </div>
@@ -1191,7 +1194,7 @@
                           class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"
                         ></span>
                         <codx-label
-                          class="text-gray-600 fw-normal label-colon "
+                          class="text-gray-600 fw-normal label-colon"
                           fiedName="MaritalStatus"
                           [formModel]="view.formModel"
                         >
@@ -1221,13 +1224,13 @@
                           class="icon-cake icon-18 text-gray-600 me-2"
                         ></span>
                         <codx-label
-                          class="text-gray-600 me-2 fw-normal label-colon "
+                          class="text-gray-600 me-2 fw-normal label-colon"
                           fiedName="Birthday"
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #birthday class="fw-bold"
-                          > {{ infoPersonal.birthday | fmDT }}</span
+                        <span #birthday class="fw-bold">
+                          {{ infoPersonal.birthday | fmDT }}</span
                         >
                       </div>
                     </div>
@@ -1238,7 +1241,7 @@
                           class="icon-connection-point icon-14 text-gray-600 me-1"
                         ></span> -->
                         <span
-                          class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1 "
+                          class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"
                         ></span>
                         <codx-label
                           class="text-gray-600 me-2 fw-normal label-colon"
@@ -1247,8 +1250,8 @@
                         >
                         </codx-label>
 
-                        <span #birthPlace class="fw-bold"
-                          > {{ infoPersonal.birthPlaceName }}</span
+                        <span #birthPlace class="fw-bold">
+                          {{ infoPersonal.birthPlaceName }}</span
                         >
                       </div>
                     </div>
@@ -1256,8 +1259,8 @@
                   </div>
                   <div class="row mb-2">
                     <!-- Quốc tịch -->
-                    <div class="col ">
-                      <div class="d-flex align-items-center" >
+                    <div class="col">
+                      <div class="d-flex align-items-center">
                         <span
                           class="icon-wysiwyg icon-18 text-gray-600 me-2"
                         ></span>
@@ -1268,8 +1271,8 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #nationality class="fw-bold"
-                          > {{ infoPersonal.nationalityName }}</span
+                        <span #nationality class="fw-bold">
+                          {{ infoPersonal.nationalityName }}</span
                         >
                       </div>
                     </div>
@@ -1288,9 +1291,9 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #ethnicGroup class="fw-bold"
-                          >{{ infoPersonal.ethnicGroupName }}</span
-                        >
+                        <span #ethnicGroup class="fw-bold">{{
+                          infoPersonal.ethnicGroupName
+                        }}</span>
                       </div>
                     </div>
                     <!-- Tôn giáo -->
@@ -1308,9 +1311,9 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #religion class="fw-bold"
-                          >{{ infoPersonal.religionName }}</span
-                        >
+                        <span #religion class="fw-bold">{{
+                          infoPersonal.religionName
+                        }}</span>
                       </div>
                     </div>
                   </div>
@@ -1327,8 +1330,8 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #idCardNo class="fw-bold"
-                          > {{ infoPersonal.idCardNo }}</span
+                        <span #idCardNo class="fw-bold">
+                          {{ infoPersonal.idCardNo }}</span
                         >
                       </div>
                     </div>
@@ -1347,8 +1350,8 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #issuedOn class="fw-bold"
-                          > {{ infoPersonal.issuedOn | fmDT }}</span
+                        <span #issuedOn class="fw-bold">
+                          {{ infoPersonal.issuedOn | fmDT }}</span
                         >
                       </div>
                     </div>
@@ -1416,8 +1419,8 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #degreeName class="fw-bold"
-                          > {{ infoPersonal.degreeName }}</span
+                        <span #degreeName class="fw-bold">
+                          {{ infoPersonal.degreeName }}</span
                         >
                       </div>
                     </div>
@@ -1433,8 +1436,7 @@
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #street class="fw-bold"
-                        >
+                      <span #street class="fw-bold">
                         {{ infoPersonal.street ?? infoPersonal.address }}</span
                       >
                     </div>
@@ -1447,8 +1449,8 @@
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #pitNumber class="fw-bold"
-                        > {{ infoPersonal.fullAddress }}</span
+                      <span #pitNumber class="fw-bold">
+                        {{ infoPersonal.fullAddress }}</span
                       >
                     </div>
                   </div>
@@ -1461,8 +1463,8 @@
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #Achievement class="fw-bold"
-                        > {{ infoPersonal.achievement }}</span
+                      <span #Achievement class="fw-bold">
+                        {{ infoPersonal.achievement }}</span
                       >
                     </div>
                   </div>
@@ -1491,9 +1493,9 @@
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #Hobby class="fw-bold"
-                        >{{ infoPersonal.hobby }}</span
-                      >
+                      <span #Hobby class="fw-bold">{{
+                        infoPersonal.hobby
+                      }}</span>
                     </div>
                   </div>
                 </div>
@@ -1516,7 +1518,7 @@
                     </a>
                   </div>
 
-                  <div class="row ">
+                  <div class="row">
                     <div class="col-4">
                       <div class="d-flex align-items-center">
                         <span
@@ -1548,7 +1550,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row ">
+                  <div class="row">
                     <div class="col-4">
                       <div class="d-flex align-items-center">
                         <span
@@ -1560,8 +1562,8 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #partyDate
-                          > {{ infoPersonal.partyDate | fmDT }}</span
+                        <span #partyDate>
+                          {{ infoPersonal.partyDate | fmDT }}</span
                         >
                       </div>
                     </div>
@@ -1745,7 +1747,7 @@
                         </codx-label>
 
                         <span #SIRegisterOn>
-                           {{ infoPersonal.siRegisterOn | fmDT }}
+                          {{ infoPersonal.siRegisterOn | fmDT }}
                         </span>
                       </div>
                     </div>
@@ -1802,8 +1804,8 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #PITIssuedOn
-                          > {{ infoPersonal.pitIssuedOn | fmDT }}</span
+                        <span #PITIssuedOn>
+                          {{ infoPersonal.pitIssuedOn | fmDT }}</span
                         >
                       </div>
                     </div>
@@ -1832,9 +1834,7 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #issuedOn
-                          > {{ infoPersonal.accountBankID }}</span
-                        >
+                        <span #issuedOn> {{ infoPersonal.accountBankID }}</span>
                       </div>
                     </div>
                   </div>
@@ -1873,7 +1873,6 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            
                             {{
                               lstPassport?.length > 0
                                 ? lstPassport[0]?.passportNo
@@ -1893,8 +1892,7 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span #IssuedPlace
-                            >
+                          <span #IssuedPlace>
                             {{
                               lstPassport?.length > 0
                                 ? lstPassport[0]?.issuedPlace
@@ -1916,8 +1914,7 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span #issuedDate
-                            >
+                          <span #issuedDate>
                             {{
                               lstPassport?.length > 0
                                 ? (lstPassport[0]?.issuedDate | fmDT)
@@ -1937,8 +1934,7 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span #ExpiredDate
-                            >
+                          <span #ExpiredDate>
                             {{
                               (lstPassport?.length > 0
                                 ? lstPassport[0]?.expiredDate
@@ -1998,7 +1994,6 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            
                             {{
                               lstVisa?.length > 0 ? lstVisa[0]?.visaNo : ""
                             }}</span
@@ -2011,7 +2006,7 @@
                             class="icon-i-info-circle-fill icon-circle-group text-gray-600 me-1"
                           ></span>
                           <codx-label
-                            class="text-gray-600 me-2 "
+                            class="text-gray-600 me-2"
                             fiedName="IssuedPlace"
                             [formModel]="view.formModel"
                           >
@@ -2026,8 +2021,7 @@
                               [formModel]="view.formModel"
                             >
                             </codx-label>
-                            <span #issuedDate
-                              >
+                            <span #issuedDate>
                               {{
                                 (lstVisa?.length > 0
                                   ? lstVisa[0]?.issuedDate
@@ -2048,8 +2042,7 @@
                               [formModel]="view.formModel"
                             >
                             </codx-label>
-                            <span #issuedOn
-                              >
+                            <span #issuedOn>
                               {{
                                 (lstVisa?.length > 0
                                   ? lstVisa[0]?.effectedDate
@@ -2121,7 +2114,6 @@
                             >
                             </codx-label>
                             <span class="text-dark">
-                              
                               {{
                                 lstWorkPermit?.length > 0
                                   ? lstWorkPermit[0]?.workPermitNo
@@ -2141,8 +2133,7 @@
                               [formModel]="view.formModel"
                             >
                             </codx-label>
-                            <span
-                              >
+                            <span>
                               {{
                                 lstWorkPermit?.length > 0
                                   ? lstWorkPermit[0]?.issuedPlace
@@ -2164,8 +2155,7 @@
                               [formModel]="view.formModel"
                             >
                             </codx-label>
-                            <span
-                              >
+                            <span>
                               {{
                                 (lstWorkPermit?.length > 0
                                   ? lstWorkPermit[0]?.issuedDate
@@ -3158,7 +3148,7 @@
                         <span
                           class="icon-add icon-20 text-gray-600 text-hover-primary"
                         ></span>
-                    </button>
+                      </button>
                       <span class="text-gray-500 ms-2">|</span>
                       <button
                         class="btn btn-icon btn-sm position-relative ms-1"

@@ -106,7 +106,6 @@ export class CompanySettingComponent
     var auth = authStore as any;
     this.tenant = auth.tenantStore?.activeTenant;
     this.loadData();
-
   }
 
   onInit(): void {
@@ -150,7 +149,6 @@ export class CompanySettingComponent
       },
     ];
     this.changeDetectorRef.detectChanges();
-
   }
   valueChange(e) {
     if (e.data) {
@@ -404,7 +402,9 @@ export class CompanySettingComponent
       lstModule: this.lstModule,
       currency: this.setting?.CurrencyID,
       vllL1449: this.vllL1449,
+      tenantID: this.tenant,
     };
+
     let popuMD = this.callfc.openForm(
       PopupModuleDetailComponent,
       '',
@@ -415,7 +415,7 @@ export class CompanySettingComponent
     );
   }
 
-  viewChanged(e){
+  viewChanged(e) {
     console.log(e);
   }
 }

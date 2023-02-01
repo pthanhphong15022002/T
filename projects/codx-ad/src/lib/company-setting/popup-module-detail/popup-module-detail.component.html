@@ -61,4 +61,24 @@
       "
     ></codx-label>
   </div>
+
+  <codx-gridview-v2
+    #grid
+    [formName]="fmUserRole?.formName"
+    [gridViewName]="fmUserRole?.gridViewName"
+    [entityName]="fmUserRole?.entityName"
+    [allowFiltering]="true"
+    [allowSorting]="true"
+    [allowPaging]="true"
+    [dataSource]="lstUserRole"
+    [predicates]="predicate"
+    [dataValues]="dataValue"
+    [service]="'Tenant'"
+    [assemblyName]="'Tenant'"
+    [entityName]="'OrderModulesBusiness'"
+    [className]="'OrderModulesBusiness'"
+    [method]="'GetListUserRoleAsync'"
+    [autoLoad]="false"
+    rowHeight="40"
+  ></codx-gridview-v2>
 </div>
