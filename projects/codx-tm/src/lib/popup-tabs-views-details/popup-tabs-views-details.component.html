@@ -89,18 +89,16 @@
         <ng-container *ngIf="name == 'History'">
           <ng-container>
             <ng-container>
-              <codx-tree-history [objectID]="iterationID" [objectType]="'TM_Sprints'" [viewIcon]="true"
-                [funcID]="functionParent">
-              </codx-tree-history>
+              <codx-history [objectID]="iterationID" [formModel]="dialog?.formModel"></codx-history>
             </ng-container>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Comments'">
           <ng-container>
-            <codx-tree-history [objectID]="iterationID ? iterationID : meetingID"
+            <codx-tree-comment [objectID]="iterationID ? iterationID : meetingID"
               [objectType]="iterationID ? 'TM_Sprints' : 'CO_Meetings'" [actionType]="'C'" [addNew]="true"
-              [viewIcon]="false" [viewVote]="true" [funcID]="functionParent">
-            </codx-tree-history>
+              [viewIcon]="false" [viewVote]="true" [allowEdit]="true" [funcID]="functionParent">
+            </codx-tree-comment>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Meetings'">

@@ -658,7 +658,7 @@
 <ng-template #popupComment let-dialog>
   <codx-form [dialog]="dialog" [body]="body" [headerText]="headerComment">
     <ng-template #body>
-      <codx-tree-history
+      <codx-tree-comment
         [funcID]="funcID"
         [objectID]="contents[id].recID"
         [objectType]="objectType"
@@ -666,7 +666,7 @@
         addNew="true"
         (totalCommentChange)="totalCommentChange($event)"
       >
-      </codx-tree-history>
+      </codx-tree-comment>
     </ng-template>
   </codx-form>
 </ng-template>

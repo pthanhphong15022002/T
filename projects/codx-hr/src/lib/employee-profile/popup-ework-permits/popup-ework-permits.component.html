@@ -1,6 +1,5 @@
 <layout-list-detail
     #lstDetail
-    [title]="headerText"
     [formModel]="formModel"
     [footer]="footer"
     [dialog]="dialog"
@@ -137,6 +136,7 @@
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
+                    [showSpinButton]="false" 
                     field="reissuedNum"
                     [formModel]="formModel"
                     [Group]="formGroup"

@@ -643,6 +643,7 @@ export class EmployeeProfileComponent extends UIComponent {
               op.entityName = 'HR_EExperiences';
               op.dataValue = params.employeeID;
               op.predicate = 'EmployeeID=@0';
+              (op.page = 1),
               this.hrService.GetListByEmployeeIDAsync(op).subscribe((res) => {
                 console.log('e experience', res);
                 this.lstExperience = res;
@@ -768,7 +769,7 @@ export class EmployeeProfileComponent extends UIComponent {
             .getListBasicSalariesByDataRequest(rqEBasic)
             .subscribe((res) => {
               if (res) {
-                this.lstEBSalary = res[0];
+                this.lstEBSalary = res;
                 console.log('e salaries', this.lstEBSalary);
               }
             });
@@ -1653,14 +1654,16 @@ export class EmployeeProfileComponent extends UIComponent {
     // option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.Width = '850px';
+    console.log('danh sach kinh nghiem', this.lstExperience);
+    
     let dialogAdd = this.callfunc.openSide(
       PopupEexperiencesComponent,
       {
-        employeeId: this.data.employeeID,
         actionType: actionType,
         headerText: 'Kinh nghiệm trước đây',
         funcID: 'HRT03020405',
         lstExperience: this.lstExperience,
+        employeeId: this.data.employeeID,
         indexSelected: this.lstExperience.indexOf(data),
       },
       option
@@ -1684,9 +1687,11 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupEJobSalariesComponent,
       {
         actionType: actionType,
-        salarySelected: data,
         headerText: 'Lương chức danh',
         employeeId: this.data.employeeID,
+        funcID: 'HRT03020302',
+        lstJobSalaries: this.lstJobSalaries,
+        indexSelected: this.lstJobSalaries.indexOf(data),
       },
       option
     );
@@ -1715,8 +1720,10 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupEBasicSalariesComponent,
       {
         actionType: actionType,
-        salarySelected: data,
+        lstEBSalary: this.lstEBSalary,
         headerText: 'Lương cơ bản',
+        funcID: 'HRT03020301',
+        indexSelected: this.lstExperience.indexOf(data),
         employeeId: this.data.employeeID,
       },
       option
@@ -1818,6 +1825,7 @@ export class EmployeeProfileComponent extends UIComponent {
         lstDayOffs: this.lstDayOffs,
         headerText: 'Nghỉ phép',
         employeeId: this.data.employeeID,
+        funcID: 'HRT03020403',
       },
       option
     );
@@ -2278,6 +2286,7 @@ export class EmployeeProfileComponent extends UIComponent {
         actionType: actionType,
         indexSelected: this.lstEdiseases.indexOf(data),
         lstEdiseases: this.lstEdiseases,
+        funcID: 'HRT03020703',
         headerText: 'Bệnh nghề nghiệp',
         employeeId: this.data.employeeID,
       },

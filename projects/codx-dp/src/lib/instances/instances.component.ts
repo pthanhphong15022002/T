@@ -71,7 +71,7 @@ export class InstancesComponent
   moreFunc: any;
   instanceNo: string;
   listSteps = [];
-
+  progress: string;
   formModel: FormModel;
   isMoveSuccess: boolean = true;
 
@@ -122,13 +122,15 @@ export class InstancesComponent
       processID: this.process?.recID ? this.process?.recID : '',
     };
 
-    if (this.process){
+    if (this.process) {
       this.codxDpService.getStep(this.process?.recID).subscribe((dt) => {
-          if (dt && dt?.length > 0) this.listSteps = dt;
-        });
+        if (dt && dt?.length > 0) this.listSteps = dt;
+      });
     }
 
-      this.codxDpService.createListInstancesStepsByProcess(this.process?.recID).subscribe((dt) => {
+    this.codxDpService
+      .createListInstancesStepsByProcess(this.process?.recID)
+      .subscribe((dt) => {
         if (dt && dt?.length > 0) this.listSteps = dt;
       });
     //kanban
@@ -162,63 +164,41 @@ export class InstancesComponent
     }
   }
 
+  progressEvent(event){
+    this.progress = event;
+  }
+
   //CRUD
   add() {
     this.view.dataService.addNew().subscribe((res) => {
+      const funcIDApplyFor =
+        this.process.applyFor === 'D' ? 'DPT0406' : 'DPT0405';
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '850px';
-      option.zIndex = 1010;
-
-      // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
-      var dialogCustomField = this.callfc.openSide(
-        PopupAddInstanceComponent,
-        ['add', applyFor, this.listSteps],
-        option
-      );
-      dialogCustomField.closed.subscribe((e) => {
-        if (e && e.event != null) {
-          //xu ly data đổ về
-          this.detectorRef.detectChanges();
-        }
+      this.cache.functionList(funcIDApplyFor).subscribe((res) => {
+        option.FormModel = this.view.formModel;
+        option.FormModel.funcID = res.functionID;
+        option.FormModel.entityName = res.entityName;
+        option.FormModel.formName = res.formName;
+        option.FormModel.gridViewName = res.gridViewName;
+        option.Width = '850px';
+        option.zIndex = 1010;
+        const titleForm = res.defaultName;
+        // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
+        var dialogCustomField = this.callfc.openSide(
+          PopupAddInstanceComponent,
+          ['add', applyFor, this.listSteps, titleForm],
+          option
+        );
+        dialogCustomField.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            //xu ly data đổ về
+            this.detectorRef.detectChanges();
+          }
+        });
       });
     });
-    // this.genAutoNumberNo();
-    // this.cache.gridView('grvDPInstances').subscribe((res) => {
-    //   this.cache
-    //     .gridViewSetup('DPInstances', 'grvDPInstances')
-    //     .subscribe((res) => {
-    //
-    //       let option = new SidebarModel();
-    //       //        let formModel = this.dialog?.formModel;
-    //       let formModel = new FormModel();
-    //       formModel.formName = 'DPInstances';
-    //       let stepCrr = this.listSteps[0] || undefined
-    //       var obj = {
-    //         instanceNo: this.instanceNo,
-    //         step : stepCrr
-    //       };
-    //       formModel.gridViewName = 'grvDPInstances';
-    //       formModel.entityName = 'DP_Instances';
-    //       option.FormModel = formModel;
-    //       option.Width = '800px';
-    //       option.zIndex = 1010;
-
-    //       var dialogCustomField = this.callfc.openSide(
-    //         PopupAddInstanceComponent,
-    //         ['add', titleAction, obj],
-    //         option
-    //       );
-    //       dialogCustomField.closed.subscribe((e) => {
-    //         if (e && e.event != null) {
-    //           //xu ly data đổ về
-    //           this.detectorRef.detectChanges();
-    //         }
-    //       });
-    //     });
-    // });
   }
   async genAutoNumberNo() {
     this.codxDpService

@@ -103,7 +103,7 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
     console.log('du lieu salari', this.listView.dataService.data);
     
     if (this.data.expiredDate < this.data.effectedDate) {
-      this.notify.notifyCode('HR002');
+      this.notify.notifyCode('HR003');
       return;
     }
     if (this.actionType === 'copy' || this.actionType === 'add') {

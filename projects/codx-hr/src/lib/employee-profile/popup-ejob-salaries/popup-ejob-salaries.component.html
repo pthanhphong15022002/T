@@ -20,7 +20,9 @@
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
+        <div>
+          <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
+        </div>
         <codx-input
           disabled="true"
           field="isCurrent"
@@ -56,6 +58,7 @@
         field="jSalary"
         [formModel]="formModel"
         [Group]="formGroup"
+        [showSpinButton]="false" 
       ></codx-input>
     </div>
 

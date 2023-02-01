@@ -1,6 +1,5 @@
 <layout-list-detail
     #lstDetail
-    [title]="headerText"
     [formModel]="formModel"
     [footer]="footer"
     [dialog]="dialog"
@@ -67,6 +66,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+            [showSpinButton]="false"
                 field="stayDays"
                 [formModel]="formModel"
                 [Group]="formGroup"
