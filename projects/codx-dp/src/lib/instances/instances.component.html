@@ -153,17 +153,11 @@
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
-      <ng-container>
-        <codx-vll
-          [name]="'DP028'"
-          [field]="'Status'"
-          [value]="'0'"
-          [showText]="true"
-          [showBgColor]="true"
-          class="badge badge-light badge-md fs-7"
-        >
-        </codx-vll>
-      </ng-container>
+      <div class="font me-3">
+        <span>
+          {{stepNameInstance}}
+        </span>
+      </div>
       <span>
         <span class="fs-7 text-gray-600" #endDate>{{
           data.endDate

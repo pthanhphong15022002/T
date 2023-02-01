@@ -162,6 +162,7 @@ export class CodxEpService {
       });
     });
   }
+  
   getFormGroupBooking(formName, gridView): Promise<FormGroup> {    
     return new Promise<FormGroup>((resolve, reject) => {
       this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {

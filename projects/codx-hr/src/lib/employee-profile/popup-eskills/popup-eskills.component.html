@@ -147,7 +147,7 @@
     [formModel]="formModel"
     [typeMF]="'hover'"
     [title]="data.skillID"
-    [icoTitleCss]="'icon-list_alt'"
+    [icoTitleCss]="'icon-i-arrow-down-left-circle-fill'"
     [subTitleTmp]="tmplateEPassportsMenuList"
     cardCss="card codx_cardcenter px-4 py-3 w-100"
     [hideMF]="true"
@@ -165,12 +165,12 @@
       }}<i class="icon-i-arrow-down-left-circle-fill icon-6 mx-1"></i>
       {{ data.skillGradeID }}
     </div>
-    <div>
-      <i class="icon-calendar_today"></i
+    <div class="d-flex align-items-center">
+      <i class="icon-event"></i
       >{{ (data.trainFrom | fmDT) + " - " + (data.trainTo | fmDT) }}
     </div>
-    <div>
-      <i class="icon-airplanemode_active"></i>{{ data.ranking }}
+    <div class="d-flex align-items-center">
+      <i class="icon-insights"></i>{{ data.ranking }}
       <i class="icon-i-arrow-down-left-circle-fill icon-6 mx-1"></i
       >{{ data.totalScore }}
     </div>

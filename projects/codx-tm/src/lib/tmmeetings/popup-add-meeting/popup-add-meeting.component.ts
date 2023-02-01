@@ -307,7 +307,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     } else if (this.action == 'edit') {
       op.method = 'UpdateMeetingsAsync';
       op.className = 'MeetingsBusiness';
-      data = [this.meeting,this.functionID];  
+      data = [this.meeting,this.functionID];
     }
 
     op.data = data;
@@ -421,8 +421,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .getResourcesTrackEvent(
         this.meeting.meetingID,
         this.meeting.resources,
-        this.meeting.startDate.toUTCString(),
-        this.meeting.endDate.toUTCString()
+        this.meeting.startDate,
+        this.meeting.endDate
       )
       .subscribe((res) => {
         if (res && res.length > 0) {
