@@ -252,6 +252,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     if (this.action != 'add') {
       // this.showID = true;
+      this.processTab = 2;
       this.getAvatar(this.process);
     } else {
       this.process.processNo = dt.data.processNo;
@@ -1202,7 +1203,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     option.FormModel = frmModel;
     let dialog = this.callfc.openSide(
       PopupJobComponent,
-      [status, this.jobType, this.step?.recID, this.taskGroupList, data || {}],
+      [
+        status,
+        this.jobType,
+        this.step?.recID,
+        this.taskGroupList,
+        data || {},
+        this.taskList,
+      ],
       option
     );
     dialog.closed.subscribe((e) => {
@@ -1278,7 +1286,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     option.FormModel = frmModel;
     let dialog = this.callfc.openSide(
       ViewJobComponent,
-      [status, this.jobType, this.step?.recID, this.taskGroupList, data || {}],
+      [
+        status,
+        this.jobType,
+        this.step?.recID,
+        this.taskGroupList,
+        data || {},
+        this.taskList,
+      ],
       option
     );
     dialog.closed.subscribe((e) => {
@@ -1323,7 +1338,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.callfc.openForm(share, '', 500, 500);
   }
   onDeleteOwner(objectID, datas) {
-    let index = datas.findIndex((item) => item.id == objectID);
+    let index = datas.findIndex((item) => item.objectID == objectID);
     if (index != -1) datas.splice(index, 1);
   }
   applyUser(event, datas, status) {
@@ -1335,6 +1350,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           objectID: element.id,
           objectName: element.text,
           objectType: element.objectType,
+          roleType: element.objectName,
         });
       }
     });
@@ -1689,23 +1705,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   loadCbxProccess() {
-    //this.cache.valueList('DP019').subscribe((valueList) => {
-      // console.log(valueList);
-      // this.dpService.getlistCbxProccess().subscribe((res) => {
-      //   if (res) {
-      //     this.listCbxProccess = res[0];
-      //     console.table(this.listCbxProccess);
-      //   }
-      // });
-
-
-   // });
-
+    this.dpService.getlistCbxProccess().subscribe((res) => {
+      if (res) {
+        this.listCbxProccess = res[0];
+      }
+    });
   }
 
-  defaultCbxProccess() {
-
-  }
+  defaultCbxProccess() {}
 
   cbxChange($event) {}
 

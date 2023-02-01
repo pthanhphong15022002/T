@@ -849,6 +849,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           )
           .closed.subscribe((x) => {
             if (x.event.status == 'Y') {
+              debugger;
               if (isData) {
                 this.odService
                   .getDetailDispatch(datas.recID, this.formModel.entityName)

@@ -1,6 +1,6 @@
-<layout-list-detail
+<!-- <layout-list-detail
     #lstDetail
-    [title]="headerText"text-primary
+    [title]="headerText"
     [formModel]="formModel"
     [footer]="footer"
     [dialog]="dialog"
@@ -149,6 +149,7 @@
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
+                    [showSpinButton]="false" 
                     disabled="true"
                     field="totalSubDays"
                     [formModel]="formModel"
@@ -167,6 +168,7 @@
                     field="totalDays"
                     [formModel]="formModel"
                     [Group]="formGroup"
+                    [showSpinButton]="false" 
                 ></codx-input>
             </div>
             <div class="col-6">
@@ -178,6 +180,7 @@
                     field="totalDaysOff"
                     [formModel]="formModel"
                     [Group]="formGroup"
+                    [showSpinButton]="false" 
                 ></codx-input>
             </div>
         </div>
@@ -220,7 +223,7 @@
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
-                    field="sILeaveNo"
+                    field="SILeaveNo"
                     [formModel]="formModel"
                     [Group]="formGroup"
                 ></codx-input>
@@ -281,6 +284,7 @@
                     [formModel]="formModel"
                 ></codx-label>
                 <codx-input
+                [showSpinButton]="false" 
                     field="pregnancyWeeks"
                     [formModel]="formModel"
                     [Group]="formGroup"
@@ -307,6 +311,7 @@
                 ></codx-label>
                 <codx-input
                     field="newChildNum"
+                    [showSpinButton]="false" 
                     [formModel]="formModel"
                     [Group]="formGroup"
                 ></codx-input>
@@ -315,10 +320,6 @@
 
         <div class="form-group row">
             <div class="col-6">
-                <!-- <codx-label
-                    fiedName="NewChildBirthType"
-                    [formModel]="formModel"
-                ></codx-label> -->
                 <div>
                     <codx-input
                 type="checkbox" 
@@ -459,8 +460,8 @@
 <ng-template #tmplateEDayOffsMenuList let-data>
     <div class="d-flex flex-column">
         <div class="d-flex justify-content-center align-items-center pt-1 pb-1">
-            <div>
-                <i class ="icon-event icon-16 pe-1"></i> {{(data.beginDate | fmDT) + ' - ' + (data.endDate | fmDT)}}
+            <div class="d-flex align-items-center">
+                <i class ="icon-event icon-16"></i> {{(data.beginDate | fmDT) + ' - ' + (data.endDate | fmDT)}}
             </div>
           
             <div class="ms-7 d-flex align-items-center">
@@ -470,5 +471,432 @@
        
         </div>
         <div class="d-flex align-items-center"><i class = "icon-edit"></i>{{data.reason}}</div>
+    </div>
+</ng-template> -->
+
+<codx-form
+    #form
+    [headerText] = "headerText"
+    [body] = "body"
+    [formModel]="formModel"
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="dayoffObj"
+    *ngIf="isAfterRender"
+>
+    <ng-template #body>
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="RegisteredDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    disabled="true"
+                    field="registeredDate"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="RegisteredBy"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    disabled="true"
+                    field="registeredBy"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="KowID"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="kowID"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="BeginDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="beginDate"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                    (valueChange)="HandleInputBeginDate($event)"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="EndDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="endDate"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                    (valueChange)="HandleInputEndDate($event)"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="PeriodType"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="periodType"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                    (valueChange)="HandleInputPeriodType($event)"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="ActualEndDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="actualEndDate"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <div class="text-primary">
+                    <codx-label 
+                        default="Loại trừ các ngày"
+                    ></codx-label>
+                </div>
+                <div>
+                    <codx-input
+                        field="isSubHoliday"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
+                    ></codx-input>
+                    <codx-label class="ms-2"
+                        fiedName="IsSubHoliday"
+                        [formModel]="formModel"
+                    ></codx-label>
+                </div>
+                
+                <div>
+                    <codx-input
+                        field="isSubWeekOff"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
+                    ></codx-input>
+                    <codx-label class="ms-2"
+                        fiedName="IsSubWeekOff"
+                        [formModel]="formModel"
+                    ></codx-label>
+                </div>
+                
+                <div>
+                    <codx-input
+                        field="isSubSunday"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
+                    ></codx-input>
+                    <codx-label class="ms-2"
+                        fiedName="IsSubSunday"
+                        [formModel]="formModel"
+                    ></codx-label>
+                </div>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="TotalSubDays"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    [showSpinButton]="false" 
+                    disabled="true"
+                    field="totalSubDays"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="TotalDays"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="totalDays"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                    [showSpinButton]="false" 
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="TotalDaysOff"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="totalDaysOff"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                    [showSpinButton]="false" 
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="Reason"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="reason"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="Note"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="note"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="row text-primary">
+            <codx-label
+                default="THÔNG TIN LOẠI NGHỈ CHẾ ĐỘ"
+                [formModel]="formModel"
+            ></codx-label>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="SILeaveNo"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="SILeaveNo"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="HospitalLine"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="hospitalLine"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="ChildID"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="childID"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="ChildHICardNo"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="childHICardNo"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="PregnancyFrom"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="pregnancyFrom"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="PregnancyWeeks"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                [showSpinButton]="false" 
+                    field="pregnancyWeeks"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="NewChildBirthDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="newChildBirthDate"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="NewChildNum"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="newChildNum"
+                    [showSpinButton]="false" 
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <!-- <codx-label
+                    fiedName="NewChildBirthType"
+                    [formModel]="formModel"
+                ></codx-label> -->
+                <div>
+                    <codx-input
+                type="checkbox" 
+                [label]="lstPregnantType[0].text"
+                [checked]="isnormalPregnant"
+                (valueChange)="HandlePregnantTypeChange($event, lstPregnantType[0])"
+                ></codx-input>
+                </div>
+
+                <div>
+                    <codx-input
+                    type="checkbox" 
+                    [checked]="isNotNormalPregnant"
+                    [label]="lstPregnantType[1].text"
+                    (valueChange)="HandlePregnantTypeChange($event, lstPregnantType[1])"
+                    ></codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div>
+                    <codx-label
+                    fiedName="IsNewChildUnder32W"
+                    [formModel]="formModel"
+                ></codx-label>
+                </div>
+                <div>
+                    <codx-input
+                    field="isNewChildUnder32W"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="WifeID"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="wifeID"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="WifeIDCardNo"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="wifeIDCardNo"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="WifeSINo"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="wifeSINo"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="RegimeNote"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="regimeNote"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+
+
+    </ng-template>
+
+</codx-form>
+
+
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveForm()">
+            <i class="icon-save"></i>
+        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+        </button>
     </div>
 </ng-template>

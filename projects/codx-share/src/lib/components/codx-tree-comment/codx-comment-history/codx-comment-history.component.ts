@@ -2,9 +2,9 @@ import { E } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ApiHttpService, AuthService, CacheService, CallFuncService, FormModel, NotificationsService } from 'codx-core';
 import { environment } from 'src/environments/environment';
-import { tmpHistory } from '../../models/tmpComments.model';
-import { AttachmentComponent } from '../attachment/attachment.component';
-import { PopupVoteComponent } from '../treeview-comment/popup-vote/popup-vote.component';
+import { tmpHistory } from '../../../models/tmpComments.model';
+import { AttachmentComponent } from '../../attachment/attachment.component';
+import { PopupVoteComponent } from '../../treeview-comment/popup-vote/popup-vote.component';
 
 @Component({
   selector: 'codx-comment-history',
@@ -24,9 +24,11 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() type: "view" | "create" = "view";
   @Input() data:any;
   @Input() viewIcon:boolean = true;
-  @Input()  allowVotes:boolean = true;
-  @Input()  dVll: any = {};
+  @Input() allowVotes:boolean = true;
+  @Input() allowEdit:boolean = true;
+  @Input() dVll: any = {};
   @Input() vllIcon: any = [];
+
   @Output() evtReply = new EventEmitter;
   @Output() evtDelete = new EventEmitter;
   @Output() evtSend = new EventEmitter;

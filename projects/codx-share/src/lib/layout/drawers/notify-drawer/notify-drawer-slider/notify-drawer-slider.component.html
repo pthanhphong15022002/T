@@ -29,7 +29,7 @@
                   [objectType]="'AD_Users'"></codx-img>
               </div>
               <div class="w-100">
-                <div [innerHTML]="item.textValue">
+                <div [innerHTML]="item.textValue | fTextValue:item.text | async">
                 </div>
                 <span class="text-gray-500 ms-1">{{item.createdOn | timefrom}}</span>
               </div>

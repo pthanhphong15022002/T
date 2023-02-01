@@ -83,7 +83,7 @@
                 <div
                   *ngFor="let t of themes"
                   class="symbol symbol-40px symbol-circle me-4 cursor-pointer"
-                  (click)="selectTheme(t.id)"
+                  (click)="updateSettting('', t.id, '')"
                   [ngbTooltip]="t.enable ? '' : 'Coming soon'"
                 >
                   <span class="symbol-label" [style.background-color]="t.color">
@@ -126,7 +126,7 @@
             <div
               *ngFor="let l of langs"
               class="menu-item px-3 cursor-pointer"
-              (click)="selectLanguage(l.lang)"
+              (click)="updateSettting(l.lang, '', '')"
               data-toggle="tooltip"
               [title]="l.enable ? '' : 'Coming soon'"
             >
@@ -135,7 +135,7 @@
                 [ngClass]="l.lang === language.lang ? 'active' : ''"
               >
                 <span class="symbol symbol-20px me-4">
-                  <img class="rounded-1" [src]="l.flag" alt="metronic" />
+                  <img class="rounded-1" [src]="l.flag" alt="flag" />
                 </span>
                 {{ l.name }}
               </a>

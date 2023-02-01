@@ -14,11 +14,11 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
 
   dataOKR : any;
   data : any;
-  dialog : any;
+  dialogRef : any;
   headerText = "Thêm mới mục tiêu";
   type:any = "add";
   gridView: any;
-  formModel: any;
+  formModel: FormModel;
   okrAddGroup: FormGroup;
   ops = ['m','q','y'];
   date = new Date();
@@ -58,9 +58,9 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
     private notifySvr: NotificationsService,
     private auth: AuthStore,
     @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef
+    @Optional() dialogRef?: DialogRef
   ) {
-    this.dialog = dialog;
+    this.dialogRef = dialogRef;
     if(dt?.data[0]) this.gridView = dt?.data[0];
     if(dt?.data[1]) this.formModel = dt?.data[1];
     if(dt?.data[2]) this.type = dt?.data[2];
@@ -113,13 +113,13 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
     //Thêm
     if(this.type == "add")
     {
-      if(this.formModel.functionID == OMCONST.FUNCID.COMP)
+      if(this.formModel.funcID == OMCONST.FUNCID.COMP)
         this.dataOKR.oKRLevel = "1";
-      else if(this.formModel.functionID == OMCONST.FUNCID.DEPT)
+      else if(this.formModel.funcID == OMCONST.FUNCID.DEPT)
         this.dataOKR.oKRLevel = "3";
-      else if(this.formModel.functionID == OMCONST.FUNCID.ORG)
+      else if(this.formModel.funcID == OMCONST.FUNCID.ORG)
         this.dataOKR.oKRLevel = "5";
-      else if(this.formModel.functionID == OMCONST.FUNCID.PERS)
+      else if(this.formModel.funcID == OMCONST.FUNCID.PERS)
         this.dataOKR.oKRLevel = "9";
       this.dataOKR.interval = "Q";
       this.dataOKR.parentID = this.okrPlans?.recID;
@@ -127,7 +127,7 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
         if(item) 
         {
           this.notifySvr.notifyCode("");
-          this.dialog.close(item);
+          this.dialogRef.close(item);
         }
       });
     }

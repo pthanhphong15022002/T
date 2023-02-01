@@ -357,6 +357,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  // view detail wp news
   naviagteWPNew(data: any) {
     if (!data || !data.recID || !data.category) return;
     this.api

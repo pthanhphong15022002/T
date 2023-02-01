@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CacheService,
   CallFuncService,
@@ -8,7 +8,10 @@ import {
   Util,
 } from 'codx-core';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-import { DP_Steps_Tasks } from '../../../../models/models';
+import {
+  DP_Steps_Tasks,
+  DP_Steps_Tasks_Roles,
+} from '../../../../models/models';
 
 @Component({
   selector: 'lib-popup-job',
@@ -16,6 +19,7 @@ import { DP_Steps_Tasks } from '../../../../models/models';
   styleUrls: ['./popup-job.component.scss'],
 })
 export class PopupJobComponent implements OnInit {
+  @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   title = '';
   dialog!: DialogRef;
   formModelMenu: FormModel;
@@ -24,18 +28,19 @@ export class PopupJobComponent implements OnInit {
   taskName = 'Giới thiệu sản phẩm';
   jobName = 'Thu thập thông tin khách hàng';
   linkQuesiton = 'http://';
-  listOwner = [];
+  listOwner: DP_Steps_Tasks_Roles[] = [];
   listChair = [];
   recIdEmail = '';
   isNewEmails = true;
   groupTackList = [];
-  stepsTasks:  DP_Steps_Tasks;
-  fields = { text: 'recID', value: 'taskGroupName' };
+  stepsTasks: DP_Steps_Tasks;
+  fieldsGroup = { text: 'taskGroupName', value: 'recID' };
+  fieldsTask = { text: 'taskName', value: 'recID' };
   tasksItem = '';
   stepID = '';
   status = 'add';
-
-
+  taskList: DP_Steps_Tasks[] = [];
+  show = false;
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -48,18 +53,19 @@ export class PopupJobComponent implements OnInit {
     this.stepID = dt?.data[2];
     this.groupTackList = dt?.data[3];
     this.dialog = dialog;
-    if(this.status == 'add'){
+    if (this.status == 'add') {
       this.stepsTasks = new DP_Steps_Tasks();
       this.stepsTasks['taskType'] = this.stepType;
       this.stepsTasks['stepID'] = this.stepID;
-    }else{
+    } else {
       this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
-      this.tasksItem = this.groupTackList.find(group => group.recID == this.stepsTasks.taskGroupID)?.taskGroupName || '';
       this.stepType = this.stepsTasks.taskType;
     }
+    this.taskList = dt?.data[5];
   }
   ngOnInit(): void {
-   
+    this.listOwner = this.stepsTasks['roles'];
+    console.log(this.taskList);
   }
   valueChangeText(event) {
     this.stepsTasks[event?.field] = event?.data;
@@ -68,9 +74,9 @@ export class PopupJobComponent implements OnInit {
     this.stepsTasks[event?.field] = event?.data;
   }
 
-  filterText(value) {
-    if (value.itemData) {
-      this.stepsTasks['taskGroupID'] = value['itemData']['recID'];
+  filterText(value, key) {
+    if (value) {
+      this.stepsTasks[key] = value;
     }
   }
   valueChangeAlert(event) {
@@ -79,27 +85,29 @@ export class PopupJobComponent implements OnInit {
   addFile(evt: any) {
     // this.attachment.uploadFile();
   }
-  eventApply(e, datas) {
+  applyOwner(e, datas) {
     if (!e || e?.data.length == 0) return;
     let listUser = e?.data;
     listUser.forEach((element) => {
       if (!datas.some((item) => item.id == element.id)) {
         datas.push({
-          id: element.id,
-          name: element.text,
-          type: element.objectType,
+          objectID: element.id,
+          objectName: element.text,
+          objectType: element.objectType,
+          roleType: element.objectName,
         });
       }
     });
   }
 
   onDeleteOwner(objectID, data) {
-    let index = data.findIndex((item) => item.id == objectID);
+    let index = data.findIndex((item) => item.objectID == objectID);
     if (index != -1) data.splice(index, 1);
   }
 
   saveData() {
-    this.dialog.close({data:this.stepsTasks, status: this.status});
+    this.stepsTasks['roles'] = this.listOwner;
+    this.dialog.close({ data: this.stepsTasks, status: this.status });
 
     // let headerText = await this.checkValidate();
     // if (headerText.length > 0) {
@@ -161,5 +169,24 @@ export class PopupJobComponent implements OnInit {
         this.isNewEmails = this.recIdEmail ? true : false;
       }
     });
+  }
+  showCombobox(){
+    this.show = !this.show;
+  }
+  outFocus(){
+    console.log('thuan ');
+    
+  }
+  ID(element: string) {
+    const idx = 'check';
+    return idx + '_' + element;
+  }
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+    console.log(event);
+    let a = this.inputContainer?.nativeElement.contains(event.target);
+    if(!a){
+      this.show = false;
+    }
   }
 }
