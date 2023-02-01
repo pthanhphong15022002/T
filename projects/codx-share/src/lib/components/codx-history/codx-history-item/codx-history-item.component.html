@@ -162,7 +162,7 @@
                     <span *ngIf="data.description" [innerHTML]="data.description"></span>
                     <span class="ms-3" *ngIf="data.sendToObjects?.length > 0">
                         <ng-container
-                            *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.sendToObjects }">
+                            *ngTemplateOutlet="tmpViewEmployee; context: { $implicit: data.sendToObjects }">
                         </ng-container>
                     </span>
                 </div>
@@ -190,7 +190,7 @@
                     <span *ngIf="data.description" [innerHTML]="data.description"></span>
                     <span class="ms-3" *ngIf="data.sendToObjects?.length > 0">
                         <ng-container
-                            *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.sendToObjects }">
+                            *ngTemplateOutlet="tmpViewEmployee; context: { $implicit: data.sendToObjects }">
                         </ng-container>
                     </span>
                 </div>
@@ -218,7 +218,7 @@
                     <span *ngIf="data.description" [innerHTML]="data.description"></span>
                     <span class="ms-3" *ngIf="data.sendToObjects?.length > 0">
                         <ng-container
-                            *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.sendToObjects }">
+                            *ngTemplateOutlet="tmpViewEmployee; context: { $implicit: data.sendToObjects }">
                         </ng-container>
                     </span>
                 </div>
@@ -283,12 +283,26 @@
                                     <td scope="col-4">
                                         <codx-label [formModel]="formModel" [fiedName]="item.fieldName"></codx-label>
                                     </td>
-                                    <td scope="col-4">
-                                        {{item.oldValue | formatvalue:formModel:item.fieldName | async}}
-                                    </td>
-                                    <td scope="col-4">
-                                        {{item.newValue | formatvalue:formModel:item.fieldName | async}}
-                                    </td>
+                                    <ng-container *ngIf="item.fieldName === 'Permissions' ;else primitiveValue">
+                                        <td scope="col-4">
+                                            <ng-container
+                                                *ngTemplateOutlet="tmpViewEmployee; context: { $implicit: item.oldValue | dJson }">
+                                            </ng-container>
+                                        </td>
+                                        <td scope="col-4">
+                                            <ng-container
+                                                *ngTemplateOutlet="tmpViewEmployee; context: { $implicit: item.newValue | dJson }">
+                                            </ng-container>
+                                        </td>
+                                    </ng-container>
+                                    <ng-template #primitiveValue>
+                                        <td scope="col-4">
+                                            {{item.oldValue | formatvalue:formModel:item.fieldName | async}}
+                                        </td>
+                                        <td scope="col-4">
+                                            {{item.newValue | formatvalue:formModel:item.fieldName | async}}
+                                        </td>
+                                    </ng-template>
                                 </tr>
                             </ng-container>
                             
@@ -298,7 +312,6 @@
             </ng-container>
         </div>
     </div>
-
 </ng-template>
 <!-- END UPDATE -->
 <!-- ATTACHMENT -->
@@ -466,7 +479,7 @@
 </ng-template>
 <!-- END V -->
 <!-- template list employeee -->
-<ng-template #templateListEmployee let-objects>
+<ng-template #tmpViewEmployee let-employees>
     <div ngbDropdown class="symbol-more" [container]="'body'">
         <div ngbDropdownToggle class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
             type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -474,32 +487,32 @@
             <div class="d-flex align-items-center">
                 <div>
                     <codx-img 
-                        [objectId]="objects[0].objectID" 
-                        [objectName]="objects[0].objectName"
+                        [objectId]="employees[0].objectID" 
+                        [objectName]="employees[0].objectName"
                         [objectType]="'AD_Users'" 
                         [width]="30"
                         [referType]="'avt'"
                         [imageType]="'circle'">
                     </codx-img>
                 </div>
-                <div *ngIf="objects.length > 1" class="symbol symbol-30px symbol-circle ">
-                    <div class="d-flex round-user justify-content-center align-items-center text-white w-30px h-30px bg-secondary">+{{(objects.length - 1)}}</div>
+                <div *ngIf="employees.length > 1" class="symbol symbol-30px symbol-circle ">
+                    <div class="d-flex round-user justify-content-center align-items-center text-white w-30px h-30px bg-secondary">+{{(employees.length - 1)}}</div>
                 </div>
             </div>
         </div>
         <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
             <div class="py-2">
                 <codx-label default="Danh sách nhân viên" class="fw-bold"></codx-label>
-                <span class="fw-bold">{{objects.length}}</span>
+                <span class="fw-bold">{{employees.length}}</span>
             </div>
             <!-- <codx-searchbar (searchEvent)="searchUser($event)"></codx-searchbar> -->
             <div class="history-list-employees">
-                <ng-container *ngFor="let object of objects">
+                <ng-container *ngFor="let employee of employees">
                     <div class="d-flex align-items-center my-2">
                         <div class="me-2">
                             <codx-img 
-                                [objectId]="object.objectID" 
-                                [objectName]="object.objectName"
+                                [objectId]="employee.objectID" 
+                                [objectName]="employee.objectName"
                                 [objectType]="'AD_Users'" 
                                 [width]="30"
                                 [referType]="'avt'"
@@ -507,7 +520,7 @@
                             </codx-img>
                         </div>
                         <div>
-                            <span class="fs-6">{{object.objectName}}</span>
+                            <span class="fs-6">{{employee.objectName}}</span>
                         </div>
                     </div>
                 </ng-container>
