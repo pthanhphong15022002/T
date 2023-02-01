@@ -72,7 +72,8 @@ export class InstancesComponent
   moreFunc: any;
   instanceNo: string;
   listSteps = [];
-
+  stepNameInstance: string;
+  progress: string;
   formModel: FormModel;
   isMoveSuccess: boolean = true;
 
@@ -164,6 +165,11 @@ export class InstancesComponent
         //  this.moveReason(this.isMoveSuccess);
         break;
     }
+  }
+
+  progressEvent(event){
+    this.progress = event.progress;
+    this.stepNameInstance = event.name;
   }
 
   //CRUD

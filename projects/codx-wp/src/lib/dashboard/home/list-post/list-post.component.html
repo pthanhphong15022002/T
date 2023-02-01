@@ -254,14 +254,9 @@
 </ng-template>
 <!-- template share WP_News-->
 <ng-template #templateShareNews let-news>
-  <div class="WP_News">
+  <div class="WP_News" (click)="naviagteWPNew(news)">
       <div class="WP_News-images">
         <ng-container *ngIf="news.recID">
-          <!-- <codx-file 
-              [objectID]="news.recID"
-              [objectType]="'WP_News'"
-              [funcID]="listview.formModel.funcID">
-          </codx-file>   -->
           <codx-img [cssClass]="'w-100'" [objectId]="news.recID" [objectType]="'WP_News'" [referType]="'image'" [width]="300" imageType="square"></codx-img>
         </ng-container>
       </div>
