@@ -25,8 +25,8 @@ export class PopupJobComponent implements OnInit {
   formModelMenu: FormModel;
   stepType = '';
   vllShare = 'BP021';
-  taskName = 'Giới thiệu sản phẩm';
-  jobName = 'Thu thập thông tin khách hàng';
+  taskName = '';
+  taskGroupName = '';
   linkQuesiton = 'http://';
   listOwner: DP_Steps_Tasks_Roles[] = [];
   listChair = [];
@@ -41,6 +41,9 @@ export class PopupJobComponent implements OnInit {
   status = 'add';
   taskList: DP_Steps_Tasks[] = [];
   show = false;
+  dataCombobox = [];
+  valueInput = '';
+  litsParentID = [];
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -62,10 +65,37 @@ export class PopupJobComponent implements OnInit {
       this.stepType = this.stepsTasks.taskType;
     }
     this.taskList = dt?.data[5];
+    this.taskName = dt?.data[6];
   }
   ngOnInit(): void {
     this.listOwner = this.stepsTasks['roles'];
     console.log(this.taskList);
+    if(this.stepsTasks['parentID']){
+      this.litsParentID = this.stepsTasks['parentID'].split(';');
+    }
+    if(this.taskList.length > 0){
+      this.dataCombobox = this.taskList.map(data => {
+        if(this.litsParentID.some(x => x == data.recID)){
+          return {
+            key: data.recID,
+            value: data.taskName,
+            checked: true,
+          }
+        }else{
+          return {
+            key: data.recID,
+            value: data.taskName,
+            checked: false,
+          }
+        }        
+      })
+      if(this.status == 'edit'){
+        let index = this.dataCombobox.findIndex(x => x.key === this.stepsTasks.recID);
+        this.dataCombobox.splice(index,1);
+        this.taskGroupName = this.groupTackList.find(x => x.recID === this.stepsTasks.taskGroupID)['taskGroupName'];
+      }
+      this.valueInput = this.dataCombobox.filter(x => x.checked).map(y => y.value).join('; ');
+    }
   }
   valueChangeText(event) {
     this.stepsTasks[event?.field] = event?.data;
@@ -77,6 +107,7 @@ export class PopupJobComponent implements OnInit {
   filterText(value, key) {
     if (value) {
       this.stepsTasks[key] = value;
+      this.taskGroupName = this.groupTackList.find(x => x.recID === value)['taskGroupName'];
     }
   }
   valueChangeAlert(event) {
@@ -107,6 +138,7 @@ export class PopupJobComponent implements OnInit {
 
   saveData() {
     this.stepsTasks['roles'] = this.listOwner;
+    this.stepsTasks['parentID'] = this.litsParentID.join(';');
     this.dialog.close({ data: this.stepsTasks, status: this.status });
 
     // let headerText = await this.checkValidate();
@@ -117,29 +149,6 @@ export class PopupJobComponent implements OnInit {
     //     '"' + headerText.join(', ') + '"'
     //   );
     //   return;
-    // }
-    // this.processSteps.owners = this.owners;
-    // this.convertReference();
-    // if (this.attachment && this.attachment.fileUploadList.length)
-    //   (await this.attachment.saveFilesObservable()).subscribe((res) => {
-    //     if (res) {
-    //       var attachments = Array.isArray(res) ? res.length : 1;
-    //       if (this.action == 'edit') {
-    //         this.processSteps.attachments += attachments;
-    //         this.updateProcessStep();
-    //       } else if (this.action == 'add') {
-    //         this.processSteps.attachments = attachments;
-    //         this.addProcessStep();
-    //       } else {
-    //         this.processSteps.attachments = attachments;
-    //         this.copyProcessStep();
-    //       }
-    //     }
-    //   });
-    // else {
-    //   if (this.action == 'edit') this.updateProcessStep();
-    //   else if (this.action == 'add') this.addProcessStep();
-    //   else this.copyProcessStep();
     // }
   }
   handelMail() {
@@ -183,10 +192,17 @@ export class PopupJobComponent implements OnInit {
   }
   @HostListener('document:click', ['$event'])
   clickout(event) {
-    console.log(event);
     let a = this.inputContainer?.nativeElement.contains(event.target);
     if(!a){
       this.show = false;
     }
+  }
+  handelCheck(data){
+    data.checked = !data.checked;
+    let dataCheck = this.dataCombobox.filter(x => x.checked).map(y => y.value); 
+    this.litsParentID = this.dataCombobox.filter(x => x.checked).map(y => y.key);
+    this.valueInput = dataCheck.join('; ');
+    console.log(this.litsParentID);
+    
   }
 }
