@@ -16,6 +16,8 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   user:any = {};
   arrMessages:any[] = [];
   message:WP_Messages = new WP_Messages();
+  page:number = 0;
+  pageIndex:number = 0;
   constructor
   (
     private api:ApiHttpService,
@@ -41,10 +43,12 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   }
 
   ngAfterViewInit(): void {
+    //receiver
     this.signalR.signalChat.subscribe((res:any) => {
       if(res)
       {
-        debugger
+        // let _boxChat = document.getElementsByTagName("codx-chat-box");
+        // if(_boxChat)
         let data = JSON.parse(JSON.stringify(res));
         this.arrMessages.push(data);
         this.dt.detectChanges();
@@ -63,12 +67,13 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
         .subscribe((res:any[]) =>{
         if(res)
         {
-          let dataGroup = res[0];
-          let dataMessages = res[1];
-          this.group = JSON.parse(JSON.stringify(dataGroup));
-          if(dataMessages)
+          let _group = res[0];
+          let _messages = res[1];
+          this.group = JSON.parse(JSON.stringify(_group));
+          if(_messages)
           {
-            this.arrMessages = JSON.parse(JSON.stringify(dataMessages[0]));
+            this.arrMessages = JSON.parse(JSON.stringify(_messages[0]));
+            this.page = _messages[1] / 20;
           }
         }
       });
@@ -123,24 +128,22 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     }
   }
   // get list chat
-  getDataChat(groupID:string){
-    if(groupID){
+  getDataChat(){
+    if(this.pageIndex < this.page){
+      this.pageIndex = this.pageIndex + 1;
       this.api.execSv(
         "WP",
         "ERM.Business.WP",
         "ChatBusiness",
         "GetMessageByGroupIDAsync",
-        [this.groupID,0])
+        [this.groupID,this.pageIndex])
         .subscribe((res:any[]) => {
           if(res[1] > 0)
           {
-            this.arrMessages = JSON.parse(JSON.stringify(res[0]));
+            let _messgae = res[0];
+            this.arrMessages = this.arrMessages.concat(_messgae);
           }
         });
-    }
-    else
-    {
-      this.notifiSV.notifyCode("SYS001");
     }
   }
 }
