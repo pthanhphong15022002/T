@@ -137,7 +137,7 @@ export class PopupAddStationeryComponent extends UIComponent {
               this.data.location = this.defaultWarehouse;
               this.epService
                 .getWarehousesOwner(this.defaultWarehouse)
-                .subscribe((res: string) => {
+                .subscribe((res: any) => {
                   if (res) {
                     this.warehouseOwner = res[0];
                     this.data.owner = this.warehouseOwner;
