@@ -10,6 +10,7 @@
             default="Nhóm khách hàng"      
           ></codx-label>
           <codx-input
+          [crrValue]="form.data.custGroupID"
           type="combobox"
           refValue="CustomerGroups"
           field="custGroupID" 
@@ -42,6 +43,7 @@
             default="Mã số thuế"      
           ></codx-label>
           <codx-input
+          [crrValue]="form.data.custTaxCode"
           field="custTaxCode"
           [formModel]="form.formModel"
           (valueChange)="valueChange($event,'')"
@@ -57,6 +59,7 @@
             default="Tên khách hàng"      
           ></codx-label>
           <codx-input
+          [crrValue]="form.data.customerName"
           field="customerName"
           [formModel]="form.formModel"
           (valueChange)="valueChange($event,'')"
@@ -70,6 +73,7 @@
             default="Địa chỉ công ty"      
           ></codx-label>
           <codx-input
+          [crrValue]="form.data.address"
           field="address"
           [formModel]="form.formModel"
           (valueChange)="valueChange($event,'')"
@@ -85,7 +89,7 @@
             default="Điện thoại"
           ></codx-label>
             <codx-input
-                    
+                    [crrValue]="form.data.phone"
                     [formModel]="form.formModel"
                     field="phone"
                     (valueChange)="valueChange($event,'')"
@@ -101,6 +105,7 @@
             default="Email"      
           ></codx-label>
           <codx-input
+          [crrValue]="form.data.email"
           field="email"
           [formModel]="form.formModel"
           (valueChange)="valueChange($event,'')"
@@ -131,7 +136,7 @@
             default="Năm thành lập"
           ></codx-label>
             <codx-input
-                    
+                    [crrValue]="form.data.establishYear"
                     [formModel]="form.formModel"
                     field="establishYear"
                     (valueChange)="valueChange($event,'establishYear')"
@@ -147,7 +152,7 @@
             default="Số lượng nhân viên"      
           ></codx-label>
           <codx-input
-          
+          [crrValue]="form.data.noOfEmployees"
           field="noOfEmployees"
           [formModel]="form.formModel"
           (valueChange)="valueChange($event,'')"
@@ -163,6 +168,7 @@
             default="Diễn giải"      
           ></codx-label>
           <codx-input
+          [crrValue]="form.data.note"
           field="note"
           [formModel]="form.formModel"  
           (valueChange)="valueChange($event,'')"
@@ -171,6 +177,7 @@
       </div>
       <div class="form-group">
         <codx-input
+        [checked]="form.data.stop"
         field="stop"
         [formModel]="form.formModel"
         (valueChange)="valueChange($event,'')"
@@ -235,6 +242,7 @@
             default="Kho xuất hàng mặc định"      
           ></codx-label>
           <codx-input 
+          [crrValue]="form.data.warehouseID"
           type="combobox" 
           refValue="Warehouses"
           field="warehouseID"
@@ -251,9 +259,10 @@
             default="Tuyến giao hàng"      
           ></codx-label>
           <codx-input 
+          [crrValue]="form.data.delRouteID"
           type="combobox" 
           refValue="Warehouses"
-          field="warehouseID"
+          field="delRouteID"
           (valueChange)="valueChange($event,'')"
           >
         </codx-input>
@@ -269,6 +278,7 @@
             default="Khoảng cách (km)"      
           ></codx-label>
           <codx-input
+            [crrValue]="form.data.distance"
             type="number"
             [min]="0"
             [formModel]="form.formModel"
@@ -285,6 +295,7 @@
             default="Thời gian (giờ)"      
           ></codx-label>
           <codx-input
+          [crrValue]="form.data.leadtime"
             type="number"
             [min]="0"
             [formModel]="form.formModel"
@@ -303,6 +314,7 @@
             default="Thời gian giao hàng"      
           ></codx-label>
           <codx-input 
+          [crrValue]="form.data.workingDays"
           type="combobox" 
           refValue="CalendarsAC"
           field="workingDays"
@@ -317,6 +329,7 @@
         type="switch"
         field="workingHour"  
         (valueChange)="valueChange($event,'')"
+        [checked]="form.data.workingHour"
         >
         </codx-input>
         <codx-label
@@ -329,8 +342,9 @@
       <div class="d-flex">
         <codx-input
         type="switch"
-        field="CalendarControl" 
+        field="calendarControl" 
         (valueChange)="valueChange($event,'')" 
+        [checked]="form.data.calendarControl"
         >
         </codx-input>
         <codx-label
@@ -528,6 +542,7 @@
         default="Ngành công nghiệp"      
       ></codx-label>
       <codx-input
+      [crrValue]="form.data.industries"
       type="combobox"
       refValue="Industries"
       field="industries" 
@@ -542,6 +557,7 @@
         default="Kênh bán hàng"      
       ></codx-label>
       <codx-input
+      [crrValue]="form.data.channelID"
       type="combobox"
       refValue="SalesChannels"
       field="channelID" 
@@ -556,6 +572,7 @@
         default="Nhân viên bán hàng"      
       ></codx-label>
       <codx-input
+      [crrValue]="form.data.salespersonID"
       type="combobox"
       refValue="Salespersons"
       field="salespersonID" 
@@ -570,6 +587,7 @@
         default="Nhân viên tư vấn"      
       ></codx-label>
       <codx-input
+      [crrValue]="form.data.salesConsultantID"
       type="combobox"
       refValue="SalesConsultants"
       field="salesConsultantID" 
@@ -584,6 +602,7 @@
         default="Người sở hữu"      
       ></codx-label>
       <codx-input
+      [crrValue]="form.data.owner"
       type="combobox"
       refValue="Users"
       field="owner" 
@@ -598,6 +617,7 @@
         default="Đơn vị/bộ phần"      
       ></codx-label>
       <codx-input
+      [crrValue]="form.data.buid"
       type="combobox"
       refValue="BusinessUnits"
       field="buid" 
