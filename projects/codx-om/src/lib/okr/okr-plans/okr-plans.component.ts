@@ -124,6 +124,7 @@ export class OkrPlansComponent implements OnInit {
     return this.fb.group({
       okrName: '',
       confidence: '',
+      category:'1',
       okrLevel: '1',
       okrType: 'O',
       child: this.fb.array([]),

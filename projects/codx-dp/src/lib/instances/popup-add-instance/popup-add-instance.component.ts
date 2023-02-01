@@ -67,8 +67,9 @@ export class PopupAddInstanceComponent implements OnInit {
 
   dialog: DialogRef;
   // step = new DP_Instances_Steps() ;
-  listStep = [] ;
+  listStep = [];
 
+  readonly fieldCbxStep = { text: 'stepName', value: 'recID' };
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -81,30 +82,29 @@ export class PopupAddInstanceComponent implements OnInit {
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
 
-    this.listStep = dt?.data[2]
+    this.listStep = dt?.data[2];
     this.isApplyFor = dt?.data[1];
+    this.title = dt?.data[3];
   }
 
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-
-    if(this.isApplyFor =='D') {
-      this.tabInfo = [this.menuGeneralInfo, this.menuAddress, this.menuInputInfo];
+    if (this.isApplyFor === 'D') {
+      this.tabInfo = [
+        this.menuGeneralInfo,
+        this.menuAddress,
+        this.menuInputInfo,
+      ];
       this.tabContent = [
         this.tabOpporGeneralInfo,
         this.tabLocation,
         this.tabInputInfo,
       ];
-    }
-    else {
+    } else {
       this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo];
-      this.tabContent = [
-        this.tabGeneralInfo,
-        this.tabInputInfo,
-      ];
+      this.tabContent = [this.tabGeneralInfo, this.tabInputInfo];
     }
-
   }
 
   buttonClick(e: any) {
@@ -163,10 +163,10 @@ export class PopupAddInstanceComponent implements OnInit {
   //   });
   // }
 
-
   //anh thao Code ne bao
   // em thay roi
-  valueChangeCustom(e){
+  valueChangeCustom(e) {}
+  cbxChange($event) {}
 
-  }
+  valueChangeUser($event) {}
 }

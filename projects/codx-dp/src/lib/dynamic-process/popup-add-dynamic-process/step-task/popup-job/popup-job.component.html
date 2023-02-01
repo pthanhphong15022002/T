@@ -68,25 +68,12 @@
         </div>
         <div>
           <ejs-dropdownlist
-            id="ddlelement"
-            #samples
             [dataSource]="groupTackList"
-            [fields]="fields"
-            [placeholder]="''"
-            [(ngModel)]="tasksItem"
-            [itemTemplate]="itemTemplate"
-            [valueTemplate]="valueTemplate"
-            [(value)]="tasksItem"
-            (change)="filterText($event)"
-            [allowFiltering]="false"
-          >
-            <ng-template #itemTemplate="" let-data="">
-              <span>{{ data.taskGroupName }}</span>
-            </ng-template>
-            <ng-template #valueTemplate="" let-data="">
-              <span>{{ data.taskGroupName }}</span>
-            </ng-template>
-          </ejs-dropdownlist>
+            [fields]="fieldsGroup"
+            [value]="stepsTasks?.taskGroupID"
+            (valueChange)="filterText($event, 'taskGroupID')"
+            [readonly]="false"
+          ></ejs-dropdownlist>
         </div>
       </div>
     </div>
@@ -273,12 +260,28 @@
         >
         </codx-label>
       </div>
-      <codx-input
+      <!-- <div>
+        <ejs-dropdownlist
+        [dataSource]="taskList"
+        [fields]="fieldsTask"
+        [value]="stepsTasks?.parentID"
+        (valueChange)="filterText($event,'parentID')"
+        [readonly]="false"
+      ></ejs-dropdownlist>
+      </div> -->
+      <div>
+        <!-- <codx-input
         field="parentID"
-        [formModel]="dialog.formModel"
+        [crrValue]="stepsTasks?.parentID"
+        [formModel]="dialog?.formModel"
         (valueChange)="valueChangeCombobox($event)"
       >
-      </codx-input>
+      </codx-input> -->
+        <ng-container
+          [ngTemplateOutlet]="comboboxMulti"
+          [ngTemplateOutletContext]="{ dataSource: taskList }"
+        ></ng-container>
+      </div>
     </div>
 
     <div class="form-group">
@@ -319,7 +322,7 @@
           [dataShared]="[]"
           [multiple]="true"
           [showInput]="false"
-          (valueChange)="eventApply($event, listChair)"
+          (valueChange)="applyOwner($event, listChair)"
         >
         </codx-input>
       </div>
@@ -347,7 +350,7 @@
           [dataShared]="[]"
           [multiple]="true"
           [showInput]="false"
-          (valueChange)="eventApply($event, listOwner)"
+          (valueChange)="applyOwner($event, listOwner)"
         >
         </codx-input>
       </div>
@@ -390,6 +393,7 @@
         [formModel]="dialog?.formModel"
         [crrValue]="stepsTasks?.memo"
         [Group]=""
+        format="ed"
         type="text"
         [height]="'100'"
         (valueChange)="valueChangeText($event)"
@@ -467,18 +471,47 @@
           <codx-img
             [width]="25"
             class="me-2"
-            [objectId]="item?.id"
+            [objectId]="item?.objectID"
             objectType="AD_Users"
-            [objectName]="item?.name"
+            [objectName]="item?.objectName"
           ></codx-img>
         </span>
-        <span class="text-dark fw-bold"> {{ item?.name }} </span>
+        <span class="text-dark fw-bold"> {{ item?.objectName }} </span>
         <span class="mt-1">
-          <a (click)="onDeleteOwner(item?.id, data)" style="cursor: pointer">
+          <a
+            (click)="onDeleteOwner(item?.objectID, data)"
+            style="cursor: pointer"
+          >
             <span class="icon-close icon-16 text-danger ms-3"></span>
           </a>
         </span>
       </div>
     </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #comboboxMulti let-data="dataSource" let-check="show">
+  <div class="combobox-multi"  #inputContainer>
+    <div class="input-container">
+      <!-- (focusout)="outFocus()" -->
+      <input
+        #input
+        type="text"
+        class="combobox"
+        (click)="showCombobox()"
+       
+      />
+      <span class="icon-expand_more"></span>
+    </div>
+    <div class="select" *ngIf="show">
+      <ul>
+        <li *ngFor="let item of data" #e (blur)="ID('thauu')">
+          <div class="w-100 d-flex justify-content-between list-radio">
+            <span>{{ item?.taskName }}</span>
+            <codx-input type="checkbox" [checked]="true"></codx-input>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </ng-template>

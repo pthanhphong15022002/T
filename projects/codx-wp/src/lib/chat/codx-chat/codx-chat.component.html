@@ -9,9 +9,10 @@
         class="svg-icon"
         [ngClass]="codxService.toolbarButtonIconSizeClass">
     </span>
-    <!-- <span
-      class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"
-    ></span> -->
+    <span *ngIf="totalMessae > 0"
+      class="position-absolute topbar-badge translate-middle badge badge-sm rounded-pill bg-danger px-2 top-0 start-100">
+      <span class="text-white fs-8">{{totalMessae < 9 ? totalMessae : '9+' }}</span>
+      </span>
   </div>
   </button>
   <div ngbDropdownMenu #popup aria-labelledby="chat-box" id="chatbox-dropdownPopup"

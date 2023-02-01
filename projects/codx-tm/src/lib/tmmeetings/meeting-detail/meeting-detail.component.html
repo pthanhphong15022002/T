@@ -78,7 +78,7 @@
         </ng-container>
         <ng-container *ngIf="name == 'Comments'">
           <div class="tab_container">
-            <codx-tree-history
+            <codx-tree-comment
               [objectID]="meeting?.meetingID"
               [objectType]="'CO_Meetings'"
               [actionType]="'C'"
@@ -87,7 +87,7 @@
               [viewVote]="true"
               [funcID]="funcID"
             >
-            </codx-tree-history>
+            </codx-tree-comment>
           </div>
         </ng-container>
         <ng-container *ngIf="name == 'AssignTo'">

@@ -1,5 +1,6 @@
 export class BankAccount {
     bankAcctID: any
+    bankAcctNo:any
     bankCode: any
     bankID: any
     branchID: any

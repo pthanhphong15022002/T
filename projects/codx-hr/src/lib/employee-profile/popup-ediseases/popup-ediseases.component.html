@@ -1,3 +1,27 @@
+<ng-template #footer1>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveForm()">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="tmpContent"
+  [footer]="footer1"
+  [formModel]="formModel"
+  [dialog]="dialog"
+  [data]="ediseasesObj"
+  *ngIf="isAfterRender"
+>
+
 <ng-template #tmpContent>
   <ejs-tab
     #leftToolbar
@@ -261,7 +285,9 @@
   </ejs-tab>
 </ng-template>
 
-<layout-list-detail
+</codx-form>
+
+<!-- <layout-list-detail
   #lstDetail
   [title]="headerText"
   [formModel]="formModel"
@@ -360,4 +386,4 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->

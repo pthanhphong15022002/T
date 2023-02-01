@@ -63,9 +63,12 @@
       [TabControl]="tabControl"
       [entityName]="view?.formModel?.entityName"
       [objectID]="transID"
+      [transID]="transID"
+      [formModel]="view?.formModel"
       [funcID]="view?.formModel?.funcID"
     >
     </codx-tabs>
+  
   </ng-template>
   <!-- <div class="pe-6 pt-1">
     <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [dataItem]="dataItem"></codx-mfunc>
