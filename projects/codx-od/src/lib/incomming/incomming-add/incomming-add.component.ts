@@ -177,18 +177,25 @@ export class IncommingAddComponent implements OnInit {
 
   //Người chịu trách nhiệm
   changeValueOwner(event: any) {
-    this.dispatch.owner = event.data?.value[0];
-    if(event.data?.value[0])
+    this.dispatch.owner = event?.data;
+    if(this.dispatch.owner)
     {
-      // this.getInforByUser(event.data?.value[0]).subscribe(item=>{
-      //   if(item) this.dispatch.orgUnitID = item.orgUnitID
-      // })
+      this.getInforByUser(this.dispatch.owner).subscribe(item=>{
+        if(item) {
+          this.dispatch.departmentID = item.orgUnitID
+          this.myForm.formGroup.patchValue({
+            departmentID: this.dispatch.departmentID, 
+          }); 
+        }
+      })
     }
   }
   //Nơi nhận
   changeValueBUID(event: any) {
-    this.dispatch.departmentID = event?.data?.value[0];
-    if (event.data?.value[0]) this.getDispathOwner(event.data?.value[0]);
+    // this.dispatch.departmentID = event?.data?.value[0];
+    // if (event.data?.value[0]) this.getDispathOwner(event.data?.value[0]);
+    this.dispatch.departmentID = event?.data;
+    if (event?.data) this.getDispathOwner(event.data);
   }
   getDispathOwner(data:any)
   {
@@ -203,6 +210,10 @@ export class IncommingAddComponent implements OnInit {
         .subscribe((item: any) => {
           if (item != null && item.length > 0) {
             this.dispatch.owner = item[0].domainUser;
+            this.myForm.formGroup.patchValue({
+              owner: this.dispatch.owner, 
+            }); 
+            
             this.change = this.dispatch.owner;
             // this.getInforByUser(item[0].domainUser).subscribe(item=>{
             //   if(item) this.dispatch.orgUnitID = item.orgUnitID

@@ -188,7 +188,6 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   click(data) {
     this.visaObj = data;
     this.formModel.currentData = JSON.parse(JSON.stringify(this.visaObj));
-    // this.indexSelected = this.lstVisas.indexOf(this.visaObj)
     this.indexSelected = this.lstVisas.findIndex(
       (p) => p.recID == this.visaObj.recID
     );

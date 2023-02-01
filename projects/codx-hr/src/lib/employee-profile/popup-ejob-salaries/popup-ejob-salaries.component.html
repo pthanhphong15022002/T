@@ -4,7 +4,7 @@
   [formModel]="formModel"
   [footer]="footer"
   [dialog]="dialog"
-  [data]="data"
+  [data]="currentEJobSalaries"
   [leftTemlate]="LeftTemlate"
   [RightTemlate]="body"
   *ngIf="isAfterRender"
@@ -161,9 +161,9 @@
 </ng-template>
 
 <ng-template #tmplateEJobSalaries let-data1>
-  <div class="d-flex flex-column">
-    <div><i class="icon-edit_fill"></i>{{(data1.effectedDate | fmDT) + ' - ' + (data1.expiredDate | fmDT)}}</div>
-    <div><i class="icon-list_alt"></i>{{(data1.decisionNo)}} <i class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 me-2 text-gray-400"></i> {{(data1.signedDate | fmDT)}}</div>
+  <div class="d-flex flex-column ">
+    <div class="d-flex align-items-center pt-1 pb-1"><i class="icon-event"></i>{{(data1.effectedDate | fmDT) + ' - ' + (data1.expiredDate | fmDT)}}</div>
+    <div class="d-flex align-items-center"><i class="icon-list_alt"></i>{{(data1.decisionNo)}} <i class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"></i> {{(data1.signedDate | fmDT)}}</div>
   </div>
 </ng-template>
 
