@@ -1,5 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { DateTime } from '@syncfusion/ej2-angular-charts';
 import { CacheService, UrlUtil, Util } from 'codx-core';
+import moment from 'moment';
 import { map, Observable } from 'rxjs';
 
 @Pipe({
@@ -27,10 +29,17 @@ export class TextValuePipe implements PipeTransform {
           }
           else
           {
-            obj[element["FieldName"]]= element["FieldValue"];
+            let _value = element["FieldValue"];
+            let _isDateTime = moment(_value).isValid();
+            if(_isDateTime){
+              obj[element["FieldName"]] = moment(_value).format("DD/MM/YYYY HH:MM");
+            }
+            else{
+              obj[element["FieldName"]] = element["FieldValue"];
+            }
           }
         });
-        _strMssg = UrlUtil.modifiedUrlByObj(_strMssg, obj,'');
+        _strMssg = UrlUtil.modifiedByObj(_strMssg, obj);
       }
       return _strMssg;
     })); 

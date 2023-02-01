@@ -1,6 +1,6 @@
 import { DP_Steps, DP_Instances_Steps, DP_Instances } from './../../models/models';
 import { CodxDpService } from './../../codx-dp.service';
-import { Component, Input, OnInit, SimpleChanges, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, TemplateRef, ViewChild, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { CRUDService, ApiHttpService } from 'codx-core';
 
 @Component({
@@ -13,7 +13,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() dataService: CRUDService;
   @Input() recID: any;
   @ViewChild('locationCBB') locationCBB: any;
-
+  @Output() progressEvent= new EventEmitter<string>();
   dataSelect: any;
   id: any;
   totalInSteps: any;
@@ -60,7 +60,7 @@ export class InstanceDetailComponent implements OnInit {
     stepName: 'test4'
   }]
 
-  currentStep = 1;
+  @Input() currentStep: number;
   constructor(private dpSv: CodxDpService, private api: ApiHttpService, private changeDetec: ChangeDetectorRef) {
   }
 
@@ -93,6 +93,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
 
+
   getInstanceByRecID(recID) {
     this.dpSv.GetInstanceByRecID(recID).subscribe((res) => {
       if (res) {
@@ -118,6 +119,7 @@ export class InstanceDetailComponent implements OnInit {
         }else{
           this.progress = '0';
         }
+        this.progressEventOut(this.progress + '%');
         this.listSteps.forEach(element =>{
           if(element.indexNo == this.currentStep){
             this.dpSv.GetStepInstance(element.recID).subscribe(data=>{
@@ -129,6 +131,10 @@ export class InstanceDetailComponent implements OnInit {
         })
       }
     });
+  }
+
+  progressEventOut(value: string){
+    this.progressEvent.emit(value);
   }
 
   // getStepsByProcessID(recID){
