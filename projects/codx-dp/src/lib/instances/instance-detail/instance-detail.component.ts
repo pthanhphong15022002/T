@@ -13,7 +13,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() dataService: CRUDService;
   @Input() recID: any;
   @ViewChild('locationCBB') locationCBB: any;
-  @Output() progressEvent= new EventEmitter<string>();
+  @Output() progressEvent= new EventEmitter<object>();
   dataSelect: any;
   id: any;
   totalInSteps: any;
@@ -119,7 +119,7 @@ export class InstanceDetailComponent implements OnInit {
         }else{
           this.progress = '0';
         }
-        this.progressEventOut(this.progress + '%');
+        this.progressEventOut({progress: this.progress + '%', name: this.stepName});
         this.listSteps.forEach(element =>{
           if(element.indexNo == this.currentStep){
             this.dpSv.GetStepInstance(element.recID).subscribe(data=>{
@@ -133,7 +133,7 @@ export class InstanceDetailComponent implements OnInit {
     });
   }
 
-  progressEventOut(value: string){
+  progressEventOut(value: object){
     this.progressEvent.emit(value);
   }
 
