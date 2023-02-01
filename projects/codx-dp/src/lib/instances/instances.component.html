@@ -114,12 +114,40 @@
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
     [title]="data.title"
-    [desc]="convertHtmlAgency('50,000,000', '70%', data.createdOn)"
+    [descTmp]="descTmp"
     [formModel]="view.formModel"
     [footer]="footer"
     [dataItem]="data"
   >
   </codx-temp-full>
+</ng-template>
+
+<ng-template #descTmp let-data>
+  <div class="flex-body">
+    <div class="d-flex flex-desc">
+      <div class="d-flex align-items-center content-jus">
+        <span class="text-gray-600 icon-14 icon-apartment me-1"></span
+        ><span>số tiền nè </span>
+      </div>
+      <div class="d-flex align-items-center content-jus">
+        <span class="text-gray-600"></span><span>{{progress}}</span>
+      </div>
+      <div class="d-flex justify-content-end">
+        <span class="text-gray-600 icon-14 icon-apartment me-1"></span>
+        <span class="fs-7 text-gray-600" #createdOn>{{
+          data.createdOn
+            | formatvalue
+              : view.formModel
+              : "createdOn"
+              : createdOn
+              : "DPInstances"
+              : "grvDPInstances"
+            | async
+        }}</span>
+      </div>
+    </div>
+  </div>
+
 </ng-template>
 
 <ng-template #footer let-data>
@@ -167,5 +195,7 @@
     [dataService]="view.dataService"
     [formModel]="view.formModel"
     [recID]="dataSelected.recID"
+    [currentStep]="dataSelected.currentStep"
+    (progressEvent)="progressEvent($event)"
   ></codx-instance-detail>
 </ng-template>

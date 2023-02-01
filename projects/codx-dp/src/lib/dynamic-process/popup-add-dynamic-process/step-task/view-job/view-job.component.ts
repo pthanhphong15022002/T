@@ -16,6 +16,8 @@ export class ViewJobComponent implements OnInit {
   status = '';
   stepType = '';
   stepID = '';
+  listOwner = [];
+  taskList: DP_Steps_Tasks[] = [];
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -28,11 +30,18 @@ export class ViewJobComponent implements OnInit {
     this.stepID = dt?.data[2];
     this.dialog = dialog;
     this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
+    this.taskList = dt?.data[5];
     this.stepType = this.stepsTasks.taskType;
-    
   }
 
   ngOnInit(): void {
+    this.listOwner = this.stepsTasks?.roles || [];
+    console.log(this.taskList);
+    
   }
 
+  onDeleteOwner(objectID, data) {
+    let index = data.findIndex((item) => item.id == objectID);
+    if (index != -1) data.splice(index, 1);
+  }
 }

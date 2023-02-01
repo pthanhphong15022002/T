@@ -36,11 +36,7 @@ import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-fil
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 import { CodxShareService } from '../../codx-share.service';
 import { Resolve } from '@angular/router';
-import { Observable } from 'rxjs';
-export interface Crisis {
-  id: number;
-  name: string;
-};
+
 @Component({
   selector: 'codx-approval',
   templateUrl: './codx-approval.component.html',
@@ -49,7 +45,7 @@ export interface Crisis {
 })
 export class CodxApprovalComponent
   extends UIComponent
-  implements OnChanges, AfterViewInit , Resolve<Crisis>
+  implements OnChanges, AfterViewInit 
 {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
@@ -87,11 +83,6 @@ export class CodxApprovalComponent
       (this.notifySvr = inject.get(NotificationsService)),
       (this.callfunc = inject.get(CallFuncService)),
       (this.esService = inject.get(CodxEsService));
-  }
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Crisis | Observable<Crisis> | Promise<Crisis> {
-    debugger;
-    throw new Error('Method not implemented.');
-    
   }
 
   ngOnChanges(changes: SimpleChanges): void {}

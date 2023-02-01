@@ -108,6 +108,7 @@ export class PopupAddKRComponent extends UIComponent {
       .then((item) => {
         this.fGroupAddKR = item;
         if (this.funcType == OMCONST.MFUNCID.Add) {
+          
           this.kr = this.fGroupAddKR.value;
         }
         if (this.funcType == OMCONST.MFUNCID.Copy) {
@@ -169,6 +170,8 @@ export class PopupAddKRComponent extends UIComponent {
     this.kr.approveStatus='1';
     this.kr.approveControl='1';
     this.kr.okrType=OMCONST.VLL.OKRType.KResult;
+    this.kr.recID= this.kr.parentID;
+    this.kr.transID= this.kr.parentID;
     //---------------------------------------
     this.OKRLevel();
     this.fGroupAddKR.patchValue(this.kr);
@@ -321,7 +324,7 @@ export class PopupAddKRComponent extends UIComponent {
     krTarget.forEach((item) => {
       let tempTarget = new Targets();
       tempTarget.period = this.kr?.periodID;
-      tempTarget.oKRID = this.kr?.recID;
+      //tempTarget.oKRID = this.kr?.recID !=null? this.kr?.recID :this.o?.recID;
       tempTarget.planDate = new Date(); //OM_WAITING: sửa lại thành thời gian tương ứng
       tempTarget.target = item;
       tempTarget.createdOn = new Date();

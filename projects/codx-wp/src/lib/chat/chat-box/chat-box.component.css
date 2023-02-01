@@ -89,17 +89,25 @@
 }
 .codx-message{
     width: 100%;
+    display: flex;
+    align-items: center;
+    margin: 8px 0px;
 }
 .my-message{
+    max-width: 250px;
     background-color: blue;
     color: white;
     text-align: right;
     border-radius: 40px;
-    margin: 8px 0px;
     padding: 4px 8px;
 }
 .message-content{
     max-width: 250px;
+    background-color: rgb(241, 241, 245);
+    text-align: right;
+    border-radius: 40px;
+    margin-left: 6px;
+    padding: 4px 8px;
 }
 codx-chat-box{
     position: fixed!important;

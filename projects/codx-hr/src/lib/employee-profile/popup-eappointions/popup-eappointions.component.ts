@@ -60,12 +60,12 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    if (!this.formModel) {
-      this.formModel = new FormModel();
-      this.formModel.formName = 'EAppointions';
-      this.formModel.entityName = 'HR_EAppointions';
-      this.formModel.gridViewName = 'grvEAppointions';
-    }
+    // if (!this.formModel) {
+    //   this.formModel = new FormModel();
+    //   this.formModel.formName = 'EAppointions';
+    //   this.formModel.entityName = 'HR_EAppointions';
+    //   this.formModel.gridViewName = 'grvEAppointions';
+    // }
 
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;

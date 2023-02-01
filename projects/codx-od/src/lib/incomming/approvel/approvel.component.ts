@@ -37,6 +37,7 @@ export class ODApprovelComponent
     ms020: any;
     ms021: any;
     active = 1;
+   
   constructor(
     private cache: CacheService,
     private odService: DispatchService,
@@ -50,6 +51,7 @@ export class ODApprovelComponent
       this.funcID = params['FuncID'];
       if(params['id']) this.getGridViewSetup(this.funcID , params['id']);
     });
+   
   }
 
   ngAfterViewInit(): void {
@@ -66,6 +68,7 @@ export class ODApprovelComponent
         funcID : funcID,
         gridViewName : fuc?.gridViewName
       }
+    
       this.getDtDis(id);
     });
   

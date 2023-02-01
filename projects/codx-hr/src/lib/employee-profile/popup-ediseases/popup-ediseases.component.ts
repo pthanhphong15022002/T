@@ -31,7 +31,8 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   ediseasesObj;
   lstEdiseases;
   indexSelected
-  funcID: string;
+  idField = 'RecID';
+  funcID;
   actionType: string;
   employeeId: string;
   isAfterRender = false;
@@ -57,6 +58,7 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     // this.funcID = this.dialog.formModel.funcID;
+    this.funcID = data?.data?.funcID;
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.lstEdiseases = data?.data?.lstEdiseases;
@@ -64,31 +66,52 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
 
     if (this.actionType === 'edit' || this.actionType === 'copy') {
       this.ediseasesObj = JSON.parse(JSON.stringify(this.lstEdiseases[this.indexSelected]));
-      this.formModel.currentData = this.ediseasesObj;
+      // this.formModel.currentData = this.ediseasesObj;
     }
   }
 
   onInit(): void {
-    this.initForm();
+    this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrSevice
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
   }
 
   initForm() {
-    this.hrSevice
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.formGroup = item;  
-        if(this.actionType == 'add'){
-          this.hrSevice.getEmployeeDiseasesModel().subscribe(p => {
-            console.log('thong tin ho chieu', p);
-            this.ediseasesObj = p;
-            this.formModel.currentData = this.ediseasesObj
-            // this.dialog.dataService.dataSelected = this.data
-            console.log('du lieu formmodel',this.formModel.currentData);
-          })  
-        }
-        this.formGroup.patchValue(this.ediseasesObj)
-        this.isAfterRender = true
-      }); 
+    if (this.actionType == 'add') {
+      this.hrSevice
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.ediseasesObj = res?.data;
+            this.ediseasesObj.employeeID = this.employeeId;
+            this.formModel.currentData = this.ediseasesObj;
+            this.formGroup.patchValue(this.ediseasesObj);
+            this.cr.detectChanges();
+            this.isAfterRender = true;
+          }
+        });
+    } else {
+      if (this.actionType === 'edit' || this.actionType === 'copy') {
+        this.formGroup.patchValue(this.ediseasesObj);
+        this.formModel.currentData = this.ediseasesObj;
+        this.cr.detectChanges();
+        this.isAfterRender = true;
+      }
+    }
   }
 
   onSaveForm() {

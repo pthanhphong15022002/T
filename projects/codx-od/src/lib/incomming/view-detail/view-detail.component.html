@@ -185,22 +185,19 @@
             </ng-container>
           </ng-template>
         </li>
-        <!-- <li [ngbNavItem]="2">
-          <a ngbNavLink>
-            <div class="d-flex align-item-center">
-              <i class="icon-format_list_numbered me-2" [ngClass]="{ 'text-primary': active === 2 }"></i><span>Công
-                việc</span>
-            </div>
-          </a>
-          <ng-template ngbNavContent>
-            <ng-container *ngIf="data?.tasks && data?.tasks.length > 0; else defaulEmpt">
-             <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks" [itemTemplate]="templateorg"
-                [enableCheck]="true" idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true"
-                [isLoadChild]="false"></codx-treeview>
-
-            </ng-container>
-          </ng-template>
-        </li> -->
+        <ng-container *ngIf="xd">
+          <li [ngbNavItem]="2">
+            <a ngbNavLink>
+              <div class="d-flex align-item-center">
+                <i class="icon-people_alt me-2" [ngClass]="{ 'text-primary': active === 2 }"></i><span>Quy trình duyệt</span>
+              </div>
+            </a>
+            <ng-template ngbNavContent>
+              <codx-approval-step [transID]="data?.recID" [approveStatus]="data?.approveStatus">
+              </codx-approval-step>
+            </ng-template>
+          </li>
+        </ng-container>
         <!-- <li [ngbNavItem]="3">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
