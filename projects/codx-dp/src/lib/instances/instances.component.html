@@ -114,7 +114,7 @@
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
     [title]="data.title"
-    [desc]="convertHtmlAgency('50,000,000', '70%', data.createdOn)"
+    [desc]="convertHtmlAgency('50,000,000', progress, data.createdOn)"
     [formModel]="view.formModel"
     [footer]="footer"
     [dataItem]="data"
@@ -167,5 +167,7 @@
     [dataService]="view.dataService"
     [formModel]="view.formModel"
     [recID]="dataSelected.recID"
+    [currentStep]="dataSelected.currentStep"
+    (progressEvent)="progressEvent($event)"
   ></codx-instance-detail>
 </ng-template>
