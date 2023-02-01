@@ -6,16 +6,14 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { FormGroup } from '@angular/forms';
 import {
-  ApiHttpService,
   AuthStore,
   CacheService,
-  CodxService,
   DialogData,
   DialogRef,
   FormModel,
+  NotificationsService,
 } from 'codx-core';
 import { CodxEsService } from '../../../codx-es.service';
 
@@ -41,6 +39,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   cbxName: object;
   vllStringFormat;
   vllDateFormat;
+  invalidValue = false;
 
   data: any = {};
 
@@ -53,6 +52,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
     private auth: AuthStore,
+    private notify: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -129,7 +129,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
             .subscribe((vllDFormat) => {
               this.vllDateFormat = vllDFormat.datas;
               i++;
-              if(i == 2){
+              if (i == 2) {
                 this.setViewAutoNumber();
               }
             });
@@ -139,7 +139,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
             .subscribe((vllSFormat) => {
               this.vllStringFormat = vllSFormat.datas;
               i++;
-              if(i == 2){
+              if (i == 2) {
                 this.setViewAutoNumber();
               }
             });
@@ -158,7 +158,8 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
         this.data.separator = '';
         this.dialogAutoNum.patchValue({ separator: '' });
       }
-      this.setViewAutoNumber();
+
+      if (field != 'autoReset') this.setViewAutoNumber();
       this.cr.detectChanges();
     }
   }
@@ -168,6 +169,12 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       this.esService.notifyInvalid(this.dialogAutoNum, this.formModel);
       return;
     }
+
+    if (this.invalidValue) {
+      this.notify.notifyCode('AD018');
+      return;
+    }
+
     if (this.isSaveNew == '1') {
       delete this.data.id;
       delete this.data.recID;
@@ -209,7 +216,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
             ?.text ?? '';
       }
 
-      let lengthNumber = 0;
+      let lengthNumber;
       let strNumber = '';
 
       switch (this.data?.stringFormat) {
@@ -218,7 +225,13 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
           this.viewAutoNumber =
             this.data?.fixedString + dateFormat + this.data?.separator;
           lengthNumber = this.data?.maxLength - this.viewAutoNumber.length;
-          strNumber = '#'.repeat(lengthNumber);
+          if (lengthNumber <= 0) {
+            this.notify.notifyCode('AD018');
+            this.invalidValue = true;
+          } else {
+            this.invalidValue = false;
+            strNumber = '#'.repeat(lengthNumber);
+          }
           this.viewAutoNumber =
             this.data?.fixedString +
             dateFormat +
@@ -231,7 +244,13 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
           this.viewAutoNumber =
             this.data?.fixedString + this.data?.separator + dateFormat;
           lengthNumber = this.data?.maxLength - this.viewAutoNumber.length;
-          strNumber = '#'.repeat(lengthNumber);
+          if (lengthNumber <= 0) {
+            this.notify.notifyCode('AD018');
+            this.invalidValue = true;
+          } else {
+            this.invalidValue = false;
+            strNumber = '#'.repeat(lengthNumber);
+          }
           this.viewAutoNumber =
             this.data?.fixedString +
             strNumber +
@@ -244,7 +263,13 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
           this.viewAutoNumber =
             this.data?.fixedString + this.data?.separator + dateFormat;
           lengthNumber = this.data?.maxLength - this.viewAutoNumber.length;
-          strNumber = '#'.repeat(lengthNumber);
+          if (lengthNumber <= 0) {
+            this.notify.notifyCode('AD018');
+            this.invalidValue = true;
+          } else {
+            this.invalidValue = false;
+            strNumber = '#'.repeat(lengthNumber);
+          }
           this.viewAutoNumber =
             strNumber +
             this.data?.separator +
@@ -257,7 +282,13 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
           this.viewAutoNumber =
             this.data?.fixedString + this.data?.separator + dateFormat;
           lengthNumber = this.data?.maxLength - this.viewAutoNumber.length;
-          strNumber = '#'.repeat(lengthNumber);
+          if (lengthNumber <= 0) {
+            this.notify.notifyCode('AD018');
+            this.invalidValue = true;
+          } else {
+            this.invalidValue = false;
+            strNumber = '#'.repeat(lengthNumber);
+          }
           this.viewAutoNumber =
             strNumber +
             this.data?.separator +
@@ -270,7 +301,13 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
           this.viewAutoNumber =
             this.data?.fixedString + this.data?.separator + dateFormat;
           lengthNumber = this.data?.maxLength - this.viewAutoNumber.length;
-          strNumber = '#'.repeat(lengthNumber);
+          if (lengthNumber <= 0) {
+            this.notify.notifyCode('AD018');
+            this.invalidValue = true;
+          } else {
+            this.invalidValue = false;
+            strNumber = '#'.repeat(lengthNumber);
+          }
           this.viewAutoNumber =
             dateFormat +
             this.data?.separator +
@@ -282,7 +319,13 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
         case '5': {
           this.viewAutoNumber = this.data?.fixedString + dateFormat;
           lengthNumber = this.data?.maxLength - this.viewAutoNumber.length;
-          strNumber = '#'.repeat(lengthNumber);
+          if (lengthNumber <= 0) {
+            this.notify.notifyCode('AD018');
+            this.invalidValue = true;
+          } else {
+            this.invalidValue = false;
+            strNumber = '#'.repeat(lengthNumber);
+          }
           this.viewAutoNumber = dateFormat + this.data?.fixedString + strNumber;
           break;
         }
@@ -299,6 +342,11 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
           break;
         }
       }
+
+      this.viewAutoNumber = this.viewAutoNumber.substring(
+        0,
+        this.data?.maxLength
+      );
 
       //   let indexStrF = this.vllStringFormat.findIndex(
       //     (p) => p.value == this.data?.stringFormat
