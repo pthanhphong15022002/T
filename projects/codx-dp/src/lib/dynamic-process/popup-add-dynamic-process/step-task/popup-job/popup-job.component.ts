@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CacheService,
   CallFuncService,
@@ -19,6 +19,7 @@ import {
   styleUrls: ['./popup-job.component.scss'],
 })
 export class PopupJobComponent implements OnInit {
+  @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   title = '';
   dialog!: DialogRef;
   formModelMenu: FormModel;
@@ -39,7 +40,7 @@ export class PopupJobComponent implements OnInit {
   stepID = '';
   status = 'add';
   taskList: DP_Steps_Tasks[] = [];
-
+  show = false;
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -168,5 +169,24 @@ export class PopupJobComponent implements OnInit {
         this.isNewEmails = this.recIdEmail ? true : false;
       }
     });
+  }
+  showCombobox(){
+    this.show = !this.show;
+  }
+  outFocus(){
+    console.log('thuan ');
+    
+  }
+  ID(element: string) {
+    const idx = 'check';
+    return idx + '_' + element;
+  }
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+    console.log(event);
+    let a = this.inputContainer?.nativeElement.contains(event.target);
+    if(!a){
+      this.show = false;
+    }
   }
 }

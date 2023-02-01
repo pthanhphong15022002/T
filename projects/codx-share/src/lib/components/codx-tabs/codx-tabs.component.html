@@ -32,15 +32,6 @@
     <ng-container *ngSwitchCase="'history'">
       <div class="tab-his">
         <div class="tab_body">
-          <!-- <codx-tree-history
-            [objectID]="objectID"
-            [id]="id"
-            [formModel]="formModel"
-            [objectType]="entityName"
-            [viewIcon]="true"
-            [funcID]="funcID"
-          >
-          </codx-tree-history> -->
           <codx-history [objectID]="objectID" [formModel]="formModel" [funcID]="funcID"></codx-history>
         </div>
       </div>
@@ -70,13 +61,13 @@
     <ng-container *ngSwitchCase="'comment'">
       <div class="tab-comt">
         <div class="tab_container">
-          <codx-tree-history
+          <codx-tree-comment
             [objectID]="objectID"
             [objectType]="entityName"
             [actionType]="'C'"
             [addNew]="true"
             [funcID]="funcID">
-          </codx-tree-history>
+          </codx-tree-comment>
         </div>
       </div>
     </ng-container>
