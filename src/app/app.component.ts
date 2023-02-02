@@ -42,7 +42,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.titleService.setTitle('OMS');
       document
         .getElementById('appFavicon')
-        .setAttribute('href', './assets/cz/qtsc/bg/logoQTSC.PNG');
+        .setAttribute('href', './assets/cz/qtsc/bg/favicon.ico');
     } else {
       this.titleService.setTitle('CodxUI');
       document
