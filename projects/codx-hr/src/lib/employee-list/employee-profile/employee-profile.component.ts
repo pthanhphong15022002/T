@@ -1581,6 +1581,7 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupETimeCardComponent,
       {
         isAdd: false,
+        funcID: 'HRT03020101',
         headerText: 'Thông tin chấm công',
       },
       option
@@ -1600,6 +1601,8 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupECalculateSalaryComponent,
       {
         isAdd: false,
+        funcID: 'HRT03020101',
+
         headerText: 'Thông tin tính lương',
       },
       option
@@ -1757,6 +1760,7 @@ export class EmployeeProfileComponent extends UIComponent {
         actionType: actionType,
         employeeId: this.data.employeeID,
         headerText: 'Quan hệ gia đình',
+        funcID: 'HRT03020103',
         lstFamilyMembers: this.lstFamily,
         indexSelected: this.lstFamily.indexOf(data),
       },
@@ -1788,6 +1792,7 @@ export class EmployeeProfileComponent extends UIComponent {
         actionType: actionType,
         indexSelected: this.lstPassport.indexOf(data),
         lstPassports: this.lstPassport,
+        funcID: 'HRT03020104',
         headerText: 'Hộ chiếu',
         employeeId: this.data.employeeID,
       },

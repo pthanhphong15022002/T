@@ -18,6 +18,7 @@ export class ViewJobComponent implements OnInit {
   stepID = '';
   listOwner = [];
   taskList: DP_Steps_Tasks[] = [];
+  taskListConnect: DP_Steps_Tasks[] = [];
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -36,8 +37,13 @@ export class ViewJobComponent implements OnInit {
 
   ngOnInit(): void {
     this.listOwner = this.stepsTasks?.roles || [];
-    console.log(this.taskList);
-    
+    if(this.stepsTasks?.parentID){
+      this.taskList.forEach(task => {
+        if(this.stepsTasks?.parentID.includes(task.recID)){
+          this.taskListConnect.push(task);
+        }
+      });
+    }    
   }
 
   onDeleteOwner(objectID, data) {

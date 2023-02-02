@@ -48,6 +48,7 @@ export class InstancesComponent
 
   @Input() process: any;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
+  @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   showButtonAdd = true;
   button?: ButtonModel;
   dataSelected: any;
@@ -57,7 +58,7 @@ export class InstancesComponent
   entityName = 'DP_Instances';
   className = 'InstancesBusiness';
   idField = 'recID';
-  funcID = 'DP0101';
+  funcID = 'DPT04';
   method = 'GetListInstancesAsync';
   //end
   // data T
@@ -66,11 +67,13 @@ export class InstancesComponent
   resourceKanban?: ResourceModel;
   dataObj: any;
   vllStatus = 'DP028';
-
+  instanceID: string;
   dialog: any;
   moreFunc: any;
   instanceNo: string;
   listSteps = [];
+  listStepInstances = [];
+  stepNameInstance: string;
   progress: string;
   formModel: FormModel;
   isMoveSuccess: boolean = true;
@@ -108,6 +111,7 @@ export class InstancesComponent
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
+          // template2: this.viewColumKaban,
         },
       },
     ];
@@ -138,9 +142,9 @@ export class InstancesComponent
     this.request.service = 'DP';
     this.request.assemblyName = 'DP';
     this.request.className = 'InstancesBusiness';
-    this.request.method = 'GetListInstancesAsync'; //hàm load data chưa viết
+    this.request.method = 'GetListInstancesAsync';
     this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj; ///de test- ccần cái này để load đúng
+    this.request.dataObj = this.dataObj;
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'DP';
@@ -164,8 +168,34 @@ export class InstancesComponent
     }
   }
 
-  progressEvent(event){
-    this.progress = event;
+  // progressEvent(event){
+  //   this.progress = event.progress;
+  //   this.stepNameInstance = event.name;
+  //   this.instanceID = event.instanceID;
+  // }
+
+  getStepsByInstanceID(insID) {
+    this.codxDpService.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
+      if (res) {
+        this.listStepInstances = res;
+        var total = 0;
+        this.listStepInstances.forEach((el) => {
+          if (this.dataSelected.currentStep == el.indexNo)
+            this.stepNameInstance = el.stepName;
+          total += el.progress;
+        });
+        if (
+          this.listStepInstances != null &&
+          this.listStepInstances.length > 0
+        ) {
+          this.progress = (total / this.listStepInstances.length)
+            .toFixed(1)
+            .toString();
+        } else {
+          this.progress = '0';
+        }
+      }
+    });
   }
 
   //CRUD
@@ -176,6 +206,8 @@ export class InstancesComponent
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
+      this.view.dataService.dataSelected.processID = this.process.recID;
+
       this.cache.functionList(funcIDApplyFor).subscribe((res) => {
         option.FormModel = this.view.formModel;
         option.FormModel.funcID = res.functionID;
@@ -254,6 +286,14 @@ export class InstancesComponent
 
   selectedChange(task: any) {
     this.dataSelected = task?.data ? task?.data : task;
+    //formModel instances
+
+    let formModel = new FormModel();
+    formModel.formName = 'DPInstances';
+    formModel.gridViewName = 'grvDPInstances';
+    formModel.entityName = 'DP_Instances';
+    formModel.funcID = 'DPT0401';
+    this.formModel = formModel;
     this.detectorRef.detectChanges();
   }
 

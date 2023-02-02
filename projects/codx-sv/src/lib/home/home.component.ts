@@ -61,8 +61,14 @@ export class HomeComponent extends UIComponent implements OnInit {
 
   clickMF(e, data) {}
 
-  add() {
-    this.codxService.navigate('', 'sv/add-survey');
+  createNewSurvey() {
+    this.view.dataService.addNew().subscribe((res) => {
+      this.codxService.navigate('', 'sv/add-survey', {
+        funcID: this.funcID,
+        title: 'Không có tiêu đề',
+        recID: res.recID,
+      });
+    });
   }
 
   update(item) {

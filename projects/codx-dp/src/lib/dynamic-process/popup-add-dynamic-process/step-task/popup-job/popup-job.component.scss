@@ -55,9 +55,11 @@
         li{
           font-size: 14px;
           padding: 5px  10px;
+          height: 32px;
         }
         li:hover{
-          background-color: #e7e7e7;
+          background-color: #e7e7e7 !important;
+          cursor: pointer;
         }
       }
     }

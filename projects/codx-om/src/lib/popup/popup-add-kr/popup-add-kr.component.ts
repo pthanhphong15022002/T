@@ -12,6 +12,7 @@ import { FormGroup } from '@angular/forms';
 
 import {
   AuthService,
+  CodxFormComponent,
   CRUDService,
   DialogData,
   DialogRef,
@@ -38,6 +39,7 @@ export class PopupAddKRComponent extends UIComponent {
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
   @Output() loadData = new EventEmitter();
+  @ViewChild('form') form :CodxFormComponent;
 
   headerText = '';
   subHeaderText = '';
@@ -56,12 +58,12 @@ export class PopupAddKRComponent extends UIComponent {
   dialogRef: DialogRef;
   isAfterRender: boolean;
   fGroupAddKR: FormGroup;
-  o: any;
   oParentID: any;
   dialogTargets: DialogRef;
   funcID: any;
   tempTarget: any;
   funcType:any;
+  isSubKR: boolean;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -71,10 +73,9 @@ export class PopupAddKRComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);   
-    
-    this.funcType = dialogData?.data[0];  
-    this.headerText = dialogData?.data[1];
-    this.o = dialogData.data[2];
+    this.funcID= dialogData.data[0]
+    this.funcType = dialogData?.data[1];  
+    this.headerText = dialogData?.data[2];
     this.kr = dialogData.data[3];
     this.dialogRef= dialogRef;
     this.formModel= dialogRef.formModel;
@@ -169,11 +170,12 @@ export class PopupAddKRComponent extends UIComponent {
     this.kr.status='1';
     this.kr.approveStatus='1';
     this.kr.approveControl='1';
-    this.kr.okrType=OMCONST.VLL.OKRType.KResult;
+    this.kr.okrType=this.isSubKR? OMCONST.VLL.OKRType.SKResult: OMCONST.VLL.OKRType.KResult;
     this.kr.recID= this.kr.parentID;
     this.kr.transID= this.kr.parentID;
     //---------------------------------------
     this.OKRLevel();
+    this.fGroupAddKR=this.form?.formGroup;
     this.fGroupAddKR.patchValue(this.kr);
 
     //tính lại Targets cho KR
@@ -192,7 +194,6 @@ export class PopupAddKRComponent extends UIComponent {
   methodAdd(kr: any) {
     this.codxOmService.addKR(this.kr).subscribe((res: any) => {
       if (res) {
-        var x = res;
         this.afterSave(res);
       }
     });
@@ -201,7 +202,6 @@ export class PopupAddKRComponent extends UIComponent {
   methodCopy(kr: any) {
     this.codxOmService.copyKR(this.kr).subscribe((res: any) => {
       if (res) {
-        var x = res;
         this.afterSave(res);
       }
     });
@@ -210,13 +210,12 @@ export class PopupAddKRComponent extends UIComponent {
   methodEdit(kr: any) {
     this.codxOmService.editKR(this.kr).subscribe((res: any) => {
       if (res) {
-        var x = res;
         this.afterSave(res);
       }
     });
   }
   afterSave(kr: any) {
-    if (this.isAdd) {
+    if (this.funcType == OMCONST.MFUNCID.Add) {
       this.notificationsService.notifyCode('SYS006');
     } else {
       this.notificationsService.notifyCode('SYS007');
@@ -330,7 +329,7 @@ export class PopupAddKRComponent extends UIComponent {
       tempTarget.createdOn = new Date();
       this.kr.targets.push(tempTarget);
     });
-    this.dialogTargets.close();
+    this.dialogTargets?.close();
     this.dialogTargets = null;
   }
 

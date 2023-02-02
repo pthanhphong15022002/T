@@ -117,7 +117,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     console.log(this.data.expiredOn)
     console.log(this.data.issuedOn)
     if(this.data.idExpiredOn < this.data.issuedOn){
-      this.notitfy.notifyCode('HR002')
+      this.hrService.notifyInvalidFromTo('ExpiredDate', 'EffectedDate', this.formModel)
       return
     }
 

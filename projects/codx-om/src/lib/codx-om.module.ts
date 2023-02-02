@@ -30,6 +30,7 @@ import { PopupAssignmentOKRComponent } from './popup/popup-assignment-okr/popup-
 import { OkrPlanShareComponent } from './okr/okr-plans/okr-plans-share/okr-plans-share.component';
 import { PopupAssignmentOKRCComponent } from './popup/popup-assigment-okr-c/popup-assignment-okr-c.component';
 import { OkrTreesComponent } from './okr/okr-trees/okr-trees.component';
+import { PopupAddOBComponent } from './popup/popup-add-ob/popup-add-ob.component';
 
 const routes: Routes = [
   {
@@ -76,6 +77,7 @@ const routes: Routes = [
     OkrPlansComponent,
     OkrToolbarComponent,
     PopupAddKRComponent,
+    PopupAddOBComponent,
     PopupShowKRComponent,
     PopupShowOBComponent,
     PopupDistributeOKRComponent,
