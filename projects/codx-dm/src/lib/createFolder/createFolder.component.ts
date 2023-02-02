@@ -294,7 +294,7 @@ export class CreateFolderComponent implements OnInit {
       }
     });
 
-
+    if(!this.dmSV.folderId) this.refesh();
     // this.dmSV.isListSubFolder.subscribe((item) => {
     //   this.listSubFolder = item;
     //   if (this.fileEditing === undefined) this.fileEditing = new FileUpload();
@@ -372,6 +372,7 @@ export class CreateFolderComponent implements OnInit {
     this.folderService.getFolder(this.id).subscribe(async (res) => {
       if(res)
       {
+        debugger;
         this.setFolderAS(res);
         if(this.edit)
         {
@@ -493,6 +494,7 @@ export class CreateFolderComponent implements OnInit {
 
 
   onSaveRightChanged($event, ctrl) {
+    debugger;
     var value = $event.data;
     switch (ctrl) {
       case 'security':
@@ -618,6 +620,7 @@ export class CreateFolderComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
+    debugger
     this.folderName = this.folderName.trim();
     this.fileEditing.folderName = this.folderName;
     this.fileEditing.approval = this.approval;
@@ -639,9 +642,12 @@ export class CreateFolderComponent implements OnInit {
       this.fileEditing.folderType = this.dmSV.idMenuActive;
       this.folderService.addFolder(this.fileEditing).subscribe(async (res) => {
         if (res.status == 0) {
+          debugger;
           var folders = this.dmSV.listFolder;
           if (folders == null) folders = [];
           folders.push(Object.assign({}, res.data));
+          this.fileEditing = res.data;
+          this.setFolderAS(this.fileEditing);
           that.dmSV.listFolder = folders;
           that.dmSV.ChangeData.next(true);
           that.dmSV.addFolder.next(res.data);

@@ -169,8 +169,8 @@
                   <codx-label [default]="titleCopyrightsControl" [fiedName]="'titleCopyrightsControl'"></codx-label>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
-                      <codx-input class="test-check" type="switch" style="width: 100%" [checked]="copyrightsControl"
-                        field="copyrightsControl" [disabled]="
+                      <codx-input class="test-check" type="switch" style="width: 100%" field="copyrightsControl" [checked]="copyrightsControl"
+                         [disabled]="
                           this.updateRight == false || this.propertiesFolder
                         " (valueChange)="
                           onSaveRightChanged($event, 'copyrightsControl')
