@@ -37,6 +37,15 @@
   </codx-card-img>
 </ng-template>
 
+<ng-template #viewColumKaban let-data>
+  <div class="">
+    <div class="d-flex align-items-center justify-content-between cursor-pointer
+      w-100 has-actions-menu">
+      <div class="line-colums" >{{ data.headerText }}</div>
+    </div>
+  </div>
+</ng-template>
+
 <ng-template #cardTitleTmp let-data>
   <codx-temp-full [title]="data.title" [descTmp]="descTmp"> </codx-temp-full>
   <ng-template #descTmp>

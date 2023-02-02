@@ -142,10 +142,10 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
 
     if (this.actionType === 'copy' || this.actionType === 'add') {
       delete this.visaObj.recID;
@@ -188,7 +188,6 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   click(data) {
     this.visaObj = data;
     this.formModel.currentData = JSON.parse(JSON.stringify(this.visaObj));
-    // this.indexSelected = this.lstVisas.indexOf(this.visaObj)
     this.indexSelected = this.lstVisas.findIndex(
       (p) => p.recID == this.visaObj.recID
     );
