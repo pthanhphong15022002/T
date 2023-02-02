@@ -39,7 +39,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (environment.layoutCZ == 'qtsc') {
-      this.titleService.setTitle('OMS');
+      this.titleService.setTitle('QTSC@oms');
       document
         .getElementById('appFavicon')
         .setAttribute('href', './assets/cz/qtsc/bg/favicon.ico');
