@@ -67,12 +67,14 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    this.address = this.form.formGroup.value;
-    this.address.longitude = 0;
-    this.address.distance = 0;
-    this.address.latitude = 0;
-    this.address.duration = 0;
-    this.address.recID = Guid.newGuid();
+    if (this.address == null) {
+      this.address = this.form.formGroup.value;
+      this.address.longitude = 0;
+      this.address.distance = 0;
+      this.address.latitude = 0;
+      this.address.duration = 0;
+      this.address.recID = Guid.newGuid();
+    }
   }
   valueChange(e:any,type:any){
     if (type == 'adressType') {

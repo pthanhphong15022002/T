@@ -35,6 +35,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   lstFamilyMembers;
   indexSelected;
   isEmployee = false;
+  idField = 'RecID';
 
   familyMemberObj;
   funcID;
@@ -55,61 +56,98 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     this.lstFamilyMembers = data?.data?.lstFamilyMembers
     this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
     this.dialog = dialog;
-    // this.formModel = dialog?.FormModel
+    this.funcID = data?.data?.funcID;
+    this.employId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
     this.actionType = data?.data?.actionType
-    if(!this.formModel){
-      this.formModel = new FormModel();
-      this.formModel.formName = 'EFamilies'
-      this.formModel.gridViewName = 'grvEFamilies'
-      this.formModel.entityName = 'HR_EFamilies'
-    }
+    // if(!this.formModel){
+    //   this.formModel = new FormModel();
+    //   this.formModel.formName = 'EFamilies'
+    //   this.formModel.gridViewName = 'grvEFamilies'
+    //   this.formModel.entityName = 'HR_EFamilies'
+    // }
     if(this.actionType == 'edit' || this.actionType == 'copy'){
       this.familyMemberObj = JSON.parse(JSON.stringify(this.lstFamilyMembers[this.indexSelected]))
-      this.formModel.currentData = this.familyMemberObj
-      console.log('data dc truyen vao', this.formModel.currentData);
     }
-    this.employId = data?.data?.employeeId;
-    this.cache.gridViewSetup(this.formModel.formName, this.formModel.gridViewName).subscribe(grv => {
-      console.log('grv:', grv);
-    })
   }
 
   initForm(){
-    this.hrService
-    .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    .then((item) => {
-      this.formGroup = item
-      if(this.actionType == 'add'){
-        this.hrService.getEFamilyModel().subscribe(p => {
-          console.log(this.formModel.currentData)
-          console.log('thong tin ng than', p)
-          this.familyMemberObj = p
-      //     this.familyMemberObj.idCardNo = this.familyMemberObj.idCardNo
-      // this.familyMemberObj.idIssuedOn = this.familyMemberObj.idIssuedOn 
-      // this.familyMemberObj.idIssuedBy = this.familyMemberObj.idIssuedBy
-      // this.familyMemberObj.pidNumber = this.familyMemberObj.pitNumber
-      ///this.familyMemberObj.sIRegisterNo = this.familyMemberObj.siRegisterNo
-      this.formGroup.patchValue(this.familyMemberObj)
-      this.isAfterRender = true
-          this.formModel.currentData = this.familyMemberObj
-        })
+    // this.hrService
+    // .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    // .then((item) => {
+    //   this.formGroup = item
+    //   if(this.actionType == 'add'){
+    //     this.hrService.getEFamilyModel().subscribe(p => {
+    //       console.log(this.formModel.currentData)
+    //       console.log('thong tin ng than', p)
+    //       this.familyMemberObj = p
+    //   //     this.familyMemberObj.idCardNo = this.familyMemberObj.idCardNo
+    //   // this.familyMemberObj.idIssuedOn = this.familyMemberObj.idIssuedOn 
+    //   // this.familyMemberObj.idIssuedBy = this.familyMemberObj.idIssuedBy
+    //   // this.familyMemberObj.pidNumber = this.familyMemberObj.pitNumber
+    //   ///this.familyMemberObj.sIRegisterNo = this.familyMemberObj.siRegisterNo
+    //   this.formGroup.patchValue(this.familyMemberObj)
+    //   this.isAfterRender = true
+    //       this.formModel.currentData = this.familyMemberObj
+    //     })
+    //   }
+    //   else{
+    //   //   this.familyMemberObj.iDCardNo = this.familyMemberObj.idCardNo
+    //   // this.familyMemberObj.iDIssuedOn = this.familyMemberObj.idIssuedOn 
+    //   // this.familyMemberObj.iDIssuedBy = this.familyMemberObj.idIssuedBy
+    //   // this.familyMemberObj.pITNumber = this.familyMemberObj.pitNumber
+    //   // this.familyMemberObj.sIRegisterNo = this.familyMemberObj.siRegisterNo
+    //   this.formGroup.patchValue(this.familyMemberObj)
+    //   this.fromdateVal = this.familyMemberObj.registerFrom
+    //   this.todateVal = this.familyMemberObj.registerTo
+    //   this.isAfterRender = true
+    //   }
+    // })
+
+    if (this.actionType == 'add') {
+      this.hrService
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.familyMemberObj = res?.data;
+            this.familyMemberObj.employeeID = this.employId;
+            this.formModel.currentData = this.familyMemberObj;
+            this.formGroup.patchValue(this.familyMemberObj);
+            this.cr.detectChanges();
+            this.isAfterRender = true;
+          }
+        });
+    } else {
+      if (this.actionType === 'edit' || this.actionType === 'copy') {
+        this.formGroup.patchValue(this.familyMemberObj);
+        this.formModel.currentData = this.familyMemberObj;
+        this.formGroup.patchValue(this.familyMemberObj)
+        this.fromdateVal = this.familyMemberObj.registerFrom
+        this.todateVal = this.familyMemberObj.registerTo
+        this.isAfterRender = true
+        this.cr.detectChanges();
+        this.isAfterRender = true;
       }
-      else{
-      //   this.familyMemberObj.iDCardNo = this.familyMemberObj.idCardNo
-      // this.familyMemberObj.iDIssuedOn = this.familyMemberObj.idIssuedOn 
-      // this.familyMemberObj.iDIssuedBy = this.familyMemberObj.idIssuedBy
-      // this.familyMemberObj.pITNumber = this.familyMemberObj.pitNumber
-      // this.familyMemberObj.sIRegisterNo = this.familyMemberObj.siRegisterNo
-      this.formGroup.patchValue(this.familyMemberObj)
-      this.fromdateVal = this.familyMemberObj.registerFrom
-      this.todateVal = this.familyMemberObj.registerTo
-      this.isAfterRender = true
-      }
-    })
+    }
   }
   onInit(): void {
-    this.initForm();
+    this.hrService.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
   }
 
   onSaveForm(){

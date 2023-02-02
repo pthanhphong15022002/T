@@ -725,6 +725,11 @@ label,
     color: var(--primary);
 }
 
+.btn.btn-primary {
+    color: var(--primary-inverse);
+}
+
+
 .e-schedule .e-schedule-table .e-auto-height {
     border-color: var(--border-list);
 }
@@ -761,6 +766,36 @@ codx-filter-form .list-group-item {
 .list-item a .icon-edit-one,
 .setting-btnright a span {
     color: var(--primary);
+}
+
+.extend-function .extend-title {
+    background-color: var(--bg-card);
+}
+
+.bs-popover-end>.popover-arrow::after,
+.bs-popover-auto[data-popper-placement^=right]>.popover-arrow::after {
+    border-color: var(--bg-card);
+}
+
+.user-mini-nav {
+    background-color: var(--bg-card-item) !important;
+
+    a {
+        color: var(--primary);
+    }
+}
+
+.input-number,
+.btn-outline-secondary {
+    border-color: var(--border-list);
+}
+
+codx-view-schedule .status-color {
+    color: var(--gray-200);
+}
+
+lib-nosubaside .aside-menu .menu .menu-item .menu-link.active {
+    background-color: var(--primary-dark) !important;
 }
 
 //end dark

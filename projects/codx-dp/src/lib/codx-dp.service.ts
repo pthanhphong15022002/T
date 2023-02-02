@@ -194,4 +194,12 @@ export class CodxDpService {
       processID
     );
   }
+  addInstances(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'AddInstanceAsync',
+      data
+    );
+  }
 }

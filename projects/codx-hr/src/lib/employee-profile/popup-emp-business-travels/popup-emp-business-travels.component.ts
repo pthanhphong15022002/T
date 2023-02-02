@@ -137,10 +137,10 @@ export class PopupEmpBusinessTravelsComponent
   }
 
   onSaveForm(isCloseForm: boolean) {
-    // if(this.formGroup.invalid){
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if(this.formGroup.invalid){
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.data.contractTypeID = '1';

@@ -1187,6 +1187,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.jobType = value;
   }
   openPopupJob(data?: any) {
+    let taskGroupIdOld = '';
     let status = 'edit';
     let frmModel: FormModel = {
       entityName: 'DP_Steps_Tasks',
@@ -1196,39 +1197,62 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (!data) {
       this.popupJob.close();
       status = 'add';
+    }else{
+      taskGroupIdOld = data['taskGroupID'];
     }
+    let listData = [
+      status,
+      this.jobType,
+      this.step?.recID,
+      this.taskGroupList,
+      data || {},
+      this.taskList,
+      this.step?.stepName,
+    ];
+
     let option = new SidebarModel();
     option.Width = '550px';
     option.zIndex = 1001;
     option.FormModel = frmModel;
-    let dialog = this.callfc.openSide(
-      PopupJobComponent,
-      [
-        status,
-        this.jobType,
-        this.step?.recID,
-        this.taskGroupList,
-        data || {},
-        this.taskList,
-      ],
-      option
-    );
+
+    let dialog = this.callfc.openSide(PopupJobComponent, listData, option);
+
     dialog.closed.subscribe((e) => {
       if (e?.event) {
+        let taskData = e?.event?.data;
         if (e.event?.status === 'add') {
-          let taskData = e?.event?.data;
           let index = this.taskGroupList.findIndex(
             (task) => task.recID == taskData.taskGroupID
           );
           this.taskGroupList[index]['task'].push(taskData);
           this.taskList.push(taskData);
-          this.taskListSave.push(taskData);
+        }else{  
+          if(taskData?.taskGroupID != taskGroupIdOld){
+            this.changeGroupTask(taskData,taskGroupIdOld);
+          }
         }
-      } else {
-        data = e?.event?.data;
-      }
+      } 
     });
   }
+
+  changeGroupTask(taskData,taskGroupIdOld ){
+    let tastClone = JSON.parse(JSON.stringify(taskData));           
+    let indexNew = this.taskGroupList.findIndex((task) => task.recID == taskData.taskGroupID);
+    let index = this.taskGroupList.findIndex((task) => task.recID == taskGroupIdOld);
+    let listTaskOld = this.taskGroupList[indexNew]['task'] || [];
+    let listTaskNew = this.taskGroupList[indexNew]['task'] || [];
+
+    listTaskOld.push(tastClone);
+    listTaskNew.forEach((element, i) => {
+      if(element?.taskGroupID !== taskGroupIdOld){
+        this.taskGroupList[index]['task'].splice(i,1);
+      }
+    });
+
+    this.setIndex(listTaskOld,'indexNo');
+    this.setIndex(listTaskNew,'indexNo');
+  }
+
   clickMFTask(e: any, taskList?: any, task?: any) {
     switch (e.functionID) {
       case 'SYS02':
@@ -1296,27 +1320,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       ],
       option
     );
-    dialog.closed.subscribe((e) => {
-      if (e?.event) {
-        if (e.event?.status === 'add') {
-          let taskData = e?.event?.data;
-          let index = this.taskGroupList.findIndex(
-            (task) => task.recID == taskData.taskGroupID
-          );
-          this.taskGroupList[index]['task'].push(taskData);
-          this.taskList.push(taskData);
-          this.taskListSave.push(taskData);
-        }
-      } else {
-        data = e?.event?.data;
-      }
-    });
   }
   // Common
   setIndex(data: any, value: string) {
     if (data.length > 0) {
       data.forEach((item, index) => {
-        item['indexNo'] = index + 1;
+        item[value] = index + 1;
       });
     }
   }

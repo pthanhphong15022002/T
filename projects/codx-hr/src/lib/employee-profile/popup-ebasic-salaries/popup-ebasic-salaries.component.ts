@@ -148,7 +148,9 @@ export class PopupEBasicSalariesComponent extends UIComponent implements OnInit 
     console.log('du lieu salari', this.listView.dataService.data);
     
     if (this.EBasicSalaryObj.expiredDate < this.EBasicSalaryObj.effectedDate) {
-      this.notify.notifyCode('HR003');
+      // this.notify.notifyCode('HR003');
+
+      this.hrService.notifyInvalidFromTo('ExpiredDate', 'EffectedDate', this.formModel)
       return;
     }
     if (this.actionType === 'copy' || this.actionType === 'add') {
@@ -174,7 +176,6 @@ export class PopupEBasicSalariesComponent extends UIComponent implements OnInit 
           if (this.listView) {
             (this.listView.dataService as CRUDService).add(p).subscribe();
           }
-          //this.dialog.close(p);
         } else this.notify.notifyCode('DM034');
       });
     } else {
@@ -193,7 +194,6 @@ export class PopupEBasicSalariesComponent extends UIComponent implements OnInit 
           if (this.listView) {
             (this.listView.dataService as CRUDService).update(p).subscribe();
           }
-          // this.dialog.close(this.data);
         } else this.notify.notifyCode('DM034');
       });
     }

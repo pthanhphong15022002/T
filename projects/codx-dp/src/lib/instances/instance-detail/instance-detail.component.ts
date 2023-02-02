@@ -13,7 +13,9 @@ export class InstanceDetailComponent implements OnInit {
   @Input() dataService: CRUDService;
   @Input() recID: any;
   @ViewChild('locationCBB') locationCBB: any;
-  @Output() progressEvent= new EventEmitter<string>();
+  @Output() progressEvent= new EventEmitter<object>();
+  @Input() stepName: string;
+  @Input() progress = '0';
   dataSelect: any;
   id: any;
   totalInSteps: any;
@@ -28,8 +30,7 @@ export class InstanceDetailComponent implements OnInit {
   value: Number = 30;
   cornerRadius: Number = 30;
   idCbx = "stage";
-  stepName: string;
-  progress = '0';
+
   fields: Object = { text: 'name', value: 'id' };
   listRoom = [{
     name: 'Xem theo biểu đồ Gantt',
@@ -43,29 +44,12 @@ export class InstanceDetailComponent implements OnInit {
     name: 'Xem theo trường nhập liệu',
     id: 'field'
   }];
-  lstTest = [{
-    stepNo: 1,
-    stepName: 'test1'
-  },
-  {
-    stepNo: 2,
-    stepName: 'test2'
-  },
-  {
-    stepNo: 3,
-    stepName: 'test3'
-  },
-  {
-    stepNo: 4,
-    stepName: 'test4'
-  }]
 
   @Input() currentStep: number;
   constructor(private dpSv: CodxDpService, private api: ApiHttpService, private changeDetec: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
-    console.log(this.listSteps);
     // var instance = new DP_Instances();
 
     // instance.title = "TEST DO PHÚC THỰC HIỆN";
@@ -87,8 +71,9 @@ export class InstanceDetailComponent implements OnInit {
       if (changes['recID'].currentValue == this.id) return;
       this.id = changes['recID'].currentValue;
       this.getInstanceByRecID(this.id);
-      this.getStepsByProcessID(this.id);
+      this.getStepsByInstanceID(this.id);
     }
+    console.log(this.formModel);
 
   }
 
@@ -104,22 +89,10 @@ export class InstanceDetailComponent implements OnInit {
     });
   }
 
-  getStepsByProcessID(insID){
+  getStepsByInstanceID(insID){
     this.dpSv.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
       if (res) {
         this.listSteps = res;
-        var total = 0;
-        this.listSteps.forEach(el =>{
-          if(this.currentStep == el.indexNo)
-            this.stepName = el.stepName;
-          total += el.progress;
-        })
-        if(this.listSteps != null && this.listSteps.length > 0){
-          this.progress = (total / this.listSteps.length).toFixed(1).toString();
-        }else{
-          this.progress = '0';
-        }
-        this.progressEventOut(this.progress + '%');
         this.listSteps.forEach(element =>{
           if(element.indexNo == this.currentStep){
             this.dpSv.GetStepInstance(element.recID).subscribe(data=>{
@@ -131,10 +104,6 @@ export class InstanceDetailComponent implements OnInit {
         })
       }
     });
-  }
-
-  progressEventOut(value: string){
-    this.progressEvent.emit(value);
   }
 
   // getStepsByProcessID(recID){
