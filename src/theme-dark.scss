@@ -587,7 +587,7 @@ codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-
 .e-schedule .e-timeline-month-view .e-date-header-wrap table td {
     background-color: var(--bg-card);
     border-color: var(--border-light);
-    color: var(--text-body);
+    color: var(--text-body) !important;
 }
 
 .e-schedule .e-timeline-view .e-resource-cells,
@@ -796,6 +796,15 @@ codx-view-schedule .status-color {
 
 lib-nosubaside .aside-menu .menu .menu-item .menu-link.active {
     background-color: var(--primary-dark) !important;
+}
+
+.e-schedule .e-month-view .e-date-header-wrap table td.e-current-day,
+.e-schedule .e-month-agenda-view .e-date-header-wrap table td.e-current-day {
+    color: var(--text-des);
+}
+
+.e-schedule .e-timeline-view .e-date-header-wrap table td.e-current-day * {
+    color: var(--primary-inverse);
 }
 
 //end dark
