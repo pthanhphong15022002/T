@@ -226,6 +226,7 @@ export class DP_Instances {
   recID: string;
   processID: string;
   instanceNo: string;
+  stepID: string;
   title: string;
   memo: string;
   datas: string; // Json;

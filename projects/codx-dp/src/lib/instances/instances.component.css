@@ -10,3 +10,13 @@
 .flex-body{
   width: 100%;
 }
+
+.font {
+	font-size: 13px;
+  max-width: 180px;
+  text-align: center;
+  color: #fff;
+  background-color: #3699ff;
+  position: relative;
+  border-radius: 5px;
+}

@@ -39,18 +39,13 @@
       </div>
       <div>
         <codx-label
-          fiedName="StepName"
-          [formModel]="dialog?.formModel"
           [default]="taskName"
         >
         </codx-label>
-        <span> > </span>
-        <codx-label
-          fiedName="StepName"
-          [formModel]="dialog?.formModel"
-          [default]="jobName"
-        >
-        </codx-label>
+        <span *ngIf="taskGroupName"> > </span>
+        <span style="font-weight: 500;">
+          {{taskGroupName}}
+        </span>
       </div>
     </div>
     <!--End Link group -->
@@ -236,7 +231,6 @@
           >
           </codx-label>
           <div>
-            <!-- combobox -->
             <codx-input
               field="reminders"
               [formModel]="dialog?.formModel"
@@ -251,6 +245,36 @@
       </div>
     </div>
 
+    <!-- <div class="form-group">
+      <div>
+        <codx-label
+          fiedName="parentID"
+          [formModel]="dialog?.formModel"
+          default="Công việc liên kết"
+        >
+        </codx-label>
+      </div>
+      <div>
+        <ejs-dropdownlist
+        [dataSource]="taskList"
+        [fields]="fieldsTask"
+        [value]="stepsTasks?.parentID"
+        (valueChange)="filterText($event,'parentID')"
+        [readonly]="false"
+      ></ejs-dropdownlist>
+      </div>
+      <div>
+        <codx-input
+        field="parentID"
+        refValue="DPStepTasks"
+        type="combobox"
+        [crrValue]="stepsTasks?.parentID"
+        [formModel]="dialog?.formModel"
+      >
+      </codx-input>
+      </div>
+    </div> -->
+
     <div class="form-group">
       <div>
         <codx-label
@@ -260,26 +284,10 @@
         >
         </codx-label>
       </div>
-      <!-- <div>
-        <ejs-dropdownlist
-        [dataSource]="taskList"
-        [fields]="fieldsTask"
-        [value]="stepsTasks?.parentID"
-        (valueChange)="filterText($event,'parentID')"
-        [readonly]="false"
-      ></ejs-dropdownlist>
-      </div> -->
       <div>
-        <!-- <codx-input
-        field="parentID"
-        [crrValue]="stepsTasks?.parentID"
-        [formModel]="dialog?.formModel"
-        (valueChange)="valueChangeCombobox($event)"
-      >
-      </codx-input> -->
         <ng-container
           [ngTemplateOutlet]="comboboxMulti"
-          [ngTemplateOutletContext]="{ dataSource: taskList }"
+          [ngTemplateOutletContext]="{ dataSource: dataCombobox }"
         ></ng-container>
       </div>
     </div>
@@ -425,13 +433,13 @@
         type="switch"
         class="test-check"
         [checked]="stepsTasks?.requireCompleted"
-        field="createTask"
+        field="requireCompleted"
         (valueChange)="valueChangeAlert($event)"
       >
       </codx-input>
       <span style="margin-left: 10px">
         <codx-label
-          name="createTask"
+          name="requireCompleted"
           [formModel]="form.formModel"
           default="Phải được hoàn tất trước khi chuyển công đoạn"
         >
@@ -490,25 +498,30 @@
   </div>
 </ng-template>
 
-<ng-template #comboboxMulti let-data="dataSource" let-check="show">
-  <div class="combobox-multi"  #inputContainer>
+<ng-template #comboboxMulti let-data="dataSource">
+  <div class="combobox-multi" #inputContainer>
     <div class="input-container">
-      <!-- (focusout)="outFocus()" -->
       <input
         #input
         type="text"
         class="combobox"
+        [value]="valueInput"
         (click)="showCombobox()"
-       
       />
       <span class="icon-expand_more"></span>
     </div>
     <div class="select" *ngIf="show">
       <ul>
-        <li *ngFor="let item of data" #e (blur)="ID('thauu')">
-          <div class="w-100 d-flex justify-content-between list-radio">
-            <span>{{ item?.taskName }}</span>
-            <codx-input type="checkbox" [checked]="true"></codx-input>
+        <li
+          *ngFor="let item of data"
+          [ngStyle]="item?.checked ? { 'background-color': '#f7fdff' } : {}"
+        >
+          <div
+            class="w-100 d-flex justify-content-between list-radio"
+            (click)="handelCheck(item)"
+          >
+            <span>{{ item?.value }}</span>
+            <codx-input type="checkbox" [checked]="item?.checked"></codx-input>
           </div>
         </li>
       </ul>

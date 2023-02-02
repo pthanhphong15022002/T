@@ -48,6 +48,7 @@ export class InstancesComponent
 
   @Input() process: any;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
+  @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   showButtonAdd = true;
   button?: ButtonModel;
   dataSelected: any;
@@ -57,7 +58,7 @@ export class InstancesComponent
   entityName = 'DP_Instances';
   className = 'InstancesBusiness';
   idField = 'recID';
-  funcID = 'DP0101';
+  funcID = 'DPT04';
   method = 'GetListInstancesAsync';
   //end
   // data T
@@ -71,6 +72,7 @@ export class InstancesComponent
   moreFunc: any;
   instanceNo: string;
   listSteps = [];
+  stepNameInstance: string;
   progress: string;
   formModel: FormModel;
   isMoveSuccess: boolean = true;
@@ -107,7 +109,8 @@ export class InstancesComponent
         request: this.request,
         request2: this.resourceKanban,
         model: {
-          template: this.cardKanban,
+          template: this.cardKanban, 
+          // template2: this.viewColumKaban,
         },
       },
     ];
@@ -138,9 +141,9 @@ export class InstancesComponent
     this.request.service = 'DP';
     this.request.assemblyName = 'DP';
     this.request.className = 'InstancesBusiness';
-    this.request.method = 'GetListInstancesAsync'; //hàm load data chưa viết
+    this.request.method = 'GetListInstancesAsync'; 
     this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj; ///de test- ccần cái này để load đúng
+    this.request.dataObj = this.dataObj;
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'DP';
@@ -165,7 +168,8 @@ export class InstancesComponent
   }
 
   progressEvent(event){
-    this.progress = event;
+    this.progress = event.progress;
+    this.stepNameInstance = event.name;
   }
 
   //CRUD
@@ -176,6 +180,8 @@ export class InstancesComponent
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
+      this.view.dataService.dataSelected.processID = this.process.recID
+
       this.cache.functionList(funcIDApplyFor).subscribe((res) => {
         option.FormModel = this.view.formModel;
         option.FormModel.funcID = res.functionID;
