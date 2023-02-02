@@ -1,7 +1,7 @@
 import { OMCONST } from './codx-om.constant';
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   ApiHttpService,
   AuthStore,
@@ -9,6 +9,7 @@ import {
   DataRequest,
   FormModel,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { ModelPage } from 'projects/codx-ep/src/public-api';
 import { finalize, map, Observable, share } from 'rxjs';
@@ -59,6 +60,76 @@ export class CodxOmService {
     });
   }
 
+  // getFormGroup(formName, gridView): Promise<FormGroup> {
+  //   return new Promise<FormGroup>((resolve, reject) => {
+  //     this.cache
+  //     .gridViewSetup(formName, gridView)
+  //     .subscribe((gv: any) => {
+  //       if (gv) {
+  //         debugger;
+  //         var gridview = Util.camelizekeyObj(gv);
+  //         var arrgv = Object.values(gridview) as any[];
+          
+  //         const group: any = {};
+  //         for (const key in gridview) {
+  //           const element = gridview[key];
+  //           var keytmp = Util.camelize(gridview[element].fieldName);
+  //           console.log(gridview[element].fieldName,":", keytmp);
+  //           var value = null;
+  //           var type = element.dataType.toLowerCase();
+  //           if (type === 'bool') value = false;
+  //           if (type === 'datetime') value = new Date();
+  //           if (type === 'int' || type === 'decimal') value = 0;
+
+  //           group[keytmp] = element.isRequire
+  //             ? new FormControl(value, Validators.required)
+  //             : new FormControl(value);
+  //         };
+        
+  //         group['updateColumn'] = new FormControl('');
+  //        var formGroup = new FormGroup(group);
+  //        resolve(formGroup);
+  //       }
+       
+  //     });
+  //     // this.cache
+  //     //   .gridViewSetup(formName, gridView)
+  //     //   .subscribe((grvSetup: any) => {
+  //     //     let gv = Util.camelizekeyObj(grvSetup);
+  //     //     var model = {};
+  //     //     model['write'] = [];
+  //     //     model['delete'] = [];
+  //     //     model['assign'] = [];
+  //     //     model['share'] = [];
+  //     //     if (gv) {
+  //     //       const user = this.auth.get();
+  //     //       for (const key in gv) {
+  //     //         const element = gv[key];
+  //     //         element.fieldName = Util.camelize(element.fieldName);
+  //     //         model[element.fieldName] = [];
+  //     //         let modelValidator = [];
+  //     //         if (element.isRequire) {
+  //     //           modelValidator.push(Validators.required);
+  //     //         }
+  //     //         if (element.fieldName == 'email') {
+  //     //           modelValidator.push(Validators.email);
+  //     //         }
+  //     //         if (modelValidator.length > 0) {
+  //     //           model[element.fieldName].push(modelValidator);
+  //     //         }
+  //     //       }
+  //     //       model['write'].push(false);
+  //     //       model['delete'].push(false);
+  //     //       model['assign'].push(false);
+  //     //       model['share'].push(false);
+  //     //     }
+       
+      
+         
+  //     //   });
+  //   });
+  // }
+
   getFormGroup(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
       this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
@@ -68,16 +139,15 @@ export class CodxOmService {
         model['assign'] = [];
         model['share'] = [];
         if (gv) {
+          const gridview = Util.camelizekeyObj(gv);
           const user = this.auth.get();
-          for (const key in gv) {
-            const element = gv[key];
-            element.fieldName =
-              element.fieldName.charAt(0).toLowerCase() +
-              element.fieldName.slice(1);
+          for (const key in gridview) {
+            const element = gridview[key];
+            element.fieldName =key;
             model[element.fieldName] = [];
             if (element.fieldName == 'owner') {
               model[element.fieldName].push(user.userID);
-            } else if (element.fieldName == 'bUID') {
+            } else if (element.fieldName == 'buid') {
               model[element.fieldName].push(user['buid']);
             } else if (element.fieldName == 'createdOn') {
               model[element.fieldName].push(new Date());
@@ -121,7 +191,6 @@ export class CodxOmService {
       });
     });
   }
-
   getComboboxName(formName, gridView): Promise<object> {
     return new Promise<object>((resolve, reject) => {
       var obj: { [key: string]: any } = {};
@@ -236,7 +305,16 @@ export class CodxOmService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
-  
+  //#Setting SYS
+  getSettingValue(para: any) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      para
+    );
+  }
   //region OKR Plan
   getOKRPlandAndOChild(recID:string) {
     return this.api.execSv(
@@ -338,6 +416,16 @@ export class CodxOmService {
     );
   }
   //-------------------------Get Data OKR---------------------------------//
+  //Lấy okr mới
+  genNewOKR() {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GenNewOKRAsync',
+      []
+    );
+  }
   //Lấy ds OKR_Links theo OKR RecID
   getOKRByORGUnit(recID:string,orgUnit:string,okrLevel:string) {
     return this.api.execSv(

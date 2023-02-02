@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ViewModel, ButtonModel, UIComponent, CallFuncService, ViewType, DialogRef, SidebarModel } from 'codx-core';
+import { ViewModel, ButtonModel, UIComponent, CallFuncService, ViewType, DialogRef, SidebarModel, RequestOption } from 'codx-core';
 import { PopAddCustomersComponent } from './pop-add-customers/pop-add-customers.component';
 
 @Component({
@@ -50,7 +50,7 @@ export class CustomersComponent extends UIComponent {
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        //this.delete(data);
+        this.delete(data);
         break;
       case 'SYS03':
         this.edit(data);
@@ -95,5 +95,50 @@ export class CustomersComponent extends UIComponent {
       option.Width = '850px';
       this.dialog = this.callfunc.openSide(PopAddCustomersComponent, obj, option);
     });
+  }
+  delete(data){
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.delete([data], true, (option: RequestOption) =>
+    this.beforeDelete(option,data)
+  ).subscribe((res:any) => {
+    if (res) {
+      this.api.exec(
+        'ERM.Business.BS',
+        'BankAccountsBusiness',
+        'DeleteAsync',
+        [data.customerID]
+      ).subscribe((res:any)=>{
+        if (res) {
+          this.api.exec(
+            'ERM.Business.BS',
+            'AddressBookBusiness',
+            'DeleteAsync',
+            [data.customerID]
+          ).subscribe((res:any)=>{
+            if (res) {
+              this.api.exec(
+                'ERM.Business.BS',
+                'ContactBookBusiness',
+                'DeleteAsync',
+                [data.customerID]
+              ).subscribe((res:any)=>{
+                
+              }); 
+            }
+          }); 
+        }
+      });   
+    }
+  });
+  }
+  beforeDelete(opt: RequestOption,data) {
+    opt.methodName = 'DeleteAsync';
+    opt.className = 'CustomersBusiness';
+    opt.assemblyName = 'AR';
+    opt.service = 'AR';
+    opt.data = data;
+    return true;
   }
 }

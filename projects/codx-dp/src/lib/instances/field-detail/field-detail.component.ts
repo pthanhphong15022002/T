@@ -8,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class FieldDetailComponent implements OnInit {
   @Input() lstSteps: any;
   @Input() lstFields: any;
-
+  @Input() formModel: any;
 
   constructor() { }
 
@@ -33,5 +33,9 @@ export class FieldDetailComponent implements OnInit {
         children.classList.add('icon-expand_more');
       }
     }
+  }
+
+  clickMF(e, data){
+
   }
 }

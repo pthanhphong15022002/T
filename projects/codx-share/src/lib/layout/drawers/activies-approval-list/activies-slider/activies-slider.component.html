@@ -21,7 +21,7 @@
           </div>
           <div class="w-100">
             <div class="d-flex justify-content-between">
-              <div class="" [innerHTML]="item.textValue"></div>
+              <div class="" [innerHTML]="item.textValue | fTextValue:item.text | async"></div>
               <codx-vll [classList]="'fw-bold text-dark'" [name]="'ES022'" [value]="item.title"
                 [showText]="true"></codx-vll>
             </div>
