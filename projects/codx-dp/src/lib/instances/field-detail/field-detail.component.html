@@ -28,6 +28,9 @@
               <span class="text-dark margin-l">
                 {{field.dataValue}}
               </span>
+              <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, field)" [isBookMark]="true"
+                [dataItem]="field" [type]="'hover'">
+              </codx-mfunc>
             </div>
           </ng-container>
         </div>
