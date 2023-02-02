@@ -109,18 +109,19 @@ export class IncommingAddComponent implements OnInit {
           //   if(item) this.dispatch.orgUnitID = item.orgUnitID
           // })
         }
-        if(!this.dispatch.dispatchNo)
-        {
-          //kiểm tra xem nếu mã công văn tự động không có thì sinh thêm 
-          this.odService.autoNumber(
-            this.formModel.formName,
-            this.formModel.funcID,
-            this.formModel.entityName,
-            "DispatchNo")
-          .subscribe(item=>{
-            if(item) this.dispatch.dispatchNo = item;
-          })
-        }
+      }
+      if(this.type == "copy") this.dispatch.dispatchNo = null
+      if(!this.dispatch.dispatchNo)
+      {
+        //kiểm tra xem nếu mã công văn tự động không có thì sinh thêm 
+        this.odService.autoNumber(
+          this.formModel.formName,
+          this.formModel.funcID,
+          this.formModel.entityName,
+          "DispatchNo")
+        .subscribe(item=>{
+          if(item) this.dispatch.dispatchNo = item;
+        })
       }
       this.dispatch.createdOn = new Date();
     } 
