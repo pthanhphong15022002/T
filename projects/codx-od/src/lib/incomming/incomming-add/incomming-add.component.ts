@@ -120,7 +120,12 @@ export class IncommingAddComponent implements OnInit {
           this.formModel.entityName,
           "DispatchNo")
         .subscribe(item=>{
-          if(item) this.dispatch.dispatchNo = item;
+          if(item) {
+            this.dispatch.dispatchNo = item;
+            this.myForm.formGroup.patchValue({
+              dispatchNo: this.dispatch.dispatchNo, 
+            }); 
+          }
         })
       }
       this.dispatch.createdOn = new Date();
