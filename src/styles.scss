@@ -1591,3 +1591,13 @@ ejs-listview .e-ul li {
   padding: 0;
   margin: 0;
 }
+
+.e-toolbar .e-tbar-btn,
+.e-toolbar .e-tbar-btn:hover,
+.e-toolbar .e-tbar-btn:hover span {
+  background: transparent !important;
+}
+
+#MyFav .h-32px {
+  min-height: 26px;
+}

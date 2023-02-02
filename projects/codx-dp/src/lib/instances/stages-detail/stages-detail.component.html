@@ -65,21 +65,15 @@
   <div id="role-main" class="main" [ngClass]="'show-main'" >
     <div class="ms-4 mt-2 mb-2" *ngIf="lstFields != null && lstFields.length > 0">
       <ng-container *ngFor="let item of lstFields">
-        <li class="text-gray-400">
-          {{item.title}}
-        </li>
-        <span class="text-dark" style="margin-left: 20px;">
-          {{item.dataValue}}
-        </span>
+        <div>
+          <li class="text-gray-400">
+            {{item.title}}
+          </li>
+          <span class="text-dark" style="margin-left: 20px;">
+            {{item.dataValue}}
+          </span>
+        </div>
       </ng-container>
-    </div>
-    <div class="ms-4 mt-2 mb-2">
-      <li class="text-gray-400">
-        Ngày tiếp nhận
-      </li>
-      <span class="text-dark" style="margin-left: 20px;">
-        24/10/2022
-      </span>
     </div>
   </div>
   <ng-container [ngTemplateOutlet]="task"> </ng-container>

@@ -139,14 +139,14 @@
         ><span>số tiền nè </span>
       </div>
       <div class="d-flex align-items-center content-jus">
-        <span class="text-gray-600"></span><span>{{progress}}</span>
+        <span class="text-gray-600"></span><span>{{data.progress}}</span>
       </div>
       <div class="d-flex justify-content-end">
         <span class="text-gray-600 icon-14 icon-apartment me-1"></span>
         <span class="fs-7 text-gray-600" #createdOn>{{
           data.createdOn
             | formatvalue
-              : view.formModel
+              : formModel
               : "createdOn"
               : createdOn
               : "DPInstances"
@@ -164,14 +164,14 @@
     <div class="d-flex align-items-end codx-badge">
       <div class="font me-3">
         <span>
-          {{stepNameInstance}}
+          {{data.stepNameCurrent}}
         </span>
       </div>
       <span>
         <span class="fs-7 text-gray-600" #endDate>{{
           data.endDate
             | formatvalue
-              : view.formModel
+              : formModel
               : "endDate"
               : endDate
               : "DPInstances"
@@ -180,8 +180,8 @@
         }}</span>
       </span>
     </div>
-
-    <codx-imgs
+    <div>
+      <codx-imgs
       [isToolTip]="true"
       [width]="25"
       [objectId]="'ADMIN'"
@@ -189,6 +189,7 @@
       [numberImages]="1"
     >
     </codx-imgs>
+    </div>
   </div>
 </ng-template>
 
@@ -196,9 +197,12 @@
 <ng-template #templateDetail>
   <codx-instance-detail
     [dataService]="view.dataService"
-    [formModel]="view.formModel"
+    [formModel]="formModel"
     [recID]="dataSelected.recID"
     [currentStep]="dataSelected.currentStep"
-    (progressEvent)="progressEvent($event)"
+    [stepName]="dataSelected.stepNameCurrent"
+    [progress]="dataSelected.progress"
+    [dataSelect]="dataSelected"
+    [listSteps]="dataSelected.instancesSteps"
   ></codx-instance-detail>
 </ng-template>

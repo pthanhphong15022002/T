@@ -94,6 +94,7 @@ export class ActiviesSliderComponent implements OnInit {
 
   //view detail
   clickViewDetail(item){
+    debugger
     if(item.transID){
       let query = {
         predicate:"RecID=@0",

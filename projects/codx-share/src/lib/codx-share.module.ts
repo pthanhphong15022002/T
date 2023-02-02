@@ -142,6 +142,7 @@ import { DisplayValue } from './pipe/displayValue.pipe';
 import { TextValuePipe } from './pipe/textValue.pipe';
 import { CodxTreeCommentComponent } from './components/codx-tree-comment/codx-tree-comment.component';
 import { CodxCommentHistoryComponent } from './components/codx-tree-comment/codx-comment-history/codx-comment-history.component';
+import { ImageViewerComponent2 } from './components/ImageViewer2/imageViewer2.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -238,7 +239,8 @@ const T_Component: Type<any>[] = [
   CalendarCenterComponent,
   CodxViewCardComponent,
   CodxViewFilesComponent,
-  PopupAddEducationsComponent
+  PopupAddEducationsComponent,
+  ImageViewerComponent2
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -291,7 +293,6 @@ const T_Pipe: Type<any>[] = [
     SliderModule,
     LazyLoadImageModule,
     DragDropModule,
-    
   ],
   exports: [T_Component, T_Pipe],
 })
