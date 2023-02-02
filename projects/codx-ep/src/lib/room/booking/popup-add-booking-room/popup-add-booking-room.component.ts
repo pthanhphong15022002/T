@@ -96,7 +96,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   startTime: any = null;
   endTime: any = null;
   tmpStartDate: any;
-  bookingOnValid = true;
+  //bookingOnValid = true;
   tmpEndDate: any;
   isFullDay = false;
   resource!: any;
@@ -129,6 +129,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   private approvalRule = '0';
   private approvalRuleStationery = '0';
   private autoApproveItem = '0';
+  dueDateControl: any;
 
   constructor(
     private injector: Injector,
@@ -260,13 +261,14 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         Array.from(settingVal).forEach((item:any)=>{
           if(item.FieldName=="ES_EP001"){
             this.approvalRule= item.ApprovalRule;
-            debugger
           }
         })
       });
     this.codxEpService.getEPRoomSetting('1').subscribe((setting: any) => {
       if (setting) {
-        this.calendarID = JSON.parse(setting.dataValue)?.CalendarID;
+        let sysSetting=JSON.parse(setting.dataValue);
+        this.calendarID = sysSetting?.CalendarID;        
+        this.dueDateControl=sysSetting?.DueDateControl;
         if (this.calendarID) {
           this.codxEpService
             .getCalendarWeekdays(this.calendarID)
@@ -983,6 +985,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       if (!this.bookingOnCheck()) {
         this.checkLoop = !this.checkLoop;
         if (!this.checkLoop) {
+
           this.notificationsService.notifyCode('EP001');
         }
         return;
@@ -1036,10 +1039,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         0
       ) < crrDate
     ) {
-      this.bookingOnValid = true;
-      return false;
+      //this.bookingOnValid = true;
+      if(this.dueDateControl!=true|| this.dueDateControl!='1'){
+        return false;
+      }
+      else{
+        return true;
+      }
     } else {
-      this.bookingOnValid = false;
+      //this.bookingOnValid = false;
       this.changeDetectorRef.detectChanges();
       return true;
     }

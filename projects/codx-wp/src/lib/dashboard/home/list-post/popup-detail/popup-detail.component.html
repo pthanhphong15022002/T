@@ -1,13 +1,13 @@
 <div class="row mx-0 h-100">
     <!-- file -->
-    <div class="col-8 p-5 bg-gray-200 position-relative d-flex felx-columns flex-wrap align-items-center">
+    <div class="col-8 px-5 bg-gray-200 position-relative d-flex felx-columns flex-wrap align-items-center">
         <ng-container *ngIf="fileSelected">
             <ng-container [ngSwitch]="fileSelected.referType">
-                <div class="d-flex flex-columns flex-wap align-items-center w-100 h-500px position-relative">
+                <div class="d-flex flex-columns flex-wap align-items-center w-100 h-100 view-imgfull position-relative">
                     <ng-container *ngSwitchCase="FILE_REFERTYPE.IMAGE">
                         <!-- <img class="w-100 h-100" [src]="fileSelected.source"> -->
                         <codx-image-viewer [images]="imageSrc" [idContainer]="'idOnHTML'"
-                        [loadOnInit]="true"></codx-image-viewer>
+                            [loadOnInit]="true"></codx-image-viewer>
                     </ng-container>
                     <ng-container *ngSwitchCase="FILE_REFERTYPE.VIDEO">
                         <video class="w-100 h-100 " [autoplay]="true">
@@ -22,13 +22,24 @@
                     </ng-container>
                 </div>
             </ng-container>
-            
+
         </ng-container>
         <div class="moreFC-top">
             <div class="d-flex justify-content-between">
-                <button class="btn btn-icon btn-md" (click)="clickClosePopup()">
+                <button class="btn btn-icon btn-light" (click)="clickClosePopup()">
                     <i class="icon-close icon-18 text-danger"></i>
                 </button>
+                <div class="d-flex">
+                    <span class="btn rounded-circle btn-icon btn-light-primary ms-2">
+                        <i class="icon-zoom_in"></i>
+                    </span>
+                    <span class="btn btn-icon rounded-circle btn-light-primary ms-2">
+                        <i class="icon-zoom_out"></i>
+                    </span>
+                    <span class="btn btn-icon rounded-circle btn-light-primary ms-2">
+                        <i class="icon-fullscreen"></i>
+                    </span>
+                </div>
                 <!-- <div class="">
                     <span class="btn rounded-circle btn-icon btn-light-primary ms-1">
                         <a href="javascript:void(0)">
@@ -54,12 +65,8 @@
         <ng-container *ngIf="post">
             <div class="d-flex">
                 <div class="me-2">
-                    <codx-img 
-                        [objectId]="post.createdBy" 
-                        [objectName]="post.createdName" 
-                        [imageType]="'circle'"
-                        objectType="AD_Users" 
-                        [width]="40">
+                    <codx-img [objectId]="post.createdBy" [objectName]="post.createdName" [imageType]="'circle'"
+                        objectType="AD_Users" [width]="40">
                     </codx-img>
                 </div>
                 <div class="text-info-date ms-2">
@@ -72,13 +79,8 @@
                     <div class="mt-2">
                         <span class="text-gray-600 fs-7 me-2">{{post.createdOn | timefrom}}</span>
                         <span *ngIf="post.shareControl" class="rounded-1 py-1 px-2 bg-gray-200">
-                            <codx-vll 
-                                [name]="'WP001'" 
-                                [value]="post.shareControl" 
-                                [showText]="true" 
-                                [showIcon]="true"
-                                [path]="'assets/themes/sys/default/img/'" 
-                                [icoCss]="'symbol-12px symbol-circle'"
+                            <codx-vll [name]="'WP001'" [value]="post.shareControl" [showText]="true" [showIcon]="true"
+                                [path]="'assets/themes/sys/default/img/'" [icoCss]="'symbol-12px symbol-circle'"
                                 [showBgColor]="true">
                             </codx-vll>
                         </span>
@@ -90,15 +92,11 @@
             </div>
             <!-- comment -->
             <div>
-                <treeview-comment 
-                    [funcID]="'WP'" 
-                    [fromModel]="dialogRef.formModel" 
-                    [objectType]="'WP_Comments'"
-                    [dataComment]="post" 
-                    [objectID]="post.recID">
+                <treeview-comment [funcID]="'WP'" [fromModel]="dialogRef.formModel" [objectType]="'WP_Comments'"
+                    [dataComment]="post" [objectID]="post.recID">
                 </treeview-comment>
             </div>
         </ng-container>
-        
+
     </div>
 </div>

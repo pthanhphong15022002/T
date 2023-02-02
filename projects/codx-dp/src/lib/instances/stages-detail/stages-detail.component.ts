@@ -13,6 +13,7 @@ import { FormModel } from 'codx-core';
 })
 export class StagesDetailComponent implements OnInit {
   @Input() listData: any;
+  @Input() formModel: any;
   dateActual: any;
   startDate: any;
   progress: string = '0';
@@ -63,6 +64,8 @@ export class StagesDetailComponent implements OnInit {
       this.totalProgress(tasks,taskGroups)
       this.lstFields = changes['listData'].currentValue?.fields;
       this.groupByTask(changes['listData'].currentValue);
+    }else{
+      this.listData = null;
     }
   }
 
@@ -85,7 +88,17 @@ export class StagesDetailComponent implements OnInit {
     }
   }
 
+  clickMF(e, data){
+    switch (e.functionID) {
+      case 'SYS02':
+        break;
+      case 'SYS03':
+        break;
+      case 'SYS04':
+        break;
 
+    }
+  }
 
   clickShow(e, id) {
     let children = e.currentTarget.children[0];
