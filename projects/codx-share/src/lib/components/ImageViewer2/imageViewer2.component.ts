@@ -20,8 +20,9 @@ import {FullScreenViewer} from 'iv-viewer';
     encapsulation: ViewEncapsulation.None
 })
 export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
-    @HostBinding('style.width') private widht = '100%';
-    @HostBinding('style.height') private height = '100%';
+    @HostBinding('class') get class() {
+        return "w-100 h-100";
+      }
 
     BASE_64_IMAGE = 'data:image/png;base64,';
     BASE_64_PNG = `${this.BASE_64_IMAGE} `;
@@ -72,7 +73,6 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     constructor(private renderer: Renderer2) {}
 
     ngOnInit() {
-        debugger
         if (this.loadOnInit) {
             this.isImagensPresentes();
         }
