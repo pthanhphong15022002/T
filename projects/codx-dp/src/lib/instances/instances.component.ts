@@ -117,7 +117,6 @@ export class InstancesComponent
     ];
 
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
-
   }
   onInit(): void {
     this.button = {
@@ -175,19 +174,24 @@ export class InstancesComponent
   //   this.instanceID = event.instanceID;
   // }
 
-  getStepsByInstanceID(insID){
+  getStepsByInstanceID(insID) {
     this.codxDpService.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
       if (res) {
         this.listStepInstances = res;
         var total = 0;
-        this.listStepInstances.forEach(el =>{
-          if(this.dataSelected.currentStep == el.indexNo)
+        this.listStepInstances.forEach((el) => {
+          if (this.dataSelected.currentStep == el.indexNo)
             this.stepNameInstance = el.stepName;
           total += el.progress;
-        })
-        if(this.listStepInstances != null && this.listStepInstances.length > 0){
-          this.progress = (total / this.listStepInstances.length).toFixed(1).toString();
-        }else{
+        });
+        if (
+          this.listStepInstances != null &&
+          this.listStepInstances.length > 0
+        ) {
+          this.progress = (total / this.listStepInstances.length)
+            .toFixed(1)
+            .toString();
+        } else {
           this.progress = '0';
         }
       }
@@ -202,7 +206,7 @@ export class InstancesComponent
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
-      this.view.dataService.dataSelected.processID = this.process.recID
+      this.view.dataService.dataSelected.processID = this.process.recID;
 
       this.cache.functionList(funcIDApplyFor).subscribe((res) => {
         option.FormModel = this.view.formModel;
@@ -282,6 +286,14 @@ export class InstancesComponent
 
   selectedChange(task: any) {
     this.dataSelected = task?.data ? task?.data : task;
+    //formModel instances
+
+    let formModel = new FormModel();
+    formModel.formName = 'DPInstances';
+    formModel.gridViewName = 'grvDPInstances';
+    formModel.entityName = 'DP_Instances';
+    formModel.funcID = 'DPT0401';
+    this.formModel = formModel;
     this.detectorRef.detectChanges();
   }
 
