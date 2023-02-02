@@ -95,10 +95,10 @@
             </div>
           </div>
         </div>
-        <codx-stages-detail [listData]="tmpTeps"></codx-stages-detail>
+        <codx-stages-detail [listData]="tmpTeps" [formModel]="formModel"></codx-stages-detail>
       </ng-container>
       <ng-container *ngIf="idCbx == 'field'">
-        <codx-field-detail [lstSteps]="listSteps"></codx-field-detail>
+        <codx-field-detail [lstSteps]="listSteps" [formModel]="formModel"></codx-field-detail>
       </ng-container>
     </ng-template>
 
