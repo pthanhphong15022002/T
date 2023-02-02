@@ -139,7 +139,7 @@
         ><span>số tiền nè </span>
       </div>
       <div class="d-flex align-items-center content-jus">
-        <span class="text-gray-600"></span><span>{{data.progress}}</span>
+        <span class="text-gray-600"></span><span>{{progress}}</span>
       </div>
       <div class="d-flex justify-content-end">
         <span class="text-gray-600 icon-14 icon-apartment me-1"></span>
@@ -164,7 +164,7 @@
     <div class="d-flex align-items-end codx-badge">
       <div class="font me-3">
         <span>
-          {{data.stepNameCurrent}}
+          {{stepNameCurrent}}
         </span>
       </div>
       <span>
@@ -180,7 +180,7 @@
         }}</span>
       </span>
     </div>
-    <div>
+    <div class="d-flex justify-content-center">
       <codx-imgs
       [isToolTip]="true"
       [width]="25"
@@ -200,9 +200,7 @@
     [formModel]="formModel"
     [recID]="dataSelected.recID"
     [currentStep]="dataSelected.currentStep"
-    [stepName]="dataSelected.stepNameCurrent"
     [progress]="dataSelected.progress"
     [dataSelect]="dataSelected"
-    [listSteps]="dataSelected.instancesSteps"
   ></codx-instance-detail>
 </ng-template>

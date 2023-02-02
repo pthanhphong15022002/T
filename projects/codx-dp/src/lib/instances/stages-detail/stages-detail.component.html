@@ -1,8 +1,10 @@
 <div class="back-ground" *ngIf="listData != null">
   <div class="header-job">
-    <div>
+    <div class="d-flex align-items-center">
       <span class="title-train">{{listData?.indexNo}}. {{listData?.stepName}}</span>
-      <i class="icon-work_outline text-primary-600"></i>
+      <div class="d-flex justify-content-center ms-2">
+        <i class="icon-message icon-20 text-primary-600 py-2" style="color: #3d81f6;"></i>
+      </div>
     </div>
     <div class="ms-3">
       <div class="d-flex justify-content-between">
@@ -21,9 +23,9 @@
         </div>
       </div>
       <div class="d-flex justify-content-between">
-        <div>
+        <div >
           <i class="icon-work_outline text-primary-600"></i>
-          <span>Kỳ vọng: {{listData?.durationDay}} ngày {{listData?.durationHour}} giờ</span>
+          <span class="">Kỳ vọng: {{listData?.durationDay}} ngày {{listData?.durationHour}} giờ</span>
         </div>
         <div class="d-flex align-items-start">
           <i class="icon-work_outline text-primary-600"></i>
