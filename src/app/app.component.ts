@@ -14,7 +14,8 @@ import {
   TenantService,
 } from 'codx-core';
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
-
+import { Title } from '@angular/platform-browser';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'body[root]',
   templateUrl: './app.component.html',
@@ -32,10 +33,22 @@ export class AppComponent implements OnInit, OnDestroy {
     private ns: NotificationsFCMService,
     private notify: NotificationsService,
     private route: ActivatedRoute,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private titleService: Title
   ) {}
 
   ngOnInit() {
+    if (environment.layoutCZ == 'qtsc') {
+      this.titleService.setTitle('OMS');
+      document
+        .getElementById('appFavicon')
+        .setAttribute('href', './assets/cz/qtsc/bg/logoQTSC.PNG');
+    } else {
+      this.titleService.setTitle('CodxUI');
+      document
+        .getElementById('appFavicon')
+        .setAttribute('href', './assets/logos/favicon.ico');
+    }
     this.unsubscribe.push(this.tenant.init(this.router));
     // this.angularFireMessaging.requestToken.subscribe(
     //   (token) => {
