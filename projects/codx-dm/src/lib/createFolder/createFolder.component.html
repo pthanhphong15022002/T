@@ -1,4 +1,9 @@
-<codx-form headerText="{{ titleDialog }}" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form
+  headerText="{{ titleDialog }}"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
   <ng-template #body>
     <div class="offcanvas-content">
       <div class="offcanvas-wrapper">
@@ -8,11 +13,20 @@
           </label>
           <div class="d-flex">
             <div class="w-100">
-              <codx-input [placeholder]="titleFolderName" [class]="validate('folderName')" type="text"
-                [crrValue]="folderName" (valueChange)="changeValue($event, 'folderName')"></codx-input>
+              <codx-input
+                [placeholder]="titleFolderName"
+                [class]="validate('folderName')"
+                type="text"
+                [crrValue]="folderName"
+                (valueChange)="changeValue($event, 'folderName')"
+              ></codx-input>
             </div>
             <div class="ms-1 h-32px icon-document">
-              <codx-valuelist [name]="'L1470'" [iconOnly]="true" (valueChange)="valueChange($event, 'icon')">
+              <codx-valuelist
+                [name]="'L1470'"
+                [iconOnly]="true"
+                (valueChange)="valueChange($event, 'icon')"
+              >
               </codx-valuelist>
             </div>
           </div>
@@ -26,45 +40,82 @@
                         </ng-template>
                     </div> -->
         </div>
-        <div id="folderError" autofocus *ngIf="errorshow && folderName === ''" class="d-flex mb-4 invalid-feedback">
-          <div *ngIf="
+        <div
+          id="folderError"
+          autofocus
+          *ngIf="errorshow && folderName === ''"
+          class="d-flex mb-4 invalid-feedback"
+        >
+          <div
+            *ngIf="
               folderName === '';
               then thenBlockErrorFolder;
               else thenBlockErrorElseFolder
-            "></div>
+            "
+          ></div>
           <ng-template #thenBlockErrorFolder>{{
             titleFolderRequired
-            }}</ng-template>
+          }}</ng-template>
           <ng-template #thenBlockErrorElseFolder>{{ message }}</ng-template>
         </div>
         <div class="mt-4 mb-5">
-          <button (click)="isShowAll(true)" type="button" class="btn btn-sm btn-primary pe-0">
-            <codx-label [default]="titleExpand" [fiedName]="'expand'"></codx-label>
-           <i class="icon-keyboard_arrow_right icon-16 ms-2"></i>
+          <button
+            (click)="isShowAll(true)"
+            type="button"
+            class="btn btn-sm btn-primary pe-0"
+          >
+            <codx-label
+              [default]="titleExpand"
+              [fiedName]="'expand'"
+            ></codx-label>
+            <i class="icon-keyboard_arrow_right icon-16 ms-2"></i>
           </button>
         </div>
 
-        <div *ngIf="this.showAll != null && isShowAll(false)" class="permission-group">
+        <div
+          *ngIf="this.showAll != null && isShowAll(false)"
+          class="permission-group"
+        >
           <div class="d-flex align-items-center justify-content-between">
             <ul class="nav nav-tabs nav-tabs-line">
               <li class="nav-item">
-                <a class="nav-link active fw-bold" data-toggle="tab" (click)="onSetPermision(false)">
-                  <codx-label [default]="titleShare" [fiedName]="'titleShare'"></codx-label>
+                <a
+                  class="nav-link active fw-bold"
+                  data-toggle="tab"
+                  (click)="onSetPermision(false)"
+                >
+                  <codx-label
+                    [default]="titleShare"
+                    [fiedName]="'titleShare'"
+                  ></codx-label>
                 </a>
               </li>
             </ul>
-            <button type="button" (click)="openRight()" class="btn btn-sm btn-outline-primary">
-              <codx-label [default]="titleSelectObject" [fiedName]="'titleSelectObject'"></codx-label>
+            <button
+              type="button"
+              (click)="openRight()"
+              class="btn btn-sm btn-outline-primary"
+            >
+              <codx-label
+                [default]="titleSelectObject"
+                [fiedName]="'titleSelectObject'"
+              ></codx-label>
             </button>
           </div>
           <div class="tab-content mt-2">
-            <div class="tab-pane fade show active" id="tab_role" role="tabpanel">
+            <div
+              class="tab-pane fade show active"
+              id="tab_role"
+              role="tabpanel"
+            >
               <div class="dms-user-mini-group border rounded p-2">
-                <ng-container *ngIf="fileEditing != null && fileEditing.permissions != null">
-                  <ng-container *ngFor="let perm of fileEditing.permissions; index as i">
-                    <ng-container *ngIf="
-                        perm.isActive && !modeSharing
-                      ">
+                <ng-container
+                  *ngIf="fileEditing != null && fileEditing.permissions != null"
+                >
+                  <ng-container
+                    *ngFor="let perm of fileEditing.permissions; index as i"
+                  >
+                    <ng-container *ngIf="perm.isActive && !modeSharing">
                       <!-- perm.isActive != false &&
                         ((!modeSharing &&
                           (!perm.isSharing || perm.isSharing == null)) ||
@@ -72,26 +123,39 @@
                       <div class="user-mini-item">
                         <div class="d-flex align-items-center">
                           <div>
-                            <div *ngIf="
+                            <div
+                              *ngIf="
                                 perm.objectID == null || perm.objectID == '';
                                 then thenAvatar1;
                                 else elsethenAvatar1
-                              "></div>
+                              "
+                            ></div>
                             <ng-template #thenAvatar1>
-                              <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg" [imageWidth]="20"
+                              <codx-temp-full
+                                imageSrc="../../../assets/codx/user/user-admin.svg"
+                                [imageWidth]="20"
                                 imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
-                                [subTitle]="perm.objectName" [descLine]="1">
+                                [subTitle]="perm.objectName"
+                                [descLine]="1"
+                              >
                               </codx-temp-full>
                             </ng-template>
                             <ng-template #elsethenAvatar1>
-                              <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
-                                imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle" [imageWidth]="20"
-                                [subTitle]="perm.objectName">
+                              <codx-temp-full
+                                [imageId]="perm.objectID"
+                                imageObjType="AD_Users"
+                                imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
+                                [imageWidth]="20"
+                                [subTitle]="perm.objectName"
+                              >
                               </codx-temp-full>
                             </ng-template>
                           </div>
-                          <span *ngIf="perm.isSystem == false && this.assignRight" (click)="removeUserRight(i)"
-                            class="icon-close icon-16 ms-2 text-danger">
+                          <span
+                            *ngIf="perm.isSystem == false && this.assignRight"
+                            (click)="removeUserRight(i)"
+                            class="icon-close icon-16 ms-2 text-danger"
+                          >
                           </span>
                         </div>
                       </div>
@@ -100,36 +164,73 @@
                 </ng-container>
               </div>
               <div class="share-groups mt-6">
-                <div class="d-flex align-items-center justify-content-between share-item mt-4">
-                  <codx-label [default]="titleApprovar" [fiedName]="'titleApprovar'"></codx-label>
+                <div
+                  class="d-flex align-items-center justify-content-between share-item mt-4"
+                >
+                  <codx-label
+                    [default]="titleApprovar"
+                    [fiedName]="'titleApprovar'"
+                  ></codx-label>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
-                      <codx-input class="test-check" type="switch" style="width: 100%" [crrValue]="approval"
-                        field="approval" [disabled]="
+                      <codx-input
+                        class="test-check"
+                        type="switch"
+                        style="width: 100%"
+                        [crrValue]="approval"
+                        field="approval"
+                        [disabled]="
                           this.updateRight == false || this.propertiesFolder
-                        " (valueChange)="onSaveRightChanged($event, 'approval')"></codx-input>
+                        "
+                        (valueChange)="onSaveRightChanged($event, 'approval')"
+                      ></codx-input>
                     </span>
                     <div class="w-80px">
-                      <button type="button" [disabled]="disableRight('approval')" (click)="openApproval()"
-                        class="btn btn-sm btn-outline-primary">
-                        <codx-label [default]="titleSetting" [fiedName]="'titleSetting'"></codx-label>
+                      <button
+                        type="button"
+                        [disabled]="disableRight('approval')"
+                        (click)="openApproval()"
+                        class="btn btn-sm btn-outline-primary"
+                      >
+                        <codx-label
+                          [default]="titleSetting"
+                          [fiedName]="'titleSetting'"
+                        ></codx-label>
                       </button>
                       <ng-container *ngIf="showPopup">
-                        <codx-combobox-popup comboboxName="ApproverGroups" [field]="approvers" [width]="width"
-                          [height]="height" [value]="approvers" (clickSave)="changeValueOwner($event)">
+                        <codx-combobox-popup
+                          comboboxName="ApproverGroups"
+                          [field]="approvers"
+                          [width]="width"
+                          [height]="height"
+                          [value]="approvers"
+                          (clickSave)="changeValueOwner($event)"
+                        >
                         </codx-combobox-popup>
                       </ng-container>
                     </div>
                   </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between share-item mt-4">
-                  <codx-label [default]="titleVersionControl" [fiedName]="'titleVersionControl'"></codx-label>
+                <div
+                  class="d-flex align-items-center justify-content-between share-item mt-4"
+                >
+                  <codx-label
+                    [default]="titleVersionControl"
+                    [fiedName]="'titleVersionControl'"
+                  ></codx-label>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
-                      <codx-input class="test-check" type="switch" style="width: 100%" [checked]="revision"
-                        field="revision" [disabled]="
+                      <codx-input
+                        class="test-check"
+                        type="switch"
+                        style="width: 100%"
+                        [checked]="revision"
+                        field="revision"
+                        [disabled]="
                           this.updateRight == false || this.propertiesFolder
-                        " (valueChange)="onSaveRightChanged($event, 'revision')"></codx-input>
+                        "
+                        (valueChange)="onSaveRightChanged($event, 'revision')"
+                      ></codx-input>
                       <!-- <label>
                                                 <input type="checkbox" name="checkRevision" #checkRevision
                                                     [checked]="revision" id="checkRevision"
@@ -141,14 +242,26 @@
                     <div class="w-80px"></div>
                   </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between share-item mt-4">
-                  <codx-label [default]="titleStoreControl" [fiedName]="'titleStoreControl'"></codx-label>
+                <div
+                  class="d-flex align-items-center justify-content-between share-item mt-4"
+                >
+                  <codx-label
+                    [default]="titleStoreControl"
+                    [fiedName]="'titleStoreControl'"
+                  ></codx-label>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
-                      <codx-input class="test-check" type="switch" style="width: 100%" [checked]="physical"
-                        field="physical" [disabled]="
+                      <codx-input
+                        class="test-check"
+                        type="switch"
+                        style="width: 100%"
+                        [checked]="physical"
+                        field="physical"
+                        [disabled]="
                           this.updateRight == false || this.propertiesFolder
-                        " (valueChange)="onSaveRightChanged($event, 'physical')"></codx-input>
+                        "
+                        (valueChange)="onSaveRightChanged($event, 'physical')"
+                      ></codx-input>
                       <!-- <label>
                                                 <input type="checkbox" name="checkPhysical" #checkPhysical
                                                     [checked]="physical" id="checkPhysical"
@@ -158,64 +271,123 @@
                                             </label> btn btn-light-primary btn-sm -->
                     </span>
                     <div class="w-80px">
-                      <button type="button" [disabled]="disableRight('physical')" (click)="openPhysical()"
-                        class="btn btn-sm btn-outline-primary">
-                        <codx-label [default]="titleSetting" [fiedName]="'titleSetting'"></codx-label>
+                      <button
+                        type="button"
+                        [disabled]="disableRight('physical')"
+                        (click)="openPhysical()"
+                        class="btn btn-sm btn-outline-primary"
+                      >
+                        <codx-label
+                          [default]="titleSetting"
+                          [fiedName]="'titleSetting'"
+                        ></codx-label>
                       </button>
                     </div>
                   </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between share-item mt-4">
-                  <codx-label [default]="titleCopyrightsControl" [fiedName]="'titleCopyrightsControl'"></codx-label>
+                <div
+                  class="d-flex align-items-center justify-content-between share-item mt-4"
+                >
+                  <codx-label
+                    [default]="titleCopyrightsControl"
+                    [fiedName]="'titleCopyrightsControl'"
+                  ></codx-label>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
-                      <codx-input class="test-check" type="switch" style="width: 100%" field="copyrightsControl" [checked]="copyrightsControl"
-                         [disabled]="
+                      <codx-input
+                        class="test-check"
+                        type="switch"
+                        style="width: 100%"
+                        field="copyrightsControl"
+                        [checked]="copyrightsControl"
+                        [disabled]="
                           this.updateRight == false || this.propertiesFolder
-                        " (valueChange)="
+                        "
+                        (valueChange)="
                           onSaveRightChanged($event, 'copyrightsControl')
-                        ">
+                        "
+                      >
                       </codx-input>
                     </span>
                     <div class="w-80px"></div>
                   </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between share-item mt-4">
-                  <codx-label [default]="titleSecurityControl" [fiedName]="'titleSecurityControl'"></codx-label>
+                <div
+                  class="d-flex align-items-center justify-content-between share-item mt-4"
+                >
+                  <codx-label
+                    [default]="titleSecurityControl"
+                    [fiedName]="'titleSecurityControl'"
+                  ></codx-label>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
-                      <codx-input class="test-check" type="switch" style="width: 100%" [checked]="security"
-                        field="security" [disabled]="
+                      <codx-input
+                        class="test-check"
+                        type="switch"
+                        style="width: 100%"
+                        [checked]="security"
+                        field="security"
+                        [disabled]="
                           this.updateRight == false || this.propertiesFolder
-                        " (valueChange)="onSaveRightChanged($event, 'security')"></codx-input>
+                        "
+                        (valueChange)="onSaveRightChanged($event, 'security')"
+                      ></codx-input>
                     </span>
                     <div class="w-80px"></div>
                   </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between share-item mt-4">
-                  <codx-label [default]="titleAvatar" fiedName="titleAvatar"></codx-label>
+                <div
+                  class="d-flex align-items-center justify-content-between share-item mt-4"
+                >
+                  <codx-label
+                    [default]="titleAvatar"
+                    fiedName="titleAvatar"
+                  ></codx-label>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
-                      <codx-input class="test-check" type="switch" style="width: 100%" [checked]="!this.fileEditing?.viewThumb?false:this.fileEditing?.viewThumb"
-                        field="createSubFolder" [disabled]="
+                      <codx-input
+                        class="test-check"
+                        type="switch"
+                        style="width: 100%"
+                        [checked]="
+                          !this.fileEditing?.viewThumb
+                            ? false
+                            : this.fileEditing?.viewThumb
+                        "
+                        field="createSubFolder"
+                        [disabled]="
                           this.updateRight == false || this.propertiesFolder
-                        " (valueChange)="
+                        "
+                        (valueChange)="
                           onSaveRightChanged($event, 'titleAvatar')
-                        "></codx-input>
+                        "
+                      ></codx-input>
                     </span>
                     <div class="w-80px"></div>
                   </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between share-item mt-4">
-                  <codx-label [default]="titletitleCreateSubFolder" [fiedName]="'titletitleCreateSubFolder'"></codx-label>
+                <div
+                  class="d-flex align-items-center justify-content-between share-item mt-4"
+                >
+                  <codx-label
+                    [default]="titletitleCreateSubFolder"
+                    [fiedName]="'titletitleCreateSubFolder'"
+                  ></codx-label>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
-                      <codx-input class="test-check" type="switch" style="width: 100%" [checked]="createSubFolder"
-                        field="createSubFolder" [disabled]="
+                      <codx-input
+                        class="test-check"
+                        type="switch"
+                        style="width: 100%"
+                        [checked]="createSubFolder"
+                        field="createSubFolder"
+                        [disabled]="
                           this.updateRight == false || this.propertiesFolder
-                        " (valueChange)="
+                        "
+                        (valueChange)="
                           onSaveRightChanged($event, 'checkFolder')
-                        "></codx-input>
+                        "
+                      ></codx-input>
                       <!-- <label>
                                                 <input type="checkbox" name="select" #checkFolder
                                                     [checked]="createSubFolder" id="checkFolder"
@@ -227,7 +399,7 @@
                     <div class="w-80px"></div>
                   </div>
                 </div>
-                
+
                 <div *ngIf="this.createSubFolder" class="mt-6">
                   <table class="table w-100">
                     <thead>
@@ -239,22 +411,37 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let sub of listSubFolder; index as i" class="border-bottom has-action-menu">
+                      <tr
+                        *ngFor="let sub of listSubFolder; index as i"
+                        class="border-bottom has-action-menu"
+                      >
                         <td>{{ SubLevel(sub) }}</td>
                         <td>
                           <div class="d-flex flex-column">
                             <div class="text-dark">{{ SubType(sub) }}</div>
-                            <div class="text-gray-500 fs-7">{{ SubFormat(sub) }}</div>
+                            <div class="text-gray-500 fs-7">
+                              {{ SubFormat(sub) }}
+                            </div>
                           </div>
                         </td>
                         <td [innerHtml]="sub.description"></td>
                         <td>
-                          <div class="action-menu d-flex align-items-center cursor-pointer">
-                            <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="onEditSub(i)">
+                          <div
+                            class="action-menu d-flex align-items-center cursor-pointer"
+                          >
+                            <div
+                              class="btn btn-sm btn-icon btn-white cursor-pointer"
+                              (click)="onEditSub(i)"
+                            >
                               <i class="icon-edit text-primary icon-18"></i>
                             </div>
-                            <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="onDeleteSub(i)">
-                              <i class="icon-close text-primary icon-18 text-danger"></i>
+                            <div
+                              class="btn btn-sm btn-icon btn-white cursor-pointer"
+                              (click)="onDeleteSub(i)"
+                            >
+                              <i
+                                class="icon-close text-primary icon-18 text-danger"
+                              ></i>
                             </div>
                           </div>
                           <!-- <div ngbDropdown class="view-more ms-2">
@@ -279,10 +466,19 @@
                         </td>
                       </tr>
                       <tr>
-                        <td class="cursor-pointer" (click)="openSubFolder()" colspan="4">
-                          <div class="d-flex align-items-center text-primary text-hover-primary">
+                        <td
+                          class="cursor-pointer"
+                          (click)="openSubFolder()"
+                          colspan="4"
+                        >
+                          <div
+                            class="d-flex align-items-center text-primary text-hover-primary"
+                          >
                             <span class="icon-add_circle icon-16 me-1"></span>
-                            <codx-label [default]="titletitleCreateSubFolder" [fiedName]="'titletitleCreateSubFolder'"></codx-label>
+                            <codx-label
+                              [default]="titletitleCreateSubFolder"
+                              [fiedName]="'titletitleCreateSubFolder'"
+                            ></codx-label>
                           </div>
                         </td>
                       </tr>
@@ -302,7 +498,11 @@
         type="button"
         class="btn btn-primary"
         id="btnCreateFolder"
-        [disabled]="this.id ?(this.updateRight == false || this.propertiesFolder) : (this.createRight == false || this.propertiesFolder)"
+        [disabled]="
+          this.id
+            ? this.updateRight == false || this.propertiesFolder
+            : this.createRight == false || this.propertiesFolder
+        "
         (click)="onFolderSave()"
       >
         {{ titleOK }}
