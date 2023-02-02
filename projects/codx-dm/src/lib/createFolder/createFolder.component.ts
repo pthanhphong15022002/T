@@ -153,7 +153,7 @@ export class CreateFolderComponent implements OnInit {
   revision = false;
   physical = false;
   copyrights: any;
-  copyrightsControl: any;
+  copyrightsControl: boolean = false;
   approvers: string;
   revisionNote: string;
   location: string;
@@ -273,7 +273,7 @@ export class CreateFolderComponent implements OnInit {
     this.titleDialog = data.data.title;
     this.id = data.data.id ?? this.dmSV.folderID;
     this.propertiesFolder = data.data.readonly;
-    if(data.data.id) this.edit = true;
+    if (data.data.id) this.edit = true;
     this.openForm();
     // if (this.fileEditing  == null) {
     //   this.fileEditing  = new FileUpload;
@@ -293,7 +293,6 @@ export class CreateFolderComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
       }
     });
-
 
     // this.dmSV.isListSubFolder.subscribe((item) => {
     //   this.listSubFolder = item;
@@ -331,8 +330,6 @@ export class CreateFolderComponent implements OnInit {
       //console.log(res);
       this.listFormat4 = res.datas;
     });
-
-    
   }
   refesh() {
     this.revision = false;
@@ -370,11 +367,9 @@ export class CreateFolderComponent implements OnInit {
     var that = this;
     this.showAll = true;
     this.folderService.getFolder(this.id).subscribe(async (res) => {
-      if(res)
-      {
+      if (res) {
         this.setFolderAS(res);
-        if(this.edit)
-        {
+        if (this.edit) {
           this.noeditName = false;
           this.checkPermission();
           this.fileEditing = res;
@@ -389,7 +384,7 @@ export class CreateFolderComponent implements OnInit {
           } else {
             this.createSubFolder = false;
           }
-         
+
           if (
             this.fileEditing.location != null &&
             this.fileEditing.location != ''
@@ -412,9 +407,7 @@ export class CreateFolderComponent implements OnInit {
           //    this.openFileDialog('dms_folder');
           //this.validate('folderName');
           this.changeDetectorRef.detectChanges();
-        }
-        else
-        {
+        } else {
           this.noeditName = false;
           //this.folderName = "";
           this.floor = '';
@@ -423,7 +416,7 @@ export class CreateFolderComponent implements OnInit {
           this.compartment = '';
           this.modeSharing = false;
           this.fileEditing = new FileUpload();
-          this.fileEditing.folderID = res.recID
+          this.fileEditing.folderID = res.recID;
           this.fileEditing.permissions = res.permissions;
           //alert(1);
           this.startDate = null;
@@ -441,9 +434,7 @@ export class CreateFolderComponent implements OnInit {
           this.icon = '';
           this.changeDetectorRef.detectChanges();
         }
-      }
-      else
-      {
+      } else {
         this.noeditName = false;
         //this.folderName = "";
         this.security = false;
@@ -478,8 +469,7 @@ export class CreateFolderComponent implements OnInit {
     });
   }
 
-  setFolderAS(data:any)
-  {
+  setFolderAS(data: any) {
     this.revision = data.revision;
     this.physical = data.physical;
     this.copyrightsControl = data.copyrights;
@@ -490,7 +480,6 @@ export class CreateFolderComponent implements OnInit {
     this.revisionNote = data.revisionNote;
     this.changeDetectorRef.detectChanges();
   }
-
 
   onSaveRightChanged($event, ctrl) {
     var value = $event.data;
@@ -862,9 +851,9 @@ export class CreateFolderComponent implements OnInit {
       [this.functionID, this.location],
       ''
     );
-    dialog.closed.subscribe(item=>{
-      if(item && item.event) this.fileEditing.location = item.event;
-    })
+    dialog.closed.subscribe((item) => {
+      if (item && item.event) this.fileEditing.location = item.event;
+    });
   }
 
   disableRight(item: string) {
