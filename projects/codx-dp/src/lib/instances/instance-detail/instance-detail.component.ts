@@ -98,6 +98,8 @@ export class InstanceDetailComponent implements OnInit {
         changes['listSteps'].currentValue.length > 0
       ) {
         this.getStepsByInstanceID(this.listSteps);
+      }else{
+        this.tmpTeps = null;
       }
     }
     console.log(this.formModel);
@@ -144,6 +146,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
+    console.log(e)
     if (e) {
       e.forEach((element) => {
         if (
