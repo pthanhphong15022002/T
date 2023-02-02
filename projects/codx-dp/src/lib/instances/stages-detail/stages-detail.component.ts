@@ -41,6 +41,8 @@ export class StagesDetailComponent implements OnInit {
       var taskGroups = changes['listData'].currentValue?.taskGroups;
       this.totalProgress(tasks,taskGroups)
       this.lstFields = changes['listData'].currentValue?.fields;
+    }else{
+      this.listData = null;
     }
   }
 

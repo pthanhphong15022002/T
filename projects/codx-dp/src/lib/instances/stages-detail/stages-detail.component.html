@@ -1,5 +1,5 @@
 
-<div class="back-ground">
+<div class="back-ground" *ngIf="listData != null">
   <div class="header-job">
     <div>
       <span class="title-train">{{listData?.indexNo}}. {{listData?.stepName}}</span>
@@ -46,7 +46,7 @@
     </div>
   </div>
 </div>
-<div class="back-info">
+<div class="back-info" *ngIf="listData != null">
   <div class="header-info">
     <div class="left">
       <span class="title">Thông tin nhập liệu</span>
