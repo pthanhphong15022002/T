@@ -67,11 +67,12 @@ export class InstancesComponent
   resourceKanban?: ResourceModel;
   dataObj: any;
   vllStatus = 'DP028';
-
+  instanceID: string;
   dialog: any;
   moreFunc: any;
   instanceNo: string;
   listSteps = [];
+  listStepInstances = [];
   stepNameInstance: string;
   progress: string;
   formModel: FormModel;
@@ -109,13 +110,14 @@ export class InstancesComponent
         request: this.request,
         request2: this.resourceKanban,
         model: {
-          template: this.cardKanban, 
+          template: this.cardKanban,
           // template2: this.viewColumKaban,
         },
       },
     ];
 
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
+
   }
   onInit(): void {
     this.button = {
@@ -141,7 +143,7 @@ export class InstancesComponent
     this.request.service = 'DP';
     this.request.assemblyName = 'DP';
     this.request.className = 'InstancesBusiness';
-    this.request.method = 'GetListInstancesAsync'; 
+    this.request.method = 'GetListInstancesAsync';
     this.request.idField = 'recID';
     this.request.dataObj = this.dataObj;
 
@@ -167,9 +169,29 @@ export class InstancesComponent
     }
   }
 
-  progressEvent(event){
-    this.progress = event.progress;
-    this.stepNameInstance = event.name;
+  // progressEvent(event){
+  //   this.progress = event.progress;
+  //   this.stepNameInstance = event.name;
+  //   this.instanceID = event.instanceID;
+  // }
+
+  getStepsByInstanceID(insID){
+    this.codxDpService.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
+      if (res) {
+        this.listStepInstances = res;
+        var total = 0;
+        this.listStepInstances.forEach(el =>{
+          if(this.dataSelected.currentStep == el.indexNo)
+            this.stepNameInstance = el.stepName;
+          total += el.progress;
+        })
+        if(this.listStepInstances != null && this.listStepInstances.length > 0){
+          this.progress = (total / this.listStepInstances.length).toFixed(1).toString();
+        }else{
+          this.progress = '0';
+        }
+      }
+    });
   }
 
   //CRUD
