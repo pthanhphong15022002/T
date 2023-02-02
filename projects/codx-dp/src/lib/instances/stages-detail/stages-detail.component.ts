@@ -1,6 +1,11 @@
-import { DP_Instances_Steps } from './../../models/models';
+import { DP_Instances_Steps, DP_Steps_TaskGroups } from './../../models/models';
 import { Component, Input, OnInit, SimpleChanges, Output, EventEmitter } from '@angular/core';
-
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
+import { FormModel } from 'codx-core';
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',
@@ -12,6 +17,22 @@ export class StagesDetailComponent implements OnInit {
   startDate: any;
   progress: string = '0';
   lstFields = [];
+  //nvthuan
+  taskGroupList: DP_Steps_TaskGroups[] = [];
+  moreDefaut = {
+    share: true,
+    write: true,
+    read: true,
+    download: true,
+    delete: true,
+  };
+  frmModel: FormModel = {
+    entityName: 'DP_Processes',
+    formName: 'DPProcesses',
+    gridViewName: 'grvDPProcesses',
+    entityPer: "DP_Processes",
+    funcID: 'DP0101',
+  };
   constructor() {}
 
   ngOnInit(): void {}
@@ -41,6 +62,7 @@ export class StagesDetailComponent implements OnInit {
       var taskGroups = changes['listData'].currentValue?.taskGroups;
       this.totalProgress(tasks,taskGroups)
       this.lstFields = changes['listData'].currentValue?.fields;
+      this.groupByTask(changes['listData'].currentValue);
     }
   }
 
@@ -84,4 +106,104 @@ export class StagesDetailComponent implements OnInit {
       }
     }
   }
+  //task -- nvthuan
+  openTypeJob(){
+
+  }
+  openGroupJob(){
+
+  }
+  clickMFTask(e: any, taskList?: any, task?: any) {
+    switch (e.functionID) {
+      case 'SYS02':
+        // this.deleteTask(taskList, task);
+        break;
+      case 'SYS03':
+        // if (task.taskType) {
+        //   this.jobType = this.listJobType.find(
+        //     (type) => type.id === task.taskType
+        //   );
+        // }
+        // this.openPopupJob(task);
+        break;
+      case 'SYS04':
+        // this.copy(data);
+        break;
+      case 'DP01':
+        // if (task.taskType) {
+        //   this.jobType = this.listJobType.find(
+        //     (type) => type.id === task.taskType
+        //   );
+        // }
+        // this.openPopupViewJob(task);
+        break;
+    }
+  }
+  //taskGroup
+  groupByTask(data){
+    let step =  JSON.parse(JSON.stringify(data));
+
+    if (!step['isSuccessStep'] && !step['isFailStep']) {
+      const taskGroupList = step?.tasks.reduce((group, product) => {
+        const { taskGroupID } = product;
+        group[taskGroupID] = group[taskGroupID] ?? [];
+        group[taskGroupID].push(product);
+        return group;
+      }, {});
+      const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
+        return {
+          ...taskGroup,
+          task: taskGroupList[taskGroup['recID']] ?? [],
+        };
+      });
+      step['taskGroups'] = taskGroupConvert;
+      this.taskGroupList = step['taskGroups'];
+    }
+  }
+  drop(event: CdkDragDrop<string[]>, data = null) {
+    if (event.previousContainer === event.container) {
+      if (data) {
+        moveItemInArray(data, event.previousIndex, event.currentIndex);
+        this.setIndex(data, 'indexNo');
+      } else {
+        moveItemInArray(
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
+        this.setIndex(event.container.data, 'indexNo');
+      }
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+      this.setIndex(event.previousContainer.data, 'indexNo');
+      this.setIndex(event.container.data, 'indexNo');
+    }
+  }
+  clickMFTaskGroup(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'SYS02':
+        // this.deletepGroupJob(data);
+        break;
+      case 'SYS03':
+        // this.openGroupJob(data);
+        break;
+      case 'SYS04':
+        // this.copy(data);
+        break;
+    }
+  }
+// Common
+   setIndex(data: any, value: string) {
+    if (data.length > 0) {
+      data.forEach((item, index) => {
+        item[value] = index + 1;
+      });
+    }
+  }
+  //End task -- nvthuan
 }
