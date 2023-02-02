@@ -146,7 +146,7 @@
         <span class="fs-7 text-gray-600" #createdOn>{{
           data.createdOn
             | formatvalue
-              : view.formModel
+              : formModel
               : "createdOn"
               : createdOn
               : "DPInstances"
@@ -171,7 +171,7 @@
         <span class="fs-7 text-gray-600" #endDate>{{
           data.endDate
             | formatvalue
-              : view.formModel
+              : formModel
               : "endDate"
               : endDate
               : "DPInstances"
@@ -197,10 +197,12 @@
 <ng-template #templateDetail>
   <codx-instance-detail
     [dataService]="view.dataService"
-    [formModel]="view.formModel"
+    [formModel]="formModel"
     [recID]="dataSelected.recID"
     [currentStep]="dataSelected.currentStep"
     [stepName]="dataSelected.stepNameCurrent"
     [progress]="dataSelected.progress"
+    [dataSelect]="dataSelected"
+    [listSteps]="dataSelected.instancesSteps"
   ></codx-instance-detail>
 </ng-template>
