@@ -61,6 +61,7 @@
               "node_modules/@ctrl/ngx-emoji-mart/picker.css",
               "./node_modules/codx-core/assets/sass/style.scss",
               "src/styles.scss"
+
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
@@ -205,7 +206,7 @@
           "options": {
             "main": "projects/codx-share/src/test.ts",
             "tsConfig": "projects/codx-share/tsconfig.spec.json",
-            "karmaConfig": "projects/codx-share/karma.conf.js"
+            "karmaConfig": "projects/codx-share/karma.conf.js" 
           }
         }
       }
