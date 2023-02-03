@@ -1,17 +1,19 @@
-import { DP_Instances_Steps, DP_Steps_TaskGroups } from './../../models/models';
-import { Component, Input, OnInit, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { DP_Instances_Steps, DP_Instances_Steps_Tasks, DP_Steps_TaskGroups } from './../../models/models';
+import { Component, Input, OnInit, SimpleChanges, Output, EventEmitter, TemplateRef, ViewChild } from '@angular/core';
 import {
   CdkDragDrop,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { FormModel } from 'codx-core';
+import { CacheService, CallFuncService, DialogRef, FormModel, NotificationsService, SidebarModel } from 'codx-core';
+import { PopupAddStaskComponent } from './popup-add-stask/popup-add-stask.component';
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',
   styleUrls: ['./stages-detail.component.scss'],
 })
 export class StagesDetailComponent implements OnInit {
+  @ViewChild('setJobPopup') setJobPopup: TemplateRef<any>;
   @Input() listData: any;
   @Input() formModel: any;
   dateActual: any;
@@ -34,7 +36,53 @@ export class StagesDetailComponent implements OnInit {
     entityPer: "DP_Processes",
     funcID: 'DP0101',
   };
-  constructor() {}
+  popupJob: DialogRef;
+  jobType: any;
+  step: DP_Instances_Steps;
+  taskList: DP_Instances_Steps_Tasks[] = [];
+  listJobType = [
+    {
+      id: 'C',
+      icon: 'icon-i-layout-three-columns',
+      text: 'Cuộc gọi',
+      funcID: 'BPT101',
+      color: { background: '#f1ff19' },
+    },
+    {
+      id: 'T',
+      icon: 'icon-i-journal-check',
+      text: 'Công việc',
+      funcID: 'BPT103',
+      color: { background: '#ffa319' },
+    },
+    {
+      id: 'E',
+      icon: 'icon-i-envelope',
+      text: 'Gửi mail',
+      funcID: 'BPT104',
+      color: { background: '#4799ff' },
+    },
+    {
+      id: 'M',
+      icon: 'icon-i-calendar-week',
+      text: 'Cuộc họp',
+      funcID: 'BPT105',
+      color: { background: '#ff9adb' },
+    },
+    {
+      id: 'S',
+      icon: 'icon-i-clipboard-check',
+      text: 'Khảo sát',
+      funcID: 'BPT106',
+      color: { background: '#1bc5bd' },
+    },
+  ];
+
+  constructor(
+    private callfc: CallFuncService,
+    private notiService: NotificationsService,
+    private cache: CacheService,
+  ) {}
 
   ngOnInit(): void {}
 
@@ -121,23 +169,73 @@ export class StagesDetailComponent implements OnInit {
   }
   //task -- nvthuan
   openTypeJob(){
-
+    this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
   }
-  openGroupJob(){
-
+  getTypeJob(e, value) {
+    this.jobType = value;
   }
+  openPopupJob(data?: any) {
+    let taskGroupIdOld = '';
+    let status = 'edit';
+    let frmModel: FormModel = {
+      entityName: 'DP_Steps_Tasks',
+      formName: 'DPStepsTasks',
+      gridViewName: 'grvDPStepsTasks',
+    };
+    if (!data) {
+      this.popupJob.close();
+      status = 'add';
+    }else{
+      taskGroupIdOld = data['taskGroupID'];
+    }
+    let listData = [
+      status,
+      this.jobType,
+      this.step?.recID,
+      this.taskGroupList,
+      data || {},
+      this.taskList,
+      this.step?.stepName,
+    ];
+
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.zIndex = 1001;
+    option.FormModel = frmModel;
+
+    let dialog = this.callfc.openSide(PopupAddStaskComponent, listData, option);
+
+    dialog.closed.subscribe((e) => {
+      if (e?.event) {
+        let taskData = e?.event?.data;
+        if (e.event?.status === 'add') {
+          let index = this.taskGroupList.findIndex(
+            (task) => task.recID == taskData.taskGroupID
+          );
+          this.taskGroupList[index]['task'].push(taskData);
+          this.taskList.push(taskData);
+        }else{  
+          if(taskData?.taskGroupID != taskGroupIdOld){
+            this.changeGroupTask(taskData,taskGroupIdOld);
+          }
+        }
+      } 
+    });
+  }
+
   clickMFTask(e: any, taskList?: any, task?: any) {
+    debugger
     switch (e.functionID) {
       case 'SYS02':
         // this.deleteTask(taskList, task);
         break;
       case 'SYS03':
-        // if (task.taskType) {
-        //   this.jobType = this.listJobType.find(
-        //     (type) => type.id === task.taskType
-        //   );
-        // }
-        // this.openPopupJob(task);
+        if (task.taskType) {
+          this.jobType = this.listJobType.find(
+            (type) => type.id === task.taskType
+          );
+        }
+        this.openPopupJob(task);
         break;
       case 'SYS04':
         // this.copy(data);
@@ -151,6 +249,23 @@ export class StagesDetailComponent implements OnInit {
         // this.openPopupViewJob(task);
         break;
     }
+  }
+  changeGroupTask(taskData,taskGroupIdOld ){
+    let tastClone = JSON.parse(JSON.stringify(taskData));           
+    let indexNew = this.taskGroupList.findIndex((task) => task.recID == taskData.taskGroupID);
+    let index = this.taskGroupList.findIndex((task) => task.recID == taskGroupIdOld);
+    let listTaskOld = this.taskGroupList[indexNew]['task'] || [];
+    let listTaskNew = this.taskGroupList[indexNew]['task'] || [];
+
+    listTaskOld.push(tastClone);
+    listTaskNew.forEach((element, i) => {
+      if(element?.taskGroupID !== taskGroupIdOld){
+        this.taskGroupList[index]['task'].splice(i,1);
+      }
+    });
+
+    this.setIndex(listTaskOld,'indexNo');
+    this.setIndex(listTaskNew,'indexNo');
   }
   //taskGroup
   groupByTask(data){
@@ -209,6 +324,25 @@ export class StagesDetailComponent implements OnInit {
         // this.copy(data);
         break;
     }
+  }
+  openGroupJob(data?: any) {
+    // this.taskGroup = new DP_Steps_TaskGroups();
+    // if (data) {
+    //   this.userGroupJob = data?.roles || [];
+    //   this.taskGroup = data;
+    // } else {
+    //   this.userGroupJob = [];
+    //   this.taskGroup['createdBy'] = this.userId;
+    //   this.taskGroup['stepID'] = this.step['recID'];
+    //   this.taskGroup['task'] = [];
+    // }
+
+    // this.popupGroupJob = this.callfc.openForm(
+    //   this.addGroupJobPopup,
+    //   '',
+    //   500,
+    //   500
+    // );
   }
 // Common
    setIndex(data: any, value: string) {

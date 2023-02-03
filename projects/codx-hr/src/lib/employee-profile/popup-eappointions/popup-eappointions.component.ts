@@ -145,7 +145,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.EAppointionObj.recID = p.recID;
-            this.notify.notifyCode('SYS007');
+            this.notify.notifyCode('SYS006');
             this.lstEAppointions.push(
               JSON.parse(JSON.stringify(this.EAppointionObj))
             );
@@ -157,7 +157,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
                 .subscribe();
             }
             // this.dialog.close(p)
-          } else this.notify.notifyCode('DM034');
+          } else this.notify.notifyCode('SYS023');
         });
     } else {
       this.hrService
@@ -172,7 +172,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
                 .subscribe();
             }
             // this.dialog.close(this.data)
-          } else this.notify.notifyCode('DM034');
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }

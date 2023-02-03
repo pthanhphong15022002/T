@@ -73,7 +73,7 @@ export class InstancesComponent
   instanceNo: string;
   listSteps = [];
   listStepInstances = [];
-  stepNameInstance: string;
+  stepNameCurrent: string;
   progress: string;
   formModel: FormModel;
   isMoveSuccess: boolean = true;
@@ -174,29 +174,6 @@ export class InstancesComponent
   //   this.instanceID = event.instanceID;
   // }
 
-  getStepsByInstanceID(insID) {
-    this.codxDpService.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
-      if (res) {
-        this.listStepInstances = res;
-        var total = 0;
-        this.listStepInstances.forEach((el) => {
-          if (this.dataSelected.currentStep == el.indexNo)
-            this.stepNameInstance = el.stepName;
-          total += el.progress;
-        });
-        if (
-          this.listStepInstances != null &&
-          this.listStepInstances.length > 0
-        ) {
-          this.progress = (total / this.listStepInstances.length)
-            .toFixed(1)
-            .toString();
-        } else {
-          this.progress = '0';
-        }
-      }
-    });
-  }
 
   //CRUD
   add() {

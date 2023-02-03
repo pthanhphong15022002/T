@@ -1,3 +1,4 @@
+import { PopupJobGeneralInfoComponent } from './../../employee-profile/popup-job-general-info/popup-job-general-info.component';
 import { PopupEbenefitComponent } from './../../employee-profile/popup-ebenefit/popup-ebenefit.component';
 import { PopupEdayoffsComponent } from './../../employee-profile/popup-edayoffs/popup-edayoffs.component';
 import { PopupEaccidentsComponent } from './../../employee-profile/popup-eaccidents/popup-eaccidents.component';
@@ -1569,6 +1570,25 @@ export class EmployeeProfileComponent extends UIComponent {
       }
     });
     // })
+  }
+
+  HandleEmployeeJobGeneralInfo(actionType: string){
+    this.view.dataService.dataSelected = this.infoPersonal;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
+    let dialogEdit = this.callfunc.openSide(
+      PopupJobGeneralInfoComponent,
+      {
+        funcID: 'HRT03020201',
+        headerText: 'Thông tin chung',
+      },
+      option
+    );
+    dialogEdit.closed.subscribe((res) => {
+      if (!res?.event) this.view.dataService.clear();
+    });
   }
 
   editEmployeeTimeCardInfo() {
