@@ -56,6 +56,11 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.customerID = '';
+    if (this.customers.overDueControl) {
+      this.customers.overDueControl = '1';
+    }else{
+      this.customers.overDueControl = '0';
+    }
     this.cache.gridViewSetup('Customers', 'grvCustomers').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -121,11 +126,16 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   valueChangeTags(e:any){
     this.customers[e.field] = e.data;
   }
-  convertAddressType(addresstype:any){
+  convertAddressType(addresstype:any,type:any){
     this.cache.valueList('AC015').subscribe((res) => {
       res.datas.forEach(element => {
         if (element.value == addresstype) {
-          document.getElementById("adressType").innerHTML = element.text;
+          if (type == 'adressType') {
+            document.getElementById("adressType").innerHTML = element.text;
+          }
+          if (type == 'contactType') {
+            document.getElementById("contactType").innerHTML = element.text;
+          }
         }
       });
     });
@@ -138,6 +148,13 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       this.customerID = e.data;            
     }
     this.customers[e.field] = e.data;
+  }
+  valueChangeOverdueControl(e:any){
+    if (e.data == '0') {
+      this.customers[e.field] = false;
+    }else{
+      this.customers[e.field] = true;
+    }
   }
   openPopupBank(){
     var obj = {
@@ -439,6 +456,11 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         '"' + this.gridViewSetup['CustomerID'].headerText + '"'
       );
       return;
+    }
+    if (this.customers.overDueControl == '0') {
+      this.customers.overDueControl = false;
+    }else{
+      this.customers.overDueControl = true;
     }
     if (this.formType == 'add') {
       this.dialog.dataService

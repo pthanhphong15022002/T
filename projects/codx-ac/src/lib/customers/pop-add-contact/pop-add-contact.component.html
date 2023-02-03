@@ -36,8 +36,8 @@
           ></codx-label>
           <codx-input 
           [crrValue]="form.data != null ? form.data.gender : ''"
-          type="combobox" 
-          refValue="Users"
+          type="valuelist"
+          refValue="AC014"
           field="gender"
           (valueChange)="valueChange($event,'gender')"
           >
@@ -125,8 +125,8 @@
       ></codx-label>
       <codx-input 
       [crrValue]="contactType"
-      type="combobox" 
-      refValue="Users"
+      type="valuelist"
+      refValue="AC015"
       field="contactType"
       (valueChange)="valueChange($event,'contactType')"
       >

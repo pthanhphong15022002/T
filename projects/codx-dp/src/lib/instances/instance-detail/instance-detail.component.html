@@ -11,7 +11,8 @@
                   {{dataSelect?.title}}
                 </h2>
                 <div class="mb-5">
-                   tag
+                  <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="dataSelect.tags">
+                  </codx-tag>
                 </div>
                 <div class="mb-6">
                   <div>
