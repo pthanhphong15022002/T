@@ -186,11 +186,12 @@ export class InstancesComponent
       this.view.dataService.dataSelected.processID = this.process.recID;
 
       this.cache.functionList(funcIDApplyFor).subscribe((res) => {
-        option.FormModel = this.view.formModel;
-        option.FormModel.funcID = res.functionID;
-        option.FormModel.entityName = res.entityName;
-        option.FormModel.formName = res.formName;
-        option.FormModel.gridViewName = res.gridViewName;
+        var formMD = new FormModel;
+        formMD.funcID = funcIDApplyFor;
+        formMD.entityName = res.entityName;
+        formMD.formName = res.formName;
+        formMD.gridViewName = res.gridViewName;
+        option.FormModel = formMD;
         option.Width = '850px';
         option.zIndex = 1010;
         const titleForm = res.defaultName;
@@ -264,7 +265,6 @@ export class InstancesComponent
   selectedChange(task: any) {
     this.dataSelected = task?.data ? task?.data : task;
     //formModel instances
-
     let formModel = new FormModel();
     formModel.formName = 'DPInstances';
     formModel.gridViewName = 'grvDPInstances';
@@ -272,6 +272,10 @@ export class InstancesComponent
     formModel.funcID = 'DPT0401';
     this.formModel = formModel;
     this.detectorRef.detectChanges();
+  }
+
+  showInput(data){
+
   }
 
   //begin code Thao
