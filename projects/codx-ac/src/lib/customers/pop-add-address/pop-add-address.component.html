@@ -140,9 +140,8 @@
           <div class="d-flex align-items-top">
             <div class="me-4">
               <div>
-                <codx-img 
-                  [width]="50"
-                  imgSource="../../../assets/img/avatar.png">
+                <codx-img [objectId]="item?.recID" [objectName]="item?.contactName"
+                [objectType]="formModel?.entityName" [width]="50">
                 </codx-img>
               </div>
             </div>
@@ -179,7 +178,20 @@
           <span (click)="deleteobject(item,'datacontact')"  class="icon-delete icon-16"></span>
         </div>
       </div>
-      
+      <div class="d-flex">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="IsDefault"
+        default="Mặc định"
+      ></codx-label>
+        <codx-input
+                [checked]="form.data != null ? form.data.isDefault : false"
+                type="switch"
+                field="isDefault"
+                (valueChange)="valueChange($event,'isDefault')"
+              >
+        </codx-input>
+      </div>   
 </ng-template>
 <ng-template #footer>
   
