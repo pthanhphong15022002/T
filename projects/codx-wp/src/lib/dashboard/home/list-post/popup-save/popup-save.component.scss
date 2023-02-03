@@ -1,0 +1,16 @@
+.storage-content {
+    height: 100%;
+    position: relative;
+}
+
+.list-storage {
+    height: calc(100% - 33px);
+    overflow: auto;
+}
+
+.btn-storage {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 26px;
+}

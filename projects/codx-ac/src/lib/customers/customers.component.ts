@@ -71,12 +71,8 @@ export class CustomersComponent extends UIComponent {
       option.Width = '850px';
       this.dialog = this.callfunc.openSide(PopAddCustomersComponent, obj, option,this.view.funcID);
       this.dialog.closed.subscribe((x) => {
-        if (x.event)
-          this.view.dataService
-            .add([this.view.dataService.dataSelected])
-            .subscribe(x => {
-              this.dt.detectChanges();
-            });
+        if (x.event == null)
+        this.view.dataService.clear();
       });
     });
   }

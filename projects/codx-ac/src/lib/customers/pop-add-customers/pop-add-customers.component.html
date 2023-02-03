@@ -3,11 +3,12 @@
     ,tabestablish,tabShipment,tabLocation,tabContact,tabAtm,tabinfo]" [data]="customers">
 </codx-layout-add>
 <ng-template #subHeader>
-  <codx-tag
+  <codx-tag 
     [entityName]="dialog.formModel.entityName"
     [isEdit]="true"
     [disabled]="false"
     [value]="customers.industries"
+    field="industries"
     (valueChange)="valueChangeTags($event)"
   ></codx-tag>
 </ng-template>

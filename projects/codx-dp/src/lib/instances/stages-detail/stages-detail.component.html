@@ -1,8 +1,8 @@
-<div class="back-ground">
+<div class="back-ground" *ngIf="listData != null">
   <div class="header-job">
     <div>
       <span class="title-train"
-        >{{ listData?.indexNo }}. {{ listData?.stepName }}</span
+        >{{ currentStep + 1 }}. {{ listData?.stepName }}</span
       >
       <i class="icon-work_outline text-primary-600"></i>
     </div>
@@ -98,7 +98,7 @@
     </div>
   </div>
 <!-- nvthuan -->
-  <ng-container [ngTemplateOutlet]="task"> </ng-container> 
+  <ng-container [ngTemplateOutlet]="task"> </ng-container>
 
 </div>
 
@@ -202,7 +202,7 @@
                       [ngTemplateOutletContext]="{ value: taskList }"
                     ></ng-container>
                   </div>
-  
+
                   <!-- kéo thả ở trong  -->
                   <div
                     cdkDropList
