@@ -98,6 +98,8 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
       this.taskGroups.dueDateControl = this.taskGroups.dueDateControl ?? '0';
       this.taskGroups.extendControl = this.taskGroups.extendControl ?? '0';
       this.taskGroups.editControl = this.taskGroups.editControl ?? '0';
+      this.taskGroups.completedControl =
+        this.taskGroups.completedControl ?? '0';
     }
 
     this.api
@@ -109,7 +111,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
         [this.functionID, this.dialog.formModel.entityName]
       )
       .subscribe((res) => {
-        if (res && !res.stop && res.autoAssignRule=='1') {
+        if (res && !res.stop && res.autoAssignRule == '1') {
           this.showInput = true;
         } else {
           this.showInput = false;
@@ -544,10 +546,10 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     var data = [];
     if (this.action === 'add') {
       op.method = 'AddTaskGroupsAsync';
-      data = [this.taskGroups,this.functionID];
+      data = [this.taskGroups, this.functionID];
     } else if (this.action === 'edit') {
       op.method = 'UpdateTaskGroupsAsync';
-      data = [this.taskGroups,this.functionID];
+      data = [this.taskGroups, this.functionID];
     }
 
     op.data = data;
@@ -581,6 +583,17 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
 
   onSave() {
     this.lstSavecheckList = [];
+    if (
+      !this.taskGroups.taskGroupName ||
+      this.taskGroups.taskGroupName.trim() == ''
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['TaskGroupName']?.headerText + '"'
+      );
+      return;
+    }
     if (this.taskGroups.checkListControl == '2') {
       for (let item of this.listTodo) {
         this.lstSavecheckList.push(item.text);

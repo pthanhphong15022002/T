@@ -64,10 +64,12 @@ export class TaskGroupComponent extends UIComponent
   itemDueDateControl: TemplateRef<any>;
   @ViewChild('itemAutoCompleted', { static: true })
   itemAutoCompleted: TemplateRef<any>;
+  @ViewChild('itemCompletedControl', { static: true })
+  itemCompletedControl: TemplateRef<any>;
   @ViewChild('itemExtendControl', { static: true })
   itemExtendControl: TemplateRef<any>;
   @ViewChild('itemConfirmControl', { static: true })
-  itemConfirmControl: TemplateRef<any>;
+  itemConfirmControl: TemplateRef<any>; 
 
   @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
   @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
@@ -133,6 +135,7 @@ export class TaskGroupComponent extends UIComponent
       { headerTemplate: this.itemEditControl, width: 180 },
       { headerTemplate: this.itemDueDateControl, width: 180 },
       { headerTemplate: this.itemAutoCompleted, width: 180 },
+      { headerTemplate: this.itemCompletedControl, width: 180 },
       { headerTemplate: this.itemExtendControl, width: 180 },
       { headerTemplate: this.itemConfirmControl, width: 180 },
       { headerTemplate: this.itemCreatedBy, width: 200 },
