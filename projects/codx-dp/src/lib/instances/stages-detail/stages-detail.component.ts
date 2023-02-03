@@ -16,6 +16,8 @@ export class StagesDetailComponent implements OnInit {
   @ViewChild('setJobPopup') setJobPopup: TemplateRef<any>;
   @Input() listData: any;
   @Input() formModel: any;
+  @Input() currentStep: any;
+  @Input() stepID: any;
   dateActual: any;
   startDate: any;
   progress: string = '0';
@@ -84,7 +86,9 @@ export class StagesDetailComponent implements OnInit {
     private cache: CacheService,
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.listData)
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
@@ -214,12 +218,12 @@ export class StagesDetailComponent implements OnInit {
           );
           this.taskGroupList[index]['task'].push(taskData);
           this.taskList.push(taskData);
-        }else{  
+        }else{
           if(taskData?.taskGroupID != taskGroupIdOld){
             this.changeGroupTask(taskData,taskGroupIdOld);
           }
         }
-      } 
+      }
     });
   }
 
@@ -251,7 +255,7 @@ export class StagesDetailComponent implements OnInit {
     }
   }
   changeGroupTask(taskData,taskGroupIdOld ){
-    let tastClone = JSON.parse(JSON.stringify(taskData));           
+    let tastClone = JSON.parse(JSON.stringify(taskData));
     let indexNew = this.taskGroupList.findIndex((task) => task.recID == taskData.taskGroupID);
     let index = this.taskGroupList.findIndex((task) => task.recID == taskGroupIdOld);
     let listTaskOld = this.taskGroupList[indexNew]['task'] || [];
