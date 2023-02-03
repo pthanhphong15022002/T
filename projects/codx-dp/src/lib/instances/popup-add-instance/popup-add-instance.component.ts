@@ -71,7 +71,7 @@ export class PopupAddInstanceComponent implements OnInit {
   // step = new DP_Instances_Steps() ;
   listStep = [];
 
-  readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
+  readonly fieldCbxStep = { text: 'stepName', value: 'recID' };
   acction: string = 'add';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -90,7 +90,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   
+
   }
 
   ngAfterViewInit(): void {

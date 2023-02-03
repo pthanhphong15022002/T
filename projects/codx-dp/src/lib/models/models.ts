@@ -343,10 +343,12 @@ export class DP_Instances_Steps_TaskGroups {
   roles: DP_Instances_Steps_TaskGroups_Roles[] = [];
   statusCodeID: string;
   memo: string;
+  note: string;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  reminders: string;
 }
 export class DP_Instances_Steps_TaskGroups_Roles {
   recID: string;
@@ -391,6 +393,7 @@ export class DP_Instances_Steps_Tasks {
   requireCompleted: boolean;
   roles: DP_Instances_Steps_Tasks_Roles[] = [];
   memo: string;
+  note: string;
   createTask: boolean;
   createTaskControl: string;
   lastUpdate: Date;

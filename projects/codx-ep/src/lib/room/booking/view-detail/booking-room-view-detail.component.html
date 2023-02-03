@@ -26,7 +26,7 @@
   </ng-template>
 
   <ng-template #header>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between mt-2">
       <h3>{{ itemDetail?.title }}</h3>
       <codx-vll [name]="'EP022'" [value]="itemDetail?.approveStatus" [showText]="true" [showBgColor]="true"
         class="badge badge-light badge-square badge-md fs-7 p-2">
@@ -176,7 +176,8 @@
 
   <ng-template #footer>
     <codx-tabs [entityName]="formModel?.entityName" [objectID]="itemDetail?.recID" [funcID]="formModel?.funcID"
-      [dataTree]="data?.tasks ? data.tasks : []" [TabControl]="tabControl" [transID]="itemDetail?.recID" [approveStatus]="itemDetail?.approveStatus"></codx-tabs>
+      [dataTree]="data?.tasks ? data.tasks : []" [TabControl]="tabControl" [transID]="itemDetail?.recID"
+      [approveStatus]="itemDetail?.approveStatus"></codx-tabs>
   </ng-template>
 </codx-detail-tmp>
 

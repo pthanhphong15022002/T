@@ -186,11 +186,12 @@ export class InstancesComponent
       this.view.dataService.dataSelected.processID = this.process.recID;
 
       this.cache.functionList(funcIDApplyFor).subscribe((res) => {
-        option.FormModel = this.view.formModel;
-        option.FormModel.funcID = res.functionID;
-        option.FormModel.entityName = res.entityName;
-        option.FormModel.formName = res.formName;
-        option.FormModel.gridViewName = res.gridViewName;
+        var formMD = new FormModel;
+        formMD.funcID = funcIDApplyFor;
+        formMD.entityName = res.entityName;
+        formMD.formName = res.formName;
+        formMD.gridViewName = res.gridViewName;
+        option.FormModel = formMD;
         option.Width = '850px';
         option.zIndex = 1010;
         const titleForm = res.defaultName;
