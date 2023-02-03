@@ -41,6 +41,8 @@ export class StagesDetailComponent implements OnInit {
   @ViewChild('updateProgress') updateProgress: TemplateRef<any>;
   @Input() listData: any;
   @Input() formModel: any;
+  @Input() currentStep: any;
+  @Input() stepID: any;
   dateActual: any;
   startDate: any;
   progress: string = '0';

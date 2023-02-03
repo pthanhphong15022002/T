@@ -48,7 +48,7 @@ export class StorageComponent
 {
   user: any;
   dataValue = '';
-  predicate = '';
+  predicate = 'CreatedBy = @0';
   data: any;
   recID: any;
   checkFormComment = false;

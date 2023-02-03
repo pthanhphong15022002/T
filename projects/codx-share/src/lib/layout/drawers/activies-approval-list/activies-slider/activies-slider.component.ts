@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, AuthService, AuthStore, CodxService, DataRequest, DialogData, DialogRef, NotificationsService, ScrollComponent } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, CacheService, CodxService, DataRequest, DialogData, DialogRef, NotificationsService, ScrollComponent } from 'codx-core';
 
 @Component({
   selector: 'lib-activies-slider',
@@ -22,13 +22,14 @@ export class ActiviesSliderComponent implements OnInit {
     srtDirections:"desc",
     pageLoading: true,
     pageSize:20,
-    page: 1
+    page: 1,
   }
   loaded:boolean = false;
   totalPage:number = 0;
   isScroll = true;
   pageIndex:number = 0;
-
+  valueSelected:any = null;
+  datas:any[] = [];
   constructor
   (
     private api:ApiHttpService,
@@ -36,22 +37,31 @@ export class ActiviesSliderComponent implements OnInit {
     private notiSV:NotificationsService,
     private auth:AuthStore,
     private codxService:CodxService,
+    private cache:CacheService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   )
   {
     this.dialog = dialog;
+    this.user = this.auth.get();
   }
 
   ngOnInit(): void {
-    this.user = this.auth.get();
     this.getDataAsync();
+    this.cache.valueList("SYS055").subscribe(vll => {
+      if(vll){
+        this.datas = vll.datas;
+        this.valueSelected = vll.datas[0];
+      }
+    });
   }
 
   ngAfterViewInit(){
     ScrollComponent.reinitialization();
   }
+  //get data approval 
   getDataAsync(){
+    this.loaded = true;
     this.api.execSv(
       'BG',
       'ERM.Business.BG',
@@ -59,21 +69,28 @@ export class ActiviesSliderComponent implements OnInit {
       'GetApprovalAsync',
       [this.model])
       .subscribe((res:any[]) => {
-      if(res)
+      if(res[1] > 0)
       {
         this.lstApproval = res[0];
-        this.loaded = true;
+        let totalRecord = res[1];
+        this.totalPage = totalRecord / this.model.pageSize;
         this.dt.detectChanges();
+      }
+      else{
+        this.loaded = false;
       }
     });
   }
+  //close
   clickCloseFrom(){
     this.dialog.close();
   }
+  //scroll
   onScroll(event: any) 
   {
     let dcScroll = event.srcElement;
-    if (dcScroll.scrollTop + dcScroll.clientHeight < dcScroll.scrollHeight - 150) return;
+    if ((dcScroll.scrollTop + dcScroll.clientHeight < dcScroll.scrollHeight - 150) || this.isScroll || (this.model.page > this.totalPage)) return;
+    this.isScroll = true;
     this.model.page = this.model.page + 1;
     this.api.execSv(
       'BG',
@@ -86,6 +103,7 @@ export class ActiviesSliderComponent implements OnInit {
         let notifications = res[0];
         this.lstApproval = this.lstApproval.concat(notifications);
         this.dt.detectChanges();
+        this.isScroll = false;
       }
     });
 
@@ -94,7 +112,6 @@ export class ActiviesSliderComponent implements OnInit {
 
   //view detail
   clickViewDetail(item){
-    debugger
     if(item.transID){
       let query = {
         predicate:"RecID=@0",
@@ -103,6 +120,7 @@ export class ActiviesSliderComponent implements OnInit {
       this.codxService.openUrlNewTab(item.function,"",query);
     }
   }
+  //xét duyệt
   approvalAsync(item:any,status:string){
     if(item.recID && item.transID && status)
     {
@@ -148,6 +166,43 @@ export class ActiviesSliderComponent implements OnInit {
       color: 'white',
     };
     return styles;
+  }
+
+  // filter selected change
+  valueChange(event:any){
+    if(event.value == "0"){
+      this.model.predicates = "";
+      this.model.dataValues = "";
+    }
+    else
+    {
+      this.model.predicates = "EntityName = @0";
+      this.model.dataValues = event.value;
+    }
+    this.valueSelected = event;
+    this.loaded = true;
+    this.totalPage = 0;
+    this.model.page = 1;
+    this.api.execSv(
+      'BG',
+      'ERM.Business.BG',
+      'NotificationBusinesss',
+      'GetApprovalAsync',
+      [this.model])
+      .subscribe((res:any[]) => {
+      if(res && res[1] > 0)
+      {
+        this.lstApproval = res[0];
+        let totalRecord = res[1];
+        this.totalPage = totalRecord / this.model.pageSize;
+        this.isScroll = false;
+        this.dt.detectChanges();
+      }
+      else
+      {
+        this.loaded = false;
+      }
+    });
   }
 }
 

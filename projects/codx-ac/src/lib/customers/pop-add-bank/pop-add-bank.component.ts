@@ -17,6 +17,7 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
   gridViewSetup:any;
   bankAcctID:any;
   bankID:any;
+  formType:any;
   owner:any;
   constructor(
     private inject: Injector,
@@ -32,6 +33,7 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
+    this.formType = dialogData.data?.formType;
     this.bankAcctID ='';
     this.bankID = '';
     this.owner = '';
@@ -96,7 +98,7 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
       );
       return;
     }
-    window.localStorage.setItem("databankaccount",JSON.stringify(this.bankaccount));
+      window.localStorage.setItem("databankaccount",JSON.stringify(this.bankaccount));
     this.dialog.close();
   }
 }
