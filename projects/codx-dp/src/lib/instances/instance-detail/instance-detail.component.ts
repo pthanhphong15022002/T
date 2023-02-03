@@ -1,6 +1,7 @@
+import { DP_Steps, DP_Instances_Steps, DP_Instances } from './../../models/models';
 import { CodxDpService } from './../../codx-dp.service';
-import { Component, Input, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { CRUDService } from 'codx-core';
+import { Component, Input, OnInit, SimpleChanges, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { CRUDService, ApiHttpService } from 'codx-core';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -16,6 +17,8 @@ export class InstanceDetailComponent implements OnInit {
   dataSelect: any;
   id: any;
   totalInSteps: any;
+  listSteps: DP_Instances_Steps[] = [];
+  tmpTeps: DP_Instances_Steps;
   //progressbar
   labelStyle = { color: '#FFFFFF' };
   showProgressValue = true;
@@ -25,6 +28,8 @@ export class InstanceDetailComponent implements OnInit {
   value: Number = 30;
   cornerRadius: Number = 30;
   idCbx = "stage";
+  stepName: string;
+  progress = '0';
   fields: Object = { text: 'name', value: 'id' };
   listRoom = [{
     name: 'Xem theo biểu đồ Gantt',
@@ -40,27 +45,32 @@ export class InstanceDetailComponent implements OnInit {
   }];
   lstTest = [{
     stepNo: 1,
-    name: 'test1'
+    stepName: 'test1'
   },
   {
     stepNo: 2,
-    name: 'test2'
+    stepName: 'test2'
   },
   {
     stepNo: 3,
-    name: 'test3'
+    stepName: 'test3'
   },
   {
     stepNo: 4,
-    name: 'test4'
+    stepName: 'test4'
   }]
 
-  currentStep = 0;
-  constructor(private dpSv: CodxDpService) {
+  currentStep = 1;
+  constructor(private dpSv: CodxDpService, private api: ApiHttpService, private changeDetec: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
+    console.log(this.listSteps);
+    // var instance = new DP_Instances();
 
+    // instance.title = "TEST DO PHÚC THỰC HIỆN";
+
+    // this.api.callSv('DP','ERM.Business.DP','InstancesBusiness','AddInstanceAsync',[instance, this.listSteps]).subscribe();
   }
 
   ngAfterViewInit(): void {
@@ -77,6 +87,7 @@ export class InstanceDetailComponent implements OnInit {
       if (changes['recID'].currentValue == this.id) return;
       this.id = changes['recID'].currentValue;
       this.getInstanceByRecID(this.id);
+      this.getStepsByProcessID(this.id);
     }
 
   }
@@ -86,10 +97,47 @@ export class InstanceDetailComponent implements OnInit {
     this.dpSv.GetInstanceByRecID(recID).subscribe((res) => {
       if (res) {
         this.dataSelect = res;
+        this.currentStep = this.dataSelect.currentStep;
 
       }
     });
   }
+
+  getStepsByProcessID(insID){
+    this.dpSv.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
+      if (res) {
+        this.listSteps = res;
+        var total = 0;
+        this.listSteps.forEach(el =>{
+          if(this.currentStep == el.indexNo)
+            this.stepName = el.stepName;
+          total += el.progress;
+        })
+        if(this.listSteps != null && this.listSteps.length > 0){
+          this.progress = (total / this.listSteps.length).toFixed(1).toString();
+        }else{
+          this.progress = '0';
+        }
+        this.listSteps.forEach(element =>{
+          if(element.indexNo == this.currentStep){
+            this.dpSv.GetStepInstance(element.recID).subscribe(data=>{
+              if(data){
+                this.tmpTeps = data;
+              }
+            })
+          }
+        })
+      }
+    });
+  }
+
+  // getStepsByProcessID(recID){
+  //   this.dpSv.getStepsByProcessID(recID).subscribe((res) => {
+  //     if (res != null || res.length > 0) {
+  //       this.listSteps = res;
+  //     }
+  //   });
+  // }
 
   cbxChange(e){
     this.idCbx = e;
@@ -118,13 +166,19 @@ export class InstanceDetailComponent implements OnInit {
 
 
 
-  click(i){
-    const element = document.getElementById('step-click');
-
+  click(indexNo, recID){
+    if(this.currentStep < indexNo) return;
+    this.dpSv.GetStepInstance(recID).subscribe(res=>{
+      if(res){
+        this.tmpTeps = res;
+      }
+    })
   }
 
   continues(data){
-    if(this.currentStep > this.lstTest.length - 2) return;
+    if(this.currentStep > this.listSteps.length) return;
+    this.currentStep++;
+    this.changeDetec.detectChanges();
   }
 
   setHTMLCssStages(oldStage, newStage){

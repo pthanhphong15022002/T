@@ -1,0 +1,123 @@
+<codx-form
+  #form
+  [headerText]="title"
+  subHeaderText=""
+  [subHeader]="subHeader"
+  [body]="body"
+  [dialog]="dialog"
+  [formModel]="formModelMenu"
+  [data]="stepsTasks"
+  [openMore]="false"
+></codx-form>
+
+<ng-template #subHeader> </ng-template>
+<!-- Form Group -->
+<ng-template #body>
+  <div>
+    <div
+      style="border-left: 3px solid red"
+      class="ps-1 d-flex justify-content-between align-items-center"
+    >
+      <h3>
+        {{ stepsTasks?.taskName }}
+      </h3>
+      <div class="d-flex">
+        <div class="d-flex align-items-center me-2">
+          <span class="icon-notifications icon-20 text-primary-500 me-1"></span>
+          <span>
+            {{ stepsTasks?.reminders }}
+          </span>
+        </div>
+
+        <div class="d-flex align-items-center me-2">
+          <span class="icon-access_time icon-20 text-primary-500 me-1"></span>
+          <span class="mx-1 text-primary-500">{{
+            stepsTasks?.durationDay
+          }}</span>
+          <codx-label name="durationDay" default="ngày"></codx-label>
+          <span class="mx-1 text-primary-500">{{
+            stepsTasks?.durationHour
+          }}</span>
+          <codx-label name="durationHour" default="giờ"></codx-label>
+        </div>
+
+        <div *ngIf="stepType == 'C'" class="d-flex align-items-center me-2">
+          <span class="icon-local_phone icon-18 me-1"></span>
+          <span class="mx-1 text-primary-500">{{ stepsTasks?.callType }}</span>
+        </div>
+        <div *ngIf="stepType === 'M'">
+          <div class="d-flex justify-content-center">
+            <codx-input
+              type="switch"
+              class="test-check me-1"
+              [checked]="stepsTasks?.isOnline"
+              field="isOnline"
+              [disabled]="true"
+            >
+            </codx-input>
+            <codx-label
+              fiedName="isOnline"
+              [formModel]="dialog?.formModel"
+              default="Họp trực tuyến"
+            >
+            </codx-label>
+          </div>
+        </div>
+        <div class="d-flex align-items-center me-2">
+          <span class="icon-more_vert icon-18 me-1"></span>
+        </div>
+      </div>
+    </div>
+    <hr />
+
+    <div>
+      <!-- <codx-label
+        fiedName="roles"
+        [formModel]="dialog?.formModel"
+        default="Vai trò thực hiện"
+      ></codx-label> -->
+      <h4>Vai trò thực hiện</h4>
+      <ng-container
+        *ngIf="listOwner.length > 0"
+        [ngTemplateOutlet]="showUser"
+        [ngTemplateOutletContext]="{ users: listOwner }"
+      ></ng-container>
+    </div>
+
+    <hr />
+
+    <div>file</div>
+    <hr />
+
+    <div>
+      {{ stepsTasks?.memo }}
+    </div>
+    <hr />
+
+    <div>
+      <h4>Công việc liên kết</h4>
+    </div>
+  </div>
+</ng-template>
+<!-- End Form Group -->
+<ng-template #showUser let-data="users">
+  <div class="mt-3">
+    <ng-container *ngFor="let item of data; index as i">
+      <div class="user-mini-nav">
+        <span>
+          <codx-img
+            [width]="45"
+            class="me-2"
+            [objectId]="item?.recID"
+            objectType="AD_Users"
+            [objectName]="item?.objectName"
+          ></codx-img>
+        </span>
+        <div>
+          <h4 class="m-0">{{ item?.objectName }}</h4>
+          <span class="text-primary-400"> {{ item?.roleType }} </span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>

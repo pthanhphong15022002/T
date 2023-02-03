@@ -24,8 +24,10 @@ export class PopupEBasicSalariesComponent extends UIComponent implements OnInit 
   formModel: FormModel
   formGroup: FormGroup
   dialog: DialogRef
-  data: any
-  currentEBasicSalaries: any;
+  EBasicSalaryObj: any;
+  lstEBSalary
+  indexSelected
+  idField = 'RecID';
   actionType: string
   funcID: string
   employeeId: string
@@ -34,6 +36,21 @@ export class PopupEBasicSalariesComponent extends UIComponent implements OnInit 
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
 
+  onInit(): void {
+    this.hrService.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
+  }
 
   constructor(
     private injector: Injector,
@@ -44,19 +61,24 @@ export class PopupEBasicSalariesComponent extends UIComponent implements OnInit 
     @Optional() data?: DialogData
   ){
     super(injector)
-    if(!this.formModel){
-      this.formModel = new FormModel();
-      this.formModel.formName = 'EBasicSalaries'
-      this.formModel.entityName = 'HR_EBasicSalaries'
-      this.formModel.gridViewName = 'grvEBasicSalaries'
-    }
+    // if(!this.formModel){
+    //   this.formModel = new FormModel();
+    //   this.formModel.formName = 'EBasicSalaries'
+    //   this.formModel.entityName = 'HR_EBasicSalaries'
+    //   this.formModel.gridViewName = 'grvEBasicSalaries'
+    // }
     this.dialog = dialog
     this.headerText = data?.data?.headerText
+    this.funcID = data?.data?.funcID;
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    this.lstEBSalary = data?.data?.lstEBSalary;
+    this.indexSelected =
+    data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
     if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.data = JSON.parse(JSON.stringify(data?.data?.basicsalarySelected));
-      this.formModel.currentData = this.data;
+      this.EBasicSalaryObj = JSON.parse(
+        JSON.stringify(this.lstEBSalary[this.indexSelected])
+      );
     }
   }
 
@@ -70,43 +92,50 @@ export class PopupEBasicSalariesComponent extends UIComponent implements OnInit 
       if(!res.event){
         for(let i = 0; i < this.listView.dataService.data.length; i++){
           if(this.listView.dataService.data[i].isCurrent == true){
-            this.currentEBasicSalaries = this.listView.dataService.data[i];
+            this.EBasicSalaryObj = this.listView.dataService.data[i];
             break;
           }
         }
-        this.dialog && this.dialog.close(this.currentEBasicSalaries);
+        this.dialog && this.dialog.close(this.EBasicSalaryObj);
       }
     })
   }
 
   initForm() {
-    this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.formGroup = item;
-        if (this.actionType == 'add') {
-          this.hrService.GetEmployeeBasicSalariesModel().subscribe((p) => {
-            this.data = p;
-            this.formModel.currentData = this.data;
-            console.log('e basic model', p);
-            
-          });
-        }
-        this.formGroup.patchValue(this.data);
+    if (this.actionType == 'add') {
+      this.hrService
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.EBasicSalaryObj = res?.data;
+            this.EBasicSalaryObj.employeeID = this.employeeId;
+            this.formModel.currentData = this.EBasicSalaryObj;
+            this.formGroup.patchValue(this.EBasicSalaryObj);
+            this.cr.detectChanges();
+            this.isAfterRender = true;
+          }
+        });
+    } else {
+      if (this.actionType === 'edit' || this.actionType === 'copy') {
+        this.formGroup.patchValue(this.EBasicSalaryObj);
+        this.formModel.currentData = this.EBasicSalaryObj;
+        this.cr.detectChanges();
         this.isAfterRender = true;
-      });
+      }
+    }
   }
 
-  onInit(): void {
-    this.initForm();
-  }
 
   click(data) {
     console.log(data);
-    this.data = data;
-    this.formModel.currentData = JSON.parse(JSON.stringify(this.data)) 
+    this.EBasicSalaryObj = data;
+    this.formModel.currentData = JSON.parse(JSON.stringify(this.EBasicSalaryObj)) 
     this.actionType ='edit'
-    this.formGroup?.patchValue(this.data);
+    this.formGroup?.patchValue(this.EBasicSalaryObj);
     this.cr.detectChanges();
   }
 
@@ -118,28 +147,28 @@ export class PopupEBasicSalariesComponent extends UIComponent implements OnInit 
   onSaveForm() {
     console.log('du lieu salari', this.listView.dataService.data);
     
-    if (this.data.expiredDate < this.data.effectedDate) {
-      this.notify.notifyCode('HR002');
+    if (this.EBasicSalaryObj.expiredDate < this.EBasicSalaryObj.effectedDate) {
+      this.notify.notifyCode('HR003');
       return;
     }
     if (this.actionType === 'copy' || this.actionType === 'add') {
-      delete this.data.recID;
+      delete this.EBasicSalaryObj.recID;
     }
-    this.data.employeeID = this.employeeId;
+    this.EBasicSalaryObj.employeeID = this.employeeId;
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrService.AddEmployeeBasicSalariesInfo(this.data).subscribe((p) => {
+      this.hrService.AddEmployeeBasicSalariesInfo(this.EBasicSalaryObj).subscribe((p) => {
         if (p != null) {
           this.notify.notifyCode('SYS007');
-          if(this.currentEBasicSalaries){
-            if(this.currentEBasicSalaries.effectedDate < p.effectedDate){
-              this.currentEBasicSalaries.isCurrent = 'false';
-              (this.listView.dataService as CRUDService).update(this.currentEBasicSalaries).subscribe();
-              this.currentEBasicSalaries = p;
+          if(this.EBasicSalaryObj){
+            if(this.EBasicSalaryObj.effectedDate < p.effectedDate){
+              this.EBasicSalaryObj.isCurrent = 'false';
+              (this.listView.dataService as CRUDService).update(this.EBasicSalaryObj).subscribe();
+              this.EBasicSalaryObj = p;
             }
           }
           else{
-            this.currentEBasicSalaries = p;
+            this.EBasicSalaryObj = p;
           }
 
           if (this.listView) {

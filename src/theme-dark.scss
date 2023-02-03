@@ -181,6 +181,7 @@ codx-view-list-detail .nav-link {
 textarea.codx-textarea {
     background-color: var(--bg-input);
     color: var(--text-title);
+    border-color: var(--border-gray);
 }
 
 .e-input-group,
@@ -366,12 +367,21 @@ a {
     background-color: var(--primary-light) !important;
 }
 
+.action-menu-1 {
+    background-color: var(--bg-card) !important;
+    border: 1px var(--border-gray) solid !important;
+}
+
 .bg-secondary {
     background-color: var(--bg-card) !important;
 }
 
 .codx-form.card .card-header .btn {
     color: var(--primary);
+}
+
+.codx-form.card .btn.btn-primary {
+    color: var(--primary-inverse);
 }
 
 h6,
@@ -746,6 +756,11 @@ codx-filter-form .list-group-item {
 
 .card-footer {
     border-color: var(--border-gray);
+}
+
+.list-item a .icon-edit-one,
+.setting-btnright a span {
+    color: var(--primary);
 }
 
 //end dark

@@ -78,6 +78,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   addKRTitle = '';
   addOBTitle = '';
   isAffterRender = false;
+  okrLevel: string;
 
   constructor(
     inject: Injector,
@@ -242,18 +243,22 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       case OMCONST.FUNCID.COMP:
         this.krFuncID = OMCONST.KRFUNCID.COMP;
         this.obFuncID = OMCONST.OBFUNCID.COMP;
+        this.okrLevel= OMCONST.VLL.OKRLevel.COMP;
         break;
       case OMCONST.FUNCID.DEPT:
         this.krFuncID = OMCONST.KRFUNCID.DEPT;
         this.obFuncID = OMCONST.OBFUNCID.DEPT;
+        this.okrLevel= OMCONST.VLL.OKRLevel.DEPT;
         break;
       case OMCONST.FUNCID.ORG:
         this.krFuncID = OMCONST.KRFUNCID.ORG;
         this.obFuncID = OMCONST.OBFUNCID.ORG;
+        this.okrLevel= OMCONST.VLL.OKRLevel.ORG;
         break;
       case OMCONST.FUNCID.PERS:
         this.krFuncID = OMCONST.KRFUNCID.PERS;
         this.obFuncID = OMCONST.OBFUNCID.PERS;
+        this.okrLevel= OMCONST.VLL.OKRLevel.PERS;
         break;
     }
     this.isAffterRender = true;
@@ -320,7 +325,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   //-----------------------Custom Event-----------------------//
   hiddenChart(evt: any) {
-    this.isHiddenChart=evt;
+    this.isHiddenChart = evt;
     this.detectorRef.detectChanges();
   }
   //-----------------------End-------------------------------//
@@ -344,7 +349,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.year,
         this.dataDate,
         this.dtCompany,
-        '1',
+        this.okrLevel,
       ],
       '',
       dialogModel
@@ -356,19 +361,31 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   //Thêm mới mục tiêu
   addOKR() {
-    let dialog = this.callfc.openSide(OkrAddComponent, [
-      this.gridView,
-      this.formModelKR,
-      'add',
-      this.dataOKRPlans,
-      null,
-    ]);
+    let option = new SidebarModel();
+    option.FormModel = this.formModelOB;
+    let dialogOB = this.callfc.openSide(
+      OkrAddComponent,
+      [this.gridView, this.formModelOB, 'add', this.dataOKRPlans, null],
+      option
+    );
     //   "add",
     //   this.dataOKRPlans,
     //   null
     //  ]
     // );
   }
+  // addOB(o: any = null) {
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.formModelKR;
+  //   let dialogKR = this.callfc.openSide(
+  //     PopupAddOBComponent,
+  //     [OMCONST.MFUNCID.Add, this.addOBTitle, null, this.dataOKRPlans],
+  //     option
+  //   );
+  //   dialogKR.closed.subscribe((res) => {
+  //     dialogKR = null;
+  //   });
+  // }
   //Thêm mới KR
   addKR(o: any = null) {
     let option = new SidebarModel();
@@ -379,16 +396,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       [OMCONST.MFUNCID.Add, this.addKRTitle, null, o],
       option
     );
-
-    // let dialogModel = new DialogModel();
-    // dialogModel.IsFull = true;
-
-    // let dialogKR = this.callfc.openForm(
-    //   PopupShowKRComponent,'',null,null,null,
-    //   ['','','','','',],
-    //   '',
-    //   dialogModel
-    // );
     dialogKR.closed.subscribe((res) => {
       dialogKR = null;
     });

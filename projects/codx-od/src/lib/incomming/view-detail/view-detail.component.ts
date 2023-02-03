@@ -78,6 +78,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() dataItem: any;
   @Input() hideMF = false;
   @Input() hideFooter = false;
+  @Input() xd = false;
   @Output() uploaded = new EventEmitter<string>();
   @ViewChild('tmpdeadline') tmpdeadline: any;
   @ViewChild('tmpFolderCopy') tmpFolderCopy: any;
@@ -129,7 +130,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       // },
       // { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
-    if (this.view?.funcID == 'ODT41')
+    if (this.view?.funcID == 'ODT41' || this.xd)
       this.tabControl.push({
         name: 'Approve',
         textDefault: 'Xét duyệt',
