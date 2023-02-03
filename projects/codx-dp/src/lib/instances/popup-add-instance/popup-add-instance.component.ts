@@ -126,47 +126,6 @@ export class PopupAddInstanceComponent implements OnInit {
       this.instance[$event.field] = $event.data;
     }
   }
-  // getFunctionID(field, textTitle) {
-  //   this.cache.gridView('grvDPInstances').subscribe((res) => {
-  //     this.cache
-  //       .gridViewSetup('DPInstances', 'grvDPInstances')
-  //       .subscribe((res) => {
-  //         let titleAction = textTitle;
-  //         let option = new SidebarModel();
-  //         let formModel = this.dialog?.formModel;
-  //         formModel.formName = 'DPStepsFields';
-  //         formModel.gridViewName = 'grvDPStepsFields';
-  //         formModel.entityName = 'DP_Steps_Fields';
-  //         option.FormModel = formModel;
-  //         option.Width = '550px';
-  //         option.zIndex = 1010;
-  //         var dialogCustomField = this.callfc.openSide(
-  //           PopupAddCustomFieldComponent,
-  //           [this.fieldCrr, 'edit', titleAction],
-  //           option
-  //         );
-  //         dialogCustomField.closed.subscribe((e) => {
-  //           if (e && e.event != null) {
-  //             //xu ly data đổ về
-  //             this.fieldCrr = e.event;
-
-  //             this.stepList.forEach((obj) => {
-  //               if (obj.recID == this.fieldCrr.stepID) {
-  //                 let index = obj.fields.findIndex(
-  //                   (x) => x.recID == this.fieldCrr.recID
-  //                 );
-  //                 if (index != -1) {
-  //                   obj.fields[index] = this.fieldCrr;
-  //                 }
-  //               }
-  //             });
-  //             this.changeDetectorRef.detectChanges();
-  //           }
-  //         });
-  //       });
-  //   });
-  // }
-
   //anh thao Code ne bao
   // em thay roi
   valueChangeCustom(e) {}
