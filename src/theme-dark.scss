@@ -807,4 +807,13 @@ lib-nosubaside .aside-menu .menu .menu-item .menu-link.active {
     color: var(--primary-inverse);
 }
 
+.e-bigger .e-more-popup-wrapper .e-more-event-close .e-btn-icon,
+.e-more-popup-wrapper .e-more-event-close .e-btn-icon {
+    margin-top: 2px;
+}
+
+.codx-theme .e-schedule .e-vertical-view .e-header-cells.e-current-day {
+    color: var(--primary-inverse);
+}
+
 //end dark

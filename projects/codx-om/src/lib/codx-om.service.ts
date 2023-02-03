@@ -358,6 +358,24 @@ export class CodxOmService {
       [recID, checkIn]
     );
   }
+  addOB(ob:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'SaveOMAsync',
+      [ob]
+    );
+  }
+  editOB(ob:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'UpdateOKRAsync',
+      [ob]
+    );
+  }
   addKR(kr:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
