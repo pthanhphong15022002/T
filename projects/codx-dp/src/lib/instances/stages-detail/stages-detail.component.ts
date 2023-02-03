@@ -93,32 +93,35 @@ export class StagesDetailComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    if (changes['listData'].currentValue != null) {
-      if(changes['listData'].currentValue?.actualStart != null){
-        this.dateActual = new Date(changes['listData'].currentValue?.actualStart);
+    if(changes['listData']){
+      if (changes['listData'].currentValue != null) {
+        if(changes['listData'].currentValue?.actualStart != null){
+          this.dateActual = new Date(changes['listData'].currentValue?.actualStart);
 
+        }
+        if(changes['listData'].currentValue?.startDate != null){
+          var date = new Date(changes['listData'].currentValue?.startDate);
+          this.startDate =
+            date.getHours() +
+            ':' +
+            date.getMinutes() +
+            ' ' +
+            date.getDate() +
+            '/' +
+            (date.getMonth() + 1) +
+            '/' +
+            date.getFullYear();
+        }
+        var tasks = changes['listData'].currentValue?.tasks;
+        var taskGroups = changes['listData'].currentValue?.taskGroups;
+        this.totalProgress(tasks,taskGroups)
+        this.lstFields = changes['listData'].currentValue?.fields;
+        this.groupByTask(changes['listData'].currentValue);
+      }else{
+        this.listData = null;
       }
-      if(changes['listData'].currentValue?.startDate != null){
-        var date = new Date(changes['listData'].currentValue?.startDate);
-        this.startDate =
-          date.getHours() +
-          ':' +
-          date.getMinutes() +
-          ' ' +
-          date.getDate() +
-          '/' +
-          (date.getMonth() + 1) +
-          '/' +
-          date.getFullYear();
-      }
-      var tasks = changes['listData'].currentValue?.tasks;
-      var taskGroups = changes['listData'].currentValue?.taskGroups;
-      this.totalProgress(tasks,taskGroups)
-      this.lstFields = changes['listData'].currentValue?.fields;
-      this.groupByTask(changes['listData'].currentValue);
-    }else{
-      this.listData = null;
     }
+
   }
 
   totalProgress(tasks, taskGroups){
