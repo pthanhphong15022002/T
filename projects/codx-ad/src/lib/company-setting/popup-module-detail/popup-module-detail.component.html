@@ -61,24 +61,24 @@
       "
     ></codx-label>
   </div>
-
+  <ng-template #tmplUserInfo let-data> </ng-template>
   <codx-gridview-v2
     #grid
     [formName]="fmUserRole?.formName"
     [gridViewName]="fmUserRole?.gridViewName"
     [entityName]="fmUserRole?.entityName"
+    [columnsGrid]="clmnGrid"
     [allowFiltering]="true"
     [allowSorting]="true"
     [allowPaging]="true"
     [dataSource]="lstUserRole"
     [predicates]="predicate"
     [dataValues]="dataValue"
-    [service]="'Tenant'"
-    [assemblyName]="'Tenant'"
-    [entityName]="'OrderModulesBusiness'"
-    [className]="'OrderModulesBusiness'"
-    [method]="'GetListUserRoleAsync'"
     [autoLoad]="false"
     rowHeight="40"
   ></codx-gridview-v2>
+  <!-- [service]="'Tenant'"
+    [assemblyName]="'Tenant'"
+    [className]="'OrderModulesBusiness'"
+    [method]="'GetListUserRoleAsync'" -->
 </div>

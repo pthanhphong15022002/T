@@ -1,10 +1,18 @@
-import { Component, Injector, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import {
   UIComponent,
   AuthStore,
   NotificationsService,
   DialogData,
   DialogRef,
+  FormModel,
 } from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
 import { TN_OrderModule } from '../../models/tmpModule.model';
@@ -45,15 +53,55 @@ export class PopupModuleDetailComponent extends UIComponent {
   tenantID;
 
   //userRole
-  fmUserRole: any;
+  fmUserRole: FormModel = {
+    formName: 'TNUserRoles',
+    gridViewName: 'grvTNUserRoles',
+    entityName: 'TN_UserRoles',
+  };
   lstUserRole: Array<any> = [];
   predicate = '';
   dataValue = '';
+  clmnGrid;
+  @ViewChild('itemAction', { static: true }) tmplUserInfo: TemplateRef<any>;
+
   onInit(): void {
     console.log('md', this.module);
     console.log('child md', this.childMD);
     this.predicate = 'TenantID=@0 and Module=@1';
     this.dataValue = this.module.moduleID + ';' + this.tenantID;
+
+    this.clmnGrid = [
+      {
+        field: 'userID',
+        headerText: 'Nhân viên',
+        width: 30,
+        template: this.tmplUserInfo,
+        textAlign: 'center',
+      },
+      {
+        field: 'EndDate',
+        headerText: 'Nghiệp vụ',
+        width: 30,
+        template: this.tmplUserInfo,
+        textAlign: 'center',
+      },
+      {
+        field: 'EndDate',
+        headerText: 'Thường',
+        width: 30,
+        template: this.tmplUserInfo,
+        textAlign: 'center',
+      },
+    ];
+
+    this.api
+      .execSv('Tenant', 'Tenant', 'UserRolesBusiness', 'GetListUserRoleAsync', [
+        this.module.moduleID,
+        this.childMD.moduleID,
+      ])
+      .subscribe((res: any) => {
+        console.log('res', res);
+      });
   }
   getInterval(interval) {
     return this.vllL1449?.find((x) => x.value == interval)?.text;

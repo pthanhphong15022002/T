@@ -252,7 +252,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     );
     this.dialogRole.closed.subscribe((e) => {
       if (e?.event) {
-        this.viewChooseRole = e?.event;
+        this.viewChooseRole = e?.event[0];
         this.countListViewChoose();
         this.viewChooseRole.forEach((dt) => {
           dt['module'] = dt.functionID;

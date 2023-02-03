@@ -52,6 +52,7 @@ export class PopRolesComponent implements OnInit {
   isCheck = true;
   checkRoleIDNull = false;
   userID: any;
+  lstChangeFunc: Array<string> = [];
 
   @ViewChild('form') form: CodxFormComponent;
 
@@ -137,8 +138,16 @@ export class PopRolesComponent implements OnInit {
   onChange(event, item?: any) {
     if (item.ischeck) {
       event.target.checked = true;
+      //add funcID into lst change
+      this.lstChangeFunc.push(item.functionID);
+      //
     } else {
       event.target.checked = false;
+      //remove function from lst change
+      this.lstChangeFunc = this.lstChangeFunc.filter(
+        (funcID) => funcID != item.functionID
+      );
+      //
     }
     if (!item.isPortal) {
       if (event.target.checked === false) {
@@ -155,7 +164,6 @@ export class PopRolesComponent implements OnInit {
           this.countApp = 0;
           this.listChooseRole = [];
         }
-
         for (var i = 0; i < this.listChooseRole.length; i++) {
           if (item.functionID === this.listChooseRole[i].functionID) {
             this.listChooseRole.splice(i, 1);
@@ -244,7 +252,26 @@ export class PopRolesComponent implements OnInit {
     return false;
   }
 
-  onSave() {
+  //check valid quantity add new modules
+  beforeSave() {
+    this.adService
+      .getListValidOrderForModules(this.lstChangeFunc)
+      .subscribe((oDictOrder) => {
+        let dictOrder = new Map(Object.entries(oDictOrder));
+        if (dictOrder.size < this.lstChangeFunc.length) {
+          this.notiService.alertCode('AD017').subscribe((e) => {
+            console.log('ad017', e);
+            if (e?.event?.status == 'Y') {
+              this.onSave(dictOrder);
+            }
+          });
+        } else {
+          this.onSave(dictOrder);
+        }
+      });
+  }
+
+  onSave(dictOrder) {
     this.checkRoleIDNull = false;
     if (this.listChooseRole) {
       this.listChooseRole.forEach((res) => {
@@ -263,11 +290,11 @@ export class PopRolesComponent implements OnInit {
       if (this.CheckListUserRoles() === this.optionFirst) {
         this.notiService.notifyCode('AD006');
       } else if (this.CheckListUserRoles() === this.optionSecond) {
-        this.dialogSecond.close(this.listChooseRole);
+        this.dialogSecond.close([this.listChooseRole, dictOrder]);
         this.changeDec.detectChanges();
       } else {
         this.notiService.notifyCode('Không có gì thay đổi');
-        this.dialogSecond.close(this.listChooseRole);
+        this.dialogSecond.close([this.listChooseRole, dictOrder]);
       }
     }
   }
