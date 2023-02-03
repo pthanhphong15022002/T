@@ -93,25 +93,47 @@ export class InstanceDetailComponent implements OnInit {
       this.id = changes['dataSelect'].currentValue.recID;
       this.dataSelect = changes['dataSelect'].currentValue;
       this.currentStep = this.dataSelect.currentStep;
+      this.getStepsByProcessID(this.id);
+
       if (
-        changes['listSteps'].currentValue != null &&
-        changes['listSteps'].currentValue.length > 0
-      ) {
-        this.getStepsByInstanceID(this.listSteps);
+        changes['listSteps'].currentValue == null ||
+        changes['listSteps'].currentValue.length == 0
+      )
+      {
+        this.tmpTeps = null;
       }
+
     }
     console.log(this.formModel);
   }
 
-  // getInstanceByRecID(recID) {
-  //   this.dpSv.GetInstanceByRecID(recID).subscribe((res) => {
-  //     if (res) {
-  //       this.dataSelect = res;
-  //       this.currentStep = this.dataSelect.currentStep;
-
-  //     }
-  //   });
-  // }
+  getStepsByProcessID(insID){
+    this.dpSv.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
+      if (res) {
+        this.listSteps = res;
+        var total = 0;
+        this.listSteps.forEach(el =>{
+          if(this.currentStep == el.indexNo)
+            this.stepName = el.stepName;
+          total += el.progress;
+        })
+        if(this.listSteps != null && this.listSteps.length > 0){
+          this.progress = (total / this.listSteps.length).toFixed(1).toString();
+        }else{
+          this.progress = '0';
+        }
+        this.listSteps.forEach(element =>{
+          if(element != null && element.indexNo == this.currentStep){
+            this.dpSv.GetStepInstance(element.recID).subscribe(data=>{
+              if(data){
+                this.tmpTeps = data;
+              }
+            })
+          }
+        })
+      }
+    });
+  }
 
   getStepsByInstanceID(list) {
     list.forEach((element) => {
@@ -144,6 +166,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
+    console.log(e)
     if (e) {
       e.forEach((element) => {
         if (

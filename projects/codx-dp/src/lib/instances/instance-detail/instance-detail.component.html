@@ -39,7 +39,7 @@
               </div>
               <div class="d-flex flex-column align-items-start">
                 <div class="progress">
-                  <div class="progress-done" role="progressbar" [style.width]="progress" aria-valuenow="50"
+                  <div class="progress-done" role="progressbar" [style.width]="progress + '%'" aria-valuenow="50"
                     aria-valuemin="0" aria-valuemax="100">
                     {{progress}}</div>
                 </div>
@@ -78,26 +78,27 @@
         <p>View gannt chưa làm để vậy</p>
       </ng-container>
       <ng-container *ngIf="idCbx == 'stage'">
-        <div class="d-flex arrow-steps flex-container">
-          <div *ngFor="let item of listSteps; index as i;" id="step-click" style="flex-grow: 1"
-            [ngClass]="item.indexNo == currentStep ? 'step current' : item.indexNo < currentStep ? 'step old' : 'step'" (click)="click(item.indexNo, item)">
-            <span> {{item.stepName}}</span>
+        <div *ngIf="listSteps != null && listSteps.length > 0">
+          <div class="d-flex arrow-steps flex-container">
+            <div *ngFor="let item of listSteps; index as i;" id="step-click" style="flex-grow: 1"
+              [ngClass]="item.indexNo == currentStep ? 'step current' : item.indexNo < currentStep ? 'step old' : 'step'" (click)="click(item.indexNo, item)">
+              <span> {{item.stepName}}</span>
+            </div>
           </div>
-        </div>
-        <div class="d-flex flex-container">
-          <div *ngFor="let item of listSteps; index as i;" class="process-wrap">
-            <div
-              [ngClass]="item.indexNo == currentStep ? 'progress-current' : item.indexNo < currentStep ? 'progress-bar' : ''" style="flex-grow: 1"
-              role="progressbar" [style.width]="item.progress + '%'" aria-valuenow="50" aria-valuemin="0"
-              aria-valuemax="100">
+          <div class="d-flex flex-container" >
+            <div *ngFor="let item of listSteps; index as i;" class="process-wrap">
+              <div
+                [ngClass]="item.indexNo == currentStep ? 'progress-current' : item.indexNo < currentStep ? 'progress-bar' : ''" style="flex-grow: 1"
+                role="progressbar" [style.width]="item.progress + '%'" aria-valuenow="50" aria-valuemin="0"
+                aria-valuemax="100">
+              </div>
             </div>
           </div>
         </div>
-
-        <codx-stages-detail [listData]="tmpTeps"></codx-stages-detail>
+        <codx-stages-detail [listData]="tmpTeps" [formModel]="formModel"></codx-stages-detail>
       </ng-container>
       <ng-container *ngIf="idCbx == 'field'">
-        <codx-field-detail [lstSteps]="listSteps"></codx-field-detail>
+        <codx-field-detail [lstSteps]="listSteps" [formModel]="formModel"></codx-field-detail>
       </ng-container>
     </ng-template>
 
