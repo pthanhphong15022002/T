@@ -27,9 +27,9 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   objectAddress:Array<Address> = [];
   objectContactAddress:Array<Contact> = [];
   gridViewSetup:any;
+  gridViewSetupBank:any;
   customerID:any;
   formType :any;
-  viewTags:string[];
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     { icon: 'icon-settings icon-20 me-3', text: 'Thiết lập', name: 'Establish' },
@@ -51,17 +51,19 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     @Optional() dialogData?: DialogData,
   ) { 
     super(inject);
-    this.viewTags = ['do go','van chuyen'];
     this.dialog = dialog;
     this.customers=dialog.dataService!.dataSelected;
-    this.customers.industries = JSON.stringify(this.viewTags); 
-    console.log(this.customers);
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.customerID = '';
     this.cache.gridViewSetup('Customers', 'grvCustomers').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
+      }
+    });
+    this.cache.gridViewSetup('BankAccounts', 'grvBankAccounts').subscribe((res) => {
+      if (res) {
+        this.gridViewSetupBank = res;
       }
     });
     if (this.customers.customerID != null) {
@@ -117,8 +119,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.dt.detectChanges();
   }
   valueChangeTags(e:any){
-    this.customers[e.field].add(e.data);
-    console.log(this.customers);
+    this.customers[e.field] = e.data;
   }
   convertAddressType(addresstype:any){
     this.cache.valueList('AC015').subscribe((res) => {
@@ -141,6 +142,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   openPopupBank(){
     var obj = {
       headerText: 'Thêm tài khoản ngân hàng',
+      formType:this.formType
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -162,8 +164,24 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         ); 
         dialogbank.closed.subscribe((x) => {
           var databankaccount = JSON.parse(localStorage.getItem('databankaccount'));
-          if (databankaccount != null) {      
-            this.objectBankaccount.push(databankaccount);
+          if (databankaccount != null) {   
+            this.api.exec(
+              'ERM.Business.BS',
+              'BankAccountsBusiness',
+              'CheckBankAccount',
+              [this.objectBankaccount,databankaccount]
+            ).subscribe((res:any)=>{
+              if (res) {
+                this.objectBankaccount.push(databankaccount);
+              }else{
+                this.notification.notifyCode(
+                  'SYS031',
+                  0,
+                  '"' + databankaccount.bankAcctID + '"'
+                );
+                return;  
+              }
+            });               
           }
           window.localStorage.removeItem("databankaccount");
         });
@@ -247,10 +265,32 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     if (type == 'databank') {
       let index = this.objectBankaccount.findIndex(x => x.bankAcctID == data.bankAcctID && x.bankID == data.bankID);
       this.objectBankaccount.splice(index, 1);
+      this.api.exec(
+        'ERM.Business.BS',
+        'BankAccountsBusiness',
+        'DeleteAsync',
+        [this.customerID,data]
+      ).subscribe((res:any)=>{
+        if (res) {
+          this.notification
+          .notify("Xóa thành công");
+        }
+      });  
     }
     if (type == 'datacontact') {
       let index = this.objectContact.findIndex(x => x.contactName == data.contactName && x.phone == data.phone);
       this.objectContact.splice(index, 1);
+      this.api.exec(
+        'ERM.Business.BS',
+        'ContactBookBusiness',
+        'DeleteAsync',
+        [this.customerID,data]
+      ).subscribe((res:any)=>{
+        if (res) {
+          this.notification
+          .notify("Xóa thành công");
+        }
+      }); 
     }
     if (type == 'dataaddress') {
       let index = this.objectAddress.findIndex(x => x.adressType == data.adressType && x.adressName == data.adressName);
@@ -260,7 +300,17 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         }
       });
       this.objectAddress.splice(index, 1);
-
+      this.api.exec(
+        'ERM.Business.BS',
+        'AddressBookBusiness',
+        'DeleteAsync',
+        [this.customerID,data]
+      ).subscribe((res:any)=>{
+        if (res) {
+          this.notification
+          .notify("Xóa thành công");
+        }
+      }); 
     }
   }
   editobject(data:any,type:any){
@@ -438,7 +488,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             'ERM.Business.BS',
             'BankAccountsBusiness',
             'UpdateAsync',
-            [this.objectBankaccount]
+            [this.customerID,this.objectBankaccount]
           ).subscribe((res:any)=>{
             
           });  
@@ -446,7 +496,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             'ERM.Business.BS',
             'AddressBookBusiness',
             'UpdateAsync',
-            [this.objectAddress,this.objectContactAddress]
+            [this.customerID,this.objectAddress,this.objectContactAddress]
           ).subscribe((res:any)=>{
             
           });  
@@ -454,7 +504,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             'ERM.Business.BS',
             'ContactBookBusiness',
             'UpdateAsync',
-            [this.objectContact]
+            [this.customerID,this.objectContact]
           ).subscribe((res:any)=>{
             
           });  
