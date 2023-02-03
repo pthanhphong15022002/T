@@ -29,7 +29,7 @@ export class TextValuePipe implements PipeTransform {
                 _value = _vll["Text"];
               }
           }
-          else if(_value && moment(_value).isValid())
+          else if(element["DataType"] == "DateTime")
           {
             if(element["DataFormat"]){
               _value = moment(_value).format(element["DataFormat"]);
@@ -38,7 +38,7 @@ export class TextValuePipe implements PipeTransform {
           }
           _obj[element["FieldName"]] = _value;
         });
-        // _strMssg = UrlUtil.modifiedByObj(_strMssg, obj);
+        return  UrlUtil.modifiedByObj(_strMssg,_obj);
       }
       return value;
     })); 

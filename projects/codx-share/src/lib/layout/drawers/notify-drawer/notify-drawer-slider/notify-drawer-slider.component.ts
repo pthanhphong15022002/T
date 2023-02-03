@@ -23,6 +23,7 @@ export class NotifyDrawerSliderComponent implements OnInit {
     pageSize:20,
     page: 1
   }
+  valueSelected:string = "";
   loaded:boolean = true;
   user:any = null;
   totalPage:number = 0;
