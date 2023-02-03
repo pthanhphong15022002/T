@@ -219,7 +219,6 @@
                 [crrValue]="form.data.pmtMethodID"
                 type="combobox"
                 refValue="PaymentMethods"          
-                [formModel]="form.formModel"
                 field="pmtMethodID"
                 (valueChange)="valueChange($event,'pmtMethodID')"
               >
@@ -238,7 +237,6 @@
       type="combobox"
       refValue="PaymentTerms"
       field="pmtTermID"
-      [formModel]="form.formModel"
       (valueChange)="valueChange($event,'')"
         >
     </codx-input>
@@ -263,7 +261,6 @@
                 [crrValue]="form.data.postDetail"  
                 type="valuelist"
                 refValue="AC007"          
-                [formModel]="form.formModel"
                 field="postDetail"
                 (valueChange)="valueChange($event,'postDetail')"
               >
@@ -283,7 +280,6 @@
                 [crrValue]="form.data.settleInvoice"  
                 type="valuelist"
                 refValue="AC008"          
-                [formModel]="form.formModel"
                 field="settleInvoice"
                 (valueChange)="valueChange($event,'settleInvoice')"
               >
@@ -302,7 +298,6 @@
       type="valuelist"
       refValue="AC009"
       field="settlePayment"
-      [formModel]="form.formModel"
       (valueChange)="valueChange($event,'')"
         >
     </codx-input>
@@ -319,8 +314,8 @@
       ></codx-label>
         <codx-input     
                 [crrValue]="form.data.creditLimit"         
-                [formModel]="form.formModel"
                 field="creditLimit"
+                [formModel]="form.formModel"
                 (valueChange)="valueChange($event,'settleInvoice')"
                 [min]="0"
               >
@@ -339,7 +334,6 @@
       type="valuelist"
       refValue="AC010"
       field="creditBalance"
-      [formModel]="form.formModel"
       (valueChange)="valueChange($event,'')"
         >
     </codx-input>
@@ -358,7 +352,6 @@
                 [crrValue]="form.data.debtComparision"      
                 type="valuelist"
                 refValue="AC012"          
-                [formModel]="form.formModel"
                 field="debtComparision"
                 (valueChange)="valueChange($event,'debtComparision')"
               >
@@ -382,8 +375,8 @@
       ></codx-label>
         <codx-input     
                 [crrValue]="form.data.overdueAmt"            
-                [formModel]="form.formModel"
                 field="overdueAmt"
+                [formModel]="form.formModel"
                 (valueChange)="valueChange($event,'overdueAmt')"
                 [min]="0"
               >
@@ -393,7 +386,6 @@
     <div class="col-4 pe-0">
       <div class="form-group">
         <codx-label
-        [formModel]="form.formModel"
         fiedName="OverDueDays"
         default="Số ngày quá hạn"      
       ></codx-label>
@@ -437,9 +429,8 @@
                 [crrValue]="form.data.overDueControl"   
                 type="valuelist"
                 refValue="AC011"          
-                [formModel]="form.formModel"
                 field="overDueControl"
-                (valueChange)="valueChange($event,'overDueControl')"
+                (valueChange)="valueChangeOverdueControl($event)"
               >
         </codx-input>
       </div>   
@@ -618,7 +609,7 @@
       </div>    
       <div *ngFor="let item of objectAddress">
         <div class="fw-bold text-dark fs-5">
-          <span id="adressType" [innerHTML]="convertAddressType(item.adressType)"></span>
+          <span id="adressType" [innerHTML]="convertAddressType(item.adressType,'adressType')"></span>
         </div>
       <div class="text-gray-500">
           {{item.adressName}}
@@ -632,14 +623,10 @@
                 <div class="d-flex align-items-top">
                   <div class="me-4">
                     <div>
-                      <codx-img 
-                        [width]="50"
-                        imgSource="../../../assets/img/avatar.png">
+                      <codx-img [objectId]="itemcontact?.recID" [objectName]="itemcontact?.contactName"
+                      [objectType]="formModel?.entityName" [width]="50">
                       </codx-img>
                     </div>
-                    <!-- <ng-template #imgDefault_personal>
-                      <img class="img_avatar" src="../../../assets/img/avatar.png" />
-                    </ng-template> -->
                   </div>
                   <div class="d-flex flex-column space_personal">
                     <div class="fw-bold text-dark fs-5">
@@ -702,14 +689,10 @@
           <div class="d-flex align-items-top">
             <div class="me-4">
               <div>
-                <codx-img 
-                  [width]="50"
-                  imgSource="../../../assets/img/avatar.png">
+                <codx-img [objectId]="item?.recID" [objectName]="item?.contactName"
+                             [objectType]="formModel?.entityName" [width]="50">
                 </codx-img>
               </div>
-              <!-- <ng-template #imgDefault_personal>
-                <img class="img_avatar" src="../../../assets/img/avatar.png" />
-              </ng-template> -->
             </div>
             <div class="d-flex flex-column space_personal">
               <div class="fw-bold text-dark fs-5">
@@ -737,7 +720,7 @@
               </div>
               </div>
               <div class="d-flex">
-                <span class="me-2">{{item.contactType}}</span>     
+                <span id="contactType" class="me-2" [innerHTML]="convertAddressType(item.contactType,'contactType')"></span>     
               </div>
             </div>
             <div class="d-flex align-items-center">
