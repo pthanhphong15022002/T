@@ -2,9 +2,11 @@
     [dialog]="dialog" [subHeader]="subHeader" (setTitle)="setTitle($event)" [openMore]="true" [tabContent]="[tabDescription
     ,tabestablish,tabShipment,tabLocation,tabContact,tabAtm,tabinfo]" [data]="customers">
 </codx-layout-add>
-<ng-template #subHeader let-item>
-  <!-- <codx-tag entityName="AR_Customers" [isEdit]="false" [disabled]="true"
-  [value]="item.industries"></codx-tag> -->
+<ng-template #subHeader>
+  <codx-tag entityName="AR_Customers" [isEdit]="false" [disabled]="true"
+  [value]="customers.industries"
+  >
+</codx-tag>
 </ng-template>
 <ng-template #tabDescription>
     <div class="form-group">
