@@ -21,7 +21,6 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
   phone:any;
   email:any;
   contactType:any;
-  @Optional() dialogData?: DialogData;
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -31,8 +30,7 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     private callfunc: CallFuncService,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
-    @Optional() dialogData?: DialogData
-  ) {
+    @Optional() dialogData?: DialogData  ) {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
@@ -46,21 +44,20 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
         this.gridViewSetup = res;
       }
     });
+    if (dialogData.data?.data != null) {    
+      this.contact = dialogData.data?.data;
+      this.contactName = dialogData.data?.data.contactName;
+      this.jobTitle = dialogData.data?.data.jobTitle;
+      this.phone = dialogData.data?.data.phone;
+      this.email = dialogData.data?.data.email;
+      this.contactType = dialogData.data?.data.contactType;
+    }
   }
 
   onInit(): void {
   }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    if (this.dialogData.data?.data != null) {
-      // this.contact = dialogData.data?.data;
-      // this.contactName = dialogData.data?.data.contactName;
-      // this.jobTitle = dialogData.data?.data.jobTitle;
-      // this.phone = dialogData.data?.data.phone;
-      // this.email = dialogData.data?.data.email;
-      // this.contactType = dialogData.data?.data.contactType;
-      console.log(this.dialogData.data?.data);
-    }
     if (this.contact == null) {
     this.contact = this.form.formGroup.value
     this.contact.longitude = 0;

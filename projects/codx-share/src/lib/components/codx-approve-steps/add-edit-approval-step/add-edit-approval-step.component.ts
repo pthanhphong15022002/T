@@ -27,11 +27,12 @@ import {
 import { Approvers, CodxShareService } from '../../../codx-share.service';
 import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-approver.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'lib-add-edit-approval-step',
   templateUrl: './add-edit-approval-step.component.html',
-  styleUrls: ['./add-edit-approval-step.component.css'],
+  styleUrls: ['./add-edit-approval-step.component.scss'],
 })
 export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   @ViewChild('tabInfo0', { static: true }) tabInfo0: TemplateRef<any>;
@@ -518,10 +519,34 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           }
         }
       });
-
-      console.log(this.lstApprover);
-      console.log(this.dataEdit);
-      console.log(this.lstStep);
     }
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray( this.lstApprover, event.previousIndex, event.currentIndex);
+    console.log('list', this.lstApprover);
+    
+  }
+
+  movies = [
+    'Episode I - The Phantom Menace',
+    'Episode II - Attack of the Clones',
+    'Episode III - Revenge of the Sith',
+    'Episode IV - A New Hope',
+    'Episode V - The Empire Strikes Back',
+    'Episode VI - Return of the Jedi',
+    'Episode VII - The Force Awakens',
+    'Episode VIII - The Last Jedi',
+    'Episode IX - The Rise of Skywalker',
+  ];
+
+  drop1(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.movies, event.previousIndex, event.currentIndex);
+  }
+
+
+  clickToScroll(event){
+    console.log('clickToScroll', event);
+    
   }
 }
