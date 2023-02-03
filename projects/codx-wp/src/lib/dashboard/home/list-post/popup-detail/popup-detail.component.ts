@@ -6,12 +6,10 @@ import {
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
-import { Post } from '@shared/models/post';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ApiHttpService, CacheService, DialogData, DialogRef } from 'codx-core';
 import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'lib-popup-detail',
@@ -29,6 +27,7 @@ export class PopupDetailComponent implements OnInit {
   fileID:string = "";
   fileReferType:string = "";
   fileSelected: any = null;
+  imageSrc:any = [];
   index:number = 0;
   vllL1480:any = null;
   dVll:any = {};
@@ -104,6 +103,8 @@ export class PopupDetailComponent implements OnInit {
           let _index =  this.files.findIndex(x => x.recID == this.fileID);
           this.index = _index;
           this.fileSelected = this.files[_index];
+          debugger
+          this.imageSrc = res.map(x => x.source);
         }
       });
     }

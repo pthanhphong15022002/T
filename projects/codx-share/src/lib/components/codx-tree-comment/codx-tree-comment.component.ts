@@ -12,12 +12,12 @@ import {
 import { ApiHttpService, AuthService, CacheService } from 'codx-core';
 
 @Component({
-  selector: 'codx-tree-history',
-  templateUrl: './codx-tree-history.component.html',
-  styleUrls: ['./codx-tree-history.component.scss'],
+  selector: 'codx-tree-comment',
+  templateUrl: './codx-tree-comment.component.html',
+  styleUrls: ['./codx-tree-comment.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CodxTreeHistoryComponent implements OnInit, OnChanges {
+export class CodxTreeCommentComponent implements OnInit, OnChanges {
   @Input() funcID: string;
   @Input() objectType: string;
   @Input() objectID: string;
@@ -27,6 +27,7 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   @Input() addNew: boolean = false;
   @Input() viewIcon: boolean = false;
   @Input() viewVote: boolean = false;
+  @Input() allowEdit: boolean = false;
   @Input() totalComment: number = 0;
   @Output() totalCommentChange = new EventEmitter<number>();
   /////////////////////////////

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'codx-field-detail',
@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./field-detail.component.scss']
 })
 export class FieldDetailComponent implements OnInit {
+  @Input() lstSteps: any;
+  @Input() lstFields: any;
+  @Input() formModel: any;
 
   constructor() { }
 
@@ -30,5 +33,9 @@ export class FieldDetailComponent implements OnInit {
         children.classList.add('icon-expand_more');
       }
     }
+  }
+
+  clickMF(e, data){
+
   }
 }

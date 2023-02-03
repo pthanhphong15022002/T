@@ -2,3 +2,13 @@
     display: inline-flex;
     align-items: center;
   }
+  .icon-container {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: #e4e4e4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+  }

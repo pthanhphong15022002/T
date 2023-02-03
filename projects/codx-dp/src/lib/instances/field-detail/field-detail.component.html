@@ -1,157 +1,40 @@
-<div class="back-info">
-  <div class="header-info">
-    <div class="left">
-      <span class="title">Tiếp nhận yêu cầu (3)</span>
-    </div>
-    <div class="right">
-      <div class="group-button">
-        <button class="button-custom">
-          <span class="icon-edit icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
-        </button>
-        <button class="button-custom" (click)="clickShow($event, 'role-request')">
-          <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
-        </button>
-      </div>
-    </div>
-  </div>
-  <div id="role-request" class="main" [ngClass]="'show-main'">
-    <div class="ms-4 mt-2 mb-2">
-      <li class="text-gray-400">
-        Ngày tiếp nhận
-      </li>
-      <span class="text-dark margin-l">
-        24/10/2022
-      </span>
-    </div>
-    <div class="ms-4 mt-2 mb-2">
-      <li class="text-gray-400">
-        Nội dung
-      </li>
-      <span class="text-dark margin-l">
-        PHÚC PHÚC
-      </span>
-    </div>
-  </div>
-</div>
-<div class="back-info">
-  <div class="header-info">
-    <div class="left">
-      <span class="title">Đánh giá khả năng (3)</span>
-    </div>
-    <div class="right">
-      <div class="group-button">
-        <button class="button-custom">
-          <span class="icon-edit icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
-        </button>
-        <button class="button-custom" (click)="clickShow($event, 'role-rate')">
-          <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
-        </button>
-      </div>
-    </div>
-  </div>
-  <div id="role-rate" class="main" [ngClass]="'show-main'">
-    <div class="ms-4 mt-2 mb-2 row">
-      <div class="col-6">
-        <li class="text-gray-400" style="margin-left: -10px;">
-          Xếp hạng
-        </li>
-        <div class="rating-group">
-          <div class="d-flex">
-            <span class="icon-star text-gray-500 icon-30 me-1"></span>
-            <span class="icon-star text-gray-500 icon-30 me-1"></span>
-            <span class="icon-star text-gray-500 icon-30 me-1"></span>
-            <span class="icon-star text-gray-500 icon-30 me-1"></span>
-            <span class="icon-star text-gray-500 icon-30 me-1"></span>
-          </div>
-          <div [style.width]="'10%'" class="d-flex rating-percent">
-            <span class="icon-star text-warning icon-30 me-1"></span>
-            <span class="icon-star text-warning icon-30 me-1"></span>
-            <span class="icon-star text-warning icon-30 me-1"></span>
-            <span class="icon-star text-warning icon-30 me-1"></span>
-            <span class="icon-star text-warning icon-30 me-1"></span>
+<div *ngIf="lstSteps != null && lstSteps.length > 0">
+  <ng-container *ngFor="let item of lstSteps">
+    <div class="back-info">
+      <div class="header-info">
+        <div class="left">
+          <span class="title">{{item.stepName}}</span>
+        </div>
+        <div class="right">
+          <div class="group-button">
+            <button class="button-custom">
+              <span class="icon-edit icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
+            </button>
+            <button class="button-custom" (click)="clickShow($event, item.recID)">
+              <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
+            </button>
           </div>
         </div>
       </div>
-      <div class="col-6">
-        <li class="text-gray-400">
-          Các vật tư cần thiết
-        </li>
-        <ng-container>
-          <li class="text-dark margin-l">
-            Option 1
-          </li>
-          <li class="text-dark margin-l">
-            Option 2
-          </li>
-          <li class="text-dark margin-l">
-            Option 3
-          </li>
-        </ng-container>
-      </div>
-
-    </div>
-    <div class="ms-4 mt-2 mb-2 row">
-      <div class="col-6">
-        <li class="text-gray-400" style="margin-left: -10px;">
-          Ngày tiếp nhận
-        </li>
-        <div class="text-dark" style="margin-left: 5px">30/10/2022 10:27 AM</div>
-      </div>
-      <div class="col-6">
-        <div class="d-flex flex">
-          <li class="text-gray-400">
-            Người liên quan
-          </li>
-          <i class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"></i>
+      <div id="{{item.recID}}" class="main" [ngClass]="'show-main'">
+        <div class="d-flex row class-field m-5" *ngIf="item.fields != null && item.fields.length > 0">
+          <ng-container *ngFor="let field of item.fields">
+            <div class="col-{{
+                12 / field.showColumnControl
+              }} p-3 has-action-menu crr-fiels mb-5">
+              <li class="text-gray-400">
+                {{field.title}}
+              </li>
+              <span class="text-dark margin-l">
+                {{field.dataValue}}
+              </span>
+              <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, field)" [isBookMark]="true"
+                [dataItem]="field" [type]="'hover'">
+              </codx-mfunc>
+            </div>
+          </ng-container>
         </div>
-        <ng-container>
-          <div class="me-4 d-flex align-items-center mb-4 margin-l">
-            <div class="d-flex align-items-center position-relative">
-              <codx-img class="" [width]="25" [objectId]="'ADMIN'" objectType="AD_Users">
-              </codx-img>
-            </div>
-            <div class="ms-1">
-              <div class="text-dark fw-bold">Trương Đặng Ngọc Phúc</div>
-            </div>
-          </div>
-        </ng-container>
-      </div>
-
-    </div>
-  </div>
-</div>
-<div class="back-info">
-  <div class="header-info">
-    <div class="left">
-      <span class="title">Giới thiệu sản phẩm (3)</span>
-    </div>
-    <div class="right">
-      <div class="group-button">
-        <button class="button-custom">
-          <span class="icon-edit icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
-        </button>
-        <button class="button-custom" (click)="clickShow($event, 'role-demo')">
-          <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
-        </button>
       </div>
     </div>
-  </div>
-  <div id="role-demo" class="main" [ngClass]="'show-main'">
-    <div class="ms-4 mt-2 mb-2">
-      <li class="text-gray-400">
-        Ngày tiếp nhận
-      </li>
-      <span class="text-dark margin-l">
-        24/10/2022
-      </span>
-    </div>
-    <div class="ms-4 mt-2 mb-2">
-      <li class="text-gray-400">
-        Nội dung
-      </li>
-      <span class="text-dark margin-l">
-        PHÚC PHÚC
-      </span>
-    </div>
-  </div>
+  </ng-container>
 </div>

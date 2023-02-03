@@ -1,6 +1,7 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]=""
   [footer]="footer" [dialog]="dialogRef" (setTitle)="setTitle($event)" [openMore]="true"
-  [tabContent]="this.ep8Avaiable != null && (this.ep8Avaiable ==true || this.ep8Avaiable=='1') ? [tabGeneralInfo, tabPeopleInfo, tabStationery , tabMoreInfo, tabReminder] :[tabGeneralInfo, tabPeopleInfo, tabMoreInfo, tabReminder]" [data]="data">
+  [tabContent]="this.ep8Avaiable != null && (this.ep8Avaiable ==true || this.ep8Avaiable=='1') ? [tabGeneralInfo, tabPeopleInfo, tabStationery , tabMoreInfo, tabReminder] :[tabGeneralInfo, tabPeopleInfo, tabMoreInfo, tabReminder]"
+  [data]="data">
   <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form && form.formGroup">
 
@@ -44,13 +45,8 @@
         <!-- <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
           (valueChange)="valueCbxRoomChange($event)">
         </codx-input> -->
-        <ejs-dropdownlist
-        id='resource' 
-        #cusCBB [dataSource]='cbbResource'
-        [fields]='fields' 
-        [placeholder]="'Phòng họp'" 
-        (valueChange)="cbxResourceChange($event)"
-      ></ejs-dropdownlist>
+        <ejs-dropdownlist id='resource' #cusCBB [dataSource]='cbbResource' [fields]='fields'
+          [placeholder]="'Phòng họp'" (valueChange)="cbxResourceChange($event)"></ejs-dropdownlist>
         <div class="row">
           <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0"
             class="d-flex align-items-center justify-content-between">
@@ -352,13 +348,13 @@
             {{ item.umid }}
           </span>
         </div>
-        
+
       </div>
       <div class="col-4 d-flex justify-content-end">
         <codx-input type="number" [cusButton]="true" class="test-number min-w-50px" [field]="item.id"
           [crrValue]="item.quantity" [min]="0" [max]="50" (valueChange)="valueQuantityChange($event)">
         </codx-input>
-        
+
         <div class="ms-5 d-flex flex-column justify-content-center align-items-center me-5">
           <span class="icon-close" role="button" (click)="deleteStationery(item.id)"></span>
         </div>
@@ -367,10 +363,10 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4" id="Stationery">
       <div class="d-flex flex-row text-end align-items-end">
-        <button class="btn btn-sm btn-outline btn-outline-secondary me-2 d-flex flex-row align-items-center"
+        <button class="btn btn-sm btn-light-primary me-2 d-flex flex-row align-items-center"
           (click)="openStationeryPopup()">
-          <span class="icon-layers icon-18 me-2 text-gray-800"></span>
-          <codx-label name="lblChooseStationery" class="fw-bold text-gray-800" default="Chọn văn phòng phẩm">
+          <span class="icon-layers icon-18 me-2"></span>
+          <codx-label name="lblChooseStationery" class="fw-bold" default="Chọn văn phòng phẩm">
           </codx-label>
         </button>
 

@@ -70,18 +70,18 @@
         <ng-container *ngIf="name == 'History'">
           <ng-container>
             <ng-container>
-              <codx-tree-history [objectID]="iterationID" [objectType]="'TM_Sprints'" [viewIcon]="true"
+              <codx-history [objectID]="iterationID" [objectType]="'TM_Sprints'" [viewIcon]="true"
                 [funcID]="functionParent">
-              </codx-tree-history>
+              </codx-history>
             </ng-container>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Comments'">
           <ng-container>
             <div class="container-md bg-body h-100 rounded-2">
-              <codx-tree-history [objectID]="iterationID" [objectType]="'TM_Sprints'" [actionType]="'C'" [addNew]="true"
+              <codx-comment-history [objectID]="iterationID" [objectType]="'TM_Sprints'" [addNew]="true"
                 [viewIcon]="false" [viewVote]="true" [funcID]="functionParent">
-              </codx-tree-history>
+              </codx-comment-history>
             </div>
           </ng-container>
         </ng-container>

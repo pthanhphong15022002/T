@@ -23,7 +23,6 @@
                 ></codx-input>
             </div>
             <div class="col-6">
-                <div class="col-6">
                     <codx-label
                         fiedName="SignedDate"
                         [formModel]="formModel"
@@ -33,12 +32,10 @@
                         [formModel]="formModel"
                         [Group]="formGroup"
                     ></codx-input>
-                </div>
             </div>
         </div>
 
         <div class="form-group row">
-            <div class="col-6">
                 <codx-label
                     fiedName="Appoint"
                     [formModel]="formModel"
@@ -48,7 +45,6 @@
                     [formModel]="formModel"
                     [Group]="formGroup"
                 ></codx-input>
-            </div>
         </div>
 
         <div class="form-group row">
@@ -64,7 +60,6 @@
                 ></codx-input>
             </div>
             <div class="col-6">
-                <div class="col-6">
                     <codx-label
                         fiedName="ExpiredDate"
                         [formModel]="formModel"
@@ -74,7 +69,6 @@
                         [formModel]="formModel"
                         [Group]="formGroup"
                     ></codx-input>
-                </div>
             </div>
         </div>
 
@@ -179,7 +173,6 @@
         </div>
 
         <div class="form-group row">
-            <div class="col-6">
                 <codx-label
                     fiedName="SignerID"
                     [formModel]="formModel"
@@ -189,11 +182,9 @@
                     [formModel]="formModel"
                     [Group]="formGroup"
                 ></codx-input>
-            </div>
         </div>
 
         <div class="form-group row">
-            <div class="col-6">
                 <codx-label
                     fiedName="SignerPosition"
                     [formModel]="formModel"
@@ -203,11 +194,9 @@
                     [formModel]="formModel"
                     [Group]="formGroup"
                 ></codx-input>
-            </div>
         </div>
 
         <div class="form-group row">
-            <div class="col-6">
                 <codx-label
                     fiedName="Note"
                     [formModel]="formModel"
@@ -217,7 +206,6 @@
                     [formModel]="formModel"
                     [Group]="formGroup"
                 ></codx-input>
-            </div>
         </div>
     </ng-template>
 
@@ -263,16 +251,16 @@
 </ng-template>
 
 <ng-template #tmplateTitleEAppointions let-data>
-    <div>
-        <i class="icon-i-arrow-down-left-circle-fill"></i>{{data.appoint}}
-        <i class="icon-microwave"></i>{{data.decisionNo}}
-        <i class="icon-i-arrow-down-left-circle-fill"></i>{{data.effectedDate | fmDT}} 
+    <div class="d-flex align-items-center pb-2">
+        <i class="icon-i-arrow-down-left-circle-fill icon-16 pe-1"></i>{{data.appoint}}
+        <i class="icon-i-layout-text-sidebar-reverse icon-12 pe-1 ps-1"></i>{{data.decisionNo}}
+        <i class="icon-i-arrow-down-left-circle-fill icon_style pe-1 ps-1"></i>{{data.effectedDate | fmDT}} 
     </div>
 </ng-template>
 
 <ng-template #tmplateEAppointionsMenuList let-data>
     <div class="d-flex flex-column">
-        <div><i class ="icon-calendar_today"></i>{{data.effectedDate | fmDT}} - {{data.expiredDate | fmDT}}</div>
-        <div><i class="icon-share"></i>{{data.orgUnitID}} | {{data.positionID}}</div>
+        <div class="d-flex align-items-center pb-2"><i class ="icon-event pe-1"></i> {{data.effectedDate | fmDT}} - {{data.expiredDate | fmDT}}</div>
+        <div class="d-flex align-items-center"><i class="icon-connection-point pe-1"></i>  {{data.orgUnitID}} | {{data.positionID}}</div>
     </div>
 </ng-template>

@@ -49,15 +49,14 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    if (!this.formModel) {
-      this.formModel = new FormModel();
-      this.formModel.entityName = 'HR_EDiseases';
-      this.formModel.formName = 'EDiseases';
-      this.formModel.gridViewName = 'grvEDiseases';
-    }
+    // if (!this.formModel) {
+    //   this.formModel = new FormModel();
+    //   this.formModel.entityName = 'HR_EDiseases';
+    //   this.formModel.formName = 'EDiseases';
+    //   this.formModel.gridViewName = 'grvEDiseases';
+    // }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
-    // this.funcID = this.dialog.formModel.funcID;
     this.funcID = data?.data?.funcID;
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;

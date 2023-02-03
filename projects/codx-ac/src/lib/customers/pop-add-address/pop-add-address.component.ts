@@ -67,12 +67,14 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    this.address = this.form.formGroup.value;
-    this.address.longitude = 0;
-    this.address.distance = 0;
-    this.address.latitude = 0;
-    this.address.duration = 0;
-    this.address.recID = Guid.newGuid();
+    if (this.address == null) {
+      this.address = this.form.formGroup.value;
+      this.address.longitude = 0;
+      this.address.distance = 0;
+      this.address.latitude = 0;
+      this.address.duration = 0;
+      this.address.recID = Guid.newGuid();
+    }
   }
   valueChange(e:any,type:any){
     if (type == 'adressType') {
@@ -126,6 +128,43 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
         });
       }
     });
+  }
+  editobject(data:any,type:any){
+    let index = this.objectContactAddress.findIndex(x => x.contactName == data.contactName && x.phone == data.phone);
+    var ob = {
+      headerText: 'Chỉnh sửa liên hệ',
+      data:{...data}
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'ContactBook';
+    dataModel.gridViewName = 'grvContactBook';
+    dataModel.entityName = 'BS_ContactBook';
+    opt.FormModel = dataModel;
+    this.cache.gridViewSetup('ContactBook','grvContactBook').subscribe(res=>{
+      if(res){  
+        var dialogcontact = this.callfc.openForm(
+          PopAddContactComponent,
+          '',
+          650,
+          550,
+          '',
+          ob,
+          '',
+          opt
+        );
+        dialogcontact.closed.subscribe((x) => {           
+          var datacontact = JSON.parse(localStorage.getItem('datacontact'));
+          if (datacontact != null) {      
+            this.objectContactAddress[index] = datacontact;
+          }
+          window.localStorage.removeItem("datacontact");
+        });
+      }
+    });
+  }
+  deleteobject(data:any,type:any){
+    
   }
   onSave(){
     if (this.adressType.trim() == '' || this.adressType == null) {

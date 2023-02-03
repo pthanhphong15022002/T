@@ -318,7 +318,7 @@ export class DispatchService implements OnDestroy {
     //check autoNumber
     autoNumber(formName: string , funcID: any ,entityName: string , key: any)
     {
-      return this.api.execSv<any>('SYS','AD','AutoNumbersBusiness','GenAutoNumberAsync', [formName , funcID , entityName , key])
+      return this.api.execSv<any>('SYS','AD','AutoNumbersBusiness','GenAutoNumberAsync', [funcID , entityName , key])
     }
     
 }

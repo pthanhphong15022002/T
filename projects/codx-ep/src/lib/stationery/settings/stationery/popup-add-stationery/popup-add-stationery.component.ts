@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
-import { NotificationsService } from 'codx-core';
+import { NotificationsService, CodxFormComponent, LayoutAddComponent } from 'codx-core';
 import {
+  AfterViewInit,
   Component,
   EventEmitter,
   Injector,
@@ -26,9 +27,9 @@ import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
   templateUrl: './popup-add-stationery.component.html',
   styleUrls: ['./popup-add-stationery.component.scss'],
 })
-export class PopupAddStationeryComponent extends UIComponent {
+export class PopupAddStationeryComponent extends UIComponent implements AfterViewInit {
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
-  @ViewChild('form') form: any;
+  @ViewChild('form') form: LayoutAddComponent;
   @Output() loadData = new EventEmitter();
   isAfterRender = false;
   dialogAddStationery: FormGroup;
@@ -95,7 +96,6 @@ export class PopupAddStationeryComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.initForm();
     this.epService
       .getAutoNumberDefault(this.formModel.funcID)
       .subscribe((autoN) => {
@@ -119,11 +119,30 @@ export class PopupAddStationeryComponent extends UIComponent {
       //   width: 200,
       // },
     ];
-    this.epService
-      .getQuota(this.data.resourceID)
-      .subscribe((res) => {
-        this.quota = res;
-      });
+    this.epService.getQuota(this.data.resourceID).subscribe((res) => {
+      this.quota = res;
+    });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.isAdd) {
+      this.api
+        .exec('EP', 'WarehousesBusiness', 'GetDefaultWarehousesIDAsync', [])
+        .subscribe((res: string) => {
+          this.defaultWarehouse = res;
+          this.data.location = this.defaultWarehouse;
+          this.epService
+            .getWarehousesOwner(this.defaultWarehouse)
+            .subscribe((res: any) => {
+              if (res) {
+                this.warehouseOwner = res[0];
+                this.data.owner = this.warehouseOwner;
+                this.warehouseOwnerName = res[1];
+                this.detectorRef.detectChanges();
+              }
+            });
+        });
+    }
   }
 
   initForm() {
@@ -139,11 +158,13 @@ export class PopupAddStationeryComponent extends UIComponent {
               this.data.location = this.defaultWarehouse;
               this.epService
                 .getWarehousesOwner(this.defaultWarehouse)
-                .subscribe((res: string) => {
-                  this.warehouseOwner = res[0];
-                  this.data.owner = this.warehouseOwner;
-                  this.warehouseOwnerName = res[1];
-                  this.detectorRef.detectChanges();
+                .subscribe((res: any) => {
+                  if (res) {
+                    this.warehouseOwner = res[0];
+                    this.data.owner = this.warehouseOwner;
+                    this.warehouseOwnerName = res[1];
+                    this.detectorRef.detectChanges();
+                  }
                 });
               this.dialogAddStationery.patchValue({
                 reservedQty: 0,
@@ -170,7 +191,8 @@ export class PopupAddStationeryComponent extends UIComponent {
     return true;
   }
 
-  onSaveForm() {
+  onSaveForm() {   
+    this.dialogAddStationery= this.form.formGroup;
     this.dialogAddStationery.patchValue(this.data);
     if (this.dialogAddStationery.invalid == true) {
       this.epService.notifyInvalid(this.dialogAddStationery, this.formModel);

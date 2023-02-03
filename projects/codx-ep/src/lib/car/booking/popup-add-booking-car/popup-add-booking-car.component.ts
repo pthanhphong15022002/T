@@ -127,6 +127,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   user: any;
   busyAttendees: string;
   approvalRule: any;
+  dueDateControl:any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -244,7 +245,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
     });
     this.codxEpService.getEPCarSetting('1').subscribe((setting: any) => {
       if (setting) {
-        this.calendarID = JSON.parse(setting.dataValue)?.CalendarID;
+        let sysSetting=JSON.parse(setting.dataValue);
+        this.calendarID = sysSetting?.CalendarID;        
+        this.dueDateControl=sysSetting?.DueDateControl;
         if (this.calendarID) {
           this.codxEpService
             .getCalendarWeekdays(this.calendarID)
@@ -586,12 +589,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       }
       if (this.data.phone != null && this.data.phone != '') {
         if (!this.validatePhoneNumber(this.data.phone)) {
-          this.notificationsService.notify(
-            'Số điện thoại không hợp lệ',//EP014
-            '2',
-            0
-          ); // EP_WAIT doi messcode tu BA
-
+          this.notificationsService.notify('EP014');
           this.saveCheck = false;
           return;
         }
@@ -882,7 +880,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
   timeCheck(startTime: Date, endTime: Date) {
     if (endTime <= startTime) {
-      return false;
+      if(this.dueDateControl==false||this.dueDateControl!='1'){
+        return false;
+      }
     }
     if (this.tempDriver != null) {
       this.driverValidator(

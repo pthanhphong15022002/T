@@ -80,8 +80,6 @@ import { ViewListComponent } from './components/codx-tasks/view-list/view-list.c
 import { PopupAddComponent } from './components/codx-tasks/popup-add/popup-add.component';
 import { CodxTasksComponent } from './components/codx-tasks/codx-tasks.component';
 import { TreeViewComponent } from './components/codx-tasks/tree-view/tree-view.component';
-import { CodxCommentHistoryComponent } from './components/codx-comment-history/codx-comment-history.component';
-import { CodxTreeHistoryComponent } from './components/codx-tree-history/codx-tree-history.component';
 import { CodxViewAssignComponent } from './components/codx-view-assign/codx-view-assign.component';
 import { FileComponent } from './components/codx-note/file/file.component';
 import { AttachmentComponent } from './components/attachment/attachment.component';
@@ -138,9 +136,13 @@ import { CodxClearCacheComponent } from './components/codx-clear-cache/codx-clea
 import { CodxCalendarComponent } from './components/codx-calendar/codx-calendar.component';
 import { CalendarCenterComponent } from './components/codx-calendar/calendar-center/calendar-center.component';
 import { CodxViewCardComponent } from './components/codx-view-card/codx-view-card.component';
-import { CodxJsonformatterComponent } from './components/codx-history/codx-history-item/codx-jsonformatter/codx-jsonformatter.component';
 import { CodxViewFilesComponent } from './components/codx-view-files/codx-view-files.component';
 import { PopupAddEducationsComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/popup/popup-add-educations/popup-add-educations.component';
+import { DisplayValue } from './pipe/displayValue.pipe';
+import { TextValuePipe } from './pipe/textValue.pipe';
+import { CodxTreeCommentComponent } from './components/codx-tree-comment/codx-tree-comment.component';
+import { CodxCommentHistoryComponent } from './components/codx-tree-comment/codx-comment-history/codx-comment-history.component';
+import { ImageViewerComponent2 } from './components/ImageViewer2/imageViewer2.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -200,7 +202,6 @@ const T_Component: Type<any>[] = [
   TreeViewComponent,
   CodxViewAssignComponent,
   CodxCommentHistoryComponent,
-  CodxTreeHistoryComponent,
   SettingCalendarComponent,
   PopupAddCalendarComponent,
   PopupAddDayoffsComponent,
@@ -219,6 +220,7 @@ const T_Component: Type<any>[] = [
   ChatListComponent,
   ListChatBoxComponent,
   CodxCompetencesComponent,
+  CodxTreeCommentComponent,
   //pdf
   PdfComponent,
   CodxDashboardComponent,
@@ -236,12 +238,17 @@ const T_Component: Type<any>[] = [
   CodxCalendarComponent,
   CalendarCenterComponent,
   CodxViewCardComponent,
-  CodxJsonformatterComponent,
   CodxViewFilesComponent,
-  PopupAddEducationsComponent
+  PopupAddEducationsComponent,
+  ImageViewerComponent2
 ];
 
-const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
+const T_Pipe: Type<any>[] = [
+  TruncatePipe, 
+  FileImage,
+  DisplayValue,
+  TextValuePipe
+];
 
 @NgModule({
   declarations: [
@@ -286,7 +293,6 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     SliderModule,
     LazyLoadImageModule,
     DragDropModule,
-    
   ],
   exports: [T_Component, T_Pipe],
 })

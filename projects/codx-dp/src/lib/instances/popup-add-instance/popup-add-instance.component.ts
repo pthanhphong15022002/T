@@ -7,10 +7,12 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  ApiHttpService,
   CacheService,
   DialogData,
   DialogRef,
   NotificationsService,
+  RequestOption,
   SidebarModel,
 } from 'codx-core';
 import { CodxDpService } from '../../codx-dp.service';
@@ -69,13 +71,13 @@ export class PopupAddInstanceComponent implements OnInit {
   // step = new DP_Instances_Steps() ;
   listStep = [];
 
-  readonly fieldCbxStep = { text: 'stepName', value: 'recID' };
+  readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
+  acction: string = 'add';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private cache: CacheService,
     private codxDpService: CodxDpService,
-
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -87,7 +89,9 @@ export class PopupAddInstanceComponent implements OnInit {
     this.title = dt?.data[3];
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+   
+  }
 
   ngAfterViewInit(): void {
     if (this.isApplyFor === 'D') {
@@ -166,7 +170,27 @@ export class PopupAddInstanceComponent implements OnInit {
   //anh thao Code ne bao
   // em thay roi
   valueChangeCustom(e) {}
-  cbxChange($event) {}
+  cbxChange(e) {
+    this.instance.stepID = e ;
+  }
 
   valueChangeUser($event) {}
+
+  beforeSave(option: RequestOption) {
+    if ((this.acction = 'add')) {
+      option.methodName = 'AddInstanceAsync';
+    }
+
+    option.data = [this.instance, this.listStep];
+    return true;
+  }
+  saveInstances() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option),0)
+      .subscribe((res) => {
+        if (res && res.save) {
+          this.dialog.close(res);
+        }
+      });
+  }
 }
