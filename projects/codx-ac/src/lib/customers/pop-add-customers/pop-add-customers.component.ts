@@ -29,6 +29,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   gridViewSetup:any;
   customerID:any;
   formType :any;
+  viewTags:string[];
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     { icon: 'icon-settings icon-20 me-3', text: 'Thiết lập', name: 'Establish' },
@@ -50,8 +51,11 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     @Optional() dialogData?: DialogData,
   ) { 
     super(inject);
+    this.viewTags = ['do go','van chuyen'];
     this.dialog = dialog;
     this.customers=dialog.dataService!.dataSelected;
+    this.customers.industries = JSON.stringify(this.viewTags); 
+    console.log(this.customers);
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.customerID = '';
@@ -111,6 +115,10 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   setTitle(e: any) {
     this.title = this.headerText;
     this.dt.detectChanges();
+  }
+  valueChangeTags(e:any){
+    this.customers[e.field].add(e.data);
+    console.log(this.customers);
   }
   convertAddressType(addresstype:any){
     this.cache.valueList('AC015').subscribe((res) => {
