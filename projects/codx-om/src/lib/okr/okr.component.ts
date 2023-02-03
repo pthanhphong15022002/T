@@ -182,8 +182,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         break;
       }
       case 'btnAddO': {
-        this.addOKR();
-        //this.addOB();
+        //this.addOKR();
+        this.addOB();
         break;
       }
       case 'Calendar': {

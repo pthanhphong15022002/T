@@ -264,7 +264,6 @@ export class InstancesComponent
   selectedChange(task: any) {
     this.dataSelected = task?.data ? task?.data : task;
     //formModel instances
-
     let formModel = new FormModel();
     formModel.formName = 'DPInstances';
     formModel.gridViewName = 'grvDPInstances';
@@ -272,6 +271,10 @@ export class InstancesComponent
     formModel.funcID = 'DPT0401';
     this.formModel = formModel;
     this.detectorRef.detectChanges();
+  }
+
+  showInput(data){
+
   }
 
   //begin code Thao

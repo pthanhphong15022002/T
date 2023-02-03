@@ -29,7 +29,7 @@ export class TextValuePipe implements PipeTransform {
                 _value = _vll["Text"];
               }
           }
-          else if(_value && moment(_value).isValid())
+          else if(element["DataType"] == "DateTime")
           {
             if(element["DataFormat"]){
               _value = moment(_value).format(element["DataFormat"]);
