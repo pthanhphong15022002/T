@@ -38,7 +38,7 @@ export class TextValuePipe implements PipeTransform {
           }
           _obj[element["FieldName"]] = _value;
         });
-        return  UrlUtil.modifiedByObj(_strMssg,_obj);
+        // _strMssg = UrlUtil.modifiedByObj(_strMssg, obj);
       }
       return value;
     })); 
