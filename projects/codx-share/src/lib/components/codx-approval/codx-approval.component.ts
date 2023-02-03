@@ -33,9 +33,9 @@ import {
 import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
+import { environment } from 'src/environments/environment';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 import { CodxShareService } from '../../codx-share.service';
-import { Resolve } from '@angular/router';
 
 @Component({
   selector: 'codx-approval',
@@ -135,22 +135,41 @@ export class CodxApprovalComponent
       this.dataItem = dt;
     }
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
-      var s = this.routers.url.split('/');
-      s = s.slice(2, 5);
-      let r = '/' + s.join('/').toString() + '/';
-
+      debugger
+    
+      var sa = new URL(environment.apiUrl + "/" + this.routers.url);
+      var check = sa.searchParams.get("dataValue");
+      //Lấy params không có dataValue 
+      let r = "";
+      if(check) 
+      {
+        var arrPath = sa.pathname.split("/");
+        var slicePath = arrPath.slice(3);
+        r = slicePath.join("/") + '/';
+      }
+      else
+      {
+        var s = this.routers.url.split('/');
+        s = s.slice(2, 5);
+        r = '/' + s.join('/').toString() + '/';
+      }
+      
+      //var c = this.routers.routerState.subscribe()
       if (fuc) {
-        var params;
         if (fuc?.url) {
-          params = fuc?.url.split('/');
-          var url =
+          var params = fuc?.url.split('/');
+          if(r && params[1] && fuc?.functionID && this.dataItem?.transID)
+          {
+            var url =
             r +
             params[1] +
             '/' +
             fuc?.functionID +
             '/' +
             this.dataItem?.transID;
-          this.codxService.navigate('', url);
+            this.codxService.navigate('', url);
+          }
+          
         }
 
         ///es/approvals/EST021/

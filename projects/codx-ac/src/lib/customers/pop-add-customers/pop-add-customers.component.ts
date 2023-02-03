@@ -21,12 +21,14 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   dialog!: DialogRef;
   customers:Customers;
+  contact:Contact;
   objectBankaccount:Array<BankAccount> = [];
   objectContact:Array<Contact> = [];
   objectAddress:Array<Address> = [];
   objectContactAddress:Array<Contact> = [];
   gridViewSetup:any;
   customerID:any;
+  formType :any;
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     { icon: 'icon-settings icon-20 me-3', text: 'Thiết lập', name: 'Establish' },
@@ -51,15 +53,57 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.customers=dialog.dataService!.dataSelected;
     this.headerText = dialogData.data?.headerText;
+    this.formType = dialogData.data?.formType;
     this.customerID = '';
     this.cache.gridViewSetup('Customers', 'grvCustomers').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
       }
     });
+    if (this.customers.customerID != null) {
+      this.customerID = this.customers.customerID;
+      this.api.exec(
+        'ERM.Business.BS',
+        'BankAccountsBusiness',
+        'LoadDataAsync',
+        [this.customerID]
+      ).subscribe((res:any)=>{
+        this.objectBankaccount = res;
+      });  
+      this.api.exec(
+        'ERM.Business.BS',
+        'AddressBookBusiness',
+        'LoadDataAsync',
+        [this.customerID]
+      ).subscribe((res:any)=>{
+        this.objectAddress = res;
+        for(var i = 0 ; i<this.objectAddress.length ; i++){
+            var recID = this.objectAddress[i].recID;
+            this.api.exec(
+              'ERM.Business.BS',
+              'ContactBookBusiness',
+              'LoadDataAsync',
+              [recID]
+            ).subscribe((res:any)=>{             
+              res.forEach(element => {
+                this.objectContactAddress.push(element);
+              });
+            }); 
+          }
+      }); 
+      this.api.exec(
+        'ERM.Business.BS',
+        'ContactBookBusiness',
+        'LoadDataAsync',
+        [this.customerID]
+      ).subscribe((res:any)=>{
+        this.objectContact = res;
+      }); 
+    }
   }
 
   onInit(): void {
+
   }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
@@ -67,6 +111,15 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   setTitle(e: any) {
     this.title = this.headerText;
     this.dt.detectChanges();
+  }
+  convertAddressType(addresstype:any){
+    this.cache.valueList('AC015').subscribe((res) => {
+      res.datas.forEach(element => {
+        if (element.value == addresstype) {
+          document.getElementById("adressType").innerHTML = element.text;
+        }
+      });
+    });
   }
   valueChange(e:any,type:any){
     if (type == 'establishYear') {            
@@ -199,6 +252,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         }
       });
       this.objectAddress.splice(index, 1);
+
     }
   }
   editobject(data:any,type:any){
@@ -240,7 +294,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       let index = this.objectContact.findIndex(x => x.contactName == data.contactName && x.phone == data.phone);
       var ob = {
         headerText: 'Chỉnh sửa liên hệ',
-        data:data
+        data:{...data}
       };
       let opt = new DialogModel();
       let dataModel = new FormModel();
@@ -260,7 +314,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             '',
             opt
           );
-          dialogcontact.closed.subscribe((x) => {
+          dialogcontact.closed.subscribe((x) => {           
             var datacontact = JSON.parse(localStorage.getItem('datacontact'));
             if (datacontact != null) {      
               this.objectContact[index] = datacontact;
@@ -274,8 +328,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       let index = this.objectAddress.findIndex(x => x.adressType == data.adressType && x.adressName == data.adressName);  
       var obs = {
         headerText: 'Chỉnh sửa địa chỉ',
-        data : data,
-        datacontactaddress:this.objectContactAddress
+        data : {...data},
+        datacontactaddress: [...this.objectContactAddress]
       };
       let opt = new DialogModel();
       let dataModel = new FormModel();
@@ -301,13 +355,13 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             if (dataaddress != null) {     
               this.objectAddress[index] = dataaddress;
             }
-            if (datacontactaddress != null) {   
+            if (datacontactaddress != null) {  
               datacontactaddress.forEach(element => {
                 if (element.reference == null) {
                   element.reference = dataaddress.recID;
                   this.objectContactAddress.push(element);
                 }else{
-                  let index = this.objectContactAddress.findIndex(x => x.contactName == element.contactName && x.reference == element.recID);  
+                  let index = this.objectContactAddress.findIndex(x => x.reference == element.reference);  
                   this.objectContactAddress[index] = element;
                 }    
               });
@@ -328,7 +382,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       );
       return;
     }
-    this.dialog.dataService
+    if (this.formType == 'add') {
+      this.dialog.dataService
       .save((opt: RequestOption) => {
         opt.methodName = 'AddAsync';
         opt.className = 'CustomersBusiness';
@@ -359,5 +414,46 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
           return;      
         }
       });
+    }    
+    if (this.formType == 'edit') {
+      this.dialog.dataService
+      .save((opt: RequestOption) => {
+        opt.methodName = 'UpdateAsync';
+        opt.className = 'CustomersBusiness';
+        opt.assemblyName = 'AR';
+        opt.service = 'AR';
+        opt.data = [this.customers];
+        return true;
+      }).subscribe((res) => {
+        if (res.save || res.update) {
+          this.api.exec(
+            'ERM.Business.BS',
+            'BankAccountsBusiness',
+            'UpdateAsync',
+            [this.objectBankaccount]
+          ).subscribe((res:any)=>{
+            
+          });  
+          this.api.exec(
+            'ERM.Business.BS',
+            'AddressBookBusiness',
+            'UpdateAsync',
+            [this.objectAddress,this.objectContactAddress]
+          ).subscribe((res:any)=>{
+            
+          });  
+          this.api.exec(
+            'ERM.Business.BS',
+            'ContactBookBusiness',
+            'UpdateAsync',
+            [this.objectContact]
+          ).subscribe((res:any)=>{
+            
+          });  
+          this.dialog.close();
+          this.dt.detectChanges();
+        }
+      })
+    }
   }
 }

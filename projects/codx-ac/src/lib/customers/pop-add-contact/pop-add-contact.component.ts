@@ -30,8 +30,7 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     private callfunc: CallFuncService,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
-    @Optional() dialogData?: DialogData,
-  ) {
+    @Optional() dialogData?: DialogData  ) {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
@@ -45,7 +44,7 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
         this.gridViewSetup = res;
       }
     });
-    if (dialogData.data?.data != null) {
+    if (dialogData.data?.data != null) {    
       this.contact = dialogData.data?.data;
       this.contactName = dialogData.data?.data.contactName;
       this.jobTitle = dialogData.data?.data.jobTitle;
@@ -59,12 +58,19 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
   }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    if (this.contact == null) {
     this.contact = this.form.formGroup.value
     this.contact.longitude = 0;
     this.contact.income = 0;
     this.contact.latitude = 0;
     this.contact.counts = 0;
     this.contact.recID = Guid.newGuid();
+    this.contact.contactID = this.randomNumber();
+    }
+  }
+  randomNumber(){
+    var number = Math.floor(Math.random() * 100000);
+    return number.toString();
   }
   valueChange(e:any,type:any){
     if (type == 'contactName') {
@@ -82,7 +88,7 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     if (type == 'contactType') {
       this.contactType = e.data;
     }
-    this.contact[e.field] = e.data;
+    this.contact[e.field] = e.data;   
   }
   onSave(){
     if (this.contactName.trim() == '' || this.contactName == null) {

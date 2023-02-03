@@ -1,9 +1,4 @@
-<codx-views 
-  #view 
-  entityName="HR_Employees" 
-  idField="employeeID" 
-  [views]="views" 
-  [autoLoad]="false">
+<codx-views #view entityName="HR_Employees" idField="employeeID" [views]="views" [autoLoad]="false">
 </codx-views>
 
 <ng-template #panelContent>
@@ -541,7 +536,7 @@
                   <div class="row">
                     <ng-container *ngIf="editMode">
                       <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
-                        <button class="btn btn-sm bg-light" (click)="clickOpenPopupAddSkill()">
+                        <button class="btn btn-sm btn-light" (click)="clickOpenPopupAddSkill()">
                           <i class="icon-add icon-16 ms-n2"></i>
                           <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
                           </codx-label>
@@ -569,7 +564,7 @@
                   <div class="d-flex w-100">
                     <ng-container *ngIf="editMode">
                       <div class="me-4">
-                        <button class="btn btn-sm bg-light" (click)="openPopupEducation()">
+                        <button class="btn btn-sm btn-light" (click)="openPopupEducation()">
                           <i class="icon-add icon-16 ms-n2"></i>
                           <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
                           </codx-label>
@@ -581,7 +576,8 @@
                         <ng-container *ngFor="let item of employeeInfor.educations">
                           <div class="col-4">
                             <div class="w-100">
-                              <div style="line-height: 50px; text-align: center;" class="rounded-circle bg-secondary text-dark w-50px h-50px">
+                              <div style="line-height: 50px; text-align: center;"
+                                class="rounded-circle bg-secondary text-dark w-50px h-50px">
                                 <span>{{item.fromDate | date:"YYYY"}}</span>
                               </div>
                             </div>
@@ -591,17 +587,17 @@
                                   <i class="icon-account_balance text-white "></i>
                                 </span>
                                 <span class="d-flex align-items-center justify-content-around">
-                                    <b>
-                                      {{item.institutionName}}
-                                    </b>
-                                    <ng-container *ngIf="editMode">
-                                      <span (click)="deleteEducation(item)">
-                                        <i class="icon-close text-danger cursor-pointer"></i>
-                                      </span>
-                                      <span (click)="openPopupEdit(item)">
-                                        <i class="icon-create cursor-pointer"></i>
-                                      </span>
-                                    </ng-container>  
+                                  <b>
+                                    {{item.institutionName}}
+                                  </b>
+                                  <ng-container *ngIf="editMode">
+                                    <span (click)="deleteEducation(item)">
+                                      <i class="icon-close text-danger cursor-pointer"></i>
+                                    </span>
+                                    <span (click)="openPopupEdit(item)">
+                                      <i class="icon-create cursor-pointer"></i>
+                                    </span>
+                                  </ng-container>
                                 </span>
                               </div>
                               <div>
@@ -616,7 +612,7 @@
                           </div>
                         </ng-container>
                       </div>
-                    </ng-container>  
+                    </ng-container>
                   </div>
                 </div>
               </div>
@@ -678,7 +674,7 @@
                 <div class="list-hoppy">
                   <div *ngFor="let item of employeeHobbie" class="d-flex align-items-center user-item tagitem"
                     [style.background]="item.color">
-                    
+
                     <a class="text-dark text-hover-danger mt-1 ms-1" *ngIf="editMode" (click)="deleteHobby(item)">
                       <span class="icon-close icon-14"></span>
                     </a>

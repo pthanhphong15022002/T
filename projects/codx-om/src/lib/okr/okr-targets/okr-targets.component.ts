@@ -245,16 +245,16 @@ export class OkrTargetsComponent implements OnInit {
       }
     }
   }
-  clickKRMF(e: any, kr: any, o: any) {
+  clickKRMF(e: any, kr: any) {
     let popupTitle = e.text + ' ' + this.krTitle;
     var funcID = e?.functionID;
     switch (funcID) {
       case OMCONST.MFUNCID.Edit: {
-        this.editKR(kr, o, popupTitle);
+        this.editKR(kr, popupTitle);
         break;
       }
       case OMCONST.MFUNCID.Copy: {
-        this.copyKR(kr, o, popupTitle);
+        this.copyKR(kr, popupTitle);
         break;
       }
       case OMCONST.MFUNCID.Delete: {
@@ -357,24 +357,24 @@ export class OkrTargetsComponent implements OnInit {
   //   );
   // }
 
-  editKR(kr: any, o: any, popupTitle: any) {
+  editKR(kr: any, popupTitle: any) {
     let option = new SidebarModel();
     option.FormModel = this.formModelKR;
 
     let dialogEditKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [OMCONST.MFUNCID.Edit, popupTitle, o, kr],
+      [this.krFuncID,OMCONST.MFUNCID.Edit, popupTitle, kr],
       option
     );
   }
 
-  copyKR(kr: any, o: any, popupTitle: any) {
+  copyKR(kr: any, popupTitle: any) {
     let option = new SidebarModel();
     option.FormModel = this.formModelKR;
 
     let dialogCopyKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [OMCONST.MFUNCID.Copy, popupTitle, o, kr],
+      [this.krFuncID,OMCONST.MFUNCID.Copy, popupTitle, kr],
       option
     );
   }

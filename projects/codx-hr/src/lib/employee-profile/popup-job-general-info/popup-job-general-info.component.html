@@ -1,0 +1,408 @@
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveForm()">
+            <i class="icon-save"></i>
+        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+        </button>
+    </div>
+</ng-template>
+
+<codx-form
+    #form
+    [headerText] = "headerText"
+    [body] = "body"
+    [formModel]="formModel"
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="data"
+    *ngIf="isAfterRender"
+>
+    <ng-template #body>
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="Email"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field = "email"
+                    [formModel]="formModel"
+                    [Group] = "formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="Phone"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                field = "phone"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="extend-function">
+            <hr />
+            <div class="d-flex justify-content-center">
+              <div class="d-flex align-items-center w-auto extend-title">
+                <span
+                  class="text-primary text-hover-primary_darker fw-bold me-1"
+                >
+                  <codx-label
+                    default="Bộ phận làm việc"
+                    [formModel]="formModel"
+                  ></codx-label>
+                </span>
+              </div>
+            </div>
+          </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="OrgUnitID"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="orgUnitID"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="LocationID"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="locationID"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="extend-function">
+            <hr />
+            <div class="d-flex justify-content-center">
+              <div class="d-flex align-items-center w-auto extend-title">
+                <span
+                  class="text-primary text-hover-primary_darker fw-bold me-1"
+                >
+                  <codx-label
+                    default="Công việc"
+                    [formModel]="formModel"
+                  ></codx-label>
+                </span>
+              </div>
+            </div>
+          </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="JoinedOn"
+                    [formModel]="formModel"
+                ></codx-label>
+
+                <codx-input
+                field = "joinedOn"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+            ></codx-input>
+                </div>
+
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="HiredOn"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                field = "hiredOn"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+                ></codx-input>
+                </div>  
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="JobLevel"
+                    [formModel]="formModel"
+                ></codx-label>
+
+                <codx-input
+                field = "jobLevel"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+            ></codx-input>
+                </div>
+
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="JobLevelDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                field = "jobLevelDate"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+                ></codx-input>
+                </div>  
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="PositionID"
+                    [formModel]="formModel"
+                ></codx-label>
+
+                <codx-input
+                field = "positionID"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+            ></codx-input>
+                </div>
+
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="PositionDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                field = "positionDate"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+                ></codx-input>
+                </div>  
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="DocumentNo"
+                    [formModel]="formModel"
+                ></codx-label>
+
+                <codx-input
+                field = "documentNo"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+            ></codx-input>
+                </div>
+
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="Status"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                field = "status"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+                ></codx-input>
+                </div>  
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="EmployeeTypeID"
+                    [formModel]="formModel"
+                ></codx-label>
+
+                <codx-input
+                field = "employeeTypeID"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+            ></codx-input>
+                </div>
+
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="UserID"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                field = "userID"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+                ></codx-input>
+                </div>  
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="LabourType"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="labourType"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="LabourConditions"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="labourConditions"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="LineManager"
+                    [formModel]="formModel"
+                ></codx-label>
+
+                <codx-input
+                field = "lineManager"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+            ></codx-input>
+                </div>
+
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="IndirectManager"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                field = "indirectManager"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+                ></codx-input>
+                </div>  
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="IsTUnion"
+                    [formModel]="formModel"
+                ></codx-label>
+
+                <codx-input
+                field = "isTUnion"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+            ></codx-input>
+                </div>
+
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="TUnionDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                field = "TUnionDate"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+                ></codx-input>
+                </div>  
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="TUnionPosition"
+                    [formModel]="formModel"
+                ></codx-label>
+
+                <codx-input
+                field = "TUnionPosition"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+            ></codx-input>
+                </div>
+
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="TUnionFee"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                field = "TUnionFee"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+                ></codx-input>
+                </div>  
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="IsExpertRecruit"
+                    [formModel]="formModel"
+                ></codx-label>
+
+                <codx-input
+                field = "isExpertRecruit"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+            ></codx-input>
+                </div>
+
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <codx-label
+                    fiedName="IsExpertTrain"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                field = "isExpertTrain"
+                [formModel]="formModel"
+                [Group] = "formGroup"
+                ></codx-input>
+                </div>  
+            </div>
+        </div>
+
+    </ng-template>
+</codx-form>

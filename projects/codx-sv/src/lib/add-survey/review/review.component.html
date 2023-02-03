@@ -1,4 +1,4 @@
-<div class="page-questions" id="page-questions">
+<div class="page-questions mt-4" id="page-questions">
   <div class="d-flex w-100">
     <div class="d-flex flex-column">
       <div class="box">
@@ -285,6 +285,7 @@
     </div>
   </div>
 </div>
+
 <ng-template
   #tempIconAnswers
   let-seqNoSession="seqNoSession"
@@ -302,6 +303,7 @@
     >
   </div>
 </ng-template>
+
 <ng-template
   #tempAnswers
   let-seqNoSession="seqNoSession"
@@ -484,6 +486,7 @@
     ></codx-input>
   </div>
 </ng-template>
+
 <ng-template
   #tempAnswers_showAnswer
   let-seqNoSession="seqNoSession"
@@ -522,7 +525,7 @@
         placeholder="Văn bản câu trả lời ngắn"
         (focus)="focusIn($event.target)"
         (blur)="focusOut($event.target)"
-        [disabled]="true"
+        [disabled]="false"
       />
     </div>
     <div
@@ -535,7 +538,7 @@
         placeholder="Văn bản câu trả lời dài"
         (focus)="focusIn($event.target)"
         (blur)="focusOut($event.target)"
-        [disabled]="true"
+        [disabled]="false"
       />
     </div>
     <div class="e-input-group date-time" *ngIf="itemQuestion.answerType == 'D'">
@@ -562,6 +565,7 @@
     <ng-container #iconRight> </ng-container>
   </div>
 </ng-template>
+
 <ng-template
   #template_card_question
   let-itemSession="itemSession"
@@ -749,6 +753,7 @@
     </div> -->
   </div>
 </ng-template>
+
 <ng-template
   #template_card_question_showAnswer
   let-itemSession="itemSession"
@@ -880,6 +885,7 @@
     ></div>
   </div>
 </ng-template>
+
 <ng-template
   #template_card_image_video
   let-itemSession="itemSession"
@@ -945,6 +951,7 @@
     </div>
   </ng-container>
 </ng-template>
+
 <ng-template
   #template_card_title
   let-itemSession="itemSession"
@@ -965,6 +972,7 @@
     </div>
   </div>
 </ng-template>
+
 <ng-template #template_card_session_index_0 let-itemSession="itemSession">
   <div class="d-flex">
     <div class="form-group ms-6">
@@ -994,6 +1002,7 @@
     <span class="ms-3 fw-700">{{ user.email }}</span>
   </div>
 </ng-template>
+
 <ng-template #template_card_session let-itemSession="itemSession">
   <div class="ms-6">
     <div class="d-flex">
@@ -1021,3 +1030,4 @@
     </div>
   </div>
 </ng-template>
+

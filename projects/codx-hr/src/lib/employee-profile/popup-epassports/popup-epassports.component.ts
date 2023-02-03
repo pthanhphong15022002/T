@@ -33,6 +33,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
   indexSelected
   headerText;
   actionType;
+  idField = 'RecID';
   funcID;
   isAfterRender = false;
   employId;
@@ -40,7 +41,19 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
   @ViewChild('listView') listView: CodxListviewComponent;
 
   onInit(): void {
-    this.initForm();
+    this.hrService.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
   }
   constructor(
     private injector: Injector,
@@ -51,45 +64,70 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    if(!this.formModel){
-      this.formModel = new FormModel();
-      this.formModel.formName = 'EPassports';
-      this.formModel.entityName = 'HR_EPassports';
-      this.formModel.gridViewName = 'grvEPassports';
-    }
+    // if(!this.formModel){
+    //   this.formModel = new FormModel();
+    //   this.formModel.formName = 'EPassports';
+    //   this.formModel.entityName = 'HR_EPassports';
+    //   this.formModel.gridViewName = 'grvEPassports';
+    // }
 
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
-    this.funcID = this.dialog.formModel.funcID;
+    this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.lstPassports = data?.data?.lstPassports
     this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
 
     if(this.actionType === 'edit' || this.actionType ==='copy'){
-      this.passportObj = JSON.parse(JSON.stringify(this.lstPassports[this.indexSelected]));
-      this.formModel.currentData = this.passportObj
+      this.passportObj = JSON.parse(
+        JSON.stringify(this.lstPassports[this.indexSelected])
+      );
     }
-    console.log('employid', this.employId)
-    console.log('formmdel', this.formModel);
    }
    initForm() {
-    this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.formGroup = item;  
-        if(this.actionType == 'add'){
-          this.hrService.getEmployeePassportModel().subscribe(p => {
-            console.log('thong tin ho chieu', p);
-            this.passportObj = p;
-            this.formModel.currentData = this.passportObj
-            // this.dialog.dataService.dataSelected = this.data
-            console.log('du lieu formmodel',this.formModel.currentData);
-          })  
-        }
-        this.formGroup.patchValue(this.passportObj)
-        this.isAfterRender = true
-      }); 
+    // this.hrService
+    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //   .then((item) => {
+    //     this.formGroup = item;  
+    //     if(this.actionType == 'add'){
+    //       this.hrService.getEmployeePassportModel().subscribe(p => {
+    //         console.log('thong tin ho chieu', p);
+    //         this.passportObj = p;
+    //         this.formModel.currentData = this.passportObj
+    //         // this.dialog.dataService.dataSelected = this.data
+    //         console.log('du lieu formmodel',this.formModel.currentData);
+    //       })  
+    //     }
+    //     this.formGroup.patchValue(this.passportObj)
+    //     this.isAfterRender = true
+    //   }); 
+
+    if (this.actionType == 'add') {
+      this.hrService
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.passportObj = res?.data;
+            this.passportObj.employeeID = this.employId;
+            this.formModel.currentData = this.passportObj;
+            this.formGroup.patchValue(this.passportObj);
+            this.cr.detectChanges();
+            this.isAfterRender = true;
+          }
+        });
+    } else {
+      if (this.actionType === 'edit' || this.actionType === 'copy') {
+        this.formGroup.patchValue(this.passportObj);
+        this.formModel.currentData = this.passportObj;
+        this.cr.detectChanges();
+        this.isAfterRender = true;
+      }
+    }
   }
 
     onSaveForm(){
@@ -127,7 +165,6 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
    }
 
    click(data) {
-    console.log('formdata', data);
     this.passportObj = data;
     this.formModel.currentData = JSON.parse(JSON.stringify(this.passportObj)) 
     this.indexSelected = this.lstPassports.findIndex(p => p.recID == this.passportObj.recID);

@@ -1,3 +1,4 @@
+import { PopupJobGeneralInfoComponent } from './../../employee-profile/popup-job-general-info/popup-job-general-info.component';
 import { PopupEbenefitComponent } from './../../employee-profile/popup-ebenefit/popup-ebenefit.component';
 import { PopupEdayoffsComponent } from './../../employee-profile/popup-edayoffs/popup-edayoffs.component';
 import { PopupEaccidentsComponent } from './../../employee-profile/popup-eaccidents/popup-eaccidents.component';
@@ -1571,6 +1572,25 @@ export class EmployeeProfileComponent extends UIComponent {
     // })
   }
 
+  HandleEmployeeJobGeneralInfo(actionType: string){
+    this.view.dataService.dataSelected = this.infoPersonal;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
+    let dialogEdit = this.callfunc.openSide(
+      PopupJobGeneralInfoComponent,
+      {
+        funcID: 'HRT03020201',
+        headerText: 'Thông tin chung',
+      },
+      option
+    );
+    dialogEdit.closed.subscribe((res) => {
+      if (!res?.event) this.view.dataService.clear();
+    });
+  }
+
   editEmployeeTimeCardInfo() {
     this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
@@ -1581,6 +1601,7 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupETimeCardComponent,
       {
         isAdd: false,
+        funcID: 'HRT03020101',
         headerText: 'Thông tin chấm công',
       },
       option
@@ -1600,6 +1621,8 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupECalculateSalaryComponent,
       {
         isAdd: false,
+        funcID: 'HRT03020101',
+
         headerText: 'Thông tin tính lương',
       },
       option
@@ -1757,6 +1780,7 @@ export class EmployeeProfileComponent extends UIComponent {
         actionType: actionType,
         employeeId: this.data.employeeID,
         headerText: 'Quan hệ gia đình',
+        funcID: 'HRT03020103',
         lstFamilyMembers: this.lstFamily,
         indexSelected: this.lstFamily.indexOf(data),
       },
@@ -1788,6 +1812,7 @@ export class EmployeeProfileComponent extends UIComponent {
         actionType: actionType,
         indexSelected: this.lstPassport.indexOf(data),
         lstPassports: this.lstPassport,
+        funcID: 'HRT03020104',
         headerText: 'Hộ chiếu',
         employeeId: this.data.employeeID,
       },

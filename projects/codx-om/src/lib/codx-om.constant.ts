@@ -1,4 +1,5 @@
 export const OMCONST = {
+  OMPARAM:'OMParameters',
   SERVICES: 'OM',
   ASSEMBLY: 'ERM.Business.OM',
   BUSINESS: {
