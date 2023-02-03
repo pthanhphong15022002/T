@@ -530,24 +530,30 @@
         >
         </codx-label>
         <div class="form-group d-flex justify-content-between">
-          <codx-input
-            field="durationDay"
-            [formModel]="grvTaskGroupsForm"
-            type="text"
-            (valueChange)="changeValueInput($event, taskGroup)"
-            [crrValue]="taskGroup?.durationDay"
-            class="me-2"
-          >
-          </codx-input>
-          <codx-input
-            field="durationHour"
-            [formModel]="grvTaskGroupsForm"
-            type="text"
-            (valueChange)="changeValueInput($event, taskGroup)"
-            [crrValue]="taskGroup?.durationHour"
-            class="ms-2"
-          >
-          </codx-input>
+          <div class="position-relative">
+            <codx-input
+              field="durationDay"
+              [formModel]="grvTaskGroupsForm"
+              type="text"
+              (valueChange)="changeValueInput($event, taskGroup)"
+              [crrValue]="taskGroup?.durationDay"
+              class="me-2"
+            >
+            </codx-input>
+            <span class="position-absolute text-gray-400" style="top: 6px; right: 5px;">Ngày</span>
+          </div>
+          <div class="position-relative">
+            <codx-input
+              field="durationHour"
+              [formModel]="grvTaskGroupsForm"
+              type="text"
+              (valueChange)="changeValueInput($event, taskGroup)"
+              [crrValue]="taskGroup?.durationHour"
+              class="ms-2"
+            >
+            </codx-input>
+            <span class="position-absolute text-gray-400" style="top: 6px; right: 5px;">Giờ</span>
+          </div>
         </div>
       </div>
       <div class="ms-2 col-6">
