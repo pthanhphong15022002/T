@@ -250,6 +250,7 @@ export class DP_Instances {
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
+  tag: string;
   modifiedBy: string;
   permissions: DP_Instances_Permissions[] = [];
 }
