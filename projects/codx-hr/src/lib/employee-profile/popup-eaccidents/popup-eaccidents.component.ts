@@ -110,7 +110,7 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
       this.hrSevice.AddEmployeeAccidentInfo(this.accidentObj).subscribe((p) => {
         if (p != null) {
           this.accidentObj.recID = p.recID;
-          this.notitfy.notifyCode('SYS007');
+          this.notitfy.notifyCode('SYS006');
           this.lstAccident.push(JSON.parse(JSON.stringify(this.accidentObj)));
           if (this.listView) {
             (this.listView.dataService as CRUDService)
@@ -118,7 +118,7 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
               .subscribe();
           }
           // this.dialog.close(p)
-        } else this.notitfy.notifyCode('DM034');
+        } else this.notitfy.notifyCode('SYS023');
       });
     } else {
       this.hrSevice
@@ -132,8 +132,7 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
                 .update(this.lstAccident[this.indexSelected])
                 .subscribe();
             }
-            // this.dialog.close(this.data)
-          } else this.notitfy.notifyCode('DM034');
+          } else this.notitfy.notifyCode('SYS021');
         });
     }
   }

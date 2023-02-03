@@ -1,10 +1,15 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
-    [dialog]="dialog" [subHeader]="subHeader" (setTitle)="setTitle($event)" [openMore]="true" [tabContent]="[tabDescription
+    [dialog]="dialog" [subHeader]="subHeader" (setTitle)="setTitle($event)"  [tabContent]="[tabDescription
     ,tabestablish,tabShipment,tabLocation,tabContact,tabAtm,tabinfo]" [data]="customers">
 </codx-layout-add>
-<ng-template #subHeader let-item>
-  <!-- <codx-tag entityName="AR_Customers" [isEdit]="false" [disabled]="true"
-  [value]="item.industries"></codx-tag> -->
+<ng-template #subHeader>
+  <codx-tag
+    [entityName]="dialog.formModel.entityName"
+    [isEdit]="true"
+    [disabled]="false"
+    [value]="customers.industries"
+    (valueChange)="valueChangeTags($event)"
+  ></codx-tag>
 </ng-template>
 <ng-template #tabDescription>
     <div class="form-group">
