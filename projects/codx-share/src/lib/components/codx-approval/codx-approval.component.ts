@@ -135,8 +135,6 @@ export class CodxApprovalComponent
       this.dataItem = dt;
     }
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
-      debugger
-    
       var sa = new URL(environment.apiUrl + "/" + this.routers.url);
       var check = sa.searchParams.get("dataValue");
       //Lấy params không có dataValue 
@@ -158,7 +156,7 @@ export class CodxApprovalComponent
       if (fuc) {
         if (fuc?.url) {
           var params = fuc?.url.split('/');
-          if(r && params[1] && fuc?.functionID && this.dataItem?.transID)
+          if(r && params[1] != null && params[1] != ""  && fuc?.functionID != null && fuc?.functionID != "" && this.dataItem?.transID != null && this.dataItem?.transID != "")
           {
             var url =
             r +
@@ -167,7 +165,7 @@ export class CodxApprovalComponent
             fuc?.functionID +
             '/' +
             this.dataItem?.transID;
-            this.codxService.navigate('', url);
+            if(url) this.codxService.navigate('', url);
           }
           
         }
