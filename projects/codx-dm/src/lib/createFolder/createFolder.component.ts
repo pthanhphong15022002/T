@@ -153,7 +153,7 @@ export class CreateFolderComponent implements OnInit {
   revision = false;
   physical = false;
   copyrights: any;
-  copyrightsControl: boolean = false;
+  copyrightsControl: any = false;
   approvers: string;
   revisionNote: string;
   location: string;

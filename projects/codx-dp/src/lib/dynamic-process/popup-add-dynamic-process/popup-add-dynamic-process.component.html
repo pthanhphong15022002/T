@@ -317,7 +317,7 @@
               type="combobox"
               [placeholder]="gridViewSetup['GroupID']?.description"
               [crrValue]="process.groupID"
-              [refValue]="gridViewSetup?.GroupID.referedValue"
+              [refValue]="gridViewSetup?.GroupID?.referedValue"
               (valueChange)="valueChange($event)"
             >
             </codx-input>
@@ -357,7 +357,7 @@
               field="applyFor"
               type="valuelist"
               [crrValue]="process.applyFor"
-              [refValue]="gridViewSetup?.ApplyFor.referedValue"
+              [refValue]="gridViewSetup?.ApplyFor?.referedValue"
               (valueChange)="valueChange($event)"
               [placeholder]="gridViewSetup['ApplyFor']?.description"
             >

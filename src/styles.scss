@@ -1605,3 +1605,12 @@ ejs-listview .e-ul li {
 #MyFav .h-32px {
   min-height: 26px;
 }
+
+textarea.codx-textarea {
+  height: auto !important;
+}
+
+.btn.btn-icon.btn-sm,
+.btn-group-sm>.btn.btn-icon {
+  min-width: 26px;
+}

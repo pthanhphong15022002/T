@@ -587,7 +587,7 @@ codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-
 .e-schedule .e-timeline-month-view .e-date-header-wrap table td {
     background-color: var(--bg-card);
     border-color: var(--border-light);
-    color: var(--text-body);
+    color: var(--text-body) !important;
 }
 
 .e-schedule .e-timeline-view .e-resource-cells,
@@ -796,6 +796,32 @@ codx-view-schedule .status-color {
 
 lib-nosubaside .aside-menu .menu .menu-item .menu-link.active {
     background-color: var(--primary-dark) !important;
+}
+
+.e-schedule .e-month-view .e-date-header-wrap table td.e-current-day,
+.e-schedule .e-month-agenda-view .e-date-header-wrap table td.e-current-day {
+    color: var(--text-des);
+}
+
+.e-schedule .e-timeline-view .e-date-header-wrap table td.e-current-day * {
+    color: var(--primary-inverse);
+}
+
+.e-bigger .e-more-popup-wrapper .e-more-event-close .e-btn-icon,
+.e-more-popup-wrapper .e-more-event-close .e-btn-icon {
+    margin-top: 2px;
+}
+
+.codx-theme .e-schedule .e-vertical-view .e-header-cells.e-current-day {
+    color: var(--primary-inverse);
+}
+
+.user-mini-nav.user-role.mb-1 {
+    background-color: transparent !important;
+}
+
+.user-mini-nav.user-role .user-nav-item:hover {
+    background-color: #ffffff0a;
 }
 
 //end dark

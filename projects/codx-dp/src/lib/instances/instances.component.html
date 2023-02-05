@@ -139,7 +139,7 @@
         ><span>số tiền nè </span>
       </div>
       <div class="d-flex align-items-center content-jus">
-        <span class="text-gray-600"></span><span>{{data.progress}}</span>
+        <span class="text-gray-600"></span><span>Progress step</span>
       </div>
       <div class="d-flex justify-content-end">
         <span class="text-gray-600 icon-14 icon-apartment me-1"></span>
@@ -162,9 +162,9 @@
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
-      <div class="font me-3">
-        <span>
-          {{data.stepNameCurrent}}
+      <div class="font me-3" *ngFor="let item of listSteps">
+        <span *ngIf="item.recID == data.stepID">
+          {{item.stepName}}
         </span>
       </div>
       <span>
@@ -180,7 +180,7 @@
         }}</span>
       </span>
     </div>
-    <div>
+    <div class="d-flex justify-content-center">
       <codx-imgs
       [isToolTip]="true"
       [width]="25"
@@ -200,9 +200,7 @@
     [formModel]="formModel"
     [recID]="dataSelected.recID"
     [currentStep]="dataSelected.currentStep"
-    [stepName]="dataSelected.stepNameCurrent"
     [progress]="dataSelected.progress"
     [dataSelect]="dataSelected"
-    [listSteps]="dataSelected.instancesSteps"
   ></codx-instance-detail>
 </ng-template>
