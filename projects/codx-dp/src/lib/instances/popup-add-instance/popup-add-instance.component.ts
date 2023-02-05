@@ -83,10 +83,10 @@ export class PopupAddInstanceComponent implements OnInit {
   ) {
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
-
+    
     this.listStep = dt?.data[2];
     this.isApplyFor = dt?.data[1];
-    this.title = dt?.data[3];
+    this.titleAction = dt?.data[3];
   }
 
   ngOnInit(): void {}

@@ -77,7 +77,7 @@ export class InstancesComponent
   progress: string;
   formModel: FormModel;
   isMoveSuccess: boolean = true;
-
+  titleAction =''
   instances = new DP_Instances();
 
   constructor(
@@ -160,6 +160,7 @@ export class InstancesComponent
     switch (evt.id) {
       case 'btnAdd':
         //   this.genAutoNumberNo();
+        this.titleAction = evt.text
         this.add();
         // this.delete(this.instances);
         // this.moveStage();
@@ -196,11 +197,11 @@ export class InstancesComponent
               option.FormModel = formMD;
               option.Width = '850px';
               option.zIndex = 1010;
-              const titleForm = res.defaultName;
+              // const titleForm = res.defaultName;
               // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
               var dialogCustomField = this.callfc.openSide(
                 PopupAddInstanceComponent,
-                ['add', applyFor, this.listSteps, titleForm],
+                ['add', applyFor, this.listSteps, this.titleAction],
                 option
               );
               dialogCustomField.closed.subscribe((e) => {
