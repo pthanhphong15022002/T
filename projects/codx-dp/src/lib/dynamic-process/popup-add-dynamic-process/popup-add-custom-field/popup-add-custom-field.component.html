@@ -84,21 +84,16 @@
           [default]="'Định dạng dữ liệu'"
         >
         </codx-label>
-        <!-- <codx-input
+        <codx-input
+          type="valuelist"
+          ngDefaultControl
           field="dataFormat"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input> -->
-        <codx-valuelist
-          field="dataFormat"
-          [name]="vllDynamic"
-          [iconOnly]="true"
           [crrValue]="field?.dataFormat"
+          [refValue]="vllDynamic"
+          [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
         >
-        </codx-valuelist>
+        </codx-input>
       </div>
       <ng-container
         *ngIf="
@@ -150,7 +145,7 @@
         ></codx-input>
       </div>
 
-      <div class="form-group row" *ngIf="field.dataFormat == 'R'">
+      <div class="form-group row" *ngIf="field.dataType == 'R'">
         <div class="col-6">
           <codx-label
             fiedName="RankIcon"
@@ -168,14 +163,6 @@
             >
             </codx-valuelist>
           </div>
-          <!-- <codx-input
-            field="rankIcon"
-            [iconOnly]="true"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input> -->
         </div>
         <div class="col-6">
           <codx-label

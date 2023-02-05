@@ -96,6 +96,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
           this.vllDynamic = 'DP0274';
           break;
       }
+      this.changdef.detectChanges() ;
     }
   }
   changeRequired(e) {

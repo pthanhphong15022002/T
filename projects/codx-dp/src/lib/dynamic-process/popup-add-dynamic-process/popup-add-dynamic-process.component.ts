@@ -841,7 +841,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.fieldCrr.stepID = stepID;
           this.fieldCrr.processID = processID;
           this.fieldCrr.isRequired = false;
-          this.fieldCrr.rank = 5;
+          // this.fieldCrr.rank = 5;
           let titleAction = this.titleAdd;
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
@@ -887,6 +887,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           formModel.formName = 'DPStepsFields';
           formModel.gridViewName = 'grvDPStepsFields';
           formModel.entityName = 'DP_Steps_Fields';
+          formModel.funcID = 'DPT0301'
           option.FormModel = formModel;
           option.Width = '550px';
           option.zIndex = 1010;
