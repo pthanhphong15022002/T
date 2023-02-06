@@ -413,7 +413,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         '',
         {
           formModel: this.dialog.formModel,
-          autoNoCode: this.data.autoNumber,
+          autoNoCode: this.data.autoNumber ?? this.data.recID,
           description: this.formModel?.entityName,
           newAutoNoCode: this.data.categoryID,
           isSaveNew: '1',
