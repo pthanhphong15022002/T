@@ -96,6 +96,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   startTime: any = null;
   endTime: any = null;
   tmpStartDate: any;
+  showAllResource =false;
   //bookingOnValid = true;
   tmpEndDate: any;
   isFullDay = false;
@@ -1131,7 +1132,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   openPopupLink() {
     this.callfc.openForm(this.addLink, '', 500, 300, this.funcID);
   }
-
+  showAllResourceChange(evt:any){
+    if(evt!=null){
+      this.showAllResource=evt;
+      this.getResourceForCurrentTime();
+      this.detectorRef.detectChanges();
+    }
+  }
   valueAttendeesChange(event: any) {
     if (event?.data!=null) {
       if(event.data<0){
@@ -1591,7 +1598,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         '1',
         this.data.startDate,
         this.data.endDate,
-        this.data.recID
+        this.data.recID,
+        this.showAllResource,
       )
       .subscribe((res: any) => {
         if (res) {
