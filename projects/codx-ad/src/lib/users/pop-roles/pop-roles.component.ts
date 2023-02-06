@@ -21,6 +21,7 @@ import {
 import { CodxAdService } from '../../codx-ad.service';
 import { AD_Roles } from '../../models/AD_Roles.models';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
+import { tmpTNMD } from '../../models/tmpTenantModules.models';
 
 @Component({
   selector: 'lib-pop-roles',
@@ -52,6 +53,7 @@ export class PopRolesComponent implements OnInit {
   isCheck = true;
   checkRoleIDNull = false;
   userID: any;
+  lstChangeFunc: tmpTNMD[] = [];
 
   @ViewChild('form') form: CodxFormComponent;
 
@@ -73,8 +75,19 @@ export class PopRolesComponent implements OnInit {
     }
   }
   ngOnInit(): void {
-    if (this.data?.length > 0)
+    if (this.data?.length > 0) {
+      this.lstChangeFunc = [];
       this.listChooseRole = JSON.parse(JSON.stringify(this.data));
+      this.listChooseRole.forEach((role) => {
+        let tmpMD: tmpTNMD = {
+          isAddAction: true,
+          isOriginal: true,
+          moduleID: role.functionID,
+          moduleSales: '',
+        };
+        this.lstChangeFunc.push(tmpMD);
+      });
+    }
     this.loadData();
   }
 
@@ -135,10 +148,39 @@ export class PopRolesComponent implements OnInit {
   }
 
   onChange(event, item?: any) {
+    let mdIdx = this.lstChangeFunc.findIndex(
+      (x) => x.moduleID == item.functionID
+    );
     if (item.ischeck) {
       event.target.checked = true;
+      //add funcID into lst change
+      if (mdIdx == -1) {
+        let tmpMD: tmpTNMD = {
+          isAddAction: true,
+          isOriginal: false,
+          moduleID: item.functionID,
+          moduleSales: '',
+        };
+        this.lstChangeFunc.push(tmpMD);
+      } else {
+        this.lstChangeFunc[mdIdx].isAddAction = true;
+      }
+      //
     } else {
       event.target.checked = false;
+      //remove function from lst change
+      //if role is not original
+      if (mdIdx == -1) {
+        this.lstChangeFunc = this.lstChangeFunc.filter(
+          (tmpTNMD) => tmpTNMD.moduleID != item.functionID
+        );
+      }
+      //original role
+      else {
+        this.lstChangeFunc[mdIdx].isAddAction = false;
+      }
+
+      //
     }
     if (!item.isPortal) {
       if (event.target.checked === false) {
@@ -155,7 +197,6 @@ export class PopRolesComponent implements OnInit {
           this.countApp = 0;
           this.listChooseRole = [];
         }
-
         for (var i = 0; i < this.listChooseRole.length; i++) {
           if (item.functionID === this.listChooseRole[i].functionID) {
             this.listChooseRole.splice(i, 1);
@@ -244,7 +285,24 @@ export class PopRolesComponent implements OnInit {
     return false;
   }
 
-  onSave() {
+  //check valid quantity add new modules
+  beforeSave() {
+    this.adService
+      .getListValidOrderForModules(this.lstChangeFunc)
+      .subscribe((lstTNMDs: tmpTNMD[]) => {
+        if (lstTNMDs.length < this.lstChangeFunc.length) {
+          this.notiService.alertCode('AD017').subscribe((e) => {
+            if (e?.event?.status == 'Y') {
+              this.onSave(lstTNMDs);
+            }
+          });
+        } else {
+          this.onSave(lstTNMDs);
+        }
+      });
+  }
+
+  onSave(lstTNMDs) {
     this.checkRoleIDNull = false;
     if (this.listChooseRole) {
       this.listChooseRole.forEach((res) => {
@@ -263,11 +321,11 @@ export class PopRolesComponent implements OnInit {
       if (this.CheckListUserRoles() === this.optionFirst) {
         this.notiService.notifyCode('AD006');
       } else if (this.CheckListUserRoles() === this.optionSecond) {
-        this.dialogSecond.close(this.listChooseRole);
+        this.dialogSecond.close([this.listChooseRole, lstTNMDs]);
         this.changeDec.detectChanges();
       } else {
         this.notiService.notifyCode('Không có gì thay đổi');
-        this.dialogSecond.close(this.listChooseRole);
+        this.dialogSecond.close([this.listChooseRole, lstTNMDs]);
       }
     }
   }
