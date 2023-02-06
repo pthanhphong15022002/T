@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
 import { CacheService, ApiHttpService, CallFuncService, NotificationsService, UIComponent, DialogData, DialogRef, FormModel, CodxFormComponent, DialogModel, RequestOption } from 'codx-core';
+import { forEachChild } from 'typescript';
 import { CodxAcService } from '../../codx-ac.service';
 import { Address } from '../../models/Address.model';
 import { BankAccount } from '../../models/BankAccount.model';
@@ -73,41 +74,37 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     });
     if (this.customers.customerID != null) {
       this.customerID = this.customers.customerID;
-      this.api.exec(
-        'ERM.Business.BS',
-        'BankAccountsBusiness',
-        'LoadDataAsync',
-        [this.customerID]
-      ).subscribe((res:any)=>{
+      this.acService.loadData(
+       'ERM.Business.BS'
+      ,'BankAccountsBusiness'
+      ,'LoadDataAsync'
+      ,this.customerID).subscribe((res:any)=>{
         this.objectBankaccount = res;
-      });  
-      this.api.exec(
-        'ERM.Business.BS',
-        'AddressBookBusiness',
-        'LoadDataAsync',
-        [this.customerID]
-      ).subscribe((res:any)=>{
+      }); 
+      this.acService.loadData(
+        'ERM.Business.BS'
+      ,'AddressBookBusiness'
+      ,'LoadDataAsync'
+      ,this.customerID).subscribe((res:any)=>{
         this.objectAddress = res;
         for(var i = 0 ; i<this.objectAddress.length ; i++){
             var recID = this.objectAddress[i].recID;
-            this.api.exec(
-              'ERM.Business.BS',
-              'ContactBookBusiness',
-              'LoadDataAsync',
-              [recID]
-            ).subscribe((res:any)=>{             
+            this.acService.loadData(
+              'ERM.Business.BS'
+            ,'ContactBookBusiness'
+            ,'LoadDataAsync'
+            ,recID).subscribe((res:any)=>{             
               res.forEach(element => {
                 this.objectContactAddress.push(element);
               });
             }); 
           }
       }); 
-      this.api.exec(
-        'ERM.Business.BS',
-        'ContactBookBusiness',
-        'LoadDataAsync',
-        [this.customerID]
-      ).subscribe((res:any)=>{
+      this.acService.loadData(
+        'ERM.Business.BS'
+       ,'ContactBookBusiness'
+       ,'LoadDataAsync'
+       ,this.customerID).subscribe((res:any)=>{
         this.objectContact = res;
       }); 
     }
@@ -126,16 +123,11 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   valueChangeTags(e:any){
     this.customers[e.field] = e.data;
   }
-  convertAddressType(addresstype:any,type:any){
+  convertHtml(data:any,id:any){
     this.cache.valueList('AC015').subscribe((res) => {
       res.datas.forEach(element => {
-        if (element.value == addresstype) {
-          if (type == 'adressType') {
-            document.getElementById("adressType").innerHTML = element.text;
-          }
-          if (type == 'contactType') {
-            document.getElementById("contactType").innerHTML = element.text;
-          }
+        if (element.value == data) {       
+            document.getElementById(id).innerHTML = element.text;
         }
       });
     });
@@ -268,10 +260,10 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
           }
           if (datacontactaddress != null) {   
             datacontactaddress.forEach(element => {
-              element.reference = dataaddress.recID;
               this.objectContactAddress.push(element);
-            });
+            });            
           }
+
           window.localStorage.removeItem("dataaddress");
           window.localStorage.removeItem("datacontactaddress");
         });
@@ -295,7 +287,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       });  
     }
     if (type == 'datacontact') {
-      let index = this.objectContact.findIndex(x => x.contactName == data.contactName && x.phone == data.phone);
+      let index = this.objectContact.findIndex(x => x.reference == data.reference && x.contactID == data.contactID);
       this.objectContact.splice(index, 1);
       this.api.exec(
         'ERM.Business.BS',
@@ -400,7 +392,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       });
     }
     if (type == 'dataaddress') {
-      let index = this.objectAddress.findIndex(x => x.adressType == data.adressType && x.adressName == data.adressName);  
+      let index = this.objectAddress.findIndex(x => x.recID == data.recID);  
       var obs = {
         headerText: 'Chỉnh sửa địa chỉ',
         data : {...data},
@@ -431,15 +423,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
               this.objectAddress[index] = dataaddress;
             }
             if (datacontactaddress != null) {  
-              datacontactaddress.forEach(element => {
-                if (element.reference == null) {
-                  element.reference = dataaddress.recID;
-                  this.objectContactAddress.push(element);
-                }else{
-                  let index = this.objectContactAddress.findIndex(x => x.reference == element.reference);  
-                  this.objectContactAddress[index] = element;
-                }    
-              });
+              this.objectContactAddress = datacontactaddress;
             }
             window.localStorage.removeItem("dataaddress");
             window.localStorage.removeItem("datacontactaddress");
@@ -474,17 +458,26 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       })
       .subscribe((res) => {
         if (res.save) {
-          this.api.exec(
-            'ERM.Business.BS',
-            'BankAccountsBusiness',
-            'AddAsync',
-            [this.customerID,this.objectBankaccount,this.objectAddress,this.objectContact,this.objectContactAddress]
-          ).subscribe((res:[])=>{
-            if (res) {
-              this.dialog.close();
-              this.dt.detectChanges();
-            }
-          });      
+          this.acService.addData(
+            'ERM.Business.BS'
+          ,'BankAccountsBusiness'
+          ,'AddAsync'
+          ,[this.customerID,this.objectBankaccount]).subscribe((res:[])=>{
+          }); 
+          this.acService.addData(
+            'ERM.Business.BS'
+          ,'AddressBookBusiness'
+          ,'AddAsync'
+          ,[this.customerID,this.objectAddress]).subscribe((res:[])=>{
+          }); 
+          this.acService.addData(
+            'ERM.Business.BS'
+          ,'ContactBookBusiness'
+          ,'AddAsync'
+          ,[this.customerID,this.objectContact,this.objectContactAddress]).subscribe((res:[])=>{
+          }); 
+          this.dialog.close();
+          this.dt.detectChanges();
         }else{
           this.notification.notifyCode(
             'SYS031',
@@ -511,14 +504,13 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             'BankAccountsBusiness',
             'UpdateAsync',
             [this.customerID,this.objectBankaccount]
-          ).subscribe((res:any)=>{
-            
+          ).subscribe((res:any)=>{          
           });  
           this.api.exec(
             'ERM.Business.BS',
             'AddressBookBusiness',
             'UpdateAsync',
-            [this.customerID,this.objectAddress,this.objectContactAddress]
+            [this.customerID,this.objectAddress]
           ).subscribe((res:any)=>{
             
           });  
@@ -526,9 +518,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             'ERM.Business.BS',
             'ContactBookBusiness',
             'UpdateAsync',
-            [this.customerID,this.objectContact]
-          ).subscribe((res:any)=>{
-            
+            [this.customerID,this.objectContact,this.objectContactAddress]
+          ).subscribe((res:any)=>{      
           });  
           this.dialog.close();
           this.dt.detectChanges();

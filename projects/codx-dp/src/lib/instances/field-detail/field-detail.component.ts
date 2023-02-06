@@ -36,6 +36,6 @@ export class FieldDetailComponent implements OnInit {
   }
 
   clickMF(e, data){
-
+    console.log(e);
   }
 }

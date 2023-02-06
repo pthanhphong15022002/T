@@ -202,4 +202,37 @@ export class CodxDpService {
       data
     );
   }
+  // Instances_Steps_TaskGroups
+  addTaskGroups(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'AddGroupTaskAsync',
+      data
+    );
+  }
+  updateTaskGroups(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateGroupTaskAsync',
+      data
+    );
+  }
+  addTask(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'AddTaskAsync',
+      data
+    );
+  }
+  updateTask(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateTaskAsync',
+      data
+    );
+  }
 }

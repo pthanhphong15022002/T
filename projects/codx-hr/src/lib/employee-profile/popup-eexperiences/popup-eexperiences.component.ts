@@ -149,7 +149,7 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
       this.hrService.AddEmployeeExperienceInfo(this.data).subscribe((p) => {
         if (p != null) {
           this.data.recID = p.recID;
-          this.notify.notifyCode('SYS007');
+          this.notify.notifyCode('SYS006');
           this.lstExperience.push(JSON.parse(JSON.stringify(this.data)));
 
           if (this.listView) {
@@ -158,14 +158,14 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
               .subscribe();
           }
           // this.dialog.close(p)
-        } else this.notify.notifyCode('DM034');
+        } else this.notify.notifyCode('SYS023');
       });
     } else {
       this.hrService
         .UpdateEmployeeExperienceInfo(this.formModel.currentData)
         .subscribe((p) => {
           if (p != null) {
-            this.notify.notifyCode('SYS007');
+            this.notify.notifyCode('SYS006');
             this.lstExperience[this.indexSelected] = p;
             if (this.listView) {
               (this.listView.dataService as CRUDService)
@@ -173,7 +173,7 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
                 .subscribe();
             }
             // this.dialog.close(this.data);
-          } else this.notify.notifyCode('DM034');
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }

@@ -208,8 +208,13 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   continues(data) {
-    if (this.currentStep + 1 > this.listSteps.length) return;
+    if (this.currentStep + 1 == this.listSteps.length) return;
+    this.dpSv.GetStepsByInstanceIDAsync(data.recID).subscribe(res =>{
+      this.tmpTeps = res;
+
+    })
     this.currentStep++;
+    this.currentNameStep = this.currentStep;
     this.changeDetec.detectChanges();
   }
 

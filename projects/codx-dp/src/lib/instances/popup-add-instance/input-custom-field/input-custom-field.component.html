@@ -42,7 +42,7 @@
   </codx-input>
 </ng-container>
 <ng-container *ngIf="customField.dataType == 'N'">
-  <codx-input
+  <!-- <codx-input
     [field]="customField.fieldName"
     type="number"
     [showSpinButton]="false"
@@ -52,7 +52,12 @@
     [placeholder]="customField.note"
     (valueChange)="valueChange($event)"
   >
-  </codx-input>
+  </codx-input> -->
+  <!--Để nhập số nhập phân-->
+  <ng-container *ngIf="customField.dataType == 'N'">
+    <codx-input [field]="customField.fieldName" type="text" [showSpinButton]="false" [crrValue]="customField.dataValue"
+      [placeholder]="customField.note" (valueChange)="valueChange($event)"></codx-input>
+  </ng-container>
 </ng-container>
 
 <ng-container *ngIf="customField.dataType == 'D'">
