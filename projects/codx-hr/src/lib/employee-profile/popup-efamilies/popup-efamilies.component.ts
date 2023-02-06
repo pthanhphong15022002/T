@@ -182,27 +182,27 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
       this.hrService.AddEmployeeFamilyInfo(this.familyMemberObj).subscribe(p => {
         if(p != null){
           this.familyMemberObj.recID = p.recID
-          this.notify.notifyCode('SYS007')
+          this.notify.notifyCode('SYS006')
           this.lstFamilyMembers.push(JSON.parse(JSON.stringify(this.familyMemberObj)));
           if(this.listView){
             (this.listView.dataService as CRUDService).add(this.familyMemberObj).subscribe();
           }
           // this.dialog.close(p)
         }
-        else this.notify.notifyCode('DM034')
+        else this.notify.notifyCode('SYS023')
       })
     }
     else{
       this.hrService.UpdateEmployeeFamilyInfo(this.formModel.currentData).subscribe(p => {
         
         if(p != null){
-          this.notify.notifyCode('SYS007')
+          this.notify.notifyCode('SYS006')
           this.lstFamilyMembers[this.indexSelected] = p
           if(this.listView){
             (this.listView.dataService as CRUDService).update(this.lstFamilyMembers[this.indexSelected]).subscribe()
           }
         }
-        else this.notify.notifyCode('DM034')
+        else this.notify.notifyCode('SYS021')
       })
     }
   }
