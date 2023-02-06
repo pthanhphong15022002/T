@@ -1855,8 +1855,9 @@
               id="recID"
               [dataSource]="listCbxProccess"
               [fields]="fieldCbxProccess"
-              [placeholder]="'Không chuyển đến quy trình khác'"
-              (valueChange)="cbxChange($event)"
+              [placeholder]="'Chọn quy trình kìa'"
+              (valueChange)="cbxChange($event,viewStepReasonSuccess)"
+              [value]="stepSuccess.processID"
             ></ejs-combobox>
             <codx-label
               class="text-danger fst-italic fs-6"
@@ -2036,8 +2037,14 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input field="" type="valuelist" refValue=""> </codx-input>
-            <br />
+            <ejs-combobox
+            id="recID"
+            [dataSource]="listCbxProccess"
+            [fields]="fieldCbxProccess"
+            [placeholder]="'Chọn quy trình kìa'"
+            (valueChange)="cbxChange($event,viewStepReasonFail)"
+            [value]="stepFail.processID"
+          ></ejs-combobox>
             <codx-label
               class="text-danger fst-italic fs-6"
               default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại đối tượng áp dụng"
