@@ -85,11 +85,56 @@
         >
         </codx-label>
         <codx-input
+          *ngIf="field.dataType == 'N'"
           type="valuelist"
           ngDefaultControl
           field="dataFormat"
           [crrValue]="field?.dataFormat"
-          [refValue]="vllDynamic"
+          refValue="DP0271"
+          [placeholder]="grvSetup['DataFormat']['headerText']"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+        <codx-input
+          *ngIf="field.dataType == 'L'"
+          type="valuelist"
+          ngDefaultControl
+          field="dataFormat"
+          [crrValue]="field?.dataFormat"
+          refValue="DP0272"
+          [placeholder]="grvSetup['DataFormat']['headerText']"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+        <codx-input
+          *ngIf="field.dataType == 'T'"
+          type="valuelist"
+          ngDefaultControl
+          field="dataFormat"
+          [crrValue]="field?.dataFormat"
+          refValue="DP0273"
+          [placeholder]="grvSetup['DataFormat']['headerText']"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+        <codx-input
+          *ngIf="field.dataType == 'D'"
+          type="valuelist"
+          ngDefaultControl
+          field="dataFormat"
+          [crrValue]="field?.dataFormat"
+          refValue="DP0274"
+          [placeholder]="grvSetup['DataFormat']['headerText']"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+        <codx-input
+          *ngIf="field.dataType == 'P'"
+          type="valuelist"
+          ngDefaultControl
+          field="dataFormat"
+          [crrValue]="field?.dataFormat"
+          refValue="DP0275"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
         >

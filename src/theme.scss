@@ -627,7 +627,11 @@
     }
 
     a.menu-link {
-        color: var(--primary-dark);
+        color: var(--primary-darker);
+    }
+
+    a.menu-link:hover {
+        color: var(--primary);
     }
 
     .extend-function hr {
