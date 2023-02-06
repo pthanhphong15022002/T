@@ -577,6 +577,20 @@ export class CodxEpService {
     );
   }
 
+  checkDuplicateBooking(
+    startDate: string,
+    endDate: string,
+    resourceID: string,
+    recID: string,
+  ) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'CheckDuplicateBookingAsync',
+      [ startDate, endDate, resourceID, recID ]
+    );
+  }
   getAvailableResources(
     resourceType: string,
     startDate: string,
