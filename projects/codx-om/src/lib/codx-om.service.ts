@@ -474,6 +474,15 @@ export class CodxOmService {
       dataRequest
     );
   }
+  getAllOKROfPlan(dataRequest: DataRequest) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR, 
+      'GetAllOKROfPlanAsync', 
+      dataRequest
+    );
+  }
   //Lấy danh sách liên kết/phụ thuộc OKR 
   getListAlignAssign(recID:string,refType:string) {
     return this.api.execSv(
