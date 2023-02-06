@@ -315,7 +315,7 @@
 
       .e-input-group:not(.e-success):not(.e-warning):not(.e-error),
       .e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error) {
-        border-color: transparent;
+        // border-color: transparent;
         color: var(--text-body);
         font-weight: 500;
       }
