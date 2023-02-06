@@ -1,4 +1,11 @@
-import { Component, ElementRef, HostListener, OnInit, Optional, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import {
   CacheService,
   CallFuncService,
@@ -8,17 +15,19 @@ import {
   Util,
 } from 'codx-core';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-import { DP_Steps_Tasks, DP_Steps_Tasks_Roles } from '../../../models/models';
-
+import {
+  DP_Instances_Steps_Tasks,
+  DP_Instances_Steps_Tasks_Roles,
+  DP_Steps_Tasks_Roles,
+} from '../../../models/models';
 
 @Component({
   selector: 'lib-popup-add-stask',
   templateUrl: './popup-add-stask.component.html',
-  styleUrls: ['./popup-add-stask.component.scss']
+  styleUrls: ['./popup-add-stask.component.scss'],
 })
 export class PopupAddStaskComponent implements OnInit {
-
-   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
+  @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   title = '';
   dialog!: DialogRef;
   formModelMenu: FormModel;
@@ -27,18 +36,18 @@ export class PopupAddStaskComponent implements OnInit {
   taskName = '';
   taskGroupName = '';
   linkQuesiton = 'http://';
-  listOwner: DP_Steps_Tasks_Roles[] = [];
+  listOwner: DP_Instances_Steps_Tasks_Roles[] = [];
   listChair = [];
   recIdEmail = '';
   isNewEmails = true;
   groupTackList = [];
-  stepsTasks: DP_Steps_Tasks;
+  stepsTasks: DP_Instances_Steps_Tasks;
   fieldsGroup = { text: 'taskGroupName', value: 'recID' };
   fieldsTask = { text: 'taskName', value: 'recID' };
   tasksItem = '';
   stepID = '';
   status = 'add';
-  taskList: DP_Steps_Tasks[] = [];
+  taskList: DP_Instances_Steps_Tasks[] = [];
   show = false;
   dataCombobox = [];
   valueInput = '';
@@ -56,11 +65,12 @@ export class PopupAddStaskComponent implements OnInit {
     this.groupTackList = dt?.data[3];
     this.dialog = dialog;
     if (this.status == 'add') {
-      this.stepsTasks = new DP_Steps_Tasks();
+      this.stepsTasks = new DP_Instances_Steps_Tasks();
       this.stepsTasks['taskType'] = this.stepType;
       this.stepsTasks['stepID'] = this.stepID;
+      this.stepsTasks['progress'] = 0;
     } else {
-      this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
+      this.stepsTasks = dt?.data[4] || new DP_Instances_Steps_Tasks();
       this.stepType = this.stepsTasks.taskType;
     }
     this.taskList = dt?.data[5];
@@ -69,31 +79,38 @@ export class PopupAddStaskComponent implements OnInit {
   ngOnInit(): void {
     this.listOwner = this.stepsTasks['roles'];
     console.log(this.taskList);
-    if(this.stepsTasks['parentID']){
+    if (this.stepsTasks['parentID']) {
       this.litsParentID = this.stepsTasks['parentID'].split(';');
     }
-    if(this.taskList.length > 0){
-      this.dataCombobox = this.taskList.map(data => {
-        if(this.litsParentID.some(x => x == data.recID)){
+    if (this.taskList.length > 0) {
+      this.dataCombobox = this.taskList.map((data) => {
+        if (this.litsParentID.some((x) => x == data.recID)) {
           return {
             key: data.recID,
             value: data.taskName,
             checked: true,
-          }
-        }else{
+          };
+        } else {
           return {
             key: data.recID,
             value: data.taskName,
             checked: false,
-          }
-        }        
-      })
-      if(this.status == 'edit'){
-        let index = this.dataCombobox.findIndex(x => x.key === this.stepsTasks.recID);
-        this.dataCombobox.splice(index,1);
-        this.taskGroupName = this.groupTackList.find(x => x.recID === this.stepsTasks.taskGroupID)['taskGroupName'];
+          };
+        }
+      });
+      if (this.status == 'edit') {
+        let index = this.dataCombobox.findIndex(
+          (x) => x.key === this.stepsTasks.recID
+        );
+        this.dataCombobox.splice(index, 1);
+        this.taskGroupName = this.groupTackList.find(
+          (x) => x.recID === this.stepsTasks.taskGroupID
+        )['taskGroupName'];
       }
-      this.valueInput = this.dataCombobox.filter(x => x.checked).map(y => y.value).join('; ');
+      this.valueInput = this.dataCombobox
+        .filter((x) => x.checked)
+        .map((y) => y.value)
+        .join('; ');
     }
   }
   valueChangeText(event) {
@@ -106,11 +123,16 @@ export class PopupAddStaskComponent implements OnInit {
   filterText(value, key) {
     if (value) {
       this.stepsTasks[key] = value;
-      this.taskGroupName = this.groupTackList.find(x => x.recID === value)['taskGroupName'];
+      this.taskGroupName = this.groupTackList.find((x) => x.recID === value)[
+        'taskGroupName'
+      ];
     }
   }
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
+  }
+  changeValueDate(event) {
+    this.stepsTasks[event?.field] = event?.data?.fromDate;
   }
   addFile(evt: any) {
     // this.attachment.uploadFile();
@@ -178,5 +200,4 @@ export class PopupAddStaskComponent implements OnInit {
       }
     });
   }
-
 }

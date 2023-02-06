@@ -149,7 +149,7 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
       this.hrService.AddEmployeeAssetInfo(this.assetObj).subscribe((p) => {
         if (p != null) {
           this.assetObj.recID = p.recID;
-          this.notify.notifyCode('SYS007');
+          this.notify.notifyCode('SYS006');
           this.lstAssets.push(JSON.parse(JSON.stringify(this.assetObj)));
           if (this.listView) {
             (this.listView.dataService as CRUDService)
@@ -157,7 +157,7 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
               .subscribe();
           }
           // this.dialog.close(p)
-        } else this.notify.notifyCode('DM034');
+        } else this.notify.notifyCode('SYS023');
       });
     } else {
       this.hrService
@@ -172,7 +172,7 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
                 .subscribe();
             }
             // this.dialog.close(this.data)
-          } else this.notify.notifyCode('DM034');
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }

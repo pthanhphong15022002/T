@@ -41,6 +41,7 @@ import { AD_Roles } from '../../models/AD_Roles.models';
 import { AD_UserRoles } from '../../models/AD_UserRoles.models';
 import { ContentTmp } from '../../models/contentTmp.model';
 import { DomSanitizer } from '@angular/platform-browser';
+import { tmpTNMD } from '../../models/tmpTenantModules.models';
 
 @Component({
   selector: 'lib-add-user',
@@ -67,6 +68,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   countListViewChooseRoleService: Number = 0;
   viewChooseRole: tmpformChooseRole[] = [];
   viewChooseRoleTemp: tmpformChooseRole[] = [];
+  lstChangeModule: tmpTNMD[] = [];
   formModel: FormModel;
   formType: any;
   gridViewSetup: any = [];
@@ -252,7 +254,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
     );
     this.dialogRole.closed.subscribe((e) => {
       if (e?.event) {
-        this.viewChooseRole = e?.event;
+        this.viewChooseRole = e?.event[0];
+        this.lstChangeModule = e.event[1];
         this.countListViewChoose();
         this.viewChooseRole.forEach((dt) => {
           dt['module'] = dt.functionID;
@@ -327,12 +330,24 @@ export class AddUserComponent extends UIComponent implements OnInit {
       }
       this.adUser;
 
-      data = [this.adUser, this.viewChooseRole, true, false];
+      data = [
+        this.adUser,
+        this.viewChooseRole,
+        true,
+        false,
+        this.lstChangeModule,
+      ];
     }
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      data = [this.adUser, this.viewChooseRole, checkDifference, '0'];
+      data = [
+        this.adUser,
+        this.viewChooseRole,
+        checkDifference,
+        '0',
+        this.lstChangeModule,
+      ];
     }
     op.data = data;
     return true;

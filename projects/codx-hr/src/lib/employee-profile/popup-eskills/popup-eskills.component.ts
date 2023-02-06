@@ -120,7 +120,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
       this.hrService.addESlkillInfo(this.skillObj).subscribe((p) => {
         if (p != null) {
           this.skillObj.recID = p.recID;
-          this.notify.notifyCode('SYS007');
+          this.notify.notifyCode('SYS006');
           this.lstSkills.push(JSON.parse(JSON.stringify(this.skillObj)));
           if (this.listView) {
             (this.listView.dataService as CRUDService)
@@ -128,7 +128,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
               .subscribe();
           }
           // this.dialog.close(p)
-        } else this.notify.notifyCode('DM034');
+        } else this.notify.notifyCode('SYS023');
       });
     } else {
       this.hrService
@@ -143,7 +143,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
                 .subscribe();
             }
             // this.dialog.close(this.data)
-          } else this.notify.notifyCode('DM034');
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }
