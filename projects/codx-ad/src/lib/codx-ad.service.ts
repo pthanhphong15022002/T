@@ -219,7 +219,7 @@ export class CodxAdService {
     );
   }
 
-  getListValidOrderForModules(lstmoduleID: Array<string>) {
+  getListValidOrderForModules(lstmoduleID) {
     return this.api.execSv(
       'Tenant',
       'ERM.Business.Tenant',
