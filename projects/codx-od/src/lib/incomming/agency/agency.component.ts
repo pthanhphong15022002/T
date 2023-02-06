@@ -45,6 +45,7 @@ export class AgencyComponent implements OnInit {
     this.dtAgency.Category = event;
   }
   onSave() {
+    if(this.checkRequired()) return; 
     this.codxService
       .getAutoNumber('ODT3', 'OD_Agencies', 'AgencyID')
       .subscribe((dt: any) => {
@@ -54,5 +55,12 @@ export class AgencyComponent implements OnInit {
           this.notifySvr.notify(item.message);
         });
       });
+  }
+
+  checkRequired()
+  {
+    if(this.agencyForm.value?.agencyName) return false;
+    this.notifySvr.notifyCode('SYS009', 0, "Tên đơn vị");
+    return true
   }
 }

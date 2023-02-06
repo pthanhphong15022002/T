@@ -1,0 +1,93 @@
+<codx-views #view [views]="views" [autoLoad]="false"> </codx-views>
+
+<ng-template #template>
+  <div class="w-100 h-100 bg-white px-5">
+    <ul class="d-flex flex-wrap">
+      <li
+        class="menu-item m-2"
+        *ngFor="let item of dashboard"
+        (click)="loadContent($event, item)"
+      >
+        <codx-card-img
+          cardCss="border w-200px h-100 card-vpp"
+          [imageObjType]="'EP_Resources'"
+          [imageObjName]="item?.resourceName"
+          [imageId]="item?.recID"
+          [rootData]="item"
+          [footer]="cardItemFooter"
+          [imageWidth]="700"
+        >
+        </codx-card-img>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #cardItemFooter let-data>
+  <div class="d-flex flex-column flex-grow-1 mt-2">
+    <div class="fw-bold line-clamp line-clamp-1 text-start">
+      <i class="{{ data?.largeIcon }}"></i>
+      {{ data?.customName }}
+    </div>
+    <div class="text-start text-gray-600">
+      {{ data?.description }}
+    </div>
+    <!-- <div
+      class="d-flex justify-content-between align-items-end mt-2 flex-nowrap"
+    >
+      <div class="d-flex justify-content-start mb-2">
+        <div
+          class="d-flex align-items-center position-relative me-2"
+          [title]="grvStationery['CurrentQty'].headerText"
+        >
+          <span class="icon-view_agenda icon-16 text-gray-500 me-1"></span>
+          <span
+            [class.truncate]="data?.currentQty >= 1000"
+            [title]="data?.currentQty"
+            >{{ data?.currentQty }}</span
+          >
+        </div>
+        <div
+          class="d-flex align-items-center position-relative me-2"
+          [title]="grvStationery['ReservedQty'].headerText"
+        >
+          <span
+            class="icon-shopping_cart icon-16 text-gray-500 me-1 reservedQty_card"
+          ></span>
+          <span
+            [class.truncate]="data?.reservedQty >= 1000"
+            [title]="data?.reservedQty"
+            >{{ data?.reservedQty }}</span
+          >
+        </div>
+        <div
+          class="d-flex align-items-center position-relative"
+          [title]="grvStationery['AvailableQty'].headerText"
+        >
+          <span
+            class="icon-brightness_auto icon-16 text-gray-500 me-1 availableQty_card"
+          ></span>
+          <span
+            [class.truncate]="data?.availableQty >= 1000"
+            [title]="data?.availableQty"
+            >{{ data?.availableQty }}</span
+          >
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <div class="position-relative">
+          <span
+            type="button"
+            class="icon-shopping_cart icon-18 text-gray-500 cart"
+            (click)="addCart($event, data)"
+          ></span>
+          <span
+            *ngIf="getItemQty(data?.resourceID) != 0"
+            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger"
+            >{{ getItemQty(data?.resourceID) }}</span
+          >
+        </div>
+      </div>
+    </div> -->
+  </div>
+</ng-template>

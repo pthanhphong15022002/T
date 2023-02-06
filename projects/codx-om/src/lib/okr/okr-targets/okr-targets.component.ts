@@ -28,6 +28,7 @@ import { PopupDistributeOKRComponent } from '../../popup/popup-distribute-okr/po
 import { E } from '@angular/cdk/keycodes';
 import { PopupAssignmentOKRComponent } from '../../popup/popup-assignment-okr/popup-assignment-okr.component';
 import { PopupAssignmentOKRCComponent } from '../../popup/popup-assigment-okr-c/popup-assignment-okr-c.component';
+import { PopupAddOBComponent } from '../../popup/popup-add-ob/popup-add-ob.component';
 
 @Component({
   selector: 'lib-okr-targets',
@@ -199,39 +200,39 @@ export class OkrTargetsComponent implements OnInit {
 
   //_______________________Base Event________________________//
 
-  clickMF(e: any, data: any) {
+  clickMF(e: any, ob: any) {
     var funcID = e?.functionID;
     switch (funcID) {
       //Chỉnh sửa
-      case 'SYS03': {
-        let dialog = this.callfunc.openSide(OkrAddComponent, [
-          this.gridView,
-          this.formModelKR,
-          'edit',
-          '',
-          data,
-        ]);
+      // case 'SYS03': {
+      //   let dialog = this.callfunc.openSide(OkrAddComponent, [
+      //     this.gridView,
+      //     this.formModelKR,
+      //     'edit',
+      //     '',
+      //     data,
+      //   ]);
+      //   break;
+      // }
+      case OMCONST.MFUNCID.Edit: {
+        this.editOB(ob, e?.text +' '+this.obTitle);
         break;
       }
-      //Phân công mục tiêu
-      // case 'OMT022': //site tester
-      // case 'OMT012':
-      //   {
-      //     let option = new DialogModel();
-      //     option.IsFull = true;
-      //     this.callfunc.openForm(PopupAssignmentOKRCComponent,"",null,null,this.formModel.funcID,
-      //     [
-      //       "Phân công mục tiêu",
-      //       data
-      //     ],"",option);
-      //     break;
-      //   }
+      case OMCONST.MFUNCID.Copy: {
+        this.copyOB(ob, e?.text +' '+this.obTitle);
+        break;
+      }
+      case OMCONST.MFUNCID.Delete: {
+        this.deleteOB(ob);
+        break;
+      }
+
       //phân bổ OB
       case OMCONST.MFUNCID.DOBComp:
       case OMCONST.MFUNCID.DOBDept:
       case OMCONST.MFUNCID.DOBOrg:
       case OMCONST.MFUNCID.DOBPers: {
-        this.distributeOKR(data, e?.text);
+        this.distributeOKR(ob, e?.text);
         break;
       }
 
@@ -240,7 +241,7 @@ export class OkrTargetsComponent implements OnInit {
       case OMCONST.MFUNCID.AOBDept:
       case OMCONST.MFUNCID.AOBOrg:
       case OMCONST.MFUNCID.AOBPers: {
-        this.assignmentOKR(data, e?.text);
+        this.assignmentOKR(ob, e?.text);
         break;
       }
     }
@@ -356,6 +357,41 @@ export class OkrTargetsComponent implements OnInit {
   //     option
   //   );
   // }
+
+  
+  editOB(ob: any, popupTitle: any) {
+    let option = new SidebarModel();
+    option.FormModel = this.formModelOB;
+
+    let dialogEditOB = this.callfunc.openSide(
+      PopupAddOBComponent,
+      [this.krFuncID,OMCONST.MFUNCID.Edit, popupTitle, ob,this.dataOKRPlans],
+      option
+    );
+  }
+
+  copyOB(ob: any, popupTitle: any) {
+    let option = new SidebarModel();
+    option.FormModel = this.formModelOB;
+
+    let dialogCopyOB = this.callfunc.openSide(
+      PopupAddOBComponent,
+      [this.krFuncID,OMCONST.MFUNCID.Copy, popupTitle, ob,this.dataOKRPlans],
+      option
+    );
+  }
+  deleteOB(ob: any) {
+    if (false) {
+      //Cần thêm kịch bản khi xóa KR
+      this.codxOmService.deleteKR(ob).subscribe((res: any) => {
+        if (res) {
+          this.notificationsService.notifyCode('SYS008');
+        } else {
+          this.notificationsService.notifyCode('SYS022');
+        }
+      });
+    }
+  }
 
   editKR(kr: any, popupTitle: any) {
     let option = new SidebarModel();

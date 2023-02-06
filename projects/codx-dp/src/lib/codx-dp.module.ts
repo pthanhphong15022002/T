@@ -35,6 +35,7 @@ import { InputCustomFieldComponent } from './instances/popup-add-instance/input-
 import { PopupMoveStageComponent } from './instances/popup-move-stage/popup-move-stage.component';
 import { PopupMoveReasonComponent } from './instances/popup-move-reason/popup-move-reason.component';
 import { ViewJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/view-job/view-job.component';
+import { PopupAddStaskComponent } from './instances/stages-detail/popup-add-stask/popup-add-stask.component';
 
 const routes: Routes = [
   {
@@ -78,6 +79,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupMoveStageComponent,
     PopupMoveReasonComponent,
     ViewJobComponent,
+    PopupAddStaskComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

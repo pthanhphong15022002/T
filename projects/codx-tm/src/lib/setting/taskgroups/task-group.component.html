@@ -344,6 +344,19 @@
     <td class="rowphoto">
       <div class="padding center">
         <codx-input
+          name="completedControl"
+          type="switch"
+          class="test-switch"
+          field="completedControl"
+          [crrValue]="data.completedControl === '1' ? true : false"
+          disabled="disabled"
+        >
+        </codx-input>
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding center">
+        <codx-input
           name="extendControl"
           type="switch"
           class="test-switch"
@@ -607,6 +620,18 @@
       formName="TaskGroups"
       gridViewName="grvTaskGroups"
       default="Cập nhật hoàn thành tự động"
+    >
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemCompletedControl let-data>
+  <div class="padding">
+    <codx-label
+      fiedName="CompletedControl"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Kiểm soát hoàn tất giao việc"
     >
     </codx-label>
   </div>

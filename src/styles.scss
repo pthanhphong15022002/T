@@ -1609,3 +1609,8 @@ ejs-listview .e-ul li {
 textarea.codx-textarea {
   height: auto !important;
 }
+
+.btn.btn-icon.btn-sm,
+.btn-group-sm>.btn.btn-icon {
+  min-width: 26px;
+}

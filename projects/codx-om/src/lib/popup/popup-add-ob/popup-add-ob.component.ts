@@ -35,7 +35,6 @@ import { Targets } from '../../model/okr.model';
 export class PopupAddOBComponent extends UIComponent {
   @Input() editResources: any;
   @Input() isAdd = true;
-  @Input() kr: any;
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
   @Output() loadData = new EventEmitter();
@@ -66,7 +65,7 @@ export class PopupAddOBComponent extends UIComponent {
   tempTarget: any;
   funcType:any;
   isSubKR: boolean;
-  ob: any;
+  ob:any;
   okrPlan: any;//Chờ c thương thiết lập vll
   //Giả lập vll
   //OM003
@@ -175,12 +174,20 @@ export class PopupAddOBComponent extends UIComponent {
 
   onSaveForm() {
     //xóa khi đã lấy được model chuẩn từ setting 
+    if(this.funcType==OMCONST.MFUNCID.Add){
+
     this.ob.status='1';
     this.ob.approveStatus='1';
     this.ob.approveControl='1';
-    this.ob.okrType=this.isSubKR? OMCONST.VLL.OKRType.SKResult: OMCONST.VLL.OKRType.KResult;
-    this.ob.recID= this.ob.parentID;
-    this.ob.transID= this.ob.parentID;
+    this.ob.okrType=OMCONST.VLL.OKRType.Obj;
+    this.ob.recID= this.okrPlan.recID;
+    this.ob.transID= this.okrPlan.recID;
+    this.ob.parentID= this.okrPlan.recID;
+    this.ob.year=this.okrPlan.year;
+    this.ob.interval=this.okrPlan.interval;    
+    this.ob.periodID=this.okrPlan.periodID;
+    this.OKRLevel();
+    }
     //---------------------------------------
     this.fGroupAddOB=this.form?.formGroup;
     this.fGroupAddOB.patchValue(this.ob);
@@ -193,15 +200,15 @@ export class PopupAddOBComponent extends UIComponent {
       this.methodCopy(this.ob);
     }
   }
-  methodAdd(kr: any) {
-    this.codxOmService.addKR(this.ob).subscribe((res: any) => {
+  methodAdd(ob:any) {
+    this.codxOmService.addOB(this.ob).subscribe((res: any) => {
       if (res) {
         this.afterSave(res);
       }
     });
   }
 
-  methodCopy(kr: any) {
+  methodCopy(ob:any) {
     this.codxOmService.copyKR(this.ob).subscribe((res: any) => {
       if (res) {
         this.afterSave(res);
@@ -209,20 +216,20 @@ export class PopupAddOBComponent extends UIComponent {
     });
   }
 
-  methodEdit(kr: any) {
-    this.codxOmService.editKR(this.ob).subscribe((res: any) => {
+  methodEdit(ob:any) {
+    this.codxOmService.editOB(this.ob).subscribe((res: any) => {
       if (res) {
         this.afterSave(res);
       }
     });
   }
-  afterSave(kr: any) {
+  afterSave(ob:any) {
     if (this.funcType == OMCONST.MFUNCID.Add) {
       this.notificationsService.notifyCode('SYS006');
     } else {
       this.notificationsService.notifyCode('SYS007');
     }
-    this.dialogRef && this.dialogRef.close(kr);
+    this.dialogRef && this.dialogRef.close(ob);
   }
 
   //-----------------------End-------------------------------//
