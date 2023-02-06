@@ -135,14 +135,14 @@
         <i class="fa-solid fa-user-group"></i>
     </span> 
       </div>
-      <div class="row pb-5" *ngFor="let item of objectContactAddress">
+      <div *ngFor="let item of objectContactAddress">
+      <div class="row pb-5" *ngIf="item.reference == address.recID" >
         <div class="col-6 ps-0">
           <div class="d-flex align-items-top">
             <div class="me-4">
               <div>
-                <codx-img 
-                  [width]="50"
-                  imgSource="../../../assets/img/avatar.png">
+                <codx-img [objectId]="item?.recID" [objectName]="item?.contactName"
+                [objectType]="formModel?.entityName" [width]="50">
                 </codx-img>
               </div>
             </div>
@@ -179,7 +179,21 @@
           <span (click)="deleteobject(item,'datacontact')"  class="icon-delete icon-16"></span>
         </div>
       </div>
-      
+      </div>
+      <div class="d-flex">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="IsDefault"
+        default="Mặc định"
+      ></codx-label>
+        <codx-input
+                [checked]="form.data != null ? form.data.isDefault : false"
+                type="switch"
+                field="isDefault"
+                (valueChange)="valueChange($event,'isDefault')"
+              >
+        </codx-input>
+      </div>   
 </ng-template>
 <ng-template #footer>
   

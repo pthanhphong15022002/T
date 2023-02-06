@@ -1609,3 +1609,33 @@ ejs-listview .e-ul li {
 textarea.codx-textarea {
   height: auto !important;
 }
+
+.btn.btn-icon.btn-sm,
+.btn-group-sm>.btn.btn-icon {
+  min-width: 26px;
+}
+
+#noti-dropdownPopup {
+  left: auto !important;
+  right: 0 !important;
+}
+
+.user-mini-item codx-temp-full .text-content {
+  overflow: hidden;
+  max-width: 195px;
+}
+
+.dropdown-menu a.border-top:first-child::before {
+  display: none !important;
+}
+
+codx-dropdown-calendar button.dropdown-toggle.btn {
+  height: 32px !important;
+  line-height: inherit;
+}
+
+
+
+// .dropdown [type="inset: 0px auto auto 0px;"] {
+//   border: 2px aqua solid !important;
+// }

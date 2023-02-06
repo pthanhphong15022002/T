@@ -1,4 +1,3 @@
-import { AssignDashboardComponent } from './dashboard/assigndashboard/assigndashboard.component';
 import { LayoutNoAsideToolbarFluidComponent } from './../../../codx-share/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { AddEditComponent } from './setting/rangeskanban/addEdit/addEdit.component';
 import { TasksComponent } from './tasks/tasks.component';
@@ -46,8 +45,9 @@ import { TaskByProjectsComponent } from './reports/task-by-projects/task-by-proj
 import { ProjectChartComponent } from './reports/task-by-projects/project-chart/project-chart.component';
 import { CalendarComponent } from './setting/calendar/calendar.component';
 import { FormsModule } from '@angular/forms';
-import { MyDashboardComponent } from './dashboard/mydashboard/mydashboard.component';
-import { TeamDashboardComponent } from './dashboard/teamdashboard/teamdashboard.component';
+import { MyDashboardComponent } from './tmdashboard/mydashboard/mydashboard.component';
+import { TeamDashboardComponent } from './tmdashboard/teamdashboard/teamdashboard.component';
+import { AssignDashboardComponent } from './tmdashboard/assigndashboard/assigndashboard.component';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
@@ -68,6 +68,7 @@ import { PopupTabsViewsDetailsComponent } from './popup-tabs-views-details/popup
 import { PopupRescheduleMeetingComponent } from './tmmeetings/popup-reschedule-meeting/popup-reschedule-meeting.component';
 import { PopupAddResourcesComponent } from './tmmeetings/popup-add-resources/popup-add-resources.component';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
+import { TMDashboardComponent } from './tmdashboard/tmdashboard.component';
 
 export const routes: Routes = [
   {
@@ -96,18 +97,9 @@ export const routes: Routes = [
         component: TMMeetingsComponent,
       },
       {
-        path: 'mydashboard/:funcID',
-        component: MyDashboardComponent,
+        path: 'tmdashboard/:funcID',
+        component: TMDashboardComponent,
       },
-      {
-        path: 'teamdashboard/:funcID',
-        component: TeamDashboardComponent,
-      },
-      {
-        path: 'assigndashboard/:funcID',
-        component: AssignDashboardComponent,
-      },
-
       // {
       //   path: 'reports',
       //   component: ReportsComponent,
@@ -147,6 +139,18 @@ export const routes: Routes = [
       {
         path: 'meetingdetails/:funcID',
         component: MeetingDetailComponent,
+      },
+      {
+        path: 'mydashboard/:funcID',
+        component: MyDashboardComponent,
+      },
+      {
+        path: 'teamdashboard/:funcID',
+        component: TeamDashboardComponent,
+      },
+      {
+        path: 'assigndashboard/:funcID',
+        component: AssignDashboardComponent,
       },
     ],
   },
@@ -217,6 +221,7 @@ const T_Component: Type<any>[] = [
   PopupAddDayoffsComponent,
   PopupShareSprintsComponent,
   TasksComponent,
+  TMDashboardComponent,
   MyDashboardComponent,
   TeamDashboardComponent,
   AssignDashboardComponent,

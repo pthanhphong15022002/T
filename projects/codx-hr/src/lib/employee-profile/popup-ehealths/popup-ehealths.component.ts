@@ -129,14 +129,14 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
       this.hrSevice.addEHealth(this.healthObj).subscribe(p => {
         if(p != null){
           this.healthObj.recID = p.recID
-          this.notify.notifyCode('SYS007')
+          this.notify.notifyCode('SYS006')
           this.lstEHealth.push(JSON.parse(JSON.stringify(this.healthObj)));
           if(this.listView){
             (this.listView.dataService as CRUDService).add(this.healthObj).subscribe();
           }
           // this.dialog.close(p)
         }
-        else this.notify.notifyCode('DM034')
+        else this.notify.notifyCode('SYS023')
       });
     } 
     else{
@@ -149,7 +149,7 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
         }
           // this.dialog.close(this.data)
         }
-        else this.notify.notifyCode('DM034')
+        else this.notify.notifyCode('SYS021')
       });
     }
   }

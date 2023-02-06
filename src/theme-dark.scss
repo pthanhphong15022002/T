@@ -816,4 +816,12 @@ lib-nosubaside .aside-menu .menu .menu-item .menu-link.active {
     color: var(--primary-inverse);
 }
 
+.user-mini-nav.user-role.mb-1 {
+    background-color: transparent !important;
+}
+
+.user-mini-nav.user-role .user-nav-item:hover {
+    background-color: #ffffff0a;
+}
+
 //end dark

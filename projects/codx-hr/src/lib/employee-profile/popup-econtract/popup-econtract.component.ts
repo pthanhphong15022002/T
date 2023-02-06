@@ -229,6 +229,8 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
           break;
         }
         case 'effectedDate': {
+          this.data.effectedDate = event.data;
+          this.formGroup.patchValue({ effectedDate: this.data.effectedDate });
           this.setExpiredDate();
           break;
         }

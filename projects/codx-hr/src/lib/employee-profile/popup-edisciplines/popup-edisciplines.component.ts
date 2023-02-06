@@ -149,7 +149,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
                 .subscribe();
             }
             // this.dialog.close(p)
-          } else this.notify.notifyCode('DM034');
+          } else this.notify.notifyCode('SYS023');
         });
     } else {
       this.hrService
@@ -164,7 +164,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
                 .subscribe();
             }
             // this.dialog.close(this.data)
-          } else this.notify.notifyCode('DM034');
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }

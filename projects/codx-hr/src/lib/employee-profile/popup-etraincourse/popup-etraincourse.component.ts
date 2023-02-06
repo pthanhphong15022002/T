@@ -163,7 +163,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
 
       this.hrService.addETraincourse(this.data).subscribe((res) => {
         if (res) {
-          this.notify.notifyCode('SYS007');
+          this.notify.notifyCode('SYS006');
           this.actionType = 'edit';
           if (this.listView) {
             (this.listView.dataService as CRUDService).add(res).subscribe();
@@ -187,7 +187,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
             if (closeForm) {
               this.dialog && this.dialog.close();
             }
-          } else this.notify.notifyCode('DM034');
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }
@@ -195,9 +195,9 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   onSaveForm2() {
     this.hrService.AddECertificateInfo(this.dataForm2).subscribe((p) => {
       if (p) {
-        this.notify.notifyCode('SYS007');
+        this.notify.notifyCode('SYS006');
         this.dialog.close();
-      } else this.notify.notifyCode('DM034');
+      } else this.notify.notifyCode('SYS023');
     });
   }
 

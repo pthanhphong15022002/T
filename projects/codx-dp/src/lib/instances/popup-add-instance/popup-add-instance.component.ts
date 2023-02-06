@@ -71,7 +71,7 @@ export class PopupAddInstanceComponent implements OnInit {
   // step = new DP_Instances_Steps() ;
   listStep = [];
 
-  readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
+  readonly fieldCbxStep = { text: 'stepName', value: 'recID' };
   acction: string = 'add';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -83,15 +83,13 @@ export class PopupAddInstanceComponent implements OnInit {
   ) {
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
-
+    
     this.listStep = dt?.data[2];
     this.isApplyFor = dt?.data[1];
-    this.title = dt?.data[3];
+    this.titleAction = dt?.data[3];
   }
 
-  ngOnInit(): void {
-   
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     if (this.isApplyFor === 'D') {
@@ -126,55 +124,28 @@ export class PopupAddInstanceComponent implements OnInit {
       this.instance[$event.field] = $event.data;
     }
   }
-  // getFunctionID(field, textTitle) {
-  //   this.cache.gridView('grvDPInstances').subscribe((res) => {
-  //     this.cache
-  //       .gridViewSetup('DPInstances', 'grvDPInstances')
-  //       .subscribe((res) => {
-  //         let titleAction = textTitle;
-  //         let option = new SidebarModel();
-  //         let formModel = this.dialog?.formModel;
-  //         formModel.formName = 'DPStepsFields';
-  //         formModel.gridViewName = 'grvDPStepsFields';
-  //         formModel.entityName = 'DP_Steps_Fields';
-  //         option.FormModel = formModel;
-  //         option.Width = '550px';
-  //         option.zIndex = 1010;
-  //         var dialogCustomField = this.callfc.openSide(
-  //           PopupAddCustomFieldComponent,
-  //           [this.fieldCrr, 'edit', titleAction],
-  //           option
-  //         );
-  //         dialogCustomField.closed.subscribe((e) => {
-  //           if (e && e.event != null) {
-  //             //xu ly data đổ về
-  //             this.fieldCrr = e.event;
-
-  //             this.stepList.forEach((obj) => {
-  //               if (obj.recID == this.fieldCrr.stepID) {
-  //                 let index = obj.fields.findIndex(
-  //                   (x) => x.recID == this.fieldCrr.recID
-  //                 );
-  //                 if (index != -1) {
-  //                   obj.fields[index] = this.fieldCrr;
-  //                 }
-  //               }
-  //             });
-  //             this.changeDetectorRef.detectChanges();
-  //           }
-  //         });
-  //       });
-  //   });
-  // }
-
   //anh thao Code ne bao
   // em thay roi
-  valueChangeCustom(e) {}
+  valueChangeCustom(event) {
+    if (event && event.e && event.data) {
+      var result = event.e?.data;
+      var index = this.listStep.findIndex((x) => x.stepID == event.data.stepID);
+      if (index != -1) {
+        if (this.listStep[index].fields?.length > 0) {
+          let idxField = this.listStep[index].fields.findIndex(
+            (x) => x.recID == event.data.recID
+          );
+          if (idxField != -1)
+            this.listStep[index].fields[idxField].dataValue = result;
+        }
+      }
+    }
+  }
   cbxChange(e) {
-    this.instance.stepID = e ;
+    this.instance.stepID = e;
   }
 
-  valueChangeUser($event) {}
+  valueChangeUser(event) {}
 
   beforeSave(option: RequestOption) {
     if ((this.acction = 'add')) {
@@ -186,7 +157,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
   saveInstances() {
     this.dialog.dataService
-      .save((option: any) => this.beforeSave(option),0)
+      .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         if (res && res.save) {
           this.dialog.close(res);

@@ -122,14 +122,14 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
       this.hrSevice.AddEmployeeDiseasesInfo(this.ediseasesObj).subscribe(p => {
         if(p != null){
           this.ediseasesObj.recID = p.recID
-          this.notify.notifyCode('SYS007')
+          this.notify.notifyCode('SYS006')
           this.lstEdiseases.push(JSON.parse(JSON.stringify(this.ediseasesObj)));
           if(this.listView){
             (this.listView.dataService as CRUDService).add(this.ediseasesObj).subscribe();
           }
           // this.dialog.close(p)
         }
-        else this.notify.notifyCode('DM034')
+        else this.notify.notifyCode('SYS023')
       });
     } 
     else{
@@ -142,7 +142,7 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
         }
           // this.dialog.close(this.data)
         }
-        else this.notify.notifyCode('DM034')
+        else this.notify.notifyCode('SYS021')
       });
     }
   }

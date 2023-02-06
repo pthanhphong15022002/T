@@ -39,7 +39,16 @@
       <!-- <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
         (valueChange)="valueCbxCarChange($event)">
       </codx-input> -->
-      <ejs-dropdownlist id='resource' #cusCBB [dataSource]='cbbResource' [fields]='fields' [placeholder]="'Chọn xe...'"
+      <ng-template #showAll>
+        <div class="d-flex  bg-light ps-5 py-2 justify-content-start align-items-center">
+          <span role="button"
+          class="me-2" [ngClass]="showAllResource ? 'text-primary icon-check_circle ' : 'text-muted icon-panorama_fish_eye '"
+          (click)="showAllResourceChange(!showAllResource)">
+        </span>
+          <codx-label default="Hiện tất cả" name="lblShowAll"></codx-label>
+        </div>
+      </ng-template>
+      <ejs-dropdownlist id='resource' #cusCBB [dataSource]='cbbResource' [fields]='fields' [footerTemplate]="showAll" [placeholder]="'Chọn xe...'"
         (valueChange)="cbxResourceChange($event)"></ejs-dropdownlist>
       <div class="row">
         <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
