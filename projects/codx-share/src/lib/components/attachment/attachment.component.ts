@@ -1903,13 +1903,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
     perm.isSharing = false;
     perm.read = true;
     perm.download = true;
-    perm.full = true;
+    perm.full = false;
     perm.share = true;
-    perm.update = true;
-    perm.create = true;
-    perm.delete = true;
-    perm.upload = true;
-    perm.assign = true;
+    perm.update = false;
+    perm.create = false;
+    perm.delete = false;
+    perm.upload = false;
+    perm.assign = false;
     permissions.push(Object.assign({}, perm));
     // }
     return permissions;
