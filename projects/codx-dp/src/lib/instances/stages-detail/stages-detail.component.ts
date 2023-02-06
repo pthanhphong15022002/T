@@ -30,6 +30,7 @@ import {
   Util,
 } from 'codx-core';
 import { PopupAddStaskComponent } from './popup-add-stask/popup-add-stask.component';
+import { PopupCustomFieldComponent } from '../popup-custom-field/popup-custom-field.component';
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',
@@ -47,6 +48,7 @@ export class StagesDetailComponent implements OnInit {
   startDate: any;
   progress: string = '0';
   lstFields = [];
+  comment: string;
   //nvthuan
   taskGroupList: DP_Instances_Steps_TaskGroups[] = [];
   userTaskGroup: DP_Instances_Steps_TaskGroups_Roles;
@@ -134,13 +136,14 @@ export class StagesDetailComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    if(changes['listData']){
+    if (changes['listData']) {
       if (changes['listData'].currentValue != null) {
-        if(changes['listData'].currentValue?.actualStart != null){
-          this.dateActual = new Date(changes['listData'].currentValue?.actualStart);
-
+        if (changes['listData'].currentValue?.actualStart != null) {
+          this.dateActual = new Date(
+            changes['listData'].currentValue?.actualStart
+          );
         }
-        if(changes['listData'].currentValue?.startDate != null){
+        if (changes['listData'].currentValue?.startDate != null) {
           var date = new Date(changes['listData'].currentValue?.startDate);
           this.startDate =
             date.getHours() +
@@ -155,14 +158,13 @@ export class StagesDetailComponent implements OnInit {
         }
         var tasks = changes['listData'].currentValue?.tasks;
         var taskGroups = changes['listData'].currentValue?.taskGroups;
-        this.totalProgress(tasks,taskGroups)
+        this.totalProgress(tasks, taskGroups);
         this.lstFields = changes['listData'].currentValue?.fields;
         this.groupByTask(changes['listData'].currentValue);
-      }else{
+      } else {
         this.listData = null;
       }
     }
-
   }
 
   totalProgress(tasks, taskGroups) {
@@ -192,6 +194,7 @@ export class StagesDetailComponent implements OnInit {
       case 'SYS02':
         break;
       case 'SYS03':
+        this.popupCustomField(data);
         break;
       case 'SYS04':
         break;
@@ -216,6 +219,36 @@ export class StagesDetailComponent implements OnInit {
         children.classList.add('icon-expand_more');
       }
     }
+  }
+
+  //huong dan buoc nhiem vu
+  openPopupSup(popup, data) {
+    this.callfc.openForm(popup, '', 800, 400, '', data);
+  }
+
+  valueChange(data) {}
+
+  onSave() {}
+
+  //Field
+  popupCustomField(data){
+    var list = [];
+    if(data && data.length > 0){
+      list = data;
+    }else{
+      list.push(data);
+    }
+    var obj = {data: list}
+    let formModel: FormModel = {
+      entityName: 'DP_Instances_Steps_Fields',
+      formName: 'DPInstancesStepsFields',
+      gridViewName: 'grvDPInstancesStepsFields',
+    };
+    let option = new SidebarModel();
+    option.FormModel = formModel;
+    option.Width = '550px';
+    option.zIndex = 1010;
+    let field = this.callfc.openSide(PopupCustomFieldComponent, obj, option);
   }
   //task -- nvthuan
   openTypeJob() {

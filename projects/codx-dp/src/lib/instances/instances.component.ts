@@ -274,7 +274,6 @@ export class InstancesComponent
     formModel.formName = 'DPInstances';
     formModel.gridViewName = 'grvDPInstances';
     formModel.entityName = 'DP_Instances';
-    formModel.funcID = 'DPT0401';
     this.formModel = formModel;
     this.detectorRef.detectChanges();
   }
