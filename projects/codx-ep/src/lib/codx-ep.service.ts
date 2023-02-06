@@ -581,14 +581,15 @@ export class CodxEpService {
     resourceType: string,
     startDate: string,
     endDate: string,
-    recID: string
+    recID: string,
+    getAll:boolean,
   ) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'ResourcesBusiness',
       'GetListAvailableResourceAsync',
-      [resourceType, startDate, endDate, recID]
+      [resourceType, startDate, endDate, recID ,getAll]
     );
   }
 

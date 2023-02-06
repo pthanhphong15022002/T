@@ -83,15 +83,13 @@ export class PopupAddInstanceComponent implements OnInit {
   ) {
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
-
+    
     this.listStep = dt?.data[2];
     this.isApplyFor = dt?.data[1];
-    this.title = dt?.data[3];
+    this.titleAction = dt?.data[3];
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     if (this.isApplyFor === 'D') {
@@ -128,12 +126,26 @@ export class PopupAddInstanceComponent implements OnInit {
   }
   //anh thao Code ne bao
   // em thay roi
-  valueChangeCustom(e) {}
+  valueChangeCustom(event) {
+    if (event && event.e && event.data) {
+      var result = event.e?.data;
+      var index = this.listStep.findIndex((x) => x.stepID == event.data.stepID);
+      if (index != -1) {
+        if (this.listStep[index].fields?.length > 0) {
+          let idxField = this.listStep[index].fields.findIndex(
+            (x) => x.recID == event.data.recID
+          );
+          if (idxField != -1)
+            this.listStep[index].fields[idxField].dataValue = result;
+        }
+      }
+    }
+  }
   cbxChange(e) {
-    this.instance.stepID = e ;
+    this.instance.stepID = e;
   }
 
-  valueChangeUser($event) {}
+  valueChangeUser(event) {}
 
   beforeSave(option: RequestOption) {
     if ((this.acction = 'add')) {
@@ -145,7 +157,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
   saveInstances() {
     this.dialog.dataService
-      .save((option: any) => this.beforeSave(option),0)
+      .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         if (res && res.save) {
           this.dialog.close(res);
