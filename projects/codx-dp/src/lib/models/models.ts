@@ -207,12 +207,13 @@ export class DP_Steps_Fields {
   title: string;
   dataType: string;
   dataFormat: string;
+  controlType: string;
   refType: string;
   refValue: string;
   multiselect: boolean;
-  rank: number;
+  rank: number = 0;
   rankIcon: string;
-  isRequired: boolean;
+  isRequired: boolean = false;
   defaultValue: string;
   note: string;
   sorting: number;
@@ -250,6 +251,7 @@ export class DP_Instances {
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
+  tag: string;
   modifiedBy: string;
   permissions: DP_Instances_Permissions[] = [];
 }
@@ -430,6 +432,7 @@ export class DP_Instance_Steps_Fields {
   title: string;
   dataType: string;
   dataFormat: string;
+  controlType: string;
   dataValue: string;
   refType: string;
   refValue: string;
