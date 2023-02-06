@@ -17,7 +17,7 @@
         <codx-label
             [formModel]="form.formModel"
             fiedName="custGroupID"
-            default="Nhóm khách hàng"      
+            default="Nhóm nhà cung cấp"      
           ></codx-label>
           <codx-input
           [crrValue]="form.data.custGroupID"
@@ -34,7 +34,7 @@
             <codx-label
             [formModel]="form.formModel"
             fiedName="CustomerID"
-            default="Mã khách hàng"
+            default="Mã nhà cung cấp"
           ></codx-label>
             <codx-input    
                     [crrValue]="customerID"             
@@ -66,7 +66,7 @@
         <codx-label
             [formModel]="form.formModel"
             fiedName="CustomerName"
-            default="Tên khách hàng"      
+            default="Tên nhà cung cấp"      
           ></codx-label>
           <codx-input
           [crrValue]="form.data.customerName"
@@ -785,11 +785,10 @@
         default="Ngành công nghiệp"      
       ></codx-label>
       <codx-input
-      [crrValue]="form.data.industryID"
+      [crrValue]="form.data.industries"
       type="combobox"
       refValue="Industries"
-      [formModel]="form.formModel"
-      field="industryID" 
+      field="industries" 
       (valueChange)="valueChange($event,'')"
     >
     </codx-input>

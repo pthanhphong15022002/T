@@ -232,26 +232,45 @@
       <span class="text">3</span>
     </div>
     <div class="notify">
-      <span class="icon-attach_file icon-20 text-primary-600 py-2" style="color: #0078ff"></span>
-      <span class="text">3</span>
+      <span class="me-3">
+        <codx-attachment-temp [objectID]="data.recID"></codx-attachment-temp>
+      </span>
     </div>
-    <div class="notify me-4" style="position: relative">
-      <span class="icon-message icon-20 text-primary-600 py-2"></span>
-      <div class="text-mes">
-        <span>3</span>
-      </div>
+    <div class="notify">
+      <span class="me-3">
+        <codx-comment-temp [objectID]="data.recID"></codx-comment-temp>
+      </span>
     </div>
     <span class="date">
-      {{ data?.createdOn | date : "dd/MM/yyyy" }} -
-      {{ data?.createdOn | date : "dd/MM/yyyy" }}</span>
+      {{ data?.startDate | date : "dd/MM/yyyy" }} -
+      {{ data?.endDate | date : "dd/MM/yyyy" }}</span
+    >
     <span>
       <codx-img [width]="25" class="me-2" [objectId]="data?.roles[0]?.objectID" objectType="AD_Users"
         [objectName]="data?.roles[0]?.objectName"></codx-img>
     </span>
-    <div class="progress-task cursor-pointer" (click)="openUpdateProgress()">
-      <div class="progress-done" role="progressbar" [style.width]="progress + '%'" aria-valuenow="50" aria-valuemin="0"
-        aria-valuemax="100">
-        <span>{{ progress }}%</span>
+    <div
+      class="progress-task"
+      (click)="checkEventProgress(data) ? openUpdateProgress(data) : ''"
+      [ngClass]="checkEventProgress(data) ? 'cursor-pointer' : ''"
+    >
+      <div
+        class="progress-task-done"
+        [ngStyle]="styleProgress(data?.progress)"
+        role="progressbar"
+        [style.width]="data?.progress + '%'"
+        aria-valuenow="50"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        <span
+          [ngStyle]="
+            data?.progress < 30
+              ? { position: 'relative', right: '-40px', color: '#0078FF' }
+              : {}
+          "
+          >{{ data?.progress }}%</span
+        >
       </div>
     </div>
   </div>
@@ -330,13 +349,21 @@
             <codx-input field="durationDay" [formModel]="grvTaskGroupsForm" type="text"
               (valueChange)="changeValueInput($event, taskGroup)" [crrValue]="taskGroup?.durationDay" class="me-2">
             </codx-input>
-            <span class="position-absolute text-gray-400" style="top: 6px; right: 5px;">Ngày</span>
+            <span
+              class="position-absolute text-gray-400"
+              style="top: 6px; right: 5px"
+              >Ngày</span
+            >
           </div>
           <div class="position-relative">
             <codx-input field="durationHour" [formModel]="grvTaskGroupsForm" type="text"
               (valueChange)="changeValueInput($event, taskGroup)" [crrValue]="taskGroup?.durationHour" class="ms-2">
             </codx-input>
-            <span class="position-absolute text-gray-400" style="top: 6px; right: 5px;">Giờ</span>
+            <span
+              class="position-absolute text-gray-400"
+              style="top: 6px; right: 5px"
+              >Giờ</span
+            >
           </div>
         </div>
       </div>
@@ -366,7 +393,12 @@
       <codx-label name="Save" formName="Tasks" default="Hủy" (click)="popupTaskGroup.close()"></codx-label>
     </button>
     <button type="button" class="btn btn-primary">
-      <codx-label name="Save" formName="Tasks" default="Đồng ý" (click)="addAndEditGroupTask()"></codx-label>
+      <codx-label
+        name="Save"
+        formName="Tasks"
+        default="Đồng ý"
+        (click)="saveGroupTask()"
+      ></codx-label>
     </button>
   </div>
 </ng-template>
@@ -386,32 +418,64 @@
         <div class="d-flex align-items-center justify-content-between">
           <codx-label fiedName="progress" [formModel]="grvTaskGroupsForm"></codx-label>
           <div class="d-flex align-items-center justify-content-end">
-            <codx-input type="switch" [checked]="progress == '100' ? true : false" field="progress"
-              (valueChange)="changeValueInput($event, taskGroup)">
+            <codx-input
+              type="switch"
+              [checked]="dataProgress?.progress == '100' ? true : false"
+              field="progress"
+              (valueChange)="checkProgress($event, dataProgress)"
+              [disabled]="disabledProgressCkeck"
+            >
             </codx-input>
             <span>100%</span>
           </div>
         </div>
 
-        <codx-input field="progress" [formModel]="grvTaskGroupsForm" (valueChange)="changeValueDate($event, taskGroup)"
-          [crrValue]="taskGroup?.startDate" type="number" [min]="0" [max]="100" [showSpinButton]="true">
+        <codx-input
+          field="progress"
+          [formModel]="grvTaskGroupsForm"
+          (valueChange)="changeValueInput($event, dataProgress)"
+          [crrValue]="dataProgress?.progress"
+          type="number"
+          [min]="0"
+          [max]="100"
+          [showSpinButton]="true"
+          [disabled]="disabledProgressInput"
+        >
         </codx-input>
       </div>
       <div>
         <codx-label fiedName="endDate" [formModel]="grvTaskGroupsForm" default="Ngày hoàn thành thực tế">
         </codx-label>
-        <codx-input field="endDate" [formModel]="grvTaskGroupsForm" (valueChange)="changeValueDate($event, taskGroup)"
-          [crrValue]="taskGroup?.endDate" format="F" type="datetime">
+        <codx-input
+          field="actualEnd"
+          [formModel]="grvTaskGroupsForm"
+          (valueChange)="changeValueDate($event, dataProgress)"
+          [crrValue]="dataProgress?.actualEnd"
+          format="F"
+          type="datetime"
+        >
         </codx-input>
       </div>
     </div>
 
     <div class="form-group">
       <div>
-        <codx-label fiedName="memo" [formModel]="grvTaskGroupsForm" default="Ghi chú"></codx-label>
+        <codx-label
+          fiedName="note"
+          [formModel]="grvTaskGroupsForm"
+          default="Ghi chú"
+        ></codx-label>
       </div>
-      <codx-input field="memo" [formModel]="grvTaskGroupsForm" type="textarea" headerposition="none" format="ed"
-        height="100" [crrValue]="taskGroup?.memo" (valueChange)="changeValueInput($event, taskGroup)">
+      <codx-input
+        field="note"
+        [formModel]="grvTaskGroupsForm"
+        type="textarea"
+        headerposition="none"
+        format="ed"
+        height="100"
+        [crrValue]="dataProgress?.memo"
+        (valueChange)="changeValueInput($event, dataProgress)"
+      >
       </codx-input>
     </div>
   </div>
@@ -424,7 +488,7 @@
         <codx-label name="UploadFile" formName="Tasks" default="Đính kèm"></codx-label>
       </span>
     </button>
-    <button type="button" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" (click)="savePopupProgress()">
       <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
     </button>
   </div>

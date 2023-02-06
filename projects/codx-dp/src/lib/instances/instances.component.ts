@@ -79,6 +79,7 @@ export class InstancesComponent
   isMoveSuccess: boolean = true;
   titleAction =''
   instances = new DP_Instances();
+  kanban : any ;
 
   constructor(
     private inject: Injector,
@@ -178,6 +179,7 @@ export class InstancesComponent
   //CRUD
   add() {
     this.view.dataService.addNew().subscribe((res) => {
+      console.log(this.kanban)
       const funcIDApplyFor =
         this.process.applyFor === 'D' ? 'DPT0406' : 'DPT0405';
       const applyFor = this.process.applyFor;
@@ -297,7 +299,13 @@ export class InstancesComponent
     }
   }
 
-  changeView(e) {}
+  changeView(e) {
+    if (e?.view.type == 6) {
+      if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
+      else this.kanban = (this.view.currentView as any).kanban;
+      this.changeDetectorRef.detectChanges();
+    }
+  }
   // end code
 
   #region;

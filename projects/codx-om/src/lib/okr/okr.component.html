@@ -74,14 +74,14 @@
                   <div>
                     <div class="my-2">
                       <span
-                        >{{ compName }} chưa thiết lập mục tiêu cho
+                        >{{ funcID==compFuncID? compName : funcID==deptFuncID? deptName : funcID==orgFuncID? orgName :persName }} chưa thiết lập mục tiêu cho
                         Q2/2022</span
                       >
                     </div>
                     <div class="my-2">
                       <span>Vui lòng chọn nút < </span
                       ><span>Tạo bộ mục tiêu</span
-                      ><span> > để thiết lập bộ mục tiêu cho công ty</span>
+                      ><span> > để thiết lập bộ mục tiêu cho {{ funcID==compFuncID? compName : funcID==deptFuncID? deptName : funcID==orgFuncID? orgName :persName }}</span>
                     </div>
                     <div class="d-flex justify-content-center">
                       <div

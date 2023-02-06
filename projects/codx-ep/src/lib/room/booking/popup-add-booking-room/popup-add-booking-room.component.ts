@@ -96,6 +96,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   startTime: any = null;
   endTime: any = null;
   tmpStartDate: any;
+  showAllResource =false;
   //bookingOnValid = true;
   tmpEndDate: any;
   isFullDay = false;
@@ -745,52 +746,79 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.data.resourceType = '1';
       this.data.requester = this.curUser.userName;
       this.data.attendees = this.tmpAttendeesList.length;
-      //ktra link online
-      if (
-        this.data.online &&
-        (this.data.onlineUrl == null || this.data.onlineUrl == '')
-      ) {
-        this.notificationsService.alertCode('EP012').subscribe((x) => {
-          //EP_WAIT đợi messagecode từ BA
-          if (x.event.status == 'N') {
-            this.saveCheck = false;
-            return;
-          } else {
-            if (this.data.attendees > this.roomCapacity) {
-              this.notificationsService.alertCode('EP004').subscribe((x) => {
-                if (x.event.status == 'N') {
-                  this.saveCheck = false;
+      //check
+      this.codxEpService.checkDuplicateBooking(
+        this.data.startDate,
+        this.data.endDate,
+        this.data.resourceID,
+        this.data.recID).subscribe(result=>{
+          
+            if(result=='1'){              
+              this.notificationsService.notifyCode('EP009');
+              return;
+            }
+            else if(result =='2')
+            {
+              this.notificationsService.alertCode('EP017').subscribe((x) => {
+                if (x.event.status == 'N') {                  
                   return;
                 } else {
-                  this.attendeesValidateStep(approval);
+                  this.checkOnlineUrlAndCapacity(approval);
                 }
               });
-            } else {
-              this.attendeesValidateStep(approval);
             }
-          }
-        });
-      } else {
-        if (this.data.attendees > this.roomCapacity) {
-          this.notificationsService.alertCode('EP004').subscribe((x) => {
-            if (x.event.status == 'N') {
-              this.saveCheck = false;
-              return;
-            } else {
-              this.attendeesValidateStep(approval);
+            else{              
+              this.checkOnlineUrlAndCapacity(approval);
             }
-          });
-        } else {
-          this.attendeesValidateStep(approval);
-        }
-      }
+          
+
+      })
       this.saveCheck = true;
     } else {
       this.saveCheck = false;
       return;
     }
   }
-
+  checkOnlineUrlAndCapacity(approval:boolean){
+    //ktra link online
+    if (
+      this.data.online &&
+      (this.data.onlineUrl == null || this.data.onlineUrl == '')
+    ) {
+      this.notificationsService.alertCode('EP012').subscribe((x) => {          
+        if (x.event.status == 'N') {
+          this.saveCheck = false;
+          return;
+        } else {
+          if (this.data.attendees > this.roomCapacity) {
+            this.notificationsService.alertCode('EP004').subscribe((x) => {
+              if (x.event.status == 'N') {
+                this.saveCheck = false;
+                return;
+              } else {
+                this.attendeesValidateStep(approval);
+              }
+            });
+          } else {
+            this.attendeesValidateStep(approval);
+          }
+        }
+      });
+    } else {
+      if (this.data.attendees > this.roomCapacity) {
+        this.notificationsService.alertCode('EP004').subscribe((x) => {
+          if (x.event.status == 'N') {
+            this.saveCheck = false;
+            return;
+          } else {
+            this.attendeesValidateStep(approval);
+          }
+        });
+      } else {
+        this.attendeesValidateStep(approval);
+      }
+    }
+  }
   checkAvailableStationery(approval) {
     //Check số lượng VPP đi kèm
     this.tmplstStationery = [];
@@ -1131,7 +1159,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   openPopupLink() {
     this.callfc.openForm(this.addLink, '', 500, 300, this.funcID);
   }
-
+  showAllResourceChange(evt:any){
+    if(evt!=null){
+      this.showAllResource=evt;
+      this.getResourceForCurrentTime();
+      this.detectorRef.detectChanges();
+    }
+  }
   valueAttendeesChange(event: any) {
     if (event?.data!=null) {
       if(event.data<0){
@@ -1591,7 +1625,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         '1',
         this.data.startDate,
         this.data.endDate,
-        this.data.recID
+        this.data.recID,
+        this.showAllResource,
       )
       .subscribe((res: any) => {
         if (res) {
