@@ -330,12 +330,24 @@ export class AddUserComponent extends UIComponent implements OnInit {
       }
       this.adUser;
 
-      data = [this.adUser, this.viewChooseRole, true, false];
+      data = [
+        this.adUser,
+        this.viewChooseRole,
+        true,
+        false,
+        this.lstChangeModule,
+      ];
     }
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      data = [this.adUser, this.viewChooseRole, checkDifference, '0'];
+      data = [
+        this.adUser,
+        this.viewChooseRole,
+        checkDifference,
+        '0',
+        this.lstChangeModule,
+      ];
     }
     op.data = data;
     return true;

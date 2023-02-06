@@ -80,7 +80,7 @@ export class PopRolesComponent implements OnInit {
       this.listChooseRole = JSON.parse(JSON.stringify(this.data));
       this.listChooseRole.forEach((role) => {
         let tmpMD: tmpTNMD = {
-          isAddAction: false,
+          isAddAction: true,
           isOriginal: true,
           moduleID: role.functionID,
           moduleSales: '',
