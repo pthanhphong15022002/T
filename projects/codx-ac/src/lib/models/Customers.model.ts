@@ -32,6 +32,7 @@ id:any
 idField:any
 includeTables:any
 industries:any
+industryID:any;
 invoiceAccount:any
 latitude:any
 leadtime:any

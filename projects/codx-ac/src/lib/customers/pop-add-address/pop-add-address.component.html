@@ -135,7 +135,8 @@
         <i class="fa-solid fa-user-group"></i>
     </span> 
       </div>
-      <div class="row pb-5" *ngFor="let item of objectContactAddress">
+      <div *ngFor="let item of objectContactAddress">
+      <div class="row pb-5" *ngIf="item.reference == address.recID" >
         <div class="col-6 ps-0">
           <div class="d-flex align-items-top">
             <div class="me-4">
@@ -177,6 +178,7 @@
           <span (click)="editobject(item,'datacontact')" class="icon-edit icon-16 py-1"></span>
           <span (click)="deleteobject(item,'datacontact')"  class="icon-delete icon-16"></span>
         </div>
+      </div>
       </div>
       <div class="d-flex">
         <codx-label
