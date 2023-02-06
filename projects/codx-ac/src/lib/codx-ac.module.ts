@@ -27,6 +27,8 @@ import { PopAddCustomersComponent } from './customers/pop-add-customers/pop-add-
 import { PopAddBankComponent } from './customers/pop-add-bank/pop-add-bank.component';
 import { PopAddContactComponent } from './customers/pop-add-contact/pop-add-contact.component';
 import { PopAddAddressComponent } from './customers/pop-add-address/pop-add-address.component';
+import { VendorsComponent } from './vendors/vendors.component';
+import { PopAddVendorsComponent } from './vendors/pop-add-vendors/pop-add-vendors.component';
 
 export const routes: Routes = [
   {
@@ -44,6 +46,10 @@ export const routes: Routes = [
       {
         path: 'customers/:funcID',
         component: CustomersComponent,
+      },
+      {
+        path: 'vendors/:funcID',
+        component: VendorsComponent,
       },
     ],
   },
@@ -64,6 +70,8 @@ export const routes: Routes = [
     PopAddBankComponent,
     PopAddContactComponent,
     PopAddAddressComponent,
+    VendorsComponent,
+    PopAddVendorsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
