@@ -1,6 +1,13 @@
 <ng-container *ngIf="dataSelect?.recID">
-  <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [dataItem]="dataSelect" [hideMF]="false"
-    (changeDataMF)="changeDataMF($event, dataSelect)" (clickMF)="clickMF($event, dataSelect)">
+  <codx-detail-tmp
+    [header]="header"
+    [formModel]="formModel"
+    [body]="body"
+    [dataItem]="dataSelect"
+    [hideMF]="false"
+    (changeDataMF)="changeDataMF($event, dataSelect)"
+    (clickMF)="clickMF($event, dataSelect)"
+  >
     <ng-template #header>
       <div class="container_detail mt-3">
         <div class="d-flex flex-grow-1 mb-4">
@@ -8,10 +15,16 @@
             <div class="d-flex justify-content-between">
               <div class="d-flex flex-column">
                 <h2 class="h2-title" style="margin-bottom: 0px !important">
-                  {{dataSelect?.title}}
+                  {{ dataSelect?.title }}
                 </h2>
                 <div class="mb-5">
-                   tag
+                  <codx-tag
+                    [entityName]="formModel.entityName"
+                    [disabled]="true"
+                    [isEdit]="false"
+                    [value]="dataSelect.tags"
+                  >
+                  </codx-tag>
                 </div>
                 <div class="mb-6">
                   <div>
@@ -22,85 +35,152 @@
                     <span>Liên hệ: </span>
                     <ng-container>
                       <div class="mb-3 ms-1">
-                        <codx-img [objectId]="'ADMIN'" objectType="AD_Users" [width]="50">
+                        <codx-img
+                          [objectId]="'ADMIN'"
+                          objectType="AD_Users"
+                          [width]="50"
+                        >
                         </codx-img>
                       </div>
                       <div class="d-flex flex-column">
-                        <span class="ms-3 text-body">Trần Đoàn Tuyết Khanh</span>
+                        <span class="ms-3 text-body"
+                          >Trần Đoàn Tuyết Khanh</span
+                        >
                         <div class="row">
                           <span class="col-3 ms-3 text-body">012344556</span>
-                          <span class="col-3 ms-3 text-body" style="margin-right: 50px;">lacviet@lacviet.com</span>
+                          <span
+                            class="col-3 ms-3 text-body"
+                            style="margin-right: 50px"
+                            >lacviet@lacviet.com</span
+                          >
                         </div>
                       </div>
                     </ng-container>
                   </div>
                 </div>
-
               </div>
               <div class="d-flex flex-column align-items-start">
                 <div class="progress">
-                  <div class="progress-done" role="progressbar" [style.width]="progress + '%'" aria-valuenow="50"
-                    aria-valuemin="0" aria-valuemax="100">
-                    {{progress}}</div>
+                  <div
+                    class="progress-done"
+                    role="progressbar"
+                    [style.width]="progress + '%'"
+                    aria-valuenow="50"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  >
+                    {{ progress }}
+                  </div>
                 </div>
                 <div class="d-flex flex-grow-1 mb-4">
                   <div class="d-flex flex-column">
                     <div class="font">
                       <span>
-                        {{stepName}}
+                        {{ stepName }}
                       </span>
                     </div>
                     <div class="text-gray-500 me-4 mb-1">
-                      {{
-                        dataSelect.createdOn
-                      }}
+                      {{ dataSelect.createdOn }}
                     </div>
                   </div>
                   <div class="me-3">
-                    <codx-img [objectId]="'ADMIN'" objectType="AD_Users" [width]="50">
+                    <codx-img
+                      [objectId]="'ADMIN'"
+                      objectType="AD_Users"
+                      [width]="50"
+                    >
                     </codx-img>
                   </div>
                 </div>
-
               </div>
             </div>
             <div class="d-flex justify-content-end">
-              <ejs-dropdownlist id='locationCBB' #locationCBB [value]="this.idCbx" [dataSource]='listRoom'
-                [fields]='fields' [placeholder]="'Phòng họp'" (valueChange)="cbxChange($event)"></ejs-dropdownlist>
+              <codx-input
+                type="valuelist"
+                refValue="DP034"
+                [crrValue]="'S'"
+                (valueChange)="cbxChange($event)"
+              >
+              </codx-input>
             </div>
           </div>
         </div>
       </div>
-
     </ng-template>
     <ng-template #body>
-      <ng-container *ngIf="idCbx == 'gantt'">
-        <p>View gannt chưa làm để vậy</p>
+      <ng-container *ngIf="idCbx == 'G'">
+        <codx-gantt-chart
+          [dataSource]="ganttDs"
+          [taskFields]="taskFields"
+          [taskbarHeight]="60"
+          [rowHeight]="60"
+          [readOnly]="true"
+          [templateTaskbar]="ganttItems"
+          [toolbar]="[]"
+        ></codx-gantt-chart>
+
+        <ng-template #ganttItems let-data>
+          <div style="background-color: chartreuse">
+            <div class="line-colums">{{ data.stepName }} + Trầm cute test</div>
+          </div>
+        </ng-template>
       </ng-container>
-      <ng-container *ngIf="idCbx == 'stage'">
+
+      <ng-container *ngIf="idCbx == 'S'">
         <div *ngIf="listSteps != null && listSteps.length > 0">
           <div class="d-flex arrow-steps flex-container">
-            <div *ngFor="let item of listSteps; index as i;" id="step-click" style="flex-grow: 1"
-              [ngClass]="item.indexNo == currentStep ? 'step current' : item.indexNo < currentStep ? 'step old' : 'step'" (click)="click(item.indexNo, item)">
-              <span> {{item.stepName}}</span>
+            <div
+              *ngFor="let item of listSteps; index as i"
+              id="step-click"
+              style="flex-grow: 1"
+              [ngClass]="
+                i == currentStep
+                  ? 'step current'
+                  : i < currentStep
+                  ? 'step old'
+                  : 'step'
+              "
+              (click)="click(i, item)"
+            >
+              <span> {{ item.stepName }}</span>
             </div>
           </div>
-          <div class="d-flex flex-container" >
-            <div *ngFor="let item of listSteps; index as i;" class="process-wrap">
+          <div class="d-flex flex-container">
+            <div
+              *ngFor="let item of listSteps; index as i"
+              class="process-wrap"
+            >
               <div
-                [ngClass]="item.indexNo == currentStep ? 'progress-current' : item.indexNo < currentStep ? 'progress-bar' : ''" style="flex-grow: 1"
-                role="progressbar" [style.width]="item.progress + '%'" aria-valuenow="50" aria-valuemin="0"
-                aria-valuemax="100">
-              </div>
+                [ngClass]="
+                  i == currentStep
+                    ? 'progress-current'
+                    : i < currentStep
+                    ? 'progress-bar'
+                    : ''
+                "
+                style="flex-grow: 1"
+                role="progressbar"
+                [style.width]="item.progress + '%'"
+                aria-valuenow="50"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
             </div>
           </div>
         </div>
-        <codx-stages-detail [listData]="tmpTeps" [formModel]="formModel"></codx-stages-detail>
+        <codx-stages-detail
+          [listData]="tmpTeps"
+          [formModel]="formModel"
+          [currentStep]="currentNameStep"
+          [stepID]="dataSelect.stepID"
+        ></codx-stages-detail>
       </ng-container>
-      <ng-container *ngIf="idCbx == 'field'">
-        <codx-field-detail [lstSteps]="listSteps" [formModel]="formModel"></codx-field-detail>
+      <ng-container *ngIf="idCbx == 'F'">
+        <codx-field-detail
+          [lstSteps]="listSteps"
+          [formModel]="formModel"
+        ></codx-field-detail>
       </ng-container>
     </ng-template>
-
   </codx-detail-tmp>
 </ng-container>

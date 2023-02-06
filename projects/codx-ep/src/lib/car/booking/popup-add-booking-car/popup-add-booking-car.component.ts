@@ -78,6 +78,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   modelPage: ModelPage;
   attendees = [];
   curUser: any;
+  showAllResource =false;
   data: any;
   isNew: boolean = true;
   currentSection = 'GeneralInfo';
@@ -1152,11 +1153,19 @@ export class PopupAddBookingCarComponent extends UIComponent {
         }
       });
   }
+
+  showAllResourceChange(evt:any){
+    if(evt!=null){
+      this.showAllResource=evt;
+      this.getResourceForCurrentTime();
+      this.detectorRef.detectChanges();
+    }
+  }
   cbbResource=[];  
   fields: Object = { text: 'resourceName', value: 'resourceID' };
   cbbResourceName:string;
   getResourceForCurrentTime(){
-    this.codxEpService.getAvailableResources('2',this.data.startDate,this.data.endDate,this.data.recID).subscribe((res:any)=>{
+    this.codxEpService.getAvailableResources('2',this.data.startDate,this.data.endDate,this.data.recID,this.showAllResource).subscribe((res:any)=>{
       if(res){
         this.cbbResource=[];
         Array.from(res).forEach((item:any)=>{

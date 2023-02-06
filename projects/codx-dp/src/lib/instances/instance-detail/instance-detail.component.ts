@@ -35,6 +35,7 @@ export class InstanceDetailComponent implements OnInit {
   totalInSteps: any;
   @Input() listSteps: DP_Instances_Steps[] = [];
   tmpTeps: DP_Instances_Steps;
+  currentNameStep: Number;
   //progressbar
   labelStyle = { color: '#FFFFFF' };
   showProgressValue = true;
@@ -43,25 +44,20 @@ export class InstanceDetailComponent implements OnInit {
   progressThickness: Number = 24;
   value: Number = 30;
   cornerRadius: Number = 30;
-  idCbx = 'stage';
+  idCbx = 'S';
 
-  fields: Object = { text: 'name', value: 'id' };
-  listRoom = [
+  currentStep = 0;
+  //gantchat
+  ganttDs = [
     {
-      name: 'Xem theo biểu đồ Gantt',
-      id: 'gantt',
-    },
-    {
-      name: 'Xem theo giai đoạn',
-      id: 'stage',
-    },
-    {
-      name: 'Xem theo trường nhập liệu',
-      id: 'field',
+      recID: '123456',
+      stepName: 'Tên của công việc ',
+      startDate: new Date('02/07/2023'),
+      endDate: new Date(),
     },
   ];
+  taskFields: any;
 
-  @Input() currentStep: number;
   constructor(
     private dpSv: CodxDpService,
     private api: ApiHttpService,
@@ -69,9 +65,12 @@ export class InstanceDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // var instance = new DP_Instances();
-    // instance.title = "TEST DO PHÚC THỰC HIỆN";
-    // this.api.callSv('DP','ERM.Business.DP','InstancesBusiness','AddInstanceAsync',[instance, this.listSteps]).subscribe();
+    this.taskFields = {
+      id: 'recID',
+      name: 'stepName',
+      startDate: 'startDate',
+      endDate: 'endDate',
+    };
   }
 
   ngAfterViewInit(): void {
@@ -94,43 +93,46 @@ export class InstanceDetailComponent implements OnInit {
       this.dataSelect = changes['dataSelect'].currentValue;
       this.currentStep = this.dataSelect.currentStep;
       this.getStepsByProcessID(this.id);
-
-      if (
-        changes['listSteps'].currentValue == null ||
-        changes['listSteps'].currentValue.length == 0
-      )
-      {
+      if (this.listSteps == null && this.listSteps.length == 0) {
         this.tmpTeps = null;
       }
-
     }
     console.log(this.formModel);
   }
 
-  getStepsByProcessID(insID){
+  getStepsByProcessID(insID) {
     this.dpSv.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
       if (res) {
         this.listSteps = res;
         var total = 0;
-        this.listSteps.forEach(el =>{
-          if(this.currentStep == el.indexNo)
-            this.stepName = el.stepName;
-          total += el.progress;
-        })
-        if(this.listSteps != null && this.listSteps.length > 0){
+        for (var i = 0; i < this.listSteps.length; i++) {
+          var stepNo = i;
+          var data = this.listSteps[i];
+          if (this.listSteps[i].recID == this.dataSelect.stepID) {
+            this.stepName = data.stepName;
+            this.currentStep = stepNo;
+            this.currentNameStep = this.currentStep;
+          }
+          total += data.progress;
+          stepNo = i + 1;
+        }
+        if (this.listSteps != null && this.listSteps.length > 0) {
           this.progress = (total / this.listSteps.length).toFixed(1).toString();
-        }else{
+        } else {
           this.progress = '0';
         }
-        this.listSteps.forEach(element =>{
-          if(element != null && element.indexNo == this.currentStep){
-            this.dpSv.GetStepInstance(element.recID).subscribe(data=>{
-              if(data){
-                this.tmpTeps = data;
-              }
-            })
-          }
-        })
+        if (this.listSteps != null && this.listSteps.length > 0) {
+          this.listSteps.forEach((element) => {
+            if (element != null && element.recID == this.dataSelect.stepID) {
+              this.tmpTeps = element;
+            }
+          });
+        }
+      } else {
+        this.listSteps = [];
+        this.stepName = '';
+        this.progress = '0';
+        this.tmpTeps = null;
       }
     });
   }
@@ -138,8 +140,7 @@ export class InstanceDetailComponent implements OnInit {
   getStepsByInstanceID(list) {
     list.forEach((element) => {
       if (element.indexNo == this.currentStep) {
-          this.tmpTeps = element;
-
+        this.tmpTeps = element;
       }
     });
   }
@@ -153,7 +154,7 @@ export class InstanceDetailComponent implements OnInit {
   // }
 
   cbxChange(e) {
-    this.idCbx = e;
+    this.idCbx = e?.data;
   }
 
   clickMF(e, data) {
@@ -166,7 +167,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
-    console.log(e)
+    console.log(e);
     if (e) {
       e.forEach((element) => {
         if (
@@ -199,15 +200,25 @@ export class InstanceDetailComponent implements OnInit {
 
   click(indexNo, data) {
     if (this.currentStep < indexNo) return;
-
+    this.currentNameStep = indexNo;
     this.tmpTeps = data;
   }
 
   continues(data) {
-    if (this.currentStep > this.listSteps.length) return;
+    if (this.currentStep + 1 > this.listSteps.length) return;
     this.currentStep++;
     this.changeDetec.detectChanges();
   }
 
   setHTMLCssStages(oldStage, newStage) {}
+
+  getDataGanttChart() {
+    this.api
+      .exec<any>('DP', 'InstancesBusiness', 'GetDataGanntChartAsync', [this.recID])
+      .subscribe((res) => {
+        if (res && res?.length > 0) {
+          this.ganttDs = res;
+        }
+      });
+  }
 }
