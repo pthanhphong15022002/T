@@ -51,9 +51,9 @@ export class InstanceDetailComponent implements OnInit {
   ganttDs = [
     {
       recID: '123456',
-      stepName: 'Tên của công việc ',
+      name: 'Tên của công việc ',
       startDate: new Date('02/07/2023'),
-      endDate: new Date(),
+      endDate: new Date("02/09/2023"),
     },
   ];
   taskFields: any;
@@ -62,15 +62,18 @@ export class InstanceDetailComponent implements OnInit {
     private dpSv: CodxDpService,
     private api: ApiHttpService,
     private changeDetec: ChangeDetectorRef
-  ) {}
+  ) {
+
+  }
 
   ngOnInit(): void {
     this.taskFields = {
       id: 'recID',
-      name: 'stepName',
+      name: 'name',
       startDate: 'startDate',
       endDate: 'endDate',
     };
+    this.getDataGanttChart() ;
   }
 
   ngAfterViewInit(): void {
@@ -219,7 +222,7 @@ export class InstanceDetailComponent implements OnInit {
 
   getDataGanttChart() {
     this.api
-      .exec<any>('DP', 'InstancesBusiness', 'GetDataGanntChartAsync', [this.recID])
+      .exec<any>('DP', 'InstanceStepsBusiness', 'GetDataGanntChartAsync', [this.recID])
       .subscribe((res) => {
         if (res && res?.length > 0) {
           this.ganttDs = res;
