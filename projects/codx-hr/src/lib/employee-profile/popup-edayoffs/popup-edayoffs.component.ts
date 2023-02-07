@@ -101,6 +101,9 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           .subscribe((res: any) => {
             if (res) {
               this.dayoffObj = res?.data;
+
+              this.dayoffObj.beginDate = null; //yêu cầu require, không default
+              this.dayoffObj.endDate = null;
               this.dayoffObj.employeeID = this.employId;
               this.dayoffObj.periodType = '1'
               this.dayoffObj.totalSubDays = 0
