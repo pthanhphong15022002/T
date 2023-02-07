@@ -262,6 +262,15 @@ export class EmployeeProfileComponent extends UIComponent {
       }
     });
 
+    this.hrService.getHeaderText('HRT03a1').then( res =>{
+      console.log('11111111111111111111111111111111', res);
+      console.log(res['ALObjectID']);
+
+      
+
+      
+    })
+
     this.EExperienceColumnsGrid = [
       {
         field: 'fromDate',
