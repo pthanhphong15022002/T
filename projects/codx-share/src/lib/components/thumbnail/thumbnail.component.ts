@@ -110,7 +110,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   checkDelete(file:any) {
     if(file)
     {
-      var per = file.permissions.filter(x=>x.userID == this.userID);
+      var per = file.permissions.filter(x=>x.userID == this.userID || x.objectID == this.userID);
       if(per && per[0]) return per[0].delete
     }
     return false;
@@ -118,7 +118,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   checkDownloadRight(file:any) {
     if(file.permissions)
     {
-      var per = file.permissions.filter(x=>x.userID == this.userID);
+      var per = file.permissions.filter(x=>x.userID == this.userID || x.objectID == this.userID);
       if(per && per[0]) return per[0].download;
     }
     return false;
