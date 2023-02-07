@@ -392,6 +392,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.listview.formModel;
       option.IsFull = true;
+      option.zIndex = 999;
       this.callFC.openForm(
         PopupDetailComponent,
         '',
