@@ -66,7 +66,7 @@ export class CodxViewFilesComponent implements OnInit {
       .subscribe((res:any[]) => {
         if(res?.length > 0)
         {
-          if(this.medias == 0)
+          if(!this.medias || this.medias == 0)
           {
             let _fileImgVid = res.filter(f => f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO);
             this.medias = _fileImgVid.length;
