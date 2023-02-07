@@ -29,8 +29,21 @@ import { PopAddContactComponent } from './customers/pop-add-contact/pop-add-cont
 import { PopAddAddressComponent } from './customers/pop-add-address/pop-add-address.component';
 import { VendorsComponent } from './vendors/vendors.component';
 import { PopAddVendorsComponent } from './vendors/pop-add-vendors/pop-add-vendors.component';
+import { CashPaymentsComponent } from './cash-payments/cash-payments.component';
+import { NoSubAsideComponent } from 'projects/codx-ad/src/lib/_noSubAside/_noSubAside.component';
+import { NosubAsideComponent } from './_noSubAside/nosub-aside.component';
 
 export const routes: Routes = [
+  {
+    path: '',
+    component: NosubAsideComponent,
+    children: [
+      {
+        path: 'cashpayments/:funcID',
+        component: CashPaymentsComponent,
+      },
+    ],
+  },
   {
     path: '',
     component: LayoutNoAsideComponent,
@@ -53,6 +66,7 @@ export const routes: Routes = [
       },
     ],
   },
+
 ];
 
 @NgModule({
@@ -72,6 +86,8 @@ export const routes: Routes = [
     PopAddAddressComponent,
     VendorsComponent,
     PopAddVendorsComponent,
+    NosubAsideComponent,
+    CashPaymentsComponent
   ],
   imports: [
     RouterModule.forChild(routes),
