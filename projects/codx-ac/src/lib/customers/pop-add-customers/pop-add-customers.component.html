@@ -615,8 +615,8 @@
       <span (click)="openPopupAddress()" class="icon-add_circle icon-16 me-1"></span>
       </div>    
       <div *ngFor="let item of objectAddress">
-        <div class="fw-bold text-dark fs-5">
-          <span id="{{item.recID}}" [innerHTML]="convertHtml(item.adressType,item.recID)"></span>
+        <div class="fw-bold text-dark fs-5" *ngFor="let value of valuelist">
+          <span *ngIf="item.adressType == value.value">{{value.text}}</span>
         </div>
       <div class="text-gray-500">
           {{item.adressName}}
@@ -726,8 +726,8 @@
                   </div>
               </div>
               </div>
-              <div class="d-flex">
-                <span id="{{item.contactID}}" class="me-2" [innerHTML]="convertHtml(item.contactType,item.contactID)"></span>     
+              <div class="d-flex" *ngFor="let value of valuelist">
+                <span *ngIf="item.contactType == value.value">{{value.text}}</span>
               </div>
             </div>
             <div class="d-flex align-items-center">
@@ -756,9 +756,6 @@
                   imgSource="https://bstyle.vn/wp-content/uploads/2019/10/ngan-hang-BIDV.jpg">
                 </codx-img>
               </div>
-              <!-- <ng-template #imgDefault_personal>
-                <img class="img_avatar" src="../../../assets/img/avatar.png" />
-              </ng-template> -->
             </div>
             <div class="d-flex flex-column space_personal">
               <div class="fw-bold text-dark fs-5">
@@ -773,8 +770,12 @@
             <span (click)="deleteobject(item,'databank')"  class="icon-delete icon-16"></span>
           </div>
           </div>
-          
         </div>
+        <div class="col-6 ps-0" *ngIf="item.isDefault">
+          <codx-vll [showText]="true" [showBgColor]="true" [name]="'DP002'" value="0"
+          class="badge badge-light badge-square badge-md fs-7 p-2">
+        </codx-vll>
+      </div>
       </div>
 </ng-template>
 <ng-template #tabinfo>

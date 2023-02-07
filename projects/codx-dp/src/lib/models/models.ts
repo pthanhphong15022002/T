@@ -179,7 +179,7 @@ export class DP_Steps_Tasks {
   createTaskControl: string;
   stop: boolean;
   attachments: number;
-  callType: boolean;
+  callType: string;
   isOnline: boolean;
   createdOn: Date;
   createdBy: string;
@@ -311,6 +311,7 @@ export class DP_Instances_Steps {
   modifiedOn: Date;
   modifiedBy: string;
   reasons: DP_Instances_Steps_Reasons[] = []; // objects
+  stepStatus: string;
 }
 
 export class DP_Instances_Steps_Roles {
@@ -368,7 +369,7 @@ export class DP_Instances_Steps_TaskGroups_Roles {
 }
 
 export class DP_Instances_Steps_Tasks {
-  recID: string;
+  recID = Util.uid();
   instanceID: string;
   stepID: string;
   indexNo: number;

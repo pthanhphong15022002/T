@@ -1,11 +1,16 @@
 <div>
-  <codx-label
+  <!-- <codx-label
     [fiedName]="customField.fieldName"
     formName="DPInstancesStepsFields"
     gridViewName="grvDPInstancesStepsFields"
     [default]="customField.title"
   >
-  </codx-label>
+  </codx-label> -->
+  <codx-label
+    [fiedName]="customField.fieldName"
+    [formModel]="formModel"
+    [default]="customField.title"
+  ></codx-label>
   <span
     *ngIf="customField.dataType == 'A'"
     class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"

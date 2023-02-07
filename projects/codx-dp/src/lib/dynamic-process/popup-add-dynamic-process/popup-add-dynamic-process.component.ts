@@ -253,6 +253,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     if (this.action != 'add') {
       // this.showID = true;
+      this.permissions = this.process.permissions;
       this.processTab = 2;
       this.getAvatar(this.process);
     } else {
@@ -593,19 +594,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   sharePerm(share, type) {
     switch (type) {
       case 'supervisor':
-        this.vllShare = 'ES014';
+        this.vllShare = 'DP0331';
         this.typeShare = '1';
         break;
       case 'participants':
-        this.vllShare = 'DM001';
+        this.vllShare = 'DP0331';
         this.typeShare = '2';
         break;
       case 'followers':
-        this.vllShare = 'DM001';
+        this.vllShare = 'DP0332';
         this.typeShare = '3';
         break;
       case 'participants-2':
-        this.vllShare = 'TM003';
+        this.vllShare = 'DP0331';
         this.typeShare = '4';
         break;
     }
@@ -647,7 +648,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';
-            perm.create = true;
+            perm.read = true;
 
             this.permissions = this.checkUserPermission(this.permissions, perm);
           }
@@ -675,7 +676,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             roles.objectName = data.text != null ? data.text : data.objectName;
             roles.objectID = data.id != null ? data.id : null;
             roles.objectType = data.objectType;
-            roles.roleType = 'O';
+            roles.roleType = 'S';
+            perm.read = true;
             this.step.roles = this.checkRolesStep(this.step.roles, roles);
           }
           break;
@@ -737,14 +739,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //Popup roles process
-  clickRoles(type) {
+  clickRoles() {
+    var title = 'Phân quyền';
     this.callfc.openForm(
       PopupRolesDynamicComponent,
       '',
       950,
       650,
       '',
-      [this.process.permissions, type],
+      [this.process, title],
       '',
       this.dialog
     );

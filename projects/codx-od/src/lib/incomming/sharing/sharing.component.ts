@@ -62,6 +62,7 @@ export class SharingComponent implements OnInit {
   }
   onSave()
   {
+    if(!this.checkRequired()) return;
    /*  var objID = (this.shareForm.get('form').value).concat(this.shareForm.get('to').value);
     this.dataDis.objID       = objID.join(";");
     this.dataDis.description = this.shareForm.get('desc').value;
@@ -83,5 +84,18 @@ export class SharingComponent implements OnInit {
       }
       this.notifySvr.notify(item.message);
     })
+  }
+
+  checkRequired()
+  {
+    var name = [];
+    if(!this.shareForm.value.to || this.shareForm.value.to.length==0) name.push("Đến") ;
+    if(!this.shareForm.value.desc) name.push("Nội dung chia sẻ") ;
+    if(name.length>0)
+    {
+      this.notifySvr.notifyCode("SYS009",0,name.join(' , '));
+      return false;
+    }
+    return true
   }
 }

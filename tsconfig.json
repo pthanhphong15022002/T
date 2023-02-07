@@ -99,6 +99,10 @@
         // "dist/codx-share/codx-share",
         // "dist/codx-share"
       ],
+      "codx-sm": [
+        "dist/codx-sm/codx-sm",
+        "dist/codx-sm"
+      ],
       "codx-tm": [
         "projects/codx-tm/src"
         // "dist/codx-tm/codx-tm",

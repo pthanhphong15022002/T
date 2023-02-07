@@ -38,6 +38,8 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  CodxGridviewComponent,
+  CRUDService,
   DataRequest,
   DialogData,
   DialogRef,
@@ -93,7 +95,7 @@ export class EmployeeProfileComponent extends UIComponent {
     this.funcID = this.routeActive.snapshot.params['funcID'];
     console.log('dtttt', dialog);
   }
-
+  @ViewChild("gridView") grid:CodxGridviewComponent;
   @ViewChild('itemTemplate') template: TemplateRef<any>;
   @ViewChild('paneRight') panelRight: TemplateRef<any>;
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
@@ -101,8 +103,10 @@ export class EmployeeProfileComponent extends UIComponent {
   views: Array<ViewModel> | any = [];
 
   infoPersonal: any = {};
-
+  ViewAllEBenefitFlag = false
   crrEContract: any;
+  ops = ['y'];
+  date = new Date('01-04-2040');
 
   formModelVisa: FormModel;
   formModelPassport: FormModel;
@@ -174,6 +178,7 @@ export class EmployeeProfileComponent extends UIComponent {
   //Awards
   lstAwards: any = [];
 
+  //#region declare columnGrid
   healthColumnsGrid;
   vaccineColumnsGrid;
   diseaseColumnsGrid;
@@ -184,6 +189,7 @@ export class EmployeeProfileComponent extends UIComponent {
   rewardColumnsGrid;
   disciplineColumnGrid;
   expColumnGrid;
+  benefitColumnGrid;
 
   //#region ViewChild
   @ViewChild('healthPeriodID', { static: true })
@@ -198,10 +204,22 @@ export class EmployeeProfileComponent extends UIComponent {
   @ViewChild('EExperience', { static: true })
   EExperienceTmp: TemplateRef<any>;
   @ViewChild('tempFromDate', { static: true }) tempFromDate;
-  @ViewChild('tempToDate', { static: true })
+  @ViewChild('tempToDate', { static: true }) tempToDate: TemplateRef<any>;
+ 
+  @ViewChild('templateBenefitID', {static: true}) 
+  templateBenefitID: TemplateRef<any>;
+  @ViewChild('templateBenefitAmt', {static: true}) 
+  templateBenefitAmt: TemplateRef<any>;
+  @ViewChild('templateBenefitEffected', {static: true}) 
+  templateBenefitEffected: TemplateRef<any>;
+  @ViewChild('templateBenefitIsCurrent', {static: true}) 
+  templateBenefitIsCurrent: TemplateRef<any>;
+  @ViewChild('templateBenefitMoreFunc', {static: true}) 
+  templateBenefitMoreFunc: TemplateRef<any>;
+  @ViewChild('filterTemplateBenefit', {static: true}) 
+  filterTemplateBenefit: TemplateRef<any>;
 
   //#endregion
-  tempToDate: TemplateRef<any>;
 
   objCollapes = {
     '1': false,
@@ -252,7 +270,7 @@ export class EmployeeProfileComponent extends UIComponent {
   request: DataRequest;
 
   lstTab: any;
-
+  benefitFormodel;
   onInit(): void {
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
       console.log('functionList', res);
@@ -261,6 +279,47 @@ export class EmployeeProfileComponent extends UIComponent {
         this.crrFuncTab = this.lstTab[0].functionID;
       }
     });
+
+    this.hrService.getHeaderText('HRT03020303').then( res =>{
+      console.log('11111111111111111111111111111111', res);
+      console.log(res['ALObjectID']);
+    })
+
+    let benefitFuncID = 'HRT03020303'
+    let benefitHeaderTexts;
+
+    this.hrService.getFormModel(benefitFuncID).then(res => {
+      this.benefitFormodel = res;
+    });
+    this.hrService.getHeaderText(benefitFuncID).then(res => {
+      benefitHeaderTexts = res;
+      this.benefitColumnGrid = [
+        {
+          headerText: benefitHeaderTexts['BenefitID'],
+          template: this.templateBenefitID,
+          width: '50'
+        },
+        {
+          headerText: benefitHeaderTexts['BenefitAmt'],
+          template: this.templateBenefitAmt,
+          width: '150'
+        },
+        {
+          headerText: 'Hiệu lực',
+          template: this.templateBenefitEffected,
+          width: '150'
+        },
+        {
+          template: this.templateBenefitIsCurrent,
+          width: '150'
+        },
+        {
+          template: this.templateBenefitMoreFunc,
+          width: '150'
+        }
+      ]
+    })
+
 
     this.EExperienceColumnsGrid = [
       {
@@ -893,6 +952,10 @@ export class EmployeeProfileComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'Diseases') {
           this.HandleEmployeeDiseaseInfo('edit', data);
+          this.df.detectChanges();
+        } else if (funcID == 'eBenefit') {
+          this.HandleEmployeeDiseaseInfo('edit', data);
+          this.df.detectChanges();
         }
         break;
 
@@ -1124,7 +1187,22 @@ export class EmployeeProfileComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            }
+            }  else if (funcID == 'eBenefit') {
+              this.hrService
+                .DeleteEmployeeDiseasesInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    let i = this.lstEdiseases.indexOf(data);
+                    if (i != -1) {
+                      this.lstEdiseases.splice(i, 1);
+                    }
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            } 
           }
         });
         break;
@@ -1164,6 +1242,9 @@ export class EmployeeProfileComponent extends UIComponent {
           this.handlEmployeeExperiences('copy', data);
           this.df.detectChanges();
         } else if (funcID == 'Diseases') {
+          this.HandleEmployeeDiseaseInfo('copy', data);
+          this.df.detectChanges();
+        } else if (funcID == 'eBenefit') {
           this.HandleEmployeeDiseaseInfo('copy', data);
           this.df.detectChanges();
         }
@@ -2482,5 +2563,25 @@ export class EmployeeProfileComponent extends UIComponent {
 
   addTest() {
     this.hrService.addTest().subscribe();
+  }
+
+  valueChangeFilterBenefit(evt){
+    (this.grid.dataService as CRUDService).setPredicates(['BenefitID==@0'], ['1']).subscribe((item) => {
+      console.log('item tra ve', item);
+    });
+  }
+
+  valueChangeYearFilterBenefit(evt){
+    let start = evt.fromDate.toJSON();
+    let endDate = evt.toDate.toJSON();
+    
+    (this.grid.dataService as CRUDService).setPredicates(['EffectedDate>=@0&&EffectedDate<=@1'], [start, endDate]).subscribe((item) => {
+      console.log('item tra ve', item);
+    });
+  }
+
+  
+  valueChangeViewAllEBenefit(evt){
+    this.ViewAllEBenefitFlag = evt.data;
   }
 }

@@ -398,7 +398,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   openAutoNumPopup() {
-    if (this.data.categoryID == '' || this.data.categoryID == null) {
+    if (this.dialog.dataService.keyField != 'CategoryID' && (this.data.categoryID == '' || this.data.categoryID == null)) {
       let headerText = this.grvSetup['CategoryID']?.headerText ?? 'CategoryID';
       this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;
@@ -456,7 +456,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.esService.notifyInvalid(this.form?.formGroup, this.formModel);
       return;
     }
-    if (this.data.categoryID == '' || this.data.categoryID == null) {
+    if (this.dialog.dataService.keyField != 'CategoryID' && (this.data.categoryID == '' || this.data.categoryID == null)) {
       let headerText = this.grvSetup['CategoryID']?.headerText ?? 'CategoryID';
       this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;
