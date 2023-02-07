@@ -31,10 +31,8 @@ export class TextValuePipe implements PipeTransform {
           }
           else if(element["DataType"] == "DateTime")
           {
-            if(element["DataFormat"]){
-              _value = moment(_value).format(element["DataFormat"]);
-            }
-            _value = moment(_value).format("DD/MM/YYYY");
+            var sDataFormat = element["DataFormat"]??"DD/MM/YYYY";
+            _value = moment(_value).format(sDataFormat);
           }
           _obj[element["FieldName"]] = _value;
         });

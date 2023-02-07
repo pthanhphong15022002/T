@@ -1643,7 +1643,7 @@ export class CodxHrService {
             var value = null;
             var type = element.dataType.toLowerCase();
             if (type === 'bool') value = false;
-            if (type === 'datetime') value = new Date();
+            if (type === 'datetime') value = null;
             if (type === 'int' || type === 'decimal') value = 0;
             group[keytmp] = element.isRequire
               ? new FormControl(value, Validators.required)
@@ -1804,6 +1804,50 @@ export class CodxHrService {
       'LoadDataCbxAsync',
       [dataRequest]
     );
+  }
+
+
+  getHeaderText(functionID): Promise<object> {
+    return new Promise<object>((resolve, reject) => {
+      var obj: { [key: string]: any } = {};
+      this.cache.functionList(functionID).subscribe(func => {
+        if(func){
+          this.cache.gridViewSetup(func.formName, func.gridViewName).subscribe((gv) => {
+            if (gv) {
+              for (const key in gv) {
+                if (Object.prototype.hasOwnProperty.call(gv, key)) {
+                  const element = gv[key];
+                  // if (element.headerText != null) {
+                    obj[key] = element.headerText;
+                  // }
+                }
+              }
+              resolve(obj as object);
+            }
+          });
+        }
+      })
+      
+      
+    });
+  }
+
+  gethHeaderText1(formName, gridView) {
+    var obj = {};
+    this.cache.gridViewSetup(formName, gridView).subscribe((gv) => {
+      if (gv) {
+        for (const key in gv) {
+          if (Object.prototype.hasOwnProperty.call(gv, key)) {
+            const element = gv[key];
+            if (element.headerText != null) {
+              obj[key] = element.headerText;
+            }
+          }
+        }
+      }
+    });
+
+    return obj;
   }
   //#endregion
 

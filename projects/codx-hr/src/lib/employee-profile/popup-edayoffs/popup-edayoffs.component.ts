@@ -101,6 +101,9 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           .subscribe((res: any) => {
             if (res) {
               this.dayoffObj = res?.data;
+
+              this.dayoffObj.beginDate = null; //yêu cầu require, không default
+              this.dayoffObj.endDate = null;
               this.dayoffObj.employeeID = this.employId;
               this.dayoffObj.periodType = '1'
               this.dayoffObj.totalSubDays = 0
@@ -129,20 +132,24 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       this.dayoffObj.totalSubDays = 0
       if(this.actionType === 'add' || this.actionType === 'copy'){
         if(this.dayoffObj.beginDate > this.dayoffObj.endDate){
-          this.notify.notifyCode('HR003')
+          this.hrSevice.notifyInvalidFromTo(
+            'BeginDate',
+            'EndDate',
+            this.formModel
+          );
           return
         }
 
         this.hrSevice.AddEmployeeDayOffInfo(this.dayoffObj).subscribe(p => {
           if(p != null){
             this.dayoffObj.recID = p.recID
-            this.notify.notifyCode('SYS007')
+            this.notify.notifyCode('SYS006')
             this.lstDayoffs.push(JSON.parse(JSON.stringify(this.dayoffObj)));
             if(this.listView){
               (this.listView.dataService as CRUDService).add(this.dayoffObj).subscribe();
             }
           }
-          else this.notify.notifyCode('DM034')
+          else this.notify.notifyCode('SYS023')
         });
       } 
       else{
@@ -154,7 +161,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
             (this.listView.dataService as CRUDService).update(this.lstDayoffs[this.indexSelected]).subscribe()
           }
           }
-          else this.notify.notifyCode('DM034')
+          else this.notify.notifyCode('SYS021')
         });
       }
   }

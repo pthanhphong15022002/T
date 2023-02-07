@@ -53,7 +53,7 @@ export class PopupETimeCardComponent extends UIComponent implements OnInit {
         this.notify.notifyCode('SYS007')
         this.dialog.close()
       }
-      else this.notify.notifyCode('DM034')
+      else this.notify.notifyCode('SYS021')
     })
   }
 }

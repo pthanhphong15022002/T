@@ -3,7 +3,7 @@
   [footer]="footer" (setTitle)="setTitle($event)"></codx-layout-add>
 
 <ng-template #subHeader>
-  <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false" [value]="''"
+  <codx-tag field="tags" [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false" [value]="instance.tag"
     (valueChange)="valueChange($event)"></codx-tag>
 </ng-template>
 

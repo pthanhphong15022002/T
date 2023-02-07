@@ -1,4 +1,4 @@
-<layout-list-detail
+<!-- <layout-list-detail
   #lstDetail
   [title]="headerText"
   [formModel]="formModel"
@@ -171,5 +171,101 @@
         </span>
       </div>
     </div>
+  </div>
+</ng-template> -->
+
+<codx-form
+    #form
+    [headerText] = "headerText"
+    [body]="body"
+    [formModel]="formModel"
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="data"
+    *ngIf="isAfterRender"
+>
+<ng-template #body>
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        fiedName="VaccineTypeID"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="VaccineTypeID"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label fiedName="VaccineName" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="VaccineName"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label fiedName="HopitalID" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="HopitalID"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label fiedName="InjectDate" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="InjectDate"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label fiedName="Cost" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="Cost"
+        [formModel]="formModel"
+        [Group]="formGroup"
+        [showSpinButton]="false"
+      ></codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="NextInjectDate"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="NextInjectDate"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="form-group row">
+    <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+    <codx-input
+      field="Note"
+      [formModel]="formModel"
+      [Group]="formGroup"
+    ></codx-input>
+  </div>
+</ng-template>
+</codx-form>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveForm(false)">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
   </div>
 </ng-template>

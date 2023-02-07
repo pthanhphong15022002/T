@@ -66,6 +66,7 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
         this.notify.notifyCode('SYS007')
         this.dialog.close();
       }
+      else this.notify.notifyCode('SYS021');
     })
   }
 }

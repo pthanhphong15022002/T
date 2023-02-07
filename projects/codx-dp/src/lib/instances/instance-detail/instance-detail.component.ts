@@ -44,35 +44,36 @@ export class InstanceDetailComponent implements OnInit {
   progressThickness: Number = 24;
   value: Number = 30;
   cornerRadius: Number = 30;
-  idCbx = 'stage';
-
-  fields: Object = { text: 'name', value: 'id' };
-  listRoom = [
-    {
-      name: 'Xem theo biểu đồ Gantt',
-      id: 'gantt',
-    },
-    {
-      name: 'Xem theo giai đoạn',
-      id: 'stage',
-    },
-    {
-      name: 'Xem theo trường nhập liệu',
-      id: 'field',
-    },
-  ];
+  idCbx = 'S';
 
   currentStep = 0;
+  //gantchat
+  ganttDs = [
+    {
+      recID: '123456',
+      name: 'Tên của công việc ',
+      startDate: new Date('02/07/2023'),
+      endDate: new Date("02/09/2023"),
+    },
+  ];
+  taskFields: any;
+
   constructor(
     private dpSv: CodxDpService,
     private api: ApiHttpService,
     private changeDetec: ChangeDetectorRef
-  ) {}
+  ) {
+
+  }
 
   ngOnInit(): void {
-    // var instance = new DP_Instances();
-    // instance.title = "TEST DO PHÚC THỰC HIỆN";
-    // this.api.callSv('DP','ERM.Business.DP','InstancesBusiness','AddInstanceAsync',[instance, this.listSteps]).subscribe();
+    this.taskFields = {
+      id: 'recID',
+      name: 'name',
+      startDate: 'startDate',
+      endDate: 'endDate',
+    };
+    this.getDataGanttChart() ;
   }
 
   ngAfterViewInit(): void {
@@ -95,10 +96,9 @@ export class InstanceDetailComponent implements OnInit {
       this.dataSelect = changes['dataSelect'].currentValue;
       this.currentStep = this.dataSelect.currentStep;
       this.getStepsByProcessID(this.id);
-      if(this.listSteps == null && this.listSteps.length == 0){
-        this.tmpTeps = null
+      if (this.listSteps == null && this.listSteps.length == 0) {
+        this.tmpTeps = null;
       }
-
     }
     console.log(this.formModel);
   }
@@ -108,11 +108,11 @@ export class InstanceDetailComponent implements OnInit {
       if (res) {
         this.listSteps = res;
         var total = 0;
-        for(var i = 0; i < this.listSteps.length; i++){
+        for (var i = 0; i < this.listSteps.length; i++) {
           var stepNo = i;
           var data = this.listSteps[i];
-          if(this.listSteps[i].recID == this.dataSelect.stepID){
-            this.stepName = data.stepName
+          if (this.listSteps[i].recID == this.dataSelect.stepID) {
+            this.stepName = data.stepName;
             this.currentStep = stepNo;
             this.currentNameStep = this.currentStep;
           }
@@ -131,7 +131,7 @@ export class InstanceDetailComponent implements OnInit {
             }
           });
         }
-      }else{
+      } else {
         this.listSteps = [];
         this.stepName = '';
         this.progress = '0';
@@ -157,7 +157,7 @@ export class InstanceDetailComponent implements OnInit {
   // }
 
   cbxChange(e) {
-    this.idCbx = e;
+    this.idCbx = e?.data;
   }
 
   clickMF(e, data) {
@@ -208,10 +208,25 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   continues(data) {
-    if (this.currentStep +1 > this.listSteps.length) return;
+    if (this.currentStep + 1 == this.listSteps.length) return;
+    this.dpSv.GetStepsByInstanceIDAsync(data.recID).subscribe(res =>{
+      this.tmpTeps = res;
+
+    })
     this.currentStep++;
+    this.currentNameStep = this.currentStep;
     this.changeDetec.detectChanges();
   }
 
   setHTMLCssStages(oldStage, newStage) {}
+
+  getDataGanttChart() {
+    this.api
+      .exec<any>('DP', 'InstanceStepsBusiness', 'GetDataGanntChartAsync', [this.recID])
+      .subscribe((res) => {
+        if (res && res?.length > 0) {
+          this.ganttDs = res;
+        }
+      });
+  }
 }

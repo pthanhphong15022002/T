@@ -152,7 +152,7 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrSevice.AddEmployeeJobSalariesInfo(this.currentEJobSalaries).subscribe((p) => {
         if (p != null) {
-          this.notify.notifyCode('SYS007');
+          this.notify.notifyCode('SYS006');
           if(this.currentEJobSalaries){
             if(this.currentEJobSalaries.effectedDate < p.effectedDate){
               this.currentEJobSalaries.isCurrent = 'false';
@@ -168,7 +168,7 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
             (this.listView.dataService as CRUDService).add(p).subscribe();
           }
           //this.dialog.close(p);
-        } else this.notify.notifyCode('DM034');
+        } else this.notify.notifyCode('SYS023');
       });
     } else {
       this.hrSevice.UpdateEmployeeJobSalariesInfo(this.formModel.currentData).subscribe((p) => {
@@ -187,7 +187,7 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
             (this.listView.dataService as CRUDService).update(p).subscribe();
           }
           // this.dialog.close(this.data);
-        } else this.notify.notifyCode('DM034');
+        } else this.notify.notifyCode('SYS021');
       });
     }
   }

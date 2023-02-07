@@ -51,7 +51,13 @@ export class NotifyDrawerSliderComponent implements OnInit {
     this.cache.valueList("SYS055").subscribe(vll => {
       if(vll){
         this.datas = vll.datas;
-        this.valueSelected = vll.datas[0];
+        let _defaultVLL  = vll.datas.find(x => x.value == "");
+        if(_defaultVLL){
+          this.valueSelected = _defaultVLL;
+        }
+        else{
+          this.valueSelected = vll.datas[0];
+        }
       }
     });
   }

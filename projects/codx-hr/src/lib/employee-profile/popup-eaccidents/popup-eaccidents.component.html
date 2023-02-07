@@ -1,3 +1,14 @@
+
+<codx-form
+#form
+[headerText] = "headerText"
+[body]="tmpContent"
+[formModel]="formModel"
+[footer]="footer"
+[dialog]="dialog"
+[data]="accidentObj"
+*ngIf="isAfterRender"
+>
 <ng-template #tmpContent>
   <ejs-tab
     #leftToolbar
@@ -296,8 +307,22 @@
     </e-tabitems>
   </ejs-tab>
 </ng-template>
+</codx-form>
 
-<layout-list-detail
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveForm()">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<!-- <layout-list-detail
   #lstDetail
   [title]="headerText"
   [formModel]="formModel"
@@ -366,4 +391,4 @@
       {{ data1.accidentPlace }}
     </div>
   </div>
-</ng-template>
+</ng-template> -->

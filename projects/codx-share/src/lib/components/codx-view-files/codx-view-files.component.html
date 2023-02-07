@@ -1,6 +1,6 @@
-<ng-container *ngIf="images">
+<ng-container *ngIf="medias">
     <div class="codx-view-files cursor-pointer">
-        <ng-container [ngSwitch]="images">
+        <ng-container [ngSwitch]="medias">
             <!-- 1 hình -->
             <ng-container *ngSwitchCase="1">
                 <div class="row w-100 h-100 m-0">
@@ -145,7 +145,7 @@
                             <ng-container *ngTemplateOutlet="video;context: { $implicit: files[3]}"></ng-container>
                         </ng-template>
                         <div class="more-image" (click)="clickViewDetail(files[3])">
-                            <span class="text-white fw-bolder">+{{images - 4}}</span>
+                            <span class="text-white fw-bolder">+{{medias - 4}}</span>
                         </div>
                     </div>
                 </div>
