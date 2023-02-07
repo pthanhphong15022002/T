@@ -44,7 +44,7 @@
             </div>   
         </div>
     </div>
-    <div class="chat-box-body" (scroll)="getDataChat()">
+    <div #chatBoxBody class="chat-box-body" (scroll)="scroll()">
         <ng-container *ngFor="let item of arrMessages; let index = i">
             <div class="codx-message" [class.justify-content-end]="item.userID == user.userID">
                 <span class="message-img" *ngIf="item.userID != user.userID">
