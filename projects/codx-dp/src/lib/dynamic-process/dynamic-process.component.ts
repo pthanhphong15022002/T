@@ -28,6 +28,7 @@ import {
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
 import { PopupViewsDetailsProcessComponent } from './popup-views-details-process/popup-views-details-process.component';
+import { PopupRolesDynamicComponent } from './popup-add-dynamic-process/popup-roles-dynamic/popup-roles-dynamic.component';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -286,9 +287,34 @@ export class DynamicProcessComponent
       case 'SYS02':
         this.delete(data);
         break;
+      case 'DP05':
+        this.roles(data);
+        break;
     }
   }
 
+  //#popup roles
+  roles(e: any) {
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 999;
+    this.callfc
+      .openForm(
+        PopupRolesDynamicComponent,
+        '',
+        950,
+        650,
+        '',
+        [e, this.titleAction],
+        '',
+        dialogModel
+      )
+      .closed.subscribe((e) => {
+        // if (e?.event && e?.event != null) {
+        //   this.view.dataService.update(e?.event).subscribe();
+        //   this.detectorRef.detectChanges();
+        // }
+      });
+  }
   //#region đang test ai cần list phần quyền la vô đâyu nha
   setTextPopover(text) {
     return text;
@@ -349,7 +375,7 @@ export class DynamicProcessComponent
       data: data,
       nameAppyFor: this.getNameAppyFor(data.applyFor),
     };
-    
+
     let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
     dialogModel.zIndex = 999;

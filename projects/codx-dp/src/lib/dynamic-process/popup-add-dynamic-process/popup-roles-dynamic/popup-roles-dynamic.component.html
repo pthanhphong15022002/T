@@ -5,11 +5,11 @@
   <div class="row" style="height: 100% !important;">
     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
       <div class="user-mini-nav">
-        <div *ngIf="lstPermissions.length > 0">
+        <div *ngIf="lstPermissions != null && lstPermissions.length > 0">
           <ng-container *ngFor="let perm of lstPermissions; index as i;">
-            <div *ngIf="perm.roleType == type" class="d-flex justify-content-between list-title w-100" (click)="changePermission(i)"
-            [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
-            class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item p-2">
+            <div class="d-flex justify-content-between list-title w-100" (click)="changePermission(i)"
+              [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
+              class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item p-2">
               <div class="d-flex align-items-top">
                 <div *ngIf="perm.objectType != '1' && perm.objectType != 'U' ; then thenAvatar1 else elsethenAvatar1">
                 </div>
@@ -25,6 +25,10 @@
                     <div class="text-dark fw-bold">
                       {{ perm.objectName }}
                     </div>
+                    <div class="text-gray-700">
+                      Người giám sát
+                    </div>
+
                   </div>
                 </ng-template>
                 <ng-template #elsethenAvatar1>
@@ -37,6 +41,9 @@
                   <div class="ms-3">
                     <div class="text-dark fw-bold">
                       {{ perm.objectName }}
+                    </div>
+                    <div class="text-gray-700">
+                      Người giám sát
                     </div>
                   </div>
 
@@ -215,4 +222,8 @@
     </div>
   </div>
 </ng-template>
-<ng-template #footer></ng-template>
+<ng-template #footer>
+  <button type="button" class="btn btn-primary" (click)="onSave()">
+    <codx-label [name]="'lblSave'" [default]="'Lưu'"></codx-label>
+  </button>
+</ng-template>

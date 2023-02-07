@@ -6,7 +6,7 @@
                     <codx-label default="Đến"></codx-label>
                 </div>
                 <div class="w-100">
-                    <codx-input type="Combobox" [refValue]="gridViewSetup['Owner']['referedValue']" [showInput]="true"
+                    <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="true"
                         refType="P" field="popup" [ngClass]="'w-100'" (valueChange)="changeValueTo($event)">
                     </codx-input>
                 </div>
@@ -16,7 +16,7 @@
                     <codx-label default="CC:"></codx-label>
                 </div>
                 <div class="w-100">
-                    <codx-input [refValue]="gridViewSetup['Owner']['referedValue']" type="combobox" refType="P"
+                    <codx-input [refValue]="'Share_Users'" type="combobox" refType="P"
                         field="popup" [ngClass]="'w-100'" (valueChange)="changeValueCC($event)">
                     </codx-input>
                 </div>
