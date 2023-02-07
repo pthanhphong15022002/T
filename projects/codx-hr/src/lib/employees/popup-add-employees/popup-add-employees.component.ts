@@ -125,6 +125,7 @@ export class PopupAddEmployeesComponent implements OnInit {
 
   // btn save
   OnSaveForm() {
+    debugger
     let arrFieldUnValid: string = '';
     if (this.arrFieldRequire.length > 0) {
       this.arrFieldRequire.forEach((field) => {
@@ -151,7 +152,7 @@ export class PopupAddEmployeesComponent implements OnInit {
   updateEmployeeAsync(employee: any) {
     if (employee) {
       this.api
-        .execSv("HR","ERM.Business.HR","EmployeesBusiness","UpdateAsync",[employee])
+        .execSv("HR","ERM.Business.HR","EmployeesBusiness","UpdateAsync",[employee,this.funcID])
         .subscribe((res: any) => {
           if (res) 
           {
@@ -168,6 +169,7 @@ export class PopupAddEmployeesComponent implements OnInit {
   // add employee
   addEmployeeAsync(employee: any) {
     if (employee) {
+      debugger
       this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","SaveAsync",[employee])
       .subscribe((res:any) => {
         if(res)

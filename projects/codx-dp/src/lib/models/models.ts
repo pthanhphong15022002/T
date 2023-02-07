@@ -310,6 +310,7 @@ export class DP_Instances_Steps {
   modifiedOn: Date;
   modifiedBy: string;
   reasons: DP_Instances_Steps_Reasons[] = []; // objects
+  stepStatus: string;
 }
 
 export class DP_Instances_Steps_Roles {

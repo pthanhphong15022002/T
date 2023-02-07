@@ -116,3 +116,24 @@ codx-chat-box{
     margin-top: -500px;
     background-color: white;
 }
+
+codx-chat-box.active{
+
+    .footer-emoji span{
+        color: --primary-active;
+    }
+    .footer-attachments span{
+        color: --primary-active;
+    }
+    .footer-message span{
+        color: --primary-active;
+
+    }
+    .footer-button span{
+        color: --primary-active;
+
+    }
+
+}
+
+    

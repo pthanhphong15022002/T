@@ -1,48 +1,46 @@
 import { DP_Processes_Permission } from './../../../models/models';
-import { Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
 
 @Component({
   selector: 'lib-popup-roles-dynamic',
   templateUrl: './popup-roles-dynamic.component.html',
-  styleUrls: ['./popup-roles-dynamic.component.css']
+  styleUrls: ['./popup-roles-dynamic.component.css'],
 })
 export class PopupRolesDynamicComponent implements OnInit {
-
   dialog: any;
-  title = 'Phân quyền';
+  title = '';
   lstPermissions: DP_Processes_Permission[] = [];
   type = '';
   currentPemission = 0;
   //Role
   full: boolean = false;
-  create:	boolean;
-  read:	boolean;
-  update:	boolean;
-  assign:	boolean;
-  delete:	boolean;
-  share:	boolean;
-  upload:	boolean;
-  download:	boolean;
+  create: boolean;
+  read: boolean;
+  update: boolean;
+  assign: boolean;
+  delete: boolean;
+  share: boolean;
+  upload: boolean;
+  download: boolean;
   //Date
   startDate: Date;
   endDate: Date;
 
-  constructor(
-    @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef
-  ) {
+  constructor( private changeDetectorRef: ChangeDetectorRef,
+    @Optional() dt?: DialogData, @Optional() dialog?: DialogRef) {
     this.dialog = dialog;
     this.lstPermissions = dt.data[0];
-    this.type = dt.data[1];
-   }
+    this.title = dt.data[1];
+  }
 
   ngOnInit(): void {
-    this.changePermission(0);
+    if (this.lstPermissions != null && this.lstPermissions.length > 0)
+      this.changePermission(0);
   }
 
   //#region changePermissions click current
-  changePermission(index){
+  changePermission(index) {
     if (this.currentPemission > -1) {
       let oldIndex = this.currentPemission;
       if (
@@ -80,7 +78,6 @@ export class PopupRolesDynamicComponent implements OnInit {
       this.upload = this.lstPermissions[index].upload;
       this.assign = this.lstPermissions[index].assign;
       this.currentPemission = index;
-
     } else {
       this.full = false;
       this.read = false;
@@ -92,22 +89,18 @@ export class PopupRolesDynamicComponent implements OnInit {
       this.download = false;
       this.currentPemission = index;
     }
-
+    this.changeDetectorRef.detectChanges();
   }
   //#endregion
 
   //#region Event user
-  valueChange(e, type){
-
-  }
+  valueChange(e, type) {}
   //#endregion
 
   //#region check role
-  controlFocus(focus){
+  controlFocus(focus) {}
 
-  }
-
-  checkAdminUpdate(){
+  checkAdminUpdate() {
     return true;
   }
   //#endregion
