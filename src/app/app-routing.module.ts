@@ -46,6 +46,7 @@ var childRoutes = [
   {
     path: 'wp',
     canActivate: [AuthGuard],
+    data: { noReuse: true },
     loadChildren: () =>
       import('projects/codx-wp/src/lib/codx-wp.module').then(
         (m) => m.CodxWpModule

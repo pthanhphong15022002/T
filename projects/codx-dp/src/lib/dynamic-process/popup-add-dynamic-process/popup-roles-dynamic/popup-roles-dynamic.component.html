@@ -42,9 +42,13 @@
                     <div class="text-dark fw-bold">
                       {{ perm.objectName }}
                     </div>
-                    <div class="text-gray-700">
-                      Người giám sát
-                    </div>
+                    <ng-container *ngFor="let role of listRoles">
+                      <ng-container *ngIf="role.value == perm.roleType">
+                        <div class="text-gray-700">
+                          {{role.text}}
+                        </div>
+                      </ng-container>
+                    </ng-container>
                   </div>
 
                 </ng-template>
@@ -222,4 +226,8 @@
     </div>
   </div>
 </ng-template>
-<ng-template #footer></ng-template>
+<ng-template #footer>
+  <button type="button" class="btn btn-primary" (click)="onSave()">
+    <codx-label [name]="'lblSave'" [default]="'Lưu'"></codx-label>
+  </button>
+</ng-template>
