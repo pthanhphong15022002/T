@@ -15,7 +15,7 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
   funcID: string = '';
   override asideFixed = false;
   override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  override asideKeepActive = false;
+  //override asideKeepActive = false;
   override toolbar = false;
   dialog!: DialogRef;
 

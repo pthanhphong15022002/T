@@ -82,14 +82,14 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
       );
       return;
     }
-    if (this.bankID.trim() == '' || this.bankID == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['BankID'].headerText + '"'
-      );
-      return;
-    }
+    // if (this.bankID.trim() == '' || this.bankID == null) {
+    //   this.notification.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.gridViewSetup['BankID'].headerText + '"'
+    //   );
+    //   return;
+    // }
     if (this.owner.trim() == '' || this.owner == null) {
       this.notification.notifyCode(
         'SYS009',

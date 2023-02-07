@@ -601,7 +601,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.typeShare = '2';
         break;
       case 'followers':
-        this.vllShare = 'DM001';
+        this.vllShare = 'DP0332';
         this.typeShare = '3';
         break;
       case 'participants-2':
@@ -647,7 +647,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';
-            perm.create = true;
+            perm.read = true;
 
             this.permissions = this.checkUserPermission(this.permissions, perm);
           }
@@ -675,7 +675,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             roles.objectName = data.text != null ? data.text : data.objectName;
             roles.objectID = data.id != null ? data.id : null;
             roles.objectType = data.objectType;
-            roles.roleType = 'O';
+            roles.roleType = 'S';
+            perm.read = true;
             this.step.roles = this.checkRolesStep(this.step.roles, roles);
           }
           break;

@@ -11,7 +11,7 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
   override toolbar = false;
   override aside = false;
   override asideFixed = false;
-  override asideKeepActive = false;
+  //override asideKeepActive = false;
   valueList: [];
   category: string = 'home';
   funcID: string | null = '';
