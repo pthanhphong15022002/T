@@ -222,4 +222,8 @@
     </div>
   </div>
 </ng-template>
-<ng-template #footer></ng-template>
+<ng-template #footer>
+  <button type="button" class="btn btn-primary" (click)="onSave()">
+    <codx-label [name]="'lblSave'" [default]="'Lưu'"></codx-label>
+  </button>
+</ng-template>
