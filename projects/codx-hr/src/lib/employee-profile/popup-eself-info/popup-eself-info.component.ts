@@ -99,10 +99,10 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   handleOnSaveEmployeeContactInfo(){
     this.hrService.saveEmployeeContactInfo(this.data).subscribe(p => {
       if(p != null){
-        this.notitfy.notifyCode('SYS007')
+        this.notitfy.notifyCode('SYS006')
         this.dialog.close()
       }
-      else this.notitfy.notifyCode('DM034')
+      else this.notitfy.notifyCode('SYS021')
     })
   }
 
@@ -123,10 +123,10 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
 
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe(p => {
       if(p != null){
-        this.notitfy.notifyCode('SYS007')
+        this.notitfy.notifyCode('SYS006')
         this.dialog.close()
       }
-      else this.notitfy.notifyCode('DM034')
+      else this.notitfy.notifyCode('SYS021')
     })
   }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, AfterViewInit, HostListener } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { WP_Messages } from '../../models/WP_Messages.model';
@@ -7,9 +7,15 @@ import { SignalRService } from '../../services/signalr.service';
 @Component({
   selector: 'codx-chat-box',
   templateUrl: './chat-box.component.html',
-  styleUrls: ['./chat-box.component.css']
+  styleUrls: ['./chat-box.component.scss']
 })
 export class ChatBoxComponent implements OnInit, AfterViewInit{
+
+  @HostListener('click', ['$event'])
+  onClick(event:any) {
+    this.isChatBox(event.target);
+    this.checkActive(this.group.groupID);
+  }
   @Input() groupID:string ;
 
   group:any = {};
@@ -144,6 +150,31 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
             this.arrMessages = this.arrMessages.concat(_messgae);
           }
         });
+    }
+  }
+  // check tag name 
+  isChatBox(element:HTMLElement){
+    if(element.tagName == "CODX-CHAT-BOX"){
+      if(!element.classList.contains("active"))
+      {
+        element.classList.add("active");
+      }
+      return;
+    }
+    else{
+      this.isChatBox(element.parentElement);
+    }
+  }
+  // check active
+  checkActive(id:string){
+    let _boxChats = document.getElementsByTagName("codx-chat-box");
+    if(_boxChats.length > 0){
+      Array.from(_boxChats).forEach(e => {
+        if(e.id != id && e.classList.contains("active")){
+          e.classList.remove("active");
+        }
+      });
+      
     }
   }
 }

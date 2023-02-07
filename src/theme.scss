@@ -627,7 +627,11 @@
     }
 
     a.menu-link {
-        color: var(--primary-dark);
+        color: var(--primary-darker);
+    }
+
+    a.menu-link:hover {
+        color: var(--primary);
     }
 
     .extend-function hr {
@@ -693,5 +697,8 @@
 
 }
 
+.e-toolbar-item.e-date-range.e-overflow-show .e-tbar-btn {
+    background: var(--primary-light) !important;
+}
 
 /// end 22/12/2022

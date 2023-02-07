@@ -85,3 +85,157 @@
     font-weight: 400;
   }
 }
+//nvthuan
+.icon-container {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  background-color: #e4e4e4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+.progress-task{
+  background-color: #d8d8d8;
+	border-radius: 10px;
+	position: relative;
+	margin: 15px 0;
+	height: 15px;
+	width: 80px;
+  .progress-task-done {
+    border-radius: 10px  0 0 10px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    span{
+      font-size: 10px;
+    }
+  }
+}
+.time-progress{
+  .notify{
+    display: flex;
+    align-items: center;
+    margin: 0 5px;
+    position: relative;
+    .text{
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .text-mes{
+      position: absolute;
+      top: 3px;
+      right: -10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #2392ef;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      span{
+        font-size: 12px;
+        color: white;
+        font-weight: 600;
+      }
+    }
+  }
+  .date{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    margin: 0 5px;
+  }
+}
+// drap drop -- nvthuan
+.example-list {
+  width: 500px;
+  max-width: 100%;
+  min-height: 60px;
+  display: block;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.example-box {
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  box-sizing: border-box;
+  cursor: move;
+  background: white;
+  padding-left: 10px;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
+  border-radius: 5px;
+  background-color: #f0f8ff;
+  color: #0172e4;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.example-box:last-child {
+  border: none;
+}
+
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+.order {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #b6ddff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.icon-container {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  background-color: #e4e4e4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+.drap-drop:hover {
+  box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
+  border-radius: 5px;
+  background-color: #f0f8ff;
+}
+.more-funtion-step {
+  codx-mfunc {
+    top: -5px !important;
+    right: -5px !important;
+  }
+}
+.body-set-job:hover {
+  background-color: #e8f7ff;
+}
+.circle {
+  width: 35px;
+  height: 35px;
+  text-align: center;
+  border-radius: 50%;
+}
+// End Drop drap -- nvthuan

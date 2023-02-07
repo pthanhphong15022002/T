@@ -1,7 +1,17 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
-    [dialog]="dialog" (setTitle)="setTitle($event)" [openMore]="true" [tabContent]="[tabDescription
+    [dialog]="dialog" [subHeader]="subHeader" (setTitle)="setTitle($event)"  [tabContent]="[tabDescription
     ,tabestablish,tabShipment,tabLocation,tabContact,tabAtm,tabinfo]" [data]="customers">
 </codx-layout-add>
+<ng-template #subHeader>
+  <codx-tag 
+    [entityName]="dialog.formModel.entityName"
+    [isEdit]="true"
+    [disabled]="false"
+    [value]="customers.industries"
+    field="industries"
+    (valueChange)="valueChangeTags($event)"
+  ></codx-tag>
+</ng-template>
 <ng-template #tabDescription>
     <div class="form-group">
         <codx-label
@@ -191,7 +201,241 @@
       </div>
 </ng-template>
 <ng-template #tabestablish>
-
+  <div class="form-group">
+    <codx-label
+    [formModel]="form.formModel"
+    default="Thanh toán"
+  ></codx-label>
+  </div>   
+  <div class="row mx-0 mt-3">
+    <div class="col-6 ps-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="PmtMethodID"
+        default="Hình thức thanh toán"
+      ></codx-label>
+        <codx-input    
+                [crrValue]="form.data.pmtMethodID"
+                type="combobox"
+                refValue="PaymentMethods"          
+                field="pmtMethodID"
+                (valueChange)="valueChange($event,'pmtMethodID')"
+              >
+        </codx-input>
+      </div>   
+    </div>
+    <div class="col-6 pe-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="PmtTermID"
+        default="Điều khoản thanh toán"      
+      ></codx-label>
+      <codx-input
+      [crrValue]="form.data.pmtTermID"
+      type="combobox"
+      refValue="PaymentTerms"
+      field="pmtTermID"
+      (valueChange)="valueChange($event,'')"
+        >
+    </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label
+    [formModel]="form.formModel"
+    default="Kiểm soát công nợ"
+  ></codx-label>
+  </div> 
+  <div class="row mx-0 mt-3">
+    <div class="col-6 ps-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="PostDetail"
+        default="Loại công nợ"
+      ></codx-label>
+        <codx-input  
+                [crrValue]="form.data.postDetail"  
+                type="valuelist"
+                refValue="AC007"          
+                field="postDetail"
+                (valueChange)="valueChange($event,'postDetail')"
+              >
+        </codx-input>
+      </div>   
+    </div>
+  </div>
+  <div class="row mx-0 mt-3">
+    <div class="col-6 ps-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="SettleInvoice"
+        default="Cấn trừ thanh toán"
+      ></codx-label>
+        <codx-input    
+                [crrValue]="form.data.settleInvoice"  
+                type="valuelist"
+                refValue="AC008"          
+                field="settleInvoice"
+                (valueChange)="valueChange($event,'settleInvoice')"
+              >
+        </codx-input>
+      </div>   
+    </div>
+    <div class="col-6 pe-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="SettlePayment"
+        default="Cấn trừ hóa đơn"      
+      ></codx-label>
+      <codx-input
+      [crrValue]="form.data.settlePayment"  
+      type="valuelist"
+      refValue="AC009"
+      field="settlePayment"
+      (valueChange)="valueChange($event,'')"
+        >
+    </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row mx-0 mt-3">
+    <div class="col-6 ps-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="CreditLimit"
+        default="Hạn mức công nợ"
+      ></codx-label>
+        <codx-input     
+                [crrValue]="form.data.creditLimit"         
+                field="creditLimit"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event,'settleInvoice')"
+                [min]="0"
+              >
+        </codx-input>
+      </div>   
+    </div>
+    <div class="col-6 pe-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="CreditBalance"
+        default="Kiểm soát hạn mức"      
+      ></codx-label>
+      <codx-input
+      [crrValue]="form.data.creditBalance"      
+      type="valuelist"
+      refValue="AC010"
+      field="creditBalance"
+      (valueChange)="valueChange($event,'')"
+        >
+    </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row mx-0 mt-3">
+    <div class="col-6 ps-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="DebtComparision"
+        default="Đối chiều công nợ"
+      ></codx-label>
+        <codx-input   
+                [crrValue]="form.data.debtComparision"      
+                type="valuelist"
+                refValue="AC012"          
+                field="debtComparision"
+                (valueChange)="valueChange($event,'debtComparision')"
+              >
+        </codx-input>
+      </div>   
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label
+    [formModel]="form.formModel"
+    default="Kiểm soát nợ quá hạn"
+  ></codx-label>
+  </div>  
+  <div class="row mx-0 mt-3">
+    <div class="col-4 ps-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="OverdueAmt"
+        default="Hạn mức quá hạn"
+      ></codx-label>
+        <codx-input     
+                [crrValue]="form.data.overdueAmt"            
+                field="overdueAmt"
+                [formModel]="form.formModel"
+                (valueChange)="valueChange($event,'overdueAmt')"
+                [min]="0"
+              >
+        </codx-input>
+      </div>   
+    </div>
+    <div class="col-4 pe-0">
+      <div class="form-group">
+        <codx-label
+        fiedName="OverDueDays"
+        default="Số ngày quá hạn"      
+      ></codx-label>
+      <codx-input
+      [crrValue]="form.data.overDueDays"        
+      field="overDueDays"
+      [formModel]="form.formModel"
+      (valueChange)="valueChange($event,'')"
+      [min]="0"
+        >
+    </codx-input>
+      </div>
+    </div>
+    <div class="col-4 pe-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="OverDueInvoices"
+        default="Số hóa đơn quá hạn"      
+      ></codx-label>
+      <codx-input
+      [crrValue]="form.data.overDueInvoices"       
+      field="overDueInvoices"
+      [formModel]="form.formModel"
+      (valueChange)="valueChange($event,'')"
+      [min]="0"
+        >
+    </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row mx-0 mt-3">
+    <div class="col-6 ps-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="OverDueControl"
+        default="Kiểm soát quá hạn"
+      ></codx-label>
+        <codx-input    
+                [crrValue]="form.data.overDueControl"   
+                type="valuelist"
+                refValue="AC011"          
+                field="overDueControl"
+                (valueChange)="valueChangeOverdueControl($event)"
+              >
+        </codx-input>
+      </div>   
+    </div>
+  </div>
 </ng-template>
 <ng-template #tabShipment>
     <div class="form-group">
@@ -209,10 +453,12 @@
             default="Điều khoản giao hàng"
           ></codx-label>
             <codx-input
+            [crrValue]="form.data.delTermID"
             type="combobox"
             refValue="DeliveryTerms"
             [formModel]="form.formModel"
             field="delTermID"  
+            (valueChange)="valueChange($event,'')"
             >
             </codx-input>
           </div>   
@@ -225,9 +471,12 @@
             default="Hình thức giao hàng"      
           ></codx-label>
           <codx-input
+            [crrValue]="form.data.delModeID"
+            [formModel]="form.formModel"
             type="combobox"
             refValue="DeliveryModes"
             field="delModeID"  
+            (valueChange)="valueChange($event,'')"
             >
             </codx-input>
           </div>
@@ -283,6 +532,7 @@
             [min]="0"
             [formModel]="form.formModel"
             field="distance"  
+            (valueChange)="valueChange($event,'')"
             >
             </codx-input>
           </div>   
@@ -300,6 +550,7 @@
             [min]="0"
             [formModel]="form.formModel"
             field="leadtime"  
+            (valueChange)="valueChange($event,'')"
             >
             </codx-input>
           </div>
@@ -364,8 +615,8 @@
       <span (click)="openPopupAddress()" class="icon-add_circle icon-16 me-1"></span>
       </div>    
       <div *ngFor="let item of objectAddress">
-        <div class="fw-bold text-dark fs-5">
-          <span>{{item.adressType}}</span>
+        <div class="fw-bold text-dark fs-5" *ngFor="let value of valuelist">
+          <span *ngIf="item.adressType == value.value">{{value.text}}</span>
         </div>
       <div class="text-gray-500">
           {{item.adressName}}
@@ -379,14 +630,10 @@
                 <div class="d-flex align-items-top">
                   <div class="me-4">
                     <div>
-                      <codx-img 
-                        [width]="50"
-                        imgSource="../../../assets/img/avatar.png">
+                      <codx-img [objectId]="itemcontact?.recID" [objectName]="itemcontact?.contactName"
+                      [objectType]="formModel?.entityName" [width]="50">
                       </codx-img>
                     </div>
-                    <!-- <ng-template #imgDefault_personal>
-                      <img class="img_avatar" src="../../../assets/img/avatar.png" />
-                    </ng-template> -->
                   </div>
                   <div class="d-flex flex-column space_personal">
                     <div class="fw-bold text-dark fs-5">
@@ -449,14 +696,10 @@
           <div class="d-flex align-items-top">
             <div class="me-4">
               <div>
-                <codx-img 
-                  [width]="50"
-                  imgSource="../../../assets/img/avatar.png">
+                <codx-img [objectId]="item?.recID" [objectName]="item?.contactName"
+                             [objectType]="formModel?.entityName" [width]="50">
                 </codx-img>
               </div>
-              <!-- <ng-template #imgDefault_personal>
-                <img class="img_avatar" src="../../../assets/img/avatar.png" />
-              </ng-template> -->
             </div>
             <div class="d-flex flex-column space_personal">
               <div class="fw-bold text-dark fs-5">
@@ -483,8 +726,8 @@
                   </div>
               </div>
               </div>
-              <div class="d-flex">
-                <span class="me-2">{{item.contactType}}</span>     
+              <div class="d-flex" *ngFor="let value of valuelist">
+                <span *ngIf="item.contactType == value.value">{{value.text}}</span>
               </div>
             </div>
             <div class="d-flex align-items-center">
@@ -530,8 +773,12 @@
             <span (click)="deleteobject(item,'databank')"  class="icon-delete icon-16"></span>
           </div>
           </div>
-          
         </div>
+        <div class="col-6 ps-0">
+          <codx-vll [showText]="true" [showBgColor]="true" [name]="'DP002'" value="0"
+          class="badge badge-light badge-md fs-7">
+        </codx-vll>
+      </div>
       </div>
 </ng-template>
 <ng-template #tabinfo>
@@ -542,10 +789,11 @@
         default="Ngành công nghiệp"      
       ></codx-label>
       <codx-input
-      [crrValue]="form.data.industries"
+      [crrValue]="form.data.industryID"
       type="combobox"
       refValue="Industries"
-      field="industries" 
+      [formModel]="form.formModel"
+      field="industryID" 
       (valueChange)="valueChange($event,'')"
     >
     </codx-input>

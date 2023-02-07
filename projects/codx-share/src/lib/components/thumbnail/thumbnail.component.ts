@@ -40,6 +40,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   titlePermission = "Permission";
   dataDelete = [];
   dataFile:any;
+  showDelete = false;
   // files: any;
   title = 'Thông báo';
   titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
@@ -88,9 +89,11 @@ export class ThumbnailComponent implements OnInit, OnChanges {
         }
       });
     }
+    
     this.userID = this.authStore.get().userID;
   }
 
+ 
   openPermission(data) {
     this.dmSV.dataFileEditing = data;
     //  this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [this.functionID], "");
@@ -124,14 +127,8 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   deleteFile(id) {
     var config = new AlertConfirmInputConfig();
     config.type = "YesNo";
-
-    // this.notificationsService.alertCode('TM005', config).subscribe((res) => {
-    //   if (res?.event && res?.event?.status == 'Y') {
-    //     console.log(res);
-    //   }
-    // });
-
-    this.notificationsService.alert(this.title, this.titleDeleteConfirm, config).closed.subscribe(x => {
+    this.notificationsService.alert(this.title, this.titleDeleteConfirm, config)
+    .closed.subscribe(x => {
       if (x.event.status == "Y") {
         if (this.isDeleteTemp == '0') {
           this.fileService.deleteFileToTrash(id, "", true).subscribe(item => {

@@ -47,10 +47,10 @@ export class PopupECalculateSalaryComponent extends UIComponent implements OnIni
   onSaveForm(){
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe(p => {
       if(p === "True"){
-        this.notify.notifyCode('SYS007')
+        this.notify.notifyCode('SYS006')
         this.dialog.close()
       }
-      else this.notify.notifyCode('DM034')
+      else this.notify.notifyCode('SYS023')
     })
   }
 }

@@ -87,32 +87,32 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //!--ID SHOW FORM !--//
 
   // create value initialize
-  viewStepCrr: string = 'custom'; // default view step custom settings
-  titleViewStepCrr: string = ''; // default title view step custom settings
-  isTurnOnYesSuccess: boolean = false; //Create variable Click yes for reason success
-  isTurnOnNoSuccess: boolean = true; // default reason control is no
-  isSwitchReason: boolean = false; // hidden switch of the reason success/failure
-  isTurnOnYesFailure: boolean = false; //Create variable Click yes for reason failure
-  isTurnOnNoFailure: boolean = true; // default reason control is no
-  listRoleInStep: DP_Processes_Permission[] = []; // creat list user role in step
-  userPermissions: DP_Processes_Permission[] = []; // create object user in step
-  stepReaSuccess: DP_Steps_Reasons = new DP_Steps_Reasons(); // create object reason success in step
-  stepReaFail: DP_Steps_Reasons = new DP_Steps_Reasons(); // create object reason fail in step
-  stepFail: DP_Steps = new DP_Steps(); // create object step fail
-  stepSuccess: DP_Steps = new DP_Steps(); // create object step fail
-  gridViewSetupStep: any; // grid view setup
-  listDayoff: any; // List day off
+  viewStepCrr: string = 'custom';
+  titleViewStepCrr: string = '';
+  isTurnOnYesSuccess: boolean = false;
+  isTurnOnNoSuccess: boolean = true;
+  isSwitchReason: boolean = false;
+  isTurnOnYesFailure: boolean = false;
+  isTurnOnNoFailure: boolean = true;
+  listRoleInStep: DP_Processes_Permission[] = [];
+  userPermissions: DP_Processes_Permission[] = [];
+  stepReaSuccess: DP_Steps_Reasons = new DP_Steps_Reasons();
+  stepReaFail: DP_Steps_Reasons = new DP_Steps_Reasons();
+  stepFail: DP_Steps = new DP_Steps();
+  stepSuccess: DP_Steps = new DP_Steps();
+  gridViewSetupStep: any;
+  listDayoff: any;
   popupAddReason: DialogRef;
   reasonList: DP_Steps_Reasons[] = [];
   reason: DP_Steps_Reasons = new DP_Steps_Reasons();
   listCbxProccess: any;
 
-  titleCheckBoxSat: string = ''; // title checkbox saturday form duration
-  titleCheckBoxSun: string = ''; // title checkbox sunday form duration
-  valueCheckBoxSat: string = ''; // title checkbox saturday form duration
-  valueCheckBoxSun: string = ''; // title checkbox sunday form duration
-  checkedSat: boolean = false; // title checkbox saturday form duration
-  checkedSun: boolean = false; // title checkbox sunday form duration
+  titleCheckBoxSat: string = '';
+  titleCheckBoxSun: string = '';
+  valueCheckBoxSat: string = '';
+  valueCheckBoxSun: string = '';
+  checkedSat: boolean = false;
+  checkedSun: boolean = false;
   stepNameSuccess: string = 'Thành công';
   stepNameFail: string = 'Thất bại';
   reasonName: string = '';
@@ -120,22 +120,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   reasonAction: any;
 
   // const value string
-  readonly strEmpty: string = ''; // value empty for methond have variable is null
-  readonly viewStepCustom: string = 'custom'; // const view custom
-  readonly viewStepReasonSuccess: string = 'reasonSuccess'; // const reason success
-  readonly viewStepReasonFail: string = 'reasonFail'; // const reason fail
-  readonly radioYes: string = 'yes'; // const click yes
-  readonly radioNo: string = 'no'; // const click yes
-  readonly titleRadioYes: string = 'Có'; // title radio button yes for reason success/failure
-  readonly titleRadioNo: string = 'Không'; // title radio button no for reason success/failure
-  readonly saturday: string = 'Thứ 7'; // title checkbox saturday form duration when value list is empty
-  readonly sunday: string = 'Chủ nhật'; // title checkbox sunday form duration when value list is empty
-  readonly viewSaturday: string = '7'; // view staturday when selected value
-  readonly viewSunday: string = '8'; // view sunday when selected value
+  readonly strEmpty: string = '';
+  readonly viewStepCustom: string = 'custom';
+  readonly viewStepReasonSuccess: string = 'reasonSuccess';
+  readonly viewStepReasonFail: string = 'reasonFail';
+  readonly radioYes: string = 'yes';
+  readonly radioNo: string = 'no';
+  readonly titleRadioYes: string = 'Có';
+  readonly titleRadioNo: string = 'Không';
+  readonly saturday: string = 'Thứ 7';
+  readonly sunday: string = 'Chủ nhật';
+  readonly viewSaturday: string = '7';
+  readonly viewSunday: string = '8';
   readonly formNameSteps: string = 'DPSteps';
   readonly gridViewNameSteps: string = 'grvDPSteps';
-  readonly formDurationCtrl: string = 'DurationControl'; // form duration control
-  readonly formLeaTimeCtrl: string = 'LeadtimeControl'; // form leadtime control
+  readonly formDurationCtrl: string = 'DurationControl';
+  readonly formLeaTimeCtrl: string = 'LeadtimeControl';
   readonly formEdit: string = 'edit'; // form edit
   readonly formAdd: string = 'add'; // form add
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
@@ -280,7 +280,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getValListDayoff();
     this.autoHandleStepReason();
     this.loadCbxProccess();
-    this.defaultCbxProccess();
   }
 
   ngAfterViewInit(): void {
@@ -437,6 +436,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   handleUpdateStep() {
+    this.stepList.push(this.stepSuccess);
+    this.stepList.push(this.stepFail);
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0 || this.stepListAdd.length > 0) {
       stepListSave.forEach((step) => {
@@ -591,11 +592,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   sharePerm(share, type) {
     switch (type) {
       case 'supervisor':
-        this.vllShare = 'ES014';
+        this.vllShare = 'DP0331';
         this.typeShare = '1';
         break;
       case 'participants':
-        this.vllShare = 'DM001';
+        this.vllShare = 'DP0331';
         this.typeShare = '2';
         break;
       case 'followers':
@@ -603,7 +604,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.typeShare = '3';
         break;
       case 'participants-2':
-        this.vllShare = 'TM003';
+        this.vllShare = 'DP0331';
         this.typeShare = '4';
         break;
     }
@@ -735,14 +736,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //Popup roles process
-  clickRoles(type) {
+  clickRoles() {
+    var title = 'Phân quyền';
     this.callfc.openForm(
       PopupRolesDynamicComponent,
       '',
       950,
       650,
       '',
-      [this.process.permissions, type],
+      [this.process.permissions, title],
       '',
       this.dialog
     );
@@ -841,7 +843,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.fieldCrr.stepID = stepID;
           this.fieldCrr.processID = processID;
           this.fieldCrr.isRequired = false;
-          this.fieldCrr.rank = 5;
+          // this.fieldCrr.rank = 5;
           let titleAction = this.titleAdd;
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
@@ -887,6 +889,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           formModel.formName = 'DPStepsFields';
           formModel.gridViewName = 'grvDPStepsFields';
           formModel.entityName = 'DP_Steps_Fields';
+          formModel.funcID = 'DPT0301'
           option.FormModel = formModel;
           option.Width = '550px';
           option.zIndex = 1010;
@@ -1226,17 +1229,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           );
           this.taskGroupList[index]['task'].push(taskData);
           this.taskList.push(taskData);
-        }else{  
+        }else{
           if(taskData?.taskGroupID != taskGroupIdOld){
             this.changeGroupTask(taskData,taskGroupIdOld);
           }
         }
-      } 
+      }
     });
   }
 
   changeGroupTask(taskData,taskGroupIdOld ){
-    let tastClone = JSON.parse(JSON.stringify(taskData));           
+    let tastClone = JSON.parse(JSON.stringify(taskData));
     let indexNew = this.taskGroupList.findIndex((task) => task.recID == taskData.taskGroupID);
     let index = this.taskGroupList.findIndex((task) => task.recID == taskGroupIdOld);
     let listTaskOld = this.taskGroupList[indexNew]['task'] || [];
@@ -1714,16 +1717,34 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   loadCbxProccess() {
-    this.dpService.getlistCbxProccess().subscribe((res) => {
-      if (res) {
-        this.listCbxProccess = res[0];
-      }
+    this.cache.valueList('DP031').subscribe((data) => {
+      this.dpService.getlistCbxProccess().subscribe((res) => {
+        if (res) {
+          this.listCbxProccess = res[0];
+          var obj = {
+            recID: '00000000-0000-0000-0000-000000000000',
+            processName: data.datas[0].default
+             // 'Không chuyển đến quy trình khác'
+          };
+          this.listCbxProccess.unshift(obj);
+          console.table(this.listCbxProccess);
+        }
+      });
     });
+
   }
 
   defaultCbxProccess() {}
 
-  cbxChange($event) {}
+  cbxChange($event,view) {
+    debugger;
+    if(view === this.viewStepReasonSuccess){
+      this.stepSuccess.processID = $event;
+    }
+    else if(view === this.viewStepReasonFail){
+      this.stepFail.processID = $event;
+    }
+  }
 
   //#endregion
 }

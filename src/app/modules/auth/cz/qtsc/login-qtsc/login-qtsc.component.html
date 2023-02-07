@@ -1,64 +1,39 @@
 ﻿<ng-container>
   <div class="login-qtsc">
     <!--Begin Login-->
-    <div
-      class="d-flex justify-content-between h-100 qtsc-form1"
-      *ngIf="mode == 'login'"
-    >
+    <div class="d-flex justify-content-between h-100 qtsc-form1" *ngIf="mode == 'login'">
       <div class="d-flex bg-white rounded-3 px-6 py-3 login-content">
         <div class="login-left w-100 ps-9 pe-6">
-          <div
-            class="d-flex flex-row-fluid flex-column justify-content-between"
-          >
+          <div class="d-flex flex-row-fluid flex-column justify-content-between">
             <div class="text-start pt-6 pb-3">
-              <div class="fw-bolder fs-title ms-5">
+              <div class="fw-bolder fs-title">
                 <div>CỔNG THÔNG TIN QUẢN LÝ ĐIỀU HÀNH</div>
                 <div>KHU CÔNG VIÊN PHẦN MỀM QUANG TRUNG</div>
               </div>
             </div>
             <div class="d-flex align-items-center w-100 mb-3 login-pic">
-              <div class="w-100 pic-left">
-                <img
-                  class="w-100"
-                  src="/assets/cz/qtsc/bg/bgloginQTSC.png"
-                  alt=""
-                />
+              <div class="w-100 pic-left mw-750px">
+                <img class="w-100" src="/assets/cz/qtsc/bg/bgloginQTSC.png" alt="" />
               </div>
               <div class="login-right">
                 <!--begin::Content body-->
                 <div class="d-flex flex-column">
                   <div class="d-flex align-items-center justify-content-center">
-                    <img
-                      src="/assets/cz/qtsc/bg/logoQTSC.PNG"
-                      class="mb-6"
-                      alt=""
-                    />
+                    <img src="/assets/cz/qtsc/bg/logoQTSC.PNG" width="235" alt="" />
                   </div>
 
                   <div class="login-signin text-dark">
                     <!--begin::Form-->
-                    <form
-                      class="form fv-plugins-bootstrap fv-plugins-framework"
-                      method="post"
-                      (ngSubmit)="submit()"
-                      [formGroup]="loginForm"
-                      class="form fv-plugins-bootstrap fv-plugins-framework"
-                      novalidate="novalidate"
-                    >
+                    <form class="form fv-plugins-bootstrap fv-plugins-framework" method="post" (ngSubmit)="submit()"
+                      [formGroup]="loginForm" class="form fv-plugins-bootstrap fv-plugins-framework"
+                      novalidate="novalidate">
                       <div class="form-group">
                         <div class="input-icon">
-                          <img
-                            class="ic-user"
-                            src="/assets/cz/qtsc/bg/ic-user.png"
-                          />
+                          <img class="ic-user" src="/assets/cz/qtsc/bg/ic-user.png" />
                           <input
                             class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                            type="text"
-                            field="email"
-                            placeholder="Nhập tài khoản hoặc email"
-                            formControlName="email"
-                            style="width: 100%"
-                          />
+                            type="text" field="email" placeholder="Nhập tài khoản hoặc email" formControlName="email"
+                            style="width: 100%" />
                         </div>
                       </div>
 
@@ -73,66 +48,41 @@
                         >
                         </codx-input> -->
                         <div class="input-icon">
-                          <img
-                            class="ic-user"
-                            src="/assets/cz/qtsc/bg/ic-lock.png"
-                          />
+                          <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
                           <input
                             class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                            type="password"
-                            field="Password"
-                            placeholder="Mật khẩu"
-                            formControlName="password"
-                            style="width: 100%"
-                          />
+                            type="password" field="Password" placeholder="Mật khẩu" formControlName="password"
+                            style="width: 100%" />
                         </div>
                       </div>
 
-                      <div
-                        class="d-flex justify-content-between mt-3 mb-6 px-2"
-                      >
+                      <div class="d-flex justify-content-between mt-3 mb-6 px-2">
                         <span class="text-danger"></span>
-                        <a
-                          (click)="forgotPass()"
-                          tabindex="-1"
-                          class="link-dark text-danger text-decoration-none cursor-pointer"
-                        >
-                          <codx-label
-                            fiedName="ForgotPassword"
-                            formModel=""
-                            default="Quên mật khẩu?"
-                          ></codx-label>
+                        <a (click)="forgotPass()" tabindex="-1"
+                          class="link-dark text-danger text-decoration-none cursor-pointer">
+                          <codx-label fiedName="ForgotPassword" formModel="" default="Quên mật khẩu?"></codx-label>
                         </a>
                       </div>
                       <div class="mb-5 d-flex justify-content-center">
                         <button type="submit" class="btn-login px-6 py-3">
                           {{
-                            "Đăng nhập " | lang : "Login" : "btnLogin" | async
+                          "Đăng nhập " | lang : "Login" : "btnLogin" | async
                           }}
                         </button>
                       </div>
 
                       <div class="login-link pb-3">
                         <div class="login-link-cont">
-                          <a
-                            href="https://www.facebook.com/QualityTechSolutionComplex"
-                            target="_blank"
-                          >
+                          <a href="https://www.facebook.com/QualityTechSolutionComplex" target="_blank">
                             <img src="/assets/cz/qtsc/bg/f.png" />
                           </a>
                           <a href="https://twitter.com/QTSC" target="_blank">
                             <img src="/assets/cz/qtsc/bg/t.png" />
                           </a>
-                          <a
-                            href="https://www.linkedin.com/company/quality-tech-solution-complex"
-                            target="_blank"
-                          >
+                          <a href="https://www.linkedin.com/company/quality-tech-solution-complex" target="_blank">
                             <img src="/assets/cz/qtsc/bg/i.png" />
                           </a>
-                          <a
-                            href="https://www.youtube.com/QualityTechSolutionComplex"
-                            target="_blank"
-                          >
+                          <a href="https://www.youtube.com/QualityTechSolutionComplex" target="_blank">
                             <img src="/assets/cz/qtsc/bg/y.png" />
                           </a>
                         </div>
@@ -147,7 +97,7 @@
               </div>
             </div>
             <!--begin: Aside footer for desktop-->
-            <div class="company-info ms-5 pb-5">
+            <div class="company-info pb-5">
               <div class="company-name fw-bold fs-5 text-danger">
                 CÔNG TY TNHH MỘT THÀNH VIÊN PHÁT TRIỂN CÔNG VIÊN PHẦN MỀM QUANG
                 TRUNG
@@ -159,31 +109,17 @@
                 Hiệp, Q.12, TP.HCM, Việt Nam
               </div>
               <div class="company-tel text-gray-600">
-                <span
-                  ><i class="fa fa-circle fs-10 text-danger me-2"></i
-                  ><span class="fs-7 fw-bold text-danger">T: </span>(84-28) 3715
-                  8888<span class="splitter">|</span></span
-                >
-                <span
-                  ><i class="fa fa-circle fs-10 text-danger me-2"></i
-                  ><span class="fs-7 fw-bold text-danger">F: </span>(84-28) 3715
-                  5985<span class="splitter">|</span></span
-                >
-                <span
-                  ><i class="fa fa-circle fs-10 text-danger me-2"></i
-                  ><span class="fs-7 fw-bold text-danger">E: </span
-                  ><a href="mailto:qtsc@qtsc.com.vn">qtsc@qtsc.com.vn</a
-                  ><span class="splitter">|</span></span
-                >
-                <span
-                  ><i class="fa fa-circle fs-10 text-danger me-2"></i
-                  ><span class="fs-7 fw-bold text-danger">W: </span
-                  ><a
-                    href="www.qtsc.com.vn"
-                    title="Công ty TNHH Một Thành Viên Phát Triển Công Viên Phần Mềm Quang Trung"
-                    >www.qtsc.com.vn</a
-                  ></span
-                >
+                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">T:
+                  </span>(84-28) 3715
+                  8888<span class="splitter">|</span></span>
+                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">F:
+                  </span>(84-28) 3715
+                  5985<span class="splitter">|</span></span>
+                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">E:
+                  </span><a href="mailto:qtsc@qtsc.com.vn">qtsc@qtsc.com.vn</a><span class="splitter">|</span></span>
+                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">W:
+                  </span><a href="www.qtsc.com.vn"
+                    title="Công ty TNHH Một Thành Viên Phát Triển Công Viên Phần Mềm Quang Trung">www.qtsc.com.vn</a></span>
               </div>
             </div>
             <!--end: Aside footer for desktop-->
@@ -196,16 +132,10 @@
     </div>
     <!--end::Login-->
     <!--Begin Doi PW-->
-    <div
-      class="d-flex align-items-center justify-content-between"
-      style="display: none"
-      *ngIf="mode == 'changePass'"
-    >
+    <div class="d-flex align-items-center justify-content-between" style="display: none" *ngIf="mode == 'changePass'">
       <div class="d-flex bg-white rounded-3 px-6 py-3 login-content">
         <div class="login-left w-100 ps-9 pe-6">
-          <div
-            class="d-flex flex-row-fluid flex-column justify-content-between"
-          >
+          <div class="d-flex flex-row-fluid flex-column justify-content-between">
             <div class="text-start py-6">
               <div class="fw-bolder fs-title ms-5" style="width: 85%">
                 <div>CỔNG THÔNG TIN QUẢN LÝ ĐIỀU HÀNH</div>
@@ -213,11 +143,7 @@
               </div>
             </div>
             <div class="d-flex w-100 my-3">
-              <img
-                class="w-100"
-                src="/assets/cz/qtsc/bg/bgloginQTSC.png"
-                alt=""
-              />
+              <img class="w-100" src="/assets/cz/qtsc/bg/bgloginQTSC.png" alt="" />
             </div>
             <!--begin: Aside footer for desktop-->
             <div class="company-info ms-5 pb-5">
@@ -232,31 +158,17 @@
                 Hiệp, Q.12, TP.HCM, Việt Nam
               </div>
               <div class="company-tel text-gray-600">
-                <span
-                  ><i class="fa fa-circle fs-10 text-danger me-2"></i
-                  ><span class="fs-7 fw-bold text-danger">T: </span>(84-28) 3715
-                  8888<span class="splitter">|</span></span
-                >
-                <span
-                  ><i class="fa fa-circle fs-10 text-danger me-2"></i
-                  ><span class="fs-7 fw-bold text-danger">F: </span>(84-28) 3715
-                  5985<span class="splitter">|</span></span
-                >
-                <span
-                  ><i class="fa fa-circle fs-10 text-danger me-2"></i
-                  ><span class="fs-7 fw-bold text-danger">E: </span
-                  ><a href="mailto:qtsc@qtsc.com.vn">qtsc@qtsc.com.vn</a
-                  ><span class="splitter">|</span></span
-                >
-                <span
-                  ><i class="fa fa-circle fs-10 text-danger me-2"></i
-                  ><span class="fs-7 fw-bold text-danger">W: </span
-                  ><a
-                    href="www.qtsc.com.vn"
-                    title="Công ty TNHH Một Thành Viên Phát Triển Công Viên Phần Mềm Quang Trung"
-                    >www.qtsc.com.vn</a
-                  ></span
-                >
+                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">T:
+                  </span>(84-28) 3715
+                  8888<span class="splitter">|</span></span>
+                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">F:
+                  </span>(84-28) 3715
+                  5985<span class="splitter">|</span></span>
+                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">E:
+                  </span><a href="mailto:qtsc@qtsc.com.vn">qtsc@qtsc.com.vn</a><span class="splitter">|</span></span>
+                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">W:
+                  </span><a href="www.qtsc.com.vn"
+                    title="Công ty TNHH Một Thành Viên Phát Triển Công Viên Phần Mềm Quang Trung">www.qtsc.com.vn</a></span>
               </div>
             </div>
             <!--end: Aside footer for desktop-->
@@ -267,111 +179,69 @@
           <!--begin::Content body-->
           <div class="d-flex flex-column">
             <div class="d-flex align-items-center justify-content-center">
-              <img src="/assets/cz/qtsc/bg/logoQTSC.PNG" class="mb-2" alt="" />
+              <img src="/assets/cz/qtsc/bg/logoQTSC.PNG" width="235" alt="" />
             </div>
 
             <div class="login-signin text-dark">
               <!--begin::Form-->
               <div class="text-start mb-3">
                 <h3 class="fw-bolder">
-                  <codx-label
-                    fiedName="ChangePassword"
-                    formModel=""
-                    default="Thay đổi mật khẩu"
-                  ></codx-label>
+                  <codx-label fiedName="ChangePassword" formModel="" default="Thay đổi mật khẩu"></codx-label>
                 </h3>
               </div>
               <span #Error></span>
-              <form
-                method="post"
-                id="frm_erm_login"
-                (ngSubmit)="submitChangePass()"
-                [formGroup]="changePassForm"
-                class="form fv-plugins-bootstrap fv-plugins-framework"
-                novalidate="novalidate"
-              >
+              <form method="post" id="frm_erm_login" (ngSubmit)="submitChangePass()" [formGroup]="changePassForm"
+                class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate">
                 <div class="form-group" #groupemail>
                   <div class="input-icon">
                     <img class="ic-user" src="/assets/cz/qtsc/bg/ic-user.png" />
-                    <input
-                      field="email"
-                      placeholder="Nhập tài khoản hoặc email"
-                      formControlName="email"
+                    <input field="email" placeholder="Nhập tài khoản hoặc email" formControlName="email"
                       class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      type="text"
-                      style="width: 100%"
-                    />
+                      type="text" style="width: 100%" />
                   </div>
                 </div>
                 <div class="form-group" #groupoldpass>
                   <div class="input-icon">
                     <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
-                    <input
-                      type="password"
-                      field="PasswordOld"
-                      placeholder="Mật khẩu cũ"
-                      formControlName="passwordOld"
+                    <input type="password" field="PasswordOld" placeholder="Mật khẩu cũ" formControlName="passwordOld"
                       class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      style="width: 100%"
-                    />
+                      style="width: 100%" />
                   </div>
                 </div>
                 <div class="form-group" #groupnewpass>
                   <div class="input-icon">
                     <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
-                    <input
-                      type="password"
-                      field="Password"
-                      placeholder="Mật khẩu mới"
-                      formControlName="password"
+                    <input type="password" field="Password" placeholder="Mật khẩu mới" formControlName="password"
                       class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      style="width: 100%"
-                    />
+                      style="width: 100%" />
                   </div>
                 </div>
                 <div class="form-group" #confirmpass>
                   <div class="input-icon">
                     <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
-                    <input
-                      type="password"
-                      field="Password"
-                      placeholder="Xác nhận mật khẩu"
+                    <input type="password" field="Password" placeholder="Xác nhận mật khẩu"
                       formControlName="confirmPassword"
                       class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      style="width: 100%"
-                    />
+                      style="width: 100%" />
                   </div>
                 </div>
                 <div class="mb-5 d-flex justify-content-center">
-                  <button
-                    type="submit"
-                    class="btn btn-login px-6 py-3"
-                    [disabled]="changePassForm.invalid"
-                  >
+                  <button type="submit" class="btn btn-login px-6 py-3" [disabled]="changePassForm.invalid">
                     {{ "Đăng nhập " | lang : "Login" : "btnLogin" | async }}
                   </button>
                 </div>
                 <div class="login-link mt-7 pb-3">
                   <div class="login-link-cont">
-                    <a
-                      href="https://www.facebook.com/QualityTechSolutionComplex"
-                      target="_blank"
-                    >
+                    <a href="https://www.facebook.com/QualityTechSolutionComplex" target="_blank">
                       <img src="/assets/cz/qtsc/bg/f.png" />
                     </a>
                     <a href="https://twitter.com/QTSC" target="_blank">
                       <img src="/assets/cz/qtsc/bg/t.png" />
                     </a>
-                    <a
-                      href="https://www.linkedin.com/company/quality-tech-solution-complex"
-                      target="_blank"
-                    >
+                    <a href="https://www.linkedin.com/company/quality-tech-solution-complex" target="_blank">
                       <img src="/assets/cz/qtsc/bg/i.png" />
                     </a>
-                    <a
-                      href="https://www.youtube.com/QualityTechSolutionComplex"
-                      target="_blank"
-                    >
+                    <a href="https://www.youtube.com/QualityTechSolutionComplex" target="_blank">
                       <img src="/assets/cz/qtsc/bg/y.png" />
                     </a>
                   </div>
@@ -389,16 +259,10 @@
     </div>
     <!--end Doi PW-->
     <!--Begin first login-->
-    <div
-      class="d-flex align-items-center justify-content-between"
-      style="display: none"
-      *ngIf="mode == 'firstLogin'"
-    >
+    <div class="d-flex align-items-center justify-content-between" style="display: none" *ngIf="mode == 'firstLogin'">
       <div class="d-flex bg-white rounded-3 px-6 py-3 login-content">
         <div class="login-left w-100 ps-9 pe-6">
-          <div
-            class="d-flex flex-row-fluid flex-column justify-content-between"
-          >
+          <div class="d-flex flex-row-fluid flex-column justify-content-between">
             <div class="text-start py-6">
               <div class="fw-bolder fs-title ms-5" style="width: 85%">
                 <div>CỔNG THÔNG TIN QUẢN LÝ ĐIỀU HÀNH</div>
@@ -406,11 +270,7 @@
               </div>
             </div>
             <div class="d-flex w-100 my-3">
-              <img
-                class="w-100"
-                src="/assets/cz/qtsc/bg/bgloginQTSC.png"
-                alt=""
-              />
+              <img class="w-100" src="/assets/cz/qtsc/bg/bgloginQTSC.png" alt="" />
             </div>
             <!--begin: Aside footer for desktop-->
             <div class="company-info ms-5 pb-5">
@@ -425,31 +285,17 @@
                 Hiệp, Q.12, TP.HCM, Việt Nam
               </div>
               <div class="company-tel text-gray-600">
-                <span
-                  ><i class="fa fa-circle fs-10 text-danger me-2"></i
-                  ><span class="fs-7 fw-bold text-danger">T: </span>(84-28) 3715
-                  8888<span class="splitter">|</span></span
-                >
-                <span
-                  ><i class="fa fa-circle fs-10 text-danger me-2"></i
-                  ><span class="fs-7 fw-bold text-danger">F: </span>(84-28) 3715
-                  5985<span class="splitter">|</span></span
-                >
-                <span
-                  ><i class="fa fa-circle fs-10 text-danger me-2"></i
-                  ><span class="fs-7 fw-bold text-danger">E: </span
-                  ><a href="mailto:qtsc@qtsc.com.vn">qtsc@qtsc.com.vn</a
-                  ><span class="splitter">|</span></span
-                >
-                <span
-                  ><i class="fa fa-circle fs-10 text-danger me-2"></i
-                  ><span class="fs-7 fw-bold text-danger">W: </span
-                  ><a
-                    href="www.qtsc.com.vn"
-                    title="Công ty TNHH Một Thành Viên Phát Triển Công Viên Phần Mềm Quang Trung"
-                    >www.qtsc.com.vn</a
-                  ></span
-                >
+                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">T:
+                  </span>(84-28) 3715
+                  8888<span class="splitter">|</span></span>
+                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">F:
+                  </span>(84-28) 3715
+                  5985<span class="splitter">|</span></span>
+                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">E:
+                  </span><a href="mailto:qtsc@qtsc.com.vn">qtsc@qtsc.com.vn</a><span class="splitter">|</span></span>
+                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">W:
+                  </span><a href="www.qtsc.com.vn"
+                    title="Công ty TNHH Một Thành Viên Phát Triển Công Viên Phần Mềm Quang Trung">www.qtsc.com.vn</a></span>
               </div>
             </div>
             <!--end: Aside footer for desktop-->
@@ -460,7 +306,7 @@
           <!--begin::Content body-->
           <div class="d-flex flex-column">
             <div class="d-flex align-items-center justify-content-center">
-              <img src="/assets/cz/qtsc/bg/logoQTSC.PNG" class="mb-6" alt="" />
+              <img src="/assets/cz/qtsc/bg/logoQTSC.PNG" width="235" alt="" />
             </div>
 
             <div class="login-signin text-dark">
@@ -469,83 +315,50 @@
                 <h3 class="fw-bolder">Tạo mật khẩu</h3>
               </div>
               <span #Error></span>
-              <form
-                method="post"
-                id="frm_erm_login"
-                (ngSubmit)="submitFirstLogin()"
-                [formGroup]="firstLoginForm"
-                class="form fv-plugins-bootstrap fv-plugins-framework"
-                novalidate="novalidate"
-              >
+              <form method="post" id="frm_erm_login" (ngSubmit)="submitFirstLogin()" [formGroup]="firstLoginForm"
+                class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate">
                 <div class="form-group" #groupemail>
                   <div class="input-icon">
                     <img class="ic-user" src="/assets/cz/qtsc/bg/ic-user.png" />
-                    <input
-                      field="email"
-                      placeholder="Nhập tài khoản hoặc email"
-                      formControlName="email"
+                    <input field="email" placeholder="Nhập tài khoản hoặc email" formControlName="email"
                       class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      type="text"
-                      style="width: 100%"
-                    />
+                      type="text" style="width: 100%" />
                   </div>
                 </div>
                 <div class="form-group" #groupnewpass>
                   <div class="input-icon">
                     <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
-                    <input
-                      type="password"
-                      field="Password"
-                      placeholder="Mật khẩu mới"
-                      formControlName="password"
+                    <input type="password" field="Password" placeholder="Mật khẩu mới" formControlName="password"
                       class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      style="width: 100%"
-                    />
+                      style="width: 100%" />
                   </div>
                 </div>
                 <div class="form-group" #confirmpass>
                   <div class="input-icon">
                     <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
-                    <input
-                      type="password"
-                      field="Password"
-                      placeholder="Xác nhận mật khẩu"
+                    <input type="password" field="Password" placeholder="Xác nhận mật khẩu"
                       formControlName="confirmPassword"
                       class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      style="width: 100%"
-                    />
+                      style="width: 100%" />
                   </div>
                 </div>
                 <div class="mb-5 d-flex justify-content-center">
-                  <button
-                    type="submit"
-                    class="btn btn-login px-6 py-3"
-                    [disabled]="firstLoginForm.invalid"
-                  >
+                  <button type="submit" class="btn btn-login px-6 py-3" [disabled]="firstLoginForm.invalid">
                     {{ "Đăng nhập " | lang : "Login" : "btnLogin" | async }}
                   </button>
                 </div>
                 <div class="login-link mt-7 pb-3">
                   <div class="login-link-cont">
-                    <a
-                      href="https://www.facebook.com/QualityTechSolutionComplex"
-                      target="_blank"
-                    >
+                    <a href="https://www.facebook.com/QualityTechSolutionComplex" target="_blank">
                       <img src="/assets/cz/qtsc/bg/f.png" />
                     </a>
                     <a href="https://twitter.com/QTSC" target="_blank">
                       <img src="/assets/cz/qtsc/bg/t.png" />
                     </a>
-                    <a
-                      href="https://www.linkedin.com/company/quality-tech-solution-complex"
-                      target="_blank"
-                    >
+                    <a href="https://www.linkedin.com/company/quality-tech-solution-complex" target="_blank">
                       <img src="/assets/cz/qtsc/bg/i.png" />
                     </a>
-                    <a
-                      href="https://www.youtube.com/QualityTechSolutionComplex"
-                      target="_blank"
-                    >
+                    <a href="https://www.youtube.com/QualityTechSolutionComplex" target="_blank">
                       <img src="/assets/cz/qtsc/bg/y.png" />
                     </a>
                   </div>

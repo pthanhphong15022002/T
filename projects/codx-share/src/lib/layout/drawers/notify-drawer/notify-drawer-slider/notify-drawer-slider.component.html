@@ -1,5 +1,29 @@
-<codx-form [body]="body" (onScroll)="onScroll($event)" [headerText]="'Thông báo'" [dialog]="dialogRef">
+<codx-form [body]="body" (onScroll)="onScroll($event)"  [subHeader]="subheader" [headerText]="'Thông báo'" [dialog]="dialogRef">
 </codx-form>
+<ng-template #subheader>
+  <div class="codx-notification-filter" ngbDropdown  ngbDropdownToggle #dropdown id="noti-dropdowTonggle">
+    <button class="btn" *ngIf="valueSelected">
+      <span class="pe-2 text-muted fs-5" [class]="valueSelected.icon">
+      </span>
+      <span>
+        {{valueSelected.text}}
+      </span>
+    </button>
+    <div ngbDropdownMenu aria-labelledby="noti-dropdowTonggle" id="noti-dropdownPopup" class="dropdown-menu">
+      <div  ngbDropdownMenu>
+        <ng-container *ngFor="let item of datas">
+          <button (click)="valueChange(item)" ngbDropdownItem>
+            <span class="pe-2 text-muted fs-5" [class]="item.icon">
+            </span>
+            <span>
+              {{item.text}}
+            </span>
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-template>
 <ng-template #body>
   <div class="p-2">
     <ng-container *ngIf="loaded;else noData">

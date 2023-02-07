@@ -67,17 +67,19 @@ export class InstancesComponent
   resourceKanban?: ResourceModel;
   dataObj: any;
   vllStatus = 'DP028';
-
+  instanceID: string;
   dialog: any;
   moreFunc: any;
   instanceNo: string;
   listSteps = [];
-  stepNameInstance: string;
+  listStepInstances = [];
+  stepNameCurrent: string;
   progress: string;
   formModel: FormModel;
   isMoveSuccess: boolean = true;
-
+  titleAction =''
   instances = new DP_Instances();
+  kanban : any ;
 
   constructor(
     private inject: Injector,
@@ -109,7 +111,7 @@ export class InstancesComponent
         request: this.request,
         request2: this.resourceKanban,
         model: {
-          template: this.cardKanban, 
+          template: this.cardKanban,
           // template2: this.viewColumKaban,
         },
       },
@@ -141,7 +143,7 @@ export class InstancesComponent
     this.request.service = 'DP';
     this.request.assemblyName = 'DP';
     this.request.className = 'InstancesBusiness';
-    this.request.method = 'GetListInstancesAsync'; 
+    this.request.method = 'GetListInstancesAsync';
     this.request.idField = 'recID';
     this.request.dataObj = this.dataObj;
 
@@ -159,6 +161,7 @@ export class InstancesComponent
     switch (evt.id) {
       case 'btnAdd':
         //   this.genAutoNumberNo();
+        this.titleAction = evt.text
         this.add();
         // this.delete(this.instances);
         // this.moveStage();
@@ -167,41 +170,49 @@ export class InstancesComponent
     }
   }
 
-  progressEvent(event){
-    this.progress = event.progress;
-    this.stepNameInstance = event.name;
-  }
+  // progressEvent(event){
+  //   this.progress = event.progress;
+  //   this.stepNameInstance = event.name;
+  //   this.instanceID = event.instanceID;
+  // }
 
   //CRUD
   add() {
     this.view.dataService.addNew().subscribe((res) => {
+      console.log(this.kanban)
       const funcIDApplyFor =
         this.process.applyFor === 'D' ? 'DPT0406' : 'DPT0405';
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
-      this.view.dataService.dataSelected.processID = this.process.recID
-
-      this.cache.functionList(funcIDApplyFor).subscribe((res) => {
-        option.FormModel = this.view.formModel;
-        option.FormModel.funcID = res.functionID;
-        option.FormModel.entityName = res.entityName;
-        option.FormModel.formName = res.formName;
-        option.FormModel.gridViewName = res.gridViewName;
-        option.Width = '850px';
-        option.zIndex = 1010;
-        const titleForm = res.defaultName;
-        // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
-        var dialogCustomField = this.callfc.openSide(
-          PopupAddInstanceComponent,
-          ['add', applyFor, this.listSteps, titleForm],
-          option
-        );
-        dialogCustomField.closed.subscribe((e) => {
-          if (e && e.event != null) {
-            //xu ly data đổ về
-            this.detectorRef.detectChanges();
-          }
+      this.view.dataService.dataSelected.processID = this.process.recID;
+      this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+        this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+          this.cache
+            .gridViewSetup(fun.formName, fun.gridViewName)
+            .subscribe((grvSt) => {
+              var formMD = new FormModel();
+              formMD.funcID = funcIDApplyFor;
+              formMD.entityName = fun.entityName;
+              formMD.formName = fun.formName;
+              formMD.gridViewName = fun.gridViewName;
+              option.FormModel = formMD;
+              option.Width = '850px';
+              option.zIndex = 1010;
+              // const titleForm = res.defaultName;
+              // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
+              var dialogCustomField = this.callfc.openSide(
+                PopupAddInstanceComponent,
+                ['add', applyFor, this.listSteps, this.titleAction],
+                option
+              );
+              dialogCustomField.closed.subscribe((e) => {
+                if (e && e.event != null) {
+                  //xu ly data đổ về
+                  this.detectorRef.detectChanges();
+                }
+              });
+            });
         });
       });
     });
@@ -260,8 +271,16 @@ export class InstancesComponent
 
   selectedChange(task: any) {
     this.dataSelected = task?.data ? task?.data : task;
+    //formModel instances
+    let formModel = new FormModel();
+    formModel.formName = 'DPInstances';
+    formModel.gridViewName = 'grvDPInstances';
+    formModel.entityName = 'DP_Instances';
+    this.formModel = formModel;
     this.detectorRef.detectChanges();
   }
+
+  showInput(data) {}
 
   //begin code Thao
   dblClick(e, data) {}
@@ -280,7 +299,13 @@ export class InstancesComponent
     }
   }
 
-  changeView(e) {}
+  changeView(e) {
+    if (e?.view.type == 6) {
+      if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
+      else this.kanban = (this.view.currentView as any).kanban;
+      this.changeDetectorRef.detectChanges();
+    }
+  }
   // end code
 
   #region;

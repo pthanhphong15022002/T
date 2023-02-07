@@ -1,7 +1,21 @@
-import { DP_Steps, DP_Instances_Steps, DP_Instances } from './../../models/models';
+import {
+  DP_Steps,
+  DP_Instances_Steps,
+  DP_Instances,
+} from './../../models/models';
 import { CodxDpService } from './../../codx-dp.service';
-import { Component, Input, OnInit, SimpleChanges, TemplateRef, ViewChild, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
-import { CRUDService, ApiHttpService } from 'codx-core';
+import {
+  Component,
+  Input,
+  OnInit,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+  ChangeDetectorRef,
+  Output,
+  EventEmitter,
+} from '@angular/core';
+import { CRUDService, ApiHttpService, CacheService } from 'codx-core';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -13,12 +27,15 @@ export class InstanceDetailComponent implements OnInit {
   @Input() dataService: CRUDService;
   @Input() recID: any;
   @ViewChild('locationCBB') locationCBB: any;
-  @Output() progressEvent= new EventEmitter<object>();
-  dataSelect: any;
+  @Output() progressEvent = new EventEmitter<object>();
+  @Input() stepName: string;
+  @Input() progress = '0';
+  @Input() dataSelect: any;
   id: any;
   totalInSteps: any;
-  listSteps: DP_Instances_Steps[] = [];
+  @Input() listSteps: DP_Instances_Steps[] = [];
   tmpTeps: DP_Instances_Steps;
+  currentNameStep: Number;
   //progressbar
   labelStyle = { color: '#FFFFFF' };
   showProgressValue = true;
@@ -27,114 +44,105 @@ export class InstanceDetailComponent implements OnInit {
   progressThickness: Number = 24;
   value: Number = 30;
   cornerRadius: Number = 30;
-  idCbx = "stage";
-  stepName: string;
-  progress = '0';
-  fields: Object = { text: 'name', value: 'id' };
-  listRoom = [{
-    name: 'Xem theo biểu đồ Gantt',
-    id: 'gantt'
-  },
-  {
-    name: 'Xem theo giai đoạn',
-    id: 'stage'
-  },
-  {
-    name: 'Xem theo trường nhập liệu',
-    id: 'field'
-  }];
-  lstTest = [{
-    stepNo: 1,
-    stepName: 'test1'
-  },
-  {
-    stepNo: 2,
-    stepName: 'test2'
-  },
-  {
-    stepNo: 3,
-    stepName: 'test3'
-  },
-  {
-    stepNo: 4,
-    stepName: 'test4'
-  }]
+  idCbx = 'S';
 
-  @Input() currentStep: number;
-  constructor(private dpSv: CodxDpService, private api: ApiHttpService, private changeDetec: ChangeDetectorRef) {
+  currentStep = 0;
+  //gantchat
+  ganttDs = [];
+  dataColors = [];
+  taskFields: any;
+
+  constructor(
+    private dpSv: CodxDpService,
+    private api: ApiHttpService,
+    private cache: CacheService,
+    private changeDetec: ChangeDetectorRef
+  ) {
+    
   }
 
   ngOnInit(): void {
-    console.log(this.listSteps);
-    // var instance = new DP_Instances();
-
-    // instance.title = "TEST DO PHÚC THỰC HIỆN";
-
-    // this.api.callSv('DP','ERM.Business.DP','InstancesBusiness','AddInstanceAsync',[instance, this.listSteps]).subscribe();
+    this.taskFields = {
+      id: 'recID',
+      name: 'name',
+      startDate: 'startDate',
+      endDate: 'endDate',
+      type: 'type',
+      color:'color'
+    };
+    this.getDataGanttChart(this.recID);
   }
 
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
-
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    if (changes['recID']) {
-      if (changes['recID'].currentValue == this.id) return;
-      this.id = changes['recID'].currentValue;
-      this.getInstanceByRecID(this.id);
+    // if (changes['recID']) {
+    //   if (changes['recID'].currentValue == this.id) return;
+    //   this.id = changes['recID'].currentValue;
+    //   this.getInstanceByRecID(this.id);
+    //   this.getStepsByInstanceID(this.id);
+    // }
+    if (changes['dataSelect']) {
+      if (changes['dataSelect'].currentValue.recID == this.id) return;
+      this.id = changes['dataSelect'].currentValue.recID;
+      this.dataSelect = changes['dataSelect'].currentValue;
+      this.currentStep = this.dataSelect.currentStep;
       this.getStepsByProcessID(this.id);
-    }
-
-  }
-
-
-
-  getInstanceByRecID(recID) {
-    this.dpSv.GetInstanceByRecID(recID).subscribe((res) => {
-      if (res) {
-        this.dataSelect = res;
-        this.currentStep = this.dataSelect.currentStep;
-
+      if (this.listSteps == null && this.listSteps.length == 0) {
+        this.tmpTeps = null;
       }
-    });
+    }
+    console.log(this.formModel);
   }
 
-  getStepsByProcessID(insID){
+  getStepsByProcessID(insID) {
     this.dpSv.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
       if (res) {
         this.listSteps = res;
         var total = 0;
-        this.listSteps.forEach(el =>{
-          if(this.currentStep == el.indexNo)
-            this.stepName = el.stepName;
-          total += el.progress;
-        })
-        if(this.listSteps != null && this.listSteps.length > 0){
+        for (var i = 0; i < this.listSteps.length; i++) {
+          var stepNo = i;
+          var data = this.listSteps[i];
+          if (this.listSteps[i].recID == this.dataSelect.stepID) {
+            this.stepName = data.stepName;
+            this.currentStep = stepNo;
+            this.currentNameStep = this.currentStep;
+          }
+          total += data.progress;
+          stepNo = i + 1;
+        }
+        if (this.listSteps != null && this.listSteps.length > 0) {
           this.progress = (total / this.listSteps.length).toFixed(1).toString();
-        }else{
+        } else {
           this.progress = '0';
         }
-        this.progressEventOut({progress: this.progress + '%', name: this.stepName});
-        this.listSteps.forEach(element =>{
-          if(element.indexNo == this.currentStep){
-            this.dpSv.GetStepInstance(element.recID).subscribe(data=>{
-              if(data){
-                this.tmpTeps = data;
-              }
-            })
-          }
-        })
+        if (this.listSteps != null && this.listSteps.length > 0) {
+          this.listSteps.forEach((element) => {
+            if (element != null && element.recID == this.dataSelect.stepID) {
+              this.tmpTeps = element;
+            }
+          });
+        }
+      } else {
+        this.listSteps = [];
+        this.stepName = '';
+        this.progress = '0';
+        this.tmpTeps = null;
       }
     });
   }
 
-  progressEventOut(value: object){
-    this.progressEvent.emit(value);
+  getStepsByInstanceID(list) {
+    list.forEach((element) => {
+      if (element.indexNo == this.currentStep) {
+        this.tmpTeps = element;
+      }
+    });
   }
 
   // getStepsByProcessID(recID){
@@ -145,11 +153,11 @@ export class InstanceDetailComponent implements OnInit {
   //   });
   // }
 
-  cbxChange(e){
-    this.idCbx = e;
+  cbxChange(e) {
+    this.idCbx = e?.data;
   }
 
-  clickMF(e, data){
+  clickMF(e, data) {
     console.log(e);
     switch (e.functionID) {
       case 'DP09':
@@ -158,36 +166,69 @@ export class InstanceDetailComponent implements OnInit {
     }
   }
 
-  changeDataMF(e, data){
-    if(e){
-      e.forEach(element => {
-        if(element.functionID == "SYS002" || element.functionID == "SYS001" || element.functionID == "SYS004" || element.functionID == "SYS003" || element.functionID == "SYS005"
-        || element.functionID == "DP04" || element.functionID == "DP11" || element.functionID == "DP08" || element.functionID == "DP07" || element.functionID == "DP06" || element.functionID == "DP05"
-        || element.functionID == "DP01" || element.functionID == "DP03" || element.functionID == "SYS102" || element.functionID == "SYS02" || element.functionID == "SYS104" || element.functionID == "SYS04"
-        || element.functionID == "SYS103" || element.functionID == "SYS03" || element.functionID == "SYS101" || element.functionID == "SYS01")
-        element.disabled = true;
+  changeDataMF(e, data) {
+    console.log(e);
+    if (e) {
+      e.forEach((element) => {
+        if (
+          element.functionID == 'SYS002' ||
+          element.functionID == 'SYS001' ||
+          element.functionID == 'SYS004' ||
+          element.functionID == 'SYS003' ||
+          element.functionID == 'SYS005' ||
+          element.functionID == 'DP04' ||
+          element.functionID == 'DP11' ||
+          element.functionID == 'DP08' ||
+          element.functionID == 'DP07' ||
+          element.functionID == 'DP06' ||
+          element.functionID == 'DP05' ||
+          element.functionID == 'DP01' ||
+          element.functionID == 'DP03' ||
+          element.functionID == 'SYS102' ||
+          element.functionID == 'SYS02' ||
+          element.functionID == 'SYS104' ||
+          element.functionID == 'SYS04' ||
+          element.functionID == 'SYS103' ||
+          element.functionID == 'SYS03' ||
+          element.functionID == 'SYS101' ||
+          element.functionID == 'SYS01'
+        )
+          element.disabled = true;
       });
     }
   }
 
-
-
-  click(indexNo, recID){
-    if(this.currentStep < indexNo) return;
-    this.dpSv.GetStepInstance(recID).subscribe(res=>{
-      if(res){
-        this.tmpTeps = res;
-      }
-    })
+  click(indexNo, data) {
+    if (this.currentStep < indexNo) return;
+    this.currentNameStep = indexNo;
+    this.tmpTeps = data;
   }
 
-  continues(data){
-    if(this.currentStep > this.listSteps.length) return;
+  continues(data) {
+    if (this.currentStep + 1 == this.listSteps.length) return;
+    this.dpSv.GetStepsByInstanceIDAsync(data.recID).subscribe((res) => {
+      this.tmpTeps = res;
+    });
     this.currentStep++;
+    this.currentNameStep = this.currentStep;
     this.changeDetec.detectChanges();
   }
 
-  setHTMLCssStages(oldStage, newStage){
+  setHTMLCssStages(oldStage, newStage) {}
 
+  getDataGanttChart(instanceID) {
+    this.api
+      .exec<any>(
+        'DP',
+        'InstanceStepsBusiness',
+        'GetDataGanntChartAsync',
+        instanceID
+      )
+      .subscribe((res) => {
+        if (res && res?.length > 0) {
+          this.ganttDs = res;
+          this.changeDetec.detectChanges();
+        }
+      });
   }
 }

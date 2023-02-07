@@ -92,6 +92,12 @@ export class PopupAddPositionsComponent implements OnInit {
       _method, 
       [this.data])
       .subscribe((res) => {
+        if(this.isAdd){
+          this.dialogRef.dataService.add(res,0).subscribe();
+        }
+        else{
+          this.dialogRef.dataService.update(res).subscribe();
+        }
         this.dialogRef.close(res);
     });
   }

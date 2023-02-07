@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { ButtonModel, DialogModel, CallFuncService } from 'codx-core';
 import { OMCONST } from '../../codx-om.constant';
+import { CodxOmService } from '../../codx-om.service';
 import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-weight.component';
 
 @Component({
@@ -25,12 +26,13 @@ export class OkrToolbarComponent implements OnInit {
   okrChild:any;
   constructor(    
     private callfunc: CallFuncService,
+    private codxOmService: CodxOmService,
   ) { }
 
   ngOnInit(): void {
     this.button = {
       id: 'btnAdd',
-      icon:'icon-i-chevron-down',
+      icon:'icon-add',
       formName:'OKRPlans',
       items:[
         {
@@ -44,6 +46,36 @@ export class OkrToolbarComponent implements OnInit {
         }
       ]
     };
+    this.codxOmService.getSettingValue(OMCONST.OMPARAM).subscribe((omSetting: any) => {
+      if (omSetting) {
+        let settingVal = JSON.parse(omSetting?.dataValue);
+        if(settingVal!=null && (settingVal?.UseSubKR=='1' || settingVal?.UseSubKR==true)){
+          this.button = {
+            id: 'btnAdd',
+            icon:'icon-add',
+            formName:'OKRPlans',
+            items:[
+              {
+                text:'Thêm mục tiêu',
+                id:'btnAddO',
+                
+              },
+              {
+                text:'Thêm kết quả',
+                id:'btnAddKR',
+              },
+              {
+                text:'Thêm kết quả phụ',
+                id:'btnAddSKR',
+              }
+            ]
+          };
+        }
+        
+      }      
+    }); 
+    
+       
   }
   buttonClick(event:any)
   {

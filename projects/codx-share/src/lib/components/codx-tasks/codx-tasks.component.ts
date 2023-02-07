@@ -237,13 +237,15 @@ export class CodxTasksComponent
       });
     });
 
-    this.showButtonAdd =
+    this.showButtonAdd = 
       this.funcID != 'TMT0206' &&
       this.funcID != 'TMT0202' &&
       this.funcID != 'MWP0063' &&
       this.funcID != 'MWP0064' &&
       this.funcID != 'TMT0402' &&
       this.funcID != 'TMT0403' ;
+
+    this.showMoreFunc = this.funcID != 'TMT0206' &&  this.funcID != 'MWP0063'
 
     this.modelResource = new ResourceModel();
     if (this.funcID != 'TMT03011' && this.funcID != 'TMT05011') {

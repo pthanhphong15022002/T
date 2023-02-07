@@ -9,12 +9,12 @@
 </codx-views>
 
 <ng-template #panelContent>
-  <div class="page-pw h-employee  p-3 rounded-2">
+  <div class="page-pw h-employee p-3 rounded-2">
     <div class="page-profile">
       <div class="d-flex">
         <div class="user-left me-5 rounded border min-w-300px w-300px bg-white">
           <div class="bg-sidebar">
-            <div class="d-flex flex-column" >
+            <div class="d-flex flex-column">
               <div class="mt-9 px-2">
                 <div class="d-flex flex-column text-center mb-4">
                   <div
@@ -375,7 +375,7 @@
                       <span class="icon-person icon-18"></span>
                     </span>
                     <div class="fw-bold">
-                      {{item.customName}}
+                      {{ item.customName }}
                     </div>
                   </a>
                 </li>
@@ -724,8 +724,10 @@
               >
               </codx-label>
             </div>
-            <div class="d-flex btn btn-hover-primary" (click)="handlEmployeeBenefit('add', null)">
-              
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="handlEmployeeBenefit('add', null)"
+            >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -942,7 +944,9 @@
 
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="DeleteEmployeeEHealths('0e55cdd5-a3e7-4da3-b2c4-700345d2ea07')"
+              (click)="
+                DeleteEmployeeEHealths('0e55cdd5-a3e7-4da3-b2c4-700345d2ea07')
+              "
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -955,7 +959,6 @@
               </codx-label>
             </div>
 
-            
             <div
               class="d-flex btn btn-hover-primary"
               (click)="addEditEVaccines('add', null)"
@@ -1147,7 +1150,7 @@
                         >
                         </codx-label>
                         <span class="text-dark fw-bold">
-                           {{ infoPersonal.employeeName2 }}</span
+                          {{ infoPersonal.employeeName2 }}</span
                         >
                       </div>
                     </div>
@@ -1191,7 +1194,7 @@
                           class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"
                         ></span>
                         <codx-label
-                          class="text-gray-600 fw-normal label-colon "
+                          class="text-gray-600 fw-normal label-colon"
                           fiedName="MaritalStatus"
                           [formModel]="view.formModel"
                         >
@@ -1221,13 +1224,13 @@
                           class="icon-cake icon-18 text-gray-600 me-2"
                         ></span>
                         <codx-label
-                          class="text-gray-600 me-2 fw-normal label-colon "
+                          class="text-gray-600 me-2 fw-normal label-colon"
                           fiedName="Birthday"
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #birthday class="fw-bold"
-                          > {{ infoPersonal.birthday | fmDT }}</span
+                        <span #birthday class="fw-bold">
+                          {{ infoPersonal.birthday | fmDT }}</span
                         >
                       </div>
                     </div>
@@ -1238,7 +1241,7 @@
                           class="icon-connection-point icon-14 text-gray-600 me-1"
                         ></span> -->
                         <span
-                          class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1 "
+                          class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"
                         ></span>
                         <codx-label
                           class="text-gray-600 me-2 fw-normal label-colon"
@@ -1247,8 +1250,8 @@
                         >
                         </codx-label>
 
-                        <span #birthPlace class="fw-bold"
-                          > {{ infoPersonal.birthPlaceName }}</span
+                        <span #birthPlace class="fw-bold">
+                          {{ infoPersonal.birthPlaceName }}</span
                         >
                       </div>
                     </div>
@@ -1256,8 +1259,8 @@
                   </div>
                   <div class="row mb-2">
                     <!-- Quốc tịch -->
-                    <div class="col ">
-                      <div class="d-flex align-items-center" >
+                    <div class="col">
+                      <div class="d-flex align-items-center">
                         <span
                           class="icon-wysiwyg icon-18 text-gray-600 me-2"
                         ></span>
@@ -1268,8 +1271,8 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #nationality class="fw-bold"
-                          > {{ infoPersonal.nationalityName }}</span
+                        <span #nationality class="fw-bold">
+                          {{ infoPersonal.nationalityName }}</span
                         >
                       </div>
                     </div>
@@ -1288,9 +1291,9 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #ethnicGroup class="fw-bold"
-                          >{{ infoPersonal.ethnicGroupName }}</span
-                        >
+                        <span #ethnicGroup class="fw-bold">{{
+                          infoPersonal.ethnicGroupName
+                        }}</span>
                       </div>
                     </div>
                     <!-- Tôn giáo -->
@@ -1308,9 +1311,9 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #religion class="fw-bold"
-                          >{{ infoPersonal.religionName }}</span
-                        >
+                        <span #religion class="fw-bold">{{
+                          infoPersonal.religionName
+                        }}</span>
                       </div>
                     </div>
                   </div>
@@ -1327,8 +1330,8 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #idCardNo class="fw-bold"
-                          > {{ infoPersonal.idCardNo }}</span
+                        <span #idCardNo class="fw-bold">
+                          {{ infoPersonal.idCardNo }}</span
                         >
                       </div>
                     </div>
@@ -1347,8 +1350,8 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #issuedOn class="fw-bold"
-                          > {{ infoPersonal.issuedOn | fmDT }}</span
+                        <span #issuedOn class="fw-bold">
+                          {{ infoPersonal.issuedOn | fmDT }}</span
                         >
                       </div>
                     </div>
@@ -1416,8 +1419,8 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #degreeName class="fw-bold"
-                          > {{ infoPersonal.degreeName }}</span
+                        <span #degreeName class="fw-bold">
+                          {{ infoPersonal.degreeName }}</span
                         >
                       </div>
                     </div>
@@ -1433,22 +1436,21 @@
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #street class="fw-bold"
-                        >
+                      <span #street class="fw-bold">
                         {{ infoPersonal.street ?? infoPersonal.address }}</span
                       >
                     </div>
                   </div>
                   <div class="row mb-2">
-                    <div class="d-flex" style="margin-left: 25px;">
+                    <div class="d-flex" style="margin-left: 25px">
                       <codx-label
                         class="text-gray-600 me-2"
                         fiedName="FullAddress"
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #pitNumber class="fw-bold"
-                        > {{ infoPersonal.fullAddress }}</span
+                      <span #pitNumber class="fw-bold">
+                        {{ infoPersonal.fullAddress }}</span
                       >
                     </div>
                   </div>
@@ -1461,8 +1463,8 @@
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #Achievement class="fw-bold"
-                        > {{ infoPersonal.achievement }}</span
+                      <span #Achievement class="fw-bold">
+                        {{ infoPersonal.achievement }}</span
                       >
                     </div>
                   </div>
@@ -1475,9 +1477,9 @@
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #Forte class="fw-bold"
-                        >{{ infoPersonal.forte }}</span
-                      >
+                      <span #Forte class="fw-bold">{{
+                        infoPersonal.forte
+                      }}</span>
                     </div>
                   </div>
                   <div class="row mb-2">
@@ -1491,9 +1493,9 @@
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #Hobby class="fw-bold"
-                        >{{ infoPersonal.hobby }}</span
-                      >
+                      <span #Hobby class="fw-bold">{{
+                        infoPersonal.hobby
+                      }}</span>
                     </div>
                   </div>
                 </div>
@@ -1548,7 +1550,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row ">
+                  <div class="row">
                     <div class="col-4">
                       <div class="d-flex align-items-center">
                         <span
@@ -1560,8 +1562,8 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #partyDate
-                          > {{ infoPersonal.partyDate | fmDT }}</span
+                        <span #partyDate>
+                          {{ infoPersonal.partyDate | fmDT }}</span
                         >
                       </div>
                     </div>
@@ -1727,7 +1729,7 @@
                         >
                         </codx-label>
                         <span class="text-dark">
-                           {{ infoPersonal.siRegisterNo }}</span
+                          {{ infoPersonal.siRegisterNo }}</span
                         >
                       </div>
                     </div>
@@ -1745,7 +1747,7 @@
                         </codx-label>
 
                         <span #SIRegisterOn>
-                           {{ infoPersonal.siRegisterOn | fmDT }}
+                          {{ infoPersonal.siRegisterOn | fmDT }}
                         </span>
                       </div>
                     </div>
@@ -1802,8 +1804,8 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #PITIssuedOn
-                          > {{ infoPersonal.pitIssuedOn | fmDT }}</span
+                        <span #PITIssuedOn>
+                          {{ infoPersonal.pitIssuedOn | fmDT }}</span
                         >
                       </div>
                     </div>
@@ -1832,9 +1834,7 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #issuedOn
-                          > {{ infoPersonal.accountBankID }}</span
-                        >
+                        <span #issuedOn> {{ infoPersonal.accountBankID }}</span>
                       </div>
                     </div>
                   </div>
@@ -1860,7 +1860,7 @@
                   <div
                     [class]="lstPassport?.length > 0 ? 'has-action-menu' : ''"
                   >
-                    <div class="row pb-3 ">
+                    <div class="row pb-3">
                       <div class="col-4">
                         <div class="d-flex align-items-center">
                           <span
@@ -1873,7 +1873,6 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            
                             {{
                               lstPassport?.length > 0
                                 ? lstPassport[0]?.passportNo
@@ -1893,8 +1892,7 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span #IssuedPlace
-                            >
+                          <span #IssuedPlace>
                             {{
                               lstPassport?.length > 0
                                 ? lstPassport[0]?.issuedPlace
@@ -1904,7 +1902,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="row ">
+                    <div class="row">
                       <div class="col-4">
                         <div class="d-flex align-items-center">
                           <span
@@ -1916,8 +1914,7 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span #issuedDate
-                            >
+                          <span #issuedDate>
                             {{
                               lstPassport?.length > 0
                                 ? (lstPassport[0]?.issuedDate | fmDT)
@@ -1937,8 +1934,7 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span #ExpiredDate
-                            >
+                          <span #ExpiredDate>
                             {{
                               (lstPassport?.length > 0
                                 ? lstPassport[0]?.expiredDate
@@ -1998,7 +1994,6 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            
                             {{
                               lstVisa?.length > 0 ? lstVisa[0]?.visaNo : ""
                             }}</span
@@ -2011,14 +2006,12 @@
                             class="icon-i-info-circle-fill icon-circle-group text-gray-600 me-1"
                           ></span>
                           <codx-label
-                            class="text-gray-600 me-2 "
+                            class="text-gray-600 me-2"
                             fiedName="IssuedPlace"
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                         
                         </div>
-                       
                       </div>
                     </div>
                     <div class="row">
@@ -2033,8 +2026,7 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span #issuedDate
-                            >
+                          <span #issuedDate>
                             {{
                               (lstVisa?.length > 0
                                 ? lstVisa[0]?.issuedDate
@@ -2055,8 +2047,7 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span #issuedOn
-                            >
+                          <span #issuedOn>
                             {{
                               (lstVisa?.length > 0
                                 ? lstVisa[0]?.effectedDate
@@ -2127,7 +2118,6 @@
                             >
                             </codx-label>
                             <span class="text-dark">
-                              
                               {{
                                 lstWorkPermit?.length > 0
                                   ? lstWorkPermit[0]?.workPermitNo
@@ -2147,8 +2137,7 @@
                               [formModel]="view.formModel"
                             >
                             </codx-label>
-                            <span
-                              >
+                            <span>
                               {{
                                 lstWorkPermit?.length > 0
                                   ? lstWorkPermit[0]?.issuedPlace
@@ -2158,7 +2147,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="row ">
+                      <div class="row">
                         <div class="col-4">
                           <div class="d-flex align-items-center">
                             <span
@@ -2170,8 +2159,7 @@
                               [formModel]="view.formModel"
                             >
                             </codx-label>
-                            <span
-                              >
+                            <span>
                               {{
                                 (lstWorkPermit?.length > 0
                                   ? lstWorkPermit[0]?.issuedDate
@@ -2347,7 +2335,7 @@
                     <a class="btn btn-xs btn-icon btn-white btn-hover-primary">
                       <span
                         class="icon-edit icon-18 text-primary"
-                        (click)="editEmployeeSelfInfo()"
+                        (click)="HandleEmployeeJobGeneralInfo('edit')"
                       ></span>
                     </a>
                   </div>
@@ -2468,7 +2456,7 @@
                       </codx-label>
 
                       <span class="text-dark fw-bold">
-                        <span>{{ infoPersonal.positionName }}</span>  
+                        <span>{{ infoPersonal.positionName }}</span>
                       </span>
                     </div>
                     <div class="col d-flex align-items-center" id="jobLevel">
@@ -2546,7 +2534,7 @@
                   <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="locationID">
                       <codx-label
-                        class="text-gray-600 me-2 "
+                        class="text-gray-600 me-2"
                         [formModel]="view.formModel"
                         fiedName=""
                       >
@@ -2595,11 +2583,9 @@
                   <!-- isTUnion-tUnionDate -->
                   <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="isTUnion">
-                    
-                        <span
-                          class="icon-i-check-circle-fill icon-14 text-primary me-1"
-                        ></span>
-                     
+                      <span
+                        class="icon-i-check-circle-fill icon-14 text-primary me-1"
+                      ></span>
 
                       <codx-label
                         class="text-gray-600 me-2 label-colon"
@@ -2635,9 +2621,9 @@
                       class="col d-flex align-items-center"
                       id="isExpertRecruit"
                     >
-                    <span
-                    class="icon-i-check-circle-fill icon-14 text-primary me-1"
-                  ></span>
+                      <span
+                        class="icon-i-check-circle-fill icon-14 text-primary me-1"
+                      ></span>
 
                       <codx-label
                         class="text-gray-600 me-2 label-colon"
@@ -2658,8 +2644,8 @@
                         class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
                       ></span>
                       <span
-                      class="icon-i-check-circle-fill icon-14 text-primary me-1"
-                    ></span>  
+                        class="icon-i-check-circle-fill icon-14 text-primary me-1"
+                      ></span>
                       <codx-label
                         class="text-gray-600 me-2 label-colon"
                         [formModel]="view.formModel"
@@ -2743,8 +2729,8 @@
                   <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="isNotScan">
                       <span
-                          class="icon-i-check-circle-fill icon-14 text-primary me-1"
-                        ></span>
+                        class="icon-i-check-circle-fill icon-14 text-primary me-1"
+                      ></span>
 
                       <codx-label
                         class="text-gray-600 me-2 label-colon"
@@ -2778,9 +2764,9 @@
                       class="col d-flex align-items-center"
                       id="isNotLateEarly"
                     >
-                    <span
-                    class="icon-i-check-circle-fill icon-14 text-primary me-1"
-                  ></span>
+                      <span
+                        class="icon-i-check-circle-fill icon-14 text-primary me-1"
+                      ></span>
 
                       <codx-label
                         class="text-gray-600 me-2 label-colon"
@@ -2866,11 +2852,9 @@
                   <!-- taxTableID-isSettleTax -->
                   <div class="row mb-2">
                     <div class="col d-flex align-items-center" id="taxTableID">
-                     
-                        <span
-                          class="icon-local_atm icon-16 text-danger me-1 fw-bold"
-                        ></span>
-                      
+                      <span
+                        class="icon-local_atm icon-16 text-danger me-1 fw-bold"
+                      ></span>
 
                       <codx-label
                         class="text-gray-600 me-2 label-colon"
@@ -3074,7 +3058,6 @@
                     </a>
                   </div>
                   <div class="d-flex flex-wrap py-3 px-4">
-                    
                     <div
                       class="border rounded min-w-250px mw-300px me-4 mb-2"
                       *ngIf="crrEBSalary != null"
@@ -3090,15 +3073,24 @@
                       </codx-temp-full>
                       <ng-template #footerEBSalaries let-data>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="icon-attach_money text-gray-600 pe-2 icon-14 "></span>Lương cơ bản:
+                          <span
+                            class="icon-attach_money text-gray-600 pe-2 icon-14"
+                          ></span
+                          >Lương cơ bản:
                           {{ crrEBSalary.bSalary }}
                         </div>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="icon-monetization_on text-danger pe-2 icon-14"></span>Lương đóng BH:
+                          <span
+                            class="icon-monetization_on text-danger pe-2 icon-14"
+                          ></span
+                          >Lương đóng BH:
                           {{ crrEBSalary.siSalary }}
                         </div>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="icon-event text-gray-600 icon-14 pe-2 "></span>Hiệu lực:
+                          <span
+                            class="icon-event text-gray-600 icon-14 pe-2"
+                          ></span
+                          >Hiệu lực:
                           {{ crrEBSalary.effectedDate | fmDT }}
                           -
                           {{ crrEBSalary.expiredDate | fmDT }}
@@ -3120,11 +3112,16 @@
                       </codx-temp-full>
                       <ng-template #footerJobSalaries let-data>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="icon-attach_money text-gray-600 pe-2 icon-14"></span>Lương chức
-                          danh: {{ crrJobSalaries.jSalary }}
+                          <span
+                            class="icon-attach_money text-gray-600 pe-2 icon-14"
+                          ></span
+                          >Lương chức danh: {{ crrJobSalaries.jSalary }}
                         </div>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="icon-event text-gray-600 icon-14 pe-2"></span>Hiệu lực:
+                          <span
+                            class="icon-event text-gray-600 icon-14 pe-2"
+                          ></span
+                          >Hiệu lực:
                           {{
                             crrJobSalaries.effectedDate | date : "MM/dd/yyyy"
                           }}
@@ -3154,7 +3151,7 @@
                         <span
                           class="icon-add icon-20 text-gray-600 text-hover-primary"
                         ></span>
-                    </button>
+                      </button>
                       <span class="text-gray-500 ms-2">|</span>
                       <button
                         class="btn btn-icon btn-sm position-relative ms-1"
@@ -3182,11 +3179,15 @@
                         </codx-temp-full>
                         <ng-template #footerBenefit let-data>
                           <div class="d-flex align-items-center mt-1">
-                            <span class="icon-i-plus-circle  text-success icon-12 text-gray-600 pe-2 "></span
+                            <span
+                              class="icon-i-plus-circle text-success icon-12 text-gray-600 pe-2"
+                            ></span
                             >{{ data.benefitID }}
                           </div>
                           <div class="d-flex align-items-center mt-1">
-                            <span class="icon-attach_money text-gray-600 pe-2 icon-14"></span
+                            <span
+                              class="icon-attach_money text-gray-600 pe-2 icon-14"
+                            ></span
                             >{{ data.benefitAmt }}
                           </div>
 
@@ -3538,16 +3539,14 @@
                       <div class="col">
                         <div class="d-flex align-items-center pt-2">
                           <i
-                            class="icon-i-circle-fill  icon-14 text-info me-1"
+                            class="icon-i-circle-fill icon-14 text-info me-1"
                           ></i
                           >{{ crrEContract.contractTypeID }}
                         </div>
                       </div>
                       <div class="col">
                         <div class="d-flex align-items-center pt-2">
-                          <i
-                            class="icon-event icon-14 text-gray-600 me-1"
-                          ></i
+                          <i class="icon-event icon-14 text-gray-600 me-1"></i
                           >{{ crrEContract.effectedDate | fmDT }} -
                           {{ crrEContract.expiredDate | fmDT }}
                         </div>
@@ -3556,9 +3555,7 @@
                     <div class="row">
                       <div class="col">
                         <div class="d-flex align-items-center pt-2">
-                          <i
-                            class="icon-edit icon-14 text-gray-600 me-1"
-                          ></i
+                          <i class="icon-edit icon-14 text-gray-600 me-1"></i
                           >{{ crrEContract.note }}
                         </div>
                       </div>
@@ -3566,7 +3563,7 @@
                         <div class="d-flex flex-wrap mb-1">
                           <div class="d-flex align-items-center">
                             <span
-                              class="me-1  icon-i-layout-text-sidebar-reverse icon-10 text-gray-800"
+                              class="me-1 icon-i-layout-text-sidebar-reverse icon-10 text-gray-800"
                             ></span>
                             <span class="text-dark">
                               <span>{{ crrEContract?.contractNo }}</span>
@@ -3825,7 +3822,7 @@
               </div>
             </div>
             <hr />
-            <div class="rounded-2 p-4 bg-white ">
+            <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"

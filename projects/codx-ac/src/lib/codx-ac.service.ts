@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CacheService, FormModel } from 'codx-core';
+import { ApiHttpService, CacheService, FormModel } from 'codx-core';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +8,7 @@ export class CodxAcService {
 
   constructor(
     private cache: CacheService,
+    private api: ApiHttpService,
   ) { }
   setCacheFormModel(formModel: FormModel) {
     this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
@@ -22,5 +23,29 @@ export class CodxAcService {
           );
         });
     });
+  }
+  loadData(assemblyName:any,className:any,methodName:any,data:any){
+    return this.api.exec(
+      assemblyName,
+      className,
+      methodName,
+      data
+    );
+  }
+  addData(assemblyName:any,className:any,methodName:any,data:any){
+    return this.api.exec(
+      assemblyName,
+      className,
+      methodName,
+      data
+    );
+  }
+  checkDataContactAddress(assemblyName:any,className:any,methodName:any,data:any){
+    return this.api.exec(
+      assemblyName,
+      className,
+      methodName,
+      data
+    );
   }
 }

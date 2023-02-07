@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
 import { DateTime } from '@syncfusion/ej2-angular-charts';
 import { CacheService, UrlUtil, Util } from 'codx-core';
 import moment from 'moment';
@@ -9,39 +9,36 @@ import { map, Observable } from 'rxjs';
 })
 export class TextValuePipe implements PipeTransform {
   constructor(
-    private cache:CacheService
+    private cache:CacheService,
+    private dt:ChangeDetectorRef
   )
   {}
   transform(value: string,mssgCode:string) : Observable<any>{
     return this.cache.message(mssgCode).pipe(map(res => {
-      let _strMssg = res ? res.defaultName : mssgCode;
-      if(value){
+      let _strMssg = res.defaultName ;
+      if(value)
+      {
         let _param = JSON.parse(value);
-        let obj ={};
+        let _obj:any = {};
         _param.forEach(element => {
+          let _value = element["FieldValue"];
           if(element["RefType"]){
-            
-            this.cache.valueList(element["RefValue"]).subscribe(vll => {
-              if(vll){
-                obj[element["FieldName"]]=vll.text;
+              let _datas = JSON.parse(element["Datas"]);
+              let _vll = _datas.find(x => x["Value"] == _value);
+              if(_vll){
+                _value = _vll["Text"];
               }
-            });
           }
-          else
+          else if(element["DataType"] == "DateTime")
           {
-            let _value = element["FieldValue"];
-            let _isDateTime = moment(_value).isValid();
-            if(_isDateTime){
-              obj[element["FieldName"]] = moment(_value).format("DD/MM/YYYY HH:MM");
-            }
-            else{
-              obj[element["FieldName"]] = element["FieldValue"];
-            }
+            var sDataFormat = element["DataFormat"]??"DD/MM/YYYY";
+            _value = moment(_value).format(sDataFormat);
           }
+          _obj[element["FieldName"]] = _value;
         });
-        _strMssg = UrlUtil.modifiedByObj(_strMssg, obj);
+        return  UrlUtil.modifiedByObj(_strMssg,_obj);
       }
-      return _strMssg;
+      return value;
     })); 
   }
 }

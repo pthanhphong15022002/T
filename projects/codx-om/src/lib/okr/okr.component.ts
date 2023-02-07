@@ -23,6 +23,7 @@ import {
   SidebarModel,
   FormModel,
   AuthService,
+  Util,
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
 import { PopupAddKRComponent } from '../popup/popup-add-kr/popup-add-kr.component';
@@ -31,6 +32,7 @@ import { OkrAddComponent } from './okr-add/okr-add.component';
 import { OkrPlansComponent } from './okr-plans/okr-plans.component';
 import { ActivatedRoute } from '@angular/router';
 import { OkrPlanShareComponent } from './okr-plans/okr-plans-share/okr-plans-share.component';
+import { PopupAddOBComponent } from '../popup/popup-add-ob/popup-add-ob.component';
 
 @Component({
   selector: 'lib-okr',
@@ -167,8 +169,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.addOKR();
         break;
       }
+      case 'btnAddSKR': {
+        this.addKR(true);
+        break;
+      }
       case 'btnAddKR': {
-        this.addKR();
+        this.addKR(false);
         break;
       }
       case 'btnAddPlan': {
@@ -176,7 +182,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         break;
       }
       case 'btnAddO': {
-        this.addOKR();
+        //this.addOKR();
+        this.addOB();
         break;
       }
       case 'Calendar': {
@@ -374,26 +381,26 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     //  ]
     // );
   }
-  // addOB(o: any = null) {
-  //   let option = new SidebarModel();
-  //   option.FormModel = this.formModelKR;
-  //   let dialogKR = this.callfc.openSide(
-  //     PopupAddOBComponent,
-  //     [OMCONST.MFUNCID.Add, this.addOBTitle, null, this.dataOKRPlans],
-  //     option
-  //   );
-  //   dialogKR.closed.subscribe((res) => {
-  //     dialogKR = null;
-  //   });
-  // }
+  addOB(o: any = null) {
+    let option = new SidebarModel();
+    option.FormModel = this.formModelOB;
+    let dialogOB = this.callfc.openSide(
+      PopupAddOBComponent,
+      [this.funcID,OMCONST.MFUNCID.Add, this.addOBTitle, null, this.dataOKRPlans],
+      option
+    );
+    dialogOB.closed.subscribe((res) => {
+      dialogOB = null;
+    });
+  }
   //Thêm mới KR
-  addKR(o: any = null) {
+  addKR(isSubKR:boolean) {
     let option = new SidebarModel();
     option.FormModel = this.formModelKR;
 
     let dialogKR = this.callfc.openSide(
       PopupAddKRComponent,
-      [OMCONST.MFUNCID.Add, this.addKRTitle, null, o],
+      [this.funcID,OMCONST.MFUNCID.Add, this.addKRTitle, null],
       option
     );
     dialogKR.closed.subscribe((res) => {
