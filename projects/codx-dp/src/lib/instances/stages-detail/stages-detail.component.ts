@@ -309,7 +309,9 @@ export class StagesDetailComponent implements OnInit {
           role.objectName = this.user['userName'];
           role.objectID = this.user['userID'];
           taskData['roles'] = [role];
-          this.dpService.addTask(taskData).subscribe((res) => {
+          let progress = this.updateProgressTaskGroupByTaskGroupID(taskData);
+
+          this.dpService.addTask([taskData,progress?.average]).subscribe((res) => {
             if (res) {
               this.notiService.notifyCode('SYS006');
               let index = this.taskGroupList.findIndex(
@@ -317,6 +319,7 @@ export class StagesDetailComponent implements OnInit {
               );
               this.taskGroupList[index]['task'].push(taskData);
               this.taskList.push(taskData);
+              this.taskGroupList[progress?.index]['progress'] = progress?.average; // cập nhật tiến độ của cha
             }
           });
         } else {
@@ -410,7 +413,7 @@ export class StagesDetailComponent implements OnInit {
   clickMFTaskGroup(e: any, data?: any) {
     switch (e.functionID) {
       case 'SYS02':
-        // this.deletepGroupJob(data);
+        this.deleteGroupTask(data);
         break;
       case 'SYS03':
         this.openPopupTaskGroup(data);
@@ -438,15 +441,20 @@ export class StagesDetailComponent implements OnInit {
       500
     );
   }
+
   saveGroupTask() {
     this.popupTaskGroup.close();
     if (!this.taskGroup['recID']) {
-      this.taskGroup['recID'] = Util.uid();
+      let index = this.taskGroupList.length;
       let role = new DP_Instances_Steps_TaskGroups_Roles();
+
       role.objectName = this.user['userName'];
       role.objectID = this.user['userID'];
-      this.taskGroup['createdOn'] = new Date();
+
       this.taskGroup['roles'] = [role];
+      this.taskGroup['recID'] = Util.uid();
+      this.taskGroup['createdOn'] = new Date();
+      this.taskGroup['indexNo'] = index;
 
       let taskGroupSave = JSON.parse(JSON.stringify(this.taskGroup));
       delete taskGroupSave['task'];
@@ -454,7 +462,7 @@ export class StagesDetailComponent implements OnInit {
       this.dpService.addTaskGroups(taskGroupSave).subscribe((res) => {
         if (res) {
           this.notiService.notifyCode('SYS006');
-          this.taskGroupList.push(this.taskGroup);
+          this.taskGroupList.splice(index - 1, 0, this.taskGroup);
           console.log(this.taskGroup);
         }
       });
@@ -462,7 +470,6 @@ export class StagesDetailComponent implements OnInit {
       this.taskGroup['modifiedOn'] = new Date();
       let taskGroupSave = JSON.parse(JSON.stringify(this.taskGroup));
       delete taskGroupSave['task'];
-
       this.dpService.updateTaskGroups(taskGroupSave).subscribe((res) => {
         if (res) {
           this.notiService.notifyCode('SYS006');
@@ -470,6 +477,19 @@ export class StagesDetailComponent implements OnInit {
         }
       });
     }
+  }
+  deleteGroupTask(data){
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {}
+        let value = [data?.recID, data?.stepID];
+        console.log(value);   
+        this.dpService.deleteTaskGroups(value).subscribe((res) => {  
+          if(res){
+            let index = this.taskGroupList.findIndex(x => x.recID == data.recID);
+            this.taskGroupList.splice(index,1);
+          }
+        })  
+    })
   }
   // Progress
   styleProgress(progress) {
@@ -520,7 +540,15 @@ export class StagesDetailComponent implements OnInit {
   }
 
   updateProgressTask() {
-    this.updateProgressTaskGroupByTaskGroupID(this.dataProgress);
+    let value = this.updateProgressTaskGroupByTaskGroupID(this.dataProgress);
+    let dataSave = [this.dataProgress, value?.average];
+    this.dpService.updateTask(dataSave).subscribe((res) => {
+      if(res){
+        this.taskGroupList[value?.index]['progress'] = value?.average;
+        this.notiService.notifyCode('SYS006');
+        this.popupUpdateProgress.close();
+      }
+    })
   }
 
   checkProgress(event, data) {
@@ -537,10 +565,10 @@ export class StagesDetailComponent implements OnInit {
       (task) => task.recID == data?.taskGroupID
     );
     this.taskGroupList[index]['task'].forEach((item) => {
-      proggress += item?.progress || 0;
+      proggress += parseFloat(item?.progress) || 0;
     });
-    average = proggress / this.taskGroupList[index]['task'].length;
-    this.taskGroupList[index]['progress'] = average;
+    average = parseFloat((proggress / (this.taskGroupList[index]['task'].length)).toFixed(1));
+    return {average:average, index: index};
   }
 
   drop(event: CdkDragDrop<string[]>, data = null) {
