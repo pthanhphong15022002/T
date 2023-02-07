@@ -48,7 +48,7 @@ export class RoleEditComponent
   gridViewSetup: any = [];
   empty = '';
   roleID = '';
-
+  oldID: any;
   @Input() modelPage: any;
 
   constructor(
@@ -64,6 +64,7 @@ export class RoleEditComponent
   ) {
     super(injector);
     this.dialog = dialog;
+    this.isAdd = dt.data.isAdd;
     this.tenant = this.tenantStore.get()?.tenant;
     this.data = dialog.dataService!.dataSelected;
     this.cache
@@ -84,6 +85,7 @@ export class RoleEditComponent
       });
     if (dt && dt.data) {
       this.formType = dt.data.formType;
+      this.oldID = dt.data.oldID;
       this.roleID = this.data?.recID;
       this.header = dt.data.headerText;
       this.tempService.roleName.next(this.data?.roleName);
@@ -136,17 +138,18 @@ export class RoleEditComponent
       this.SaveRole(false);
     }
   }
+  isAdd = false;
   SaveRole(isCopyPermision: boolean) {
     //var listview = this.adsv.listview;
     this.api
       .call('ERM.Business.AD', 'RolesBusiness', 'SaveRoleAsync', [
         this.data,
         this.formType,
-        isCopyPermision,
+        this.oldID,
       ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
-          this.dialog.close();
+          this.dialog.close(res.msgBodyData[0]);
         } else {
           this.notificationsService.notifyCode('SYS020');
         }

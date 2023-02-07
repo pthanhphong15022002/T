@@ -1,19 +1,20 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormModel, SidebarModel, CallFuncService } from 'codx-core';
+import { PopupCustomFieldComponent } from '../popup-custom-field/popup-custom-field.component';
 
 @Component({
   selector: 'codx-field-detail',
   templateUrl: './field-detail.component.html',
-  styleUrls: ['./field-detail.component.scss']
+  styleUrls: ['./field-detail.component.scss'],
 })
 export class FieldDetailComponent implements OnInit {
   @Input() lstSteps: any;
   @Input() lstFields: any;
   @Input() formModel: any;
 
-  constructor() { }
+  constructor(private callfc: CallFuncService) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   clickShow(e, id) {
     let children = e.currentTarget.children[0];
@@ -35,7 +36,30 @@ export class FieldDetailComponent implements OnInit {
     }
   }
 
-  clickMF(e, data){
-
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS03':
+        this.popupCustomField(data);
+        break;
+    }
+  }
+  popupCustomField(data) {
+    var list = [];
+    if (data && data.length > 0) {
+      list = data;
+    } else {
+      list.push(data);
+    }
+    var obj = { data: list };
+    let formModel: FormModel = {
+      entityName: 'DP_Instances_Steps_Fields',
+      formName: 'DPInstancesStepsFields',
+      gridViewName: 'grvDPInstancesStepsFields',
+    };
+    let option = new SidebarModel();
+    option.FormModel = formModel;
+    option.Width = '550px';
+    option.zIndex = 1010;
+    let field = this.callfc.openSide(PopupCustomFieldComponent, obj, option);
   }
 }

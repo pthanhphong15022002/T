@@ -156,7 +156,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
       this.hrService.AddECertificateInfo(this.certificateObj).subscribe((p) => {
         if (p != null) {
           this.certificateObj.recID = p.recID;
-          this.notify.notifyCode('SYS007');
+          this.notify.notifyCode('SYS006');
           this.lstCertificates.push(
             JSON.parse(JSON.stringify(this.certificateObj))
           );
@@ -166,7 +166,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
               .subscribe();
           }
           // this.dialog.close(p)
-        } else this.notify.notifyCode('DM034');
+        } else this.notify.notifyCode('SYS023');
       });
     } else {
       this.hrService
@@ -181,7 +181,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
                 .subscribe();
             }
             // this.dialog.close(this.data)
-          } else this.notify.notifyCode('DM034');
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }

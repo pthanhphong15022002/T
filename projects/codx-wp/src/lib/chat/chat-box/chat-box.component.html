@@ -62,16 +62,15 @@
     </div>
     <div class="chat-box-footer">
         <div class="footer-emoji">
-            <span class="icon-tag_faces icon-16 text-primary"></span>
+            <span class="icon-tag_faces icon-16"></span>
         </div>
         <div class="footer-attachments">
-            <span class="icon-photo icon-16 text-primary"></span>
+            <span class="icon-photo icon-16"></span>
         </div>
         <div class="footer-message" (keyup.enter)="sendMessage()">
             <codx-input 
                 type="text"
                 [class]="'border-0 bg-light rounded-pill px-4'" 
-                placeholder="Type your text" 
                 [crrValue]="message.message"
                 (valueChange)="valueChange($event)">
             </codx-input>

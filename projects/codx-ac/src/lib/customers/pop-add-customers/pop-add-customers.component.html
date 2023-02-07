@@ -453,10 +453,12 @@
             default="Điều khoản giao hàng"
           ></codx-label>
             <codx-input
+            [crrValue]="form.data.delTermID"
             type="combobox"
             refValue="DeliveryTerms"
             [formModel]="form.formModel"
             field="delTermID"  
+            (valueChange)="valueChange($event,'')"
             >
             </codx-input>
           </div>   
@@ -469,9 +471,12 @@
             default="Hình thức giao hàng"      
           ></codx-label>
           <codx-input
+            [crrValue]="form.data.delModeID"
+            [formModel]="form.formModel"
             type="combobox"
             refValue="DeliveryModes"
             field="delModeID"  
+            (valueChange)="valueChange($event,'')"
             >
             </codx-input>
           </div>
@@ -527,6 +532,7 @@
             [min]="0"
             [formModel]="form.formModel"
             field="distance"  
+            (valueChange)="valueChange($event,'')"
             >
             </codx-input>
           </div>   
@@ -544,6 +550,7 @@
             [min]="0"
             [formModel]="form.formModel"
             field="leadtime"  
+            (valueChange)="valueChange($event,'')"
             >
             </codx-input>
           </div>
@@ -609,7 +616,7 @@
       </div>    
       <div *ngFor="let item of objectAddress">
         <div class="fw-bold text-dark fs-5">
-          <span id="adressType" [innerHTML]="convertAddressType(item.adressType,'adressType')"></span>
+          <span id="{{item.recID}}" [innerHTML]="convertHtml(item.adressType,item.recID)"></span>
         </div>
       <div class="text-gray-500">
           {{item.adressName}}
@@ -720,7 +727,7 @@
               </div>
               </div>
               <div class="d-flex">
-                <span id="contactType" class="me-2" [innerHTML]="convertAddressType(item.contactType,'contactType')"></span>     
+                <span id="{{item.contactID}}" class="me-2" [innerHTML]="convertHtml(item.contactType,item.contactID)"></span>     
               </div>
             </div>
             <div class="d-flex align-items-center">
@@ -778,10 +785,11 @@
         default="Ngành công nghiệp"      
       ></codx-label>
       <codx-input
-      [crrValue]="form.data.industries"
+      [crrValue]="form.data.industryID"
       type="combobox"
       refValue="Industries"
-      field="industries" 
+      [formModel]="form.formModel"
+      field="industryID" 
       (valueChange)="valueChange($event,'')"
     >
     </codx-input>

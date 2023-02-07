@@ -122,6 +122,9 @@
           [objectID]="item.recID" 
           [objectType]="'WP_Comments'" 
           [formModel]="listview.formModel"
+          [attachment]="item.attachment"
+          [medias]="item.medias"
+
           (fileClicked)="clickViewDetail($event)">
         </codx-view-files>
       </div> 

@@ -1,0 +1,50 @@
+.user-profile{
+    background-color: #f5f8fa;
+  }
+  
+  
+  .emp-check-add {
+    position: fixed;
+    z-index: 105;
+    bottom: 20px;
+    right: 20px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
+  }
+  
+  .h-employee {
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  
+  .user-menu {
+    height: calc(100% - 330px) !important;
+  }
+  
+  .pw-content {
+    height: calc(100vh - 145px) !important;
+    
+  }
+  
+  .h-employee {
+    .pic-emloyee .top-100.start-100 {
+      margin-left: -10px;
+      margin-top: -10px;
+    }
+  
+  
+    .bg-sidebar {
+      background-image: url(../../../../../../src/assets/themes/hr/default/img/EmpProfile_Background.jpg);
+      background-repeat: no-repeat;
+      background-size: 100% 62%;
+    }
+  
+    .icon-circle-group {
+      font-size: 6px !important;
+    }
+    
+  }
+  
+  
