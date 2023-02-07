@@ -252,6 +252,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     if (this.action != 'add') {
       // this.showID = true;
+      this.permissions = this.process.permissions;
       this.processTab = 2;
       this.getAvatar(this.process);
     } else {
@@ -744,7 +745,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       950,
       650,
       '',
-      [this.process.permissions, title],
+      [this.process, title],
       '',
       this.dialog
     );

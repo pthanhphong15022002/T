@@ -88,14 +88,11 @@
 </div>
 
 <ng-template #popupSup let-dialog>
-  <codx-form [headerText]="'Hướng dẫn bước nhiệm vụ'" [body]="body" [footer]="footer" [dialog]="dialog">
+  <codx-form [headerText]="'Hướng dẫn bước nhiệm vụ'" [body]="body" [footer]="" [dialog]="dialog">
     <ng-template #body>
-      <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150" (valueChange)="valueChange($event)"
-      [placeholder]="'Nhập.....'" [crrValue]="comment">
+      <codx-input field="memo" type="textarea" headerposition="none" format="ed2" height="150" (valueChange)="valueChange($event)"
+      [placeholder]="'Nhập.....'" [crrValue]="listData.memo" [disabled]="true">
       </codx-input>
-    </ng-template>
-    <ng-template #footer>
-      <button type="button" (click)="onSave()" class="btn btn-primary">Lưu</button>
     </ng-template>
 
   </codx-form>

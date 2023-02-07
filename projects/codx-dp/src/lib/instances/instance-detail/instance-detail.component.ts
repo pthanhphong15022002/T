@@ -58,7 +58,7 @@ export class InstanceDetailComponent implements OnInit {
     private cache: CacheService,
     private changeDetec: ChangeDetectorRef
   ) {
-    
+
   }
 
   ngOnInit(): void {
@@ -206,9 +206,13 @@ export class InstanceDetailComponent implements OnInit {
 
   continues(data) {
     if (this.currentStep + 1 == this.listSteps.length) return;
-    this.dpSv.GetStepsByInstanceIDAsync(data.recID).subscribe((res) => {
-      this.tmpTeps = res;
-    });
+    this.dpSv.GetStepsByInstanceIDAsync(data.recID).subscribe(res =>{
+      res.forEach((element) => {
+        if (element != null && element.recID == this.dataSelect.stepID) {
+          this.tmpTeps = element;
+        }
+      })
+    })
     this.currentStep++;
     this.currentNameStep = this.currentStep;
     this.changeDetec.detectChanges();
