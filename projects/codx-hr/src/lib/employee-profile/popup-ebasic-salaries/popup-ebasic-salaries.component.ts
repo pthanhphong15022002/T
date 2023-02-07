@@ -161,7 +161,7 @@ export class PopupEBasicSalariesComponent extends UIComponent implements OnInit 
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddEmployeeBasicSalariesInfo(this.EBasicSalaryObj).subscribe((p) => {
         if (p != null) {
-          this.notify.notifyCode('SYS007');
+          this.notify.notifyCode('SYS006');
           if(this.EBasicSalaryObj){
             if(this.EBasicSalaryObj.effectedDate < p.effectedDate){
               this.EBasicSalaryObj.isCurrent = 'false';
@@ -176,7 +176,7 @@ export class PopupEBasicSalariesComponent extends UIComponent implements OnInit 
           if (this.listView) {
             (this.listView.dataService as CRUDService).add(p).subscribe();
           }
-        } else this.notify.notifyCode('DM034');
+        } else this.notify.notifyCode('SYS023');
       });
     } else {
       this.hrService.UpdateEmployeeBasicSalariesInfo(this.formModel.currentData).subscribe((p) => {
@@ -194,7 +194,7 @@ export class PopupEBasicSalariesComponent extends UIComponent implements OnInit 
           if (this.listView) {
             (this.listView.dataService as CRUDService).update(p).subscribe();
           }
-        } else this.notify.notifyCode('DM034');
+        } else this.notify.notifyCode('SYS021');
       });
     }
   }

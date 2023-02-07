@@ -86,6 +86,7 @@ import { PopupEdayoffsComponent } from './employee-profile/popup-edayoffs/popup-
 import { PopupEmpBusinessTravelsComponent } from './employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
 import { PopupEbenefitComponent } from './employee-profile/popup-ebenefit/popup-ebenefit.component';
 import { PopupJobGeneralInfoComponent } from './employee-profile/popup-job-general-info/popup-job-general-info.component';
+import { EmployeeDetailComponent } from './employee-list/employee-detail/employee-detail.component';
 
 export const routes: Routes = [
   {
@@ -122,6 +123,7 @@ export const routes: Routes = [
           {
             path: 'employeedetail/:funcID',
             component: EmployeeProfileComponent,
+            //component: EmployeeDetailComponent,
           },
         ],
       },
@@ -282,7 +284,8 @@ const T_Component: Type<any>[] = [
   PopupEdayoffsComponent,
   PopupEmpBusinessTravelsComponent,
   PopupEbenefitComponent,
-  PopupJobGeneralInfoComponent
+  PopupJobGeneralInfoComponent,
+  EmployeeDetailComponent
 ];
 @NgModule({
   imports: [

@@ -55,24 +55,27 @@ import { ActivatedRoute } from '@angular/router';
 import { E, I } from '@angular/cdk/keycodes';
 import { PopupEPassportsComponent } from '../../employee-profile/popup-epassports/popup-epassports.component';
 import { NoopAnimationPlayer } from '@angular/animations';
-import { EmployeePositionsComponent } from './employee-positions/employee-positions.component';
 import { PopupEhealthsComponent } from '../../employee-profile/popup-ehealths/popup-ehealths.component';
 import { PopupEVaccineComponent } from '../../employee-profile/popup-evaccine/popup-evaccine.component';
 import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/popup-ediseases.component';
 import { PopupEContractComponent } from '../../employee-profile/popup-econtract/popup-econtract.component';
 import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 
 @Component({
-  selector: 'lib-employee-profile',
-  templateUrl: './employee-profile.component.html',
-  styleUrls: ['./employee-profile.component.scss'],
+  selector: 'lib-employee-detail',
+  templateUrl: './employee-detail.component.html',
+  styleUrls: ['./employee-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class EmployeeProfileComponent extends UIComponent {
+export class EmployeeDetailComponent extends UIComponent {
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   @ViewChild('button') button: TemplateRef<any>;
   minType = 'MinRange';
   user;
+
+  active = 'HRT03020101';
+
   constructor(
     private inject: Injector,
     private routeActive: ActivatedRoute,
@@ -99,6 +102,33 @@ export class EmployeeProfileComponent extends UIComponent {
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
 
   views: Array<ViewModel> | any = [];
+
+  navChange(evt: any) {
+    if (!evt) return;
+    let element = document.getElementById(evt.nextId);
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest',
+    });
+
+    console.log('change', evt);
+
+    let footer = document.querySelector('.codx-detail-footer');
+    if (footer) {
+      var f = footer as HTMLElement;
+      let clss = f.classList;
+      if (!clss.contains('expand')) {
+        clss.remove('collape');
+        clss.add('expand');
+      }
+    }
+  }
+
+  loadLabel(funcID){
+    // function = this.lstFuncID.filter((p) => p.functionID == funcID)[0].customName ?? '';
+    return this.lstFuncID.filter((p) => p.functionID == funcID)[0]?.customName ?? '';
+  }
 
   infoPersonal: any = {};
 
@@ -253,23 +283,69 @@ export class EmployeeProfileComponent extends UIComponent {
 
   lstTab: any;
 
+  lstFuncSelfInfo: any = [];
+  lstFuncLegalInfo: any = [];
+  lstFuncTaskInfo: any = [];
+  lstFuncSalary: any = [];
+  lstFuncHRProcess: any = [];
+  lstFuncKnowledge: any = [];
+  lstFuncAward: any = [];
+  lstFuncHealth: any = [];
+  lstFuncArchiveRecords: any = [];
+  lstFuncSeverance: any = [];
+  lstFuncID: any = [];
+
+  clickItem(evet) {
+    console.log('click', this.active);
+  }
+
+  onSectionChange(data: any) {
+    console.log(data);
+    this.codxMwpService.currentSection = data.current;
+    this.detectorRef.detectChanges();
+  }
+
   onInit(): void {
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
       console.log('functionList', res);
-      if(res && res[1] > 0){
-        this.lstTab = res[0].filter(p => p.parentID == this.funcID);
+      if (res && res[1] > 0) {
+        this.lstTab = res[0].filter((p) => p.parentID == this.funcID);
         this.crrFuncTab = this.lstTab[0].functionID;
+        this.lstFuncID = res[0]
+
+        this.lstFuncSelfInfo = res[0].filter((p) => p.parentID == 'HRT030201');
+        console.log('lstFuncSelfInfo', this.lstFuncSelfInfo);
+
+        this.lstFuncLegalInfo = res[0].filter((p) => p.parentID == 'HRT030209');
+        console.log('lstFuncLegalInfo', this.lstFuncLegalInfo);
+
+        this.lstFuncTaskInfo = res[0].filter((p) => p.parentID == 'HRT030202');
+        console.log('lstFuncTaskInfo', this.lstFuncTaskInfo);
+
+        this.lstFuncSalary = res[0].filter((p) => p.parentID == 'HRT030203');
+        console.log('lstFuncSalary', this.lstFuncSalary);
+
+        this.lstFuncHRProcess = res[0].filter((p) => p.parentID == 'HRT030204');
+        console.log('lstFuncHRProcess', this.lstFuncHRProcess);
+
+        this.lstFuncKnowledge = res[0].filter((p) => p.parentID == 'HRT030205');
+        console.log('lstFuncKnowledge', this.lstFuncKnowledge);
+
+        this.lstFuncAward = res[0].filter((p) => p.parentID == 'HRT030206');
+        console.log('lstFuncAward', this.lstFuncAward);
+
+        this.lstFuncHealth = res[0].filter((p) => p.parentID == 'HRT030207');
+        console.log('lstFuncHealth', this.lstFuncHealth);
+
+        this.lstFuncArchiveRecords = res[0].filter(
+          (p) => p.parentID == 'HRT030210'
+        );
+        console.log('lstFuncArchiveRecords', this.lstFuncArchiveRecords);
+
+        this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
+        console.log('lstFuncSeverance', this.lstFuncSeverance);
       }
     });
-
-    this.hrService.getHeaderText('HRT03a1').then( res =>{
-      console.log('11111111111111111111111111111111', res);
-      console.log(res['ALObjectID']);
-
-      
-
-      
-    })
 
     this.EExperienceColumnsGrid = [
       {
@@ -654,10 +730,10 @@ export class EmployeeProfileComponent extends UIComponent {
               op.dataValue = params.employeeID;
               op.predicate = 'EmployeeID=@0';
               (op.page = 1),
-              this.hrService.GetListByEmployeeIDAsync(op).subscribe((res) => {
-                console.log('e experience', res);
-                this.lstExperience = res;
-              });
+                this.hrService.GetListByEmployeeIDAsync(op).subscribe((res) => {
+                  console.log('e experience', res);
+                  this.lstExperience = res;
+                });
 
               // Salary
               this.hrService
@@ -1501,7 +1577,7 @@ export class EmployeeProfileComponent extends UIComponent {
   crrFuncTab: string;
   clickTab(funcList: any) {
     // this.crrTab = tabNumber;
-    this.crrFuncTab = funcList.functionID
+    this.crrFuncTab = funcList.functionID;
   }
 
   editEmployeePartyInfo() {
@@ -1513,7 +1589,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupEmployeePartyInfoComponent,
       {
-        funcID : 'HRT03020102',
+        funcID: 'HRT03020102',
         headerText: 'Thông tin Đảng - Đoàn',
       },
       option
@@ -1521,6 +1597,7 @@ export class EmployeeProfileComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res) {
         console.log('data tra ve dang doan', res.event);
+
         this.infoPersonal = JSON.parse(JSON.stringify(res.event));
         this.df.detectChanges();
         this.view.dataService.clear();
@@ -1577,9 +1654,10 @@ export class EmployeeProfileComponent extends UIComponent {
         this.view.dataService.clear();
       }
     });
+    // })
   }
 
-  HandleEmployeeJobGeneralInfo(actionType: string){
+  HandleEmployeeJobGeneralInfo(actionType: string) {
     this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -1643,8 +1721,8 @@ export class EmployeeProfileComponent extends UIComponent {
     console.log('rec ID', recID);
     this.hrService.deleteEHealth(recID).subscribe((p) => {
       if (p != null) {
-        this.notify.notifyCode('SYS008');
-      } else this.notify.notifyCode('SYS022');
+        this.notify.notifyCode('SYS007');
+      } else this.notify.notifyCode('DM034');
     });
     console.log('delete xong');
   }
@@ -1663,7 +1741,7 @@ export class EmployeeProfileComponent extends UIComponent {
         headerText: 'Phụ cấp',
         funcID: 'HRT03020303',
         listBenefits: this.listCrrBenefit,
-        indexSelected: this.listCrrBenefit?.indexOf(data) ?? 0
+        indexSelected: this.listCrrBenefit?.indexOf(data) ?? 0,
       },
       option
     );
@@ -1677,15 +1755,14 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-
   handlEmployeeExperiences(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     // option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '850px';
     console.log('danh sach kinh nghiem', this.lstExperience);
-    
+
     let dialogAdd = this.callfunc.openSide(
       PopupEexperiencesComponent,
       {
@@ -1712,7 +1789,7 @@ export class EmployeeProfileComponent extends UIComponent {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     // option.FormModel = this.view.formModel
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEJobSalariesComponent,
       {
@@ -1745,7 +1822,7 @@ export class EmployeeProfileComponent extends UIComponent {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     // option.FormModel = this.view.formModel
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEBasicSalariesComponent,
       {
@@ -1779,7 +1856,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       // EmployeeFamilyRelationshipDetailComponent,
       PopupEFamiliesComponent,
@@ -1812,7 +1889,7 @@ export class EmployeeProfileComponent extends UIComponent {
     console.log('datas', option.DataService);
 
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       PopupEPassportsComponent,
       {
@@ -1847,7 +1924,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       // EmployeeWorkingLisenceDetailComponent,
       PopupEdayoffsComponent,
@@ -1872,7 +1949,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       // EmployeeWorkingLisenceDetailComponent,
       PopupEWorkPermitsComponent,
@@ -1906,7 +1983,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       // EmployeeVisaFormComponent,
       PopupEVisasComponent,
@@ -1971,7 +2048,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       // EmployeeDisciplinesDetailComponent,
       PopupEDisciplinesComponent,
@@ -1996,7 +2073,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       // EmployeeAwardsDetailComponent,
       PopupEAwardsComponent,
@@ -2022,7 +2099,7 @@ export class EmployeeProfileComponent extends UIComponent {
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
 
-    option.Width = '550px';
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       // EmployeeAllocatedPropertyDetailComponent,
       PopupEaccidentsComponent,
@@ -2047,7 +2124,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       // EmployeeAllocatedPropertyDetailComponent,
       PopupEAssetsComponent,
@@ -2072,7 +2149,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEappointionsComponent,
       {
@@ -2096,7 +2173,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupECertificatesComponent,
       {
@@ -2120,14 +2197,13 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       PopupEDegreesComponent,
       {
         actionType: actionType,
         indexSelected: this.lstEDegrees.indexOf(data),
         lstEDegrees: this.lstEDegrees,
-        headerText: 'Bằng cấp',
         employeeId: this.data.employeeID,
         dataSelected: data,
         funcID: 'HRT03020501',
@@ -2144,7 +2220,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupESkillsComponent,
       {
@@ -2168,7 +2244,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       // EmployeeTraincoursesComponent,
       PopupETraincourseComponent,
@@ -2225,7 +2301,7 @@ export class EmployeeProfileComponent extends UIComponent {
   HandleEmployeeEHealths(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEhealthsComponent,
       {
@@ -2255,7 +2331,7 @@ export class EmployeeProfileComponent extends UIComponent {
     // return;
     // this.view.dataService.dataSelected = data;
     let option = new SidebarModel();
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEVaccineComponent,
       {
@@ -2312,7 +2388,7 @@ export class EmployeeProfileComponent extends UIComponent {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     // option.FormModel = this.view.formModel
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEDiseasesComponent,
       {
@@ -2345,7 +2421,7 @@ export class EmployeeProfileComponent extends UIComponent {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     // option.FormModel = this.view.formModel
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEContractComponent,
       {
@@ -2379,7 +2455,7 @@ export class EmployeeProfileComponent extends UIComponent {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     // option.FormModel = this.view.formModel
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEmpBusinessTravelsComponent,
       {

@@ -93,20 +93,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     this.userID = this.authStore.get().userID;
   }
 
-  checkShowDelete()
-  {
-    if(this.permissions)
-    {
-      var per = this.permissions.filter(x=>x.userID == this.userID);
-      if(per && per[0] && !per[0].delete) 
-      {
-        this.notificationsService.notifyCode("DM060")
-        return false;
-      }
-      return true;
-    }
-    return null;
-  }
+ 
   openPermission(data) {
     this.dmSV.dataFileEditing = data;
     //  this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [this.functionID], "");
@@ -138,17 +125,10 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   deleteFile(id) {
-    if(!this.checkShowDelete() && this.checkShowDelete() != null) return;
     var config = new AlertConfirmInputConfig();
     config.type = "YesNo";
-
-    // this.notificationsService.alertCode('TM005', config).subscribe((res) => {
-    //   if (res?.event && res?.event?.status == 'Y') {
-    //     console.log(res);
-    //   }
-    // });
-
-    this.notificationsService.alert(this.title, this.titleDeleteConfirm, config).closed.subscribe(x => {
+    this.notificationsService.alert(this.title, this.titleDeleteConfirm, config)
+    .closed.subscribe(x => {
       if (x.event.status == "Y") {
         if (this.isDeleteTemp == '0') {
           this.fileService.deleteFileToTrash(id, "", true).subscribe(item => {

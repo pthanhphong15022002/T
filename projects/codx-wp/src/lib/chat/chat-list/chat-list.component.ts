@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  AuthStore,
   CacheService,
   CallFuncService,
   CodxListviewComponent,
@@ -36,14 +37,13 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   
   @Input() isOpen: boolean; // check open dropdown
   @Output() isOpenChange = new EventEmitter<boolean>();
-  @Output() isNewMessage = new EventEmitter<any>();
   
   funcID: string = 'WPT11';
   function: any = null;
   formModel: FormModel = new FormModel();
   grdViewSetUp: any = null;
   moreFC: any = null;
-
+  user:any = null;
   @ViewChild('codxListView') codxListView: CodxListviewComponent;
   @ViewChild("chatBox") chatBox:TemplateRef<any>;
   constructor(
@@ -53,8 +53,14 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     private cache: CacheService,
     private notifySV: NotificationsService,
     private dt: ChangeDetectorRef,
-    private _applicationRef: ApplicationRef,
-  ) {}
+    private applicationRef: ApplicationRef,
+    private auth: AuthStore,
+
+  ) 
+  {
+    this.user = this.auth.get();
+
+  }
 
   ngOnInit(): void {
     // get function - gridViewsetup
@@ -98,11 +104,17 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     this.signalRSV.signalChat.subscribe((res: any) => {
       if (res) 
       {
+        let _eleChatBoxs = document.getElementsByTagName("codx-chat-box");
+        let _arrBoxChat = Array.from(_eleChatBoxs);
+        let _boxChat = _arrBoxChat.find(e => e.id === res.groupID);
+        if(!_boxChat){
+          this.addBoxChat(res.groupID);
+        }
         let _group = this.codxListView.dataService.data;
-        let _index = _group.findIndex(e => e['groupID'] == res.groupID);
+        let _index = _group.findIndex(e => e['groupID'] === res.groupID);
         if(_index > -1){
           _group[_index].message = res.message;
-          this.isNewMessage.emit(res);
+          _group[_index].isRead = res.status.some(x => x["UserID"] === this.user.UserID);
         }
       }
     });
@@ -127,7 +139,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
           .subscribe();
         group.isRead = true;
       }
-      this.addBoxChat(group);
+      this.addBoxChat(group.groupID);
     }
   }
 
@@ -165,15 +177,13 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-  addBoxChat(group:any){
-    let viewRef = this.chatBox.createEmbeddedView({ $implicit: group });
-    this._applicationRef.attachView(viewRef);
+  addBoxChat(groupID:any){
+    let viewRef = this.chatBox.createEmbeddedView({ $implicit: groupID });
+    this.applicationRef.attachView(viewRef);
     viewRef.detectChanges();
     let html = viewRef.rootNodes[0];
-     let elementContainer = document.querySelector(".container-chat");
-     if(elementContainer)
-     {
+    let elementContainer = document.querySelector(".container-chat");
+    if(elementContainer){
       let length = elementContainer.children.length;
       if(length < 3) // add box chat
       {
@@ -182,8 +192,8 @@ export class ChatListComponent implements OnInit, AfterViewInit {
         bottom: 0px;
         right: ${(length*320 + 100)}px;
         margin-top: -500px;
-        background-color: white;`)
-        html.setAttribute('id',group.groupID)
+        background-color: white;`);
+        html.setAttribute('id',groupID);
         elementContainer.append(html);
       }
       else // tạo bong bóng chat
