@@ -120,9 +120,10 @@
         ></codx-gantt-chart>
 
         <ng-template #ganttItems let-data>
-          <div style="background-color: chartreuse">
-            <div class="line-colums">{{ data.stepName }} + Trầm cute test</div>
+          <div class="badge badge-light badge-square badge-md fs-7 p-2" [style]="'background-color: {{data.color}}'">
+            <div class="fw-bold text-dark">{{ data.name }}</div>
           </div>
+
         </ng-template>
       </ng-container>
 
