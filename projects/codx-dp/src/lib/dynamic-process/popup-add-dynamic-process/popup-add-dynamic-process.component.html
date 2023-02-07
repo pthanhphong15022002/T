@@ -1056,7 +1056,7 @@
             cdkDrag
             *ngFor="let itemStep of stepList; let i = index"
             class="list-stage example-box drap-drop"
-            [ngClass]="itemStep?.recID == step.recID ? 'click' : ''"
+            [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''"
             (click)="
               clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)
             "
@@ -1810,8 +1810,8 @@
                   style="width: 100%"
                   field="yes"
                   [label]="titleRadioYes"
-                  [checked]="step.reasonControl"
-                  [crrValue]="step.reasonControl"
+                  [checked]="stepSuccess.reasonControl"
+                  [crrValue]="stepSuccess.reasonControl"
                   (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   "
@@ -1825,8 +1825,8 @@
                   style="width: 100%"
                   field="no"
                   [label]="titleRadioNo"
-                  [checked]="!step.reasonControl"
-                  [crrValue]="step.reasonControl"
+                  [checked]="!stepSuccess.reasonControl"
+                  [crrValue]="stepSuccess.reasonControl"
                   (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   "
@@ -1857,7 +1857,7 @@
               [fields]="fieldCbxProccess"
               [placeholder]="'Chọn quy trình kìa'"
               (valueChange)="cbxChange($event,viewStepReasonSuccess)"
-              [value]="stepSuccess.processID"
+              [value]="stepSuccess.newProcessID"
             ></ejs-combobox>
             <codx-label
               class="text-danger fst-italic fs-6"
@@ -2043,7 +2043,7 @@
             [fields]="fieldCbxProccess"
             [placeholder]="'Chọn quy trình kìa'"
             (valueChange)="cbxChange($event,viewStepReasonFail)"
-            [value]="stepFail.processID"
+            [value]="stepFail?.newProcessID"
           ></ejs-combobox>
             <codx-label
               class="text-danger fst-italic fs-6"

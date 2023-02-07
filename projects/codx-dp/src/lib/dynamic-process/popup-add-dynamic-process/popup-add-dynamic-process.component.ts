@@ -139,6 +139,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly formEdit: string = 'edit'; // form edit
   readonly formAdd: string = 'add'; // form add
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
+  readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE 
 
   //stage-nvthuan
   user: any;
@@ -407,12 +408,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   handlerSave() {
     if (this.action == 'add') {
-      // this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
+      this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
       this.onAdd();
       this.handleAddStep();
       this.notiService.notifyCode('SYS006');
     } else if (this.action == 'edit') {
-      // this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
+    //  this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
       this.onUpdate();
       this.handleUpdateStep();
       this.notiService.notifyCode('SYS006');
@@ -1573,13 +1574,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
       // create step reason fail with value is 2
       this.createStepReason(this.stepFail, '2');
+ 
     }
     // edit step reason success/fail
-    else {
-      // this.stepSuccess = this.stepList.find(x=>x.isSuccessStep == true);
-      // this.stepFail = this.stepList.find(x=>x.isFailStep == true);
-      // console.log(this.stepSuccess);
-      // console.log(this.stepFail);
+    else if (this.action === 'edit') {
+      this.stepSuccess = this.stepList.find(x=>x.isSuccessStep == true);
+      this.stepFail = this.stepList.find(x=>x.isFailStep == true);
     }
   }
   editTest(data) {
@@ -1601,7 +1601,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     reason.reasonType = reasonValue;
     reason.stepID = step.recID;
     // cbx proccess get id
-    reason.processID = idProccess ?? null;
+    reason.processID = idProccess;
     reason.createdBy = this.userId;
     reason.modifiedBy = this.userId;
 
@@ -1624,7 +1624,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   addReason() {
-    if (this.reasonAction === this.formAdd) {
+    if (this.action === this.formAdd) {
       this.reason = this.handleReason(
         this.reason,
         this.dataValueview === this.viewStepReasonSuccess ? '1' : '2',
@@ -1640,23 +1640,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     this.popupAddReason.close();
   }
-
-  // openPopupReason(viewReason: string,data) {
-  //   if (this.action === 'add') {
-  //     this.headerText =
-  //       viewReason === this.viewStepReasonSuccess
-  //         ? 'Thêm lý do thành công'
-  //         : 'Thêm lý do thất bại';
-
-  //   }
-  //   this.dataValueview = viewReason;
-  //   this.popupAddReason = this.callfc.openForm(
-  //     this.addReasonPopup,
-  //     '',
-  //     500,
-  //     280
-  //   );
-  // }
 
   changeValueReaName($event) {
     if ($event) {
@@ -1721,7 +1704,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (res) {
           this.listCbxProccess = res[0];
           var obj = {
-            recID: '00000000-0000-0000-0000-000000000000',
+            recID: this.guidEmpty,
             processName: data.datas[0].default
              // 'Không chuyển đến quy trình khác'
           };
@@ -1738,10 +1721,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   cbxChange($event,view) {
     debugger;
     if(view === this.viewStepReasonSuccess){
-      this.stepSuccess.processID = $event;
+      this.stepSuccess.newProcessID = $event;
     }
     else if(view === this.viewStepReasonFail){
-      this.stepFail.processID = $event;
+      this.stepFail.newProcessID = $event;
     }
   }
 
