@@ -111,23 +111,23 @@ export class IncommingAddComponent implements OnInit {
         }
       }
       if(this.type == "copy") this.dispatch.dispatchNo = null
-      if(!this.dispatch.dispatchNo)
-      {
-        //kiểm tra xem nếu mã công văn tự động không có thì sinh thêm 
-        this.odService.autoNumber(
-          this.formModel.formName,
-          this.formModel.funcID,
-          this.formModel.entityName,
-          "DispatchNo")
-        .subscribe(item=>{
-          if(item) {
-            this.dispatch.dispatchNo = item;
-            this.myForm.formGroup.patchValue({
-              dispatchNo: this.dispatch.dispatchNo, 
-            }); 
-          }
-        })
-      }
+      // if(!this.dispatch.dispatchNo)
+      // {
+      //   //kiểm tra xem nếu mã công văn tự động không có thì sinh thêm 
+      //   this.odService.autoNumber(
+      //     this.formModel.formName,
+      //     this.formModel.funcID,
+      //     this.formModel.entityName,
+      //     "DispatchNo")
+      //   .subscribe(item=>{
+      //     if(item) {
+      //       this.dispatch.dispatchNo = item;
+      //       this.myForm.formGroup.patchValue({
+      //         dispatchNo: this.dispatch.dispatchNo, 
+      //       }); 
+      //     }
+      //   })
+      // }
       this.dispatch.createdOn = new Date();
     } 
     else if (this.type == 'edit') 
@@ -321,6 +321,7 @@ export class IncommingAddComponent implements OnInit {
       .subscribe(async (item) => {
         if (item.status == 0) {
           this.data = item;
+          this.attachment.dataSelected = item.data;
           (await this.attachment.saveFilesObservable()).subscribe(
             (item2: any) => {
               //Chưa xử lý Upload nhìu file
