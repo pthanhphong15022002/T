@@ -134,29 +134,27 @@
     </div>
   </div>
   <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="departmentID"  class="fw-bold"></codx-label>
-    <div class="d-flex mt-2 pb-2">
-      <!-- <codx-input type="Combobox" name="combobox" [refValue]="
+    <codx-label [formModel]="form.formModel" fiedName="departmentID" class="fw-bold"></codx-label>
+    <!-- <codx-input type="Combobox" name="combobox" [refValue]="
           gridViewSetup != null ? gridViewSetup['DepartmentID']['referedValue'] : null
         " refType="P"  [showInput]="true" [crrValue]="dispatch?.departmentID" [ngClass]="'w-100'"
         (valueChange)="changeValueBUID($event)">
       </codx-input> -->
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" [ngClass]="'w-100'" field="departmentID" (valueChange)="changeValueBUID($event)">
-      </codx-input>
-    </div>
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup" [ngClass]="'w-100'" field="departmentID"
+      (valueChange)="changeValueBUID($event)">
+    </codx-input>
   </div>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Owner"
       [default]="form.formModel.funcID == 'ODT41' ? 'Người gửi' : null"></codx-label>
-    <div class="d-flex mt-2 pb-2">
-      <!-- <codx-input type="Combobox" name="combobox" [refValue]="
+    <!-- <codx-input type="Combobox" name="combobox" [refValue]="
           gridViewSetup != null ? gridViewSetup['Owner']['referedValue'] : null
         " [multiple]="false" [crrValue]="this.dispatch.owner" [showInput]="true" refType="P" 
         [ngClass]="'w-100'" (valueChange)="changeValueOwner($event)">
       </codx-input> -->
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="owner" [ngClass]="'w-100'" (valueChange)="changeValueOwner($event)" >
-      </codx-input>
-    </div>
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="owner" [ngClass]="'w-100'"
+      (valueChange)="changeValueOwner($event)">
+    </codx-input>
   </div>
   <div class="row form-group">
     <div class="col">

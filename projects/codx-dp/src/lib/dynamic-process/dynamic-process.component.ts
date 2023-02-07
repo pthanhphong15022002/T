@@ -304,7 +304,7 @@ export class DynamicProcessComponent
         950,
         650,
         '',
-        [e.permissions, this.titleAction],
+        [e, this.titleAction],
         '',
         dialogModel
       )

@@ -1,4 +1,4 @@
-import { DP_Processes_Permission } from './../../../models/models';
+import { DP_Processes, DP_Processes_Permission } from './../../../models/models';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
 
@@ -10,6 +10,7 @@ import { DialogData, DialogRef } from 'codx-core';
 export class PopupRolesDynamicComponent implements OnInit {
   dialog: any;
   title = '';
+  process = new DP_Processes();
   lstPermissions: DP_Processes_Permission[] = [];
   type = '';
   currentPemission = 0;
@@ -26,11 +27,15 @@ export class PopupRolesDynamicComponent implements OnInit {
   //Date
   startDate: Date;
   endDate: Date;
-
-  constructor( private changeDetectorRef: ChangeDetectorRef,
-    @Optional() dt?: DialogData, @Optional() dialog?: DialogRef) {
+  isSetFull = false;
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
     this.dialog = dialog;
-    this.lstPermissions = dt.data[0];
+    this.process = dt.data[0]
+    this.lstPermissions = this.process.permissions;
     this.title = dt.data[1];
   }
 
@@ -94,14 +99,60 @@ export class PopupRolesDynamicComponent implements OnInit {
   //#endregion
 
   //#region Event user
-  valueChange(e, type) {}
+  valueChange(e, type) {
+    var data = e.data;
+    // this.isSetFull = data;
+    switch (type) {
+      case 'full':
+        this.full = data;
+        if (this.isSetFull) {
+          this.read = data;
+          this.share = data;
+          this.upload = data;
+          this.download = data;
+          this.create = data;
+          this.delete = data;
+          this.assign = data;
+        }
+
+        break;
+      case 'delete':
+        if (data != null) this.delete = data;
+        break;
+      default:
+        this.isSetFull = false;
+        this[type] = data;
+        break;
+    }
+    if (type != 'full' && data == false) this.full = false;
+
+    if (
+      this.read &&
+      this.share &&
+      this.upload &&
+      this.download &&
+      this.create &&
+      this.delete &&
+      this.assign
+    )
+      this.full = true;
+
+    this.changeDetectorRef.detectChanges();
+  }
   //#endregion
 
   //#region check role
-  controlFocus(focus) {}
+  controlFocus(isFull) {
+    this.isSetFull = isFull;
+    this.changeDetectorRef.detectChanges();
+  }
 
   checkAdminUpdate() {
-    return true;
+    return false;
+  }
+
+  onSave(){
+
   }
   //#endregion
 }

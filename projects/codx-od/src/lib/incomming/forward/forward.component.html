@@ -1,7 +1,7 @@
 <form [formGroup]="forwardForm" (ngSubmit)="onSave()" class="h-100">
     <codx-form [headerText]="title" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
         <ng-template popup adde #body>
-            <div class="mb-2 p-2">
+            <div class="mb-4">
                 <div class="d-flex align-items-center flex-grow-1 mb-2">
                     <div class="w-50px">From:</div>
                     <div class="d-flex align-items-center me-2 mail-user">
@@ -9,7 +9,7 @@
                             [imgCss]="'me-2'"></codx-temp-full>
                     </div>
                 </div>
-                <div class="d-flex align-items-center flex-grow-1 pb-2 border-bottom">
+                <div class="d-flex align-items-center w-100">
                     <div class="w-50px">To:</div>
                     <codx-input type="Combobox" name="combobox" [refValue]="gridViewSetup['Owner']['referedValue']"
                         [showInput]="true" refType="P" field="popup" [ngClass]="'w-100'"
@@ -17,12 +17,12 @@
                     </codx-input>
                 </div>
             </div>
-            <div class="mx-2">
+            <div class="mb-2">
                 <ng-container *ngIf="files">
                     <codx-thumbnail [files]="files"></codx-thumbnail>
                 </ng-container>
             </div>
-            <div class="form-group mt-4">
+            <div class="form-group">
                 <codx-label default="Mô tả chi tiết" class="text-primary"></codx-label>
                 <codx-input type="textarea" class="w-100" [Group]="forwardForm" ControlName="comment">
                 </codx-input>
