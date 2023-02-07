@@ -173,6 +173,7 @@ export class StagesDetailComponent implements OnInit {
         this.lstFields = changes['listData'].currentValue?.fields;
         //nvthuan
         this.groupByTask(changes['listData'].currentValue);
+        this.step = changes['listData'].currentValue;
       }else{
         this.listData = null;
       }
@@ -325,7 +326,7 @@ export class StagesDetailComponent implements OnInit {
               if (taskData?.taskGroupID != taskGroupIdOld) {
                 this.changeGroupTask(taskData, taskGroupIdOld);
               }
-              this.notiService.notifyCode('SYS006');
+              // this.notiService.notifyCode('SYS006');
 
             }
           })
@@ -402,6 +403,9 @@ export class StagesDetailComponent implements OnInit {
       });
       step['taskGroups'] = taskGroupConvert;
       this.taskGroupList = step['taskGroups'];
+      let taskGroup = new DP_Instances_Steps_TaskGroups();
+      taskGroup['task'] = [];
+      this.taskGroupList.push(taskGroup);
       console.log(this.taskGroupList);
     }
   }
