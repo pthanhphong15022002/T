@@ -1,6 +1,6 @@
 import { DP_Processes, DP_Processes_Permission } from './../../../models/models';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { DialogData, DialogRef } from 'codx-core';
+import { CacheService, DialogData, DialogRef } from 'codx-core';
 
 @Component({
   selector: 'lib-popup-roles-dynamic',
@@ -28,8 +28,10 @@ export class PopupRolesDynamicComponent implements OnInit {
   startDate: Date;
   endDate: Date;
   isSetFull = false;
+  listRoles = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -37,6 +39,11 @@ export class PopupRolesDynamicComponent implements OnInit {
     this.process = dt.data[0]
     this.lstPermissions = this.process.permissions;
     this.title = dt.data[1];
+    this.cache.valueList('DP010').subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas;
+      }
+    });
   }
 
   ngOnInit(): void {
