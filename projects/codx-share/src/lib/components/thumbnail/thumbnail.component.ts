@@ -48,7 +48,8 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   target: string = '.control-section';
   fileName:any
   visible: boolean = false;
-  userID: any
+  userID: any;
+  file:any
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
@@ -93,6 +94,9 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     this.userID = this.authStore.get().userID;
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    this.changeDetectorRef.detectChanges();
+  }
  
   openPermission(data) {
     this.dmSV.dataFileEditing = data;
@@ -103,14 +107,21 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   hideMore() {
     document.getElementById('drop').setAttribute("style", "display: none;");
   }
-
-  checkDownloadRight(file) {
-    if(this.permissions)
+  checkDelete(file:any) {
+    if(file)
     {
-      var per = this.permissions.filter(x=>x.userID == this.userID);
-      if(per && per.length>0) return true;
+      var per = file.permissions.filter(x=>x.userID == this.userID);
+      if(per && per[0]) return per[0].delete
     }
-    return file.download;
+    return false;
+  }
+  checkDownloadRight(file:any) {
+    if(file.permissions)
+    {
+      var per = file.permissions.filter(x=>x.userID == this.userID);
+      if(per && per[0]) return per[0].download;
+    }
+    return false;
   }
 
   base64ToArrayBuffer(base64) {
@@ -124,65 +135,75 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     return bytes;
   }
 
-  deleteFile(id) {
-    var config = new AlertConfirmInputConfig();
-    config.type = "YesNo";
-    this.notificationsService.alert(this.title, this.titleDeleteConfirm, config)
-    .closed.subscribe(x => {
-      if (x.event.status == "Y") {
-        if (this.isDeleteTemp == '0') {
-          this.fileService.deleteFileToTrash(id, "", true).subscribe(item => {
-            if (item) {
-              let list = this.files;
-              var index = -1;
-              if (list.length > 0) {
-                if (list[0].data != null) {
-                  index = list.findIndex(d => d.data.recID.toString() === id);
-                }
-                else {
-                  index = list.findIndex(d => d.recID.toString() === id);
-                }
-                if (index > -1) {
-                  this.dataDelete.push(list[index]);
-                  this.fileDelete.emit(this.dataDelete);
-                  list.splice(index, 1);//remove element from array
-                  this.files = list;
-                  this.fileCount.emit(this.files);
-          
-                  this.changeDetectorRef.detectChanges();
+  deleteFile(id:any) {
+
+    this.fileService.getFile(id).subscribe(item=>{
+      if(item)
+      {
+        if(this.checkDelete(item))
+        {
+          var config = new AlertConfirmInputConfig();
+          config.type = "YesNo";
+          this.notificationsService.alert(this.title, this.titleDeleteConfirm, config)
+          .closed.subscribe(x => {
+            if (x.event.status == "Y") {
+              if (this.isDeleteTemp == '0') {
+                this.fileService.deleteFileToTrash(id, "", true).subscribe(item => {
+                  if (item) {
+                    let list = this.files;
+                    var index = -1;
+                    if (list.length > 0) {
+                      if (list[0].data != null) {
+                        index = list.findIndex(d => d.data.recID.toString() === id);
+                      }
+                      else {
+                        index = list.findIndex(d => d.recID.toString() === id);
+                      }
+                      if (index > -1) {
+                        this.dataDelete.push(list[index]);
+                        this.fileDelete.emit(this.dataDelete);
+                        list.splice(index, 1);//remove element from array
+                        this.files = list;
+                        this.fileCount.emit(this.files);
+                
+                        this.changeDetectorRef.detectChanges();
+                      }
+                    }
+                  }
+                })
+              }
+              else {
+                let list = this.files;
+                var index = -1;
+                if (list.length > 0) {
+                  if (list[0].data != null) {
+                    index = list.findIndex(d => d.data.recID.toString() === id);
+                  }
+                  else {
+                    index = list.findIndex(d => d.recID.toString() === id);
+                  }
+                  if (index > -1) {
+                    this.dataDelete.push(list[index]);
+                    list.splice(index, 1);//remove element from array
+                    this.files = list;
+                    this.fileCount.emit(this.files);
+                    this.fileDelete.emit(this.dataDelete);
+                    this.changeDetectorRef.detectChanges();
+                  }
                 }
               }
             }
           })
         }
-        else {
-          let list = this.files;
-          var index = -1;
-          if (list.length > 0) {
-            if (list[0].data != null) {
-              index = list.findIndex(d => d.data.recID.toString() === id);
-            }
-            else {
-              index = list.findIndex(d => d.recID.toString() === id);
-            }
-            if (index > -1) {
-              this.dataDelete.push(list[index]);
-              list.splice(index, 1);//remove element from array
-              this.files = list;
-              this.fileCount.emit(this.files);
-              this.fileDelete.emit(this.dataDelete);
-              this.changeDetectorRef.detectChanges();
-            }
-          }
-        }
+        else this.notificationsService.notifyCode("SYS032")
       }
     })
+   
   }
 
-  async download(id): Promise<void> {
+  async download(id:any): Promise<void> {
     
     this.fileService.getFile(id).subscribe(file => {
-      var id = file.recID;
       if (this.checkDownloadRight(file)) {
         this.fileService.downloadFile(id).subscribe(async res => {
           if (res) {
@@ -216,9 +237,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.changeDetectorRef.detectChanges();
-  }
+ 
   properties() {
 
   }
