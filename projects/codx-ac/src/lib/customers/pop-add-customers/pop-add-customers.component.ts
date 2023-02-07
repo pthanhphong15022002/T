@@ -28,6 +28,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   objectAddress:Array<Address> = [];
   objectContactAddress:Array<Contact> = [];
   gridViewSetup:any;
+  valuelist:any;
   gridViewSetupBank:any;
   customerID:any;
   formType :any;
@@ -72,15 +73,25 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         this.gridViewSetupBank = res;
       }
     });
+    this.cache.valueList('AC015').subscribe((res) => {
+      this.valuelist = res.datas;
+    });
     if (this.customers.customerID != null) {
       this.customerID = this.customers.customerID;
       this.acService.loadData(
-       'ERM.Business.BS'
-      ,'BankAccountsBusiness'
-      ,'LoadDataAsync'
-      ,this.customerID).subscribe((res:any)=>{
-        this.objectBankaccount = res;
-      }); 
+      'ERM.Business.BS'
+     ,'BankAccountsBusiness'
+     ,'LoadDataAsync'
+     ,this.customerID).subscribe((res:any)=>{
+       this.objectBankaccount = res;
+     }); 
+     this.acService.loadData(
+      'ERM.Business.BS'
+     ,'ContactBookBusiness'
+     ,'LoadDataAsync'
+     ,this.customerID).subscribe((res:any)=>{
+      this.objectContact = res;
+    }); 
       this.acService.loadData(
         'ERM.Business.BS'
       ,'AddressBookBusiness'
@@ -100,16 +111,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             }); 
           }
       }); 
-      this.acService.loadData(
-        'ERM.Business.BS'
-       ,'ContactBookBusiness'
-       ,'LoadDataAsync'
-       ,this.customerID).subscribe((res:any)=>{
-        this.objectContact = res;
-      }); 
     }
   }
-
   onInit(): void {
 
   }
@@ -122,15 +125,6 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   }
   valueChangeTags(e:any){
     this.customers[e.field] = e.data;
-  }
-  convertHtml(data:any,id:any){
-    this.cache.valueList('AC015').subscribe((res) => {
-      res.datas.forEach(element => {
-        if (element.value == data) {       
-            document.getElementById(id).innerHTML = element.text;
-        }
-      });
-    });
   }
   valueChange(e:any,type:any){
     if (type == 'establishYear') {            
