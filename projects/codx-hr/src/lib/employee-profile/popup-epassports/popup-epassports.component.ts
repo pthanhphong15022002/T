@@ -139,14 +139,14 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
         this.hrService.addEmployeePassportInfo(this.passportObj).subscribe(p => {
           if(p != null){
             this.passportObj.recID = p.recID
-            this.notify.notifyCode('SYS007')
+            this.notify.notifyCode('SYS006')
             this.lstPassports.push(JSON.parse(JSON.stringify(this.passportObj)));
             if(this.listView){
               (this.listView.dataService as CRUDService).add(this.passportObj).subscribe();
             }
             // this.dialog.close(p)
           }
-          else this.notify.notifyCode('DM034')
+          else this.notify.notifyCode('SYS023')
         });
       } 
       else{
@@ -159,7 +159,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
           }
             // this.dialog.close(this.data)
           }
-          else this.notify.notifyCode('DM034')
+          else this.notify.notifyCode('SYS021')
         });
       }
    }

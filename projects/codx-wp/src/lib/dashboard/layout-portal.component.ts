@@ -8,38 +8,32 @@ import { SignalRService } from '../services/signalr.service';
 @Component({
   selector: 'lib-layout-portal',
   templateUrl: './layout-portal.component.html',
-  styleUrls: ['./layout-portal.component.scss']
+  styleUrls: ['./layout-portal.component.scss'],
 })
 export class LayoutPortalComponent extends LayoutBaseComponent {
-  
   module = 'WP';
-  funcID:string = "";
+  funcID: string = '';
   override asideFixed = false;
   override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  override toolbar = false;  
+  //override asideKeepActive = false;
+  override toolbar = false;
   dialog!: DialogRef;
 
-  constructor(inject: Injector,
-    private route:ActivatedRoute,
+  constructor(
+    inject: Injector,
+    private route: ActivatedRoute,
     private callfc: CallFuncService,
-    private signalRSV: SignalRService  
-  )
-  {
+    private signalRSV: SignalRService
+  ) {
     super(inject);
   }
 
-  onInit() 
-  {
-
-  }
-  onAfterViewInit(): void {
-    
-  }
+  onInit() {}
+  onAfterViewInit(): void {}
   openFormNoteDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';
     this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
-    this.dialog.closed.subscribe()
+    this.dialog.closed.subscribe();
   }
-
 }

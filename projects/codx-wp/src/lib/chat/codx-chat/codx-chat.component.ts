@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, HostBinding, OnInit } from '@angular/core';
+import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, HostBinding, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
-import { CodxService, CallFuncService } from 'codx-core';
+import { CodxService, CallFuncService, ApiHttpService } from 'codx-core';
+import { group } from '@angular/animations';
 
 @Component({
   selector: 'codx-chat',
@@ -13,21 +14,34 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   }
   loaded = false;
   autoClose:boolean = true;
-  totalMessae:number = 0;
+  totalMessage:number = 0;
+  @ViewChild("chatBox") chatBox:TemplateRef<any>;
+
   constructor(
     public codxService:CodxService,
-    private callFc:CallFuncService,
-    private signalRSV:SignalRService
+    private api:ApiHttpService,
+    private signalRSV:SignalRService,
+    private dt:ChangeDetectorRef,
+    private _applicationRef: ApplicationRef,
   ) 
   { }
   ngAfterViewInit(): void {
   }
 
+  
   ngOnInit(): void {
+    this.getTotalMessage();
   }
   // get total message
   getTotalMessage(){
-
+    this.api.execSv(
+      "WP",
+      "ERM.Business.WP",
+      "ChatBusiness",
+      "GetTotalMessageAsync")
+      .subscribe((res:any) => {
+        this.totalMessage = res;
+      });
   }
   // open chat box
   openChatBox()

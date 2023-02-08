@@ -91,14 +91,12 @@ export class PopupUpdateQuantityComponent extends UIComponent {
       ])
       .subscribe((res) => {
         if (res) {
-          this.notificationsService.notify(
-            'Cập nhật tồn kho thành công',
-            '1',
-            0
-          );
-          this.detectorRef.detectChanges();
-          this.dialog && this.dialog.close(res);
+          this.notificationsService.notifyCode('SYS007');
+        } else {
+          this.notificationsService.notifyCode('SYS001');
         }
+        this.detectorRef.detectChanges();
+        this.dialog && this.dialog.close(res);
       });
   }
 }

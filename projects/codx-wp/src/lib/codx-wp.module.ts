@@ -51,8 +51,6 @@ import { LayoutChatComponent } from './layout-chat/layout-chat.component';
 import { ChatBoxComponent } from './chat/chat-box/chat-box.component';
 import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
 
-
-
 export const routes: Routes = [
   {
     path: 'portal',
@@ -152,7 +150,7 @@ export const routes: Routes = [
   //   pathMatch: 'full',
   // },
   {
-    path: '',
+    path: '**',
     redirectTo: 'portal/WP',
     data: { noReuse: true },
     pathMatch: 'full',
@@ -196,7 +194,7 @@ const Component: Type<any>[] = [
 ];
 
 @NgModule({
-   imports: [
+  imports: [
     CommonModule,
     FormsModule,
     OverlayModule,

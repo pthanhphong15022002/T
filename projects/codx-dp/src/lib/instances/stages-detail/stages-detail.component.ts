@@ -32,6 +32,7 @@ import {
 } from 'codx-core';
 import { PopupAddStaskComponent } from './popup-add-stask/popup-add-stask.component';
 import { CodxDpService } from '../../codx-dp.service';
+import { PopupCustomFieldComponent } from '../popup-custom-field/popup-custom-field.component';
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',
@@ -49,6 +50,7 @@ export class StagesDetailComponent implements OnInit {
   startDate: any;
   progress: string = '0';
   lstFields = [];
+  comment: string;
   //nvthuan
   taskGroupList: DP_Instances_Steps_TaskGroups[] = [];
   userTaskGroup: DP_Instances_Steps_TaskGroups_Roles;
@@ -123,7 +125,7 @@ export class StagesDetailComponent implements OnInit {
     private notiService: NotificationsService,
     private cache: CacheService,
     private authStore: AuthStore,
-    private dpService: CodxDpService,
+    private dpService: CodxDpService
   ) {
     this.user = this.authStore.get();
   }
@@ -145,13 +147,14 @@ export class StagesDetailComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    if(changes['listData']){
+    if (changes['listData']) {
       if (changes['listData'].currentValue != null) {
-        if(changes['listData'].currentValue?.actualStart != null){
-          this.dateActual = new Date(changes['listData'].currentValue?.actualStart);
-
+        if (changes['listData'].currentValue?.actualStart != null) {
+          this.dateActual = new Date(
+            changes['listData'].currentValue?.actualStart
+          );
         }
-        if(changes['listData'].currentValue?.startDate != null){
+        if (changes['listData'].currentValue?.startDate != null) {
           var date = new Date(changes['listData'].currentValue?.startDate);
           this.startDate =
             date.getHours() +
@@ -166,17 +169,15 @@ export class StagesDetailComponent implements OnInit {
         }
         var tasks = changes['listData'].currentValue?.tasks;
         var taskGroups = changes['listData'].currentValue?.taskGroups;
-        this.totalProgress(tasks,taskGroups)
+        this.totalProgress(tasks, taskGroups);
         this.lstFields = changes['listData'].currentValue?.fields;
         //nvthuan
         this.groupByTask(changes['listData'].currentValue);
         this.step = changes['listData'].currentValue;
-        //end--nvthuan
-      }else{
+      } else {
         this.listData = null;
       }
     }
-
   }
 
   totalProgress(tasks, taskGroups) {
@@ -206,6 +207,7 @@ export class StagesDetailComponent implements OnInit {
       case 'SYS02':
         break;
       case 'SYS03':
+        this.popupCustomField(data);
         break;
       case 'SYS04':
         break;
@@ -230,6 +232,36 @@ export class StagesDetailComponent implements OnInit {
         children.classList.add('icon-expand_more');
       }
     }
+  }
+
+  //huong dan buoc nhiem vu
+  openPopupSup(popup, data) {
+    this.callfc.openForm(popup, '', 800, 400, '', data);
+  }
+
+  valueChange(data) {}
+
+  onSave() {}
+
+  //Field
+  popupCustomField(data) {
+    var list = [];
+    if (data && data.length > 0) {
+      list = data;
+    } else {
+      list.push(data);
+    }
+    var obj = { data: list };
+    let formModel: FormModel = {
+      entityName: 'DP_Instances_Steps_Fields',
+      formName: 'DPInstancesStepsFields',
+      gridViewName: 'grvDPInstancesStepsFields',
+    };
+    let option = new SidebarModel();
+    option.FormModel = formModel;
+    option.Width = '550px';
+    option.zIndex = 1010;
+    let field = this.callfc.openSide(PopupCustomFieldComponent, obj, option);
   }
   //task -- nvthuan
   openTypeJob() {
@@ -276,39 +308,57 @@ export class StagesDetailComponent implements OnInit {
           let role = new DP_Instances_Steps_TaskGroups_Roles();
           role.objectName = this.user['userName'];
           role.objectID = this.user['userID'];
-          taskData['roles']=[role];
-          this.dpService.addTask(taskData).subscribe(res =>{
-            if(res){
+          taskData['roles'] = [role];
+          let progress = this.updateProgressTaskGroupByTaskGroupID(taskData);
+
+          this.dpService.addTask([taskData,progress?.average]).subscribe((res) => {
+            if (res) {
               this.notiService.notifyCode('SYS006');
               let index = this.taskGroupList.findIndex(
                 (task) => task.recID == taskData.taskGroupID
               );
               this.taskGroupList[index]['task'].push(taskData);
               this.taskList.push(taskData);
+              this.taskGroupList[progress?.indexGroup]['progress'] = progress?.average; // cập nhật tiến độ của cha
             }
-          })
+          });
         } else {
           taskData['modifiedOn'] = new Date();
-          this.dpService.updateTask(taskData).subscribe(res =>{
-            if(res){
+          this.dpService.updateTask(taskData).subscribe((res) => {
+            if (res) {
               if (taskData?.taskGroupID != taskGroupIdOld) {
                 this.changeGroupTask(taskData, taskGroupIdOld);
+                this.notiService.notifyCode('SYS007');
               }
-              this.notiService.notifyCode('SYS006');
-             
+              
             }
-          })   
-         
+          });
         }
       }
     });
   }
 
+
+  deleteTask(taskData){
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {}
+        let progress = this.updateProgressTaskGroupByTaskGroupID(taskData,false);
+        let value = [taskData?.recID,taskData?.taskGroupID, taskData?.stepID, progress?.average];
+        console.log(value);   
+        this.dpService.deleteTask(value).subscribe((res) => {  
+          if(res){
+            this.taskGroupList[progress.indexGroup]['progress'] = progress?.average;
+            this.taskGroupList[progress.indexGroup]['task'].splice(progress.indexTask,1);
+            this.notiService.notifyCode('SYS008');
+          }
+        })  
+    })
+  }
+
   clickMFTask(e: any, taskList?: any, task?: any) {
-    debugger;
     switch (e.functionID) {
       case 'SYS02':
-        // this.deleteTask(taskList, task);
+        this.deleteTask(task);
         break;
       case 'SYS03':
         if (task.taskType) {
@@ -371,13 +421,16 @@ export class StagesDetailComponent implements OnInit {
       });
       step['taskGroups'] = taskGroupConvert;
       this.taskGroupList = step['taskGroups'];
+      let taskGroup = new DP_Instances_Steps_TaskGroups();
+      taskGroup['task'] = [];
+      this.taskGroupList.push(taskGroup);
       console.log(this.taskGroupList);
     }
   }
   clickMFTaskGroup(e: any, data?: any) {
     switch (e.functionID) {
       case 'SYS02':
-        // this.deletepGroupJob(data);
+        this.deleteGroupTask(data);
         break;
       case 'SYS03':
         this.openPopupTaskGroup(data);
@@ -405,53 +458,71 @@ export class StagesDetailComponent implements OnInit {
       500
     );
   }
+
   saveGroupTask() {
     this.popupTaskGroup.close();
     if (!this.taskGroup['recID']) {
-      this.taskGroup['recID'] = Util.uid();
+      let index = this.taskGroupList.length;
       let role = new DP_Instances_Steps_TaskGroups_Roles();
+
       role.objectName = this.user['userName'];
       role.objectID = this.user['userID'];
+
+      this.taskGroup['roles'] = [role];
+      this.taskGroup['recID'] = Util.uid();
       this.taskGroup['createdOn'] = new Date();
-      this.taskGroup['roles'] = [role ];
+      this.taskGroup['indexNo'] = index;
 
       let taskGroupSave = JSON.parse(JSON.stringify(this.taskGroup));
       delete taskGroupSave['task'];
 
-      this.dpService.addTaskGroups(taskGroupSave).subscribe(res =>{
-        if(res){
+      this.dpService.addTaskGroups(taskGroupSave).subscribe((res) => {
+        if (res) {
           this.notiService.notifyCode('SYS006');
-          this.taskGroupList.push(this.taskGroup);
+          this.taskGroupList.splice(index - 1, 0, this.taskGroup);
           console.log(this.taskGroup);
         }
-      })
-    }
-    else{
+      });
+    } else {
       this.taskGroup['modifiedOn'] = new Date();
       let taskGroupSave = JSON.parse(JSON.stringify(this.taskGroup));
       delete taskGroupSave['task'];
-
-      this.dpService.updateTaskGroups(taskGroupSave).subscribe(res =>{
-        if(res){
-          this.notiService.notifyCode('SYS006');
+      this.dpService.updateTaskGroups(taskGroupSave).subscribe((res) => {
+        if (res) {
+          this.notiService.notifyCode('SYS007');
           console.log(this.taskGroup);
         }
-      })
+      });
     }
   }
+  deleteGroupTask(data){
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {}
+        let value = [data?.recID, data?.stepID];
+        console.log(value);   
+        this.dpService.deleteTaskGroups(value).subscribe((res) => {  
+          if(res){
+            let index = this.taskGroupList.findIndex(x => x.recID == data.recID);
+            this.taskGroupList.splice(index,1);
+            this.notiService.notifyCode('SYS008');
+          }
+        })  
+    })
+  }
   // Progress
-  styleProgress(progress){
-    if(progress >=0 && progress <50) return {'background':'#FE0000'}
-    else if(progress >=50 && progress <75) return {'background':'#E1BE27'}
-    else{
-      return progress > 90 ? {'background':'#34CDEF', 'border-radius': '10px'} : {'background':'#34CDEF'}
+  styleProgress(progress) {
+    if (progress >= 0 && progress < 50) return { background: '#FE0000' };
+    else if (progress >= 50 && progress < 75) return { background: '#E1BE27' };
+    else {
+      return progress > 90
+        ? { background: '#34CDEF', 'border-radius': '10px' }
+        : { background: '#34CDEF' };
     }
   }
   openUpdateProgress(data?: any) {
-    if(data){
+    if (data) {
       this.dataProgress = data;
       console.log(this.dataProgress);
-      
     }
     this.popupUpdateProgress = this.callfc.openForm(
       this.updateProgress,
@@ -460,31 +531,76 @@ export class StagesDetailComponent implements OnInit {
       370
     );
   }
-  checkEventProgress(data){
-    if(data?.task){
+  checkEventProgress(data) {
+    if (data?.task) {
       return data?.task.length == 0 ? true : false;
-    }else{
+    } else {
       return true;
     }
   }
-  savePopupProgress(){
-    let taskGroupSave = JSON.parse(JSON.stringify(this.dataProgress));
-      delete taskGroupSave['task'];
-      this.dpService.updateTaskGroups(taskGroupSave).subscribe(res =>{
-        if(res){
-          this.notiService.notifyCode('SYS006');
-        }
-      })
-    this.popupUpdateProgress.close();
+  handelProgress() {
+    if (this.dataProgress['taskGroupID']) {
+      this.updateProgressTask();
+    } else {
+      this.updateProgressGroupTask();
+    }
   }
 
-  checkProgress(event, data){
-    if(event?.data){
+  updateProgressGroupTask() {
+    let taskGroupSave = JSON.parse(JSON.stringify(this.dataProgress));
+    delete taskGroupSave['task'];
+    this.dpService.updateTaskGroups(taskGroupSave).subscribe((res) => {
+      if (res) {
+        this.notiService.notifyCode('SYS006');
+        this.popupUpdateProgress.close();
+      }
+    });
+  }
+
+  updateProgressTask() {
+    let value = this.updateProgressTaskGroupByTaskGroupID(this.dataProgress);
+    let dataSave = [this.dataProgress, value?.average];
+    this.dpService.updateTask(dataSave).subscribe((res) => {
+      if(res){
+        this.taskGroupList[value?.indexGroup]['progress'] = value?.average;
+        this.notiService.notifyCode('SYS006');
+        this.popupUpdateProgress.close();
+      }
+    })
+  }
+
+  checkProgress(event, data) {
+    if (event?.data) {
       data[event?.field] = 100;
     }
     this.disabledProgressInput = event?.data;
   }
   // Common
+  updateProgressTaskGroupByTaskGroupID(data, isAdd = true) {
+    let proggress = 0;
+    let average = 0;
+    let indexTask = -1;
+    let indexGroup = this.taskGroupList.findIndex(
+      (task) => task.recID == data?.taskGroupID
+    );
+
+    let taskGroupFind = JSON.parse(JSON.stringify(this.taskGroupList[indexGroup]['task']));
+
+    if(isAdd){
+      taskGroupFind.push(data);
+    }else{
+      indexTask = taskGroupFind.findIndex(task => task.recID == data.recID)
+      taskGroupFind.splice(indexTask,1);
+    }
+
+    taskGroupFind.forEach((item) => {
+      proggress += parseFloat(item?.progress) || 0;
+    });
+
+    average = parseFloat((proggress / (taskGroupFind.length)).toFixed(1)) || 0;
+    return {average:average, indexGroup: indexGroup, indexTask: indexTask};
+  }
+
   drop(event: CdkDragDrop<string[]>, data = null) {
     if (event.previousContainer === event.container) {
       if (data) {
@@ -517,13 +633,13 @@ export class StagesDetailComponent implements OnInit {
       });
     }
   }
-  
+
   changeValueInput(event, data) {
     data[event?.field] = event?.data;
   }
   changeValueDate(event, data) {
     data[event?.field] = event?.data?.fromDate;
   }
- 
+
   //End task -- nvthuan
 }

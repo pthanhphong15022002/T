@@ -80,6 +80,19 @@ export class AppComponent implements OnInit, OnDestroy {
     // sự kiện khi ấn nút back của trình duyệt
     this.closeDialog(event);
   }
+  // @HostListener('click', ['$event'])
+  // activeBoxChat(event) {
+  //   // sự kiện focus box chat trên màn hình
+  //   let _boxChats = document.getElementsByTagName("codx-chat-box");
+  //     if(_boxChats.length > 0){
+  //       Array.from(_boxChats).forEach(e => {
+  //         if(e.classList.contains("active")){
+  //           e.classList.remove("active");
+  //         }
+  //       });
+        
+  //     }
+  // }
 
   closeDialog(event) {
     // var over = document.querySelector('.e-sidebar-overlay');

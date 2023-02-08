@@ -19,7 +19,8 @@ export class CodxViewFilesComponent implements OnInit {
   @Input() objectType:string = "";
   @Input() formModel:FormModel = null;
   @Input() allowEdit: boolean = false;
-  @Input() images: number = 0;
+  @Input() attachment: number = 0;
+  @Input() medias: number = 0;
 
   @Output() fileClicked = new EventEmitter();
   
@@ -65,10 +66,10 @@ export class CodxViewFilesComponent implements OnInit {
       .subscribe((res:any[]) => {
         if(res?.length > 0)
         {
-          if(this.images == 0)
+          if(!this.medias || this.medias == 0)
           {
             let _fileImgVid = res.filter(f => f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO);
-            this.images = _fileImgVid.length;
+            this.medias = _fileImgVid.length;
           }
           let _files = res.filter(f => f.referType === this.FILE_REFERTYPE.IMAGE);
           switch(_files.length)
@@ -126,13 +127,13 @@ export class CodxViewFilesComponent implements OnInit {
       {
         f["source"] = f.avatar;
         f['referType'] = this.FILE_REFERTYPE.IMAGE;
-        this.images++;
+        this.medias++;
       }
       else if(f.mimeType.includes('video'))
       {
         f['source'] = f.data.changingThisBreaksApplicationSecurity;
         f['referType'] = this.FILE_REFERTYPE.VIDEO;
-        this.images++;
+        this.medias++;
       }
       else 
       {
@@ -161,7 +162,7 @@ export class CodxViewFilesComponent implements OnInit {
       {
         this.files.splice(_index,1);
         let _fileImages = this.files.filter(x => (x.referType == this.FILE_REFERTYPE.IMAGE || x.referType == this.FILE_REFERTYPE.VIDEO));
-        this.images = _fileImages.length;
+        this.medias = _fileImages.length;
       }
       
       this.dt.detectChanges();

@@ -9,14 +9,14 @@
         class="svg-icon"
         [ngClass]="codxService.toolbarButtonIconSizeClass">
     </span>
-    <span *ngIf="totalMessae > 0"
+    <span *ngIf="totalMessage > 0"
       class="position-absolute topbar-badge translate-middle badge badge-sm rounded-pill bg-danger px-2 top-0 start-100">
-      <span class="text-white fs-8">{{totalMessae < 9 ? totalMessae : '9+' }}</span>
+      <span class="text-white fs-8">{{totalMessage < 9 ? totalMessage : '9+' }}</span>
       </span>
   </div>
   </button>
   <div ngbDropdownMenu #popup aria-labelledby="chat-box" id="chatbox-dropdownPopup"
-    class="h-600px w-400px">
+    class="chat-popup h-600px w-400px">
     <div class="w-100" id="dropdown" style="height: 600px;">
       <ng-container *ngIf="loaded">
         <wp-chat-list [(isOpen)]="autoClose"></wp-chat-list>
@@ -24,3 +24,7 @@
     </div>
   </div>
 </div>
+
+<ng-template #chatBox let-group>
+  <codx-chat-box [groupID]="group.groupID"></codx-chat-box>
+</ng-template>

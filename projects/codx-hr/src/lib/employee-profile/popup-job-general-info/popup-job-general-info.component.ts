@@ -80,7 +80,7 @@ export class PopupJobGeneralInfoComponent extends UIComponent implements OnInit 
         this.notitfy.notifyCode('SYS007')
         this.dialog.close()
       }
-      else this.notitfy.notifyCode('DM034')
+      else this.notitfy.notifyCode('SYS021')
     })
   }
 

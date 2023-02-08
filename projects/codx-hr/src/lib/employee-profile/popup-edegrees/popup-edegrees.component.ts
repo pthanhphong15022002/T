@@ -137,7 +137,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
       this.hrService.AddEmployeeDegreeInfo(this.degreeObj).subscribe((p) => {
         if (p != null) {
           this.degreeObj = p;
-          this.notify.notifyCode('SYS007');
+          this.notify.notifyCode('SYS006');
           this.lstDegrees.push(JSON.parse(JSON.stringify(this.degreeObj)));
           if (this.listView) {
             (this.listView.dataService as CRUDService)
@@ -145,7 +145,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
               .subscribe();
           }
           // this.dialog.close(p)
-        } else this.notify.notifyCode('DM034');
+        } else this.notify.notifyCode('SYS023');
       });
     } else {
       this.hrService
@@ -160,7 +160,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
                 .subscribe();
             }
             // this.dialog.close(this.data)
-          } else this.notify.notifyCode('DM034');
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }

@@ -15,7 +15,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { CRUDService, ApiHttpService } from 'codx-core';
+import { CRUDService, ApiHttpService, CacheService } from 'codx-core';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -48,29 +48,29 @@ export class InstanceDetailComponent implements OnInit {
 
   currentStep = 0;
   //gantchat
-  ganttDs = [
-    {
-      recID: '123456',
-      stepName: 'Tên của công việc ',
-      startDate: new Date('02/07/2023'),
-      endDate: new Date(),
-    },
-  ];
+  ganttDs = [];
+  dataColors = [];
   taskFields: any;
 
   constructor(
     private dpSv: CodxDpService,
     private api: ApiHttpService,
+    private cache: CacheService,
     private changeDetec: ChangeDetectorRef
-  ) {}
+  ) {
+
+  }
 
   ngOnInit(): void {
     this.taskFields = {
       id: 'recID',
-      name: 'stepName',
+      name: 'name',
       startDate: 'startDate',
       endDate: 'endDate',
+      type: 'type',
+      color:'color'
     };
+    this.getDataGanttChart(this.recID);
   }
 
   ngAfterViewInit(): void {
@@ -205,19 +205,33 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   continues(data) {
-    if (this.currentStep + 1 > this.listSteps.length) return;
+    if (this.currentStep + 1 == this.listSteps.length) return;
+    this.dpSv.GetStepsByInstanceIDAsync(data.recID).subscribe(res =>{
+      res.forEach((element) => {
+        if (element != null && element.recID == this.dataSelect.stepID) {
+          this.tmpTeps = element;
+        }
+      })
+    })
     this.currentStep++;
+    this.currentNameStep = this.currentStep;
     this.changeDetec.detectChanges();
   }
 
   setHTMLCssStages(oldStage, newStage) {}
 
-  getDataGanttChart() {
+  getDataGanttChart(instanceID) {
     this.api
-      .exec<any>('DP', 'InstancesBusiness', 'GetDataGanntChartAsync', [this.recID])
+      .exec<any>(
+        'DP',
+        'InstanceStepsBusiness',
+        'GetDataGanntChartAsync',
+        instanceID
+      )
       .subscribe((res) => {
         if (res && res?.length > 0) {
           this.ganttDs = res;
+          this.changeDetec.detectChanges();
         }
       });
   }

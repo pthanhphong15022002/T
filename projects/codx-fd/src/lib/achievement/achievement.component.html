@@ -8,7 +8,9 @@
         <div class="container d-flex pb-0">
           <div class="w-100 pr-9">
             <div class="d-flex align-items-top">
-              <div class="me-3 w-150px mt-6">
+              <div class="me-3 w-150px">
+                <codx-label default="Ngày" class="fw-bold">
+                </codx-label>
                 <codx-dropdown-calendar [cssClass]="'w-100'" [cssPopup]="'h-400px w-500px border'"
                   (change)="dateChange($event)"></codx-dropdown-calendar>
               </div>
