@@ -237,15 +237,15 @@ export class CodxTasksComponent
       });
     });
 
-    this.showButtonAdd = 
+    this.showButtonAdd =
       this.funcID != 'TMT0206' &&
       this.funcID != 'TMT0202' &&
       this.funcID != 'MWP0063' &&
       this.funcID != 'MWP0064' &&
       this.funcID != 'TMT0402' &&
-      this.funcID != 'TMT0403' ;
+      this.funcID != 'TMT0403';
 
-    this.showMoreFunc = this.funcID != 'TMT0206' &&  this.funcID != 'MWP0063'
+    this.showMoreFunc = this.funcID != 'TMT0206' && this.funcID != 'MWP0063';
 
     this.modelResource = new ResourceModel();
     if (this.funcID != 'TMT03011' && this.funcID != 'TMT05011') {
@@ -394,12 +394,23 @@ export class CodxTasksComponent
         },
       },
     ];
+    if (this.funcID)
+      this.cache.viewSettings(this.funcID).subscribe((res) => {
+        if (res && res.length > 0) {
+          var viewFunc = [];
+          res.forEach((x) => {
+            var idx = this.views.findIndex((obj) => obj.type == x.view);
+            if (idx != -1) viewFunc.push(this.views[idx]);
+          });
+          this.views = viewFunc;
+        }
+      });
 
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
     this.view.dataService.methodDelete = 'DeleteTaskAsync';
     //this.getParam();
-    //this.detectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
   //#endregion
 
@@ -1599,7 +1610,8 @@ export class CodxTasksComponent
         if (
           this.funcID == 'TMT03011' &&
           data.category == '1' &&
-          data.createdBy != this.user?.userID && !this.user?.administrator && 
+          data.createdBy != this.user?.userID &&
+          !this.user?.administrator &&
           (x.functionID == 'SYS02' || x.functionID == 'SYS03')
         ) {
           x.disabled = true;
