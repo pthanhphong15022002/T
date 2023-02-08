@@ -915,7 +915,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.stepList.forEach((obj) => {
                 if (obj.recID == this.fieldCrr.stepID) {
                   let index = obj.fields.findIndex(
-                    (x) => x.recID ==  this.fieldCrr.recID
+                    (x) => x.recID == this.fieldCrr.recID
                   );
                   if (index != -1) {
                     obj.fields[index] = this.fieldCrr;
@@ -937,7 +937,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         //   if (x.sorting > field.sorting) x.sorting = x.sorting - 1;
         // });
         this.stepList.forEach((obj) => {
-          if (obj.recID == field.stepID) {
+          if (obj.recID == this.fieldCrr.stepID) {
             obj.fields.splice(field.sorting - 1, 1);
             obj.fields.forEach((x) => {
               if (x.sorting > field.sorting) x.sorting = x.sorting - 1;
