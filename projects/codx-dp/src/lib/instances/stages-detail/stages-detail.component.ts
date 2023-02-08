@@ -641,18 +641,18 @@ export class StagesDetailComponent implements OnInit {
     return { average: average, indexGroup: indexGroup, indexTask: indexTask };
   }
 
-  drop(event: CdkDragDrop<string[]>, data = null) {
+  async drop(event: CdkDragDrop<string[]>, data = null) {
     if (event.previousContainer === event.container) {
       if (data) {
         moveItemInArray(data, event.previousIndex, event.currentIndex);
-        this.setIndex(data, 'indexNo');
+        await this.setIndex(data, 'indexNo');
       } else {
         moveItemInArray(
           event.container.data,
           event.previousIndex,
           event.currentIndex
         );
-        this.setIndex(event.container.data, 'indexNo');
+        await this.setIndex(event.container.data, 'indexNo');
       }
     } else {
       let groupTaskIdOld = '';
@@ -666,12 +666,22 @@ export class StagesDetailComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-      this.setIndex(event.previousContainer.data, 'indexNo',groupTaskIdOld);
-      this.setIndex(event.container.data, 'indexNo',groupTaskIdOld);
+      await this.setIndex(event.previousContainer.data, 'indexNo',groupTaskIdOld);
+      await this.setIndex(event.container.data, 'indexNo',groupTaskIdOld);
+
+      let groupPrevious = this.taskGroupList.find((group) => group.recID == groupTaskIdOld);
+      let group = this.taskGroupList.find((group) => group.recID == event.container.data[0]['taskGroupID']);
+
+      let listGroupTaskSave = [groupPrevious,group];
+      
     }
   }
 
-  setIndex(data: any, value: string, recID = '') {
+  updateDropDrap(){
+
+  }
+
+  async setIndex(data: any, value: string, recID = '') {
     if (data.length > 0) {
       let index = this.taskGroupList.findIndex(
         (group) => group.recID == data[0]['taskGroupID']
@@ -684,7 +694,6 @@ export class StagesDetailComponent implements OnInit {
       });
       average = parseFloat((sum / data.length).toFixed(1)) || 0;
       this.taskGroupList[index]['progress'] = average;
-      console.log(this.taskGroupList);
     }else{
       let index = this.taskGroupList.findIndex((group) => group.recID == recID);
       this.taskGroupList[index]['progress'] = 0;
