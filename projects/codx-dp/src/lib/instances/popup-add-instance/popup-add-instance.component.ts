@@ -81,9 +81,9 @@ export class PopupAddInstanceComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    this.instance = dialog.dataService.dataSelected != null ? dialog.dataService.dataSelected : dialog.dataService.data[0];
     this.dialog = dialog;
-    
+
     this.listStep = dt?.data[2];
     this.isApplyFor = dt?.data[1];
     this.titleAction = dt?.data[3];

@@ -185,7 +185,7 @@ export class InstancesComponent
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
-      this.view.dataService.dataSelected.processID = this.process.recID;
+      // this.view.dataService.dataSelected.processID = this.process.recID;
       this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
         this.cache.gridView(fun.gridViewName).subscribe((grv) => {
           this.cache
