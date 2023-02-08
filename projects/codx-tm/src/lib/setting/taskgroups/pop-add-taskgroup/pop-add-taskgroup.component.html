@@ -25,7 +25,11 @@
       <codx-input
         field="taskGroupID"
         type="text"
-        [placeholder]="disabledShowInput?planceHolderAutoNumber:gridViewSetup['TaskGroupID']?.description"
+        [placeholder]="
+          disabledShowInput
+            ? planceHolderAutoNumber
+            : gridViewSetup['TaskGroupID']?.description
+        "
         [disabled]="disabledShowInput"
         [crrValue]="taskGroups.taskGroupID"
         (valueChange)="valueChange($event)"
@@ -791,7 +795,11 @@
       class="btn btn-primary cursor-pointer"
       (click)="onSave()"
     >
-      Lưu
+      <codx-label
+        name="lblSave"
+        default="Lưu"
+        [formModel]="dialog.formModel"
+      ></codx-label>
     </button>
   </div>
 </ng-template>
