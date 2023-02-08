@@ -417,9 +417,9 @@ export class InstancesComponent
     this.changeDetectorRef.detectChanges();
   }
   beforeDel(opt: RequestOption) {
+    debugger;
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedInstanceAsync';
-    itemSelected.recID = 'fa6fe84a-9585-11ed-83ef-d493900707c4';
     opt.data = [itemSelected.recID];
     return true;
   }

@@ -75,7 +75,7 @@ export class PopupAddInstanceComponent implements OnInit {
   // step = new DP_Instances_Steps() ;
   listStep = [];
   recID: any;
-  readonly fieldCbxStep = { text: 'stepName', value: 'recID' };
+  readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
   acction: string = 'add';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
