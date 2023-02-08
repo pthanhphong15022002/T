@@ -97,7 +97,35 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
       // this.changeDetectorRef.detectChanges();
     }
   }
-
+  ngOnInit(): void {
+    this.route.queryParams
+      .subscribe(params => {
+        if(params)
+        {
+          if(params.id)
+          {
+            this.api.execSv("DM","DM","FileBussiness","GetFilesByIDAsync",params.id).subscribe(item=>{
+              if(item) 
+              {
+                this.dataFile = item;
+                this.data = item;
+                this.getData();
+              }
+            })
+          }
+          else {
+            this.data = this.dataFile;
+            this.getData();
+          }
+        }
+        else
+        {
+          
+        }
+      }
+    );
+    //if(this.data)this.getData(); 
+  }
 
   setShare() {
     if (this.checkShareRight()) {
@@ -322,32 +350,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
   closeOpenForm(e: any) {
   }
 
-  ngOnInit(): void {
-    this.route.queryParams
-      .subscribe(params => {
-        if(params)
-        {
-          if(params.id)
-          {
-            this.api.execSv("DM","DM","FileBussiness","GetFilesByIDAsync",params.id).subscribe(item=>{
-              if(item) 
-              {
-                this.dataFile = item;
-                this.data = item;
-                this.getData();
-              }
-            })
-          }
-          else this.data = this.dataFile;
-        }
-        else
-        {
-          
-        }
-      }
-    );
-    //if(this.data)this.getData(); 
-  }
+
   getData()
   {
     

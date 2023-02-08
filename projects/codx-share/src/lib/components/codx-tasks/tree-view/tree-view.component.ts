@@ -29,6 +29,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() listRoles?: any;
   @Input() showMoreFunc?: any;
   @Input() dataObj: any
+  @Input() user: any;
   isShow = true ;
   isClose = false ;
 
@@ -128,6 +129,14 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
               x.functionID == 'SYS03' ||
               x.functionID == 'SYS04') &&
               this.formModel?.funcID == 'TMT0206'
+          ) {
+            x.disabled = true;
+          }
+          if (
+            (this.formModel?.funcID == 'TMT03011' || this.formModel?.funcID == 'TMT05011')  &&
+            data.category == '1' &&
+            data.createdBy != this.user.userID && !this.user?.administrator &&
+            (x.functionID == 'SYS02' || x.functionID == 'SYS03')
           ) {
             x.disabled = true;
           }

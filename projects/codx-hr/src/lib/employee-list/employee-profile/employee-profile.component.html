@@ -560,28 +560,28 @@
                 <div
                   class="tab-pane fade show"
                   id="pane_0"
-                  [class]="crrFuncTab == 'HRT030201' ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRTEM01' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="info"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
                   id="pane_1"
-                  [class]="crrFuncTab == 'HRT030202' ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRTEM03' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="jobInfo"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
                   id="pane_2"
-                  [class]="crrFuncTab == 'HRT030203' ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRTEM04' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="benefit"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
                   id="pane_3"
-                  [class]="crrFuncTab == 'HRT030204' ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRTEM05' ? 'active' : ''"
                 >
                   <ng-container
                     [ngTemplateOutlet]="processingInfo"
@@ -590,14 +590,14 @@
                 <div
                   class="tab-pane fade show"
                   id="pane_4"
-                  [class]="crrFuncTab == 'HRT030205' ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRTEM06' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="knowledge"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
                   id="pane_5"
-                  [class]="crrFuncTab == 'HRT030206' ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRTEM07' ? 'active' : ''"
                 >
                   <ng-container
                     [ngTemplateOutlet]="rewardDiscipline"
@@ -606,7 +606,7 @@
                 <div
                   class="tab-pane fade show"
                   id="pane_6"
-                  [class]="crrFuncTab == 'HRT030207' ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRTEM08' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="healthInfo"></ng-container>
                 </div>
@@ -3135,14 +3135,16 @@
                 <hr />
                 <div class="mb-1">
                   <div
-                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3 ms-5"
+                    class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5"
                   >
+                  <div class="text-uppercase">
                     <codx-label
-                      name="lblBenefit"
-                      [formModel]="view.formModel"
-                      default="Phụ cấp"
-                    >
-                    </codx-label>
+                    name="lblBenefit"
+                    [formModel]="view.formModel"
+                    default="Phụ cấp"
+                  >
+                  </codx-label>
+                  </div>
                     <div class="d-flex align-items-center ms-5">
                       <button
                         class="btn btn-icon btn-sm position-relative ms-2"
@@ -3152,16 +3154,20 @@
                           class="icon-add icon-20 text-gray-600 text-hover-primary"
                         ></span>
                       </button>
-                      <span class="text-gray-500 ms-2">|</span>
-                      <button
-                        class="btn btn-icon btn-sm position-relative ms-1"
+                      <span class="text-gray-500 ms-2"> | </span>
+                      <codx-label
+                        name="lblSeeAllEBenefit"
+                        default="Xem tất cả"
                       >
-                        <span
-                          class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
-                        ></span>
-                      </button>
+                      </codx-label>
+                      <codx-input
+                        type="switch"
+                        (valueChange)="valueChangeViewAllEBenefit($event)"
+                        [checked]="ViewAllEBenefitFlag"
+                      ></codx-input>
                     </div>
                   </div>
+
                   <div class="d-flex flex-wrap py-3 px-4">
                     <ng-container *ngFor="let benefit of listCrrBenefit">
                       <div
@@ -3204,10 +3210,65 @@
                       </div>
                     </ng-container>
                   </div>
-                  <div class="row form-group"></div>
+                  <div>
+
+                  </div>
+
+                  <div *ngIf="ViewAllEBenefitFlag == true" >
+                    <div class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5">
+                      <div class="d-flex me-3">
+                        <codx-label
+                          default="Chi tiết"
+                          class ="text-uppercase"
+                        >
+                        </codx-label>
+                        <span class="text-gray-500 ms-2"> | </span>
+                        <span>({{eBenefitRowCount}})</span>
+                    </div>
+                      <div class="d-flex me-3">
+                        <codx-dropdown-select
+                          [cssClass]="'rounded-pill border-1'"
+                          cssPopup="h-350px w-300px"
+                          [isMulti]="true"
+                          type="valuelist"
+                          field="BenefitID"
+                          [refValue]="'HR009'"
+                          (valueChange)="valueChangeFilterBenefit($event)"
+                        ></codx-dropdown-select>
+                        <codx-dropdown-calendar
+                        [cssPopup]="'w-600px h-400px'"
+                          emptyText="Chọn năm..."
+                          [firstChange]="false"
+                          [displayOption]="ops"
+                          [selectedType]="'y'"
+                          [cssClass]="'rounded-pill'"
+                          (change)="valueChangeYearFilterBenefit($event)"
+                        ></codx-dropdown-calendar>
+                      </div>
+                    </div>
+
+                    <div>
+                      <codx-gridview
+                        #gridView
+                        [columnsGrid]="benefitColumnGrid"
+                        [service]="'HR'"
+                        [assemblyName]="'Core'"
+                        [className]="'DataBusiness'"
+                        [method]="'LoadDataAsync'"
+                        [predicates]="'EmployeeID=@0'"
+                        [dataValues]="data.employeeID"
+                        [pageSize]="numPageSizeGridView"
+                        [entityName]="'HR_EBenefits'"
+                        [rowHeight]="50"
+                        height="240px"
+                      ></codx-gridview>
+                    </div>
+                  </div>
+                  
                 </div>
               </div>
             </div>
+
             <hr />
             <div class="rounded-2 p-4 bg-white">
               <div class="d-flex align-items-center justify-content-between">
@@ -5138,3 +5199,58 @@
   >
   </codx-mfunc>
 </ng-template>
+
+<ng-template #templateBenefitID let-data>
+  {{data?.benefitID}}
+</ng-template>
+
+<ng-template #templateBenefitAmt let-data>
+
+  <div #benefitNorm>
+    {{data?.benefitAmt }} / 
+    {{
+      data?.benefitNorm | formatvalue: benefitFormodel:"benefitNorm" | async
+    }}
+  </div>
+  
+</ng-template>
+
+<ng-template #templateBenefitEffected let-data>
+  <div>
+    {{data?.effectedDate | fmDT}} - {{ data?.expiredDate| fmDT }}
+  </div>
+</ng-template>
+
+<ng-template #templateBenefitIsCurrent let-data>
+  <div *ngIf="data?.isCurrent == 1">
+    Đang hiệu lực
+  </div>
+</ng-template>
+
+<ng-template #templateBenefitMoreFunc let-data>
+  <codx-mfunc
+    [formModel]="benefitFormodel"
+    (clickMF)="clickMF($event, data, 'eBenefit')"
+    [dataItem]="data"
+    type="hover"
+  >
+  </codx-mfunc>
+</ng-template>
+
+<!-- <ng-template #filterTemplateBenefit>
+  <div class="d-flex me-3">
+    <codx-dropdown-select
+      [cssClass]="'rounded-pill border-1'"
+      cssPopup="h-350px w-300px"
+      type="valuelist"
+      field="BenefitID"
+      [refValue]="'HR009'"
+      (valueChange)="valueChangeFilterBenefit($event)"
+    ></codx-dropdown-select>
+    <!-- <codx-dropdown-calendar
+      [value]="date"
+      [displayOption]="ops"
+      [selectedType]="'y'"
+    ></codx-dropdown-calendar> 
+  </div>
+</ng-template> -->

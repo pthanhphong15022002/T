@@ -1,10 +1,11 @@
 <codx-layout-add #form [title]="title" [subHeader]="subHeader" [tabInfo]="tabInfo" [tabContent]="tabContent"
-  [openMore]="true" (buttonClick)="buttonClick($event)" [dialog]="dialog" [formModel]="dialog.formModel"
-  [footer]="footer" (setTitle)="setTitle($event)"></codx-layout-add>
+  [openMore]="true" (buttonClick)="buttonClick($event)" [dialog]="dialog" [formModel]="formModelCrr"
+  [footer]="footer" [data]="instance" (setTitle)="setTitle($event)"></codx-layout-add>
 
 <ng-template #subHeader>
-  <codx-tag field="tags" [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false" [value]="instance.tag"
+  <codx-tag field="tags" [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false" [value]="instance?.tags"
     (valueChange)="valueChange($event)"></codx-tag>
+
 </ng-template>
 
 <ng-template #footer>
@@ -23,7 +24,7 @@
 <!-- No object general  -->
 <ng-template #tabGeneralInfo>
   <div class="form-group">
-    <codx-label fiedName="InstanceNo" [formModel]="form.formModel" default="Mã nhiệm vụ">
+    <codx-label fiedName="InstanceNo" [formModel]="form.formModel" [Group]="form.formGroup" default="Mã nhiệm vụ">
     </codx-label>
     <codx-input field="instanceNo" [formModel]="form.formModel" [Group]="form.formGroup"
       (valueChange)="valueChange($event)">
@@ -33,14 +34,14 @@
   <div class="form-group">
     <codx-label [formModel]="form.formModel" field="Title" default="Tên nhiệm vụ">
     </codx-label>
-    <codx-input field="title" [formModel]="form.formModel" [Group]="form.formGroup" (valueChange)="valueChange($event)">
+    <codx-input  field="title" [formModel]="form.formModel" [Group]="form.formGroup" (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 
   <div class="form-group">
     <codx-label fiedName="Owner" [formModel]="form.formModel" default="Người phụ trách">
     </codx-label>
-    <codx-input type="combobox" [crrValue]="instance.owner" [refValue]="'Users'" field="owner"
+    <codx-input type="combobox" [crrValue]="instance?.owner" [refValue]="'Users'" field="owner"
       (valueChange)="valueChangeUser($event)">
     </codx-input>
   </div>
@@ -49,8 +50,8 @@
     <codx-label fiedName="StepID" [formModel]="form.formModel"
       default="Giai đoạn quy trình">
     </codx-label>
-    <ejs-dropdownlist id="recID" [dataSource]="listStep" [fields]="fieldCbxStep" [value]="instance.stepID"
-      [placeholder]="'Không chuyển đến quy trình khác'" (valueChange)="cbxChange($event)"></ejs-dropdownlist>
+    <ejs-combobox id="recID" [dataSource]="listStepReasonCbx" [fields]="fieldCbxStep" [value]="instance?.stepID"
+     (valueChange)="cbxChange($event)"></ejs-combobox>
   </div>
 
   <div class="form-group">

@@ -127,12 +127,6 @@ export class InstancesComponent
       processID: this.process?.recID ? this.process?.recID : '',
     };
 
-    if (this.process) {
-      this.codxDpService.getStep(this.process?.recID).subscribe((dt) => {
-        if (dt && dt?.length > 0) this.listSteps = dt;
-      });
-    }
-
     this.codxDpService
       .createListInstancesStepsByProcess(this.process?.recID)
       .subscribe((dt) => {
@@ -185,25 +179,27 @@ export class InstancesComponent
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
-      this.view.dataService.dataSelected.processID = this.process.recID;
+      option.FormModel = this.view.formModel ;
       this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
         this.cache.gridView(fun.gridViewName).subscribe((grv) => {
           this.cache
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
+
               var formMD = new FormModel();
               formMD.funcID = funcIDApplyFor;
               formMD.entityName = fun.entityName;
               formMD.formName = fun.formName;
               formMD.gridViewName = fun.gridViewName;
-              option.FormModel = formMD;
+
               option.Width = '850px';
               option.zIndex = 1010;
+              this.view.dataService.dataSelected.processID = this.process.recID;
               // const titleForm = res.defaultName;
               // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
               var dialogCustomField = this.callfc.openSide(
                 PopupAddInstanceComponent,
-                ['add', applyFor, this.listSteps, this.titleAction],
+                ['add', applyFor, this.listSteps, this.titleAction,formMD],
                 option
               );
               dialogCustomField.closed.subscribe((e) => {
@@ -217,6 +213,46 @@ export class InstancesComponent
       });
     });
   }
+
+  edit(data,titleAction) {
+    this.view.dataService.addNew().subscribe((res) => {
+      const funcIDApplyFor =
+        this.process.applyFor === 'D' ? 'DPT0406' : 'DPT0405';
+      const applyFor = this.process.applyFor;
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel ;
+      this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+        this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+          this.cache
+            .gridViewSetup(fun.formName, fun.gridViewName)
+            .subscribe((grvSt) => {
+              var formMD = new FormModel();
+              formMD.funcID = funcIDApplyFor;
+              formMD.entityName = fun.entityName;
+              formMD.formName = fun.formName;
+              formMD.gridViewName = fun.gridViewName;
+           
+              option.Width = '850px';
+              option.zIndex = 1010;
+              this.view.dataService.dataSelected.processID = this.process.recID;
+              var dialogCustomField = this.callfc.openSide(
+                PopupAddInstanceComponent,
+                ['edit', applyFor, this.listSteps,titleAction,formMD,data],
+                option
+              );
+              dialogCustomField.closed.subscribe((e) => {
+                if (e && e.event != null) {
+                  //xu ly data đổ về
+                  this.detectorRef.detectChanges();
+                }
+              });
+            });
+        });
+      });
+    });
+  }
+
   async genAutoNumberNo() {
     this.codxDpService
       .GetAutoNumberNo('DPInstances', this.funcID, 'DP_Instances', 'InstanceNo')
@@ -234,14 +270,11 @@ export class InstancesComponent
     // this.titleAction = e.text;
     this.moreFunc = e.functionID;
     switch (e.functionID) {
-      case 'SYS01':
-        this.add();
-        break;
       case 'SYS03':
-        // this.edit(data);
+        this.edit(data,e.text);
         break;
       case 'SYS04':
-        //   this.copy(data);
+      //  this.copy(data);
         break;
       case 'SYS02':
         this.delete(data);
