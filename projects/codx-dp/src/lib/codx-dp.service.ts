@@ -243,4 +243,12 @@ export class CodxDpService {
       data
     );
   }
+  deleteTask(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'DeleteTaskAsync',
+      data
+    );
+  }
 }
