@@ -536,7 +536,6 @@ export class CalendarNotesComponent
             .endOf('date')
             .toISOString();
           const dataValueTM = fDayOfMonth + ';' + lDayTimeOfMonth;
-          debugger;
           this.getRequestTM(
             dt[0]?.TM_Tasks[0],
             dataValueTM,
