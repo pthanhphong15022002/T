@@ -95,6 +95,7 @@ export class DP_Steps {
   modifiedOn: Date = new Date();
   modifiedBy: string;
   showColumnControl: number = 1;
+  newProcessID: string;
 }
 export class DP_Steps_Roles {
   recID: string;
