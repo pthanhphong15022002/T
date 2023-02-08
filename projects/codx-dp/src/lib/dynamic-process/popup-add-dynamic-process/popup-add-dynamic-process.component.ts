@@ -414,7 +414,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.handleAddStep();
       this.notiService.notifyCode('SYS006');
     } else if (this.action == 'edit') {
-    //  this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
       this.onUpdate();
       this.handleUpdateStep();
       this.notiService.notifyCode('SYS006');
@@ -1723,7 +1722,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
              // 'Không chuyển đến quy trình khác'
           };
           this.listCbxProccess.unshift(obj);
-          console.table(this.listCbxProccess);
         }
       });
     });
@@ -1733,7 +1731,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   defaultCbxProccess() {}
 
   cbxChange($event,view) {
-    debugger;
     if(view === this.viewStepReasonSuccess){
       this.stepSuccess.newProcessID = $event;
     }
