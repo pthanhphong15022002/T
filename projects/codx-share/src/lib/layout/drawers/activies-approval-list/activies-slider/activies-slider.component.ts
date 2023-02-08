@@ -176,7 +176,7 @@ export class ActiviesSliderComponent implements OnInit {
 
   // filter selected change
   valueChange(event:any){
-    if(event.value == "0"){
+    if(event.value == ""){
       this.model.predicates = "";
       this.model.dataValues = "";
     }

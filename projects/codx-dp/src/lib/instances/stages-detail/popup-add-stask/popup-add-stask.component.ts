@@ -14,6 +14,7 @@ import {
   FormModel,
   Util,
 } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import {
   DP_Instances_Steps_Tasks,
@@ -28,6 +29,7 @@ import {
 })
 export class PopupAddStaskComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
+  @ViewChild('attachment') attachment: AttachmentComponent;
   title = '';
   dialog!: DialogRef;
   formModelMenu: FormModel;
@@ -52,6 +54,10 @@ export class PopupAddStaskComponent implements OnInit {
   dataCombobox = [];
   valueInput = '';
   litsParentID = [];
+  showLabelAttachment = false;
+  isHaveFile = false;
+  funcIDparent: any;
+  folderID = '';
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -70,6 +76,7 @@ export class PopupAddStaskComponent implements OnInit {
       this.stepsTasks['stepID'] = this.stepID;
       this.stepsTasks['progress'] = 0;
     } else {
+      this.showLabelAttachment = true;
       this.stepsTasks = dt?.data[4] || new DP_Instances_Steps_Tasks();
       this.stepType = this.stepsTasks.taskType;
     }
@@ -134,9 +141,6 @@ export class PopupAddStaskComponent implements OnInit {
   changeValueDate(event) {
     this.stepsTasks[event?.field] = event?.data?.fromDate;
   }
-  addFile(evt: any) {
-    // this.attachment.uploadFile();
-  }
   applyOwner(e, datas) {
     if (!e || e?.data.length == 0) return;
     let listUser = e?.data;
@@ -157,10 +161,19 @@ export class PopupAddStaskComponent implements OnInit {
     if (index != -1) data.splice(index, 1);
   }
 
-  saveData() {
+  async saveData() {
     this.stepsTasks['roles'] = this.listOwner;
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
-    this.dialog.close({ data: this.stepsTasks, status: this.status });
+    if (this.attachment && this.attachment.fileUploadList.length){
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          this.dialog.close({ data: this.stepsTasks, status: this.status });
+        }
+      });
+    } else {
+      this.dialog.close({ data: this.stepsTasks, status: this.status });
+    } 
+    
 
     // let headerText = await this.checkValidate();
     // if (headerText.length > 0) {
@@ -199,5 +212,17 @@ export class PopupAddStaskComponent implements OnInit {
         this.isNewEmails = this.recIdEmail ? true : false;
       }
     });
+  }
+  addFile(evt: any) {
+    this.attachment.uploadFile();
+  }
+  fileAdded(e) {}
+  getfileCount(e) {
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    this.showLabelAttachment = this.isHaveFile;
+  }
+  getfileDelete(event) {
+    event.data.length;
   }
 }

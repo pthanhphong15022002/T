@@ -1,9 +1,9 @@
 <codx-layout-add #form [title]="title" [subHeader]="subHeader" [tabInfo]="tabInfo" [tabContent]="tabContent"
-  [openMore]="true" (buttonClick)="buttonClick($event)" [dialog]="dialog" [formModel]="dialog.formModel"
+  [openMore]="true" (buttonClick)="buttonClick($event)" [dialog]="dialog" [formModel]="formModelCrr"
   [footer]="footer" (setTitle)="setTitle($event)"></codx-layout-add>
 
 <ng-template #subHeader>
-  <codx-tag field="tags" [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false" [value]="instance.tag"
+  <codx-tag field="tags" [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false" [value]="instance?.tag"
     (valueChange)="valueChange($event)"></codx-tag>
 </ng-template>
 
@@ -40,7 +40,7 @@
   <div class="form-group">
     <codx-label fiedName="Owner" [formModel]="form.formModel" default="Người phụ trách">
     </codx-label>
-    <codx-input type="combobox" [crrValue]="instance.owner" [refValue]="'Users'" field="owner"
+    <codx-input type="combobox" [crrValue]="instance?.owner" [refValue]="'Users'" field="owner"
       (valueChange)="valueChangeUser($event)">
     </codx-input>
   </div>
@@ -49,7 +49,7 @@
     <codx-label fiedName="StepID" [formModel]="form.formModel"
       default="Giai đoạn quy trình">
     </codx-label>
-    <ejs-dropdownlist id="recID" [dataSource]="listStep" [fields]="fieldCbxStep" [value]="instance.stepID"
+    <ejs-dropdownlist id="recID" [dataSource]="listStep" [fields]="fieldCbxStep" [value]="instance?.stepID"
       [placeholder]="'Không chuyển đến quy trình khác'" (valueChange)="cbxChange($event)"></ejs-dropdownlist>
   </div>
 

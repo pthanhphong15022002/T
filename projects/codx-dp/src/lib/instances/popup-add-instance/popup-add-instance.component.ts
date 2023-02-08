@@ -11,6 +11,7 @@ import {
   CacheService,
   DialogData,
   DialogRef,
+  FormModel,
   NotificationsService,
   RequestOption,
   SidebarModel,
@@ -35,7 +36,7 @@ export class PopupAddInstanceComponent implements OnInit {
   tabInfo: any[] = [];
   tabContent: any[] = [];
   listInstances: DP_Instances[] = [];
-
+  formModelCrr : FormModel;
   gridViewSetup: any;
   instanceNo: string;
 
@@ -70,7 +71,7 @@ export class PopupAddInstanceComponent implements OnInit {
   dialog: DialogRef;
   // step = new DP_Instances_Steps() ;
   listStep = [];
-
+  recID: any;
   readonly fieldCbxStep = { text: 'stepName', value: 'recID' };
   acction: string = 'add';
   constructor(
@@ -82,11 +83,13 @@ export class PopupAddInstanceComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+   // this.instance = dialog.dataService.dataSelected != null ? JSON.parse(JSON.stringify(dialog.dataService?.dataSelected))  : JSON.parse(JSON.stringify(dialog.dataService?.data[0]));
     this.dialog = dialog;
     
     this.listStep = dt?.data[2];
     this.isApplyFor = dt?.data[1];
     this.titleAction = dt?.data[3];
+    this.formModelCrr = dt?.data[4];
   }
 
   ngOnInit(): void {}

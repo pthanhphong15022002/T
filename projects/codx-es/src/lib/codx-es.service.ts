@@ -433,6 +433,16 @@ export class CodxEsService {
     );
   }
 
+  genAutoNumber(funcID: string, entityName: string, keyField: string, data: object = null){
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumbersBusiness',
+      'GenAutoNumberAsync',
+      [funcID, entityName, keyField, data]
+    )
+  }
+
   addEditAutoNumbers(data: any, isAdd: boolean): Observable<any> {
     return this.api.execSv(
       'SYS',
