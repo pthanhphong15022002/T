@@ -32,6 +32,7 @@ import { PopAddVendorsComponent } from './vendors/pop-add-vendors/pop-add-vendor
 import { CashPaymentsComponent } from './cash-payments/cash-payments.component';
 import { NoSubAsideComponent } from 'projects/codx-ad/src/lib/_noSubAside/_noSubAside.component';
 import { NosubAsideComponent } from './_noSubAside/nosub-aside.component';
+import { PopAddCashComponent } from './cash-payments/pop-add-cash/pop-add-cash.component';
 
 export const routes: Routes = [
   {
@@ -87,7 +88,8 @@ export const routes: Routes = [
     VendorsComponent,
     PopAddVendorsComponent,
     NosubAsideComponent,
-    CashPaymentsComponent
+    CashPaymentsComponent,
+    PopAddCashComponent
   ],
   imports: [
     RouterModule.forChild(routes),
