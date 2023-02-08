@@ -290,7 +290,7 @@ export class PopRolesComponent implements OnInit {
     this.adService
       .getListValidOrderForModules(this.lstChangeFunc)
       .subscribe((lstTNMDs: tmpTNMD[]) => {
-        if (lstTNMDs.length < this.lstChangeFunc.length) {
+        if (lstTNMDs == null || lstTNMDs?.length < this.lstChangeFunc.length) {
           this.notiService.alertCode('AD017').subscribe((e) => {
             if (e?.event?.status == 'Y') {
               this.onSave(lstTNMDs);
