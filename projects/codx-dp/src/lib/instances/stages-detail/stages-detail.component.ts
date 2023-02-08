@@ -319,7 +319,7 @@ export class StagesDetailComponent implements OnInit {
               );
               this.taskGroupList[index]['task'].push(taskData);
               this.taskList.push(taskData);
-              this.taskGroupList[progress?.index]['progress'] = progress?.average; // cập nhật tiến độ của cha
+              this.taskGroupList[progress?.indexGroup]['progress'] = progress?.average; // cập nhật tiến độ của cha
             }
           });
         } else {
@@ -328,8 +328,9 @@ export class StagesDetailComponent implements OnInit {
             if (res) {
               if (taskData?.taskGroupID != taskGroupIdOld) {
                 this.changeGroupTask(taskData, taskGroupIdOld);
+                this.notiService.notifyCode('SYS007');
               }
-              // this.notiService.notifyCode('SYS006');
+              
             }
           });
         }
@@ -337,11 +338,27 @@ export class StagesDetailComponent implements OnInit {
     });
   }
 
+
+  deleteTask(taskData){
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {}
+        let progress = this.updateProgressTaskGroupByTaskGroupID(taskData,false);
+        let value = [taskData?.recID,taskData?.taskGroupID, taskData?.stepID, progress?.average];
+        console.log(value);   
+        this.dpService.deleteTask(value).subscribe((res) => {  
+          if(res){
+            this.taskGroupList[progress.indexGroup]['progress'] = progress?.average;
+            this.taskGroupList[progress.indexGroup]['task'].splice(progress.indexTask,1);
+            this.notiService.notifyCode('SYS008');
+          }
+        })  
+    })
+  }
+
   clickMFTask(e: any, taskList?: any, task?: any) {
-    debugger;
     switch (e.functionID) {
       case 'SYS02':
-        // this.deleteTask(taskList, task);
+        this.deleteTask(task);
         break;
       case 'SYS03':
         if (task.taskType) {
@@ -472,7 +489,7 @@ export class StagesDetailComponent implements OnInit {
       delete taskGroupSave['task'];
       this.dpService.updateTaskGroups(taskGroupSave).subscribe((res) => {
         if (res) {
-          this.notiService.notifyCode('SYS006');
+          this.notiService.notifyCode('SYS007');
           console.log(this.taskGroup);
         }
       });
@@ -487,6 +504,7 @@ export class StagesDetailComponent implements OnInit {
           if(res){
             let index = this.taskGroupList.findIndex(x => x.recID == data.recID);
             this.taskGroupList.splice(index,1);
+            this.notiService.notifyCode('SYS008');
           }
         })  
     })
@@ -544,7 +562,7 @@ export class StagesDetailComponent implements OnInit {
     let dataSave = [this.dataProgress, value?.average];
     this.dpService.updateTask(dataSave).subscribe((res) => {
       if(res){
-        this.taskGroupList[value?.index]['progress'] = value?.average;
+        this.taskGroupList[value?.indexGroup]['progress'] = value?.average;
         this.notiService.notifyCode('SYS006');
         this.popupUpdateProgress.close();
       }
@@ -558,17 +576,29 @@ export class StagesDetailComponent implements OnInit {
     this.disabledProgressInput = event?.data;
   }
   // Common
-  updateProgressTaskGroupByTaskGroupID(data) {
+  updateProgressTaskGroupByTaskGroupID(data, isAdd = true) {
     let proggress = 0;
     let average = 0;
-    let index = this.taskGroupList.findIndex(
+    let indexTask = -1;
+    let indexGroup = this.taskGroupList.findIndex(
       (task) => task.recID == data?.taskGroupID
     );
-    this.taskGroupList[index]['task'].forEach((item) => {
+
+    let taskGroupFind = JSON.parse(JSON.stringify(this.taskGroupList[indexGroup]['task']));
+
+    if(isAdd){
+      taskGroupFind.push(data);
+    }else{
+      indexTask = taskGroupFind.findIndex(task => task.recID == data.recID)
+      taskGroupFind.splice(indexTask,1);
+    }
+
+    taskGroupFind.forEach((item) => {
       proggress += parseFloat(item?.progress) || 0;
     });
-    average = parseFloat((proggress / (this.taskGroupList[index]['task'].length)).toFixed(1));
-    return {average:average, index: index};
+
+    average = parseFloat((proggress / (taskGroupFind.length)).toFixed(1)) || 0;
+    return {average:average, indexGroup: indexGroup, indexTask: indexTask};
   }
 
   drop(event: CdkDragDrop<string[]>, data = null) {

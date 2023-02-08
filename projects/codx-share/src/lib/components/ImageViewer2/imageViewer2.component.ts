@@ -102,6 +102,7 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     }
 
     zoomIn() {
+        debugger
         this.zoomPercent += 10;
         this.viewer.zoom(this.zoomPercent);
     }
