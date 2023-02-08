@@ -536,6 +536,7 @@ export class CalendarNotesComponent
             .endOf('date')
             .toISOString();
           const dataValueTM = fDayOfMonth + ';' + lDayTimeOfMonth;
+          debugger;
           this.getRequestTM(
             dt[0]?.TM_Tasks[0],
             dataValueTM,
@@ -1101,6 +1102,16 @@ export class CalendarNotesComponent
     }
   }
 
+  convertDMY_MDY(dmyString: string) {
+    let arr = dmyString.split('/');
+    let tmp = arr[1];
+    arr[1] = arr[0];
+    arr[0] = tmp;
+    let mdy = arr.join('/');
+    let dateReturn = new Date(mdy).toDateString();
+    return dateReturn;
+  }
+
   updateSettingValue(transType, value) {
     if (value == false) value = '0';
     else value = '1';
@@ -1176,9 +1187,11 @@ export class CalendarNotesComponent
                     '.week-item[data-date]'
                   );
                   let htmlEleFD = eleWeek[0] as HTMLElement;
-                  var fromDate = moment(htmlEleFD?.dataset?.date).toISOString();
+                  // var fromDate = moment(htmlEleFD?.dataset?.date).toISOString();
+                  let fromDate = this.convertDMY_MDY(htmlEleFD?.dataset?.date);
                   let htmlEleTD = eleWeek[eleWeek.length - 1] as HTMLElement;
-                  var toDate = moment(htmlEleTD?.dataset?.date).toISOString();
+                  // var toDate = moment(htmlEleTD?.dataset?.date).toJSON();
+                  let toDate = this.convertDMY_MDY(htmlEleTD?.dataset?.date);
                   this.getParamCalendar(fromDate, toDate, false);
                   this.setDate(this.FDdate, this.lstView);
                   this.change.detectChanges();
