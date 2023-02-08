@@ -185,13 +185,13 @@ export class InstancesComponent
           this.cache
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
-     
+
               var formMD = new FormModel();
               formMD.funcID = funcIDApplyFor;
               formMD.entityName = fun.entityName;
               formMD.formName = fun.formName;
               formMD.gridViewName = fun.gridViewName;
-           
+
               option.Width = '850px';
               option.zIndex = 1010;
               this.view.dataService.dataSelected.processID = this.process.recID;
