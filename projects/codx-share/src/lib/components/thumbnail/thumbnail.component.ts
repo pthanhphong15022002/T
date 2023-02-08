@@ -107,6 +107,14 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   hideMore() {
     document.getElementById('drop').setAttribute("style", "display: none;");
   }
+  checkOpen(file:any) {
+    if(file)
+    {
+      var per = file.permissions.filter(x=>x.userID == this.userID || x.objectID == this.userID);
+      if(per && per[0]) return per[0].read
+    }
+    return false;
+  }
   checkDelete(file:any) {
     if(file)
     {
@@ -202,7 +210,6 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   async download(id:any): Promise<void> {
-    
     this.fileService.getFile(id).subscribe(file => {
       if (this.checkDownloadRight(file)) {
         this.fileService.downloadFile(id).subscribe(async res => {
@@ -226,15 +233,21 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   openFile(id) {
-    //var data = JSON.parse(file);
-    this.fileService.getFile(id).subscribe(data => {
-      var option = new DialogModel();
-      option.IsFull = true;
-      this.fileName = data.fileName;
-      this.dataFile = data;
-      this.visible = true;
-      this.viewFile.emit(true);
-    });
+    this.fileService.getFile(id).subscribe(file => {
+      if(file)
+      {
+        if(this.checkOpen(file))
+        {
+          var option = new DialogModel();
+          option.IsFull = true;
+          this.fileName = file.fileName;
+          this.dataFile = file;
+          this.visible = true;
+          this.viewFile.emit(true);
+        }
+        else this.notificationsService.notifyCode("SYS032")
+      }
+    })
   }
 
  

@@ -1,6 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { rejects } from 'assert';
 import {
@@ -212,9 +217,7 @@ export class CodxEsService {
 
   getFormGroup(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
-      this.cache
-      .gridViewSetup(formName, gridView)
-      .subscribe((gv: any) => {
+      this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
         if (gv) {
           var arrgv = Object.values(gv) as any[];
           const group: any = {};
@@ -230,10 +233,9 @@ export class CodxEsService {
               : new FormControl(value);
           });
           group['updateColumn'] = new FormControl('');
-         var formGroup = new FormGroup(group);
-         resolve(formGroup);
+          var formGroup = new FormGroup(group);
+          resolve(formGroup);
         }
-       
       });
       // this.cache
       //   .gridViewSetup(formName, gridView)
@@ -266,9 +268,7 @@ export class CodxEsService {
       //       model['assign'].push(false);
       //       model['share'].push(false);
       //     }
-       
-      
-         
+
       //   });
     });
   }
@@ -433,14 +433,19 @@ export class CodxEsService {
     );
   }
 
-  genAutoNumber(funcID: string, entityName: string, keyField: string, data: object = null){
+  genAutoNumber(
+    funcID: string,
+    entityName: string,
+    keyField: string,
+    data: object = null
+  ) {
     return this.api.execSv<any>(
       'SYS',
       'AD',
       'AutoNumbersBusiness',
       'GenAutoNumberAsync',
       [funcID, entityName, keyField, data]
-    )
+    );
   }
 
   addEditAutoNumbers(data: any, isAdd: boolean): Observable<any> {
@@ -535,6 +540,29 @@ export class CodxEsService {
         return stringFormat;
       });
     });
+  }
+
+  //#endregion
+
+  //#region AD_AutoNumberDefaults
+  getAutoNumberDefaults(functionID: string){
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumberDefaultsBusiness',
+      'GetByFuncNEntityAsync',
+      [functionID]
+    );
+  }
+
+  updateAutoNumberDefaults(data: any){
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumberDefaultsBusiness',
+      'UpdateAutoDefaultAsync',
+      [data]
+    );
   }
 
   //#endregion
@@ -1329,13 +1357,31 @@ export class CodxEsService {
       [fileUrl]
     );
   }
-  highlightText(sfID, edited, fileUrl, fileID, fileName, isClear, lstHLArea, rerenderPages) {
+  highlightText(
+    sfID,
+    edited,
+    fileUrl,
+    fileID,
+    fileName,
+    isClear,
+    lstHLArea,
+    rerenderPages
+  ) {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'HighlightTextAsync',
-      [sfID, edited, fileUrl, fileID, fileName, isClear, lstHLArea, rerenderPages]
+      [
+        sfID,
+        edited,
+        fileUrl,
+        fileID,
+        fileName,
+        isClear,
+        lstHLArea,
+        rerenderPages,
+      ]
     );
   }
 
