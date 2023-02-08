@@ -394,17 +394,17 @@ export class CodxTasksComponent
         },
       },
     ];
-    if (this.funcID)
-      this.cache.viewSettings(this.funcID).subscribe((res) => {
-        if (res && res.length > 0) {
-          var viewFunc = [];
-          res.forEach((x) => {
-            var idx = this.views.findIndex((obj) => obj.type == x.view);
-            if (idx != -1) viewFunc.push(this.views[idx]);
-          });
-          this.views = viewFunc;
-        }
-      });
+    // if (this.funcID)
+    //   this.cache.viewSettings(this.funcID).subscribe((res) => {
+    //     if (res && res.length > 0) {
+    //       var viewFunc = [];
+    //       res.forEach((x) => {
+    //         var idx = this.views.findIndex((obj) => obj.type == x.view);
+    //         if (idx != -1) viewFunc.push(this.views[idx]);
+    //       });
+    //       this.views = viewFunc;
+    //     }
+    //   });
 
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
