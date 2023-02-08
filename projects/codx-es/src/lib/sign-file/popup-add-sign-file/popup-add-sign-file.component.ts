@@ -358,7 +358,28 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.approveControl = '3';
               this.data.refDate = new Date();
 
-              this.autoNo = JSON.parse(JSON.stringify(this.data?.refNo));
+              if (!this.data?.refNo) {
+                this.esService
+                  .genAutoNumber(
+                    this.formModelCustom.funcID,
+                    this.formModelCustom.entityName,
+                    'RefNo'
+                  )
+                  .subscribe((res) => {
+                    console.log('autoNumber', res);
+                    if (res) {
+                      this.data.refNo = res;
+                      this.dialogSignFile.patchValue({
+                        refNo: this.data.refNo,
+                      });
+                      this.autoNo = JSON.parse(
+                        JSON.stringify(this.data?.refNo)
+                      );
+                    }
+                  });
+              } else {
+                this.autoNo = JSON.parse(JSON.stringify(this.data?.refNo));
+              }
 
               this.formModelCustom.currentData = this.data;
               this.dialogSignFile.patchValue(this.data);
@@ -1155,13 +1176,13 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   fileDelete(event) {
-    if(event && event?.length> 0){
+    if (event && event?.length > 0) {
       let file = event[0].data;
-      if(file){
-        let i = this.data?.files?.findIndex(p => p.fileID == file.recID);
-        if(i > -1){
+      if (file) {
+        let i = this.data?.files?.findIndex((p) => p.fileID == file.recID);
+        if (i > -1) {
           this.data.files.splice(i, 1);
-          this.dialogSignFile.patchValue({files: this.data.files})
+          this.dialogSignFile.patchValue({ files: this.data.files });
           this.cr.detectChanges();
         }
       }

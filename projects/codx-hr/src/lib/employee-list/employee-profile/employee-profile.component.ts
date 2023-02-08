@@ -63,6 +63,7 @@ import { PopupEVaccineComponent } from '../../employee-profile/popup-evaccine/po
 import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/popup-ediseases.component';
 import { PopupEContractComponent } from '../../employee-profile/popup-econtract/popup-econtract.component';
 import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
+import { log } from 'console';
 
 @Component({
   selector: 'lib-employee-profile',
@@ -1586,7 +1587,9 @@ export class EmployeeProfileComponent extends UIComponent {
   crrFuncTab: string;
   clickTab(funcList: any) {
     // this.crrTab = tabNumber;
-    this.crrFuncTab = funcList.functionID
+    this.crrFuncTab = funcList.functionID;
+    console.log(this.crrFuncTab);
+  
   }
 
   editEmployeePartyInfo() {

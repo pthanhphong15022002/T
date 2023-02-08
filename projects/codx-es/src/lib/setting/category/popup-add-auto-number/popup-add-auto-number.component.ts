@@ -27,7 +27,10 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   dialog: DialogRef;
   isAfterRender = false;
   formModel: FormModel;
-  formModelData: FormModel;
+  fmANumberDefault: FormModel;
+  fgANumberDefault: FormGroup;
+  functionID: string = '';
+  // formModelData: FormModel;
   autoNoCode;
   newAutoNoCode;
   isSaveNew: string = '0';
@@ -42,6 +45,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   invalidValue = false;
 
   data: any = {};
+  autoDefaultData: any;
 
   isAdd: boolean = true;
 
@@ -57,14 +61,19 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    this.formModelData = data?.data?.formModel;
+    // this.formModelData = data?.data?.formModel;
     this.autoNoCode = data?.data?.autoNoCode;
 
     this.description = data?.data?.description;
 
+    // Thiết lập số tự động mặc định của function
+    this.functionID == data?.data?.functionID;
+
     //tao moi autoNumber theo autoNumber mẫu
     this.newAutoNoCode = data?.data?.newAutoNoCode;
     this.isSaveNew = data?.data?.isSaveNew ?? '0';
+
+    // delete this.cbxName.
   }
 
   ngAfterViewInit(): void {}
@@ -84,6 +93,33 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.formModel.formName = 'AutoNumbers';
     this.formModel.gridViewName = 'grvAutoNumbers';
     this.dialog.formModel = this.formModel;
+
+    if (this.functionID) {
+      this.fmANumberDefault = new FormModel();
+      this.fmANumberDefault.entityName = 'AD_AutoNumberDefaults';
+      this.fmANumberDefault.formName = 'AutoNumberDefaults';
+      this.fmANumberDefault.gridViewName = 'grvAutoNumberDefaults';
+
+      this.esService
+        .getFormGroup(
+          this.fmANumberDefault.formName,
+          this.fmANumberDefault.gridViewName
+        )
+        .then((res) => {
+          if(res){
+            this.fgANumberDefault = res;
+            this.esService.getAutoNumberDefaults(this.functionID).subscribe(model => {
+              if(model){
+                this.autoDefaultData = model;
+                this.fgANumberDefault.patchValue(this.autoDefaultData);
+                this.cr.detectChanges();
+              }
+            })
+          }
+        });
+
+      this.esService.getAutoNumber;
+    }
 
     this.esService.setCacheFormModel(this.formModel);
     this.esService
