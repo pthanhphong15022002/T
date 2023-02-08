@@ -35,7 +35,9 @@ export class AddEditComponent implements OnInit {
     gridViewName: 'grvRangeLines',
   };
   titleAction = ''
-
+  disabledShowInput = false ;
+  planceHolderAutoNumber = '' ;
+  gridViewSetup: any;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -51,9 +53,33 @@ export class AddEditComponent implements OnInit {
     this.action = dialogData.data[0];
     this.titleAction = dialogData.data[1];
     this.formModelRangeLine.userPermission = dialog.formModel.userPermission;
+
+    this.api
+    .execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumberDefaultsBusiness',
+      'GetFieldAutoNoAsync',
+      [this.dialog.formModel.funcID, this.dialog.formModel.entityName]
+    )
+    .subscribe((res) => {
+      if (res && !res.stop) {
+        this.disabledShowInput = true;
+        this.cache.message('AD019').subscribe((mes) => {
+          if (mes)
+            this.planceHolderAutoNumber = mes?.customName || mes?.description;
+        });
+      } else {       
+        this.disabledShowInput = false;
+      }
+    });
   }
   //#region Init
   ngOnInit(): void {
+    this.cache.gridViewSetup(this.dialog.formModel.formName, this.dialog.formModel.gridViewName).subscribe((res) => {
+      if (res) this.gridViewSetup = res;
+    });
+
     this.dialog.beforeClose.subscribe(res => {
       if (res.event == null && this.action == 'edit') {
         this.master.rangeName = this.orgData.rangeName;

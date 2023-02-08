@@ -127,12 +127,6 @@ export class InstancesComponent
       processID: this.process?.recID ? this.process?.recID : '',
     };
 
-    if (this.process) {
-      this.codxDpService.getStep(this.process?.recID).subscribe((dt) => {
-        if (dt && dt?.length > 0) this.listSteps = dt;
-      });
-    }
-
     this.codxDpService
       .createListInstancesStepsByProcess(this.process?.recID)
       .subscribe((dt) => {
@@ -185,25 +179,27 @@ export class InstancesComponent
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
-      this.view.dataService.dataSelected.processID = this.process.recID;
+      option.FormModel = this.view.formModel ;
       this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
         this.cache.gridView(fun.gridViewName).subscribe((grv) => {
           this.cache
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
+
               var formMD = new FormModel();
               formMD.funcID = funcIDApplyFor;
               formMD.entityName = fun.entityName;
               formMD.formName = fun.formName;
               formMD.gridViewName = fun.gridViewName;
-              option.FormModel = formMD;
+
               option.Width = '850px';
               option.zIndex = 1010;
+              this.view.dataService.dataSelected.processID = this.process.recID;
               // const titleForm = res.defaultName;
               // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
               var dialogCustomField = this.callfc.openSide(
                 PopupAddInstanceComponent,
-                ['add', applyFor, this.listSteps, this.titleAction],
+                ['add', applyFor, this.listSteps, this.titleAction,formMD],
                 option
               );
               dialogCustomField.closed.subscribe((e) => {

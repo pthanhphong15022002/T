@@ -822,6 +822,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
+          this.taskGroup = res
           this.convertParameterByTaskGroup(res);
         }
       });
