@@ -4,9 +4,11 @@ import {
   Input,
   OnInit,
   Optional,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { ApiHttpService, CacheService, DialogData, DialogRef } from 'codx-core';
+import { ImageViewerComponent2 } from 'projects/codx-share/src/lib/components/ImageViewer2/imageViewer2.component';
 import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 import { environment } from 'src/environments/environment';
 
@@ -37,6 +39,7 @@ export class PopupDetailComponent implements OnInit {
     VIDEO: 'video',
     APPLICATION: 'application',
   };
+  @ViewChild("codxImageViewer") codxImageViewer:ImageViewerComponent2;
   constructor(
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
@@ -117,37 +120,55 @@ export class PopupDetailComponent implements OnInit {
 
   // nextFile
   nextFile(){
-    if(this.index >= 0)
-    {
-      let _index = ++this.index;
-      if(_index >= this.files.length){
-        _index = 0;
-      }
-      this.fileSelected = this.files[_index];
-      if(this.fileSelected)
-      {
-        this.getPostByID(this.postID,this.fileSelected.recID,this.fileSelected.referType);
-      }
-      this.index = _index;
-      this.dt.detectChanges();
-    }
+    // if(this.index >= 0)
+    // {
+    //   let _index = ++this.index;
+    //   if(_index >= this.files.length){
+    //     _index = 0;
+    //   }
+    //   this.fileSelected = this.files[_index];
+    //   if(this.fileSelected)
+    //   {
+    //     this.getPostByID(this.postID,this.fileSelected.recID,this.fileSelected.referType);
+    //   }
+    //   this.index = _index;
+    //   this.dt.detectChanges();
+    // }
+    this.codxImageViewer.proximaImagem();
+
   }
 
   // previriousFile
   previousFile(){
-    if(this.index >= 0)
-    {
-      let _index = --this.index;
-      if(_index <= -1 ){
-        _index = this.files.length - 1;
-      }
-      this.fileSelected = this.files[_index];
-      if(this.fileSelected)
-      {
-        this.getPostByID(this.postID,this.fileSelected.recID,this.fileSelected.referType);
-      }
-      this.index = _index;
-      this.dt.detectChanges();
-    }
+    // if(this.index >= 0)
+    // {
+    //   let _index = --this.index;
+    //   if(_index <= -1 ){
+    //     _index = this.files.length - 1;
+    //   }
+    //   this.fileSelected = this.files[_index];
+    //   if(this.fileSelected)
+    //   {
+    //     this.getPostByID(this.postID,this.fileSelected.recID,this.fileSelected.referType);
+    //   }
+    //   this.index = _index;
+    //   this.dt.detectChanges();
+    // }
+    this.codxImageViewer.imagemAnterior();
+
+  }
+
+  // zoom in
+  zoomIn(){
+    this.codxImageViewer.zoomIn();
+  } 
+  // zoom out
+  zoomOut(){
+    this.codxImageViewer.zoomOut();
+  } 
+  // full screem
+  fullscreen(){
+    this.codxImageViewer.mostrarFullscreen();
+    
   }
 }
