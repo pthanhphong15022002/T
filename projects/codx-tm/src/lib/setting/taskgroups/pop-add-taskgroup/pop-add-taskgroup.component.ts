@@ -65,11 +65,12 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
   listName = '';
   fieldValue = '';
   listCombobox = {};
-  showInput = false;
+  disabledShowInput = false;
   titleAction = '';
   verifyName = '';
   approveName = '';
   mess = '';
+  planceHolderAutoNumber = '';
   constructor(
     private authStore: AuthStore,
     private cache: CacheService,
@@ -103,20 +104,25 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     }
 
     this.api
-      .execSv<any>(
-        'SYS',
-        'AD',
-        'AutoNumberDefaultsBusiness',
-        'GetFieldAutoNoAsync',
-        [this.functionID, this.dialog.formModel.entityName]
-      )
-      .subscribe((res) => {
-        if (res && !res.stop && res.autoAssignRule == '1') {
-          this.showInput = true;
-        } else {
-          this.showInput = false;
-        }
-      });
+    .execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumberDefaultsBusiness',
+      'GetFieldAutoNoAsync',
+      [this.functionID, this.dialog.formModel.entityName]
+    )
+    .subscribe((res) => {
+      if (res && !res.stop) {
+        this.disabledShowInput = true;
+        this.cache.message('AD019').subscribe((mes) => {
+          if (mes)
+            this.planceHolderAutoNumber = mes?.customName || mes?.description;
+        });
+      } else {       
+        this.disabledShowInput = false;
+      }
+    });
+   
   }
   ngAfterViewInit(): void {}
 

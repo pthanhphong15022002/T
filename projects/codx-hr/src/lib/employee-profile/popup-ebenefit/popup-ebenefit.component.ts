@@ -21,8 +21,8 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
   dialog: DialogRef;
   benefitObj;
-  listBenefits;
-  indexSelected;
+  //listBenefits;
+  //indexSelected;
   employId: string;
   isAfterRender = false;
   actionType: string;
@@ -46,16 +46,19 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
     this.formModel = dialog?.formModel;
-    this.indexSelected =
-      data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
+    // this.benefitObj = JSON.parse(JSON.stringify(this.benefitObj));
+    this.benefitObj = data?.data?.benefitObj;
+    // this.indexSelected =
+    //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
     this.actionType = data?.data?.actionType;
-    this.listBenefits = data?.data?.listBenefits;
+    //this.listBenefits = data?.data?.listBenefits;
     this.headerText = data?.data?.headerText;
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.benefitObj = JSON.parse(
-        JSON.stringify(this.listBenefits[this.indexSelected])
-      );
-    }
+    // if (this.actionType === 'edit' || this.actionType === 'copy') {
+    //   this.benefitObj = JSON.parse(
+    //     JSON.stringify(this.listBenefits[this.indexSelected])
+    //   );
+    //   this.benefitObj = JSON.parse(JSON.stringify(this.benefitObj));
+    // }
   }
 
   onInit(): void {
@@ -119,12 +122,9 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
       return;
     }
 
-    // Gọi hàm copy
-    // if (this.actionType === 'copy') {
-    //   delete this.benefitObj.recID;
-    // }
-
     if (this.actionType === 'add' || this.actionType === 'copy') {
+      console.log('benefit obj them moi', this.benefitObj);
+      
       this.hrService.AddEBenefit(this.benefitObj).subscribe((p) => {
         if (p != null) {
           this.benefitObj.recID = p.recID;
@@ -136,21 +136,21 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
           this.hrService
             .GetCurrentBenefit(this.benefitObj.employeeID)
             .subscribe((res) => {
-              this.listBenefits = res;
+              //this.listBenefits = res;
               this.dialog && this.dialog.close(p);
             });
-        } else this.notify.notifyCode('SYS023');
+        } 
       });
     } else {
       this.hrService.EditEBenefit(this.formModel.currentData).subscribe((p) => {
         if (p != null) {
           this.notify.notifyCode('SYS007');
-          this.listBenefits[this.indexSelected] = p;
+          //this.listBenefits[this.indexSelected] = p;
           // if(this.listView){
           //   (this.listView.dataService as CRUDService).update(this.lstPassports[this.indexSelected]).subscribe()
           // }
           // this.dialog.close(this.data)
-        } else this.notify.notifyCode('SYS021');
+        } 
       });
     }
   }

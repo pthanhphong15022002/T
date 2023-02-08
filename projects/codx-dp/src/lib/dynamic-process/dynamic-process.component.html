@@ -16,6 +16,7 @@
   [idField]="idField"
   [autoSearch]="true"
   (searchChanged)="searchDynamicProcess($event)"
+
 ></codx-views>
 
 <ng-template #templateViewCard let-data>
@@ -35,6 +36,7 @@
     [footer]="footerbg"
     [typeMF]="'hover'"
     (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)"
     (dblclick)="doubleClickViewProcess(data)"
   >
   </codx-card-img>

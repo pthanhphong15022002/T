@@ -432,7 +432,7 @@ export class CatagoryComponent implements OnInit {
     }
     if (lstScheduleID.length > 0) {
       this.api
-        .execSv<any>('SYS', 'AD', 'ScheduledTasksBusiness', 'GetDicByIDAsync', [
+        .execSv<any>('BG', 'BG', 'ScheduleTasksBusiness', 'GetDicByIDAsync', [
           lstScheduleID,
         ])
         .subscribe((res) => {

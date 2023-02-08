@@ -127,12 +127,12 @@ export class InstancesComponent
       processID: this.process?.recID ? this.process?.recID : '',
     };
 
-    if (this.process) {
-      this.codxDpService.getStep(this.process?.recID).subscribe((dt) => {
+    this.codxDpService
+      .createListInstancesStepsByProcess(this.process?.recID)
+      .subscribe((dt) => {
         if (dt && dt?.length > 0) this.listSteps = dt;
       });
-    }
-    //kanban@
+    //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
     this.request.assemblyName = 'DP';
@@ -185,13 +185,13 @@ export class InstancesComponent
           this.cache
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
-     
+
               var formMD = new FormModel();
               formMD.funcID = funcIDApplyFor;
               formMD.entityName = fun.entityName;
               formMD.formName = fun.formName;
               formMD.gridViewName = fun.gridViewName;
-           
+
               option.Width = '850px';
               option.zIndex = 1010;
               this.view.dataService.dataSelected.processID = this.process.recID;
