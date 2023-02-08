@@ -85,7 +85,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
    // this.instance = dialog.dataService.dataSelected != null ? JSON.parse(JSON.stringify(dialog.dataService?.dataSelected))  : JSON.parse(JSON.stringify(dialog.dataService?.data[0]));
     this.dialog = dialog;
-    
+
     this.listStep = dt?.data[2];
     this.isApplyFor = dt?.data[1];
     this.titleAction = dt?.data[3];
@@ -154,8 +154,8 @@ export class PopupAddInstanceComponent implements OnInit {
     if ((this.acction = 'add')) {
       option.methodName = 'AddInstanceAsync';
     }
-
     option.data = [this.instance, this.listStep];
+  
     return true;
   }
   saveInstances() {

@@ -626,7 +626,9 @@ export class CalendarNotesComponent
     requestDataEP_Room.entityName = 'EP_Bookings';
     requestDataEP_Room.entityPermission = 'EP_BookingRooms';
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Room).subscribe((res) => {
-      this.getModelShare(res[0], param.Template, 'EP_BookingRooms');
+      if (res) {
+        this.getModelShare(res[0], param.Template, 'EP_BookingRooms');
+      }
     });
   }
 

@@ -293,6 +293,9 @@ export class DynamicProcessComponent
     }
   }
 
+  changeDataMF(e, data){
+
+  }
   //#popup roles
   roles(e: any) {
     let dialogModel = new DialogModel();
