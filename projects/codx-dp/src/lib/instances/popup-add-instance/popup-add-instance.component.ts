@@ -154,8 +154,8 @@ export class PopupAddInstanceComponent implements OnInit {
     if ((this.acction = 'add')) {
       option.methodName = 'AddInstanceAsync';
     }
-
     option.data = [this.instance, this.listStep];
+  
     return true;
   }
   saveInstances() {
