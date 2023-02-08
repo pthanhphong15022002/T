@@ -31,14 +31,17 @@ export class PopupAddInstanceComponent implements OnInit {
   @ViewChild('tabOpporGeneralInfo') tabOpporGeneralInfo: TemplateRef<any>;
 
   title = 'Nhiệm vụ';
-  titleAction = '';
+  titleAction: string = '';
 
+  gridViewSetup: any;
+  action:any;
   tabInfo: any[] = [];
   tabContent: any[] = [];
   listInstances: DP_Instances[] = [];
   formModelCrr : FormModel;
-  gridViewSetup: any;
+
   instanceNo: string;
+  listStepReasonCbx:any;
 
   instance: DP_Instances;
 
@@ -87,9 +90,15 @@ export class PopupAddInstanceComponent implements OnInit {
     this.dialog = dialog;
     
     this.listStep = dt?.data[2];
+    this.listStepReasonCbx = JSON.parse(JSON.stringify(dt?.data[2]))
+    this.deleteListReason(this.listStepReasonCbx);
+    this.action = dt?.data[0];
     this.isApplyFor = dt?.data[1];
     this.titleAction = dt?.data[3];
     this.formModelCrr = dt?.data[4];
+    if(this.action === 'edit'){
+      this.instance = dt?.data[5];
+    }
   }
 
   ngOnInit(): void {}
@@ -121,7 +130,7 @@ export class PopupAddInstanceComponent implements OnInit {
       this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
     this.changeDetectorRef.detectChanges();
   }
-
+   
   valueChange($event) {
     if ($event) {
       this.instance[$event.field] = $event.data;
@@ -154,7 +163,6 @@ export class PopupAddInstanceComponent implements OnInit {
     if ((this.acction = 'add')) {
       option.methodName = 'AddInstanceAsync';
     }
-
     option.data = [this.instance, this.listStep];
     return true;
   }
@@ -166,5 +174,9 @@ export class PopupAddInstanceComponent implements OnInit {
           this.dialog.close(res);
         }
       });
+  }
+  deleteListReason(listStep:any): void{
+    delete listStep[listStep.length-1];
+    delete listStep[listStep.length-2];
   }
 }
