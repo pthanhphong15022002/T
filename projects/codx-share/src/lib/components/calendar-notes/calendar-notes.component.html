@@ -319,10 +319,7 @@
                 </div>
               </div>
             </div>
-            <div
-              *ngIf="item.isPin == true || item.isPin == '1'"
-              class="active"
-            >
+            <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
               <span class="icon-push_pin icon-16" type="button"></span>
             </div>
             <div class="d-flex flex-column note-option">
@@ -394,10 +391,7 @@
                 </div>
               </div>
             </div>
-            <div
-              *ngIf="item.isPin == true || item.isPin == '1'"
-              class="active"
-            >
+            <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
               <span class="icon-push_pin icon-16" type="button"></span>
             </div>
             <div class="d-flex flex-column note-option">
@@ -432,7 +426,9 @@
         </div>
       </div>
     </div>
-    <div *ngIf="item?.transType == 'TM_Tasks'">
+    <!-- Chi Thuong ep buoc sua lai -->
+    <!-- <div *ngIf="item?.transType == 'TM_Tasks'"> -->
+    <div *ngIf="item?.transType == 'TM_MyTasks'">
       <div
         [ngStyle]="{
           'background-color': TM_TasksParam?.ShowBackground,
