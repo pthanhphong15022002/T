@@ -77,9 +77,10 @@ export class InstancesComponent
   progress: string;
   formModel: FormModel;
   isMoveSuccess: boolean = true;
-  titleAction =''
+  titleAction = '';
   instances = new DP_Instances();
-  kanban : any ;
+  kanban: any;
+  listStepsCbx : any
 
   constructor(
     private inject: Injector,
@@ -130,7 +131,11 @@ export class InstancesComponent
     this.codxDpService
       .createListInstancesStepsByProcess(this.process?.recID)
       .subscribe((dt) => {
-        if (dt && dt?.length > 0) this.listSteps = dt;
+        if (dt && dt?.length > 0) {
+          this.listSteps = dt;
+          this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
+          this.deleteListReason(this.listStepsCbx);
+        }
       });
     //kanban
     this.request = new ResourceModel();
@@ -155,7 +160,7 @@ export class InstancesComponent
     switch (evt.id) {
       case 'btnAdd':
         //   this.genAutoNumberNo();
-        this.titleAction = evt.text
+        this.titleAction = evt.text;
         this.add();
         // this.delete(this.instances);
         // this.moveStage();
@@ -173,19 +178,18 @@ export class InstancesComponent
   //CRUD
   add() {
     this.view.dataService.addNew().subscribe((res) => {
-      console.log(this.kanban)
+      console.log(this.kanban);
       const funcIDApplyFor =
         this.process.applyFor === 'D' ? 'DPT0406' : 'DPT0405';
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel ;
+      option.FormModel = this.view.formModel;
       this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
         this.cache.gridView(fun.gridViewName).subscribe((grv) => {
           this.cache
             .gridViewSetup(fun.formName, fun.gridViewName)
             .subscribe((grvSt) => {
-
               var formMD = new FormModel();
               formMD.funcID = funcIDApplyFor;
               formMD.entityName = fun.entityName;
@@ -199,7 +203,14 @@ export class InstancesComponent
               // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
               var dialogCustomField = this.callfc.openSide(
                 PopupAddInstanceComponent,
-                ['add', applyFor, this.listSteps, this.titleAction,formMD],
+                [
+                  'add',
+                  applyFor,
+                  this.listSteps,
+                  this.titleAction,
+                  formMD,
+                  this.listStepsCbx
+                ],
                 option
               );
               dialogCustomField.closed.subscribe((e) => {
@@ -214,14 +225,17 @@ export class InstancesComponent
     });
   }
 
-  edit(data,titleAction) {
-    this.view.dataService.addNew().subscribe((res) => {
+  edit(data, titleAction) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res) => {
       const funcIDApplyFor =
         this.process.applyFor === 'D' ? 'DPT0406' : 'DPT0405';
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel ;
+      option.FormModel = this.view.formModel;
       this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
         this.cache.gridView(fun.gridViewName).subscribe((grv) => {
           this.cache
@@ -232,13 +246,13 @@ export class InstancesComponent
               formMD.entityName = fun.entityName;
               formMD.formName = fun.formName;
               formMD.gridViewName = fun.gridViewName;
-           
+
               option.Width = '850px';
               option.zIndex = 1010;
               this.view.dataService.dataSelected.processID = this.process.recID;
               var dialogCustomField = this.callfc.openSide(
                 PopupAddInstanceComponent,
-                ['edit', applyFor, this.listSteps,titleAction,formMD,data],
+                ['edit', applyFor, this.listSteps, titleAction, formMD,  this.listStepsCbx],
                 option
               );
               dialogCustomField.closed.subscribe((e) => {
@@ -271,10 +285,10 @@ export class InstancesComponent
     this.moreFunc = e.functionID;
     switch (e.functionID) {
       case 'SYS03':
-        this.edit(data,e.text);
+        this.edit(data, e.text);
         break;
       case 'SYS04':
-      //  this.copy(data);
+        //  this.copy(data);
         break;
       case 'SYS02':
         this.delete(data);
@@ -424,5 +438,9 @@ export class InstancesComponent
     return true;
   }
 
+  deleteListReason(listStep: any): void {
+    delete listStep[listStep.length - 1];
+    delete listStep[listStep.length - 2];
+  }
   #endregion;
 }

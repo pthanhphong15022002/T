@@ -41,7 +41,7 @@ export class PopupAddInstanceComponent implements OnInit {
   formModelCrr : FormModel;
 
   instanceNo: string;
-  listStepReasonCbx:any;
+  listStepCbx:any;
 
   instance: DP_Instances;
 
@@ -90,15 +90,16 @@ export class PopupAddInstanceComponent implements OnInit {
     this.dialog = dialog;
 
     this.listStep = dt?.data[2];
-    this.listStepReasonCbx = JSON.parse(JSON.stringify(dt?.data[2]))
-    this.deleteListReason(this.listStepReasonCbx);
+    // this.listStepReasonCbx = JSON.parse(JSON.stringify(dt?.data[2]))
+    // this.deleteListReason(this.listStepReasonCbx);
     this.action = dt?.data[0];
     this.isApplyFor = dt?.data[1];
     this.titleAction = dt?.data[3];
     this.formModelCrr = dt?.data[4];
-    if(this.action === 'edit'){
-      this.instance = dt?.data[5];
-    }
+    this.listStepCbx = dt?.data[5];
+    // if(this.action === 'edit'){
+    //   this.instance = dt?.data[5];
+    // }
   }
 
   ngOnInit(): void {}
