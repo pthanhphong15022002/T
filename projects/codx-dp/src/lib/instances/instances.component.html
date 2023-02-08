@@ -163,7 +163,7 @@
   <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
       <div class="font me-3" *ngFor="let item of listSteps">
-        <span *ngIf="item.recID == data.stepID">
+        <span *ngIf="item?.recID === data?.stepID">
           {{item.stepName}}
         </span>
       </div>

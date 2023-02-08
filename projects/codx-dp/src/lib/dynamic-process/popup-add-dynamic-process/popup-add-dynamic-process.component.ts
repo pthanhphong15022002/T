@@ -1617,6 +1617,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     stepReason.isFailStep = stepReaValue == '2' ? true : false;
     stepReason.processID = this.process?.recID;
     stepReason.stepNo = 0;
+    stepReason.newProcessID = this.guidEmpty;
     return stepReason;
   }
 
@@ -1626,7 +1627,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   addReason() {
-    if (this.action === this.formAdd) {
+    if (this.reasonAction === this.formAdd) {
       this.reason = this.handleReason(
         this.reason,
         this.dataValueview === this.viewStepReasonSuccess ? '1' : '2',

@@ -1855,7 +1855,6 @@
               id="recID"
               [dataSource]="listCbxProccess"
               [fields]="fieldCbxProccess"
-              [placeholder]="'Chọn quy trình kìa'"
               (valueChange)="cbxChange($event,viewStepReasonSuccess)"
               [value]="stepSuccess.newProcessID"
             ></ejs-combobox>
@@ -1914,7 +1913,7 @@
       #view
     >
       <div class="main-body">
-        <div class="position-relative p-9" *ngIf="step.reasons.length == 0">
+        <div class="position-relative p-9" *ngIf="stepSuccess.reasons.length == 0">
           <div class="position-absolute top-50 start-50 translate-middle">
             <button
               type="button"
@@ -1928,8 +1927,8 @@
         </div>
       </div>
 
-      <div class="main-body pt-5 ps-5" *ngIf="step.reasons.length > 0">
-        <div *ngFor="let item of step.reasons" class="pb-2 ">
+      <div class="main-body pt-5 ps-5" *ngIf="stepSuccess.reasons.length > 0">
+        <div *ngFor="let item of stepSuccess.reasons" class="pb-2 ">
           <ul
           class="text-left drap-drop me-5 py-2 has-action-menu"
         >
@@ -2002,8 +2001,8 @@
                   style="width: 100%"
                   field="yes"
                   [label]="titleRadioYes"
-                  [checked]="step.reasonControl"
-                  [crrValue]="step.reasonControl"
+                  [checked]="stepFail.reasonControl"
+                  [crrValue]="stepFail.reasonControl"
                   (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
                 >
                 </codx-input>
@@ -2013,8 +2012,8 @@
                   type="radio"
                   name="fail-radio"
                   field="no"
-                  [checked]="!step.reasonControl"
-                  [crrValue]="step.reasonControl"
+                  [checked]="!stepFail.reasonControl"
+                  [crrValue]="stepFail.reasonControl"
                   [label]="titleRadioNo"
                   (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
                 >
@@ -2100,7 +2099,7 @@
       #view
     >
       <div class="main-body">
-        <div class="position-relative p-9" *ngIf="step.reasons.length == 0">
+        <div class="position-relative p-9" *ngIf="stepFail.reasons.length == 0">
           <div class="position-absolute top-50 start-50 translate-middle">
             <button
               type="button"
@@ -2114,8 +2113,8 @@
         </div>
       </div>
 
-      <div class="main-body pt-5 ps-5" *ngIf="step.reasons.length > 0">
-        <div *ngFor="let item of step.reasons" class="pb-2 ">
+      <div class="main-body pt-5 ps-5" *ngIf="stepFail.reasons.length > 0">
+        <div *ngFor="let item of stepFail.reasons" class="pb-2 ">
           <ul
           class="text-left drap-drop me-5 py-2 has-action-menu"
         >
