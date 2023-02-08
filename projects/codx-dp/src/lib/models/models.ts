@@ -471,7 +471,7 @@ export class DP_Instances_Steps_Reasons {
   instanceID: string;
   stepID: string;
   reasonName: string;
-  reasonType: boolean;
+  reasonType: string;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
