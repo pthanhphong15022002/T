@@ -23,7 +23,6 @@ import {
   CallFuncService,
   CodxChartsComponent,
   DialogData,
-  DialogModel,
   DialogRef,
   SeriesSetting,
   SidebarModel,
@@ -54,9 +53,9 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     //   }
     // }, 200);
   }
-  @Input() columns: number = 10;
-  @Input() cellSpacing: number[] = [10, 10];
-  @Input() cellAspectRatio: number = 100 / 50;
+  @Input() columns: number = 24;
+  @Input() cellSpacing: number[] = [0, 0];
+  @Input() cellAspectRatio: number = 100 / 100;
   @Input() name!: string;
   @Input() templates!: any;
 
@@ -105,6 +104,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @Input() panels: any = [];
   @Input() datas: any = [];
   isChart: boolean = false;
+  enableEditing: boolean = false;
   annotations: ChartAnnotationSettingsModel[] = [];
   primaryXAxis: AxisModel = {
     valueType: 'Category',
