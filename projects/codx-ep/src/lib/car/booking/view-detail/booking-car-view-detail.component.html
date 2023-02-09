@@ -1,6 +1,14 @@
-<codx-detail-tmp #itemDetailTemplate [formModel]="formModel" [dataItem]="itemDetail" [header]="header" [body]="body"
-  [footer]="hideFooter ? null : footer" [hideMF]="hideMF" (clickMF)="childClickMF($event, itemDetail)"
-  (changeDataMF)="changeDataMF($event, itemDetail)">
+<codx-detail-tmp
+  #itemDetailTemplate
+  [formModel]="formModel"
+  [dataItem]="itemDetail"
+  [header]="header"
+  [body]="body"
+  [footer]="hideFooter ? null : footer"
+  [hideMF]="hideMF"
+  (clickMF)="childClickMF($event, itemDetail)"
+  (changeDataMF)="changeDataMF($event, itemDetail)"
+>
   <ng-template #subTitleHeader>
     <div class="d-flex flex-row align-item-center mt-1 mb-2">
       <div class="me-6">
@@ -28,13 +36,23 @@
   <ng-template #header>
     <div class="d-flex justify-content-between">
       <h3>{{ itemDetail?.title }}</h3>
-      <codx-vll [name]="'EP022'" [value]="itemDetail?.approveStatus" [showText]="true" [showBgColor]="true"
-        class="badge badge-light badge-square badge-md fs-7 p-2">
+      <codx-vll
+        [name]="'EP022'"
+        [value]="itemDetail?.approveStatus"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-square badge-md fs-7 p-2"
+      >
       </codx-vll>
     </div>
     <div class="d-flex flex-column flex-grow-1 mb-2">
-      <codx-temp-full [title]="itemDetail?.requester" [subTitleTmp]="subTitleHeader" [imageId]="itemDetail?.createdBy"
-        imageObjType="AD_Users" [imageWidth]="40">
+      <codx-temp-full
+        [title]="itemDetail?.requester"
+        [subTitleTmp]="subTitleHeader"
+        [imageId]="itemDetail?.createdBy"
+        imageObjType="AD_Users"
+        [imageWidth]="40"
+      >
       </codx-temp-full>
     </div>
 
@@ -52,54 +70,72 @@
         <span class="text-gray-800">
           {{ itemDetail?.resourceName }}
           <span *ngIf="itemDetail?.code != null">
-            - {{ itemDetail?.code }}</span>
+            - {{ itemDetail?.code }}</span
+          >
         </span>
       </div>
 
       <div class="d-flex mb-1 text-dark me-6">
-        <codx-label name="lblDriver" default="Tài xế" class="fw-bold"></codx-label>
+        <codx-label
+          name="lblDriver"
+          default="Tài xế"
+          class="fw-bold"
+        ></codx-label>
         <span class="me-1 fw-bold">:</span>
 
         <span *ngIf="itemDetail?.driverName != null">
           <span class="text-gray-800">
-            {{itemDetail?.driverName}}
+            {{ itemDetail?.driverName }}
           </span>
         </span>
         <span *ngIf="itemDetail?.driverName == null">
-          <codx-label default="Không có tài xế" class="ms-1 text-gray-800" name="lblUnavailableDriver"></codx-label>
+          <codx-label
+            default="Không có tài xế"
+            class="ms-1 text-gray-800"
+            name="lblUnavailableDriver"
+          ></codx-label>
         </span>
       </div>
     </div>
 
     <div class="d-flex mb-1 text-dark me-6">
-      <codx-label name="lblTime" default="Thời gian" class="fw-bold"></codx-label>
+      <codx-label
+        name="lblTime"
+        default="Thời gian"
+        class="fw-bold"
+      ></codx-label>
       <span class="me-1 fw-bold">:</span>
 
-      <div *ngIf="!sameDayCheck(itemDetail?.startDate,itemDetail?.endDate)">
+      <div *ngIf="!sameDayCheck(itemDetail?.startDate, itemDetail?.endDate)">
         <div class="ms-1 text-gray-800">
           <span>
-            {{ itemDetail?.startDate | fmDT: "dmy":true }}
+            {{ itemDetail?.startDate | fmDT : "dmy" : true }}
           </span>
           <span> - </span>
           <span>
-            {{ itemDetail?.endDate | fmDT: "dmy":true }}
+            {{ itemDetail?.endDate | fmDT : "dmy" : true }}
           </span>
         </div>
       </div>
-      <div *ngIf="sameDayCheck(itemDetail?.startDate,itemDetail?.endDate)">
+      <div *ngIf="sameDayCheck(itemDetail?.startDate, itemDetail?.endDate)">
         <div class="ms-1 text-gray-800">
           <span>
-            {{ itemDetail?.startDate | fmDT}}
+            {{ itemDetail?.startDate | fmDT }}
           </span>
           <span>
-            {{ showHour(itemDetail?.startDate) }} - {{ showHour(itemDetail?.endDate) }}
+            {{ showHour(itemDetail?.startDate) }} -
+            {{ showHour(itemDetail?.endDate) }}
           </span>
         </div>
       </div>
     </div>
     <div class="d-flex mb-2">
       <div class="d-flex text-dark">
-        <codx-label name="lblReason" default="Lý do" class="fw-bold"></codx-label>
+        <codx-label
+          name="lblReason"
+          default="Lý do"
+          class="fw-bold"
+        ></codx-label>
         <span class="me-1 fw-bold">:</span>
         <span class="ms-1 text-gray-800">
           {{ itemDetail?.reasonID }}
@@ -109,47 +145,84 @@
 
     <div class="d-flex mb-2">
       <div class="d-flex text-dark">
-        <codx-label name="lblAttendees" default="Người tham gia" class="fw-bold"></codx-label>
+        <codx-label
+          name="lblAttendees"
+          default="Người tham gia"
+          class="fw-bold"
+        ></codx-label>
         <span class="me-1 fw-bold">:</span>
         <div class="d-flex justify-content-end">
-          <codx-imgs [objectId]="itemDetail?.bookingAttendees" objectType="AD_Users" [numberImages]="6" [width]="30">
+          <codx-imgs
+            [objectId]="itemDetail?.bookingAttendees"
+            objectType="AD_Users"
+            [numberImages]="6"
+            [width]="30"
+          >
           </codx-imgs>
         </div>
       </div>
     </div>
 
     <div class="d-flex align-items-center mb-2 text-dark me-6">
-      <codx-label name="lblUseCardHeader" default="Sử dụng thẻ" class="fw-bold"></codx-label>
+      <codx-label
+        name="lblUseCardHeader"
+        default="Sử dụng thẻ"
+        class="fw-bold"
+      ></codx-label>
       <span class="me-1 fw-bold">:</span>
 
       <span *ngIf="!!itemDetail?.useCard">
-        <codx-label default="Dùng thẻ" class="badge badge-light-success" name="lblUseCard"></codx-label>
+        <codx-label
+          default="Dùng thẻ"
+          class="badge badge-light-success"
+          name="lblUseCard"
+        ></codx-label>
       </span>
       <span *ngIf="!itemDetail?.useCard">
-        <codx-label default="Không dùng thẻ" class="badge badge-light-danger" name="lblNotUseCard"></codx-label>
+        <codx-label
+          default="Không dùng thẻ"
+          class="badge badge-light-danger"
+          name="lblNotUseCard"
+        ></codx-label>
       </span>
     </div>
 
     <div class="mb-2">
-      <codx-label default="Nơi công tác" name="lblAddressHeader" class="fw-bold me-4 text-primary"></codx-label>
+      <codx-label
+        default="Nơi công tác"
+        name="lblAddressHeader"
+        class="fw-bold me-4 text-primary"
+      ></codx-label>
     </div>
 
     <div class="d-flex mb-1 text-dark me-6">
-      <codx-label name="lblOrgUnitName" default="Đơn vị" class="fw-bold"></codx-label>
+      <codx-label
+        name="lblOrgUnitName"
+        default="Đơn vị"
+        class="fw-bold"
+      ></codx-label>
       <span class="me-1 fw-bold">:</span>
       <span class="ms-1 text-gray-800">
         {{ itemDetail?.agencyName }}
       </span>
     </div>
     <div class="d-flex mb-1 text-dark me-6">
-      <codx-label name="lblAddress" default="Địa chỉ" class="fw-bold"></codx-label>
+      <codx-label
+        name="lblAddress"
+        default="Địa chỉ"
+        class="fw-bold"
+      ></codx-label>
       <span class="me-1 fw-bold">:</span>
       <span class="ms-1 text-gray-800">
         {{ itemDetail?.address }}
       </span>
     </div>
     <div class="d-flex mb-1 text-dark me-6">
-      <codx-label name="lblRequester" default="Người liên hệ" class="fw-bold"></codx-label>
+      <codx-label
+        name="lblRequester"
+        default="Người liên hệ"
+        class="fw-bold"
+      ></codx-label>
       <span class="me-1 fw-bold">:</span>
       <span class="ms-1 text-gray-800">
         {{ itemDetail?.requester }}
@@ -210,12 +283,18 @@
       <div [ngbNavOutlet]="nav" class="pt-5"></div>
     </div>-->
   </ng-template>
-
-
 </codx-detail-tmp>
 <ng-template #footer>
-  <codx-tabs [entityName]="formModel?.entityName" [objectID]="itemDetail?.recID" [funcID]="formModel?.funcID"
-    [dataTree]="data?.tasks?data.tasks: []" [TabControl]="tabControl"></codx-tabs>
+  <codx-tabs
+    [entityName]="formModel?.entityName"
+    [objectID]="itemDetail?.recID"
+    [funcID]="formModel?.funcID"
+    [dataTree]="data?.tasks ? data.tasks : []"
+    [TabControl]="tabControl"
+    [referType]="'2'"
+    [transID]="itemDetail?.recID"
+    [approveStatus]="itemDetail?.approveStatus"
+  ></codx-tabs>
 </ng-template>
 <!-- <ng-template #reference>
   <ng-container *ngIf="data?.linkss">
@@ -244,7 +323,10 @@
   <div class="container h-100">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
-        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-200px"
+        />
         <div class="fw-bold mt-1 text-center">
           {{ "SYS011" | mssg | async }}
         </div>
@@ -256,14 +338,24 @@
 
 <ng-template #baseTmpRight let-data>
   <ng-container *ngIf="data?.relationType != '1' && !data?.reCall">
-    <codx-vll [showText]="true" [showBgColor]="true" [name]="'OD009'" [value]="data?.view"
-      class="badge badge-light badge-md fs-7">
+    <codx-vll
+      [showText]="true"
+      [showBgColor]="true"
+      [name]="'OD009'"
+      [value]="data?.view"
+      class="badge badge-light badge-md fs-7"
+    >
     </codx-vll>
   </ng-container>
 
   <ng-container *ngIf="data?.reCall">
-    <codx-vll [showText]="true" [showBgColor]="true" [name]="'OD010'" [value]="data?.reCall"
-      class="badge badge-light badge-md fs-7">
+    <codx-vll
+      [showText]="true"
+      [showBgColor]="true"
+      [name]="'OD010'"
+      [value]="data?.reCall"
+      class="badge badge-light badge-md fs-7"
+    >
     </codx-vll>
   </ng-container>
 </ng-template>
@@ -271,21 +363,43 @@
 <ng-template #templateorg let-data>
   <div class="container-fluid justify-content-between d-flex">
     <div class="d-flex align-items-top mt-5">
-      <codx-temp-full [imageId]="data?.userID" [imageObjType]="'AD_Users'" [title]="data?.userName" [titleLine]="2"
-        [subTitle]="data?.positionNameCreate" [desc]="data?.taskName" [dataItem]="data" [footer]="footerTask">
+      <codx-temp-full
+        [imageId]="data?.userID"
+        [imageObjType]="'AD_Users'"
+        [title]="data?.userName"
+        [titleLine]="2"
+        [subTitle]="data?.positionNameCreate"
+        [desc]="data?.taskName"
+        [dataItem]="data"
+        [footer]="footerTask"
+      >
       </codx-temp-full>
     </div>
-    <div class="mt-5 ms-5 justify-content-end w-120px text-center" *ngIf="data?.items.length == 0">
-      <codx-vll [name]="'L0614'" [value]="data?.approveStatus" [showText]="true" [showBgColor]="false"></codx-vll>
+    <div
+      class="mt-5 ms-5 justify-content-end w-120px text-center"
+      *ngIf="data?.items.length == 0"
+    >
+      <codx-vll
+        [name]="'L0614'"
+        [value]="data?.approveStatus"
+        [showText]="true"
+        [showBgColor]="false"
+      ></codx-vll>
       <div class="progress h-6px w-100 mt-2">
-        <div class="progress-bar bg-primary" role="progressbar" [style.width.%]="data?.percentage" aria-valuenow="50"
-          aria-valuemin="0" aria-valuemax="100"></div>
+        <div
+          class="progress-bar bg-primary"
+          role="progressbar"
+          [style.width.%]="data?.percentage"
+          aria-valuenow="50"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
       </div>
       <div class="d-flex mt-2">
         <span class="icon-schedule icon-16 text-gray-800"></span>
         <span class="ms-2 text-dark">{{
-          data?.dueDate | fmDT: "dmy":true
-          }}</span>
+          data?.dueDate | fmDT : "dmy" : true
+        }}</span>
       </div>
     </div>
   </div>
@@ -294,11 +408,14 @@
 <ng-template #footerTask let-data>
   <div class="d-flex align-items-center mt-2" [style.marginLeft.px]="50">
     <div class="d-flex align-items-center">
-      <span class="icon-person me-1" [class.text-muted]="data?.items.length == 0"
-        [class.text-primary]="data?.items.length > 0"></span>
+      <span
+        class="icon-person me-1"
+        [class.text-muted]="data?.items.length == 0"
+        [class.text-primary]="data?.items.length > 0"
+      ></span>
       <span class="text-dark" *ngIf="data?.items.length > 0">{{
         data?.items.length
-        }}</span>
+      }}</span>
     </div>
     <div class="d-flex align-items-center ms-6">
       <span class="icon-chat_bubble_outline me-1 text-muted"></span>
@@ -313,15 +430,30 @@
 
 <ng-template #resourceTypeLabel let-type>
   <ng-container *ngIf="type == 1">
-    <codx-label fiedName="ResourceType" default="Phòng họp" [formModel]="formModel" class="fw-bold me-1">
+    <codx-label
+      fiedName="ResourceType"
+      default="Phòng họp"
+      [formModel]="formModel"
+      class="fw-bold me-1"
+    >
     </codx-label>
   </ng-container>
   <ng-container *ngIf="type == 2">
-    <codx-label fiedName="ResourceType" default="Xe" [formModel]="formModel" class="fw-bold me-1">
+    <codx-label
+      fiedName="ResourceType"
+      default="Xe"
+      [formModel]="formModel"
+      class="fw-bold me-1"
+    >
     </codx-label>
   </ng-container>
   <ng-container *ngIf="type == 6">
-    <codx-label fiedName="ResourceType" default="VPP" [formModel]="formModel" class="fw-bold me-1">
+    <codx-label
+      fiedName="ResourceType"
+      default="VPP"
+      [formModel]="formModel"
+      class="fw-bold me-1"
+    >
     </codx-label>
   </ng-container>
 </ng-template>

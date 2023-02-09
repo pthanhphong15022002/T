@@ -33,7 +33,7 @@ ejs-richtexteditor .e-content.e-lib {
 }
 
 .progress-bar-processing {
-  background-color: #005DC7;
+  background-color: #005dc7;
 }
 
 .progress-bar-done {
@@ -61,7 +61,7 @@ ejs-richtexteditor .e-content.e-lib {
 
 .fs-header {
   font-size: 28px;
-  color: #005DC7 !important;
+  color: #005dc7 !important;
 }
 
 .e-tab .e-tab-header .e-toolbar-item {
@@ -72,13 +72,12 @@ ejs-richtexteditor .e-content.e-lib {
   background: white;
 }
 
-
 .e-tab .e-tab-header .e-toolbar-item .e-tab-text {
   font-size: 12px !important;
 }
 
 .e-tab .e-toolbar-items {
-  background-color: #F5F8FA;
+  background-color: #f5f8fa;
   padding: 3px !important;
 }
 
@@ -110,4 +109,48 @@ ejs-richtexteditor .e-content.e-lib {
 .rounded-pill-right {
   border-top-right-radius: 50rem;
   border-bottom-right-radius: 50rem;
+}
+
+/* Bar Graph Horizontal */
+.bar-graph-horizontal {
+  max-width: 100%;
+}
+
+.bar-graph-horizontal > div {
+  float: right;
+  width: 100%;
+}
+
+.bar-graph-horizontal .bar {
+  border-radius: 10px 0px 0px 10px;
+  height: 35px;
+  float: right;
+  position: relative;
+  width: 0;
+}
+
+.bar-username {
+  color: #fff;
+  content: attr(user-id);
+  font-weight: 700;
+  max-width: 200px;
+  position: absolute;
+  right: 16px;
+  top: 17px;
+}
+
+.bar-task-quantity {
+  position: absolute;
+  left: -25px;
+  top: 50%;
+}
+
+.card {
+  border: 1px solid #f0f0f0 !important;
+}
+
+@media only screen and (max-width: 512px) {
+  .vr {
+    display: none;
+  }
 }

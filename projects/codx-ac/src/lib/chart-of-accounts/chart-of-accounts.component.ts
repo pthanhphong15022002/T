@@ -46,6 +46,7 @@ export class ChartOfAccountsComponent extends UIComponent {
   onInit(): void {}
 
   ngAfterViewInit() {
+    this.api.exec('PS', 'TestBusiness', 'Test').subscribe();
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) {
         this.funcName = res.defaultName;

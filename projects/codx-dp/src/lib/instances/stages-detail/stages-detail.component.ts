@@ -94,7 +94,7 @@ export class StagesDetailComponent implements OnInit {
   listJobType = [
     {
       id: 'C',
-      icon: 'icon-i-layout-three-columns',
+      icon: 'icon-local_phone',
       text: 'Cuộc gọi',
       funcID: 'BPT101',
       color: { background: '#f1ff19' },
@@ -185,7 +185,6 @@ export class StagesDetailComponent implements OnInit {
         this.groupByTask(changes['listData'].currentValue);
         this.step = changes['listData'].currentValue;
         console.log('Thuan', this.step);
-        
       } else {
         this.listData = null;
       }
@@ -457,7 +456,8 @@ export class StagesDetailComponent implements OnInit {
       step['taskGroups'] = taskGroupConvert;
       this.taskGroupList = step['taskGroups'];
       let taskGroup = new DP_Instances_Steps_TaskGroups();
-      taskGroup['task'] = [];
+      taskGroup['task'] = taskGroupList['null'] || [];
+      taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
       this.taskGroupList.push(taskGroup);
       console.log(this.taskGroupList);
     }
@@ -662,9 +662,11 @@ export class StagesDetailComponent implements OnInit {
       }
     } else {
       let groupTaskIdOld = '';
-      if (event.previousContainer.data.length > 0 && data?.recID) {
-        groupTaskIdOld = event.previousContainer.data[event.previousIndex]['taskGroupID']
-        event.previousContainer.data[event.previousIndex]['taskGroupID'] = data?.recID;
+      if (event.previousContainer.data.length > 0) {
+        groupTaskIdOld =
+          event.previousContainer.data[event.previousIndex]['taskGroupID'];
+        event.previousContainer.data[event.previousIndex]['taskGroupID'] =
+          data?.recID;
       }
       transferArrayItem(
         event.previousContainer.data,
@@ -672,55 +674,72 @@ export class StagesDetailComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-      await this.changeValueDrop(event.previousContainer.data, 'indexNo',groupTaskIdOld,true);
-      await this.changeValueDrop(event.container.data, 'indexNo',groupTaskIdOld,true);
+      await this.changeValueDrop(
+        event.previousContainer.data,
+        'indexNo',
+        groupTaskIdOld,
+        true
+      );
+      await this.changeValueDrop(
+        event.container.data,
+        'indexNo',
+        groupTaskIdOld,
+        true
+      );
       await this.updateDropDrap('all');
     }
   }
 
-  async updateDropDrap(status){
+  async updateDropDrap(status) {
     let listTask = [];
-      let taskGroupListClone = JSON.parse(JSON.stringify(this.taskGroupList))
-      let listGroupTask = taskGroupListClone.map(group => {
-        listTask = [...listTask,...group['task']];
-        delete group['task'];
-        return group;
-      })
-      listGroupTask.pop();  
-      let dataSave = []; 
-      switch (status) {
-        case 'all':
-          dataSave = [listGroupTask,listTask,this.step.recID]
-          break;
-          case 'parent':
-          dataSave = [listGroupTask,null,this.step.recID]
-          break;
-          case 'child':
-          dataSave = [null,listTask,this.step.recID]
-          break;
-      }
+    let taskGroupListClone = JSON.parse(JSON.stringify(this.taskGroupList));
+    let listGroupTask = taskGroupListClone.map((group) => {
+      listTask = [...listTask, ...group['task']];
+      delete group['task'];
+      return group;
+    });
+    listGroupTask.pop();
+    let dataSave = [];
+    switch (status) {
+      case 'all':
+        dataSave = [listGroupTask, listTask, this.step.recID];
+        break;
+      case 'parent':
+        dataSave = [listGroupTask, null, this.step.recID];
+        break;
+      case 'child':
+        dataSave = [null, listTask, this.step.recID];
+        break;
+    }
 
-      this.dpService.updateDataDrop(dataSave).subscribe((res) => {  
-        if(res){
-          this.notiService.notifyCode('SYS007');
-        }
-      })
+    this.dpService.updateDataDrop(dataSave).subscribe((res) => {
+      if (res) {
+        this.notiService.notifyCode('SYS007');
+      }
+    });
   }
 
-  async changeValueDrop(data: any, value: string, recID = '', isProgress = false) {
+  async changeValueDrop(
+    data: any,
+    value: string,
+    recID = '',
+    isProgress = false
+  ) {
     if (data.length > 0) {
-      let index = this.taskGroupList.findIndex((group) => group.recID == data[0]['taskGroupID']);
+      let index = this.taskGroupList.findIndex(
+        (group) => group.recID == data[0]['taskGroupID']
+      );
       let sum = 0;
       let average = 0;
       data.forEach((item, index) => {
-        item[value] = index + 1; // cập nhật số thứ tự 
+        item[value] = index + 1; // cập nhật số thứ tự
         sum += item['progress'] + 0; // tổng tiến độ
       });
-      if(isProgress){
+      if (isProgress) {
         average = parseFloat((sum / data.length).toFixed(1)) || 0;
         this.taskGroupList[index]['progress'] = average;
-      }    
-    }else if(data.length == 0 && isProgress){
+      }
+    } else if (data.length == 0 && isProgress) {
       let index = this.taskGroupList.findIndex((group) => group.recID == recID);
       this.taskGroupList[index]['progress'] = 0;
     }

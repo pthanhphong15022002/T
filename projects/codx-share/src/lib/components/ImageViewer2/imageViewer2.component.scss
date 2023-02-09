@@ -323,9 +323,10 @@
 .image-gallery-2 {
   width: 100%;
   position: relative;
-  height: calc(100vh - 54px);
+  height: 100%;
   // background: #000;
-  top: 52px
+  top: 0;
+
 }
 
 .image-gallery-2 .image-container {
@@ -335,7 +336,6 @@
   right: 0;
   bottom: 0;
   background-color: #e2e2e2;
-  border: 0.1px solid rgba(0, 0, 0, 0.1);
 }
 
 .image-gallery-2 .prev,
@@ -413,9 +413,7 @@
   justify-content: space-between;
   position: relative;
   float: right;
-  padding-left: 5px;
   width: 100%;
-  margin-top: -45px;
 }
 
 .inline-pdf {
@@ -480,9 +478,44 @@ lib-popup-detail .moreFC-top {
   top: 10px;
   left: 0;
   right: 0;
-  padding: 0 16px;
 }
 
 lib-popup-detail .next-previrous {
-  margin-top: 52px;
+  margin-top: -52px;
+  position: absolute;
+  top: 50%;
+}
+
+.footer-info {
+  background-color: var(--gray-200) !important;
+  color: var(--gray-800) !important;
+  font-size: 18px !important;
+}
+
+.moreFC-top .btn.btn-icon {
+  height: 36px !important;
+  width: 36px !important;
+  min-width: 36px;
+  border-radius: 50% !important;
+  background-color: var(--primary) !important;
+
+}
+
+.moreFC-top .btn.btn-icon {
+  height: 36px !important;
+  width: 36px !important;
+  min-width: 36px;
+  border-radius: 50% !important;
+  //background-color: var(--primary) !important;
+
+}
+
+.moreFC-top .btn.btn-icon * {
+  color: var(--primary-inverse) !important;
+}
+
+.next-previrous .btn.btn-icon {
+  height: 40px !important;
+  width: 40px !important;
+  min-width: 40px;
 }
