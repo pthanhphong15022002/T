@@ -55,13 +55,39 @@
   width: 22%;
   min-width: 220px;
   max-width: 260px;
+  box-shadow: none;
+}
+
+.page-dashboard .aside.aside-transparent {
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
+
+}
+
+.page-dashboard .aside .aside-logo {
+  display: none;
+}
+
+.page-dashboard .btn-minimize {
+  display: none !important;
 }
 
 .aside.aside-transparent .aside-menu {
   width: 100%;
 }
 
+.dashboard-main {
+  width: 1246px;
+  margin: 0 auto;
+}
+
+.dashboard-content {
+  width: 996px;
+}
+
 .home-left {
+  width: 617px !important;
   min-width: 617px !important;
 }
 

@@ -66,6 +66,7 @@
                 >
                 </codx-label>
                 <codx-input
+                  [crrValue]="form.data.cashBookID"
                   field="cashBookID"
                   [formModel]="form.formModel"
                   type="combobox"
@@ -98,6 +99,7 @@
                   >
                   </codx-label>
                   <codx-input 
+                  [crrValue]="form.data.paymentAmt"
                   [formModel]="form.formModel"
                   field="paymentAmt"
                   (valueChange)="valueChange($event,'')"
@@ -117,6 +119,7 @@
                   >
                   </codx-label>
                   <codx-input
+                    [crrValue]="form.data.currencyID"
                     field="currencyID"
                     [formModel]="form.formModel"
                     (valueChange)="valueChange($event,'')"
@@ -133,6 +136,7 @@
                   >
                   </codx-label>
                   <codx-input
+                  [crrValue]="form.data.exchangeRate"
                     field="exchangeRate"
                     [formModel]="form.formModel"
                     (valueChange)="valueChange($event,'')"
@@ -155,6 +159,7 @@
                 >
                 </codx-label>
                 <codx-input
+                  [crrValue]="form.data.objectType"
                   field="objectType"                 
                   type="valuelist"
                   refValue="AC016"
@@ -172,6 +177,7 @@
                   >
                   </codx-label>
                   <codx-input
+                    [crrValue]="form.data.objectID"
                     *ngIf="ObjectID"
                     field="objectID"                  
                     type="combobox"
@@ -190,6 +196,7 @@
                   >
                   </codx-label>
                   <codx-input 
+                  [crrValue]="form.data.payee"
                   [formModel]="form.formModel"
                   type="combobox"
                   refValue="EmployeesAC"
@@ -233,6 +240,7 @@
                 >
                 </codx-label>
                 <codx-input
+                  [crrValue]="form.data.transactionText"
                   field="transactionText"
                   [formModel]="form.formModel"
                   type="combobox"
@@ -251,6 +259,7 @@
                   >
                   </codx-label>
                   <codx-input
+                    [crrValue]="form.data.memo"
                     field="memo"
                     [formModel]="form.formModel"
                     (valueChange)="valueChange($event,'')"
@@ -271,6 +280,7 @@
                   >
                   </codx-label>
                   <codx-input
+                    [crrValue]="form.data.voucherNo"
                     field="voucherNo"
                     [formModel]="form.formModel"  
                     (valueChange)="valueChange($event,'')"  
@@ -298,6 +308,7 @@
     [height]="490"
     [autoLoad]="false"
     rowHeight="40"
+    (cellChanged)="cellChanged($event)"
   ></codx-gridview-v2>
 
 </ng-template>

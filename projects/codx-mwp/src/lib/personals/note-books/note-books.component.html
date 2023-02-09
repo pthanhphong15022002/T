@@ -79,7 +79,6 @@
     <codx-card-img
       cardCss="border card-img-mwp rounded-3 img-storage w-225px h-225px"
       (clickMF)="clickMF($event, item)"
-      [imageId]="item.recID"
       imgCss="h-150px w-150px mb-2"
       icoTitleCss="icon-assignment icon-16"
       [title]="item.title"
@@ -88,7 +87,9 @@
       [desc2]="item.memo"
       cssDes2="line-clamp line-clamp-2"
       imageWidth="223"
+      [imageId]="item.recID"
       [imageObjType]="'WP_NoteBooks'"
+      imageReferType="image"
       [formModel]="listView.formModel"
       [dataItem]="item"
       [imageObjName]="item.title"

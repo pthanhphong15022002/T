@@ -26,6 +26,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   ObjectID:any;
   refValue:any;
   cashpaymentline: Array<CashPaymentLine> = [];
+  cashpaymentlineDelete: Array<CashPaymentLine> = [];
   fmCashPaymentsLines: FormModel = {
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
@@ -38,11 +39,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     allowDeleting: true,
     mode: 'Normal',
   };
+  data:any;
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
-    // { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    // { name: 'Link', textDefault: 'Liên kết', isActive: false },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ]
   constructor(
     private inject: Injector,
@@ -57,16 +59,27 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.ObjectID = '';
+    this.data =null;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.cashpayment = dialog.dataService!.dataSelected;
-    this.cache.gridViewSetup('CashPaymentsLines', 'grvCashPaymentsLines').subscribe((res) => {
-      if (res) {
-        console.log(res);
-      }
-    });
+    if(this.cashpayment.objectType == null){
+      this.cashpayment.objectType = '1';
+      this.ObjectID = 'Customers';
+    }
+    if (this.cashpayment.voucherNo != null) {
+      this.acService
+        .loadData(
+          'ERM.Business.AC',
+          'CashPaymentsLinesBusiness',
+          'LoadDataAsync',
+          this.cashpayment.recID
+        )
+        .subscribe((res: any) => {
+          this.cashpaymentline = res;
+        });
+    }  
   }
-
   onInit(): void {
     
   }
@@ -96,25 +109,37 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
     this.cashpayment[e.field] = e.data;
   }
+  cellChanged(e:any){
+    this.cashpaymentline[e.field] = e.value;
+    this.data = JSON.stringify(this.cashpaymentline);
+  }
   addRow() {
     let idx = this.grid.dataSource.length;
     let data = this.grid.formGroup.value;
-    data['isAdd'] = true;
     data.recID = Util.uid();
     data.write = true;
     data.delete = true;
     data.read = true;
+    data.dr = 0;
+    data.rowNo = idx + 1;
+    data.transID = this.cashpayment.recID;
     this.grid.addRow(data, idx);
+  }
+  deleteRow(data){
+    this.cashpaymentlineDelete.push(data);
+    this.grid.deleteRow();
   }
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        this.grid.deleteRow();
+        this.deleteRow(data);
         break;
     }
   }
 onSave(){
   this.cashpayment.voucherDate = this.form.formGroup.value.voucherDate;
+  this.cashpaymentline = this.data;
+  console.log(this.cashpaymentline);
   if (this.formType == 'add') {
     this.dialog.dataService
       .save((opt: RequestOption) => {
@@ -127,11 +152,35 @@ onSave(){
       })
       .subscribe((res) => {
         if (res.save) {
-          
-          this.dialog.close();
-          this.dt.detectChanges();
+          this.acService
+              .addData('ERM.Business.AC', 'CashPaymentsLinesBusiness', 'AddAsync', this.cashpaymentline)
+              .subscribe((res) => {
+              });
+              this.dialog.close();
+              this.dt.detectChanges();
         } else {
-          return;
+        }
+      });
+  }
+  if (this.formType == 'edit') {
+    this.dialog.dataService
+      .save((opt: RequestOption) => {
+        opt.methodName = 'UpdateAsync';
+        opt.className = 'CashPaymentsBusiness';
+        opt.assemblyName = 'AC';
+        opt.service = 'AC';
+        opt.data = [this.cashpayment];
+        return true;
+      })
+      .subscribe((res) => {
+        if (res != null) {
+          this.acService
+              .addData('ERM.Business.AC', 'CashPaymentsLinesBusiness', 'UpdateAsync', [this.cashpaymentline,this.cashpaymentlineDelete])
+              .subscribe((res) => {
+              });
+              this.dialog.close();
+              this.dt.detectChanges();
+        } else {
         }
       });
   }
