@@ -32,6 +32,12 @@ export const OMCONST = {
     ORG: 'OMT032',
     PERS: 'OMT042',
   },
+  SKRFUNCID: {
+    COMP: 'OMT013',
+    DEPT: 'OMT023',
+    ORG: 'OMT033',
+    PERS: 'OMT043',
+  },
 
   MFUNCID: {
     Add: 'SYS01',

@@ -474,13 +474,13 @@ export class CodxOmService {
       dataRequest
     );
   }
-  getAllOKROfPlan(dataRequest: DataRequest) {
+  getAllOKROfPlan(recID: string) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR, 
       'GetAllOKROfPlanAsync', 
-      dataRequest
+      recID
     );
   }
   //Lấy danh sách liên kết/phụ thuộc OKR 
