@@ -107,7 +107,7 @@ export class EmployeeProfileComponent extends UIComponent {
   ViewAllEBenefitFlag = false
   crrEContract: any;
   ops = ['y'];
-  date = new Date('01-04-2040');
+
 
   formModelVisa: FormModel;
   formModelPassport: FormModel;
@@ -178,6 +178,17 @@ export class EmployeeProfileComponent extends UIComponent {
   lstESkill: any = [];
   //Awards
   lstAwards: any = [];
+
+  //#region pageSize
+  numPageSizeGridView = 5;
+
+  //#region filter variables of form main eBenefit
+  filterByBenefitIDArr: any = []
+  yearFilterValue
+  startDateEBenefitFilterValue
+  endDateEBenefitFilterValue
+  filterEBenefitPredicates
+  filterEBenefitDatavalues
 
   //#region declare columnGrid
   healthColumnsGrid;
@@ -272,6 +283,8 @@ export class EmployeeProfileComponent extends UIComponent {
 
   lstTab: any;
   benefitFormodel;
+  eBenefitRowCount;
+
   onInit(): void {
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
       console.log('functionList', res);
@@ -286,7 +299,7 @@ export class EmployeeProfileComponent extends UIComponent {
       console.log(res['ALObjectID']);
     })
 
-    let benefitFuncID = 'HRT03020303'
+    let benefitFuncID = 'HRTEM0403'
     let benefitHeaderTexts;
 
     this.hrService.getFormModel(benefitFuncID).then(res => {
@@ -298,7 +311,7 @@ export class EmployeeProfileComponent extends UIComponent {
         {
           headerText: benefitHeaderTexts['BenefitID'],
           template: this.templateBenefitID,
-          width: '50'
+          width: '50',
         },
         {
           headerText: benefitHeaderTexts['BenefitAmt'],
@@ -955,7 +968,7 @@ export class EmployeeProfileComponent extends UIComponent {
           this.HandleEmployeeDiseaseInfo('edit', data);
           this.df.detectChanges();
         } else if (funcID == 'eBenefit') {
-          this.HandleEmployeeDiseaseInfo('edit', data);
+          this.handlEmployeeBenefit('edit', data);
           this.df.detectChanges();
         }
         break;
@@ -1190,7 +1203,7 @@ export class EmployeeProfileComponent extends UIComponent {
                 });
             }  else if (funcID == 'eBenefit') {
               this.hrService
-                .DeleteEmployeeDiseasesInfo(data.recID)
+                .DeleteEBenefit(data.recID)
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
@@ -1246,7 +1259,7 @@ export class EmployeeProfileComponent extends UIComponent {
           this.HandleEmployeeDiseaseInfo('copy', data);
           this.df.detectChanges();
         } else if (funcID == 'eBenefit') {
-          this.HandleEmployeeDiseaseInfo('copy', data);
+          this.handlEmployeeBenefit('copy', this.copyValue(data));
           this.df.detectChanges();
         }
         break;
@@ -1588,7 +1601,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupEmployeePartyInfoComponent,
       {
-        funcID : 'HRT03020102',
+        funcID : 'HRTEM0102',
         headerText: 'Thông tin Đảng - Đoàn',
       },
       option
@@ -1614,6 +1627,7 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupEAssurTaxBankComponent,
       {
         isAdd: true,
+        funcID : 'HRTEM0201',
         headerText: 'Bảo hiểm - MST - Tài khoản',
       },
       option
@@ -1641,7 +1655,7 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupESelfInfoComponent,
       {
         headerText: 'Thông tin bản thân',
-        funcID: 'HRT03020101',
+        funcID: 'HRTEM0101',
       },
       option
     );
@@ -1663,7 +1677,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let dialogEdit = this.callfunc.openSide(
       PopupJobGeneralInfoComponent,
       {
-        funcID: 'HRT03020201',
+        funcID: 'HRTEM0301',
         headerText: 'Thông tin chung',
       },
       option
@@ -1683,7 +1697,7 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupETimeCardComponent,
       {
         isAdd: false,
-        funcID: 'HRT03020101',
+        funcID: 'HRTEM0302',
         headerText: 'Thông tin chấm công',
       },
       option
@@ -1703,7 +1717,7 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupECalculateSalaryComponent,
       {
         isAdd: false,
-        funcID: 'HRT03020101',
+        funcID: 'HRTEM0303',
 
         headerText: 'Thông tin tính lương',
       },
@@ -1730,15 +1744,18 @@ export class EmployeeProfileComponent extends UIComponent {
     // option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.Width = '550px';
+    console.log('data benefit truyen vao form', data );
+    
     let dialogAdd = this.callfunc.openSide(
       PopupEbenefitComponent,
       {
         employeeId: this.data.employeeID,
         actionType: actionType,
         headerText: 'Phụ cấp',
-        funcID: 'HRT03020303',
-        listBenefits: this.listCrrBenefit,
-        indexSelected: this.listCrrBenefit?.indexOf(data) ?? 0
+        funcID: 'HRTEM0403',
+        benefitObj: data,
+        //listBenefits: this.listCrrBenefit,
+        //indexSelected: this.listCrrBenefit?.indexOf(data) ?? 0
       },
       option
     );
@@ -1766,7 +1783,7 @@ export class EmployeeProfileComponent extends UIComponent {
       {
         actionType: actionType,
         headerText: 'Kinh nghiệm trước đây',
-        funcID: 'HRT03020405',
+        funcID: 'HRTEM0505',
         lstExperience: this.lstExperience,
         employeeId: this.data.employeeID,
         indexSelected: this.lstExperience.indexOf(data),
@@ -1794,7 +1811,7 @@ export class EmployeeProfileComponent extends UIComponent {
         actionType: actionType,
         headerText: 'Lương chức danh',
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020302',
+        funcID: 'HRTEM0402',
         lstJobSalaries: this.lstJobSalaries,
         indexSelected: this.lstJobSalaries.indexOf(data),
       },
@@ -1827,7 +1844,7 @@ export class EmployeeProfileComponent extends UIComponent {
         actionType: actionType,
         lstEBSalary: this.lstEBSalary,
         headerText: 'Lương cơ bản',
-        funcID: 'HRT03020301',
+        funcID: 'HRTEM0401',
         indexSelected: this.lstExperience.indexOf(data),
         employeeId: this.data.employeeID,
       },
@@ -1862,7 +1879,7 @@ export class EmployeeProfileComponent extends UIComponent {
         actionType: actionType,
         employeeId: this.data.employeeID,
         headerText: 'Quan hệ gia đình',
-        funcID: 'HRT03020103',
+        funcID: 'HRTEM0103',
         lstFamilyMembers: this.lstFamily,
         indexSelected: this.lstFamily.indexOf(data),
       },
@@ -1894,7 +1911,7 @@ export class EmployeeProfileComponent extends UIComponent {
         actionType: actionType,
         indexSelected: this.lstPassport.indexOf(data),
         lstPassports: this.lstPassport,
-        funcID: 'HRT03020104',
+        funcID: 'HRTEM0202',
         headerText: 'Hộ chiếu',
         employeeId: this.data.employeeID,
       },
@@ -1932,7 +1949,7 @@ export class EmployeeProfileComponent extends UIComponent {
         lstDayOffs: this.lstDayOffs,
         headerText: 'Nghỉ phép',
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020403',
+        funcID: 'HRTEM0503',
       },
       option
     );
@@ -1958,7 +1975,7 @@ export class EmployeeProfileComponent extends UIComponent {
         // selectedWorkPermit: data,
         headerText: 'Giấy phép lao động',
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020106',
+        funcID: 'HRTEM0204',
       },
       option
     );
@@ -1991,7 +2008,7 @@ export class EmployeeProfileComponent extends UIComponent {
         lstVisas: this.lstVisa,
         headerText: 'Thị thực',
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020105',
+        funcID: 'HRTEM0203',
       },
       option
     );
@@ -2056,7 +2073,7 @@ export class EmployeeProfileComponent extends UIComponent {
         lstDiscipline: this.lstDiscipline,
         headerText: 'Kỷ luật',
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020602',
+        funcID: 'HRTEM0702',
       },
       option
     );
@@ -2081,7 +2098,7 @@ export class EmployeeProfileComponent extends UIComponent {
         lstAwards: this.lstAwards,
         employeeId: this.data.employeeID,
         headerText: 'Khen thưởng',
-        funcID: 'HRT03020601',
+        funcID: 'HRTEM0701',
       },
       option
     );
@@ -2107,7 +2124,7 @@ export class EmployeeProfileComponent extends UIComponent {
         lstAccident: this.lstAccident,
         employeeId: this.data.employeeID,
         headerText: 'Tai nạn lao động',
-        funcID: 'HRT03020704',
+        funcID: 'HRTEM0804',
       },
       option
     );
@@ -2131,7 +2148,7 @@ export class EmployeeProfileComponent extends UIComponent {
         indexSelected: this.lstAsset.indexOf(data),
         lstAssets: this.lstAsset,
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020304',
+        funcID: 'HRTEM0406',
         headerText: 'Tài sản cấp phát',
       },
       option
@@ -2155,7 +2172,7 @@ export class EmployeeProfileComponent extends UIComponent {
         indexSelected: this.lstAppointions.indexOf(data),
         employeeId: this.data.employeeID,
         lstEAppointions: this.lstAppointions,
-        funcID: 'HRT03020402',
+        funcID: 'HRTEM0502',
         headerText: 'Bổ nhiệm - Điều chuyển',
       },
       option
@@ -2179,7 +2196,7 @@ export class EmployeeProfileComponent extends UIComponent {
         indexSelected: this.lstCertificates.indexOf(data),
         lstCertificates: this.lstCertificates,
         headerText: 'Chứng chỉ',
-        funcID: 'HRT03020502',
+        funcID: 'HRTEM0602',
         employeeId: this.data.employeeID,
       },
       option
@@ -2205,7 +2222,7 @@ export class EmployeeProfileComponent extends UIComponent {
         headerText: 'Bằng cấp',
         employeeId: this.data.employeeID,
         dataSelected: data,
-        funcID: 'HRT03020501',
+        funcID: 'HRTEM0601',
       },
       option
     );
@@ -2229,7 +2246,7 @@ export class EmployeeProfileComponent extends UIComponent {
         // isAdd: true,
         headerText: 'Kỹ năng',
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020503',
+        funcID: 'HRTEM0603',
       },
       option
     );
@@ -2252,7 +2269,7 @@ export class EmployeeProfileComponent extends UIComponent {
         headerText: 'Đào tạo',
         employeeId: this.data.employeeID,
         actionType: 'add',
-        funcID: 'HRT03020504',
+        funcID: 'HRTEM0604',
       },
       option
     );
@@ -2309,7 +2326,7 @@ export class EmployeeProfileComponent extends UIComponent {
         lstEhealth: this.lstEhealth,
         headerText: 'Khám sức khỏe',
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020701',
+        funcID: 'HRTEM0801',
       },
       option
     );
@@ -2339,7 +2356,7 @@ export class EmployeeProfileComponent extends UIComponent {
         listData: this.lstVaccine,
         headerText: 'Tiêm Vaccine',
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020702',
+        funcID: 'HRTEM0802',
       },
       option
     );
@@ -2394,7 +2411,7 @@ export class EmployeeProfileComponent extends UIComponent {
         actionType: actionType,
         indexSelected: this.lstEdiseases.indexOf(data),
         lstEdiseases: this.lstEdiseases,
-        funcID: 'HRT03020703',
+        funcID: 'HRTEM0803',
         headerText: 'Bệnh nghề nghiệp',
         employeeId: this.data.employeeID,
       },
@@ -2428,7 +2445,7 @@ export class EmployeeProfileComponent extends UIComponent {
         salarySelected: null,
         headerText: 'Hợp đồng lao động',
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020401',
+        funcID: 'HRTEM0501',
       },
       option
     );
@@ -2462,7 +2479,7 @@ export class EmployeeProfileComponent extends UIComponent {
         dataSelected: null,
         headerText: 'Nhật kí công tác',
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020404',
+        funcID: 'HRTEM0504',
       },
       option
     );
@@ -2569,22 +2586,88 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   valueChangeFilterBenefit(evt){
-    (this.grid.dataService as CRUDService).setPredicates(['BenefitID==@0'], ['1']).subscribe((item) => {
-      console.log('item tra ve', item);
-    });
+    console.log('filter theo type', evt);
+    this.filterByBenefitIDArr = evt.data;
+    // let predicates = '('
+    // for(let i =0 ; i< this.filterByBenefitIDArr.length; i++){
+    //   if(i>0){
+    //     predicates +=' or '
+    //   }
+    //   predicates += `BenefitID==@${i}`
+    // }
+    // predicates += ') and ';
+    
+    // (this.grid.dataService as CRUDService).setPredicates(['BenefitID==@0'], ['1']).subscribe((item) => {
+    //   console.log('item tra ve', item);
+    // });
+    this.UpdateEBenefitPredicate();
+  }
+
+  UpdateEBenefitPredicate(){
+    if(this.filterByBenefitIDArr.length > 0){
+      this.filterEBenefitPredicates = '('
+      let i = 0;
+      for(i; i< this.filterByBenefitIDArr.length; i++){
+        if(i>0){
+          this.filterEBenefitPredicates +=' or '
+        }
+        this.filterEBenefitPredicates += `BenefitID==@${i}`
+      }
+      this.filterEBenefitPredicates += ') ';
+      if(this.startDateEBenefitFilterValue != null && this.endDateEBenefitFilterValue != null){
+        this.filterEBenefitPredicates +=  `and (EffectedDate>=@${i+1} and EffectedDate<=@${i+2})`;
+      }
+      this.filterEBenefitDatavalues = this.filterByBenefitIDArr.concat([this.startDateEBenefitFilterValue, this.endDateEBenefitFilterValue]);
+      
+      (this.grid.dataService as CRUDService).setPredicates([this.filterEBenefitPredicates],this.filterEBenefitDatavalues)
+      .subscribe((item) => {
+        console.log('item tra ve sau khi loc 1', item);
+      });
+    }
+    else if(this.startDateEBenefitFilterValue != null){
+      (this.grid.dataService as CRUDService).setPredicates([`EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}"`], [])
+      .subscribe((item) => {
+        console.log('item tra ve sau khi loc 2', item);
+      });
+    }
+    
   }
 
   valueChangeYearFilterBenefit(evt){
-    let start = evt.fromDate.toJSON();
-    let endDate = evt.toDate.toJSON();
+    console.log('chon year', evt);
+    ;
+    this.startDateEBenefitFilterValue = evt.fromDate.toJSON();
+    this.endDateEBenefitFilterValue = evt.toDate.toJSON();
+    this.UpdateEBenefitPredicate();
     
-    (this.grid.dataService as CRUDService).setPredicates(['EffectedDate>=@0&&EffectedDate<=@1'], [start, endDate]).subscribe((item) => {
-      console.log('item tra ve', item);
-    });
+    // (this.grid.dataService as CRUDService).setPredicates(['EffectedDate>=@0 and EffectedDate<=@1'], [start, endDate]).subscribe((item) => {
+    //   console.log('item tra ve', item);
+    // });
   }
 
   
   valueChangeViewAllEBenefit(evt){
     this.ViewAllEBenefitFlag = evt.data;
+    let ins = setInterval(()=>{
+      if(this.grid){
+        clearInterval(ins);
+        let t= this;
+        this.grid.dataService.onAction.subscribe((res)=>{
+          if(res.type == 'loaded'){
+            t.eBenefitRowCount = res['data'].length
+          }
+        })
+        //this.eBenefitRowCount = this.grid.dataService.rowCount; 
+      }
+    },100)
+    
+    
   }
-}
+
+copyValue(data) {
+    this.grid.dataService.dataSelected = data;
+    (this.grid.dataService as CRUDService).copy().subscribe((res: any) => {
+      if (!res) return;
+      return res;
+    })
+}}
