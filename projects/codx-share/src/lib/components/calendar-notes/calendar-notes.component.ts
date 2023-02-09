@@ -1073,7 +1073,7 @@ export class CalendarNotesComponent
     let option = new DialogModel();
     option.DataService = this.lstView.dataService as CRUDService;
     option.FormModel = this.lstView.formModel;
-    this.callfc.openForm(
+    let dialog = this.callfc.openForm(
       AddNoteComponent,
       'Thêm mới ghi chú',
       700,
@@ -1083,6 +1083,9 @@ export class CalendarNotesComponent
       '',
       option
     );
+    // dialog.closed.subscribe((e) => {
+    //   (this.lstView.dataService as CRUDService).add(e.event).subscribe();
+    // });
   }
 
   valueChange(e, transID = null, item = null) {
