@@ -162,7 +162,7 @@
               </div>
               <div class="text-dark">
                 <codx-input class="" type="text" [crrValue]="item?.memo"
-                  (valueChange)="changeMemo2($event, item?.resourceID)" placeholder="Ghi chú phân công..."
+                  (valueChange)="changeMemo2($event, item?.resourceID)" placeholder="{{planholderTaskChild}}"
                   [disabled]="readOnly"></codx-input>
               </div>
             </div>
@@ -268,7 +268,7 @@
             </div> -->
             <div class="text-dark">
               <codx-input class="" type="text" [crrValue]="item?.memo"
-                (valueChange)="changeMemo2($event, item?.resourceID)" placeholder="Ghi chú phân công..."
+                (valueChange)="changeMemo2($event, item?.resourceID)" placeholder= '{{planholderTaskChild}}'
                 [disabled]="readOnly"></codx-input>
             </div>
           </div>

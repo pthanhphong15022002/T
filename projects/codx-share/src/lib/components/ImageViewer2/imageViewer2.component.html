@@ -1,7 +1,26 @@
 <div id="{{idContainer}}" class="image-gallery-2">
     <div class="image-container"></div>
     <div class="inline-icon">
-        <div *ngIf="showOptions" class="options-image-viewer">
+        <div class="moreFC-top px-5">
+            <div class="d-flex justify-content-between">
+                <button (click)="close()" class="btn btn-icon btn-primary">
+                    <i class="icon-close icon-20 text-danger"></i>
+                </button>
+                <div class="d-flex">
+                    <span (click)="zoomIn()" class="btn rounded-circle btn-icon btn-primary ms-2 cursor-pointer">
+                        <i class="icon-zoom_in icon-20"></i>
+                    </span>
+                    <span (click)="zoomOut()" class="btn btn-icon rounded-circle btn-primary ms-2 cursor-pointer">
+                        <i class="icon-zoom_out icon-20"></i>
+                    </span>
+                    <span (click)="mostrarFullscreen()"
+                        class="btn btn-icon rounded-circle bt-primary ms-2 cursor-pointer">
+                        <i class="icon-i-arrows-angle-expand icon-18"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- <div *ngIf="showOptions" class="options-image-viewer">
             <a class="image-viewer-tooltip" *ngIf="zoomInButton"
                (click)="zoomIn()">
                 <span *ngIf="enableTooltip" class="tooltiptext">{{zoomInTooltipLabel}}</span>
@@ -19,12 +38,17 @@
                 <span *ngIf="enableTooltip" class="tooltiptext">{{fullscreenTooltipLabel}}</span>
                 <i class="material-icons footer-icon">fullscreen</i>
             </a>
-        </div>
+        </div> -->
     </div>
-    <i class="prev" (click)="imagemAnterior()"></i>
-    <i class="next" (click)="proximaImagem()"></i>
+    <!-- <i class="prev" (click)="imagemAnterior()"></i>
+    <i class="next" (click)="proximaImagem()"></i> -->
+    <div class="next-previrous px-5">
+        <span class="btn rounded-circle btn-icon btn-light-primary cursor-pointer" (click)="imagemAnterior()">
+            <span class="icon-i-chevron-left icon-24"></span></span>
+        <span class="btn rounded-circle btn-icon btn-light-primary cursor-pointer" (click)="proximaImagem()">
+            <span class="icon-i-chevron-right icon-24"></span></span>
+    </div>
     <div class="footer-info">
         <span id="current"></span>/<span class="total"></span>
     </div>
 </div>
-1

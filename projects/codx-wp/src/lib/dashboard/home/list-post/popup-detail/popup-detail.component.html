@@ -1,38 +1,16 @@
 <div class="row mx-0 h-100">
     <!-- file -->
-    <div class="col-8 px-5 bg-gray-200 position-relative d-flex felx-columns flex-wrap align-items-center">
-        <ng-container *ngIf="imageSrc">
-            <div class="d-flex flex-columns flex-wap align-items-center w-100 h-100 view-imgfull position-relative">
-                <codx-image-viewer #codxImageViewer 
-                    [idContainer]="'idOnHTML'"
-                    [objectID]="postID"
-                    [loadOnInit]="true">
-                </codx-image-viewer>
-                <ng-container *ngIf="files.length > 1">
-                    <div class="next-previrous">
-                        <span class="icon-arrow_back_ios next-previrous-btn" (click)="previousFile()"></span>
-                        <span class="icon-arrow_forward_ios next-previrous-btn" (click)="nextFile()"></span>
-                    </div>
-                </ng-container>
-            </div>
-        </ng-container>
-        <div class="moreFC-top">
-            <div class="d-flex justify-content-between">
-                <button class="btn btn-icon btn-light" (click)="clickClosePopup()">
-                    <i class="icon-close icon-18 text-danger"></i>
-                </button>
-                <div class="d-flex">
-                    <span (click)="zoomIn()" class="btn rounded-circle btn-icon btn-light-primary ms-2 cursor-pointer">
-                        <i class="icon-zoom_in"></i>
-                    </span>
-                    <span (click)="zoomOut()" class="btn btn-icon rounded-circle btn-light-primary ms-2 cursor-pointer">
-                        <i class="icon-zoom_out"></i>
-                    </span>
-                    <span (click)="fullscreen()"  class="btn btn-icon rounded-circle btn-light-primary ms-2 cursor-pointer">
-                        <i class="icon-fullscreen"></i>
-                    </span>
+    <div class="col-8 px-0 bg-gray-200 position-relative d-flex felx-columns flex-wrap align-items-center">
+        <div class="d-flex flex-columns flex-wap align-items-center w-100 h-100 view-imgfull position-relative">
+            <codx-image-viewer #codxImageViewer [idContainer]="'idOnHTML'" [objectID]="postID" [loadOnInit]="true"
+                [dialog]="dialogRef">
+            </codx-image-viewer>
+            <!-- <ng-container *ngIf="files.length > 1">
+                <div class="next-previrous">
+                    <span class="icon-arrow_back_ios next-previrous-btn" (click)="previousFile()"></span>
+                    <span class="icon-arrow_forward_ios next-previrous-btn" (click)="nextFile()"></span>
                 </div>
-            </div>
+            </ng-container> -->
         </div>
     </div>
     <!-- post -->

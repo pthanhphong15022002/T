@@ -54,6 +54,15 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   qtyTasks: number = 0;
   vlWork = [];
   hrWork = [];
+  topEmp = [
+    { name: 'Lê Phạm Hoài Thương 1', tasks: 123 },
+    { name: 'Lê Phạm Hoài Thương 2', tasks: 100 },
+    { name: 'Lê Phạm Hoài Thương 3', tasks: 90 },
+    { name: 'Lê Phạm Hoài Thương 4', tasks: 80 },
+    { name: 'Lê Phạm Hoài Thương 5', tasks: 70 },
+    { name: 'Lê Phạm Hoài Thương 6', tasks: 60 },
+    { name: 'Lê Phạm Hoài Thương 7', tasks: 10 },
+  ];
 
   rangeColors: RangeColorModel[] = [
     { start: 0, end: 50, color: 'red' },
@@ -236,7 +245,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.panels = JSON.parse(
-      '[{"id":"0.5293183694893755_layout","row":6,"col":6,"sizeX":3,"sizeY":3,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.7462735198778399_layout","row":6,"col":0,"sizeX":6,"sizeY":3,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.932033280876619_layout","row":1,"col":6,"sizeX":3,"sizeY":5,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.6076202141678433_layout","row":1,"col":3,"sizeX":3,"sizeY":5,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.5296463903570827_layout","row":1,"col":0,"sizeX":3,"sizeY":5,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.18375208371519292_layout","row":0,"col":0,"sizeX":9,"sizeY":1,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"0.5293183694893755_layout","row":5,"col":16,"sizeX":7,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.7462735198778399_layout","row":5,"col":0,"sizeX":16,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.932033280876619_layout","row":1,"col":16,"sizeX":7,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.6076202141678433_layout","row":1,"col":8,"sizeX":8,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.5296463903570827_layout","row":1,"col":0,"sizeX":8,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.18375208371519292_layout","row":0,"col":0,"sizeX":23,"sizeY":1,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datas = JSON.parse(
       '[{"panelId":"0.5293183694893755_layout","data":"6"},{"panelId":"0.7462735198778399_layout","data":"5"},{"panelId":"0.932033280876619_layout","data":"4"},{"panelId":"0.6076202141678433_layout","data":"3"},{"panelId":"0.5296463903570827_layout","data":"2"},{"panelId":"0.18375208371519292_layout","data":"1"}]'
