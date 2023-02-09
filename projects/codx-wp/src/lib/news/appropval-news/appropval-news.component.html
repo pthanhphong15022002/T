@@ -1,0 +1,72 @@
+<codx-views #view 
+  [entityName]="entityName" 
+  idField="recID" 
+  [views]="views" 
+  [service]="'WP'"
+  [assemblyName]="'ERM.Business.WP'" 
+  [className]="'NewsBusiness'" 
+  [method]="'GetDataApprovalAsync'"
+  [selectedFirst]="true" 
+  (selectedChange)="selectedChange($event)" 
+  (buttonClick)="clickBtnAdd()">
+</codx-views>
+
+<ng-template #headerTemplate>
+  <ul class="nav nav-news">
+    <ng-container *ngFor="let item of tabAsside">
+      <li class="nav-item" [class.text-primary]="item.active">
+        <a class="nav-link fw-bold" href="javascript:;" (click)="clickTabApprove(item, item.predicate, item.datavalue)">
+          <codx-label [formModel]="view.formModel" [name]="'lbl' + item.text" [default]="item.text"></codx-label>
+          <span>({{ item.total }})</span>
+        </a>
+      </li>
+    </ng-container>
+  </ul>
+</ng-template>
+<ng-template #panelRightRef>
+  <wp-appropval-news-detail 
+    [objectID]="selectedID" 
+    [entityName]="entityName" 
+    [dataService]="view.dataService"
+    [funcID]="view.funcID" 
+    (evtUpdateApproval)="realoadData($event)" 
+    [formModel]="view.formModel">
+  </wp-appropval-news-detail>
+</ng-template>
+<ng-template #tmpEmpty>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-250px" />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #itemTemplate let-data>
+  <div class="news-listleft">
+    <ng-container *ngIf="funcID == 'WPT0213';else wp_news">
+      <codx-temp-full [dataItem]="data" [typeMF]="'hover'" (clickMF)="clickMF($event,data)" [descLine]="2"
+        [formModel]="view.formModel" [resourceObjType]="entityName" imgCss="me-2"
+        cardCss="card-template border-bottom px-4 py-3"
+        [icoCss]="'w-40px symbol h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' + data.category | vll:'WP004':'icon' | async"
+        [icoStyle]="" title="<span class='fw-bold'>{{data.category | vll:'WP004':'text'|async}}</span>"
+        [desc]="data.comments" [date]="data.createdOn" [status]="data.approveStatus"
+        [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']" [bookmark]="false">
+      </codx-temp-full>
+    </ng-container>
+    <ng-template #wp_news>
+      <codx-temp-full [dataItem]="data" [typeMF]="'hover'" (clickMF)="clickMF($event,data)" [formModel]="view.formModel"
+        [resourceObjType]="'AD_Users'" [resources]="data.createdBy"
+        [icoCss]="'w-40px symbol h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' +(data.category | vll:'WP004':'icon' | async)"
+        [icoStyle]="setStyles((data.category | vll:'WP004':'color'|async))" imgCss="me-3"
+        cardCss="card-template border-bottom px-4 py-3"
+        title="<span class='fw-bold'>{{data.category | vll:'WP004':'text'|async}}</span>"
+        [desc]="data.category == 'companyinfo'? data.content : data.subject" [descLine]="2" [date]="data.createdOn"
+        [status]="data.approveStatus" [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']" [bookmark]="false">
+      </codx-temp-full>
+    </ng-template>
+  </div>
+</ng-template>

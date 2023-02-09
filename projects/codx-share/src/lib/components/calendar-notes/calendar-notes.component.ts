@@ -1147,13 +1147,18 @@ export class CalendarNotesComponent
                 this.EP_BookingCars = this.EP_BookingCarsTemp;
           }
           if (value == '0') {
+            let tmpTransType = transType;
+            if (transType == 'TM_Tasks') {
+              tmpTransType = 'TM_MyTasks';
+            }
+
             this.dataResourceModel = this.dataResourceModel.filter(
-              (x) => x.transType != transType
+              (x) => x.transType != tmpTransType
             );
             if (this.dataListViewTemp && this.dataListViewTemp.length > 0)
               this.lstView.dataService.data =
                 this.lstView.dataService.data.filter(
-                  (x) => x.transType != transType
+                  (x) => x.transType != tmpTransType
                 );
           } else if (value == '1') {
             if (
@@ -1231,7 +1236,11 @@ export class CalendarNotesComponent
             let lstTemp: any = JSON.parse(
               JSON.stringify(this.dataListViewTemp)
             );
-            lstTemp = lstTemp.filter((x) => x.transType == transType);
+            let tmpTransType = transType;
+            if (transType == 'TM_Tasks') {
+              tmpTransType = 'TM_MyTasks';
+            }
+            lstTemp = lstTemp.filter((x) => x.transType == tmpTransType);
             if (transType == 'WP_Notes')
               this.lstView.dataService.data = [
                 ...lstTemp,

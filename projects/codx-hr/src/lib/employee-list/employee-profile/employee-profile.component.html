@@ -3246,10 +3246,14 @@
                         ></codx-dropdown-calendar>
                       </div>
                     </div>
-
+                    <!-- [funcId]="benefitFormodel.funcID"
+                    [formName]="benefitFormodel.formName"
+                    [gridViewName]="benefitFormodel.gridViewName"
+                    [entityName]="benefitFormodel.entityName" -->
                     <div>
-                      <codx-gridview
+                      <codx-gridview *ngIf="benefitColumnGrid"
                         #gridView
+                        [formModel]="benefitFormodel"
                         [columnsGrid]="benefitColumnGrid"
                         [service]="'HR'"
                         [assemblyName]="'Core'"
@@ -3672,6 +3676,8 @@
                       default="Bổ nhiệm - Điều chuyển"
                     >
                     </codx-label>
+                    <span class="text-gray-500 ms-2"> | </span>
+                    <span>({{appointionRowCount}})</span>
                   </div>
                 </div>
                 <div class="d-flex align-items-center ms-5">
@@ -3709,11 +3715,21 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                    <!-- <codx-gridview-v2 idField="recID" [service]="'HR'" [gridViewName]="'grvEAppointions'"
-                      [formName]="'EAppointions'" [assemblyName]="'Core'" [className]="'DataBusiness'"
-                      [method]="'LoadDataAsync'" [predicates]="'EmployeeID=@0'" [autoLoad]="true" [height]="200"
-                      [dataValues]="data.employeeID" [entityName]="'HR_EAppointions'" [contentEditable]="false"
-                      [allowResizing]="true" (clickMF)="clickMF($event, null, 'eAppointions')"></codx-gridview-v2> -->
+                  <codx-gridview *ngIf="appointionColumnGrid"
+                  #appointionGridView
+                  [formModel]="appointionFormodel"
+                  [columnsGrid]="appointionColumnGrid"
+                  [service]="'HR'"
+                  [assemblyName]="'Core'"
+                  [className]="'DataBusiness'"
+                  [method]="'LoadDataAsync'"
+                  [predicates]="'EmployeeID=@0'"
+                  [dataValues]="data.employeeID"
+                  [pageSize]="numPageSizeGridView"
+                  [entityName]="'HR_EAppointions'"
+                  [rowHeight]="50"
+                  height="240px"
+                ></codx-gridview>
                   </div>
                 </div>
               </div>
@@ -5237,20 +5253,41 @@
   </codx-mfunc>
 </ng-template>
 
-<!-- <ng-template #filterTemplateBenefit>
-  <div class="d-flex me-3">
-    <codx-dropdown-select
-      [cssClass]="'rounded-pill border-1'"
-      cssPopup="h-350px w-300px"
-      type="valuelist"
-      field="BenefitID"
-      [refValue]="'HR009'"
-      (valueChange)="valueChangeFilterBenefit($event)"
-    ></codx-dropdown-select>
-    <!-- <codx-dropdown-calendar
-      [value]="date"
-      [displayOption]="ops"
-      [selectedType]="'y'"
-    ></codx-dropdown-calendar> 
+<ng-template #templateAppointionGridCol1 let-data>
+  <div>
+    {{data?.appoint | formatvalue: appointionFormodel:"appoint" | async}}
   </div>
-</ng-template> -->
+  <div>
+    <i class="icon-calendar_today"></i>
+    {{data?.effectedDate | fmDT}} - {{ data?.expiredDate| fmDT }}
+  </div>
+</ng-template>
+
+<ng-template #templateAppointionGridCol2 let-data>
+  <div>
+    {{data?.positionID | formatvalue: appointionFormodel:"positionID" | async}}
+  </div>
+  <div>Cũ: 
+    {{data?.oldPositionID | formatvalue: appointionFormodel:"oldPositionID" | async}}
+  </div>
+</ng-template>
+
+<ng-template #templateAppointionGridCol3 let-data>
+  <div>
+    {{data?.orgUnitID | formatvalue: appointionFormodel:"orgUnitID" | async}}
+  </div>
+  <div>
+    Cũ: 
+    {{data?.oldOrgUnitID | formatvalue: appointionFormodel:"oldOrgUnitID" | async}}
+  </div>
+</ng-template>
+
+<ng-template #templateAppointionGridMoreFunc let-data>
+  <codx-mfunc
+    [formModel]="appointionFormodel"
+    (clickMF)="clickMF($event, data, 'eAppointions')"
+    [dataItem]="data"
+    type="hover"
+  >
+  </codx-mfunc>
+</ng-template>

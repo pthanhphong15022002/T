@@ -363,6 +363,7 @@ export class IncommingComponent
 
   getGridViewSetup(funcID: any) {
     this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
+      debugger;
       this.funcList = fuc;
       this.codxODService
         .loadGridView(fuc?.formName, fuc?.gridViewName)

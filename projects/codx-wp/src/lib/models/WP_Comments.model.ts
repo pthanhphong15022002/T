@@ -60,6 +60,9 @@ export class WP_Comments{
     public shares:any
     public news:any
     public images:number
+    public medias:number
+    public attachments:number
+
     public files:any
 
     constructor(){
@@ -95,5 +98,7 @@ export class WP_Comments{
         this.tag = 0;
         this.files = null;
         this.permissions = [];
+        this.medias = 0;
+        this.attachments = 0;
     }
 }

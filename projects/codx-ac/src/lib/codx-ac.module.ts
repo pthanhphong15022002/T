@@ -1,3 +1,4 @@
+import { JournalNamesComponent } from './journal-names/journal-names.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxCoreModule } from 'codx-core';
@@ -43,6 +44,10 @@ export const routes: Routes = [
         path: 'cashpayments/:funcID',
         component: CashPaymentsComponent,
       },
+      {
+        path: 'journalnames/:funcID',
+        component: JournalNamesComponent,
+      },
     ],
   },
   {
@@ -67,7 +72,6 @@ export const routes: Routes = [
       },
     ],
   },
-
 ];
 
 @NgModule({
@@ -89,7 +93,8 @@ export const routes: Routes = [
     PopAddVendorsComponent,
     NosubAsideComponent,
     CashPaymentsComponent,
-    PopAddCashComponent
+    PopAddCashComponent,
+    JournalNamesComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
