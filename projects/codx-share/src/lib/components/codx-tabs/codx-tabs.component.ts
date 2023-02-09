@@ -61,15 +61,15 @@ export class CodxTabsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.api
-      .execSv('BG', 'BG', 'TrackLogsBusiness', 'CountFooterAsync', [
-        this.objectID,
-        this.referType,
-        this.transID,
-      ])
-      .subscribe((res) => {
-        this.oCountFooter = res;
-      });
+    // this.api
+    //   .execSv('BG', 'BG', 'TrackLogsBusiness', 'CountFooterAsync', [
+    //     this.objectID,
+    //     this.referType,
+    //     this.transID,
+    //   ])
+    //   .subscribe((res) => {
+    //     this.oCountFooter = res;
+    //   });
     if (this.TabControl.length == 0) {
       this.TabControl = this.all;
       // this.all.forEach((res, index) => {
