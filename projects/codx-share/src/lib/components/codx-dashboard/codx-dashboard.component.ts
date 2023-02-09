@@ -103,8 +103,9 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @Input() dataValue!: string;
   @Input() panels: any = [];
   @Input() datas: any = [];
+  @Input() enableEditing: boolean = false;
   isChart: boolean = false;
-  enableEditing: boolean = false;
+
   annotations: ChartAnnotationSettingsModel[] = [];
   primaryXAxis: AxisModel = {
     valueType: 'Category',
