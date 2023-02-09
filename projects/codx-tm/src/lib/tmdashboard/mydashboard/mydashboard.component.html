@@ -1,16 +1,6 @@
-<codx-views
-  #view
-  [views]="views"
-  [viewActiveType]="viewType.card"
-  [funcID]="'TMD001'"
-  [service]="'TM'"
-  [assemblyName]="'TM'"
-  [className]="'ReportBusiness'"
-  [method]="'LoadDashboardAsync'"
->
-</codx-views>
+<codx-views #view [views]="views"> </codx-views>
 
-<!-- <ng-template #my_dashboard>
+<ng-template #my_dashboard>
   <div id="1" title="Thống kê">
     <div class="w-100 h-100">
       <div
@@ -98,7 +88,7 @@
         Tỷ lệ hoàn thành công việc
       </div>
       <div class="row">
-        <div class="col-5">
+        <div class="col-6">
           <ejs-circulargauge
             class="mh-200px h-200px"
             style="display: block"
@@ -169,7 +159,7 @@
             </e-axes>
           </ejs-circulargauge>
         </div>
-        <div class="col-7">
+        <div class="col-6">
           <div
             class="rateDoneTask_wrap mh-100px h-100px"
             style="
@@ -408,28 +398,4 @@
     [panels]="panels"
     [datas]="datas"
   ></codx-dashboard>
-</ng-template> -->
-
-<ng-template #templateListCard let-data>
-  <codx-card-img
-    cardCss="border w-200px h-100 card-vpp"
-    [icoCss]="data?.largeIcon"
-    [imageObjName]="data?.resourceName"
-    [imageId]="data?.recID"
-    [rootData]="data"
-    [footer]="cardItemFooter"
-    [imageWidth]="600"
-  >
-  </codx-card-img>
-</ng-template>
-
-<ng-template #cardItemFooter let-data>
-  <div class="d-flex flex-column flex-grow-1 mt-2">
-    <div class="fw-bold line-clamp line-clamp-1 text-start">
-      {{ data?.customName }}
-    </div>
-    <div class="fw-bold line-clamp line-clamp-1 text-start">
-      {{ data?.description }}
-    </div>
-  </div>
 </ng-template>
