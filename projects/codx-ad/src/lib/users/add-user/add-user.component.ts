@@ -288,6 +288,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
         .save((opt: any) => this.beforeSaveTemp(opt), 0)
         .subscribe((res) => {
           if (res.save) {
+            this.adUser.userID = res.save.userID;
+
             this.getHTMLFirstPost(this.adUser);
             this.adService.createFirstPost(this.tmpPost).subscribe();
             this.imageUpload

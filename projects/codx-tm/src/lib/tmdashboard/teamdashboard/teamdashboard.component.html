@@ -2,12 +2,195 @@
 <ng-template #team_dashboard>
   <div id="1" title="Thống kê">
     <div class="w-100 p-2">
-      <div class="fw-bold text-center">Thống kê</div>
-      <div class="d-flex justify-content-between align-items-center">
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>4</div>
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <div class="card m-2" style="min-width: 250px; min-height: 115px">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <img
+                src="assets/themes/tm/default/img/DB_Chuathuchien.svg"
+                class="svg-icon"
+              />
+              <div class="ms-2">
+                <div>Chưa thực hiện</div>
+                <div class="fw-bold">23</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card m-2" style="min-width: 250px; min-height: 115px">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <img
+                src="assets/themes/tm/default/img/DB_Quahan.svg"
+                class="svg-icon"
+              />
+              <div class="ms-2">
+                <div>Quá hạn</div>
+                <div class="fw-bold">5</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card m-2" style="min-width: 250px; min-height: 115px">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <img
+                src="assets/themes/tm/default/img/DB_Dangthuchien.svg"
+                class="svg-icon"
+              />
+              <div class="ms-2">
+                <div>Đang thực hiện</div>
+                <div class="fw-bold">1</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card m-2" style="min-height: 115px">
+          <div class="card-body">
+            <div class="d-flex justify-content-between flex-wrap">
+              <div class="d-flex align-items-center">
+                <img
+                  src="assets/themes/tm/default/img/DB_Hoantat.svg"
+                  class="svg-icon"
+                />
+                <div class="ms-2">
+                  <div>Công việc hoàn tất</div>
+                  <div class="fw-bold">1939</div>
+                </div>
+              </div>
+              <div class="vr mx-5"></div>
+              <div class="d-flex justify-content-between">
+                <div class="d-flex align-items-center">
+                  <ejs-circulargauge
+                    class="w-70px h-70px"
+                    style="display: block"
+                    id="ontime"
+                    width="100%"
+                  >
+                    <e-axes>
+                      <e-axis
+                        minimum="0"
+                        radius="100%"
+                        maximum="100"
+                        startAngle="0"
+                        endAngle="360"
+                        [majorTicks]="{
+                          height: 0
+                        }"
+                        [labelStyle]="{
+                          position: 'Inside',
+                          useRangeColor: true,
+                          font: {
+                            size: '0px',
+                            color: 'white',
+                            fontFamily: 'Roboto',
+                            fontStyle: 'Regular'
+                          }
+                        }"
+                        [lineStyle]="{
+                          width: 0
+                        }"
+                        [minorTicks]="{
+                          width: 0
+                        }"
+                      >
+                        <e-ranges>
+                          <e-range
+                            start="0"
+                            end="100"
+                            radius="100%"
+                            color="#F0F0F0"
+                            startWidth="10"
+                            endWidth="10"
+                          >
+                          </e-range>
+                        </e-ranges>
+                        <e-pointers>
+                          <e-pointer
+                            [value]="70"
+                            pointerWidth="10"
+                            type="RangeBar"
+                            radius="100%"
+                            color="#357cd2"
+                          ></e-pointer>
+                        </e-pointers>
+                      </e-axis>
+                    </e-axes>
+                  </ejs-circulargauge>
+                  <div class="ms-2">
+                    <div>Đúng hạn</div>
+                    <div class="fw-bold">1551</div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <ejs-circulargauge
+                    class="w-70px h-70px"
+                    style="display: block"
+                    id="duedate"
+                    width="100%"
+                  >
+                    <e-axes>
+                      <e-axis
+                        minimum="0"
+                        radius="100%"
+                        maximum="100"
+                        startAngle="0"
+                        endAngle="360"
+                        [majorTicks]="{
+                          height: 0
+                        }"
+                        [labelStyle]="{
+                          position: 'Inside',
+                          useRangeColor: true,
+                          font: {
+                            size: '0px',
+                            color: 'white',
+                            fontFamily: 'Roboto',
+                            fontStyle: 'Regular'
+                          }
+                        }"
+                        [lineStyle]="{
+                          width: 0
+                        }"
+                        [minorTicks]="{
+                          width: 0
+                        }"
+                      >
+                        <e-ranges>
+                          <e-range
+                            start="0"
+                            end="100"
+                            radius="100%"
+                            color="#F0F0F0"
+                            startWidth="10"
+                            endWidth="10"
+                          >
+                          </e-range>
+                        </e-ranges>
+                        <e-pointers>
+                          <e-pointer
+                            [value]="70"
+                            pointerWidth="10"
+                            type="RangeBar"
+                            radius="100%"
+                            color="#357cd2"
+                          ></e-pointer>
+                        </e-pointers>
+                      </e-axis>
+                    </e-axes>
+                  </ejs-circulargauge>
+                  <div class="ms-2">
+                    <div>Quá hạn</div>
+                    <div class="fw-bold">338</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -329,14 +512,63 @@
         Hiệu suất làm việc
       </div>
       <div class="rounded-2 bg-body mb-3">
-        <div class="d-flex justify-content-start border-bottom p-5">
-          <div class="bg-light-primary p-3 rounded-1 me-3">
-            <span class="icon-check-correct icon-24"></span>
-          </div>
-          <div class="d-flex flex-column">
-            <h1 class="mb-0">80.4</h1>
-            <div class="text-gray-600">Công việc đã hoàn tất</div>
-          </div>
+        <div class="d-flex justify-content-center">
+          <ejs-circulargauge
+            class="w-250px h-150px"
+            id="range-container-4"
+            centerY="100"
+            width="100%"
+          >
+            <e-axes>
+              <e-axis
+                minimum="0"
+                radius="150%"
+                maximum="100"
+                startAngle="270"
+                endAngle="90"
+                [majorTicks]="{
+                  height: 1,
+                  color: '#000',
+                  interval: 25
+                }"
+                [labelStyle]="{
+                  position: 'Outside',
+                  font: {
+                    size: '10px',
+                    color: '#000'
+                  }
+                }"
+                [lineStyle]="{
+                  width: 0
+                }"
+                [minorTicks]="{
+                  width: 0
+                }"
+              >
+                <e-ranges>
+                  <e-range
+                    start="0"
+                    end="100"
+                    radius="100%"
+                    roundedCornerRadius="10"
+                    color="#F0F0F0"
+                    startWidth="20"
+                    endWidth="20"
+                  >
+                  </e-range>
+                </e-ranges>
+                <e-pointers>
+                  <e-pointer
+                    [value]="70"
+                    pointerWidth="20"
+                    type="RangeBar"
+                    radius="100%"
+                    color="#357cd2"
+                  ></e-pointer>
+                </e-pointers>
+              </e-axis>
+            </e-axes>
+          </ejs-circulargauge>
         </div>
         <div class="d-flex py-3">
           <div class="w-50 p-3 border-right">
@@ -364,5 +596,6 @@
     [templates]="templates"
     [panels]="panels"
     [datas]="datas"
+    [enableEditing]="true"
   ></codx-dashboard>
 </ng-template>

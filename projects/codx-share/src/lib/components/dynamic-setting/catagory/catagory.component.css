@@ -22,3 +22,7 @@ lib-catagory .card-body {
     margin-bottom: 12px;
     margin-top: 5px;
 }
+
+.category-control ejs-dropdownlist {
+    width: 200px !important;
+}

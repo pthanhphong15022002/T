@@ -228,6 +228,7 @@ export class EmployeesComponent extends UIComponent {
       }
     }
   }
+  // edit
   edit(event: any, data: any) {
     if (event && data) 
     {
@@ -346,7 +347,6 @@ export class EmployeesComponent extends UIComponent {
   }
 
   beforeDel(opt: RequestOption) {
-    debugger;
     opt.service = 'HR';
     opt.assemblyName = 'ERM.Business.HR';
     opt.className = 'EmployeesBusiness';
@@ -360,6 +360,7 @@ export class EmployeesComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
+  // cập nhật tình trạng nhân viên
   updateStatus(data: any, funcID: string) {
     let popup = this.callfc.openForm(
       UpdateStatusComponent,
@@ -372,7 +373,7 @@ export class EmployeesComponent extends UIComponent {
     popup.closed.subscribe((e) => {
       if (e?.event) {
         var emp = e.event;
-        if (emp.status == '90') {
+        if (emp.status === '90') {
           this.view.dataService.remove(emp).subscribe();
         } else this.view.dataService.update(emp).subscribe();
       }
@@ -380,6 +381,7 @@ export class EmployeesComponent extends UIComponent {
     });
   }
 
+  // view emp infor
   viewEmployeeInfo(func, data) {
     if (func.url)
       this.codxService.navigate('', func.url, { employeeID: data.employeeID });
@@ -409,15 +411,13 @@ export class EmployeesComponent extends UIComponent {
   }
 
   doubleClick(data) {
-    // this.codxService.navigate('HRT0301', '', {employeeID: data.employeeID});
-    debugger;
-    if (this.listMoreFunc.length > 0) {
-      this.listMoreFunc.forEach((obj) => {
-        if (obj.functionID == 'HR0032') this.urlView = obj.url;
-      });
-      this.codxService.navigate('', this.urlView, {
-        employeeID: data.employeeID,
-      });
+    if (Array.isArray(this.listMoreFunc)){
+      let _mFunc = this.listMoreFunc.find(x => x.functionID === "HR0032");
+      if(_mFunc?.url){
+        this.codxService.navigate('', _mFunc.url, {
+          employeeID: data.employeeID,
+        });
+      }
     }
   }
 
