@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, CallFuncService, DialogRef, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CallFuncService, DialogModel, DialogRef, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { PopAddCashComponent } from './pop-add-cash/pop-add-cash.component';
 
 @Component({
   selector: 'lib-cash-payments',
@@ -11,6 +12,9 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   dialog!: DialogRef;
   button?: ButtonModel;
+  headerText:any;
+  moreFuncName:any;
+  funcName:any;
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -19,6 +23,12 @@ export class CashPaymentsComponent extends UIComponent {
   ) { 
     super(inject);
     this.dialog = dialog;
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS01');
+        if (m) this.moreFuncName = m.defaultName;
+      }
+    });
   }
 
   onInit(): void {
@@ -29,7 +39,7 @@ export class CashPaymentsComponent extends UIComponent {
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
-        //this.add();
+        this.add();
         break;
     }
   }
@@ -45,6 +55,9 @@ export class CashPaymentsComponent extends UIComponent {
     
   }
   ngAfterViewInit(): void {
+    this.cache.functionList(this.view.funcID).subscribe((res) => {
+      if (res) this.funcName = res.defaultName;
+    });
     this.views = [
       {
         type: ViewType.list,
@@ -55,6 +68,24 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
     ];
+  }
+  add() {
+    this.headerText = this.moreFuncName + ' ' + this.funcName;
+    this.view.dataService.addNew().subscribe((res: any) => {
+      var obj = {
+        formType: 'add',
+        headerText: this.headerText,
+      };
+      let option = new DialogModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.IsFull = true;
+      this.dialog = this.callfunc.openForm(PopAddCashComponent,'', null,null,this.view.funcID,obj,'',option,);
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null)
+        this.view.dataService.clear();
+      });
+    });
   }
 
 }

@@ -12,7 +12,19 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel, ViewTreeDetailComponent, DataService, DataRequest, PageTitleService, CodxService, CacheService } from 'codx-core';
+import {
+  ApiHttpService,
+  CallFuncService,
+  DialogData,
+  DialogRef,
+  FormModel,
+  ViewTreeDetailComponent,
+  DataService,
+  DataRequest,
+  PageTitleService,
+  CodxService,
+  CacheService,
+} from 'codx-core';
 
 @Component({
   selector: 'share-tree-view',
@@ -20,45 +32,45 @@ import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel, View
   styleUrls: ['./tree-view.component.css'],
 })
 export class TreeViewComponent implements OnInit, AfterViewInit {
-
   //#region Constructor
-  @Input() data: any
+  @Input() data: any;
   @Input() formModel?: FormModel;
   @Input() dataService: DataService;
   @Input() vllStatus?: any;
   @Input() listRoles?: any;
   @Input() showMoreFunc?: any;
-  @Input() dataObj: any
-  isShow = true ;
-  isClose = false ;
+  @Input() dataObj: any;
+  @Input() user: any;
+  isShow = true;
+  isClose = false;
 
-
-  vllPriority ='TM005'
+  vllPriority = 'TM005';
   dataTree: any[] = [];
   dialog: any;
-  favorite  = '' ;
+  favorite = '';
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() viewTask = new EventEmitter<any>();
- 
+
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
     private changeDetectorRef: ChangeDetectorRef,
     private pageTitle: PageTitleService,
-    private codxService : CodxService,
-    private cache : CacheService,
+    private codxService: CodxService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) { 
+  ) {
     if (this.codxService.activeFav) {
-          this.cache.favorite(this.codxService.activeFav).subscribe((x) => {
-            this.favorite = x?.favorite
-          });
-   }}
+      this.cache.favorite(this.codxService.activeFav).subscribe((x) => {
+        this.favorite = x?.favorite;
+      });
+    }
+  }
   //#endregion
 
   //#region Init
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     var gridModel = new DataRequest();
@@ -67,8 +79,8 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     gridModel.funcID = this.formModel.funcID;
     gridModel.gridViewName = this.formModel.gridViewName;
     gridModel.treeField = 'ParentID';
-    gridModel.dataObj = JSON.stringify(this.dataObj)  ;
-   
+    gridModel.dataObj = JSON.stringify(this.dataObj);
+
     this.api
       .execSv<any>(
         'TM',
@@ -82,14 +94,13 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
           this.dataTree = res[0];
           let breadCrumbs = [
             {
-              title: this.favorite + ' (' +res[1] + ')',
+              title: this.favorite + ' (' + res[1] + ')',
             },
           ];
 
           this.pageTitle.setBreadcrumbs(breadCrumbs);
         }
-        }
-      );
+      });
   }
   //#endregion
 
@@ -114,23 +125,38 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         ) {
           x.disabled = true;
         }
-         //an giao viec
-         if (x.functionID == 'SYS005') {
+        //an giao viec
+        if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
-         //an cap nhat tien do khi hoan tat 
-         if ((x.functionID == 'TMT02018'|| x.functionID == 'TMT02026'||x.functionID == 'TMT02035')&& data.status=="90") {
+        //an cap nhat tien do khi hoan tat
+        if (
+          (x.functionID == 'TMT02018' ||
+            x.functionID == 'TMT02026' ||
+            x.functionID == 'TMT02035') &&
+          data.status == '90'
+        ) {
           x.disabled = true;
         }
-          //an voi ca TMT026
-          if (
-            (x.functionID == 'SYS02' ||
-              x.functionID == 'SYS03' ||
-              x.functionID == 'SYS04') &&
-              this.formModel?.funcID == 'TMT0206'
-          ) {
-            x.disabled = true;
-          }
+        //an voi ca TMT026
+        if (
+          (x.functionID == 'SYS02' ||
+            x.functionID == 'SYS03' ||
+            x.functionID == 'SYS04') &&
+          this.formModel?.funcID == 'TMT0206'
+        ) {
+          x.disabled = true;
+        }
+        if (
+          (this.formModel?.funcID == 'TMT03011' ||
+            this.formModel?.funcID == 'TMT05011') &&
+          data.category == '1' &&
+          data.createdBy != this.user.userID &&
+          !this.user?.administrator &&
+          (x.functionID == 'SYS02' || x.functionID == 'SYS03')
+        ) {
+          x.disabled = true;
+        }
       });
     }
   }
@@ -138,38 +164,38 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
 
   //#region Function
   selectionChange(parent) {
-  // var id = parent?.data.taskID ;
-  // var element = document.getElementById(id);
-  // if(element){
-  //   this.isClose =  element.classList.contains("icon-add_box");
-  //   this.isShow =  element.classList.contains("icon-indeterminate_check_box"); 
-  //   if(this.isClose){
-  //     element.classList.remove("icon-add_box");
-  //     element.classList.add("icon-indeterminate_check_box");
-  //   }else if(this.isShow){
-  //     element.classList.remove("icon-indeterminate_check_box");
-  //     element.classList.add("icon-add_box");
-  //   }
-  // }
-   if(parent.isItem){
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListTasksChildrenDeTailsTreeOneStepAsync',
-        parent.data.taskID
-      )
-      .subscribe((res) => {
-        if (res && res?.length >0) {
-          parent.data.items=res ;
-        }
-      });
-   }
+    // var id = parent?.data.taskID ;
+    // var element = document.getElementById(id);
+    // if(element){
+    //   this.isClose =  element.classList.contains("icon-add_box");
+    //   this.isShow =  element.classList.contains("icon-indeterminate_check_box");
+    //   if(this.isClose){
+    //     element.classList.remove("icon-add_box");
+    //     element.classList.add("icon-indeterminate_check_box");
+    //   }else if(this.isShow){
+    //     element.classList.remove("icon-indeterminate_check_box");
+    //     element.classList.add("icon-add_box");
+    //   }
+    // }
+    if (parent.isItem) {
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetListTasksChildrenDeTailsTreeOneStepAsync',
+          parent.data.taskID
+        )
+        .subscribe((res) => {
+          if (res && res?.length > 0) {
+            parent.data.items = res;
+          }
+        });
+    }
   }
 
-  dbClick(data){
-    this.viewTask.emit(data) ;
+  dbClick(data) {
+    this.viewTask.emit(data);
   }
 
   //#endregion

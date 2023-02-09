@@ -55,12 +55,24 @@ export class DP_Processes_Permission {
   assign: boolean;
   delete: boolean;
   share: boolean;
+  edit: boolean;
+  allowPermit: boolean;
+  publish: boolean;
   upload: boolean;
   download: boolean;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  startDate: Date;
+  endDate: Date;
+  approvalRule: String;
+  approverType: String;
+  approvers: String;
+  approvedBy: String;
+  approveStatus: String;
+  approvedOn: Date;
+
 }
 export class DP_Steps {
   recID: string = Util.uid();
@@ -252,7 +264,7 @@ export class DP_Instances {
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
-  tag: string;
+  tags: string;
   modifiedBy: string;
   permissions: DP_Instances_Permissions[] = [];
 }
@@ -459,7 +471,7 @@ export class DP_Instances_Steps_Reasons {
   instanceID: string;
   stepID: string;
   reasonName: string;
-  reasonType: boolean;
+  reasonType: string;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;

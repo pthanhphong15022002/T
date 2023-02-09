@@ -11,6 +11,7 @@ import {
   CacheService,
   DialogData,
   DialogRef,
+  FormModel,
   NotificationsService,
   RequestOption,
   SidebarModel,
@@ -30,14 +31,17 @@ export class PopupAddInstanceComponent implements OnInit {
   @ViewChild('tabOpporGeneralInfo') tabOpporGeneralInfo: TemplateRef<any>;
 
   title = 'Nhiệm vụ';
-  titleAction = '';
+  titleAction: string = '';
 
+  gridViewSetup: any;
+  action:any;
   tabInfo: any[] = [];
   tabContent: any[] = [];
   listInstances: DP_Instances[] = [];
+  formModelCrr : FormModel;
 
-  gridViewSetup: any;
   instanceNo: string;
+  listStepCbx:any;
 
   instance: DP_Instances;
 
@@ -70,8 +74,8 @@ export class PopupAddInstanceComponent implements OnInit {
   dialog: DialogRef;
   // step = new DP_Instances_Steps() ;
   listStep = [];
-
-  readonly fieldCbxStep = { text: 'stepName', value: 'recID' };
+  recID: any;
+  readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
   acction: string = 'add';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -82,11 +86,20 @@ export class PopupAddInstanceComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+   // this.instance = dialog.dataService.dataSelected != null ? JSON.parse(JSON.stringify(dialog.dataService?.dataSelected))  : JSON.parse(JSON.stringify(dialog.dataService?.data[0]));
     this.dialog = dialog;
-    
+
     this.listStep = dt?.data[2];
+    // this.listStepReasonCbx = JSON.parse(JSON.stringify(dt?.data[2]))
+    // this.deleteListReason(this.listStepReasonCbx);
+    this.action = dt?.data[0];
     this.isApplyFor = dt?.data[1];
     this.titleAction = dt?.data[3];
+    this.formModelCrr = dt?.data[4];
+    this.listStepCbx = dt?.data[5];
+    // if(this.action === 'edit'){
+    //   this.instance = dt?.data[5];
+    // }
   }
 
   ngOnInit(): void {}
@@ -118,7 +131,7 @@ export class PopupAddInstanceComponent implements OnInit {
       this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
     this.changeDetectorRef.detectChanges();
   }
-
+   
   valueChange($event) {
     if ($event) {
       this.instance[$event.field] = $event.data;
@@ -151,8 +164,8 @@ export class PopupAddInstanceComponent implements OnInit {
     if ((this.acction = 'add')) {
       option.methodName = 'AddInstanceAsync';
     }
-
     option.data = [this.instance, this.listStep];
+  
     return true;
   }
   saveInstances() {
@@ -163,5 +176,9 @@ export class PopupAddInstanceComponent implements OnInit {
           this.dialog.close(res);
         }
       });
+  }
+  deleteListReason(listStep:any): void{
+    delete listStep[listStep.length-1];
+    delete listStep[listStep.length-2];
   }
 }

@@ -139,7 +139,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly formEdit: string = 'edit'; // form edit
   readonly formAdd: string = 'add'; // form add
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
-  readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE 
+  readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
 
   //stage-nvthuan
   user: any;
@@ -414,7 +414,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.handleAddStep();
       this.notiService.notifyCode('SYS006');
     } else if (this.action == 'edit') {
-    //  this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
       this.onUpdate();
       this.handleUpdateStep();
       this.notiService.notifyCode('SYS006');
@@ -670,6 +669,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           break;
         case '4':
           var value = e;
+          var tmpRole =  [];
           for (var i = 0; i < value.length; i++) {
             var data = value[i];
             var roles = new DP_Steps_Roles();
@@ -677,12 +677,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             roles.objectID = data.id != null ? data.id : null;
             roles.objectType = data.objectType;
             roles.roleType = 'S';
+            tmpRole = this.checkRolesStep(this.step.roles, roles);
+            var perm = new DP_Processes_Permission();
+            perm.objectName = data.text != null ? data.text : data.objectName;
+            perm.objectID = data.id != null ? data.id : null;
+            perm.objectType = data.objectType;
+            perm.roleType = 'P';
             perm.read = true;
-            this.step.roles = this.checkRolesStep(this.step.roles, roles);
+            this.permissions = this.checkUserPermission(this.permissions, perm);
+
           }
+          this.step.roles = tmpRole;
+          this.process.permissions = this.permissions;
           break;
       }
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   checkUserPermission(
@@ -1577,7 +1587,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
       // create step reason fail with value is 2
       this.createStepReason(this.stepFail, '2');
- 
+
     }
     // edit step reason success/fail
     else if (this.action === 'edit') {
@@ -1618,6 +1628,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     stepReason.isFailStep = stepReaValue == '2' ? true : false;
     stepReason.processID = this.process?.recID;
     stepReason.stepNo = 0;
+    stepReason.newProcessID = this.guidEmpty;
     return stepReason;
   }
 
@@ -1627,12 +1638,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   addReason() {
-    if (this.action === this.formAdd) {
+    if (this.reasonAction === this.formAdd) {
       this.reason = this.handleReason(
         this.reason,
         this.dataValueview === this.viewStepReasonSuccess ? '1' : '2',
         this.step,
-        null
+        this.process?.recID
       );
       this.reason.reasonName = this.reasonName;
       this.step.reasons.push(this.reason);
@@ -1712,7 +1723,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
              // 'Không chuyển đến quy trình khác'
           };
           this.listCbxProccess.unshift(obj);
-          console.table(this.listCbxProccess);
         }
       });
     });
@@ -1722,7 +1732,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   defaultCbxProccess() {}
 
   cbxChange($event,view) {
-    debugger;
     if(view === this.viewStepReasonSuccess){
       this.stepSuccess.newProcessID = $event;
     }

@@ -66,7 +66,7 @@ export class CalendarNotesComponent
   checkCO_MeetingsParam: any;
   checkEP_BookingRoomsParam: any;
   checkEP_BookingCarsParam: any;
-  daySelected: any;
+  dateSelected: any;
   typeList = 'notes-home';
   dataValue = '';
   predicate = '';
@@ -331,8 +331,8 @@ export class CalendarNotesComponent
   }
 
   changeDayOfWeek(e) {
-    var date = e.daySelected;
-    this.changeNewWeek(null, date);
+    this.dateSelected = e.daySelected;
+    this.changeNewWeek(null, this.dateSelected);
   }
 
   changeNewWeek(args: any, setDate = null) {
@@ -413,10 +413,10 @@ export class CalendarNotesComponent
 
   setDate(date, lstView: CodxListviewComponent) {
     if (date) {
-      let dateT = new Date(date).toLocaleDateString();
-      var fromDate = dateT;
-      this.daySelected = fromDate;
-      var toDate = moment(dateT).add(1, 'day').toISOString();
+      //let dateT = new Date(date).toLocaleDateString();
+      var fromDate = date;
+      this.dateSelected = date;
+      var toDate = moment(date).add(1, 'day').toDate(); //;.toISOString();
       if (lstView) {
         let myInterval = setInterval(() => {
           if (
@@ -424,13 +424,17 @@ export class CalendarNotesComponent
             this.countDataOfE == this.countEvent
           ) {
             clearInterval(myInterval);
-            var dataTemp = JSON.parse(JSON.stringify(this.dataResourceModel));
-            dataTemp.forEach((x) => {
-              let calendarDate = new Date(x.calendarDate).toLocaleDateString();
-              x.calendarDate = calendarDate;
-            });
-            dataTemp = dataTemp.filter((x) => x.calendarDate == fromDate);
-            lstView.dataService.data = dataTemp;
+            //var dataTemp = JSON.parse(JSON.stringify(this.dataResourceModel));
+            //dataTemp.forEach((x) => {
+            //let calendarDate = new Date(x.calendarDate).toLocaleDateString();
+            //x.calendarDate = this.dateSelected;
+            //});
+            //let dataTemp = dataTemp.filter((x) => x.calendarDate == fromDate);
+            lstView.dataService.data = this.dataResourceModel.filter(
+              (x) =>
+                new Date(x.calendarDate) >= fromDate &&
+                new Date(x.calendarDate) < toDate
+            );
             this.dataListViewTemp = JSON.parse(
               JSON.stringify(lstView.dataService.data)
             );
@@ -622,7 +626,9 @@ export class CalendarNotesComponent
     requestDataEP_Room.entityName = 'EP_Bookings';
     requestDataEP_Room.entityPermission = 'EP_BookingRooms';
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Room).subscribe((res) => {
-      this.getModelShare(res[0], param.Template, 'EP_BookingRooms');
+      if (res) {
+        this.getModelShare(res[0], param.Template, 'EP_BookingRooms');
+      }
     });
   }
 
@@ -998,7 +1004,7 @@ export class CalendarNotesComponent
       dataUpdate: data,
       formType: 'edit',
       maxPinNotes: this.maxPinNotes,
-      currentDate: this.daySelected,
+      currentDate: this.dateSelected,
       dataSelected: this.lstView.dataService.dataSelected,
       countNotePin: this.countNotePin,
     };
@@ -1060,7 +1066,7 @@ export class CalendarNotesComponent
       data: this.WP_Notes,
       typeLst: this.typeList,
       formType: 'add',
-      currentDate: this.daySelected,
+      currentDate: this.dateSelected,
       component: 'calendar-notes',
       maxPinNotes: this.maxPinNotes,
     };
@@ -1095,6 +1101,16 @@ export class CalendarNotesComponent
       var field = e.field;
       this.updateSettingValue(field, e.data);
     }
+  }
+
+  convertDMY_MDY(dmyString: string) {
+    let arr = dmyString.split('/');
+    let tmp = arr[1];
+    arr[1] = arr[0];
+    arr[0] = tmp;
+    let mdy = arr.join('/');
+    let dateReturn = new Date(mdy).toDateString();
+    return dateReturn;
   }
 
   updateSettingValue(transType, value) {
@@ -1172,9 +1188,11 @@ export class CalendarNotesComponent
                     '.week-item[data-date]'
                   );
                   let htmlEleFD = eleWeek[0] as HTMLElement;
-                  var fromDate = moment(htmlEleFD?.dataset?.date).toISOString();
+                  // var fromDate = moment(htmlEleFD?.dataset?.date).toISOString();
+                  let fromDate = this.convertDMY_MDY(htmlEleFD?.dataset?.date);
                   let htmlEleTD = eleWeek[eleWeek.length - 1] as HTMLElement;
-                  var toDate = moment(htmlEleTD?.dataset?.date).toISOString();
+                  // var toDate = moment(htmlEleTD?.dataset?.date).toJSON();
+                  let toDate = this.convertDMY_MDY(htmlEleTD?.dataset?.date);
                   this.getParamCalendar(fromDate, toDate, false);
                   this.setDate(this.FDdate, this.lstView);
                   this.change.detectChanges();
