@@ -66,30 +66,13 @@
             </div>
             <!-- contents - files -->
             <div class="wp-contents-files">
-                <ng-container *ngIf="status == 'edit';else codxFileNew">
-                    <codx-file #codxFile 
-                        [objectID]="data.recID" 
-                        [edit]='true' 
-                        [funcID]="dialogRef.formModel.funcID"
-                        (evtAddFile)="addFile($event)"
-                        (evtRemoveFile)="removeFile($event)">
-                    </codx-file>
-                </ng-container>
-                <ng-template #codxFileNew>
-                    <!-- <codx-file 
-                        #codxFile
-                        [isNew]="true" 
-                        [funcID]="dialogRef.formModel.funcID"
-                        (evtRemoveFile)="removeFile($event)" 
-                        (evtAddFile)="addFile($event)" 
-                        [edit]='true'>
-                    </codx-file> -->
-                    <codx-view-files #codxViewFiles 
-                        [allowEdit]="true" 
-                        [formModel]="dialogRef.formModel" 
-                        [objectType]="'WP_Comments'">
-                    </codx-view-files>
-                </ng-template>
+                <codx-view-files #codxViewFiles 
+                    [allowEdit]="true" 
+                    [formModel]="dialogRef.formModel" 
+                    [objectType]="'WP_Comments'"
+                    [medias]="data.medias"
+                    [objectID]="data.recID">
+                </codx-view-files>
             </div>
             <!-- template chia sẻ --> 
             <ng-container *ngIf="data.category == '4' && data.refType">
@@ -155,22 +138,9 @@
                     <button (click)="clickUploadFile()" 
                         type="button" 
                         data-toggle="tooltip" 
-                        title="Hình ảnh"
+                        title="File đính kèm"
                         class="btn btn-icon btn-md ms-2 ng-star-inserted">
                         <i class="icon-photo icon-24 text-success"></i>
-                        <div class="d-none">
-                            <codx-attachment #codxATM 
-                                objectType="WP_Comments" 
-                                hideFolder="1" 
-                                hideUploadBtn="1" 
-                                hideDes="1" 
-                                type="inline"
-                                allowMultiFile="1" 
-                                [showMessage]="0" 
-                                (fileCount)="getfileCount($event)"
-                                [functionID]="dialogRef.formModel.funcID">
-                            </codx-attachment>
-                        </div>
                     </button>
                 </div>
             </div>

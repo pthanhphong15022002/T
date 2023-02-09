@@ -8,7 +8,7 @@
 
 <ng-template #treeView>
   <share-tree-view [formModel]="view.formModel" [vllStatus]="vllStatus" [listRoles]="listRoles" [dataObj]="dataObj"
-    [showMoreFunc]="showMoreFunc" (clickMoreFunction)="receiveMF($event)" (viewTask)="viewTask($event)">
+    [showMoreFunc]="showMoreFunc" (clickMoreFunction)="receiveMF($event)" (viewTask)="viewTask($event)" [user]="user">
   </share-tree-view>
 </ng-template>
 

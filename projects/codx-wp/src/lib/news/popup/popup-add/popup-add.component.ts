@@ -1,14 +1,7 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Optional, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Optional, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Permission } from '@shared/models/file.model';
-import { preRender } from '@syncfusion/ej2-angular-buttons';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { dataValidate } from '@syncfusion/ej2-angular-spreadsheet';
-import { ViewModel, ViewsComponent, ImageViewerComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService, CallFuncService, Util, CacheService } from 'codx-core';
-import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
+import { ViewsComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService, CallFuncService, Util, CacheService } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { environment } from 'src/environments/environment';
-import { WP_Comments } from '../../../models/WP_Comments.model';
 import { WP_News } from '../../../models/WP_News.model';
 
 @Component({

@@ -128,10 +128,59 @@
       <codx-input type="Share" [refValue]="vllShare" field="AssignTo" [dataShared]="[]" [multiple]="true"
         [showInput]="false" (valueChange)="eventApply($event)" [disabled]="readOnly"></codx-input>
     </div>
-    <div class="">
+    <!-- <div class="">
       <ng-container *ngIf="listUser.length > 0">
         <codx-imgs class="flex symbol-40px" [objectId]="listUser.join(';')" objectType="AD_Users" [numberImages]="5">
         </codx-imgs>
+      </ng-container>
+    </div> -->
+    <div class="mt-2">
+      <ng-container *ngFor="let item of listTaskResources">
+        <div class="d-flex py-2 justify-content-between list-title">
+          <div class="d-flex align-items-top w-100">
+            <div style="position: relative" class="h-30px me-3" popoverClass="userPopoverClass"
+              [ngbPopover]="popoverSelectRoles" placement="right" #p="ngbPopover"
+              (mouseenter)="showPopover(p, item.resourceID)" autoClose="outside">
+              <codx-img [width]="30" [objectId]="item?.resourceID" objectType="AD_Users">
+              </codx-img>
+              <div style="position: absolute; right: 0px; bottom: 0px">
+                <ng-container *ngFor="let role of listRoles">
+                  <ng-container *ngIf="role.value == item.roleType">
+                    <span><img src="/assets/themes/tm/default/img/{{ role.icon }}" alt="" /></span>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </div>
+            <div class="d-flex flex-column me-6 w-100">
+              <div class="text-dark fw-bold fs-6">
+                {{ item?.resourceName }}
+              </div>
+              <div class="text-gray-700">
+                {{ item?.positionName }}
+                <span *ngIf="item?.departmentName">
+                  | {{ item?.departmentName }}</span>
+              </div>
+              <div class="text-dark">
+                <codx-input class="" type="text" [crrValue]="item?.memo"
+                  (valueChange)="changeMemo2($event, item?.resourceID)" placeholder="{{planholderTaskChild}}"
+                  [disabled]="readOnly"></codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="ms-3" *ngIf="!readOnly">
+            <a class="btn btn-icon btn-sm btn-light-danger" (click)="onDeleteUser(item)" style="cursor: pointer">
+              <span class="icon-close icon-18"></span>
+            </a>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="d-flex justify-content-end me-2">
+      <ng-container *ngFor="let item of listRoles">
+        <div class="d-flex align-items-center ms-4">
+          <span class="me-1"><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt="" /></span>
+          <div class="fs-8 text-gray-500">{{ item.text }}</div>
+        </div>
       </ng-container>
     </div>
   </ng-container>
@@ -219,7 +268,7 @@
             </div> -->
             <div class="text-dark">
               <codx-input class="" type="text" [crrValue]="item?.memo"
-                (valueChange)="changeMemo2($event, item?.resourceID)" placeholder="Ghi chú phân công..."
+                (valueChange)="changeMemo2($event, item?.resourceID)" placeholder= '{{planholderTaskChild}}'
                 [disabled]="readOnly"></codx-input>
             </div>
           </div>

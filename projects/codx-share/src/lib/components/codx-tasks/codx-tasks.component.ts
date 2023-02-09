@@ -40,6 +40,7 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
+import { X } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -82,8 +83,8 @@ export class CodxTasksComponent
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
 
+  @Input() viewsInput: Array<ViewModel> = [];
   views: Array<ViewModel> = [];
-  viewsActive: Array<ViewModel> = [];
 
   button?: ButtonModel = {
     id: 'btnAdd',
@@ -394,23 +395,27 @@ export class CodxTasksComponent
         },
       },
     ];
-    // if (this.funcID)
-    //   this.cache.viewSettings(this.funcID).subscribe((res) => {
-    //     if (res && res.length > 0) {
-    //       var viewFunc = [];
-    //       res.forEach((x) => {
-    //         var idx = this.views.findIndex((obj) => obj.type == x.view);
-    //         if (idx != -1) viewFunc.push(this.views[idx]);
-    //       });
-    //       this.views = viewFunc;
-    //     }
-    //   });
+
+    if (this.funcID == 'TMT03011')
+      this.cache.viewSettings(this.funcID).subscribe((res) => {
+        if (res && res.length > 0) {
+          var viewFunc = [];
+          res.forEach((x) => {
+            var idx = this.views.findIndex((obj) => obj.type == x.view);
+            if (idx != -1) {
+              viewFunc.push(this.views[idx]);
+              if(x.isDefault) this.viewMode = x.view
+            }
+          });
+          this.views = viewFunc;
+        }
+      });
 
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
     this.view.dataService.methodDelete = 'DeleteTaskAsync';
     //this.getParam();
-    this.detectorRef.detectChanges();
+    //this.detectorRef.detectChanges();
   }
   //#endregion
 
@@ -1608,7 +1613,7 @@ export class CodxTasksComponent
         }
         //an voi ca TMT03011
         if (
-          this.funcID == 'TMT03011' &&
+         (this.funcID == 'TMT03011' || this.funcID == 'TMT05011' )  &&
           data.category == '1' &&
           data.createdBy != this.user?.userID &&
           !this.user?.administrator &&

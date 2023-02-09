@@ -1,11 +1,9 @@
-import { C } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { Permission } from '@shared/models/file.model';
 import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, CRUDService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxViewFilesComponent } from 'projects/codx-share/src/lib/components/codx-view-files/codx-view-files.component';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
-import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 
 
 @Component({
@@ -20,7 +18,7 @@ export class PopupAddPostComponent implements OnInit {
   user:any = null;
   headerText:string = "";
   placeholderText:string = "";
-  data:WP_Comments = null;
+  data:any = null;
   status: "create" | "edit" | "share" = "create"
   fileUpload:any[] = [];
   grvSetup:any = null;
@@ -78,7 +76,12 @@ export class PopupAddPostComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // set data
     this.setData();
+    // get grv set up
+    this.getSetGridSetUp();
+    // get message
+    this.getMssgDefault();
   }
 
   // set data default
@@ -88,7 +91,7 @@ export class PopupAddPostComponent implements OnInit {
       this.headerText = this.dialogData.headerText;
       this.status = this.dialogData.status;
       this.data = this.dialogData.data;
-      if(this.user && this.status != "edit")
+      if(this.status != "edit")
       {
         this.data.createdBy = this.user.userID;
         this.data.createdName = this.user.userName;
@@ -107,17 +110,23 @@ export class PopupAddPostComponent implements OnInit {
         }
       }
     }
-    // get grv set up
-    this.cache.gridViewSetup("Comments","grvComments")
-    .subscribe((grv:any) => {
-      if(grv){
-        this.grvSetup = grv;
+    
+  }
+  // get func -> gridViewSetup
+  getSetGridSetUp(){
+    this.cache.functionList("WP").subscribe((func:any) =>{
+      if(func){
+        let _formName = func.formName;
+        let _gridViewName = func.gridViewName;
+        this.cache.gridViewSetup(_formName,_gridViewName)
+        .subscribe((grv:any) => {
+          if(grv){
+            this.grvSetup = grv;
+          }
+        });
       }
     });
-    // get message
-    this.getMssgDefault();
   }
-
   // get mssg default
   getMssgDefault(){
     // mssg share one
@@ -190,42 +199,6 @@ export class PopupAddPostComponent implements OnInit {
     this.data.content  = _content;
   }
 
-  // upload file 
-  addFile(files: any) {
-    if(files){
-      if (this.fileUpload.length == 0) {
-        this.fileUpload = JSON.parse(JSON.stringify(files));
-      }
-      else
-      {
-        this.fileUpload = this.fileUpload.concat(files);
-      }
-      if(this.fileUpload.length > 0)
-      {
-        let fileImages = this.fileUpload.filter(x => x.referType == "image");
-        if(fileImages?.length > 0){
-          this.data.images = fileImages.length;
-        }
-      }
-      this.dt.detectChanges();
-    }
-  }
-
-  // remove file 
-  removeFile(file: any) {
-    if(file?.fileName){
-      this.fileUpload = this.fileUpload.filter(x => x.fileName != file.fileName);
-      this.dt.detectChanges();
-    }
-  }
-
-  // select file
-  getfileCount(event: any) {
-    if(event?.data?.length > 0)
-    {
-      this.codxFile.addFiles(event.data);
-    }
-  }
   // click tag 
   clickTagsUser(){
     this.showCBB = !this.showCBB;
@@ -233,7 +206,6 @@ export class PopupAddPostComponent implements OnInit {
 
   // clikc uploadFile
   clickUploadFile(){
-    // this.codxATM.uploadFile();
     this.codxViewFiles.uploadFiles();
   }
 
@@ -258,18 +230,22 @@ export class PopupAddPostComponent implements OnInit {
 
   // create Post 
   publishPost(){
-    if (!this.data?.content && this.codxViewFiles.files.length == 0) 
+    if (!this.data.content && this.codxViewFiles.files.length == 0) 
     {
-      if(this.grvSetup["Comments"]["headerText"]){
-        this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
-      }
-      return;
+      return this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
     }
-    this.data.category = "1" // post;
+    this.data.category = "1";
     this.data.approveControl = "0";
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
+    let _files = this.codxViewFiles.files;
+    if(Array.isArray(_files) && _files.length > 0){
+      this.data.attachments = _files.length;
+      this.data.medias = this.codxViewFiles.medias;
+    }
+    debugger
+
     this.api.execSv(
       "WP",
       "ERM.Business.WP",
@@ -292,11 +268,17 @@ export class PopupAddPostComponent implements OnInit {
         }
       });
   }
+
   // edit post
   editPost(){
     if (!this.data.content && this.codxViewFiles.files.length == 0 && this.data.category != "4") 
     {
       return this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
+    }
+    let _files = this.codxViewFiles.files;
+    if(Array.isArray(_files) && _files.length > 0){
+      this.data.attachments = _files.length;
+      this.data.medias = this.codxViewFiles.medias;
     }
     this.api.execSv<any>(
       'WP',
@@ -304,7 +286,7 @@ export class PopupAddPostComponent implements OnInit {
       'CommentsBusiness',
       'EditPostAsync',
       [this.data])
-      .subscribe(async (res: any) => {
+      .subscribe((res: any) => {
         if (res) 
         {
           this.codxViewFiles.save().subscribe((res2)=>{
@@ -319,6 +301,7 @@ export class PopupAddPostComponent implements OnInit {
         }
     });
   }
+
   // share post
   sharePost(){
     this.data.category = "4";
@@ -326,6 +309,11 @@ export class PopupAddPostComponent implements OnInit {
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
+    let _files = this.codxViewFiles.files;
+    if(Array.isArray(_files) && _files.length > 0){
+      this.data.attachments = _files.length;
+      this.data.medias = this.codxViewFiles.medias;
+    }
     this.api.execSv(
       "WP",
       "ERM.Business.WP",
@@ -347,6 +335,7 @@ export class PopupAddPostComponent implements OnInit {
         }
       });
   }
+
   // add permission share
   addPerrmissonShares(event:any){
     if(event?.length > 0)

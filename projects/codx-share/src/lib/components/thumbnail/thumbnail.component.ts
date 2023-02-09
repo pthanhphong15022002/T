@@ -107,30 +107,28 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   hideMore() {
     document.getElementById('drop').setAttribute("style", "display: none;");
   }
-  checkOpen(file:any) {
-    if(file)
-    {
-      var per = file.permissions.filter(x=>x.userID == this.userID || x.objectID == this.userID);
-      if(per && per[0]) return per[0].read
-    }
-    return false;
-  }
-  checkDelete(file:any) {
-    if(file)
-    {
-      var per = file.permissions.filter(x=>x.userID == this.userID || x.objectID == this.userID);
-      if(per && per[0]) return per[0].delete
-    }
-    return false;
-  }
-  checkDownloadRight(file:any) {
-    if(file.permissions)
-    {
-      var per = file.permissions.filter(x=>x.userID == this.userID || x.objectID == this.userID);
-      if(per && per[0]) return per[0].download;
-    }
-    return false;
-  }
+
+  // checkDelete(file:any) {
+  //   if(file)
+  //   {
+  //     debugger
+  //     var per = file.permissions.filter(x=>x.userID == this.userID || x.objectID == this.userID);
+  //     if(per && per[0]) return per[0].delete
+  //   }
+  //   return false;
+  // }
+  // isAdmin()
+  // {
+
+  // }
+  // checkDownloadRight(file:any) {
+  //   if(file.permissions)
+  //   {
+  //     var per = file.permissions.filter(x=>x.userID == this.userID || x.objectID == this.userID);
+  //     if(per && per[0]) return per[0].download;
+  //   }
+  //   return false;
+  // }
 
   base64ToArrayBuffer(base64) {
     var binaryString = window.atob(base64);
@@ -143,111 +141,104 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     return bytes;
   }
 
-  deleteFile(id:any) {
-
-    this.fileService.getFile(id).subscribe(item=>{
-      if(item)
-      {
-        if(this.checkDelete(item))
-        {
-          var config = new AlertConfirmInputConfig();
-          config.type = "YesNo";
-          this.notificationsService.alert(this.title, this.titleDeleteConfirm, config)
-          .closed.subscribe(x => {
-            if (x.event.status == "Y") {
-              if (this.isDeleteTemp == '0') {
-                this.fileService.deleteFileToTrash(id, "", true).subscribe(item => {
-                  if (item) {
-                    let list = this.files;
-                    var index = -1;
-                    if (list.length > 0) {
-                      if (list[0].data != null) {
-                        index = list.findIndex(d => d.data.recID.toString() === id);
-                      }
-                      else {
-                        index = list.findIndex(d => d.recID.toString() === id);
-                      }
-                      if (index > -1) {
-                        this.dataDelete.push(list[index]);
-                        this.fileDelete.emit(this.dataDelete);
-                        list.splice(index, 1);//remove element from array
-                        this.files = list;
-                        this.fileCount.emit(this.files);
-                
-                        this.changeDetectorRef.detectChanges();
-                      }
-                    }
-                  }
-                })
-              }
-              else {
+  deleteFile(file:any) {
+    if(file && file.delete)
+    {
+      var config = new AlertConfirmInputConfig();
+      config.type = "YesNo";
+      this.notificationsService.alert(this.title, this.titleDeleteConfirm, config)
+      .closed.subscribe(x => {
+        if (x.event.status == "Y") {
+          if (this.isDeleteTemp == '0') {
+            this.fileService.deleteFileToTrash(file.recID, "", true).subscribe(item => {
+              if (item) {
                 let list = this.files;
                 var index = -1;
                 if (list.length > 0) {
                   if (list[0].data != null) {
-                    index = list.findIndex(d => d.data.recID.toString() === id);
+                    index = list.findIndex(d => d.data.recID.toString() === file.recID);
                   }
                   else {
-                    index = list.findIndex(d => d.recID.toString() === id);
+                    index = list.findIndex(d => d.recID.toString() === file.recID);
                   }
                   if (index > -1) {
                     this.dataDelete.push(list[index]);
+                    this.fileDelete.emit(this.dataDelete);
                     list.splice(index, 1);//remove element from array
                     this.files = list;
                     this.fileCount.emit(this.files);
-                    this.fileDelete.emit(this.dataDelete);
+            
                     this.changeDetectorRef.detectChanges();
                   }
                 }
               }
+            })
+          }
+          else {
+            let list = this.files;
+            var index = -1;
+            if (list.length > 0) {
+              if (list[0].data != null) {
+                index = list.findIndex(d => d.data.recID.toString() === file.recID);
+              }
+              else {
+                index = list.findIndex(d => d.recID.toString() === file.recID);
+              }
+              if (index > -1) {
+                this.dataDelete.push(list[index]);
+                list.splice(index, 1);//remove element from array
+                this.files = list;
+                this.fileCount.emit(this.files);
+                this.fileDelete.emit(this.dataDelete);
+                this.changeDetectorRef.detectChanges();
+              }
             }
-          })
+          }
         }
-        else this.notificationsService.notifyCode("SYS032")
-      }
-    })
+      })
+    }
+    else this.notificationsService.notifyCode("SYS032")
    
   }
 
-  async download(id:any): Promise<void> {
-    this.fileService.getFile(id).subscribe(file => {
-      if (this.checkDownloadRight(file)) {
-        this.fileService.downloadFile(id).subscribe(async res => {
-          if (res) {
-            fetch(environment.urlUpload + "/" + res)
-              .then(response => response.blob())
-              .then(blob => {
-                const link = document.createElement("a");
-                link.href = URL.createObjectURL(blob);
-                link.download = file.fileName;
-                link.click();
-              })
-              .catch(console.error);
-          }
-        });
-      }
-      else {
-        this.notificationsService.notifyCode("DM060");
-      }
-    });
+  async download(file:any): Promise<void> {
+    if(file && file.download)
+    {
+      this.fileService.downloadFile(file.recID).subscribe(async res => {
+        if (res) {
+          fetch(environment.urlUpload + "/" + res)
+            .then(response => response.blob())
+            .then(blob => {
+              const link = document.createElement("a");
+              link.href = URL.createObjectURL(blob);
+              link.download = file.fileName;
+              link.click();
+            })
+            .catch(console.error);
+        }
+      })
+    }
+    else this.notificationsService.notifyCode("DM060");
+   
   }
 
-  openFile(id) {
-    this.fileService.getFile(id).subscribe(file => {
-      if(file)
-      {
-        if(this.checkOpen(file))
+  openFile(file:any) {
+    if(file && file.read)
+    {
+      this.fileService.getFile(file.recID).subscribe(item=>{
+        if(item)
         {
           var option = new DialogModel();
           option.IsFull = true;
-          this.fileName = file.fileName;
-          this.dataFile = file;
+          this.fileName = item.fileName;
+          this.dataFile = item;
           this.visible = true;
           this.viewFile.emit(true);
         }
-        else this.notificationsService.notifyCode("SYS032")
-      }
-    })
+      })
+     
+    }
+    else this.notificationsService.notifyCode("SYS032")
   }
 
  

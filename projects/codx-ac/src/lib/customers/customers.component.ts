@@ -132,8 +132,8 @@ export class CustomersComponent extends UIComponent {
   beforeDelete(opt: RequestOption,data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'CustomersBusiness';
-    opt.assemblyName = 'AR';
-    opt.service = 'AR';
+    opt.assemblyName = 'SM';
+    opt.service = 'SM';
     opt.data = data;
     return true;
   }

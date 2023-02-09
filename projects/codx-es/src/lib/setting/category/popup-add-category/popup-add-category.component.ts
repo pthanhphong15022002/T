@@ -475,7 +475,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;
     }
-    if (this.isAdd) {
+    if (this.isAdd && !this.isSaved) {
       this.esService.addNewCategory(this.data).subscribe((res) => {
         if (res) {
           //update data
@@ -520,35 +520,40 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           });
         }
       });
-    }
-    else{
+    } else {
       //openForm add process
-      let transID = this.data.recID;
-      let data = {
-        type: '0',
-        transID: transID,
-        model: this.form?.formGroup,
-        data: this.data,
-        isAddNew: !this.isSaved,
-      };
+      this.esService.updateCategory(this.data).subscribe((res) => {
+        if (res) {
+          this.data = res;
+          
+          let transID = this.data.recID;
+          let data = {
+            type: '0',
+            transID: transID,
+            model: this.form?.formGroup,
+            data: this.data,
+            isAddNew: !this.isSaved,
+          };
 
-      let dialogModel = new DialogModel();
-      dialogModel.IsFull = true;
+          let dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
 
-      let popupeStep = this.cfService.openForm(
-        CodxApproveStepsComponent,
-        '',
-        screen.width,
-        screen.height,
-        '',
-        data,
-        '',
-        dialogModel
-      );
+          let popupeStep = this.cfService.openForm(
+            CodxApproveStepsComponent,
+            '',
+            screen.width,
+            screen.height,
+            '',
+            data,
+            '',
+            dialogModel
+          );
 
-      popupeStep.closed.subscribe((res) => {
-        if (res.event) {
-          this.approvalStep?.initForm();
+          popupeStep.closed.subscribe((res) => {
+            if (res.event) {
+              this.approvalStep?.initForm();
+            }
+          });
         }
       });
     }
