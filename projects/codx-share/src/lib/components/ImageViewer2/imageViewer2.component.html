@@ -1,7 +1,25 @@
 <div id="{{idContainer}}" class="image-gallery-2">
     <div class="image-container"></div>
     <div class="inline-icon">
-        <div *ngIf="showOptions" class="options-image-viewer">
+        <div class="moreFC-top">
+            <div class="d-flex justify-content-between">
+                <button class="btn btn-icon btn-light">
+                    <i class="icon-close icon-18 text-danger"></i>
+                </button>
+                <div class="d-flex">
+                    <span class="btn rounded-circle btn-icon btn-light-primary ms-2 cursor-pointer">
+                        <i class="icon-zoom_in"></i>
+                    </span>
+                    <span class="btn btn-icon rounded-circle btn-light-primary ms-2 cursor-pointer">
+                        <i class="icon-zoom_out"></i>
+                    </span>
+                    <span class="btn btn-icon rounded-circle btn-light-primary ms-2 cursor-pointer">
+                        <i class="icon-fullscreen"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- <div *ngIf="showOptions" class="options-image-viewer">
             <a class="image-viewer-tooltip" *ngIf="zoomInButton"
                (click)="zoomIn()">
                 <span *ngIf="enableTooltip" class="tooltiptext">{{zoomInTooltipLabel}}</span>
@@ -19,10 +37,14 @@
                 <span *ngIf="enableTooltip" class="tooltiptext">{{fullscreenTooltipLabel}}</span>
                 <i class="material-icons footer-icon">fullscreen</i>
             </a>
-        </div>
+        </div> -->
     </div>
-    <i class="prev" (click)="imagemAnterior()"></i>
-    <i class="next" (click)="proximaImagem()"></i>
+    <!-- <i class="prev" (click)="imagemAnterior()"></i>
+    <i class="next" (click)="proximaImagem()"></i> -->
+    <div class="next-previrous">
+        <span class="icon-arrow_back_ios next-previrous-btn"></span>
+        <span class="icon-arrow_forward_ios next-previrous-btn"></span>
+    </div>
     <div class="footer-info">
         <span id="current"></span>/<span class="total"></span>
     </div>
