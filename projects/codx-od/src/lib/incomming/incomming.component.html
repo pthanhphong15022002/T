@@ -1,5 +1,6 @@
 <ng-template #itemTemplate let-data>
-  <codx-temp-full
+  <ng-container *ngIf="gridViewSetup">
+    <codx-temp-full
     (clickMF)="openFormFuncID($event, data)"
     (click)="click(data)"
     [typeMF]="'hover'"
@@ -24,8 +25,11 @@
     (changeDataMF)="changeDataMF($event, data)"
     [footer]="footerTmp"
     [moreFuncCss]="'me-12'"
+    [hideMF]="view.formModel.funcID.includes('ODT8')"
   >
   </codx-temp-full>
+  </ng-container>
+
    <!-- [icoDateCss]="checkDeadLine(data?.deadline)" -->
   <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'" -->
 </ng-template>
@@ -38,6 +42,7 @@
     [view]="view"
     (uploaded)="getDtDis($event)"
     [pfuncID]="view?.formModel?.funcID"
+    [hideMF]="view.formModel.funcID.includes('ODT8')"
   >
   </app-view-detail>
 </ng-template>
