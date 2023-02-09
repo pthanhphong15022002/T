@@ -104,12 +104,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     this.signalRSV.signalChat.subscribe((res: any) => {
       if (res) 
       {
-        let _eleChatBoxs = document.getElementsByTagName("codx-chat-box");
-        let _arrBoxChat = Array.from(_eleChatBoxs);
-        let _boxChat = _arrBoxChat.find(e => e.id === res.groupID);
-        if(!_boxChat){
-          this.addBoxChat(res.groupID);
-        }
+        this.addBoxChat(res.groupID);
         let _group = this.codxListView.dataService.data;
         let _index = _group.findIndex(e => e['groupID'] === res.groupID);
         if(_index > -1){
@@ -178,29 +173,33 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
 
   addBoxChat(groupID:any){
-    let viewRef = this.chatBox.createEmbeddedView({ $implicit: groupID });
-    this.applicationRef.attachView(viewRef);
-    viewRef.detectChanges();
-    let html = viewRef.rootNodes[0];
-    let elementContainer = document.querySelector(".container-chat");
-    if(elementContainer){
-      let length = elementContainer.children.length;
-      if(length < 3) // add box chat
-      {
-        html.setAttribute('style',`
-        position: fixed!important;
-        bottom: 0px;
-        right: ${(length*320 + 100)}px;
-        margin-top: -500px;
-        background-color: white;`);
-        html.setAttribute('id',groupID);
-        elementContainer.append(html);
+    let _eleChatBoxs = document.getElementsByTagName("codx-chat-box");
+    let _arrBoxChat = Array.from(_eleChatBoxs);
+    let _boxChat = _arrBoxChat.find(e => e.id === groupID);
+    if(!_boxChat){
+      let viewRef = this.chatBox.createEmbeddedView({ $implicit: groupID });
+      this.applicationRef.attachView(viewRef);
+      viewRef.detectChanges();
+      let html = viewRef.rootNodes[0];
+      let elementContainer = document.querySelector(".container-chat");
+      if(elementContainer){
+        let length = elementContainer.children.length;
+        if(length < 3) // add box chat
+        {
+          html.setAttribute('style',`
+          position: fixed!important;
+          bottom: 0px;
+          right: ${(length*320 + 100)}px;
+          margin-top: -500px;
+          background-color: white;`);
+          html.setAttribute('id',groupID);
+          elementContainer.append(html);
       }
       else // tạo bong bóng chat
       {
         
       }
-      
+    }
     }
   }
 }
