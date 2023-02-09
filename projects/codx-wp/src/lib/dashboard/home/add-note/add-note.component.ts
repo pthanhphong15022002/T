@@ -211,18 +211,19 @@ export class AddNoteComponent implements OnInit {
       this.countValueChange++;
       var date = new Date(e.data.fromDate);
       var crr = date.toLocaleDateString();
-      if (crr !== this.currentDate) {
-        this.currentDate = '';
+      if (crr != this.currentDate.toLocaleDateString()) {
         this.currentDate = crr;
       }
       if (this.countValueChange == 1) {
-        var date1 = new Date(e.data.fromDate);
-        var crr1 = date1.toLocaleDateString();
-        this.date1 = crr1;
+        // var date1 = new Date(e.data.fromDate);
+        // var crr1 = date1.toLocaleDateString();
+        // this.date1 = crr1;
+        this.date1 = crr;
       } else if (this.countValueChange > 1) {
-        var date2 = new Date(e.data.fromDate);
-        var crr2 = date2.toLocaleDateString();
-        this.date2 = crr2;
+        // var date2 = new Date(e.data.fromDate);
+        // var crr2 = date2.toLocaleDateString();
+        // this.date2 = crr2;
+        this.date2 = crr;
       }
     }
   }
@@ -355,7 +356,7 @@ export class AddNoteComponent implements OnInit {
               else object = [{ data: dtNew, type: 'add-currentDate' }];
             }
             this.noteService.data.next(object);
-            this.dialog.close();
+            this.dialog.close(dtNew);
             if (this.note?.showCalendar == true) {
               var today: any = document.querySelector(
                 ".e-footer-container button[aria-label='Today']"
