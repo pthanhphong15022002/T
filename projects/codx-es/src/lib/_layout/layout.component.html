@@ -68,13 +68,6 @@
     <codx-notify-drawer></codx-notify-drawer>
     <codx-activies-approval-list></codx-activies-approval-list>
 
-    <!-- Quick links -->
-    <erm-quick-links-inner
-      [buttonMarginClass]="codxService.toolbarButtonMarginClass"
-      [buttonIconClass]="codxService.toolbarButtonIconSizeClass"
-      [buttonHeightClass]="codxService.toolbarButtonHeightClass"
-    ></erm-quick-links-inner>
-    <!-- End: Quick links -->
     <!-- Home -->
     <a class="d-flex align-items-center" href="/">
       <!-- begin::Menu wrapper -->
@@ -92,6 +85,14 @@
       <!-- end::Menu wrapper -->
     </a>
     <!--end Home -->
+    <!-- Quick links -->
+    <erm-quick-links-inner
+      [buttonMarginClass]="codxService.toolbarButtonMarginClass"
+      [buttonIconClass]="codxService.toolbarButtonIconSizeClass"
+      [buttonHeightClass]="codxService.toolbarButtonHeightClass"
+    ></erm-quick-links-inner>
+    <!-- End: Quick links -->
+
     <!-- begin::User -->
     <codx-user-inner
       [user]="user"
