@@ -63,6 +63,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.cashpayment = dialog.dataService!.dataSelected;
+    if(this.cashpayment.objectType == null){
+      this.cashpayment.objectType = '1';
+      this.ObjectID = 'Customers';
+    }
     if (this.cashpayment.voucherNo != null) {
       this.acService
         .loadData(
