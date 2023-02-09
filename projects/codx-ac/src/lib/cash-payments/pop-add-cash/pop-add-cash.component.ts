@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, Injector, OnInit, Optional, ViewChild } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { CacheService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent, Util } from 'codx-core';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CashPayment } from '../../models/CashPayment.model';
 import { CashPaymentLine } from '../../models/CashPaymentLine.model';
@@ -37,11 +38,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     allowDeleting: true,
     mode: 'Normal',
   };
-  tabInfo: any[] = [
+  tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Link', textDefault: 'Liên kết', isActive: false },
+    // { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    // { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ]
   constructor(
     private inject: Injector,
@@ -98,6 +99,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   addRow() {
     let idx = this.grid.dataSource.length;
     let data = this.grid.formGroup.value;
+    data['isAdd'] = true;
     data.recID = Util.uid();
     data.write = true;
     data.delete = true;

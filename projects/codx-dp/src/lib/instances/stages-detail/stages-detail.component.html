@@ -190,7 +190,7 @@
         <div
           cdkDropList
           class="list"
-          (cdkDropListDropped)="drop($event, taskGroupList)"
+          (cdkDropListDropped)="drop($event, taskGroupList, true)"
         >
           <div cdkDropListGroup>
             <ng-container *ngFor="let taskList of taskGroupList">
