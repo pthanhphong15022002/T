@@ -3223,7 +3223,7 @@
                         >
                         </codx-label>
                         <span class="text-gray-500 ms-2"> | </span>
-                        <span>dem so record</span>
+                        <span>({{eBenefitRowCount}})</span>
                     </div>
                       <div class="d-flex me-3">
                         <codx-dropdown-select
@@ -3236,9 +3236,12 @@
                           (valueChange)="valueChangeFilterBenefit($event)"
                         ></codx-dropdown-select>
                         <codx-dropdown-calendar
-                          [value]="date"
+                        [cssPopup]="'w-600px h-400px'"
+                          emptyText="Chọn năm..."
+                          [firstChange]="false"
                           [displayOption]="ops"
                           [selectedType]="'y'"
+                          [cssClass]="'rounded-pill'"
                           (change)="valueChangeYearFilterBenefit($event)"
                         ></codx-dropdown-calendar>
                       </div>
@@ -3254,8 +3257,10 @@
                         [method]="'LoadDataAsync'"
                         [predicates]="'EmployeeID=@0'"
                         [dataValues]="data.employeeID"
-                        [pageSize]="'3'"
+                        [pageSize]="numPageSizeGridView"
                         [entityName]="'HR_EBenefits'"
+                        [rowHeight]="50"
+                        height="240px"
                       ></codx-gridview>
                     </div>
                   </div>

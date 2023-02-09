@@ -251,4 +251,12 @@ export class CodxDpService {
       data
     );
   }
+  updateDataDrop(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'updateStepDrapDropAsync',
+      data
+    );
+  }
 }
