@@ -357,7 +357,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
     var data = [];
     this.isAddMode = true;
     op.methodName = 'AddUserAsync';
-    data = [this.adUser, this.viewChooseRole, false, false];
+    data = [
+      this.adUser,
+      this.viewChooseRole,
+      false,
+      false,
+      this.lstChangeModule,
+    ];
     op.data = data;
     return true;
   }

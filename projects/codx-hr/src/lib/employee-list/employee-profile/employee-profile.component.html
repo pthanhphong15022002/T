@@ -560,28 +560,28 @@
                 <div
                   class="tab-pane fade show"
                   id="pane_0"
-                  [class]="crrFuncTab == 'HRT030201' ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRTEM01' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="info"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
                   id="pane_1"
-                  [class]="crrFuncTab == 'HRT030202' ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRTEM03' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="jobInfo"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
                   id="pane_2"
-                  [class]="crrFuncTab == 'HRT030203' ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRTEM04' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="benefit"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
                   id="pane_3"
-                  [class]="crrFuncTab == 'HRT030204' ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRTEM05' ? 'active' : ''"
                 >
                   <ng-container
                     [ngTemplateOutlet]="processingInfo"
@@ -590,14 +590,14 @@
                 <div
                   class="tab-pane fade show"
                   id="pane_4"
-                  [class]="crrFuncTab == 'HRT030205' ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRTEM06' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="knowledge"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
                   id="pane_5"
-                  [class]="crrFuncTab == 'HRT030206' ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRTEM07' ? 'active' : ''"
                 >
                   <ng-container
                     [ngTemplateOutlet]="rewardDiscipline"
@@ -606,7 +606,7 @@
                 <div
                   class="tab-pane fade show"
                   id="pane_6"
-                  [class]="crrFuncTab == 'HRT030207' ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRTEM08' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="healthInfo"></ng-container>
                 </div>
@@ -3223,7 +3223,7 @@
                         >
                         </codx-label>
                         <span class="text-gray-500 ms-2"> | </span>
-                        <span>dem so record</span>
+                        <span>({{eBenefitRowCount}})</span>
                     </div>
                       <div class="d-flex me-3">
                         <codx-dropdown-select
@@ -3236,9 +3236,12 @@
                           (valueChange)="valueChangeFilterBenefit($event)"
                         ></codx-dropdown-select>
                         <codx-dropdown-calendar
-                          [value]="date"
+                        [cssPopup]="'w-600px h-400px'"
+                          emptyText="Chọn năm..."
+                          [firstChange]="false"
                           [displayOption]="ops"
                           [selectedType]="'y'"
+                          [cssClass]="'rounded-pill'"
                           (change)="valueChangeYearFilterBenefit($event)"
                         ></codx-dropdown-calendar>
                       </div>
@@ -3254,8 +3257,10 @@
                         [method]="'LoadDataAsync'"
                         [predicates]="'EmployeeID=@0'"
                         [dataValues]="data.employeeID"
-                        [pageSize]="'3'"
+                        [pageSize]="numPageSizeGridView"
                         [entityName]="'HR_EBenefits'"
+                        [rowHeight]="50"
+                        height="240px"
                       ></codx-gridview>
                     </div>
                   </div>

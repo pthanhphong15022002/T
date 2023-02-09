@@ -112,21 +112,15 @@
         </ng-container>
       </div>
       <div class="wp-contents-files">
-        <!-- <codx-file 
-          [objectID]="item.recID"
-          [objectType]="'WP_Comments'" 
-          (evtGetFiles)="getFiles($event, item)"
-          (evtViewDetail)="clickViewDetail($event)">
-        </codx-file> -->
-        <codx-view-files 
-          [objectID]="item.recID" 
-          [objectType]="'WP_Comments'" 
-          [formModel]="listview.formModel"
-          [attachment]="item.attachment"
-          [medias]="item.medias"
-
-          (fileClicked)="clickViewDetail($event)">
-        </codx-view-files>
+        <ng-container *ngIf="item.attachments">
+          <codx-view-files 
+            [objectID]="item.recID" 
+            [objectType]="'WP_Comments'" 
+            [formModel]="listview.formModel"
+            [medias]="item.medias"
+            (fileClicked)="clickViewDetail($event)">
+          </codx-view-files>
+        </ng-container>  
       </div> 
     </div>
     <!-- end contents -->

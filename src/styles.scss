@@ -544,7 +544,7 @@ codx-view-list-detail .codx-detail-footer {
 }
 
 .codx-detail-footer .mh-200px {
-  max-height: 178px !important;
+  max-height: 185px !important;
 }
 
 codx-view-list-tree {
@@ -1632,6 +1632,24 @@ textarea.codx-textarea {
 codx-dropdown-calendar button.dropdown-toggle.btn {
   height: 32px !important;
   line-height: inherit;
+}
+
+
+codx-view-list-detail .tab-footer {
+  margin-top: 12px;
+}
+
+codx-view-list-detail .codx-detail-footer {
+  height: 46px;
+  padding-bottom: 0 !important;
+}
+
+codx-view-list-detail .codx-detail-footer .badge.badge-sm {
+  margin-top: 2px;
+  margin-left: -3px;
+  padding-left: 1px !important;
+  padding-right: 1px !important;
+  font-size: 10px !important;
 }
 
 // .dropdown [type="inset: 0px auto auto 0px;"] {
