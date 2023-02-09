@@ -335,6 +335,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.viewChooseRole,
         true,
         false,
+        false,
         this.lstChangeModule,
       ];
     }
@@ -360,6 +361,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     data = [
       this.adUser,
       this.viewChooseRole,
+      false,
       false,
       false,
       this.lstChangeModule,
