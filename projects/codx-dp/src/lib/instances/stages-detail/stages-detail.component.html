@@ -194,8 +194,14 @@
         >
           <div cdkDropListGroup>
             <ng-container *ngFor="let taskList of taskGroupList">
-              <div class="card-job-list" cdkDrag [cdkDragData]="taskList" [cdkDragStartDelay]="200">
-                <div class="card-job">
+              <div
+                class="card-job-list"
+                cdkDrag
+                [cdkDragData]="taskList"
+                [cdkDragStartDelay]="200"
+                [cdkDragDisabled]="taskList?.recID ? false : true"
+              >
+                <div class="card-job p-3">
                   <div
                     *ngIf="taskList?.recID"
                     class="d-flex align-items-center justify-content-between"
@@ -247,13 +253,19 @@
                     >
                     </ng-container>
                   </div>
-                  <div *ngIf="!taskList?.recID" style="height: 20px"></div>
+                  <div
+                    *ngIf="!taskList?.recID"
+                    [ngStyle]="
+                      taskList?.task.length == 0 ? { height: '30px' } : {}
+                    "
+                  ></div>
 
                   <!-- kéo thả ở trong  -->
                   <div
                     cdkDropList
                     [cdkDropListData]="taskList?.task || []"
-                    (cdkDropListDropped)="drop($event,taskList)"
+                    (cdkDropListDropped)="drop($event, taskList)"
+                    id="{{ taskList?.recID }}"
                   >
                     <ng-container *ngFor="let task of taskList?.task">
                       <div

@@ -3,7 +3,7 @@
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
-      <codx-aside *ngIf="asideDisplay" [hasSecond]="false"> </codx-aside>
+      <codx-aside *ngIf="asideDisplay" [hasSecond]="true"> </codx-aside>
 
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header
@@ -69,13 +69,6 @@
     <codx-notify-drawer></codx-notify-drawer>
     <codx-activies-approval-list></codx-activies-approval-list>
 
-    <!-- Quick links -->
-    <erm-quick-links-inner
-      [buttonMarginClass]="codxService.toolbarButtonMarginClass"
-      [buttonIconClass]="codxService.toolbarButtonIconSizeClass"
-      [buttonHeightClass]="codxService.toolbarButtonHeightClass"
-    ></erm-quick-links-inner>
-    <!-- End: Quick links -->
     <!-- Home -->
     <a class="d-flex align-items-center" href="/">
       <!-- begin::Menu wrapper -->
@@ -93,6 +86,14 @@
       <!-- end::Menu wrapper -->
     </a>
     <!--end Home -->
+    <!-- Quick links -->
+    <erm-quick-links-inner
+      [buttonMarginClass]="codxService.toolbarButtonMarginClass"
+      [buttonIconClass]="codxService.toolbarButtonIconSizeClass"
+      [buttonHeightClass]="codxService.toolbarButtonHeightClass"
+    ></erm-quick-links-inner>
+    <!-- End: Quick links -->
+
     <!-- begin::User -->
     <codx-user-inner
       [user]="user"

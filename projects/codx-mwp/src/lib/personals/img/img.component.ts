@@ -23,6 +23,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { environment } from 'src/environments/environment';
 import { FileService } from '@shared/services/file.service';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'app-img',
@@ -30,6 +31,7 @@ import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/
   styleUrls: ['./img.component.scss'],
 })
 export class ImgComponent implements OnInit, AfterViewInit {
+  urlUpload = environment.urlUpload;
   data: any = [];
   user: any;
   functionList = {
@@ -54,6 +56,7 @@ export class ImgComponent implements OnInit, AfterViewInit {
     private fileService: FileService,
     private callfc: CallFuncService,
     private auth: AuthStore,
+    private shareService: CodxShareService,
     private injector: Injector
   ) {
     this.cache.functionList('WP').subscribe((res) => {
@@ -71,7 +74,9 @@ export class ImgComponent implements OnInit, AfterViewInit {
     this.dtService = dataSv;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+  }
 
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
@@ -89,5 +94,14 @@ export class ImgComponent implements OnInit, AfterViewInit {
         ''
       );
     });
+  }
+
+  getThumb(url:any)
+  {
+    if(url)
+    {
+      return this.shareService.getThumbByUrl(url,300);
+    }
+    return ""
   }
 }
