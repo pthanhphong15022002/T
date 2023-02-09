@@ -119,7 +119,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
+  // get vll
   getValueList() {
     this.cache.valueList('L1480').subscribe((res) => {
       if (res) {
@@ -146,6 +146,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  //get grv set up
   getSetUp(funcID: string) {
     if (funcID) {
       // get function
@@ -169,6 +170,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       });
     }
   }
+  // change more
   changeMoreFunction(arrMoreFc) {
     // set moreFucntion
     if (arrMoreFc) {
@@ -182,6 +184,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       });
     }
   }
+  // click moreFC
   clickMF(event: any, post: any) {
     if (event && post) {
       switch (event.functionID) {
@@ -348,15 +351,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       this.callFC.openForm(PopupSavePostComponent, '', 500, 400, '', obj, '');
     }
   }
-  pushComment(data: any) {
-    if (!data) return;
-    this.listview.dataService.data.map((p) => {
-      if (p.recID == data.refID) {
-        p.listComment.push(data);
-        return;
-      }
-    });
-  }
+
   // view detail wp news
   naviagteWPNew(data: any) {
     if (!data || !data.recID || !data.category) return;
@@ -377,10 +372,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         }
       });
   }
-  getFiles(event: any, data: any) {
-    if (!event || !data) return;
-    data.files = event;
-  }
+
+  //view detail imgae
   clickViewDetail(file: any){
     if (file) {
       let _data = {
@@ -392,6 +385,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.listview.formModel;
       option.IsFull = true;
+      option.zIndex = 999;
       this.callFC.openForm(
         PopupDetailComponent,
         '',
@@ -403,13 +397,5 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         option
       );
     }
-  }
-  clickShowComment(data: any) {
-    data.isShowComment = !data.isShowComment;
-    this.dt.detectChanges();
-  }
-  replyTo(data: any) {
-    data.showReply = !data.showReply;
-    this.dt.detectChanges();
   }
 }

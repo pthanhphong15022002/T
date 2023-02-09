@@ -7,14 +7,22 @@
     class="nav nav-tabs"
   >
     <ng-container *ngFor="let item of TabControl; let i = index">
-      <li [ngbNavItem]="i + 1" class="nav-item">
-        <a ngbNavLink class="nav-link">
+      <li [ngbNavItem]="i + 1" class="nav-item pe-1">
+        <a ngbNavLink class="nav-link position-relative">
           <codx-label
             [name]="'tab' + item.name"
             [formName]="'SYS'"
             [default]="item.textDefault || item.name"
           >
           </codx-label>
+          <span
+            *ngIf="
+              oCountFooter[item.name.toLowerCase()] &&
+              oCountFooter[item.name.toLowerCase()] > 0
+            "
+            class="position-absolute topbar-badge translate-middle badge badge-sm rounded-pill bg-danger top-0 start-100"
+            >{{ oCountFooter[item.name.toLowerCase()] }}</span
+          >
         </a>
 
         <ng-template ngbNavContent>
@@ -32,7 +40,11 @@
     <ng-container *ngSwitchCase="'history'">
       <div class="tab-his">
         <div class="tab_body">
-          <codx-history [objectID]="objectID" [formModel]="formModel" [funcID]="funcID"></codx-history>
+          <codx-history
+            [objectID]="objectID"
+            [formModel]="formModel"
+            [funcID]="funcID"
+          ></codx-history>
         </div>
       </div>
     </ng-container>
@@ -66,7 +78,8 @@
             [objectType]="entityName"
             [actionType]="'C'"
             [addNew]="true"
-            [funcID]="funcID">
+            [funcID]="funcID"
+          >
           </codx-tree-comment>
         </div>
       </div>

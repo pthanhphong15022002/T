@@ -18,6 +18,7 @@ import {
   CodxFormComponent,
   CacheService,
 } from 'codx-core';
+import { environment } from 'src/environments/environment';
 import { CodxAdService } from '../../codx-ad.service';
 import { AD_Roles } from '../../models/AD_Roles.models';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
@@ -287,19 +288,26 @@ export class PopRolesComponent implements OnInit {
 
   //check valid quantity add new modules
   beforeSave() {
-    this.adService
-      .getListValidOrderForModules(this.lstChangeFunc)
-      .subscribe((lstTNMDs: tmpTNMD[]) => {
-        if (lstTNMDs.length < this.lstChangeFunc.length) {
-          this.notiService.alertCode('AD017').subscribe((e) => {
-            if (e?.event?.status == 'Y') {
-              this.onSave(lstTNMDs);
-            }
-          });
-        } else {
-          this.onSave(lstTNMDs);
-        }
-      });
+    if (environment.saas == 1) {
+      this.adService
+        .getListValidOrderForModules(this.lstChangeFunc)
+        .subscribe((lstTNMDs: tmpTNMD[]) => {
+          if (
+            lstTNMDs == null ||
+            lstTNMDs?.length < this.lstChangeFunc.length
+          ) {
+            this.notiService.alertCode('AD017').subscribe((e) => {
+              if (e?.event?.status == 'Y') {
+                this.onSave(lstTNMDs);
+              }
+            });
+          } else {
+            this.onSave(lstTNMDs);
+          }
+        });
+    } else {
+      this.onSave([]);
+    }
   }
 
   onSave(lstTNMDs) {

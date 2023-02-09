@@ -7,8 +7,7 @@
     </codx-listview>
 
     <ng-template #templateListCard let-item>
-      <codx-card-img cardCss="border rounded-4 w-200px" (click)="openImg(item)" [imageRecId]="item.recID"
-        [imgOn]="item?.modifiedOn" [imageObjType]="item.objectType" imageWidth="200" imgCss="h-150px">
+       <codx-card-img cardCss="border rounded-4 w-200px pt-6" (dblclick)="openImg(item)" [imageSrc]="getThumb(urlUpload + '/' + item.pathDisk)" imageWidth="200" imgCss="h-150px" >
       </codx-card-img>
     </ng-template>
   </div>

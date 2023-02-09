@@ -55,12 +55,24 @@ export class DP_Processes_Permission {
   assign: boolean;
   delete: boolean;
   share: boolean;
+  edit: boolean;
+  allowPermit: boolean;
+  publish: boolean;
   upload: boolean;
   download: boolean;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  startDate: Date;
+  endDate: Date;
+  approvalRule: String;
+  approverType: String;
+  approvers: String;
+  approvedBy: String;
+  approveStatus: String;
+  approvedOn: Date;
+
 }
 export class DP_Steps {
   recID: string = Util.uid();
@@ -95,6 +107,7 @@ export class DP_Steps {
   modifiedOn: Date = new Date();
   modifiedBy: string;
   showColumnControl: number = 1;
+  newProcessID: string;
 }
 export class DP_Steps_Roles {
   recID: string;
@@ -178,7 +191,7 @@ export class DP_Steps_Tasks {
   createTaskControl: string;
   stop: boolean;
   attachments: number;
-  callType: boolean;
+  callType: string;
   isOnline: boolean;
   createdOn: Date;
   createdBy: string;
@@ -251,7 +264,7 @@ export class DP_Instances {
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
-  tag: string;
+  tags: string;
   modifiedBy: string;
   permissions: DP_Instances_Permissions[] = [];
 }
@@ -368,7 +381,7 @@ export class DP_Instances_Steps_TaskGroups_Roles {
 }
 
 export class DP_Instances_Steps_Tasks {
-  recID: string;
+  recID = Util.uid();
   instanceID: string;
   stepID: string;
   indexNo: number;
@@ -458,7 +471,7 @@ export class DP_Instances_Steps_Reasons {
   instanceID: string;
   stepID: string;
   reasonName: string;
-  reasonType: boolean;
+  reasonType: string;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;

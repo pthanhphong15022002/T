@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, AfterViewInit, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, AfterViewInit, HostListener, ViewChild, ElementRef, AfterContentInit } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { WP_Messages } from '../../models/WP_Messages.model';
@@ -24,6 +24,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   message:WP_Messages = new WP_Messages();
   page:number = 0;
   pageIndex:number = 0;
+  @ViewChild("chatBoxBody") chatBoxBody:ElementRef<HTMLDivElement>;
   constructor
   (
     private api:ApiHttpService,
@@ -36,6 +37,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   {
     this.user = this.auth.get()
   }
+  
  
 
   ngOnInit(): void 
@@ -59,8 +61,16 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
         this.arrMessages.push(data);
         this.dt.detectChanges();
       }
-    })
+    });
+    if(this.chatBoxBody){
+      setTimeout(() => {
+        this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight)
+        this.yValue = this.chatBoxBody.nativeElement.scrollHeight;
+      },100)
+    }
+    
   }
+
   // get group info
   getGroupInfo(groupID:string){
     if(groupID){
@@ -133,6 +143,15 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
       })
     }
   }
+  // scroll up load data
+  yValue:number = 0;
+  scroll(){
+    let _y = this.chatBoxBody.nativeElement.scrollTop;
+    if(_y < this.yValue && _y <= 50){
+      this.getDataChat();
+    }
+    this.yValue = _y;
+  }
   // get list chat
   getDataChat(){
     if(this.pageIndex < this.page){
@@ -147,7 +166,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
           if(res[1] > 0)
           {
             let _messgae = res[0];
-            this.arrMessages = this.arrMessages.concat(_messgae);
+            this.arrMessages = _messgae.concat(this.arrMessages);
           }
         });
     }

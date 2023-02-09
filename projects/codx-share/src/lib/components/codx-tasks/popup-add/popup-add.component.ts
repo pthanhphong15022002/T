@@ -79,6 +79,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   popover: any;
   vllShare = 'TM003';
   planholderTaskGoal = 'Add to do list…';
+  planholderTaskChild ="Ghi chú phân công..."
   listRoles: any;
   vllRole = 'TM001';
   vllRefType = 'TM018';
@@ -195,6 +196,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           .subscribe((res) => {
             if (res) {
               this.gridViewSetup = res;
+              this.planholderTaskChild= res['Memo']?.description;
             }
           });
       }
@@ -822,6 +824,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
+          this.taskGroup = res
           this.convertParameterByTaskGroup(res);
         }
       });

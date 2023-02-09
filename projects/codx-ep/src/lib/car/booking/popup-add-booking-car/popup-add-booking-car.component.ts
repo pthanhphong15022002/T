@@ -577,23 +577,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.data.reminder = 15;
       this.data.bookingOn = this.data.startDate;
       this.data.stopOn = this.data.endDate;
-      this.fGroupAddBookingCar.patchValue(this.data);
-      if (this.fGroupAddBookingCar.invalid == true) {
-        this.codxEpService.notifyInvalid(
-          this.fGroupAddBookingCar,
-          this.formModel
-        );
-
-        this.saveCheck = false;
-        return;
-      }
-      if (this.data.phone != null && this.data.phone != '') {
-        if (!this.validatePhoneNumber(this.data.phone)) {
-          this.notificationsService.notify('EP014');
-          this.saveCheck = false;
-          return;
-        }
-      }
       let tempDate = new Date();
       if (
         this.data.startDate != null &&
@@ -621,6 +604,24 @@ export class PopupAddBookingCarComponent extends UIComponent {
         this.saveCheck = false;
         return;
       }
+      this.fGroupAddBookingCar.patchValue(this.data);
+      if (this.fGroupAddBookingCar.invalid == true) {
+        this.codxEpService.notifyInvalid(
+          this.fGroupAddBookingCar,
+          this.formModel
+        );
+
+        this.saveCheck = false;
+        return;
+      }
+      if (this.data.phone != null && this.data.phone != '') {
+        if (!this.validatePhoneNumber(this.data.phone)) {
+          this.notificationsService.notify('EP014');
+          this.saveCheck = false;
+          return;
+        }
+      }
+      
       let tmpEquip = [];
       this.tmplstDevice.forEach((element) => {
         let tempEquip = new Equipments();

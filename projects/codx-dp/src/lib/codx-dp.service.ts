@@ -219,6 +219,14 @@ export class CodxDpService {
       data
     );
   }
+  deleteTaskGroups(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'DeleteGroupTaskAsync',
+      data
+    );
+  }
   addTask(data){
     return this.api.exec<any>(
       'DP',
@@ -232,6 +240,22 @@ export class CodxDpService {
       'DP',
       'InstanceStepsBusiness',
       'UpdateTaskAsync',
+      data
+    );
+  }
+  deleteTask(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'DeleteTaskAsync',
+      data
+    );
+  }
+  updateDataDrop(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'updateStepDrapDropAsync',
       data
     );
   }
