@@ -1,15 +1,14 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService, ViewType, CodxListviewComponent, UIComponent, DialogModel } from 'codx-core';
+import { Component, Injector,TemplateRef, ViewChild } from '@angular/core';
+import { ViewModel, ViewType, CodxListviewComponent, UIComponent, DialogModel } from 'codx-core';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from '../popup/popup-search/popup-search.component';
 
 @Component({
-  selector: 'lib-view-tag',
-  templateUrl: './view-tag.component.html',
-  styleUrls: ['./view-tag.component.scss']
+  selector: 'wp-news-tag',
+  templateUrl: './news-tag.component.html',
+  styleUrls: ['./news-tag.component.scss']
 })
-export class ViewTagComponent extends UIComponent {
+export class NewsTagComponent extends UIComponent {
   funcID: string = "";
   entityName: string = "WP_News";
   predicate: string = "Category != @0 && (ApproveStatus==@1 or ApproveStatus==null) && Status==@2 && Stop==false ";
