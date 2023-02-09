@@ -54,6 +54,7 @@
             </ng-template>
             <ng-template #content>
               <ng-container *ngIf="dataOKRPlans != null; else elseOKR">
+                <ng-container *ngIf="dataOKR != null">
                 <lib-okr-targets
                   [dataOKRPlans]="dataOKRPlans"
                   [dataOKR]="dataOKR"
@@ -61,11 +62,15 @@
                   [gridView]="gridView"
                   [obFuncID]="obFuncID"
                   [krFuncID]="krFuncID"
+                  [skrFuncID]="skrFuncID"
+
                   [formModelKR]="formModelKR"
-                  [formModelOB]="formModelOB"
+                  [formModelOB]="formModelOB"                  
+                  [formModelSKR]="formModelSKR"
                   [funcID]="funcID"
                   [isHiddenChart]="isHiddenChart"
                 ></lib-okr-targets>
+              </ng-container>
               </ng-container>
               <ng-template #elseOKR>
                 <div

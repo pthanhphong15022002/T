@@ -91,9 +91,9 @@ export class OkrTreesComponent implements OnInit, AfterViewInit {
           tempOrgID = this.curUser?.employee.employeeID;
           break;
       }
-      
       this.codxOmService.getOrgTreeOKR(this.planRecID,tempOrgID,okrLevelChild).subscribe((listOrg: any) => {
         if (listOrg) {          
+
             this.orgUnitTree=[listOrg];
             this.changeDetectorRef.detectChanges();
             this.isAfterRender=true;

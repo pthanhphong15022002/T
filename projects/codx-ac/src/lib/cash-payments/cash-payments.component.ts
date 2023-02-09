@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, CallFuncService, DialogModel, DialogRef, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CallFuncService, DialogModel, DialogRef, RequestOption, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopAddCashComponent } from './pop-add-cash/pop-add-cash.component';
 
 @Component({
@@ -9,7 +9,8 @@ import { PopAddCashComponent } from './pop-add-cash/pop-add-cash.component';
 })
 export class CashPaymentsComponent extends UIComponent {
   views: Array<ViewModel> = [];
-  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   dialog!: DialogRef;
   button?: ButtonModel;
   headerText:any;
@@ -46,10 +47,10 @@ export class CashPaymentsComponent extends UIComponent {
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        //this.delete(data);
+        this.delete(data);
         break;
       case 'SYS03':
-        //this.edit(data);
+        this.edit(e,data);
         break;
     }
     
@@ -60,13 +61,14 @@ export class CashPaymentsComponent extends UIComponent {
     });
     this.views = [
       {
-        type: ViewType.list,
+        type: ViewType.grid,
         active: true,
         sameData: true,
         model: {
-          template: this.itemTemplate,
+          template2: this.templateMore,
+          frozenColumns: 1,
         },
-      },
+      } 
     ];
   }
   add() {
@@ -81,11 +83,48 @@ export class CashPaymentsComponent extends UIComponent {
       option.FormModel = this.view.formModel;
       option.IsFull = true;
       this.dialog = this.callfunc.openForm(PopAddCashComponent,'', null,null,this.view.funcID,obj,'',option,);
-      this.dialog.closed.subscribe((x) => {
-        if (x.event == null)
-        this.view.dataService.clear();
-      });
     });
   }
-
+  edit(e,data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      var obj = {
+        formType: 'edit',
+        headerText: e.text + ' ' + this.funcName,
+      };
+      let option = new DialogModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.IsFull = true;
+      this.dialog = this.callfunc.openForm(PopAddCashComponent,'', null,null,this.view.funcID,obj,'',option,);
+    });
+  }
+  delete(data){
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.delete([data], true, (option: RequestOption) =>
+    this.beforeDelete(option,data)
+  ).subscribe((res:any) => {
+    if (res) {
+      this.api.exec(
+        'ERM.Business.AC',
+        'CashPaymentsLinesBusiness',
+        'DeleteAsync',
+        [data.recID]
+      ).subscribe((res:any)=>{
+      })
+    }
+  });
+  }
+  beforeDelete(opt: RequestOption,data) {
+    opt.methodName = 'DeleteAsync';
+    opt.className = 'CashPaymentsBusiness';
+    opt.assemblyName = 'AC';
+    opt.service = 'AC';
+    opt.data = data;
+    return true;
+  }
 }

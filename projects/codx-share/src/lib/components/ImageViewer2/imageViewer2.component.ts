@@ -85,19 +85,9 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
 
     ngOnInit() {
         this.getFileByObjectID();
-        // if (this.loadOnInit) {
-        //     this.isImagensPresentes();
-        // }
     }
 
     ngAfterViewInit() {
-        // this.inicializarCores();
-        // if (this.loadOnInit) {
-        //     this.inicializarImageViewer();
-        //     setTimeout(() => {
-        //         this.showImage();
-        //     }, 1000);
-        // }
     }
 
     // get file by objectID
@@ -119,17 +109,10 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
                     }
                 });
                 this.inicializarImageViewer();
-                setTimeout(() => {
-                    this.showImage();
-                }, 1000);
+                this.showImage();
             }
         });
     }
-    // inicializarCores() {
-    //     this.setStyleClass('inline-icon', 'background-color', this.primaryColor);
-    //     this.setStyleClass('footer-info', 'background-color', this.primaryColor);
-    //     this.setStyleClass('footer-icon', 'color', this.buttonsColor);
-    // }
 
     ngOnChanges(changes: SimpleChanges) {
         this.imagesChange(changes);
@@ -139,24 +122,19 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     }
 
     zoomIn() {
-        debugger
         this.zoomPercent += 10;
         this.viewer.zoom(this.zoomPercent);
     }
 
     zoomOut() {
         if (this.zoomPercent === 100) {
-
             return;
         }
-
         this.zoomPercent -= 10;
-
         if (this.zoomPercent < 0) {
 
             this.zoomPercent = 0;
         }
-
         this.viewer.zoom(this.zoomPercent);
     }
 
@@ -223,19 +201,8 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     showImage() {
         this.prepararTrocaImagem();
         let imgObj = this.isURlImagem();
-        // if (this.isURlImagem()) {
-        //     imgObj = this.getImagemAtual();
-        //     imgObj = this.images[this.indexImagemAtual - 1]["source"];
-        //     this.stringDownloadImagem = this.getImagemAtual();
-        // } 
-        // else 
-        // {
-        //     imgObj = this.BASE_64_PNG + this.getImagemAtual();
-        //     this.stringDownloadImagem = this.BASE_64_IMAGE + this.getImagemAtual();
-        // }
         this.viewer.load(imgObj, imgObj);
         this.curSpan.innerHTML = this.indexImagemAtual;
-        // this.inicializarCores();
     }
 
     getTamanhoIframe() {
@@ -292,10 +259,6 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
             this.indexImagemAtual = 1;
         }
         this.onNext.emit(this.indexImagemAtual);
-        // if (!this.isPDF() && this.showOnlyPDF) {
-        //     this.proximaImagem();
-        //     return;
-        // }
         this.showImage();
     }
 
@@ -306,10 +269,6 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
             this.indexImagemAtual = this.totalImagens;
         }
         this.onPrevious.emit(this.indexImagemAtual);
-        // if (!this.isPDF() && this.showOnlyPDF) {
-        //     this.imagemAnterior();
-        //     return;
-        // }
         this.showImage();
     }
 

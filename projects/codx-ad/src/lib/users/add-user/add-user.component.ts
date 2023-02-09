@@ -288,6 +288,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
         .save((opt: any) => this.beforeSaveTemp(opt), 0)
         .subscribe((res) => {
           if (res.save) {
+            this.adUser.userID = res.save.userID;
+
             this.getHTMLFirstPost(this.adUser);
             this.adService.createFirstPost(this.tmpPost).subscribe();
             this.imageUpload
@@ -335,6 +337,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.viewChooseRole,
         true,
         false,
+        false,
         this.lstChangeModule,
       ];
     }
@@ -360,6 +363,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     data = [
       this.adUser,
       this.viewChooseRole,
+      false,
       false,
       false,
       this.lstChangeModule,

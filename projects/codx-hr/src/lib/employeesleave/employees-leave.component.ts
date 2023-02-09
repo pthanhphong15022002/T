@@ -1,54 +1,63 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { CallFuncService, CodxService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { CacheService, CallFuncService, CodxService, DataRequest, DialogRef, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupAddEmployeesComponent } from '../employees/popup-add-employees/popup-add-employees.component';
+import { UpdateStatusComponent } from '../employees/update-status/update-status.component';
 
 @Component({
   selector: 'lib-employees-leave',
   templateUrl: './employees-leave.component.html',
   styleUrls: ['./employees-leave.component.css']
 })
-export class EmployeesLeaveComponent implements OnInit {
+export class EmployeesLeaveComponent  extends UIComponent {
   views: Array<ViewModel> = [];
   columnsGrid = [];
   dataValue = "90";
   predicate = "Status=@0";
-  currentEmployee: boolean = false;
-  itemSelected: any;
   dialog!: DialogRef;
-  urlDetail = '';
-
+  functionID:string ="";
+  listMoreFunc:any = null;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemContact', { static: true }) itemContact: TemplateRef<any>;
   @ViewChild('itemInfoPersonal', { static: true }) itemInfoPersonal: TemplateRef<any>;
   @ViewChild('itemStatusName', { static: true }) itemStatusName: TemplateRef<any>;
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
-  @ViewChild('view') view!: ViewsComponent;
   @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
 
   constructor(
     private changedt: ChangeDetectorRef,
     private notiService: NotificationsService,
     private callfunc: CallFuncService,
-    private codxService: CodxService,
     private hrService: CodxHrService,
+    private injector: Injector,
   ) 
   {
+    super(injector);
     
   }
 
-  ngOnInit(): void {
-    this.columnsGrid = [
-      { field: '', headerText: '', width: 40, template: this.itemAction },
-      { field: 'employeeID', headerText: 'Nhân viên', width: 300, template: this.itemEmployee },
-      { field: 'email', headerText: 'Liên hệ', width: 300, template: this.itemContact },
-      { field: 'birthday', headerText: 'Thông tin cá nhân', width: 200, template: this.itemInfoPersonal },
-      { field: 'statusName', headerText: 'Tình trạng', width: 200, template: this.itemStatusName },
-    ];
+  onInit(): void {
+    this.router.params.subscribe((param: any) => {
+      if (param) {
+        let funcID = param['funcID'];
+        if (funcID) {
+          this.functionID = funcID;
+          this.getSetup(funcID);
+        }
+      }
+    });
   }
 
   ngAfterViewInit(): void {
+    this.columnsGrid = [
+      { field: 'employeeID', headerText: 'Nhân viên', width: 300, template: this.itemEmployee },
+      { field: 'email', headerText: 'Liên hệ', width: 200, template: this.itemContact },
+      { field: 'birthday', headerText: 'Thông tin cá nhân', width: 200, template: this.itemInfoPersonal },
+      { field: 'statusName', headerText: 'Tình trạng', width: 200, template: this.itemStatusName },
+      { field: '', headerText: '', width: 40, template: this.itemAction }
+    ];
     this.views = [
       {
         id: '1',
@@ -73,58 +82,55 @@ export class EmployeesLeaveComponent implements OnInit {
     ];
     this.changedt.detectChanges();
   }
-
-  // delete(data: any) {
-  // this.view.dataService
-  //   .delete([this.view.dataService.dataSelected] ,true,(opt) =>
-  //     this.beforeDel(opt)
-  //   )
-  //   .subscribe((res) => {
-  //     if (res[0]) {
-  //       this.notiService.notifyCode('TM004');
-  //     }
-  //   });
-  // }
-
-  // beforeDel(opt: RequestOption) {
-  //   opt.methodName = 'DeleteAsync';
-  //   opt.data = this.itemSelected.employeeID;
-  //   return true;
-  // }
-
-  selectedChange(val: any) {
-    this.itemSelected = val.data;
-    this.changedt.detectChanges();
+  getSetup(functionID: string) {
+    if (functionID) {
+      this.cache.functionList(functionID).subscribe((func: any) => {
+        if (func) {
+          this.cache
+            .moreFunction(func.formName, func.gridViewName)
+            .subscribe((res) => {
+              if (res) {
+                this.listMoreFunc = res;
+              }
+            });
+        }
+      });
+    }
   }
-
-  edit(data?) {
-    if (data) {
+  // more func
+  clickMF(event: any, data: any) {
+    if (event && data) {
       this.view.dataService.dataSelected = data;
+      switch (event.functionID) {
+        case 'HR0033': // cập nhật tình trạng
+          this.updateStatus(data, event.functionID);
+          break;
+      }
     }
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, [this.view.dataService.dataSelected, 'edit'], option);
+  }
+
+
+
+
+  // cập nhật tình trạng nhân viên
+  updateStatus(data: any, funcID: string) {
+    let popup = this.callfunc.openForm(
+      UpdateStatusComponent,
+      'Cập nhật tình trạng',
+      350,
+      200,
+      funcID,
+      data
+    );
+    popup.closed.subscribe((e) => {
+      if (e?.event) {
+        var emp = e.event;
+        if (emp.status !== '90') {
+          this.view.dataService.remove(emp).subscribe();
+        } else this.view.dataService.update(emp).subscribe();
+      }
+      this.changedt.detectChanges();
     });
-    this.changedt.detectChanges();
   }
 
-  clickMF(e: any, data?: any) {
-    switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'HR0032':
-        this.viewEmployeeInfo(data);
-        break;
-    }
-  }
-
-  viewEmployeeInfo(data) {
-    this.codxService.navigate('', this.urlDetail, { employeeID: data.employeeID });
-  }
-
-  requestEnded(event) { }
 }
