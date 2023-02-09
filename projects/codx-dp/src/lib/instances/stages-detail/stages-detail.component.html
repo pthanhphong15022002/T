@@ -190,11 +190,11 @@
         <div
           cdkDropList
           class="list"
-          (cdkDropListDropped)="drop($event, taskGroupList)"
+          (cdkDropListDropped)="drop($event, taskGroupList, true)"
         >
           <div cdkDropListGroup>
             <ng-container *ngFor="let taskList of taskGroupList">
-              <div class="card-job-list" cdkDrag [cdkDragData]="taskList">
+              <div class="card-job-list" cdkDrag [cdkDragData]="taskList" [cdkDragStartDelay]="200">
                 <div class="card-job">
                   <div
                     *ngIf="taskList?.recID"
@@ -258,7 +258,7 @@
                     <ng-container *ngFor="let task of taskList?.task">
                       <div
                         cdkDrag
-                        [cdkDragStartDelay]="100"
+                        [cdkDragStartDelay]="200"
                         [cdkDragData]="task"
                         class="drap-drop"
                       >

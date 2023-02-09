@@ -1643,7 +1643,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.reason,
         this.dataValueview === this.viewStepReasonSuccess ? '1' : '2',
         this.step,
-        null
+        this.process?.recID
       );
       this.reason.reasonName = this.reasonName;
       this.step.reasons.push(this.reason);

@@ -29,7 +29,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   formModel: FormModel;
   fmANumberDefault: FormModel;
   fgANumberDefault: FormGroup;
-  functionID: string = '';
+  functionID;
   // formModelData: FormModel;
   autoNoCode;
   newAutoNoCode;
@@ -106,15 +106,18 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
           this.fmANumberDefault.gridViewName
         )
         .then((res) => {
-          if(res){
+          if (res) {
             this.fgANumberDefault = res;
-            this.esService.getAutoNumberDefaults(this.functionID).subscribe(model => {
-              if(model){
-                this.autoDefaultData = model;
-                this.fgANumberDefault.patchValue(this.autoDefaultData);
-                this.cr.detectChanges();
-              }
-            })
+            this.esService
+              .getAutoNumberDefaults(this.functionID)
+              .subscribe((model) => {
+                if (model) {
+                  model.autoNumber = this.autoNoCode;
+                  this.autoDefaultData = model;
+                  this.fgANumberDefault.patchValue(this.autoDefaultData);
+                  this.cr.detectChanges();
+                }
+              });
           }
         });
 
