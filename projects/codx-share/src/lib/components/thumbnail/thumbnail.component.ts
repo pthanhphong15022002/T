@@ -223,7 +223,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   openFile(file:any) {
-    if(file && file.write)
+    if(file && file.read)
     {
       var option = new DialogModel();
       option.IsFull = true;
