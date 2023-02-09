@@ -143,12 +143,6 @@ export const routes: Routes = [
       },
     ],
   },
-  // {
-  //   path: 'wp/portal/wp',
-  //   redirectTo: 'portal/WP',
-  //   data: { noReuse: true },
-  //   pathMatch: 'full',
-  // },
   {
     path: '**',
     redirectTo: 'portal/WP',

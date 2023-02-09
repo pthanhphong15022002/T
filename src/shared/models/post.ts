@@ -54,12 +54,17 @@ export class Post {
   createdName:string;
   subject:string;
   subContent:string ;
+  medias:number ;
+  attachments:number ;
+
 
   constructor(){
     this.createdOn = new Date();
     this.permissions = [];
     this.files = [];
     this.listComment = [];
+    this.medias = 0;
+    this.attachments = 0;
 
 }
 

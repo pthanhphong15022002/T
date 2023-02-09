@@ -1,63 +1,19 @@
 <div class="row mx-0 h-100">
     <!-- file -->
     <div class="col-8 px-5 bg-gray-200 position-relative d-flex felx-columns flex-wrap align-items-center">
-        <ng-container *ngIf="fileSelected">
-            <ng-container [ngSwitch]="fileSelected.referType">
-                <div class="d-flex flex-columns flex-wap align-items-center w-100 h-100 view-imgfull position-relative">
-                    <ng-container *ngSwitchCase="FILE_REFERTYPE.IMAGE">
-                        <!-- <img class="w-100 h-100" [src]="fileSelected.source"> -->
-                        <codx-image-viewer #codxImageViewer [images]="imageSrc" [idContainer]="'idOnHTML'"
-                            [loadOnInit]="true"></codx-image-viewer>
-                    </ng-container>
-                    <ng-container *ngSwitchCase="FILE_REFERTYPE.VIDEO">
-                        <video class="w-100 h-100 " [autoplay]="true">
-                            <source [src]="fileSelected.source" type="video/mp4">
-                        </video>
-                    </ng-container>
-                    <ng-container *ngIf="files.length > 1">
-                        <div class="next-previrous">
-                            <span class="icon-arrow_back_ios next-previrous-btn" (click)="previousFile()"></span>
-                            <span class="icon-arrow_forward_ios next-previrous-btn" (click)="nextFile()"></span>
-                        </div>
-                    </ng-container>
+        <div class="d-flex flex-columns flex-wap align-items-center w-100 h-100 view-imgfull position-relative">
+            <codx-image-viewer #codxImageViewer 
+                [idContainer]="'idOnHTML'" 
+                [objectID]="postID" 
+                [loadOnInit]="true"
+                [dialog]="dialogRef">
+            </codx-image-viewer>
+            <!-- <ng-container *ngIf="files.length > 1">
+                <div class="next-previrous">
+                    <span class="icon-arrow_back_ios next-previrous-btn" (click)="previousFile()"></span>
+                    <span class="icon-arrow_forward_ios next-previrous-btn" (click)="nextFile()"></span>
                 </div>
-            </ng-container>
-
-        </ng-container>
-        <div class="moreFC-top">
-            <div class="d-flex justify-content-between">
-                <button class="btn btn-icon btn-light" (click)="clickClosePopup()">
-                    <i class="icon-close icon-18 text-danger"></i>
-                </button>
-                <div class="d-flex">
-                    <span (click)="zoomIn()" class="btn rounded-circle btn-icon btn-light-primary ms-2 cursor-pointer">
-                        <i class="icon-zoom_in"></i>
-                    </span>
-                    <span (click)="zoomOut()" class="btn btn-icon rounded-circle btn-light-primary ms-2 cursor-pointer">
-                        <i class="icon-zoom_out"></i>
-                    </span>
-                    <span (click)="fullscreen()"  class="btn btn-icon rounded-circle btn-light-primary ms-2 cursor-pointer">
-                        <i class="icon-fullscreen"></i>
-                    </span>
-                </div>
-                <!-- <div class="">
-                    <span class="btn rounded-circle btn-icon btn-light-primary ms-1">
-                        <a href="javascript:void(0)">
-                            <i class="icon-zoom_in"></i>
-                        </a>
-                    </span>
-                    <span class="btn btn-icon rounded-circle btn-light-primary ms-1">
-                        <a href="javascript:void(0)">
-                            <i class="icon-zoom_out"></i>
-                        </a>
-                    </span>
-                    <span class="btn btn-icon rounded-circle btn-light-primary ms-1">
-                        <a href="javascript:void(0)">
-                            <i class="icon-fullscreen"></i>
-                        </a>
-                    </span>
-                </div> -->
-            </div>
+            </ng-container> -->
         </div>
     </div>
     <!-- post -->
