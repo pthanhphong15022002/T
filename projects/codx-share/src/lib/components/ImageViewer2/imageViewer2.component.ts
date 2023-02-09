@@ -11,7 +11,7 @@ import {
     SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import { ApiHttpService } from 'codx-core';
+import { ApiHttpService, DialogRef } from 'codx-core';
 import ImageViewer from 'iv-viewer';
 import {FullScreenViewer} from 'iv-viewer';
 import { environment } from 'src/environments/environment';
@@ -25,7 +25,7 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     @HostBinding('class') get class() {
         return "w-100 h-100";
       }
-
+    @Input() dialog:DialogRef;
     BASE_64_IMAGE = 'data:image/png;base64,';
     BASE_64_PNG = `${this.BASE_64_IMAGE} `;
     ROTACAO_PADRAO_GRAUS = 90;
@@ -91,7 +91,7 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.inicializarCores();
+        // this.inicializarCores();
         // if (this.loadOnInit) {
         //     this.inicializarImageViewer();
         //     setTimeout(() => {
@@ -125,11 +125,11 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
             }
         });
     }
-    private inicializarCores() {
-        this.setStyleClass('inline-icon', 'background-color', this.primaryColor);
-        this.setStyleClass('footer-info', 'background-color', this.primaryColor);
-        this.setStyleClass('footer-icon', 'color', this.buttonsColor);
-    }
+    // inicializarCores() {
+    //     this.setStyleClass('inline-icon', 'background-color', this.primaryColor);
+    //     this.setStyleClass('footer-info', 'background-color', this.primaryColor);
+    //     this.setStyleClass('footer-icon', 'color', this.buttonsColor);
+    // }
 
     ngOnChanges(changes: SimpleChanges) {
         this.imagesChange(changes);
@@ -222,12 +222,12 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
 
     showImage() {
         this.prepararTrocaImagem();
-        let imgObj = this.BASE_64_PNG;
-        if (this.isURlImagem()) {
-            // imgObj = this.getImagemAtual();
-            imgObj = this.images[this.indexImagemAtual - 1]["source"];
-            // this.stringDownloadImagem = this.getImagemAtual();
-        } 
+        let imgObj = this.isURlImagem();
+        // if (this.isURlImagem()) {
+        //     imgObj = this.getImagemAtual();
+        //     imgObj = this.images[this.indexImagemAtual - 1]["source"];
+        //     this.stringDownloadImagem = this.getImagemAtual();
+        // } 
         // else 
         // {
         //     imgObj = this.BASE_64_PNG + this.getImagemAtual();
@@ -235,7 +235,7 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         // }
         this.viewer.load(imgObj, imgObj);
         this.curSpan.innerHTML = this.indexImagemAtual;
-        this.inicializarCores();
+        // this.inicializarCores();
     }
 
     getTamanhoIframe() {
@@ -292,10 +292,10 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
             this.indexImagemAtual = 1;
         }
         this.onNext.emit(this.indexImagemAtual);
-        if (!this.isPDF() && this.showOnlyPDF) {
-            this.proximaImagem();
-            return;
-        }
+        // if (!this.isPDF() && this.showOnlyPDF) {
+        //     this.proximaImagem();
+        //     return;
+        // }
         this.showImage();
     }
 
@@ -306,10 +306,10 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
             this.indexImagemAtual = this.totalImagens;
         }
         this.onPrevious.emit(this.indexImagemAtual);
-        if (!this.isPDF() && this.showOnlyPDF) {
-            this.imagemAnterior();
-            return;
-        }
+        // if (!this.isPDF() && this.showOnlyPDF) {
+        //     this.imagemAnterior();
+        //     return;
+        // }
         this.showImage();
     }
 
@@ -411,15 +411,7 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         setTimeout(() => {
 
             this.viewerFullscreen = new FullScreenViewer();
-            let imgSrc;
-
-            if (this.isURlImagem()) {
-
-                imgSrc = this.getImagemAtual();
-            } else {
-
-                imgSrc = this.BASE_64_PNG + this.getImagemAtual();
-            }
+            let imgSrc = this.isURlImagem();
             this.viewerFullscreen.show(imgSrc, imgSrc);
             this.atualizarRotacao(false);
         }, timeout);
@@ -468,5 +460,12 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
 
     getIdIframe() {
         return this.idContainer + '-iframe'
+    }
+
+    // close
+    close(){
+        if(this.dialog){
+            this.dialog.close();
+        }
     }
 }

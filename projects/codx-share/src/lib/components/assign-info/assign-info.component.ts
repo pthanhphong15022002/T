@@ -70,6 +70,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   loadingAll = false;
   gridViewSetup: any;
   formModel: any;
+  planholderTaskChild=''
 
   constructor(
     private authStore: AuthStore,
@@ -111,6 +112,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
+          this.planholderTaskChild= res['Memo']?.description;
         }
       });
   }

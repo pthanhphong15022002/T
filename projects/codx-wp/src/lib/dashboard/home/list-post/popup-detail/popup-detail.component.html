@@ -1,19 +1,17 @@
 <div class="row mx-0 h-100">
     <!-- file -->
-    <div class="col-8 px-5 bg-gray-200 position-relative d-flex felx-columns flex-wrap align-items-center">
-        <ng-container *ngIf="imageSrc">
-            <div class="d-flex flex-columns flex-wap align-items-center w-100 h-100 view-imgfull position-relative">
-                <codx-image-viewer #codxImageViewer [idContainer]="'idOnHTML'" [objectID]="postID" [loadOnInit]="true">
-                </codx-image-viewer>
-                <ng-container *ngIf="files.length > 1">
-                    <div class="next-previrous">
-                        <span class="icon-arrow_back_ios next-previrous-btn" (click)="previousFile()"></span>
-                        <span class="icon-arrow_forward_ios next-previrous-btn" (click)="nextFile()"></span>
-                    </div>
-                </ng-container>
-            </div>
-        </ng-container>
-
+    <div class="col-8 px-0 bg-gray-200 position-relative d-flex felx-columns flex-wrap align-items-center">
+        <div class="d-flex flex-columns flex-wap align-items-center w-100 h-100 view-imgfull position-relative">
+            <codx-image-viewer #codxImageViewer [idContainer]="'idOnHTML'" [objectID]="postID" [loadOnInit]="true"
+                [dialog]="dialogRef">
+            </codx-image-viewer>
+            <!-- <ng-container *ngIf="files.length > 1">
+                <div class="next-previrous">
+                    <span class="icon-arrow_back_ios next-previrous-btn" (click)="previousFile()"></span>
+                    <span class="icon-arrow_forward_ios next-previrous-btn" (click)="nextFile()"></span>
+                </div>
+            </ng-container> -->
+        </div>
     </div>
     <!-- post -->
     <div class="col-4 mt-5 ps-6">
