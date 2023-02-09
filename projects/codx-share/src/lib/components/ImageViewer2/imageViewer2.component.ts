@@ -11,8 +11,10 @@ import {
     SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
+import { ApiHttpService } from 'codx-core';
 import ImageViewer from 'iv-viewer';
 import {FullScreenViewer} from 'iv-viewer';
+import { environment } from 'src/environments/environment';
 @Component({
     selector: 'codx-image-viewer',
     templateUrl: './imageViewer2.component.html',
@@ -28,7 +30,6 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     BASE_64_PNG = `${this.BASE_64_IMAGE} `;
     ROTACAO_PADRAO_GRAUS = 90;
     @Input() idContainer;
-    @Input() images: any[];
     @Input() rotate = true;
     @Input() download = true;
     @Input() fullscreen = true;
@@ -37,8 +38,13 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     @Input() showOptions = true;
     @Input() zoomInButton = true;
     @Input() zoomOutButton = true;
+    ///
+    images: any[] = [];
 
-    @Input() showPDFOnlyOption = true;
+    @Input() objectID: string = "";
+
+
+
     @Input() primaryColor = '#0176bd';
     @Input() buttonsColor = 'white';
     @Input() buttonsHover = '#333333';
@@ -70,24 +76,55 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
 
     zoomPercent = 100;
 
-    constructor(private renderer: Renderer2) {}
+    constructor
+    (
+        private renderer: Renderer2,
+        private api: ApiHttpService,
+    )
+    {}
 
     ngOnInit() {
-        if (this.loadOnInit) {
-            this.isImagensPresentes();
-        }
+        this.getFileByObjectID();
+        // if (this.loadOnInit) {
+        //     this.isImagensPresentes();
+        // }
     }
 
     ngAfterViewInit() {
         this.inicializarCores();
-        if (this.loadOnInit) {
-            this.inicializarImageViewer();
-            setTimeout(() => {
-                this.showImage();
-            }, 1000);
-        }
+        // if (this.loadOnInit) {
+        //     this.inicializarImageViewer();
+        //     setTimeout(() => {
+        //         this.showImage();
+        //     }, 1000);
+        // }
     }
 
+    // get file by objectID
+    getFileByObjectID(){
+        this.api
+        .execSv(
+        'DM',
+        'ERM.Business.DM',
+        'FileBussiness',
+        'GetFilesByIbjectIDAsync',
+        [this.objectID])
+        .subscribe((res:any[]) => {
+            if(Array.isArray(res) && res.length > 0){
+                res.forEach((f: any) => {
+                    if(f.referType == "image" || f.referType == "video")
+                    {
+                        f["source"] = `${environment.urlUpload}/${f.url}`; 
+                        this.images.push(f);
+                    }
+                });
+                this.inicializarImageViewer();
+                setTimeout(() => {
+                    this.showImage();
+                }, 1000);
+            }
+        });
+    }
     private inicializarCores() {
         this.setStyleClass('inline-icon', 'background-color', this.primaryColor);
         this.setStyleClass('footer-info', 'background-color', this.primaryColor);
@@ -185,43 +222,21 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
 
     showImage() {
         this.prepararTrocaImagem();
-
         let imgObj = this.BASE_64_PNG;
-        // if (this.isPDF()) {
-
-        //     this.carregarViewerPDF();
-        // } else 
         if (this.isURlImagem()) {
-
-            imgObj = this.getImagemAtual();
-            this.stringDownloadImagem = this.getImagemAtual();
-        } else {
-            imgObj = this.BASE_64_PNG + this.getImagemAtual();
-            this.stringDownloadImagem = this.BASE_64_IMAGE + this.getImagemAtual();
-        }
+            // imgObj = this.getImagemAtual();
+            imgObj = this.images[this.indexImagemAtual - 1]["source"];
+            // this.stringDownloadImagem = this.getImagemAtual();
+        } 
+        // else 
+        // {
+        //     imgObj = this.BASE_64_PNG + this.getImagemAtual();
+        //     this.stringDownloadImagem = this.BASE_64_IMAGE + this.getImagemAtual();
+        // }
         this.viewer.load(imgObj, imgObj);
         this.curSpan.innerHTML = this.indexImagemAtual;
         this.inicializarCores();
     }
-
-    // carregarViewerPDF() {
-    //     this.esconderBotoesImageViewer();
-    //     const {widthIframe, heightIframe} = this.getTamanhoIframe();
-    //     this.injetarIframe(widthIframe, heightIframe);
-    // }
-
-    // injetarIframe(widthIframe: number, heightIframe: number) {
-    //     const ivImageWrap = document.getElementById(this.idContainer).getElementsByClassName('iv-image-wrap').item(0);
-
-    //     const iframe = document.createElement('iframe');
-
-    //     iframe.id = this.getIdIframe();
-    //     iframe.style.width = `${widthIframe}px`;
-    //     iframe.style.height = `${heightIframe}px`;
-    //     iframe.src = `${this.converterPDFBase64ParaBlob()}`;
-
-    //     this.renderer.appendChild(ivImageWrap, iframe);
-    // }
 
     getTamanhoIframe() {
 
@@ -242,7 +257,8 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     }
 
     isURlImagem() {
-        return this.getImagemAtual().match(new RegExp(/^(https|http|www\.)/g));
+        if(this.indexImagemAtual <= 0)return this.images[this.indexImagemAtual]["source"];
+        return this.images[this.indexImagemAtual - 1]["source"];
     }
 
     prepararTrocaImagem() {
@@ -265,10 +281,6 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
                 this.renderer.removeChild(container, ivLargeImage);
             }
         }
-
-        if (iframeElement) {
-        }
-
         this.setStyleClass('iv-loader', 'visibility', 'auto');
         this.setStyleClass('options-image-viewer', 'visibility', 'inherit');
     }
@@ -413,21 +425,7 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         }, timeout);
     }
 
-    // converterPDFBase64ParaBlob() {
-
-    //     const arrBuffer = this.base64ToArrayBuffer(this.getImagemAtual());
-
-    //     const newBlob = new Blob([arrBuffer], { type: 'application/pdf' });
-
-    //     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-    //         window.navigator.msSaveOrOpenBlob(newBlob);
-    //         return;
-    //     }
-
-    //     return window.URL.createObjectURL(newBlob);
-    // }
-
-    private getImagemAtual() {
+    getImagemAtual() {
         return this.images[this.indexImagemAtual - 1];
     }
 
