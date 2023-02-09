@@ -1,3 +1,4 @@
+import { Util } from 'codx-core';
 import { OMCONST } from './../../codx-om.constant';
 import {
   Component,
@@ -32,20 +33,12 @@ import { Targets } from '../../model/okr.model';
   templateUrl: 'popup-add-kr.component.html',
   styleUrls: ['popup-add-kr.component.scss'],
 })
-export class PopupAddKRComponent extends UIComponent {
-  @Input() editResources: any;
-  @Input() isAdd = true;
-  @Input() kr: any;
-  @Output() closeEdit = new EventEmitter();
-  @Output() onDone = new EventEmitter();
-  @Output() loadData = new EventEmitter();
+export class PopupAddKRComponent extends UIComponent {   
   @ViewChild('form') form :CodxFormComponent;
-
   headerText = '';
   subHeaderText = '';
   month = 'Tháng';
   quarter = 'Quý';
-
   months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
   quarters = ['1', '2', '3', '4'];
   quartersMonth = ['1', '4', '7', '10'];
@@ -64,6 +57,9 @@ export class PopupAddKRComponent extends UIComponent {
   tempTarget: any;
   funcType:any;
   isSubKR: boolean;
+  isAdd = true;
+  kr: any;
+  oldKR: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -76,11 +72,12 @@ export class PopupAddKRComponent extends UIComponent {
     this.funcID= dialogData.data[0]
     this.funcType = dialogData?.data[1];  
     this.headerText = dialogData?.data[2];
-    this.kr = dialogData.data[3];
+    this.oldKR = dialogData.data[3];
+    this.isSubKR = dialogData.data[4];
     this.dialogRef= dialogRef;
     this.formModel= dialogRef.formModel;
     if (this.funcType == OMCONST.MFUNCID.Edit || this.funcType == OMCONST.MFUNCID.Copy ) {
-      this.typePlan = this.kr.plan;
+      this.typePlan = this.oldKR.plan;
     }
   }
 
@@ -88,41 +85,38 @@ export class PopupAddKRComponent extends UIComponent {
   ngAfterViewInit(): void {}
 
   onInit(): void {
-    this.cache.gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
-    .subscribe((gv: any) => {      
-      if (gv) {
-        for (const key in gv) {
-          const element = gv[key];
-          if(element.allowCopy){
-            element.fieldName =element.fieldName.charAt(0).toLowerCase() + element.fieldName.slice(1);
-            this.allowCopyField.push(element.fieldName);
-          }
-        }
-      }
-    });
-    this.initForm();
-  }
-
-  initForm() {
-    this.codxOmService
-      .getFormGroup(this.formModel?.formName, this.formModel?.gridViewName)
-      .then((item) => {
-        this.fGroupAddKR = item;
-        if (this.funcType == OMCONST.MFUNCID.Add) {
-          
-          this.kr = this.fGroupAddKR.value;
-        }
-        if (this.funcType == OMCONST.MFUNCID.Copy) {
-          let tmpKR = this.fGroupAddKR.value;
-          this.allowCopyField.forEach(field=>{
-            tmpKR[field]=this.kr[field];
+    this.codxOmService.getOKRByID(this.oldKR?.recID).subscribe(krModel=>{
+      if(krModel){
+        if(this.funcType==OMCONST.MFUNCID.Edit || this.funcType==OMCONST.MFUNCID.Add){
+          this.kr= krModel;
+        }        
+        else{
+          this.cache.gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+          .subscribe((gv: any) => {      
+            if (gv) {
+              let gridView = Util.camelizekeyObj(gv);
+              for (const key in gridView) {          
+                const element = gridView[key];
+                if(element?.allowCopy){
+                  this.allowCopyField.push(key);
+                }
+              }     
+              for(const fieldName in this.allowCopyField){
+                krModel[fieldName]=this.oldKR[fieldName];
+              }
+              this.kr=krModel;
+               
+            }
           });
-          this.kr=null;
-          this.kr=tmpKR;
-        }
+        } 
+        
         this.isAfterRender = true;
-      });
-  }
+        
+      }
+        
+    });
+     
+  }  
 
   //-----------------------End-------------------------------//
 
@@ -167,7 +161,7 @@ export class PopupAddKRComponent extends UIComponent {
 
   onSaveForm() {
     //xóa khi đã lấy được model chuẩn từ setting 
-    if(this.funcType==OMCONST.MFUNCID.Add){
+    if(this.funcType==OMCONST.MFUNCID.Add ||this.funcType==OMCONST.MFUNCID.Copy){
 
       this.kr.status='1';
       this.kr.approveStatus='1';
@@ -197,6 +191,8 @@ export class PopupAddKRComponent extends UIComponent {
   methodAdd(kr: any) {
     this.codxOmService.addKR(this.kr).subscribe((res: any) => {
       if (res) {
+        res.write=true;
+        res.delete =true;
         this.afterSave(res);
       }
     });
@@ -205,6 +201,8 @@ export class PopupAddKRComponent extends UIComponent {
   methodCopy(kr: any) {
     this.codxOmService.copyKR(this.kr).subscribe((res: any) => {
       if (res) {
+        res.write=true;
+        res.delete =true;
         this.afterSave(res);
       }
     });
@@ -213,12 +211,14 @@ export class PopupAddKRComponent extends UIComponent {
   methodEdit(kr: any) {
     this.codxOmService.editKR(this.kr).subscribe((res: any) => {
       if (res) {
+        res.write=true;
+        res.delete =true;
         this.afterSave(res);
       }
     });
   }
   afterSave(kr: any) {
-    if (this.funcType == OMCONST.MFUNCID.Add) {
+    if (this.funcType == OMCONST.MFUNCID.Add || this.funcType == OMCONST.MFUNCID.Copy) {
       this.notificationsService.notifyCode('SYS006');
     } else {
       this.notificationsService.notifyCode('SYS007');

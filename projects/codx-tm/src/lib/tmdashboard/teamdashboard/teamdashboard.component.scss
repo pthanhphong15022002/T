@@ -111,3 +111,38 @@ ejs-richtexteditor .e-content.e-lib {
   border-top-right-radius: 50rem;
   border-bottom-right-radius: 50rem;
 }
+
+/* Bar Graph Horizontal */
+.bar-graph-horizontal {
+  max-width: 100%;
+}
+
+.bar-graph-horizontal > div {
+  float: right;
+  width: 100%;
+}
+
+.bar-graph-horizontal .bar {
+  border-radius: 10px 0px 0px 10px;
+  height: 35px;
+  float: right;
+  position: relative;
+  width: 0;
+}
+
+.bar-username {
+  color: #fff;
+  content: attr(user-id);
+  font-weight: 700;
+  max-width: 200px;
+  position: absolute;
+  right: 16px;
+  top: 17px;
+}
+
+.bar-task-quantity {
+  position: absolute;
+  left: -25px;
+  top: 50%;
+}
+

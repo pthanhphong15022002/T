@@ -72,12 +72,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   curUser: any;
   dataRequest = new DataRequest();
   formModelKR = new FormModel();
+  formModelSKR = new FormModel();
   formModelOB = new FormModel();
   formModel = new FormModel();
   funcID: any;
   obFuncID: any;
   krFuncID: any;
+  skrFuncID: any;
   addKRTitle = '';
+  addSKRTitle = '';
   addOBTitle = '';
   isAffterRender = false;
   okrLevel: string;
@@ -166,15 +169,27 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   click(event: any) {
     switch (event.id) {
       case 'btnAdd': {
-        this.addOKR();
+        if (this.dataOKRPlans == null) {
+          this.addOKRPlans();
+        } else {
+          this.addOB();
+        }
         break;
       }
       case 'btnAddSKR': {
-        this.addKR(true);
+        if (this.dataOKRPlans == null) {
+          this.addOKRPlans();
+        } else {
+          this.addSKR();
+        }
         break;
       }
       case 'btnAddKR': {
-        this.addKR(false);
+        if (this.dataOKRPlans == null) {
+          this.addOKRPlans();
+        } else {
+          this.addKR();
+        }
         break;
       }
       case 'btnAddPlan': {
@@ -182,8 +197,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         break;
       }
       case 'btnAddO': {
-        //this.addOKR();
-        this.addOB();
+        if (this.dataOKRPlans == null) {
+          this.addOKRPlans();
+        } else {
+          this.addOB();
+        }
         break;
       }
       case 'Calendar': {
@@ -243,32 +261,35 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         });
     }
   }
-
+  plac;
   //Lấy fucID con
   funcIDChanged() {
     switch (this.funcID) {
       case OMCONST.FUNCID.COMP:
         this.krFuncID = OMCONST.KRFUNCID.COMP;
+        this.skrFuncID = OMCONST.SKRFUNCID.COMP;
         this.obFuncID = OMCONST.OBFUNCID.COMP;
-        this.okrLevel= OMCONST.VLL.OKRLevel.COMP;
+        this.okrLevel = OMCONST.VLL.OKRLevel.COMP;
         break;
       case OMCONST.FUNCID.DEPT:
+        this.skrFuncID = OMCONST.SKRFUNCID.DEPT;
         this.krFuncID = OMCONST.KRFUNCID.DEPT;
         this.obFuncID = OMCONST.OBFUNCID.DEPT;
-        this.okrLevel= OMCONST.VLL.OKRLevel.DEPT;
+        this.okrLevel = OMCONST.VLL.OKRLevel.DEPT;
         break;
       case OMCONST.FUNCID.ORG:
+        this.skrFuncID = OMCONST.SKRFUNCID.ORG;
         this.krFuncID = OMCONST.KRFUNCID.ORG;
         this.obFuncID = OMCONST.OBFUNCID.ORG;
-        this.okrLevel= OMCONST.VLL.OKRLevel.ORG;
+        this.okrLevel = OMCONST.VLL.OKRLevel.ORG;
         break;
       case OMCONST.FUNCID.PERS:
+        this.skrFuncID = OMCONST.SKRFUNCID.PERS;
         this.krFuncID = OMCONST.KRFUNCID.PERS;
         this.obFuncID = OMCONST.OBFUNCID.PERS;
-        this.okrLevel= OMCONST.VLL.OKRLevel.PERS;
+        this.okrLevel = OMCONST.VLL.OKRLevel.PERS;
         break;
     }
-    this.isAffterRender = true;
     this.detectorRef.detectChanges();
   }
   //Lấy form Model con
@@ -281,6 +302,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.codxOmService.getFormModel(this.krFuncID).then((krFM) => {
       if (krFM) {
         this.formModelKR = krFM;
+        this.formModelSKR = krFM;
       }
     });
     this.codxOmService.getFormModel(this.obFuncID).then((obFM) => {
@@ -289,6 +311,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       }
     });
     //Lấy tiêu đề theo FuncID cho Popup
+    this.cache.functionList(this.skrFuncID).subscribe((res) => {
+      if (res) {
+        this.addSKRTitle = res.customName.toString();
+      }
+    });
     this.cache.functionList(this.krFuncID).subscribe((res) => {
       if (res) {
         this.addKRTitle = res.customName.toString();
@@ -357,6 +384,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.dataDate,
         this.dtCompany,
         this.okrLevel,
+        this.dataOKR,
       ],
       '',
       dialogModel
@@ -386,25 +414,86 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     option.FormModel = this.formModelOB;
     let dialogOB = this.callfc.openSide(
       PopupAddOBComponent,
-      [this.funcID,OMCONST.MFUNCID.Add, this.addOBTitle, null, this.dataOKRPlans],
+      [
+        this.funcID,
+        OMCONST.MFUNCID.Add,
+        'Thêm ' + this.addOBTitle.toLowerCase(),
+        null,
+        this.dataOKRPlans,
+      ],
       option
     );
     dialogOB.closed.subscribe((res) => {
-      dialogOB = null;
+      if (res && res?.event) {
+        this.dataOKR.push(res?.event);
+      }
     });
   }
   //Thêm mới KR
-  addKR(isSubKR:boolean) {
+  addKR() {    
+    let notSubKR=false;
     let option = new SidebarModel();
     option.FormModel = this.formModelKR;
 
     let dialogKR = this.callfc.openSide(
       PopupAddKRComponent,
-      [this.funcID,OMCONST.MFUNCID.Add, this.addKRTitle, null],
+      [
+        this.funcID,
+        OMCONST.MFUNCID.Add,
+        'Thêm ' + this.addKRTitle.toLowerCase(),
+        null,
+        notSubKR,
+      ],
       option
     );
     dialogKR.closed.subscribe((res) => {
-      dialogKR = null;
+      if (res && res?.event) {
+        for (let ob of this.dataOKR) {
+          if (ob.recID == res?.event.parentID) {
+            if(ob.child==null){
+              ob.child=[];
+            }
+            ob.child.push(res?.event);
+            ob.items=ob.child;
+          }
+        }
+      }
+    });
+  }
+  //Thêm mới SKR
+  addSKR() {
+    let isSubKR=true;
+    let option = new SidebarModel();
+    option.FormModel = this.formModelSKR;
+
+    let dialogSKR = this.callfc.openSide(
+      PopupAddKRComponent,
+      [
+        this.funcID,
+        OMCONST.MFUNCID.Add,
+        'Thêm ' + this.addSKRTitle.toLowerCase(),
+        null,
+        isSubKR,
+      ],
+      option
+    );
+    dialogSKR.closed.subscribe((res) => {
+      if (res && res?.event) {
+        for (let ob of this.dataOKR) {
+          if (ob.child!=null) {
+              for (let kr of ob.child) {
+                if (kr.recID == res.event.parentID) {
+                  if(kr.child==null){
+                    kr.child=[];
+                  }
+                  kr.child.push(res.event);
+                }
+              }
+            
+            
+          }
+        }
+      }
     });
   }
   //Chia sẻ bộ mục tiêu

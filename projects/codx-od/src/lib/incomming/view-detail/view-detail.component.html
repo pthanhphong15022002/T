@@ -106,10 +106,11 @@
         </div>
       </div>
     </div>
-    <ng-container *ngIf="data && data?.files">
-      <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'1'" [hideMoreF]="'0'"
+    <ng-container *ngIf="data ">
+      <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment>
+      <!-- <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'1'" [hideMoreF]="'0'"
         (viewFile)="handleViewFile($event)" [permissions]="data?.relations">
-      </codx-thumbnail>
+      </codx-thumbnail> -->
     </ng-container>
   </ng-template>
   <ng-template #body>

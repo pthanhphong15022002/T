@@ -29,7 +29,7 @@ export class PopupDetailComponent implements OnInit {
   fileID:string = "";
   fileReferType:string = "";
   fileSelected: any = null;
-  imageSrc:any = [];
+  imageSrc:any[] = [];
   index:number = 0;
   vllL1480:any = null;
   dVll:any = {};
@@ -58,7 +58,7 @@ export class PopupDetailComponent implements OnInit {
       this.postID = this.dialofData.postID;
       this.fileID = this.dialofData.fileID;
       this.fileReferType = this.dialofData.fileReferType;
-      this.getFileByObjectID(this.postID);
+      //this.getFileByObjectID(this.postID);
       this.getPostByID(this.postID,this.fileID,this.fileReferType);
     }
   }
@@ -94,20 +94,17 @@ export class PopupDetailComponent implements OnInit {
       'GetFilesByIbjectIDAsync',
       [objectID])
       .subscribe((res:any[]) => {
-        if(res?.length > 0)
+        if(Array.isArray(res) && res.length > 0)
         {
+          debugger;
           res.forEach((f: any) => {
             if(f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO)
             {
               f["source"] = `${environment.urlUpload}/${f.url}`; 
+              this.imageSrc.push(f);
             }
           });
           this.files = JSON.parse(JSON.stringify(res));
-          let _index =  this.files.findIndex(x => x.recID == this.fileID);
-          this.index = _index;
-          this.fileSelected = this.files[_index];
-          debugger
-          this.imageSrc = res.map(x => x.source);
         }
       });
     }
@@ -120,42 +117,13 @@ export class PopupDetailComponent implements OnInit {
 
   // nextFile
   nextFile(){
-    // if(this.index >= 0)
-    // {
-    //   let _index = ++this.index;
-    //   if(_index >= this.files.length){
-    //     _index = 0;
-    //   }
-    //   this.fileSelected = this.files[_index];
-    //   if(this.fileSelected)
-    //   {
-    //     this.getPostByID(this.postID,this.fileSelected.recID,this.fileSelected.referType);
-    //   }
-    //   this.index = _index;
-    //   this.dt.detectChanges();
-    // }
     this.codxImageViewer.proximaImagem();
 
   }
 
   // previriousFile
   previousFile(){
-    // if(this.index >= 0)
-    // {
-    //   let _index = --this.index;
-    //   if(_index <= -1 ){
-    //     _index = this.files.length - 1;
-    //   }
-    //   this.fileSelected = this.files[_index];
-    //   if(this.fileSelected)
-    //   {
-    //     this.getPostByID(this.postID,this.fileSelected.recID,this.fileSelected.referType);
-    //   }
-    //   this.index = _index;
-    //   this.dt.detectChanges();
-    // }
     this.codxImageViewer.imagemAnterior();
-
   }
 
   // zoom in

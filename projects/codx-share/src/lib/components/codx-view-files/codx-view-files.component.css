@@ -1,10 +1,16 @@
 .codx-view-files{
+
+}
+.codx-files-medias{
     width: 100%;
     height: 300px;
     border: 1px solid rgb(231 219 219);
     border-radius: 4px;
 }
-
+.codx-files-documents{
+    display: flex;
+    margin-top: 8px;
+}
 .codx-view-file_image{
     width: 100%;
     height: 100%;
