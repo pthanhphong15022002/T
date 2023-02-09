@@ -36,6 +36,7 @@ import { CodxDpService } from '../../codx-dp.service';
 import { PopupCustomFieldComponent } from '../popup-custom-field/popup-custom-field.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { log } from 'console';
+import { async } from '@angular/core/testing';
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',
@@ -183,6 +184,8 @@ export class StagesDetailComponent implements OnInit {
         //nvthuan
         this.groupByTask(changes['listData'].currentValue);
         this.step = changes['listData'].currentValue;
+        console.log('Thuan', this.step);
+        
       } else {
         this.listData = null;
       }
@@ -431,8 +434,8 @@ export class StagesDetailComponent implements OnInit {
       }
     });
 
-    this.setIndex(listTaskOld, 'indexNo');
-    this.setIndex(listTaskNew, 'indexNo');
+    this.changeValueDrop(listTaskOld, 'indexNo');
+    this.changeValueDrop(listTaskNew, 'indexNo');
   }
   //taskGroup
   groupByTask(data) {
@@ -641,18 +644,21 @@ export class StagesDetailComponent implements OnInit {
     return { average: average, indexGroup: indexGroup, indexTask: indexTask };
   }
 
-  async drop(event: CdkDragDrop<string[]>, data = null) {
+  async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) {
     if (event.previousContainer === event.container) {
-      if (data) {
+      if (event.previousIndex == event.currentIndex) return;
+      if (data && isParent) {
         moveItemInArray(data, event.previousIndex, event.currentIndex);
-        await this.setIndex(data, 'indexNo');
+        await this.changeValueDrop(data, 'indexNo');
+        await this.updateDropDrap('parent');
       } else {
         moveItemInArray(
           event.container.data,
           event.previousIndex,
           event.currentIndex
         );
-        await this.setIndex(event.container.data, 'indexNo');
+        await this.changeValueDrop(event.container.data, 'indexNo');
+        await this.updateDropDrap('child');
       }
     } else {
       let groupTaskIdOld = '';
@@ -666,35 +672,55 @@ export class StagesDetailComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-      await this.setIndex(event.previousContainer.data, 'indexNo',groupTaskIdOld);
-      await this.setIndex(event.container.data, 'indexNo',groupTaskIdOld);
-
-      let groupPrevious = this.taskGroupList.find((group) => group.recID == groupTaskIdOld);
-      let group = this.taskGroupList.find((group) => group.recID == event.container.data[0]['taskGroupID']);
-
-      let listGroupTaskSave = [groupPrevious,group];
-      
+      await this.changeValueDrop(event.previousContainer.data, 'indexNo',groupTaskIdOld,true);
+      await this.changeValueDrop(event.container.data, 'indexNo',groupTaskIdOld,true);
+      await this.updateDropDrap('all');
     }
   }
 
-  updateDropDrap(){
+  async updateDropDrap(status){
+    let listTask = [];
+      let taskGroupListClone = JSON.parse(JSON.stringify(this.taskGroupList))
+      let listGroupTask = taskGroupListClone.map(group => {
+        listTask = [...listTask,...group['task']];
+        delete group['task'];
+        return group;
+      })
+      listGroupTask.pop();  
+      let dataSave = []; 
+      switch (status) {
+        case 'all':
+          dataSave = [listGroupTask,listTask,this.step.recID]
+          break;
+          case 'parent':
+          dataSave = [listGroupTask,null,this.step.recID]
+          break;
+          case 'child':
+          dataSave = [null,listTask,this.step.recID]
+          break;
+      }
 
+      this.dpService.updateDataDrop(dataSave).subscribe((res) => {  
+        if(res){
+          this.notiService.notifyCode('SYS007');
+        }
+      })
   }
 
-  async setIndex(data: any, value: string, recID = '') {
+  async changeValueDrop(data: any, value: string, recID = '', isProgress = false) {
     if (data.length > 0) {
-      let index = this.taskGroupList.findIndex(
-        (group) => group.recID == data[0]['taskGroupID']
-      );
+      let index = this.taskGroupList.findIndex((group) => group.recID == data[0]['taskGroupID']);
       let sum = 0;
       let average = 0;
       data.forEach((item, index) => {
-        item[value] = index + 1;
-        sum += item['progress'] + 0;
+        item[value] = index + 1; // cập nhật số thứ tự 
+        sum += item['progress'] + 0; // tổng tiến độ
       });
-      average = parseFloat((sum / data.length).toFixed(1)) || 0;
-      this.taskGroupList[index]['progress'] = average;
-    }else{
+      if(isProgress){
+        average = parseFloat((sum / data.length).toFixed(1)) || 0;
+        this.taskGroupList[index]['progress'] = average;
+      }    
+    }else if(data.length == 0 && isProgress){
       let index = this.taskGroupList.findIndex((group) => group.recID == recID);
       this.taskGroupList[index]['progress'] = 0;
     }
