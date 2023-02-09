@@ -16,7 +16,7 @@ export class UpdateStatusComponent implements OnInit {
   title: string = 'Cập nhật tình trạng';
   headerText:string = "";
   employee: any;
-  statusSelected:string = "";
+  value:string = "";
   @Input() view: any;
 
   constructor(
@@ -28,6 +28,7 @@ export class UpdateStatusComponent implements OnInit {
   ) {
     this.data = dt?.data;
     this.employee = this.data;
+    this.value = this.employee.status;
     this.dialogRef = dialogRef;
     this.funcID = this.data.funcID
   }
@@ -35,38 +36,34 @@ export class UpdateStatusComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  updateStatus() 
-  {
-    if(this.statusSelected)
+  updateStatus() {
+    if(this.value)
     {
       this.api
-      .execSv<any>("HR", "ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", [this.employee.employeeID, this.statusSelected])
-      .subscribe((res) => {
-        if (res) 
-        {
-          this.employee.status = this.statusSelected;
-          this.dialogRef.close(this.employee)
-        } 
-        else 
-        {
-          this.dialogRef.close()
-        }
+      .execSv(
+        "HR", 
+        "ERM.Business.HR",
+        "EmployeesBusiness",
+        "UpdateStatusAsync", 
+        [this.employee.employeeID, this.value])
+        .subscribe((res) => {
+          if (res) 
+          {
+            this.employee.status = this.value;
+            this.dialogRef.close(this.employee)
+          } 
+          else 
+          {
+            this.dialogRef.close()
+          }
       });
     }
     
   }
 
   valueChange(e) {
-    if (e) {
-      var arrData = e.component?.dataSource;
-      // this.employee.status = e.data;
-      this.statusSelected = e.data;
-      // arrData.forEach(obj => {
-      //   if (obj.value == e.data) {
-      //     this.employee.statusName = obj.text;
-      //     this.employee.statusColor = obj.color;
-      //   }
-      // })
+    if (e && e.data !== this.value) {
+      this.value = e.data;
     }
   }
 

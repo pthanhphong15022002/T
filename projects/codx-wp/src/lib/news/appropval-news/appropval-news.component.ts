@@ -1,27 +1,13 @@
-import {
-  Component,
-  Injector,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
-import {
-  DataRequest,
-  AuthService,
-  ViewModel,
-  ViewType,
-  UIComponent,
-  CallFuncService,
-  RequestOption,
-} from 'codx-core';
+import { Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ViewModel, AuthService, CallFuncService, ViewType, DataRequest, RequestOption, UIComponent } from 'codx-core';
 
 @Component({
-  selector: 'lib-approve',
-  templateUrl: './approve.component.html',
-  styleUrls: ['./approve.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  selector: 'wp-appropval-news',
+  templateUrl: './appropval-news.component.html',
+  styleUrls: ['./appropval-news.component.scss']
 })
-export class ApproveComponent extends UIComponent {
+export class AppropvalNewsComponent extends UIComponent {
+
   service: string = 'WP';
   assemblyName: string = 'ERM.Business.WP';
   className: string = 'NewsBusiness';
@@ -284,4 +270,5 @@ export class ApproveComponent extends UIComponent {
       .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'DeleteAllDataAsync')
       .subscribe();
   }
+
 }

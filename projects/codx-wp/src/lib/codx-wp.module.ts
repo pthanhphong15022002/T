@@ -33,15 +33,7 @@ import { PopupSearchPostComponent } from './dashboard/home/list-post/popup-searc
 import { MyTeamComponent } from './dashboard/home/my-team/my-team.component';
 import { PostComponent } from './dashboard/home/post/post.component';
 import { UpdateNotePinComponent } from './dashboard/home/update-note-pin/update-note-pin.component';
-import { NewsComponent } from './news/news.component';
-import { PopupAddComponent } from './news/popup/popup-add/popup-add.component';
-import { PopupEditComponent } from './news/popup/popup-edit/popup-edit.component';
-import { PopupSearchComponent } from './news/popup/popup-search/popup-search.component';
-import { ViewDetailComponent } from './news/view-detail/view-detail.component';
-import { ViewTagComponent } from './news/view-tag/view-tag.component';
-import { ViewVideoComponent } from './news/view-video/view-video.component';
 import { LayoutComponent } from './_layout/layout.component';
-import { LayoutNewsComponent } from './layout-news/layout-news.component';
 import { LayoutApprovalComponent } from './layout-approval/layout-approval.component';
 import { LayoutPortalComponent } from './dashboard/layout-portal.component';
 import { CodxChatComponent } from './chat/codx-chat/codx-chat.component';
@@ -61,37 +53,8 @@ export const routes: Routes = [
         component: HomeComponent,
         data: { noReuse: true },
       },
-    ],
-  },
-  {
-    path: 'news',
-    component: LayoutNewsComponent,
-    children: [
-      {
-        path: 'settings/:funcID',
-        loadChildren: () =>
-          import(
-            'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module'
-          ).then((m) => m.DynamicSettingModule),
-      },
-      {
-        path: ':funcID/tag/:tagName',
-        component: ViewTagComponent,
-      },
-      {
-        path: ':funcID/:category',
-        component: NewsComponent,
-      },
-      {
-        path: ':funcID/:category/:recID',
-        component: ViewDetailComponent,
-      },
-      {
-        path: ':funcID',
-        redirectTo: 'WPT02/home',
-        pathMatch: 'full',
-      },
-    ],
+    ]
+    
   },
   {
     path: 'companyinfo',
@@ -107,17 +70,6 @@ export const routes: Routes = [
       {
         path: ':funcID',
         component: CompanyInforComponent,
-        data: { noReuse: true },
-      },
-    ],
-  },
-  {
-    path: 'approvals',
-    component: LayoutApprovalComponent,
-    children: [
-      {
-        path: ':funcID',
-        component: ApproveComponent,
         data: { noReuse: true },
       },
     ],
@@ -149,20 +101,14 @@ export const routes: Routes = [
     data: { noReuse: true },
     pathMatch: 'full',
   },
+  
 ];
 
 const Component: Type<any>[] = [
   LayoutComponent,
-  LayoutNewsComponent,
   LayoutApprovalComponent,
   CodxWpComponent,
-  NewsComponent,
-  PopupAddComponent,
-  ViewDetailComponent,
   CompanyInforComponent,
-  PopupEditComponent,
-  ApproveComponent,
-  ApproveDetailComponent,
   LayoutPortalComponent,
   HomeComponent,
   AddNoteComponent,
@@ -171,12 +117,9 @@ const Component: Type<any>[] = [
   PopupSavePostComponent,
   MyTeamComponent,
   UpdateNotePinComponent,
-  ViewVideoComponent,
   PopupDetailComponent,
   CompanyEditComponent,
   PopupTitleComponent,
-  ViewTagComponent,
-  PopupSearchComponent,
   PopupSearchPostComponent,
   ChatListComponent,
   CodxChatComponent,
@@ -185,6 +128,8 @@ const Component: Type<any>[] = [
   PopupAddGroupComponent,
   LayoutChatComponent,
   ChatBoxComponent,
+  ApproveComponent,
+  ApproveDetailComponent
 ];
 
 @NgModule({
