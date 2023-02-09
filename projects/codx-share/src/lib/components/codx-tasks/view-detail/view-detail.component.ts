@@ -231,7 +231,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         }
         //an voi fun TMT03011
         if (
-          this.formModel?.funcID == 'TMT03011' &&
+          (this.formModel?.funcID == 'TMT03011' || this.formModel?.funcID == 'TMT05011') &&
           data.category == '1' &&
           data.createdBy != this.user.userID && !this.user?.administrator &&
           (x.functionID == 'SYS02' || x.functionID == 'SYS03')

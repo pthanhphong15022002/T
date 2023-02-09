@@ -626,7 +626,9 @@ export class CalendarNotesComponent
     requestDataEP_Room.entityName = 'EP_Bookings';
     requestDataEP_Room.entityPermission = 'EP_BookingRooms';
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Room).subscribe((res) => {
-      this.getModelShare(res[0], param.Template, 'EP_BookingRooms');
+      if (res) {
+        this.getModelShare(res[0], param.Template, 'EP_BookingRooms');
+      }
     });
   }
 
@@ -1071,7 +1073,7 @@ export class CalendarNotesComponent
     let option = new DialogModel();
     option.DataService = this.lstView.dataService as CRUDService;
     option.FormModel = this.lstView.formModel;
-    this.callfc.openForm(
+    let dialog = this.callfc.openForm(
       AddNoteComponent,
       'Thêm mới ghi chú',
       700,
@@ -1081,6 +1083,9 @@ export class CalendarNotesComponent
       '',
       option
     );
+    // dialog.closed.subscribe((e) => {
+    //   (this.lstView.dataService as CRUDService).add(e.event).subscribe();
+    // });
   }
 
   valueChange(e, transID = null, item = null) {

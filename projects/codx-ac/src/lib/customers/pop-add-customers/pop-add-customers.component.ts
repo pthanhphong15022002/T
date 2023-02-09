@@ -522,8 +522,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         .save((opt: RequestOption) => {
           opt.methodName = 'AddAsync';
           opt.className = 'CustomersBusiness';
-          opt.assemblyName = 'AR';
-          opt.service = 'AR';
+          opt.assemblyName = 'SM';
+          opt.service = 'SM';
           opt.data = [this.customers];
           return true;
         })
@@ -565,8 +565,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         .save((opt: RequestOption) => {
           opt.methodName = 'UpdateAsync';
           opt.className = 'CustomersBusiness';
-          opt.assemblyName = 'AR';
-          opt.service = 'AR';
+          opt.assemblyName = 'SM';
+          opt.service = 'SM';
           opt.data = [this.customers];
           return true;
         })
