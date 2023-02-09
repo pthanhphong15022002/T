@@ -1,32 +1,42 @@
 <codx-form [body]="body" [subToolbar]="toolbar" [dialog]="dialog"></codx-form>
 <ng-template #body>
   <div class="container-fluid h-100">
-    <div class="row h-100 w-100 ">
-      <div  [ngClass]="!isCollapsed ? 'col-3 p-0' : 'd-none'"class="h-100" *ngIf="!isCollapsed">
+    <div class="row h-100 w-100">
+      <div
+        [ngClass]="!isCollapsed ? 'col-3 p-0' : 'd-none'"
+        class="h-100"
+        *ngIf="!isCollapsed"
+      >
         <div class="h-100">
-          <select-template [isPopupMode]="false" (add)="popupClose($event)" [queryList]="templates"></select-template>
+          <select-template
+            [isPopupMode]="false"
+            (add)="popupClose($event)"
+            [queryList]="templates"
+          ></select-template>
         </div>
       </div>
-      <div  [ngClass]="!isCollapsed ? 'col-9' : 'col-12'" class="h-100 overflow-auto">
-        <ejs-dashboardlayout
-        #dashboard
-        id="defaultLayoutDashBoard"
-        style="height: 100% ; width: 100%;"
-        [columns]="columns"
-        [cellSpacing]="cellSpacing"
-        [cellAspectRatio]="cellAspectRatio"
-        [allowResizing]="true"
-        (resizeStart)="onResizeStart($event)"
-        (resize)="onResize($event)"
-        (resizeStop)="onResizeStop($event)"
-        (created)="onCreate($event)"
+      <div
+        [ngClass]="!isCollapsed ? 'col-9' : 'col-12'"
+        class="h-100 overflow-auto"
       >
-      </ejs-dashboardlayout>
+        <ejs-dashboardlayout
+          #dashboard
+          id="defaultLayoutDashBoard"
+          style="height: 100%; width: 100%"
+          [columns]="columns"
+          [cellSpacing]="cellSpacing"
+          [cellAspectRatio]="cellAspectRatio"
+          [showGridLines]="false"
+          [allowResizing]="true"
+          (resizeStart)="onResizeStart($event)"
+          (resize)="onResize($event)"
+          (resizeStop)="onResizeStop($event)"
+          (created)="onCreate($event)"
+        >
+        </ejs-dashboardlayout>
       </div>
       <!-- <button class="btn btn-danger" (click)="addPanel()">ét be nồ đát bo</button> -->
     </div>
-
-
   </div>
 </ng-template>
 
@@ -363,7 +373,6 @@
       height="80%"
     >
       <e-series-collection>
-
         <e-series
           [dataSource]="dataArea1"
           type="Area"
@@ -1097,7 +1106,7 @@
   <div class="chart-item w-100 h-100">
     <ejs-accumulationchart
       #pyramid
-      style="display: block;"
+      style="display: block"
       [legendSettings]="legend"
       [tooltip]="tooltipPyramid"
       width="100%"
@@ -1150,34 +1159,35 @@
 </ng-template>
 
 <ng-template #toolbar>
-  <div class="d-flex justify-content-between">
+  <div *ngIf="enableEditing" class="d-flex justify-content-between">
     <!-- <div class="float-start w-100">
 
     </div> -->
-    <div class="float-start d-flex justify-content-between"><button
+    <div class="float-start d-flex justify-content-between">
+      <button
         class="btn btn-sm btn-light-info"
-        title="thêm chạc"
+        title="add chart"
         (click)="isCollapsed = !isCollapsed"
       >
-        <i [ngClass]="isCollapsed ? 'icon-i-arrow-right-square' : 'icon-i-arrow-left-square' " class="icon-16"></i>
+        <i
+          [ngClass]="
+            isCollapsed
+              ? 'icon-i-arrow-right-square'
+              : 'icon-i-arrow-left-square'
+          "
+          class="icon-16"
+        ></i>
       </button>
       <button
         class="btn btn-sm btn-light-info"
-        title="thêm be nồ"
+        title="add panel"
         (click)="addPanel()"
       >
         <i class="icon-i-collection icon-16"></i>
       </button>
-      <!-- <button
-        class="btn btn-sm btn-light-primary"
-        title="thêm chạc"
-        (click)="addPanelAuto()"
-      >
-        <i class="icon-addchart icon-16"></i>
-      </button> -->
       <button
         class="btn btn-sm btn-light-warning"
-        title="lưu chạc"
+        title="save"
         (click)="savePanel($event)"
       >
         <i class="icon-fact_check icon-16"></i>
