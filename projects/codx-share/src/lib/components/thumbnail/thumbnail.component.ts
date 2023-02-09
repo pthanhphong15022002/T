@@ -225,12 +225,18 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   openFile(file:any) {
     if(file && file.read)
     {
-      var option = new DialogModel();
-      option.IsFull = true;
-      this.fileName = file.fileName;
-      this.dataFile = file;
-      this.visible = true;
-      this.viewFile.emit(true);
+      this.fileService.getFile(file.recID).subscribe(item=>{
+        if(item)
+        {
+          var option = new DialogModel();
+          option.IsFull = true;
+          this.fileName = item.fileName;
+          this.dataFile = item;
+          this.visible = true;
+          this.viewFile.emit(true);
+        }
+      })
+     
     }
     else this.notificationsService.notifyCode("SYS032")
   }
