@@ -1,3 +1,4 @@
+import { Valuelist } from './../../../../../codx-fd/src/lib/models/model';
 import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import {
   DP_Instances_Steps,
@@ -91,43 +92,7 @@ export class StagesDetailComponent implements OnInit {
   step: DP_Instances_Steps;
   taskList: DP_Instances_Steps_Tasks[] = [];
   userGroupJob = [];
-  listJobType = [
-    {
-      id: 'C',
-      icon: 'icon-local_phone',
-      text: 'Cuộc gọi',
-      funcID: 'BPT101',
-      color: { background: '#f1ff19' },
-    },
-    {
-      id: 'T',
-      icon: 'icon-i-journal-check',
-      text: 'Công việc',
-      funcID: 'BPT103',
-      color: { background: '#ffa319' },
-    },
-    {
-      id: 'E',
-      icon: 'icon-i-envelope',
-      text: 'Gửi mail',
-      funcID: 'BPT104',
-      color: { background: '#4799ff' },
-    },
-    {
-      id: 'M',
-      icon: 'icon-i-calendar-week',
-      text: 'Cuộc họp',
-      funcID: 'BPT105',
-      color: { background: '#ff9adb' },
-    },
-    {
-      id: 'S',
-      icon: 'icon-i-clipboard-check',
-      text: 'Khảo sát',
-      funcID: 'BPT106',
-      color: { background: '#1bc5bd' },
-    },
-  ];
+  listJobType = [];
 
   constructor(
     private callfc: CallFuncService,
@@ -151,6 +116,19 @@ export class StagesDetailComponent implements OnInit {
           };
         });
     });
+
+    this.cache.valueList('DP035').subscribe((res) => {
+      if(res.datas){
+        let data = [];
+        res.datas.forEach(element => {         
+          if(['T','E','M','C','S'].includes(element['value'])){
+            data.push(element);        
+          }               
+        });
+        this.listJobType = data.map(item => {return{...item, color: { background: item['color'] }, icon: 'icon-local_phone'}})
+      }
+    })
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -245,6 +223,21 @@ export class StagesDetailComponent implements OnInit {
     }
   }
 
+  clickShowTask(id){
+    debugger
+    let element = document.getElementById(id);
+    if (element) {
+      let isClose = element.classList.contains('hidden-main');
+      let isShow = element.classList.contains('show-main');
+      if (isClose) {
+        element.classList.remove('hidden-main');
+        element.classList.add('show-main');
+      } else if (isShow) {
+        element.classList.remove('show-main');
+        element.classList.add('hidden-main');
+      }
+    }
+  }
   //huong dan buoc nhiem vu
   openPopupSup(popup, data) {
     this.callfc.openForm(popup, '', 800, 400, '', data);
@@ -397,7 +390,7 @@ export class StagesDetailComponent implements OnInit {
       case 'SYS03':
         if (task.taskType) {
           this.jobType = this.listJobType.find(
-            (type) => type.id === task.taskType
+            (type) => type.value === task.taskType
           );
         }
         this.openPopupJob(task);
@@ -600,6 +593,8 @@ export class StagesDetailComponent implements OnInit {
       this.dataProgress,
       'update'
     );
+    console.log(this.dataProgress);
+    
     let dataSave = [this.dataProgress, value?.average];
     this.dpService.updateTask(dataSave).subscribe((res) => {
       if (res) {
