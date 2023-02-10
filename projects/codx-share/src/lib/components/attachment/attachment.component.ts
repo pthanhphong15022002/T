@@ -148,7 +148,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() isTab = false;
   @Input() referType: string ="";
   @Input() dataSelected: any;
-  @Input() addPermission: Permission[] = [];
+  @Input() addPermissions: Permission[] = [];
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -1116,14 +1116,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   addPermissionA()
   {
-    if(this.fileUploadList.length > 0 && this.addPermission.length >0)
+    if(this.fileUploadList.length > 0 && this.addPermissions.length >0)
     {
       this.fileUploadList.forEach(elm=>{
-        elm.permissions = elm.permissions.concat(this.addPermission);
+        elm.permissions = elm.permissions.concat(this.addPermissions);
       })
     }
     
-    this.addPermission
   }
 
   async uploadFileAsync(uploadFile: any,appName: any, chunkSizeInKB: any) {
