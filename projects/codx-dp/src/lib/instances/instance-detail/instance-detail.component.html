@@ -120,8 +120,8 @@
         ></codx-gantt-chart>
 
         <ng-template #ganttItems let-data>
-          <div class="badge badge-light badge-square badge-md fs-7 p-2" [style]="'background-color: {{data.color}}'">
-            <div class="fw-bold text-dark">{{ data.name }}</div>
+          <div class="badge badge-light badge-square badge-md fs-7 p-2" [ngStyle]="{'background-color': getColor(data.recID)}" >
+            <div class="fw-bold text-dark">{{ data.name }} </div>
           </div>
 
         </ng-template>

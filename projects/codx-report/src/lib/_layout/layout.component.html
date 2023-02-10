@@ -72,21 +72,23 @@
     <codx-activies-approval-list></codx-activies-approval-list>
 
     <!-- Home -->
-    <a class="d-flex align-items-center" href="/">
-      <!-- begin::Menu wrapper -->
-      <div
-        class="btn btn-icon btn-active-light-primary position-relative"
-        [ngClass]="codxService.toolbarButtonHeightClass"
-        id=""
-      >
-        <span
-          [inlineSVG]="'./assets/themes/sys/default/img/header_home.svg'"
-          class="svg-icon"
-          [ngClass]="codxService.toolbarButtonIconSizeClass"
-        ></span>
-      </div>
-      <!-- end::Menu wrapper -->
-    </a>
+    <div class="align-items-center d-flex ms-1 ms-lg-3">
+      <a class="d-flex align-items-center" href="/">
+        <!-- begin::Menu wrapper -->
+        <div
+          class="btn btn-icon btn-active-light-primary position-relative"
+          [ngClass]="codxService.toolbarButtonHeightClass"
+          id=""
+        >
+          <span
+            [inlineSVG]="'./assets/themes/sys/default/img/header_home.svg'"
+            class="svg-icon"
+            [ngClass]="codxService.toolbarButtonIconSizeClass"
+          ></span>
+        </div>
+        <!-- end::Menu wrapper -->
+      </a>
+    </div>
     <!--end Home -->
     <!-- Quick links -->
     <erm-quick-links-inner

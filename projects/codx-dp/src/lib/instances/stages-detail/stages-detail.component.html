@@ -201,7 +201,7 @@
                 [cdkDragStartDelay]="200"
                 [cdkDragDisabled]="taskList?.recID ? false : true"
               >
-                <div class="card-job p-3">
+                <div class="card-job px-3 pt-3">
                   <div
                     *ngIf="taskList?.recID"
                     class="d-flex align-items-center justify-content-between"
@@ -210,7 +210,7 @@
                       class="d-flex justify-content-start align-items-center has-action-menu"
                       style="flex-grow: 1"
                     >
-                      <div class="icon-container">
+                      <div class="icon-container" (click)="clickShowTask(taskList?.recID)">
                         <span
                           class="icon-add_circle icon-20 text-primary-600 py-2"
                         ></span>
@@ -266,11 +266,12 @@
                     [cdkDropListData]="taskList?.task || []"
                     (cdkDropListDropped)="drop($event, taskList)"
                     id="{{ taskList?.recID }}"
+                    class="show-main"
                   >
                     <ng-container *ngFor="let task of taskList?.task">
                       <div
                         cdkDrag
-                        [cdkDragStartDelay]="200"
+                        [cdkDragStartDelay]="100"
                         [cdkDragData]="task"
                         class="drap-drop"
                       >
@@ -470,6 +471,7 @@
     *ngFor="let item of listJobType"
     class="d-flex body-set-job"
     style="justify-content: space-between; padding: 10px 0"
+    (click)="getTypeJob($event, item)"
   >
     <div style="display: flex; align-items: center" class="job">
       <span
@@ -481,14 +483,10 @@
       <span style="font-size: 1.2rem; font-weight: 400">{{ item?.text }}</span>
     </div>
     <div style="padding-right: 2rem">
-      <codx-input
-        [id]="item?.id"
-        name="styleJob"
-        class="test-check"
-        type="radio"
-        style="width: 100%"
+      <codx-input    
+        type="radio"     
         pageSize="50"
-        (valueChange)="getTypeJob($event, item)"
+        [checked]="item?.checked"
       ></codx-input>
     </div>
   </div>
@@ -769,7 +767,7 @@
         headerposition="none"
         format="ed2"
         height="100"
-        [crrValue]="dataProgress?.memo"
+        [crrValue]="dataProgress?.note"
         (valueChange)="changeValueInput($event, dataProgress)"
       >
       </codx-input>
