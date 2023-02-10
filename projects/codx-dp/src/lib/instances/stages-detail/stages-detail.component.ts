@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import { Valuelist } from './../../../../../codx-fd/src/lib/models/model';
 import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import {
@@ -289,26 +290,33 @@ export class StagesDetailComponent implements OnInit {
     this.jobType = value;
     this.jobType['checked'] = true;
   }
-  openPopupJob(data?: any) {
+
+  setRole(){
+    let role = new DP_Instances_Steps_TaskGroups_Roles();
+    role.objectName = this.user['userName'];
+    role.objectID = this.user['userID'];
+    return role;
+  }
+
+  openPopupJob(data?: any, status?: string) {
     let taskGroupIdOld = '';
-    let status = 'edit';
-    let frmModel: FormModel = {
-      entityName: 'DP_Steps_Tasks',
-      formName: 'DPStepsTasks',
-      gridViewName: 'grvDPStepsTasks',
-    };
+    status = 'edit';
+    let frmModel: FormModel = {entityName: 'DP_Steps_Tasks',formName: 'DPStepsTasks',gridViewName: 'grvDPStepsTasks'};
+    
     if (!data) {
       this.popupJob.close();
       status = 'add';
     } else {
       taskGroupIdOld = data['taskGroupID'];
     }
+    let dataTransmit = status == 'copy' ? JSON.parse(JSON.stringify(data)) : data;
+
     let listData = [
       status,
       this.jobType,
       this.step?.recID,
       this.taskGroupList,
-      data || {},
+      dataTransmit || {},
       this.taskList,
       this.step?.stepName,
       this.groupTaskID,
@@ -321,29 +329,18 @@ export class StagesDetailComponent implements OnInit {
 
     let dialog = this.callfc.openSide(PopupAddStaskComponent, listData, option);
 
-    dialog.closed.subscribe((e) => {
+    dialog.closed.subscribe(async(e) => {
       this.groupTaskID = ''; //set lại
       if (e?.event) {
         let taskData = e?.event?.data;
-        if (e.event?.status === 'add') {
-          let role = new DP_Instances_Steps_TaskGroups_Roles();
-          let lengthTask = this.taskGroupList.find(
-            (x) => x.recID === taskData.taskGroupID
-          );
-          role.objectName = this.user['userName'];
-          role.objectID = this.user['userID'];
-          taskData['roles'] = [role];
+        if (e.event?.status === 'add' || e.event?.status === 'copy') {
+          let lengthTask = this.taskGroupList.find((x) => x.recID === taskData.taskGroupID);
+          taskData['roles'] = [this.setRole()];
           taskData['createdOn'] = new Date();
           taskData['indexNo'] = lengthTask['task'].length;
+          let progress = await this.updateProgressTaskGroupByTaskGroupID(taskData,'add');
 
-          let progress = this.updateProgressTaskGroupByTaskGroupID(
-            taskData,
-            'add'
-          );
-
-          this.dpService
-            .addTask([taskData, progress?.average])
-            .subscribe((res) => {
+          this.dpService.addTask([taskData, progress?.average]).subscribe((res) => {
               if (res) {
                 this.notiService.notifyCode('SYS006');
                 let index = this.taskGroupList.findIndex(
@@ -412,10 +409,15 @@ export class StagesDetailComponent implements OnInit {
             (type) => type.value === task.taskType
           );
         }
-        this.openPopupJob(task);
+        this.openPopupJob(task,'edit');
         break;
       case 'SYS04':
-        // this.copy(data);
+        if (task.taskType) {
+          this.jobType = this.listJobType.find(
+            (type) => type.value === task.taskType
+          );
+        }
+        this.openPopupJob(task,'copy');
         break;
       case 'DP07':
         if (task.taskType) {

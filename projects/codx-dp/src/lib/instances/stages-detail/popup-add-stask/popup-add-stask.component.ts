@@ -71,13 +71,14 @@ export class PopupAddStaskComponent implements OnInit {
     this.stepID = dt?.data[2];
     this.groupTackList = dt?.data[3];
     this.dialog = dialog;
+
     if (this.status == 'add') {
       this.stepsTasks = new DP_Instances_Steps_Tasks();
       this.stepsTasks['taskType'] = this.stepType;
       this.stepsTasks['stepID'] = this.stepID;
       this.stepsTasks['progress'] = 0;
       this.stepsTasks['taskGroupID'] = dt?.data[7];
-    } else {
+    }else {
       this.showLabelAttachment = true;
       this.stepsTasks = dt?.data[4] || new DP_Instances_Steps_Tasks();
       this.stepType = this.stepsTasks.taskType;
@@ -86,6 +87,7 @@ export class PopupAddStaskComponent implements OnInit {
     this.taskName = dt?.data[6];
     this.groupTaskID = dt?.data[7];
   }
+
   ngOnInit(): void {
     this.listOwner = this.stepsTasks['roles'];
     console.log(this.taskList);
@@ -165,15 +167,22 @@ export class PopupAddStaskComponent implements OnInit {
   }
 
   async saveData() {
+    debugger
     this.stepsTasks['roles'] = this.listOwner;
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
     if (this.attachment && this.attachment.fileUploadList.length){
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
+          if(this.status === 'copy'){
+            this.stepsTasks['recID'] = Util.uid();
+          }
           this.dialog.close({ data: this.stepsTasks, status: this.status });
         }
       });
     } else {
+      if(this.status === 'copy'){
+        this.stepsTasks['recID'] = Util.uid();
+      }
       this.dialog.close({ data: this.stepsTasks, status: this.status });
     } 
     

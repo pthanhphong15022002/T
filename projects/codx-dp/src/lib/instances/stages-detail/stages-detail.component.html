@@ -508,7 +508,7 @@
         name="Save"
         formName="Tasks"
         default="Tiếp tục"
-        (click)="openPopupJob()"
+        (click)="openPopupJob(null,'add')"
       ></codx-label>
     </button>
   </div>
@@ -548,7 +548,7 @@
     </div>
 
     <div class="form-group d-flex justify-content-between">
-      <div class="me-2">
+      <div class="me-4">
         <codx-label
           fiedName="startDate"
           [formModel]="grvTaskGroupsForm"
@@ -601,6 +601,7 @@
               [min]="0"
               (valueChange)="changeValueInput($event, taskGroup)"
               [crrValue]="taskGroup?.durationDay"
+              [showSpinButton]="false"
               class="me-2"
             >
             </codx-input>
@@ -610,7 +611,7 @@
               >Ngày</span
             >
           </div>
-          <div class="position-relative">
+          <div class="position-relative ms-2">
             <codx-input
               field="durationHour"
               [formModel]="grvTaskGroupsForm"
@@ -619,6 +620,7 @@
               (valueChange)="changeValueInput($event, taskGroup)"
               [crrValue]="taskGroup?.durationHour"
               class="ms-2"
+              [showSpinButton]="false"
             >
             </codx-input>
             <span
