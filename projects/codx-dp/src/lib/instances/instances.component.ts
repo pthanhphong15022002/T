@@ -82,7 +82,8 @@ export class InstancesComponent
   kanban: any;
   listStepsCbx: any;
   crrStepID : string ;
-
+  moreFuncDbClick=[] ;
+  dataColums =[] ;
 
   constructor(
     private inject: Injector,
@@ -155,7 +156,14 @@ export class InstancesComponent
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
 
-    // this.api.execSv<any>(this.service, this.assemblyName, this.className, 'AddInstanceAsync').subscribe();
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f)
+        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+          if (res && res.length > 0) {
+            this.moreFuncDbClick = res
+          }
+        });
+    });
   }
 
   click(evt: ButtonModel) {
@@ -357,7 +365,9 @@ export class InstancesComponent
     switch (e.type) {
       case 'drop':
         // xử lý data chuyển công đoạn
-      //  this.moveStage()
+        if(e.data.stepID){
+          
+        }
         break;
       case 'drag':
         ///bắt data khi kéo
@@ -373,6 +383,7 @@ export class InstancesComponent
     if (e?.view.type == 6) {
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
+      if(this.dataColums.length==0)this.dataColums= this.kanban.columns
       this.changeDetectorRef.detectChanges();
     }
   }
