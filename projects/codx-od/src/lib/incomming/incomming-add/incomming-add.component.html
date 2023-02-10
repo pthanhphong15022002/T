@@ -25,7 +25,7 @@
       hideDes="1" (fileAdded)="fileAdded($event)" (fileDelete)="handleDelete($event)" (fileCount)="getfileCount($event)"
       (fileGet)="getfileCount($event)" isDeleteTemp="1" [allowMultiFile]="0" [idBrowse]="'add'" [hideDelete]="
         this.dispatch?.status == '1' || this.dispatch?.status == '2' || this.dispatch?.status == '4' ? '0' : '1'
-      " hideMoreF="0" [permissions]="dispatch?.relations" [formModel]="formModel" [dataSelected]="dispatch"
+      " hideMoreF="0" [permissions]="dispatch?.relations" [addPermissions]="listPermission" [formModel]="formModel" [dataSelected]="dispatch"
       [idField]="'RecID'">
     </codx-attachment>
   </div>

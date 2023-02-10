@@ -24,6 +24,7 @@ import {
 } from '../../function/default.function';
 import { FileService } from '@shared/services/file.service';
 import { Observable } from 'rxjs';
+import { Permission } from '@shared/models/file.model';
 
 @Component({
   selector: 'app-imcomming-add',
@@ -60,6 +61,7 @@ export class IncommingAddComponent implements OnInit {
   objRequied = [];
   fileDelete:any;
   service:any;
+  listPermission = []
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -76,6 +78,7 @@ export class IncommingAddComponent implements OnInit {
   }
   public disEdit: any;
   ngOnInit(): void {
+    debugger;
     if (this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
 
@@ -95,9 +98,11 @@ export class IncommingAddComponent implements OnInit {
     if (this.type == 'add' || this.type == 'copy') 
     {
       this.dispatch.copies = 1;
+      this.dispatch.status = '1';
       this.dispatch.refDate = new Date();
       this.dispatch.dispatchOn = new Date();
       if (this.type == 'add') {
+    
         this.dispatch.dispatchType = this.data?.dispatchType;
         this.dispatch.agencyName = null;
         // this.dispatch.departmentID = "BGĐ"
@@ -316,6 +321,7 @@ export class IncommingAddComponent implements OnInit {
         this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
       this.dispatch.approveStatus = '1';
       this.attachment.objectId = this.dispatch.recID;
+      this.addPermission();
       this.odService
       .saveDispatch(this.dataRq, this.dispatch)
       .subscribe(async (item) => {
@@ -423,5 +429,17 @@ export class IncommingAddComponent implements OnInit {
   {
     var data = e?.component?.itemsSelected;
     if(data && data[0]) this.dispatch.category = data[0].CategoryName;
+  }
+  addPermission()
+  {
+    if(this.dispatch.owner)
+    {
+      var p = new Permission()
+      p.read = true;
+      p.share = true;
+      p.download = true;
+      p.objectID = this.dispatch.owner;
+      p.objectType = "U";
+    }
   }
 }

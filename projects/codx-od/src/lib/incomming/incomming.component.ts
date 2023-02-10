@@ -220,6 +220,7 @@ export class IncommingComponent
           formModel: this.view.formModel,
           service: this.view.service,
           dispatchType: this.funcList?.dataValue,
+          data: res
         },
         option
       );
