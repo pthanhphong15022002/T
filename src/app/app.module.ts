@@ -1,4 +1,4 @@
-
+import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { HttpClient } from '@angular/common/http';
 import { NgModule, APP_INITIALIZER, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -24,7 +24,7 @@ import {
   CacheRouteReuseStrategy,
 } from 'codx-core';
 import { ERMModule, SharedModule } from '../shared';
-import { registerLocaleData } from '@angular/common';
+import { registerLocaleData, CommonModule } from '@angular/common';
 import localeFr from '@angular/common/locales/vi';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { environment } from 'src/environments/environment';
@@ -43,7 +43,7 @@ import { AppConfig } from '@core/services/config/app-config';
 import { RouteReuseStrategy } from '@angular/router';
 import { CodxEiModule } from 'projects/codx-ei/src/public-api';
 import { SosComponent } from '@pages/sos/sos.component';
-
+import { LayoutTenantComponent } from '@modules/auth/tenants/layout/layout.component';
 
 registerLocaleData(localeFr);
 
@@ -90,11 +90,16 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 };
 
 @NgModule({
-  declarations: [AppComponent, FileComponent,SosComponent],
+  declarations: [
+    AppComponent,
+    FileComponent,
+    SosComponent,
+    LayoutTenantComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-
+    CommonModule,
     HttpClientModule,
     ClipboardModule,
     InlineSVGModule.forRoot(),
@@ -102,7 +107,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
     NgxUiLoaderRouterModule, //.forRoot({ showForeground: false }), // import this module for showing loader automatically when navigating between app routes
     NgxUiLoaderHttpModule,
-    
+
     SharedModule,
     CoreModule,
     ERMModule,
@@ -115,6 +120,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     CodxEiModule.forRoot({ environment }),
     CodxEsModule.forRoot({ environment }),
     CodxReportModule.forRoot({ environment }),
+    CodxShareModule,
     AppRoutingModule,
     HoverPreloadModule,
     NgxSkeletonLoaderModule.forRoot({

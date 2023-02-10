@@ -12,7 +12,7 @@
       <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
         (valueChange)="valueCbxCarChange($event)">
       </codx-input>
-      <div class="row">
+      <div class="mt-2">
         <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
           <div class="d-flex justify-content-start flex-wrap">
             <div class="d-flex" *ngFor="let item of tmplstDevice">
@@ -58,22 +58,22 @@
         </codx-input>
       </div>
     </div>
-    <div class="row form-group d-flex flex-row justify-content-start align-items-center">
-      <div class="col-1">
+    <div class="d-flex align-items-top">
+      <div class="me-2">
         <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="driverCheck"
           (valueChange)="valueChange($event)">
         </codx-input>
       </div>
-      <div class="col-5">
+      <div class="me-6">
         <codx-label name="lblDriverStatus" default="Đã điều tài xế" [formModel]="form.formModel"></codx-label>
       </div>
 
-      <div class="col-1">
+      <div class="me-2">
         <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="useCard"
           (valueChange)="valueChange($event)">
         </codx-input>
       </div>
-      <div class="col-5">
+      <div class="me-5">
         <codx-label name="lblUseCard" default="Có sử dụng thẻ" [formModel]="form.formModel"></codx-label>
       </div>
     </div>
