@@ -306,7 +306,7 @@ export class InstancesComponent
         this.delete(data);
         break;
       case 'DP09':
-        this.moveStage(e.data, data, e.functionID);
+        this.moveStage(e.data, data);
         break;
       case 'DP02':
         this.moveReason(e.data, data, e.functionID, !this.isMoveSuccess);
@@ -379,7 +379,7 @@ export class InstancesComponent
   // end code
 
   #region;
-  moveStage(dataMore, data, functionId) {
+  moveStage(dataMore, data) {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
