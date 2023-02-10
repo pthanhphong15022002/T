@@ -53,6 +53,15 @@ var childRoutes = [
       ),
   },
   {
+    path: 'news',
+    canActivate: [AuthGuard],
+    data: { noReuse: true },
+    loadChildren: () =>
+      import('projects/codx-wp/src/lib/news/codx-new.module').then(
+        (m) => m.CodxNewModule
+      ),
+  },
+  {
     path: 'dm',
     canActivate: [AuthGuard],
     loadChildren: () =>

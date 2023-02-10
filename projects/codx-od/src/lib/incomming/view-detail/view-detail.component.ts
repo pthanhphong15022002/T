@@ -198,11 +198,13 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       'codx-detail-body'
     ) as HTMLCollectionOf<HTMLElement>;
     if (nodes.length > 0) {
+      var a = 0;
+      if(this.view.formModel.funcID.includes("ODT8")) a = 35
       Array.from(
         document.getElementsByClassName(
           'codx-detail-body'
         ) as HTMLCollectionOf<HTMLElement>
-      )[0].style.height = main - header - 27 + 'px';
+      )[0].style.height = (main - header - 27 - a) + 'px';
     }
   }
   getGridViewSetup(funcID: any) {

@@ -41,7 +41,7 @@ export class OkrToolbarComponent implements OnInit {
           
         },
         {
-          text:'Thêm kết quả',
+          text:'Thêm kết quả then chốt',
           id:'btnAddKR',
         }
       ]
@@ -50,7 +50,8 @@ export class OkrToolbarComponent implements OnInit {
       if (omSetting) {
         let settingVal = JSON.parse(omSetting?.dataValue);
         if(settingVal!=null && (settingVal?.UseSubKR=='1' || settingVal?.UseSubKR==true)){
-          this.button = {
+          this.button =
+          {
             id: 'btnAdd',
             icon:'icon-add',
             formName:'OKRPlans',
@@ -61,11 +62,11 @@ export class OkrToolbarComponent implements OnInit {
                 
               },
               {
-                text:'Thêm kết quả',
+                text:'Thêm kết quả then chốt',
                 id:'btnAddKR',
               },
               {
-                text:'Thêm kết quả phụ',
+                text:'Thêm kết quả then chốt cấp con',
                 id:'btnAddSKR',
               }
             ]

@@ -239,4 +239,8 @@ export class InstanceDetailComponent implements OnInit {
         }
       });
   }
+  getColor(recID){
+    var idx =  this.ganttDs.findIndex(x=>x.recID==recID) ;
+    return  this.ganttDs[idx]?.color
+  }
 }

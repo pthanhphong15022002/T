@@ -123,8 +123,15 @@ export class ApprovalCarViewDetailComponent
     switch (funcID) {
       case 'EPT40201':
         {
-          //alert('Duyệt');
+          // if(datas.allowToApprove == true){
+
           this.approve(datas, '5');
+          // }
+          // else{
+            
+          //   this.notificationsService.notifyCode('EP020');
+          //   return;
+          // }
         }
         break;
       case 'EPT40205':
