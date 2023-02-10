@@ -578,32 +578,28 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.data.bookingOn = this.data.startDate;
       this.data.stopOn = this.data.endDate;
       let tempDate = new Date();
-      if (
-        this.data.startDate != null &&
-        this.data.endDate != null &&
-        this.data.startDate < this.data.endDate &&
-        this.data.startDate >=
-          new Date(
-            tempDate.getFullYear(),
-            tempDate.getMonth(),
-            tempDate.getDate(),
-            0,
-            0,
-            0,
-            0
-          )
-      ) {
-        let hours = parseInt(
-          ((this.data.endDate - this.data.startDate) / 1000 / 60 / 60).toFixed()
-        );
-        if (!isNaN(hours) && hours > 0) {
-          this.data.hours = hours;
+      if (this.data.startDate < new Date()) {
+        if(this.dueDateControl!=true || this.dueDateControl!='1'){
+          this.notificationsService.notifyCode('TM036');
+          
+        return;
         }
-      } else {
+      }
+      if (this.data.startDate >= this.data.endDate )
+       {
         this.notificationsService.notifyCode('TM036');
         this.saveCheck = false;
         return;
+        
+      } 
+      
+      let hours = parseInt(
+        ((this.data.endDate - this.data.startDate) / 1000 / 60 / 60).toFixed()
+      );
+      if (!isNaN(hours) && hours > 0) {
+        this.data.hours = hours;
       }
+
       this.fGroupAddBookingCar.patchValue(this.data);
       if (this.fGroupAddBookingCar.invalid == true) {
         this.codxEpService.notifyInvalid(
