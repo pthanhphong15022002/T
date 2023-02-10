@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import { Valuelist } from './../../../../../codx-fd/src/lib/models/model';
 import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import {
@@ -36,8 +37,7 @@ import { PopupAddStaskComponent } from './popup-add-stask/popup-add-stask.compon
 import { CodxDpService } from '../../codx-dp.service';
 import { PopupCustomFieldComponent } from '../popup-custom-field/popup-custom-field.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { log } from 'console';
-import { async } from '@angular/core/testing';
+import { ViewJobComponent } from '../../dynamic-process/popup-add-dynamic-process/step-task/view-job/view-job.component';
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',
@@ -107,18 +107,6 @@ export class StagesDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cache.gridView('grvDPStepsTaskGroups').subscribe((res) => {
-      this.cache
-        .gridViewSetup('DPStepsTaskGroups', 'grvDPStepsTaskGroups')
-        .subscribe((res) => {
-          this.grvTaskGroupsForm = {
-            entityName: 'DP_Instances_Steps_TaskGroups',
-            formName: 'DPInstancesStepsTaskGroups',
-            gridViewName: 'grvDPInstancesStepsTaskGroups',
-          };
-        });
-    });
-
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
         let data = [];
@@ -136,6 +124,20 @@ export class StagesDetailComponent implements OnInit {
           };
         });
       }
+    });
+  }
+
+  getFormModel() {
+    this.cache.gridView('grvDPStepsTaskGroups').subscribe((res) => {
+      this.cache
+        .gridViewSetup('DPStepsTaskGroups', 'grvDPStepsTaskGroups')
+        .subscribe((res) => {
+          this.grvTaskGroupsForm = {
+            entityName: 'DP_Instances_Steps_TaskGroups',
+            formName: 'DPInstancesStepsTaskGroups',
+            gridViewName: 'grvDPInstancesStepsTaskGroups',
+          };
+        });
     });
   }
 
@@ -288,26 +290,33 @@ export class StagesDetailComponent implements OnInit {
     this.jobType = value;
     this.jobType['checked'] = true;
   }
-  openPopupJob(data?: any) {
+
+  setRole(){
+    let role = new DP_Instances_Steps_TaskGroups_Roles();
+    role.objectName = this.user['userName'];
+    role.objectID = this.user['userID'];
+    return role;
+  }
+
+  openPopupJob(data?: any, status?: string) {
     let taskGroupIdOld = '';
-    let status = 'edit';
-    let frmModel: FormModel = {
-      entityName: 'DP_Steps_Tasks',
-      formName: 'DPStepsTasks',
-      gridViewName: 'grvDPStepsTasks',
-    };
+    status = 'edit';
+    let frmModel: FormModel = {entityName: 'DP_Steps_Tasks',formName: 'DPStepsTasks',gridViewName: 'grvDPStepsTasks'};
+    
     if (!data) {
       this.popupJob.close();
       status = 'add';
     } else {
       taskGroupIdOld = data['taskGroupID'];
     }
+    let dataTransmit = status == 'copy' ? JSON.parse(JSON.stringify(data)) : data;
+
     let listData = [
       status,
       this.jobType,
       this.step?.recID,
       this.taskGroupList,
-      data || {},
+      dataTransmit || {},
       this.taskList,
       this.step?.stepName,
       this.groupTaskID,
@@ -320,29 +329,18 @@ export class StagesDetailComponent implements OnInit {
 
     let dialog = this.callfc.openSide(PopupAddStaskComponent, listData, option);
 
-    dialog.closed.subscribe((e) => {
+    dialog.closed.subscribe(async(e) => {
       this.groupTaskID = ''; //set lại
       if (e?.event) {
         let taskData = e?.event?.data;
-        if (e.event?.status === 'add') {
-          let role = new DP_Instances_Steps_TaskGroups_Roles();
-          let lengthTask = this.taskGroupList.find(
-            (x) => x.recID === taskData.taskGroupID
-          );
-          role.objectName = this.user['userName'];
-          role.objectID = this.user['userID'];
-          taskData['roles'] = [role];
+        if (e.event?.status === 'add' || e.event?.status === 'copy') {
+          let lengthTask = this.taskGroupList.find((x) => x.recID === taskData.taskGroupID);
+          taskData['roles'] = [this.setRole()];
           taskData['createdOn'] = new Date();
           taskData['indexNo'] = lengthTask['task'].length;
+          let progress = await this.updateProgressTaskGroupByTaskGroupID(taskData,'add');
 
-          let progress = this.updateProgressTaskGroupByTaskGroupID(
-            taskData,
-            'add'
-          );
-
-          this.dpService
-            .addTask([taskData, progress?.average])
-            .subscribe((res) => {
+          this.dpService.addTask([taskData, progress?.average]).subscribe((res) => {
               if (res) {
                 this.notiService.notifyCode('SYS006');
                 let index = this.taskGroupList.findIndex(
@@ -411,20 +409,54 @@ export class StagesDetailComponent implements OnInit {
             (type) => type.value === task.taskType
           );
         }
-        this.openPopupJob(task);
+        this.openPopupJob(task,'edit');
         break;
       case 'SYS04':
-        // this.copy(data);
+        if (task.taskType) {
+          this.jobType = this.listJobType.find(
+            (type) => type.value === task.taskType
+          );
+        }
+        this.openPopupJob(task,'copy');
         break;
-      case 'DP01':
-        // if (task.taskType) {
-        //   this.jobType = this.listJobType.find(
-        //     (type) => type.id === task.taskType
-        //   );
-        // }
-        // this.openPopupViewJob(task);
+      case 'DP07':
+        if (task.taskType) {
+          this.jobType = this.listJobType.find(
+            (type) => type?.value === task?.taskType
+          );
+        }
+        this.openPopupViewJob(task);
         break;
     }
+  }
+  //View task
+  openPopupViewJob(data?: any) {
+    let status = 'edit';
+    let frmModel: FormModel = {
+      entityName: 'DP_Steps_Tasks',
+      formName: 'DPStepsTasks',
+      gridViewName: 'grvDPStepsTasks',
+    };
+    if (!data) {
+      this.popupJob.close();
+      status = 'add';
+    }
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.zIndex = 1001;
+    option.FormModel = frmModel;
+    let dialog = this.callfc.openSide(
+      ViewJobComponent,
+      [
+        status,
+        this.jobType,
+        this.step?.recID,
+        this.taskGroupList,
+        data || {},
+        this.taskList,
+      ],
+      option
+    );
   }
   changeGroupTask(taskData, taskGroupIdOld) {
     let tastClone = JSON.parse(JSON.stringify(taskData));
@@ -479,7 +511,7 @@ export class StagesDetailComponent implements OnInit {
         this.deleteGroupTask(data);
         break;
       case 'SYS03':
-        this.openPopupTaskGroup(data);
+        this.openPopupTaskGroup(data, 'edit');
         break;
       case 'SYS04':
         this.openPopupTaskGroup(data, 'copy');
@@ -490,10 +522,12 @@ export class StagesDetailComponent implements OnInit {
         break;
     }
   }
+
   openPopupTaskGroup(data?: any, type = '') {
+    this.getFormModel();
     this.taskGroup = new DP_Instances_Steps_TaskGroups();
     if (data) {
-      if ((type = 'copy')) {
+      if (type === 'copy') {
         let dataCopy = JSON.parse(JSON.stringify(data));
         this.taskGroup = dataCopy;
         this.isCopyGroup = true;
@@ -513,7 +547,7 @@ export class StagesDetailComponent implements OnInit {
     );
   }
 
-  copyTaskInGroup(taskList, groupID) {
+  async copyTaskInGroup(taskList, groupID) {
     if (taskList.length > 0) {
       let data = taskList.map((task) => {
         return {
@@ -524,14 +558,11 @@ export class StagesDetailComponent implements OnInit {
           modifiedOn: null,
         };
       });
-      console.log(data);
-      console.log(taskList);
-
-      this.dpService.copyTask([data]).subscribe((res) => {});
+      return data;
     }
   }
 
-  saveGroupTask() {
+  async saveGroupTask() {
     this.popupTaskGroup.close();
     if (!this.taskGroup['recID'] || this.isCopyGroup) {
       if (!this.isCopyGroup) {
@@ -544,17 +575,23 @@ export class StagesDetailComponent implements OnInit {
       this.taskGroup['recID'] = Util.uid();
       this.taskGroup['createdOn'] = new Date();
       this.taskGroup['indexNo'] = index;
-      this.copyTaskInGroup(this.taskGroup['task'], this.taskGroup['recID']);
+      let listTaskSave = await this.copyTaskInGroup(
+        this.taskGroup['task'],
+        this.taskGroup['recID']
+      );
       let taskGroupSave = JSON.parse(JSON.stringify(this.taskGroup));
       delete taskGroupSave['task'];
+      this.isCopyGroup = false;
 
-      this.dpService.addTaskGroups(taskGroupSave).subscribe((res) => {
-        if (res) {
-          this.notiService.notifyCode('SYS006');
-          this.taskGroupList.splice(index - 1, 0, this.taskGroup);
-          console.log(this.taskGroup);
-        }
-      });
+      this.dpService
+        .addTaskGroups([taskGroupSave, listTaskSave])
+        .subscribe((res) => {
+          if (res) {
+            this.notiService.notifyCode('SYS006');
+            this.taskGroupList.splice(index - 1, 0, this.taskGroup);
+            console.log(this.taskGroup);
+          }
+        });
     } else {
       this.taskGroup['modifiedOn'] = new Date();
       let taskGroupSave = JSON.parse(JSON.stringify(this.taskGroup));
@@ -800,6 +837,30 @@ export class StagesDetailComponent implements OnInit {
   }
   getfileDelete(event) {
     event.data.length;
+  }
+  async changeDataMF(e, type) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS003':
+          case 'SYS02':
+          case 'SYS03':
+          case 'SYS04':
+            break;
+          case 'DP12':
+            if (type != 'group') res.disabled = true;
+            break;
+          case 'DP08':
+            if (type != 'group') res.disabled = true;
+            break;
+          case 'DP07':
+            if (type == 'group') res.disabled = true;
+            break;
+          default:
+            res.disabled = true;
+        }
+      });
+    }
   }
 
   //End task -- nvthuan
