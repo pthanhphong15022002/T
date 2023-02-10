@@ -210,7 +210,10 @@
                       class="d-flex justify-content-start align-items-center has-action-menu"
                       style="flex-grow: 1"
                     >
-                      <div class="icon-container" (click)="clickShowTask(taskList?.recID)">
+                      <div
+                        class="icon-container"
+                        (click)="clickShowTask(taskList?.recID)"
+                      >
                         <span
                           class="icon-add_circle icon-20 text-primary-600 py-2"
                         ></span>
@@ -240,6 +243,7 @@
                       </div>
                       <codx-mfunc
                         [formModel]="frmModel"
+                        (changeDataMF)="changeDataMF($event, 'group')"
                         (clickMF)="clickMFTaskGroup($event, taskList)"
                         [isBookMark]="true"
                         [dataItem]="moreDefaut"
@@ -349,6 +353,7 @@
                               [isBookMark]="true"
                               [dataItem]="moreDefaut"
                               [type]="'hover'"
+                              (changeDataMF)="changeDataMF($event, 'task')"
                             >
                             </codx-mfunc>
                           </div>
@@ -483,8 +488,8 @@
       <span style="font-size: 1.2rem; font-weight: 400">{{ item?.text }}</span>
     </div>
     <div style="padding-right: 2rem">
-      <codx-input    
-        type="radio"     
+      <codx-input
+        type="radio"
         pageSize="50"
         [checked]="item?.checked"
       ></codx-input>
