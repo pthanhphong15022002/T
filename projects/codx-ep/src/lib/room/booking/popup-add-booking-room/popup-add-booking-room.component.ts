@@ -698,8 +698,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         return;
       }
       if (this.data.startDate < new Date()) {
-        this.notificationsService.notifyCode('EP001');
+        if(this.dueDateControl!=true || this.dueDateControl!='1'){
+          this.notificationsService.notifyCode('EP001');
+          
         return;
+        }
       }
       if (!this.validateStartEndTime(this.startTime, this.endTime)) {
         this.notificationsService.notifyCode('EP002');
@@ -1068,11 +1071,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       ) < crrDate
     ) {
       //this.bookingOnValid = true;
-      if(this.dueDateControl!=true|| this.dueDateControl!='1'){
-        return false;
+      if(this.dueDateControl==true|| this.dueDateControl=='1'){
+        return true;
       }
       else{
-        return true;
+        return false;
       }
     } else {
       //this.bookingOnValid = false;

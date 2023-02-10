@@ -148,6 +148,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() isTab = false;
   @Input() referType: string ="";
   @Input() dataSelected: any;
+  @Input() addPermissions: Permission[] = [];
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -715,7 +716,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     this.getFolder();
     try {
       if (this.data == undefined) this.data = [];
-
+      this.addPermissionA();
       let total = this.fileUploadList.length;
       //  var that = this;
       //await this.dmSV.getToken();
@@ -876,6 +877,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
             })
           );
       } else if (total == 1) {
+        this.addPermissionA();
         //return this.addFileLargeLong(this.fileUploadList[0]);
         return this.addFileObservable(this.fileUploadList[0]);
         // this.atSV.fileList.next(this.fileUploadList);
@@ -923,7 +925,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
           false
         );
     }
-   
+    this.addPermissionA();
     if (remainingStorage >= 0 && toltalUsed > remainingStorage)
       return this.notificationsService.notifyCode('DM053');
     this.atSV.fileListAdded = [];
@@ -1112,6 +1114,16 @@ export class AttachmentComponent implements OnInit, OnChanges {
     }
   }
 
+  addPermissionA()
+  {
+    if(this.fileUploadList.length > 0 && this.addPermissions.length >0)
+    {
+      this.fileUploadList.forEach(elm=>{
+        elm.permissions = elm.permissions.concat(this.addPermissions);
+      })
+    }
+    
+  }
 
   async uploadFileAsync(uploadFile: any,appName: any, chunkSizeInKB: any) {
     lvFileClientAPI.setUrl(environment.urlUpload);

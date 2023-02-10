@@ -948,14 +948,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var message = e?.data;
     var index = this.listTaskResources.findIndex((obj) => obj.resourceID == id);
     if (index != -1) {
-      this.listTaskResources.forEach((obj) => {
-        if (obj.resourceID == id) {
-          obj.memo = message;
-          this.changeDetectorRef.detectChanges();
-          return;
-        }
-      });
+      this.listTaskResources[index].memo=message
+      // this.listTaskResources.forEach((obj) => {
+      //   if (obj.resourceID == id) {
+      //     obj.memo = message;
+      //   }
+      // });
     }
+    this.changeDetectorRef.detectChanges();
   }
   addFile(evt: any) {
     this.attachment.uploadFile();

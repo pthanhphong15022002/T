@@ -1652,6 +1652,7 @@ codx-view-list-detail .codx-detail-footer .badge.badge-sm {
   font-size: 10px !important;
 }
 
-// .dropdown [type="inset: 0px auto auto 0px;"] {
-//   border: 2px aqua solid !important;
+
+// .dropdown[data-popper-placement="bottom-start"] {
+//   margin-left: -150px !important;
 // }

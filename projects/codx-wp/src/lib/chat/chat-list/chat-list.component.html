@@ -23,7 +23,11 @@
             </div>
             <!-- search -->
             <div>
-                <codx-searchbar #codxSearch [iconPos]="'left'" [width]="300" (searchEvent)="search($event)"></codx-searchbar>
+                <codx-searchbar #codxSearch 
+                    [iconPos]="'left'" 
+                    [width]="300" 
+                    (searchEvent)="search($event)">
+                </codx-searchbar>
             </div>
         </div>
         <!-- end feature -->
@@ -36,19 +40,30 @@
             data-kt-scroll-dependencies="#kt_header, #kt_toolbar, #kt_footer, #kt_chat_list_header"
             data-kt-scroll-wrappers="#kt_content, #kt_chat_contacts_body" data-kt-scroll-offset="0px"
             style="max-height: 600px; overflow-x:hidden">
-            <codx-listview #codxListView 
-                [itemTemplate]="itemTemplate" 
-                [funcId]="'WPT11'" 
-                service="WP" 
-                assemblyName="ERM.Business.WP" 
-                className="GroupBusiness"
-                method="GetGroupsChatAsync">
-            </codx-listview>
+            <ng-container *ngIf="dataSerach.length;else tmpListGroup">
+                <ng-container *ngFor="let item of dataSerach">
+                    <ng-container *ngTemplateOutlet="
+                    itemTemplateSearch;
+                    context: { $implicit: item }
+                  "></ng-container>
+                </ng-container>
+            </ng-container>
+            <ng-template #tmpListGroup>
+                <codx-listview #codxListView 
+                    [itemTemplate]="itemTemplateGroup" 
+                    [funcId]="'WPT11'" 
+                    service="WP" 
+                    assemblyName="ERM.Business.WP" 
+                    className="GroupBusiness"
+                    method="GetGroupsChatAsync">
+                </codx-listview>
+            </ng-template>
         </div>
     </div>
     <!-- end list group chat -->
 </div>
-<ng-template #itemTemplate let-item>
+<!-- template group chat -->
+<ng-template #itemTemplateGroup let-item>
     <div class="row mt-2 p-2" (click)="openChatBox(item)">
         <!-- image -->
         <div class="col-2">
@@ -81,7 +96,36 @@
         </div>
     </div>
 </ng-template>
-
+<!-- template search chat -->
+<ng-template #itemTemplateSearch let-item>
+    <div class="row my-2 p-2" (click)="openChatBox(item)">
+        <!-- image -->
+        <div class="col-2">
+            <ng-container *ngIf="item.groupType == '1' ; else group1_n">
+                <codx-img 
+                    [objectId]="item.groupID2" 
+                    [objectName]="item.groupName2" 
+                    [objectType]="'AD_Users'"
+                    [referType]="'image'"
+                    [width]="50">
+                </codx-img>
+            </ng-container>
+            <ng-template #group1_n>
+                <codx-img 
+                    [objectId]="item.groupID"
+                    [isDefaulImg]="true" 
+                    [objectType]="'WP_Groups'"
+                    [referType]="'image'"
+                    [width]="50">
+                </codx-img>
+            </ng-template>
+        </div>
+        <!-- group name - created - seen -->
+        <div class="col-10">
+            <span class="fw-bolder m-0 p-0">{{ item.groupType == '1' ? item.groupName2 : item.groupName}}</span>
+        </div>
+    </div>
+</ng-template>
 <ng-template #chatBox let-data>
     <codx-chat-box [groupID]="data"></codx-chat-box>
 </ng-template>

@@ -48,6 +48,8 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     this.formModel = dialog?.formModel;
     // this.benefitObj = JSON.parse(JSON.stringify(this.benefitObj));
     this.benefitObj = data?.data?.benefitObj;
+    console.log('benefit obj nhan dc la', this.benefitObj);
+    
     // this.indexSelected =
     //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
     this.actionType = data?.data?.actionType;
@@ -70,12 +72,19 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
           .then((fg) => {
             if (fg) {
               this.formGroup = fg;
-
               this.initForm();
             }
           });
       }
     });
+  }
+
+    ngAfterViewInit(){
+    this.dialog && this.dialog.closed.subscribe(res => {
+      if(!res.event){
+        this.dialog.close(this.benefitObj);
+      }
+    })
   }
 
   initForm() {
@@ -129,7 +138,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
         if (p != null) {
           this.benefitObj.recID = p.recID;
           this.notify.notifyCode('SYS006');
-          this.benefitObj.push(JSON.parse(JSON.stringify(this.benefitObj)));
+          //this.benefitObj.push(JSON.parse(JSON.stringify(this.benefitObj)));
           // if(this.listView){
           //   (this.listView.dataService as CRUDService).add(this.benefitObj).subscribe();
           // }

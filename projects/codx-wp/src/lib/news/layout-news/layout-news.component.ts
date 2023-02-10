@@ -62,12 +62,12 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
         this.codxService.navigate(funcID);
         break;
       case 'settings':
-        this.codxService.navigate('', 'wp/news/settings/' + funcID);
+        this.codxService.navigate('', 'news/settings/' + funcID);
         break;
       default:
         this.codxService.navigate(
           '',
-          'wp/news/' + funcID + '/' + this.category
+          'news/' + funcID + '/' + this.category
         );
         break;
     }
