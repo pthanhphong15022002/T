@@ -380,31 +380,37 @@ export class InstancesComponent
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     this.cache.functionList('DPT0402').subscribe((fun) => {
-      var formMD = new FormModel();
-      formMD.funcID = fun.functionID;
-      formMD.entityName = fun.entityName;
-      formMD.formName = fun.formName;
-      formMD.gridViewName = fun.gridViewName;
-      var obj = {
-        stepName: this.getStepNameById(data.stepID)[0],
-        formModel: formMD,
-        instance: data,
-        listStep: this.listStepsCbx
-      };
+      this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+        this.cache
+          .gridViewSetup(fun.formName, fun.gridViewName)
+          .subscribe((grvSt) => {
+            var formMD = new FormModel();
+            formMD.funcID = fun.functionID;
+            formMD.entityName = fun.entityName;
+            formMD.formName = fun.formName;
+            formMD.gridViewName = fun.gridViewName;
+            var obj = {
+              stepName: this.getStepNameById(data.stepID),
+              formModel: formMD,
+              instance: data,
+              listStep: this.listStepsCbx,
+            };
 
-      var dialogMoveStage = this.callfc.openForm(
-        PopupMoveStageComponent,
-        '',
-        800,
-        600,
-        '',
-        obj
-      );
-      dialogMoveStage.closed.subscribe((e) => {
-        if (e && e.event != null) {
-          //xu ly data đổ về
-          this.detectorRef.detectChanges();
-        }
+            var dialogMoveStage = this.callfc.openForm(
+              PopupMoveStageComponent,
+              '',
+              800,
+              600,
+              '',
+              obj
+            );
+            dialogMoveStage.closed.subscribe((e) => {
+              if (e && e.event != null) {
+                //xu ly data đổ về
+                this.detectorRef.detectChanges();
+              }
+            });
+          });
       });
     });
   }
@@ -415,10 +421,16 @@ export class InstancesComponent
     option.FormModel = this.view.formModel;
 
     var formMD = new FormModel();
-    formMD.funcID = functionId;
-    formMD.entityName = data.entityName;
-    formMD.formName = data.formName;
-    formMD.gridViewName = data.gridViewName;
+    // formMD.funcID = functionId;
+    // formMD.entityName = data.entityName;
+    // formMD.formName = data.formName;
+    // formMD.gridViewName = data.gridViewName;
+
+    formMD.funcID = 'DPT0201';
+    formMD.entityName = 'DP_Instances_Steps_TaskGroups';
+    formMD.formName = 'DPInstancesStepsTaskGroups';
+    formMD.gridViewName = 'grvDPInstancesStepsTaskGroups';
+
     var obj = {
       dataMore: dataMore,
       stepName: this.process.processName,
@@ -470,9 +482,11 @@ export class InstancesComponent
     delete listStep[listStep.length - 2];
   }
 
-  getStepNameById(stepId:string){
-    let listStep = JSON.parse(JSON.stringify(this.listStepsCbx));
-    return listStep.filter(x=>x.stepID === stepId).map(x=> x.stepName);
+  getStepNameById(stepId: string): string {
+    // let listStep = JSON.parse(JSON.stringify(this.listStepsCbx));
+    return this.listSteps
+      .filter((x) => x.stepID === stepId)
+      .map((x) => x.stepName)[0];
   }
   #endregion;
 }
