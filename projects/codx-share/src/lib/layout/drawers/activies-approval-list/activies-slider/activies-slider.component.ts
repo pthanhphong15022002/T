@@ -14,7 +14,7 @@ export class ActiviesSliderComponent implements OnInit {
   lstApproval:any[] = [];
   model:DataRequest = {
     entityName:"BG_Notification",
-    predicate: "ActionType = @0",
+    predicate: "ActionType = @0 && (Deleted = null || Deleted = false)",
     dataValue: "AP",
     formName:"Notification",
     gridViewName:"grvNotification",

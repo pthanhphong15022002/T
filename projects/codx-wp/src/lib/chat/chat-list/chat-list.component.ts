@@ -116,6 +116,11 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
   // searrch
   search(event: any) {
+    debugger;
+    this.api.execSv("WP","ERM.Business.WP","GroupBusiness","SearchGroupAsync",[event])
+    .subscribe((res:any) =>{
+      console.log(res);
+    });
 
   }
   // click group chat - chat box
