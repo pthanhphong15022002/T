@@ -36,21 +36,20 @@ import { RedirectToComponent } from './redirect-to/redirect-to.component';
     ForgotPasswordDefaultComponent,
     ForgotPasswordQTSCComponent,
     TenantsComponent,
-    RedirectToComponent
+    RedirectToComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-
     SharedModule,
     CoreModule,
     ERMModule,
     CodxCoreModule,
     AuthRoutingModule,
     HoverPreloadModule,
-    CodxCoreModule.forRoot({environment}),
-  ]
+    CodxCoreModule.forRoot({ environment }),
+  ],
 })
-export class AuthModule { }
+export class AuthModule {}
