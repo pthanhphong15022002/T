@@ -164,12 +164,14 @@
     <ng-container *ngIf="fileDocuments.length > 0">
         <div class="codx-files-documents">
             <ng-container *ngFor="let item of fileDocuments">
-                <div class="position-relative me-2">
+                <div class="d-flex align-items-center my-1">
                     <codx-temp-full imageSrc="{{item.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
                         title="{{item.fileName}}" [descLine]="1">
                     </codx-temp-full>
                     <ng-container *ngIf="allowEdit">
-                        <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: item }"></ng-container>
+                        <button class="btn btn-icon btn-md" (click)="removeFiles(item)">
+                            <i class="icon-close icon-18 text-danger"></i>
+                        </button>
                     </ng-container>
                 </div>
                 
