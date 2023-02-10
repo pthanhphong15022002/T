@@ -10,6 +10,7 @@ import { Contact } from '../../models/Contact.model';
   styleUrls: ['./pop-add-contact.component.css']
 })
 export class PopAddContactComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('form') public form: CodxFormComponent;
   dialog!: DialogRef;
   headerText:string;
@@ -53,7 +54,9 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
       this.contactType = dialogData.data?.data.contactType;
     }
   }
+//#endregion
 
+//#region Init
   onInit(): void {
   }
   ngAfterViewInit() {
@@ -68,28 +71,39 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     this.contact.contactID = this.randomNumber();
     }
   }
+  //#endregion
+  
+  //#region Function
   randomNumber(){
     var number = Math.floor(Math.random() * 100000);
     return number.toString();
   }
-  valueChange(e:any,type:any){
-    if (type == 'contactName') {
-      this.contactName = e.data;
-    }
-    if (type == 'jobTitle') {
-      this.jobTitle = e.data;
-    }
-    if (type == 'phone') {
-      this.phone = e.data;
-    }
-    if (type == 'email') {
-      this.email = e.data;
-    }
-    if (type == 'contactType') {
-      this.contactType = e.data;
-    }
+  valueChange(e:any){
     this.contact[e.field] = e.data;   
   }
+  valueChangeContactName(e: any) {
+    this.contactName = e.data;
+    this.contact[e.field] = e.data;
+  }
+  valueChangeJobTitle(e: any) {
+    this.jobTitle = e.data;
+    this.contact[e.field] = e.data;
+  }
+  valueChangePhone(e: any) {
+    this.phone = e.data;
+    this.contact[e.field] = e.data;
+  }
+  valueChangeEmail(e: any) {
+    this.email = e.data;
+    this.contact[e.field] = e.data;
+  }
+  valueChangeContactType(e: any) {
+    this.contactType = e.data;
+    this.contact[e.field] = e.data;
+  }
+  //#endregion
+
+  //#region CRUD
   onSave(){
     if (this.contactName.trim() == '' || this.contactName == null) {
       this.notification.notifyCode(
@@ -134,6 +148,7 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     window.localStorage.setItem("datacontact",JSON.stringify(this.contact));
     this.dialog.close();
   }
+  //#endregion
 }
 class Guid {
   static newGuid() {
