@@ -1,3 +1,4 @@
+import { EMPTY } from 'rxjs';
 import { PopupJobGeneralInfoComponent } from './../../employee-profile/popup-job-general-info/popup-job-general-info.component';
 import { PopupEbenefitComponent } from './../../employee-profile/popup-ebenefit/popup-ebenefit.component';
 import { PopupEdayoffsComponent } from './../../employee-profile/popup-edayoffs/popup-edayoffs.component';
@@ -96,7 +97,9 @@ export class EmployeeProfileComponent extends UIComponent {
     this.funcID = this.routeActive.snapshot.params['funcID'];
     console.log('dtttt', dialog);
   }
+  @ViewChild("dayoffGridView") dayoffGrid: CodxGridviewComponent;
   @ViewChild("gridView") grid:CodxGridviewComponent;
+  @ViewChild("appointionGridView") appointionGrid:CodxGridviewComponent;
   @ViewChild('itemTemplate') template: TemplateRef<any>;
   @ViewChild('paneRight') panelRight: TemplateRef<any>;
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
@@ -187,7 +190,7 @@ export class EmployeeProfileComponent extends UIComponent {
   yearFilterValue
   startDateEBenefitFilterValue
   endDateEBenefitFilterValue
-  filterEBenefitPredicates
+  filterEBenefitPredicates : string
   filterEBenefitDatavalues
 
   //#region declare columnGrid
@@ -202,6 +205,8 @@ export class EmployeeProfileComponent extends UIComponent {
   disciplineColumnGrid;
   expColumnGrid;
   benefitColumnGrid;
+  appointionColumnGrid;
+  dayoffColumnGrid;
 
   //#region ViewChild
   @ViewChild('healthPeriodID', { static: true })
@@ -230,6 +235,25 @@ export class EmployeeProfileComponent extends UIComponent {
   templateBenefitMoreFunc: TemplateRef<any>;
   @ViewChild('filterTemplateBenefit', {static: true}) 
   filterTemplateBenefit: TemplateRef<any>;
+
+  @ViewChild('templateAppointionGridCol1', {static: true}) 
+  templateAppointionGridCol1: TemplateRef<any>;
+  @ViewChild('templateAppointionGridCol2', {static: true}) 
+  templateAppointionGridCol2: TemplateRef<any>;
+  @ViewChild('templateAppointionGridCol3', {static: true}) 
+  templateAppointionGridCol3: TemplateRef<any>;
+  @ViewChild('templateAppointionGridMoreFunc', {static: true}) 
+  templateAppointionGridMoreFunc: TemplateRef<any>;
+
+  @ViewChild('templateDayOffGridCol1', {static: true}) 
+  templateDayOffGridCol1: TemplateRef<any>;
+  @ViewChild('templateDayOffGridCol2', {static: true}) 
+  templateDayOffGridCol2: TemplateRef<any>;
+  @ViewChild('templateDayOffGridCol3', {static: true}) 
+  templateDayOffGridCol3: TemplateRef<any>;
+  @ViewChild('templateDayOffGridMoreFunc', {static: true}) 
+  templateDayOffGridMoreFunc: TemplateRef<any>;
+  
 
   //#endregion
 
@@ -282,8 +306,19 @@ export class EmployeeProfileComponent extends UIComponent {
   request: DataRequest;
 
   lstTab: any;
-  benefitFormodel;
+
+  appointionFormodel: FormModel;
+  appointionRowCount;
+  appointionFuncID = 'HRTEM0502'
+  appointionHeaderTexts;
+  benefitFormodel: FormModel;
   eBenefitRowCount;
+  benefitFuncID = 'HRTEM0403'
+  benefitHeaderTexts;
+  dayofFormModel: FormModel;
+  dayoffRowCount;
+  dayoffFuncID = 'HRTEM0503'
+  dayoffHeaderTexts
 
   onInit(): void {
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
@@ -294,27 +329,60 @@ export class EmployeeProfileComponent extends UIComponent {
       }
     });
 
-    this.hrService.getHeaderText('HRT03020303').then( res =>{
-      console.log('11111111111111111111111111111111', res);
-      console.log(res['ALObjectID']);
-    })
+    // this.hrService.getHeaderText('HRT03020303').then( res =>{
+    //   console.log('11111111111111111111111111111111', res);
+    //   console.log(res['ALObjectID']);
+    // })
 
-    let benefitFuncID = 'HRTEM0403'
-    let benefitHeaderTexts;
 
-    this.hrService.getFormModel(benefitFuncID).then(res => {
+
+    this.hrService.getFormModel(this.benefitFuncID).then(res => {
       this.benefitFormodel = res;
     });
-    this.hrService.getHeaderText(benefitFuncID).then(res => {
-      benefitHeaderTexts = res;
+
+    this.hrService.getFormModel(this.appointionFuncID).then(res => {
+      this.appointionFormodel = res;
+    })
+
+    this.hrService.getFormModel(this.dayoffFuncID).then(res => {
+      this.dayofFormModel = res;
+    })
+
+    this.hrService.getHeaderText(this.dayoffFuncID).then(res =>{
+      this.dayoffHeaderTexts = res;
+      this.dayoffColumnGrid = [
+        {
+          headerText: this.dayoffHeaderTexts['KowID'] + '|' + this.dayoffHeaderTexts['RegisteredDate'],
+          template: this.templateDayOffGridCol1,
+          width: '150',
+        },
+        {
+          headerText: 'Thời gian nghỉ ' + '|' + 'Số ngày',
+          template: this.templateDayOffGridCol2,
+          width: '150',
+        },
+        {
+          headerText: this.dayoffHeaderTexts['Reason'],
+          template: this.templateDayOffGridCol3,
+          width: '150',
+        },
+        {
+          template: this.templateDayOffGridMoreFunc,
+          width: '150'
+        },
+      ]
+    })
+    
+    this.hrService.getHeaderText(this.benefitFuncID).then(res => {
+      this.benefitHeaderTexts = res;
       this.benefitColumnGrid = [
         {
-          headerText: benefitHeaderTexts['BenefitID'],
+          headerText: this.benefitHeaderTexts['BenefitID'],
           template: this.templateBenefitID,
           width: '50',
         },
         {
-          headerText: benefitHeaderTexts['BenefitAmt'],
+          headerText: this.benefitHeaderTexts['BenefitAmt'],
           template: this.templateBenefitAmt,
           width: '150'
         },
@@ -333,6 +401,46 @@ export class EmployeeProfileComponent extends UIComponent {
         }
       ]
     })
+
+    this.hrService.getHeaderText(this.appointionFuncID).then(res => {
+      console.log('headerText bo nhiem dieu chuyen', res);
+      
+      this.appointionHeaderTexts = res;
+      this.appointionColumnGrid = [
+        {
+          headerText: this.benefitHeaderTexts['Appoint'] + '| Hiệu lực',
+          template: this.templateAppointionGridCol1,
+          width: '150',
+        },
+        {
+          headerText: this.benefitHeaderTexts['PositionID'],
+          template: this.templateAppointionGridCol2,
+          width: '150',
+        },
+        {
+          headerText: this.benefitHeaderTexts['OrgUnitID'] + '/ Phòng ban',
+          template: this.templateAppointionGridCol3,
+          width: '150',
+        },
+        {
+          template: this.templateAppointionGridMoreFunc,
+          width: '150',
+        },
+      ]
+    })
+
+    let ins = setInterval(()=>{
+      if(this.appointionGrid){
+        clearInterval(ins);
+        let t= this;
+        this.appointionGrid.dataService.onAction.subscribe((res)=>{
+          if(res.type == 'loaded'){
+            t.appointionRowCount = res['data'].length
+          }
+        })
+        this.appointionRowCount = this.appointionGrid.dataService.rowCount; 
+      }
+    },100)
 
 
     this.EExperienceColumnsGrid = [
@@ -922,9 +1030,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  clickMF(event: any, data: any, funcID = null) {
-    console.log('click vo MF');
-    console.log('data ', data);
+  async clickMF(event: any, data: any, funcID = null) {
     switch (event.functionID) {
       case 'SYS03': //edit
         if (funcID == 'passport') {
@@ -1159,13 +1265,18 @@ export class EmployeeProfileComponent extends UIComponent {
             } else if (funcID == 'eAppointions') {
               this.hrService
                 .DeleteEmployeeAppointionsInfo(data.recID)
+                // .subscribe((p) => {
+                //   if (p == true) {
+                //     this.notify.notifyCode('SYS008');
+                //     let i = this.lstAppointions.indexOf(data);
+                //     if (i != -1) {
+                //       this.lstAppointions.splice(i, 1);
+                //     }
                 .subscribe((p) => {
-                  if (p == true) {
+                  if (p != null) {
                     this.notify.notifyCode('SYS008');
-                    let i = this.lstAppointions.indexOf(data);
-                    if (i != -1) {
-                      this.lstAppointions.splice(i, 1);
-                    }
+                    (this.appointionGrid.dataService as CRUDService).remove(data).subscribe();
+                    this.appointionRowCount = this.appointionGrid.dataService.rowCount; 
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -1203,14 +1314,12 @@ export class EmployeeProfileComponent extends UIComponent {
                 });
             }  else if (funcID == 'eBenefit') {
               this.hrService
-                .DeleteEBenefit(data.recID)
+                .DeleteEBenefit(data)
                 .subscribe((p) => {
-                  if (p == true) {
+                  if (p != null) {
                     this.notify.notifyCode('SYS008');
-                    let i = this.lstEdiseases.indexOf(data);
-                    if (i != -1) {
-                      this.lstEdiseases.splice(i, 1);
-                    }
+                    (this.grid.dataService as CRUDService).remove(data).subscribe();
+                    this.eBenefitRowCount = this.grid.dataService.rowCount; 
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -1250,7 +1359,8 @@ export class EmployeeProfileComponent extends UIComponent {
           this.HandleEmployeeCertificateInfo('copy', data);
           this.df.detectChanges();
         } else if (funcID == 'eAppointions') {
-          this.HandleEmployeeAppointionInfo('copy', data);
+          this.copyValue(data, 'eAppointions');
+          //this.HandleEmployeeAppointionInfo('copy', data);
           this.df.detectChanges();
         } else if (funcID == 'eExperiences') {
           this.handlEmployeeExperiences('copy', data);
@@ -1259,7 +1369,7 @@ export class EmployeeProfileComponent extends UIComponent {
           this.HandleEmployeeDiseaseInfo('copy', data);
           this.df.detectChanges();
         } else if (funcID == 'eBenefit') {
-          this.handlEmployeeBenefit('copy', this.copyValue(data));
+          this.copyValue(data, 'benefit');
           this.df.detectChanges();
         }
         break;
@@ -1741,31 +1851,29 @@ export class EmployeeProfileComponent extends UIComponent {
   handlEmployeeBenefit(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
-    // option.DataService = this.view.dataService;
+    option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
-    console.log('data benefit truyen vao form', data );
-    
+    option.Width = '550px';    
     let dialogAdd = this.callfunc.openSide(
       PopupEbenefitComponent,
       {
         employeeId: this.data.employeeID,
         actionType: actionType,
         headerText: 'Phụ cấp',
-        funcID: 'HRTEM0403',
+        funcID: this.benefitFuncID,
         benefitObj: data,
-        //listBenefits: this.listCrrBenefit,
-        //indexSelected: this.listCrrBenefit?.indexOf(data) ?? 0
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      // if (actionType == 'add') {
-      //   this.listCrrBenefit = res.event;
-      //   console.log('lst ex', this.listCrrBenefit);
-      //   this.df.detectChanges();
-      // }
-      if (!res?.event) this.view.dataService.clear();
+      if(res.event){
+        if (actionType == 'add' || actionType == 'copy') {
+          (this.grid.dataService as CRUDService).add(res.event).subscribe();
+        }
+        else if(actionType == 'edit'){
+          (this.grid.dataService as CRUDService).update(res.event).subscribe();
+        }
+      }
     });
   }
 
@@ -2169,16 +2277,24 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupEappointionsComponent,
       {
         actionType: actionType,
-        indexSelected: this.lstAppointions.indexOf(data),
+        //indexSelected: this.lstAppointions.indexOf(data),
         employeeId: this.data.employeeID,
-        lstEAppointions: this.lstAppointions,
-        funcID: 'HRTEM0502',
+        //lstEAppointions: this.lstAppointions,
+        funcID: this.appointionFuncID,
+        appointionObj: data,
         headerText: 'Bổ nhiệm - Điều chuyển',
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if(res.event){
+        if (actionType == 'add' || actionType == 'copy') {
+          (this.appointionGrid.dataService as CRUDService).add(res.event).subscribe();
+        }
+        else if(actionType == 'edit'){
+          (this.appointionGrid.dataService as CRUDService).update(res.event).subscribe();
+        }
+      }
       this.df.detectChanges();
     });
   }
@@ -2604,7 +2720,8 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   UpdateEBenefitPredicate(){
-    if(this.filterByBenefitIDArr.length > 0){
+    this.filterEBenefitPredicates = ""
+    if(this.filterByBenefitIDArr.length > 0 && this.startDateEBenefitFilterValue != null){
       this.filterEBenefitPredicates = '('
       let i = 0;
       for(i; i< this.filterByBenefitIDArr.length; i++){
@@ -2614,20 +2731,32 @@ export class EmployeeProfileComponent extends UIComponent {
         this.filterEBenefitPredicates += `BenefitID==@${i}`
       }
       this.filterEBenefitPredicates += ') ';
-      if(this.startDateEBenefitFilterValue != null && this.endDateEBenefitFilterValue != null){
-        this.filterEBenefitPredicates +=  `and (EffectedDate>=@${i+1} and EffectedDate<=@${i+2})`;
-      }
-      this.filterEBenefitDatavalues = this.filterByBenefitIDArr.concat([this.startDateEBenefitFilterValue, this.endDateEBenefitFilterValue]);
+      this.filterEBenefitPredicates +=  `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
+      //this.filterEBenefitDatavalues = this.filterByBenefitIDArr.concat([this.startDateEBenefitFilterValue, this.endDateEBenefitFilterValue]);
       
-      (this.grid.dataService as CRUDService).setPredicates([this.filterEBenefitPredicates],this.filterEBenefitDatavalues)
+      (this.grid.dataService as CRUDService).setPredicates([this.filterEBenefitPredicates],[this.filterByBenefitIDArr])
       .subscribe((item) => {
         console.log('item tra ve sau khi loc 1', item);
+      });
+    }
+    else if(this.filterByBenefitIDArr.length > 0 && this.startDateEBenefitFilterValue == undefined || this.startDateEBenefitFilterValue == null){
+      let i = 0;
+      for(i; i< this.filterByBenefitIDArr.length; i++){
+        if(i>0){
+          this.filterEBenefitPredicates +=' or '
+        }
+        this.filterEBenefitPredicates += `BenefitID==@${i}`
+      }
+
+      (this.grid.dataService as CRUDService).setPredicates([this.filterEBenefitPredicates],[this.filterByBenefitIDArr])
+      .subscribe((item) => {
+        console.log('item tra ve sau khi loc 2', item);
       });
     }
     else if(this.startDateEBenefitFilterValue != null){
       (this.grid.dataService as CRUDService).setPredicates([`EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}"`], [])
       .subscribe((item) => {
-        console.log('item tra ve sau khi loc 2', item);
+        console.log('item tra ve sau khi loc 3', item);
       });
     }
     
@@ -2657,17 +2786,24 @@ export class EmployeeProfileComponent extends UIComponent {
             t.eBenefitRowCount = res['data'].length
           }
         })
-        //this.eBenefitRowCount = this.grid.dataService.rowCount; 
+        this.eBenefitRowCount = this.grid.dataService.rowCount; 
       }
     },100)
-    
-    
   }
 
-copyValue(data) {
-    this.grid.dataService.dataSelected = data;
-    (this.grid.dataService as CRUDService).copy().subscribe((res: any) => {
-      if (!res) return;
-      return res;
-    })
-}}
+copyValue(data, flag) {
+      if(flag == 'benefit'){
+        this.grid.dataService.dataSelected = data;
+        (this.grid.dataService as CRUDService).copy().subscribe((res: any) => {
+        this.handlEmployeeBenefit('copy', res);
+        })
+      }
+      else if(flag == 'eAppointions'){
+        this.appointionGrid.dataService.dataSelected = data;
+        (this.appointionGrid.dataService as CRUDService).copy().subscribe((res: any) => {
+        this.HandleEmployeeAppointionInfo('copy', res);
+        })
+      }
+}
+
+}

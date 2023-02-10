@@ -4,11 +4,12 @@
     <ng-container *ngIf="form && form.formGroup">
       <div class="row">
         <div class="col-4 form-group">
-          <codx-label [formModel]="form.formModel" fiedName="periodID"></codx-label>
-          <codx-dropdown-calendar cssPopup="h-500px w-800px" [value]="okrPlan?.toDate"
+          <codx-label [formModel]="form.formModel" fiedName="PeriodID"></codx-label>
+          <codx-dropdown-calendar cssPopup="h-500px w-800px" [value]="ob.periodID"
             [selectedType]="formatInterval(okrPlan?.interval)" [displayOption]="ops" 
             cssClass="w-100" class="me-4"
             (change)="changeCalendar($event)" [disabled]="true"></codx-dropdown-calendar>
+          
         </div>
         <div class="col-4 form-group">
           <codx-label [formModel]="formModel" fiedName="Category"></codx-label>

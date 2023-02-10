@@ -162,6 +162,7 @@ export class IncommingComponent
     this.request.idField = 'recID';
     this.userID = this.authStore.get().userID;
   }
+ 
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -219,6 +220,7 @@ export class IncommingComponent
           formModel: this.view.formModel,
           service: this.view.service,
           dispatchType: this.funcList?.dataValue,
+          data: res
         },
         option
       );
@@ -363,7 +365,6 @@ export class IncommingComponent
 
   getGridViewSetup(funcID: any) {
     this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
-      debugger;
       this.funcList = fuc;
       this.codxODService
         .loadGridView(fuc?.formName, fuc?.gridViewName)

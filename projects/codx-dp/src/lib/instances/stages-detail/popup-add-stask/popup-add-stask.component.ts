@@ -58,6 +58,7 @@ export class PopupAddStaskComponent implements OnInit {
   isHaveFile = false;
   funcIDparent: any;
   folderID = '';
+  groupTaskID = ''
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -75,6 +76,7 @@ export class PopupAddStaskComponent implements OnInit {
       this.stepsTasks['taskType'] = this.stepType;
       this.stepsTasks['stepID'] = this.stepID;
       this.stepsTasks['progress'] = 0;
+      this.stepsTasks['taskGroupID'] = dt?.data[7];
     } else {
       this.showLabelAttachment = true;
       this.stepsTasks = dt?.data[4] || new DP_Instances_Steps_Tasks();
@@ -82,6 +84,7 @@ export class PopupAddStaskComponent implements OnInit {
     }
     this.taskList = dt?.data[5];
     this.taskName = dt?.data[6];
+    this.groupTaskID = dt?.data[7];
   }
   ngOnInit(): void {
     this.listOwner = this.stepsTasks['roles'];

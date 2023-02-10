@@ -3,7 +3,7 @@
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
-      <codx-aside *ngIf="asideDisplay"> </codx-aside>
+      <codx-aside *ngIf="asideDisplay" [hasSecond]="false"> </codx-aside>
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header
           [class]="headerCSSClasses"
@@ -15,7 +15,9 @@
         </codx-header>
         <!-- <codx-wrapper class="d-flex flex-column flex-column-fluid" (resizedEvent)="contentResized($event)">
         </codx-wrapper> -->
-        <codx-wrapper class="d-flex flex-column flex-column-fluid">
+        <codx-wrapper
+          class="d-flex flex-column flex-column-fluid wrapper-only-header"
+        >
         </codx-wrapper>
       </div>
     </div>
@@ -25,7 +27,7 @@
   <codx-scroll-top></codx-scroll-top>
 
   <!-- begin:: Drawers -->
-  <codx-messenger-drawer></codx-messenger-drawer>
+  <!-- <codx-notify-drawer></codx-notify-drawer> -->
   <!-- <codx-user-drawer></codx-user-drawer> -->
   <!-- end:: Drawers -->
 
@@ -38,49 +40,6 @@
     >
       <!-- <codx-chat-list></codx-chat-list> -->
     </div>
-    <!-- NOTES -->
-    <!-- <div class="d-flex align-items-center">
-      <div class="btn btn-icon btn-active-light-primary position-relative"
-        [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_note_toggle">
-        <span [inlineSVG]="
-            './assets/themes/sys/default/img/header_notes.svg'
-          " class="svg-icon" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
-      </div>
-    </div> -->
-    <!-- NOTIFICATIONS -->
-    <codx-notify-drawer></codx-notify-drawer>
-    <codx-activies-approval-list></codx-activies-approval-list>
-
-    <!-- <div class="align-items-center">
-      <codx-searchbar [width]="500" (searchEvent)="onSearch($event)"></codx-searchbar>
-    </div> -->
-
-    <!-- Home -->
-    <div class="align-items-center d-flex ms-1 ms-lg-3">
-      <a class="d-flex align-items-center" href="/">
-        <!-- begin::Menu wrapper -->
-        <div
-          class="btn btn-icon btn-active-light-primary position-relative"
-          [ngClass]="codxService.toolbarButtonHeightClass"
-          id=""
-        >
-          <span
-            [inlineSVG]="'./assets/themes/sys/default/img/header_home.svg'"
-            class="svg-icon"
-            [ngClass]="codxService.toolbarButtonIconSizeClass"
-          ></span>
-        </div>
-        <!-- end::Menu wrapper -->
-      </a>
-    </div>
-    <!--end Home -->
-    <!-- Quick links -->
-    <erm-quick-links-inner
-      [buttonMarginClass]="codxService.toolbarButtonMarginClass"
-      [buttonIconClass]="codxService.toolbarButtonIconSizeClass"
-      [buttonHeightClass]="codxService.toolbarButtonHeightClass"
-    ></erm-quick-links-inner>
-    <!-- End: Quick links -->
 
     <!-- begin::User -->
     <codx-user-inner
