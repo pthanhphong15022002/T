@@ -201,7 +201,7 @@
                 [cdkDragStartDelay]="200"
                 [cdkDragDisabled]="taskList?.recID ? false : true"
               >
-                <div class="card-job p-3">
+                <div class="card-job px-3 pt-3">
                   <div
                     *ngIf="taskList?.recID"
                     class="d-flex align-items-center justify-content-between"
@@ -471,6 +471,7 @@
     *ngFor="let item of listJobType"
     class="d-flex body-set-job"
     style="justify-content: space-between; padding: 10px 0"
+    (click)="getTypeJob($event, item)"
   >
     <div style="display: flex; align-items: center" class="job">
       <span
@@ -482,14 +483,10 @@
       <span style="font-size: 1.2rem; font-weight: 400">{{ item?.text }}</span>
     </div>
     <div style="padding-right: 2rem">
-      <codx-input
-        [id]="item?.value"
-        name="styleJob"
-        class="test-check"
-        type="radio"
-        style="width: 100%"
+      <codx-input    
+        type="radio"     
         pageSize="50"
-        (valueChange)="getTypeJob($event, item)"
+        [checked]="item?.checked"
       ></codx-input>
     </div>
   </div>
