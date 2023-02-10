@@ -102,14 +102,14 @@ export class NewsDetailComponent extends UIComponent {
     this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "UpdateViewNewsAsync", data.recID).subscribe(
       (res) => {
         if (res) {
-          this.codxService.navigate('', '/wp/news/' + this.funcID + '/' + data.category + '/' + data.recID);
+          this.codxService.navigate('', '/news/' + this.funcID + '/' + data.category + '/' + data.recID);
           this.loadData(data.recID);
         }
       });
   }
   // navigate view post by tag
   clickTag(tag: any) {
-    this.codxService.navigate('', '/wp/news/' + this.funcID + '/tag/' + tag.value);
+    this.codxService.navigate('', '/news/' + this.funcID + '/tag/' + tag.value);
   }
   // add
   openPopupAdd(newsType: string) {
