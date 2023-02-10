@@ -59,9 +59,9 @@
 }
 
 .page-dashboard .aside.aside-transparent {
-  width: 250px;
-  min-width: 250px;
-  max-width: 250px;
+  width: 350px;
+  min-width: 350px;
+  max-width: 350px;
 
 }
 
@@ -73,12 +73,16 @@
   display: none !important;
 }
 
+.page-dashboard .aside-menu .menu .menu-item .menu-link {
+  padding-left: 0;
+}
+
 .aside.aside-transparent .aside-menu {
   width: 100%;
 }
 
 .dashboard-main {
-  width: 1246px;
+  width: 1346px;
   margin: 0 auto;
 }
 
@@ -167,7 +171,7 @@
 }
 
 .card.sp-my-task {
-  height: calc(100vh - 245px);
+  height: calc(100vh - 250px);
   overflow: auto;
 }
 

@@ -136,14 +136,96 @@
       <div class="d-flex bg-white rounded-3 px-6 py-3 login-content">
         <div class="login-left w-100 ps-9 pe-6">
           <div class="d-flex flex-row-fluid flex-column justify-content-between">
-            <div class="text-start py-6">
-              <div class="fw-bolder fs-title" style="width: 85%">
+            <div class="text-start pt-6 pb-3">
+              <div class="fw-bolder fs-title">
                 <div>CỔNG THÔNG TIN QUẢN LÝ ĐIỀU HÀNH</div>
                 <div>KHU CÔNG VIÊN PHẦN MỀM QUANG TRUNG</div>
               </div>
             </div>
-            <div class="d-flex w-100 my-3">
-              <img class="w-100" src="/assets/cz/qtsc/bg/bgloginQTSC.png" alt="" />
+            <div class="d-flex align-items-center w-100 mb-3 login-pic">
+              <div class="w-100 pic-left mw-750px">
+                <img class="w-100" src="/assets/cz/qtsc/bg/bgloginQTSC.png" alt="" />
+              </div>
+              <div class="login-right pt-0">
+                <!--begin::Content body-->
+                <div class="d-flex flex-column">
+                  <div class="d-flex align-items-center justify-content-center">
+                    <img src="/assets/cz/qtsc/bg/logoQTSC.PNG" width="235" alt="" />
+                  </div>
+
+                  <div class="login-signin text-dark">
+                    <!--begin::Form-->
+                    <div class="text-start mb-3">
+                      <h3 class="fw-bolder">
+                        <codx-label fiedName="ChangePassword" formModel="" default="Thay đổi mật khẩu"></codx-label>
+                      </h3>
+                    </div>
+                    <span #Error></span>
+                    <form method="post" id="frm_erm_login" (ngSubmit)="submitChangePass()" [formGroup]="changePassForm"
+                      class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate">
+                      <div class="form-group" #groupemail>
+                        <div class="input-icon">
+                          <img class="ic-user" src="/assets/cz/qtsc/bg/ic-user.png" />
+                          <input field="email" placeholder="Nhập tài khoản hoặc email" formControlName="email"
+                            class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                            type="text" style="width: 100%" />
+                        </div>
+                      </div>
+                      <div class="form-group" #groupoldpass>
+                        <div class="input-icon">
+                          <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
+                          <input type="password" field="PasswordOld" placeholder="Mật khẩu cũ"
+                            formControlName="passwordOld"
+                            class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                            style="width: 100%" />
+                        </div>
+                      </div>
+                      <div class="form-group" #groupnewpass>
+                        <div class="input-icon">
+                          <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
+                          <input type="password" field="Password" placeholder="Mật khẩu mới" formControlName="password"
+                            class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                            style="width: 100%" />
+                        </div>
+                      </div>
+                      <div class="form-group" #confirmpass>
+                        <div class="input-icon">
+                          <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
+                          <input type="password" field="Password" placeholder="Xác nhận mật khẩu"
+                            formControlName="confirmPassword"
+                            class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                            style="width: 100%" />
+                        </div>
+                      </div>
+                      <div class="mb-5 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-login px-6 py-3" [disabled]="changePassForm.invalid">
+                          {{ "Đăng nhập " | lang : "Login" : "btnLogin" | async }}
+                        </button>
+                      </div>
+                      <div class="login-link mt-7 pb-3">
+                        <div class="login-link-cont">
+                          <a href="https://www.facebook.com/QualityTechSolutionComplex" target="_blank">
+                            <img src="/assets/cz/qtsc/bg/f.png" />
+                          </a>
+                          <a href="https://twitter.com/QTSC" target="_blank">
+                            <img src="/assets/cz/qtsc/bg/t.png" />
+                          </a>
+                          <a href="https://www.linkedin.com/company/quality-tech-solution-complex" target="_blank">
+                            <img src="/assets/cz/qtsc/bg/i.png" />
+                          </a>
+                          <a href="https://www.youtube.com/QualityTechSolutionComplex" target="_blank">
+                            <img src="/assets/cz/qtsc/bg/y.png" />
+                          </a>
+                        </div>
+                      </div>
+                      <input type="hidden" />
+                      <div></div>
+                    </form>
+                    <!--end::Form-->
+                  </div>
+                </div>
+                <!--end::Content body-->
+              </div>
             </div>
             <!--begin: Aside footer for desktop-->
             <div class="company-info pb-5">
@@ -175,85 +257,7 @@
           </div>
         </div>
         <!--begin::Content-->
-        <div class="login-right pt-0">
-          <!--begin::Content body-->
-          <div class="d-flex flex-column">
-            <div class="d-flex align-items-center justify-content-center">
-              <img src="/assets/cz/qtsc/bg/logoQTSC.PNG" width="235" alt="" />
-            </div>
 
-            <div class="login-signin text-dark">
-              <!--begin::Form-->
-              <div class="text-start mb-3">
-                <h3 class="fw-bolder">
-                  <codx-label fiedName="ChangePassword" formModel="" default="Thay đổi mật khẩu"></codx-label>
-                </h3>
-              </div>
-              <span #Error></span>
-              <form method="post" id="frm_erm_login" (ngSubmit)="submitChangePass()" [formGroup]="changePassForm"
-                class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate">
-                <div class="form-group" #groupemail>
-                  <div class="input-icon">
-                    <img class="ic-user" src="/assets/cz/qtsc/bg/ic-user.png" />
-                    <input field="email" placeholder="Nhập tài khoản hoặc email" formControlName="email"
-                      class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      type="text" style="width: 100%" />
-                  </div>
-                </div>
-                <div class="form-group" #groupoldpass>
-                  <div class="input-icon">
-                    <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
-                    <input type="password" field="PasswordOld" placeholder="Mật khẩu cũ" formControlName="passwordOld"
-                      class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      style="width: 100%" />
-                  </div>
-                </div>
-                <div class="form-group" #groupnewpass>
-                  <div class="input-icon">
-                    <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
-                    <input type="password" field="Password" placeholder="Mật khẩu mới" formControlName="password"
-                      class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      style="width: 100%" />
-                  </div>
-                </div>
-                <div class="form-group" #confirmpass>
-                  <div class="input-icon">
-                    <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
-                    <input type="password" field="Password" placeholder="Xác nhận mật khẩu"
-                      formControlName="confirmPassword"
-                      class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      style="width: 100%" />
-                  </div>
-                </div>
-                <div class="mb-5 d-flex justify-content-center">
-                  <button type="submit" class="btn btn-login px-6 py-3" [disabled]="changePassForm.invalid">
-                    {{ "Đăng nhập " | lang : "Login" : "btnLogin" | async }}
-                  </button>
-                </div>
-                <div class="login-link mt-7 pb-3">
-                  <div class="login-link-cont">
-                    <a href="https://www.facebook.com/QualityTechSolutionComplex" target="_blank">
-                      <img src="/assets/cz/qtsc/bg/f.png" />
-                    </a>
-                    <a href="https://twitter.com/QTSC" target="_blank">
-                      <img src="/assets/cz/qtsc/bg/t.png" />
-                    </a>
-                    <a href="https://www.linkedin.com/company/quality-tech-solution-complex" target="_blank">
-                      <img src="/assets/cz/qtsc/bg/i.png" />
-                    </a>
-                    <a href="https://www.youtube.com/QualityTechSolutionComplex" target="_blank">
-                      <img src="/assets/cz/qtsc/bg/y.png" />
-                    </a>
-                  </div>
-                </div>
-                <input type="hidden" />
-                <div></div>
-              </form>
-              <!--end::Form-->
-            </div>
-          </div>
-          <!--end::Content body-->
-        </div>
         <!--end::Content-->
       </div>
     </div>
@@ -263,14 +267,85 @@
       <div class="d-flex bg-white rounded-3 px-6 py-3 login-content">
         <div class="login-left w-100 ps-9 pe-6">
           <div class="d-flex flex-row-fluid flex-column justify-content-between">
-            <div class="text-start py-6">
-              <div class="fw-bolder fs-title" style="width: 85%">
+            <div class="text-start pt-6 pb-3">
+              <div class="fw-bolder fs-title">
                 <div>CỔNG THÔNG TIN QUẢN LÝ ĐIỀU HÀNH</div>
                 <div>KHU CÔNG VIÊN PHẦN MỀM QUANG TRUNG</div>
               </div>
             </div>
-            <div class="d-flex w-100 my-3">
-              <img class="w-100" src="/assets/cz/qtsc/bg/bgloginQTSC.png" alt="" />
+            <div class="d-flex align-items-center w-100 mb-3 login-pic">
+              <div class="w-100 pic-left mw-750px">
+                <img class="w-100" src="/assets/cz/qtsc/bg/bgloginQTSC.png" alt="" />
+              </div>
+              <div class="login-right">
+                <!--begin::Content body-->
+                <div class="d-flex flex-column">
+                  <div class="d-flex align-items-center justify-content-center">
+                    <img src="/assets/cz/qtsc/bg/logoQTSC.PNG" width="235" alt="" />
+                  </div>
+
+                  <div class="login-signin text-dark">
+                    <!--begin::Form-->
+                    <div class="text-start mb-10">
+                      <h3 class="fw-bolder">Tạo mật khẩu</h3>
+                    </div>
+                    <span #Error></span>
+                    <form method="post" id="frm_erm_login" (ngSubmit)="submitFirstLogin()" [formGroup]="firstLoginForm"
+                      class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate">
+                      <div class="form-group" #groupemail>
+                        <div class="input-icon">
+                          <img class="ic-user" src="/assets/cz/qtsc/bg/ic-user.png" />
+                          <input field="email" placeholder="Nhập tài khoản hoặc email" formControlName="email"
+                            class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                            type="text" style="width: 100%" />
+                        </div>
+                      </div>
+                      <div class="form-group" #groupnewpass>
+                        <div class="input-icon">
+                          <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
+                          <input type="password" field="Password" placeholder="Mật khẩu mới" formControlName="password"
+                            class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                            style="width: 100%" />
+                        </div>
+                      </div>
+                      <div class="form-group" #confirmpass>
+                        <div class="input-icon">
+                          <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
+                          <input type="password" field="Password" placeholder="Xác nhận mật khẩu"
+                            formControlName="confirmPassword"
+                            class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                            style="width: 100%" />
+                        </div>
+                      </div>
+                      <div class="mb-5 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-login px-6 py-3" [disabled]="firstLoginForm.invalid">
+                          {{ "Đăng nhập " | lang : "Login" : "btnLogin" | async }}
+                        </button>
+                      </div>
+                      <div class="login-link mt-7 pb-3">
+                        <div class="login-link-cont">
+                          <a href="https://www.facebook.com/QualityTechSolutionComplex" target="_blank">
+                            <img src="/assets/cz/qtsc/bg/f.png" />
+                          </a>
+                          <a href="https://twitter.com/QTSC" target="_blank">
+                            <img src="/assets/cz/qtsc/bg/t.png" />
+                          </a>
+                          <a href="https://www.linkedin.com/company/quality-tech-solution-complex" target="_blank">
+                            <img src="/assets/cz/qtsc/bg/i.png" />
+                          </a>
+                          <a href="https://www.youtube.com/QualityTechSolutionComplex" target="_blank">
+                            <img src="/assets/cz/qtsc/bg/y.png" />
+                          </a>
+                        </div>
+                      </div>
+                      <input type="hidden" />
+                      <div></div>
+                    </form>
+                    <!--end::Form-->
+                  </div>
+                </div>
+                <!--end::Content body-->
+              </div>
             </div>
             <!--begin: Aside footer for desktop-->
             <div class="company-info pb-5">
@@ -302,75 +377,7 @@
           </div>
         </div>
         <!--begin::Content-->
-        <div class="login-right">
-          <!--begin::Content body-->
-          <div class="d-flex flex-column">
-            <div class="d-flex align-items-center justify-content-center">
-              <img src="/assets/cz/qtsc/bg/logoQTSC.PNG" width="235" alt="" />
-            </div>
 
-            <div class="login-signin text-dark">
-              <!--begin::Form-->
-              <div class="text-start mb-10">
-                <h3 class="fw-bolder">Tạo mật khẩu</h3>
-              </div>
-              <span #Error></span>
-              <form method="post" id="frm_erm_login" (ngSubmit)="submitFirstLogin()" [formGroup]="firstLoginForm"
-                class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate">
-                <div class="form-group" #groupemail>
-                  <div class="input-icon">
-                    <img class="ic-user" src="/assets/cz/qtsc/bg/ic-user.png" />
-                    <input field="email" placeholder="Nhập tài khoản hoặc email" formControlName="email"
-                      class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      type="text" style="width: 100%" />
-                  </div>
-                </div>
-                <div class="form-group" #groupnewpass>
-                  <div class="input-icon">
-                    <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
-                    <input type="password" field="Password" placeholder="Mật khẩu mới" formControlName="password"
-                      class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      style="width: 100%" />
-                  </div>
-                </div>
-                <div class="form-group" #confirmpass>
-                  <div class="input-icon">
-                    <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
-                    <input type="password" field="Password" placeholder="Xác nhận mật khẩu"
-                      formControlName="confirmPassword"
-                      class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      style="width: 100%" />
-                  </div>
-                </div>
-                <div class="mb-5 d-flex justify-content-center">
-                  <button type="submit" class="btn btn-login px-6 py-3" [disabled]="firstLoginForm.invalid">
-                    {{ "Đăng nhập " | lang : "Login" : "btnLogin" | async }}
-                  </button>
-                </div>
-                <div class="login-link mt-7 pb-3">
-                  <div class="login-link-cont">
-                    <a href="https://www.facebook.com/QualityTechSolutionComplex" target="_blank">
-                      <img src="/assets/cz/qtsc/bg/f.png" />
-                    </a>
-                    <a href="https://twitter.com/QTSC" target="_blank">
-                      <img src="/assets/cz/qtsc/bg/t.png" />
-                    </a>
-                    <a href="https://www.linkedin.com/company/quality-tech-solution-complex" target="_blank">
-                      <img src="/assets/cz/qtsc/bg/i.png" />
-                    </a>
-                    <a href="https://www.youtube.com/QualityTechSolutionComplex" target="_blank">
-                      <img src="/assets/cz/qtsc/bg/y.png" />
-                    </a>
-                  </div>
-                </div>
-                <input type="hidden" />
-                <div></div>
-              </form>
-              <!--end::Form-->
-            </div>
-          </div>
-          <!--end::Content body-->
-        </div>
         <!--end::Content-->
       </div>
     </div>

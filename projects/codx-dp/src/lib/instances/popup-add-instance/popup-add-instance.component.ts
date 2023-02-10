@@ -86,20 +86,14 @@ export class PopupAddInstanceComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
-   // this.instance = dialog.dataService.dataSelected != null ? JSON.parse(JSON.stringify(dialog.dataService?.dataSelected))  : JSON.parse(JSON.stringify(dialog.dataService?.data[0]));
     this.dialog = dialog;
 
-    this.listStep = dt?.data[2];
-    // this.listStepReasonCbx = JSON.parse(JSON.stringify(dt?.data[2]))
-    // this.deleteListReason(this.listStepReasonCbx);
     this.action = dt?.data[0];
     this.isApplyFor = dt?.data[1];
+    this.listStep = dt?.data[2];
     this.titleAction = dt?.data[3];
     this.formModelCrr = dt?.data[4];
     this.listStepCbx = dt?.data[5];
-    // if(this.action === 'edit'){
-    //   this.instance = dt?.data[5];
-    // }
   }
 
   ngOnInit(): void {}
@@ -158,11 +152,18 @@ export class PopupAddInstanceComponent implements OnInit {
     this.instance.stepID = e;
   }
 
-  valueChangeUser(event) {}
+  valueChangeUser(event) {
+    if(event.data){
+      this.instance.owner = event?.data;
+    }
+  }
 
   beforeSave(option: RequestOption) {
-    if ((this.acction = 'add')) {
+    if (this.action === 'add') {
       option.methodName = 'AddInstanceAsync';
+    }
+    else if (this.action === 'edit') {
+      option.methodName = 'EditInstanceAsync';
     }
     option.data = [this.instance, this.listStep];
   
