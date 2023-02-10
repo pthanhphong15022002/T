@@ -105,6 +105,7 @@
       [dataSource]="listStepCbx"
       [fields]="fieldCbxStep"
       [value]="instance.stepID"
+      [readonly]=" action === 'edit' ?true : false"
       (valueChange)="cbxChange($event)"
     ></ejs-combobox>
   </div>

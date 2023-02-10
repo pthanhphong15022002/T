@@ -951,6 +951,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.listTaskResources.forEach((obj) => {
         if (obj.resourceID == id) {
           obj.memo = message;
+          this.changeDetectorRef.detectChanges();
           return;
         }
       });
