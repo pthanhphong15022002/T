@@ -22,7 +22,7 @@
                     [crrValue]="form.data != null ? form.data.bankAcctID : bankAcctID"
                     [formModel]="form.formModel"
                     field="bankAcctID"
-                    (valueChange)="valueChange($event,'bankAcctID')"
+                    (valueChange)="valueChangeBankAcctID($event)"
                   >
             </codx-input>
           </div>   
@@ -39,7 +39,7 @@
           type="combobox" 
           refValue="BanksAC"
           field="bankID"
-          (valueChange)="valueChange($event,'bankID')"
+          (valueChange)="valueChangeBankID($event)"
           >
         </codx-input>
           </div>
@@ -55,7 +55,7 @@
                 [crrValue]="form.data != null ? form.data.owner : owner"
                 [formModel]="form.formModel"
                 field="owner"
-                (valueChange)="valueChange($event,'owner')"
+                (valueChange)="valueChangeOwner($event)"
               >
         </codx-input>
       </div>   
@@ -69,7 +69,7 @@
                 [crrValue]="form.data != null ? form.data.description : ''"
                 [formModel]="form.formModel"
                 field="description"
-                (valueChange)="valueChange($event,'description')"
+                (valueChange)="valueChange($event)"
               >
         </codx-input>
       </div>   
@@ -83,7 +83,7 @@
                 [checked]="form.data != null ? form.data.isDefault : false"
                 type="switch"
                 field="isDefault"
-                (valueChange)="valueChange($event,'isDefault')"
+                (valueChange)="valueChange($event)"
               >
         </codx-input>
       </div>   
