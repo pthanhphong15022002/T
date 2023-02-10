@@ -21,22 +21,26 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-7">
+        <div class="col-lg-6">
           <codx-chart [title]="chartSettings?.title" [legendSettings]="{ visible: false }"
             [primaryXAxis]="chartSettings?.primaryXAxis" [primaryYAxis]="chartSettings?.primaryYAxis"
             [seriesSetting]="chartSettings?.seriesSetting" [service]="chartSettings?.service"
             [assemblyName]="chartSettings?.assembly" [className]="chartSettings?.className"
             [method]="chartSettings?.method"></codx-chart>
         </div>
-        <div class="col-lg-5 om-p-chart">
+        <div class="col-lg-3 om-p-chart">
           <codx-chart height="180" [title]="chartSettings1?.title" [seriesSetting]="chartSettings1?.seriesSetting"
             [dataSource]="Objs">
           </codx-chart>
 
-          <codx-chart height="180" [title]="chartSettings2?.title" [seriesSetting]="chartSettings2?.seriesSetting"
-            [dataSource]="Krs">
-          </codx-chart>
+         
         </div>
+        
+        <div class="col-lg-3 om-p-chart">
+        <codx-chart height="180" [title]="chartSettings2?.title" [seriesSetting]="chartSettings2?.seriesSetting"
+        [dataSource]="Krs">
+      </codx-chart>
+      </div>
       </div>
     </div>
 
@@ -296,7 +300,7 @@
                       item?.notes ? item?.notes?.length : 0 }}</span>
                   </button>
                   <codx-mfunc [formModel]="formModelKR" type="view" [dataItem]="item" class="ms-4"
-                    (clickMF)="clickKRMF($event,item)"></codx-mfunc>
+                    (clickMF)="clickKRMF($event,item,false)"></codx-mfunc>
                 </div>
               </div>
             </div>
@@ -344,7 +348,7 @@
                       item?.notes ? item?.notes?.length : 0 }}</span>
                   </button>
                   <codx-mfunc [formModel]="formModelSKR" type="view" [dataItem]="item" class="ms-4"
-                    (clickMF)="clickKRMF($event,item)"></codx-mfunc>
+                    (clickMF)="clickKRMF($event,item,true)"></codx-mfunc>
                 </div>
               </div>
             </div>

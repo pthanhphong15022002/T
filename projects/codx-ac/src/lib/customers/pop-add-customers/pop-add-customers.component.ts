@@ -35,6 +35,7 @@ import { PopAddContactComponent } from '../pop-add-contact/pop-add-contact.compo
   styleUrls: ['./pop-add-customers.component.css'],
 })
 export class PopAddCustomersComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('form') form: CodxFormComponent;
   title: string;
   headerText: string;
@@ -161,11 +162,16 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         });
     }
   }
-
+  //#endregion
+  
+  //#region Init
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
   }
+  //#endregion
+  
+  //#region Function
   setTitle(e: any) {
     this.title = this.headerText;
     this.dt.detectChanges();
@@ -173,13 +179,15 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   valueChangeTags(e: any) {
     this.customers[e.field] = e.data;
   }
-  valueChange(e: any, type: any) {
-    if (type == 'establishYear') {
-      e.data = e.data.fromDate;
-    }
-    if (type == 'customerID') {
-      this.customerID = e.data;
-    }
+  valueChange(e: any) {
+    this.customers[e.field] = e.data;
+  }
+  valueChangeCustomerID(e: any) {
+    this.customerID = e.data;
+    this.customers[e.field] = e.data;
+  }
+  valueChangeEstablishYear(e: any) {
+    e.data = e.data.fromDate;
     this.customers[e.field] = e.data;
   }
   valueChangeOverdueControl(e: any) {
@@ -503,6 +511,9 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         });
     }
   }
+  //#endregion
+ 
+ //#region CRUD
   onSave() {
     if (this.customerID.trim() == '' || this.customerID == null) {
       this.notification.notifyCode(
@@ -597,4 +608,5 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         });
     }
   }
+//#endregion
 }

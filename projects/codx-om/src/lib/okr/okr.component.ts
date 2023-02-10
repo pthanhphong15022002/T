@@ -33,7 +33,9 @@ import { OkrPlansComponent } from './okr-plans/okr-plans.component';
 import { ActivatedRoute } from '@angular/router';
 import { OkrPlanShareComponent } from './okr-plans/okr-plans-share/okr-plans-share.component';
 import { PopupAddOBComponent } from '../popup/popup-add-ob/popup-add-ob.component';
-
+const _isAdd=true;
+const _isSubKR=true;
+const _notSubKR=false;
 @Component({
   selector: 'lib-okr',
   templateUrl: './okr.component.html',
@@ -354,7 +356,97 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Func-----------------------//
+  renderOB(ob:any,isAdd:boolean){
+    if (ob !=null) {
+      if(isAdd){ this.dataOKR.push(ob); }
+      else{
+        for(let oldOB of this.dataOKR){
+          if(oldOB.recID== ob.recID){
+            let tmpChild=oldOB?.child;            
+            oldOB=ob;
+            oldOB.child= tmpChild;
+          }
+        }
+      }
+    }
+  }
+  renderKR(kr:any,isAdd:boolean){
+    if (kr!=null) {
+      if(isAdd){
+        for (let ob of this.dataOKR) {
+          if (ob.recID == kr.parentID) {
+            if(ob.child==null){
+              ob.child=[];
+            }
+            ob.child.push(kr);
+          }
+        }
+      } 
+      else{
+        debugger;
+        for (let ob of this.dataOKR) {
+          if (ob.recID == kr.parentID) {
+            if(ob.child==null){
+              ob.child=[];
+            }
+            ob.child.forEach(okr => {
+              if(okr.recID==kr.recID){
+                for(const field in okr){
+                  okr[field]=kr[field];
+                }
+              }
+            });
+                    
+          }
+        }
+      }     
+    }    
+  }
+  
 
+  renderSKR(skr:any,isAdd:boolean){
+    if (skr!=null) {
+      if(isAdd){
+        for (let ob of this.dataOKR) {
+          if (ob.child!=null) {
+              for (let kr of ob.child) {
+                if (kr.recID == skr.parentID) {
+                  if(kr.child==null){
+                    kr.child=[];
+                  }
+                  kr.child.push(skr);
+                }
+              }          
+            
+          }
+        }
+      }
+      else{
+        for (let ob of this.dataOKR) {
+          if (ob.child!=null) {
+              for (let kr of ob.child) {
+                if (kr.recID == skr.parentID) {
+                  if(kr.child==null){
+                    kr.child=[];
+                  }
+                  for(let oldSKR of kr.child){
+                    if(oldSKR.recID==skr.recID)
+                    {
+                      debugger;
+                      for(const field in oldSKR){
+                        oldSKR[field]=skr[field];
+                      }
+                    }
+                  }
+                }
+              }          
+            
+          }
+        }
+      }
+      
+    }
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Event-----------------------//
@@ -409,7 +501,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     //  ]
     // );
   }
-  addOB(o: any = null) {
+  addOB() {
     let option = new SidebarModel();
     option.FormModel = this.formModelOB;
     let dialogOB = this.callfc.openSide(
@@ -431,7 +523,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
   //Thêm mới KR
   addKR() {    
-    let notSubKR=false;
     let option = new SidebarModel();
     option.FormModel = this.formModelKR;
 
@@ -442,27 +533,16 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         OMCONST.MFUNCID.Add,
         'Thêm ' + this.addKRTitle.toLowerCase(),
         null,
-        notSubKR,
+        _notSubKR,
       ],
       option
     );
     dialogKR.closed.subscribe((res) => {
-      if (res && res?.event) {
-        for (let ob of this.dataOKR) {
-          if (ob.recID == res?.event.parentID) {
-            if(ob.child==null){
-              ob.child=[];
-            }
-            ob.child.push(res?.event);
-            ob.items=ob.child;
-          }
-        }
-      }
+      this.renderKR(res?.event,_isAdd)
     });
   }
   //Thêm mới SKR
   addSKR() {
-    let isSubKR=true;
     let option = new SidebarModel();
     option.FormModel = this.formModelSKR;
 
@@ -473,27 +553,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         OMCONST.MFUNCID.Add,
         'Thêm ' + this.addSKRTitle.toLowerCase(),
         null,
-        isSubKR,
+        _isSubKR,
       ],
       option
     );
     dialogSKR.closed.subscribe((res) => {
-      if (res && res?.event) {
-        for (let ob of this.dataOKR) {
-          if (ob.child!=null) {
-              for (let kr of ob.child) {
-                if (kr.recID == res.event.parentID) {
-                  if(kr.child==null){
-                    kr.child=[];
-                  }
-                  kr.child.push(res.event);
-                }
-              }
-            
-            
-          }
-        }
-      }
+      this.renderSKR(res?.event,_isAdd)      
     });
   }
   //Chia sẻ bộ mục tiêu

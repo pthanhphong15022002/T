@@ -19,6 +19,7 @@ import { PopSettingExchangeComponent } from '../pop-setting-exchange/pop-setting
   styleUrls: ['./pop-add-currency.component.css']
 })
 export class PopAddCurrencyComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @Input() headerText: string;
@@ -79,115 +80,17 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
       
     }
     }
+    //#endregion
+
+    //#region Init
     onInit(): void {
       
     }
-
   ngAfterViewInit() {
   }
-  onSave(){
-    var dataexchange = JSON.parse(localStorage.getItem('dataexchange'));
-    if (dataexchange != null) {
-      if (dataexchange.Multiply != null) {
-        this.currencies.multiply = dataexchange.Multiply;
-      }     
-    }
-    if (this.curID.trim() == '' || this.curID == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['CurrencyID'].headerText + '"'
-      );
-      return;
-    }
-    if (this.symbol.trim() == '' || this.symbol == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['Symbol'].headerText + '"'
-      );
-      return;
-    }
-    if (this.curName.trim() == '' || this.curName == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['CurrencyName'].headerText + '"'
-      );
-      return;
-    }
-    if (this.formType == 'add') {   
-      this.dialog.dataService
-      .save((opt: RequestOption) => {
-        opt.methodName = 'AddAsync';
-        opt.className = 'CurrenciesBusiness';
-        opt.assemblyName = 'BS';
-        opt.service = 'BS';
-        opt.data = [this.currencies];
-        return true;
-      })
-      .subscribe((res) => {
-        if (res.save) {        
-          for(var i=0;i<this.objectExchange.length;i++){
-            this.objectExchange[i].CurrencyID = this.curID;   
-          }
-          this.api.exec(
-            'ERM.Business.BS',
-            'ExchangeRatesBusiness',
-            'AddAsync',
-            [this.objectExchange]
-          ).subscribe((res:[])=>{
-            if(res){
-              window.localStorage.removeItem("dataexchangeRate");
-              window.localStorage.removeItem("dataexchange");
-              this.dialog.close();
-              this.dt.detectChanges();
-            }
-          });       
-        }else{
-          this.notification.notifyCode(
-            'SYS031',
-            0,
-            '"' + this.curID + '"'
-          );
-          return;      
-        }
-      });
-    }
-    if (this.formType == 'edit') {
-      this.dialog.dataService
-      .save((opt: RequestOption) => {
-        opt.methodName = 'UpdateAsync';
-        opt.className = 'CurrenciesBusiness';
-        opt.assemblyName = 'BS';
-        opt.service = 'BS';
-        opt.data = [this.currencies];
-        return true;
-      })
-      .subscribe((res) => {
-        console.log(res);
-        if (res.save || res.update) {
-          for(var i=0;i<this.objectExchange.length;i++){
-            this.objectExchange[i].CurrencyID = this.curID;   
-          }
-          this.api.exec(
-            'ERM.Business.BS',
-            'ExchangeRatesBusiness',
-            'UpdateAsync',
-            [this.objectExchange]
-          ).subscribe((res:[])=>{
-            if(res){
-              window.localStorage.removeItem("dataexchangeRate");
-              window.localStorage.removeItem("dataexchange");
-              this.dialog.close();
-              this.dt.detectChanges();
-            }
-          });     
-        }
-      });
-    }
-    
-  }
+    //#endregion
+ 
+    //#region Function
   valueChangecurID(e: any) {
     if (e) {
       this.curID = e.data;
@@ -333,4 +236,111 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
       }
     });
   }
+  //#endregion
+
+  //#region CRUD
+  onSave(){
+    var dataexchange = JSON.parse(localStorage.getItem('dataexchange'));
+    if (dataexchange != null) {
+      if (dataexchange.Multiply != null) {
+        this.currencies.multiply = dataexchange.Multiply;
+      }     
+    }
+    if (this.curID.trim() == '' || this.curID == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['CurrencyID'].headerText + '"'
+      );
+      return;
+    }
+    if (this.symbol.trim() == '' || this.symbol == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Symbol'].headerText + '"'
+      );
+      return;
+    }
+    if (this.curName.trim() == '' || this.curName == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['CurrencyName'].headerText + '"'
+      );
+      return;
+    }
+    if (this.formType == 'add') {   
+      this.dialog.dataService
+      .save((opt: RequestOption) => {
+        opt.methodName = 'AddAsync';
+        opt.className = 'CurrenciesBusiness';
+        opt.assemblyName = 'BS';
+        opt.service = 'BS';
+        opt.data = [this.currencies];
+        return true;
+      })
+      .subscribe((res) => {
+        if (res.save) {        
+          for(var i=0;i<this.objectExchange.length;i++){
+            this.objectExchange[i].CurrencyID = this.curID;   
+          }
+          this.api.exec(
+            'ERM.Business.BS',
+            'ExchangeRatesBusiness',
+            'AddAsync',
+            [this.objectExchange]
+          ).subscribe((res:[])=>{
+            if(res){
+              window.localStorage.removeItem("dataexchangeRate");
+              window.localStorage.removeItem("dataexchange");
+              this.dialog.close();
+              this.dt.detectChanges();
+            }
+          });       
+        }else{
+          this.notification.notifyCode(
+            'SYS031',
+            0,
+            '"' + this.curID + '"'
+          );
+          return;      
+        }
+      });
+    }
+    if (this.formType == 'edit') {
+      this.dialog.dataService
+      .save((opt: RequestOption) => {
+        opt.methodName = 'UpdateAsync';
+        opt.className = 'CurrenciesBusiness';
+        opt.assemblyName = 'BS';
+        opt.service = 'BS';
+        opt.data = [this.currencies];
+        return true;
+      })
+      .subscribe((res) => {
+        console.log(res);
+        if (res.save || res.update) {
+          for(var i=0;i<this.objectExchange.length;i++){
+            this.objectExchange[i].CurrencyID = this.curID;   
+          }
+          this.api.exec(
+            'ERM.Business.BS',
+            'ExchangeRatesBusiness',
+            'UpdateAsync',
+            [this.objectExchange]
+          ).subscribe((res:[])=>{
+            if(res){
+              window.localStorage.removeItem("dataexchangeRate");
+              window.localStorage.removeItem("dataexchange");
+              this.dialog.close();
+              this.dt.detectChanges();
+            }
+          });     
+        }
+      });
+    }
+    
+  }
+  //#endregion
 }

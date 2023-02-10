@@ -11,6 +11,7 @@ import { PopAddContactComponent } from '../pop-add-contact/pop-add-contact.compo
   styleUrls: ['./pop-add-address.component.css']
 })
 export class PopAddAddressComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('form',{ static:true})  form: CodxFormComponent;
   dialog!: DialogRef;
   headerText:string;
@@ -62,7 +63,9 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
       this.objectContactAddress = dialogData.data?.datacontactaddress;
     }
   }
+//#endregion
 
+//#region Init
   onInit(): void {
   }
   ngAfterViewInit() {
@@ -76,25 +79,34 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
       this.address.recID = Guid.newGuid();
     }
   }
+  //#endregion
+
+  //#region Function
   valueChange(e:any,type:any){
-    if (type == 'adressType') {
-      this.adressType = e.data;
-    }
-    if (type == 'adressName') {
-      this.adressName = e.data;
-    }
-    if (type == 'countryID') {
-      this.countryID = e.data;
-    }
-    if (type == 'provinceID') {
-      this.provinceID = e.data;
-    }
-    if (type == 'districtID') {
-      this.districtID = e.data;
-    }
-    if (type == 'postalCode') {
-      this.postalCode = e.data;
-    }
+    this.address[e.field] = e.data;
+  }
+  valueChangeAdressType(e: any) {
+    this.adressType = e.data;
+    this.address[e.field] = e.data;
+  }
+  valueChangeAdressName(e: any) {
+    this.adressName = e.data;
+    this.address[e.field] = e.data;
+  }
+  valueChangeCountryID(e: any) {
+    this.countryID = e.data;
+    this.address[e.field] = e.data;
+  }
+  valueChangeProvinceID(e: any) {
+    this.provinceID = e.data;
+    this.address[e.field] = e.data;
+  }
+  valueChangeDistrictID(e: any) {
+    this.districtID = e.data;
+    this.address[e.field] = e.data;
+  }
+  valueChangePostalCode(e: any) {
+    this.postalCode = e.data;
     this.address[e.field] = e.data;
   }
   openPopupContact(){
@@ -179,6 +191,9 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
         }
       }); 
   }
+  //#endregion
+
+  //#region CRUD
   onSave(){
     if (this.adressType.trim() == '' || this.adressType == null) {
       this.notification.notifyCode(
@@ -232,6 +247,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     window.localStorage.setItem("datacontactaddress",JSON.stringify(this.objectContactAddress));
     this.dialog.close();
   } 
+  //#endregion
 }
 class Guid {
   static newGuid() {

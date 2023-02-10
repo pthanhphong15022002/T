@@ -61,6 +61,7 @@ import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/
 import { PopupEContractComponent } from '../../employee-profile/popup-econtract/popup-econtract.component';
 import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
+import { log } from 'console';
 
 @Component({
   selector: 'lib-employee-detail',
@@ -74,7 +75,7 @@ export class EmployeeDetailComponent extends UIComponent {
   minType = 'MinRange';
   user;
 
-  active = 'HRT03020101';
+  active: string = 'HRTEM0101';
 
   constructor(
     private inject: Injector,
@@ -114,20 +115,22 @@ export class EmployeeDetailComponent extends UIComponent {
 
     console.log('change', evt);
 
-    let footer = document.querySelector('.codx-detail-footer');
-    if (footer) {
-      var f = footer as HTMLElement;
-      let clss = f.classList;
-      if (!clss.contains('expand')) {
-        clss.remove('collape');
-        clss.add('expand');
-      }
-    }
+    // let footer = document.querySelector('.codx-detail-footer');
+    // if (footer) {
+    //   var f = footer as HTMLElement;
+    //   let clss = f.classList;
+    //   if (!clss.contains('expand')) {
+    //     clss.remove('collape');
+    //     clss.add('expand');
+    //   }
+    // }
   }
 
-  loadLabel(funcID){
+  loadLabel(funcID) {
     // function = this.lstFuncID.filter((p) => p.functionID == funcID)[0].customName ?? '';
-    return this.lstFuncID.filter((p) => p.functionID == funcID)[0]?.customName ?? '';
+    return (
+      this.lstFuncID.filter((p) => p.functionID == funcID)[0]?.customName ?? ''
+    );
   }
 
   infoPersonal: any = {};
@@ -266,17 +269,17 @@ export class EmployeeDetailComponent extends UIComponent {
     '7.4': false,
   };
 
-  vllTabs = [
-    { icon: 'icon-apartment', text: 'Thông tin cá nhân' },
-    { icon: 'icon-apartment', text: 'Thông tin công việc' },
-    { icon: 'icon-apartment', text: 'Phúc Lợi' },
-    { icon: 'icon-apartment', text: 'Quá trình nhân sự' },
-    { icon: 'icon-apartment', text: 'Kiến thức' },
-    { icon: 'icon-apartment', text: 'Khen thưởng' },
-    { icon: 'icon-apartment', text: 'Kỷ luật' },
-    { icon: 'icon-apartment', text: 'Sức khỏe' },
-    { icon: 'icon-apartment', text: 'Thôi việc' },
-  ];
+  // vllTabs = [
+  //   { icon: 'icon-apartment', text: 'Thông tin cá nhân' },
+  //   { icon: 'icon-apartment', text: 'Thông tin công việc' },
+  //   { icon: 'icon-apartment', text: 'Phúc Lợi' },
+  //   { icon: 'icon-apartment', text: 'Quá trình nhân sự' },
+  //   { icon: 'icon-apartment', text: 'Kiến thức' },
+  //   { icon: 'icon-apartment', text: 'Khen thưởng' },
+  //   { icon: 'icon-apartment', text: 'Kỷ luật' },
+  //   { icon: 'icon-apartment', text: 'Sức khỏe' },
+  //   { icon: 'icon-apartment', text: 'Thôi việc' },
+  // ];
 
   listEmp: any;
   request: DataRequest;
@@ -295,12 +298,11 @@ export class EmployeeDetailComponent extends UIComponent {
   lstFuncSeverance: any = [];
   lstFuncID: any = [];
 
-  clickItem(evet) {
-    console.log('click', this.active);
-  }
+  clickItem(evet) {}
 
   onSectionChange(data: any) {
-    console.log(data);
+    debugger;
+    console.log('change section', data);
     this.codxMwpService.currentSection = data.current;
     this.detectorRef.detectChanges();
   }
@@ -311,30 +313,31 @@ export class EmployeeDetailComponent extends UIComponent {
       if (res && res[1] > 0) {
         this.lstTab = res[0].filter((p) => p.parentID == this.funcID);
         this.crrFuncTab = this.lstTab[0].functionID;
-        this.lstFuncID = res[0]
+        console.log('crrFuncTab', this.crrFuncTab)
+        this.lstFuncID = res[0];
 
-        this.lstFuncSelfInfo = res[0].filter((p) => p.parentID == 'HRT030201');
+        this.lstFuncSelfInfo = res[0].filter((p) => p.parentID == 'HRTEM01');
         console.log('lstFuncSelfInfo', this.lstFuncSelfInfo);
 
-        this.lstFuncLegalInfo = res[0].filter((p) => p.parentID == 'HRT030209');
+        this.lstFuncLegalInfo = res[0].filter((p) => p.parentID == 'HRTEM02');
         console.log('lstFuncLegalInfo', this.lstFuncLegalInfo);
 
-        this.lstFuncTaskInfo = res[0].filter((p) => p.parentID == 'HRT030202');
+        this.lstFuncTaskInfo = res[0].filter((p) => p.parentID == 'HRTEM03');
         console.log('lstFuncTaskInfo', this.lstFuncTaskInfo);
 
-        this.lstFuncSalary = res[0].filter((p) => p.parentID == 'HRT030203');
+        this.lstFuncSalary = res[0].filter((p) => p.parentID == 'HRTEM04');
         console.log('lstFuncSalary', this.lstFuncSalary);
 
-        this.lstFuncHRProcess = res[0].filter((p) => p.parentID == 'HRT030204');
+        this.lstFuncHRProcess = res[0].filter((p) => p.parentID == 'HRTEM05');
         console.log('lstFuncHRProcess', this.lstFuncHRProcess);
 
-        this.lstFuncKnowledge = res[0].filter((p) => p.parentID == 'HRT030205');
+        this.lstFuncKnowledge = res[0].filter((p) => p.parentID == 'HRTEM06');
         console.log('lstFuncKnowledge', this.lstFuncKnowledge);
 
-        this.lstFuncAward = res[0].filter((p) => p.parentID == 'HRT030206');
+        this.lstFuncAward = res[0].filter((p) => p.parentID == 'HRTEM07');
         console.log('lstFuncAward', this.lstFuncAward);
 
-        this.lstFuncHealth = res[0].filter((p) => p.parentID == 'HRT030207');
+        this.lstFuncHealth = res[0].filter((p) => p.parentID == 'HRTEM08');
         console.log('lstFuncHealth', this.lstFuncHealth);
 
         this.lstFuncArchiveRecords = res[0].filter(
@@ -380,7 +383,6 @@ export class EmployeeDetailComponent extends UIComponent {
 
     this.routeActive.queryParams.subscribe((params) => {
       if (params.employeeID || this.user.userID) {
-        console.log('State', history.state);
         this.listEmp = history.state?.data;
         this.request = history.state?.request;
         if (!this.request && !this.listEmp) {
