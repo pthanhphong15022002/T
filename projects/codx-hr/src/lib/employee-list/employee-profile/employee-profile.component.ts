@@ -97,6 +97,7 @@ export class EmployeeProfileComponent extends UIComponent {
     this.funcID = this.routeActive.snapshot.params['funcID'];
     console.log('dtttt', dialog);
   }
+  @ViewChild("dayoffGridView") dayoffGrid: CodxGridviewComponent;
   @ViewChild("gridView") grid:CodxGridviewComponent;
   @ViewChild("appointionGridView") appointionGrid:CodxGridviewComponent;
   @ViewChild('itemTemplate') template: TemplateRef<any>;
@@ -205,6 +206,7 @@ export class EmployeeProfileComponent extends UIComponent {
   expColumnGrid;
   benefitColumnGrid;
   appointionColumnGrid;
+  dayoffColumnGrid;
 
   //#region ViewChild
   @ViewChild('healthPeriodID', { static: true })
@@ -242,6 +244,15 @@ export class EmployeeProfileComponent extends UIComponent {
   templateAppointionGridCol3: TemplateRef<any>;
   @ViewChild('templateAppointionGridMoreFunc', {static: true}) 
   templateAppointionGridMoreFunc: TemplateRef<any>;
+
+  @ViewChild('templateDayOffGridCol1', {static: true}) 
+  templateDayOffGridCol1: TemplateRef<any>;
+  @ViewChild('templateDayOffGridCol2', {static: true}) 
+  templateDayOffGridCol2: TemplateRef<any>;
+  @ViewChild('templateDayOffGridCol3', {static: true}) 
+  templateDayOffGridCol3: TemplateRef<any>;
+  @ViewChild('templateDayOffGridMoreFunc', {static: true}) 
+  templateDayOffGridMoreFunc: TemplateRef<any>;
   
 
   //#endregion
@@ -295,14 +306,19 @@ export class EmployeeProfileComponent extends UIComponent {
   request: DataRequest;
 
   lstTab: any;
-  benefitFormodel: FormModel;
+
   appointionFormodel: FormModel;
   appointionRowCount;
   appointionFuncID = 'HRTEM0502'
   appointionHeaderTexts;
+  benefitFormodel: FormModel;
   eBenefitRowCount;
   benefitFuncID = 'HRTEM0403'
   benefitHeaderTexts;
+  dayofFormModel: FormModel;
+  dayoffRowCount;
+  dayoffFuncID = 'HRTEM0503'
+  dayoffHeaderTexts
 
   onInit(): void {
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
@@ -326,6 +342,35 @@ export class EmployeeProfileComponent extends UIComponent {
 
     this.hrService.getFormModel(this.appointionFuncID).then(res => {
       this.appointionFormodel = res;
+    })
+
+    this.hrService.getFormModel(this.dayoffFuncID).then(res => {
+      this.dayofFormModel = res;
+    })
+
+    this.hrService.getHeaderText(this.dayoffFuncID).then(res =>{
+      this.dayoffHeaderTexts = res;
+      this.dayoffColumnGrid = [
+        {
+          headerText: this.dayoffHeaderTexts['KowID'] + '|' + this.dayoffHeaderTexts['RegisteredDate'],
+          template: this.templateDayOffGridCol1,
+          width: '150',
+        },
+        {
+          headerText: 'Thời gian nghỉ ' + '|' + 'Số ngày',
+          template: this.templateDayOffGridCol2,
+          width: '150',
+        },
+        {
+          headerText: this.dayoffHeaderTexts['Reason'],
+          template: this.templateDayOffGridCol3,
+          width: '150',
+        },
+        {
+          template: this.templateDayOffGridMoreFunc,
+          width: '150'
+        },
+      ]
     })
     
     this.hrService.getHeaderText(this.benefitFuncID).then(res => {
