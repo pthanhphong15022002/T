@@ -199,7 +199,7 @@ export class NewsComponent extends UIComponent {
       'NewsBusiness',
       'UpdateViewNewsAsync',
       [data.recID]).subscribe();
-      this.codxService.navigate('', '/wp/news/' + this.funcID + '/' + data.category + '/' + data.recID);
+      this.codxService.navigate('', '/news/' + this.funcID + '/' + data.category + '/' + data.recID);
     }
   }
   // open popup create
