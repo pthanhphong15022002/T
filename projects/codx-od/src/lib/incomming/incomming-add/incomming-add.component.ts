@@ -78,7 +78,6 @@ export class IncommingAddComponent implements OnInit {
   }
   public disEdit: any;
   ngOnInit(): void {
-    debugger;
     if (this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
 
