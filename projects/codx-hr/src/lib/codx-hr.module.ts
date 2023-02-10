@@ -122,8 +122,8 @@ export const routes: Routes = [
         children: [
           {
             path: 'employeedetail/:funcID',
-            component: EmployeeProfileComponent,
-            //component: EmployeeDetailComponent,
+            // component: EmployeeProfileComponent,
+            component: EmployeeDetailComponent,
           },
         ],
       },
