@@ -81,6 +81,8 @@ export class InstancesComponent
   instances = new DP_Instances();
   kanban: any;
   listStepsCbx: any;
+  crrStepID : string ;
+
 
   constructor(
     private inject: Injector,
@@ -354,10 +356,12 @@ export class InstancesComponent
   onActions(e) {
     switch (e.type) {
       case 'drop':
-        // xử lý data
+        // xử lý data chuyển công đoạn
+      //  this.moveStage()
         break;
       case 'drag':
         ///bắt data khi kéo
+        this.crrStepID = e?.data?.stepID;
         break;
       case 'dbClick':
         //xư lý dbClick
