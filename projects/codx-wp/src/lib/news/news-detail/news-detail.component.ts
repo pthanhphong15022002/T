@@ -1,6 +1,5 @@
 import { Component, HostBinding, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Post } from '@shared/models/post';
 import { ViewModel, ViewType, DialogModel, UIComponent } from 'codx-core';
 import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { WP_Comments } from '../../models/WP_Comments.model';
@@ -8,12 +7,12 @@ import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from '../popup/popup-search/popup-search.component';
 
 @Component({
-  selector: 'lib-view-detail',
-  templateUrl: './view-detail.component.html',
-  styleUrls: ['./view-detail.component.scss'],
+  selector: 'wp-news-detail',
+  templateUrl: './news-detail.component.html',
+  styleUrls: ['./news-detail.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ViewDetailComponent extends UIComponent {
+export class NewsDetailComponent extends UIComponent {
   @HostBinding('class') get class() {
     return "bg-body h-100 news-main card-body hover-scroll-overlay-y news-detail";
   }
@@ -98,6 +97,7 @@ export class ViewDetailComponent extends UIComponent {
       });
     }
   }
+  //click view detail post
   clickViewDeital(data: any) {
     this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "UpdateViewNewsAsync", data.recID).subscribe(
       (res) => {
@@ -107,9 +107,11 @@ export class ViewDetailComponent extends UIComponent {
         }
       });
   }
+  // navigate view post by tag
   clickTag(tag: any) {
     this.codxService.navigate('', '/wp/news/' + this.funcID + '/tag/' + tag.value);
   }
+  // add
   openPopupAdd(newsType: string) {
     if(this.view){
       let option = new DialogModel();

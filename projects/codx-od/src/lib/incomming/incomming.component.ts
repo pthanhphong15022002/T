@@ -162,6 +162,7 @@ export class IncommingComponent
     this.request.idField = 'recID';
     this.userID = this.authStore.get().userID;
   }
+ 
   ngAfterViewInit(): void {
     this.views = [
       {

@@ -167,7 +167,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     )
       this.gridViewSetup = changes?.gridViewSetup?.currentValue;
     this.active = 1;
-    this.setHeight();
+   
   }
 
   ngOnInit(): void {
@@ -176,10 +176,11 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
     this.getGridViewSetup(this.pfuncID);
+    this.setHeight();
+  
   }
   setHeight() {
-    let main,
-      header = 0;
+    let main = 0, header = 0;
     let ele = document.getElementsByClassName(
       'codx-detail-main'
     ) as HTMLCollectionOf<HTMLElement>;
@@ -198,11 +199,13 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       'codx-detail-body'
     ) as HTMLCollectionOf<HTMLElement>;
     if (nodes.length > 0) {
+      var a = 0;
+      if(this.view.formModel.funcID.includes("ODT8")) a = 70
       Array.from(
         document.getElementsByClassName(
           'codx-detail-body'
         ) as HTMLCollectionOf<HTMLElement>
-      )[0].style.height = main - header - 27 + 'px';
+      )[0].style.height = main - header - 27 - a + 'px';
     }
   }
   getGridViewSetup(funcID: any) {
@@ -849,7 +852,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           )
           .closed.subscribe((x) => {
             if (x.event.status == 'Y') {
-              debugger;
               if (isData) {
                 this.odService
                   .getDetailDispatch(datas.recID, this.formModel.entityName)

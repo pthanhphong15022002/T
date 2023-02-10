@@ -24,8 +24,8 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
   dialog: DialogRef;
   EAppointionObj;
-  lstEAppointions;
-  indexSelected;
+  //lstEAppointions;
+  //indexSelected;
   headerText;
   actionType;
   idField = 'RecID';
@@ -33,7 +33,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   employId;
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('listView') listView: CodxListviewComponent;
+  //@ViewChild('listView') listView: CodxListviewComponent;
 
   onInit(): void {
     this.hrService.getFormModel(this.funcID).then((formModel) => {
@@ -70,19 +70,20 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
+    this.EAppointionObj = data?.data?.appointionObj;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
-    this.lstEAppointions = data?.data?.lstEAppointions;
+    //this.lstEAppointions = data?.data?.lstEAppointions;
 
-    this.indexSelected =
-      data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
+    // this.indexSelected =
+    //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
 
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.EAppointionObj = JSON.parse(
-        JSON.stringify(this.lstEAppointions[this.indexSelected])
-      );
-      // this.formModel.currentData = this.EAppointionObj
-    }
+    // if (this.actionType === 'edit' || this.actionType === 'copy') {
+    //   this.EAppointionObj = JSON.parse(
+    //     JSON.stringify(this.lstEAppointions[this.indexSelected])
+    //   );
+    //   // this.formModel.currentData = this.EAppointionObj
+    // }
   }
 
   initForm() {
@@ -146,16 +147,16 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
           if (p != null) {
             this.EAppointionObj.recID = p.recID;
             this.notify.notifyCode('SYS006');
-            this.lstEAppointions.push(
-              JSON.parse(JSON.stringify(this.EAppointionObj))
-            );
-            console.log('lit e appoint', this.lstEAppointions);
+            // this.lstEAppointions.push(
+            //   JSON.parse(JSON.stringify(this.EAppointionObj))
+            // );
+            // console.log('lit e appoint', this.lstEAppointions);
 
-            if (this.listView) {
-              (this.listView.dataService as CRUDService)
-                .add(this.EAppointionObj)
-                .subscribe();
-            }
+            // if (this.listView) {
+            //   (this.listView.dataService as CRUDService)
+            //     .add(this.EAppointionObj)
+            //     .subscribe();
+            // }
             // this.dialog.close(p)
           } else this.notify.notifyCode('SYS023');
         });
@@ -165,33 +166,41 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            this.lstEAppointions[this.indexSelected] = p;
-            if (this.listView) {
-              (this.listView.dataService as CRUDService)
-                .update(this.lstEAppointions[this.indexSelected])
-                .subscribe();
-            }
+            // this.lstEAppointions[this.indexSelected] = p;
+            // if (this.listView) {
+            //   (this.listView.dataService as CRUDService)
+            //     .update(this.lstEAppointions[this.indexSelected])
+            //     .subscribe();
+            // }
             // this.dialog.close(this.data)
           } else this.notify.notifyCode('SYS021');
         });
     }
   }
 
-  click(data) {
-    this.EAppointionObj = data;
-    this.formModel.currentData = JSON.parse(
-      JSON.stringify(this.EAppointionObj)
-    );
-    this.indexSelected = this.lstEAppointions.findIndex(
-      (p) => p.recID == this.EAppointionObj.recID
-    );
-    this.actionType = 'edit';
-    this.formGroup?.patchValue(this.EAppointionObj);
-    this.cr.detectChanges();
+  ngAfterViewInit(){
+    this.dialog && this.dialog.closed.subscribe(res => {
+      if(!res.event){
+        this.dialog.close(this.EAppointionObj);
+      }
+    })
   }
 
-  afterRenderListView(evt) {
-    this.listView = evt;
-    console.log(this.listView);
-  }
+  // click(data) {
+  //   this.EAppointionObj = data;
+  //   this.formModel.currentData = JSON.parse(
+  //     JSON.stringify(this.EAppointionObj)
+  //   );
+  //   this.indexSelected = this.lstEAppointions.findIndex(
+  //     (p) => p.recID == this.EAppointionObj.recID
+  //   );
+  //   this.actionType = 'edit';
+  //   this.formGroup?.patchValue(this.EAppointionObj);
+  //   this.cr.detectChanges();
+  // }
+
+  // afterRenderListView(evt) {
+  //   this.listView = evt;
+  //   console.log(this.listView);
+  // }
 }

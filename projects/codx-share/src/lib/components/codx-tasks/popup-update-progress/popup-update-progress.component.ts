@@ -51,7 +51,7 @@ export class PopupUpdateProgressComponent implements OnInit {
     this.task = JSON.parse(JSON.stringify(this.data?.data));
     this.moreFunc = this.data?.moreFunc;
     this.title = this.moreFunc.customName;
-    this.task.percentage = this.task?.percentage?.toFixed(2)
+    this.task.percentage = this.task?.percentage?.toFixed(2);
     this.crrpercentage = this.task.percentage;
   }
 
@@ -60,12 +60,15 @@ export class PopupUpdateProgressComponent implements OnInit {
     if (this.task?.percentage == 100) this.percentage100 = true;
   }
   changePercentage(data) {
-    if (data?.data) {
+    if (!data || !data?.data) {
+      this.percentage100 = false;
+      this.task.percentage = 0;
+    } else if (data?.data) {
       this.task.percentage = data?.data?.toFixed(2);
       if (this.task.percentage == 100) this.percentage100 = true;
       else this.percentage100 = false;
-      this.changeDetectorRef.detectChanges();
     }
+    this.changeDetectorRef.detectChanges();
   }
   valueChangePercentage100(e: any) {
     if (e?.data) {
@@ -76,8 +79,8 @@ export class PopupUpdateProgressComponent implements OnInit {
       this.task.percentage = this.crrpercentage;
     }
   }
-  valueChangComment(e){
-    this.comment = e.data ;
+  valueChangComment(e) {
+    this.comment = e.data;
   }
 
   saveData() {
@@ -87,14 +90,22 @@ export class PopupUpdateProgressComponent implements OnInit {
           this.actionUpdatePercentage();
         } else this.dialog.close();
       });
-    }else this.actionUpdatePercentage();
+    } else this.actionUpdatePercentage();
   }
   actionUpdatePercentage() {
-   this.tmSv.updateProgressTask(this.funcID,this.task.taskID,this.task.modifiedOn,this.task.percentage,this.comment).subscribe(res=>{
-    if(res && res.length > 0){
-      this.dialog.close(res) ;
-      this.notiService.notifyCode('SYS007');
-    }
-   })
+    this.tmSv
+      .updateProgressTask(
+        this.funcID,
+        this.task.taskID,
+        this.task.modifiedOn,
+        this.task.percentage,
+        this.comment
+      )
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          this.dialog.close(res);
+          this.notiService.notifyCode('SYS007');
+        }
+      });
   }
 }
