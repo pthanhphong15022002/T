@@ -261,11 +261,6 @@
               <span *ngIf="item?.departmentName">
                 | {{ item?.departmentName }}</span>
             </div>
-
-            <!-- <div class="text-dark" *ngIf="item?.memo == null">
-              <codx-input class="" type="text" (valueChange)="changeMemo2($event,item?.resourceID)"
-                placeholder="Ghi chú phân công..." [disabled]="readOnly"></codx-input>
-            </div> -->
             <div class="text-dark">
               <codx-input class="" type="text" [crrValue]="item?.memo"
                 (valueChange)="changeMemo2($event, item?.resourceID)" placeholder= '{{planholderTaskChild}}'
