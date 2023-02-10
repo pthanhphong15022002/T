@@ -439,6 +439,7 @@ export class IncommingAddComponent implements OnInit {
       p.download = true;
       p.objectID = this.dispatch.owner;
       p.objectType = "U";
+      this.listPermission.push(p);
     }
   }
 }
