@@ -210,7 +210,10 @@
                       class="d-flex justify-content-start align-items-center has-action-menu"
                       style="flex-grow: 1"
                     >
-                      <div class="icon-container" (click)="clickShowTask(taskList?.recID)">
+                      <div
+                        class="icon-container"
+                        (click)="clickShowTask(taskList?.recID)"
+                      >
                         <span
                           class="icon-add_circle icon-20 text-primary-600 py-2"
                         ></span>
@@ -240,6 +243,7 @@
                       </div>
                       <codx-mfunc
                         [formModel]="frmModel"
+                        (changeDataMF)="changeDataMF($event, 'group')"
                         (clickMF)="clickMFTaskGroup($event, taskList)"
                         [isBookMark]="true"
                         [dataItem]="moreDefaut"
@@ -349,6 +353,7 @@
                               [isBookMark]="true"
                               [dataItem]="moreDefaut"
                               [type]="'hover'"
+                              (changeDataMF)="changeDataMF($event, 'task')"
                             >
                             </codx-mfunc>
                           </div>
@@ -483,8 +488,8 @@
       <span style="font-size: 1.2rem; font-weight: 400">{{ item?.text }}</span>
     </div>
     <div style="padding-right: 2rem">
-      <codx-input    
-        type="radio"     
+      <codx-input
+        type="radio"
         pageSize="50"
         [checked]="item?.checked"
       ></codx-input>
@@ -503,7 +508,7 @@
         name="Save"
         formName="Tasks"
         default="Tiếp tục"
-        (click)="openPopupJob()"
+        (click)="openPopupJob(null,'add')"
       ></codx-label>
     </button>
   </div>
@@ -543,7 +548,7 @@
     </div>
 
     <div class="form-group d-flex justify-content-between">
-      <div class="me-2">
+      <div class="me-4">
         <codx-label
           fiedName="startDate"
           [formModel]="grvTaskGroupsForm"
@@ -596,6 +601,7 @@
               [min]="0"
               (valueChange)="changeValueInput($event, taskGroup)"
               [crrValue]="taskGroup?.durationDay"
+              [showSpinButton]="false"
               class="me-2"
             >
             </codx-input>
@@ -605,7 +611,7 @@
               >Ngày</span
             >
           </div>
-          <div class="position-relative">
+          <div class="position-relative ms-2">
             <codx-input
               field="durationHour"
               [formModel]="grvTaskGroupsForm"
@@ -614,6 +620,7 @@
               (valueChange)="changeValueInput($event, taskGroup)"
               [crrValue]="taskGroup?.durationHour"
               class="ms-2"
+              [showSpinButton]="false"
             >
             </codx-input>
             <span
