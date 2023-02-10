@@ -9,7 +9,7 @@
 <ng-template #tabDescription>
   <div class="form-group">
     <div>
-      <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Tên công việc">
+      <codx-label fiedName="TaskName"  [formModel]="form.formModel" default="Tên công việc">
       </codx-label>
     </div>
     <!-- <codx-input field="taskName" [type]="'text'" [placeholder]="gridViewSetup['TaskName']['headerText']"
@@ -22,7 +22,7 @@
   </div>
   <div class="form-group">
     <div>
-      <codx-label name="TaskGroups" formName="Tasks" default="Nhóm công việc">
+      <codx-label fiedName="TaskGroupID" [formModel]="form.formModel"  default="Nhóm công việc">
       </codx-label>
     </div>
     <codx-input field="taskGroupID" [formModel]="form.formModel" [Group]="form.formGroup"
@@ -32,7 +32,7 @@
   <div class="row mx-0">
     <div class="col-6 ps-0">
       <div class="form-group">
-        <codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
+        <codx-label fiedName="DueDate"  [formModel]="form.formModel"  default="Ngày hết hạn">
         </codx-label>
         <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" [crrValue]="task?.dueDate"
           (valueChange)="changeTime($event)" [disabled]="disableDueDate">
