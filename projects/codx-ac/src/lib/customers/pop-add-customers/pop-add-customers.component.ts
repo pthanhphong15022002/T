@@ -4,6 +4,7 @@ import {
   Injector,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -37,6 +38,7 @@ import { PopAddContactComponent } from '../pop-add-contact/pop-add-contact.compo
 export class PopAddCustomersComponent extends UIComponent implements OnInit {
   //#region Contructor
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('firstComment') firstComment: TemplateRef<any>;
   title: string;
   headerText: string;
   formModel: FormModel;
@@ -52,6 +54,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   gridViewSetupBank: any;
   customerID: any;
   formType: any;
+  showErrMess = false;
+  errorMessage :any;
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     {
@@ -112,6 +116,9 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       });
     this.cache.valueList('AC015').subscribe((res) => {
       this.valuelist = res.datas;
+    });
+    this.cache.message('SYS028').subscribe((res) => {
+      if (res) this.errorMessage = res.customName || res.defaultName;
     });
     if (this.customers.customerID != null) {
       this.customerID = this.customers.customerID;
