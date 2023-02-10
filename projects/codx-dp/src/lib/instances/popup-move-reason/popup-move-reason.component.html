@@ -35,14 +35,13 @@
         </codx-label>
         </div>
 
-      <codx-input
-        field="processID"
-        [formModel]="form.formModel"
-        [Group]=""
-        type="valuelist"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
+        <ejs-combobox
+        id="recID"
+        [dataSource]="listCbxProccess"
+        [fields]="fieldCbxProccess"
+        (valueChange)="cbxChange($event)"
+        [value]=""
+      ></ejs-combobox>
 
       <div class="col-12">
         <codx-label

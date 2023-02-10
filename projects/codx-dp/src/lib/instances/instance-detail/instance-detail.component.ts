@@ -161,7 +161,11 @@ export class InstanceDetailComponent implements OnInit {
     console.log(e);
     switch (e.functionID) {
       case 'DP09':
-        this.continues(data);
+      // API của bảo nha
+     //   this.continues(data);
+        break;
+      case 'DP02':
+        this
         break;
     }
   }
