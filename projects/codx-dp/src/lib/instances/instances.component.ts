@@ -470,9 +470,9 @@ export class InstancesComponent
     delete listStep[listStep.length - 2];
   }
 
-  // getStepNameById(stepId:string){
-  //   let listStep = JSON.parse(JSON.stringify(this.listStepsCbx));
-  //   return listStep.filter(x=>x.stepID === stepId).map(x=> x.stepName);
-  // }
+  getStepNameById(stepId:string){
+    let listStep = JSON.parse(JSON.stringify(this.listStepsCbx));
+    return listStep.filter(x=>x.stepID === stepId).map(x=> x.stepName);
+  }
   #endregion;
 }
