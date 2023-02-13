@@ -395,7 +395,7 @@ export class InstancesComponent
         var stepCrr = this.dataColums[idx].dataColums;
         let more: any;
         if (!stepCrr?.isSuccessStep && !stepCrr?.isFailStep)
-          this.moveStage(more, data);
+          this.moveStage(more, data,this.listSteps);
         else {
           if (stepCrr?.isSuccessStep) this.moveReason(more, data, true);
           else this.moveReason(more, data, false);
