@@ -362,8 +362,8 @@ export class CodxOmService {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR,
-      'SaveOMAsync',
+      OMCONST.BUSINESS.OB,
+      'AddOBAsync',
       [ob]
     );
   }
@@ -371,21 +371,21 @@ export class CodxOmService {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR,
-      'UpdateOKRAsync',
+      OMCONST.BUSINESS.OB,
+      'EditOBAsync',
       [ob]
     );
   }
-  addKR(kr:any) {
+  deleteOB(kr:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.KR,
-      'AddKRAsync',
+      OMCONST.BUSINESS.OB,
+      'DeleteOBAsync',
       [kr]
     );
   }
-  copyKR(kr:any) {
+  addKR(kr:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
@@ -492,28 +492,7 @@ export class CodxOmService {
       'GetListAlignAssignAsync',
       [recID,refType]
     );
-  }
-  //Thêm một mục tiêu
-  addOKR(okr:any) {
-    return this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR,
-      'SaveOMAsync',
-      okr
-    );
-  }
-
-  //Chỉnh sửa mục tiêu
-  updateOKR(okr:any) {
-    return this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR,
-      'UpdateOKRAsync',
-      okr
-    );
-  }
+  }  
   //Lấy OB và tất cả KR con theo ID của OB
   getObjectAndKRChild(recID:string) {
     return this.api.execSv(

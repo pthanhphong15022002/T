@@ -122,7 +122,7 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         field="memo"
-        [crrValue]="instancesStepOld.memo || ''"
+        [crrValue]="instancesStepOld?.memo || ''"
         (valueChange)="valueChange($event)"
       >
       </codx-input>

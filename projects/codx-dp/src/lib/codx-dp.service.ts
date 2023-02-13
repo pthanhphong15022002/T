@@ -266,7 +266,7 @@ export class CodxDpService {
       'InstanceStepsBusiness',
       'MoveStageByIdInstnaceAsync',
       data
-    ).subscribe();
+    );
   }
   updateHistoryViewProcessesAsync(recID: string) {
     return this.api.exec<any>(
