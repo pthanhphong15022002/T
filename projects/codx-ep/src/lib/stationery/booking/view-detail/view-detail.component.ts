@@ -29,6 +29,7 @@ export class BookingStationeryViewDetailComponent
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();
   @Output('release') release: EventEmitter<any> = new EventEmitter();
+  @Output('allocate') allocate: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
     new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
@@ -110,6 +111,8 @@ export class BookingStationeryViewDetailComponent
       case 'EP8T1101': //Copy.
         this.lviewRelease(data);
         break;
+      case 'EPT40303': //Cấp phát
+        this.lviewAllocate(data);
     }
   }
 
@@ -136,6 +139,12 @@ export class BookingStationeryViewDetailComponent
   lviewRelease(data?) {
     if (data) {
       this.release.emit(data);
+    }
+  }
+
+  lviewAllocate(data?) {
+    if (data) {
+      this.allocate.emit(data);
     }
   }
 
