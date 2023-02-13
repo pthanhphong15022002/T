@@ -268,4 +268,12 @@ export class CodxDpService {
       data
     );
   }
+  updateHistoryViewProcessesAsync(recID: string) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'UpdateHistoryViewAsync',
+      recID
+    );
+  }
 }

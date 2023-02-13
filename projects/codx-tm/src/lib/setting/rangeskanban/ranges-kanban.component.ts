@@ -1,38 +1,52 @@
 import { AddEditComponent } from './addEdit/addEdit.component';
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { NotificationsService } from 'codx-core';
 import { RequestOption } from 'codx-core';
-import { ButtonModel, DialogRef, SidebarModel, ViewModel, ViewsComponent, ViewType, CallFuncService } from 'codx-core';
+import {
+  ButtonModel,
+  DialogRef,
+  SidebarModel,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+  CallFuncService,
+} from 'codx-core';
 import { title } from 'process';
-
 
 @Component({
   selector: 'lib-ranges-kanban',
   templateUrl: './ranges-kanban.component.html',
-  styleUrls: ['./ranges-kanban.component.css']
+  styleUrls: ['./ranges-kanban.component.css'],
 })
 export class RangesKanbanComponent implements OnInit {
-  @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
-  @ViewChild("itemRangeID", { static: true }) itemRangeID: TemplateRef<any>;
-  @ViewChild("itemRangeName", { static: true }) itemRangeName: TemplateRef<any>;
-  @ViewChild("itemNote", { static: true }) itemNote: TemplateRef<any>;
-  @ViewChild("itemRange", { static: true }) itemRange: TemplateRef<any>;
-  @ViewChild("itemCreatedBy", { static: true }) itemCreatedBy: TemplateRef<any>;
-  @ViewChild("itemCreatedOn", { static: true }) itemCreatedOn: TemplateRef<any>;
+  @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
+  @ViewChild('itemRangeID', { static: true }) itemRangeID: TemplateRef<any>;
+  @ViewChild('itemRangeName', { static: true }) itemRangeName: TemplateRef<any>;
+  @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
+  @ViewChild('itemRange', { static: true }) itemRange: TemplateRef<any>;
+  @ViewChild('itemCreatedBy', { static: true }) itemCreatedBy: TemplateRef<any>;
+  @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
   dialog!: DialogRef;
-  titleAction = ''
+  titleAction = '';
 
   columnsGrid = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   views: Array<ViewModel> = [];
   itemSelected: any;
-  constructor(private dt: ChangeDetectorRef,
+  constructor(
+    private dt: ChangeDetectorRef,
     private callfunc: CallFuncService,
-    private notiService: NotificationsService,
-  ) { }
+    private notiService: NotificationsService
+  ) {}
 
   //#region Init
   ngOnInit(): void {
@@ -44,7 +58,6 @@ export class RangesKanbanComponent implements OnInit {
       { width: 200, headerTemplate: this.itemCreatedBy },
       { width: 150, headerTemplate: this.itemCreatedOn },
       { field: '', headerText: '#', width: 30 },
-
     ];
     this.button = {
       id: 'btnAdd',
@@ -65,15 +78,17 @@ export class RangesKanbanComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.views = [{
-      type: ViewType.grid,
-      sameData: true,
-      active: true,
-      model: {
-        resources: this.columnsGrid,
-        template: this.grid,
-      }
-    }];
+    this.views = [
+      {
+        type: ViewType.grid,
+        sameData: true,
+        active: true,
+        model: {
+          resources: this.columnsGrid,
+          template: this.grid,
+        },
+      },
+    ];
     this.view.dataService.methodSave = '';
     this.view.dataService.methodDelete = '';
   }
@@ -86,47 +101,62 @@ export class RangesKanbanComponent implements OnInit {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(AddEditComponent, ['add', this.titleAction], option);
+      this.dialog = this.callfunc.openSide(
+        AddEditComponent,
+        ['add', this.titleAction],
+        option
+      );
       this.dialog.closed.subscribe((x) => {
-        if (!x?.event) this.view.dataService.clear();
-        if (x?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
-        if (x.event == null && this.view.dataService.hasSaved)
-          this.view.dataService
-            .delete([this.view.dataService.dataSelected])
-            .subscribe(x => {
-              this.dt.detectChanges();
-            });
+        // if (!x?.event)
+        this.view.dataService.clear();
+        // if (x?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
+        // if (x.event == null && this.view.dataService.hasSaved)
+        //   this.view.dataService
+        //     .delete([this.view.dataService.dataSelected])
+        //     .subscribe(x => {
+        //       this.dt.detectChanges();
+        //     });
       });
     });
   }
 
   edit(data?) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '550px';
-      this.dialog = this.callfunc.openSide(AddEditComponent, ['edit', this.titleAction], option);
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfunc.openSide(
+          AddEditComponent,
+          ['edit', this.titleAction],
+          option
+        );
 
-      this.dialog.closed.subscribe((x) => {
-        if (!x?.event) this.view.dataService.clear();
-        if (x?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );})
-    });
+        this.dialog.closed.subscribe((x) => {
+          // if (!x?.event)
+          this.view.dataService.clear();
+          // if (x?.event == null)
+          //   this.view.dataService.delete(
+          //     [this.view.dataService.dataSelected],
+          //     false
+          //   );
+        });
+      });
   }
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
-  };
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected])
+      .subscribe();
+  }
   //#endregion
 
   //#region Functions
@@ -134,7 +164,6 @@ export class RangesKanbanComponent implements OnInit {
     console.log('evt: ', evt);
     var t = this;
   }
-
 
   selectedChange(val: any) {
     console.log(val);

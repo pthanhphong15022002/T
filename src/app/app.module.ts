@@ -16,7 +16,6 @@ import {
 } from 'ngx-ui-loader';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FormModel } from 'codx-core';
 
 import {
   AuthService,
@@ -25,12 +24,11 @@ import {
 } from 'codx-core';
 import { ERMModule, SharedModule } from '../shared';
 import { registerLocaleData, CommonModule } from '@angular/common';
-import localeFr from '@angular/common/locales/vi';
+import localeVi from '@angular/common/locales/vi';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { environment } from 'src/environments/environment';
 import { CoreModule } from 'src/core/core.module';
 import { TMModule } from 'projects/codx-tm/src/public-api';
-//import { CodxEpModule } from 'projects/codx-ep/src/public-api';
 import { CodxEp4Module } from 'projects/codx-ep/src/lib/room/codx-ep4.module';
 import { CodxEp7Module } from 'projects/codx-ep/src/lib/car/codx-ep7.module';
 import { CodxEp8Module } from 'projects/codx-ep/src/lib/stationery/codx-ep8.module';
@@ -43,9 +41,67 @@ import { AppConfig } from '@core/services/config/app-config';
 import { RouteReuseStrategy } from '@angular/router';
 import { CodxEiModule } from 'projects/codx-ei/src/public-api';
 import { SosComponent } from '@pages/sos/sos.component';
+import { SocialLoginModule, SocialAuthServiceConfig, AmazonLoginProvider, FacebookLoginProvider, GoogleLoginProvider, MicrosoftLoginProvider } from '@abacritt/angularx-social-login';
 import { LayoutTenantComponent } from '@modules/auth/tenants/layout/layout.component';
 
-registerLocaleData(localeFr);
+const socialConfigFactory = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      setTimeout(()=>{
+        let providers = [];
+        
+        if(environment.saas == 1){
+          if(environment.externalLogin.amazonId){
+            providers.push({
+                id: AmazonLoginProvider.PROVIDER_ID,
+                provider: new AmazonLoginProvider(
+                  environment.externalLogin.amazonId
+                ),
+            });
+          }
+
+          if(environment.externalLogin.googleId){
+            providers.push({
+                id: GoogleLoginProvider.PROVIDER_ID,
+                provider: new GoogleLoginProvider(
+                  environment.externalLogin.googleId
+                ),
+            });
+          }
+
+          if(environment.externalLogin.facebookId){
+            providers.push({
+                id: FacebookLoginProvider.PROVIDER_ID,
+                provider: new FacebookLoginProvider(
+                  environment.externalLogin.facebookId
+                ),
+            });
+          }
+
+          if(environment.externalLogin.microsoftId){
+            providers.push({
+                id: MicrosoftLoginProvider.PROVIDER_ID,
+                provider: new MicrosoftLoginProvider(
+                  environment.externalLogin.microsoftId
+                ),
+            });
+          }
+        }
+
+        var config =  {
+          autoLogin: false,
+          providers: providers,
+        } as SocialAuthServiceConfig;
+
+        resolve(config);
+      }, 100);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+registerLocaleData(localeVi);
 
 function appInitializer(authService: AuthService, appConfig: AppConfigService) {
   return () => {
@@ -94,7 +150,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     AppComponent,
     FileComponent,
     SosComponent,
-    LayoutTenantComponent,
+    LayoutTenantComponent
   ],
   imports: [
     BrowserModule,
@@ -113,7 +169,6 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     ERMModule,
     CodxCoreModule.forRoot({ environment }),
     TMModule.forRoot({ environment }),
-    //CodxEpModule.forRoot({ environment }),
     CodxEp4Module.forRoot({ environment }),
     CodxEp7Module.forRoot({ environment }),
     CodxEp8Module.forRoot({ environment }),
@@ -127,6 +182,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
       animation: 'pulse',
       loadingText: 'This item is actually loading...',
     }),
+    SocialLoginModule,
     NgbModule,
   ],
   exports: [],
@@ -141,6 +197,10 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
       useFactory: appInitializer,
       multi: true,
       deps: [AuthService, AppConfigService],
+    },
+    {
+      provide: 'SocialAuthServiceConfig',
+      useFactory: socialConfigFactory
     },
     { provide: LOCALE_ID, useValue: 'vi-VN' },
     { provide: RouteReuseStrategy, useClass: CacheRouteReuseStrategy },

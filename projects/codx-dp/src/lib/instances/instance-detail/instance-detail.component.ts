@@ -16,6 +16,8 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { CRUDService, ApiHttpService, CacheService } from 'codx-core';
+import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
+import { InstancesComponent } from '../instances.component';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -56,7 +58,8 @@ export class InstanceDetailComponent implements OnInit {
     private dpSv: CodxDpService,
     private api: ApiHttpService,
     private cache: CacheService,
-    private changeDetec: ChangeDetectorRef
+    private changeDetec: ChangeDetectorRef,
+    private popupInstances: InstancesComponent
   ) {
 
   }
@@ -163,6 +166,7 @@ export class InstanceDetailComponent implements OnInit {
       case 'DP09':
       // API của bảo nha
      //   this.continues(data);
+     this.popupInstances.moveStage(e,data,this.listSteps);
         break;
       case 'DP02':
         this

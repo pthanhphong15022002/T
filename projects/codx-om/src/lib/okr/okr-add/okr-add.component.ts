@@ -123,17 +123,17 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
         this.dataOKR.oKRLevel = "9";
       this.dataOKR.interval = "Q";
       this.dataOKR.parentID = this.okrPlans?.recID;
-      this.codxOmService.addOKR(this.dataOKR).subscribe(item=>{
-        if(item) 
-        {
-          this.notifySvr.notifyCode("");
-          this.dialogRef.close(item);
-        }
-      });
+      // this.codxOmService.addOKR(this.dataOKR).subscribe(item=>{
+      //   if(item) 
+      //   {
+      //     this.notifySvr.notifyCode("");
+      //     this.dialogRef.close(item);
+      //   }
+      // });
     }
     else
     {
-      this.codxOmService.updateOKR(this.dataOKR).subscribe();
+      //this.codxOmService.updateOKR(this.dataOKR).subscribe();
     }
   }
 

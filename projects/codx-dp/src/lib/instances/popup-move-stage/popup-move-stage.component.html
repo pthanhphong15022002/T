@@ -6,6 +6,7 @@
   [footer]="footer"
   [dialog]="dialog"
   [formModel]="formModel"
+  [data]="instancesStepOld"
 ></codx-form>
 
 <ng-template #subHeader>
@@ -25,9 +26,9 @@
       >
       </codx-label>
       <ejs-combobox
-        [dataSource]="listStep"
+        [dataSource]="listStepsCbx"
         [fields]="fieldCbxStep"
-        [value]="instanceStep.stepID"
+        [value]="instance.stepID"
         (valueChange)="cbxChange($event)"
       ></ejs-combobox>
     </div>
@@ -46,12 +47,11 @@
       <codx-input
         [formModel]="form.formModel"
         field="actualEnd"
-        [crrValue]="instanceStep.actualEnd"
         [Group]="form.formGroup"
         (valueChange)="valueChange($event)"
       >
       </codx-input>
-
+      <h1>{{instancesStepOld?.actualEnd}}</h1>
       <!-- <div class="col-12">
           <div class="row">
             <div class="col-6">
@@ -122,26 +122,13 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         field="memo"
-        [crrValue]="instanceStep.memo"
+        [crrValue]="instancesStepOld?.memo || ''"
         (valueChange)="valueChange($event)"
       >
       </codx-input>
+      <h1>{{instancesStepOld?.memo}}</h1>
     </div>
 
-    <!-- Tên nhóm công việc [TaskGroups] -->
-    <div class="form-group">
-      <div>
-        <codx-label
-          fiedName="taskGroups"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          default="Công việc chưa hoàn tất"
-        >
-        </codx-label>
-      </div>
-    </div>
-
-    <!-- Tên công việc [Tasks] -->
     <div class="form-group">
       <div>
         <codx-label
@@ -158,11 +145,11 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <div class="not-allowed d-inline">
+    <div class="" id="buttonSave">
       <button
         type="button"
         class="btn btn-primary ms-1"
-        [disabled]="true"
+        [disabled]="isLockStep"
         (click)="onSave()"
       >
         <codx-label

@@ -15,19 +15,8 @@ import {
   FormGroup,
   ValidationErrors,
   ValidatorFn,
-  Validators,
 } from '@angular/forms';
-import { map, Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import {
-  ApiHttpService,
-  AuthService,
-  AuthStore,
-  CacheRouteReuseStrategy,
-  NotificationsService,
-  TenantStore,
-  UrlUtil,
-} from 'codx-core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'codx-login',
@@ -35,6 +24,7 @@ import {
   styleUrls: ['./login-default.component.scss'],
 })
 export class LoginDefaultComponent implements OnInit, OnDestroy {
+  environment = environment;
   @ViewChild('Error') error: ElementRef;
   @Input() defaultAuth: any = {
     email: '', // 'admin@demo.com',
@@ -54,16 +44,38 @@ export class LoginDefaultComponent implements OnInit, OnDestroy {
   @Input() f: any;
   @Input() c: any;
   @Input() fl: any;
-  @Output() submitEvent = new EventEmitter();
+  @Output() submitEvent = new EventEmitter<string>();
   @Output() submitChangePassEvent = new EventEmitter();
   @Output() submitFirstLoginEvent = new EventEmitter();
   @Output() destroyEven = new EventEmitter();
   @Output() forgotPassEven = new EventEmitter();
+
+  externalLogin = false;
+  externalLoginCol = '';
+  externalLoginShowText = true;
+  
   // private fields
-  @Input() unsubscribe: Subscription[] = [];
   constructor(private dt: ChangeDetectorRef) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // if (
+    //   environment.saas == 1 &&
+    //   (environment.externalLogin.amazonId ||
+    //     environment.externalLogin.facebookId ||
+    //     environment.externalLogin.googleId ||
+    //     environment.externalLogin.microsoftId)
+    // ) {
+    //   this.externalLogin = true;
+    //   let iCol = 0;
+    //   if (environment.externalLogin.amazonId) iCol += 1;
+    //   if (environment.externalLogin.facebookId) iCol += 1;
+    //   if (environment.externalLogin.googleId) iCol += 1;
+    //   if (environment.externalLogin.microsoftId) iCol += 1;
+
+    //   this.externalLoginShowText = iCol <= 2;
+    //   this.externalLoginCol = 'col-md-' + (12/iCol);
+    // }
+  }
 
   ngOnDestroy() {
     this.destroyEven.emit();
@@ -84,8 +96,8 @@ export class LoginDefaultComponent implements OnInit, OnDestroy {
     this.dt.detectChanges();
   }
 
-  submit() {
-    this.submitEvent.emit();
+  submit(type?: string) {
+    this.submitEvent.emit(type);
   }
 
   submitChangePass() {

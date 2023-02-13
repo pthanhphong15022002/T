@@ -10,4 +10,13 @@ export abstract class AppConfig {
   themeMode: string;
   sureMeet: any;
   firebase: any;
+  externalLogin: ExternalLogin;
 }
+
+export abstract class ExternalLogin {
+  amazonId: string;
+  facebookId: string;
+  googleId: string;
+  microsoftId: string;
+}
+
