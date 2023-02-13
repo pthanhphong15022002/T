@@ -254,7 +254,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             //----------
             this.dataRequest.dataValue = item.recID;
             //----------
-            this.okrService.getOKR(this.dataRequest).subscribe((item: any) => {
+            this.okrService.getAllOKROfPlan(this.dataOKRPlans.recID).subscribe((item: any) => {
               if (item) {
                 this.dataOKR = item;
               }
@@ -263,7 +263,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         });
     }
   }
-  plac;
   //Lấy fucID con
   funcIDChanged() {
     switch (this.funcID) {
@@ -304,7 +303,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.codxOmService.getFormModel(this.krFuncID).then((krFM) => {
       if (krFM) {
         this.formModelKR = krFM;
-        this.formModelSKR = krFM;
+      }
+    });
+    this.codxOmService.getFormModel(this.skrFuncID).then((skrFM) => {
+      if (skrFM) {
+        this.formModelSKR = skrFM;
       }
     });
     this.codxOmService.getFormModel(this.obFuncID).then((obFM) => {

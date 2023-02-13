@@ -42,7 +42,7 @@ export class CodxTabsComponent implements OnInit {
   //ApprovalProcess
   @Input() transID: string;
   @Input() approveStatus: string;
-  @Input() referType: string =""; //de mac định the any moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
+  @Input() referType: string = ''; //de mac định the any moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
   private all: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
@@ -85,6 +85,22 @@ export class CodxTabsComponent implements OnInit {
       );
     }
     this.changeDetectorRef.detectChanges();
+  }
+
+  ngOnChanges() {
+    if(this.objectID){
+      this.api
+      .execSv('BG', 'BG', 'TrackLogsBusiness', 'CountFooterAsync', [
+        this.objectID,
+        this.referType,
+        this.transID,
+      ])
+      .subscribe((res) => {
+        if(res)
+        this.oCountFooter = res;
+      });
+    }
+   
   }
 
   fileAdded(e: any) {

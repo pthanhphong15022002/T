@@ -71,30 +71,30 @@ export class PopupAddOBComponent extends UIComponent {
   okrPlan: any;//Chờ c thương thiết lập vll
   //Giả lập vll
   //OM003
-  vll={
-    datas : [
-      {
-        value: "9",
-        text: "Tất cả",
-        icon: "All.svg"
-      },
-      {
-        value: "4;P",
-        text: "Phòng & Quản lý của tôi",
-        icon: "MyDeptManagement.svg"
-      },
-      {
-        value: "4",
-        text: "Phòng của tôi",
-        icon: "MyDept.svg"
-      },
-      {
-        value: "P",
-        text: "Quản lý của tôi",
-        icon: "MyManagement.svg"
-      }
-    ]
-  }
+  // vll={
+  //   datas : [
+  //     {
+  //       value: "9",
+  //       text: "Tất cả",
+  //       icon: "All.svg"
+  //     },
+  //     {
+  //       value: "4;P",
+  //       text: "Phòng & Quản lý của tôi",
+  //       icon: "MyDeptManagement.svg"
+  //     },
+  //     {
+  //       value: "4",
+  //       text: "Phòng của tôi",
+  //       icon: "MyDept.svg"
+  //     },
+  //     {
+  //       value: "P",
+  //       text: "Quản lý của tôi",
+  //       icon: "MyManagement.svg"
+  //     }
+  //   ]
+  // }
   okrRecID: any;
   shareModel: any;
   constructor(
@@ -128,18 +128,23 @@ export class PopupAddOBComponent extends UIComponent {
     else{
       this.okrRecID=null;
     }
-    this.codxOmService.getOKRByID(this.okrRecID).subscribe((krModel) => {
+    this.codxOmService.getOKRByID(this.okrRecID).subscribe((krModel:any) => {
       if (krModel) {
+        if(this.funcType == OMCONST.MFUNCID.Add || this.funcType == OMCONST.MFUNCID.Copy){
+          krModel.periodID= this.okrPlan.periodID;          
+          krModel.year= this.okrPlan.year;
+          krModel.interval= this.okrPlan.interval;
+          krModel.transID = this.okrPlan.recID;
+        }
         if (this.funcType == OMCONST.MFUNCID.Add) {
-          this.ob = krModel;
+          
+          this.ob = krModel;          
           if (this.ob.shares && this.ob.shares.length > 0) {
-            this.shareModel = this.ob.targets[0];
-            this.ob.targets=[];
+            this.shareModel = this.ob.shares[0];
+            this.ob.shares=[];
           }
-          this.setPlanToOB();
         } else if (this.funcType == OMCONST.MFUNCID.Edit) {
           this.ob = krModel;
-          this.setPlanToOB();
         } else {
           this.cache
             .gridViewSetup(
@@ -158,9 +163,8 @@ export class PopupAddOBComponent extends UIComponent {
                 debugger
                 for (const fieldName of this.allowCopyField) {
                   krModel[fieldName] = this.oldOB[fieldName];
-                }
+                }                
                 this.ob = krModel;
-                //this.setPlanToOB();
               }
             });
         }
@@ -201,41 +205,29 @@ export class PopupAddOBComponent extends UIComponent {
   }
 
   onSaveForm() {
-    //xóa khi đã lấy được model chuẩn từ setting 
     if (
       this.funcType == OMCONST.MFUNCID.Add ||
       this.funcType == OMCONST.MFUNCID.Copy
     ) {
-      this.ob.okrType = this.isSubKR
-        ? OMCONST.VLL.OKRType.SKResult
-        : OMCONST.VLL.OKRType.KResult;        
+      this.ob.okrType = OMCONST.VLL.OKRType.Obj;        
         this.OKRLevel();
+    }
+    else{
+      this.ob.edited=true;
     }
     
     //---------------------------------------
     this.fGroupAddOB=this.form?.formGroup;
     this.fGroupAddOB.patchValue(this.ob);
     
-    if (this.funcType == OMCONST.MFUNCID.Add) {
+    if (this.funcType == OMCONST.MFUNCID.Add || this.funcType == OMCONST.MFUNCID.Copy) {
       this.methodAdd(this.ob);
     } else if(this.funcType == OMCONST.MFUNCID.Edit) {
       this.methodEdit(this.ob);
-    } else if(this.funcType == OMCONST.MFUNCID.Copy) {
-      this.methodCopy(this.ob);
     }
   }
   methodAdd(ob:any) {
     this.codxOmService.addOB(this.ob).subscribe((res: any) => {
-      if (res) {
-        res.write = true;
-        res.delete = true;
-        this.afterSave(res);
-      }
-    });
-  }
-
-  methodCopy(ob:any) {
-    this.codxOmService.copyKR(this.ob).subscribe((res: any) => {
       if (res) {
         res.write = true;
         res.delete = true;
@@ -254,7 +246,7 @@ export class PopupAddOBComponent extends UIComponent {
     });
   }
   afterSave(ob:any) {
-    if (this.funcType == OMCONST.MFUNCID.Add) {
+    if (this.funcType == OMCONST.MFUNCID.Add || this.funcType == OMCONST.MFUNCID.Copy) {
       this.notificationsService.notifyCode('SYS006');
     } else {
       this.notificationsService.notifyCode('SYS007');
@@ -287,23 +279,7 @@ export class PopupAddOBComponent extends UIComponent {
         break;
     }
     this.detectorRef.detectChanges();
-  }
-  setPlanToOB(){
-    if(this.okrPlan){
-      this.ob.periodID=this.okrPlan.periodID;
-      this.ob.interval=this.okrPlan.interval;
-      this.ob.year=this.okrPlan.year;
-    }
-  }
-  formatInterval(val:any)
-  {
-    if(val) return val.toLowerCase();
-    return ""
-  }
-  changeCalendar(e:any)
-  {
-    this.ob.periodID = e?.text;
-  }
+  }    
   //-----------------------End-------------------------------//
 
   //-----------------------Popup-----------------------------//

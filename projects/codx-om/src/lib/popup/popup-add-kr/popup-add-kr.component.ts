@@ -103,8 +103,10 @@ export class PopupAddKRComponent extends UIComponent {
         if (this.funcType == OMCONST.MFUNCID.Add) {
           this.kr = krModel;
           if (this.kr.targets && this.kr.targets.length > 0) {
-            this.targetModel = this.kr.targets[0];
+            this.targetModel = {...this.kr.targets[0]};
             this.kr.targets=[];
+            this.kr.shares=[];
+            this.kr.checkIns=[];
           }
         } else if (this.funcType == OMCONST.MFUNCID.Edit) {
           this.kr = krModel;
@@ -127,7 +129,9 @@ export class PopupAddKRComponent extends UIComponent {
                 for (const fieldName of this.allowCopyField) {
                   krModel[fieldName] = this.oldKR[fieldName];
                 }
-                this.kr = krModel;
+                this.kr = krModel;                
+                this.kr.shares=[];
+                this.kr.checkIns=[];
               }
             });
         }
@@ -182,6 +186,9 @@ export class PopupAddKRComponent extends UIComponent {
         : OMCONST.VLL.OKRType.KResult;        
         this.OKRLevel();
     }
+    else{
+      this.kr.edited=true;
+    }
     //---------------------------------------
     this.fGroupAddKR = this.form?.formGroup;
     this.fGroupAddKR.patchValue(this.kr);
@@ -191,12 +198,10 @@ export class PopupAddKRComponent extends UIComponent {
       this.calculatorTarget();
       this.onSaveTarget();
     }
-    if (this.funcType == OMCONST.MFUNCID.Add) {
+    if (this.funcType == OMCONST.MFUNCID.Add || this.funcType == OMCONST.MFUNCID.Copy) {
       this.methodAdd(this.kr);
     } else if (this.funcType == OMCONST.MFUNCID.Edit) {
       this.methodEdit(this.kr);
-    } else if (this.funcType == OMCONST.MFUNCID.Copy) {
-      this.methodCopy(this.kr);
     }
   }
   methodAdd(kr: any) {
@@ -208,17 +213,6 @@ export class PopupAddKRComponent extends UIComponent {
       }
     });
   }
-
-  methodCopy(kr: any) {
-    this.codxOmService.copyKR(this.kr).subscribe((res: any) => {
-      if (res) {
-        res.write = true;
-        res.delete = true;
-        this.afterSave(res);
-      }
-    });
-  }
-
   methodEdit(kr: any) {
     this.codxOmService.editKR(this.kr).subscribe((res: any) => {
       if (res) {

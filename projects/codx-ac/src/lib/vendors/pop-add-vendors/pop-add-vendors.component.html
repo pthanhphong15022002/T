@@ -1,13 +1,13 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
     [dialog]="dialog" [subHeader]="subHeader" (setTitle)="setTitle($event)"  [tabContent]="[tabDescription
-    ,tabestablish,tabShipment,tabLocation,tabContact,tabAtm,tabinfo]" [data]="customers">
+    ,tabestablish,tabShipment,tabLocation,tabContact,tabAtm,tabinfo]" [data]="vendors">
 </codx-layout-add>
 <ng-template #subHeader>
   <codx-tag 
     [entityName]="dialog.formModel.entityName"
     [isEdit]="true"
     [disabled]="false"
-    [value]="customers.industries"
+    [value]="vendors.industries"
     field="industries"
     (valueChange)="valueChangeTags($event)"
   ></codx-tag>
@@ -16,15 +16,15 @@
     <div class="form-group">
         <codx-label
             [formModel]="form.formModel"
-            fiedName="custGroupID"
+            fiedName="VendorGroupID"
             default="Nhóm nhà cung cấp"      
           ></codx-label>
           <codx-input
-          [crrValue]="form.data.custGroupID"
+          [crrValue]="form.data.vendorGroupID"
           type="combobox"
-          refValue="CustomerGroups"
-          field="custGroupID" 
-          (valueChange)="valueChange($event,'')"
+          refValue="VendorGroups"
+          field="vendorGroupID" 
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -33,14 +33,14 @@
           <div class="form-group">
             <codx-label
             [formModel]="form.formModel"
-            fiedName="CustomerID"
+            fiedName="VendorID"
             default="Mã nhà cung cấp"
           ></codx-label>
             <codx-input    
-                    [crrValue]="customerID"             
+                    [crrValue]="vendorID"             
                     [formModel]="form.formModel"
-                    field="customerID"
-                    (valueChange)="valueChange($event,'customerID')"
+                    field="vendorID"
+                    (valueChange)="valueChangeVendorID($event)"
                   >
             </codx-input>
           </div>   
@@ -49,14 +49,14 @@
           <div class="form-group">
             <codx-label
             [formModel]="form.formModel"
-            fiedName="CustTaxCode"
+            fiedName="VendorTaxCode"
             default="Mã số thuế"      
           ></codx-label>
           <codx-input
-          [crrValue]="form.data.custTaxCode"
-          field="custTaxCode"
+          [crrValue]="form.data.vendorTaxCode"
+          field="vendorTaxCode"
           [formModel]="form.formModel"
-          (valueChange)="valueChange($event,'')"
+          (valueChange)="valueChange($event)"
             >
         </codx-input>
           </div>
@@ -65,14 +65,14 @@
       <div class="form-group">
         <codx-label
             [formModel]="form.formModel"
-            fiedName="CustomerName"
+            fiedName="VendorName"
             default="Tên nhà cung cấp"      
           ></codx-label>
           <codx-input
-          [crrValue]="form.data.customerName"
-          field="customerName"
+          [crrValue]="form.data.vendorName"
+          field="vendorName"
           [formModel]="form.formModel"
-          (valueChange)="valueChange($event,'')"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -86,7 +86,7 @@
           [crrValue]="form.data.address"
           field="address"
           [formModel]="form.formModel"
-          (valueChange)="valueChange($event,'')"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -102,7 +102,7 @@
                     [crrValue]="form.data.phone"
                     [formModel]="form.formModel"
                     field="phone"
-                    (valueChange)="valueChange($event,'')"
+                    (valueChange)="valueChange($event)"
                   >
             </codx-input>
           </div>   
@@ -118,7 +118,7 @@
           [crrValue]="form.data.email"
           field="email"
           [formModel]="form.formModel"
-          (valueChange)="valueChange($event,'')"
+          (valueChange)="valueChange($event)"
             >
         </codx-input>
           </div>
@@ -133,7 +133,7 @@
           <codx-input
           field="webPage"
           [formModel]="form.formModel"
-          (valueChange)="valueChange($event,'')"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -147,9 +147,10 @@
           ></codx-label>
             <codx-input
                     [crrValue]="form.data.establishYear"
-                    [formModel]="form.formModel"
+                    type="datetime"
+                    format="d"
                     field="establishYear"
-                    (valueChange)="valueChange($event,'establishYear')"
+                    (valueChange)="valueChangeEstablishYear($event)"
                   >
             </codx-input>
           </div>   
@@ -165,7 +166,7 @@
           [crrValue]="form.data.noOfEmployees"
           field="noOfEmployees"
           [formModel]="form.formModel"
-          (valueChange)="valueChange($event,'')"
+          (valueChange)="valueChange($event)"
             >
         </codx-input>
           </div>
@@ -181,7 +182,7 @@
           [crrValue]="form.data.note"
           field="note"
           [formModel]="form.formModel"  
-          (valueChange)="valueChange($event,'')"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -190,7 +191,7 @@
         [checked]="form.data.stop"
         field="stop"
         [formModel]="form.formModel"
-        (valueChange)="valueChange($event,'')"
+        (valueChange)="valueChange($event)"
       >
       </codx-input>
         <codx-label
@@ -220,7 +221,7 @@
                 type="combobox"
                 refValue="PaymentMethods"          
                 field="pmtMethodID"
-                (valueChange)="valueChange($event,'pmtMethodID')"
+                (valueChange)="valueChange($event)"
               >
         </codx-input>
       </div>   
@@ -237,7 +238,7 @@
       type="combobox"
       refValue="PaymentTerms"
       field="pmtTermID"
-      (valueChange)="valueChange($event,'')"
+      (valueChange)="valueChange($event)"
         >
     </codx-input>
       </div>
@@ -262,7 +263,7 @@
                 type="valuelist"
                 refValue="AC007"          
                 field="postDetail"
-                (valueChange)="valueChange($event,'postDetail')"
+                (valueChange)="valueChange($event)"
               >
         </codx-input>
       </div>   
@@ -281,7 +282,7 @@
                 type="valuelist"
                 refValue="AC008"          
                 field="settleInvoice"
-                (valueChange)="valueChange($event,'settleInvoice')"
+                (valueChange)="valueChange($event)"
               >
         </codx-input>
       </div>   
@@ -298,7 +299,7 @@
       type="valuelist"
       refValue="AC009"
       field="settlePayment"
-      (valueChange)="valueChange($event,'')"
+      (valueChange)="valueChange($event)"
         >
     </codx-input>
       </div>
@@ -316,7 +317,7 @@
                 [crrValue]="form.data.creditLimit"         
                 field="creditLimit"
                 [formModel]="form.formModel"
-                (valueChange)="valueChange($event,'settleInvoice')"
+                (valueChange)="valueChange($event)"
                 [min]="0"
               >
         </codx-input>
@@ -334,7 +335,7 @@
       type="valuelist"
       refValue="AC010"
       field="creditBalance"
-      (valueChange)="valueChange($event,'')"
+      (valueChange)="valueChange($event)"
         >
     </codx-input>
       </div>
@@ -353,7 +354,7 @@
                 type="valuelist"
                 refValue="AC012"          
                 field="debtComparision"
-                (valueChange)="valueChange($event,'debtComparision')"
+                (valueChange)="valueChange($event)"
               >
         </codx-input>
       </div>   
@@ -377,7 +378,7 @@
                 [crrValue]="form.data.overdueAmt"            
                 field="overdueAmt"
                 [formModel]="form.formModel"
-                (valueChange)="valueChange($event,'overdueAmt')"
+                (valueChange)="valueChange($event)"
                 [min]="0"
               >
         </codx-input>
@@ -393,7 +394,7 @@
       [crrValue]="form.data.overDueDays"        
       field="overDueDays"
       [formModel]="form.formModel"
-      (valueChange)="valueChange($event,'')"
+      (valueChange)="valueChange($event)"
       [min]="0"
         >
     </codx-input>
@@ -410,7 +411,7 @@
       [crrValue]="form.data.overDueInvoices"       
       field="overDueInvoices"
       [formModel]="form.formModel"
-      (valueChange)="valueChange($event,'')"
+      (valueChange)="valueChange($event)"
       [min]="0"
         >
     </codx-input>
@@ -455,10 +456,9 @@
             <codx-input
             [crrValue]="form.data.delTermID"
             type="combobox"
-            refValue="DeliveryTerms"
-            [formModel]="form.formModel"
+            refValue="DeliveryTermsAC"
             field="delTermID"  
-            (valueChange)="valueChange($event,'')"
+            (valueChange)="valueChange($event)"
             >
             </codx-input>
           </div>   
@@ -472,11 +472,10 @@
           ></codx-label>
           <codx-input
             [crrValue]="form.data.delModeID"
-            [formModel]="form.formModel"
             type="combobox"
-            refValue="DeliveryModes"
+            refValue="DeliveryModesAC"
             field="delModeID"  
-            (valueChange)="valueChange($event,'')"
+            (valueChange)="valueChange($event)"
             >
             </codx-input>
           </div>
@@ -495,7 +494,7 @@
           type="combobox" 
           refValue="Warehouses"
           field="warehouseID"
-          (valueChange)="valueChange($event,'')"
+          (valueChange)="valueChange($event)"
           >
         </codx-input>
           </div>   
@@ -512,7 +511,7 @@
           type="combobox" 
           refValue="Warehouses"
           field="delRouteID"
-          (valueChange)="valueChange($event,'')"
+          (valueChange)="valueChange($event)"
           >
         </codx-input>
           </div>
@@ -532,7 +531,7 @@
             [min]="0"
             [formModel]="form.formModel"
             field="distance"  
-            (valueChange)="valueChange($event,'')"
+            (valueChange)="valueChange($event)"
             >
             </codx-input>
           </div>   
@@ -550,7 +549,7 @@
             [min]="0"
             [formModel]="form.formModel"
             field="leadtime"  
-            (valueChange)="valueChange($event,'')"
+            (valueChange)="valueChange($event)"
             >
             </codx-input>
           </div>
@@ -569,7 +568,7 @@
           type="combobox" 
           refValue="CalendarsAC"
           field="workingDays"
-          (valueChange)="valueChange($event,'')"
+          (valueChange)="valueChange($event)"
           >
         </codx-input>
           </div>   
@@ -579,7 +578,7 @@
         <codx-input
         type="switch"
         field="workingHour"  
-        (valueChange)="valueChange($event,'')"
+        (valueChange)="valueChange($event)"
         [checked]="form.data.workingHour"
         >
         </codx-input>
@@ -594,7 +593,7 @@
         <codx-input
         type="switch"
         field="calendarControl" 
-        (valueChange)="valueChange($event,'')" 
+        (valueChange)="valueChange($event)" 
         [checked]="form.data.calendarControl"
         >
         </codx-input>
@@ -607,16 +606,27 @@
       </div>   
 </ng-template>
 <ng-template #tabLocation>
-    <div class="form-group">
+  <div class="row mx-0 mt-3">
+    <div class="col-11 ps-0">
+      <div class="form-group">
         <codx-label
         [formModel]="form.formModel"
         default="Danh sách địa chỉ"
       ></codx-label>
-      <span (click)="openPopupAddress()" class="icon-add_circle icon-16 me-1"></span>
-      </div>    
+      </div>   
+    </div>
+    <div class="col-1 ps-0">
+      <div class="form-group">
+        <span (click)="openPopupAddress()">
+          <i class="fa-sharp fa-solid fa-plus"></i>
+          <i class="fa-sharp fa-solid fa-location-dot"></i>
+        </span>        
+      </div>
+    </div>
+  </div>   
       <div *ngFor="let item of objectAddress">
-        <div class="fw-bold text-dark fs-5">
-          <span id="{{item.recID}}" [innerHTML]="convertHtml(item.adressType,item.recID)"></span>
+        <div class="fw-bold text-dark fs-5" *ngFor="let value of valuelist">
+          <span *ngIf="item.adressType == value.value">{{value.text}}</span>
         </div>
       <div class="text-gray-500">
           {{item.adressName}}
@@ -673,24 +683,24 @@
         
 </ng-template>
 <ng-template #tabContact>
-    <div class="row mx-0 mt-3">
-        <div class="col-6 ps-0">
-          <div class="form-group">
-            <codx-label
-            [formModel]="form.formModel"
-            default="Danh sách người liên hệ"
-          ></codx-label>
-          </div>   
-        </div>
-        <div class="col-6 pe-0">
-          <div class="form-group">
-            <span (click)="openPopupContact()">
-                <i class="icon-add"></i>
-                <i class="fa-solid fa-user-group"></i>
-            </span>        
-          </div>
-        </div>
+  <div class="row mx-0 mt-3">
+    <div class="col-11 ps-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        default="Danh sách người liên hệ"           
+      ></codx-label>
+      </div>   
+    </div>
+    <div class="col-1 ps-0">
+      <div class="form-group">
+        <span (click)="openPopupContact()">
+          <i class="fa-sharp fa-solid fa-plus"></i>
+          <i class="fa-solid fa-user-group"></i>
+        </span>        
       </div>
+    </div>
+  </div>
       <div class="row pb-5" *ngFor="let item of objectContact">
         <div class="col-6 ps-0">
           <div class="d-flex align-items-top">
@@ -726,8 +736,8 @@
                   </div>
               </div>
               </div>
-              <div class="d-flex">
-                <span id="{{item.contactID}}" class="me-2" [innerHTML]="convertHtml(item.contactType,item.contactID)"></span>     
+              <div class="d-flex" *ngFor="let value of valuelist">
+                <span *ngIf="item.contactType == value.value">{{value.text}}</span>
               </div>
             </div>
             <div class="d-flex align-items-center">
@@ -739,13 +749,24 @@
       </div>
 </ng-template>
 <ng-template #tabAtm>
-    <div class="form-group">
+  <div class="row mx-0 mt-3">
+    <div class="col-11 ps-0">
+      <div class="form-group">
         <codx-label
         [formModel]="form.formModel"
         default="Tài khoản ngân hàng"
       ></codx-label>
-      <span (click)="openPopupBank()" class="icon-add_circle icon-16 me-1"></span>
-      </div> 
+      </div>   
+    </div>
+    <div class="col-1 ps-0">
+      <div class="form-group">
+        <span (click)="openPopupBank()">
+          <i class="fa-sharp fa-solid fa-plus"></i>
+          <i class="fa-solid fa-chart-column"></i>
+        </span>        
+      </div>
+    </div>
+  </div> 
       <div class="row pb-5" *ngFor="let item of objectBankaccount">
         <div class="col-6 ps-0">
           <div class="d-flex align-items-top">
@@ -789,7 +810,7 @@
       type="combobox"
       refValue="Industries"
       field="industries" 
-      (valueChange)="valueChange($event,'')"
+      (valueChange)="valueChange($event)"
     >
     </codx-input>
   </div>
@@ -804,7 +825,7 @@
       type="combobox"
       refValue="SalesChannels"
       field="channelID" 
-      (valueChange)="valueChange($event,'')"
+      (valueChange)="valueChange($event)"
     >
     </codx-input>
   </div>
@@ -819,7 +840,7 @@
       type="combobox"
       refValue="Salespersons"
       field="salespersonID" 
-      (valueChange)="valueChange($event,'')"
+      (valueChange)="valueChange($event)"
     >
     </codx-input>
   </div>
@@ -834,7 +855,7 @@
       type="combobox"
       refValue="SalesConsultants"
       field="salesConsultantID" 
-      (valueChange)="valueChange($event,'')"
+      (valueChange)="valueChange($event)"
     >
     </codx-input>
   </div>
@@ -849,7 +870,7 @@
       type="combobox"
       refValue="Users"
       field="owner" 
-      (valueChange)="valueChange($event,'')"
+      (valueChange)="valueChange($event)"
     >
     </codx-input>
   </div>
@@ -864,7 +885,7 @@
       type="combobox"
       refValue="BusinessUnits"
       field="buid" 
-      (valueChange)="valueChange($event,'')"
+      (valueChange)="valueChange($event)"
     >
     </codx-input>
   </div>
