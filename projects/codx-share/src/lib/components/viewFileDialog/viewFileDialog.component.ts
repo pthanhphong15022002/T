@@ -100,27 +100,21 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
   ngOnInit(): void {
     this.route.queryParams
       .subscribe(params => {
-        if(params)
+        if(params && params.id)
         {
-          if(params.id)
-          {
-            this.api.execSv("DM","DM","FileBussiness","GetFilesByIDAsync",params.id).subscribe(item=>{
-              if(item) 
-              {
-                this.dataFile = item;
-                this.data = item;
-                this.getData();
-              }
-            })
-          }
-          else {
-            this.data = this.dataFile;
-            this.getData();
-          }
+          this.api.execSv("DM","DM","FileBussiness","GetFilesByIDAsync",params.id).subscribe(item=>{
+            if(item) 
+            {
+              this.dataFile = item;
+              this.data = item;
+              this.getData();
+            }
+          })
         }
-        else
+        else if(params)
         {
-          
+          this.data = this.dataFile;
+          this.getData();
         }
       }
     );

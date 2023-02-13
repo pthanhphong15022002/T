@@ -480,11 +480,11 @@ export class TMMeetingsComponent
       );
       this.dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+        // if (e?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
         // if (e && e?.event != null) {
         //   this.getResourecesNew(e?.event?.resources);
         // }
@@ -512,11 +512,11 @@ export class TMMeetingsComponent
         );
         this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
+          // if (e?.event == null)
+          //   this.view.dataService.delete(
+          //     [this.view.dataService.dataSelected],
+          //     false
+          //   );
         });
       });
   }
@@ -537,11 +537,11 @@ export class TMMeetingsComponent
       );
       this.dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+        // if (e?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
         // if (e && e?.event != null) {
         //   this.getResourecesNew(e?.event?.resources);
         // }

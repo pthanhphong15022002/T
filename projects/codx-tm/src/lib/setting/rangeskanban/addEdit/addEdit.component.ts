@@ -1,8 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Optional,
-} from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
 import {
   DialogRef,
   FormModel,
@@ -34,17 +30,16 @@ export class AddEditComponent implements OnInit {
     formName: 'RangeLines',
     gridViewName: 'grvRangeLines',
   };
-  titleAction = ''
-  disabledShowInput = false ;
-  planceHolderAutoNumber = '' ;
+  titleAction = '';
+  disabledShowInput = false;
+  planceHolderAutoNumber = '';
   gridViewSetup: any;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
     private callfc: CallFuncService,
     @Optional() dialog?: DialogRef,
-    @Optional() dialogData?: DialogData,
-
+    @Optional() dialogData?: DialogData
   ) {
     this.dialog = dialog;
     this.master = dialog.dataService!.dataSelected;
@@ -55,39 +50,43 @@ export class AddEditComponent implements OnInit {
     this.formModelRangeLine.userPermission = dialog.formModel.userPermission;
 
     this.api
-    .execSv<any>(
-      'SYS',
-      'AD',
-      'AutoNumberDefaultsBusiness',
-      'GetFieldAutoNoAsync',
-      [this.dialog.formModel.funcID, this.dialog.formModel.entityName]
-    )
-    .subscribe((res) => {
-      if (res && !res.stop) {
-        this.disabledShowInput = true;
-        this.cache.message('AD019').subscribe((mes) => {
-          if (mes)
-            this.planceHolderAutoNumber = mes?.customName || mes?.description;
-        });
-      } else {       
-        this.disabledShowInput = false;
-      }
-    });
+      .execSv<any>(
+        'SYS',
+        'AD',
+        'AutoNumberDefaultsBusiness',
+        'GetFieldAutoNoAsync',
+        [this.dialog.formModel.funcID, this.dialog.formModel.entityName]
+      )
+      .subscribe((res) => {
+        if (res && !res.stop) {
+          this.disabledShowInput = true;
+          this.cache.message('AD019').subscribe((mes) => {
+            if (mes)
+              this.planceHolderAutoNumber = mes?.customName || mes?.description;
+          });
+        } else {
+          this.disabledShowInput = false;
+        }
+      });
   }
   //#region Init
   ngOnInit(): void {
-    this.cache.gridViewSetup(this.dialog.formModel.formName, this.dialog.formModel.gridViewName).subscribe((res) => {
-      if (res) this.gridViewSetup = res;
-    });
+    this.cache
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) this.gridViewSetup = res;
+      });
 
-    this.dialog.beforeClose.subscribe(res => {
+    this.dialog.beforeClose.subscribe((res) => {
       if (res.event == null && this.action == 'edit') {
         this.master.rangeName = this.orgData.rangeName;
-        this.master.note = this.orgData.note
+        this.master.note = this.orgData.note;
       }
       this.dialog.dataService.clear();
-
-    })
+    });
   }
   //#endregion
   //#region master
@@ -97,31 +96,32 @@ export class AddEditComponent implements OnInit {
       return;
     }
 
-    this.dialog.dataService.save((opt: RequestOption) => {
-      opt.service = "BS";
-      opt.assemblyName = "BS";
-      opt.className = "RangesBusiness";
-      if (this.action == "add")
-        opt.methodName = "AddAsync";
-      else
-        opt.methodName = "UpdateAsync";
+    this.dialog.dataService
+      .save((opt: RequestOption) => {
+        opt.service = 'BS';
+        opt.assemblyName = 'BS';
+        opt.className = 'RangesBusiness';
+        if (this.action == 'add') opt.methodName = 'AddAsync';
+        else opt.methodName = 'UpdateAsync';
 
-      opt.data = this.dialog.dataService.dataSelected;
-      return true
-    }, 0).subscribe((res) => {
-      if (res && !res.error) {
-        this.dialog.dataService.hasSaved = false;
-        this.dialog.close(true);
-      }
-    });
+        opt.data = this.dialog.dataService.dataSelected;
+        return true;
+      }, 0)
+      .subscribe((res) => {
+        if (res && !res.error) {
+          this.dialog.dataService.hasSaved = false;
+          this.dialog.close(true);
+        }
+      });
   }
   //#endregion
   //#region line
   addLine(template: any) {
-    this.line.rangeID = this.master.rangeID;
     if (this.action == 'add') {
       this.dialog.dataService.save().subscribe((res) => {
-        if (res && !res.save.error || !res.save.error.isError) {
+        if ((res && !res.save.error) || !res.save.error.isError) {
+          this.line.rangeID = this.master.rangeID =
+            this.dialog.dataService.dataSelected.rangeID;
           this.callfc.openForm(template, '', 500, 400);
         }
       });
@@ -136,10 +136,8 @@ export class AddEditComponent implements OnInit {
   }
 
   saveLine(dialog) {
-    if (!this.line.recID)
-      this.onSaveLine(dialog);
-    else
-      this.onUpdateLine(dialog);
+    if (!this.line.recID) this.onSaveLine(dialog);
+    else this.onUpdateLine(dialog);
   }
 
   onSaveLine(dialog) {
@@ -160,9 +158,8 @@ export class AddEditComponent implements OnInit {
       .exec<any>('BS', 'RangeLinesBusiness', 'UpdateAsync', this.line)
       .subscribe((res) => {
         if (res) {
-          let idx = this.lines.findIndex(x => x.id == this.line.id);
-          if (idx > -1)
-            this.lines[idx] = this.line;
+          let idx = this.lines.findIndex((x) => x.id == this.line.id);
+          if (idx > -1) this.lines[idx] = this.line;
           this.line = new RangeLine();
           this.master.rangeLines = this.lines;
           dialog.close(true);
