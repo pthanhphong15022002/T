@@ -1,3 +1,4 @@
+import { AfterViewInit } from '@angular/core';
 import {
   Component,
   OnInit,
@@ -26,7 +27,10 @@ import { CodxTMService } from '../../codx-tm.service';
   styleUrls: ['./teamdashboard.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TeamDashboardComponent extends UIComponent implements OnInit {
+export class TeamDashboardComponent
+  extends UIComponent
+  implements AfterViewInit
+{
   @ViewChild('content') content: TemplateRef<any>;
   @ViewChildren('team_dashboard') templates: QueryList<any>;
   views: Array<ViewModel> = [];
@@ -42,27 +46,9 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   beginMonth: Date;
   endMonth: Date;
   user: UserModel;
-  isDesc: boolean = true;
-  tasksByGroup: object;
-  status: any = {
-    doneTasks: 0,
-    overdueTasks: 0,
-  };
-  piedata: any;
-  dataBarChart: any = {};
-  rateDoneTaskOnTime: number = 0;
-  qtyTasks: number = 0;
-  vlWork = [];
-  hrWork = [];
-  topEmp = [
-    { name: 'Lê Phạm Hoài Thương 1', tasks: 123 },
-    { name: 'Lê Phạm Hoài Thương 2', tasks: 100 },
-    { name: 'Lê Phạm Hoài Thương 3', tasks: 90 },
-    { name: 'Lê Phạm Hoài Thương 4', tasks: 80 },
-    { name: 'Lê Phạm Hoài Thương 5', tasks: 70 },
-    { name: 'Lê Phạm Hoài Thương 6', tasks: 60 },
-    { name: 'Lê Phạm Hoài Thương 7', tasks: 10 },
-  ];
+  topEmp = [];
+
+  dataSource: any;
 
   rangeColors: RangeColorModel[] = [
     { start: 0, end: 50, color: 'red' },
@@ -264,12 +250,15 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
         },
       },
     ];
+
     this.detectorRef.detectChanges();
   }
 
   getGeneralData() {
     this.tmService.getTeamDBData(this.model).subscribe((res: any) => {
       if (res) {
+        this.dataSource = res;
+        this.detectorRef.detectChanges();
       }
     });
   }

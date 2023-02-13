@@ -49,7 +49,6 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
     const funcID = route.params['funcID'];
     let key = this.getPath(route),
       item: CacheItem = { handle: handle, config: {} };
-    console.log('store ' + key);
     if (route.routeConfig?.children) {
       if (comRef.instance.module || comRef.instance.asideTheme) {
         item.config = {
@@ -59,6 +58,7 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
           asideTheme: comRef.instance.asideTheme,
           toolbar: comRef.instance.toolbar,
           toolbarFixed: comRef.instance.toolbarFixed,
+          theme: comRef.instance.theme,
           asideDisplay: comRef.instance.asideDisplay,
           asideCSSClasses: comRef.instance.asideCSSClasses,
           headerCSSClasses: comRef.instance.headerCSSClasses,
@@ -75,6 +75,8 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
               activeViews: config.activeViews,
               onActiveMenu: config.onActiveMenu,
               activeFav: config.activeFav,
+              predicate: config.predicate,
+              dataValue: config.dataValue,
               autoSetTitle: config.autoSetTitle,
               pageTitle: config.pageTitle,
               pageSubTitle: config.pageSubTitle,
@@ -82,7 +84,9 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
               layoutUrl: config.layoutUrl,
               layoutLogo: config.layoutLogo,
               breadcrumbs: config.breadcrumbs,
-              activeMenu: config.activeMenu?JSON.parse(JSON.stringify(config.activeMenu)):{},
+              activeMenu: config.activeMenu
+                ? JSON.parse(JSON.stringify(config.activeMenu))
+                : {},
             };
           }
 
@@ -95,6 +99,8 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
             activeViews: this.codxSvc.activeViews,
             onActiveMenu: this.codxSvc.onActiveMenu,
             activeFav: this.codxSvc.activeFav,
+            predicate: this.codxSvc.predicate,
+            dataValue: this.codxSvc.dataValue,
             autoSetTitle: this.codxSvc.autoSetTitle,
             pageTitle: this.codxSvc.page.title.value,
             pageSubTitle: this.codxSvc.page.subTitle.value,
@@ -102,7 +108,10 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
             layoutUrl: this.codxSvc.layout.url.value,
             layoutLogo: this.codxSvc.layout.logo.value,
             breadcrumbs: this.codxSvc.page.breadcrumbs.value,
-            activeMenu: this.codxSvc.activeMenu?JSON.parse(JSON.stringify(this.codxSvc.activeMenu)):{},
+            asideKeepActive: this.codxSvc.asideKeepActive,
+            activeMenu: this.codxSvc.activeMenu
+              ? JSON.parse(JSON.stringify(this.codxSvc.activeMenu))
+              : {},
           };
         }
       }
@@ -117,6 +126,8 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
             activeViews: config.activeViews,
             onActiveMenu: config.onActiveMenu,
             activeFav: config.activeFav,
+            predicate: config.predicate,
+            dataValue: config.dataValue,
             autoSetTitle: config.autoSetTitle,
             pageTitle: config.pageTitle,
             pageSubTitle: config.pageSubTitle,
@@ -124,7 +135,9 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
             layoutUrl: config.layoutUrl,
             layoutLogo: config.layoutLogo,
             breadcrumbs: config.breadcrumbs,
-            activeMenu: config.activeMenu?JSON.parse(JSON.stringify(config.activeMenu)):{},
+            activeMenu: config.activeMenu
+              ? JSON.parse(JSON.stringify(config.activeMenu))
+              : {},
           };
         }
         this.codxSvcConfigs.delete(key);
@@ -136,6 +149,8 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
           activeViews: this.codxSvc.activeViews,
           onActiveMenu: this.codxSvc.onActiveMenu,
           activeFav: this.codxSvc.activeFav,
+          predicate: this.codxSvc.predicate,
+          dataValue: this.codxSvc.dataValue,
           autoSetTitle: this.codxSvc.autoSetTitle,
           pageTitle: this.codxSvc.page.title.value,
           pageSubTitle: this.codxSvc.page.subTitle.value,
@@ -143,7 +158,10 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
           layoutUrl: this.codxSvc.layout.url.value,
           layoutLogo: this.codxSvc.layout.logo.value,
           breadcrumbs: this.codxSvc.page.breadcrumbs.value,
-          activeMenu: this.codxSvc.activeMenu?JSON.parse(JSON.stringify(this.codxSvc.activeMenu)):{},
+          asideKeepActive: this.codxSvc.asideKeepActive,
+          activeMenu: this.codxSvc.activeMenu
+            ? JSON.parse(JSON.stringify(this.codxSvc.activeMenu))
+            : {},
         };
       }
     }
@@ -154,13 +172,11 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
   shouldAttach(route: ActivatedRouteSnapshot): boolean {
     const key = this.getPath(route);
     const has = CacheRouteReuseStrategy.stores.has(key);
-    console.log('shouldAttach ' + key + ': ' + has);
     return has;
   }
 
   retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {
     var key = this.getPath(route);
-    console.log('retrieve ' + key);
     if (!CacheRouteReuseStrategy.stores.has(key)) return null;
 
     const item = CacheRouteReuseStrategy.stores.get(key);
@@ -176,6 +192,7 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
           comRef.instance.asideTheme = item.config.asideTheme;
           comRef.instance.toolbar = item.config.toolbar;
           comRef.instance.toolbarFixed = item.config.toolbarFixed;
+          comRef.instance.theme = item.config.theme;
           comRef.instance.asideDisplay = item.config.asideDisplay;
           comRef.instance.asideCSSClasses = item.config.asideCSSClasses;
           comRef.instance.headerCSSClasses = item.config.headerCSSClasses;
@@ -188,13 +205,16 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
           this.codxSvc.activeViews = item.config.codxSvc.activeViews;
           this.codxSvc.onActiveMenu = item.config.codxSvc.onActiveMenu;
           this.codxSvc.activeFav = item.config.codxSvc.activeFav;
-          //this.codxSvc.autoSetTitle = item.config.codxSvc.autoSetTitle;
-          this.codxSvc.page.setTitle(item.config.codxSvc.pageTitle);
+          (this.codxSvc.predicate = item.config.codxSvc.predicate),
+            (this.codxSvc.dataValue = item.config.codxSvc.dataValue),
+            //this.codxSvc.autoSetTitle = item.config.codxSvc.autoSetTitle;
+            this.codxSvc.page.setTitle(item.config.codxSvc.pageTitle);
           this.codxSvc.page.setSubTitle(item.config.codxSvc.pageSubTitle);
           this.codxSvc.layout.setUrl(item.config.codxSvc.layoutUrl);
           this.codxSvc.layout.setLogo(item.config.codxSvc.layoutLogo);
           this.codxSvc.page.setBreadcrumbs(item.config.codxSvc.breadcrumbs);
           this.codxSvc.activeMenu = item.config.codxSvc.activeMenu;
+          this.codxSvc.asideKeepActive = item.config.codxSvc.asideKeepActive;
 
           this.codxSvc.layout.showIconBack = item.config.codxSvc.showIconBack;
           this.codxSvc.autoSetTitle = false;
@@ -203,8 +223,10 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
             item.config.aside,
             item.config.asideFixed,
             item.config.asideTheme,
+            item.config.asideKeepActive,
             item.config.toolbar,
-            item.config.toolbarFixed
+            item.config.toolbarFixed,
+            item.config.theme
           );
 
           if (item.config.module) {
@@ -242,7 +264,9 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
         this.codxSvc.activeViews = item.config.codxSvc.activeViews;
         this.codxSvc.onActiveMenu = item.config.codxSvc.onActiveMenu;
         this.codxSvc.activeFav = item.config.codxSvc.activeFav;
-        this.codxSvc.autoSetTitle = item.config.codxSvc.autoSetTitle;
+        (this.codxSvc.predicate = item.config.codxSvc.predicate),
+          (this.codxSvc.dataValue = item.config.codxSvc.dataValue),
+          (this.codxSvc.autoSetTitle = item.config.codxSvc.autoSetTitle);
         //this.codxSvc.page.setTitle(item.config.codxSvc.pageTitle);
         //this.codxSvc.page.setSubTitle(item.config.codxSvc.pageSubTitle);
         //this.codxSvc.layout.setUrl(item.config.codxSvc.layoutUrl);
@@ -250,6 +274,7 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
         this.codxSvc.layout.showIconBack = item.config.codxSvc.showIconBack;
         this.codxSvc.page.setBreadcrumbs(item.config.codxSvc.breadcrumbs);
         this.codxSvc.activeMenu = item.config.codxSvc.activeMenu;
+        this.codxSvc.asideKeepActive = item.config.codxSvc.asideKeepActive;
 
         this.codxSvc.cacheService.functionList(funcID).subscribe((f: any) => {
           if (f) {
@@ -281,15 +306,6 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
           future.routeConfig?.component === curr.routeConfig?.component)) &&
       !future.data['alwaysRefresh'];
 
-    console.log(
-      'shouldReuseRoute ' +
-        this.getPath(curr) +
-        '=>' +
-        this.getPath(future) +
-        ':' +
-        ok
-    );
-
     if (!ok && this.codxSvc) {
       const key = this.getPath(curr);
       const codxSvcConfig = {
@@ -299,6 +315,8 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
         activeViews: this.codxSvc.activeViews,
         onActiveMenu: this.codxSvc.onActiveMenu,
         activeFav: this.codxSvc.activeFav,
+        predicate: this.codxSvc.predicate,
+        dataValue: this.codxSvc.dataValue,
         autoSetTitle: this.codxSvc.autoSetTitle,
         pageTitle: this.codxSvc.page.title.value,
         pageSubTitle: this.codxSvc.page.subTitle.value,
@@ -306,7 +324,10 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
         layoutUrl: this.codxSvc.layout.url.value,
         layoutLogo: this.codxSvc.layout.logo.value,
         breadcrumbs: this.codxSvc.page.breadcrumbs.value,
-        activeMenu: this.codxSvc.activeMenu?JSON.parse(JSON.stringify(this.codxSvc.activeMenu)):{},
+        asideKeepActive: this.codxSvc.asideKeepActive,
+        activeMenu: this.codxSvc.activeMenu
+          ? JSON.parse(JSON.stringify(this.codxSvc.activeMenu))
+          : {},
       };
       this.codxSvcConfigs.set(key, codxSvcConfig);
     }

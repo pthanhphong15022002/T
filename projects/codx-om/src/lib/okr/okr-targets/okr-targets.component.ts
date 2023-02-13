@@ -253,16 +253,18 @@ export class OkrTargetsComponent implements OnInit {
       }
     }
   }
-  clickKRMF(e: any, kr: any) {
+  clickKRMF(e: any, kr: any, isSKR:boolean) {
     let popupTitle = e.text + ' ' + this.krTitle;
     var funcID = e?.functionID;
     switch (funcID) {
       case OMCONST.MFUNCID.Edit: {
-        this.editKR(kr, popupTitle);
+        debugger
+        this.editKR(kr, popupTitle,isSKR);
         break;
       }
       case OMCONST.MFUNCID.Copy: {
-        this.copyKR(kr, popupTitle);
+        debugger
+        this.copyKR(kr, popupTitle, isSKR);
         break;
       }
       case OMCONST.MFUNCID.Delete: {

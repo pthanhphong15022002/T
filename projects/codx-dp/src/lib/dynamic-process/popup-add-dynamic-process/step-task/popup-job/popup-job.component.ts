@@ -23,7 +23,7 @@ export class PopupJobComponent implements OnInit {
   title = '';
   dialog!: DialogRef;
   formModelMenu: FormModel;
-  stepType = '';
+  taskType = '';
   vllShare = 'BP021';
   taskName = '';
   taskGroupName = '';
@@ -44,6 +44,7 @@ export class PopupJobComponent implements OnInit {
   dataCombobox = [];
   valueInput = '';
   litsParentID = [];
+  listJobType = [];
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -51,25 +52,24 @@ export class PopupJobComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.status = dt?.data[0];
-    this.title = dt?.data[1]['text'];
-    this.stepType = dt?.data[1]['id'];
+    this.taskType = dt?.data[1];
     this.stepID = dt?.data[2];
     this.groupTackList = dt?.data[3];
     this.dialog = dialog;
     if (this.status == 'add') {
       this.stepsTasks = new DP_Steps_Tasks();
-      this.stepsTasks['taskType'] = this.stepType;
+      this.stepsTasks['taskType'] = this.taskType;
       this.stepsTasks['stepID'] = this.stepID;
     } else {
       this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
-      this.stepType = this.stepsTasks.taskType;
+      this.taskType = this.stepsTasks.taskType;
     }
     this.taskList = dt?.data[5];
     this.taskName = dt?.data[6];
   }
   ngOnInit(): void {
+    this.getTypeTask();
     this.listOwner = this.stepsTasks['roles'];
-    console.log(this.taskList);
     if(this.stepsTasks['parentID']){
       this.litsParentID = this.stepsTasks['parentID'].split(';');
     }
@@ -96,6 +96,15 @@ export class PopupJobComponent implements OnInit {
       }
       this.valueInput = this.dataCombobox.filter(x => x.checked).map(y => y.value).join('; ');
     }
+  }
+  getTypeTask(){
+    this.cache.valueList('DP035').subscribe((res) => {
+      if (res.datas) {
+        this.listJobType = res.datas
+        let type = this.listJobType.find(x => x.value === this.taskType)
+        this.title = type['text'];
+      }
+    });
   }
   valueChangeText(event) {
     this.stepsTasks[event?.field] = event?.data;
