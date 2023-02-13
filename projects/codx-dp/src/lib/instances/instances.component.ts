@@ -314,7 +314,8 @@ export class InstancesComponent
         this.delete(data);
         break;
       case 'DP09':
-        this.moveStage(e.data, data);
+        // listStep by Id Instacess is null
+        this.moveStage(e.data, data,null);
         break;
       case 'DP02':
         this.moveReason(e.data, data, e.functionID, !this.isMoveSuccess);
@@ -390,7 +391,7 @@ export class InstancesComponent
   // end code
 
   #region;
-  moveStage(dataMore, data) {
+  moveStage(dataMore, data, instanceStep) {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -409,6 +410,7 @@ export class InstancesComponent
               formModel: formMD,
               instance: data,
               listStep: this.listStepsCbx,
+              instanceStep: instanceStep,
             };
 
             var dialogMoveStage = this.callfc.openForm(
@@ -493,8 +495,8 @@ export class InstancesComponent
   }
 
   deleteListReason(listStep: any): void {
-    delete listStep[listStep.length - 1];
-    delete listStep[listStep.length - 2];
+    listStep.pop();
+    listStep.pop();
   }
 
   getStepNameById(stepId: string): string {

@@ -266,6 +266,6 @@ export class CodxDpService {
       'InstanceStepsBusiness',
       'MoveStageByIdInstnaceAsync',
       data
-    );
+    ).subscribe();
   }
 }
