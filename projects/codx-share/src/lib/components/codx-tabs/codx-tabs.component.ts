@@ -88,15 +88,19 @@ export class CodxTabsComponent implements OnInit {
   }
 
   ngOnChanges() {
-    this.api
+    if(this.objectID){
+      this.api
       .execSv('BG', 'BG', 'TrackLogsBusiness', 'CountFooterAsync', [
         this.objectID,
         this.referType,
         this.transID,
       ])
       .subscribe((res) => {
+        if(res)
         this.oCountFooter = res;
       });
+    }
+   
   }
 
   fileAdded(e: any) {
