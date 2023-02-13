@@ -168,12 +168,8 @@ export class InstancesComponent
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        //   this.genAutoNumberNo();
         this.titleAction = evt.text;
         this.add();
-        // this.delete(this.instances);
-        // this.moveStage();
-
         break;
     }
   }
@@ -187,7 +183,6 @@ export class InstancesComponent
   //CRUD
   add() {
     this.view.dataService.addNew().subscribe((res) => {
-      console.log(this.kanban);
       const funcIDApplyFor =
         this.process.applyFor === 'D' ? 'DPT0406' : 'DPT0405';
       const applyFor = this.process.applyFor;
@@ -223,8 +218,10 @@ export class InstancesComponent
                 option
               );
               dialogCustomField.closed.subscribe((e) => {
+                if (!e?.event) this.view.dataService.clear();
                 if (e && e.event != null) {
                   //xu ly data đổ về
+                 
                   this.detectorRef.detectChanges();
                 }
               });
