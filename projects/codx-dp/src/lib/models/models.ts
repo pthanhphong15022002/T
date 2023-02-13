@@ -324,6 +324,7 @@ export class DP_Instances_Steps {
   modifiedBy: string;
   reasons: DP_Instances_Steps_Reasons[] = []; // objects
   stepStatus: string;
+  memo: string;
 }
 
 export class DP_Instances_Steps_Roles {

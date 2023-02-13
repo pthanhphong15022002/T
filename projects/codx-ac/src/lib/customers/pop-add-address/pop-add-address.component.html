@@ -21,7 +21,7 @@
       type="valuelist" 
       refValue="AC015"
       field="adressType"
-      (valueChange)="valueChange($event,'adressType')"
+      (valueChange)="valueChangeAdressType($event)"
       >
     </codx-input>
       </div>
@@ -35,7 +35,7 @@
       [crrValue]="adressName"
       [formModel]="form.formModel"
       field="adressName"
-      (valueChange)="valueChange($event,'adressName')"
+      (valueChange)="valueChangeAdressName($event)"
       >
     </codx-input>
       </div>
@@ -52,7 +52,7 @@
                     type="combobox"
                     refValue="Countries"
                     field="countryID"
-                    (valueChange)="valueChange($event,'countryID')"
+                    (valueChange)="valueChangeCountryID($event)"
                   >
             </codx-input>
           </div>   
@@ -69,7 +69,7 @@
           type="combobox"
           refValue="Provinces"
           field="provinceID"
-          (valueChange)="valueChange($event,'provinceID')"
+          (valueChange)="valueChangeProvinceID($event)"
             >
         </codx-input>
           </div>
@@ -88,7 +88,7 @@
                     type="combobox"
                     refValue="DistrictsAC"
                     field="districtID"
-                    (valueChange)="valueChange($event,'districtID')"
+                    (valueChange)="valueChangeDistrictID($event)"
                   >
             </codx-input>
           </div>   
@@ -105,7 +105,7 @@
           type="combobox"
           refValue="PostalCodes"
           field="postalCode"
-          (valueChange)="valueChange($event,'postalCode')"
+          (valueChange)="valueChangePostalCode($event)"
             >
         </codx-input>
           </div>
