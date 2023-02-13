@@ -38,6 +38,9 @@ import { ViewJobComponent } from './dynamic-process/popup-add-dynamic-process/st
 import { PopupAddStaskComponent } from './instances/stages-detail/popup-add-stask/popup-add-stask.component';
 import { PopupCustomFieldComponent } from './instances/popup-custom-field/popup-custom-field.component';
 import { PopupAddGroupTaskComponent } from './instances/stages-detail/popup-add-group-task/popup-add-group-task.component';
+import { PopupTypeTaskComponent } from './dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
+import { StepTaskGroupComponent } from './dynamic-process/popup-add-dynamic-process/step-task/step-task-group/step-task-group.component';
+import { UserComponent } from './dynamic-process/popup-add-dynamic-process/step-task/user/user.component';
 
 const routes: Routes = [
   {
@@ -84,6 +87,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddStaskComponent,
     PopupCustomFieldComponent,
     PopupAddGroupTaskComponent,
+    PopupTypeTaskComponent,
+    StepTaskGroupComponent,
+    UserComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

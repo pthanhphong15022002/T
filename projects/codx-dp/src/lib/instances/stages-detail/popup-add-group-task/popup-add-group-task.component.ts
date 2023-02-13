@@ -75,7 +75,5 @@ export class PopupAddGroupTaskComponent implements OnInit {
     }else{
       this.dialog.close(this.taskGroup);
     }
-    
-    
   }
 }
