@@ -77,6 +77,7 @@ export class SharingComponent implements OnInit {
     });
     this.shareForm.value.recID = this.dialog.dataService.dataSelected.recID;
     this.shareForm.value.idFile = idFile;
+    this.shareForm.value.funcID = this.formModel.funcID;
     this.odService.shareDispatch(this.shareForm.value).subscribe((item)=>{
       if(item.status==0)
       {
