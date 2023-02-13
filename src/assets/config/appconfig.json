@@ -1,5 +1,5 @@
 {
-  "apiUrl": "http://localhost:8011",
+  "apiUrl": "http://172.16.7.34:8011",
   "reportUrl": "http://172.16.7.34:4203/report",
   "shopping": "https://172.16.7.34:44317/Shopping",
   "urlUpload": "http://localhost:8011/lvfile",
@@ -8,6 +8,12 @@
   "saas": 1,
   "layoutCZ": "",
   "themeMode": "body",
+  "externalLogin": {
+    "amazonId": "amzn1.application-oa2-client.f074ae67c0a146b6902cc0c4a3297935",
+    "facebookId": "553419903425493",
+    "googleId": "1004809784960-375udeskttcpr03e0pqshf0hpococ0vq.apps.googleusercontent.com",
+    "microsoftId": "0611ccc3-9521-45b6-b432-039852002705"
+  },
   "SureMeet": {
     "baseUrl": "https://api.suremeet.vn/",
     "tokenUrl": "api/auth/token",
