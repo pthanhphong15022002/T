@@ -206,7 +206,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     {
       this.fileService.downloadFile(file.recID).subscribe(async res => {
         if (res) {
-          fetch(res)
+          fetch(environment.urlUpload+ "/" + res)
             .then(response => response.blob())
             .then(blob => {
               const link = document.createElement("a");
