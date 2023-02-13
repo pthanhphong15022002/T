@@ -4,4 +4,6 @@ export class tmpTNMD {
   isAddAction: boolean;
   isOriginal: boolean;
   tN_MDRecID?: any;
+  startDate?: Date;
+  endDate?: Date;
 }
