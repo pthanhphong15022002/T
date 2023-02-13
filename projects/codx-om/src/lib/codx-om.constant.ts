@@ -44,6 +44,11 @@ export const OMCONST = {
     Delete: 'SYS02',
     Edit: 'SYS03',
     Copy: 'SYS04',
+//OB
+    OBDetail:'OMT101',
+    OBAssign:'OMT102',
+    OBDistribute:'OMT103',
+    OBEditWeight:'OMT104',
 
     //distribute OB
     DOBComp: 'OMT011',
