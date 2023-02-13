@@ -16,6 +16,8 @@ export class CustomersComponent extends UIComponent {
   dialog: DialogRef;
   moreFuncName:any;
   funcName:any;
+  htxcusGroup:string = '';
+  gridViewSetup:any;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   constructor(
     private inject: Injector,
@@ -47,9 +49,8 @@ export class CustomersComponent extends UIComponent {
         active: true,
         sameData: true,
         model: {
-          resources:this.columnsGrid,
           template2: this.templateMore,
-          frozenColumns: 1,
+          frozenColumns:1
         },
       },
     ];
