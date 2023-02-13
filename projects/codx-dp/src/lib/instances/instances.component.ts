@@ -81,9 +81,10 @@ export class InstancesComponent
   instances = new DP_Instances();
   kanban: any;
   listStepsCbx: any;
-  crrStepID : string ;
-  moreFuncDbClick=[] ;
-  dataColums =[] ;
+  crrStepID: string;
+  moreFuncDbClick = [];
+  dataColums = [];
+  dataDrop: any;
 
   constructor(
     private inject: Injector,
@@ -160,7 +161,7 @@ export class InstancesComponent
       if (f)
         this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
           if (res && res.length > 0) {
-            this.moreFuncDbClick = res
+            this.moreFuncDbClick = res;
           }
         });
     });
@@ -301,7 +302,7 @@ export class InstancesComponent
   //Event
   clickMF(e, data?) {
     // this.itemSelected = data;
-  //  this.titleAction = e.text;
+    //  this.titleAction = e.text;
     this.moreFunc = e.functionID;
     switch (e.functionID) {
       case 'SYS03':
@@ -317,10 +318,10 @@ export class InstancesComponent
         this.moveStage(e.data, data);
         break;
       case 'DP02':
-        this.moveReason(e.data, data, e.functionID, !this.isMoveSuccess);
+        this.moveReason(e.data, data, !this.isMoveSuccess);
         break;
       case 'DP10':
-        this.moveReason(e.data, data, e.functionID, this.isMoveSuccess);
+        this.moveReason(e.data, data, this.isMoveSuccess);
         break;
     }
   }
@@ -365,9 +366,8 @@ export class InstancesComponent
     switch (e.type) {
       case 'drop':
         // xử lý data chuyển công đoạn
-        if(e.data.stepID){
-          
-        }
+        this.dataDrop = e.data;
+        if (this.crrStepID != e?.data?.stepID) this.dropInstance(this.dataDrop);
         break;
       case 'drag':
         ///bắt data khi kéo
@@ -379,11 +379,38 @@ export class InstancesComponent
     }
   }
 
+  dropInstance(data) {
+    if (
+      this.kanban &&
+      this.kanban.columns?.length > 0 &&
+      this.dataColums.length == 0
+    )
+      this.dataColums = this.kanban.columns;
+    if (this.dataColums.length > 0) {
+      var idx = this.dataColums.findIndex(
+        (x) => x.dataColums.recID == data.stepID
+      );
+      if (idx != -1) {
+        var stepCrr = this.dataColums[idx].dataColums;
+        let more: any;
+        if (!stepCrr?.isSuccessStep && !stepCrr?.isFailStep)
+          this.moveStage(more, data);
+        else {
+          if (stepCrr?.isSuccessStep) this.moveReason(more, data, true);
+          else this.moveReason(more, data, false);
+        }
+      } else {
+        data.stepID = this.crrStepID;
+        this.changeDetectorRef.detectChanges()
+      }
+    }
+  }
+
   changeView(e) {
     if (e?.view.type == 6) {
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
-      if(this.dataColums.length==0)this.dataColums= this.kanban.columns
+
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -420,8 +447,14 @@ export class InstancesComponent
               obj
             );
             dialogMoveStage.closed.subscribe((e) => {
+              if (!e || !e.event) {
+                data.stepID = this.crrStepID;
+                this.changeDetectorRef.detectChanges();
+              }
+
               if (e && e.event != null) {
                 //xu ly data đổ về
+
                 this.detectorRef.detectChanges();
               }
             });
@@ -430,7 +463,7 @@ export class InstancesComponent
     });
   }
 
-  moveReason(dataMore, data: any, functionId, isMoveSuccess: Boolean) {
+  moveReason(dataMore, data: any, isMoveSuccess: Boolean) {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -463,6 +496,10 @@ export class InstancesComponent
       obj
     );
     dialogRevision.closed.subscribe((e) => {
+      if (!e || !e.event) {
+        data.stepID = this.crrStepID;
+        this.changeDetectorRef.detectChanges();
+      }
       if (e?.event && e?.event != null) {
         this.view.dataService.clear();
         this.view.dataService.update(e?.event).subscribe();

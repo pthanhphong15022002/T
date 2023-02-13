@@ -157,7 +157,7 @@ export class ProcessesComponent
     if (this.user?.employee) this.employee = this.user?.employee;
     this.userGroupID = this.user?.groupID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    //this.showButtonAdd = this.funcID != 'BPT6'
+ 
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
