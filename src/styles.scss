@@ -1660,6 +1660,12 @@ codx-view-list-detail .codx-detail-footer .badge.badge-sm {
   margin-top: 6px !important;
 }
 
-// .dropdown[data-popper-placement="bottom-start"] {
-//   margin-left: -150px !important;
-// }
+codx-share .role-group .user-nav-item.p-1 {
+  padding: 0 !important;
+  margin-bottom: 5px !important;
+}
+
+codx-share .role-group div.user-mini-nav {
+  padding: 0 !important;
+  margin: 0 !important;
+}
