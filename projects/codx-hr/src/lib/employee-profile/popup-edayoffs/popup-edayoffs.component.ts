@@ -24,10 +24,11 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   lstPregnantType;
   dayoffObj: any;
-  lstDayoffs: any;
+  //lstDayoffs: any;
   idField = 'RecID';
+  successFlag = false;
   funcID: string;
-  indexSelected
+  //indexSelected
   isnormalPregnant = false
   isNotNormalPregnant = false
   actionType: string;
@@ -35,7 +36,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   headerText: string;
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('listView') listView: CodxListviewComponent;
+  //@ViewChild('listView') listView: CodxListviewComponent;
 
   onInit(): void {
     this.hrSevice.getFormModel(this.funcID).then((formModel) => {
@@ -72,13 +73,27 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       this.headerText = data?.data?.headerText;
       this.employId = data?.data?.employeeId;
       this.funcID = data?.data?.funcID;
-      this.lstDayoffs = data?.data?.lstDayOffs
+      this.dayoffObj = data?.data?.dayoffObj;
+      //this.lstDayoffs = data?.data?.lstDayOffs
       this.actionType = data?.data?.actionType;
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
-        this.dayoffObj = JSON.parse(
-          JSON.stringify(this.lstDayoffs[this.indexSelected])
-        );
-      }      
+      // if (this.actionType === 'edit' || this.actionType === 'copy') {
+      //   this.dayoffObj = JSON.parse(
+      //     JSON.stringify(this.lstDayoffs[this.indexSelected])
+      //   );
+      // }      
+    }
+
+    ngAfterViewInit(){
+      this.dialog && this.dialog.closed.subscribe(res => {
+        if(!res.event){
+          if(this.successFlag == true){
+            this.dialog.close(this.dayoffObj);
+          }
+          else{
+            this.dialog.close(null)
+          }
+        }
+      })
     }
 
     initForm() {
@@ -86,7 +101,6 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         this.cache.valueList(p.NewChildBirthType.referedValue).subscribe(p => {
           this.lstPregnantType = p.datas;
           console.log('pregnanttype', this.lstPregnantType);
-          
         })
       })
 
@@ -101,7 +115,6 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           .subscribe((res: any) => {
             if (res) {
               this.dayoffObj = res?.data;
-
               this.dayoffObj.beginDate = null; //yêu cầu require, không default
               this.dayoffObj.endDate = null;
               this.dayoffObj.employeeID = this.employId;
@@ -115,7 +128,6 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           });
       } else {
         if (this.actionType === 'edit' || this.actionType === 'copy') {
-
           this.formGroup.patchValue(this.dayoffObj);
           this.formModel.currentData = this.dayoffObj;
           this.cr.detectChanges();
@@ -144,10 +156,11 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           if(p != null){
             this.dayoffObj.recID = p.recID
             this.notify.notifyCode('SYS006')
-            this.lstDayoffs.push(JSON.parse(JSON.stringify(this.dayoffObj)));
-            if(this.listView){
-              (this.listView.dataService as CRUDService).add(this.dayoffObj).subscribe();
-            }
+            this.successFlag = true;
+            // this.lstDayoffs.push(JSON.parse(JSON.stringify(this.dayoffObj)));
+            // if(this.listView){
+            //   (this.listView.dataService as CRUDService).add(this.dayoffObj).subscribe();
+            // }
           }
           else this.notify.notifyCode('SYS023')
         });
@@ -156,31 +169,31 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         this.hrSevice.UpdateEmployeeDayOffInfo(this.formModel.currentData).subscribe(p => {
           if(p != null){
             this.notify.notifyCode('SYS007')
-          this.lstDayoffs[this.indexSelected] = p;
-          if(this.listView){
-            (this.listView.dataService as CRUDService).update(this.lstDayoffs[this.indexSelected]).subscribe()
-          }
+          // this.lstDayoffs[this.indexSelected] = p;
+          // if(this.listView){
+          //   (this.listView.dataService as CRUDService).update(this.lstDayoffs[this.indexSelected]).subscribe()
+          // }
           }
           else this.notify.notifyCode('SYS021')
         });
       }
   }
 
-  click(data) {
-    console.log('formdata', data);
-    this.dayoffObj = data;
-    this.formModel.currentData = JSON.parse(JSON.stringify(this.dayoffObj)) 
-    this.indexSelected = this.lstDayoffs.findIndex(p => p.recID == this.dayoffObj.recID);
-    this.actionType ='edit'
-    this.formGroup?.patchValue(this.dayoffObj);
-    this.cr.detectChanges();
-  }
+  // click(data) {
+  //   console.log('formdata', data);
+  //   this.dayoffObj = data;
+  //   this.formModel.currentData = JSON.parse(JSON.stringify(this.dayoffObj)) 
+  //   this.indexSelected = this.lstDayoffs.findIndex(p => p.recID == this.dayoffObj.recID);
+  //   this.actionType ='edit'
+  //   this.formGroup?.patchValue(this.dayoffObj);
+  //   this.cr.detectChanges();
+  // }
 
   
-  afterRenderListView(evt){
-    this.listView = evt;
-    console.log(this.listView);
-  }
+  // afterRenderListView(evt){
+  //   this.listView = evt;
+  //   console.log(this.listView);
+  // }
   
   HandlePregnantTypeChange(e, pregnantType){
     console.log('e e ', e);

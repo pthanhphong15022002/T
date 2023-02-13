@@ -25,6 +25,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   //indexSelected;
   employId: string;
   isAfterRender = false;
+  successFlag = false;
   actionType: string;
   idField = 'RecID';
   headerText: '';
@@ -82,7 +83,12 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     ngAfterViewInit(){
     this.dialog && this.dialog.closed.subscribe(res => {
       if(!res.event){
-        this.dialog.close(this.benefitObj);
+        if(this.successFlag == true){
+          this.dialog.close(this.benefitObj);
+        }
+        else{
+          this.dialog.close(null);
+        }
       }
     })
   }
@@ -138,16 +144,17 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
         if (p != null) {
           this.benefitObj.recID = p.recID;
           this.notify.notifyCode('SYS006');
+          this.successFlag = true;
           //this.benefitObj.push(JSON.parse(JSON.stringify(this.benefitObj)));
           // if(this.listView){
           //   (this.listView.dataService as CRUDService).add(this.benefitObj).subscribe();
           // }
-          this.hrService
-            .GetCurrentBenefit(this.benefitObj.employeeID)
-            .subscribe((res) => {
-              //this.listBenefits = res;
-              this.dialog && this.dialog.close(p);
-            });
+          // this.hrService
+          //   .GetCurrentBenefit(this.benefitObj.employeeID)
+          //   .subscribe((res) => {
+          //     //this.listBenefits = res;
+          //     this.dialog && this.dialog.close(p);
+          //   });
         } 
       });
     } else {

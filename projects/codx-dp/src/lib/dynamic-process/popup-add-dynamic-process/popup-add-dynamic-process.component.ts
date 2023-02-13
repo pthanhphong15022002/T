@@ -1001,6 +1001,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     });
   }
+
   openPopupAddEditStep(type) {
     if (type === 'add') {
       this.step = new DP_Steps();
@@ -1012,9 +1013,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.headerText = 'Sửa Giai Đoạn';
       this.stepName = this.step['stepName'];
     }
-
     this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
   }
+
   addAndEditStep() {
     if (!this.stepName) {
       this.stepList.push(this.step);
@@ -1025,6 +1026,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     this.popupAddStage.close();
   }
+
   deleteStep(data) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
@@ -1048,6 +1050,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     });
   }
+
   clickMFStep(e: any, data?: any) {
     switch (e.functionID) {
       case 'SYS02':
@@ -1061,6 +1064,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         break;
     }
   }
+  
   dropStep(event: CdkDragDrop<string[]>) {
     if (event.previousIndex == event.currentIndex) return;
     moveItemInArray(this.stepList, event.previousIndex, event.currentIndex);
@@ -1098,14 +1102,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.deletepGroupJob(data);
         break;
       case 'SYS03':
-        this.openGroupJob(data);
+        this.openTaskGroup(data);
         break;
       case 'SYS04':
         // this.copy(data);
         break;
     }
   }
-  openGroupJob(data?: any) {
+  openTaskGroup(data?: any) {
     this.taskGroup = new DP_Steps_TaskGroups();
     if (data) {
       this.userGroupJob = data?.roles || [];
@@ -1116,28 +1120,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.taskGroup['stepID'] = this.step['recID'];
       this.taskGroup['task'] = [];
     }
-
     this.popupGroupJob = this.callfc.openForm(
       StepTaskGroupComponent,
       '',
       500,
-      500
+      500,
+      '',
+      this.taskGroup
     );
+    this.popupGroupJob.closed.subscribe(res => {
+      if(res?.event){
+        this.savePopupGroupJob();
+      }
+    })
   }
   savePopupGroupJob() {
-    let reqiure = [];
-    if (
-      !this.taskGroup?.taskGroupName ||
-      !this.taskGroup?.taskGroupName.trim()
-    ) {
-      reqiure.push(
-        this.grvTaskGroups['TaskGroupName']?.headerText ?? 'TaskGroupName'
-      );
-    }
-    if (reqiure.length > 0) {
-      this.notiService.notifyCode('SYS009', 0, '"' + reqiure.join(', ') + '"');
-      return;
-    }
     this.popupGroupJob.close();
     if (!this.taskGroup['recID']) {
       this.taskGroup['recID'] = Util.uid();

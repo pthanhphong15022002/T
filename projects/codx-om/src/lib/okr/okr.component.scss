@@ -164,3 +164,11 @@
 .bg-color{   
   background-color: var(--text-primary) !important;
 }
+::ng-deep {
+  .e-content .e-lib .e-touch {
+    padding: 0px !important;
+  }
+  .content-tree{
+    padding: 0px !important;
+  }
+}

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { CodxInputComponent, DialogData, DialogRef, FormModel } from 'codx-core';
+import { CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import { log } from 'console';
 import { CodxDpService } from '../../codx-dp.service';
 import { DP_Instances, DP_Instances_Steps } from '../../models/models';
@@ -33,7 +33,8 @@ export class PopupMoveStageComponent implements OnInit {
 
   constructor(
     private codxDpService: CodxDpService,
-    private detectorRef: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -63,15 +64,28 @@ export class PopupMoveStageComponent implements OnInit {
   }
   beforeSave() {
     var data = [this.instance.recID,this.stepIdOld ,this.instancesStepOld];
-    this.codxDpService.moveStageByIdInstance(data);
-    return true;
+    this.codxDpService.moveStageByIdInstance(data).subscribe((res)=> {
+      if(res){
+        this.listStep = res;
+        var obj ={
+          listStep: this.listStep,
+          instance: this.instance
+        };
+        this.dialog.close(obj);
+        this.dialog.dataService.clear();
+        this.notiService.notifyCode('Chuyển tiếp oke nha');
+        this.changeDetectorRef.detectChanges();
+      }
+    })
+
+
   }
 
   valueChange($event) {
     if($event){
       this.instancesStepOld[$event.field] = $event.data;
     }
-    this.detectorRef.detectChanges();
+    this.changeDetectorRef.detectChanges();
   }
 
   changeTime($event) {}
@@ -92,10 +106,7 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   autoLockStepEnd(){
-    // var buttonSave = document.getElementById('buttonSave');
-    // buttonSave.classList.add("not-allowed");
-    // buttonSave.classList.add("d-inline");
-    // debugger;
+
     this.isLockStep = true;
   }
   deleteListReason(listStep: any): void {
@@ -107,7 +118,7 @@ export class PopupMoveStageComponent implements OnInit {
         this.instance.stepID = $event;
         this.isLockStep = this.stepIdOld === this.IdStepEnd && $event === this.IdStepEnd ? true:false;
         this.instancesStepOld = this.listStepsCbx.filter(x => x.stepID === this.instance.stepID)[0];
-        this.detectorRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
     }
   }
 

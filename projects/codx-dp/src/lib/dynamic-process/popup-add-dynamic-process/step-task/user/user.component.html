@@ -12,12 +12,12 @@
    </div>
    <div>
      <ng-container
-       *ngIf="userGroupJob.length > 0"
+       *ngIf="dataSource.length > 0"
        [ngTemplateOutlet]="showUser"
-       [ngTemplateOutletContext]="{ users: userGroupJob }"
+       [ngTemplateOutletContext]="{ users: dataSource }"
      ></ng-container>
      <codx-label
-       *ngIf="userGroupJob.length == 0"
+       *ngIf="dataSource.length == 0"
        class="fw-normal text-gray-400"
        fiedName="LocationControl"
        default="Nếu không chọn mặc định là người phụ trách của nhiệm vụ"
@@ -58,7 +58,7 @@
    <codx-share
      [dialog]="dialog"
      [multiple]="true"
-     (eventApply)="applyUser($event, userGroupJob, 'roles')"
+     (eventApply)="applyUser($event, dataSource)"
      [listName]="'BP021'"
    ></codx-share>
  </ng-template>

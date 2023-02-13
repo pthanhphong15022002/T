@@ -432,6 +432,7 @@ export class InstancesComponent
 
   #region;
   moveStage(dataMore, data, instanceStep) {
+    this.crrStepID = data.stepID ;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
