@@ -342,17 +342,18 @@ export class BookingStationeryComponent
       ) {
         this.api
           .exec('EP', 'ResourceTransBusiness', 'AllocateAsync', [evt.recID])
-          .subscribe((dataItem) => {
+          .subscribe((dataItem: any) => {
             if (dataItem) {
-              this.view.dataService.update(dataItem).subscribe((res) => {
-                if (res) {
-                  this.notificationsService.notify(
-                    'Cấp phát thành công',
-                    '1',
-                    0
-                  );
-                }
-              });
+              this.codxEpService
+                .getBookingByRecID(dataItem.recID)
+                .subscribe((booking) => {
+                  this.view.dataService.update(booking).subscribe((res) => {
+                    if (res) {
+                      this.notificationsService.notifyCode('SYS034');
+                    }
+                  });
+                });
+
               this.detectorRef.detectChanges();
             }
           });
@@ -372,42 +373,41 @@ export class BookingStationeryComponent
       this.notificationsService.notifyCode('TM052');
       return;
     }
-    if(data.approval!=0){
+    if (data.approval != 0) {
       this.codxEpService
-      .getCategoryByEntityName(this.formModel.entityName)
-      .subscribe((category: any) => {
-        this.codxEpService
-          .release(
-            data,
-            category.processID,
-            'EP_Bookings',
-            this.formModel.funcID
-          )
-          .subscribe((res) => {
-            if (res?.msgCodeError == null && res?.rowCount >= 0) {
-              this.notificationsService.notifyCode('ES007');
-              data.approveStatus = '3';
-              data.status = '3';
-              data.write = false;
-              data.delete = false;
-              this.view.dataService.update(data).subscribe();
-            } else {
-              this.notificationsService.notifyCode(res?.msgCodeError);
-            }
-          });
-      });
-    }
-    else{
+        .getCategoryByEntityName(this.formModel.entityName)
+        .subscribe((category: any) => {
+          this.codxEpService
+            .release(
+              data,
+              category.processID,
+              'EP_Bookings',
+              this.formModel.funcID
+            )
+            .subscribe((res) => {
+              if (res?.msgCodeError == null && res?.rowCount >= 0) {
+                this.notificationsService.notifyCode('ES007');
+                data.approveStatus = '3';
+                data.status = '3';
+                data.write = false;
+                data.delete = false;
+                this.view.dataService.update(data).subscribe();
+              } else {
+                this.notificationsService.notifyCode(res?.msgCodeError);
+              }
+            });
+        });
+    } else {
       data.approveStatus = '5';
       data.status = '5';
       data.write = false;
       data.delete = false;
-      this.view.dataService.update(data).subscribe(); 
+      this.view.dataService.update(data).subscribe();
       this.notificationsService.notifyCode('ES007');
-      this.codxEpService.afterApprovedManual(this.formModel.entityName, data.recID,'5').subscribe();
-      
+      this.codxEpService
+        .afterApprovedManual(this.formModel.entityName, data.recID, '5')
+        .subscribe();
     }
-    
   }
 
   setPopupTitle(mfunc) {

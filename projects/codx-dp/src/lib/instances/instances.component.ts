@@ -81,18 +81,29 @@ export class InstancesComponent
   instances = new DP_Instances();
   kanban: any;
   listStepsCbx: any;
+  crrStepID: string;
+  moreFuncInstance = [];
+  dataColums = [];
+  dataDrop: any;
 
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
-
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     super(inject);
     this.dialog = dialog;
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f)
+        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+          if (res && res.length > 0) {
+            this.moreFuncInstance = res;
+          }
+        });
+    });
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -152,8 +163,6 @@ export class InstancesComponent
     this.resourceKanban.className = 'StepsBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
-
-    // this.api.execSv<any>(this.service, this.assemblyName, this.className, 'AddInstanceAsync').subscribe();
   }
 
   click(evt: ButtonModel) {
@@ -291,7 +300,7 @@ export class InstancesComponent
   //Event
   clickMF(e, data?) {
     // this.itemSelected = data;
-    // this.titleAction = e.text;
+    //  this.titleAction = e.text;
     this.moreFunc = e.functionID;
     switch (e.functionID) {
       case 'SYS03':
@@ -304,13 +313,14 @@ export class InstancesComponent
         this.delete(data);
         break;
       case 'DP09':
-        this.moveStage(e.data, data, e.functionID);
+        // listStep by Id Instacess is null
+        this.moveStage(e.data, data, null);
         break;
       case 'DP02':
-        this.moveReason(e.data, data, e.functionID, !this.isMoveSuccess);
+        this.moveReason(e.data, data, !this.isMoveSuccess);
         break;
       case 'DP10':
-        this.moveReason(e.data, data, e.functionID, this.isMoveSuccess);
+        this.moveReason(e.data, data, this.isMoveSuccess);
         break;
     }
   }
@@ -354,10 +364,13 @@ export class InstancesComponent
   onActions(e) {
     switch (e.type) {
       case 'drop':
-        // xử lý data
+        // xử lý data chuyển công đoạn
+        this.dataDrop = e.data;
+        if (this.crrStepID != e?.data?.stepID) this.dropInstance(this.dataDrop);
         break;
       case 'drag':
         ///bắt data khi kéo
+        this.crrStepID = e?.data?.stepID;
         break;
       case 'dbClick':
         //xư lý dbClick
@@ -365,60 +378,125 @@ export class InstancesComponent
     }
   }
 
+  dropInstance(data) {
+    if (this.moreFuncInstance?.length == 0) {
+      data.stepID = this.crrStepID;
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
+
+    if (
+      this.kanban &&
+      this.kanban.columns?.length > 0 &&
+      this.dataColums.length == 0
+    )
+      this.dataColums = this.kanban.columns;
+    if (this.dataColums.length > 0) {
+      var idx = this.dataColums.findIndex(
+        (x) => x.dataColums.recID == data.stepID
+      );
+      if (idx != -1) {
+        var stepCrr = this.dataColums[idx].dataColums;
+        if (!stepCrr?.isSuccessStep && !stepCrr?.isFailStep) {
+          idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
+          if (idx != -1)
+            this.moveStage(this.moreFuncInstance[idx], data, this.listSteps);
+        } else {
+          if (stepCrr?.isSuccessStep) {
+            idx = this.moreFuncInstance.findIndex(
+              (x) => x.functionID == 'DP10'
+            );
+            if (idx != -1)
+              this.moveReason(this.moreFuncInstance[idx], data, true);
+          } else {
+            idx = this.moreFuncInstance.findIndex(
+              (x) => x.functionID == 'DP02'
+            );
+            if (idx != -1)
+              this.moveReason(this.moreFuncInstance[idx], data, false);
+          }
+        }
+      } else {
+        data.stepID = this.crrStepID;
+        this.changeDetectorRef.detectChanges();
+      }
+    }
+  }
+
   changeView(e) {
     if (e?.view.type == 6) {
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
+
       this.changeDetectorRef.detectChanges();
     }
   }
   // end code
 
   #region;
-  moveStage(dataMore, data, functionId) {
+  moveStage(dataMore, data, instanceStep) {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     this.cache.functionList('DPT0402').subscribe((fun) => {
-      var formMD = new FormModel();
-      formMD.funcID = fun.functionID;
-      formMD.entityName = fun.entityName;
-      formMD.formName = fun.formName;
-      formMD.gridViewName = fun.gridViewName;
-      var obj = {
-        stepName: this.getStepNameById(data.stepID)[0],
-        formModel: formMD,
-        instance: data,
-        listStep: this.listStepsCbx
-      };
+      this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+        this.cache
+          .gridViewSetup(fun.formName, fun.gridViewName)
+          .subscribe((grvSt) => {
+            var formMD = new FormModel();
+            formMD.funcID = fun.functionID;
+            formMD.entityName = fun.entityName;
+            formMD.formName = fun.formName;
+            formMD.gridViewName = fun.gridViewName;
+            var obj = {
+              stepName: this.getStepNameById(data.stepID),
+              formModel: formMD,
+              instance: data,
+              listStep: this.listStepsCbx,
+              instanceStep: instanceStep,
+            };
 
-      var dialogMoveStage = this.callfc.openForm(
-        PopupMoveStageComponent,
-        '',
-        800,
-        600,
-        '',
-        obj
-      );
-      dialogMoveStage.closed.subscribe((e) => {
-        if (e && e.event != null) {
-          //xu ly data đổ về
-          this.detectorRef.detectChanges();
-        }
+            var dialogMoveStage = this.callfc.openForm(
+              PopupMoveStageComponent,
+              '',
+              800,
+              600,
+              '',
+              obj
+            );
+            dialogMoveStage.closed.subscribe((e) => {
+              if (!e || !e.event) {
+                data.stepID = this.crrStepID;
+                this.changeDetectorRef.detectChanges();
+              }
+
+              if (e && e.event != null) {
+                //xu ly data đổ về
+
+                this.detectorRef.detectChanges();
+              }
+            });
+          });
       });
     });
   }
 
-  moveReason(dataMore, data: any, functionId, isMoveSuccess: Boolean) {
+  moveReason(dataMore, data: any, isMoveSuccess: Boolean) {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
 
     var formMD = new FormModel();
-    formMD.funcID = functionId;
-    formMD.entityName = data.entityName;
-    formMD.formName = data.formName;
-    formMD.gridViewName = data.gridViewName;
+    // formMD.funcID = functionId;
+    // formMD.entityName = data.entityName;
+    // formMD.formName = data.formName;
+    // formMD.gridViewName = data.gridViewName;
+
+    formMD.funcID = 'DPT0201';
+    formMD.entityName = 'DP_Instances_Steps_TaskGroups';
+    formMD.formName = 'DPInstancesStepsTaskGroups';
+    formMD.gridViewName = 'grvDPInstancesStepsTaskGroups';
+
     var obj = {
       dataMore: dataMore,
       stepName: this.process.processName,
@@ -436,6 +514,10 @@ export class InstancesComponent
       obj
     );
     dialogRevision.closed.subscribe((e) => {
+      if (!e || !e.event) {
+        data.stepID = this.crrStepID;
+        this.changeDetectorRef.detectChanges();
+      }
       if (e?.event && e?.event != null) {
         this.view.dataService.clear();
         this.view.dataService.update(e?.event).subscribe();
@@ -466,13 +548,15 @@ export class InstancesComponent
   }
 
   deleteListReason(listStep: any): void {
-    delete listStep[listStep.length - 1];
-    delete listStep[listStep.length - 2];
+    listStep.pop();
+    listStep.pop();
   }
 
-  getStepNameById(stepId:string){
-    let listStep = JSON.parse(JSON.stringify(this.listStepsCbx));
-    return listStep.filter(x=>x.stepID === stepId).map(x=> x.stepName);
+  getStepNameById(stepId: string): string {
+    // let listStep = JSON.parse(JSON.stringify(this.listStepsCbx));
+    return this.listSteps
+      .filter((x) => x.stepID === stepId)
+      .map((x) => x.stepName)[0];
   }
   #endregion;
 }

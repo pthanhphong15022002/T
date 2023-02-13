@@ -21,6 +21,7 @@ import {
   NotificationsService,
   RequestOption,
   UIComponent,
+  Util,
 } from 'codx-core';
 import { CodxOmService } from '../../codx-om.service';
 import { Targets } from '../../model/okr.model';
@@ -66,6 +67,7 @@ export class PopupAddOBComponent extends UIComponent {
   funcType:any;
   isSubKR: boolean;
   ob:any;
+  oldOB:any;
   okrPlan: any;//Chờ c thương thiết lập vll
   //Giả lập vll
   //OM003
@@ -93,6 +95,8 @@ export class PopupAddOBComponent extends UIComponent {
       }
     ]
   }
+  okrRecID: any;
+  shareModel: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -105,7 +109,7 @@ export class PopupAddOBComponent extends UIComponent {
     this.funcID= dialogData.data[0]
     this.funcType = dialogData?.data[1];  
     this.headerText = dialogData?.data[2];
-    this.ob = dialogData.data[3];
+    this.oldOB = dialogData.data[3];
     this.okrPlan = dialogData.data[4];
     this.dialogRef= dialogRef;
     this.formModel= dialogRef.formModel;
@@ -115,30 +119,54 @@ export class PopupAddOBComponent extends UIComponent {
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {}
 
+  
   onInit(): void {
     
-    this.initForm();
-  }
-
-  initForm() {
-    this.codxOmService
-      .getFormGroup(this.formModel?.formName, this.formModel?.gridViewName)
-      .then((item) => {
-        this.fGroupAddOB = item;
+    if (this.funcType == OMCONST.MFUNCID.Edit) {
+      this.okrRecID=this.oldOB.recID;
+    }
+    else{
+      this.okrRecID=null;
+    }
+    this.codxOmService.getOKRByID(this.okrRecID).subscribe((krModel) => {
+      if (krModel) {
         if (this.funcType == OMCONST.MFUNCID.Add) {
-          
-          this.ob = this.fGroupAddOB.value;
-        }
-        if (this.funcType == OMCONST.MFUNCID.Copy) {
-          let tmpKR = this.fGroupAddOB.value;
-          this.allowCopyField.forEach(field=>{
-            tmpKR[field]=this.ob[field];
-          });
-          this.ob=null;
-          this.ob=tmpKR;
+          this.ob = krModel;
+          if (this.ob.shares && this.ob.shares.length > 0) {
+            this.shareModel = this.ob.targets[0];
+            this.ob.targets=[];
+          }
+          this.setPlanToOB();
+        } else if (this.funcType == OMCONST.MFUNCID.Edit) {
+          this.ob = krModel;
+          this.setPlanToOB();
+        } else {
+          this.cache
+            .gridViewSetup(
+              this.formModel?.formName,
+              this.formModel?.gridViewName
+            )
+            .subscribe((gv: any) => {
+              if (gv) {
+                let gridView = Util.camelizekeyObj(gv);
+                for (const key in gridView) {
+                  const element = gridView[key];
+                  if (element?.allowCopy) {
+                    this.allowCopyField.push(key);
+                  }
+                }
+                debugger
+                for (const fieldName of this.allowCopyField) {
+                  krModel[fieldName] = this.oldOB[fieldName];
+                }
+                this.ob = krModel;
+                //this.setPlanToOB();
+              }
+            });
         }
         this.isAfterRender = true;
-      });
+      }
+    });
   }
 
   //-----------------------End-------------------------------//
@@ -174,20 +202,16 @@ export class PopupAddOBComponent extends UIComponent {
 
   onSaveForm() {
     //xóa khi đã lấy được model chuẩn từ setting 
-    if(this.funcType==OMCONST.MFUNCID.Add){
-
-    this.ob.status='1';
-    this.ob.approveStatus='1';
-    this.ob.approveControl='1';
-    this.ob.okrType=OMCONST.VLL.OKRType.Obj;
-    this.ob.recID= this.okrPlan.recID;
-    this.ob.transID= this.okrPlan.recID;
-    this.ob.parentID= this.okrPlan.recID;
-    this.ob.year=this.okrPlan.year;
-    this.ob.interval=this.okrPlan.interval;    
-    this.ob.periodID=this.okrPlan.periodID;
-    this.OKRLevel();
+    if (
+      this.funcType == OMCONST.MFUNCID.Add ||
+      this.funcType == OMCONST.MFUNCID.Copy
+    ) {
+      this.ob.okrType = this.isSubKR
+        ? OMCONST.VLL.OKRType.SKResult
+        : OMCONST.VLL.OKRType.KResult;        
+        this.OKRLevel();
     }
+    
     //---------------------------------------
     this.fGroupAddOB=this.form?.formGroup;
     this.fGroupAddOB.patchValue(this.ob);
@@ -203,6 +227,8 @@ export class PopupAddOBComponent extends UIComponent {
   methodAdd(ob:any) {
     this.codxOmService.addOB(this.ob).subscribe((res: any) => {
       if (res) {
+        res.write = true;
+        res.delete = true;
         this.afterSave(res);
       }
     });
@@ -211,6 +237,8 @@ export class PopupAddOBComponent extends UIComponent {
   methodCopy(ob:any) {
     this.codxOmService.copyKR(this.ob).subscribe((res: any) => {
       if (res) {
+        res.write = true;
+        res.delete = true;
         this.afterSave(res);
       }
     });
@@ -219,6 +247,8 @@ export class PopupAddOBComponent extends UIComponent {
   methodEdit(ob:any) {
     this.codxOmService.editOB(this.ob).subscribe((res: any) => {
       if (res) {
+        res.write = true;
+        res.delete = true;
         this.afterSave(res);
       }
     });
@@ -239,6 +269,7 @@ export class PopupAddOBComponent extends UIComponent {
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Func-----------------------//
+  
   //Thiết lập OKRLevel theo funcID
   OKRLevel() {
     switch (this.funcID) {
@@ -256,6 +287,13 @@ export class PopupAddOBComponent extends UIComponent {
         break;
     }
     this.detectorRef.detectChanges();
+  }
+  setPlanToOB(){
+    if(this.okrPlan){
+      this.ob.periodID=this.okrPlan.periodID;
+      this.ob.interval=this.okrPlan.interval;
+      this.ob.year=this.okrPlan.year;
+    }
   }
   formatInterval(val:any)
   {

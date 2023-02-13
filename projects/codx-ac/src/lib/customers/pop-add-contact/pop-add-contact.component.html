@@ -22,7 +22,7 @@
                     [crrValue]="contactName"
                     [formModel]="form.formModel"
                     field="contactName"
-                    (valueChange)="valueChange($event,'contactName')"
+                    (valueChange)="valueChangeContactName($event)"
                   >
             </codx-input>
           </div>   
@@ -39,7 +39,7 @@
           type="valuelist"
           refValue="AC014"
           field="gender"
-          (valueChange)="valueChange($event,'gender')"
+          (valueChange)="valueChange($event)"
           >
         </codx-input>
           </div>
@@ -55,7 +55,7 @@
                 [crrValue]="jobTitle"
                 [formModel]="form.formModel"
                 field="jobTitle"
-                (valueChange)="valueChange($event,'jobTitle')"
+                (valueChange)="valueChangeJobTitle($event)"
               >
         </codx-input>
       </div>  
@@ -70,7 +70,7 @@
                     [crrValue]="phone"
                     [formModel]="form.formModel"
                     field="phone"
-                    (valueChange)="valueChange($event,'phone')"
+                    (valueChange)="valueChangePhone($event)"
                   >
             </codx-input>
           </div>  
@@ -84,7 +84,7 @@
                     [crrValue]="form.data != null ? form.data.homePhone : ''"
                     [formModel]="form.formModel"
                     field="homePhone"
-                    (valueChange)="valueChange($event,'homePhone')"
+                    (valueChange)="valueChange($event)"
                   >
             </codx-input>
           </div>  
@@ -98,7 +98,7 @@
                     [crrValue]="form.data != null ? form.data.phoneExt : ''"
                     [formModel]="form.formModel"
                     field="phoneExt"
-                    (valueChange)="valueChange($event,'phoneExt')"
+                    (valueChange)="valueChange($event)"
                   >
             </codx-input>
           </div>  
@@ -113,7 +113,7 @@
                 [crrValue]="email"
                 [formModel]="form.formModel"
                 field="email"
-                (valueChange)="valueChange($event,'email')"
+                (valueChange)="valueChangeEmail($event)"
               >
         </codx-input>
       </div>  
@@ -128,7 +128,7 @@
       type="valuelist"
       refValue="AC015"
       field="contactType"
-      (valueChange)="valueChange($event,'contactType')"
+      (valueChange)="valueChangeContactType($event)"
       >
     </codx-input>
       </div>
@@ -142,7 +142,7 @@
                 [crrValue]="form.data != null ? form.data.note : ''"
                 [formModel]="form.formModel"
                 field="note"
-                (valueChange)="valueChange($event,'note')"
+                (valueChange)="valueChange($event)"
               >
         </codx-input>
       </div>  

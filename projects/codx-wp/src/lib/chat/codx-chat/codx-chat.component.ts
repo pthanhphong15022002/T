@@ -44,8 +44,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
       });
   }
   // open chat box
-  openChatBox()
-  {
+  openChatList(){
     this.loaded = true;
   }
 }

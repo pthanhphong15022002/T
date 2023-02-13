@@ -21,22 +21,26 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-7">
+        <div class="col-lg-6">
           <codx-chart [title]="chartSettings?.title" [legendSettings]="{ visible: false }"
             [primaryXAxis]="chartSettings?.primaryXAxis" [primaryYAxis]="chartSettings?.primaryYAxis"
             [seriesSetting]="chartSettings?.seriesSetting" [service]="chartSettings?.service"
             [assemblyName]="chartSettings?.assembly" [className]="chartSettings?.className"
             [method]="chartSettings?.method"></codx-chart>
         </div>
-        <div class="col-lg-5 om-p-chart">
+        <div class="col-lg-3 om-p-chart">
           <codx-chart height="180" [title]="chartSettings1?.title" [seriesSetting]="chartSettings1?.seriesSetting"
             [dataSource]="Objs">
           </codx-chart>
 
-          <codx-chart height="180" [title]="chartSettings2?.title" [seriesSetting]="chartSettings2?.seriesSetting"
-            [dataSource]="Krs">
-          </codx-chart>
+         
         </div>
+        
+        <div class="col-lg-3 om-p-chart">
+        <codx-chart height="180" [title]="chartSettings2?.title" [seriesSetting]="chartSettings2?.seriesSetting"
+        [dataSource]="Krs">
+      </codx-chart>
+      </div>
       </div>
     </div>
 
@@ -213,6 +217,8 @@
                 <span class="ob-kr" (click)="showOB(item)">{{ item?.okrName }}</span>
               </div>
               <div class="d-flex align-items-center justify-content-end ">
+                
+                <codx-img [objectId]="item?.owner" [objectType]="'AD_Users'"></codx-img>
                 <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
                   <div class="h-15px w-100 bg-gray-200 rounded-4">
                     <div class="bg-color rounded-4 h-15px" role="progressbar" [style.width]="item?.progress + '%'"
@@ -262,7 +268,6 @@
                 </div>
               </div>
               <div class="d-flex align-items-center justify-content-end ">
-                <codx-img [objectId]="item?.createdBy" [objectType]="'AD_Users'"></codx-img>
                 <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
                   <div class="h-15px w-100 bg-gray-200 rounded-4">
                     <div class="bg-color rounded-4 h-15px" role="progressbar" [style.width]="item?.progress + '%'"
@@ -296,7 +301,7 @@
                       item?.notes ? item?.notes?.length : 0 }}</span>
                   </button>
                   <codx-mfunc [formModel]="formModelKR" type="view" [dataItem]="item" class="ms-4"
-                    (clickMF)="clickKRMF($event,item)"></codx-mfunc>
+                    (clickMF)="clickKRMF($event,item,false)"></codx-mfunc>
                 </div>
               </div>
             </div>
@@ -310,7 +315,6 @@
                 </div>
               </div>
               <div class="d-flex align-items-center justify-content-end ">
-                <codx-img [objectId]="item?.createdBy" [objectType]="'AD_Users'"></codx-img>
                 <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
                   <div class="h-15px w-100 bg-gray-200 rounded-4">
                     <div class="bg-color rounded-4 h-15px" role="progressbar" [style.width]="item?.progress + '%'"
@@ -344,7 +348,7 @@
                       item?.notes ? item?.notes?.length : 0 }}</span>
                   </button>
                   <codx-mfunc [formModel]="formModelSKR" type="view" [dataItem]="item" class="ms-4"
-                    (clickMF)="clickKRMF($event,item)"></codx-mfunc>
+                    (clickMF)="clickKRMF($event,item,true)"></codx-mfunc>
                 </div>
               </div>
             </div>

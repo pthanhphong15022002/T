@@ -5,3 +5,4 @@
     box-sizing: content-box;
     max-height: none !important;
 }
+.not-allowed:hover {cursor: not-allowed !important;}
