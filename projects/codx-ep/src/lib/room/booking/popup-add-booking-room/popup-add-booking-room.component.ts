@@ -1,3 +1,4 @@
+import { Equipments } from './../../../models/equipments.model';
 import { Permission } from './../../../../../../../src/shared/models/file.model';
 import { editAlert } from '@syncfusion/ej2-angular-spreadsheet';
 import { Resource } from './../../../models/resource.model';
@@ -29,7 +30,6 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEpService, ModelPage } from '../../../codx-ep.service';
-import { Equipments } from '../../../models/equipments.model';
 import { APICONSTANT } from '@shared/constant/api-const';
 import { BookingAttendees } from '../../../models/bookingAttendees.model';
 import { MeetingComponent } from '../../../room/meeting/meeting.component';
@@ -40,6 +40,8 @@ export class Device {
   text = '';
   isSelected = false;
   icon = '';
+  createdBy=null;
+  createdOn=null;
 }
 
 @Component({
@@ -108,6 +110,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   tempDate = new Date();
   lstDevices = [];
   tmplstDevice = [];
+  tmplstDeviceEdit = [];
   tmplstStationery = [];
   tmpTitle = '';
   title = '';
@@ -402,21 +405,34 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.lstDeviceRoom.push(device);
       });
       if (!this.isAdd && this.optionalData == null) {
-        if (this.data?.equipments) {
-          this.data?.equipments.forEach((equip) => {
-            let tmpDevice = new Device();
-            tmpDevice.id = equip.equipmentID;
-            tmpDevice.isSelected = equip.isPicked;
-            this.lstDeviceRoom.forEach((vlDevice) => {
-              if (tmpDevice.id == vlDevice.id) {
-                tmpDevice.text = vlDevice.text;
-                tmpDevice.icon = vlDevice.icon;
+        //Lấy list Thiết bị
+        this.codxEpService.getResourceEquipments(this.data?.resourceID).subscribe((eq:any)=>{
+          if(eq!=null){
+            Array.from(eq).forEach((e:any)=>{
+              let tmpDevice = new Device();
+              tmpDevice.id = e.equipmentID;
+              tmpDevice.isSelected=false;
+              this.lstDeviceRoom.forEach((vlDevice) => {
+                if (tmpDevice.id == vlDevice.id) {
+                  tmpDevice.text = vlDevice.text;
+                  tmpDevice.icon = vlDevice.icon;
+                }
+              });
+              if(this.data.equipments && this.data.equipments.length>0){
+                this.data.equipments.forEach(element => {
+                  if(element.equipmentID==tmpDevice.id){
+                    tmpDevice.isSelected=true;
+                    tmpDevice.createdBy=element.createdBy;
+                    tmpDevice.createdOn=element.createdOn;
+                  }
+                });
               }
-            });
-            this.tmplstDevice.push(tmpDevice);
-          });
-        }
-        this.data.resourceID = this.data.resourceID;
+              this.tmplstDeviceEdit.push(tmpDevice);
+            })
+          }
+          
+        })
+        
       }
       if (this.isCopy) {
         if (this.data?.equipments) {
@@ -741,11 +757,14 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
       let tmpEquip = [];
       this.tmplstDevice.forEach((element) => {
-        let tempEquip = new Equipments();
-        tempEquip.equipmentID = element.id;
-        tempEquip.createdBy = this.authService.userValue.userID;
-        tempEquip.isPicked = element.isSelected;
-        tmpEquip.push(tempEquip);
+        if(element.isSelected){
+          let tempEquip = new Equipments();
+          tempEquip.equipmentID = element.id;
+          tempEquip.createdBy = element.createdBy==null? this.authService.userValue.userID :element.createdBy;
+          tempEquip.createdOn =element.createdOn ==null? new Date(): element.createdOn;
+          tmpEquip.push(tempEquip);
+        }
+        
       });
       this.data.equipments = [];
       this.data.equipments = tmpEquip;
@@ -1693,7 +1712,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           selectResource[0].equipments.forEach((item) => {
             let tmpDevice = new Device();
             tmpDevice.id = item.equipmentID;
-            tmpDevice.isSelected = false;
+            if(this.tmplstDeviceEdit.length>0){
+              this.tmplstDeviceEdit.forEach(oldItem=>{
+                if(oldItem.id== tmpDevice.id){
+                  tmpDevice.isSelected=oldItem.isSelected;
+                  tmpDevice.createdOn=oldItem.createdOn;
+                  tmpDevice.createdBy=oldItem.createdBy;
+                }
+              })
+            }
             this.vllDevices.forEach((vlItem) => {
               if (tmpDevice.id == vlItem.value) {
                 tmpDevice.text = vlItem.text;

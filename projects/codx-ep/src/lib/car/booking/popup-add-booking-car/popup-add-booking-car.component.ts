@@ -27,8 +27,10 @@ import { Resource } from '../../../models/resource.model';
 export class Device {
   id;
   text = '';
-  isSelected = true;
+  isSelected = false;
   icon = '';
+  createdBy=null;
+  createdOn=null;
 }
 
 @Component({
@@ -85,6 +87,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   CbxName: any;
   isAfterRender = false;
   lstEquipment = [];
+  tmplstDeviceEdit = [];
   tempAtender: {
     userID: string;
     userName: string;
@@ -177,25 +180,52 @@ export class PopupAddBookingCarComponent extends UIComponent {
         this.data?.equipments != null &&
         this.optionalData == null
       ) {
-        this.data?.equipments.forEach((equip) => {
-          let tmpDevice = new Device();
-          tmpDevice.id = equip.equipmentID;
-          tmpDevice.isSelected = equip.isPicked;
-          this.lstDeviceCar.forEach((vlDevice) => {
-            if (tmpDevice.id == vlDevice.id) {
-              tmpDevice.text = vlDevice.text;
-              tmpDevice.icon = vlDevice.icon;
-            }
-          });
-          this.tmplstDevice.push(tmpDevice);
-        });
+        // this.data?.equipments.forEach((equip) => {
+        //   let tmpDevice = new Device();
+        //   tmpDevice.id = equip.equipmentID;
+        //   tmpDevice.isSelected = equip.isPicked;
+        //   this.lstDeviceCar.forEach((vlDevice) => {
+        //     if (tmpDevice.id == vlDevice.id) {
+        //       tmpDevice.text = vlDevice.text;
+        //       tmpDevice.icon = vlDevice.icon;
+        //     }
+        //   });
+        //   this.tmplstDevice.push(tmpDevice);
+        // });
+        //Lấy list Thiết bị
+        this.codxEpService.getResourceEquipments(this.data?.resourceID).subscribe((eq:any)=>{
+          if(eq!=null){
+            Array.from(eq).forEach((e:any)=>{
+              let tmpDevice = new Device();
+              tmpDevice.id = e.equipmentID;
+              tmpDevice.isSelected=false;
+              this.lstDeviceCar.forEach((vlDevice) => {
+                if (tmpDevice.id == vlDevice.id) {
+                  tmpDevice.text = vlDevice.text;
+                  tmpDevice.icon = vlDevice.icon;
+                }
+              });
+              if(this.data.equipments && this.data.equipments.length>0){
+                this.data.equipments.forEach(element => {
+                  if(element.equipmentID==tmpDevice.id){
+                    tmpDevice.isSelected=true;
+                    tmpDevice.createdBy=element.createdBy;
+                    tmpDevice.createdOn=element.createdOn;
+                  }
+                });
+              }
+              this.tmplstDeviceEdit.push(tmpDevice);
+            })
+          }
+          
+        })
       }
       if (this.isCopy) {
         if (this.data.equipments) {
           this.data.equipments.forEach((equip) => {
             let tmpDevice = new Device();
             tmpDevice.id = equip.equipmentID;
-            tmpDevice.isSelected = equip.isPicked;
+            tmpDevice.isSelected = false;
             this.lstDeviceCar.forEach((vlDevice) => {
               if (tmpDevice.id == vlDevice.id) {
                 tmpDevice.text = vlDevice.text;
@@ -593,12 +623,12 @@ export class PopupAddBookingCarComponent extends UIComponent {
         
       } 
       
-      let hours = parseInt(
-        ((this.data.endDate - this.data.startDate) / 1000 / 60 / 60).toFixed()
-      );
-      if (!isNaN(hours) && hours > 0) {
-        this.data.hours = hours;
-      }
+      // let hours = parseInt(
+      //   ((this.data.endDate - this.data.startDate) / 1000 / 60 / 60).toFixed()
+      // );
+      // if (!isNaN(hours) && hours > 0) {
+      //   this.data.hours = hours;
+      // }
 
       this.fGroupAddBookingCar.patchValue(this.data);
       if (this.fGroupAddBookingCar.invalid == true) {
@@ -620,11 +650,13 @@ export class PopupAddBookingCarComponent extends UIComponent {
       
       let tmpEquip = [];
       this.tmplstDevice.forEach((element) => {
-        let tempEquip = new Equipments();
-        tempEquip.equipmentID = element.id;
-        tempEquip.createdBy = this.authService.userValue.userID;
-        tempEquip.isPicked = element.isSelected;
-        tmpEquip.push(tempEquip);
+        if(element.isSelected){
+          let tempEquip = new Equipments();
+          tempEquip.equipmentID = element.id;
+          tempEquip.createdBy = element.createdBy==null? this.authService.userValue.userID :element.createdBy;
+          tempEquip.createdOn =element.createdOn ==null? new Date(): element.createdOn;
+          tmpEquip.push(tempEquip);
+        }
       });
       this.data.equipments = tmpEquip;
 
@@ -1254,7 +1286,15 @@ export class PopupAddBookingCarComponent extends UIComponent {
           selectResource[0].equipments.forEach((item) => {
             let tmpDevice = new Device();
             tmpDevice.id = item.equipmentID;
-            tmpDevice.isSelected = false;
+            if(this.tmplstDeviceEdit.length>0){
+              this.tmplstDeviceEdit.forEach(oldItem=>{
+                if(oldItem.id== tmpDevice.id){
+                  tmpDevice.isSelected=oldItem.isSelected;
+                  tmpDevice.createdOn=oldItem.createdOn;
+                  tmpDevice.createdBy=oldItem.createdBy;
+                }
+              })
+            }
             this.vllDevices.forEach((vlItem) => {
               if (tmpDevice.id == vlItem.value) {
                 tmpDevice.text = vlItem.text;

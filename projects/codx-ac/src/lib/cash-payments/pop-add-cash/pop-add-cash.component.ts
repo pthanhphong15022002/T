@@ -84,6 +84,13 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     });
     if (this.cashpayment.voucherNo != null) {
+      this.voucherNo = this.cashpayment.voucherNo;
+      this.objectType = this.cashpayment.objectType;
+      this.voucherDate = this.cashpayment.voucherDate;
+      this.objectID = this.cashpayment.objectID;
+      this.cashBookID = this.cashpayment.cashBookID;
+      this.currencyID = this.cashpayment.currencyID;
+      this.exchangeRate = this.cashpayment.exchangeRate;
       this.acService
         .loadData(
           'ERM.Business.AC',
@@ -101,6 +108,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //#region Init
 
   onInit(): void {
+    this.voucherDate = new Date();
   }
   
   ngAfterViewInit() {
