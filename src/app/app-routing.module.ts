@@ -1,3 +1,4 @@
+import { LayoutTenantComponent } from './modules/auth/tenants/layout/layout.component';
 import { DynamicFormComponent } from './../../projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -233,7 +234,8 @@ var childRoutes = [
 export const routes: Routes = [
   {
     path: 'tenants',
-    component: TenantsComponent,
+    component: LayoutTenantComponent,
+    children: [{ path: '', component: TenantsComponent }],
   },
   {
     path: 'auth',

@@ -144,8 +144,10 @@ export class OrgorganizationComponent extends UIComponent {
       if (currentView) {
         this.codxTreeView = currentView.currentComponent?.treeView;
       }
-      this.view.dataService.addNew().subscribe((result: any) => {
+      this.view.dataService.addNew()
+      .subscribe((result: any) => {
         if (result) {
+          result["parentID"] = this.orgUnitID;
           let data = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,

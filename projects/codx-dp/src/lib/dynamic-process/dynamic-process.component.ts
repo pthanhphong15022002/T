@@ -50,7 +50,7 @@ export class DynamicProcessComponent
 
   // Input
   @Input() dataObj?: any;
-  @Input() showButtonAdd = true;
+  @Input() showButtonAdd = false;
   dialog!: DialogRef;
   // create variables
   crrFunID: string = '';
@@ -117,11 +117,29 @@ export class DynamicProcessComponent
     this.button = {
       id: this.btnAdd,
     };
+    if (!this.funcID) {
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
+      this.crrFunID = this.funcID;
+    }
+    this.afterLoad();
     // gán tạm để test
     this.getListUser();
   }
 
-  afterLoad() {}
+  afterLoad() {
+    this.showButtonAdd =this.funcID == 'DP0101'   
+  }
+  //chang data
+  viewChanged(e) {
+    var funcIDClick = this.activedRouter.snapshot.params['funcID'];
+    if (this.crrFunID != funcIDClick) {
+      this.funcID = funcIDClick;
+      this.crrFunID = this.funcID;
+      this.afterLoad();
+    
+      this.changeDetectorRef.detectChanges();
+    }
+  }
   onDragDrop(e: any) {}
 
   click(evt: ButtonModel) {
@@ -274,6 +292,7 @@ export class DynamicProcessComponent
     this.itemSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
+    
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -293,9 +312,7 @@ export class DynamicProcessComponent
     }
   }
 
-  changeDataMF(e, data){
-
-  }
+  changeDataMF(e, data) {}
   //#popup roles
   roles(e: any) {
     let dialogModel = new DialogModel();

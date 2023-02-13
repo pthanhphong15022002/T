@@ -113,6 +113,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.EAppointionObj = res?.data;
+            this.EAppointionObj.effectedDate = null;
             this.EAppointionObj.employeeID = this.employId;
             this.formModel.currentData = this.EAppointionObj;
             this.formGroup.patchValue(this.EAppointionObj);

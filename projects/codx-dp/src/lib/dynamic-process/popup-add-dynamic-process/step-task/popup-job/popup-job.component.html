@@ -12,7 +12,7 @@
 ></codx-form>
 
 <ng-template #subHeader>
-  <div class="ms-4" *ngIf="stepType == 'A'">
+  <div class="ms-4" *ngIf="taskType == 'A'">
     <codx-input
       class="me-2"
       type="colorpicker"
@@ -75,10 +75,10 @@
     <!-- Ten Cong Viec -->
     <div
       class="form-group d-flex justify-content-between align-item-center w-100"
-      *ngIf="stepType != 'Q'"
+      *ngIf="taskType != 'Q'"
     >
       <!-- name -->
-      <div class="step-name w-100" [ngClass]="stepType === 'P' ? 'me-4' : ''">
+      <div class="step-name w-100" [ngClass]="taskType === 'P' ? 'me-4' : ''">
         <div>
           <codx-label
             fiedName="taskName"
@@ -98,7 +98,7 @@
       </div>
       <!--End name -->
       <!-- Cuoc goi -->
-      <div *ngIf="stepType === 'C'" class="w-100 ms-4" style="flex-basis: 100%">
+      <div *ngIf="taskType === 'C'" class="w-100 ms-4" style="flex-basis: 100%">
         <div>
           <codx-label
             fiedName="callType"
@@ -119,7 +119,7 @@
       <!--end Cuoc goi -->
 
       <!-- Cuoc hop -->
-      <div *ngIf="stepType === 'M'" style="flex-basis: 25%" class="">
+      <div *ngIf="taskType === 'M'" style="flex-basis: 25%" class="">
         <div class="d-flex justify-content-end">
           <codx-label
             fiedName="isOnline"
@@ -143,7 +143,7 @@
       <!-- Gui mail -->
       <!-- TODO: mail chưa có tài liệu -->
       <div
-        *ngIf="stepType === 'E' || stepType === 'Q'"
+        *ngIf="taskType === 'E' || taskType === 'Q'"
         class=""
         style="flex-basis: 10%"
       >
@@ -151,13 +151,13 @@
           <codx-label></codx-label>
         </div>
         <div
-          *ngIf="stepType === 'E'"
+          *ngIf="taskType === 'E'"
           class="d-flex justify-content-end"
           style="margin-top: 2px"
         >
           <button
             class="button-mail"
-            *ngIf="stepType == 'E'"
+            *ngIf="taskType == 'E'"
             (click)="handelMail()"
           >
             <span
@@ -170,7 +170,7 @@
     </div>
     <!--End ten Cong Viec -->
 
-    <div class="form-group" *ngIf="stepType == 'Q'">
+    <div class="form-group" *ngIf="taskType == 'Q'">
       <div class="d-flex justify-content-between align-items-center mail">
         <codx-label name="Reference" default="Tên khảo sát"></codx-label>
         <a class="d-flex justify-content-end align-items-center cursor-pointer">
@@ -314,7 +314,7 @@
     <div class="form-group">
       <div
         class="d-flex justify-content-between align-item-center"
-        *ngIf="stepType === 'M'"
+        *ngIf="taskType === 'M'"
       >
         <div>
           <codx-label

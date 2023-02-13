@@ -11,6 +11,7 @@ import { ExchangeRates } from '../../models/ExchangeRates.model';
   styleUrls: ['./pop-add-exchangerate.component.css']
 })
 export class PopAddExchangerateComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('form') public form: CodxFormComponent;
   @Input() headerText: string;
   dialog!: DialogRef;
@@ -45,13 +46,18 @@ export class PopAddExchangerateComponent extends UIComponent implements OnInit {
       this.note = dialogData.data?.dataex.note;   
     }
   }
+//#endregion
 
+  //#region Init
   onInit(): void {
     
   }
   ngAfterViewInit() {
     this.exchangerate = this.form.formGroup.value;
   }
+  //#endregion
+
+  //#region Function
   valueChange(e:any){
     this.exchangeRate = e.data;
     this.exchangerate[e.field] = this.exchangeRate;
@@ -64,6 +70,9 @@ export class PopAddExchangerateComponent extends UIComponent implements OnInit {
     this.note = e.data;
     this.exchangerate[e.field] = this.note;
   }
+  //#endregion
+
+  //#region CRUD
   onSave(){    
       if (this.exchangeRate.trim() == '' || this.exchangeRate == null) {
         this.notification.notifyCode(
@@ -84,4 +93,5 @@ export class PopAddExchangerateComponent extends UIComponent implements OnInit {
     
     this.dialog.close();  
   }
+  //#endregion
 }

@@ -99,14 +99,14 @@ export class NewsTagComponent extends UIComponent {
         data.recID).subscribe(
           (res) => {
             if (res) {
-              this.codxService.navigate("", '/wp/news/' + this.funcID + '/' + data.category + '/' + data.recID);
+              this.codxService.navigate("", '/news/' + this.funcID + '/' + data.category + '/' + data.recID);
             }
           });
   }
   clickTag(tag: any) {
     if (tag && tag.text) {
       this.dataValues = tag.text;
-      this.codxService.navigate('', '/wp/news/' + this.funcID + '/tag/' + this.dataValues)
+      this.codxService.navigate('', '/news/' + this.funcID + '/tag/' + this.dataValues)
       this.listview.dataService.setPredicates([this.predicates], [this.dataValues]).subscribe();
     }
   }

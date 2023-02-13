@@ -44,6 +44,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   grdViewSetUp: any = null;
   moreFC: any = null;
   user:any = null;
+  dataSerach:any[] = [];
   @ViewChild('codxListView') codxListView: CodxListviewComponent;
   @ViewChild("chatBox") chatBox:TemplateRef<any>;
   constructor(
@@ -116,6 +117,12 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
   // searrch
   search(event: any) {
+    debugger;
+    this.api.execSv("WP","ERM.Business.WP","GroupBusiness","SearchGroupAsync",[event])
+    .subscribe((res:any) =>{
+      this.dataSerach = res;
+      this.dt.detectChanges();
+    });
 
   }
   // click group chat - chat box

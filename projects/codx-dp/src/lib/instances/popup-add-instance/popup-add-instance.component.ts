@@ -96,7 +96,12 @@ export class PopupAddInstanceComponent implements OnInit {
     this.listStepCbx = dt?.data[5];
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+    if(this.acction === 'add'){
+      this.autoClickedSteps();
+    }
+  }
 
   ngAfterViewInit(): void {
     if (this.isApplyFor === 'D') {
@@ -125,7 +130,7 @@ export class PopupAddInstanceComponent implements OnInit {
       this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
     this.changeDetectorRef.detectChanges();
   }
-   
+
   valueChange($event) {
     if ($event) {
       this.instance[$event.field] = $event.data;
@@ -166,7 +171,7 @@ export class PopupAddInstanceComponent implements OnInit {
       option.methodName = 'EditInstanceAsync';
     }
     option.data = [this.instance, this.listStep];
-  
+
     return true;
   }
   saveInstances() {
@@ -181,5 +186,8 @@ export class PopupAddInstanceComponent implements OnInit {
   deleteListReason(listStep:any): void{
     delete listStep[listStep.length-1];
     delete listStep[listStep.length-2];
+  }
+  autoClickedSteps() {
+    this.instance.stepID =  this.listStep[0].stepID;
   }
 }
