@@ -82,7 +82,7 @@ export class InstancesComponent
   kanban: any;
   listStepsCbx: any;
   crrStepID: string;
-  moreFuncDbClick = [];
+  moreFuncInstance = [];
   dataColums = [];
   dataDrop: any;
 
@@ -91,12 +91,19 @@ export class InstancesComponent
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
-
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     super(inject);
     this.dialog = dialog;
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f)
+        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+          if (res && res.length > 0) {
+            this.moreFuncInstance = res;
+          }
+        });
+    });
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -156,15 +163,6 @@ export class InstancesComponent
     this.resourceKanban.className = 'StepsBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
-
-    this.cache.functionList(this.funcID).subscribe((f) => {
-      if (f)
-        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
-          if (res && res.length > 0) {
-            this.moreFuncDbClick = res;
-          }
-        });
-    });
   }
 
   click(evt: ButtonModel) {
@@ -316,7 +314,7 @@ export class InstancesComponent
         break;
       case 'DP09':
         // listStep by Id Instacess is null
-        this.moveStage(e.data, data,null);
+        this.moveStage(e.data, data, null);
         break;
       case 'DP02':
         this.moveReason(e.data, data, !this.isMoveSuccess);
@@ -381,6 +379,12 @@ export class InstancesComponent
   }
 
   dropInstance(data) {
+    if (this.moreFuncInstance?.length == 0) {
+      data.stepID = this.crrStepID;
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
+
     if (
       this.kanban &&
       this.kanban.columns?.length > 0 &&
@@ -393,16 +397,28 @@ export class InstancesComponent
       );
       if (idx != -1) {
         var stepCrr = this.dataColums[idx].dataColums;
-        let more: any;
-        if (!stepCrr?.isSuccessStep && !stepCrr?.isFailStep)
-          this.moveStage(more, data,this.listSteps);
-        else {
-          if (stepCrr?.isSuccessStep) this.moveReason(more, data, true);
-          else this.moveReason(more, data, false);
+        if (!stepCrr?.isSuccessStep && !stepCrr?.isFailStep) {
+          idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
+          if (idx != -1)
+            this.moveStage(this.moreFuncInstance[idx], data, this.listSteps);
+        } else {
+          if (stepCrr?.isSuccessStep) {
+            idx = this.moreFuncInstance.findIndex(
+              (x) => x.functionID == 'DP10'
+            );
+            if (idx != -1)
+              this.moveReason(this.moreFuncInstance[idx], data, true);
+          } else {
+            idx = this.moreFuncInstance.findIndex(
+              (x) => x.functionID == 'DP02'
+            );
+            if (idx != -1)
+              this.moveReason(this.moreFuncInstance[idx], data, false);
+          }
         }
       } else {
         data.stepID = this.crrStepID;
-        this.changeDetectorRef.detectChanges()
+        this.changeDetectorRef.detectChanges();
       }
     }
   }

@@ -16,19 +16,7 @@ import {
   FormGroup,
   ValidationErrors,
   ValidatorFn,
-  Validators,
 } from '@angular/forms';
-import { map, Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import {
-  ApiHttpService,
-  AuthService,
-  AuthStore,
-  CacheRouteReuseStrategy,
-  NotificationsService,
-  TenantStore,
-  UrlUtil,
-} from 'codx-core';
 
 @Component({
   selector: 'qtsc-login',
@@ -56,13 +44,12 @@ export class LoginQTSCComponent implements OnInit, OnDestroy {
   @Input() f: any;
   @Input() c: any;
   @Input() fl: any;
-  @Output() submitEvent = new EventEmitter();
+  @Output() submitEvent = new EventEmitter<string>();
   @Output() submitChangePassEvent = new EventEmitter();
   @Output() submitFirstLoginEvent = new EventEmitter();
   @Output() destroyEven = new EventEmitter();
   @Output() forgotPassEven = new EventEmitter();
   // private fields
-  @Input() unsubscribe: Subscription[] = [];
   constructor(private dt: ChangeDetectorRef) { }
 
   ngOnInit(): void { }
@@ -86,8 +73,8 @@ export class LoginQTSCComponent implements OnInit, OnDestroy {
     this.dt.detectChanges();
   }
 
-  submit() {
-    this.submitEvent.emit();
+  submit(type?: string) {
+    this.submitEvent.emit(type);
   }
 
   submitChangePass() {

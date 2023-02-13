@@ -89,11 +89,11 @@ export class RangesKanbanComponent implements OnInit {
       this.dialog = this.callfunc.openSide(AddEditComponent, ['add', this.titleAction], option);
       this.dialog.closed.subscribe((x) => {
         if (!x?.event) this.view.dataService.clear();
-        if (x?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+        // if (x?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
         if (x.event == null && this.view.dataService.hasSaved)
           this.view.dataService
             .delete([this.view.dataService.dataSelected])
@@ -115,11 +115,12 @@ export class RangesKanbanComponent implements OnInit {
 
       this.dialog.closed.subscribe((x) => {
         if (!x?.event) this.view.dataService.clear();
-        if (x?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );})
+        // if (x?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
+        })
     });
   }
 
