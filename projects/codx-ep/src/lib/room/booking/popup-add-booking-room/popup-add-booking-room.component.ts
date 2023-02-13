@@ -1,3 +1,4 @@
+import { Permission } from './../../../../../../../src/shared/models/file.model';
 import { editAlert } from '@syncfusion/ej2-angular-spreadsheet';
 import { Resource } from './../../../models/resource.model';
 import { Subscriber } from 'rxjs';
@@ -131,6 +132,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   private approvalRuleStationery = '0';
   private autoApproveItem = '0';
   dueDateControl: any;
+  listFilePermission =[];
 
   constructor(
     private injector: Injector,
@@ -725,8 +727,18 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.tmpAttendeesList = [];
       this.attendeesList.forEach((item) => {
         this.tmpAttendeesList.push(item);
+          let tmpPer= new Permission()
+          tmpPer.objectID= item.userID;//
+          tmpPer.objectType= 'U';
+          tmpPer.read= true;
+          tmpPer.share=  true;
+          tmpPer.download=  true;
+          tmpPer.isActive=  true;
+          this.listFilePermission.push(tmpPer);
+        
       });
       this.tmpAttendeesList.push(this.curUser);
+
       let tmpEquip = [];
       this.tmplstDevice.forEach((element) => {
         let tempEquip = new Equipments();
@@ -749,6 +761,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.data.resourceType = '1';
       this.data.requester = this.curUser.userName;
       this.data.attendees = this.tmpAttendeesList.length;
+      this.data.attachments=this.attachment.fileUploadList.length
       //check
       this.codxEpService.checkDuplicateBooking(
         this.data.startDate,
@@ -915,6 +928,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               this.attachment.fileUploadList &&
               this.attachment.fileUploadList.length > 0
             ) {
+              this.attachment.addPermissions=this.listFilePermission;
               this.attachment.objectId = this.returnData?.recID;
               (await this.attachment.saveFilesObservable()).subscribe(
                 (item2: any) => {
@@ -1227,11 +1241,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.attendeesList.push(item);
       });
     }
+    this.listFilePermission=[];
     this.attendeesList.forEach((item) => {
       if (item.userID == this.curUser.userID) {
         this.attendeesList.splice(this.attendeesList.indexOf(item), 1);
       }
     });
+    
 
     this.changeDetectorRef.detectChanges();
   }
@@ -1673,18 +1689,21 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       if (selectResource) {
         this.roomCapacity = selectResource[0].capacity;
         this.tmplstDevice = [];
-        selectResource[0].equipments.forEach((item) => {
-          let tmpDevice = new Device();
-          tmpDevice.id = item.equipmentID;
-          tmpDevice.isSelected = false;
-          this.vllDevices.forEach((vlItem) => {
-            if (tmpDevice.id == vlItem.value) {
-              tmpDevice.text = vlItem.text;
-              tmpDevice.icon = vlItem.icon;
-            }
+        if(selectResource[0].equipments && selectResource[0].equipments.length>0){
+          selectResource[0].equipments.forEach((item) => {
+            let tmpDevice = new Device();
+            tmpDevice.id = item.equipmentID;
+            tmpDevice.isSelected = false;
+            this.vllDevices.forEach((vlItem) => {
+              if (tmpDevice.id == vlItem.value) {
+                tmpDevice.text = vlItem.text;
+                tmpDevice.icon = vlItem.icon;
+              }
+            });
+            this.tmplstDevice.push(tmpDevice);
           });
-          this.tmplstDevice.push(tmpDevice);
-        });
+        }
+        
       }
       this.detectorRef.detectChanges();
     }

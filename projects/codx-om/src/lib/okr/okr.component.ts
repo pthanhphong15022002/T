@@ -254,7 +254,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             //----------
             this.dataRequest.dataValue = item.recID;
             //----------
-            this.okrService.getOKR(this.dataRequest).subscribe((item: any) => {
+            this.okrService.getAllOKROfPlan(this.dataOKRPlans.recID).subscribe((item: any) => {
               if (item) {
                 this.dataOKR = item;
               }
