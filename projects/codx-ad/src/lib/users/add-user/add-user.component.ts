@@ -101,7 +101,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.dataCopy = dt?.data?.dataCopy;
     this.adUser = JSON.parse(JSON.stringify(this.data));
     if (this.formType == 'edit') {
-      this.adUser.userID = this.data._uuid;
+      // this.adUser.userID = this.data._uuid;
       this.viewChooseRole = this.data?.chooseRoles;
       if (this.data?.chooseRoles)
         this.viewChooseRoleTemp = JSON.parse(
