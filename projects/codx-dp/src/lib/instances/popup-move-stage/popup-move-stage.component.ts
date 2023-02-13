@@ -62,7 +62,7 @@ export class PopupMoveStageComponent implements OnInit {
     this.beforeSave();
   }
   beforeSave() {
-    var data = [this.instance.recID,this.instance.stepID ,this.instancesStepOld];
+    var data = [this.instance.recID,this.stepIdOld ,this.instancesStepOld];
     this.codxDpService.moveStageByIdInstance(data);
     return true;
   }
