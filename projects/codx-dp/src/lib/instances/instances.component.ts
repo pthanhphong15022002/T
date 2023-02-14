@@ -43,12 +43,12 @@ export class InstancesComponent
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
-  views: Array<ViewModel> = [];
-  moreFuncs: Array<ButtonModel> = [];
-
   @Input() process: any;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
+  @ViewChild('tmpDetail') tmpDetail: TemplateRef<any>;
+  views: Array<ViewModel> = [];
+  moreFuncs: Array<ButtonModel> = [];
   showButtonAdd = true;
   button?: ButtonModel;
   dataSelected: any;
@@ -373,6 +373,21 @@ export class InstancesComponent
         //xư lý dbClick
         break;
     }
+  }
+
+  viewDetail(){
+      let option = new DialogModel();
+       option.zIndex = 1010;
+      let popup = this.callFunc.openForm(
+        this.tmpDetail,
+        '',
+        400,
+        500,
+        '',
+        null,
+        '',
+        option
+      );
   }
 
   dropInstance(data) {

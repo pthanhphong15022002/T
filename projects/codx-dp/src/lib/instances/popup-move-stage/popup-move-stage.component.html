@@ -2,8 +2,8 @@
   #form
   [headerText]="headerText"
   [subHeader]="subHeader"
-  [body]="body"
-  [footer]="footer"
+  [body]="bodyCatgaBao"
+  [footer]="footerCatgaBao"
   [dialog]="dialog"
   [formModel]="formModel"
   [data]="instancesStepOld"
@@ -12,7 +12,7 @@
 <ng-template #subHeader>
   <span>{{ stepName }}</span>
 </ng-template>
-<ng-template #body>
+<ng-template #bodyCatgaBao>
   <div class="title-step pb-18">
     <!-- <span>{{instanceStep.currentStep}}</span> -->
   </div>
@@ -143,7 +143,7 @@
   </div>
 </ng-template>
 
-<ng-template #footer>
+<ng-template #footerCatgaBao>
   <div class="d-flex justify-content-end">
     <div class="" id="buttonSave">
       <button
