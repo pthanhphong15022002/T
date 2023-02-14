@@ -45,7 +45,8 @@ export class PopupSearchComponent implements OnInit {
         {
           let formName = func.formName;
           let grvName = func.gridViewName;
-          this.cache.gridViewSetup(formName,grvName).subscribe(grv => {
+          this.cache.gridViewSetup(formName,grvName)
+          .subscribe(grv => {
             if(grv){
               this.gridViewSetup = grv;
             }
@@ -67,7 +68,7 @@ export class PopupSearchComponent implements OnInit {
     .subscribe((res:any) => {
       if(res){
         this.dialogRef.close();
-        this.codxService.navigate('','/wp/news/'+this.funcID + '/' + data.category +'/' + data.recID);
+        this.codxService.navigate('',`/wp2/news/${this.funcID}/${data.category}/${data.recID}`);
       }
     });
   }

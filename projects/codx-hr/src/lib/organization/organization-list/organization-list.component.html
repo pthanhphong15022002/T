@@ -59,7 +59,10 @@
   </div>
 </ng-template> -->
 <div class="p-2 h-100">
-  <codx-listview #codxListView [itemTemplate]="itemTemplate" [formModel]="formModel" [dataService]="dataService"
+  <codx-listview #codxListView 
+    [itemTemplate]="itemTemplate" 
+    [formModel]="formModel" 
+    [dataService]="dataService"
     [funcId]="formModel.funcID" [entityName]="formModel.entityName">
   </codx-listview>
 </div>

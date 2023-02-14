@@ -157,6 +157,8 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
             this.dayoffObj.recID = p.recID
             this.notify.notifyCode('SYS006')
             this.successFlag = true;
+          this.dialog && this.dialog.close(this.dayoffObj);
+
             // this.lstDayoffs.push(JSON.parse(JSON.stringify(this.dayoffObj)));
             // if(this.listView){
             //   (this.listView.dataService as CRUDService).add(this.dayoffObj).subscribe();
@@ -169,6 +171,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         this.hrSevice.UpdateEmployeeDayOffInfo(this.formModel.currentData).subscribe(p => {
           if(p != null){
             this.notify.notifyCode('SYS007')
+          this.dialog && this.dialog.close(this.dayoffObj);
           // this.lstDayoffs[this.indexSelected] = p;
           // if(this.listView){
           //   (this.listView.dataService as CRUDService).update(this.lstDayoffs[this.indexSelected]).subscribe()

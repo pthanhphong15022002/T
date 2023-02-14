@@ -39,7 +39,7 @@ export class InputCustomFieldComponent implements OnInit {
   isPopupUserCbb = false;
   messCodeEmail = 'SYS037'; // Email ko hợp lê
   messCodePhoneNum = 'RS030';
-
+  listIdUser: string = '';
   constructor(
     private cache: CacheService,
     private changeDef: ChangeDetectorRef
@@ -60,10 +60,12 @@ export class InputCustomFieldComponent implements OnInit {
     // this.customField.multiselect = true;
     //  this.customField.dataType = 'T';
     //  this.customField.dataFormat = 'T';
-
+     
     this.allowMultiFile = this.customField.multiselect ? '1' : '0';
     if (this.customField.dataFormat == 'D') this.formatDate = 'd';
     if (this.customField.dataFormat == 'DT') this.formatDate = 'F';
+    if (this.customField.DataType == 'P')  this.listIdUser = this.customField?.dataValue??'';
+   
   }
 
   valueChange(e) {
@@ -78,9 +80,9 @@ export class InputCustomFieldComponent implements OnInit {
       this.customField.dataFormat == 'E'
     ) {
       let email = e.data;
-      // var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-      //
-      var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+       var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      // var mailformat =
+      //   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (!email.match(mailformat)) {
         this.cache.message(this.messCodeEmail).subscribe((res) => {
           if (res) {
@@ -98,9 +100,10 @@ export class InputCustomFieldComponent implements OnInit {
       this.customField.dataFormat == 'P'
     ) {
       let phone = e.data;
-      // var phonenumberFormat = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-      //Thêm trường hợp +84
-      var phonenumberFormat = /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/;
+      var phonenumberFormat = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+      // //Thêm trường hợp +84
+      // var phonenumberFormat =
+      //   /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/;
       if (!phone.match(phonenumberFormat)) {
         this.cache.message(this.messCodePhoneNum).subscribe((res) => {
           if (res) {
@@ -123,29 +126,29 @@ export class InputCustomFieldComponent implements OnInit {
           this.changeDef.detectChanges();
           return;
         });
-      }else {
+      } else {
         this.showErrMess = false;
       }
       if (this.customField.dataFormat == 'I') {
-        if(!String(e.data).match(/^-?\d+$/)){
+        if (!String(e.data).match(/^-?\d+$/)) {
           this.showErrMess = true;
           //Mssg chưa có
           this.errorMessage = 'Vui lòng nhập số nguyên';
           this.changeDef.detectChanges();
           return;
         }
-      }else {
+      } else {
         this.showErrMess = false;
       }
       if (this.customField.dataFormat == 'D') {
-        if(!String(e.data).match(/^-?\d+\.\d+$/)){
+        if (!String(e.data).match(/^-?\d+\.\d+$/)) {
           this.showErrMess = true;
           //Mssg chưa có
           this.errorMessage = 'Vui lòng nhập số thập phân';
           this.changeDef.detectChanges();
           return;
         }
-      }else {
+      } else {
         this.showErrMess = false;
       }
     }
@@ -158,7 +161,12 @@ export class InputCustomFieldComponent implements OnInit {
 
   valueCbxUserChange(e) {
     if (this.isPopupUserCbb) this.isPopupUserCbb = false;
-    this.valueChangeCustom.emit({ e: e, data: this.customField });
+    if (e && e.id) {
+      if (this.listIdUser || this.customField.dataFormat == '1')
+        this.listIdUser = e.id;
+      else this.listIdUser += ';' + e.id;
+    }
+    this.valueChangeCustom.emit({ e: this.listIdUser, data: this.customField });
   }
 
   addFile() {

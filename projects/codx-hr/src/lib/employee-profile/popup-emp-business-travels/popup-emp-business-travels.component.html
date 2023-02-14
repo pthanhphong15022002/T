@@ -334,7 +334,16 @@
   </div>
 </ng-template>
 
-<codx-form>
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [formModel]="formModel"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="data"
+  *ngIf="isAfterRender"
+>
 <ng-template #body>
   <div class="form-group row">
     <div class="col-6">
