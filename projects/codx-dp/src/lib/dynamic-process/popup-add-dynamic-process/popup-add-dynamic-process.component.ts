@@ -248,7 +248,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getGrvStep();
     this.getValListDayoff();
     this.autoHandleStepReason();
-    this.loadCbxProccess();
   }
 
   ngAfterViewInit(): void {
@@ -423,6 +422,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   valueChange(e) {
     this.process[e.field] = e.data;
+    if(this.process.applyFor){
+      this.loadCbxProccess();
+    }
   }
   //#endregion
 
@@ -1555,6 +1557,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   createStepReason(stepReason: any, reasonValue: any) {
     stepReason = this.handleStepReason(stepReason, reasonValue);
+    stepReason.reasonControl = true;
   }
 
   handleReason(
@@ -1569,7 +1572,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     reason.processID = idProccess;
     reason.createdBy = this.userId;
     reason.modifiedBy = this.userId;
-
     return reason;
   }
 
@@ -1666,7 +1668,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   loadCbxProccess() {
     this.cache.valueList('DP031').subscribe((data) => {
-      this.dpService.getlistCbxProccess().subscribe((res) => {
+      this.dpService.getlistCbxProccess(this.process?.applyFor).subscribe((res) => {
         if (res) {
           this.listCbxProccess = res[0];
           var obj = {
