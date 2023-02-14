@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } f
 import { ApiHttpService, CallFuncService, DialogModel } from 'codx-core';
 
 @Component({
-  selector: 'lib-codx-history-temp',
+  selector: 'codx-history-temp',
   templateUrl: './codx-history-temp.component.html',
   styleUrls: ['./codx-history-temp.component.css']
 })
@@ -13,6 +13,7 @@ export class CodxHistoryTempComponent implements OnInit {
   @Input() openViewPopup = true ;// Thảo truyền ko cho click
   lstData: any[] = [];
   dVll: any = {};
+  
 
   countData: number = 0;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
@@ -27,6 +28,7 @@ export class CodxHistoryTempComponent implements OnInit {
   }
 
   getDataAsync(pObjectID: string) {
+    //đang test còn để comnet sau lộc thêm hàm get his
     if (pObjectID) {
       this.api
         .execSv(
