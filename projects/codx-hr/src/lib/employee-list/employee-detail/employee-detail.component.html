@@ -3664,7 +3664,7 @@
               </div>
             </div>
             <div class="mb-1">
-              <div>
+              <!-- <div>
                 <div class="d-flex flex-wrap py-3 px-4">
                   <ng-container *ngFor="let item of lstEDegrees">
                     <div class="border rounded min-w-250px mw-250px me-4 mb-2">
@@ -3724,6 +3724,23 @@
                     </div>
                   </ng-container>
                 </div>
+              </div> -->
+              <div>
+                <codx-gridview *ngIf="degreeColumnGrid"
+                #degreeGridView
+                [formModel]="degreeFormodel"
+                [columnsGrid]="degreeColumnGrid"
+                [service]="'HR'"
+                [assemblyName]="'Core'"
+                [className]="'DataBusiness'"
+                [method]="'LoadDataAsync'"
+                [predicates]="'EmployeeID=@0'"
+                [dataValues]="data.employeeID"
+                [pageSize]="numPageSizeGridView"
+                [entityName]="'HR_EDegrees'"
+                [rowHeight]="50"
+                height="240px"
+              ></codx-gridview>
               </div>
             </div>
           </div>
@@ -4571,3 +4588,49 @@
   </codx-mfunc>
 </ng-template>
 <!--#endregion -->
+
+
+<ng-template #templateDegreeGridCol1 let-data>
+  <div>
+    <i class="icon-school"></i>
+    {{data?.degreeName}}
+  </div>
+  <div>
+    {{data?.trainFieldDetail}}
+  </div>
+
+</ng-template>
+<ng-template #templateDegreeGridCol2 let-data>
+  <div>
+    {{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}
+  </div>
+  <div>
+    <i class="icon-school"></i>
+    {{data?.ranking}}
+    <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
+    {{data?.totalScore}}
+  </div>
+  
+</ng-template>
+<ng-template #templateDegreeGridCol3 let-data>
+  <span>
+    <i class="icon-calendar_today"></i>
+    {{data?.yearGraduated}}
+  </span>
+  <span>
+    <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
+    {{data?.issuedDate | fmDT}}
+  </span>
+  <div *ngIf="data.isMain">
+    <label>Là bằng cấp chính</label>
+  </div>
+</ng-template>
+<ng-template #templateDegreeGridMoreFunc let-data>
+  <codx-mfunc
+    [formModel]="degreeFormodel"
+    (clickMF)="clickMF($event, data, 'eDegrees')"
+    [dataItem]="data"
+    type="hover"
+  >
+  </codx-mfunc>
+</ng-template>
