@@ -81,15 +81,6 @@ export class OrganizationListComponent
       (this.dataService as CRUDService).delete([data], true).subscribe();
     }
   }
-  // before delete
-  beforeDelete(opt: RequestOption) {
-    opt.service = 'HR';
-    opt.assemblyName = 'ERM.Business.HR';
-    opt.className = 'OrganizationUnitsBusiness';
-    opt.methodName = 'DeleteOrgUnitAsync';
-    opt.data = [this.dataService.dataSelected.orgUnitID];
-    return true;
-  }
   // edit data
   editData(data: any, event: any) {
     if (this.dataService) {

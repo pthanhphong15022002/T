@@ -99,6 +99,7 @@ export class EmployeeProfileComponent extends UIComponent {
     console.log('dtttt', dialog);
   }
   @ViewChild("businessTravelGrid") businessTravelGrid: CodxGridviewComponent;
+  @ViewChild("degreeGridView") degreeGrid : CodxGridviewComponent;
   @ViewChild("dayoffGridView") dayoffGrid: CodxGridviewComponent;
   @ViewChild("gridView") grid:CodxGridviewComponent;
   @ViewChild("appointionGridView") appointionGrid:CodxGridviewComponent;
@@ -224,6 +225,7 @@ export class EmployeeProfileComponent extends UIComponent {
   appointionColumnGrid;
   dayoffColumnGrid;
   businessTravelColumnGrid;
+  degreeColumnGrid;
 
   //#region ViewChild
   @ViewChild('healthPeriodID', { static: true })
@@ -270,6 +272,15 @@ export class EmployeeProfileComponent extends UIComponent {
   templateDayOffGridCol3: TemplateRef<any>;
   @ViewChild('templateDayOffGridMoreFunc', {static: true}) 
   templateDayOffGridMoreFunc: TemplateRef<any>;
+
+  @ViewChild('templateDegreeGridCol1', {static: true}) 
+  templateDegreeGridCol1: TemplateRef<any>;
+  @ViewChild('templateDegreeGridCol2', {static: true}) 
+  templateDegreeGridCol2: TemplateRef<any>;
+  @ViewChild('templateDegreeGridCol3', {static: true}) 
+  templateDegreeGridCol3: TemplateRef<any>;
+  @ViewChild('templateDegreeGridMoreFunc', {static: true}) 
+  templateDegreeGridMoreFunc: TemplateRef<any>;
   
   @ViewChild('templateBusinessTravelGridCol1', {static: true}) 
   templateBusinessTravelGridCol1: TemplateRef<any>;
@@ -349,6 +360,11 @@ export class EmployeeProfileComponent extends UIComponent {
   eBusinessTravelFuncID= 'HRTEM0504'
   eBusinessTravelHeaderTexts
 
+  degreeFormodel: FormModel;
+  degreeRowCount;
+  degreeFuncID = 'HRTEM0601';
+  degreeHeaderText;
+
   onInit(): void {
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
       console.log('functionList', res);
@@ -368,6 +384,9 @@ export class EmployeeProfileComponent extends UIComponent {
 
     this.hrService.getFormModel(this.dayoffFuncID).then(res => {
       this.dayofFormModel = res;
+    })
+    this.hrService.getFormModel(this.degreeFuncID).then(res => {
+      this.degreeFormodel = res;
     })
 
     this.hrService.getFormModel(this.eBusinessTravelFuncID).then(res => {
@@ -515,6 +534,48 @@ export class EmployeeProfileComponent extends UIComponent {
         },
       ]
     })
+
+    this.hrService.getHeaderText(this.degreeFuncID).then(res => {
+      console.log('degreeeeeeeeeeeeeee', res);
+      
+      this.degreeHeaderText = res;
+      this.degreeColumnGrid = [
+        {
+          headerText: this.degreeHeaderText['DegreeName'] + '|' + this.degreeHeaderText['TrainFieldID'],
+          template: this.templateDegreeGridCol1,
+          width: '150',
+        },
+        {
+          headerText: this.degreeHeaderText['TrainSupplierID'] + '|' + this.degreeHeaderText['Ranking'],
+          template: this.templateDegreeGridCol2,
+          width: '150',
+        },
+        {
+          headerText: this.degreeHeaderText['YearGraduated'] + '|' + this.degreeHeaderText['IssuedDate'],
+          template: this.templateDegreeGridCol3,
+          width: '150',
+        },
+        {
+          template: this.templateDegreeGridMoreFunc,
+          width: '150',
+        },
+      ]
+    })
+
+    let insDegree = setInterval(()=>{
+      if(this.degreeGrid){
+        clearInterval(insDegree);
+        let t= this;
+        this.degreeGrid.dataService.onAction.subscribe((res)=>{
+          if(res){
+            if(res.type == 'loaded'){
+              t.degreeRowCount = res['data'].length
+          }
+          }
+        })
+        this.degreeRowCount = this.degreeGrid.dataService.rowCount; 
+      }
+    },100)
 
     let ins = setInterval(()=>{
       if(this.appointionGrid){
@@ -1315,10 +1376,12 @@ export class EmployeeProfileComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    let i = this.lstEDegrees.indexOf(data);
-                    if (i != -1) {
-                      this.lstEDegrees.splice(i, 1);
-                    }
+                    (this.degreeGrid.dataService as CRUDService).remove(data).subscribe();
+                    // let i = this.lstEDegrees.indexOf(data);
+                    // if (i != -1) {
+                    //   this.lstEDegrees.splice(i, 1);
+                    // }
+                    this.degreeRowCount = this.degreeRowCount - 1;
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2471,17 +2534,25 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupEDegreesComponent,
       {
         actionType: actionType,
-        indexSelected: this.lstEDegrees.indexOf(data),
-        lstEDegrees: this.lstEDegrees,
+        //indexSelected: this.lstEDegrees.indexOf(data),
+        //lstEDegrees: this.lstEDegrees,
         headerText: 'Bằng cấp',
         employeeId: this.data.employeeID,
-        dataSelected: data,
-        funcID: 'HRTEM0601',
+        degreeObj: data,
+        // dataSelected: data,
+        funcID: this.degreeFuncID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if (actionType == 'add' || actionType == 'copy') {
+        (this.degreeGrid.dataService as CRUDService).add(res.event).subscribe();
+        this.degreeRowCount = this.degreeRowCount + 1;
+      }
+      else if(actionType == 'edit'){
+        (this.degreeGrid.dataService as CRUDService).update(res.event).subscribe();
+      }
+      this.df.detectChanges();
     });
   }
 
@@ -2936,6 +3007,12 @@ copyValue(data, flag) {
       else if(flag == 'eAppointions'){
         this.appointionGrid.dataService.dataSelected = data;
         (this.appointionGrid.dataService as CRUDService).copy().subscribe((res: any) => {
+        this.HandleEmployeeAppointionInfo('copy', res);
+        })
+      }
+      else if(flag == 'eDegrees'){
+        this.degreeGrid.dataService.dataSelected = data;
+        (this.degreeGrid.dataService as CRUDService).copy().subscribe((res: any) => {
         this.HandleEmployeeAppointionInfo('copy', res);
         })
       }

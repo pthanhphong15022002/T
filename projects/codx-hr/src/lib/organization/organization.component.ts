@@ -16,6 +16,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { PopupAddOrganizationComponent } from './popup-add-organization/popup-add-organization.component';
 @Component({
   selector: 'lib-organization',
   templateUrl: './organization.component.html',
@@ -43,6 +44,8 @@ export class OrgorganizationComponent extends UIComponent {
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
   @ViewChild('tmpList') tmpList: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
 
   constructor(private inject: Injector) {
@@ -72,49 +75,129 @@ export class OrgorganizationComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.views = [
+      // {
+      //   id: '1',
+      //   type: ViewType.tree_orgchart,
+      //   sameData: true,
+      //   active: false,
+      //   model: {
+      //     resizable: true,
+      //     template: this.tempTree,
+      //     panelRightRef: this.panelRightLef,
+      //     template2: this.tmpOrgChart,
+      //     resourceModel: { parentIDField: 'ParentID' },
+      //   },
+      // },
       {
         id: '1',
-        type: ViewType.tree_orgchart,
+        type: ViewType.list,
         sameData: true,
         active: false,
         model: {
-          resizable: true,
-          template: this.tempTree,
-          panelRightRef: this.panelRightLef,
-          template2: this.tmpOrgChart,
-          resourceModel: { parentIDField: 'ParentID' },
+          template: this.itemTemplate,
         },
       },
-      {
-        id: '1',
-        type: ViewType.tree_list,
-        sameData: true,
-        active: false,
-        model: {
-          resizable: true,
-          template: this.tempTree,
-          panelRightRef: this.panelRightLef,
-          template2: this.tmpList,
-          resourceModel: { parentIDField: 'ParentID' },
-        },
-      },
-      {
-        id: '2',
-        type: ViewType.tree_masterdetail,
-        sameData: true,
-        active: false,
-        model: {
-          resizable: true,
-          template: this.tempTree,
-          panelRightRef: this.panelRightLef,
-          template2: this.tmpMasterDetail,
-        },
-      },
+      // {
+      //   id: '2',
+      //   type: ViewType.tree_masterdetail,
+      //   sameData: true,
+      //   active: false,
+      //   model: {
+      //     resizable: true,
+      //     template: this.tempTree,
+      //     panelRightRef: this.panelRightLef,
+      //     template2: this.tmpMasterDetail,
+      //   },
+      // },
     ];
     this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
     this.dataService.currentComponent =
       this.view?.dataService?.currentComponent;
+  }
+
+  //loadEmployList
+  loadEmployList(h, orgUnitID: string, abc) {}
+  // click moreFC
+  clickMF(event: any, data: any) {
+    if (event) {
+      switch (event.functionID) {
+        case 'SYS02': //delete
+          this.deleteData(data);
+          break;
+        case 'SYS03': // edit
+          this.editData(data, event);
+          break;
+        case 'SYS04': // copy
+          this.copyData(data, event);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  // delete data
+  deleteData(data: any) {
+    if (data) {
+      (this.dataService as CRUDService).delete([data], true).subscribe();
+    }
+  }
+  // edit data
+  editData(data: any, event: any) {
+    if (this.dataService) {
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.DataService = this.dataService;
+      option.FormModel = this.view.formModel;
+      let object = {
+        data: data,
+        action: event,
+        funcID: this.view.formModel.funcID,
+        isModeAdd: false,
+      };
+      let popup = this.callfc.openSide(
+        PopupAddOrganizationComponent,
+        object,
+        option,
+        this.view.formModel.funcID
+      );
+      popup.closed.subscribe((res: any) => {
+        if (res.event) {
+          let org = res.event[0];
+          let tmpOrg = res.event[1];
+          this.dataService.update(tmpOrg).subscribe();
+          this.view.dataService.add(org).subscribe();
+        }
+      });
+    }
+  }
+  // copy data
+  copyData(data: any, text: string) {
+    if (data && text) {
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.DataService = this.dataService;
+      option.FormModel = this.view.formModel;
+      this.dataService.dataSelected = JSON.parse(JSON.stringify(data));
+      (this.dataService as CRUDService).copy(data).subscribe((result: any) => {
+        if (result) {
+          let data = {
+            dataService: this.dataService,
+            formModel: this.view.formModel,
+            data: result,
+            function: this.view.formModel.funcID,
+            isAddMode: true,
+            titleMore: text,
+          };
+          let popup = this.callfc.openSide(
+            CodxFormDynamicComponent,
+            data,
+            option,
+            this.view.formModel.funcID
+          );
+        }
+      });
+    }
   }
   // change view
   changeView(evt: any) {
