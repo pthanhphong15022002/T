@@ -219,6 +219,7 @@ export class EmployeeDetailComponent extends UIComponent {
   rewardColumnsGrid;
   disciplineColumnGrid;
   expColumnGrid;
+  degreeColumnGrid;
 
   //#region ViewChild
   @ViewChild('healthPeriodID', { static: true })
@@ -300,6 +301,12 @@ export class EmployeeDetailComponent extends UIComponent {
   lstFuncSeverance: any = [];
   lstFuncID: any = [];
 
+
+  degreeFormodel: FormModel;
+  degreeRowCount;
+  degreeFuncID = 'HRTEM0601';
+  degreeHeaderText;
+
   clickItem(evet) {}
 
   onSectionChange(data: any) {
@@ -317,6 +324,7 @@ export class EmployeeDetailComponent extends UIComponent {
         this.crrFuncTab = this.lstTab[1].functionID;
         console.log('crrFuncTab', this.crrFuncTab);
         this.lstFuncID = res[0];
+        
 
         this.lstFuncSelfInfo = res[0].filter((p) => p.parentID == 'HRTEM01');
         console.log('lstFuncSelfInfo', this.lstFuncSelfInfo);
@@ -350,6 +358,53 @@ export class EmployeeDetailComponent extends UIComponent {
         this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
         console.log('lstFuncSeverance', this.lstFuncSeverance);
 
+
+        this.hrService.getFormModel(this.degreeFuncID).then(res => {
+          this.degreeFormodel = res;
+        })
+
+        this.hrService.getHeaderText(this.degreeFuncID).then(res => {
+          
+          this.degreeHeaderText = res;
+          this.degreeColumnGrid = [
+            {
+              headerText: this.degreeHeaderText['DegreeName'] + '|' + this.degreeHeaderText['TrainFieldID'],
+              template: this.templateDegreeGridCol1,
+              width: '150',
+            },
+            {
+              headerText: this.degreeHeaderText['TrainSupplierID'] + '|' + this.degreeHeaderText['Ranking'],
+              template: this.templateDegreeGridCol2,
+              width: '150',
+            },
+            {
+              headerText: this.degreeHeaderText['YearGraduated'] + '|' + this.degreeHeaderText['IssuedDate'],
+              template: this.templateDegreeGridCol3,
+              width: '150',
+            },
+            {
+              template: this.templateDegreeGridMoreFunc,
+              width: '150',
+            },
+          ]
+        })
+
+        let insDegree = setInterval(()=>{
+          if(this.degreeGrid){
+            clearInterval(insDegree);
+            let t= this;
+            this.degreeGrid.dataService.onAction.subscribe((res)=>{
+              if(res){
+                if(res.type == 'loaded'){
+                  t.degreeRowCount = res['data'].length
+              }
+              }
+            })
+            this.degreeRowCount = this.degreeGrid.dataService.rowCount; 
+          }
+        },100)
+
+        
         this.hrService.getHeaderText(this.benefitFuncID).then((res) => {
           this.benefitHeaderTexts = res;
           this.benefitColumnGrid = [
@@ -2230,7 +2285,7 @@ export class EmployeeDetailComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px';
+    option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       PopupEDegreesComponent,
       {
@@ -2602,6 +2657,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
   numPageSizeGridView = 5;
   @ViewChild('gridView') grid: CodxGridviewComponent;
+  @ViewChild("degreeGridView") degreeGrid : CodxGridviewComponent;
   @ViewChild('appointionGridView') appointionGrid: CodxGridviewComponent;
   @ViewChild('templateBenefitID', { static: true })
   templateBenefitID: TemplateRef<any>;
@@ -2615,6 +2671,17 @@ export class EmployeeDetailComponent extends UIComponent {
   templateBenefitMoreFunc: TemplateRef<any>;
   @ViewChild('filterTemplateBenefit', { static: true })
   filterTemplateBenefit: TemplateRef<any>;
+
+  @ViewChild('templateDegreeGridCol1', {static: true}) 
+  templateDegreeGridCol1: TemplateRef<any>;
+  @ViewChild('templateDegreeGridCol2', {static: true}) 
+  templateDegreeGridCol2: TemplateRef<any>;
+  @ViewChild('templateDegreeGridCol3', {static: true}) 
+  templateDegreeGridCol3: TemplateRef<any>;
+  @ViewChild('templateDegreeGridMoreFunc', {static: true}) 
+  templateDegreeGridMoreFunc: TemplateRef<any>;
+
+
   benefitFormodel: FormModel;
   eBenefitRowCount: number = 0;
   filterByBenefitIDArr: any = [];
