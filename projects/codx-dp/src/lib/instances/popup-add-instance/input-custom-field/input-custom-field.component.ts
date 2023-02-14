@@ -100,10 +100,10 @@ export class InputCustomFieldComponent implements OnInit {
       this.customField.dataFormat == 'P'
     ) {
       let phone = e.data;
-      // var phonenumberFormat = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-      //Thêm trường hợp +84
-      var phonenumberFormat =
-        /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/;
+      var phonenumberFormat = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+      // //Thêm trường hợp +84
+      // var phonenumberFormat =
+      //   /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/;
       if (!phone.match(phonenumberFormat)) {
         this.cache.message(this.messCodePhoneNum).subscribe((res) => {
           if (res) {
