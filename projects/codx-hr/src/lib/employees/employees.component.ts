@@ -110,12 +110,6 @@ export class EmployeesComponent extends UIComponent {
         template: this.itemInfoPersonal,
       },
       {
-        field: 'statusName',
-        headerText: 'Tình trạng',
-        width: 200,
-        template: this.itemStatusName,
-      },
-      {
         field: '',
         headerText: '',
         width: 30,
@@ -147,7 +141,13 @@ export class EmployeesComponent extends UIComponent {
     this.view.dataService.methodUpdate = 'UpdateAsync';
     this.detectorRef.detectChanges();
   }
-
+  changeDataMF(event:any){
+    event.forEach(element => {
+      if(element.functionID == "HR0032"){
+        element.disabled = true;
+      }
+    });
+  }
   getSetup(functionID: string) {
     if (functionID) {
       this.cache.functionList(functionID).subscribe((func: any) => {
@@ -219,9 +219,9 @@ export class EmployeesComponent extends UIComponent {
         case 'HR0031': // cập nhật tình trạng
           this.updateStatus(data, event.functionID);
           break;
-        case 'HR0032': // xem chi tiết
-          this.viewEmployeeInfo(event.data, data);
-          break;
+        // case 'HR0032': // xem chi tiết
+        //   this.viewEmployeeInfo(event.data, data);
+        //   break;
         case 'SYS002':
           this.exportFile();
           break;
@@ -411,14 +411,14 @@ export class EmployeesComponent extends UIComponent {
   }
 
   doubleClick(data) {
-    if (Array.isArray(this.listMoreFunc)){
-      let _mFunc = this.listMoreFunc.find(x => x.functionID === "HR0032");
-      if(_mFunc?.url){
-        this.codxService.navigate('', _mFunc.url, {
-          employeeID: data.employeeID,
-        });
-      }
-    }
+    // if (Array.isArray(this.listMoreFunc)){
+    //   let _mFunc = this.listMoreFunc.find(x => x.functionID === "HR0032");
+    //   if(_mFunc?.url){
+    //     this.codxService.navigate('', _mFunc.url, {
+    //       employeeID: data.employeeID,
+    //     });
+    //   }
+    // }
   }
 
   placeholder(

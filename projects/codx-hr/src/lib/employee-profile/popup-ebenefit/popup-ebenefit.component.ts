@@ -145,6 +145,8 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
           this.benefitObj.recID = p.recID;
           this.notify.notifyCode('SYS006');
           this.successFlag = true;
+          this.dialog && this.dialog.close(this.benefitObj);
+
           //this.benefitObj.push(JSON.parse(JSON.stringify(this.benefitObj)));
           // if(this.listView){
           //   (this.listView.dataService as CRUDService).add(this.benefitObj).subscribe();
@@ -161,6 +163,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
       this.hrService.EditEBenefit(this.formModel.currentData).subscribe((p) => {
         if (p != null) {
           this.notify.notifyCode('SYS007');
+          this.dialog && this.dialog.close(this.benefitObj);
           //this.listBenefits[this.indexSelected] = p;
           // if(this.listView){
           //   (this.listView.dataService as CRUDService).update(this.lstPassports[this.indexSelected]).subscribe()

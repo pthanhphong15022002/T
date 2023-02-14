@@ -16,10 +16,7 @@
     class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"
     (click)="addFile()"
   ></span>
-  <span
-    *ngIf="customField.dataType == 'P' && customField.dataFormat == 'M'"
-    class="mx-2 me-5"
-  >
+  <span *ngIf="customField.dataType == 'P'" class="mx-2 me-5">
     <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
       <span class="icon-group_add text-primary icon-18"></span>
     </button>
@@ -47,7 +44,7 @@
   </codx-input>
 </ng-container>
 <ng-container *ngIf="customField.dataType == 'N'">
-  <ng-container >
+  <ng-container>
     <codx-input
       [field]="customField.fieldName"
       type="number"
@@ -82,7 +79,7 @@
 </ng-container>
 
 <ng-container *ngIf="customField.dataType == 'P'">
-  <ng-container
+  <!-- <ng-container
     *ngIf="customField.dataFormat == 'C' || customField.dataFormat == 'V'"
   >
     <codx-input
@@ -97,18 +94,13 @@
       (valueChange)="valueChange($event)"
     >
     </codx-input>
-  </ng-container>
+  </ng-container> -->
 
-  <ng-container
-    *ngIf="
-      isPopupUserCbb &&
-      (customField.dataFormat == 'M' || customField.dataFormat == '1')
-    "
-  >
+  <ng-container *ngIf="isPopupUserCbb">
     <codx-combobox-popup
       [comboboxName]="'Users'"
       [field]="'cbbUser'"
-      [multiple]="customField.dataFormat == 'M' ? true : false"
+      [multiple]="customField.dataFormat == '2' ? true : false"
       [width]="700"
       [height]="600"
       [value]=""
@@ -116,6 +108,9 @@
       (clickSave)="valueCbxUserChange($event)"
     >
     </codx-combobox-popup>
+  </ng-container>
+  <ng-container *ngIf="listIdUser">
+    <codx-imgs [objectId]='listIdUser' objectType="AD_Users" [numberImages]="5"></codx-imgs>
   </ng-container>
 </ng-container>
 

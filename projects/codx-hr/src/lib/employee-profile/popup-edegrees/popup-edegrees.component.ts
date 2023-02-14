@@ -25,8 +25,9 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   idField: string = 'recID';
   degreeObj;
-  indexSelected;
-  lstDegrees;
+  //indexSelected;
+  //lstDegrees;
+  successFlag = false;
   funcID: string;
   actionType;
   employId;
@@ -38,7 +39,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   levelText: string;
   trainFieldText: string;
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('listView') listView: CodxListviewComponent;
+  //@ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
     private injector: Injector,
@@ -49,19 +50,35 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-
+    this.degreeObj = data?.data?.degreeObj;
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
-    this.lstDegrees = data?.data?.lstEDegrees;
-    this.indexSelected = data?.data?.indexSelected ?? -1;
+    this.formModel = dialog.formModel;
+    console.log(this.formModel);
+    
+    //this.lstDegrees = data?.data?.lstEDegrees;
+    //this.indexSelected = data?.data?.indexSelected ?? -1;
 
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      if (data?.data?.dataSelected)
-        this.degreeObj = JSON.parse(JSON.stringify(data?.data?.dataSelected));
-    }
+    // if (this.actionType === 'edit' || this.actionType === 'copy') {
+    //   if (data?.data?.dataSelected)
+    //     this.degreeObj = JSON.parse(JSON.stringify(data?.data?.dataSelected));
+    // }
+  }
+
+  ngAfterViewInit(){
+    this.dialog && this.dialog.closed.subscribe(res => {
+      if(!res.event){
+        if(this.successFlag){
+          this.dialog.close(this.degreeObj);
+        }
+        else{
+          this.dialog.close(null);
+        }
+      }
+    })
   }
 
   initForm() {
@@ -124,10 +141,10 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
-      return;
-    }
+    // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
 
     if (this.actionType === 'copy' || this.actionType === 'add') {
       delete this.degreeObj.recID;
@@ -136,15 +153,17 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddEmployeeDegreeInfo(this.degreeObj).subscribe((p) => {
         if (p != null) {
+          this.successFlag = true;
           this.degreeObj = p;
           this.notify.notifyCode('SYS006');
-          this.lstDegrees.push(JSON.parse(JSON.stringify(this.degreeObj)));
-          if (this.listView) {
-            (this.listView.dataService as CRUDService)
-              .add(this.degreeObj)
-              .subscribe();
-          }
+          // this.lstDegrees.push(JSON.parse(JSON.stringify(this.degreeObj)));
+          // if (this.listView) {
+          //   (this.listView.dataService as CRUDService)
+          //     .add(this.degreeObj)
+          //     .subscribe();
+          // }
           // this.dialog.close(p)
+          this.dialog && this.dialog.close(this.degreeObj);
         } else this.notify.notifyCode('SYS023');
       });
     } else {
@@ -153,32 +172,34 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            this.lstDegrees[this.indexSelected] = p;
-            if (this.listView) {
-              (this.listView.dataService as CRUDService)
-                .update(this.lstDegrees[this.indexSelected])
-                .subscribe();
-            }
+            this.successFlag = true; 
+            // this.lstDegrees[this.indexSelected] = p;
+            // if (this.listView) {
+            //   (this.listView.dataService as CRUDService)
+            //     .update(this.lstDegrees[this.indexSelected])
+            //     .subscribe();
+            // }
             // this.dialog.close(this.data)
+            this.dialog && this.dialog.close(this.degreeObj);
           } else this.notify.notifyCode('SYS021');
         });
     }
   }
 
-  click(data) {
-    this.degreeObj = data;
-    this.formModel.currentData = JSON.parse(JSON.stringify(this.degreeObj));
-    this.indexSelected = this.lstDegrees.findIndex(
-      (p) => (p.recID = this.degreeObj.recID)
-    );
-    this.actionType = 'edit';
-    this.formGroup?.patchValue(this.degreeObj);
-    this.cr.detectChanges();
-  }
+  // click(data) {
+  //   this.degreeObj = data;
+  //   this.formModel.currentData = JSON.parse(JSON.stringify(this.degreeObj));
+  //   this.indexSelected = this.lstDegrees.findIndex(
+  //     (p) => (p.recID = this.degreeObj.recID)
+  //   );
+  //   this.actionType = 'edit';
+  //   this.formGroup?.patchValue(this.degreeObj);
+  //   this.cr.detectChanges();
+  // }
 
-  afterRenderListView(evt) {
-    this.listView = evt;
-  }
+  // afterRenderListView(evt) {
+  //   this.listView = evt;
+  // }
 
   setIssuedPlace() {
     if (this.degreeObj.trainSupplierID) {

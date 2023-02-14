@@ -1166,6 +1166,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           (step) => step.recID == data.recID
         );
         if (index >= 0) {
+          
           this.taskGroupList.splice(index, 1);
         }
       }

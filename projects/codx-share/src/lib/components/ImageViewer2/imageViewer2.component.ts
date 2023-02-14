@@ -40,7 +40,7 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     @Input() zoomOutButton = true;
     ///
     images: any[] = [];
-
+    @Input() fileID:string = "";
     @Input() objectID: string = "";
 
 
@@ -68,12 +68,7 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     curSpan;
     viewerFullscreen;
     totalImagens: number;
-    indexImagemAtual: number;
-    rotacaoImagemAtual: number;
-    stringDownloadImagem: string;
-    isImagemVertical: boolean;
-    showOnlyPDF = false;
-
+    indexImage: number;
     zoomPercent = 100;
 
     constructor
@@ -178,9 +173,15 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     }
 
     inicializarImageViewer() {
-
-        this.indexImagemAtual = 1;
-        this.rotacaoImagemAtual = 0;
+        let _index = 0;
+        _index =  this.images.findIndex(x => x.recID == this.fileID);
+        if(_index > -1){
+            this.indexImage = _index;
+        }
+        else
+        {
+            this.indexImage = 0;
+        }
         this.totalImagens = this.images.length;
 
         if (this.viewer) {
@@ -202,7 +203,7 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         this.prepararTrocaImagem();
         let imgObj = this.isURlImagem();
         this.viewer.load(imgObj, imgObj);
-        this.curSpan.innerHTML = this.indexImagemAtual;
+        this.curSpan.innerHTML = this.indexImage + 1;
     }
 
     getTamanhoIframe() {
@@ -224,12 +225,10 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     }
 
     isURlImagem() {
-        if(this.indexImagemAtual <= 0)return this.images[this.indexImagemAtual]["source"];
-        return this.images[this.indexImagemAtual - 1]["source"];
+        return this.images[this.indexImage]["source"];
     }
 
     prepararTrocaImagem() {
-        this.rotacaoImagemAtual = 0;
         this.limparCacheElementos();
     }
 
@@ -252,31 +251,29 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
         this.setStyleClass('options-image-viewer', 'visibility', 'inherit');
     }
 
+    //next
     proximaImagem() {
-        this.isImagemVertical = false;
-        this.indexImagemAtual++;
-        if (this.indexImagemAtual > this.totalImagens) {
-            this.indexImagemAtual = 1;
+        this.indexImage++;
+        if (this.indexImage >= this.totalImagens) {
+            this.indexImage = 0;
         }
-        this.onNext.emit(this.indexImagemAtual);
+        this.onNext.emit(this.images[this.indexImage]);
         this.showImage();
     }
 
+    //previrious
     imagemAnterior() {
-        this.isImagemVertical = false;
-        this.indexImagemAtual--;
-        if (this.indexImagemAtual <= 0) {
-            this.indexImagemAtual = this.totalImagens;
+        this.indexImage--;
+        if (this.indexImage < 0) {
+            this.indexImage = this.totalImagens - 1;
         }
-        this.onPrevious.emit(this.indexImagemAtual);
+        this.onNext.emit(this.images[this.indexImage]);
         this.showImage();
     }
 
     rotacionarDireita() {
         const timeout = this.resetarZoom();
         setTimeout(() => {
-            this.rotacaoImagemAtual += this.ROTACAO_PADRAO_GRAUS;
-            this.isImagemVertical = !this.isImagemVertical;
             this.atualizarRotacao();
         }, timeout);
     }
@@ -284,8 +281,6 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     rotacionarEsquerda() {
         const timeout = this.resetarZoom();
         setTimeout(() => {
-            this.rotacaoImagemAtual -= this.ROTACAO_PADRAO_GRAUS;
-            this.isImagemVertical = !this.isImagemVertical;
             this.atualizarRotacao();
         }, timeout);
     }
@@ -301,12 +296,12 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     }
 
     atualizarRotacao(isAnimacao = true) {
-        let scale = '';
-        if (this.isImagemVertical && this.isImagemSobrepondoNaVertical()) {
-            scale = `scale(${this.getScale()})`;
-        }
-        const novaRotacao = `rotate(${this.rotacaoImagemAtual}deg)`;
-        this.carregarImagem(novaRotacao, scale, isAnimacao);
+        // let scale = '';
+        // if (this.isImagemVertical && this.isImagemSobrepondoNaVertical()) {
+        //     scale = `scale(${this.getScale()})`;
+        // }
+        // const novaRotacao = `rotate(${this.rotacaoImagemAtual}deg)`;
+        // this.carregarImagem(novaRotacao, scale, isAnimacao);
     }
 
     getScale() {
@@ -377,24 +372,9 @@ export class ImageViewerComponent2 implements OnChanges, OnInit, AfterViewInit {
     }
 
     getImagemAtual() {
-        return this.images[this.indexImagemAtual - 1];
+        return this.images[this.indexImage - 1];
     }
 
-    base64ToArrayBuffer(data) {
-        const binaryString = window.atob(data);
-        const binaryLen = binaryString.length;
-        const bytes = new Uint8Array(binaryLen);
-        for (let i = 0; i < binaryLen; i++) {
-            const ascii = binaryString.charCodeAt(i);
-            bytes[i] = ascii;
-        }
-        return bytes;
-    }
-
-    showPDFOnly() {
-        this.showOnlyPDF = !this.showOnlyPDF;
-        this.proximaImagem();
-    }
 
     setStyleClass(nomeClasse: string, nomeStyle: string, cor: string) {
 
