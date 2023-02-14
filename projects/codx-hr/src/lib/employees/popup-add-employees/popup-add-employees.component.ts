@@ -39,16 +39,16 @@ export class PopupAddEmployeesComponent implements OnInit {
       text: 'Nhân viên',
       name: 'tabInfoEmploy',
     },
-    {
-      icon: 'icon-receipt_long',
-      text: 'Thông tin cá nhân',
-      name: 'tabInfoPrivate',
-    },
-    {
-      icon: 'icon-business_center',
-      text: 'Pháp lý',
-      name: 'tabInfoLaw',
-    },
+    // {
+    //   icon: 'icon-receipt_long',
+    //   text: 'Thông tin cá nhân',
+    //   name: 'tabInfoPrivate',
+    // },
+    // {
+    //   icon: 'icon-business_center',
+    //   text: 'Pháp lý',
+    //   name: 'tabInfoLaw',
+    // },
   ];
   isCorporation = false;
   dialogRef: any;

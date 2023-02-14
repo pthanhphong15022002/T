@@ -45,11 +45,14 @@ export class NewsTagComponent extends UIComponent {
 
   onInit() {
     this.funcID = this.router.snapshot.params["funcID"];
-    this.tagName = this.router.snapshot.params["tagName"];
-    this.dataValues = this.tagName;
+    this.router.params.subscribe((param:any) => {
+      this.tagName = this.router.snapshot.params["tagName"];
+      this.dataValues = this.tagName;
+    })
     this.loadDataAsync();
     this.getUserPermission(this.funcID);
   }
+  //
   getUserPermission(funcID:string){
     if(funcID){
       let funcIDPermission  = funcID + "P";
@@ -62,10 +65,12 @@ export class NewsTagComponent extends UIComponent {
       });
     }
   }
+  //
   loadDataAsync() {
     this.loadDataViews();
     this.loadDataTags();
   }
+  //
   loadDataViews() {
     this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetNewOderByViewAsync")
       .subscribe((res: any) => {
@@ -76,6 +81,7 @@ export class NewsTagComponent extends UIComponent {
         this.detectorRef.detectChanges();
       });
   }
+  //
   loadDataTags() {
     this.api
       .execSv('BS', 'ERM.Business.BS', 'TagsBusiness', 'GetModelDataAsync', this.entityName)
@@ -99,14 +105,14 @@ export class NewsTagComponent extends UIComponent {
         data.recID).subscribe(
           (res) => {
             if (res) {
-              this.codxService.navigate("", '/news/' + this.funcID + '/' + data.category + '/' + data.recID);
+              this.codxService.navigate("", `wp2/news/${this.funcID}/${data.category}/${data.recID}`);
             }
           });
   }
   clickTag(tag: any) {
     if (tag && tag.text) {
       this.dataValues = tag.text;
-      this.codxService.navigate('', '/news/' + this.funcID + '/tag/' + this.dataValues)
+      this.codxService.navigate('', `wp2/news/${this.funcID}/tag/${this.dataValues}`)
       this.listview.dataService.setPredicates([this.predicates], [this.dataValues]).subscribe();
     }
   }
