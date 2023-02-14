@@ -55,7 +55,7 @@ var childRoutes = [
       ),
   },
   {
-    path: 'news',
+    path: 'wp2',
     canActivate: [AuthGuard],
     data: { noReuse: true },
     loadChildren: () =>

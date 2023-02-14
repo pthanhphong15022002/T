@@ -40,13 +40,33 @@
             data-kt-scroll-dependencies="#kt_header, #kt_toolbar, #kt_footer, #kt_chat_list_header"
             data-kt-scroll-wrappers="#kt_content, #kt_chat_contacts_body" data-kt-scroll-offset="0px"
             style="max-height: 600px; overflow-x:hidden">
-            <ng-container *ngIf="dataSerach.length;else tmpListGroup">
-                <ng-container *ngFor="let item of dataSerach">
-                    <ng-container *ngTemplateOutlet="
-                    itemTemplateSearch;
-                    context: { $implicit: item }
-                  "></ng-container>
-                </ng-container>
+            <ng-container *ngIf="searched;else tmpListGroup">
+                <div class="row mt-3">
+                    <div>
+                        Users
+                    </div>
+                    <ng-container *ngIf="dataSerach[0]">
+                        <ng-container *ngFor="let item of dataSerach[0]">
+                            <ng-container *ngTemplateOutlet="
+                            itemTemplateSearchUser;
+                            context: { $implicit: item }
+                          "></ng-container>
+                        </ng-container>
+                    </ng-container>
+                </div>
+                <div class="row mt-3">
+                    <div>
+                        Groups
+                    </div>
+                    <ng-container *ngIf="dataSerach[1]">
+                        <ng-container *ngFor="let group of dataSerach[1]">
+                            <ng-container *ngTemplateOutlet="
+                            itemTemplateSearch;
+                            context: { $implicit: group }
+                          "></ng-container>
+                        </ng-container>
+                    </ng-container>
+                </div>
             </ng-container>
             <ng-template #tmpListGroup>
                 <codx-listview #codxListView 
@@ -71,7 +91,9 @@
                 <codx-img 
                     [objectId]="item.groupID2" 
                     [objectName]="item.groupName2" 
-                    [objectType]="'AD_Users'">
+                    [objectType]="'AD_Users'"
+                    [referType]="'avt'"
+                    [width]="40">
                 </codx-img>
                 
             </ng-container>
@@ -79,7 +101,9 @@
                 <codx-img 
                     [objectId]="item.groupID"
                     [isDefaulImg]="true" 
-                    [objectType]="'WP_Groups'">
+                    [objectType]="'WP_Groups'"
+                    [referType]="'avt'"
+                    [width]="40">
                 </codx-img>
             </ng-template>
         </div>
@@ -97,6 +121,13 @@
     </div>
 </ng-template>
 <!-- template search chat -->
+<ng-template #itemTemplateSearchUser let-item>
+    <div class="row my-2 p-2" (click)="openChatBox(item)">
+        <codx-img [objectId]="item.userID" [objectType]="'AD_Users'" [objectName]="item.userName" [width]="40" [referType]="'avt'"></codx-img>
+        <span>{{item.userName}}</span>
+    </div>
+</ng-template>
+<!-- template search group -->
 <ng-template #itemTemplateSearch let-item>
     <div class="row my-2 p-2" (click)="openChatBox(item)">
         <!-- image -->
