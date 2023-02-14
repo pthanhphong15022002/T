@@ -97,14 +97,13 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    if(this.acction === 'add'){
+    if(this.action === 'add'){
       this.autoClickedSteps();
     }
   }
 
   ngAfterViewInit(): void {
-    if (this.isApplyFor === 'D') {
+    if (this.isApplyFor === '1') {
       this.tabInfo = [
         this.menuGeneralInfo,
         this.menuAddress,
@@ -185,8 +184,8 @@ export class PopupAddInstanceComponent implements OnInit {
       });
   }
   deleteListReason(listStep:any): void{
-    delete listStep[listStep.length-1];
-    delete listStep[listStep.length-2];
+    listStep.pop();
+    listStep.pop();
   }
   autoClickedSteps() {
     this.instance.stepID =  this.listStep[0].stepID;

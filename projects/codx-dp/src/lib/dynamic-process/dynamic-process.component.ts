@@ -393,7 +393,7 @@ export class DynamicProcessComponent
   doubleClickViewProcess(data) {
     let obj = {
       data: data,
-      nameAppyFor: this.getNameAppyFor(data.applyFor),
+      nameAppyFor: this.getNameAppyFor(data?.applyFor),
     };
 
     let dialogModel = new DialogModel();
