@@ -1572,7 +1572,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // cbx proccess get id
     reason.processID = idProccess;
     reason.createdBy = this.userId;
-    reason.modifiedBy = this.userId;
     return reason;
   }
 
