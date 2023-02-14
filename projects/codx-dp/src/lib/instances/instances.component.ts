@@ -124,7 +124,7 @@ export class InstancesComponent
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
-          // template2: this.viewColumKaban,
+          template2: this.viewColumKaban,
         },
       },
     ];
