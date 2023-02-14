@@ -301,10 +301,23 @@ export class EmployeeDetailComponent extends UIComponent {
   lstFuncSeverance: any = [];
   lstFuncID: any = [];
 
-
   degreeFormodel: FormModel;
   degreeRowCount;
+
+  //#region var functionID
+
+  eInfoFuncID = 'HRTEM0101';
+  eFamiliesFuncID = 'HRTEM0103';
   degreeFuncID = 'HRTEM0601';
+
+  //#endregion
+
+  //#region var formModel
+  
+  eInfoFormModel: FormModel; // Thông tin bản thân
+  eFamilyFormModel: FormModel; //Quan hệ gia đình
+
+  //#endregion
   degreeHeaderText;
 
   clickItem(evet) {}
@@ -317,68 +330,75 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   onInit(): void {
+    //#region get FormModel
+    this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
+      this.eInfoFormModel = res;
+    });
+
+    this.hrService.getFormModel(this.eFamiliesFuncID).then((res) => {
+      this.eFamilyFormModel = res;
+    });
+    //#endregion
+
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
       console.log('functionList', res);
       if (res && res[1] > 0) {
         this.lstTab = res[0].filter((p) => p.parentID == this.funcID);
-        this.crrFuncTab = this.lstTab[1].functionID;
+        this.crrFuncTab = this.lstTab[0].functionID;
         console.log('crrFuncTab', this.crrFuncTab);
         this.lstFuncID = res[0];
-        
 
         this.lstFuncSelfInfo = res[0].filter((p) => p.parentID == 'HRTEM01');
-        console.log('lstFuncSelfInfo', this.lstFuncSelfInfo);
 
         this.lstFuncLegalInfo = res[0].filter((p) => p.parentID == 'HRTEM02');
-        console.log('lstFuncLegalInfo', this.lstFuncLegalInfo);
 
         this.lstFuncTaskInfo = res[0].filter((p) => p.parentID == 'HRTEM03');
-        console.log('lstFuncTaskInfo', this.lstFuncTaskInfo);
 
         this.lstFuncSalary = res[0].filter((p) => p.parentID == 'HRTEM04');
-        console.log('lstFuncSalary', this.lstFuncSalary);
 
         this.lstFuncHRProcess = res[0].filter((p) => p.parentID == 'HRTEM05');
-        console.log('lstFuncHRProcess', this.lstFuncHRProcess);
 
         this.lstFuncKnowledge = res[0].filter((p) => p.parentID == 'HRTEM06');
-        console.log('lstFuncKnowledge', this.lstFuncKnowledge);
 
         this.lstFuncAward = res[0].filter((p) => p.parentID == 'HRTEM07');
-        console.log('lstFuncAward', this.lstFuncAward);
 
         this.lstFuncHealth = res[0].filter((p) => p.parentID == 'HRTEM08');
-        console.log('lstFuncHealth', this.lstFuncHealth);
 
         this.lstFuncArchiveRecords = res[0].filter(
           (p) => p.parentID == 'HRT030210'
         );
-        console.log('lstFuncArchiveRecords', this.lstFuncArchiveRecords);
 
         this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
-        console.log('lstFuncSeverance', this.lstFuncSeverance);
 
-
-        this.hrService.getFormModel(this.degreeFuncID).then(res => {
+        //#region EDegrees - Bằng cấp
+        this.hrService.getFormModel(this.degreeFuncID).then((res) => {
           this.degreeFormodel = res;
-        })
+        });
 
-        this.hrService.getHeaderText(this.degreeFuncID).then(res => {
-          
+        this.hrService.getHeaderText(this.degreeFuncID).then((res) => {
           this.degreeHeaderText = res;
           this.degreeColumnGrid = [
             {
-              headerText: this.degreeHeaderText['DegreeName'] + '|' + this.degreeHeaderText['TrainFieldID'],
+              headerText:
+                this.degreeHeaderText['DegreeName'] +
+                '|' +
+                this.degreeHeaderText['TrainFieldID'],
               template: this.templateDegreeGridCol1,
               width: '150',
             },
             {
-              headerText: this.degreeHeaderText['TrainSupplierID'] + '|' + this.degreeHeaderText['Ranking'],
+              headerText:
+                this.degreeHeaderText['TrainSupplierID'] +
+                '|' +
+                this.degreeHeaderText['Ranking'],
               template: this.templateDegreeGridCol2,
               width: '150',
             },
             {
-              headerText: this.degreeHeaderText['YearGraduated'] + '|' + this.degreeHeaderText['IssuedDate'],
+              headerText:
+                this.degreeHeaderText['YearGraduated'] +
+                '|' +
+                this.degreeHeaderText['IssuedDate'],
               template: this.templateDegreeGridCol3,
               width: '150',
             },
@@ -386,25 +406,25 @@ export class EmployeeDetailComponent extends UIComponent {
               template: this.templateDegreeGridMoreFunc,
               width: '150',
             },
-          ]
-        })
+          ];
+        });
 
-        let insDegree = setInterval(()=>{
-          if(this.degreeGrid){
+        let insDegree = setInterval(() => {
+          if (this.degreeGrid) {
             clearInterval(insDegree);
-            let t= this;
-            this.degreeGrid.dataService.onAction.subscribe((res)=>{
-              if(res){
-                if(res.type == 'loaded'){
-                  t.degreeRowCount = res['data'].length
+            let t = this;
+            this.degreeGrid.dataService.onAction.subscribe((res) => {
+              if (res) {
+                if (res.type == 'loaded') {
+                  t.degreeRowCount = res['data'].length;
+                }
               }
-              }
-            })
-            this.degreeRowCount = this.degreeGrid.dataService.rowCount; 
+            });
+            this.degreeRowCount = this.degreeGrid.dataService.rowCount;
           }
-        },100)
+        }, 100);
+        //#endregion
 
-        
         this.hrService.getHeaderText(this.benefitFuncID).then((res) => {
           this.benefitHeaderTexts = res;
           this.benefitColumnGrid = [
@@ -1940,13 +1960,11 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   handleEFamilyInfo(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px';
+    option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      // EmployeeFamilyRelationshipDetailComponent,
       PopupEFamiliesComponent,
       {
         actionType: actionType,
@@ -2657,7 +2675,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
   numPageSizeGridView = 5;
   @ViewChild('gridView') grid: CodxGridviewComponent;
-  @ViewChild("degreeGridView") degreeGrid : CodxGridviewComponent;
+  @ViewChild('degreeGridView') degreeGrid: CodxGridviewComponent;
   @ViewChild('appointionGridView') appointionGrid: CodxGridviewComponent;
   @ViewChild('templateBenefitID', { static: true })
   templateBenefitID: TemplateRef<any>;
@@ -2672,15 +2690,14 @@ export class EmployeeDetailComponent extends UIComponent {
   @ViewChild('filterTemplateBenefit', { static: true })
   filterTemplateBenefit: TemplateRef<any>;
 
-  @ViewChild('templateDegreeGridCol1', {static: true}) 
+  @ViewChild('templateDegreeGridCol1', { static: true })
   templateDegreeGridCol1: TemplateRef<any>;
-  @ViewChild('templateDegreeGridCol2', {static: true}) 
+  @ViewChild('templateDegreeGridCol2', { static: true })
   templateDegreeGridCol2: TemplateRef<any>;
-  @ViewChild('templateDegreeGridCol3', {static: true}) 
+  @ViewChild('templateDegreeGridCol3', { static: true })
   templateDegreeGridCol3: TemplateRef<any>;
-  @ViewChild('templateDegreeGridMoreFunc', {static: true}) 
+  @ViewChild('templateDegreeGridMoreFunc', { static: true })
   templateDegreeGridMoreFunc: TemplateRef<any>;
-
 
   benefitFormodel: FormModel;
   eBenefitRowCount: number = 0;

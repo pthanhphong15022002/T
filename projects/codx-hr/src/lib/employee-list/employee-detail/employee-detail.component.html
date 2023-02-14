@@ -1082,14 +1082,14 @@
                 </a>
               </div>
             </div>
-            <div #info class="mt-6">
+            <div #info class="mt-6" *ngIf="eInfoFormModel">
               <div class="row form-group">
                 <!-- Họ tên -->
                 <div class="col">
                   <codx-label
                     class="text-gray-600 me-2 fw-normal"
                     fiedName="EmployeeName"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div class="fw-bolder">
@@ -1101,7 +1101,7 @@
                   <codx-label
                     class="text-gray-600 me-2 fw-normal"
                     fiedName="EmployeeName2"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
 
@@ -1114,7 +1114,7 @@
                   <codx-label
                     class="text-gray-600 fw-normal"
                     fiedName="MaritalStatus"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
 
@@ -1139,7 +1139,7 @@
                   <codx-label
                     class="text-gray-600 fw-normal"
                     fiedName="Birthday"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div class="d-flex">
@@ -1166,7 +1166,7 @@
                   <codx-label
                     class="text-gray-600 me-2"
                     fiedName="Gender"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div>
@@ -1174,7 +1174,7 @@
                       [showText]="true"
                       [showBgColor]="true"
                       [showIcon]="true"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                       [field]="'Gender'"
                       [value]="data?.gender"
                       class="badge badge-light badge-square badge-md fs-7"
@@ -1189,7 +1189,7 @@
                   <codx-label
                     class="text-gray-600 me-2 fw-normal"
                     fiedName="Nationality"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div class="d-flex">
@@ -1205,7 +1205,7 @@
                   <codx-label
                     class="text-gray-600 me-2 fw-normal"
                     fiedName="EthnicGroup"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div #ethnicGroup class="fw-bolder">
@@ -1216,7 +1216,7 @@
                   <codx-label
                     class="text-gray-600 me-2 fw-normal"
                     fiedName="Religion"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div #religion class="fw-bolder">
@@ -1230,7 +1230,7 @@
                   <codx-label
                     class="text-gray-600 me-2 fw-normal"
                     fiedName="IDCardNo"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div #idCardNo class="fw-bolder">
@@ -1241,7 +1241,7 @@
                   <codx-label
                     class="text-gray-600 me-2 fw-normal"
                     fiedName="IssuedOn"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div class="d-flex align-items-center">
@@ -1255,7 +1255,7 @@
                   <codx-label
                     class="text-gray-600 me-2 fw-normal"
                     fiedName="IssuedBy"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <span #issuedBy class="fw-bolder"
@@ -1269,7 +1269,7 @@
                   <codx-label
                     class="text-gray-600 me-2"
                     fiedName="PassportNo"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div #education class="fw-bolder">
@@ -1280,7 +1280,7 @@
                   <codx-label
                     class="text-gray-600 me-2"
                     fiedName="IssuedDate"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div class="d-flex align-items-center">
@@ -1294,7 +1294,7 @@
                   <codx-label
                     class="text-gray-600 me-2 fw-normal"
                     fiedName="ExpiredDate"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div class="d-flex align-items-center">
@@ -1311,7 +1311,7 @@
                   <codx-label
                     class="text-gray-600 me-2"
                     fiedName="Education"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div class="d-flex align-items-center">
@@ -1321,7 +1321,7 @@
                         [showText]="true"
                         [showBgColor]="false"
                         [showIcon]="false"
-                        [formModel]="view.formModel"
+                        [formModel]="eInfoFormModel"
                         [field]="'Education'"
                         [value]="data?.education"
                         class="text-dark"
@@ -1334,7 +1334,7 @@
                   <codx-label
                     class="text-gray-600 me-2 fw-normal"
                     fiedName="DegreeName"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div class="d-flex align-items-center">
@@ -1350,7 +1350,7 @@
                 <codx-label
                   class="text-gray-600 me-2 fw-normal"
                   fiedName="Achievement"
-                  [formModel]="view.formModel"
+                  [formModel]="eInfoFormModel"
                 >
                 </codx-label>
                 <div class="d-flex align-items-center">
@@ -1365,7 +1365,7 @@
                 <codx-label
                   class="text-gray-600 me-2 fw-normal"
                   fiedName="Forte"
-                  [formModel]="view.formModel"
+                  [formModel]="eInfoFormModel"
                 >
                 </codx-label>
                 <div class="d-flex align-items-center">
@@ -1378,7 +1378,7 @@
                 <codx-label
                   class="text-gray-600 me-2 fw-normal"
                   fiedName="Hobby"
-                  [formModel]="view.formModel"
+                  [formModel]="eInfoFormModel"
                 >
                 </codx-label>
                 <div class="d-flex">
@@ -1393,7 +1393,7 @@
                 >
                   <codx-label
                     name="lblEmployeeInfo"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     default="Thông tin liên hệ"
                   >
                   </codx-label>
@@ -1405,7 +1405,7 @@
                       <codx-label
                         class="text-gray-600 me-2 fw-normal"
                         fiedName="Email"
-                        [formModel]="view.formModel"
+                        [formModel]="eInfoFormModel"
                       >
                       </codx-label>
                       <div class="d-flex align-items-center">
@@ -1419,7 +1419,7 @@
                       <codx-label
                         class="text-gray-600 me-2 fw-normal"
                         fiedName="Phone"
-                        [formModel]="view.formModel"
+                        [formModel]="eInfoFormModel"
                       >
                       </codx-label>
                       <div class="d-flex align-items-center">
@@ -1438,7 +1438,7 @@
                       <codx-label
                         class="text-gray-600 me-2 fw-normal"
                         fiedName="PersonalEmail"
-                        [formModel]="view.formModel"
+                        [formModel]="eInfoFormModel"
                       >
                       </codx-label>
                       <div class="d-flex align-items-center">
@@ -1454,7 +1454,7 @@
                       <codx-label
                         class="text-gray-600 me-2 fw-normal label-colon"
                         fiedName="Mobile"
-                        [formModel]="view.formModel"
+                        [formModel]="eInfoFormModel"
                       >
                       </codx-label>
                       <div class="d-flex align-items-center">
@@ -1472,7 +1472,7 @@
                     <codx-label
                       class="text-gray-600 me-2 fw-normal label-colon"
                       fiedName="Street"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
@@ -1488,8 +1488,8 @@
                   <div class="row form-group">
                     <codx-label
                       class="text-gray-600 me-2"
-                      fiedName="FullAddress"
-                      [formModel]="view.formModel"
+                      fiedName="TAddress"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
@@ -1497,7 +1497,7 @@
                         class="icon-place icon-18 text-gray-600 me-2"
                       ></span>
                       <span #pitNumber class="fw-bold">
-                        {{ infoPersonal.fullAddress }}</span
+                        {{ infoPersonal.tAddress }}</span
                       >
                     </div>
                   </div>
@@ -1519,7 +1519,7 @@
                 <div class="fs-5 fw-bold text-uppercase text-primary">
                   <!-- {{loadLabel('HRT03020102')}} -->
                   <codx-label
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     name="lblLegalInfo"
                     default="Thông tin Đảng - Đoàn"
                   >
@@ -1535,13 +1535,13 @@
                 </a>
               </div>
             </div>
-            <div #DangDoan class="mb-1">
+            <div #DangDoan class="mb-1" *ngIf="eInfoFormModel">
               <div class="row form-group">
                 <div class="col-4">
                   <codx-label
                     class="text-gray-600 me-2"
                     fiedName="yUnionDate"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div class="d-flex align-items-center">
@@ -1555,7 +1555,7 @@
                   <codx-label
                     class="text-gray-600 me-2 fw-normal"
                     fiedName="yUnionAt"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div class="d-flex">
@@ -1570,7 +1570,7 @@
                   <codx-label
                     class="text-gray-600 me-2 fw-normal"
                     fiedName="partyDate"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div class="d-flex align-items-center">
@@ -1584,7 +1584,7 @@
                   <codx-label
                     class="text-gray-600 me-2"
                     fiedName="partyAt"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
                   <div class="d-flex align-items-center">
@@ -1627,11 +1627,11 @@
               </div>
             </div>
 
-            <div #family class="mb-1">
+            <div #family class="mb-1" *ngIf="eFamilyFormModel">
               <div class="d-flex flex-wrap py-3 px-4">
                 <ng-container *ngFor="let item of lstFamily">
-                  <div class="border rounded min-w-250px mw-250px me-4 mb-4">
-                    <codx-temp-full
+                  <div class="border rounded min-w-250px mw-400px me-4 mb-4">
+                    <!-- <codx-temp-full
                       (clickMF)="clickMF($event, item, 'family')"
                       cardCss="card codx_cardcenter px-2 pt-4 pb-4"
                       [imageId]="item.recID"
@@ -1666,6 +1666,59 @@
                       >
                         <span class="icon-check icon-14 me-1 text-danger"></span
                         >Liên hệ khẩn cấp: {{ data.mobile }}
+                      </div>
+                    </ng-template> -->
+                    <codx-temp-full
+                      (clickMF)="clickMF($event, item, 'family')"
+                      cardCss="card codx_cardcenter px-2 pt-4 pb-4"
+                      [imageId]="item.recID"
+                      [imageObjType]="'HR_EFamilies'"
+                      [imageWidth]="40"
+                      [formModel]="view.formModel"
+                      [titleTmp]="titleTmp"
+                      [dataItem]="item"
+                      [typeMF]="'hover'"
+                    >
+                    </codx-temp-full>
+                    <ng-template #titleTmp let-data>
+                      <div class="row">
+                        <div>{{ data.relationName }}</div>
+                        <div class="d-flex align-items-center ms-5">
+                          <span>{{
+                            item.relationType | vll : "HR006" : "text" | async
+                          }}</span>
+                          <span class="text-gray-500 ms-2">|</span>
+                          <span class="d-flex align-items-center">
+                            <codx-label
+                              class="text-gray-600 me-2 label-colon"
+                              fiedName="Birthday"
+                              [formModel]="eFamilyFormModel"
+                            >
+                            </codx-label>
+                            <span class="text-dark">
+                              {{ item.birthday | fmDT }}</span
+                            >
+                          </span>
+                        </div>
+
+                        <div
+                          class="d-flex align-items-center mt-1"
+                          *ngIf="data.isDependent"
+                        >
+                          <span
+                            class="icon-check icon-14 me-1 text-success"
+                          ></span
+                          >Phụ thuộc giảm trừ gia cảnh
+                        </div>
+                        <div
+                          class="d-flex align-items-center"
+                          *ngIf="data.isEmergency"
+                        >
+                          <span
+                            class="icon-check icon-14 me-1 text-danger"
+                          ></span
+                          >Liên hệ khẩn cấp: {{ data.mobile }}
+                        </div>
                       </div>
                     </ng-template>
                   </div>
@@ -1729,7 +1782,7 @@
                 </div>
                 <div class="fs-5 fw-bold text-uppercase text-primary">
                   <codx-label
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     name="lblPersonalInfo"
                     default="Bảo hiểm - Mã số thuế - Tài khoản cá nhân"
                   >
@@ -1752,7 +1805,7 @@
               >
                 <codx-label
                   name="lblEmployeeInfo"
-                  [formModel]="view.formModel"
+                  [formModel]="eInfoFormModel"
                   default="Bảo hiểm"
                 >
                 </codx-label>
@@ -1764,7 +1817,7 @@
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
                       fiedName="SIRegisterNo"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div class="fw-bolder">
@@ -1775,7 +1828,7 @@
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
                       fiedName="SIRegisterOn"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
@@ -1794,7 +1847,7 @@
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
                       fiedName="HICardNo"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div #HICardNo class="fw-bolder">
@@ -1805,7 +1858,7 @@
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
                       fiedName="HICardFrom"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
@@ -1825,7 +1878,7 @@
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
                       fiedName="HIDateOf5Years"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
@@ -1841,7 +1894,7 @@
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
                       fiedName="HIHospitalID"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
@@ -1860,7 +1913,7 @@
               >
                 <codx-label
                   name="lblEmployeeInfo"
-                  [formModel]="view.formModel"
+                  [formModel]="eInfoFormModel"
                   default="Mã số thuế"
                 >
                 </codx-label>
@@ -1872,7 +1925,7 @@
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
                       fiedName="PITNumber"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
@@ -1885,7 +1938,7 @@
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
                       fiedName="PITIssuedOn"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
@@ -1901,7 +1954,7 @@
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
                       fiedName="PITPlace"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
@@ -1918,7 +1971,7 @@
               >
                 <codx-label
                   name="lblEmployeeInfo"
-                  [formModel]="view.formModel"
+                  [formModel]="eInfoFormModel"
                   default="Tài khoản cá nhân"
                 >
                 </codx-label>
@@ -1930,7 +1983,7 @@
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
                       fiedName="AccountNo"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
@@ -1943,7 +1996,7 @@
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
                       fiedName="AccountBankID"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
@@ -1959,7 +2012,7 @@
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
                       fiedName="AccountName"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
@@ -1972,7 +2025,7 @@
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
                       fiedName="AccountBankBranch"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
@@ -3726,21 +3779,22 @@
                 </div>
               </div> -->
               <div>
-                <codx-gridview *ngIf="degreeColumnGrid"
-                #degreeGridView
-                [formModel]="degreeFormodel"
-                [columnsGrid]="degreeColumnGrid"
-                [service]="'HR'"
-                [assemblyName]="'Core'"
-                [className]="'DataBusiness'"
-                [method]="'LoadDataAsync'"
-                [predicates]="'EmployeeID=@0'"
-                [dataValues]="data.employeeID"
-                [pageSize]="numPageSizeGridView"
-                [entityName]="'HR_EDegrees'"
-                [rowHeight]="50"
-                height="240px"
-              ></codx-gridview>
+                <codx-gridview
+                  *ngIf="degreeColumnGrid"
+                  #degreeGridView
+                  [formModel]="degreeFormodel"
+                  [columnsGrid]="degreeColumnGrid"
+                  [service]="'HR'"
+                  [assemblyName]="'Core'"
+                  [className]="'DataBusiness'"
+                  [method]="'LoadDataAsync'"
+                  [predicates]="'EmployeeID=@0'"
+                  [dataValues]="data.employeeID"
+                  [pageSize]="numPageSizeGridView"
+                  [entityName]="'HR_EDegrees'"
+                  [rowHeight]="50"
+                  height="240px"
+                ></codx-gridview>
               </div>
             </div>
           </div>
@@ -4589,37 +4643,38 @@
 </ng-template>
 <!--#endregion -->
 
-
 <ng-template #templateDegreeGridCol1 let-data>
   <div>
     <i class="icon-school"></i>
-    {{data?.degreeName}}
+    {{ data?.degreeName }}
   </div>
   <div>
-    {{data?.trainFieldDetail}}
+    {{ data?.trainFieldDetail }}
   </div>
-
 </ng-template>
 <ng-template #templateDegreeGridCol2 let-data>
   <div>
-    {{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}
+    {{
+      data?.trainSupplierID
+        | formatvalue : degreeFormodel : "trainSupplierID"
+        | async
+    }}
   </div>
   <div>
     <i class="icon-school"></i>
-    {{data?.ranking}}
+    {{ data?.ranking }}
     <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
-    {{data?.totalScore}}
+    {{ data?.totalScore }}
   </div>
-  
 </ng-template>
 <ng-template #templateDegreeGridCol3 let-data>
   <span>
     <i class="icon-calendar_today"></i>
-    {{data?.yearGraduated}}
+    {{ data?.yearGraduated }}
   </span>
   <span>
     <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
-    {{data?.issuedDate | fmDT}}
+    {{ data?.issuedDate | fmDT }}
   </span>
   <div *ngIf="data.isMain">
     <label>Là bằng cấp chính</label>
