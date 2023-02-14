@@ -60,10 +60,12 @@ export class InputCustomFieldComponent implements OnInit {
     // this.customField.multiselect = true;
     //  this.customField.dataType = 'T';
     //  this.customField.dataFormat = 'T';
-
+     
     this.allowMultiFile = this.customField.multiselect ? '1' : '0';
     if (this.customField.dataFormat == 'D') this.formatDate = 'd';
     if (this.customField.dataFormat == 'DT') this.formatDate = 'F';
+    if (this.customField.DataType == 'P')  this.listIdUser = this.customField?.dataValue??'';
+   
   }
 
   valueChange(e) {
@@ -78,10 +80,9 @@ export class InputCustomFieldComponent implements OnInit {
       this.customField.dataFormat == 'E'
     ) {
       let email = e.data;
-      // var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-      //
-      var mailformat =
-        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+       var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      // var mailformat =
+      //   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (!email.match(mailformat)) {
         this.cache.message(this.messCodeEmail).subscribe((res) => {
           if (res) {
