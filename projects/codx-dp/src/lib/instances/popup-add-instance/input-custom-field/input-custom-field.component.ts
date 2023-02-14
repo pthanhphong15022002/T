@@ -60,12 +60,12 @@ export class InputCustomFieldComponent implements OnInit {
     // this.customField.multiselect = true;
     //  this.customField.dataType = 'T';
     //  this.customField.dataFormat = 'T';
-     
+
     this.allowMultiFile = this.customField.multiselect ? '1' : '0';
     if (this.customField.dataFormat == 'D') this.formatDate = 'd';
     if (this.customField.dataFormat == 'DT') this.formatDate = 'F';
-    if (this.customField.DataType == 'P')  this.listIdUser = this.customField?.dataValue??'';
-   
+    if (this.customField.DataType == 'P')
+      this.listIdUser = this.customField?.dataValue ?? '';
   }
 
   valueChange(e) {
@@ -75,12 +75,13 @@ export class InputCustomFieldComponent implements OnInit {
         return;
       } else this.showErrMess = false;
     }
+
     if (
       this.customField.dataType == 'T' &&
       this.customField.dataFormat == 'E'
     ) {
       let email = e.data;
-       var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
       // var mailformat =
       //   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (!email.match(mailformat)) {
@@ -100,7 +101,8 @@ export class InputCustomFieldComponent implements OnInit {
       this.customField.dataFormat == 'P'
     ) {
       let phone = e.data;
-      var phonenumberFormat = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+      var phonenumberFormat =
+        /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
       // //Thêm trường hợp +84
       // var phonenumberFormat =
       //   /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/;
@@ -171,8 +173,18 @@ export class InputCustomFieldComponent implements OnInit {
 
   addFile() {
     this.attachment.uploadFile();
-    debugger;
   }
   fileAdded(e) {}
   getfileCount(e) {}
+
+  rateChange(e) {
+    //rank
+    if (this.customField.dataFormat == 'R') {
+      this.valueChangeCustom.emit({
+        e: e,
+        data: this.customField,
+      });
+      return;
+    }
+  }
 }

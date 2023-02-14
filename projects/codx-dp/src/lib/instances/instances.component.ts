@@ -569,7 +569,6 @@ export class InstancesComponent
     this.changeDetectorRef.detectChanges();
   }
   beforeDel(opt: RequestOption) {
-    debugger;
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedInstanceAsync';
     opt.data = [itemSelected.recID];

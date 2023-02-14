@@ -62,4 +62,8 @@ export class FieldDetailComponent implements OnInit {
     option.zIndex = 1010;
     let field = this.callfc.openSide(PopupCustomFieldComponent, obj, option);
   }
+
+   partNum(num){
+   return Number.parseInt(num) ;
+   }
 }
