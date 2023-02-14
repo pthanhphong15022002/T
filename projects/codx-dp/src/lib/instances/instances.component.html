@@ -110,6 +110,11 @@
     </codx-imgs>
   </div>
 </ng-template>
+
+<ng-template #tmpDetail let-dialog>
+  <codx-form [body]="templateDetail" [dialog]="dialog" >
+  </codx-form>
+</ng-template>
 <!-- end kanban -->
 
 <!--list details tempfull-->

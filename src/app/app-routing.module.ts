@@ -10,6 +10,7 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
 import { ExternalSigningComponent } from 'projects/codx-es/src/lib/external-signing/external-signing.component';
 import { TenantsComponent } from '@modules/auth/tenants/tenants.component';
+import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 
 var childRoutes = [
   {
@@ -213,16 +214,18 @@ var childRoutes = [
         path: 'dynamic/:funcID',
         component: DynamicFormComponent,
       },
+      
     ],
+  },
+  {
+    path: 'viewfile',
+    component: ViewFileDialogComponent,
   },
   {
     path: 'sos',
     component: SosComponent,
   },
-  {
-    path: 'signature/:id',
-    component: ExternalSigningComponent,
-  },
+ 
   {
     path: '',
     redirectTo: 'wp',
@@ -237,6 +240,7 @@ export const routes: Routes = [
     component: LayoutTenantComponent,
     children: [{ path: '', component: TenantsComponent }],
   },
+ 
   {
     path: 'auth',
     loadChildren: () =>
