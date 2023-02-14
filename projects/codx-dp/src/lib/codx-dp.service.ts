@@ -180,8 +180,8 @@ export class CodxDpService {
     );
   }
 
-  getlistCbxProccess(){
-    return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetListCbxProcessesAsync');
+  getlistCbxProccess(applyFor: string){
+    return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetListCbxProcessesAsync',applyFor);
   }
 
 

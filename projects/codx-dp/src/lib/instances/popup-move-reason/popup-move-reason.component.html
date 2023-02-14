@@ -1,12 +1,16 @@
 <codx-form
   #form
   [headerText]="headerText"
+  [subHeader]="subHeader"
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
   [formModel]="formModel"
 ></codx-form>
 
+<ng-template #subHeader>
+  <span>{{ stepName }}</span>
+</ng-template>
 <ng-template #body>
   <div class="title-step pb-18">
     <span>{{ instance.currentStep }}</span>
@@ -64,7 +68,7 @@
       <codx-label
         fiedName=""
         [formModel]="form.formModel"
-        default="Chon lý do thành công"
+        [default]="titleReasonClick"
       >
       </codx-label>
     </div>
