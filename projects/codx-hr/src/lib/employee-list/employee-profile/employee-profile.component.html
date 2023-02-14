@@ -3172,7 +3172,7 @@
                     <ng-container *ngFor="let benefit of listCrrBenefit">
                       <div
                         class="border rounded min-w-250px mw-250px me-4 mb-2"
-                        *ngIf="benefit != null"
+                        *ngIf="benefit.isCurrent == true"
                       >
                         <codx-temp-full
                           (clickMF)="clickMF($event, benefit, 'benefit')"
@@ -3853,12 +3853,26 @@
                       default="Nhật kí công tác"
                     >
                     </codx-label>
+                    <span class="text-gray-500 ms-2"> | </span>
+                    <span>({{eBusinessTravelRowCount}})</span>
                   </div>
                 </div>
                 <div class="d-flex align-items-center ms-5">
+                  <codx-dropdown-calendar
+                  [cssPopup]="'w-600px h-400px'"
+                    emptyText="Chọn năm..."
+                    [firstChange]="false"
+                    [displayOption]="ops"
+                    [selectedType]="'y'"
+                    [cssClass]="'rounded-pill'"
+                    (change)="valueChangeYearFilterBusinessTravel($event)"
+                  ></codx-dropdown-calendar>
+
+                  <span class="text-gray-500 ms-2">|</span>
+
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEBusinessTravel()"
+                    (click)="HandleEBusinessTravel('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -3896,24 +3910,21 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                    <!-- <codx-gridview-v2
-                      idField="recID"
-                      [columnsGrid]="workDiaryColumnGrid"
-                      [service]="'HR'"
-                      [gridViewName]="'grvEBusinessTravels'"
-                      [formName]="'EBusinessTravels'"
-                      [assemblyName]="'Core'"
-                      [className]="'DataBusiness'"
-                      [method]="'LoadDataAsync'"
-                      [predicates]="'EmployeeID=@0'"
-                      [autoLoad]="true"
-                      [height]="200"
-                      [dataValues]="data.employeeID"
-                      [entityName]="'HR_EBusinessTravels'"
-                      [contentEditable]="false"
-                      [allowResizing]="true"
-                      (clickMF)="clickMF($event, null, 'eBusinessTravels')"
-                    ></codx-gridview-v2> -->
+                  <codx-gridview *ngIf="businessTravelColumnGrid"
+                  #businessTravelGrid
+                  [formModel]="EBusinessTravelFormodel"
+                  [columnsGrid]="businessTravelColumnGrid"
+                  [service]="'HR'"
+                  [assemblyName]="'Core'"
+                  [className]="'DataBusiness'"
+                  [method]="'LoadDataAsync'"
+                  [predicates]="'EmployeeID=@0'"
+                  [dataValues]="data.employeeID"
+                  [pageSize]="numPageSizeGridView"
+                  [entityName]="'HR_EBusinessTravels'"
+                  [rowHeight]="50"
+                  height="240px"
+                ></codx-gridview>
                   </div>
                 </div>
               </div>
@@ -5373,7 +5384,40 @@
 </ng-template>
 
 
-<!---->
+<ng-template #templateBusinessTravelGridCol1 let-data>
+  <div>
+    <i class="icon-home_work"></i>
+    {{data?.businessPlace }}
+  </div>
+  <div>
+    <i class="icon-connection-point icon-18 text-gray-600 me-1 text-primary"></i>
+    {{data?.kowID | formatvalue: EBusinessTravelFormodel:"kowID" | async}}
+  </div>
+</ng-template>
+
+<ng-template #templateBusinessTravelGridCol2 let-data>
+  <div>
+    <i class="icon-calendar_today"></i>
+    {{data?.beginDate | fmDT}} - {{ data?.endDate| fmDT }}
+  </div>
+  <div>
+    <i class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></i>
+    {{data?.days}}
+  </div>
+</ng-template>
+
+<ng-template #templateBusinessTravelGridCol3 let-data>
+  <div>
+    {{data?.businessPurpose}}
+  </div>
+</ng-template>
+
+<ng-template #templateBusinessTravelMoreFunc let-data>
+  <codx-mfunc
+    [formModel]="EBusinessTravelFormodel"
+    (clickMF)="clickMF($event, data, 'eBusinessTravels')">
+  </codx-mfunc>
+</ng-template>
 
 <ng-template #templateDegreeGridCol1 let-data>
   <div>

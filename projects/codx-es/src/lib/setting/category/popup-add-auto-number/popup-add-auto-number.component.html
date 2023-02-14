@@ -85,13 +85,14 @@
           </codx-input>
         </div>
       </div>
-      <div class="col" *ngIf="functionID">
+      <div class="col" *ngIf="functionID && afterFgANumberDefault">
         <div class="form-group">
           <codx-label fiedName="AutoAssignRule" [formModel]="fmANumberDefault">
           </codx-label>
           <codx-input
             [formModel]="fmANumberDefault"
             field="autoAssignRule"
+            [crrValue]=""
             [Group]="fgANumberDefault"
           >
           </codx-input>

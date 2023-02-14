@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { FileService } from '@shared/services/file.service';
 import { AnimationSettingsModel, ButtonPropsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, AuthStore, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
@@ -51,6 +52,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   userID: any;
   file:any
   constructor(
+    private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
     private callfc: CallFuncService,
@@ -223,6 +225,15 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   openFile(file:any) {
+    // const queryParams = {
+    //   id: file.recID,
+    // };
+    // const url = this.router.serializeUrl(
+    //   this.router.createUrlTree([`/default/viewfile`],{
+    //     queryParams: queryParams
+    //   })
+    // );
+    // window.open(url, '_blank');
     if(file && file.read)
     {
       this.fileService.getFile(file.recID).subscribe(item=>{

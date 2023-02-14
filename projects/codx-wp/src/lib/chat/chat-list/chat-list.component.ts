@@ -13,6 +13,7 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
+import { Data } from '@syncfusion/ej2-angular-grids';
 import {
   ApiHttpService,
   AuthStore,
@@ -20,6 +21,7 @@ import {
   CallFuncService,
   CodxListviewComponent,
   CRUDService,
+  DataRequest,
   DialogModel,
   FormModel,
   NotificationsService,
@@ -40,11 +42,12 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   
   funcID: string = 'WPT11';
   function: any = null;
-  formModel: FormModel = new FormModel();
+  formModel: FormModel = null;
   grdViewSetUp: any = null;
   moreFC: any = null;
   user:any = null;
   dataSerach:any[] = [];
+  searched:boolean = false;
   @ViewChild('codxListView') codxListView: CodxListviewComponent;
   @ViewChild("chatBox") chatBox:TemplateRef<any>;
   constructor(
@@ -60,7 +63,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   ) 
   {
     this.user = this.auth.get();
-
+    this.formModel = new FormModel();
   }
 
   ngOnInit(): void {
@@ -117,13 +120,18 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
   // searrch
   search(event: any) {
-    debugger;
-    this.api.execSv("WP","ERM.Business.WP","GroupBusiness","SearchGroupAsync",[event])
-    .subscribe((res:any) =>{
-      this.dataSerach = res;
-      this.dt.detectChanges();
-    });
+    if(event){
+      this.searched = true;
+      this.api.execSv("WP","ERM.Business.WP","GroupBusiness","SearchAsync",[event,0])
+      .subscribe((res:any) =>{
+        this.dataSerach = res;
+        this.dt.detectChanges();
+      });
+    }
+    else{
+      this.searched = false;
 
+    }
   }
   // click group chat - chat box
   openChatBox(group: any) {
