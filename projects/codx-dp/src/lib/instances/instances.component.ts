@@ -371,6 +371,7 @@ export class InstancesComponent
         break;
       case 'dbClick':
         //xư lý dbClick
+        this.viewDetail() ;
         break;
     }
   }
@@ -381,8 +382,8 @@ export class InstancesComponent
       let popup = this.callFunc.openForm(
         this.tmpDetail,
         '',
-        400,
-        500,
+        1000,
+        700,
         '',
         null,
         '',
