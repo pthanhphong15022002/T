@@ -3798,10 +3798,10 @@
                     [cssClass]="'rounded-pill border-1'"
                     cssPopup="h-350px w-300px"
                     [isMulti]="true"
-                    type="valuelist"
-                    field="BenefitID"
-                    [refValue]="'HR009'"
-                    (valueChange)="valueChangeFilterBenefit($event)"
+                    type="combobox"
+                    field="KowID"
+                    [refValue]="'HRKowsOff'"
+                    (valueChange)="valueChangeFilterDayOff($event)"
                   ></codx-dropdown-select>
                   <codx-dropdown-calendar
                   [cssPopup]="'w-600px h-400px'"
@@ -3810,7 +3810,7 @@
                     [displayOption]="ops"
                     [selectedType]="'y'"
                     [cssClass]="'rounded-pill'"
-                    (change)="valueChangeYearFilterBenefit($event)"
+                    (change)="valueChangeYearFilterDayOff($event)"
                   ></codx-dropdown-calendar>
                   </div>
                   
@@ -5260,13 +5260,13 @@
 </ng-template>
 
 <ng-template #templateBenefitID let-data>
-  {{data?.benefitID}}
+  {{data?.benefitID | formatvalue: benefitFormodel:"benefitID" | async }}
 </ng-template>
 
 <ng-template #templateBenefitAmt let-data>
 
   <div #benefitNorm>
-    {{data?.benefitAmt }} / 
+    {{data?.benefitAmt }}  / 
     {{
       data?.benefitNorm | formatvalue: benefitFormodel:"benefitNorm" | async
     }}
@@ -5365,7 +5365,7 @@
 <ng-template #templateDayOffGridMoreFunc let-data>
   <codx-mfunc
     [formModel]="dayofFormModel"
-    (clickMF)="clickMF($event, data, 'eDayoffs')"
+    (clickMF)="clickMF($event, data, 'eDayoff')"
     [dataItem]="data"
     type="hover"
   >

@@ -606,13 +606,24 @@
       </div>   
 </ng-template>
 <ng-template #tabLocation>
-    <div class="form-group">
+  <div class="row mx-0 mt-3">
+    <div class="col-11 ps-0">
+      <div class="form-group">
         <codx-label
         [formModel]="form.formModel"
         default="Danh sách địa chỉ"
       ></codx-label>
-      <span (click)="openPopupAddress()" class="icon-add_circle icon-16 me-1"></span>
-      </div>    
+      </div>   
+    </div>
+    <div class="col-1 ps-0">
+      <div class="form-group">
+        <span (click)="openPopupAddress()">
+          <i class="fa-sharp fa-solid fa-plus"></i>
+          <i class="fa-sharp fa-solid fa-location-dot"></i>
+        </span>        
+      </div>
+    </div>
+  </div>   
       <div *ngFor="let item of objectAddress">
         <div class="fw-bold text-dark fs-5" *ngFor="let value of valuelist">
           <span *ngIf="item.adressType == value.value">{{value.text}}</span>
@@ -672,24 +683,24 @@
         
 </ng-template>
 <ng-template #tabContact>
-    <div class="row mx-0 mt-3">
-        <div class="col-6 ps-0">
-          <div class="form-group">
-            <codx-label
-            [formModel]="form.formModel"
-            default="Danh sách người liên hệ"
-          ></codx-label>
-          </div>   
-        </div>
-        <div class="col-6 pe-0">
-          <div class="form-group">
-            <span (click)="openPopupContact()">
-                <i class="icon-add"></i>
-                <i class="fa-solid fa-user-group"></i>
-            </span>        
-          </div>
-        </div>
+  <div class="row mx-0 mt-3">
+    <div class="col-11 ps-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        default="Danh sách người liên hệ"           
+      ></codx-label>
+      </div>   
+    </div>
+    <div class="col-1 ps-0">
+      <div class="form-group">
+        <span (click)="openPopupContact()">
+          <i class="fa-sharp fa-solid fa-plus"></i>
+          <i class="fa-solid fa-user-group"></i>
+        </span>        
       </div>
+    </div>
+  </div>
       <div class="row pb-5" *ngFor="let item of objectContact">
         <div class="col-6 ps-0">
           <div class="d-flex align-items-top">
@@ -738,13 +749,24 @@
       </div>
 </ng-template>
 <ng-template #tabAtm>
-    <div class="form-group">
+  <div class="row mx-0 mt-3">
+    <div class="col-11 ps-0">
+      <div class="form-group">
         <codx-label
         [formModel]="form.formModel"
         default="Tài khoản ngân hàng"
       ></codx-label>
-      <span (click)="openPopupBank()" class="icon-add_circle icon-16 me-1"></span>
-      </div> 
+      </div>   
+    </div>
+    <div class="col-1 ps-0">
+      <div class="form-group">
+        <span (click)="openPopupBank()">
+          <i class="fa-sharp fa-solid fa-plus"></i>
+          <i class="fa-solid fa-chart-column"></i>
+        </span>        
+      </div>
+    </div>
+  </div> 
       <div class="row pb-5" *ngFor="let item of objectBankaccount">
         <div class="col-6 ps-0">
           <div class="d-flex align-items-top">
