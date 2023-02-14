@@ -50,6 +50,7 @@ import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/ca
 import { ViewJobComponent } from './step-task/view-job/view-job.component';
 import { PopupTypeTaskComponent } from './step-task/popup-type-task/popup-type-task.component';
 import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-group.component';
+import { paste } from '@syncfusion/ej2-angular-richtexteditor';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -1143,6 +1144,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       delete taskGroupList['task'];
       this.taskGroupListSave.push(taskGroupList);
     }
+    let sumDay = 0;
+    let sumHour = 0;
+    this.step?.taskGroups?.forEach(taskGroup => {
+      sumDay += Number(taskGroup?.durationDay) || 0;
+      sumHour += Number(taskGroup?.durationHour) || 0;
+    })
+    if(sumHour >=24){
+      sumDay += Math.floor(sumHour/24);
+      sumHour = sumHour%24;
+    }
+    this.step['durationDay'] = sumDay;
+    this.step['durationHour'] = sumHour;
   }
   deletepGroupJob(data) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
