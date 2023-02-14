@@ -377,9 +377,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   clickViewDetail(file: any){
     if (file) {
       let _data = {
-        postID:file.objectID,
-        fileID:file.recID,
-        fileReferType:file.referType
+        objectID:file.objectID,
+        recID:file.recID,
+        referType:file.referType
       };
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;

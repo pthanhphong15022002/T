@@ -1652,11 +1652,26 @@ codx-view-list-detail .codx-detail-footer .badge.badge-sm {
   font-size: 10px !important;
 }
 
+codx-view-list-detail .codx-detail-footer .nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+  background-color: transparent;
+}
+
+codx-view-list-detail .codx-detail-footer .attach-group {
+  height: 185px;
+  overflow: auto;
+}
+
+codx-view-list-detail .codx-detail-footer .attach-group .attach-files {
+  max-height: none !important;
+  margin-top: 0 !important;
+}
+
 .process-main .card-header.m-h-auto.p-0 {
   border: 0 !important;
 }
 
-.content-tree .collapse-conent {
+.role-group .content-tree .collapse-conent {
   margin-top: 6px !important;
 }
 
@@ -1669,3 +1684,28 @@ codx-share .role-group div.user-mini-nav {
   padding: 0 !important;
   margin: 0 !important;
 }
+
+codx-toolbar codx-searchbar {
+  width: 280px !important;
+  display: flex;
+  justify-content: end;
+}
+
+codx-toolbar .codx-search.codx-search-slide {
+  width: 250px !important;
+}
+
+codx-toolbar .codx-search.codx-search-slide input {
+  width: 220px !important;
+  text-overflow: ellipsis;
+}
+
+.assign-refer .container {
+  padding: 0 !important;
+}
+
+.assign-refer .mt-3.tab-tch {
+  margin-top: 0 !important;
+}
+
+/// 14/2/2023 
