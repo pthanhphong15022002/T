@@ -1245,9 +1245,7 @@
                   >
                   </codx-label>
                   <div class="d-flex align-items-center">
-                    <span
-                      class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"
-                    ></span>
+                    <span class="icon-event icon-18 text-gray-600 me-2"></span>
                     <span #issuedOn class="fw-bolder">
                       {{ infoPersonal.issuedOn | fmDT }}</span
                     >
@@ -1285,8 +1283,11 @@
                     [formModel]="view.formModel"
                   >
                   </codx-label>
-                  <div #education class="fw-bolder">
-                    {{ infoPersonal.issuedDate | fmDT }}
+                  <div class="d-flex align-items-center">
+                    <span class="icon-event icon-18 text-gray-600 me-2"></span>
+                    <div #education class="fw-bolder">
+                      {{ infoPersonal.issuedDate | fmDT }}
+                    </div>
                   </div>
                 </div>
                 <div class="col">
@@ -1297,9 +1298,7 @@
                   >
                   </codx-label>
                   <div class="d-flex align-items-center">
-                    <span
-                      class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"
-                    ></span>
+                    <span class="icon-event icon-18 me-2 text-danger"></span>
                     <span #degreeName class="fw-bolder">
                       {{ infoPersonal.expiredDate | fmDT }}</span
                     >
@@ -1546,9 +1545,7 @@
                   >
                   </codx-label>
                   <div class="d-flex align-items-center">
-                    <span
-                      class="icon-star_border icon-18 text-primary me-2"
-                    ></span>
+                    <span class="icon-event icon-18 text-gray-600 me-2"></span>
                     <span class="text-dark fw-bolder">
                       {{ infoPersonal.yUnionDate | fmDT }}</span
                     >
@@ -1562,9 +1559,6 @@
                   >
                   </codx-label>
                   <div class="d-flex">
-                    <span
-                      class="icon-star_border icon-18 text-primary me-1"
-                    ></span>
                     <span #yUnionAt class="text-dark fw-bolder">
                       {{ infoPersonal.yUnionAt }}
                     </span>
@@ -1580,9 +1574,7 @@
                   >
                   </codx-label>
                   <div class="d-flex align-items-center">
-                    <span
-                      class="icon-star_border icon-18 text-warning me-2"
-                    ></span>
+                    <span class="icon-event icon-18 text-gray-600 me-2"></span>
                     <span #partyDate class="text-dark fw-bolder">
                       {{ infoPersonal.partyDate | fmDT }}</span
                     >
@@ -1595,10 +1587,7 @@
                     [formModel]="view.formModel"
                   >
                   </codx-label>
-                  <div class="d-flex align-items-center ps-2">
-                    <span
-                      class="icon-i-info-circle-fill icon-circle-group text-gray-600 me-1 pe-2"
-                    ></span>
+                  <div class="d-flex align-items-center">
                     <span #partyAt class="text-dark fw-bolder"
                       >{{ infoPersonal.partyAt }}
                     </span>
@@ -1769,6 +1758,37 @@
                 </codx-label>
               </div>
               <div>
+                <!-- Số BHXH/ Ngày cấp -->
+                <div class="row form-group">
+                  <div class="col-4">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="SIRegisterNo"
+                      [formModel]="view.formModel"
+                    >
+                    </codx-label>
+                    <div class="fw-bolder">
+                      {{ infoPersonal.siRegisterNo }}
+                    </div>
+                  </div>
+                  <div class="col-8">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="SIRegisterOn"
+                      [formModel]="view.formModel"
+                    >
+                    </codx-label>
+                    <div class="d-flex align-items-center">
+                      <span
+                        class="icon-event icon-18 text-gray-600 me-2"
+                      ></span>
+                      <span class="fw-bolder">{{
+                        infoPersonal.siRegisterOn | fmDT
+                      }}</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Sỗ BHYT/ Hạn thẻ BHYT -->
                 <div class="row form-group">
                   <div class="col-4">
                     <codx-label
@@ -1784,78 +1804,50 @@
                   <div class="col-8">
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
+                      fiedName="HICardFrom"
+                      [formModel]="view.formModel"
+                    >
+                    </codx-label>
+                    <div class="d-flex align-items-center">
+                      <span
+                        class="icon-event icon-18 text-gray-600 me-2"
+                      ></span>
+                      <span class="fw-bolder"
+                        >{{ infoPersonal.HICardFrom | fmDT }} -
+                        {{ infoPersonal.HICardTo | fmDT }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <!-- Thời điểm đủ 5 năm/ Nơi khám chữa bệnh đầu tiên -->
+                <div class="row form-group">
+                  <div class="col-4">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="HIDateOf5Years"
+                      [formModel]="view.formModel"
+                    >
+                    </codx-label>
+                    <div class="d-flex align-items-center">
+                      <span
+                        class="icon-event icon-18 text-gray-600 me-2"
+                      ></span>
+                      <span class="fw-bolder">
+                        {{ infoPersonal.hiDateOf5Years | fmDT }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-8">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
                       fiedName="HIHospitalID"
                       [formModel]="view.formModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
-                      <span
-                        class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 me-1"
-                      ></span>
-                      <span>{{ infoPersonal.hiHospitalID }}</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <div class="col-4">
-                    <codx-label
-                      class="text-gray-600 me-2 fw-normal"
-                      fiedName="PITNumber"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <div class="d-flex align-items-center">
-                      <span class="fw-bolder">
-                        {{ infoPersonal.pitNumber }}</span
-                      >
-                    </div>
-                  </div>
-                  <!-- Ngày cấp -->
-                  <div class="col-8">
-                    <codx-label
-                      class="text-gray-600 me-2 fw-normal"
-                      fiedName="PITIssuedOn"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <div class="d-flex align-items-center">
-                      <span
-                        class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 me-1"
-                      ></span>
-                      <span #PITIssuedOn class="fw-bolder">
-                        {{ infoPersonal.pitIssuedOn | fmDT }}</span
-                      >
-                    </div>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <div class="col-4">
-                    <codx-label
-                      class="text-gray-600 me-2 fw-normal"
-                      fiedName="AccountNo"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <div class="d-flex align-items-center">
-                      <span #idCardNo class="fw-bolder">
-                        {{ infoPersonal.idCardNo }}</span
-                      >
-                    </div>
-                  </div>
-                  <div class="col-8">
-                    <codx-label
-                      class="text-gray-600 me-2 fw-normal label-colon"
-                      fiedName="AccountBankID"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <div class="d-flex align-items-center">
-                      <span
-                        class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 me-1"
-                      ></span>
-                      <span #issuedOn class="fw-bolder">
-                        {{ infoPersonal.accountBankID }}</span
-                      >
+                      <span class="fw-bolder">{{
+                        infoPersonal.hiHospitalID
+                      }}</span>
                     </div>
                   </div>
                 </div>
@@ -1874,92 +1866,46 @@
                 </codx-label>
               </div>
               <div>
+                <!-- Mã số thuế/ Ngày cấp/ Nơi cấp -->
                 <div class="row form-group">
-                  <div class="col-4">
+                  <div class="col">
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
-                      fiedName="HICardNo"
+                      fiedName="PITNumber"
                       [formModel]="view.formModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
-                      <span #HICardNo class="fw-bolder">
-                        {{ infoPersonal.hiCardNo }}</span
+                      <span class="fw-bolder">
+                        {{ infoPersonal.pitNumber }}</span
                       >
                     </div>
                   </div>
-                  <div class="col-8">
+                  <div class="col">
                     <codx-label
                       class="text-gray-600 me-2 fw-normal"
-                      fiedName="HIHospitalID"
+                      fiedName="PITIssuedOn"
                       [formModel]="view.formModel"
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
                       <span
-                        class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 me-1"
+                        class="icon-event icon-18 text-gray-600 me-2"
                       ></span>
                       <span class="fw-bolder">{{
-                        infoPersonal.hiHospitalID
+                        infoPersonal.pitIssuedOn | fmDT
                       }}</span>
                     </div>
                   </div>
-                </div>
-                <div class="row form-group">
-                  <div class="col-4">
+                  <div class="col">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="PITPlace"
+                      [formModel]="view.formModel"
+                    >
+                    </codx-label>
                     <div class="d-flex align-items-center">
-                      <codx-label
-                        class="text-gray-600 me-2 fw-normal label-colon"
-                        fiedName="PITNumber"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span> {{ infoPersonal.pitNumber }}</span>
-                    </div>
-                  </div>
-                  <!-- Ngày cấp -->
-                  <div class="col-8">
-                    <div class="d-flex align-items-center">
-                      <span
-                        class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2 fw-normal label-colon"
-                        fiedName="PITIssuedOn"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #PITIssuedOn>
-                        {{ infoPersonal.pitIssuedOn | fmDT }}</span
-                      >
-                    </div>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <!-- CMND/CCCD -->
-                  <div class="col-4">
-                    <div class="d-flex align-items-center">
-                      <codx-label
-                        class="text-gray-600 me-2 fw-normal label-colon"
-                        fiedName="AccountNo"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #idCardNo> {{ infoPersonal.idCardNo }}</span>
-                    </div>
-                  </div>
-                  <div class="col-8">
-                    <div class="d-flex align-items-center">
-                      <span
-                        class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2 fw-normal label-colon"
-                        fiedName="AccountBankID"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #issuedOn> {{ infoPersonal.accountBankID }}</span>
+                      <span class="fw-bolder">{{ infoPersonal.pitPlace }}</span>
                     </div>
                   </div>
                 </div>
@@ -1978,89 +1924,61 @@
                 </codx-label>
               </div>
               <div>
-                <div class="row pb-3">
+                <!-- Số tài khoản/ Ngân hàng -->
+                <div class="row form-group">
                   <div class="col-4">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="AccountNo"
+                      [formModel]="view.formModel"
+                    >
+                    </codx-label>
                     <div class="d-flex align-items-center">
-                      <codx-label
-                        class="text-gray-600 me-2 fw-normal label-colon"
-                        fiedName="HICardNo"
-                        [formModel]="view.formModel"
+                      <span class="fw-bolder">
+                        {{ infoPersonal.idCardNo }}</span
                       >
-                      </codx-label>
-                      <span #HICardNo> {{ infoPersonal.hiCardNo }}</span>
                     </div>
                   </div>
                   <div class="col-8">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="AccountBankID"
+                      [formModel]="view.formModel"
+                    >
+                    </codx-label>
                     <div class="d-flex align-items-center">
-                      <span
-                        class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2 fw-normal label-colon"
-                        fiedName="HIHospitalID"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-
-                      <span>{{ infoPersonal.hiHospitalID }}</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="row pb-3">
-                  <div class="col-4">
-                    <div class="d-flex align-items-center">
-                      <codx-label
-                        class="text-gray-600 me-2 fw-normal label-colon"
-                        fiedName="PITNumber"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span> {{ infoPersonal.pitNumber }}</span>
-                    </div>
-                  </div>
-                  <!-- Ngày cấp -->
-                  <div class="col-8">
-                    <div class="d-flex align-items-center">
-                      <span
-                        class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2 fw-normal label-colon"
-                        fiedName="PITIssuedOn"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #PITIssuedOn>
-                        {{ infoPersonal.pitIssuedOn | fmDT }}</span
+                      <span class="fw-bolder">
+                        {{ infoPersonal.accountBankID }}</span
                       >
                     </div>
                   </div>
                 </div>
-                <div class="row pb-3">
-                  <!-- CMND/CCCD -->
+                <!-- Tên chủ tài khoản/ Chi nhánh ngân hàng -->
+                <div class="row form-group">
                   <div class="col-4">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="AccountName"
+                      [formModel]="view.formModel"
+                    >
+                    </codx-label>
                     <div class="d-flex align-items-center">
-                      <codx-label
-                        class="text-gray-600 me-2 fw-normal label-colon"
-                        fiedName="AccountNo"
-                        [formModel]="view.formModel"
+                      <span class="fw-bolder">
+                        {{ infoPersonal.accountName }}</span
                       >
-                      </codx-label>
-                      <span #idCardNo> {{ infoPersonal.idCardNo }}</span>
                     </div>
                   </div>
                   <div class="col-8">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="AccountBankBranch"
+                      [formModel]="view.formModel"
+                    >
+                    </codx-label>
                     <div class="d-flex align-items-center">
-                      <span
-                        class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2 fw-normal label-colon"
-                        fiedName="AccountBankID"
-                        [formModel]="view.formModel"
+                      <span class="fw-bolder">
+                        {{ infoPersonal.accountBankBranch }}</span
                       >
-                      </codx-label>
-                      <span #issuedOn> {{ infoPersonal.accountBankID }}</span>
                     </div>
                   </div>
                 </div>
@@ -3131,62 +3049,113 @@
                   ></span>
                 </button>
                 <span class="text-gray-500 ms-2">|</span>
-                <button class="btn btn-icon btn-sm position-relative ms-1">
-                  <span
-                    class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
-                  ></span>
-                </button>
+                <codx-label name="lblSeeAllEBenefit" default="Xem tất cả">
+                </codx-label>
+                <codx-input
+                  type="switch"
+                  (valueChange)="valueChangeViewAllEBenefit($event)"
+                  [checked]="ViewAllEBenefitFlag"
+                ></codx-input>
               </div>
             </div>
-            <div
-              id="31"
-              #legalInformation="ngbCollapse"
-              [(ngbCollapse)]="objCollapes['3.1']"
-            >
-              <div class="mb-1">
-                <div class="d-flex flex-wrap py-3 px-4">
-                  <ng-container *ngFor="let benefit of listCrrBenefit">
-                    <div
-                      class="border rounded min-w-250px mw-250px me-4 mb-2"
-                      *ngIf="benefit != null"
-                    >
-                      <codx-temp-full
-                        (clickMF)="clickMF($event, benefit, 'benefit')"
-                        [dataItem]="benefit"
-                        [formModel]="view.formModel"
-                        [footer]="footerBenefit"
-                        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
-                        [typeMF]="'hover'"
-                      >
-                      </codx-temp-full>
-                      <ng-template #footerBenefit let-data>
-                        <div class="d-flex align-items-center mt-1">
-                          <span
-                            class="icon-i-plus-circle text-success icon-12 text-gray-600 pe-2"
-                          ></span
-                          >{{ data.benefitID }}
-                        </div>
-                        <div class="d-flex align-items-center mt-1">
-                          <span
-                            class="icon-attach_money text-gray-600 pe-2 icon-14"
-                          ></span
-                          >{{ data.benefitAmt }}
-                        </div>
 
-                        <div class="d-flex align-items-center mt-1">
-                          <span
-                            class="icon-event text-gray-600 icon-14 pe-2"
-                          ></span
-                          >Hiệu lực:
-                          {{ data.effectedDate | fmDT }}
-                          -
-                          {{ data.expiredDate | fmDT }}
-                        </div>
-                      </ng-template>
-                    </div>
-                  </ng-container>
+            <div class="mb-1">
+              <div class="d-flex flex-wrap py-3 px-4">
+                <ng-container *ngFor="let benefit of listCrrBenefit">
+                  <div
+                    class="border rounded min-w-250px mw-250px me-4 mb-2"
+                    *ngIf="benefit != null"
+                  >
+                    <codx-temp-full
+                      (clickMF)="clickMF($event, benefit, 'benefit')"
+                      [dataItem]="benefit"
+                      [formModel]="view.formModel"
+                      [footer]="footerBenefit"
+                      cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+                      [typeMF]="'hover'"
+                    >
+                    </codx-temp-full>
+                    <ng-template #footerBenefit let-data>
+                      <div class="d-flex align-items-center mt-1">
+                        <span
+                          class="icon-i-plus-circle text-success icon-12 text-gray-600 pe-2"
+                        ></span
+                        >{{ data.benefitID }}
+                      </div>
+                      <div class="d-flex align-items-center mt-1">
+                        <span
+                          class="icon-attach_money text-gray-600 pe-2 icon-14"
+                        ></span
+                        >{{ data.benefitAmt }}
+                      </div>
+
+                      <div class="d-flex align-items-center mt-1">
+                        <span
+                          class="icon-event text-gray-600 icon-14 pe-2"
+                        ></span
+                        >Hiệu lực:
+                        {{ data.effectedDate | fmDT }}
+                        -
+                        {{ data.expiredDate | fmDT }}
+                      </div>
+                    </ng-template>
+                  </div>
+                </ng-container>
+              </div>
+              <div class="row form-group"></div>
+            </div>
+            <div *ngIf="ViewAllEBenefitFlag == true">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5"
+              >
+                <div class="d-flex me-3">
+                  <codx-label default="Chi tiết" class="text-uppercase">
+                  </codx-label>
+                  <span class="text-gray-500 ms-2"> | </span>
+                  <span>({{ eBenefitRowCount }})</span>
                 </div>
-                <div class="row form-group"></div>
+                <div class="d-flex me-3">
+                  <codx-dropdown-select
+                    [cssClass]="'rounded-pill border-1'"
+                    cssPopup="h-350px w-300px"
+                    [isMulti]="true"
+                    type="valuelist"
+                    field="BenefitID"
+                    [refValue]="'HR009'"
+                    (valueChange)="valueChangeFilterBenefit($event)"
+                  ></codx-dropdown-select>
+                  <codx-dropdown-calendar
+                    [cssPopup]="'w-600px h-400px'"
+                    emptyText="Chọn năm..."
+                    [firstChange]="false"
+                    [displayOption]="ops"
+                    [selectedType]="'y'"
+                    [cssClass]="'rounded-pill'"
+                    (change)="valueChangeYearFilterBenefit($event)"
+                  ></codx-dropdown-calendar>
+                </div>
+              </div>
+              <!-- [funcId]="benefitFormodel.funcID"
+              [formName]="benefitFormodel.formName"
+              [gridViewName]="benefitFormodel.gridViewName"
+              [entityName]="benefitFormodel.entityName" -->
+              <div>
+                <codx-gridview
+                  *ngIf="benefitColumnGrid"
+                  #gridView
+                  [formModel]="benefitFormodel"
+                  [columnsGrid]="benefitColumnGrid"
+                  [service]="'HR'"
+                  [assemblyName]="'Core'"
+                  [className]="'DataBusiness'"
+                  [method]="'LoadDataAsync'"
+                  [predicates]="'EmployeeID=@0'"
+                  [dataValues]="data.employeeID"
+                  [pageSize]="numPageSizeGridView"
+                  [entityName]="'HR_EBenefits'"
+                  [rowHeight]="50"
+                  height="240px"
+                ></codx-gridview>
               </div>
             </div>
           </div>
@@ -3695,7 +3664,7 @@
               </div>
             </div>
             <div class="mb-1">
-              <div>
+              <!-- <div>
                 <div class="d-flex flex-wrap py-3 px-4">
                   <ng-container *ngFor="let item of lstEDegrees">
                     <div class="border rounded min-w-250px mw-250px me-4 mb-2">
@@ -3755,6 +3724,23 @@
                     </div>
                   </ng-container>
                 </div>
+              </div> -->
+              <div>
+                <codx-gridview *ngIf="degreeColumnGrid"
+                #degreeGridView
+                [formModel]="degreeFormodel"
+                [columnsGrid]="degreeColumnGrid"
+                [service]="'HR'"
+                [assemblyName]="'Core'"
+                [className]="'DataBusiness'"
+                [method]="'LoadDataAsync'"
+                [predicates]="'EmployeeID=@0'"
+                [dataValues]="data.employeeID"
+                [pageSize]="numPageSizeGridView"
+                [entityName]="'HR_EDegrees'"
+                [rowHeight]="50"
+                height="240px"
+              ></codx-gridview>
               </div>
             </div>
           </div>
@@ -4566,6 +4552,85 @@
     [formModel]="view.formModel"
     (clickMF)="clickMF($event, data)"
     [dataItem]="data"
+  >
+  </codx-mfunc>
+</ng-template>
+
+<!--#region template Phụ cấp  -->
+<ng-template #templateBenefitID let-data>
+  {{ data?.benefitID }}
+</ng-template>
+
+<ng-template #templateBenefitAmt let-data>
+  <div #benefitNorm>
+    {{ data?.benefitAmt }} /
+    {{
+      data?.benefitNorm | formatvalue : benefitFormodel : "benefitNorm" | async
+    }}
+  </div>
+</ng-template>
+
+<ng-template #templateBenefitEffected let-data>
+  <div>{{ data?.effectedDate | fmDT }} - {{ data?.expiredDate | fmDT }}</div>
+</ng-template>
+
+<ng-template #templateBenefitIsCurrent let-data>
+  <div *ngIf="data?.isCurrent == 1">Đang hiệu lực</div>
+</ng-template>
+
+<ng-template #templateBenefitMoreFunc let-data>
+  <codx-mfunc
+    [formModel]="benefitFormodel"
+    (clickMF)="clickMF($event, data, 'eBenefit')"
+    [dataItem]="data"
+    type="hover"
+  >
+  </codx-mfunc>
+</ng-template>
+<!--#endregion -->
+
+
+<ng-template #templateDegreeGridCol1 let-data>
+  <div>
+    <i class="icon-school"></i>
+    {{data?.degreeName}}
+  </div>
+  <div>
+    {{data?.trainFieldDetail}}
+  </div>
+
+</ng-template>
+<ng-template #templateDegreeGridCol2 let-data>
+  <div>
+    {{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}
+  </div>
+  <div>
+    <i class="icon-school"></i>
+    {{data?.ranking}}
+    <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
+    {{data?.totalScore}}
+  </div>
+  
+</ng-template>
+<ng-template #templateDegreeGridCol3 let-data>
+  <span>
+    <i class="icon-calendar_today"></i>
+    {{data?.yearGraduated}}
+  </span>
+  <span>
+    <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
+    {{data?.issuedDate | fmDT}}
+  </span>
+  <div *ngIf="data.isMain">
+    <label>Là bằng cấp chính</label>
+  </div>
+</ng-template>
+<ng-template #templateDegreeGridMoreFunc let-data>
+  <codx-mfunc
+    [formModel]="degreeFormodel"
+    (clickMF)="clickMF($event, data, 'eDegrees')"
+    [dataItem]="data"
+    type="hover"
   >
   </codx-mfunc>
 </ng-template>

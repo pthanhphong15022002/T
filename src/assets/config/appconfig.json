@@ -5,9 +5,15 @@
   "urlUpload": "http://localhost:8011/lvfile",
   "appName": "hps-file-test",
   "office365": "",
-  "saas": 1,
+  "saas": 0,
   "layoutCZ": "",
   "themeMode": "body",
+  "externalLogin": {
+    "amazonId": "amzn1.application-oa2-client.f074ae67c0a146b6902cc0c4a3297935",
+    "facebookId": "553419903425493",
+    "googleId": "1004809784960-375udeskttcpr03e0pqshf0hpococ0vq.apps.googleusercontent.com",
+    "microsoftId": "0611ccc3-9521-45b6-b432-039852002705"
+  },
   "SureMeet": {
     "baseUrl": "https://api.suremeet.vn/",
     "tokenUrl": "api/auth/token",

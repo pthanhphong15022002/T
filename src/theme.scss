@@ -26,6 +26,7 @@
 /*** css for theme********/
 .codx-theme {
 
+
     &.default {
         --primary: #3699ff;
         --primary-active: #005dc7;
@@ -265,6 +266,10 @@
                 }
             }
         }
+    }
+
+    .menu-state-title-primary .menu-item:not(.here) .menu-link:hover:not(.disabled):not(.active):not(.here) {
+        color: var(--primary-light) !important;
     }
 
     .menu-state-title-primary .menu-item.hover:not(.here)>.menu-link:not(.disabled):not(.active):not(.here) .menu-title,
@@ -700,5 +705,7 @@
 .e-toolbar-item.e-date-range.e-overflow-show .e-tbar-btn {
     background: var(--primary-light) !important;
 }
+
+
 
 /// end 22/12/2022

@@ -1,74 +1,74 @@
 <ng-container *ngIf="data">
-    <ng-container [ngSwitch]="data.actionType">
-        <!-- Bình luận -->
-        <ng-container *ngSwitchCase="'C'">
-            <ng-container *ngTemplateOutlet="C"></ng-container>
-        </ng-container>
-        <!-- thêm mới -->
-        <ng-container *ngSwitchCase="'N'">
-            <ng-container *ngTemplateOutlet="N"></ng-container>
-        </ng-container>
-        <!-- gửi mail -->
-        <ng-container *ngSwitchCase="'E'">
-            <ng-container *ngTemplateOutlet="E"></ng-container>
-        </ng-container>
-        <!-- phân công công việc -->
-        <ng-container *ngSwitchCase="'T'">
-            <ng-container *ngTemplateOutlet="T"></ng-container>
-        </ng-container>
-        <!-- yêu cầu cấp quyền -->
-        <ng-container *ngSwitchCase="'RE'">
-            <ng-container *ngTemplateOutlet="T"></ng-container>
-        </ng-container>
-        <!-- cập nhật -->
-        <ng-container *ngSwitchCase="'U'">
-            <ng-container *ngTemplateOutlet="U"></ng-container>
-        </ng-container>
-        <!-- đính kèm -->
-        <ng-container *ngSwitchCase="'A'">
-            <ng-container *ngTemplateOutlet="A"></ng-container>
-        </ng-container>
-        <!-- share -->
-        <ng-container *ngSwitchCase="'S'">
-            <ng-container *ngTemplateOutlet="S"></ng-container>
-        </ng-container>
-        <!-- xóa -->
-        <ng-container *ngSwitchCase="'D'">
-            <ng-container *ngTemplateOutlet="D"></ng-container>
-        </ng-container>
-        <!-- chỉnh sửa gì đó ai biết -->
-        <ng-container *ngSwitchCase="'C1'">
-            <ng-container *ngTemplateOutlet="C1"></ng-container>
-        </ng-container>
-        <!-- A0  -->
-        <ng-container *ngSwitchCase="'A0'">
-            <ng-container *ngTemplateOutlet="A0"></ng-container>
-        </ng-container>
-        <!-- chỉnh sửa gì đó ai biết -->
-        <ng-container *ngSwitchCase="'C2'">
-            <ng-container *ngTemplateOutlet="C2"></ng-container>
-        </ng-container>
-        <!-- khôi phục -->
-        <ng-container *ngSwitchCase="'A1'">
-            <ng-container *ngTemplateOutlet="C1"></ng-container>
-        </ng-container>
-        <!-- làm lại -->
-        <ng-container *ngSwitchCase="'A2'">
-            <ng-container *ngTemplateOutlet="C1"></ng-container>
-        </ng-container>
-        <!-- phát hành -->
-        <ng-container *ngSwitchCase="'A3'">
-            <ng-container *ngTemplateOutlet="C1"></ng-container>
-        </ng-container>
-        <!-- từ chối -->
-        <ng-container *ngSwitchCase="'A4'">
-            <ng-container *ngTemplateOutlet="C1"></ng-container>
-        </ng-container>
-        <!-- duyệt -->
-        <ng-container *ngSwitchCase="'A5'">
-            <ng-container *ngTemplateOutlet="C1"></ng-container>
-        </ng-container>
+  <ng-container [ngSwitch]="data.actionType">
+    <!-- Bình luận -->
+    <ng-container *ngSwitchCase="'C'">
+      <ng-container *ngTemplateOutlet="C"></ng-container>
     </ng-container>
+    <!-- thêm mới -->
+    <ng-container *ngSwitchCase="'N'">
+      <ng-container *ngTemplateOutlet="N"></ng-container>
+    </ng-container>
+    <!-- gửi mail -->
+    <ng-container *ngSwitchCase="'E'">
+      <ng-container *ngTemplateOutlet="E"></ng-container>
+    </ng-container>
+    <!-- phân công công việc -->
+    <ng-container *ngSwitchCase="'T'">
+      <ng-container *ngTemplateOutlet="T"></ng-container>
+    </ng-container>
+    <!-- yêu cầu cấp quyền -->
+    <ng-container *ngSwitchCase="'RE'">
+      <ng-container *ngTemplateOutlet="T"></ng-container>
+    </ng-container>
+    <!-- cập nhật -->
+    <ng-container *ngSwitchCase="'U'">
+      <ng-container *ngTemplateOutlet="U"></ng-container>
+    </ng-container>
+    <!-- đính kèm -->
+    <ng-container *ngSwitchCase="'A'">
+      <ng-container *ngTemplateOutlet="A"></ng-container>
+    </ng-container>
+    <!-- share -->
+    <ng-container *ngSwitchCase="'S'">
+      <ng-container *ngTemplateOutlet="S"></ng-container>
+    </ng-container>
+    <!-- xóa -->
+    <ng-container *ngSwitchCase="'D'">
+      <ng-container *ngTemplateOutlet="D"></ng-container>
+    </ng-container>
+    <!-- chỉnh sửa gì đó ai biết -->
+    <ng-container *ngSwitchCase="'C1'">
+      <ng-container *ngTemplateOutlet="C1"></ng-container>
+    </ng-container>
+    <!-- A0  -->
+    <ng-container *ngSwitchCase="'A0'">
+      <ng-container *ngTemplateOutlet="A0"></ng-container>
+    </ng-container>
+    <!-- chỉnh sửa gì đó ai biết -->
+    <ng-container *ngSwitchCase="'C2'">
+      <ng-container *ngTemplateOutlet="C2"></ng-container>
+    </ng-container>
+    <!-- khôi phục -->
+    <ng-container *ngSwitchCase="'A1'">
+      <ng-container *ngTemplateOutlet="C1"></ng-container>
+    </ng-container>
+    <!-- làm lại -->
+    <ng-container *ngSwitchCase="'A2'">
+      <ng-container *ngTemplateOutlet="C1"></ng-container>
+    </ng-container>
+    <!-- phát hành -->
+    <ng-container *ngSwitchCase="'A3'">
+      <ng-container *ngTemplateOutlet="C1"></ng-container>
+    </ng-container>
+    <!-- từ chối -->
+    <ng-container *ngSwitchCase="'A4'">
+      <ng-container *ngTemplateOutlet="C1"></ng-container>
+    </ng-container>
+    <!-- duyệt -->
+    <ng-container *ngSwitchCase="'A5'">
+      <ng-container *ngTemplateOutlet="C1"></ng-container>
+    </ng-container>
+  </ng-container>
 </ng-container>
 <!-- COMMENT -->
 <ng-template #C>
@@ -517,6 +517,8 @@
               class="popup-attachment"
               [files]="data.listFile"
               [formModel]="formModel"
+              [hideDelete]="'1'"
+              [hideMoreF]="'0'"
             ></codx-thumbnail>
           </div>
         </ng-container>
@@ -773,31 +775,46 @@
 </ng-template>
 <!-- A0 -->
 <ng-template #A0>
-    <div class="d-flex align-items-top ">
-        <div class="me-3">
-            <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true" [path]="'assets/themes/sys/default/img/'"></codx-vll>
-        </div>
-        <div class="d-flex justify-content-between align-items-top w-100">
-            <div class="d-flex align-items-top w-100">
-                <div class="me-3">
-                    <codx-img 
-                        [objectId]="data.createdBy" 
-                        [objectName]="data.createdName"
-                        objectType="AD_Users" 
-                        [width]="30">
-                    </codx-img>
-                </div>
-                <div class="d-flex flex-column flex-wrap w-100">
-                    <div *ngIf="data.description" class="w-100" [innerHTML]="data.description"></div>
-                    <div *ngIf="data.createdOn" class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
-                        {{data.createdOn | timefrom}}
-                    </div>
-                    <div *ngIf="!isNullOrEmpty(data.comment)" class="comment text-nowrap">
-                        <span [innerHTML]="data.comment"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="d-flex align-items-top">
+    <div class="me-3">
+      <codx-vll
+        [value]="data.actionType"
+        name="SYS022"
+        [icoCss]="'w-30px iconHistory'"
+        [showIcon]="true"
+        [path]="'assets/themes/sys/default/img/'"
+      ></codx-vll>
     </div>
+    <div class="d-flex justify-content-between align-items-top w-100">
+      <div class="d-flex align-items-top w-100">
+        <div class="me-3">
+          <codx-img
+            [objectId]="data.createdBy"
+            [objectName]="data.createdName"
+            objectType="AD_Users"
+            [width]="30"
+          >
+          </codx-img>
+        </div>
+        <div class="d-flex flex-column flex-wrap w-100">
+          <div
+            *ngIf="data.description"
+            class="w-100"
+            [innerHTML]="data.description"
+          ></div>
+          <div
+            *ngIf="data.createdOn"
+            class="text-gray-400 fw-normal flex-grow-1 fs-7"
+            data-toggle="tooltip"
+          >
+            {{ data.createdOn | timefrom }}
+          </div>
+          <div *ngIf="!isNullOrEmpty(data.comment)" class="comment text-nowrap">
+            <span [innerHTML]="data.comment"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
 <!-- END A0 -->

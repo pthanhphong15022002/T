@@ -600,13 +600,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     var message = e?.data;
     var index = this.listTaskResources.findIndex((obj) => obj.resourceID == id);
     if (index != -1) {
-      this.listTaskResources.forEach((obj) => {
-        if (obj.resourceID == id) {
-          obj.memo = message;
-          return;
-        }
-      });
+      this.listTaskResources[index].memo=message
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   valueChangeEstimated(data) {

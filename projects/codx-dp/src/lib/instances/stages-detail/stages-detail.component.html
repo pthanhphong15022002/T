@@ -210,7 +210,10 @@
                       class="d-flex justify-content-start align-items-center has-action-menu"
                       style="flex-grow: 1"
                     >
-                      <div class="icon-container" (click)="clickShowTask(taskList?.recID)">
+                      <div
+                        class="icon-container"
+                        (click)="clickShowTask(taskList?.recID)"
+                      >
                         <span
                           class="icon-add_circle icon-20 text-primary-600 py-2"
                         ></span>
@@ -240,6 +243,7 @@
                       </div>
                       <codx-mfunc
                         [formModel]="frmModel"
+                        (changeDataMF)="changeDataMF($event, 'group')"
                         (clickMF)="clickMFTaskGroup($event, taskList)"
                         [isBookMark]="true"
                         [dataItem]="moreDefaut"
@@ -349,6 +353,7 @@
                               [isBookMark]="true"
                               [dataItem]="moreDefaut"
                               [type]="'hover'"
+                              (changeDataMF)="changeDataMF($event, 'task')"
                             >
                             </codx-mfunc>
                           </div>
@@ -403,8 +408,10 @@
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
     <div class="notify">
-      <span class="icon-library_books icon-20 text-primary-600 py-2"></span>
-      <span class="text">3</span>
+      <!-- <span class="icon-library_books icon-20 text-primary-600 py-2"></span> -->
+      <span class="me-3">
+        <codx-history-temp [objectID]="data.recID" ></codx-history-temp
+      ></span>
     </div>
     <div class="notify">
       <span class="me-3">
@@ -483,8 +490,8 @@
       <span style="font-size: 1.2rem; font-weight: 400">{{ item?.text }}</span>
     </div>
     <div style="padding-right: 2rem">
-      <codx-input    
-        type="radio"     
+      <codx-input
+        type="radio"
         pageSize="50"
         [checked]="item?.checked"
       ></codx-input>
@@ -503,189 +510,12 @@
         name="Save"
         formName="Tasks"
         default="Tiếp tục"
-        (click)="openPopupJob()"
+        (click)="openPopupJob(null, 'add')"
       ></codx-label>
     </button>
   </div>
 </ng-template>
 <!--End chon cong viec -->
-<!-- End popup them nhom cong viec -- nvthuan -->
-<ng-template #addGroupJobPopup>
-  <codx-form
-    [headerText]="'Thêm Nhóm Công Việc'"
-    [body]="addGroupJobBody"
-    [footer]="addGroupJobFooter"
-    [dialog]="popupTaskGroup"
-  >
-  </codx-form>
-</ng-template>
-
-<ng-template #addGroupJobBody>
-  <div class="mt-5">
-    <div class="form-group">
-      <div>
-        <!-- default="Tên nhóm công việc" -->
-        <codx-label
-          fiedName="taskGroupName"
-          [formModel]="grvTaskGroupsForm"
-        ></codx-label>
-      </div>
-      <codx-input
-        field="taskGroupName"
-        [formModel]="grvTaskGroupsForm"
-        [Group]=""
-        [crrValue]="taskGroup?.taskGroupName"
-        type="text"
-        [height]="'100'"
-        (valueChange)="changeValueInput($event, taskGroup)"
-      >
-      </codx-input>
-    </div>
-
-    <div class="form-group d-flex justify-content-between">
-      <div class="me-2">
-        <codx-label
-          fiedName="startDate"
-          [formModel]="grvTaskGroupsForm"
-          default="Ngày bắt đầu"
-        >
-        </codx-label>
-        <codx-input
-          field="startDate"
-          [formModel]="grvTaskGroupsForm"
-          (valueChange)="changeValueDate($event, taskGroup)"
-          [crrValue]="taskGroup?.startDate"
-          type="datetime"
-          format="F"
-        >
-        </codx-input>
-      </div>
-      <div>
-        <codx-label
-          fiedName="endDate"
-          [formModel]="grvTaskGroupsForm"
-          default="Ngày kết thúc"
-        >
-        </codx-label>
-        <codx-input
-          field="endDate"
-          [formModel]="grvTaskGroupsForm"
-          (valueChange)="changeValueDate($event, taskGroup)"
-          [crrValue]="taskGroup?.endDate"
-          format="F"
-          type="datetime"
-        >
-        </codx-input>
-      </div>
-    </div>
-
-    <div class="form-group d-flex justify-content-between">
-      <div class="me-2 clo-6">
-        <codx-label
-          fiedName="durationDay"
-          [formModel]="grvTaskGroupsForm"
-          default="Thời lượng công việc "
-        >
-        </codx-label>
-        <div class="form-group d-flex justify-content-between">
-          <div class="position-relative">
-            <codx-input
-              field="durationDay"
-              [formModel]="grvTaskGroupsForm"
-              type="number"
-              [min]="0"
-              (valueChange)="changeValueInput($event, taskGroup)"
-              [crrValue]="taskGroup?.durationDay"
-              class="me-2"
-            >
-            </codx-input>
-            <span
-              class="position-absolute text-gray-400"
-              style="top: 6px; right: 5px"
-              >Ngày</span
-            >
-          </div>
-          <div class="position-relative">
-            <codx-input
-              field="durationHour"
-              [formModel]="grvTaskGroupsForm"
-              type="number"
-              [min]="0"
-              (valueChange)="changeValueInput($event, taskGroup)"
-              [crrValue]="taskGroup?.durationHour"
-              class="ms-2"
-            >
-            </codx-input>
-            <span
-              class="position-absolute text-gray-400"
-              style="top: 6px; right: 5px"
-              >Giờ</span
-            >
-          </div>
-        </div>
-      </div>
-      <div class="ms-2 col-6">
-        <codx-label
-          fiedName="reminders"
-          [formModel]="grvTaskGroupsForm"
-          default="Nhắc nhở trước khi bắt đầu"
-        >
-        </codx-label>
-        <codx-input
-          field="reminders"
-          [formModel]="grvTaskGroupsForm"
-          [crrValue]="taskGroup?.reminders"
-          refValue="DP024"
-          type="valuelist"
-          (valueChange)="changeValueInput($event, taskGroup)"
-        >
-        </codx-input>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <div>
-        <codx-label
-          fiedName="memo"
-          [formModel]="grvTaskGroupsForm"
-          default="Ghi chú"
-        ></codx-label>
-      </div>
-      <codx-input
-        field="memo"
-        [formModel]="grvTaskGroupsForm"
-        type="textarea"
-        headerposition="none"
-        format="ed"
-        height="100"
-        [crrValue]="taskGroup?.memo"
-        (valueChange)="changeValueInput($event, taskGroup)"
-      >
-      </codx-input>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #addGroupJobFooter>
-  <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-outline-primary me-5">
-      <codx-label
-        name="Save"
-        formName="Tasks"
-        default="Hủy"
-        (click)="popupTaskGroup.close()"
-      ></codx-label>
-    </button>
-    <button type="button" class="btn btn-primary">
-      <codx-label
-        name="Save"
-        formName="Tasks"
-        default="Đồng ý"
-        (click)="saveGroupTask()"
-      ></codx-label>
-    </button>
-  </div>
-</ng-template>
 
 <!-- Cập nhật kết quả thực hiện -- nvthuan -->
 <ng-template #updateProgress>
@@ -707,6 +537,7 @@
           <codx-label
             fiedName="progress"
             [formModel]="grvTaskGroupsForm"
+            default="Tiến độ thực hiện"
           ></codx-label>
           <div class="d-flex align-items-center justify-content-end">
             <codx-input
@@ -736,7 +567,7 @@
       </div>
       <div>
         <codx-label
-          fiedName="endDate"
+          fiedName="actualEnd"
           [formModel]="grvTaskGroupsForm"
           default="Ngày hoàn thành thực tế"
         >

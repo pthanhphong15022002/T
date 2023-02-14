@@ -14,7 +14,13 @@ export const environment = {
   appName: '',
   saas: 0,
   layoutCZ: 'qtsc',
-  themeMode: 'body', //layout
+  themeMode: 'body', //layout,
+  externalLogin: {
+    amazonId: '',
+    facebookId: '',
+    googleId: '1004809784960-375udeskttcpr03e0pqshf0hpococ0vq.apps.googleusercontent.com',
+    microsoftId: '',
+  },
   SureMeet: {
     baseUrl: 'https://api.suremeet.vn/',
     tokenUrl: 'api/auth/token',

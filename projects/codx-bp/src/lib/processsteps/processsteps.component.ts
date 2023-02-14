@@ -321,11 +321,11 @@ export class ProcessStepsComponent
       );
       dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+        // if (e?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
         else {
           if ((this.view.currentView as any)?.kanban)
             this.kanban = (this.view.currentView as any).kanban;
@@ -414,11 +414,11 @@ export class ProcessStepsComponent
         );
         dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
+          // if (e?.event == null)
+          //   this.view.dataService.delete(
+          //     [this.view.dataService.dataSelected],
+          //     false
+          //   );
           else {
             if ((this.view.currentView as any)?.kanban)
               this.kanban = (this.view.currentView as any).kanban;
@@ -582,11 +582,11 @@ export class ProcessStepsComponent
       );
       dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+        // if (e?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
         else {
           if ((this.view.currentView as any)?.kanban)
             this.kanban = (this.view.currentView as any).kanban;

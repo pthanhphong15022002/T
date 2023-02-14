@@ -157,7 +157,7 @@ export class ProcessesComponent
     if (this.user?.employee) this.employee = this.user?.employee;
     this.userGroupID = this.user?.groupID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    //this.showButtonAdd = this.funcID != 'BPT6'
+ 
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -347,11 +347,11 @@ export class ProcessesComponent
       );
       this.dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+        // if (e?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
       });
     });
   }
@@ -374,11 +374,11 @@ export class ProcessesComponent
         );
         this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
+          // if (e?.event == null)
+          //   this.view.dataService.delete(
+          //     [this.view.dataService.dataSelected],
+          //     false
+          //   );
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
             this.detectorRef.detectChanges();
@@ -409,11 +409,12 @@ export class ProcessesComponent
         option
       );
       this.dialog.closed.subscribe((e) => {
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+        if (!e?.event) this.view.dataService.clear();
+        // if (e?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
       });
     });
   }

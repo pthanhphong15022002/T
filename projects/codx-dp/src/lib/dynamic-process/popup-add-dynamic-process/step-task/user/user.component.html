@@ -1,0 +1,64 @@
+<div class="form-group">
+   <div class="d-flex align-items-center">
+     <codx-label
+       class="fw-bolder"
+       fiedName="Permission"
+       default="Người phụ trách"
+     ></codx-label>
+     <i
+       class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user ms-2"
+       (click)="shareUser(controlUser)"
+     ></i>
+   </div>
+   <div>
+     <ng-container
+       *ngIf="dataSource.length > 0"
+       [ngTemplateOutlet]="showUser"
+       [ngTemplateOutletContext]="{ users: dataSource }"
+     ></ng-container>
+     <codx-label
+       *ngIf="dataSource.length == 0"
+       class="fw-normal text-gray-400"
+       fiedName="LocationControl"
+       default="Nếu không chọn mặc định là người phụ trách của nhiệm vụ"
+     >
+     </codx-label>
+   </div>
+ </div>
+
+ <ng-template #showUser let-data="users">
+   <div class="mt-3" style="display: block">
+     <ng-container *ngFor="let item of data; index as i">
+       <div class="user-mini-nav" style="background-color: #f4f7ff">
+         <span>
+           <codx-img
+             [width]="25"
+             class="me-2"
+             [objectId]="item?.objectID"
+             objectType="AD_Users"
+             [objectName]="item?.objectName"
+           >
+           </codx-img>
+         </span>
+         <span class="text-dark fw-bold"> {{ item?.objectName }} </span>
+         <span class="mt-1">
+           <a
+             (click)="onDeleteOwner(item?.objectID, data)"
+             style="cursor: pointer"
+           >
+             <span class="icon-close icon-16 text-danger ms-3"></span>
+           </a>
+         </span>
+       </div>
+     </ng-container>
+   </div>
+ </ng-template>
+
+ <ng-template #controlUser let-dialog>
+   <codx-share
+     [dialog]="dialog"
+     [multiple]="true"
+     (eventApply)="applyUser($event, dataSource)"
+     [listName]="'BP021'"
+   ></codx-share>
+ </ng-template>

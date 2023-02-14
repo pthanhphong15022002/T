@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { EMPTY } from 'rxjs';
 import { PopupJobGeneralInfoComponent } from './../../employee-profile/popup-job-general-info/popup-job-general-info.component';
 import { PopupEbenefitComponent } from './../../employee-profile/popup-ebenefit/popup-ebenefit.component';
@@ -97,6 +98,7 @@ export class EmployeeProfileComponent extends UIComponent {
     this.funcID = this.routeActive.snapshot.params['funcID'];
     console.log('dtttt', dialog);
   }
+  @ViewChild("degreeGridView") degreeGrid : CodxGridviewComponent;
   @ViewChild("dayoffGridView") dayoffGrid: CodxGridviewComponent;
   @ViewChild("gridView") grid:CodxGridviewComponent;
   @ViewChild("appointionGridView") appointionGrid:CodxGridviewComponent;
@@ -193,6 +195,14 @@ export class EmployeeProfileComponent extends UIComponent {
   filterEBenefitPredicates : string
   filterEBenefitDatavalues
 
+  //#region filter variables of form main eDayoffs
+  filterByKowIDArr: any = []
+  yearFilterValueDayOffs
+  startDateEDayoffFilterValue
+  endDateEDayoffFilterValue
+  filterEDayoffPredicates : string
+  filterEDayoffDatavalues
+
   //#region declare columnGrid
   healthColumnsGrid;
   vaccineColumnsGrid;
@@ -207,6 +217,7 @@ export class EmployeeProfileComponent extends UIComponent {
   benefitColumnGrid;
   appointionColumnGrid;
   dayoffColumnGrid;
+  degreeColumnGrid;
 
   //#region ViewChild
   @ViewChild('healthPeriodID', { static: true })
@@ -253,6 +264,15 @@ export class EmployeeProfileComponent extends UIComponent {
   templateDayOffGridCol3: TemplateRef<any>;
   @ViewChild('templateDayOffGridMoreFunc', {static: true}) 
   templateDayOffGridMoreFunc: TemplateRef<any>;
+
+  @ViewChild('templateDegreeGridCol1', {static: true}) 
+  templateDegreeGridCol1: TemplateRef<any>;
+  @ViewChild('templateDegreeGridCol2', {static: true}) 
+  templateDegreeGridCol2: TemplateRef<any>;
+  @ViewChild('templateDegreeGridCol3', {static: true}) 
+  templateDegreeGridCol3: TemplateRef<any>;
+  @ViewChild('templateDegreeGridMoreFunc', {static: true}) 
+  templateDegreeGridMoreFunc: TemplateRef<any>;
   
 
   //#endregion
@@ -318,7 +338,12 @@ export class EmployeeProfileComponent extends UIComponent {
   dayofFormModel: FormModel;
   dayoffRowCount;
   dayoffFuncID = 'HRTEM0503'
-  dayoffHeaderTexts
+  dayoffHeaderTexts;
+
+  degreeFormodel: FormModel;
+  degreeRowCount;
+  degreeFuncID = 'HRTEM0601';
+  degreeHeaderText;
 
   onInit(): void {
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
@@ -347,6 +372,9 @@ export class EmployeeProfileComponent extends UIComponent {
     this.hrService.getFormModel(this.dayoffFuncID).then(res => {
       this.dayofFormModel = res;
     })
+    this.hrService.getFormModel(this.degreeFuncID).then(res => {
+      this.degreeFormodel = res;
+    })
 
     this.hrService.getHeaderText(this.dayoffFuncID).then(res =>{
       this.dayoffHeaderTexts = res;
@@ -372,6 +400,22 @@ export class EmployeeProfileComponent extends UIComponent {
         },
       ]
     })
+
+    let insDayOff = setInterval(()=>{
+      if(this.dayoffGrid){
+        clearInterval(insDayOff);
+        let t= this;
+        this.dayoffGrid.dataService.onAction.subscribe((res)=>{
+          if(res){
+            if(res.type != null && res.type == 'loaded'){
+              t.dayoffRowCount = res['data'].length
+            }
+          }
+          
+        })
+        this.dayoffRowCount = this.dayoffGrid.dataService.rowCount; 
+      }
+    },100)
     
     this.hrService.getHeaderText(this.benefitFuncID).then(res => {
       this.benefitHeaderTexts = res;
@@ -429,14 +473,59 @@ export class EmployeeProfileComponent extends UIComponent {
       ]
     })
 
+    this.hrService.getHeaderText(this.degreeFuncID).then(res => {
+      console.log('degreeeeeeeeeeeeeee', res);
+      
+      this.degreeHeaderText = res;
+      this.degreeColumnGrid = [
+        {
+          headerText: this.degreeHeaderText['DegreeName'] + '|' + this.degreeHeaderText['TrainFieldID'],
+          template: this.templateDegreeGridCol1,
+          width: '150',
+        },
+        {
+          headerText: this.degreeHeaderText['TrainSupplierID'] + '|' + this.degreeHeaderText['Ranking'],
+          template: this.templateDegreeGridCol2,
+          width: '150',
+        },
+        {
+          headerText: this.degreeHeaderText['YearGraduated'] + '|' + this.degreeHeaderText['IssuedDate'],
+          template: this.templateDegreeGridCol3,
+          width: '150',
+        },
+        {
+          template: this.templateDegreeGridMoreFunc,
+          width: '150',
+        },
+      ]
+    })
+
+    let insDegree = setInterval(()=>{
+      if(this.degreeGrid){
+        clearInterval(insDegree);
+        let t= this;
+        this.degreeGrid.dataService.onAction.subscribe((res)=>{
+          if(res){
+            if(res.type == 'loaded'){
+              t.degreeRowCount = res['data'].length
+          }
+          }
+        })
+        this.degreeRowCount = this.degreeGrid.dataService.rowCount; 
+      }
+    },100)
+
     let ins = setInterval(()=>{
       if(this.appointionGrid){
         clearInterval(ins);
         let t= this;
         this.appointionGrid.dataService.onAction.subscribe((res)=>{
-          if(res.type == 'loaded'){
-            t.appointionRowCount = res['data'].length
+          if(res){
+            if(res.type != null && res.type == 'loaded'){
+              t.appointionRowCount = res['data'].length
+            }
           }
+          
         })
         this.appointionRowCount = this.appointionGrid.dataService.rowCount; 
       }
@@ -1076,6 +1165,9 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'eBenefit') {
           this.handlEmployeeBenefit('edit', data);
           this.df.detectChanges();
+        } else if (funcID == 'eDayoff'){
+          this.HandleEmployeeDayOffInfo('edit', data);
+          this.df.detectChanges();
         }
         break;
 
@@ -1218,10 +1310,12 @@ export class EmployeeProfileComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    let i = this.lstEDegrees.indexOf(data);
-                    if (i != -1) {
-                      this.lstEDegrees.splice(i, 1);
-                    }
+                    (this.degreeGrid.dataService as CRUDService).remove(data).subscribe();
+                    // let i = this.lstEDegrees.indexOf(data);
+                    // if (i != -1) {
+                    //   this.lstEDegrees.splice(i, 1);
+                    // }
+                    this.degreeRowCount = this.degreeRowCount - 1;
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -1276,7 +1370,7 @@ export class EmployeeProfileComponent extends UIComponent {
                   if (p != null) {
                     this.notify.notifyCode('SYS008');
                     (this.appointionGrid.dataService as CRUDService).remove(data).subscribe();
-                    this.appointionRowCount = this.appointionGrid.dataService.rowCount; 
+                    this.appointionRowCount = this.appointionRowCount - 1; 
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -1319,7 +1413,20 @@ export class EmployeeProfileComponent extends UIComponent {
                   if (p != null) {
                     this.notify.notifyCode('SYS008');
                     (this.grid.dataService as CRUDService).remove(data).subscribe();
-                    this.eBenefitRowCount = this.grid.dataService.rowCount; 
+                    this.eBenefitRowCount = this.eBenefitRowCount - 1; 
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            }  else if (funcID == 'eDayoff') {
+              this.hrService
+                .DeleteEmployeeDayOffInfo(data)
+                .subscribe((p) => {
+                  if (p != null) {
+                    this.notify.notifyCode('SYS008');
+                    (this.dayoffGrid.dataService as CRUDService).remove(data).subscribe();
+                    this.dayoffRowCount = this.dayoffRowCount - 1; 
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -1371,6 +1478,9 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'eBenefit') {
           this.copyValue(data, 'benefit');
           this.df.detectChanges();
+        } else if(funcID == 'eDayoff'){
+          this.copyValue(data, 'eDayoff');
+          this.df.detectChanges();
         }
         break;
     }
@@ -1417,7 +1527,6 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    // this.view.dataService.methodDelete = 'DeleteSignFileAsync';
     this.views = [
       {
         type: ViewType.content,
@@ -1869,6 +1978,7 @@ export class EmployeeProfileComponent extends UIComponent {
       if(res.event){
         if (actionType == 'add' || actionType == 'copy') {
           (this.grid.dataService as CRUDService).add(res.event).subscribe();
+          this.eBenefitRowCount += 1;
         }
         else if(actionType == 'edit'){
           (this.grid.dataService as CRUDService).update(res.event).subscribe();
@@ -2053,16 +2163,24 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupEdayoffsComponent,
       {
         actionType: actionType,
-        indexSelected: this.lstDayOffs.indexOf(data),
-        lstDayOffs: this.lstDayOffs,
+        // indexSelected: this.lstDayOffs.indexOf(data),
+        dayoffObj: data,
         headerText: 'Nghỉ phép',
         employeeId: this.data.employeeID,
-        funcID: 'HRTEM0503',
+        funcID: this.dayoffFuncID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if(res.event){
+        if (actionType == 'add' || actionType == 'copy') {
+          (this.dayoffGrid.dataService as CRUDService).add(res.event).subscribe();
+          this.dayoffRowCount += 1;
+        }
+        else if(actionType == 'edit'){
+          (this.dayoffGrid.dataService as CRUDService).update(res.event).subscribe();
+        }
+      }
       this.df.detectChanges();
     });
   }
@@ -2289,6 +2407,7 @@ export class EmployeeProfileComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if(res.event){
         if (actionType == 'add' || actionType == 'copy') {
+          this.appointionRowCount += 1;
           (this.appointionGrid.dataService as CRUDService).add(res.event).subscribe();
         }
         else if(actionType == 'edit'){
@@ -2333,17 +2452,25 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupEDegreesComponent,
       {
         actionType: actionType,
-        indexSelected: this.lstEDegrees.indexOf(data),
-        lstEDegrees: this.lstEDegrees,
+        //indexSelected: this.lstEDegrees.indexOf(data),
+        //lstEDegrees: this.lstEDegrees,
         headerText: 'Bằng cấp',
         employeeId: this.data.employeeID,
-        dataSelected: data,
-        funcID: 'HRTEM0601',
+        degreeObj: data,
+        // dataSelected: data,
+        funcID: this.degreeFuncID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if (actionType == 'add' || actionType == 'copy') {
+        (this.degreeGrid.dataService as CRUDService).add(res.event).subscribe();
+        this.degreeRowCount = this.degreeRowCount + 1;
+      }
+      else if(actionType == 'edit'){
+        (this.degreeGrid.dataService as CRUDService).update(res.event).subscribe();
+      }
+      this.df.detectChanges();
     });
   }
 
@@ -2359,7 +2486,6 @@ export class EmployeeProfileComponent extends UIComponent {
         lstESkill: this.lstESkill,
         indexSelected: this.lstESkill.indexOf(data),
         actionType: actionType,
-        // isAdd: true,
         headerText: 'Kỹ năng',
         employeeId: this.data.employeeID,
         funcID: 'HRTEM0603',
@@ -2764,9 +2890,14 @@ export class EmployeeProfileComponent extends UIComponent {
 
   valueChangeYearFilterBenefit(evt){
     console.log('chon year', evt);
-    ;
-    this.startDateEBenefitFilterValue = evt.fromDate.toJSON();
-    this.endDateEBenefitFilterValue = evt.toDate.toJSON();
+    if(evt.formatDate == undefined && evt.toDate == undefined){
+      this.startDateEBenefitFilterValue = null;
+      this.endDateEBenefitFilterValue = null;
+    }
+    else{
+      this.startDateEBenefitFilterValue = evt.fromDate.toJSON();
+      this.endDateEBenefitFilterValue = evt.toDate.toJSON();
+    }
     this.UpdateEBenefitPredicate();
     
     // (this.grid.dataService as CRUDService).setPredicates(['EffectedDate>=@0 and EffectedDate<=@1'], [start, endDate]).subscribe((item) => {
@@ -2782,9 +2913,12 @@ export class EmployeeProfileComponent extends UIComponent {
         clearInterval(ins);
         let t= this;
         this.grid.dataService.onAction.subscribe((res)=>{
-          if(res.type == 'loaded'){
-            t.eBenefitRowCount = res['data'].length
+          if(res){
+            if(res.type != null && res.type == 'loaded'){
+              t.eBenefitRowCount = res['data'].length
+            }
           }
+          
         })
         this.eBenefitRowCount = this.grid.dataService.rowCount; 
       }
@@ -2804,6 +2938,70 @@ copyValue(data, flag) {
         this.HandleEmployeeAppointionInfo('copy', res);
         })
       }
+      else if(flag == 'eDegrees'){
+        this.degreeGrid.dataService.dataSelected = data;
+        (this.degreeGrid.dataService as CRUDService).copy().subscribe((res: any) => {
+        this.HandleEmployeeAppointionInfo('copy', res);
+        })
+      }
+      else if(flag == 'eDayoff'){
+        this.dayoffGrid.dataService.dataSelected = data;
+        (this.dayoffGrid.dataService as CRUDService).copy().subscribe((res: any) => {
+        this.HandleEmployeeDayOffInfo('copy', res);
+        })
+      }
+}
+
+UpdateEDayOffsPredicate(){
+  this.filterEDayoffPredicates = ""
+  if(this.filterByKowIDArr.length > 0 && this.startDateEBenefitFilterValue != null){
+    this.filterEDayoffPredicates = '('
+    let i = 0;
+    for(i; i< this.filterByKowIDArr.length; i++){
+      if(i>0){
+        this.filterEDayoffPredicates +=' or '
+      }
+      this.filterEDayoffPredicates += `KowID==@${i}`
+    }
+    this.filterEDayoffPredicates += ') ';
+    this.filterEDayoffPredicates +=  `and (BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEBenefitFilterValue}")`;
+    //this.filterEBenefitDatavalues = this.filterByKowIDArr.concat([this.startDateEBenefitFilterValue, this.endDateEBenefitFilterValue]);
+    
+    (this.grid.dataService as CRUDService).setPredicates([this.filterEDayoffPredicates],[this.filterByKowIDArr])
+    .subscribe((item) => {
+      console.log('item tra ve sau khi loc 1', item);
+    });
+  }
+  else if(this.filterByKowIDArr.length > 0 && this.startDateEDayoffFilterValue == undefined || this.startDateEBenefitFilterValue == null){
+    let i = 0;
+    for(i; i< this.filterByKowIDArr.length; i++){
+      if(i>0){
+        this.filterEDayoffPredicates +=' or '
+      }
+      this.filterEDayoffPredicates += `KowID==@${i}`
+    }
+
+    (this.grid.dataService as CRUDService).setPredicates([this.filterEDayoffPredicates],[this.filterByKowIDArr])
+    .subscribe((item) => {
+      console.log('item tra ve sau khi loc 2', item);
+    });
+  }
+  else if(this.startDateEDayoffFilterValue != null){
+    (this.grid.dataService as CRUDService).setPredicates([`BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEBenefitFilterValue}"`], [])
+    .subscribe((item) => {
+      console.log('item tra ve sau khi loc 3', item);
+    });
+  }
+}
+
+valueChangeFilterDayOff(evt){
+  this.startDateEDayoffFilterValue = evt.fromDate.toJSON();
+  this.endDateEDayoffFilterValue = evt.toDate.toJSON();
+  this.UpdateEDayOffsPredicate();
+} 
+
+valueChangeYearFilterDayOff(evt){
+  this.filterByBenefitIDArr = evt.data;
 }
 
 }

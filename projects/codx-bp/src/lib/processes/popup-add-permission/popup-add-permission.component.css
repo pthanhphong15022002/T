@@ -27,17 +27,6 @@
   font-weight: 400 !important;
 }
 
-.background-name{
-  background: #f8f9fa;
-    height: 45px;
-    border-radius: 5px;
-}
-
-.text-name{
-  margin-left: 10px;
-  font-weight: 500;
-  font-size: 14px;
-}
 
 .line-clamp {
   display: -webkit-box;

@@ -40,8 +40,8 @@
 
     <div class="p-om-okr d-flex justify-content-center">
       <ejs-tab id="om-tab">
-        <e-tabitems>
-          <e-tabitem>
+        <e-tabitems style="padding: 0px;">
+          <e-tabitem style="padding: 0px;">
             <ng-template #headerText>
               <div class="d-flex align-items-center">
                 <i class="fa-solid fa-bullseye me-2"></i>
@@ -79,17 +79,18 @@
                   <div>
                     <div class="my-2">
                       <span
-                        >{{ funcID==compFuncID? compName : funcID==deptFuncID? deptName : funcID==orgFuncID? orgName :persName }} chưa thiết lập mục tiêu cho
-                        Q2/2022</span
+                        > <span class="fw-bold">{{ funcID==compFuncID? compName : funcID==deptFuncID? deptName : funcID==orgFuncID? orgName :persName }}</span> chưa thiết lập mục tiêu cho
+                        <span class="fw-bold">{{periodID}}</span></span
                       >
                     </div>
                     <div class="my-2">
                       <span>Vui lòng chọn nút < </span
-                      ><span>Tạo bộ mục tiêu</span
-                      ><span> > để thiết lập bộ mục tiêu cho {{ funcID==compFuncID? compName : funcID==deptFuncID? deptName : funcID==orgFuncID? orgName :persName }}</span>
+                      ><span class="text-primary fw-bold">Tạo bộ mục tiêu</span
+                      ><span> > để thiết lập bộ mục tiêu cho <span class="fw-bold">{{ funcID==compFuncID? compName : funcID==deptFuncID? deptName : funcID==orgFuncID? orgName :persName }}</span></span>
                     </div>
+
                     <div class="d-flex justify-content-center">
-                      <div
+                      <!-- <div
                         class="d-flex align-items-center cursor-pointer border rounded p-2"
                         (click)="click({ id: 'btnAddPlan' })"
                       >
@@ -98,7 +99,12 @@
                           default="Tạo bộ mục tiêu"
                           fiedName="lblTargets"
                         ></codx-label>
-                      </div>
+                      </div> -->
+                      <span type="button" (click)="click({ id: 'btnAddPlan' })"
+                      class="w-110px d-flex mt-3 py-2 px-4 bg-color rounded justify-content-center align-items-center">
+                      <span class="fa-solid fa-bullseye btn-text-primary text-light me-1"></span>
+                      <codx-label class="text-light" fiedName="lbl" default="Tạo bộ mục tiêu"></codx-label>
+                    </span>
                     </div>
                   </div>
                 </div>

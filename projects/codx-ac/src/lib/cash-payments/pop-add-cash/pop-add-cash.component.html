@@ -21,7 +21,7 @@
                   [formModel]="form.formModel"
                   fiedName="tabBasic"
                   default="Thông tin chứng từ"
-                  class="icon-info"     
+                   
                 ></codx-label>
               </ng-template>
               <ng-template #content>
@@ -62,16 +62,16 @@
                 <codx-label
                   fiedName="CashBookID"
                   [formModel]="form.formModel"
-                  default="Số quỹ tiền mặt"
+                  default="Sổ quỹ tiền mặt"
                 >
                 </codx-label>
                 <codx-input
-                  [crrValue]="form.data.cashBookID"
+                  [crrValue]="cashBookID"
                   field="cashBookID"
                   [formModel]="form.formModel"
                   type="combobox"
                   refValue="CashBookID"
-                  (valueChange)="valueChange($event,'')"
+                  (valueChange)="valueChangeCashBookID($event)"
                 >
                 </codx-input>
               </div>
@@ -119,15 +119,15 @@
                   >
                   </codx-label>
                   <codx-input
-                    [crrValue]="form.data.currencyID"
+                    [crrValue]="currencyID"
                     field="currencyID"
                     [formModel]="form.formModel"
-                    (valueChange)="valueChange($event,'')"
+                    (valueChange)="valueChangeCurrency($event)"
                   >
                   </codx-input>
                 </div>
               </div>
-              <div class="col-6">
+              <div class="col-4">
                 <div class="form-group mb-0 pt-1">
                   <codx-label
                     fiedName="ExchangeRate"
@@ -136,12 +136,12 @@
                   >
                   </codx-label>
                   <codx-input
-                  [crrValue]="form.data.exchangeRate"
+                  [crrValue]="exchangeRate"
                     field="exchangeRate"
                     [formModel]="form.formModel"
-                    (valueChange)="valueChange($event,'')"
+                    (valueChange)="valueChangeExchangeRate($event)"
                   >
-                  </codx-input>
+                  </codx-input>                 
                 </div>
               </div>
             </div>
@@ -159,11 +159,11 @@
                 >
                 </codx-label>
                 <codx-input
-                  [crrValue]="form.data.objectType"
+                  [crrValue]="objectType"
                   field="objectType"                 
                   type="valuelist"
                   refValue="AC016"
-                  (valueChange)="valueChange($event,'objectType')"
+                  (valueChange)="valueChangeObjectType($event)"
                 >
                 </codx-input>
               </div>
@@ -177,12 +177,18 @@
                   >
                   </codx-label>
                   <codx-input
-                    [crrValue]="form.data.objectID"
-                    *ngIf="ObjectID"
+                    [crrValue]="objectID"
+                    *ngIf="cbxObjectID != null"
                     field="objectID"                  
                     type="combobox"
-                    [refValue]="ObjectID"
-                    (valueChange)="valueChange($event,'')"
+                    [refValue]="cbxObjectID"
+                    (valueChange)="valueChangeObjectID($event)"
+                  >
+                  </codx-input>
+                  <codx-input
+                  *ngIf="cbxObjectID == null"
+                  type="valuelist"
+                  [formModel]="form.formModel"
                   >
                   </codx-input>
                 </div>
@@ -218,9 +224,11 @@
                   >
                   </codx-label>
                   <codx-input
+                    [crrValue]="voucherDate"
                     field="voucherDate"
-                    [formModel]="form.formModel"    
-                    [Group]="form.formGroup"   
+                    type="datetime"
+                    format="d"
+                    (valueChange)="valueChangeDate($event)"
                   >
                   </codx-input>
                 </div>
@@ -280,10 +288,10 @@
                   >
                   </codx-label>
                   <codx-input
-                    [crrValue]="form.data.voucherNo"
+                    [crrValue]="voucherNo"
                     field="voucherNo"
                     [formModel]="form.formModel"  
-                    (valueChange)="valueChange($event,'')"  
+                    (valueChange)="valueChangeVoucherNo($event)"  
                   >
                   </codx-input>
                 </div>
@@ -300,6 +308,7 @@
     [entityName]="fmCashPaymentsLines.entityName"
     [templateMore]="morefunction"
     [editSettings]="editSettings"
+    predicates="TransID=@0"
     [allowFiltering]="true"
     [allowSorting]="true"
     [dataValues]="cashpayment.recID"
@@ -321,7 +330,7 @@
         (clickMF)="clickMF($event, data)"
       ></codx-mfunc>
     </div>
-  </ng-template>
+</ng-template>
   <ng-template #footer>
     <div class="row" *ngIf="cashpayment">
         <ng-container *ngTemplateOutlet="tabRef"></ng-container>
