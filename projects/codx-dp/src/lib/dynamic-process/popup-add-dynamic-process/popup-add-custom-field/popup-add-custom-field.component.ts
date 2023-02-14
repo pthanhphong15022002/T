@@ -149,7 +149,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
-    if (!this.field.dataFormat) {
+    if (!this.field.dataFormat && this.field.dataType !='R' && this.field.dataType !='A') {
       this.notiService.notifyCode(
         'SYS009',
         0,

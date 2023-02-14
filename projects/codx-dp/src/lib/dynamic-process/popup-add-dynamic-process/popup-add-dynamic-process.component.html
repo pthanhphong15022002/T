@@ -818,6 +818,7 @@
 <ng-template #dynamicFieldsAllSteps>
   <ng-container *ngFor="let st of stepList">
     <ng-container
+      *ngIf="!st.isFailStep && !st.isSuccessStep"
       [ngTemplateOutlet]="dynamicFields"
       [ngTemplateOutletContext]="{ $implicit: st }"
     ></ng-container>
