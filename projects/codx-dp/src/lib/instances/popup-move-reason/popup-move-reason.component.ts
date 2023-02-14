@@ -1,5 +1,5 @@
-import { Component, OnInit, Optional } from '@angular/core';
-import { CacheService, DialogData, DialogRef } from 'codx-core';
+import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { AuthStore, CacheService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxDpService } from '../../codx-dp.service';
 import { DP_Instances, DP_Instances_Steps, DP_Instances_Steps_Reasons, DP_Steps_Reasons } from '../../models/models';
 
@@ -14,6 +14,8 @@ export class PopupMoveReasonComponent implements OnInit {
   formModel:any;
   listCbxProccess:any;
   stepReason:any;
+  user:any;
+  userId:any;
 
   headerText: string = '';
   instancesName: string = '';
@@ -22,20 +24,31 @@ export class PopupMoveReasonComponent implements OnInit {
   titleReasonClick: string = '';
   applyFor: string = '';
   stepName: string = '';
+  moveProccess: string = '';
+  memoStep:string = '';
 
   listReason: DP_Instances_Steps_Reasons[]=[];
-  reasonStep = new DP_Instances_Steps();
 
+  listReasonClick: DP_Instances_Steps_Reasons[]=[];
+  reasonStep = new DP_Instances_Steps();
+  reason = new DP_Instances_Steps_Reasons();
+  instances = new DP_Instances();
+  listStep : DP_Instances_Steps_Reasons[]=[];
 
   instanceStep = new DP_Instances_Steps;
   instance = new DP_Instances;
+
+  isReason: boolean = true;
 
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
   readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
 
   constructor(
     private cache: CacheService,
-    private dpService: CodxDpService,
+    private codxDpService: CodxDpService,
+    private notiService: NotificationsService,
+    private authStore: AuthStore,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
 
@@ -44,25 +57,28 @@ export class PopupMoveReasonComponent implements OnInit {
 
     this.dialog = dialog;
     this.formModel = dt?.data.formModel;
-    this.instancesName = dt?.data.instancesName;
-    this.headerText = dt?.data?.dataMore?.description;
+    this.instances = dt?.data.instance;
+    this.headerText = dt?.data.headerTitle;
     this.titleReasonClick = dt?.data.isReason? 'Chọn lý do thành công': 'Chọn lý do thất bại';
     this.applyFor = dt?.data?.applyFor;
     this.viewClick = this.viewKanban;
     this.stepName = dt?.data?.stepName;
     this.reasonStep = dt?.data?.objReason
     this.listReason = this.reasonStep.reasons;
+    this.user = this.authStore.get();
+    this.userId = this.user?.userID
+    this.isReason = dt?.data?.isReason;
 
     this.loadCbxProccess();
 
   }
 
   ngOnInit(): void {
-
+    
   }
   loadCbxProccess() {
     this.cache.valueList('DP031').subscribe((data) => {
-      this.dpService.getlistCbxProccess(this.applyFor).subscribe((res) => {
+      this.codxDpService.getlistCbxProccess(this.applyFor).subscribe((res) => {
         if (res) {
           this.listCbxProccess = res[0];
           var obj = {
@@ -71,19 +87,94 @@ export class PopupMoveReasonComponent implements OnInit {
              // 'Không chuyển đến quy trình khác'
           };
           this.listCbxProccess.unshift(obj);
+          this.autoClickedProccess();
         }
       });
     });
 
   }
 
-  onSave(){
+  onSave() {
+    // if(this.stepIdClick === this.stepIdOld) {
+    //   this.notiService.notifyCode('DP001');
+    //   return;
+    // }
+    // else {
+      this.beforeSave();
+    // }
 
   }
+  beforeSave() {
+    var data = [this.instance,this.listReasonClick, this.moveProccess, this.memoStep];
+    this.codxDpService.moveReasonByIdInstance(data).subscribe((res)=> {
+      if(res){
+        this.listStep = res;
+        var obj ={
+          listStep: this.listStep,
+          instance: this.instance,
+        };
+        this.dialog.close(obj);
+        // this.dialog.dataService.clear();
+        this.notiService.notifyCode('Đánh dấu oke nha');
 
+        this.changeDetectorRef.detectChanges();
+      }
+    })
+    // if(this.instancesStepOld.stepID === this.IdSuccess || this.instancesStepOld.stepID === this.IdFail ) {
+    //   this.instance.stepID = this.stepIdOld;
+    //   this.instancesStepOld.stepID = this.stepIdOld;
+    //   this.stepIdOld = '';
+    //   this.isReason = true;
+    // }
+    // else {
+    //   this.instance.stepID = this.stepIdClick;
+    // }
+
+    // var data = [this.instance.recID,this.stepIdOld ,this.instancesStepOld];
+    // this.codxDpService.moveStageByIdInstance(data).subscribe((res)=> {
+    //   if(res){
+    //     this.listStep = res;
+    //     var obj ={
+    //       listStep: this.listStep,
+    //       instance: this.instance,
+    //       isReason: this.isReason,
+    //     };
+    //     this.dialog.close(obj);
+    //     // this.dialog.dataService.clear();
+    //     this.notiService.notifyCode('Chuyển tiếp oke nha');
+
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // })
+  }
+  checkValue($event,data){
+    if($event && $event.currentTarget.checked){
+        var reason = this.handleReason(data);
+        this.listReasonClick.push(reason);
+    }
+    else {
+      let idx = this.listReasonClick.findIndex(x=> x.reasonName  === data.reasonName);
+      if(idx>=0) this.listReasonClick.splice(idx, 1);
+    }
+  }
   valueChange($event){
-
+    if($event){
+      this.memoStep = $event.data;
+    }
   }
+
+  handleReason(
+    reason: DP_Instances_Steps_Reasons
+  ) {
+    reason.processID = this.instances.processID;
+    reason.stepID = this.reasonStep.stepID;
+    reason.instanceID = this.instances.recID;
+    reason.createdBy = this.userId;
+//    reason.createdOn = Date.UTC();
+    reason.reasonType = this.isReason ? '1' : '2';
+    return reason;
+  }
+
 
   changeTime($event){
 
@@ -94,6 +185,10 @@ export class PopupMoveReasonComponent implements OnInit {
     //   this.stepReason.newProcessID = $event;
     // }
 
+  }
+
+  autoClickedProccess() {
+    this.moveProccess =  this.listCbxProccess[0].recID;
   }
 }
 
