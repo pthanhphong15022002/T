@@ -56,6 +56,9 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    this.formModel = dialog.formModel;
+    console.log(this.formModel);
+    
     //this.lstDegrees = data?.data?.lstEDegrees;
     //this.indexSelected = data?.data?.indexSelected ?? -1;
 
@@ -160,6 +163,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
           //     .subscribe();
           // }
           // this.dialog.close(p)
+          this.dialog && this.dialog.close(this.degreeObj);
         } else this.notify.notifyCode('SYS023');
       });
     } else {
@@ -176,6 +180,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
             //     .subscribe();
             // }
             // this.dialog.close(this.data)
+            this.dialog && this.dialog.close(this.degreeObj);
           } else this.notify.notifyCode('SYS021');
         });
     }

@@ -3644,6 +3644,8 @@
                     default="Bằng cấp"
                   >
                   </codx-label>
+                  <span class="text-gray-500 ms-2"> | </span>
+                  <span>({{ degreeRowCount }})</span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -3726,21 +3728,22 @@
                 </div>
               </div> -->
               <div>
-                <codx-gridview *ngIf="degreeColumnGrid"
-                #degreeGridView
-                [formModel]="degreeFormodel"
-                [columnsGrid]="degreeColumnGrid"
-                [service]="'HR'"
-                [assemblyName]="'Core'"
-                [className]="'DataBusiness'"
-                [method]="'LoadDataAsync'"
-                [predicates]="'EmployeeID=@0'"
-                [dataValues]="data.employeeID"
-                [pageSize]="numPageSizeGridView"
-                [entityName]="'HR_EDegrees'"
-                [rowHeight]="50"
-                height="240px"
-              ></codx-gridview>
+                <codx-gridview
+                  *ngIf="degreeColumnGrid"
+                  #degreeGridView
+                  [formModel]="degreeFormodel"
+                  [columnsGrid]="degreeColumnGrid"
+                  [service]="'HR'"
+                  [assemblyName]="'Core'"
+                  [className]="'DataBusiness'"
+                  [method]="'LoadDataAsync'"
+                  [predicates]="'EmployeeID=@0'"
+                  [dataValues]="data.employeeID"
+                  [pageSize]="numPageSizeGridView"
+                  [entityName]="'HR_EDegrees'"
+                  [rowHeight]="50"
+                  height="240px"
+                ></codx-gridview>
               </div>
             </div>
           </div>
@@ -3760,6 +3763,8 @@
                     default="Chứng chỉ"
                   >
                   </codx-label>
+                  <span class="text-gray-500 ms-2"> | </span>
+                  <span>({{ certificateRowCount }})</span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -3781,7 +3786,7 @@
             </div>
 
             <div class="mb-1">
-              <div>
+              <!-- <div>
                 <div class="d-flex flex-wrap py-3 px-4">
                   <ng-container *ngFor="let item of lstCertificates">
                     <div class="border rounded min-w-250px mw-250px me-4 mb-2">
@@ -3838,6 +3843,25 @@
                     </div>
                   </ng-container>
                 </div>
+              </div> -->
+
+              <div>
+                <codx-gridview
+                  *ngIf="certificateColumnGrid"
+                  #certificateGridView
+                  [formModel]="certificateFormModel"
+                  [columnsGrid]="certificateColumnGrid"
+                  [service]="'HR'"
+                  [assemblyName]="'Core'"
+                  [className]="'DataBusiness'"
+                  [method]="'LoadDataAsync'"
+                  [predicates]="'EmployeeID=@0'"
+                  [dataValues]="data.employeeID"
+                  [pageSize]="numPageSizeGridView"
+                  [entityName]="'HR_ECertificates'"
+                  [rowHeight]="50"
+                  height="240px"
+                ></codx-gridview>
               </div>
             </div>
           </div>
@@ -4589,37 +4613,37 @@
 </ng-template>
 <!--#endregion -->
 
-
 <ng-template #templateDegreeGridCol1 let-data>
   <div>
     <i class="icon-school"></i>
-    {{data?.degreeName}}
+    {{ data?.degreeName }}
   </div>
   <div>
-    {{data?.trainFieldDetail}}
+    {{ data?.trainFieldDetail }}
   </div>
-
 </ng-template>
 <ng-template #templateDegreeGridCol2 let-data>
   <div>
-    {{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}
+    {{
+      data?.trainSupplierID
+        | formatvalue : degreeFormodel : "trainSupplierID"
+        | async
+    }}
   </div>
   <div>
-    <i class="icon-school"></i>
-    {{data?.ranking}}
+    {{ data?.ranking }}
     <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
-    {{data?.totalScore}}
+    {{ data?.totalScore }}
   </div>
-  
 </ng-template>
 <ng-template #templateDegreeGridCol3 let-data>
   <span>
     <i class="icon-calendar_today"></i>
-    {{data?.yearGraduated}}
+    {{ data?.yearGraduated }}
   </span>
   <span>
     <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
-    {{data?.issuedDate | fmDT}}
+    {{ data?.issuedDate | fmDT }}
   </span>
   <div *ngIf="data.isMain">
     <label>Là bằng cấp chính</label>
@@ -4629,6 +4653,75 @@
   <codx-mfunc
     [formModel]="degreeFormodel"
     (clickMF)="clickMF($event, data, 'eDegrees')"
+    [dataItem]="data"
+    type="hover"
+  >
+  </codx-mfunc>
+</ng-template>
+
+<!------------------------------------------------------------------------------------>
+
+<ng-template #templateCertificateGridCol1 let-data>
+  <div>
+    <i class="icon-class icon-20 me-1 text-primary"></i>
+    {{
+      data?.certificateID
+        | formatvalue : certificateFormModel : "certificateID"
+        | async
+    }}
+    <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
+    {{
+      data?.certificateGradeID
+        | formatvalue : certificateFormModel : "certificateGradeID"
+        | async
+    }}
+    <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
+  </div>
+  <div>
+    <i class="icon-dashboard"></i>
+    {{
+      data?.certificateType
+        | formatvalue : certificateFormModel : "certificateType"
+        | async
+    }}
+  </div>
+</ng-template>
+
+<ng-template #templateCertificateGridCol2 let-data>
+  <div>
+    {{
+      data?.trainSupplierID
+        | formatvalue : certificateFormModel : "trainSupplierID"
+        | async
+    }}
+    <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
+  </div>
+  <div>
+    <i class=""></i>
+    {{ data?.ranking | formatvalue : certificateFormModel : "ranking" | async }}
+    <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
+    {{
+      data?.totalScore
+        | formatvalue : certificateFormModel : "totalScore"
+        | async
+    }}
+  </div>
+</ng-template>
+
+<ng-template #templateCertificateGridCol3 let-data>
+  <div>
+    <i class="icon-calendar_today"></i>
+    {{ data?.issuedDate | fmDT }}
+    <span *ngIf="data?.isExpire"> Hết hạn </span>
+    <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
+  </div>
+  <div>{{ data?.effectedDate | fmDT }} - {{ data?.expiredDate | fmDT }}</div>
+</ng-template>
+
+<ng-template #templateCertificateGridMoreFunc let-data>
+  <codx-mfunc
+    [formModel]="degreeFormodel"
+    (clickMF)="clickMF($event, data, 'eCertificate')"
     [dataItem]="data"
     type="hover"
   >
