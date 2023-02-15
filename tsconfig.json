@@ -110,6 +110,12 @@
         // "dist/codx-tm/codx-tm",
         // "dist/codx-tm"
       ],
+      "codx-tn": [
+        "dist/codx-tn/codx-tn",
+        "dist/codx-tn",
+        "dist/codx-tn/codx-tn",
+        "dist/codx-tn"
+      ],
       "codx-wp": [
         "dist/codx-wp/codx-wp",
         "dist/codx-wp"

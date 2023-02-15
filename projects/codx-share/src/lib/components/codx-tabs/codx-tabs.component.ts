@@ -127,7 +127,7 @@ export class CodxTabsComponent implements OnInit {
   //xu ly quyen file tm
   fileSave(e) {
     if (e && typeof e === 'object' && this.isUpPermission) {
-      var createdBy = Array.isArray(e) ? e[0].createdBy : e.createdBy;
+      var createdBy = Array.isArray(e) ? e[0].data.createdBy : e.createdBy;
       this.api
         .execSv<any>('TM', 'TM', 'TaskBusiness', 'AddPermissionFileAsync', [
           this.objectID,
