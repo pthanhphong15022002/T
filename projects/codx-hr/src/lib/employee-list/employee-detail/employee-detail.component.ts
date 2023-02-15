@@ -486,11 +486,6 @@ export class EmployeeDetailComponent extends UIComponent {
               headerText: this.eAssetHeaderText['ReturnedDate'],
               template: this.templateEAssetCol3,
               width: '150',
-            },
-            {
-              headerText: this.eAssetHeaderText['AssetCategory'] + '|' + this.eAssetHeaderText['AssetNo'],
-              template: this.templateMoreFuncEAsset,
-              width: '150',
             }
           ]
         })
@@ -2936,8 +2931,6 @@ export class EmployeeDetailComponent extends UIComponent {
   templateEAssetCol2: TemplateRef<any>;
   @ViewChild('templateEAssetCol3', { static: true })
   templateEAssetCol3: TemplateRef<any>;
-  @ViewChild('templateMoreFuncEAsset', { static: true })
-  templateMoreFuncEAsset: TemplateRef<any>;
 
 
   @ViewChild('templateEExperienceGridCol4', { static: true })
@@ -3099,66 +3092,61 @@ export class EmployeeDetailComponent extends UIComponent {
 
   valueChangeFilterAssetCategory(evt){
     console.log('filter theo type', evt);
-    this.filterByBenefitIDArr = evt.data;
+    this.filterByAssetCatIDArr = evt.data;
     this.UpdateEAssetPredicate();
   }
 
   UpdateEAssetPredicate(){
-    this.filterEBenefitPredicates = ""
-    if(this.filterByBenefitIDArr.length > 0 && this.startDateEBenefitFilterValue != null){
-      this.filterEBenefitPredicates = '('
+    this.filterEAssetPredicates = ""
+    if(this.filterByAssetCatIDArr.length > 0 && this.startDateEAssetFilterValue != null){
+      this.filterEAssetPredicates = '('
       let i = 0;
-      for(i; i< this.filterByBenefitIDArr.length; i++){
+      for(i; i< this.filterByAssetCatIDArr.length; i++){
         if(i>0){
-          this.filterEBenefitPredicates +=' or '
+          this.filterEAssetPredicates +=' or '
         }
-        this.filterEBenefitPredicates += `BenefitID==@${i}`
+        this.filterEAssetPredicates += `AssetCategory==@${i}`
       }
-      this.filterEBenefitPredicates += ') ';
-      this.filterEBenefitPredicates +=  `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
+      this.filterEAssetPredicates += ') ';
+      this.filterEAssetPredicates +=  `and (IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEBenefitFilterValue}")`;
       
-      (this.grid.dataService as CRUDService).setPredicates([this.filterEBenefitPredicates],[this.filterByBenefitIDArr.join(';')])
+      (this.eAssetGrid.dataService as CRUDService).setPredicates([this.filterEAssetPredicates],[this.filterByAssetCatIDArr.join(';')])
       .subscribe((item) => {
         console.log('item tra ve sau khi loc 1', item);
       });
     }
-    else if(this.filterByBenefitIDArr.length > 0 && this.startDateEBenefitFilterValue == undefined || this.startDateEBenefitFilterValue == null){
+    else if(this.filterByAssetCatIDArr.length > 0 && this.startDateEAssetFilterValue == undefined || this.startDateEAssetFilterValue == null){
       let i = 0;
-      for(i; i< this.filterByBenefitIDArr.length; i++){
+      for(i; i< this.filterByAssetCatIDArr.length; i++){
         if(i>0){
-          this.filterEBenefitPredicates +=' or '
+          this.filterEAssetPredicates +=' or '
         }
-        this.filterEBenefitPredicates += `BenefitID==@${i}`
+        this.filterEAssetPredicates += `AssetCategory==@${i}`
       }
 
-      (this.grid.dataService as CRUDService).setPredicates([this.filterEBenefitPredicates],[this.filterByBenefitIDArr.join(';')])
+      (this.eAssetGrid.dataService as CRUDService).setPredicates([this.filterEAssetPredicates],[this.filterByAssetCatIDArr.join(';')])
       .subscribe((item) => {
         console.log('item tra ve sau khi loc 2', item);
       });
     }
-    else if(this.startDateEBenefitFilterValue != null){
-      (this.grid.dataService as CRUDService).setPredicates([`EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}"`], [])
+    else if(this.startDateEAssetFilterValue != null){
+      (this.eAssetGrid.dataService as CRUDService).setPredicates([`IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEBenefitFilterValue}"`], [])
       .subscribe((item) => {
         console.log('item tra ve sau khi loc 3', item);
       });
     }
-    
   }
 
   valueChangeYearFilterEAsset(evt){
     console.log('chon year', evt);
     if(evt.formatDate == undefined && evt.toDate == undefined){
-      this.startDateEBenefitFilterValue = null;
-      this.endDateEBenefitFilterValue = null;
+      this.startDateEAssetFilterValue = null;
+      this.endDateEAssetFilterValue = null;
     }
     else{
-      this.startDateEBenefitFilterValue = evt.fromDate.toJSON();
-      this.endDateEBenefitFilterValue = evt.toDate.toJSON();
+      this.startDateEAssetFilterValue = evt.fromDate.toJSON();
+      this.endDateEAssetFilterValue = evt.toDate.toJSON();
     }
     this.UpdateEAssetPredicate();
-    
-    // (this.grid.dataService as CRUDService).setPredicates(['EffectedDate>=@0 and EffectedDate<=@1'], [start, endDate]).subscribe((item) => {
-    //   console.log('item tra ve', item);
-    // });
   }
 }
