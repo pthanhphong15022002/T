@@ -211,6 +211,9 @@ export class EmployeeDetailComponent extends UIComponent {
   //Awards
   lstAwards: any = [];
 
+  passportColumnGrid;
+  visaColumnGrid;
+  workPermitColumnGrid;
   healthColumnsGrid;
   vaccineColumnsGrid;
   diseaseColumnsGrid;
@@ -224,7 +227,7 @@ export class EmployeeDetailComponent extends UIComponent {
   degreeColumnGrid;
   certificateColumnGrid;
 
-  //#region ViewChild
+  //#region ViewChild template
   @ViewChild('healthPeriodID', { static: true })
   healthPeriodID: TemplateRef<any>;
   @ViewChild('healthPeriodDate', { static: true })
@@ -237,10 +240,29 @@ export class EmployeeDetailComponent extends UIComponent {
   @ViewChild('EExperience', { static: true })
   EExperienceTmp: TemplateRef<any>;
   @ViewChild('tempFromDate', { static: true }) tempFromDate;
-  @ViewChild('tempToDate', { static: true })
+  @ViewChild('tempToDate', { static: true }) tempToDate: TemplateRef<any>;
+
+  // ePassPort
+  @ViewChild('passportCol1', { static: true }) passportCol1: TemplateRef<any>;
+  @ViewChild('passportCol2', { static: true }) passportCol2: TemplateRef<any>;
+
+  // ePassVisa
+  @ViewChild('visaCol1', { static: true }) visaCol1: TemplateRef<any>;
+  @ViewChild('visaCol2', { static: true }) visaCol2: TemplateRef<any>;
+
+  // eWorkPermit
+  @ViewChild('workPermitCol1', { static: true })
+  workPermitCol1: TemplateRef<any>;
+  @ViewChild('workPermitCol2', { static: true })
+  workPermitCol2: TemplateRef<any>;
+  //#endregion
+
+  //#region gridView viewChild
+  @ViewChild('passportGridview') passportGridview: CodxGridviewComponent;
+  @ViewChild('visaGridview') visaGridview: CodxGridviewComponent;
+  @ViewChild('workPermitGridview') workPermitGridview: CodxGridviewComponent;
 
   //#endregion
-  tempToDate: TemplateRef<any>;
 
   objCollapes = {
     '1': false,
@@ -292,6 +314,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
   lstTab: any;
 
+  //#region functions list
   lstFuncSelfInfo: any = [];
   lstFuncLegalInfo: any = [];
   lstFuncTaskInfo: any = [];
@@ -303,9 +326,13 @@ export class EmployeeDetailComponent extends UIComponent {
   lstFuncArchiveRecords: any = [];
   lstFuncSeverance: any = [];
   lstFuncID: any = [];
+  //#endregion
 
   degreeFormodel: FormModel;
   degreeRowCount;
+  passportRowCount: number;
+  visaRowCount: Number;
+  workPermitRowCount: Number;
 
   //#region var functionID
 
@@ -313,16 +340,25 @@ export class EmployeeDetailComponent extends UIComponent {
   ePassportFuncID = 'HRTEM0202';
   eFamiliesFuncID = 'HRTEM0103';
   degreeFuncID = 'HRTEM0601';
+  eVisaFuncID = 'HRTEM0203';
+  eWorkPermitFuncID = 'HRTEM0204';
 
   //#endregion
 
   //#region var formModel
-  
-  eInfoFormModel: FormModel; // Thông tin bản thân
+
+  //#region var headerText
+
+  eInfoFormModel: FormModel; // Thông tin bản thân/ Bảo hiểm
   eFamilyFormModel: FormModel; //Quan hệ gia đình
+  ePassportFormModel: FormModel; //Hộ chiếu
+  eVisaFormModel: FormModel;
+  eWorkPermitFormModel: FormModel; //Giay phep lao dong
 
   //#endregion
   degreeHeaderText;
+
+  //#endregion
 
   certificateFormModel: FormModel;
   certificateRowCount;
@@ -346,6 +382,18 @@ export class EmployeeDetailComponent extends UIComponent {
 
     this.hrService.getFormModel(this.eFamiliesFuncID).then((res) => {
       this.eFamilyFormModel = res;
+    });
+
+    this.hrService.getFormModel(this.ePassportFuncID).then((res) => {
+      this.ePassportFormModel = res;
+    });
+
+    this.hrService.getFormModel(this.eVisaFuncID).then((res) => {
+      this.eVisaFormModel = res;
+    });
+
+    this.hrService.getFormModel(this.eWorkPermitFuncID).then((res) => {
+      this.eWorkPermitFormModel = res;
     });
     //#endregion
 
@@ -429,7 +477,8 @@ export class EmployeeDetailComponent extends UIComponent {
                 }
               }
             });
-            this.certificateRowCount = this.certificateGrid.dataService.rowCount;
+            this.certificateRowCount =
+              this.certificateGrid.dataService.rowCount;
           }
         }, 100);
         ////////////////////
@@ -520,6 +569,121 @@ export class EmployeeDetailComponent extends UIComponent {
       }
     });
 
+    //#region get columnGrid EVisa - Thị thực
+    this.hrService.getHeaderText(this.eVisaFuncID).then((res) => {
+      let visaHeaderText = res;
+      this.visaColumnGrid = [
+        {
+          headerText:
+            visaHeaderText['VisatNo'] + ' | ' + visaHeaderText['IssuedPlace'],
+          template: this.visaCol1,
+          width: '150',
+        },
+        {
+          headerText:
+            visaHeaderText['IssuedDate'] +
+            ' | ' +
+            visaHeaderText['ExpiredDate'],
+          template: this.visaCol2,
+          width: '150',
+        },
+      ];
+    });
+
+    let insVisa = setInterval(() => {
+      if (this.passportGridview) {
+        clearInterval(insVisa);
+        let t = this;
+        this.visaGridview.dataService.onAction.subscribe((res) => {
+          if (res) {
+            if (res.type == 'loaded') {
+              t.visaRowCount = res['data'].length;
+            }
+          }
+        });
+        this.visaRowCount = this.visaGridview.dataService.rowCount;
+      }
+    }, 100);
+
+    //#endregion
+
+    //#region get columnGrid EPassport - Hộ chiếu
+    this.hrService.getHeaderText(this.ePassportFuncID).then((res) => {
+      let passportHeaderText = res;
+      this.passportColumnGrid = [
+        {
+          headerText:
+            passportHeaderText['PassportNo'] +
+            ' | ' +
+            passportHeaderText['IssuedPlace'],
+          template: this.passportCol1,
+          width: '150',
+        },
+        {
+          headerText:
+            passportHeaderText['IssuedDate'] +
+            ' | ' +
+            passportHeaderText['ExpiredDate'],
+          template: this.passportCol2,
+          width: '150',
+        },
+      ];
+    });
+
+    let insPassport = setInterval(() => {
+      if (this.passportGridview) {
+        clearInterval(insPassport);
+        let t = this;
+        this.passportGridview.dataService.onAction.subscribe((res) => {
+          if (res) {
+            if (res.type == 'loaded') {
+              t.passportRowCount = res['data'].length;
+            }
+          }
+        });
+        this.passportRowCount = this.passportGridview.dataService.rowCount;
+      }
+    }, 100);
+
+    //#endregion
+
+    //#region get columnGrid EWorkPermit - Giấy phép lao động
+    this.hrService.getHeaderText(this.eWorkPermitFuncID).then((res) => {
+      let workHeaderText = res;
+      this.workPermitColumnGrid = [
+        {
+          headerText:
+            workHeaderText['WorkPermitNo'] +
+            ' | ' +
+            workHeaderText['IssuedPlace'],
+          template: this.workPermitCol1,
+          width: '150',
+        },
+        {
+          headerText:
+            workHeaderText['IssuedDate'] + ' | ' + workHeaderText['ToDate'],
+          template: this.workPermitCol2,
+          width: '150',
+        },
+      ];
+    });
+
+    let insWorkPermit = setInterval(() => {
+      if (this.passportGridview) {
+        clearInterval(insWorkPermit);
+        let t = this;
+        this.workPermitGridview.dataService.onAction.subscribe((res) => {
+          if (res) {
+            if (res.type == 'loaded') {
+              t.workPermitRowCount = res['data'].length;
+            }
+          }
+        });
+        this.workPermitRowCount = this.workPermitGridview.dataService.rowCount;
+      }
+    }, 100);
+
+    //#endregion
     this.EExperienceColumnsGrid = [
       {
         field: 'fromDate',
@@ -1162,11 +1326,12 @@ export class EmployeeDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    let i = this.lstPassport.indexOf(data);
-                    if (i != -1) {
-                      this.lstPassport.splice(i, 1);
-                    }
-                    this.df.detectChanges();
+                    this.updateGridView(this.passportGridview, 'delete', data);
+                    // let i = this.lstPassport.indexOf(data);
+                    // if (i != -1) {
+                    //   this.lstPassport.splice(i, 1);
+                    // }
+                    // this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -1177,10 +1342,11 @@ export class EmployeeDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    let i = this.lstWorkPermit.indexOf(data);
-                    if (i != -1) {
-                      this.lstWorkPermit.splice(i, 1);
-                    }
+                    // let i = this.lstWorkPermit.indexOf(data);
+                    // if (i != -1) {
+                    //   this.lstWorkPermit.splice(i, 1);
+                    // }
+                    this.updateGridView(this.passportGridview, 'delete', data);
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -1192,11 +1358,12 @@ export class EmployeeDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    let i = this.lstVisa.indexOf(data);
-                    if (i != -1) {
-                      this.lstVisa.splice(i, 1);
-                      console.log('delete visa', this.lstVisa);
-                    }
+                    // let i = this.lstVisa.indexOf(data);
+                    // if (i != -1) {
+                    //   this.lstVisa.splice(i, 1);
+                    //   console.log('delete visa', this.lstVisa);
+                    // }
+                    this.updateGridView(this.visaGridview, 'delete', data);
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -1296,7 +1463,9 @@ export class EmployeeDetailComponent extends UIComponent {
                     // if (i != -1) {
                     //   this.lstEDegrees.splice(i, 1);
                     // }
-                    (this.degreeGrid.dataService as CRUDService).remove(data).subscribe();
+                    (this.degreeGrid.dataService as CRUDService)
+                      .remove(data)
+                      .subscribe();
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -1332,7 +1501,9 @@ export class EmployeeDetailComponent extends UIComponent {
                     //   this.lstCertificates.splice(i, 1);
                     // }
                     this.certificateRowCount--;
-                    (this.certificateGrid.dataService as CRUDService).remove(data).subscribe();
+                    (this.certificateGrid.dataService as CRUDService)
+                      .remove(data)
+                      .subscribe();
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -1994,7 +2165,6 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   HandleEmployeeBasicSalariesInfo(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     // option.FormModel = this.view.formModel
     option.Width = '850px';
@@ -2058,9 +2228,7 @@ export class EmployeeDetailComponent extends UIComponent {
   handleEmployeePassportInfo(actionType: string, data: any) {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
-    console.log('datas', option.DataService);
-
-    option.FormModel = this.view.formModel;
+    option.FormModel = this.passportColumnGrid.formModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       PopupEPassportsComponent,
@@ -2069,7 +2237,7 @@ export class EmployeeDetailComponent extends UIComponent {
         // indexSelected: this.lstPassport.indexOf(data),
         // lstPassports: this.lstPassport,
         funcID: this.ePassportFuncID,
-        headerText: 'Hộ chiếu',
+        headerText: this.getFormHeader(this.ePassportFuncID),
         employeeId: this.data.employeeID,
         passportObj: data,
       },
@@ -2087,7 +2255,11 @@ export class EmployeeDetailComponent extends UIComponent {
       // console.log('data tra ve', res.event);
       // console.log('lst passport', this.lstPassport);
 
-      if (!res?.event) this.view.dataService.clear();
+      if (!res?.event)
+        (this.passportGridview.dataService as CRUDService).clear();
+      else {
+        this.updateGridView(this.passportGridview, actionType, res?.event);
+      }
       this.df.detectChanges();
     });
   }
@@ -2118,22 +2290,21 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   handleEmployeeWorkingPermitInfo(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    option.Width = '850px';
+    option.DataService = this.workPermitGridview.dataService;
+    option.FormModel = this.workPermitGridview.formModel;
+    option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      // EmployeeWorkingLisenceDetailComponent,
       PopupEWorkPermitsComponent,
       {
         actionType: actionType,
-        indexSelected: this.lstWorkPermit.indexOf(data),
-        lstWorkPermit: this.lstWorkPermit,
+        // indexSelected: this.lstWorkPermit.indexOf(data),
+        // lstWorkPermit: this.lstWorkPermit,
         // selectedWorkPermit: data,
-        headerText: 'Giấy phép lao động',
+        headerText: this.getFormHeader(this.eWorkPermitFuncID),
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020106',
+        funcID: this.eWorkPermitFuncID,
+        workPermitObj: data,
       },
       option
     );
@@ -2146,27 +2317,28 @@ export class EmployeeDetailComponent extends UIComponent {
       //   this.lstWorkPermit[index] = res.event;
       // }
       // console.log(this.lstWorkPermit);
-      if (!res?.event) this.view.dataService.clear();
+      if (!res?.event)
+        (this.workPermitGridview.dataService as CRUDService).clear();
+      else this.updateGridView(this.workPermitGridview, actionType, data);
       this.df.detectChanges();
     });
   }
 
   handleEmployeeVisaInfo(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    option.Width = '800px';
+    option.DataService = this.visaGridview.dataService;
+    option.FormModel = this.visaGridview.formModel;
+    option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      // EmployeeVisaFormComponent,
       PopupEVisasComponent,
       {
         actionType: actionType,
-        indexSelected: this.lstVisa.indexOf(data),
-        lstVisas: this.lstVisa,
-        headerText: 'Thị thực',
+        // indexSelected: this.lstVisa.indexOf(data),
+        // lstVisas: this.lstVisa,
+        headerText: this.getFormHeader(this.eVisaFuncID),
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020105',
+        funcID: this.eVisaFuncID,
+        visaObj: data,
       },
       option
     );
@@ -2174,7 +2346,8 @@ export class EmployeeDetailComponent extends UIComponent {
       if (res.event != null) {
         // this.lstVisa = res?.event;
         console.log('sau khi dong form', this.lstVisa);
-        if (!res?.event) this.view.dataService.clear();
+        if (!res?.event) (this.visaGridview.dataService as CRUDService).clear();
+        else this.updateGridView(this.visaGridview, actionType, res.event);
         this.df.detectChanges();
       }
     });
@@ -2349,25 +2522,28 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfc.openSide(
       PopupECertificatesComponent,
       {
-        actionType : actionType,
-        headerText : 'Chứng chỉ',
-        employeeId : this.data.employeeID, 
-        funcID : this.certificateFuncID,
-        dataInput : data, // get data
+        actionType: actionType,
+        headerText: 'Chứng chỉ',
+        employeeId: this.data.employeeID,
+        funcID: this.certificateFuncID,
+        dataInput: data, // get data
       },
       option
     );
-      // RELOAD
+    // RELOAD
     dialogAdd.closed.subscribe((res) => {
-      if(actionType === 'add' || actionType === 'copy'){
-        (this.certificateGrid.dataService as CRUDService).add(res.event).subscribe();
+      if (actionType === 'add' || actionType === 'copy') {
+        (this.certificateGrid.dataService as CRUDService)
+          .add(res.event)
+          .subscribe();
         this.certificateRowCount++;
-      } 
-      else if (actionType === 'edit'){
-        (this.certificateGrid.dataService as CRUDService).update(res.event).subscribe();
+      } else if (actionType === 'edit') {
+        (this.certificateGrid.dataService as CRUDService)
+          .update(res.event)
+          .subscribe();
       }
       this.df.detectChanges();
-    })
+    });
 
     // this.view.dataService.dataSelected = this.data;
     // let option = new SidebarModel();
@@ -2415,9 +2591,10 @@ export class EmployeeDetailComponent extends UIComponent {
       if (actionType == 'add' || actionType == 'copy') {
         (this.degreeGrid.dataService as CRUDService).add(res.event).subscribe();
         this.degreeRowCount = this.degreeRowCount + 1;
-      }
-      else if(actionType == 'edit'){
-        (this.degreeGrid.dataService as CRUDService).update(res.event).subscribe();
+      } else if (actionType == 'edit') {
+        (this.degreeGrid.dataService as CRUDService)
+          .update(res.event)
+          .subscribe();
       }
       this.df.detectChanges();
     });
@@ -2948,5 +3125,28 @@ export class EmployeeDetailComponent extends UIComponent {
 
   addTest() {
     this.hrService.addTest().subscribe();
+  }
+
+  getFormHeader(functionID: string) {
+    let funcObj = this.lstFuncID.filter((x) => x.functionID == functionID);
+    let headerText = '';
+    if (funcObj) {
+      headerText = funcObj[0].description;
+    }
+    return headerText;
+  }
+
+  updateGridView(
+    gridView: CodxGridviewComponent,
+    actionType: string,
+    dataItem: any
+  ) {
+    if (actionType == 'add') {
+      (gridView.dataService as CRUDService).add(dataItem, 0).subscribe();
+    } else if (actionType == 'edit') {
+      (gridView.dataService as CRUDService).update(dataItem).subscribe();
+    } else if ((actionType = 'delete')) {
+      (gridView.dataService as CRUDService).remove(dataItem).subscribe();
+    }
   }
 }
