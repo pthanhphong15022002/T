@@ -26,6 +26,7 @@ import {
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Instances } from '../models/models';
+import { InstanceDetailComponent } from './instance-detail/instance-detail.component';
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
@@ -43,6 +44,8 @@ export class InstancesComponent
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
+  @ViewChild('detailViewInstance')
+  detailViewInstance: InstanceDetailComponent;
   @Input() process: any;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
@@ -81,11 +84,13 @@ export class InstancesComponent
   instances = new DP_Instances();
   kanban: any;
   listStepsCbx: any;
+  lstStepInstances = [];
   crrStepID: string;
   moreFuncInstance = [];
   dataColums = [];
   dataDrop: any;
   isClick: boolean = true;
+  @Input() isCreate: boolean;
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -132,6 +137,7 @@ export class InstancesComponent
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
   onInit(): void {
+    this.showButtonAdd = this.isCreate ? true : false;
     this.button = {
       id: 'btnAdd',
     };
@@ -221,7 +227,7 @@ export class InstancesComponent
                 if (!e?.event) this.view.dataService.clear();
                 if (e && e.event != null) {
                   //xu ly data đổ về
-                 
+
                   this.detectorRef.detectChanges();
                 }
               });
@@ -311,7 +317,7 @@ export class InstancesComponent
         break;
       case 'DP09':
         // listStep by Id Instacess is null
-        this.moveStage(e.data, data, null);
+        this.moveStage(e.data, data, this.lstStepInstances);
         break;
       case 'DP02':
         this.moveReason(e.data, data, !this.isMoveSuccess);
@@ -490,11 +496,15 @@ export class InstancesComponent
 
               if (e && e.event != null) {
                 //xu ly data đổ về
-              
                 data = e.event.instance;
+                this.listStepInstances = e.event.listStep;
                 if(e.event.isReason != null ) {
                   this.moveReason(null,data, e.event.isReason)
                 }
+                this.dataSelected = data;
+                this.detailViewInstance.dataSelect = this.dataSelected;
+                this.detailViewInstance.GetStepsByInstanceIDAsync(this.dataSelected.recID);
+                this.view.dataService.update(data).subscribe();            
                 this.detectorRef.detectChanges();
               }
             });
@@ -585,6 +595,11 @@ export class InstancesComponent
     return this.listSteps
       .filter((x) => x.stepID === stepId)
       .map((x) => x.stepName)[0];
+  }
+  clickMoreFunc(e){
+    console.log(e);
+    this.lstStepInstances = e.lstSteps;
+    this.clickMF(e.e, e.data);
   }
   #endregion;
 }

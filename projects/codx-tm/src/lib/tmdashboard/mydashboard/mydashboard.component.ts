@@ -37,14 +37,17 @@ export class MyDashboardComponent extends UIComponent {
 
   chartSettings2: ChartSettings = {
     title: 'Tỷ lệ công việc được giao',
-    seriesSetting: [
-      {
-        type: 'Bar',
-        xName: 'category',
-        yName: 'quantity',
-        columnSpacing: 0.1,
+    primaryXAxis: {
+      valueType: 'Category',
+      majorGridLines: { width: 0 },
+      labelStyle: {
+        color: 'transparent',
       },
-    ],
+    },
+    primaryYAxis: {
+      majorTickLines: { width: 0 },
+      lineStyle: { width: 0 },
+    },
   };
 
   chartSettings6: ChartSettings = {
@@ -80,10 +83,7 @@ export class MyDashboardComponent extends UIComponent {
   datas = [];
 
   dataSource: any;
-  dataSource2: any = [
-    { category: 'Được giao', quantity: 345 },
-    { category: 'Tự tạo', quantity: 150 },
-  ];
+  dataSource2: any = [{ Country: 'Canada', GDP: 3.05, WorldShare: 2.04 }];
   CarSales: object[] = [
     { Continent: 'China', Company: 'Volkswagen', Sales: 3005994 },
     { Continent: 'China', Company: 'General Motors', Sales: 1230044 },
@@ -205,7 +205,6 @@ export class MyDashboardComponent extends UIComponent {
       '[{"panelId":"0.5424032823689648_layout","data":"1"},{"panelId":"0.26516454554256064_layout","data":"2"},{"panelId":"0.5994517199966756_layout","data":"3"},{"panelId":"0.7626223401346761_layout","data":"4"},{"panelId":"0.8917770078511407_layout","data":"5"},{"panelId":"0.4942285241369997_layout","data":"6"},{"panelId":"0.7295624332564068_layout","data":"7"}]'
     );
     this.getGeneralData();
-
   }
 
   ngAfterViewInit(): void {
@@ -229,10 +228,10 @@ export class MyDashboardComponent extends UIComponent {
           window.ng.getComponent(
             document.getElementsByTagName('codx-views')[0]
           ).dataService.data = res;
-        }else{
-          window.ng.getComponent(
-            document.getElementsByTagName('codx-views')[0]
-          ).dataService.clear();
+        } else {
+          window.ng
+            .getComponent(document.getElementsByTagName('codx-views')[0])
+            .dataService.clear();
         }
       });
     this.detectorRef.detectChanges();
