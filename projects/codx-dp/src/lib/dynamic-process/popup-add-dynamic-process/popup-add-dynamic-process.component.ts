@@ -248,7 +248,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getGrvStep();
     this.getValListDayoff();
     this.autoHandleStepReason();
-    this.loadCbxProccess();
   }
 
   ngAfterViewInit(): void {
@@ -321,6 +320,35 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#endregion
   //#region onSave
+  async onSave() {
+    if (
+      !this.process.processName ||
+      !this.process.processName.trim() ||
+      this.stepList?.length === 0
+    ) {
+      this.notiService.notify('Lưu thất bại ');
+      return;
+    }
+    if (this.imageAvatar?.fileUploadList?.length > 0) {
+      (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
+        // save file
+        if (res) {
+          this.handlerSave();
+        }
+      });
+    } else {
+      this.handlerSave();
+    }
+  }
+
+  handlerSave() {
+    if (this.action == 'add') {
+      this.onAdd();
+    } else if (this.action == 'edit') {
+      this.onUpdate();
+    }
+  }
+
   beforeSave(op) {
     var data = [];
     op.className = 'ProcessesBusiness';
@@ -339,6 +367,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       .subscribe((res) => {
         this.imageAvatar.clearData();
         if (res) {
+          this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
+          this.handleAddStep();
           this.dialog.close([res.save]);
         } else this.dialog.close();
       });
@@ -349,42 +379,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.update) {
+          this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
+          this.handleUpdateStep();
           this.imageAvatar.clearData();
           this.dialog.close(res.update);
         }
       });
-  }
-
-  async onSave() {
-    if (
-      this.process.processName == null ||
-      this.process.processName.trim() == ''
-    ) {
-      this.notiService.notify('Test name');
-      return;
-    }
-    if (this.imageAvatar?.fileUploadList?.length > 0) {
-      (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
-        if (res) {
-          this.handlerSave();
-        }
-      });
-    } else {
-      this.handlerSave();
-    }
-  }
-
-  handlerSave() {
-    if (this.action == 'add') {
-      this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
-      this.onAdd();
-      this.handleAddStep();
-      this.notiService.notifyCode('SYS006');
-    } else if (this.action == 'edit') {
-      this.onUpdate();
-      this.handleUpdateStep();
-      this.notiService.notifyCode('SYS006');
-    }
   }
 
   handleAddStep() {
@@ -395,7 +395,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           delete step['taskGroups']['task'];
         }
       });
-
       this.dpService.addStep([stepListSave]).subscribe((data) => {
         if (data) {
         }
@@ -421,8 +420,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         });
     }
   }
+
   valueChange(e) {
     this.process[e.field] = e.data;
+    if (this.process.applyFor) {
+      this.loadCbxProccess();
+    }
   }
   //#endregion
 
@@ -594,12 +597,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.full = true;
             perm.create = true;
             perm.read = true;
-            perm.update = true;
             perm.assign = true;
+            perm.edit = true;
+            perm.publish = true;
             perm.delete = true;
-            perm.share = true;
-            perm.upload = true;
-            perm.download = true;
             perm.roleType = 'O';
             this.permissions = this.checkUserPermission(this.permissions, perm);
           }
@@ -614,7 +615,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';
+            perm.full = false;
+            perm.create = false;
             perm.read = true;
+            perm.assign = false;
+            perm.edit = false;
+            perm.publish = false;
+            perm.delete = false;
 
             this.permissions = this.checkUserPermission(this.permissions, perm);
           }
@@ -629,7 +636,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'F';
+            perm.full = false;
+            perm.create = false;
             perm.read = true;
+            perm.assign = false;
+            perm.edit = false;
+            perm.publish = false;
+            perm.delete = false;
             this.permissions = this.checkUserPermission(this.permissions, perm);
           }
           this.process.permissions = this.permissions;
@@ -650,7 +663,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';
+            perm.full = false;
+            perm.create = false;
             perm.read = true;
+            perm.assign = false;
+            perm.edit = false;
+            perm.publish = false;
+            perm.delete = false;
             this.permissions = this.checkUserPermission(this.permissions, perm);
           }
           this.step.roles = tmpRole;
@@ -723,10 +742,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       950,
       650,
       '',
-      [this.process, title],
+      [this.process, title, 'add'],
       '',
       this.dialog
-    );
+    ).closed.subscribe((e) => {
+      if(e && e.event != null){
+        this.process.permissions = e.event;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
   //end
 
@@ -1065,7 +1089,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         break;
     }
   }
-  
+
   dropStep(event: CdkDragDrop<string[]>) {
     if (event.previousIndex == event.currentIndex) return;
     moveItemInArray(this.stepList, event.previousIndex, event.currentIndex);
@@ -1129,11 +1153,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       '',
       this.taskGroup
     );
-    this.popupGroupJob.closed.subscribe(res => {
-      if(res?.event){
+    this.popupGroupJob.closed.subscribe((res) => {
+      if (res?.event) {
         this.savePopupGroupJob();
       }
-    })
+    });
   }
   savePopupGroupJob() {
     this.popupGroupJob.close();
@@ -1146,13 +1170,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     let sumDay = 0;
     let sumHour = 0;
-    this.step?.taskGroups?.forEach(taskGroup => {
+    this.step?.taskGroups?.forEach((taskGroup) => {
       sumDay += Number(taskGroup?.durationDay) || 0;
       sumHour += Number(taskGroup?.durationHour) || 0;
-    })
-    if(sumHour >=24){
-      sumDay += Math.floor(sumHour/24);
-      sumHour = sumHour%24;
+    });
+    if (sumHour >= 24) {
+      sumDay += Math.floor(sumHour / 24);
+      sumHour = sumHour % 24;
     }
     this.step['durationDay'] = sumDay;
     this.step['durationHour'] = sumHour;
@@ -1164,6 +1188,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           (step) => step.recID == data.recID
         );
         if (index >= 0) {
+
           this.taskGroupList.splice(index, 1);
         }
       }
@@ -1174,7 +1199,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   openTypeJob() {
     this.popupJob = this.callfc.openForm(PopupTypeTaskComponent, '', 400, 400);
     this.popupJob.closed.subscribe(async (value) => {
-      debugger
+      debugger;
       if (value?.event) {
         this.jobType = value?.event;
         this.openPopupJob();
@@ -1258,14 +1283,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.deleteTask(taskList, task);
         break;
       case 'SYS03':
-        this.jobType = task.taskType;        
+        this.jobType = task.taskType;
         this.openPopupJob(task);
         break;
       case 'SYS04':
         // this.copy(data);
         break;
       case 'DP01':
-        this.jobType = task.taskType;      
+        this.jobType = task.taskType;
         this.openPopupViewJob(task);
         break;
     }
@@ -1333,6 +1358,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   changeValueInput(event, data) {
     data[event?.field] = event?.data;
+  }
+  checkButtonContinue() {
+    if (this.currentTab == 0) {
+      if (this.process.processNo && this.process.processName) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (this.stepList?.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
   //#End stage -- nvthuan
 
@@ -1555,6 +1595,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   createStepReason(stepReason: any, reasonValue: any) {
     stepReason = this.handleStepReason(stepReason, reasonValue);
+    stepReason.reasonControl = true;
   }
 
   handleReason(
@@ -1568,8 +1609,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // cbx proccess get id
     reason.processID = idProccess;
     reason.createdBy = this.userId;
-    reason.modifiedBy = this.userId;
-
     return reason;
   }
 
@@ -1666,17 +1705,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   loadCbxProccess() {
     this.cache.valueList('DP031').subscribe((data) => {
-      this.dpService.getlistCbxProccess().subscribe((res) => {
-        if (res) {
-          this.listCbxProccess = res[0];
-          var obj = {
-            recID: this.guidEmpty,
-            processName: data.datas[0].default,
-            // 'Không chuyển đến quy trình khác'
-          };
-          this.listCbxProccess.unshift(obj);
-        }
-      });
+      this.dpService
+        .getlistCbxProccess(this.process?.applyFor)
+        .subscribe((res) => {
+          if (res) {
+            this.listCbxProccess = res[0];
+            var obj = {
+              recID: this.guidEmpty,
+              processName: data.datas[0].default,
+              // 'Không chuyển đến quy trình khác'
+            };
+            this.listCbxProccess.unshift(obj);
+          }
+        });
     });
   }
 

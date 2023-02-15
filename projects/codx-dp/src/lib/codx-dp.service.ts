@@ -180,11 +180,14 @@ export class CodxDpService {
     );
   }
 
-  getlistCbxProccess(){
-    return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetListCbxProcessesAsync');
+  getlistCbxProccess(applyFor: string){
+    return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetListCbxProcessesAsync',applyFor);
   }
 
+  updatePermissionProcess(process){
+    return this.api.exec<any>('DP', 'ProcessesBusiness', 'UpdatePermissionsProcessAsync',process);
 
+  }
 
   createListInstancesStepsByProcess(processID) {
     return this.api.exec<any>(
@@ -265,6 +268,14 @@ export class CodxDpService {
       'DP',
       'InstanceStepsBusiness',
       'MoveStageByIdInstnaceAsync',
+      data
+    );
+  }
+  moveReasonByIdInstance(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'MoveReasonByIdInstnaceAsync',
       data
     );
   }

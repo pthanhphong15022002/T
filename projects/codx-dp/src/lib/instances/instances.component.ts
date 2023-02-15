@@ -85,7 +85,8 @@ export class InstancesComponent
   moreFuncInstance = [];
   dataColums = [];
   dataDrop: any;
-
+  isClick: boolean = true;
+  @Input() isCreate: boolean;
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -132,6 +133,7 @@ export class InstancesComponent
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
   onInit(): void {
+    this.showButtonAdd = this.isCreate ? true : false;
     this.button = {
       id: 'btnAdd',
     };
@@ -221,7 +223,7 @@ export class InstancesComponent
                 if (!e?.event) this.view.dataService.clear();
                 if (e && e.event != null) {
                   //xu ly data đổ về
-                 
+
                   this.detectorRef.detectChanges();
                 }
               });
@@ -448,6 +450,10 @@ export class InstancesComponent
 
   #region;
   moveStage(dataMore, data, instanceStep) {
+    if(!this.isClick) {
+      return;
+    }
+    this.isClick = false;
     this.crrStepID = data.stepID ;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -469,7 +475,6 @@ export class InstancesComponent
               listStep: this.listStepsCbx,
               instanceStep: instanceStep,
             };
-
             var dialogMoveStage = this.callfc.openForm(
               PopupMoveStageComponent,
               '',
@@ -479,6 +484,7 @@ export class InstancesComponent
               obj
             );
             dialogMoveStage.closed.subscribe((e) => {
+              this.isClick = true;
               if (!e || !e.event) {
                 data.stepID = this.crrStepID;
                 this.changeDetectorRef.detectChanges();
@@ -487,6 +493,10 @@ export class InstancesComponent
               if (e && e.event != null) {
                 //xu ly data đổ về
 
+                data = e.event.instance;
+                if(e.event.isReason != null ) {
+                  this.moveReason(null,data, e.event.isReason)
+                }
                 this.detectorRef.detectChanges();
               }
             });
@@ -496,47 +506,54 @@ export class InstancesComponent
   }
 
   moveReason(dataMore, data: any, isMoveSuccess: Boolean) {
+    this.crrStepID = data.stepID ;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
+    var functionID = isMoveSuccess ? 'DPT0403' : 'DPT0404';
+    this.cache.functionList(functionID).subscribe((fun) => {
+      this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+        this.cache
+          .gridViewSetup(fun.formName, fun.gridViewName)
+          .subscribe((grvSt) => {
+            var formMD = new FormModel();
+            formMD.funcID = fun.functionID;
+            formMD.entityName = fun.entityName;
+            formMD.formName = fun.formName;
+            formMD.gridViewName = fun.gridViewName;
+            let reason = isMoveSuccess ? this.listSteps[this.listSteps.length-2]: this.listSteps[this.listSteps.length-1];
+            var obj = {
+              dataMore: dataMore,
+              headerTitle: fun.defaultName,
+              stepName: this.getStepNameById(data.stepID),
+              formModel: formMD,
+              isReason: isMoveSuccess,
+              instance: data,
+              objReason: reason,
+              applyFor: this.process.applyFor
+            };
 
-    var formMD = new FormModel();
-    // formMD.funcID = functionId;
-    // formMD.entityName = data.entityName;
-    // formMD.formName = data.formName;
-    // formMD.gridViewName = data.gridViewName;
-
-    formMD.funcID = 'DPT0201';
-    formMD.entityName = 'DP_Instances_Steps_TaskGroups';
-    formMD.formName = 'DPInstancesStepsTaskGroups';
-    formMD.gridViewName = 'grvDPInstancesStepsTaskGroups';
-
-    var obj = {
-      dataMore: dataMore,
-      stepName: this.process.processName,
-      funcIdMain: this.funcID,
-      formModel: formMD,
-      isReason: isMoveSuccess,
-    };
-
-    var dialogRevision = this.callfc.openForm(
-      PopupMoveReasonComponent,
-      '',
-      800,
-      600,
-      '',
-      obj
-    );
-    dialogRevision.closed.subscribe((e) => {
-      if (!e || !e.event) {
-        data.stepID = this.crrStepID;
-        this.changeDetectorRef.detectChanges();
-      }
-      if (e?.event && e?.event != null) {
-        this.view.dataService.clear();
-        this.view.dataService.update(e?.event).subscribe();
-        this.detectorRef.detectChanges();
-      }
+            var dialogRevision = this.callfc.openForm(
+              PopupMoveReasonComponent,
+              '',
+              800,
+              600,
+              '',
+              obj
+            );
+            dialogRevision.closed.subscribe((e) => {
+              if (!e || !e.event) {
+                data.stepID = this.crrStepID;
+                this.changeDetectorRef.detectChanges();
+              }
+              if (e?.event && e?.event != null) {
+                this.view.dataService.clear();
+                this.view.dataService.update(e?.event).subscribe();
+                this.detectorRef.detectChanges();
+              }
+            });
+          });
+      });
     });
   }
 
@@ -554,7 +571,6 @@ export class InstancesComponent
     this.changeDetectorRef.detectChanges();
   }
   beforeDel(opt: RequestOption) {
-    debugger;
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedInstanceAsync';
     opt.data = [itemSelected.recID];

@@ -1,16 +1,11 @@
 <div>
-  <!-- <codx-label
-    [fiedName]="customField.fieldName"
+  <codx-label
+    [name]="customField.fieldName"
     formName="DPInstancesStepsFields"
     gridViewName="grvDPInstancesStepsFields"
     [default]="customField.title"
   >
-  </codx-label> -->
-  <codx-label
-    [fiedName]="customField.fieldName"
-    [formModel]="formModel"
-    [default]="customField.title"
-  ></codx-label>
+  </codx-label>
   <span
     *ngIf="customField.dataType == 'A'"
     class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"
@@ -20,6 +15,12 @@
     <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
       <span class="icon-group_add text-primary icon-18"></span>
     </button>
+  </span>
+  <span
+    *ngIf="customField.dataType == 'N' && customField.dataFormat == 'P'"
+    class="codx-label"
+  >
+    (%)
   </span>
 </div>
 <ng-container *ngIf="customField.dataType == 'T'">
@@ -110,7 +111,11 @@
     </codx-combobox-popup>
   </ng-container>
   <ng-container *ngIf="listIdUser">
-    <codx-imgs [objectId]='listIdUser' objectType="AD_Users" [numberImages]="5"></codx-imgs>
+    <codx-imgs
+      [objectId]="listIdUser"
+      objectType="AD_Users"
+      [numberImages]="5"
+    ></codx-imgs>
   </ng-container>
 </ng-container>
 
@@ -118,7 +123,7 @@
   <ngb-rating
     [(rate)]="currentRate"
     [max]="customField.rank"
-    (rateChange)="readonly = false"
+    (rateChange)="rateChange($event)"
     (hover)="hovered = $event"
     (leave)="hovered = currentRate"
     [readonly]="readonly"

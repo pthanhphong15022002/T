@@ -2,11 +2,12 @@ import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, 
 import { Router } from '@angular/router';
 import { FileService } from '@shared/services/file.service';
 import { AnimationSettingsModel, ButtonPropsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
-import { AlertConfirmInputConfig, AuthStore, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
+import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { RolesComponent } from 'projects/codx-dm/src/lib/roles/roles.component';
 import { environment } from 'src/environments/environment';
+import { CodxShareService } from '../../codx-share.service';
 import { objectPara } from '../viewFileDialog/alertRule.model';
 import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
 import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
@@ -53,6 +54,8 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   file:any
   constructor(
     private router: Router,
+    private cache: CacheService,
+    private shareService : CodxShareService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
     private callfc: CallFuncService,
@@ -225,29 +228,45 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   openFile(file:any) {
-    // const queryParams = {
-    //   id: file.recID,
-    // };
-    // const url = this.router.serializeUrl(
-    //   this.router.createUrlTree([`/default/viewfile`],{
-    //     queryParams: queryParams
-    //   })
-    // );
-    // window.open(url, '_blank');
     if(file && file.read)
     {
       this.fileService.getFile(file.recID).subscribe(item=>{
-        if(item)
+        if(item && item.read)
         {
-          var option = new DialogModel();
-          option.IsFull = true;
-          this.fileName = item.fileName;
-          this.dataFile = item;
-          this.visible = true;
-          this.viewFile.emit(true);
+          this.cache.moreFunction("FileInfo","grvFileInfo").subscribe(item2=>{
+              if(item2 && item2.length > 0)
+              {
+                debugger
+                var c = item2.filter(x=>x.functionID == "DMT0210");
+                if(c && c[0])
+                {
+                  if(c[0].displayMode == "2")
+                  {
+                    const queryParams = {
+                      id: file.recID,
+                    };
+                    const url = this.router.serializeUrl(
+                      this.router.createUrlTree([`/democodx/viewfile`],{
+                        queryParams: queryParams
+                      })
+                    );
+                    window.open(url, '_blank');
+                  }
+                  else 
+                  {
+                    var option = new DialogModel();
+                    option.IsFull = true;
+                    this.fileName = item.fileName;
+                    this.dataFile = item;
+                    this.visible = true;
+                    this.viewFile.emit(true);
+                  }
+                }
+              }
+          })
         }
+        else this.notificationsService.notifyCode("SYS032")
       })
-     
     }
     else this.notificationsService.notifyCode("SYS032")
   }

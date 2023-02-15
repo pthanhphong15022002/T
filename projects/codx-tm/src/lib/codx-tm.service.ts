@@ -421,6 +421,16 @@ export class CodxTMService {
     );
   }
 
+RPASendMailAlert(valueRuleNo: string, funcID: string) {
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'RPASendAlertMeetingMailAsync',
+      [valueRuleNo, funcID]
+    );
+  }
+
   UpdateDateMeeting(
     meetingID: string,
     startDate,

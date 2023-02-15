@@ -19,6 +19,7 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
+import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { Observable, Subject } from 'rxjs';
 import { HR_Employees } from '../../model/HR_Employees.model';
 
@@ -74,6 +75,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     private fb: FormBuilder,
     private cache: CacheService,
     private api: ApiHttpService,
+    private adService: CodxAdService,
 
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
@@ -84,11 +86,18 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    debugger
     this.isAdd = this.dialogData.isAdd;
     this.action = this.dialogData.action;
     this.funcID = this.dialogData.funcID;
     this.employee = JSON.parse(JSON.stringify(this.dialogData.employee));
     this.getFunction(this.funcID);
+    this.adService.getListCompanySettings()
+    .subscribe((res) => {
+      if (res) {
+        this.isCorporation = res.isCorporation; // check disable field DivisionID
+      }
+    });
   }
   //get function
   getFunction(functionID: string) {
@@ -125,7 +134,6 @@ export class PopupAddEmployeesComponent implements OnInit {
 
   // btn save
   OnSaveForm() {
-    debugger
     let arrFieldUnValid: string = '';
     if (this.arrFieldRequire.length > 0) {
       this.arrFieldRequire.forEach((field) => {
