@@ -112,6 +112,7 @@ export class PopupShareSprintsComponent implements OnInit {
           case 'D':
             listDepartmentID += obj.id + ';';
             break;
+          case 'RP':
           case 'P':
             listPositionID += obj.id + ';';
             break;

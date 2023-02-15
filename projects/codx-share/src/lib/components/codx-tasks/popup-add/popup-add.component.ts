@@ -680,6 +680,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           case 'D':
             listDepartmentID += obj.id + ';';
             break;
+          case 'RP':
           case 'P':
             listPositionID += obj.id + ';';
             break;

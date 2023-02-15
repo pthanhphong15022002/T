@@ -1,4 +1,170 @@
 <codx-form headerText="{{title}}" [body]="body" [footer]="footer" [dialog]="dialog">
 </codx-form>
-<ng-template #body></ng-template>
+<ng-template #body>
+  <div class="row" style="height: 100% !important;">
+    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
+      <div class="user-mini-nav">
+        <div *ngIf="instance != null && instance?.permissions != null">
+          <ng-container *ngFor="let perm of instance.permissions; index as i;">
+            <div class="d-flex justify-content-between list-title w-100" (click)="changePermission(i)"
+                [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
+                class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item p-2">
+                <div class="d-flex align-items-top">
+                  <div *ngIf="perm.objectType != '1' && perm.objectType != 'U' ; then thenAvatar1 else elsethenAvatar1">
+                  </div>
+                  <ng-template #thenAvatar1>
+                    <div class="me-3 d-flex align-items-center" style="margin-bottom: 10px">
+                      <div class="d-flex align-items-center position-relative">
+                        <img src="../../../assets/codx/user/user-admin.svg" alt=""
+                          style="width: 25px; border-radius: 50%;">
+                      </div>
+                    </div>
+
+                    <div class="ms-3">
+                      <div class="text-dark fw-bold">
+                        {{ perm.objectName }}
+                      </div>
+                      <!-- <ng-container *ngFor="let role of listRoles">
+                        <ng-container *ngIf="role.value == perm.roleType">
+                          <div class="text-gray-700">
+                            {{role.text}}
+                          </div>
+                        </ng-container>
+                      </ng-container> -->
+                    </div>
+                  </ng-template>
+                  <ng-template #elsethenAvatar1>
+                    <div class="me-3 d-flex align-items-center">
+                      <div class="d-flex align-items-center position-relative">
+                        <codx-img class="" [width]="25" [objectId]="perm.objectID" objectType="AD_Users">
+                        </codx-img>
+                      </div>
+                    </div>
+                    <div class="ms-3">
+                      <div class="text-dark fw-bold">
+                        {{ perm.objectName }}
+                      </div>
+                      <!-- <ng-container *ngFor="let role of listRoles">
+                        <ng-container *ngIf="role.value == perm.roleType">
+                          <div class="text-gray-700">
+                            {{role.text}}
+                          </div>
+                        </ng-container>
+                      </ng-container> -->
+                    </div>
+
+                  </ng-template>
+                </div>
+
+              </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 ps-6 role-right">
+      <div class="list-role">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">
+                <codx-label [default]="'Chức năng'" [fiedName]="'titleFunction'"></codx-label>
+              </th>
+              <th scope="col">
+                <codx-label [default]="'Mô tả'" [fiedName]="'titleDescription'"></codx-label>
+              </th>
+              <th scope="col">
+                <codx-label [default]="'Cho phép'" [fiedName]="'titleAllow'"></codx-label>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-size-lg text-dark">
+                <codx-label [default]="'Toàn quyền'" [formModel]="dialog.formModel" [fiedName]="'Full'"></codx-label>
+              </td>
+              <td>
+                <codx-label [default]="'Người dùng có tất cả quyền trên quy trình'" [formModel]="dialog.formModel" [fiedName]="'DescriptionFull'">
+                </codx-label>
+              </td>
+              <td class="text-center">
+                <codx-input class="test-check" type="switch" style="width:100%" [checked]="full" field="full"
+                  [disabled]="checkAdminUpdate()"  (valueChange)="valueChange($event, 'full')" (focus)="controlFocus(true)">
+                </codx-input>
+              </td>
+            </tr>
+            <tr>
+              <td class="font-size-lg text-dark">
+                <codx-label [default]="'Tạo qui trình'" [formModel]="dialog.formModel" [fiedName]="'Create'"></codx-label>
+              </td>
+              <td>
+                <codx-label [default]="'Cho phép tạo công việc, nhóm công việc'" [fiedName]="'DescriptionCreate'"></codx-label>
+              </td>
+              <td class="text-center">
+                <codx-input class="test-check" type="switch" style="width:100%" [checked]="create" field="create"
+                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'create')">
+                </codx-input>
+              </td>
+            </tr>
+            <tr>
+              <td class="font-size-lg text-dark">
+                <codx-label [default]="'Chỉnh sửa'" [formModel]="dialog.formModel" [fiedName]="'Update'"></codx-label>
+              </td>
+              <td>
+                <codx-label [default]="'Cho phép chỉnh sửa nhiệm vụ'" [formModel]="dialog.formModel"
+                  [fiedName]="'Update'"></codx-label>
+              </td>
+              <td class="text-center">
+                <codx-input class="test-check" type="switch" style="width:100%" [checked]="update" field="update"
+                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'update')">
+                </codx-input>
+              </td>
+            </tr>
+            <tr>
+              <td class="font-size-lg text-dark">
+                <codx-label [default]="'Chỉnh sửa'" [formModel]="dialog.formModel" [fiedName]="'Edit'"></codx-label>
+              </td>
+              <td>
+                <codx-label [default]="'Cho phép chỉnh sửa công việc, nhóm công việc'" [formModel]="dialog.formModel"
+                  [fiedName]="'Edit'"></codx-label>
+              </td>
+              <td class="text-center">
+                <codx-input class="test-check" type="switch" style="width:100%" [checked]="edit" field="edit"
+                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'edit')">
+                </codx-input>
+              </td>
+            </tr>
+            <tr>
+              <td class="font-size-lg text-dark">
+                <codx-label [default]="'Xóa'" [formModel]="dialog.formModel" [fiedName]="'Delete'"></codx-label>
+              </td>
+              <td>
+                <codx-label [default]="'Cho phép xóa nhiệm vụ, công việc, nhóm công việc'" [fiedName]="'DescriptionDelete'"></codx-label>
+              </td>
+              <td class="text-center">
+                <codx-input class="test-check" type="switch" style="width:100%" [checked]="delete" field="delete"
+                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'delete')">
+                </codx-input>
+              </td>
+            </tr>
+            <tr>
+              <td class="font-size-lg text-dark">
+                <codx-label [default]="'Phân quyền'" [formModel]="dialog.formModel" [fiedName]="'AllowPermit'"></codx-label>
+              </td>
+              <td>
+                <codx-label [default]="'Cho phép chia sẻ và chỉnh sửa quyền'" [formModel]="dialog.formModel" [fiedName]="'DescriptionAssign'">
+                </codx-label>
+              </td>
+              <td class="text-center">
+                <codx-input class="test-check" type="switch" style="width:100%" [checked]="allowPermit" field="allowPermit"
+                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'allowPermit')">
+                </codx-input>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</ng-template>
 <ng-template #footer></ng-template>
