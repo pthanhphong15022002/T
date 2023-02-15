@@ -30,6 +30,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() recID: any;
   @ViewChild('locationCBB') locationCBB: any;
   @Output() progressEvent = new EventEmitter<object>();
+  @Output() moreFunctionEvent = new EventEmitter<any>();
   @Input() stepName: string;
   @Input() progress = '0';
   @Input() dataSelect: any;
@@ -156,17 +157,18 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   clickMF(e, data) {
-    console.log(e);
-    switch (e.functionID) {
-      case 'DP09':
-      // API của bảo nha
-     //   this.continues(data);
-        this.popupInstances.moveStage(e,data,this.listSteps);
-        break;
-      case 'DP02':
-        this
-        break;
-    }
+    this.moreFunctionEvent.emit({e: e, data: data, lstSteps: this.listSteps});
+    // console.log(e);
+    // switch (e.functionID) {
+    //   case 'DP09':
+    //   // API của bảo nha
+    //  //   this.continues(data);
+    //     this.popupInstances.moveStage(e,data,this.listSteps);
+    //     break;
+    //   case 'DP02':
+    //     this
+    //     break;
+    // }
   }
 
   changeDataMF(e, data) {

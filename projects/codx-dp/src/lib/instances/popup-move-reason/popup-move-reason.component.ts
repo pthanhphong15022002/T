@@ -36,7 +36,6 @@ export class PopupMoveReasonComponent implements OnInit {
   listStep : DP_Instances_Steps_Reasons[]=[];
 
   instanceStep = new DP_Instances_Steps;
-  instance = new DP_Instances;
 
   isReason: boolean = true;
 
@@ -87,7 +86,7 @@ export class PopupMoveReasonComponent implements OnInit {
              // 'Không chuyển đến quy trình khác'
           };
           this.listCbxProccess.unshift(obj);
-          this.autoClickedProccess();
+          this.moveProccess =  this.listCbxProccess[0].recID;
         }
       });
     });
@@ -105,17 +104,17 @@ export class PopupMoveReasonComponent implements OnInit {
 
   }
   beforeSave() {
-    var data = [this.instance,this.listReasonClick, this.moveProccess, this.memoStep];
+    var data = [this.instances,this.listReasonClick, this.moveProccess, this.memoStep, this.isReason];
     this.codxDpService.moveReasonByIdInstance(data).subscribe((res)=> {
       if(res){
         this.listStep = res;
         var obj ={
           listStep: this.listStep,
-          instance: this.instance,
+          instance: this.instances,
         };
         this.dialog.close(obj);
-        // this.dialog.dataService.clear();
         this.notiService.notifyCode('Đánh dấu oke nha');
+    
 
         this.changeDetectorRef.detectChanges();
       }
@@ -185,10 +184,6 @@ export class PopupMoveReasonComponent implements OnInit {
     //   this.stepReason.newProcessID = $event;
     // }
 
-  }
-
-  autoClickedProccess() {
-    this.moveProccess =  this.listCbxProccess[0].recID;
   }
 }
 
