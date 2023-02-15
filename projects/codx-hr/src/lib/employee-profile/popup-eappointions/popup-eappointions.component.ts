@@ -27,6 +27,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   //lstEAppointions;
   //indexSelected;
   headerText;
+  successFlag = false;
   actionType;
   idField = 'RecID';
   funcID;
@@ -148,6 +149,9 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
           if (p != null) {
             this.EAppointionObj.recID = p.recID;
             this.notify.notifyCode('SYS006');
+            this.successFlag = true;
+          this.dialog && this.dialog.close(this.EAppointionObj);
+
             // this.lstEAppointions.push(
             //   JSON.parse(JSON.stringify(this.EAppointionObj))
             // );
@@ -167,6 +171,8 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
+          this.dialog && this.dialog.close(this.EAppointionObj);
+
             // this.lstEAppointions[this.indexSelected] = p;
             // if (this.listView) {
             //   (this.listView.dataService as CRUDService)
@@ -182,7 +188,10 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   ngAfterViewInit(){
     this.dialog && this.dialog.closed.subscribe(res => {
       if(!res.event){
-        this.dialog.close(this.EAppointionObj);
+        if(this.successFlag == true){
+          this.dialog.close(this.EAppointionObj);
+        }
+        else this.dialog.close(null)
       }
     })
   }

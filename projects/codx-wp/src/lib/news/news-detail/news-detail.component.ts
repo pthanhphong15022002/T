@@ -62,7 +62,8 @@ export class NewsDetailComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   loadData(recID: string) {
-    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetNewsInforAsync", recID).subscribe(
+    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetNewsInforAsync", recID)
+    .subscribe(
       (res) => {
         if (res) {
           this.data = res[0];
@@ -99,17 +100,18 @@ export class NewsDetailComponent extends UIComponent {
   }
   //click view detail post
   clickViewDeital(data: any) {
-    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "UpdateViewNewsAsync", data.recID).subscribe(
+    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "UpdateViewNewsAsync", data.recID)
+    .subscribe(
       (res) => {
         if (res) {
-          this.codxService.navigate('', '/news/' + this.funcID + '/' + data.category + '/' + data.recID);
+          this.codxService.navigate('', `wp2/news/${this.funcID}/${data.category}/${data.recID}`);
           this.loadData(data.recID);
         }
       });
   }
   // navigate view post by tag
   clickTag(tag: any) {
-    this.codxService.navigate('', '/news/' + this.funcID + '/tag/' + tag.value);
+    this.codxService.navigate('', `wp2/news/${this.funcID}/tag/${tag.value}`);
   }
   // add
   openPopupAdd(newsType: string) {

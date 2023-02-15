@@ -164,3 +164,52 @@
 .bg-color{   
   background-color: var(--text-primary) !important;
 }
+::ng-deep {
+  .e-content .e-lib .e-touch {
+    padding: 0px !important;
+  }
+  .content-tree{
+    padding: 0px !important;
+  }
+}
+.bg-om-gray {
+  background-color: #E8E8ED !important;
+}
+
+.om-calendar {
+  border: none !important;
+  border-color: white !important;
+}
+
+.om-switch-room .active {
+  background-color: var(--primary-darkest);
+}
+
+.bgC5C7D0 {
+  background-color: #C5C7D0;
+}
+
+.om-rounded-pill-left {
+  border-top-left-radius: 50rem;
+  border-bottom-left-radius: 50rem;
+}
+
+.om-rounded-pill-right {
+  border-top-right-radius: 50rem;
+  border-bottom-right-radius: 50rem;
+}
+.bg-color{   
+  background-color: var(--text-primary) !important;
+}
+.hover-bg-color:hover{   
+  background-color: var(--text-primary) !important;
+}
+.hover-text-light-color:hover{   
+  color: var(--text-light) !important;
+}
+.bg-primary-lighter{
+  background-color: var(--primary-lightest) !important;
+  border-style: dashed !important;
+  border-color: var(--primary) !important;
+  border-width: 2px;
+}

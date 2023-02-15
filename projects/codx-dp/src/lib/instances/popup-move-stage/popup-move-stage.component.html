@@ -3,9 +3,9 @@
   [headerText]="headerText"
   [subHeader]="subHeader"
   [body]="body"
+  [formModel]="formModel"
   [footer]="footer"
   [dialog]="dialog"
-  [formModel]="formModel"
   [data]="instancesStepOld"
 ></codx-form>
 
@@ -17,23 +17,8 @@
     <!-- <span>{{instanceStep.currentStep}}</span> -->
   </div>
   <div class="content-step">
-    <div class="form-group">
-      <codx-label
-        fiedName="stepID"
-        formName="Instances"
-        gridViewName="grvInstances"
-        default="Giai đoạn chuyển đến"
-      >
-      </codx-label>
-      <ejs-combobox
-        [dataSource]="listStepsCbx"
-        [fields]="fieldCbxStep"
-        [value]="instance.stepID"
-        (valueChange)="cbxChange($event)"
-      ></ejs-combobox>
-    </div>
-
-    <div class="form-group">
+      <ng-container [ngTemplateOutlet]="test"></ng-container>
+      <div class="form-group">
       <div>
         <codx-label
           fiedName="ActualEnd"
@@ -52,63 +37,9 @@
       >
       </codx-input>
       <h1>{{instancesStepOld?.actualEnd}}</h1>
-      <!-- <div class="col-12">
-          <div class="row">
-            <div class="col-6">
-              <div class="position-relative">
-                <codx-input
-                  field="DurationDay"
-                  [formModel]="form.formModel"
-                  [Group]=""
-                  type="text"
-                  [height]="'100'"
-                  [min]="0"
-                  [placeholder]="0"
-                  [crrValue]="instanceStep?.durationDay"
-                  (valueChange)="valueChange($event)"
-                ></codx-input>
-                <div
-                  class="position-absolute text-muted"
-                  style="top: 7px; right: 7px"
-                >
-                  <codx-label
-                    fiedName="StepName"
-                    [formModel]="form.formModel"
-                    default="Ngày"
-                  ></codx-label>
-                </div>
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="position-relative">
-                <codx-input
-                  field="durationHour"
-                  [formModel]="form.formModel"
-                  [Group]=""
-                  type="text"
-                  [height]="'100'"
-                  [min]="0"
-                  [placeholder]="'00.00'"
-                  [crrValue]="instanceStep?.durationHour"
-                  (valueChange)="valueChange($event)"
-                ></codx-input>
-                <div
-                  class="position-absolute text-gray-400"
-                  style="top: 7px; right: 7px"
-                >
-                  <codx-label
-                    fiedName="StepName"
-                    [formModel]="form.formModel"
-                    default="Giờ"
-                  ></codx-label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
     </div>
 
-    <div class="form-group">
+     <div class="form-group">
       <div>
         <codx-label
           fiedName="Memo"
@@ -122,12 +53,12 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         field="memo"
-        [crrValue]="instancesStepOld.memo || ''"
+        [crrValue]="instancesStepOld?.memo || ''"
         (valueChange)="valueChange($event)"
       >
       </codx-input>
       <h1>{{instancesStepOld?.memo}}</h1>
-    </div>
+    </div> 
 
     <div class="form-group">
       <div>
@@ -156,9 +87,28 @@
           name="Save"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          default="Lưu"
+          default="Chuyển tiếp"
         ></codx-label>
       </button>
     </div>
+  </div>
+</ng-template>
+
+
+<ng-template #test>
+  <div class="form-group">
+    <codx-label
+      fiedName="stepID"
+      formName="Instances"
+      gridViewName="grvInstances"
+      default="Giai đoạn chuyển đến"
+    >
+    </codx-label>
+    <ejs-combobox
+      [dataSource]="listStepsCbx"
+      [fields]="fieldCbxStep"
+      [value]="stepIdClick"
+      (valueChange)="cbxChange($event)"
+    ></ejs-combobox>
   </div>
 </ng-template>

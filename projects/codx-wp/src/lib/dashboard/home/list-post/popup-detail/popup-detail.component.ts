@@ -22,7 +22,7 @@ import { environment } from 'src/environments/environment';
 export class PopupDetailComponent implements OnInit {
 
   dialogRef: any;
-  dialofData:any = null;
+  dialogData:any = null;
   post: WP_Comments= new WP_Comments();
   postID:string ="";
   files:any[] = [];
@@ -49,16 +49,15 @@ export class PopupDetailComponent implements OnInit {
   ) 
   {
     this.dialogRef = dialogRef;
-    this.dialofData = dd.data;
+    this.dialogData = dd.data;
   }
 
   ngOnInit(): void {
-    if(this.dialofData)
+    if(this.dialogData)
     {
-      this.postID = this.dialofData.postID;
-      this.fileID = this.dialofData.fileID;
-      this.fileReferType = this.dialofData.fileReferType;
-      //this.getFileByObjectID(this.postID);
+      this.postID = this.dialogData.objectID;
+      this.fileID = this.dialogData.recID;
+      this.fileReferType = this.dialogData.referType;
       this.getPostByID(this.postID,this.fileID,this.fileReferType);
     }
   }
@@ -78,65 +77,19 @@ export class PopupDetailComponent implements OnInit {
         if(res) 
         {
           this.post = JSON.parse(JSON.stringify(res));
+          this.dt.detectChanges();
         }
       });
     }
   }
-  // get file by objectID
-  getFileByObjectID(objectID:string){
-    if(objectID)
-    {
-      this.api
-      .execSv(
-      'DM',
-      'ERM.Business.DM',
-      'FileBussiness',
-      'GetFilesByIbjectIDAsync',
-      [objectID])
-      .subscribe((res:any[]) => {
-        if(Array.isArray(res) && res.length > 0)
-        {
-          debugger;
-          res.forEach((f: any) => {
-            if(f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO)
-            {
-              f["source"] = `${environment.urlUpload}/${f.url}`; 
-              this.imageSrc.push(f);
-            }
-          });
-          this.files = JSON.parse(JSON.stringify(res));
-        }
-      });
+  //change image
+  changeImage(file:any){
+    if(file){
+      this.postID = file.objectID;
+      this.fileID = file.recID;
+      this.fileReferType = file.referType;
+      this.getPostByID(this.postID,this.fileID,this.fileReferType);
     }
-  }
-
-  // close popup
-  clickClosePopup() {
-    this.dialogRef.close();
-  }
-
-  // nextFile
-  nextFile(){
-    this.codxImageViewer.proximaImagem();
-
-  }
-
-  // previriousFile
-  previousFile(){
-    this.codxImageViewer.imagemAnterior();
-  }
-
-  // zoom in
-  zoomIn(){
-    this.codxImageViewer.zoomIn();
-  } 
-  // zoom out
-  zoomOut(){
-    this.codxImageViewer.zoomOut();
-  } 
-  // full screem
-  fullscreen(){
-    this.codxImageViewer.mostrarFullscreen();
     
   }
 }

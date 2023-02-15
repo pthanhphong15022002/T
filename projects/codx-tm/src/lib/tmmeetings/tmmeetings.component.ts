@@ -119,7 +119,9 @@ export class TMMeetingsComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
-    
+    this.tmService
+            .RPASendMailAlert('TM_0024', 'TMT0501')
+            .subscribe();
     this.cache.moreFunction('TMMeetings', 'grvTMMeetings').subscribe((res) => {
       if (res) this.listMoreFunc = res;
     });
@@ -232,7 +234,7 @@ export class TMMeetingsComponent
   changeDataMF(e: any, data: any) {
     if (e) {
       e.forEach((x) => {
-        // an edit và delete 
+        // an edit và delete
         if ((x.functionID == 'SYS02' || x.functionID == 'SYS03') && data?.createdBy != this.user?.userID  && !this.user?.administrator) {
           x.disabled = true;
         }
@@ -756,7 +758,7 @@ export class TMMeetingsComponent
   openLinkMeeting(data) {
     window.open(data?.link);
   }
-  // getResourecesNew(arrayResource) { 
+  // getResourecesNew(arrayResource) {
   //   if (arrayResource?.length > 0) {
   //     var idResources = arrayResource.map((x) => {
   //       return x.resourceID;
