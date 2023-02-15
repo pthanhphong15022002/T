@@ -285,7 +285,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       formGroup.email.status == 'VALID'
     ) {
       this.dialog.dataService
-        .save((opt: any) => this.beforeSaveTemp(opt), 0)
+        .save((opt: any) => this.beforeSaveTemp(opt), 0, '', '', false)
         .subscribe((res) => {
           if (res.save) {
             this.adUser.userID = res.save.userID;

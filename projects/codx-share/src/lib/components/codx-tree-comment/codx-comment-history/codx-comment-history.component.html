@@ -2,42 +2,26 @@
     <ng-container *ngIf="type=='create'; else modView">
         <div class="d-flex align-items-center">
             <div class="me-3">
-                <codx-img
-                    [objectId]="user.userID" 
-                    [objectName]="user.userName" 
-                    [imageType]="'circle'"
-                    objectType="AD_Users" 
-                    [width]="30">
+                <codx-img [objectId]="user.userID" [objectName]="user.userName" [imageType]="'circle'"
+                    objectType="AD_Users" [width]="30">
                 </codx-img>
             </div>
             <div class="position-relative cmt feed-box cmt-cmt c3 w-100" (keyup.enter)="sendComments()">
-                <codx-input type="text" placeholder="Trả lời" [crrValue]="message"
-                    (valueChange)="valueChange($event)">
+                <codx-input type="text" placeholder="Trả lời" [crrValue]="message" (valueChange)="valueChange($event)">
                 </codx-input>
                 <div class="feed-icon btn-send">
                     <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary " (click)="uploadFile()">
                         <span class="icon-attach_file icon-18"></span>
                     </span>
-                    <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
-                        (click)="sendComments()">
+                    <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary " (click)="sendComments()">
                         <span class="icon-send icon-18"></span>
                     </span>
                 </div>
             </div>
         </div>
-        <codx-attachment #codxATM 
-            [functionID]="funcID" 
-            [objectType]="'BG_TrackLogs'" 
-            [hideFolder]="'1'"
-            [hideUploadBtn]="'1'" 
-            [hideDes]="'1'" 
-            [type]="'inline'" 
-            [allowMultiFile]="'1'" 
-            [hideImageUpload]="'1'" 
-            [hideBtnSave]="'1'" 
-            [hideImageThumb]="'1'"
-            [showMessage]="'0'" 
-            (fileCount)="selectedFiles($event)">
+        <codx-attachment #codxATM [functionID]="funcID" [objectType]="'BG_TrackLogs'" [hideFolder]="'1'"
+            [hideUploadBtn]="'1'" [hideDes]="'1'" [type]="'inline'" [allowMultiFile]="'1'" [hideImageUpload]="'1'"
+            [hideBtnSave]="'1'" [hideImageThumb]="'1'" [showMessage]="'0'" (fileCount)="selectedFiles($event)">
         </codx-attachment>
         <ng-container *ngIf="lstFile">
             <div class="row px-4 justify-content-between">
@@ -81,12 +65,8 @@
         <div class="d-flex">
             <div class="d-flex w-100">
                 <div class="me-3">
-                    <codx-img 
-                        [objectId]="data.createdBy" 
-                        [objectName]="data.createdName" 
-                        objectType="AD_Users" 
-                        [imageType]="'circle'"
-                        [width]="30">
+                    <codx-img [objectId]="data.createdBy" [objectName]="data.createdName" objectType="AD_Users"
+                        [imageType]="'circle'" [width]="30">
                     </codx-img>
                 </div>
                 <div class="w-100 footer-comt">
@@ -106,14 +86,13 @@
                             <div class="more">
                                 <div ngbDropdown class="dropdown">
                                     <a href="javascript:void(0)"
-                                        class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
-                                        ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false">
+                                        class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
+                                        id="dropdownMenuButton1" aria-expanded="false">
                                         <i class="fas fa-ellipsis-h"></i>
                                     </a>
                                     <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                                         <li>
-                                            <a ngbDropdownItem href="javascript:void(0)"
-                                                (click)="deleteComment(data)">
+                                            <a ngbDropdownItem href="javascript:void(0)" (click)="deleteComment(data)">
                                                 <span class="icon-close text-danger icon-16 me-2"></span>
                                                 <codx-label [formModel]="" name="lblDelete_comments" default="Xóa">
                                                 </codx-label>
@@ -142,8 +121,8 @@
                                     <div class="w-100 position-relative">
                                         <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
                                             <ng-container *ngIf="item.recID;else imageSrc">
-                                                <codx-img [recId]="item.recID" [objectId]="item.objectID"
-                                                    [width]="100" cssClass="pic" imageType="square" [imgOn]="item.modifiedOn">
+                                                <codx-img [recId]="item.recID" [objectId]="item.objectID" [width]="100"
+                                                    cssClass="pic" imageType="square" [imgOn]="item.modifiedOn">
                                                 </codx-img>
                                             </ng-container>
                                             <ng-template #imageSrc>
@@ -169,7 +148,7 @@
                     <ng-container *ngIf="allowEdit">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex flex-grow-1">
-                                <span class="text-gray-600 fs-7 text-hover-underline me-3">
+                                <span class="text-gray-600 fw-bold text-hover-underline me-3">
                                     <div class="btn-like delay-500">
                                         <div *ngIf="data.myVoted;else noVote">
                                             <div
@@ -190,16 +169,15 @@
                                         <ng-template #noVote>
                                             <div
                                                 class="d-flex align-items-center justify-content-center text-hover-primary">
-                                                <span class="fs-7 text-gray-600">
-                                                    <codx-label formName="WP_Comments" name="lblLike"
-                                                        default="Thích">
+                                                <span class="fw-bold text-gray-600">
+                                                    <codx-label formName="WP_Comments" name="lblLike" default="Thích">
                                                     </codx-label>
                                                 </span>
                                             </div>
                                         </ng-template>
                                     </div>
                                 </span>
-                                <span class="d-flex align-items-center text-gray-600 fs-7 text-hover-underline"
+                                <span class="d-flex align-items-center text-gray-600 fw-bold text-hover-underline"
                                     (click)="replyTo(data)">
                                     <codx-label formName="WPW_Comments" name="lblReply" default="Trả lời">
                                     </codx-label>

@@ -451,6 +451,14 @@
       >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
+            <span
+              [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"
+            ></span>
+          </div>
+          <div class="d-flex flex-column note-option">
+            <span [innerHTML]="item?.memo"></span>
+          </div>
+          <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.title"></span>
           </div>
         </div>
@@ -465,6 +473,14 @@
       >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
+            <span
+              [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"
+            ></span>
+          </div>
+          <div class="d-flex flex-column note-option">
+            <span [innerHTML]="item?.memo"></span>
+          </div>
+          <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.title"></span>
           </div>
         </div>
@@ -478,6 +494,14 @@
         }"
       >
         <div class="checkbox-list">
+          <div class="d-flex flex-column note-option">
+            <span
+              [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"
+            ></span>
+          </div>
+          <div class="d-flex flex-column note-option">
+            <span [innerHTML]="item?.memo"></span>
+          </div>
           <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.title"></span>
           </div>

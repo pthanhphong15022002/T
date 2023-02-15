@@ -3,33 +3,72 @@
     <div class="back-info">
       <div class="header-info">
         <div class="left">
-          <span class="title">{{item.stepName}}</span>
+          <span class="title">{{ item.stepName }}</span>
         </div>
         <div class="right">
           <div class="group-button">
             <button class="button-custom">
-              <span class="icon-edit icon-20 text-primary-600 py-2" style="font-weight: 500" (click)="popupCustomField(item.fields)"></span>
+              <span
+                class="icon-edit icon-20 text-primary-600 py-2"
+                style="font-weight: 500"
+                (click)="popupCustomField(item.fields)"
+              ></span>
             </button>
-            <button class="button-custom" (click)="clickShow($event, item.recID)">
-              <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
+            <button
+              class="button-custom"
+              (click)="clickShow($event, item.recID)"
+            >
+              <span
+                class="icon-expand_less icon-20 text-primary-600 py-2"
+                style="font-weight: 500"
+              ></span>
             </button>
           </div>
         </div>
       </div>
-      <div id="{{item.recID}}" class="main" [ngClass]="'show-main'">
-        <div class="d-flex row class-field m-5" *ngIf="item.fields != null && item.fields.length > 0">
+      <div id="{{ item.recID }}" class="main" [ngClass]="'show-main'">
+        <div
+          class="d-flex row class-field m-5"
+          *ngIf="item.fields != null && item.fields.length > 0"
+        >
           <ng-container *ngFor="let field of item.fields">
-            <div class="col-{{
+            <div
+              class="col-{{
                 12 / field.showColumnControl
-              }} p-3 has-action-menu crr-fiels mb-5">
+              }} p-3 has-action-menu crr-fiels mb-5"
+            >
               <li class="text-gray-400">
-                {{field.title}}
+                {{ field.title }}
               </li>
-              <span class="text-dark margin-l">
-                {{field.dataValue}}
+
+              <span class="text-dark margin-l" *ngIf="field.dataType == 'T'">
+                {{ field.dataValue }}
               </span>
-              <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, field)" [isBookMark]="true"
-                [dataItem]="field" [type]="'hover'">
+              <!-- đang test cấm xóa -->
+              <!-- <ng-container *ngIf="field.dataType == 'R'">
+                <ngb-rating
+                  (rate)="partNum(field.dataValue)"
+                  [max]="field.rank"
+                  [readonly]="true"
+                  [starTemplate]="temp"
+                >
+                  <ng-template #temp let-fill="fill" let-index="index">
+                    <span
+                      class="rankIcon {{ field.rankIcon }} filled"
+                      [class.filled]="fill === 100"
+                      [class.bad]="index < field.rank"
+                    ></span>
+                  </ng-template>
+                </ngb-rating>
+              </ng-container> -->
+
+              <codx-mfunc
+                [formModel]="formModel"
+                (clickMF)="clickMF($event, field)"
+                [isBookMark]="true"
+                [dataItem]="field"
+                [type]="'hover'"
+              >
               </codx-mfunc>
             </div>
           </ng-container>

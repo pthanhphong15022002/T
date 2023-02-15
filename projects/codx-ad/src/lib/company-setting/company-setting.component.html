@@ -604,6 +604,110 @@
               <span class="icon-autorenew icon-20 me-2"></span>
               <span class="fw-bold">
                 <codx-label
+                  name="lblLstApp"
+                  [formModel]="view.formModel"
+                  default="Lịch sử đơn hàng"
+                >
+                </codx-label>
+              </span>
+            </a>
+          </div>
+        </ng-template>
+        <ng-template #content>
+          <!-- [predicate]="'ResourceType=@0'" -->
+
+          <codx-listview
+            #listView
+            [type]="'cardView'"
+            [service]="'Tenant'"
+            [assemblyName]="'Tenant'"
+            [entityName]="'TN_Orders'"
+            [className]="'OrdersBusiness'"
+            [method]="'GetListPurchaseAsync'"
+            [dataValue]="userID"
+            [funcId]=""
+            [itemTemplate]="orderTmp"
+          >
+          </codx-listview>
+          <ng-template #orderTmp let-order>
+            <codx-temp-full
+              [typeMF]="'hover'"
+              [titleTmp]="oTitleTmp"
+              [imageSrc]=""
+              typeMF="hover"
+              [dataItem]="order"
+            >
+            </codx-temp-full>
+          </ng-template>
+          <ng-template #oTitleTmp let-order>
+            <div class="row">
+              <div class="col-5">
+                <div class="text-gray-600">
+                  <codx-label
+                    fiedName=""
+                    [formModel]="orderFormodel"
+                    [default]="'Đơn hàng: '"
+                  >
+                  </codx-label>
+                  <span class="text-primary">
+                    <codx-vll
+                      [name]="'L1466'"
+                      [value]="order?.orderType"
+                      [showText]="true"
+                      [showBgColor]="true"
+                      class="badge badge-light badge-square badge-md fs-7 p-2"
+                    >
+                    </codx-vll>
+                  </span>
+                </div>
+                <div class="text-gray-600">
+                  <codx-label
+                    fiedName=""
+                    [formModel]="orderFormodel"
+                    [default]="'Số giao dịch: '"
+                  >
+                  </codx-label>
+                </div>
+                <div class="text-gray-600">
+                  <codx-label
+                    fiedName=""
+                    [formModel]="orderFormodel"
+                    [default]="'Ngày giao dịch: '"
+                  >
+                  </codx-label>
+                </div>
+                <div class="text-gray-600">
+                  <codx-label
+                    fiedName=""
+                    [formModel]="orderFormodel"
+                    [default]="'Tình trạng: '"
+                  >
+                  </codx-label>
+                  <span class="text-primary">
+                    <codx-vll
+                      [name]="'L1467'"
+                      [value]="order?.status"
+                      [showText]="true"
+                      [showBgColor]="true"
+                      class="badge badge-light badge-square badge-md fs-7 p-2"
+                    >
+                    </codx-vll>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-template>
+      </e-tabitem>
+      <e-tabitem>
+        <ng-template #headerText>
+          <div class="nav-item">
+            <a
+              class="nav-link text-dark text-hover-primary btn-light-primary d-flex px-0"
+            >
+              <span class="icon-autorenew icon-20 me-2"></span>
+              <span class="fw-bold">
+                <codx-label
                   fiedName="Update"
                   [formModel]="view.formModel"
                   default="Version update"
