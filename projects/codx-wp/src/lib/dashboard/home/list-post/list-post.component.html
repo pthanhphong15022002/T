@@ -20,14 +20,22 @@
   <div id="newfeed" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
     data-kt-scroll-dependencies="#postnew, .pw-profile, .pw-menu"
     data-kt-scroll-wrappers=".wrapper-portal, .wrapper, #newfeed, .pw-content" data-kt-scroll-offset="0">
-    <codx-listview #listview [dataService]="dataService" [funcId]="'WP'" [service]="service"
-      [assemblyName]="assemblyName" [className]="className" [method]="method" entityName="WP_Comments"
-      [itemTemplate]="tmpPortal" [emptyTemplate]="empty" [formModel]="formModel">
+    <codx-listview #listview 
+      [dataService]="dataService" 
+      [funcId]="'WP'" 
+      [service]="'WP'"
+      [assemblyName]="'ERM.Business.WP'"
+      [className]="'CommentsBusiness'" 
+      [method]="'GetListPostAsync'" 
+      entityName="WP_Comments"
+      [itemTemplate]="itemTemplate" 
+      [emptyTemplate]="empty" 
+      [formModel]="formModel">
     </codx-listview>
 
   </div>
 </div>
-<ng-template #tmpPortal let-item>
+<ng-template #itemTemplate let-item>
   <div class="p-5 pb-0">
     <div class="d-flex align-items-top">
       <div class="me-3">
@@ -50,8 +58,13 @@
               item.createdOn | timefrom
               }}</span>
             <span class="rounded-1 py-1 px-2 bg-gray-200 d-flex algin-items-center">
-              <codx-vll [name]="'WP001'" [value]="item.shareControl" [showText]="true" [showIcon]="true"
-                [className]="'text-gray-600'" [icoCss]="'w-13px h-13px'" [path]="'assets/themes/sys/default/img/'"
+              <codx-vll 
+                [name]="'WP001'" 
+                [value]="item.shareControl" 
+                [showText]="true" [showIcon]="true"
+                [className]="'text-gray-600'" 
+                [icoCss]="'w-13px h-13px'" 
+                [path]="'assets/themes/sys/default/img/'"
                 [showBgColor]="true">
               </codx-vll>
             </span>
@@ -62,9 +75,11 @@
           </span>
         </div>
       </div>
+      <!-- bổ sung moreFC và moreFCtmp cho Nguyên dùng bên MWP -->
       <ng-container *ngIf="moreFunc && moreFuncTmp; else defaultMoreFunc">
         <ng-container *ngTemplateOutlet="moreFuncTmp; context: { $implicit: item }"></ng-container>
       </ng-container>
+      <!--  -->
       <ng-template #defaultMoreFunc>
         <div class="more">
           <div ngbDropdown class="dropdown">
@@ -116,7 +131,7 @@
           <codx-view-files 
             [objectID]="item.recID" 
             [objectType]="'WP_Comments'" 
-            [formModel]="listview.formModel"
+            [formModel]="formModel"
             [medias]="item.medias"
             (fileClicked)="clickViewDetail($event)">
           </codx-view-files>
@@ -168,8 +183,8 @@
     <!-- end template feedback -->
     <!-- commemt -->
     <treeview-comment 
-      [funcID]="listview.formModel.funcID" 
-      [formModel]="listview.formModel" 
+      [funcID]="formModel.funcID" 
+      [formModel]="formModel" 
       [objectType]="'WP_Comments'"
       [dataComment]="item" 
       [objectID]="item.recID">

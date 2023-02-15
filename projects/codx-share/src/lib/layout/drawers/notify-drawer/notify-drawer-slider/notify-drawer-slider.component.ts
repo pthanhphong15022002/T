@@ -1,7 +1,5 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { MODEL_CHANGED } from '@syncfusion/ej2-angular-richtexteditor';
-import { DateTime, Thickness } from '@syncfusion/ej2-charts';
-import { DialogRef, CRUDService, ApiHttpService, AuthService, DialogData, ScrollComponent, RequestModel, DataRequest, CacheService, CodxService } from 'codx-core';
+import { ChangeDetectorRef, Component, OnChanges, OnInit, Optional, SimpleChanges, } from '@angular/core';
+import { DialogRef, ApiHttpService, DialogData, ScrollComponent, DataRequest, CacheService, CodxService, AuthStore } from 'codx-core';
 
 @Component({
   selector: 'lib-notify-drawer-slider',
@@ -28,13 +26,15 @@ export class NotifyDrawerSliderComponent implements OnInit {
   totalPage:number = 0;
   isScroll = true;
   messageNoData:string ="";
-  datas:any[] = [];
-  valueSelected:any = null;
+  vllEntityName:any[] = [];
+  entityName:any = null;
+  vllIsRead:any[] = [];
+  isRead:any = null;
 
   constructor(
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,
-    private auth:AuthService,
+    private auth:AuthStore,
     private cache:CacheService,
     private codxService:CodxService,
     @Optional() dialogData?: DialogData,
@@ -42,21 +42,33 @@ export class NotifyDrawerSliderComponent implements OnInit {
   ) 
   {    
     this.dialogRef = dialogRef;
-    this.user = this.auth.userValue;
+    this.user = this.auth.get();
   }
 
   ngOnInit(): void {
     this.getNotifyAsync();
     this.getMessage("SYS010");
-    this.cache.valueList("SYS055").subscribe(vll => {
+    this.cache.valueList("SYS055").subscribe((vll:any) => {
       if(vll){
-        this.datas = vll.datas;
-        let _defaultVLL  = vll.datas.find(x => x.value == "");
-        if(_defaultVLL){
-          this.valueSelected = _defaultVLL;
+        this.vllEntityName = vll.datas;
+        let _default  = vll.datas.find(x => x.value === "");
+        if(_default){
+          this.entityName = _default;
         }
         else{
-          this.valueSelected = vll.datas[0];
+          this.entityName = vll.datas[0];
+        }
+      }
+    });
+    this.cache.valueList("SYS057").subscribe((vll:any) => {
+      if(vll){
+        this.vllIsRead = vll.datas;
+        let _default  = vll.datas.find(x => x.value === "");
+        if(_default){
+          this.isRead = _default;
+        }
+        else{
+          this.isRead = vll.datas[0];
         }
       }
     });
@@ -70,8 +82,7 @@ export class NotifyDrawerSliderComponent implements OnInit {
     this.dialogRef.close();
   }
   // load data noti
-  getNotifyAsync()
-  {
+  getNotifyAsync(){
     this.api.execSv(
       'BG',
       'ERM.Business.BG',
@@ -87,11 +98,8 @@ export class NotifyDrawerSliderComponent implements OnInit {
         this.isScroll = false;
         this.dt.detectChanges();
       }
-      else
-      {
-        if(Array.isArray(this.lstNotify) && this.lstNotify.length == 0){
-          this.loaded = false;
-        }
+      else if(Array.isArray(this.lstNotify) && this.lstNotify.length == 0){
+        this.loaded = false;
       }
     });
   }
@@ -119,16 +127,14 @@ export class NotifyDrawerSliderComponent implements OnInit {
         this.isScroll = false;
         this.dt.detectChanges();
       }
-      else
+      else if(Array.isArray(this.lstNotify) && this.lstNotify.length == 0)
       {
-        if(Array.isArray(this.lstNotify) && this.lstNotify.length == 0){
-          this.loaded = false;
-        }
+        this.loaded = false;
       }
     });
   }
   // view detail noti
-  clickNotification(item:any){
+  clickNotification(item:any,index:number){
     if(item.transID){
       this.api.execSv(
         'BG',
@@ -146,6 +152,7 @@ export class NotifyDrawerSliderComponent implements OnInit {
         predicate:"RecID=@0",
         dataValue:item.transID
       };
+      this.lstNotify.splice(index,1);
       this.codxService.openUrlNewTab(item.function,"",query);
     }
   }
@@ -161,17 +168,10 @@ export class NotifyDrawerSliderComponent implements OnInit {
     }
   }
   // filter selected change
-  valueChange(event:any){
-    if(event.value == ""){
-      this.model.predicates = "";
-      this.model.dataValues = "";
-    }
-    else
-    {
-      this.model.predicates = "EntityName = @0";
-      this.model.dataValues = event.value;
-    }
-    this.valueSelected = event;
+  entityNameChange(event:any){
+    this.entityName = event;
+    this.model.predicates = "EntityName = @0";
+    this.model.dataValues = event.value;
     this.loaded = true;
     this.model.page = 1;
     this.totalPage = 0;
@@ -195,5 +195,39 @@ export class NotifyDrawerSliderComponent implements OnInit {
         this.loaded = false;
       }
     });
+  }
+  //filter change
+  isReadChange(event:any){
+    this.isRead = event;
+    this.model.dataObj = event.value;
+    this.loaded = true;
+    this.model.page = 1;
+    this.totalPage = 0;
+    this.api.execSv(
+      'BG',
+      'ERM.Business.BG',
+      'NotificationBusinesss',
+      'GetAsync',
+      [this.model])
+      .subscribe((res:any[]) => {
+      if(res && res[1] > 0)
+      {
+        this.lstNotify = res[0];
+        let totalRecord = res[1];
+        this.totalPage = totalRecord / this.model.pageSize;
+        this.isScroll = false;
+        this.dt.detectChanges();
+      }
+      else
+      {
+        this.loaded = false;
+      }
+    });
+    this.dt.detectChanges();
+  }
+
+  //
+  viewAll(){
+
   }
 }

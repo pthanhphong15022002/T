@@ -20,12 +20,6 @@ export class NewsComponent extends UIComponent {
     return "bg-body h-100 news-main card-body hover-scroll-overlay-y";
   }
   funcID: string = "";
-  entityName: string = 'WP_News';
-  service: string = "WP";
-  assemblyName: string = "ERM.Business.WP";
-  className: string = "NewsBusiness"
-  predicate: string = "";
-  dataValue: string = "5;null;2;";
   posts: any[] = [];
   videos: any[] = [];
   lstGroup: any[] = [];
@@ -35,8 +29,6 @@ export class NewsComponent extends UIComponent {
   mssgWP025:string = "";
   mssgWP026:string = "";
   mssgWP027:string = "";
-  pageSlider:any[] = [];
-  newDate:any = new Date();
   loaded:boolean = false;
   userPermission:any = null;
   NEWSTYPE = {
@@ -64,12 +56,14 @@ export class NewsComponent extends UIComponent {
   onInit(): void {
     this.router.params.subscribe((param) => {
       if (param) {
-        this.funcID = param["funcID"];
         this.category = param["category"];
         this.loadDataAsync(this.category);
-        this.getUserPermission(this.funcID);
       }
     });
+    this.funcID = this.router.snapshot.params["funcID"];
+    if(this.funcID){
+      this.getUserPermission(this.funcID);
+    }
     this.getMessageDefault();
   }
 
@@ -199,7 +193,7 @@ export class NewsComponent extends UIComponent {
       'NewsBusiness',
       'UpdateViewNewsAsync',
       [data.recID]).subscribe();
-      this.codxService.navigate('', '/news/' + this.funcID + '/' + data.category + '/' + data.recID);
+      this.codxService.navigate('', `wp2/news/${this.funcID}/${data.category}/${data.recID}`);
     }
   }
   // open popup create

@@ -113,6 +113,22 @@
             </tr>
             <tr>
               <td class="font-size-lg text-dark">
+                <codx-label [default]="'Thêm'" [formModel]="dialog.formModel" [fiedName]="'Create'"></codx-label>
+              </td>
+              <td>
+                <codx-label [default]="'Cho phép tạo nhiệm vụ'" [formModel]="dialog.formModel"
+                  [fiedName]="'DescriptionRead'">
+                </codx-label>
+              </td>
+              <td class="text-center">
+                <codx-input class="test-check" type="switch" style="width:100%" [checked]="create" field="create"
+                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'create')">
+                </codx-input>
+
+              </td>
+            </tr>
+            <tr>
+              <td class="font-size-lg text-dark">
                 <codx-label [default]="'Chỉnh sửa'" [formModel]="dialog.formModel" [fiedName]="'Edit'"></codx-label>
               </td>
               <td>
@@ -125,20 +141,7 @@
                 </codx-input>
               </td>
             </tr>
-            <!-- <tr>
-              <td class="font-size-lg text-dark">
-                <codx-label [default]="'Phát hành'" [formModel]="dialog.formModel" [fiedName]="'Publish'"></codx-label>
-              </td>
-              <td>
-                <codx-label [default]="'Cho phép phát hành quy trình'" [formModel]="dialog.formModel"
-                  [fiedName]="'Publish'"></codx-label>
-              </td>
-              <td class="text-center">
-                <codx-input class="test-check" type="switch" style="width:100%" [checked]="publish" field="publish"
-                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'publish')">
-                </codx-input>
-              </td>
-            </tr> -->
+
             <tr>
               <td class="font-size-lg text-dark">
                 <codx-label [default]="'Xóa'" [formModel]="dialog.formModel" [fiedName]="'Delete'"></codx-label>
@@ -154,21 +157,21 @@
             </tr>
             <tr>
               <td class="font-size-lg text-dark">
-                <codx-label [default]="'Chia sẻ'" [formModel]="dialog.formModel" [fiedName]="'Share'"></codx-label>
+                <codx-label [default]="'Phát hành'" [formModel]="dialog.formModel" [fiedName]="'Publish'"></codx-label>
               </td>
               <td>
-                <codx-label [default]="'Cho phép chia sẻ quy trình'" [formModel]="dialog.formModel"
-                  [fiedName]="'DescriptionShare'"></codx-label>
+                <codx-label [default]="'Cho phép phát hành quy trình'" [formModel]="dialog.formModel"
+                  [fiedName]="'Publish'"></codx-label>
               </td>
               <td class="text-center">
-                <codx-input class="test-check" type="switch" style="width:100%" [checked]="share" field="share"
-                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'share')">
+                <codx-input class="test-check" type="switch" style="width:100%" [checked]="publish" field="publish"
+                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'publish')">
                 </codx-input>
               </td>
             </tr>
             <tr>
               <td class="font-size-lg text-dark">
-                <codx-label [default]="'Phân quyền'" [formModel]="dialog.formModel" [fiedName]="'AllowPermit'"></codx-label>
+                <codx-label [default]="'Phân quyền'" [formModel]="dialog.formModel" [fiedName]="'Assign'"></codx-label>
               </td>
               <td>
                 <codx-label [default]="'Cho phép chia sẻ và chỉnh sửa quyền'" [formModel]="dialog.formModel"
@@ -176,35 +179,8 @@
                 </codx-label>
               </td>
               <td class="text-center">
-                <codx-input class="test-check" type="switch" style="width:100%" [checked]="allowPermit" field="allowPermit"
-                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'allowPermit')">
-                </codx-input>
-              </td>
-            </tr>
-            <tr>
-              <td class="font-size-lg text-dark">
-                <codx-label [default]="'Upload'" [formModel]="dialog.formModel" [fiedName]="'Upload'"></codx-label>
-              </td>
-              <td>
-                <codx-label [default]="'Cho phép upload file'" [fiedName]="'DescriptionUpload'"></codx-label>
-              </td>
-              <td class="text-center">
-                <codx-input class="test-check" type="switch" style="width:100%" [checked]="upload" field="upload"
-                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'upload')">
-                </codx-input>
-              </td>
-            </tr>
-            <tr>
-              <td class="font-size-lg text-dark">
-                <codx-label [default]="'Download'" [formModel]="dialog.formModel" [fiedName]="'Download'"></codx-label>
-              </td>
-              <td>
-                <codx-label [default]="'Cho phép download file'" [formModel]="dialog.formModel"
-                  [fiedName]="'DescriptionDownload'"></codx-label>
-              </td>
-              <td class="text-center">
-                <codx-input class="test-check" type="switch" style="width:100%" [checked]="download" field="download"
-                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'download')">
+                <codx-input class="test-check" type="switch" style="width:100%" [checked]="assign" field="assign"
+                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'assign')">
                 </codx-input>
               </td>
             </tr>

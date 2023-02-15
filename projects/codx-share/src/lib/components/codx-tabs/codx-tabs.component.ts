@@ -32,6 +32,8 @@ export class CodxTabsComponent implements OnInit {
   //references
   @Input() dataReferences: any[] = [];
   @Input() vllRefType: any = 'TM018';
+  //update quyen cho file tai TM
+  @Input() isUpPermission = false;
   //Attachment
   @Input() hideFolder: string = '1';
   @Input() type: string = 'inline';
@@ -90,19 +92,17 @@ export class CodxTabsComponent implements OnInit {
   }
 
   ngOnChanges() {
-    if(this.objectID){
+    if (this.objectID) {
       this.api
-      .execSv('BG', 'BG', 'TrackLogsBusiness', 'CountFooterAsync', [
-        this.objectID,
-        this.referType,
-        this.transID,
-      ])
-      .subscribe((res) => {
-        if(res)
-        this.oCountFooter = res;
-      });
+        .execSv('BG', 'BG', 'TrackLogsBusiness', 'CountFooterAsync', [
+          this.objectID,
+          this.referType,
+          this.transID,
+        ])
+        .subscribe((res) => {
+          if (res) this.oCountFooter = res;
+        });
     }
-   
   }
 
   fileAdded(e: any) {
@@ -124,5 +124,18 @@ export class CodxTabsComponent implements OnInit {
       }
     }
     this.tabChange.emit(evt);
+  }
+
+  //xu ly quyen file tm
+  fileSave(e) {
+    if (e && typeof e === 'object' && this.isUpPermission) {
+      var createdBy = Array.isArray(e) ? e[0].data.createdBy : e.createdBy;
+      this.api
+        .execSv<any>('TM', 'TM', 'TaskBusiness', 'AddPermissionFileAsync', [
+          this.objectID,
+          createdBy
+        ])
+        .subscribe();
+    }
   }
 }

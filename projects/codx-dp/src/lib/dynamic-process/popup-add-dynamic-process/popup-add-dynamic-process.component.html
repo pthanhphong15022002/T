@@ -213,8 +213,7 @@
           <button
             *ngIf="currentTab != 2"
             type="button"
-            [ngClass]="(this.process.processNo == null || this.process.processNo == '') || (this.process.processName == null || this.process.processName == '') ? 'disabled'
-            : ''"
+            [ngClass]="checkButtonContinue() ? '' : 'disabled'"
             class="btn btn-primary"
             (click)="continue(currentTab)"
           >
@@ -818,6 +817,7 @@
 <ng-template #dynamicFieldsAllSteps>
   <ng-container *ngFor="let st of stepList">
     <ng-container
+      *ngIf="!st.isFailStep && !st.isSuccessStep"
       [ngTemplateOutlet]="dynamicFields"
       [ngTemplateOutletContext]="{ $implicit: st }"
     ></ng-container>
@@ -1069,7 +1069,7 @@
 
               <div style="font-size: 1.1rem; font-weight: 500">
                 Thời hạn {{ itemStep?.durationDay || 0 }} ngày
-                {{ itemStep?.durationHour || 0 }} giờ
+                {{ (itemStep?.durationHour / 60) * 100 || 0 }} giờ
               </div>
               <div style="font-size: 1.1rem; font-weight: 500">
                 Công việc {{ itemStep?.taskGroups.length }}
@@ -1293,8 +1293,9 @@
                         >
                         </codx-label>
                         <span>
-                          {{ taskList?.durationDay }}.{{
-                            taskList?.durationHour
+                          {{
+                            +taskList?.durationDay * 24 +
+                              +taskList?.durationHour || 0
                           }}
                         </span>
                         <codx-label
@@ -1371,8 +1372,9 @@
                                 >
                                 </codx-label>
                                 <span>
-                                  {{ taskList?.durationDay }}.{{
-                                    taskList?.durationHour
+                                  {{
+                                    +task?.durationDay * 24 +
+                                      task?.durationHour || 0
                                   }}
                                 </span>
                                 <codx-label
@@ -1461,7 +1463,8 @@
       <codx-label
         fiedName="StepName"
         [formModel]="dialog.formModel"
-        default="Mặc định giai đoạn sẽ được thêm vào vị trí cuối cùng (trước giai đoạn hoàn tất)"
+        default="Mặc định giai đoạn sẽ được thêm vào vị trí cuối cùng (trước
+        giai đoạn hoàn tất)"
       ></codx-label>
     </div>
   </div>
@@ -1529,7 +1532,8 @@
           <div class="col-6">
             <div class="title-switch">
               <codx-label
-                default="Bắt buộc chọn lý do khi đánh dấu nhiệm vụ là thành công:"
+                default="Bắt buộc chọn lý do khi đánh dấu nhiệm vụ là thành
+                công:"
               ></codx-label>
             </div>
           </div>
@@ -1576,7 +1580,8 @@
             <div class="col-12">
               <codx-label
                 class="fw-lighter fs-6"
-                default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh dấu thành công"
+                default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh
+                dấu thành công"
               ></codx-label>
             </div>
           </div>
@@ -1587,12 +1592,13 @@
               id="recID"
               [dataSource]="listCbxProccess"
               [fields]="fieldCbxProccess"
-              (valueChange)="cbxChange($event,viewStepReasonSuccess)"
+              (valueChange)="cbxChange($event, viewStepReasonSuccess)"
               [value]="stepSuccess.newProcessID"
             ></ejs-combobox>
             <codx-label
               class="text-danger fst-italic fs-6"
-              default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại đối tượng áp dụng"
+              default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại
+              đối tượng áp dụng"
             >
             </codx-label>
           </div>
@@ -1645,7 +1651,10 @@
       #view
     >
       <div class="main-body">
-        <div class="position-relative p-9" *ngIf="stepSuccess.reasons.length == 0">
+        <div
+          class="position-relative p-9"
+          *ngIf="stepSuccess.reasons.length == 0"
+        >
           <div class="position-absolute top-50 start-50 translate-middle">
             <button
               type="button"
@@ -1660,22 +1669,19 @@
       </div>
 
       <div class="main-body pt-5 ps-5" *ngIf="stepSuccess.reasons.length > 0">
-        <div *ngFor="let item of stepSuccess.reasons" class="pb-2 ">
-          <ul
-          class="text-left drap-drop me-5 py-2 has-action-menu"
-        >
-          <li>
-            {{item.reasonName}}
-            <codx-mfunc
-            [formModel]="dialog.formModel"
-            (clickMF)="clickMFReason($event, item,viewStepReasonSuccess)"
-            [dataItem]="action != 'edit' ? moreDefaut : item"
-            [type]="'hover'"
-          >
-          </codx-mfunc>
-          </li>
-
-        </ul>
+        <div *ngFor="let item of stepSuccess.reasons" class="pb-2">
+          <ul class="text-left drap-drop me-5 py-2 has-action-menu">
+            <li>
+              {{ item.reasonName }}
+              <codx-mfunc
+                [formModel]="dialog.formModel"
+                (clickMF)="clickMFReason($event, item, viewStepReasonSuccess)"
+                [dataItem]="action != 'edit' ? moreDefaut : item"
+                [type]="'hover'"
+              >
+              </codx-mfunc>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -1762,23 +1768,25 @@
             <div class="col-12">
               <codx-label
                 class="fw-lighter fs-6"
-                default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh dấu thất bại"
+                default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh
+                dấu thất bại"
               ></codx-label>
             </div>
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
             <ejs-combobox
-            id="recID"
-            [dataSource]="listCbxProccess"
-            [fields]="fieldCbxProccess"
-            [placeholder]="'Chọn quy trình kìa'"
-            (valueChange)="cbxChange($event,viewStepReasonFail)"
-            [value]="stepFail?.newProcessID"
-          ></ejs-combobox>
+              id="recID"
+              [dataSource]="listCbxProccess"
+              [fields]="fieldCbxProccess"
+              [placeholder]="'Chọn quy trình kìa'"
+              (valueChange)="cbxChange($event, viewStepReasonFail)"
+              [value]="stepFail?.newProcessID"
+            ></ejs-combobox>
             <codx-label
               class="text-danger fst-italic fs-6"
-              default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại đối tượng áp dụng"
+              default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại
+              đối tượng áp dụng"
             >
             </codx-label>
           </div>
@@ -1846,22 +1854,19 @@
       </div>
 
       <div class="main-body pt-5 ps-5" *ngIf="stepFail.reasons.length > 0">
-        <div *ngFor="let item of stepFail.reasons" class="pb-2 ">
-          <ul
-          class="text-left drap-drop me-5 py-2 has-action-menu"
-        >
-          <li>
-            {{item.reasonName}}
-            <codx-mfunc
-            [formModel]="dialog.formModel"
-            (clickMF)="clickMFReason($event, item,viewStepReasonFail)"
-            [dataItem]="action != 'edit' ? moreDefaut : item"
-            [type]="'hover'"
-          >
-          </codx-mfunc>
-          </li>
-
-        </ul>
+        <div *ngFor="let item of stepFail.reasons" class="pb-2">
+          <ul class="text-left drap-drop me-5 py-2 has-action-menu">
+            <li>
+              {{ item.reasonName }}
+              <codx-mfunc
+                [formModel]="dialog.formModel"
+                (clickMF)="clickMFReason($event, item, viewStepReasonFail)"
+                [dataItem]="action != 'edit' ? moreDefaut : item"
+                [type]="'hover'"
+              >
+              </codx-mfunc>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -1939,10 +1944,7 @@
           *ngIf="step.roles != null && step.roles.length > 0"
         >
           <ng-container *ngFor="let perm of step.roles; index as i">
-            <div
-
-              class="me-4 d-flex align-items-center margin-form mb-4"
-            >
+            <div class="me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
                 <codx-img
                   class=""
@@ -1974,7 +1976,8 @@
               <codx-label
                 class="fw-normal text-gray-400"
                 fiedName="LocationControl"
-                default="Người liên quan có thể cập nhật công việc mà họ đang phụ trách"
+                default="Người liên quan có thể cập nhật công việc mà họ đang
+                phụ trách"
               >
               </codx-label>
             </div>
@@ -2069,7 +2072,8 @@
                   <div>
                     <codx-label
                       class="text-muted fs-5"
-                      default="Mặc định khi nhiệm vụ được tạo hoặc chuyển đến giai đoạn sẽ tự động phân bố người phụ trách cho nhiệm vụ"
+                      default="Mặc định khi nhiệm vụ được tạo hoặc chuyển đến
+                      giai đoạn sẽ tự động phân bố người phụ trách cho nhiệm vụ"
                     >
                     </codx-label>
                   </div>
@@ -2098,7 +2102,8 @@
                   <codx-label
                     class="text-muted text-opacity-25"
                     fiedName=""
-                    default="Tự động chuyển nhiệm vụ qua giai đoạn tiếp theo khi"
+                    default="Tự động chuyển nhiệm vụ qua giai đoạn tiếp theo
+                    khi"
                     [formModel]="dialog.formModel"
                   >
                   </codx-label>
@@ -2181,7 +2186,8 @@
                   <div>
                     <codx-label
                       class="text-muted fs-5"
-                      default="Thời hạn mà nhiệm vụ cần được đến giai đoạn tiếp theo"
+                      default="Thời hạn mà nhiệm vụ cần được đến giai đoạn tiếp
+                      theo"
                     >
                     </codx-label>
                   </div>
@@ -2251,7 +2257,8 @@
               <strong>
                 <codx-label
                   class="text-muted"
-                  default="Bỏ qua ngày nghỉ trong tuần khi tính toán ngày đến hạn cho nhiệm vụ trong giai đoạn"
+                  default="Bỏ qua ngày nghỉ trong tuần khi tính toán ngày đến
+                  hạn cho nhiệm vụ trong giai đoạn"
                 >
                 </codx-label>
               </strong>
@@ -2295,7 +2302,8 @@
                   <codx-label
                     class="text-muted text-opacity-25"
                     fiedName="StartControl"
-                    default="Bắt đầu tính thời gian thực tế cho nhiệm vụ trong giai đoạn lúc"
+                    default="Bắt đầu tính thời gian thực tế cho nhiệm vụ trong
+                    giai đoạn lúc"
                   >
                   </codx-label>
                 </strong>
@@ -2321,7 +2329,8 @@
             <div class="title-switch">
               <codx-label
                 class="text-muted"
-                default="Cho phép người phụ trách chỉnh sửa thời gian hoành thành giai đoạn thực tế"
+                default="Cho phép người phụ trách chỉnh sửa thời gian hoành
+                thành giai đoạn thực tế"
               >
               </codx-label>
             </div>
@@ -2362,7 +2371,8 @@
             <div class="title-switch">
               <codx-label
                 class="text-muted"
-                default="Cho phép người phụ trách chỉnh sửa thời hạn công việc mặc định"
+                default="Cho phép người phụ trách chỉnh sửa thời hạn công việc
+                mặc định"
               ></codx-label>
             </div>
           </div>
@@ -2417,7 +2427,8 @@
           <codx-label
             class="text-muted"
             name=""
-            default="Mô tả chi tiết cách hoàn thành giai đoạn cho người phụ trách"
+            default="Mô tả chi tiết cách hoàn thành giai đoạn cho người phụ
+            trách"
           >
           </codx-label>
         </div>

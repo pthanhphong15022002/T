@@ -8,6 +8,8 @@
 
 .codx-notification-filter {
   position: absolute;
+  display: flex;
+  justify-content: end;
   right: 52px;
   top: 18px;
 }

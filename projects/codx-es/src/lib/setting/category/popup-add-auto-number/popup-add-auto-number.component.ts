@@ -7,6 +7,7 @@ import {
   Optional,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   AuthStore,
   CacheService,
@@ -15,6 +16,7 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
+import { log } from 'console';
 import { CodxEsService } from '../../../codx-es.service';
 
 @Component({
@@ -26,6 +28,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   dialogAutoNum: FormGroup;
   dialog: DialogRef;
   isAfterRender = false;
+  afterFgANumberDefault = false;
   formModel: FormModel;
   fmANumberDefault: FormModel;
   fgANumberDefault: FormGroup;
@@ -67,7 +70,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.description = data?.data?.description;
 
     // Thiết lập số tự động mặc định của function
-    this.functionID == data?.data?.functionID;
+    this.functionID = data?.data?.functionID;
 
     //tao moi autoNumber theo autoNumber mẫu
     this.newAutoNoCode = data?.data?.newAutoNoCode;
@@ -112,10 +115,13 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
               .getAutoNumberDefaults(this.functionID)
               .subscribe((model) => {
                 if (model) {
+                  console.log(model);
                   model.autoNumber = this.autoNoCode;
+                  this.fmANumberDefault.currentData = model;
                   this.autoDefaultData = model;
                   this.fgANumberDefault.patchValue(this.autoDefaultData);
                   this.cr.detectChanges();
+                  this.afterFgANumberDefault = true;
                 }
               });
           }
@@ -241,6 +247,16 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
           if (res) {
             this.dialogAutoNum.patchValue(this.data);
             this.dialog && this.dialog.close(res);
+          }
+        });
+    }
+
+    if (this.functionID) {
+      this.esService
+        .updateAutoNumberDefaults(this.autoDefaultData)
+        .subscribe((res) => {
+          if (res) {
+            this.autoDefaultData = res;
           }
         });
     }

@@ -4,6 +4,7 @@
   [body]="addGroupJobBody"
   [footer]="addGroupJobFooter"
   [dialog]="dialog"
+  [formModel]="grvTaskGroupsForm"
 ></codx-form>
 
 <ng-template #addGroupJobBody>
@@ -40,7 +41,6 @@
         <div class="position-relative">
           <codx-input
             field="durationDay"
-            [formModel]="grvTaskGroupsForm"
             [crrValue]="taskGroup?.durationDay"
             (valueChange)="changeValueInput($event, taskGroup)"
             [height]="'100'"
@@ -64,16 +64,22 @@
         <div class="d-flex justify-content-end">
           <codx-label
             fiedName="durationHour"
-            [formModel]="grvTaskGroupsForm"
             default="Thời gian còn lại "
           ></codx-label>
-          <span class="text-danger ms-3" *ngIf="!taskGroup?.createdOn">{{days}} ngày {{hours}} giờ</span>
-          <span class="text-danger ms-3" id="countdown"*ngIf="taskGroup?.createdOn" > </span>
+          <span class="text-danger ms-3" *ngIf="!taskGroup?.createdOn"
+            >{{ taskGroup?.durationDay }} ngày
+            {{ taskGroup?.durationHour }} giờ</span
+          >
+          <span
+            class="text-danger ms-3"
+            id="countdown"
+            *ngIf="taskGroup?.createdOn"
+          >
+          </span>
         </div>
         <div class="position-relative">
           <codx-input
             field="durationHour"
-            [formModel]="grvTaskGroupsForm"
             [crrValue]="taskGroup?.durationHour"
             (valueChange)="changeValueInput($event, taskGroup)"
             [showSpinButton]="false"
@@ -96,8 +102,8 @@
     </div>
 
     <codx-user
-    [dataSource]="taskGroup?.roles"
-    (valueList)="changeUser($event)"
+      [dataSource]="taskGroup?.roles"
+      (valueList)="changeUser($event)"
     ></codx-user>
 
     <div class="form-group">
