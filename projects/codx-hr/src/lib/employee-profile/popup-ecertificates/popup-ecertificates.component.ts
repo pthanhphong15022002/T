@@ -143,7 +143,6 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
             this.certificateObj = p;
             this.notify.notifyCode('SYS006');
             this.dialog && this.dialog.close(this.certificateObj);
-            console.log('addddddddddddddddddddddddddddddddddddd dataaaaaaaaaaaaaaaaaaa', this.certificateObj);
           } else this.notify.notifyCode('SYS023');
         });
       }else {
