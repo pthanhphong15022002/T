@@ -9,6 +9,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { Permission } from '@shared/models/file.model';
 import { ApiHttpService } from 'codx-core';
 import { TabModel } from './model/tabControl.model';
 
@@ -37,6 +38,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() allowExtensions: string = '.jpg,.png';
   @Input() allowMultiFile: string = '1';
   @Input() displayThumb: string = 'full';
+  @Input() addPermissions: Permission[] = [];
   opened = false;
   @Output() tabChange = new EventEmitter();
   //ApprovalProcess
