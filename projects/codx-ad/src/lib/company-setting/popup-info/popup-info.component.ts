@@ -26,7 +26,7 @@ export class PopupInfoComponent implements OnInit {
   ngOnInit(): void {}
 
   valueChange(e) {
-    if (e.data) {
+    if (e.data != null) {
       this.data[e.field] = e.data;
     }
   }

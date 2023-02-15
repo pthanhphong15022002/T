@@ -23,13 +23,68 @@
 <ng-template #my_dashboard>
   <div id="2" title="Tỷ lệ công việc được giao">
     <div class="w-100 h-100">
-      <codx-chart
-        height="180"
-        [title]="chartSettings2?.title"
-        [seriesSetting]="chartSettings2?.seriesSetting"
-        [dataSource]="dataSource2"
+      <ejs-chart
+        style="display: block"
+        [chartArea]="{
+          border: {
+            width: 0
+          }
+        }"
+        [width]="'100%'"
+        id="chartcontainer"
+        [primaryXAxis]="chartSettings2?.primaryXAxis"
+        [primaryYAxis]="chartSettings2?.primaryYAxis"
+        [tooltip]="{
+          enable: true
+        }"
+        [legendSettings]="{
+          visible: true,
+          enableHighlight: true
+        }"
       >
-      </codx-chart>
+        <e-series-collection>
+          <e-series
+            [dataSource]="dataSource2"
+            type="Bar"
+            xName="Country"
+            yName="GDP"
+            name="GDP"
+            [marker]="{
+              dataLabel: {
+                visible: true,
+                position: 'Top',
+                font: {
+                  fontWeight: '600',
+                  color: '#ffffff'
+                }
+              }
+            }"
+            columnSpacing="0.1"
+            columnWidth="0.2"
+          >
+          </e-series>
+          <e-series
+            [dataSource]="dataSource2"
+            type="Bar"
+            xName="Country"
+            yName="WorldShare"
+            name="Share in World's GDP"
+            columnSpacing="0.1"
+            [marker]="{
+              dataLabel: {
+                visible: true,
+                position: 'Top',
+                font: {
+                  fontWeight: '600',
+                  color: '#ffffff'
+                }
+              }
+            }"
+            columnWidth="0.2"
+          >
+          </e-series>
+        </e-series-collection>
+      </ejs-chart>
     </div>
   </div>
 </ng-template>
