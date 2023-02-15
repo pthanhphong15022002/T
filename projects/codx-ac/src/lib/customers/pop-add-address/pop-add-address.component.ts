@@ -22,6 +22,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   provinceID:any;
   districtID:any;
   postalCode:any;
+  objectype:any;
   gridViewSetup:any;
   address: Address;
   objectContactAddress:Array<Contact> = [];
@@ -39,6 +40,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
+    this.objectype = dialogData.data?.objectype;
     this.adressType = '';
     this.adressName = '';
     this.countryID = '';
@@ -183,7 +185,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
         'ERM.Business.BS',
         'ContactBookBusiness',
         'DeleteContactAddressAsync',
-        [data]
+        [this.objectype,data]
       ).subscribe((res:any)=>{
         if (res) {
           this.notification

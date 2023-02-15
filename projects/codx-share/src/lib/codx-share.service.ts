@@ -1,4 +1,4 @@
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, finalize, map, Observable, of, share } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { TM_Tasks } from './components/codx-tasks/model/task.model';
 import {
@@ -27,6 +27,8 @@ export class CodxShareService {
   dateChange = new BehaviorSubject<any>(null);
   dataResourceModel = new BehaviorSubject<any>(null);
   settingValue = new BehaviorSubject<any>(null);
+  public caches = new Map<string, Map<string, any>>();
+  private cachedObservables = new Map<string, Observable<any>>();
   constructor(
     private notificationsService: NotificationsService,
     private callfunc: CallFuncService,
@@ -35,6 +37,36 @@ export class CodxShareService {
     private cache: CacheService,
     private fb: FormBuilder
   ) {}
+  loadFuncID(functionID:any): Observable<any>
+  {
+    let paras = [functionID];
+    let keyRoot = "MFunc" + functionID;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.api.execSv("SYS","SYS","MoreFunctionsBusiness","GetAsync",functionID)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
   defaultMoreFunc(
     val: any,
     data: any,
