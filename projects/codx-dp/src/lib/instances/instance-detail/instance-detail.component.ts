@@ -95,7 +95,7 @@ export class InstanceDetailComponent implements OnInit {
       this.id = changes['dataSelect'].currentValue.recID;
       this.dataSelect = changes['dataSelect'].currentValue;
       this.currentStep = this.dataSelect.currentStep;
-      this.getStepsByProcessID(this.id);
+      this.GetStepsByInstanceIDAsync(this.id);
       if (this.listSteps == null && this.listSteps.length == 0) {
         this.tmpTeps = null;
       }
@@ -103,7 +103,7 @@ export class InstanceDetailComponent implements OnInit {
     console.log(this.formModel);
   }
 
-  getStepsByProcessID(insID) {
+  GetStepsByInstanceIDAsync(insID) {
     this.dpSv.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
       if (res) {
         this.listSteps = res;
@@ -111,10 +111,11 @@ export class InstanceDetailComponent implements OnInit {
         for (var i = 0; i < this.listSteps.length; i++) {
           var stepNo = i;
           var data = this.listSteps[i];
-          if (this.listSteps[i].recID == this.dataSelect.stepID) {
+          if (data.stepID == this.dataSelect.stepID) {
             this.stepName = data.stepName;
             this.currentStep = stepNo;
             this.currentNameStep = this.currentStep;
+            this.tmpTeps = data;
           }
           total += data.progress;
           stepNo = i + 1;
@@ -124,13 +125,7 @@ export class InstanceDetailComponent implements OnInit {
         } else {
           this.progress = '0';
         }
-        if (this.listSteps != null && this.listSteps.length > 0) {
-          this.listSteps.forEach((element) => {
-            if (element != null && element.recID == this.dataSelect.stepID) {
-              this.tmpTeps = element;
-            }
-          });
-        }
+
       } else {
         this.listSteps = [];
         this.stepName = '';
@@ -184,22 +179,23 @@ export class InstanceDetailComponent implements OnInit {
           element.functionID == 'SYS004' ||
           element.functionID == 'SYS003' ||
           element.functionID == 'SYS005' ||
-          element.functionID == 'DP04' ||
-          element.functionID == 'DP11' ||
-          element.functionID == 'DP08' ||
-          element.functionID == 'DP07' ||
-          element.functionID == 'DP06' ||
-          element.functionID == 'DP05' ||
-          element.functionID == 'DP01' ||
-          element.functionID == 'DP03' ||
-          element.functionID == 'SYS102' ||
+          // element.functionID == 'DP04' ||
+          // element.functionID == 'DP11' ||
+          // element.functionID == 'DP08' ||
+          // element.functionID == 'DP07' ||
+          // element.functionID == 'DP06' ||
+          // element.functionID == 'DP05' ||
+          // element.functionID == 'DP01' ||
+          // element.functionID == 'DP03' ||
+          // element.functionID == 'SYS102' ||
           element.functionID == 'SYS02' ||
-          element.functionID == 'SYS104' ||
+          // element.functionID == 'SYS104' ||
           element.functionID == 'SYS04' ||
-          element.functionID == 'SYS103' ||
+          // element.functionID == 'SYS103' ||
           element.functionID == 'SYS03' ||
-          element.functionID == 'SYS101' ||
-          element.functionID == 'SYS01'
+          // element.functionID == 'SYS101' ||
+          // element.functionID == 'SYS01' ||
+          element.functionID == 'DP011'
         )
           element.disabled = true;
       });
