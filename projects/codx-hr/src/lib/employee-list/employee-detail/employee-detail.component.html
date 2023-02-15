@@ -3948,6 +3948,15 @@
                   ></span>
                 </button>
                 <span class="text-gray-500 ms-2">|</span>
+                <codx-label name="lblSeeAllEBenefit" default="Xem tất cả">
+                </codx-label>
+                <codx-input
+                  type="switch"
+                  (valueChange)="valueChangeViewAllESkill($event)"
+                  [checked]="ViewAllEskillFlag"
+                ></codx-input>
+
+                <!-- <span class="text-gray-500 ms-2">|</span>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-1"
                   (click)="addSkill()"
@@ -3955,7 +3964,7 @@
                   <span
                     class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
                   ></span>
-                </button>
+                </button> -->
               </div>
             </div>
             <div class="mb-1">
@@ -3998,19 +4007,19 @@
                         </div>
                       </ng-container>
 
-                      <!-- <div class="sk-item active">2</div>
-                          <div class="sk-item active">3</div>
-                          <div class="sk-item active selected">4</div>
-                          <div class="sk-item">5</div>
-                          <div class="sk-item">6</div> -->
+                      <div class="sk-item active">2</div>
+                      <div class="sk-item active">3</div>
+                      <div class="sk-item active selected">4</div>
+                      <div class="sk-item">5</div>
+                      <div class="sk-item">6</div>
                     </div>
-                    <codx-mfunc
+                    <!-- <codx-mfunc
                       [formModel]="formModel"
                       (clickMF)="clickMF($event, eSkill.listSkill[0], 'eSkill')"
                       type="hover"
                       [dataItem]="eSkill.listSkill[0]"
                     >
-                    </codx-mfunc>
+                    </codx-mfunc> -->
                   </div>
                 </div>
               </ng-container>
@@ -4030,6 +4039,49 @@
                       <div class="sk-item">8</div>
                     </div>
                   </div> -->
+              <div *ngIf="ViewAllEskillFlag == true">
+                <div
+                  class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5"
+                >
+                  <div class="d-flex me-3">
+                    <codx-label default="Chi tiết" class="text-uppercase">
+                    </codx-label>
+                    <span class="text-gray-500 ms-2"> | </span>
+                    <span>({{ skillRowCount }})</span>
+                  </div>
+
+                  <div class="d-flex me-3">
+                    <codx-dropdown-select
+                      [cssClass]="'rounded-pill border-1'"
+                      cssPopup="h-350px w-300px"
+                      placeholder="Kỹ năng"
+                      type="valuelist"
+                      field="SkillID"
+
+                      (valueChange)="valueChangeFilterSkill($event)"
+                    ></codx-dropdown-select>
+                  </div>
+                </div>
+
+                <div>
+                  <codx-gridview
+                    *ngIf="skillColumnGrid"
+                    #skillGridViewID
+                    [formModel]="skillFormmodel"
+                    [columnsGrid]="skillColumnGrid"
+                    [service]="'HR'"
+                    [assemblyName]="'Core'"
+                    [className]="'DataBusiness'"
+                    [method]="'LoadDataAsync'"
+                    [predicates]="'EmployeeID=@0'"
+                    [dataValues]="data.employeeID"
+                    [pageSize]="numPageSizeGridView"
+                    [entityName]="'HR_ESkills'"
+                    [rowHeight]="50"
+                    height="240px"
+                  ></codx-gridview>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -4666,6 +4718,7 @@
 </ng-template>
 <!--#endregion -->
 
+<!--#Region template Bằng cấp-->
 <ng-template #templateDegreeGridCol1 let-data>
   <div>
     <i class="icon-school"></i>
@@ -4689,30 +4742,33 @@
     {{ data?.totalScore }}
   </div>
 </ng-template>
+
 <ng-template #templateDegreeGridCol3 let-data>
-  <span>
-    <i class="icon-calendar_today"></i>
-    {{ data?.yearGraduated }}
-  </span>
-  <span>
-    <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
-    {{ data?.issuedDate | fmDT }}
-  </span>
-  <div *ngIf="data.isMain">
-    <label>Là bằng cấp chính</label>
+  <div class="has-action-menu">
+    <div>
+      <i class="icon-calendar_today"></i>
+      {{ data?.yearGraduated }}
+    </div>
+    <div>
+      <i
+        class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"
+      ></i>
+      {{ data?.issuedDate | fmDT }}
+    </div>
+    <div *ngIf="data.isMain">
+      <label>Là bằng cấp chính</label>
+    </div>
+
+    <codx-mfunc
+      [formModel]="degreeFormodel"
+      (clickMF)="clickMF($event, data, 'eDegrees')"
+      [dataItem]="data"
+      type="hover"
+    >
+    </codx-mfunc>
   </div>
 </ng-template>
-<ng-template #templateDegreeGridMoreFunc let-data>
-  <codx-mfunc
-    [formModel]="degreeFormodel"
-    (clickMF)="clickMF($event, data, 'eDegrees')"
-    [dataItem]="data"
-    type="hover"
-  >
-  </codx-mfunc>
-</ng-template>
-
-<!------------------------------------------------------------------------------------>
+<!--#endRegion-->
 
 <ng-template #templateCertificateGridCol1 let-data>
   <div>
@@ -4762,21 +4818,65 @@
 </ng-template>
 
 <ng-template #templateCertificateGridCol3 let-data>
-  <div>
-    <i class="icon-calendar_today"></i>
-    {{ data?.issuedDate | fmDT }}
-    <span *ngIf="data?.isExpire"> Hết hạn </span>
-    <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
+  <div class="has-action-menu">
+    <div>
+      <i class="icon-calendar_today"></i>
+      {{ data?.issuedDate | fmDT }}
+      <span *ngIf="data?.isExpire"> Hết hạn </span>
+      <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
+    </div>
+    <div>{{ data?.effectedDate | fmDT }} - {{ data?.expiredDate | fmDT }}</div>
+    <codx-mfunc
+      [formModel]="certificateFormModel"
+      (clickMF)="clickMF($event, data, 'eCertificate')"
+      [dataItem]="data"
+      type="hover"
+    >
+    </codx-mfunc>
   </div>
-  <div>{{ data?.effectedDate | fmDT }} - {{ data?.expiredDate | fmDT }}</div>
 </ng-template>
 
-<ng-template #templateCertificateGridMoreFunc let-data>
-  <codx-mfunc
-    [formModel]="degreeFormodel"
-    (clickMF)="clickMF($event, data, 'eCertificate')"
-    [dataItem]="data"
-    type="hover"
-  >
-  </codx-mfunc>
+<!--Template ESkills-->
+<ng-template #templateSkillGridCol1 let-data>
+  <div>
+    {{ data?.skillID | formatvalue : skillFormmodel : "skillID" | async }}
+  </div>
+  <div>
+    {{
+      data?.skillGradeID | formatvalue : skillFormmodel : "skillGradeID" | async
+    }}
+  </div>
+</ng-template>
+
+<ng-template #templateSkillGridCol2 let-data>
+  <div>
+    {{
+      data?.trainSupplierID
+        | formatvalue : skillFormmodel : "trainSupplierID"
+        | async
+    }}
+  </div>
+  <div>
+    <i></i>
+    {{ data?.ranking | formatvalue : skillFormmodel : "ranking" | async }}
+    <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
+    {{ data?.totalScore }}
+  </div>
+</ng-template>
+
+<ng-template #templateSkillGridCol3 let-data>
+  <div class="has-action-menu">
+    <div>{{ data?.trainFrom | fmDT }} - {{ data?.trainTo | fmDT }}</div>
+    <i></i>
+    <div>
+      {{ data?.trainForm | formatvalue : skillFormmodel : "trainForm" | async }}
+    </div>
+    <codx-mfunc
+      [formModel]="skillFormmodel"
+      (clickMF)="clickMF($event, data, 'eSkill')"
+      [dataItem]="data"
+      type="hover"
+    >
+    </codx-mfunc>
+  </div>
 </ng-template>

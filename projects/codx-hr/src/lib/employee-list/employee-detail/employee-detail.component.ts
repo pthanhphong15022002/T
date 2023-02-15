@@ -66,6 +66,7 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/t
 import { log } from 'console';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
+import { Sidebar } from '@syncfusion/ej2-angular-navigations';
 
 @Component({
   selector: 'lib-employee-detail',
@@ -223,6 +224,7 @@ export class EmployeeDetailComponent extends UIComponent {
   expColumnGrid;
   degreeColumnGrid;
   certificateColumnGrid;
+  skillColumnGrid;
 
   //#region ViewChild
   @ViewChild('healthPeriodID', { static: true })
@@ -304,7 +306,6 @@ export class EmployeeDetailComponent extends UIComponent {
   lstFuncSeverance: any = [];
   lstFuncID: any = [];
 
-  degreeFormodel: FormModel;
   degreeRowCount;
 
   //#region var functionID
@@ -312,21 +313,31 @@ export class EmployeeDetailComponent extends UIComponent {
   eInfoFuncID = 'HRTEM0101';
   eFamiliesFuncID = 'HRTEM0103';
   degreeFuncID = 'HRTEM0601';
+  certificateFuncID = 'HRTEM0602';
+  skillFuncID = 'HRTEM0603';
 
   //#endregion
 
   //#region var formModel
-  
+
   eInfoFormModel: FormModel; // Thông tin bản thân
   eFamilyFormModel: FormModel; //Quan hệ gia đình
+  certificateFormModel: FormModel; // Chứng chỉ
+  degreeFormodel: FormModel; // Bằng cấp
+  skillFormmodel: FormModel; // Kỹ năng
 
   //#endregion
-  degreeHeaderText;
 
-  certificateFormModel: FormModel;
-  certificateRowCount;
-  certificateFuncID = 'HRTEM0602';
+  //#region header text
   certificateHeaderText;
+  degreeHeaderText;
+  skillHeaderText;
+  //#endregion
+
+  //#region
+  certificateRowCount;
+  skillRowCount = 0;
+  //#endregion
 
   clickItem(evet) {}
 
@@ -346,6 +357,21 @@ export class EmployeeDetailComponent extends UIComponent {
     this.hrService.getFormModel(this.eFamiliesFuncID).then((res) => {
       this.eFamilyFormModel = res;
     });
+
+    this.hrService.getFormModel(this.degreeFuncID).then((res) => {
+      this.degreeFormodel = res;
+    });
+    this.hrService.getFormModel(this.certificateFuncID).then((res) => {
+      this.certificateFormModel = res;
+    });
+
+    this.hrService.getFormModel(this.skillFuncID).then((res) => {
+      this.skillFormmodel = res;
+    });
+    // this.hrService.getFormModel(this.degreeFuncID).then((res) => {
+    //   this.degreeFormodel = res;
+    // });
+
     //#endregion
 
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
@@ -378,14 +404,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
         this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
 
-        this.hrService.getFormModel(this.degreeFuncID).then((res) => {
-          this.degreeFormodel = res;
-        });
-        this.hrService.getFormModel(this.certificateFuncID).then((res) => {
-          this.certificateFormModel = res;
-        });
-
-        //////////////////////////////
+        //#region - Chứng chỉ
         this.hrService.getHeaderText(this.certificateFuncID).then((res) => {
           this.certificateHeaderText = res;
           this.certificateColumnGrid = [
@@ -410,10 +429,6 @@ export class EmployeeDetailComponent extends UIComponent {
               template: this.templateCertificateGridCol3,
               width: '150',
             },
-            {
-              template: this.templateCertificateGridMoreFunc,
-              width: '150',
-            },
           ];
         });
 
@@ -428,15 +443,13 @@ export class EmployeeDetailComponent extends UIComponent {
                 }
               }
             });
-            this.certificateRowCount = this.certificateGrid.dataService.rowCount;
+            this.certificateRowCount =
+              this.certificateGrid.dataService.rowCount;
           }
         }, 100);
-        ////////////////////
+        //#endregion
 
         //#region EDegrees - Bằng cấp
-        this.hrService.getFormModel(this.degreeFuncID).then((res) => {
-          this.degreeFormodel = res;
-        });
 
         this.hrService.getHeaderText(this.degreeFuncID).then((res) => {
           this.degreeHeaderText = res;
@@ -465,10 +478,6 @@ export class EmployeeDetailComponent extends UIComponent {
               template: this.templateDegreeGridCol3,
               width: '150',
             },
-            {
-              template: this.templateDegreeGridMoreFunc,
-              width: '150',
-            },
           ];
         });
 
@@ -487,6 +496,58 @@ export class EmployeeDetailComponent extends UIComponent {
           }
         }, 100);
         //#endregion
+
+        //#region ESKills - Kỹ năng
+
+        this.hrService.getHeaderText(this.skillFuncID).then((res) => {
+          this.skillHeaderText = res;
+          this.skillColumnGrid = [
+            {
+              headerText:
+                this.skillHeaderText['SkillID'] +
+                '|' +
+                
+                this.skillHeaderText['SkillGradeID'],
+              template: this.templateSkillGridCol1,
+              width: '150',
+            },
+            {
+              headerText:
+                this.skillHeaderText['TrainSupplierID']  +
+                '|' +
+                this.skillHeaderText['Ranking']
+                 + ' - ' + this.skillHeaderText['TotalScore'],
+              template: this.templateSkillGridCol2,
+              width: '150',
+            },
+            {
+              headerText:
+                this.skillHeaderText['TrainFrom'] +
+                '|' +
+                this.skillHeaderText['TrainTo'],
+              template: this.templateSkillGridCol3,
+              width: '150',
+            },
+          ];
+        });
+
+        let insSkill = setInterval(() => {
+          if (this.skillGrid) {
+            clearInterval(insSkill);
+            let t = this;
+            this.skillGrid.dataService.onAction.subscribe((res) => {
+              if (res) {
+                if (res.type == 'loaded') {
+                  t.skillRowCount = res['data'].length;
+                }
+              }
+            });
+            this.skillRowCount = this.skillGrid.dataService.rowCount;
+          }
+        }, 100);
+        //#endregion
+
+        //#region - Phúc lợi
 
         this.hrService.getHeaderText(this.benefitFuncID).then((res) => {
           this.benefitHeaderTexts = res;
@@ -518,6 +579,7 @@ export class EmployeeDetailComponent extends UIComponent {
         });
       }
     });
+    //#endregion
 
     this.EExperienceColumnsGrid = [
       {
@@ -1149,6 +1211,8 @@ export class EmployeeDetailComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'Diseases') {
           this.HandleEmployeeDiseaseInfo('edit', data);
+        } else if (funcID == 'eSkill') {
+          this.HandleEmployeeSkillsInfo('edit', data);
         }
         break;
 
@@ -1295,29 +1359,25 @@ export class EmployeeDetailComponent extends UIComponent {
                     // if (i != -1) {
                     //   this.lstEDegrees.splice(i, 1);
                     // }
-                    (this.degreeGrid.dataService as CRUDService).remove(data).subscribe();
+                    (this.degreeGrid.dataService as CRUDService)
+                      .remove(data)
+                      .subscribe();
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
                 });
             } else if (funcID == 'eSkill') {
-              this.hrService.deleteESkill(data.recID).subscribe((res) => {
-                if (res) {
-                  let grpIndex = this.lstESkill.findIndex(
-                    (p) => p.skillID == data.skillID
-                  );
-                  if (grpIndex > -1) {
-                    let lstItem = this.lstESkill[grpIndex]?.listSkill;
-
-                    let skillIndex = lstItem.findIndex(
-                      (p) => p.recID == data.recID
-                    );
-                    if (skillIndex > -1) {
-                      lstItem.splice(skillIndex, 1);
-                      this.df.detectChanges();
-                    }
-                  }
+              this.hrService.deleteESkill(data.recID).subscribe((p) => {
+                if (p == true) {
+                  this.notify.notifyCode('SYS008');
+                  this.skillRowCount--;
+                  (this.skillGrid.dataService as CRUDService)
+                    .remove(data)
+                    .subscribe();
+                  this.df.detectChanges();
+                } else {
+                  this.notify.notifyCode('SYS022');
                 }
               });
             } else if (funcID == 'eCertificate') {
@@ -1331,7 +1391,9 @@ export class EmployeeDetailComponent extends UIComponent {
                     //   this.lstCertificates.splice(i, 1);
                     // }
                     this.certificateRowCount--;
-                    (this.certificateGrid.dataService as CRUDService).remove(data).subscribe();
+                    (this.certificateGrid.dataService as CRUDService)
+                      .remove(data)
+                      .subscribe();
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2215,6 +2277,10 @@ export class EmployeeDetailComponent extends UIComponent {
   //   });
   // }
 
+  valueChangeFilterSkill(e){
+    console.log('eeeeeee',e);
+  }
+
   addEmployeeDisciplinesInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
@@ -2348,25 +2414,32 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfc.openSide(
       PopupECertificatesComponent,
       {
-        actionType : actionType,
-        headerText : 'Chứng chỉ',
-        employeeId : this.data.employeeID, 
-        funcID : this.certificateFuncID,
-        dataInput : data, // get data
+        actionType: actionType,
+        headerText: 'Chứng chỉ',
+        employeeId: this.data.employeeID,
+        funcID: this.certificateFuncID,
+        dataInput: data, // get data
       },
       option
     );
-      // RELOAD
+    // RELOAD
     dialogAdd.closed.subscribe((res) => {
-      if(actionType === 'add' || actionType === 'copy'){
-        (this.certificateGrid.dataService as CRUDService).add(res.event).subscribe();
-        this.certificateRowCount++;
-      } 
-      else if (actionType === 'edit'){
-        (this.certificateGrid.dataService as CRUDService).update(res.event).subscribe();
+      if (!res?.event) this.view.dataService.clear();
+      console.log('res eventttttttttttttttttttttttt', res.event);
+      if(res != null){
+        if (actionType === 'add' || actionType === 'copy') {
+          (this.certificateGrid.dataService as CRUDService)
+            .add(res.event)
+            .subscribe();
+          this.certificateRowCount++;
+        } else if (actionType === 'edit') {
+          (this.certificateGrid.dataService as CRUDService)
+            .update(res.event)
+            .subscribe();
+        }
+        this.df.detectChanges();
       }
-      this.df.detectChanges();
-    })
+    });
 
     // this.view.dataService.dataSelected = this.data;
     // let option = new SidebarModel();
@@ -2414,36 +2487,69 @@ export class EmployeeDetailComponent extends UIComponent {
       if (actionType == 'add' || actionType == 'copy') {
         (this.degreeGrid.dataService as CRUDService).add(res.event).subscribe();
         this.degreeRowCount = this.degreeRowCount + 1;
-      }
-      else if(actionType == 'edit'){
-        (this.degreeGrid.dataService as CRUDService).update(res.event).subscribe();
+      } else if (actionType == 'edit') {
+        (this.degreeGrid.dataService as CRUDService)
+          .update(res.event)
+          .subscribe();
       }
       this.df.detectChanges();
     });
   }
 
   HandleEmployeeSkillsInfo(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
+    option.DataService = this.skillGrid.dataService;
+    option.FormModel = this.skillFormmodel;
     option.Width = '550px';
-    let dialogAdd = this.callfunc.openSide(
+    let dialogAdd = this.callfc.openSide(
       PopupESkillsComponent,
       {
-        lstESkill: this.lstESkill,
-        indexSelected: this.lstESkill.indexOf(data),
         actionType: actionType,
-        // isAdd: true,
         headerText: 'Kỹ năng',
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020503',
+        funcID : this.skillFuncID,
+        dataInput : data,
       },
       option
     );
+
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
-    });
+        if(actionType === 'add' || actionType === 'copy'){
+          console.log('resssssssssssss', res);
+          (this.skillGrid.dataService as CRUDService)
+          .add(res.event)
+          .subscribe();
+          this.skillRowCount++;
+        } else if(actionType === 'edit') {
+          (this.skillGrid.dataService as CRUDService)
+          .update(res.event)
+          .subscribe();
+        }
+        
+      }
+    )
+    
+    // this.view.dataService.dataSelected = this.data;
+    // let option = new SidebarModel();
+    // option.DataService = this.view.dataService;
+    // option.FormModel = this.view.formModel;
+    // option.Width = '550px';
+    // let dialogAdd = this.callfunc.openSide(
+    //   PopupESkillsComponent,
+    //   {
+    //     lstESkill: this.lstESkill,
+    //     indexSelected: this.lstESkill.indexOf(data),
+    //     actionType: actionType,
+    //     // isAdd: true,
+    //     headerText: 'Kỹ năng',
+    //     employeeId: this.data.employeeID,
+    //     funcID: 'HRT03020503',
+    //   },
+    //   option
+    // );
+    // dialogAdd.closed.subscribe((res) => {
+    //   if (!res?.event) this.view.dataService.clear();
+    // });
   }
 
   addEmployeeTrainCourseInfo() {
@@ -2775,6 +2881,7 @@ export class EmployeeDetailComponent extends UIComponent {
   //#region Phụ cấp
 
   numPageSizeGridView = 5;
+  @ViewChild('skillGridViewID') skillGrid: CodxGridviewComponent;
   @ViewChild('certificateGridView') certificateGrid: CodxGridviewComponent;
   @ViewChild('gridView') grid: CodxGridviewComponent;
   @ViewChild('degreeGridView') degreeGrid: CodxGridviewComponent;
@@ -2810,6 +2917,15 @@ export class EmployeeDetailComponent extends UIComponent {
   @ViewChild('templateCertificateGridMoreFunc', { static: true })
   templateCertificateGridMoreFunc: TemplateRef<any>;
 
+  @ViewChild('templateSkillGridCol1', { static: true })
+  templateSkillGridCol1: TemplateRef<any>;
+  @ViewChild('templateSkillGridCol2', { static: true })
+  templateSkillGridCol2: TemplateRef<any>;
+  @ViewChild('templateSkillGridCol3', { static: true })
+  templateSkillGridCol3: TemplateRef<any>;
+  @ViewChild('templateSkillGridMoreFunc', { static: true })
+  templateSkillGridMoreFunc: TemplateRef<any>;
+
   benefitFormodel: FormModel;
   eBenefitRowCount: number = 0;
   filterByBenefitIDArr: any = [];
@@ -2820,6 +2936,7 @@ export class EmployeeDetailComponent extends UIComponent {
   benefitFuncID = 'HRTEM0403';
   benefitHeaderTexts;
   ViewAllEBenefitFlag = false;
+  ViewAllEskillFlag = false;
   ops = ['y'];
 
   valueChangeFilterBenefit(evt) {
@@ -2924,6 +3041,22 @@ export class EmployeeDetailComponent extends UIComponent {
           }
         });
         this.eBenefitRowCount = this.grid.dataService.rowCount;
+      }
+    }, 100);
+  }
+
+  valueChangeViewAllESkill(evt) {
+    this.ViewAllEskillFlag = evt.data;
+    let ins = setInterval(() => {
+      if (this.grid) {
+        clearInterval(ins);
+        let t = this;
+        this.grid.dataService.onAction.subscribe((res) => {
+          if (res.type == 'loaded') {
+            t.skillRowCount = res['data'].length;
+          }
+        });
+        this.skillRowCount = this.grid.dataService.rowCount;
       }
     }, 100);
   }
