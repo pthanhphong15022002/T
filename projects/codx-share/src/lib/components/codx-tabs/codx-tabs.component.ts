@@ -9,6 +9,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { Permission } from '@shared/models/file.model';
 import { ApiHttpService } from 'codx-core';
 import { TabModel } from './model/tabControl.model';
 
@@ -39,6 +40,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() allowExtensions: string = '.jpg,.png';
   @Input() allowMultiFile: string = '1';
   @Input() displayThumb: string = 'full';
+  @Input() addPermissions: Permission[] = [];
   opened = false;
   @Output() tabChange = new EventEmitter();
   //ApprovalProcess
@@ -127,7 +129,7 @@ export class CodxTabsComponent implements OnInit {
   //xu ly quyen file tm
   fileSave(e) {
     if (e && typeof e === 'object' && this.isUpPermission) {
-      var createdBy = Array.isArray(e) ? e[0].createdBy : e.createdBy;
+      var createdBy = Array.isArray(e) ? e[0].data.createdBy : e.createdBy;
       this.api
         .execSv<any>('TM', 'TM', 'TaskBusiness', 'AddPermissionFileAsync', [
           this.objectID,

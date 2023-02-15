@@ -68,7 +68,7 @@
                                       ></span>
                                       <span class="text-dark fw-bold">
                                         <span>{{
-                                          infoPersonal.birthday | fmDT
+                                          infoPersonal?.birthday | fmDT
                                         }}</span>
                                       </span>
                                     </div>
@@ -91,7 +91,7 @@
                                         class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
                                       ></span>
                                       <span #maritalStatus class="fw-bold">
-                                        {{ infoPersonal.maritalStatus }}
+                                        {{ infoPersonal?.maritalStatus }}
                                         <!-- <codx-vll
                             [showText]="true"
                             [showBgColor]="false"
@@ -1093,7 +1093,7 @@
                   >
                   </codx-label>
                   <div class="fw-bolder">
-                    {{ infoPersonal.employeeName }}
+                    {{ infoPersonal?.employeeName }}
                   </div>
                 </div>
                 <!-- Bí danh -->
@@ -1106,7 +1106,7 @@
                   </codx-label>
 
                   <div class="fw-bolder">
-                    {{ infoPersonal.employeeName2 }}
+                    {{ infoPersonal?.employeeName2 }}
                   </div>
                 </div>
                 <!-- Tình trạng hôn nhân -->
@@ -1119,7 +1119,7 @@
                   </codx-label>
 
                   <div class="fw-bolder">
-                    {{ infoPersonal.maritalStatus }}
+                    {{ infoPersonal?.maritalStatus }}
                     <!-- <codx-vll
                         [showText]="true"
                         [showBgColor]="false"
@@ -1145,7 +1145,7 @@
                   <div class="d-flex">
                     <span class="icon-cake icon-18 text-gray-600 me-2"></span>
                     <span class="text-dark fw-bolder">
-                      {{ infoPersonal.birthday | fmDT }}</span
+                      {{ infoPersonal?.birthday | fmDT }}</span
                     >
                   </div>
                 </div>
@@ -1799,7 +1799,7 @@
               </div>
             </div>
 
-            <div #insurance class="mb-1">
+            <div #insurance class="mb-1" *ngIf="eInfoFormModel">
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
@@ -1907,7 +1907,7 @@
               </div>
             </div>
             <hr />
-            <div #tax class="mb-1">
+            <div #tax class="mb-1" *ngIf="eInfoFormModel">
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
@@ -1965,7 +1965,7 @@
               </div>
             </div>
             <hr />
-            <div #account class="mb-1">
+            <div #account class="mb-1" *ngIf="eInfoFormModel">
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >

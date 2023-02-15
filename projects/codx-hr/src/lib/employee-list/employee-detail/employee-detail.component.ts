@@ -322,6 +322,7 @@ export class EmployeeDetailComponent extends UIComponent {
   //#region var functionID
 
   eInfoFuncID = 'HRTEM0101';
+  ePassportFuncID = 'HRTEM0202';
   eFamiliesFuncID = 'HRTEM0103';
   degreeFuncID = 'HRTEM0601';
   eExperienceFuncID = 'HRTEM0505'; // Kinh nghiệm trước đây
@@ -2164,22 +2165,22 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   handleEmployeePassportInfo(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     console.log('datas', option.DataService);
 
     option.FormModel = this.view.formModel;
-    option.Width = '800px';
+    option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       PopupEPassportsComponent,
       {
         actionType: actionType,
-        indexSelected: this.lstPassport.indexOf(data),
-        lstPassports: this.lstPassport,
-        funcID: 'HRT03020104',
+        // indexSelected: this.lstPassport.indexOf(data),
+        // lstPassports: this.lstPassport,
+        funcID: this.ePassportFuncID,
         headerText: 'Hộ chiếu',
         employeeId: this.data.employeeID,
+        passportObj: data,
       },
       option
     );

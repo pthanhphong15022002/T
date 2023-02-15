@@ -127,7 +127,7 @@ export class DynamicProcessComponent
   }
 
   afterLoad() {
-    this.showButtonAdd =this.funcID == 'DP0101'   
+    this.showButtonAdd = this.funcID == 'DP0101';
   }
   //chang data
   viewChanged(e) {
@@ -136,7 +136,7 @@ export class DynamicProcessComponent
       this.funcID = funcIDClick;
       this.crrFunID = this.funcID;
       this.afterLoad();
-    
+
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -292,7 +292,7 @@ export class DynamicProcessComponent
     this.itemSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
-    
+
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -309,10 +309,73 @@ export class DynamicProcessComponent
       case 'DP05':
         this.roles(data);
         break;
+      case 'DP01':
+        this.viewDetailProcess(data);
+        break;
     }
   }
 
-  changeDataMF(e, data) {}
+  changeDataMF(e, data) {
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS005':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+          case 'SYS003':
+          case 'DP01011':
+          case 'DP01012':
+          case 'DP01014':
+          case 'DP01015':
+          case 'DP02':
+          case 'DP07':
+          case 'DP08':
+          case 'DP09':
+          case 'DP10':
+          case 'DP11':
+          case 'DP12':
+          case 'DP01013':
+            res.disabled = true;
+            break;
+          //Xem chi tiết
+          case 'DP01':
+            let isRead = this.checkPermissionRead(data);
+            if (!isRead) {
+              res.isblur = true;
+            }
+            break;
+          //Đổi tên, chỉnh sửa.
+          case 'DP03':
+          case 'SYS03':
+            let isEdit = data.write;
+            if (!isEdit) {
+              if (res.functionID == 'SYS03') res.disabled = true;
+              else res.isblur = true;
+            }
+            break;
+          //Phân quyền:
+          case 'DP05':
+            let isAssign = data.assign;
+            if (!isAssign) res.isblur = true;
+            break;
+          //Phát hành
+          case 'DP06':
+            let isPublish = data.publish;
+            if (!isPublish) res.isblur = true;
+
+            break;
+          case 'SYS02': // xoa
+            let isDelete = data.delete;
+            if (!isDelete || data.deleted) {
+              res.disabled = true;
+            }
+            break;
+        }
+      });
+    }
+  }
+
   //#popup roles
   roles(e: any) {
     let dialogModel = new DialogModel();
@@ -324,15 +387,15 @@ export class DynamicProcessComponent
         950,
         650,
         '',
-        [e, this.titleAction],
+        [e, this.titleAction, 'role'],
         '',
         dialogModel
       )
       .closed.subscribe((e) => {
-        // if (e?.event && e?.event != null) {
-        //   this.view.dataService.update(e?.event).subscribe();
-        //   this.detectorRef.detectChanges();
-        // }
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
       });
   }
   //#region đang test ai cần list phần quyền la vô đâyu nha
@@ -365,6 +428,13 @@ export class DynamicProcessComponent
     return isRead ? true : false;
   }
 
+  doubleClickViewProcess(data){
+    let isRead = this.checkPermissionRead(data);
+    if(isRead){
+      this.viewDetailProcess(data);
+    }
+  }
+
   getListUser() {
     this.codxDpService
       .getUserByProcessId('675ef83a-f2a6-4798-b377-9071c52fa714')
@@ -390,10 +460,15 @@ export class DynamicProcessComponent
   }
   //#endregion đang test
 
-  doubleClickViewProcess(data) {
+  viewDetailProcess(data) {
+    let isCreate =
+      data.create
+        ? true
+        : false;
     let obj = {
       data: data,
       nameAppyFor: this.getNameAppyFor(data?.applyFor),
+      isCreate: isCreate
     };
 
     let dialogModel = new DialogModel();

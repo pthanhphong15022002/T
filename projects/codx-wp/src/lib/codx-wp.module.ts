@@ -47,6 +47,7 @@ export const routes: Routes = [
   {
     path: 'portal',
     component: LayoutPortalComponent,
+    data: { noReuse: true },
     children: [
       {
         path: ':funcID',

@@ -418,27 +418,36 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
 
   onDeleteUser(item) {
     var userID = item.resourceID;
-    var listUser = [];
-    var listTaskResources = [];
-    var listUserDetail = [];
-    for (var i = 0; i < this.listUserDetail.length; i++) {
-      if (this.listUser[i] != userID) {
-        listUser.push(this.listUser[i]);
-      }
-      if (this.listUserDetail[i].userID != userID) {
-        listUserDetail.push(this.listUserDetail[i]);
-      }
-      if (this.listTaskResources[i]?.resourceID != userID) {
-        listTaskResources.push(this.listTaskResources[i]);
-      }
-    }
-    this.listUser = listUser;
-    this.listUserDetail = listUserDetail;
-    this.listTaskResources = listTaskResources;
+    // var listUser = [];
+    // var listTaskResources = [];
+    // var listUserDetail = [];
+    // for (var i = 0; i < this.listUserDetail.length; i++) {
+    //   if (this.listUser[i] != userID) {
+    //     listUser.push(this.listUser[i]);
+    //   }
+    //   if (this.listUserDetail[i].userID != userID) {
+    //     listUserDetail.push(this.listUserDetail[i]);
+    //   }
+    //   if (this.listTaskResources[i]?.resourceID != userID) {
+    //     listTaskResources.push(this.listTaskResources[i]);
+    //   }
+    // }
+    // this.listUser = listUser;
+    // this.listUserDetail = listUserDetail;
+    // this.listTaskResources = listTaskResources;
+
+    var idxUser = this.listUser.findIndex(x=>x==userID) ;
+    if(idxUser!=-1) this.listUser.splice(idxUser,1) ;
+
+    var idxUserDt = this.listUserDetail.findIndex(x=>x.userID==userID) ;
+    if(idxUserDt!=-1) this.listUserDetail.splice(idxUserDt,1) ;
+
+    var idxUserRs = this.listTaskResources.findIndex(x=>x.resourceID==userID) ;
+    if(idxUserRs!=-1) this.listTaskResources.splice(idxUserRs,1) ;
 
     var assignTo = '';
-    if (listUser.length > 0) {
-      listUser.forEach((idUser) => {
+    if (this.listUser.length > 0) {
+      this.listUser.forEach((idUser) => {
         assignTo += idUser + ';';
       });
       assignTo = assignTo.slice(0, -1);
