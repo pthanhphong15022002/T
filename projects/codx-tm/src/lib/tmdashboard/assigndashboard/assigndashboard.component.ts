@@ -68,6 +68,8 @@ export class AssignDashboardComponent extends UIComponent {
   datas = [];
   funcID: any;
   user: any;
+  dataSource: any;
+  topEmp = []
 
   constructor(
     private inject: Injector,
@@ -90,7 +92,7 @@ export class AssignDashboardComponent extends UIComponent {
 
   onInit(): void {
     this.panels = JSON.parse(
-      '[{"id":"0.523457964441643_layout","row":0,"col":0,"sizeX":9,"sizeY":1,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.31840880843740593_layout","row":1,"col":0,"sizeX":3,"sizeY":8,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.7510647884478909_layout","row":1,"col":3,"sizeX":3,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.3589282977118571_layout","row":1,"col":6,"sizeX":3,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.04560048135185002_layout","row":5,"col":3,"sizeX":3,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.019371191380587183_layout","row":5,"col":6,"sizeX":3,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"0.523457964441643_layout","row":0,"col":0,"sizeX":23,"sizeY":2,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.31840880843740593_layout","row":2,"col":0,"sizeX":7,"sizeY":8,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.7510647884478909_layout","row":2,"col":7,"sizeX":8,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.3589282977118571_layout","row":2,"col":15,"sizeX":8,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.04560048135185002_layout","row":6,"col":7,"sizeX":8,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.019371191380587183_layout","row":6,"col":15,"sizeX":8,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datas = JSON.parse(
       '[{"panelId":"0.523457964441643_layout","data":"1"},{"panelId":"0.31840880843740593_layout","data":"2"},{"panelId":"0.7510647884478909_layout","data":"3"},{"panelId":"0.3589282977118571_layout","data":"4"},{"panelId":"0.04560048135185002_layout","data":"5"},{"panelId":"0.019371191380587183_layout","data":"6"}]'
