@@ -34,7 +34,7 @@ export class PopupShareSprintsComponent implements OnInit {
   listUserDetail = [];
   taskBoard: any;
   vllShare: any;
-  isAdmin = false ;
+  isAdmin = false;
   constructor(
     private api: ApiHttpService,
     private tmSv: CodxTMService,
@@ -100,6 +100,7 @@ export class PopupShareSprintsComponent implements OnInit {
     var listDepartmentID = '';
     var listUserID = '';
     var listPositionID = '';
+    var listEmployeeID = '';
 
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -113,6 +114,9 @@ export class PopupShareSprintsComponent implements OnInit {
             break;
           case 'P':
             listPositionID += obj.id + ';';
+            break;
+          case 'RE':
+            listEmployeeID += obj.id + ';';
             break;
         }
       }
@@ -138,7 +142,16 @@ export class PopupShareSprintsComponent implements OnInit {
         } else this.notiService.notifyCode('TM065');
       });
     }
-
+    if (listEmployeeID != '') {
+      listEmployeeID = listEmployeeID.substring(0, listEmployeeID.length - 1);
+      this.tmSv
+        .getListUserIDByListEmployeeID(listEmployeeID)
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            this.valueSelectUser(res);
+          }
+        });
+    }
     if (listPositionID != '') {
       listPositionID = listPositionID.substring(0, listPositionID.length - 1);
       this.tmSv
