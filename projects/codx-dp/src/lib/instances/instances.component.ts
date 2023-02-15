@@ -29,6 +29,7 @@ import { DP_Instances } from '../models/models';
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
+import { PopupRolesInstanceComponent } from './popup-roles-instance/popup-roles-instance.component';
 
 @Component({
   selector: 'codx-instances',
@@ -300,7 +301,7 @@ export class InstancesComponent
   //Event
   clickMF(e, data?) {
     // this.itemSelected = data;
-    //  this.titleAction = e.text;
+     this.titleAction = e.text;
     this.moreFunc = e.functionID;
     switch (e.functionID) {
       case 'SYS03':
@@ -322,7 +323,33 @@ export class InstancesComponent
       case 'DP10':
         this.moveReason(e.data, data, this.isMoveSuccess);
         break;
+      case 'DP011':
+        this.roles(data);
+        break;
     }
+  }
+
+  //#popup roles
+  roles(e: any) {
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 999;
+    this.callfc
+      .openForm(
+        PopupRolesInstanceComponent,
+        '',
+        950,
+        650,
+        '',
+        [e, this.titleAction],
+        '',
+        dialogModel
+      )
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
   changeDataMF(e, data) {}
