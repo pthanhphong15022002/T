@@ -16,6 +16,7 @@
   [autoLoad]="true"
   (onActions)="onActions($event)"
   (viewChanged)="changeView($event)"
+
 >
 </codx-views>
 <!-- KANBAN -->
@@ -38,7 +39,7 @@
 </ng-template>
 
 <ng-template #viewColumKaban let-data>
-    <div class="d-flex align-items-center justify-content-between cursor-pointer 
+    <div class="d-flex align-items-center justify-content-between cursor-pointer
       w-100 has-actions-menu"  style="background-color: red;">
       <div class="line-colums" >{{ data.headerText }}</div>
     </div>
@@ -165,9 +166,9 @@
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
-      <div class="font me-3" *ngFor="let item of listSteps">
-        <span *ngIf="item.recID == dataSelected.stepID">
-          {{item.stepName}}
+      <div class="font me-3">
+        <span >
+          {{getStepNameById(dataSelected.stepID)}}
         </span>
       </div>
       <span>

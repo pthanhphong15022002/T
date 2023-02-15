@@ -395,9 +395,6 @@ export class EmployeeProfileComponent extends UIComponent {
     })
 
     this.hrService.getHeaderText(this.eBusinessTravelFuncID).then(res => {
-      console.log('dumaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', res);
-      
-      console.log('headerText cong tac', res);
       this.eBusinessTravelHeaderTexts = res;
       this.businessTravelColumnGrid = [
         {
@@ -568,7 +565,7 @@ export class EmployeeProfileComponent extends UIComponent {
         let t= this;
         this.degreeGrid.dataService.onAction.subscribe((res)=>{
           if(res){
-            if(res.type == 'loaded'){
+            if(res.type != null && res.type == 'loaded'){
               t.degreeRowCount = res['data'].length
           }
           }
@@ -2076,7 +2073,6 @@ export class EmployeeProfileComponent extends UIComponent {
     // option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.Width = '550px';
-    console.log('danh sach kinh nghiem', this.lstExperience);
     
     let dialogAdd = this.callfunc.openSide(
       PopupEexperiencesComponent,

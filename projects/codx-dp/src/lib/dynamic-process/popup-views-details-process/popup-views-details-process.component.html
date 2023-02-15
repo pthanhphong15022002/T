@@ -90,7 +90,7 @@
           [attr.data-kt-scroll-offset]="'0px'"
         >
           <ng-container *ngIf="name == 'Mission' && process">
-            <codx-instances [process]="process"></codx-instances>
+            <codx-instances [process]="process" [isCreate]="isCreate"></codx-instances>
           </ng-container>
           <ng-container *ngIf="name == 'Dashboard'">
             <ng-container>Dashboard - Tháng 3 mới làm control </ng-container>

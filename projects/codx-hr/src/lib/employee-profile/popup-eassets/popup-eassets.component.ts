@@ -24,31 +24,41 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
   dialog: DialogRef;
   assetObj;
-  lstAssets;
-  indexSelected;
+  //lstAssets;
+  //indexSelected;
   actionType;
+  successFlag = false;
   idField = 'RecID';
   funcID;
   employeeId;
   isAfterRender = false;
   headerText: '';
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('listView') listView: CodxListviewComponent;
+  //@ViewChild('listView') listView: CodxListviewComponent;
 
   onInit(): void {
-    this.hrService.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.InitForm();
-            }
-          });
+    this.hrService
+    .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    .then((fg) => {
+      if (fg) {
+        this.formGroup = fg;
+        this.InitForm();
       }
     });
+
+    // this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //   if (formModel) {
+    //     this.formModel = formModel;
+    //     this.hrService
+    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //       .then((fg) => {
+    //         if (fg) {
+    //           this.formGroup = fg;
+    //           this.InitForm();
+    //         }
+    //       });
+    //   }
+    // });
   }
 
   constructor(
@@ -75,19 +85,20 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
+    this.formModel = dialog.formModel;
     this.actionType = data?.data?.actionType;
-    this.lstAssets = data?.data?.lstAssets;
-    this.indexSelected =
-      data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
+    this.assetObj = data?.data?.assetObj;
+    // this.indexSelected =
+    //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
 
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.assetObj = JSON.parse(
-        JSON.stringify(this.lstAssets[this.indexSelected])
-      );
+    // if (this.actionType === 'edit' || this.actionType === 'copy') {
+    //   this.assetObj = JSON.parse(
+    //     JSON.stringify(this.lstAssets[this.indexSelected])
+    //   );
       // console.log('data truyen vao asset', this.assetObj);
 
       // this.formModel.currentData = this.assetObj
-    }
+    
   }
 
   InitForm() {
@@ -135,6 +146,19 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
     }
   }
 
+  ngAfterViewInit(){
+    this.dialog && this.dialog.closed.subscribe(res => {
+      if(!res.event){
+        if(this.successFlag == true){
+          this.dialog.close(this.assetObj);
+        }
+        else{
+          this.dialog.close(null);
+        }
+      }
+    })
+  }
+
   onSaveForm() {
     // if (this.formGroup.invalid) {
     //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
@@ -150,12 +174,14 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
         if (p != null) {
           this.assetObj.recID = p.recID;
           this.notify.notifyCode('SYS006');
-          this.lstAssets.push(JSON.parse(JSON.stringify(this.assetObj)));
-          if (this.listView) {
-            (this.listView.dataService as CRUDService)
-              .add(this.assetObj)
-              .subscribe();
-          }
+          this.successFlag = true;
+          this.dialog && this.dialog.close(this.assetObj);
+          // this.lstAssets.push(JSON.parse(JSON.stringify(this.assetObj)));
+          // if (this.listView) {
+          //   (this.listView.dataService as CRUDService)
+          //     .add(this.assetObj)
+          //     .subscribe();
+          // }
           // this.dialog.close(p)
         } else this.notify.notifyCode('SYS023');
       });
@@ -165,32 +191,34 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            this.lstAssets[this.indexSelected] = p;
-            if (this.listView) {
-              (this.listView.dataService as CRUDService)
-                .update(this.lstAssets[this.indexSelected])
-                .subscribe();
-            }
+          this.successFlag = true;
+          this.dialog && this.dialog.close(this.assetObj);
+            // this.lstAssets[this.indexSelected] = p;
+            // if (this.listView) {
+            //   (this.listView.dataService as CRUDService)
+            //     .update(this.lstAssets[this.indexSelected])
+            //     .subscribe();
+            // }
             // this.dialog.close(this.data)
           } else this.notify.notifyCode('SYS021');
         });
     }
   }
 
-  click(data) {
-    console.log('formdata', data);
-    this.assetObj = data;
-    this.formModel.currentData = JSON.parse(JSON.stringify(this.assetObj));
-    this.indexSelected = this.lstAssets.findIndex(
-      (p) => (p.recID = this.assetObj.recID)
-    );
-    this.actionType = 'edit';
-    this.formGroup?.patchValue(this.assetObj);
-    this.cr.detectChanges();
-  }
+  // click(data) {
+  //   console.log('formdata', data);
+  //   this.assetObj = data;
+  //   this.formModel.currentData = JSON.parse(JSON.stringify(this.assetObj));
+  //   this.indexSelected = this.lstAssets.findIndex(
+  //     (p) => (p.recID = this.assetObj.recID)
+  //   );
+  //   this.actionType = 'edit';
+  //   this.formGroup?.patchValue(this.assetObj);
+  //   this.cr.detectChanges();
+  // }
 
-  afterRenderListView(evt) {
-    this.listView = evt;
-    console.log(this.listView);
-  }
+  // afterRenderListView(evt) {
+  //   this.listView = evt;
+  //   console.log(this.listView);
+  // }
 }

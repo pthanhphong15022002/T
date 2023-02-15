@@ -33,10 +33,10 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   employId;
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('listView') listView: CodxListviewComponent;
+  // @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private notify: NotificationsService,
     private cr: ChangeDetectorRef,
     private hrService: CodxHrService,
@@ -45,32 +45,27 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    // if(!this.formModel){
-    //   this.formModel = new FormModel();
-    //   this.formModel.formName = 'EVisas';
-    //   this.formModel.entityName = 'HR_EVisas';
-    //   this.formModel.gridViewName = 'grvEVisas';
-    // }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.employId = data?.data?.employeeId;
-    this.lstVisas = data?.data?.lstVisas;
+    this.visaObj = JSON.stringify(data?.data?.visaObj);
+    // this.lstVisas = data?.data?.lstVisas;
     console.log('lst visa constructor', this.lstVisas);
 
-    this.indexSelected =
-      data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
+    // this.indexSelected =
+    //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
 
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.visaObj = JSON.parse(
-        JSON.stringify(this.lstVisas[this.indexSelected])
-      );
-      // this.formGroup.patchValue(this.visaObj);
-      // this.formModel.currentData = this.visaObj
-      // this.cr.detectChanges();
-      // this.isAfterRender = true;
-    }
+    // if (this.actionType === 'edit' || this.actionType === 'copy') {
+    //   this.visaObj = JSON.parse(
+    //     JSON.stringify(this.lstVisas[this.indexSelected])
+    //   );
+    //   // this.formGroup.patchValue(this.visaObj);
+    //   // this.formModel.currentData = this.visaObj
+    //   // this.cr.detectChanges();
+    //   // this.isAfterRender = true;
+    // }
   }
 
   // ngAfterViewInit(){
@@ -109,6 +104,10 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
           if (res) {
             this.visaObj = res?.data;
             this.visaObj.employeeID = this.employId;
+            //xét null cho field dateTime required
+            this.visaObj.effectedDate = null;
+            this.visaObj.expiredDate = null;
+
             this.formModel.currentData = this.visaObj;
             this.formGroup.patchValue(this.visaObj);
             this.cr.detectChanges();
@@ -126,19 +125,21 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.hrService.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
-      }
-    });
+    if (!this.formGroup)
+      this.hrService.getFormModel(this.funcID).then((formModel) => {
+        if (formModel) {
+          this.formModel = formModel;
+          this.hrService
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .then((fg) => {
+              if (fg) {
+                this.formGroup = fg;
+                this.initForm();
+              }
+            });
+        }
+      });
+    else this.initForm();
   }
 
   onSaveForm() {
@@ -147,25 +148,24 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
       return;
     }
 
-    if (this.actionType === 'copy' || this.actionType === 'add') {
-      delete this.visaObj.recID;
-    }
-    this.visaObj.employeeID = this.employId;
+    // if (this.actionType === 'copy' || this.actionType === 'add') {
+    //   delete this.visaObj.recID;
+    // }
+    // this.visaObj.employeeID = this.employId;
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddEmployeeVisaInfo(this.visaObj).subscribe((p) => {
         if (p != null) {
           this.visaObj.recID = p.recID;
           this.notify.notifyCode('SYS007');
-          this.lstVisas.push(JSON.parse(JSON.stringify(this.visaObj)));
-
-          if (this.listView) {
-            (this.listView.dataService as CRUDService)
-              .add(this.visaObj)
-              .subscribe();
-          }
-          // this.dialog.close(p)
-        } else this.notify.notifyCode('DM034');
+          // this.lstVisas.push(JSON.parse(JSON.stringify(this.visaObj)));
+          // if (this.listView) {
+          //   (this.listView.dataService as CRUDService)
+          //     .add(this.visaObj)
+          //     .subscribe();
+          // }
+          this.dialog && this.dialog.close(p);
+        } else this.notify.notifyCode('SYS023');
       });
     } else {
       this.hrService
@@ -173,14 +173,14 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            this.lstVisas[this.indexSelected] = p;
-            if (this.listView) {
-              (this.listView.dataService as CRUDService)
-                .update(this.lstVisas[this.indexSelected])
-                .subscribe();
-            }
-            // this.dialog.close(this.data);
-          } else this.notify.notifyCode('DM034');
+            // this.lstVisas[this.indexSelected] = p;
+            // if (this.listView) {
+            //   (this.listView.dataService as CRUDService)
+            //     .update(this.lstVisas[this.indexSelected])
+            //     .subscribe();
+            // }
+            this.dialog && this.dialog.close(p);
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }
@@ -196,8 +196,8 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
     this.cr.detectChanges();
   }
 
-  afterRenderListView(evt) {
-    this.listView = evt;
-    console.log(this.listView);
-  }
+  // afterRenderListView(evt) {
+  //   this.listView = evt;
+  //   console.log(this.listView);
+  // }
 }

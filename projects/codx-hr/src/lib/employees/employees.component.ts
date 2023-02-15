@@ -53,7 +53,6 @@ export class EmployeesComponent extends UIComponent {
   employStatus: any;
   urlView: string;
   listMoreFunc = [];
-
   // @Input() formModel: any;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
@@ -69,7 +68,8 @@ export class EmployeesComponent extends UIComponent {
 
   constructor(
     private injector: Injector,
-    private notifiSV: NotificationsService
+    private notifiSV: NotificationsService,
+
   ) {
     super(injector);
   }
@@ -84,6 +84,7 @@ export class EmployeesComponent extends UIComponent {
         }
       }
     });
+    
   }
 
   ngAfterViewInit(): void {
@@ -176,6 +177,7 @@ export class EmployeesComponent extends UIComponent {
       this.view.dataService.addNew()
       .subscribe((res: any) => {
         if (res) {
+          debugger
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
           option.FormModel = this.view.formModel;
