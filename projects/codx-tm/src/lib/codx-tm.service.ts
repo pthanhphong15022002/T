@@ -361,6 +361,15 @@ export class CodxTMService {
       [meetingID, data, startDate, endDate]
     );
   }
+  getListUserIDByListEmployeeID(listEmployeeID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDbyListEmployeeIDAsync',
+      listEmployeeID
+    );  
+  }
 
   convertListToObject(
     list: Array<object>,
@@ -418,6 +427,16 @@ export class CodxTMService {
       'MeetingsBusiness',
       'SendAlertMailAsync',
       [recID, valueRuleNo, funcID]
+    );
+  }
+
+RPASendMailAlert(valueRuleNo: string, funcID: string) {
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'RPASendAlertMeetingMailAsync',
+      [valueRuleNo, funcID]
     );
   }
 

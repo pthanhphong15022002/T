@@ -87,6 +87,7 @@ export class InstancesComponent
   dataColums = [];
   dataDrop: any;
   isClick: boolean = true;
+  @Input() isCreate: boolean;
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -133,6 +134,7 @@ export class InstancesComponent
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
   onInit(): void {
+    this.showButtonAdd = this.isCreate ? true : false;
     this.button = {
       id: 'btnAdd',
     };
@@ -222,7 +224,7 @@ export class InstancesComponent
                 if (!e?.event) this.view.dataService.clear();
                 if (e && e.event != null) {
                   //xu ly data đổ về
-                 
+
                   this.detectorRef.detectChanges();
                 }
               });

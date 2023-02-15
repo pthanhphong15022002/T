@@ -79,7 +79,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   popover: any;
   vllShare = 'TM003';
   planholderTaskGoal = 'Add to do list…';
-  planholderTaskChild ="Ghi chú phân công..."
+  planholderTaskChild = 'Ghi chú phân công...';
   listRoles: any;
   vllRole = 'TM001';
   vllRefType = 'TM018';
@@ -196,7 +196,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           .subscribe((res) => {
             if (res) {
               this.gridViewSetup = res;
-              this.planholderTaskChild= res['Memo']?.description;
+              this.planholderTaskChild = res['Memo']?.description;
             }
           });
       }
@@ -668,6 +668,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var listDepartmentID = '';
     var listUserID = '';
     var listPositionID = '';
+    var listEmployeeID = '';
 
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -681,6 +682,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             break;
           case 'P':
             listPositionID += obj.id + ';';
+            break;
+          case 'RE':
+            listEmployeeID += obj.id + ';';
             break;
         }
       }
@@ -704,6 +708,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.valueSelectUser(res);
         } else this.notiService.notifyCode('TM065');
       });
+    }
+    if (listEmployeeID != '') {
+      listEmployeeID = listEmployeeID.substring(0, listEmployeeID.length - 1);
+      this.tmSv
+        .getListUserIDByListEmployeeID(listEmployeeID)
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            this.valueSelectUser(res);
+          }
+        });
     }
     if (listPositionID != '') {
       listPositionID = listPositionID.substring(0, listPositionID.length - 1);
@@ -824,7 +838,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.taskGroup = res
+          this.taskGroup = res;
           this.convertParameterByTaskGroup(res);
         }
       });
@@ -909,28 +923,40 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       return;
     }
     var userID = item.resourceID;
-    var listUser = [];
-    var listTaskResources = [];
-    var listUserDetail = [];
-    var totalUser = this.listUser.length;
-    for (var i = 0; i < totalUser; i++) {
-      if (this.listUser[i] != userID) {
-        listUser.push(this.listUser[i]);
-      }
-      if (this.listUserDetail[i].userID != userID) {
-        listUserDetail.push(this.listUserDetail[i]);
-      }
-      if (this.listTaskResources[i]?.resourceID != userID) {
-        listTaskResources.push(this.listTaskResources[i]);
-      }
-    }
-    this.listUser = listUser;
-    this.listUserDetail = listUserDetail;
-    this.listTaskResources = listTaskResources;
+
+    // var listUser = [];
+    // var listTaskResources = [];
+    // var listUserDetail = [];
+    // var totalUser = this.listUser.length;
+    // for (var i = 0; i < totalUser; i++) {
+    //   if (this.listUser[i] != userID) {
+    //     listUser.push(this.listUser[i]);
+    //   }
+    //   if (this.listUserDetail[i].userID != userID) {
+    //     listUserDetail.push(this.listUserDetail[i]);
+    //   }
+    //   if (this.listTaskResources[i]?.resourceID != userID) {
+    //     listTaskResources.push(this.listTaskResources[i]);
+    //   }
+    // }
+    // this.listUser = listUser;
+    // this.listUserDetail = listUserDetail;
+    // this.listTaskResources = listTaskResources;
+
+    var idxUser = this.listUser.findIndex((x) => x == userID);
+    if (idxUser != -1) this.listUser.splice(idxUser, 1);
+
+    var idxUserDt = this.listUserDetail.findIndex((x) => x.userID == userID);
+    if (idxUserDt != -1) this.listUserDetail.splice(idxUserDt, 1);
+
+    var idxUserRs = this.listTaskResources.findIndex(
+      (x) => x.resourceID == userID
+    );
+    if (idxUserRs != -1) this.listTaskResources.splice(idxUserRs, 1);
 
     var assignTo = '';
-    if (listUser.length > 0) {
-      listUser.forEach((idUser) => {
+    if (this.listUser.length > 0) {
+      this.listUser.forEach((idUser) => {
         assignTo += idUser + ';';
       });
       assignTo = assignTo.slice(0, -1);
@@ -948,7 +974,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var message = e?.data;
     var index = this.listTaskResources.findIndex((obj) => obj.resourceID == id);
     if (index != -1) {
-      this.listTaskResources[index].memo=message
+      this.listTaskResources[index].memo = message;
       // this.listTaskResources.forEach((obj) => {
       //   if (obj.resourceID == id) {
       //     obj.memo = message;
@@ -980,21 +1006,21 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     console.log(e);
   }
 
-  searchName(e) {
-    var listUserDetailSearch = [];
-    var searchField = e;
-    if (searchField.trim() == '') {
-      this.listUserDetailSearch = this.listUserDetail;
-      return;
-    }
-    this.listUserDetail.forEach((res) => {
-      var name = res.userName;
-      if (name.toLowerCase().includes(searchField.toLowerCase())) {
-        listUserDetailSearch.push(res);
-      }
-    });
-    this.listUserDetailSearch = listUserDetailSearch;
-  }
+  // searchName(e) {
+  //   var listUserDetailSearch = [];
+  //   var searchField = e;
+  //   if (searchField.trim() == '') {
+  //     this.listUserDetailSearch = this.listUserDetail;
+  //     return;
+  //   }
+  //   this.listUserDetail.forEach((res) => {
+  //     var name = res.userName;
+  //     if (name.toLowerCase().includes(searchField.toLowerCase())) {
+  //       listUserDetailSearch.push(res);
+  //     }
+  //   });
+  //   this.listUserDetailSearch = listUserDetailSearch;
+  // }
 
   //#region popver select RolType
   showPopover(p, userID) {

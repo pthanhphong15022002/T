@@ -213,13 +213,7 @@
           <button
             *ngIf="currentTab != 2"
             type="button"
-            [ngClass]="
-              this.process.processNo == null ||
-              this.process.processNo == '' ||
-              this.process.processName == null || this.process.processName == ''
-                ? 'disabled'
-                : ''
-            "
+            [ngClass]="checkButtonContinue() ? '' : 'disabled'"
             class="btn btn-primary"
             (click)="continue(currentTab)"
           >

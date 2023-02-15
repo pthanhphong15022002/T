@@ -231,6 +231,14 @@ var childRoutes = [
     redirectTo: 'wp',
     pathMatch: 'full',
   },
+  {
+    path: 'tn',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-tn/src/lib/codx-tn.module').then(
+        (m) => m.CodxTnModule
+      ),
+  },
   { path: '**', redirectTo: 'error/404' },
 ];
 
