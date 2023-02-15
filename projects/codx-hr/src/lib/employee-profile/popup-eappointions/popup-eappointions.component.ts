@@ -150,6 +150,8 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
             this.EAppointionObj.recID = p.recID;
             this.notify.notifyCode('SYS006');
             this.successFlag = true;
+          this.dialog && this.dialog.close(this.EAppointionObj);
+
             // this.lstEAppointions.push(
             //   JSON.parse(JSON.stringify(this.EAppointionObj))
             // );
@@ -169,6 +171,8 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
+          this.dialog && this.dialog.close(this.EAppointionObj);
+
             // this.lstEAppointions[this.indexSelected] = p;
             // if (this.listView) {
             //   (this.listView.dataService as CRUDService)

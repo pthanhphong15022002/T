@@ -166,7 +166,7 @@ export class InstanceDetailComponent implements OnInit {
       case 'DP09':
       // API của bảo nha
      //   this.continues(data);
-     this.popupInstances.moveStage(e,data,this.listSteps);
+        this.popupInstances.moveStage(e,data,this.listSteps);
         break;
       case 'DP02':
         this

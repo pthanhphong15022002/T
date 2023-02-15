@@ -60,6 +60,7 @@ export class StepTaskGroupComponent implements OnInit {
               this.view[keyConvert] = res[key]['headerText'];
             }
           }
+          console.log(res);
         });
     });
   }
@@ -69,21 +70,27 @@ export class StepTaskGroupComponent implements OnInit {
   }
 
   changeValueInput(event, data) {
-    data[event?.field] = event?.data;
-    // this.hours = data['durationHour'];
-    // this.days = data['durationDay'];
-    // clearInterval(this.clear);
-    // this.setTime();
+    if (event?.field === 'durationHour' && event?.data >= 24) {
+      this.taskGroup['durationDay'] =
+        Number(this.taskGroup['durationDay']) + Math.floor(event?.data / 24);
+      this.taskGroup['durationHour'] = Math.floor(event?.data % 24);
+    } else {
+      data[event?.field] = event?.data;
+    }
   }
   changeValueDate(event, data) {
     data[event?.field] = event?.data?.fromDate;
   }
+
   handleSave() {
     let message = [];
     for (let key of this.REQUIRE) {
       if (!this.taskGroup[key]) {
         message.push(this.view[key]);
       }
+    }
+    if (!this.taskGroup['durationDay'] && !this.taskGroup['durationHour']) {
+      message.push(this.view['durationDay']);
     }
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
@@ -105,8 +112,8 @@ export class StepTaskGroupComponent implements OnInit {
   setTime() {
     if (this.taskGroup?.createdOn) {
       let date = new Date(this.taskGroup?.createdOn);
-      date.setHours(date.getHours() + this.taskGroup?.durationHour);
-      date.setDate(date.getDate() + this.taskGroup?.durationDay);
+      date.setHours(date.getHours() + Number(this.taskGroup?.durationHour));
+      date.setDate(date.getDate() + Number(this.taskGroup?.durationDay));
       let countDownDate = date.getTime();
       this.clear = setInterval(function () {
         var now = new Date().getTime();
