@@ -145,8 +145,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
         }
       });
   }
-  editobject(data: any, type: any) {
-    if (type == 'datacontact') {
+  editobject(data: any) {
       let index = this.objectContact.findIndex(
         (x) => x.contactName == data.contactName && x.phone == data.phone
       );
@@ -183,10 +182,8 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
             });
           }
         });
-    }
   }
-  deleteobject(data: any, type: any) {
-    if (type == 'datacontact') {
+  deleteobject(data: any) {
       let index = this.objectContact.findIndex(
         (x) => x.reference == data.reference && x.contactID == data.contactID
       );
@@ -201,7 +198,6 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
             this.notification.notify('Xóa thành công');
           }
         });
-    }
   }
   //#endregion
 
