@@ -66,4 +66,5 @@ export class FieldDetailComponent implements OnInit {
    partNum(num){
    return Number.parseInt(num) ;
    }
+   rateChange(e){}
 }
