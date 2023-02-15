@@ -44,7 +44,7 @@ export class PopupOKRWeightComponent
   dialogRef: DialogRef;
   formModel: FormModel;
   headerText: string;
-  dataOKR: any;
+  okrPlan: any;
   totalProgress = 0;
   listWeight = [];
   okrChild: any;
@@ -103,17 +103,29 @@ export class PopupOKRWeightComponent
     }
   }
   valueChange(evt: any) {
-    if (evt.data != null && evt.field != null) {
-      this.listWeight[evt.field].weight = parseFloat(evt.data);
-      this.listWeight[evt.field].pbyw =
-        +(
-          this.listWeight[evt.field].weight *
-          this.listWeight[evt.field].progress
-        ).toFixed(2) * 1;
-      this.totalProgress = 0;
-      this.listWeight.forEach((item) => {
-        this.totalProgress += item.pbyw;
-      });
+    if (evt.data != null && evt.field != null) {      
+      this.okrChild[evt.field].weight = parseFloat(evt.data);
+      this.okrChild[evt.field].weightChanged=true;
+      this.totalProgress=0;
+      let weightNotChanged=[];
+      let totalWeightEdited=0;
+      for(let i=0;i<this.okrChild.length;i++){        
+        if(this.okrChild[i]?.weightChanged!=true){
+          weightNotChanged.push(i);
+        }
+        else{
+          totalWeightEdited+=this.okrChild[i]?.weight;
+        }
+      }
+      for(let i=0;i<this.okrChild.length;i++){        
+        if(this.okrChild[i]?.weightChanged!=true){
+          this.okrChild[i].weight=(1-totalWeightEdited)/weightNotChanged.length;
+        }
+      }      
+      for(let i=0;i<this.okrChild.length;i++){        
+        
+        this.totalProgress += this.okrChild[i].weight*this.okrChild[i].progress;
+      }  
       this.detectorRef.detectChanges();
     }
   }
@@ -126,17 +138,11 @@ export class PopupOKRWeightComponent
         .getObjectAndKRChild(this.recID)
         .subscribe((res: any) => {
           if (res) {
-            this.dataOKR = res;
+            this.okrPlan = res;
             this.okrChild = res.child;
-            this.totalProgress = this.dataOKR.progress;
-            let tempArr = Array.from(this.okrChild);
-            tempArr.forEach((item: any) => {
-              let newWeight = new EditWeight();
-              newWeight.recID = item.recID;
-              newWeight.weight = item.weight;
-              newWeight.progress = item.progress;
-              newWeight.pbyw = +(item.weight * item.progress).toFixed(2) * 1;
-              this.listWeight.push(newWeight);
+            this.totalProgress = 0;
+            Array.from(this.okrChild).forEach((kr: any) => {
+              this.totalProgress += kr?.weight*kr?.progress;
             });
             this.detectorRef.detectChanges();
           }
@@ -147,17 +153,12 @@ export class PopupOKRWeightComponent
         .getOKRPlandAndOChild(this.recID)
         .subscribe((res: any) => {
           if (res) {
-            this.dataOKR = res;
+            this.okrPlan = res;
             this.okrChild = res.child;
-            this.totalProgress = this.dataOKR.progress;
-            let tempArr = Array.from(this.okrChild);
-            tempArr.forEach((item: any) => {
-              let newWeight = new EditWeight();
-              newWeight.recID = item.recID;
-              newWeight.weight = item.weight;
-              newWeight.progress = item.progress;
-              newWeight.pbyw = +(item.weight * item.progress).toFixed(2) * 1;
-              this.listWeight.push(newWeight);
+            this.totalProgress = this.okrPlan.progress;
+            this.totalProgress = 0;
+            Array.from(this.okrChild).forEach((ob: any) => {
+              this.totalProgress += ob?.weight * ob?.progress;
             });
             this.detectorRef.detectChanges();
           }
@@ -172,33 +173,28 @@ export class PopupOKRWeightComponent
   //-----------------------Logic Func------------------------//
 
   onSaveForm() {
-    if(this.listWeight){
+    if(this.okrChild){
       this.totalWeight = 0;
-      this.listWeight.forEach((okr)=>{
+      this.okrChild.forEach((okr)=>{
         if(okr.weight!=null){
           this.totalWeight = this.totalWeight+ okr.weight;
           this.detectorRef.detectChanges();
         }
-        
-        else{   
-          okr.weight=0;       
-          //this.notificationsService.notify("Trọng số không được bỏ trống","2");         
-          return;
-        }
       });
       if(this.totalWeight!=1){
-        this.notificationsService.notify("Tổng trọng số phải bằng 1","2");
+        this.notificationsService.notify("Tổng trọng số phải bằng 1","2");//OM_WAIT đợi messageCode
         return;
       }
-    }
-    this.codxOmService
-      .editOKRWeight(this.dataOKR.recID, this.editWeight , this.listWeight)
+      this.codxOmService
+      .editOKRWeight(this.okrPlan.recID, this.editWeight, this.okrChild)
       .subscribe((res: any) => {
         if (res) {
           let x = res;
           this.dialogRef && this.dialogRef.close();
         }
       });
+    }
+    
   }
   //-----------------------End-------------------------------//
 
