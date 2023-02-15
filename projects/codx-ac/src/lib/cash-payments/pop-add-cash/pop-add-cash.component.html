@@ -21,7 +21,6 @@
                   [formModel]="form.formModel"
                   fiedName="tabBasic"
                   default="Thông tin chứng từ"
-                   
                 ></codx-label>
               </ng-template>
               <ng-template #content>
@@ -85,7 +84,9 @@
                   >
                   </codx-label>
                   <codx-input
+                    [crrValue]="cashbookName"
                     type="text"
+                    [hideInput="true"
                   >
                   </codx-input>
                 </div>
@@ -258,7 +259,7 @@
                 </codx-input>
               </div>
             </div>
-            <div class="col-4">
+            <div #noteRef class="col-4">
                 <div class="form-group mb-0 pt-1">
                   <codx-label
                     fiedName="Memo"
@@ -314,10 +315,11 @@
     [dataValues]="cashpayment.recID"
     [dataSource]="cashpaymentline"
     service="AC"
-    [height]="490"
+    [height]="gridHeight"
     [autoLoad]="false"
     rowHeight="40"
     (cellChanged)="cellChanged($event)"
+    (created)="gridCreated($event)"
   ></codx-gridview-v2>
 
 </ng-template>
@@ -348,18 +350,6 @@
                 default="Thêm dòng"
               ></codx-label>
             </button>
-          </div>
-          <!-- Tổng số lượng -->
-          <div class="col-2">
-            <div class="form-group mb-0 pt-1">
-              <codx-label
-                fiedName="quantity"
-                [formModel]="form.formModel"
-                default="Tổng cộng: "
-              >
-              </codx-label>
-              <span>0</span>
-            </div>
           </div>
         </div>
       </div>

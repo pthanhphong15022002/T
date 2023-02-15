@@ -56,6 +56,15 @@ export class CodxTasksService {
       listPositionID
     );  
   }
+  getListUserIDByListEmployeeID(listEmployeeID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDbyListEmployeeIDAsync',
+      listEmployeeID
+    );  
+  }
 
   //update status
   setStatusTask(
