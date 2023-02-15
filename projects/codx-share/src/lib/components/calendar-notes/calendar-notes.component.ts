@@ -2,6 +2,8 @@ declare var window: any;
 import { CO_Meetings } from './../../../../../codx-tm/src/lib/models/CO_Meetings.model';
 import { DataRequest } from './../../../../../../src/shared/models/data.request';
 import { EventEmitter, Output } from '@angular/core';
+import { DatePipe } from '@angular/common';
+
 import {
   UIComponent,
   DialogRef,
@@ -102,7 +104,8 @@ export class CalendarNotesComponent
     private change: ChangeDetectorRef,
     private auth: AuthStore,
     private noteService: NoteServices,
-    private codxShareSV: CodxShareService
+    private codxShareSV: CodxShareService,
+    private datePipe: DatePipe
   ) {
     super(injector);
     let dataSv = new CRUDService(injector);
@@ -282,6 +285,8 @@ export class CalendarNotesComponent
           } else this.setEventWeek();
         }
         this.WP_NotesTemp = JSON.parse(JSON.stringify(this.WP_Notes));
+        this.lstView.dataService.data.sort(this.orderByStartTime);
+
         this.change.detectChanges();
       }
     });
@@ -438,6 +443,8 @@ export class CalendarNotesComponent
             this.dataListViewTemp = JSON.parse(
               JSON.stringify(lstView.dataService.data)
             );
+            this.lstView.dataService.data.sort(this.orderByStartTime);
+
             this.change.detectChanges();
           }
         });
@@ -1252,8 +1259,22 @@ export class CalendarNotesComponent
                 ...lstTemp,
               ];
           }
+          this.lstView.dataService.data.sort(this.orderByStartTime);
         }
       });
+  }
+
+  orderByStartTime(a, b) {
+    let aS = new Date(a.startTime);
+    let bS = new Date(b.startTime);
+
+    if (aS < bS) {
+      return -1;
+    }
+    if (aS > bS) {
+      return 1;
+    }
+    return 0;
   }
 
   onEditIsPin(data: Notes) {
@@ -1335,5 +1356,15 @@ export class CalendarNotesComponent
         note,
       ])
       .subscribe();
+  }
+
+  getStart_EndTime(sStart, sEnd) {
+    let startDate = new Date(sStart);
+    let endDate = new Date(sEnd);
+    let rHtml =
+      this.datePipe.transform(startDate, 'H:mm') +
+      ' - ' +
+      this.datePipe.transform(endDate, 'H:mm');
+    return rHtml;
   }
 }
