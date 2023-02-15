@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef } from '@angular/core';
 import { CacheService, CallFuncService, NotificationsService } from 'codx-core';
 
 @Component({
@@ -9,6 +9,7 @@ import { CacheService, CallFuncService, NotificationsService } from 'codx-core';
 export class UserComponent implements OnInit {
   @Input() dataSource: any = [];
   @Output() valueList = new EventEmitter();
+  isPopupUserCbb = false;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -18,7 +19,9 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
   }
   shareUser(share) {
-    this.callfc.openForm(share, '', 500, 500);
+    this.isPopupUserCbb = true;
+
+    // this.callfc.openForm(share, '', 500, 500);
   }
   onDeleteOwner(objectID, datas) {
     let index = datas.findIndex((item) => item.objectID == objectID);
@@ -28,18 +31,20 @@ export class UserComponent implements OnInit {
     } 
   }
   applyUser(event, datas) {
+    this.isPopupUserCbb = false;
     if (!event) return;
     let listUser = event;
-    listUser.forEach((element) => {
-      if (!datas.some((item) => item.id == element.id)) {
-        datas.push({
-          objectID: element.id,
-          objectName: element.text || '',
-          objectType: element.objectType || '',
-          roleType: element.objectName || '',
-        });
-      }
-    });
+    datas[0] = {
+      objectID: event.id,
+      objectName: event.text || '',
+      objectType: event.objectType || '',
+      roleType: event.objectName || '',
+    };
+    // listUser.forEach((element) => {
+    //   if (!datas.some((item) => item.id == element.id)) {
+       
+    //   }
+    // });
     this.valueList.emit(datas);
   }
 
