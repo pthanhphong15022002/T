@@ -596,12 +596,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.full = true;
             perm.create = true;
             perm.read = true;
-            perm.update = true;
             perm.assign = true;
+            perm.edit = true;
+            perm.publish = true;
             perm.delete = true;
-            perm.share = true;
-            perm.upload = true;
-            perm.download = true;
             perm.roleType = 'O';
             this.permissions = this.checkUserPermission(this.permissions, perm);
           }
@@ -616,7 +614,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';
+            perm.full = false;
+            perm.create = false;
             perm.read = true;
+            perm.assign = false;
+            perm.edit = false;
+            perm.publish = false;
+            perm.delete = false;
 
             this.permissions = this.checkUserPermission(this.permissions, perm);
           }
@@ -631,7 +635,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'F';
+            perm.full = false;
+            perm.create = false;
             perm.read = true;
+            perm.assign = false;
+            perm.edit = false;
+            perm.publish = false;
+            perm.delete = false;
             this.permissions = this.checkUserPermission(this.permissions, perm);
           }
           this.process.permissions = this.permissions;
@@ -652,7 +662,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';
+            perm.full = false;
+            perm.create = false;
             perm.read = true;
+            perm.assign = false;
+            perm.edit = false;
+            perm.publish = false;
+            perm.delete = false;
             this.permissions = this.checkUserPermission(this.permissions, perm);
           }
           this.step.roles = tmpRole;
@@ -725,10 +741,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       950,
       650,
       '',
-      [this.process, title],
+      [this.process, title, 'add'],
       '',
       this.dialog
-    );
+    ).closed.subscribe((e) => {
+      if(e && e.event != null){
+        this.process.permissions = e.event;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
   //end
 
@@ -1067,7 +1088,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         break;
     }
   }
-  
+
   dropStep(event: CdkDragDrop<string[]>) {
     if (event.previousIndex == event.currentIndex) return;
     moveItemInArray(this.stepList, event.previousIndex, event.currentIndex);
@@ -1166,7 +1187,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           (step) => step.recID == data.recID
         );
         if (index >= 0) {
-          
+
           this.taskGroupList.splice(index, 1);
         }
       }
@@ -1261,14 +1282,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.deleteTask(taskList, task);
         break;
       case 'SYS03':
-        this.jobType = task.taskType;        
+        this.jobType = task.taskType;
         this.openPopupJob(task);
         break;
       case 'SYS04':
         // this.copy(data);
         break;
       case 'DP01':
-        this.jobType = task.taskType;      
+        this.jobType = task.taskType;
         this.openPopupViewJob(task);
         break;
     }

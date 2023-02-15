@@ -127,7 +127,7 @@ export class DynamicProcessComponent
   }
 
   afterLoad() {
-    this.showButtonAdd =this.funcID == 'DP0101'   
+    this.showButtonAdd =this.funcID == 'DP0101'
   }
   //chang data
   viewChanged(e) {
@@ -136,7 +136,7 @@ export class DynamicProcessComponent
       this.funcID = funcIDClick;
       this.crrFunID = this.funcID;
       this.afterLoad();
-    
+
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -292,7 +292,7 @@ export class DynamicProcessComponent
     this.itemSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
-    
+
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -312,7 +312,21 @@ export class DynamicProcessComponent
     }
   }
 
-  changeDataMF(e, data) {}
+  changeDataMF(e, data) {
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS005':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+          case 'SYS003':
+            res.disabled = true;
+            break;
+        }
+      })
+    }
+  }
   //#popup roles
   roles(e: any) {
     let dialogModel = new DialogModel();
@@ -324,7 +338,7 @@ export class DynamicProcessComponent
         950,
         650,
         '',
-        [e, this.titleAction],
+        [e, this.titleAction, 'role'],
         '',
         dialogModel
       )
