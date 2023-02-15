@@ -54,6 +54,7 @@ export class PopupAddGroupComponent implements OnInit {
   }
 
   searchEvent(textSearch:any){
+    debugger
     this.listview.dataService.search(textSearch).subscribe();
   }
   // value change

@@ -56,6 +56,9 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   dataKR: any;
   progressHistory = [];
   krCheckIn = [];
+  obType=OMCONST.VLL.OKRType.Obj;
+  krType=OMCONST.VLL.OKRType.KResult;
+  skrType=OMCONST.VLL.OKRType.SKResult;
   chartSettings: ChartSettings = {
     primaryXAxis: {
       valueType: 'Category',
@@ -216,7 +219,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
         .getListAlignAssign(this.obRecID, OMCONST.VLL.RefType_Link.Align)
         .subscribe((res: any) => {
           if (res) {
-            this.listAlign = res;           
+            this.listAlign =[res];           
           }
         });
   }
@@ -225,7 +228,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
         .getListAlignAssign(this.obRecID, OMCONST.VLL.RefType_Link.Assign)
         .subscribe((res: any) => {
           if (res) {
-            this.listAssign = res;           
+            this.listAssign = [res];           
           }
         });
   }
@@ -353,7 +356,11 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Event-----------------------//
-  
+  selectionChange(parent) {
+    if (parent.isItem) {
+      parent.data.items= parent?.data?.child;
+    }
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Popup-----------------------------//

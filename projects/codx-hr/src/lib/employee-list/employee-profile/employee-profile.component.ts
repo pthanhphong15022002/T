@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { EMPTY } from 'rxjs';
 import { PopupJobGeneralInfoComponent } from './../../employee-profile/popup-job-general-info/popup-job-general-info.component';
 import { PopupEbenefitComponent } from './../../employee-profile/popup-ebenefit/popup-ebenefit.component';
@@ -97,6 +98,8 @@ export class EmployeeProfileComponent extends UIComponent {
     this.funcID = this.routeActive.snapshot.params['funcID'];
     console.log('dtttt', dialog);
   }
+  @ViewChild("businessTravelGrid") businessTravelGrid: CodxGridviewComponent;
+  @ViewChild("degreeGridView") degreeGrid : CodxGridviewComponent;
   @ViewChild("dayoffGridView") dayoffGrid: CodxGridviewComponent;
   @ViewChild("gridView") grid:CodxGridviewComponent;
   @ViewChild("appointionGridView") appointionGrid:CodxGridviewComponent;
@@ -193,6 +196,20 @@ export class EmployeeProfileComponent extends UIComponent {
   filterEBenefitPredicates : string
   filterEBenefitDatavalues
 
+  //#region filter variables of form main eDayoffs
+  filterByKowIDArr: []
+  yearFilterValueDayOffs
+  startDateEDayoffFilterValue
+  endDateEDayoffFilterValue
+  filterEDayoffPredicates : string
+  filterEDayoffDatavalues
+
+  //#region filter variables of form main EBusinessTravel
+  yearFilterValueBusinessTravel
+  startDateBusinessTravelFilterValue
+  endDateBusinessTravelFilterValue
+  filterBusinessTravelPredicates : string
+
   //#region declare columnGrid
   healthColumnsGrid;
   vaccineColumnsGrid;
@@ -207,6 +224,8 @@ export class EmployeeProfileComponent extends UIComponent {
   benefitColumnGrid;
   appointionColumnGrid;
   dayoffColumnGrid;
+  businessTravelColumnGrid;
+  degreeColumnGrid;
 
   //#region ViewChild
   @ViewChild('healthPeriodID', { static: true })
@@ -253,7 +272,24 @@ export class EmployeeProfileComponent extends UIComponent {
   templateDayOffGridCol3: TemplateRef<any>;
   @ViewChild('templateDayOffGridMoreFunc', {static: true}) 
   templateDayOffGridMoreFunc: TemplateRef<any>;
+
+  @ViewChild('templateDegreeGridCol1', {static: true}) 
+  templateDegreeGridCol1: TemplateRef<any>;
+  @ViewChild('templateDegreeGridCol2', {static: true}) 
+  templateDegreeGridCol2: TemplateRef<any>;
+  @ViewChild('templateDegreeGridCol3', {static: true}) 
+  templateDegreeGridCol3: TemplateRef<any>;
+  @ViewChild('templateDegreeGridMoreFunc', {static: true}) 
+  templateDegreeGridMoreFunc: TemplateRef<any>;
   
+  @ViewChild('templateBusinessTravelGridCol1', {static: true}) 
+  templateBusinessTravelGridCol1: TemplateRef<any>;
+  @ViewChild('templateBusinessTravelGridCol2', {static: true}) 
+  templateBusinessTravelGridCol2: TemplateRef<any>;
+  @ViewChild('templateBusinessTravelGridCol3', {static: true}) 
+  templateBusinessTravelGridCol3: TemplateRef<any>;
+  @ViewChild('templateBusinessTravelMoreFunc', {static: true}) 
+  templateBusinessTravelMoreFunc: TemplateRef<any>;
 
   //#endregion
 
@@ -319,6 +355,15 @@ export class EmployeeProfileComponent extends UIComponent {
   dayoffRowCount;
   dayoffFuncID = 'HRTEM0503'
   dayoffHeaderTexts
+  EBusinessTravelFormodel: FormModel;
+  eBusinessTravelRowCount = 0;
+  eBusinessTravelFuncID= 'HRTEM0504'
+  eBusinessTravelHeaderTexts
+
+  degreeFormodel: FormModel;
+  degreeRowCount;
+  degreeFuncID = 'HRTEM0601';
+  degreeHeaderText;
 
   onInit(): void {
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
@@ -328,13 +373,6 @@ export class EmployeeProfileComponent extends UIComponent {
         this.crrFuncTab = this.lstTab[0].functionID;
       }
     });
-
-    // this.hrService.getHeaderText('HRT03020303').then( res =>{
-    //   console.log('11111111111111111111111111111111', res);
-    //   console.log(res['ALObjectID']);
-    // })
-
-
 
     this.hrService.getFormModel(this.benefitFuncID).then(res => {
       this.benefitFormodel = res;
@@ -347,6 +385,58 @@ export class EmployeeProfileComponent extends UIComponent {
     this.hrService.getFormModel(this.dayoffFuncID).then(res => {
       this.dayofFormModel = res;
     })
+    this.hrService.getFormModel(this.degreeFuncID).then(res => {
+      this.degreeFormodel = res;
+    })
+
+    this.hrService.getFormModel(this.eBusinessTravelFuncID).then(res => {
+      this.EBusinessTravelFormodel = res;
+      console.log('formmodel cong tac', this.EBusinessTravelFormodel);
+    })
+
+    this.hrService.getHeaderText(this.eBusinessTravelFuncID).then(res => {
+      console.log('dumaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', res);
+      
+      console.log('headerText cong tac', res);
+      this.eBusinessTravelHeaderTexts = res;
+      this.businessTravelColumnGrid = [
+        {
+          headerText: this.eBusinessTravelHeaderTexts['BusinessPlace'] + '|' + this.eBusinessTravelHeaderTexts['KowID'],
+          template: this.templateBusinessTravelGridCol1,
+          width: '150',
+        },
+        {
+          headerText: this.eBusinessTravelHeaderTexts['PeriodType'] + '|' + this.eBusinessTravelHeaderTexts['Days'],
+          template: this.templateBusinessTravelGridCol2,
+          width: '150',
+        },
+        {
+          headerText: this.eBusinessTravelHeaderTexts['BusinessPurpose'],
+          template: this.templateBusinessTravelGridCol3,
+          width: '150',
+        },
+        {
+          template: this.templateBusinessTravelMoreFunc,
+          width: '150'
+        },
+      ]
+    })
+
+    let insBusinessTravel = setInterval(()=>{
+      if(this.businessTravelGrid){
+        clearInterval(insBusinessTravel);
+        let t= this;
+        this.businessTravelGrid.dataService.onAction.subscribe((res)=>{
+          if(res){
+            if(res.type != null && res.type == 'loaded'){
+              t.eBusinessTravelRowCount = res['data'].length
+            }
+          }
+          
+        })
+        this.eBusinessTravelRowCount = this.businessTravelGrid.dataService.rowCount; 
+      }
+    },100)
 
     this.hrService.getHeaderText(this.dayoffFuncID).then(res =>{
       this.dayoffHeaderTexts = res;
@@ -372,6 +462,22 @@ export class EmployeeProfileComponent extends UIComponent {
         },
       ]
     })
+
+    let insDayOff = setInterval(()=>{
+      if(this.dayoffGrid){
+        clearInterval(insDayOff);
+        let t= this;
+        this.dayoffGrid.dataService.onAction.subscribe((res)=>{
+          if(res){
+            if(res.type != null && res.type == 'loaded'){
+              t.dayoffRowCount = res['data'].length
+            }
+          }
+          
+        })
+        this.dayoffRowCount = this.dayoffGrid.dataService.rowCount; 
+      }
+    },100)
     
     this.hrService.getHeaderText(this.benefitFuncID).then(res => {
       this.benefitHeaderTexts = res;
@@ -429,14 +535,59 @@ export class EmployeeProfileComponent extends UIComponent {
       ]
     })
 
+    this.hrService.getHeaderText(this.degreeFuncID).then(res => {
+      console.log('degreeeeeeeeeeeeeee', res);
+      
+      this.degreeHeaderText = res;
+      this.degreeColumnGrid = [
+        {
+          headerText: this.degreeHeaderText['DegreeName'] + '|' + this.degreeHeaderText['TrainFieldID'],
+          template: this.templateDegreeGridCol1,
+          width: '150',
+        },
+        {
+          headerText: this.degreeHeaderText['TrainSupplierID'] + '|' + this.degreeHeaderText['Ranking'],
+          template: this.templateDegreeGridCol2,
+          width: '150',
+        },
+        {
+          headerText: this.degreeHeaderText['YearGraduated'] + '|' + this.degreeHeaderText['IssuedDate'],
+          template: this.templateDegreeGridCol3,
+          width: '150',
+        },
+        {
+          template: this.templateDegreeGridMoreFunc,
+          width: '150',
+        },
+      ]
+    })
+
+    let insDegree = setInterval(()=>{
+      if(this.degreeGrid){
+        clearInterval(insDegree);
+        let t= this;
+        this.degreeGrid.dataService.onAction.subscribe((res)=>{
+          if(res){
+            if(res.type == 'loaded'){
+              t.degreeRowCount = res['data'].length
+          }
+          }
+        })
+        this.degreeRowCount = this.degreeGrid.dataService.rowCount; 
+      }
+    },100)
+
     let ins = setInterval(()=>{
       if(this.appointionGrid){
         clearInterval(ins);
         let t= this;
         this.appointionGrid.dataService.onAction.subscribe((res)=>{
-          if(res.type == 'loaded'){
-            t.appointionRowCount = res['data'].length
+          if(res){
+            if(res.type != null && res.type == 'loaded'){
+              t.appointionRowCount = res['data'].length
+            }
           }
+          
         })
         this.appointionRowCount = this.appointionGrid.dataService.rowCount; 
       }
@@ -1031,6 +1182,7 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   async clickMF(event: any, data: any, funcID = null) {
+    console.log('event', event)
     switch (event.functionID) {
       case 'SYS03': //edit
         if (funcID == 'passport') {
@@ -1075,6 +1227,12 @@ export class EmployeeProfileComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'eBenefit') {
           this.handlEmployeeBenefit('edit', data);
+          this.df.detectChanges();
+        } else if (funcID == 'eDayoff'){
+          this.HandleEmployeeDayOffInfo('edit', data);
+          this.df.detectChanges();
+        } else if (funcID == 'eBusinessTravels'){
+          this.HandleEBusinessTravel('edit', data);
           this.df.detectChanges();
         }
         break;
@@ -1218,10 +1376,12 @@ export class EmployeeProfileComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    let i = this.lstEDegrees.indexOf(data);
-                    if (i != -1) {
-                      this.lstEDegrees.splice(i, 1);
-                    }
+                    (this.degreeGrid.dataService as CRUDService).remove(data).subscribe();
+                    // let i = this.lstEDegrees.indexOf(data);
+                    // if (i != -1) {
+                    //   this.lstEDegrees.splice(i, 1);
+                    // }
+                    this.degreeRowCount = this.degreeRowCount - 1;
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -1276,7 +1436,7 @@ export class EmployeeProfileComponent extends UIComponent {
                   if (p != null) {
                     this.notify.notifyCode('SYS008');
                     (this.appointionGrid.dataService as CRUDService).remove(data).subscribe();
-                    this.appointionRowCount = this.appointionGrid.dataService.rowCount; 
+                    this.appointionRowCount = this.appointionRowCount - 1; 
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -1319,13 +1479,39 @@ export class EmployeeProfileComponent extends UIComponent {
                   if (p != null) {
                     this.notify.notifyCode('SYS008');
                     (this.grid.dataService as CRUDService).remove(data).subscribe();
-                    this.eBenefitRowCount = this.grid.dataService.rowCount; 
+                    this.eBenefitRowCount = this.eBenefitRowCount - 1; 
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            } 
+            }  else if (funcID == 'eDayoff') {
+              this.hrService
+                .DeleteEmployeeDayOffInfo(data)
+                .subscribe((p) => {
+                  if (p != null) {
+                    this.notify.notifyCode('SYS008');
+                    (this.dayoffGrid.dataService as CRUDService).remove(data).subscribe();
+                    this.dayoffRowCount = this.dayoffRowCount - 1; 
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            } else if (funcID == 'eBusinessTravels') {
+              this.hrService
+                .deleteEBusinessTravels(data)
+                .subscribe((p) => {
+                  if (p != null) {
+                    this.notify.notifyCode('SYS008');
+                    (this.businessTravelGrid.dataService as CRUDService).remove(data).subscribe();
+                    this.eBusinessTravelRowCount = this.eBusinessTravelRowCount - 1; 
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            }
           }
         });
         break;
@@ -1370,6 +1556,12 @@ export class EmployeeProfileComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'eBenefit') {
           this.copyValue(data, 'benefit');
+          this.df.detectChanges();
+        } else if(funcID == 'eDayoff'){
+          this.copyValue(data, 'eDayoff');
+          this.df.detectChanges();
+        } else if(funcID == 'eBusinessTravels'){
+          this.copyValue(data, 'eBusinessTravels');
           this.df.detectChanges();
         }
         break;
@@ -1417,7 +1609,6 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    // this.view.dataService.methodDelete = 'DeleteSignFileAsync';
     this.views = [
       {
         type: ViewType.content,
@@ -1869,6 +2060,7 @@ export class EmployeeProfileComponent extends UIComponent {
       if(res.event){
         if (actionType == 'add' || actionType == 'copy') {
           (this.grid.dataService as CRUDService).add(res.event).subscribe();
+          this.eBenefitRowCount += 1;
         }
         else if(actionType == 'edit'){
           (this.grid.dataService as CRUDService).update(res.event).subscribe();
@@ -2053,16 +2245,24 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupEdayoffsComponent,
       {
         actionType: actionType,
-        indexSelected: this.lstDayOffs.indexOf(data),
-        lstDayOffs: this.lstDayOffs,
+        // indexSelected: this.lstDayOffs.indexOf(data),
+        dayoffObj: data,
         headerText: 'Nghỉ phép',
         employeeId: this.data.employeeID,
-        funcID: 'HRTEM0503',
+        funcID: this.dayoffFuncID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if(res.event){
+        if (actionType == 'add' || actionType == 'copy') {
+          (this.dayoffGrid.dataService as CRUDService).add(res.event).subscribe();
+          this.dayoffRowCount += 1;
+        }
+        else if(actionType == 'edit'){
+          (this.dayoffGrid.dataService as CRUDService).update(res.event).subscribe();
+        }
+      }
       this.df.detectChanges();
     });
   }
@@ -2289,6 +2489,7 @@ export class EmployeeProfileComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if(res.event){
         if (actionType == 'add' || actionType == 'copy') {
+          this.appointionRowCount += 1;
           (this.appointionGrid.dataService as CRUDService).add(res.event).subscribe();
         }
         else if(actionType == 'edit'){
@@ -2333,17 +2534,25 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupEDegreesComponent,
       {
         actionType: actionType,
-        indexSelected: this.lstEDegrees.indexOf(data),
-        lstEDegrees: this.lstEDegrees,
+        //indexSelected: this.lstEDegrees.indexOf(data),
+        //lstEDegrees: this.lstEDegrees,
         headerText: 'Bằng cấp',
         employeeId: this.data.employeeID,
-        dataSelected: data,
-        funcID: 'HRTEM0601',
+        degreeObj: data,
+        // dataSelected: data,
+        funcID: this.degreeFuncID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if (actionType == 'add' || actionType == 'copy') {
+        (this.degreeGrid.dataService as CRUDService).add(res.event).subscribe();
+        this.degreeRowCount = this.degreeRowCount + 1;
+      }
+      else if(actionType == 'edit'){
+        (this.degreeGrid.dataService as CRUDService).update(res.event).subscribe();
+      }
+      this.df.detectChanges();
     });
   }
 
@@ -2359,7 +2568,6 @@ export class EmployeeProfileComponent extends UIComponent {
         lstESkill: this.lstESkill,
         indexSelected: this.lstESkill.indexOf(data),
         actionType: actionType,
-        // isAdd: true,
         headerText: 'Kỹ năng',
         employeeId: this.data.employeeID,
         funcID: 'HRTEM0603',
@@ -2583,34 +2791,37 @@ export class EmployeeProfileComponent extends UIComponent {
   //#endregion
 
   //#region  HR_EBusinessTravels
-  addEBusinessTravel() {
-    this.view.dataService.dataSelected = this.data;
+  HandleEBusinessTravel(actionType: string, data: any) {
+    this.businessTravelGrid.dataService.dataSelected = this.data;
+    // (this.businessTravelGrid.dataService as CRUDService).addNew().subscribe(res =>{
+    //   console.log('GridComponent', this.businessTravelGrid)
+    // });
+
     let option = new SidebarModel();
-    // option.FormModel = this.view.formModel
     option.Width = '550px';
+    option.FormModel = this.businessTravelGrid.formModel;
     let dialogAdd = this.callfunc.openSide(
       PopupEmpBusinessTravelsComponent,
       {
-        actionType: 'add',
-        dataSelected: null,
-        headerText: 'Nhật kí công tác',
+        actionType: actionType,
         employeeId: this.data.employeeID,
-        funcID: 'HRTEM0504',
+        headerText: 'Nhật kí công tác',
+        funcID: this.eBusinessTravelFuncID,
+        businessTravelObj : data,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (res) {
-        // this.hrService
-        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
-        //   .subscribe((p) => {
-        //     this.crrJobSalaries = p;
-        //   });
-        console.log('current val', res.event);
-        this.crrJobSalaries = res.event;
-        this.df.detectChanges();
+      if(res.event){
+        if (actionType == 'add' || actionType == 'copy') {
+          this.eBusinessTravelRowCount += 1;
+          (this.businessTravelGrid.dataService as CRUDService).add(res.event).subscribe();
+        }
+        else if(actionType == 'edit'){
+          (this.businessTravelGrid.dataService as CRUDService).update(res.event).subscribe();
+        }
       }
-      if (res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
@@ -2704,18 +2915,6 @@ export class EmployeeProfileComponent extends UIComponent {
   valueChangeFilterBenefit(evt){
     console.log('filter theo type', evt);
     this.filterByBenefitIDArr = evt.data;
-    // let predicates = '('
-    // for(let i =0 ; i< this.filterByBenefitIDArr.length; i++){
-    //   if(i>0){
-    //     predicates +=' or '
-    //   }
-    //   predicates += `BenefitID==@${i}`
-    // }
-    // predicates += ') and ';
-    
-    // (this.grid.dataService as CRUDService).setPredicates(['BenefitID==@0'], ['1']).subscribe((item) => {
-    //   console.log('item tra ve', item);
-    // });
     this.UpdateEBenefitPredicate();
   }
 
@@ -2732,9 +2931,8 @@ export class EmployeeProfileComponent extends UIComponent {
       }
       this.filterEBenefitPredicates += ') ';
       this.filterEBenefitPredicates +=  `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
-      //this.filterEBenefitDatavalues = this.filterByBenefitIDArr.concat([this.startDateEBenefitFilterValue, this.endDateEBenefitFilterValue]);
       
-      (this.grid.dataService as CRUDService).setPredicates([this.filterEBenefitPredicates],[this.filterByBenefitIDArr])
+      (this.grid.dataService as CRUDService).setPredicates([this.filterEBenefitPredicates],[this.filterByBenefitIDArr.join(';')])
       .subscribe((item) => {
         console.log('item tra ve sau khi loc 1', item);
       });
@@ -2748,7 +2946,7 @@ export class EmployeeProfileComponent extends UIComponent {
         this.filterEBenefitPredicates += `BenefitID==@${i}`
       }
 
-      (this.grid.dataService as CRUDService).setPredicates([this.filterEBenefitPredicates],[this.filterByBenefitIDArr])
+      (this.grid.dataService as CRUDService).setPredicates([this.filterEBenefitPredicates],[this.filterByBenefitIDArr.join(';')])
       .subscribe((item) => {
         console.log('item tra ve sau khi loc 2', item);
       });
@@ -2764,9 +2962,14 @@ export class EmployeeProfileComponent extends UIComponent {
 
   valueChangeYearFilterBenefit(evt){
     console.log('chon year', evt);
-    ;
-    this.startDateEBenefitFilterValue = evt.fromDate.toJSON();
-    this.endDateEBenefitFilterValue = evt.toDate.toJSON();
+    if(evt.formatDate == undefined && evt.toDate == undefined){
+      this.startDateEBenefitFilterValue = null;
+      this.endDateEBenefitFilterValue = null;
+    }
+    else{
+      this.startDateEBenefitFilterValue = evt.fromDate.toJSON();
+      this.endDateEBenefitFilterValue = evt.toDate.toJSON();
+    }
     this.UpdateEBenefitPredicate();
     
     // (this.grid.dataService as CRUDService).setPredicates(['EffectedDate>=@0 and EffectedDate<=@1'], [start, endDate]).subscribe((item) => {
@@ -2782,9 +2985,12 @@ export class EmployeeProfileComponent extends UIComponent {
         clearInterval(ins);
         let t= this;
         this.grid.dataService.onAction.subscribe((res)=>{
-          if(res.type == 'loaded'){
-            t.eBenefitRowCount = res['data'].length
+          if(res){
+            if(res.type != null && res.type == 'loaded'){
+              t.eBenefitRowCount = res['data'].length
+            }
           }
+          
         })
         this.eBenefitRowCount = this.grid.dataService.rowCount; 
       }
@@ -2804,6 +3010,113 @@ copyValue(data, flag) {
         this.HandleEmployeeAppointionInfo('copy', res);
         })
       }
+      else if(flag == 'eDegrees'){
+        this.degreeGrid.dataService.dataSelected = data;
+        (this.degreeGrid.dataService as CRUDService).copy().subscribe((res: any) => {
+        this.HandleEmployeeAppointionInfo('copy', res);
+        })
+      }
+      else if(flag == 'eDayoff'){
+        this.dayoffGrid.dataService.dataSelected = data;
+        (this.dayoffGrid.dataService as CRUDService).copy().subscribe((res: any) => {
+        this.HandleEmployeeDayOffInfo('copy', res);
+        })
+      }
+      else if(flag == 'eBusinessTravels'){
+        this.businessTravelGrid.dataService.dataSelected = data;
+        (this.businessTravelGrid.dataService as CRUDService).copy().subscribe((res: any) => {
+        this.HandleEBusinessTravel('copy', res);
+        })
+      }
+}
+
+UpdateEDayOffsPredicate(){
+  this.filterEDayoffPredicates = ""
+  if(this.filterByKowIDArr.length > 0 && this.startDateEDayoffFilterValue != null){
+    this.filterEDayoffPredicates = '('
+    let i = 0;
+    for(i; i< this.filterByKowIDArr.length; i++){
+      if(i>0){
+        this.filterEDayoffPredicates +=' or '
+      }
+      this.filterEDayoffPredicates += `KowID==@${i}`
+    }
+    this.filterEDayoffPredicates += ') ';
+    this.filterEDayoffPredicates +=  `and (BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}")`;
+    //this.filterEBenefitDatavalues = this.filterByKowIDArr.concat([this.startDateEBenefitFilterValue, this.endDateEBenefitFilterValue]);
+    
+    (this.dayoffGrid.dataService as CRUDService).setPredicates([this.filterEDayoffPredicates],[this.filterByKowIDArr.join(';')])
+    .subscribe((item) => {
+      console.log('item tra ve sau khi loc 1', item);
+    });
+  }
+  else if(this.filterByKowIDArr.length > 0 && (this.startDateEDayoffFilterValue == undefined || this.startDateEDayoffFilterValue == null)){
+    let i = 0;
+    for(i; i< this.filterByKowIDArr.length; i++){
+      if(i>0){
+        this.filterEDayoffPredicates +=' or '
+      }
+      this.filterEDayoffPredicates += `KowID==@${i}`
+    }
+
+    (this.dayoffGrid.dataService as CRUDService).setPredicates([this.filterEDayoffPredicates],[this.filterByKowIDArr.join(';')])
+    .subscribe((item) => {
+      console.log('item tra ve sau khi loc 2', item);
+    });
+  }
+  else if(this.startDateEDayoffFilterValue != null){
+    (this.dayoffGrid.dataService as CRUDService).setPredicates([`BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}"`], [])
+    .subscribe((item) => {
+      console.log('item tra ve sau khi loc 3', item);
+    });
+  }
+}
+
+valueChangeFilterDayOff(evt){
+  this.filterByKowIDArr = evt.data; 
+  
+  this.UpdateEDayOffsPredicate();
+} 
+
+valueChangeYearFilterDayOff(evt){
+  console.log('chon year', evt);
+  if(evt.formatDate == undefined && evt.toDate == undefined){
+    this.startDateEDayoffFilterValue = null;
+    this.endDateEDayoffFilterValue = null;
+  }
+  else{
+    this.startDateEDayoffFilterValue = evt.fromDate.toJSON();
+    this.endDateEDayoffFilterValue = evt.toDate.toJSON();
+  }
+  this.UpdateEDayOffsPredicate();
+}
+
+UpdateBusinessTravelPredicate(){
+  this.filterBusinessTravelPredicates = "";
+  if(this.startDateBusinessTravelFilterValue == null){
+    (this.businessTravelGrid.dataService as CRUDService).setPredicates([`EmployeeID=@0`], [this.data.employeeID])
+    .subscribe((item) => {
+      console.log('item tra ve sau khi loc 3', item);
+    });
+  }
+  else{
+    (this.businessTravelGrid.dataService as CRUDService).setPredicates([`BeginDate>="${this.startDateBusinessTravelFilterValue}" and EndDate<="${this.endDateBusinessTravelFilterValue}"`], [])
+    .subscribe((item) => {
+      console.log('item tra ve sau khi loc 3', item);
+    });
+  }
+}
+
+valueChangeYearFilterBusinessTravel(evt){
+  if(evt.formatDate == undefined && evt.toDate == undefined){
+    this.startDateBusinessTravelFilterValue = null;
+    this.endDateBusinessTravelFilterValue = null;
+  }
+  else{
+    this.startDateBusinessTravelFilterValue = evt.fromDate.toJSON();
+    this.endDateBusinessTravelFilterValue = evt.toDate.toJSON();
+  }
+  this.UpdateBusinessTravelPredicate();
 }
 
 }

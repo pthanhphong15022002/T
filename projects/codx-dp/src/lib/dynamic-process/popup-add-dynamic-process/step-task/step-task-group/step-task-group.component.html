@@ -4,6 +4,7 @@
   [body]="addGroupJobBody"
   [footer]="addGroupJobFooter"
   [dialog]="dialog"
+  [formModel]="grvTaskGroupsForm"
 ></codx-form>
 
 <ng-template #addGroupJobBody>
@@ -40,12 +41,12 @@
         <div class="position-relative">
           <codx-input
             field="durationDay"
-            [formModel]="grvTaskGroupsForm"
             [crrValue]="taskGroup?.durationDay"
-            type="text"
-            [height]="'100'"
-            [min]="0"
             (valueChange)="changeValueInput($event, taskGroup)"
+            [height]="'100'"
+            [type]="'number'"
+            [min]="0"
+            [showSpinButton]="false"
           ></codx-input>
           <div
             class="position-absolute text-gray-400"
@@ -63,21 +64,28 @@
         <div class="d-flex justify-content-end">
           <codx-label
             fiedName="durationHour"
-            [formModel]="grvTaskGroupsForm"
             default="Thời gian còn lại "
           ></codx-label>
-          <span class="text-danger ms-3">5 ngày 00:00 giờ</span>
+          <span class="text-danger ms-3" *ngIf="!taskGroup?.createdOn"
+            >{{ taskGroup?.durationDay }} ngày
+            {{ taskGroup?.durationHour }} giờ</span
+          >
+          <span
+            class="text-danger ms-3"
+            id="countdown"
+            *ngIf="taskGroup?.createdOn"
+          >
+          </span>
         </div>
         <div class="position-relative">
           <codx-input
             field="durationHour"
-            [formModel]="grvTaskGroupsForm"
-            [Group]=""
             [crrValue]="taskGroup?.durationHour"
-            type="text"
-            [height]="'100'"
-            [min]="0"
             (valueChange)="changeValueInput($event, taskGroup)"
+            [showSpinButton]="false"
+            [height]="'100'"
+            type="number"
+            [min]="0"
           ></codx-input>
           <div
             class="position-absolute text-gray-400"
@@ -93,7 +101,10 @@
       </div>
     </div>
 
-    <codx-user></codx-user>
+    <codx-user
+      [dataSource]="taskGroup?.roles"
+      (valueList)="changeUser($event)"
+    ></codx-user>
 
     <div class="form-group">
       <div>
@@ -125,7 +136,7 @@
         name="Save"
         formName="Tasks"
         default="Hủy"
-        (click)="dialog.close()"
+        (click)="close()"
       ></codx-label>
     </button>
     <button type="button" class="btn btn-primary">
@@ -133,7 +144,7 @@
         name="Save"
         formName="Tasks"
         default="Đồng ý"
-        (click)="savePopupGroupJob()"
+        (click)="handleSave()"
       ></codx-label>
     </button>
   </div>

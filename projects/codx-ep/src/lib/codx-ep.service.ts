@@ -667,7 +667,15 @@ export class CodxEpService {
     );
   }
   //#endregion
-
+  getResourceEquipments(resourceID: any) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'GetResourceEquipmentsAsync',
+      resourceID
+    );
+  }
   //#Setting SYS
   getSettingValue(para: any) {
     return this.api.execSv(

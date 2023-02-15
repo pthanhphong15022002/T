@@ -1,12 +1,14 @@
 import { I } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { ApiHttpService, AuthService, AuthStore, CallFuncService, FormModel, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, CallFuncService, DialogModel, FormModel, NotificationsService } from 'codx-core';
 import { Observable,forkJoin, map, from, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CodxShareService } from '../../codx-share.service';
 import { AttachmentComponent } from '../attachment/attachment.component';
+import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
 
 @Component({
   selector: 'codx-view-files',
@@ -41,6 +43,7 @@ export class CodxViewFilesComponent implements OnInit {
     private dt: ChangeDetectorRef,
     private codxShareSV: CodxShareService,
     private notifySvr: NotificationsService,
+    private fileSV:FileService
 
   )
   {
@@ -214,6 +217,39 @@ export class CodxViewFilesComponent implements OnInit {
       else{
         return of(true);
       }
+    }
+  }
+  // format file size
+  formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  }
+  //click view file document
+  clickFileDocument(file){
+    if(file?.recID)
+    {
+      this.fileSV.getFile(file.recID).subscribe(item=>{
+        if(item)
+        {
+          var option = new DialogModel();
+          option.IsFull = true;
+          this.callfc.openForm(ViewFileDialogComponent,item.fileName,0,0,"",item,"",option);
+        }
+      })
+     
+    }
+    // else this.notifySvr.notifyCode("SYS032")
+    else{
+      var option = new DialogModel();
+      option.IsFull = true;
+      this.callfc.openForm(ViewFileDialogComponent,file.fileName,0,0,"",file,"",option);
     }
   }
 }

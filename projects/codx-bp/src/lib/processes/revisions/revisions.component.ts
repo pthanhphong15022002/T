@@ -118,22 +118,6 @@ export class RevisionsComponent implements OnInit {
     if (nameVersion === null || nameVersion.trim() === '') {
       return this.msgErrorValidIsNull;
     }
-    // filter array in rxjs
-    //  let revisions$: Observable<any>;
-    //  revisions$ = from(this.revisions);
-
-    //  revisions$.pipe(map(x=>{
-    //   if(x?.versionName){
-    //    x.versionName = x?.versionName.toUpperCase();
-    //   }
-    //  })).subscribe()
-    // let listCount:any=[];
-    // var result = revisions$.pipe(filter(x=>x.versionName == nameVersion.trim().toUpperCase())).subscribe(x=> listCount.push(x));
-    // console.log(listCount);
-    // if(listCount.length > 0 && listCount.length !== null) {
-    //   check = false;
-    //   return this.msgErrorValidExit;
-    // }
 
     for (let element of this.revisions) {
       if (

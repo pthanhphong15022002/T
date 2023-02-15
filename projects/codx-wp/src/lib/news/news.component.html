@@ -242,7 +242,7 @@
                   [objectId]="item.recID" objectType="WP_News" [referType]="'image'"></codx-img>
               </div>
               <div class="col-10">
-                <codx-temp-full [resourceObjType]="entityName" cardCss="" [title]="item.subject"
+                <codx-temp-full [resourceObjType]="'WP_News'" cardCss="" [title]="item.subject"
                   [titleCss]="'cursor-pointer news-title'" [desc]="item.subContent" [date]="item.createdOn"
                   [bookmark]="false">
                 </codx-temp-full>
@@ -282,7 +282,6 @@
   <div (click)="clickViewDetail(item)" class="row my-4">
     <div class="col-2">
       <codx-img [width]="180" 
-        [imgOn]="newDate"
         [isDefaulImg]="true" 
         [cssClass]="'image-150 w-100'" 
         imageType="square" 

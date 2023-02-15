@@ -33,3 +33,119 @@
 <ng-template #tmpList>
   <lib-organization-list [view]="view" [dataService]="dataService" [formModel]="view.formModel" [orgUnitID]="orgUnitID"></lib-organization-list>
 </ng-template>
+
+<!--  -->
+
+<ng-template #itemTemplate let-item>
+  <div class="d-flex flex-column p-4 border-bottom">
+    <div class="d-flex align-items-center org-header mt-1 mb-3">
+      <div class="text-dark fw-bold fs-6 me-3">
+        {{ item.orgUnitName }}
+      </div>
+      <codx-vll [name]="'L0605'" [value]="item.orgUnitType" [showText]="true" [showBgColor]="true" [showIcon]="true"
+        class="badge badge-light badge-md fs-7 me-2">
+      </codx-vll>
+      <div *ngIf="item.parentID" class="text-gray-600 me-2">
+        <codx-label [formModel]="view.formModel" default="Trực thuộc:"> </codx-label>
+        <span class="text-dark">
+          {{ item.parentName }}
+        </span>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between align-items-top list-action-menu">
+      <div class="d-flex align-items-center justify-content-between px-3">
+        <div>
+          <codx-img [objectId]="item.employeeManager?.employeeID" [objectName]="item.employeeManager?.employeeName"
+            [objectType]="'HR_Employees'" [width]="35" [imageType]="'circle'">
+          </codx-img>
+        </div>
+        <div class="ms-2">
+          <div>
+            <ng-container *ngIf="item.employeeManager?.employeeName; else lblEmployeeName">
+              <span class="fw-bolder">{{
+                item.employeeManager.employeeName
+                }}</span>
+            </ng-container>
+            <ng-template #lblEmployeeName>
+              <codx-label [className]="'fw-bolder'" [formModel]="view.formModel" name="lblEmployeeName"
+                default="Tên nhân viên"></codx-label>
+            </ng-template>
+          </div>
+          <div>
+            <ng-container *ngIf="item.positionName; else lblPositionName">
+              <span class="text-dark-400">{{ item.positionName }}</span>
+            </ng-container>
+            <ng-template #lblPositionName>
+              <codx-label [className]="'text-dark-400'" [formModel]="view.formModel" name="lblPositionName"
+                default="Chức vụ"></codx-label>
+            </ng-template>
+          </div>
+          <div>
+            <ng-container *ngIf="item.employeeManager?.phone; else lblPhone">
+              <span class="text-dark-400">{{
+                item.employeeManager?.phone
+                }}</span>
+            </ng-container>
+            <ng-template #lblPhone>
+              <codx-label [className]="'text-dark-400'" [formModel]="view.formModel" name="lblEmployeePhone"
+                default="SĐT"></codx-label>
+            </ng-template>
+            <ng-container *ngIf="item.employeeManager?.email; else lblEmail">
+              <span class="mx-2">|</span>
+              <span class="text-dark-400">{{
+                item.employeeManager.email
+                }}</span>
+            </ng-container>
+            <ng-template #lblEmail>
+              <span class="mx-2">|</span>
+              <codx-label [className]="'text-dark-400 ms-2'" [formModel]="view.formModel" name="lblEmail"
+                default="Email"></codx-label>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex">
+        <div #h class="mx-6 d-flex flex-column align-items-center" (click)="loadEmployList(h, item.departmentCode, '')">
+          <div class="fs-2 fw-bold text-dark mb-2">
+            {{ item.headcounts ? item.headcounts : 0 }}
+          </div>
+          <span class="text-gray-500">
+            <codx-label [formModel]="view.formModel" name="lblBoundary" default="Định biên">
+            </codx-label>
+          </span>
+        </div>
+        <div #c class="mx-6 d-flex flex-column align-items-center"
+          (click)="loadEmployList(c, item.departmentCode, '50')">
+          <div class="fs-2 fw-bold mb-2 text-primary">
+            {{ item.counts ? item.counts : 0 }}
+          </div>
+          <span class="text-gray-500">
+            <codx-label [formModel]="view.formModel" name="lblStaff" default="Chính thức">
+            </codx-label>
+          </span>
+        </div>
+        <div #o class="mx-6 d-flex flex-column align-items-center"
+          (click)="loadEmployList(o, item.departmentCode, '30')">
+          <div class="fs-2 fw-bold mb-2 text-warning">{{ item.onboard }}</div>
+          <span class="text-gray-500">
+            <codx-label [formModel]="view.formModel" name="lblOnBoard" default="Onbroard">
+            </codx-label>
+          </span>
+        </div>
+        <div #f class="mx-6 d-flex flex-column align-items-center"
+          (click)="loadEmployList(f, item.departmentCode, '70')">
+          <div class="fs-2 fw-bold mb-2 text-danger">{{ item.offboard }}</div>
+          <span class="text-gray-500">
+            <codx-label [formModel]="view.formModel" name="lblOffBoard" default="Offboard">
+            </codx-label>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, item)" [isBookMark]="false" [dataItem]="item"
+        type="hover">
+      </codx-mfunc>
+    </div>
+  </div>
+</ng-template>

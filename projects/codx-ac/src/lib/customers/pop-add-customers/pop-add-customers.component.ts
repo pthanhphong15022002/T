@@ -7,6 +7,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import {
   CacheService,
   ApiHttpService,
@@ -42,6 +43,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   title: string;
   headerText: string;
   formModel: FormModel;
+  formGroup : FormGroup;
   dialog!: DialogRef;
   customers: Customers;
   contact: Contact;
@@ -175,6 +177,9 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    this.formGroup = this.form?.formGroup;
+    console.log(this.formGroup.controls);
+    
   }
   //#endregion
   
@@ -192,6 +197,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   valueChangeCustomerID(e: any) {
     this.customerID = e.data;
     this.customers[e.field] = e.data;
+    console.log(this.customerID);
   }
   valueChangeEstablishYear(e: any) {
     e.data = e.data.fromDate;

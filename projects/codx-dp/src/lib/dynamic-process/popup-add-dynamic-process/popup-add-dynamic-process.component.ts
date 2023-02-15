@@ -50,6 +50,7 @@ import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/ca
 import { ViewJobComponent } from './step-task/view-job/view-job.component';
 import { PopupTypeTaskComponent } from './step-task/popup-type-task/popup-type-task.component';
 import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-group.component';
+import { paste } from '@syncfusion/ej2-angular-richtexteditor';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -247,7 +248,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getGrvStep();
     this.getValListDayoff();
     this.autoHandleStepReason();
-    this.loadCbxProccess();
   }
 
   ngAfterViewInit(): void {
@@ -422,6 +422,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   valueChange(e) {
     this.process[e.field] = e.data;
+    if(this.process.applyFor){
+      this.loadCbxProccess();
+    }
   }
   //#endregion
 
@@ -1001,6 +1004,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     });
   }
+
   openPopupAddEditStep(type) {
     if (type === 'add') {
       this.step = new DP_Steps();
@@ -1012,9 +1016,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.headerText = 'Sửa Giai Đoạn';
       this.stepName = this.step['stepName'];
     }
-
     this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
   }
+
   addAndEditStep() {
     if (!this.stepName) {
       this.stepList.push(this.step);
@@ -1025,6 +1029,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     this.popupAddStage.close();
   }
+
   deleteStep(data) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
@@ -1048,6 +1053,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     });
   }
+
   clickMFStep(e: any, data?: any) {
     switch (e.functionID) {
       case 'SYS02':
@@ -1061,6 +1067,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         break;
     }
   }
+  
   dropStep(event: CdkDragDrop<string[]>) {
     if (event.previousIndex == event.currentIndex) return;
     moveItemInArray(this.stepList, event.previousIndex, event.currentIndex);
@@ -1098,14 +1105,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.deletepGroupJob(data);
         break;
       case 'SYS03':
-        this.openGroupJob(data);
+        this.openTaskGroup(data);
         break;
       case 'SYS04':
         // this.copy(data);
         break;
     }
   }
-  openGroupJob(data?: any) {
+  openTaskGroup(data?: any) {
     this.taskGroup = new DP_Steps_TaskGroups();
     if (data) {
       this.userGroupJob = data?.roles || [];
@@ -1116,28 +1123,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.taskGroup['stepID'] = this.step['recID'];
       this.taskGroup['task'] = [];
     }
-
     this.popupGroupJob = this.callfc.openForm(
       StepTaskGroupComponent,
       '',
       500,
-      500
+      500,
+      '',
+      this.taskGroup
     );
+    this.popupGroupJob.closed.subscribe(res => {
+      if(res?.event){
+        this.savePopupGroupJob();
+      }
+    })
   }
   savePopupGroupJob() {
-    let reqiure = [];
-    if (
-      !this.taskGroup?.taskGroupName ||
-      !this.taskGroup?.taskGroupName.trim()
-    ) {
-      reqiure.push(
-        this.grvTaskGroups['TaskGroupName']?.headerText ?? 'TaskGroupName'
-      );
-    }
-    if (reqiure.length > 0) {
-      this.notiService.notifyCode('SYS009', 0, '"' + reqiure.join(', ') + '"');
-      return;
-    }
     this.popupGroupJob.close();
     if (!this.taskGroup['recID']) {
       this.taskGroup['recID'] = Util.uid();
@@ -1146,6 +1146,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       delete taskGroupList['task'];
       this.taskGroupListSave.push(taskGroupList);
     }
+    let sumDay = 0;
+    let sumHour = 0;
+    this.step?.taskGroups?.forEach(taskGroup => {
+      sumDay += Number(taskGroup?.durationDay) || 0;
+      sumHour += Number(taskGroup?.durationHour) || 0;
+    })
+    if(sumHour >=24){
+      sumDay += Math.floor(sumHour/24);
+      sumHour = sumHour%24;
+    }
+    this.step['durationDay'] = sumDay;
+    this.step['durationHour'] = sumHour;
   }
   deletepGroupJob(data) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
@@ -1154,6 +1166,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           (step) => step.recID == data.recID
         );
         if (index >= 0) {
+          
           this.taskGroupList.splice(index, 1);
         }
       }
@@ -1545,6 +1558,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   createStepReason(stepReason: any, reasonValue: any) {
     stepReason = this.handleStepReason(stepReason, reasonValue);
+    stepReason.reasonControl = true;
   }
 
   handleReason(
@@ -1558,8 +1572,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // cbx proccess get id
     reason.processID = idProccess;
     reason.createdBy = this.userId;
-    reason.modifiedBy = this.userId;
-
     return reason;
   }
 
@@ -1656,7 +1668,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   loadCbxProccess() {
     this.cache.valueList('DP031').subscribe((data) => {
-      this.dpService.getlistCbxProccess().subscribe((res) => {
+      this.dpService.getlistCbxProccess(this.process?.applyFor).subscribe((res) => {
         if (res) {
           this.listCbxProccess = res[0];
           var obj = {

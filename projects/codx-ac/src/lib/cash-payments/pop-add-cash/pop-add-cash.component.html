@@ -308,6 +308,7 @@
     [entityName]="fmCashPaymentsLines.entityName"
     [templateMore]="morefunction"
     [editSettings]="editSettings"
+    predicates="TransID=@0"
     [allowFiltering]="true"
     [allowSorting]="true"
     [dataValues]="cashpayment.recID"
@@ -329,7 +330,7 @@
         (clickMF)="clickMF($event, data)"
       ></codx-mfunc>
     </div>
-  </ng-template>
+</ng-template>
   <ng-template #footer>
     <div class="row" *ngIf="cashpayment">
         <ng-container *ngTemplateOutlet="tabRef"></ng-container>

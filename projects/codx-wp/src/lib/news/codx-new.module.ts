@@ -21,7 +21,7 @@ import { ViewVideoComponent } from './view-video/view-video.component';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'news',
     component: LayoutNewsComponent,
     children: [
         {
@@ -48,12 +48,23 @@ export const routes: Routes = [
             component: NewsDetailComponent,
         },
         {
-            path: '**',
-            redirectTo: 'WPT02/home',
-            pathMatch: 'full',
+          path: '**',
+          redirectTo: 'WPT02/home',
+          pathMatch: 'full',
         },
+        
     ]
   },
+  {
+    path: '',
+    redirectTo: 'news/WPT02/home',
+    pathMatch: 'full',
+  },
+  {
+    path: '**',
+    redirectTo: 'news/WPT02/home',
+    pathMatch: 'full',
+},
 ];
 
 const Component: Type<any>[] = [
