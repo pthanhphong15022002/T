@@ -26,6 +26,7 @@ import {
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Instances } from '../models/models';
+import { InstanceDetailComponent } from './instance-detail/instance-detail.component';
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
@@ -43,6 +44,8 @@ export class InstancesComponent
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
+  @ViewChild('detailViewInstance')
+  detailViewInstance: InstanceDetailComponent;
   @Input() process: any;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
@@ -498,8 +501,10 @@ export class InstancesComponent
                 if(e.event.isReason != null ) {
                   this.moveReason(null,data, e.event.isReason)
                 }
-                // this.view.dataService.update(data).subscribe();
                 this.dataSelected = data;
+                this.detailViewInstance.dataSelect = this.dataSelected;
+                this.detailViewInstance.GetStepsByInstanceIDAsync(this.dataSelected.recID);
+                this.view.dataService.update(data).subscribe();            
                 this.detectorRef.detectChanges();
               }
             });
