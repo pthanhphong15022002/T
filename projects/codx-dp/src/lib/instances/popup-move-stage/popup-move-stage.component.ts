@@ -32,6 +32,7 @@ export class PopupMoveStageComponent implements OnInit {
   isLockReasons: boolean = false;
   isReason: any = null;
   stepReason = new DP_Instances_Steps_Reasons();
+  stepIdClick: string = '';
   //instanceStep = new DP_Instances_Steps;
 
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
@@ -63,7 +64,7 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   onSave() {
-    if(this.instance.stepID === this.stepIdOld) {
+    if(this.stepIdClick === this.stepIdOld) {
       this.notiService.notifyCode('DP001');
       return;
     }
@@ -78,6 +79,9 @@ export class PopupMoveStageComponent implements OnInit {
       this.instancesStepOld.stepID = this.stepIdOld;
       this.stepIdOld = '';
       this.isReason = true;
+    }
+    else {
+      this.instance.stepID = this.stepIdClick;
     }
 
     var data = [this.instance.recID,this.stepIdOld ,this.instancesStepOld];
@@ -115,7 +119,7 @@ export class PopupMoveStageComponent implements OnInit {
       //  this.autoLockStepEnd();
       //  }
       //  else {
-         this.instance.stepID = listStep[i + 1]?.stepID;
+         this.stepIdClick = listStep[i + 1]?.stepID;
   //    }
         break;
       }
@@ -132,9 +136,9 @@ export class PopupMoveStageComponent implements OnInit {
   // }
   cbxChange($event) {
     if($event){
-        this.instance.stepID = $event;
+        this.stepIdClick = $event;
         this.isLockStep = this.stepIdOld === this.IdStepEnd && $event === this.IdStepEnd ? true:false;
-        let obj = this.listStepsCbx.filter(x => x.stepID === this.instance.stepID && x.indexNo > 0)[0];
+        let obj = this.listStepsCbx.filter(x => x.stepID === this.stepIdClick && x.indexNo > 0)[0];
         if(obj !== null && obj) {
           this.instancesStepOld = obj;
         }

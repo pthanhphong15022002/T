@@ -522,6 +522,7 @@ export class InstancesComponent
             let reason = isMoveSuccess ? this.listSteps[this.listSteps.length-2]: this.listSteps[this.listSteps.length-1];
             var obj = {
               dataMore: dataMore,
+              headerTitle: fun.defaultName,
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
               isReason: isMoveSuccess,
