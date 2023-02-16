@@ -623,8 +623,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.objectType = data.objectType;
             perm.roleType = 'P';
             perm.full = false;
-            perm.create = false;
             perm.read = true;
+            perm.create = false;
             perm.assign = false;
             perm.edit = false;
             perm.publish = false;
@@ -644,8 +644,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.objectType = data.objectType;
             perm.roleType = 'F';
             perm.full = false;
-            perm.create = false;
             perm.read = true;
+            perm.create = false;
             perm.assign = false;
             perm.edit = false;
             perm.publish = false;
@@ -671,8 +671,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.objectType = data.objectType;
             perm.roleType = 'P';
             perm.full = false;
-            perm.create = false;
             perm.read = true;
+            perm.create = false;
             perm.assign = false;
             perm.edit = false;
             perm.publish = false;

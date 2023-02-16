@@ -30,7 +30,6 @@ import { InstanceDetailComponent } from './instance-detail/instance-detail.compo
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
-import { PopupRolesInstanceComponent } from './popup-roles-instance/popup-roles-instance.component';
 
 @Component({
   selector: 'codx-instances',

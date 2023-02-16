@@ -4,8 +4,8 @@
     <div class="row" style="height: 100% !important;">
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
         <div class="user-mini-nav">
-          <div *ngIf="lstPermissions != null && lstPermissions.length > 0">
-            <ng-container *ngFor="let perm of lstPermissions; index as i;">
+          <div *ngIf="process.permissions != null && process.permissions.length > 0">
+            <ng-container *ngFor="let perm of process.permissions; index as i;">
               <div class="d-flex justify-content-between list-title w-100" (click)="changePermission(i)"
                 [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
                 class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item p-2">
@@ -107,7 +107,6 @@
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="read" field="read"
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'read')">
                   </codx-input>
-
                 </td>
               </tr>
               <tr>
@@ -121,9 +120,8 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="create" field="create"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'create')">
-                  </codx-input>
-
+                  [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'create')">
+                </codx-input>
                 </td>
               </tr>
               <tr>
