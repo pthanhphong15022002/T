@@ -131,11 +131,7 @@
         </div>
       </div>
     </div>
-    <!-- <div class="mb-2">
-      <ng-container *ngIf="files.length > 0">
-        <codx-thumbnail [files]="files" displayThumb="simple"> </codx-thumbnail>
-      </ng-container>
-    </div> -->
+    
   </ng-template>
 
   <ng-template #body>
@@ -251,6 +247,7 @@
       [transID]="itemDetail?.recID"
       [approveStatus]="itemDetail?.approveStatus"
       [referType]="'2'"
+      [addPermissions]=""
     ></codx-tabs>
   </ng-template>
 </codx-detail-tmp>
