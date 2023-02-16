@@ -1718,6 +1718,10 @@ codx-vll.badge.badge-light.badge-md>span[class*="fa"] {
   font-weight: 400 !important;
 }
 
+.codx-notification-filter .dropdown-menu {
+  right: 0;
+}
+
 // fix dropdown
 // .dropdown[data-popper-placement="bottom-start"] {
 //   border: 1px aqua solid;
