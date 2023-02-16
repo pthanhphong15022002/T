@@ -211,6 +211,10 @@ export class EmployeeDetailComponent extends UIComponent {
   //Awards
   lstAwards: any = [];
 
+  //#region getGridView
+  eVaccineGrvSetup
+  //#endregion
+
   //#region ColumnsGrid
   passportColumnGrid;
   visaColumnGrid;
@@ -229,6 +233,8 @@ export class EmployeeDetailComponent extends UIComponent {
   eExperienceColumnGrid;
   eAssetColumnGrid;
   skillColumnGrid;
+  eHealthColumnGrid;
+  eVaccineColumnGrid;
   //#endregion
 
   //#region filter variables of form main eAssets
@@ -236,7 +242,14 @@ export class EmployeeDetailComponent extends UIComponent {
   startDateEAssetFilterValue;
   endDateEAssetFilterValue;
   filterEAssetPredicates: string;
-  filterEAssetDatavalues;
+  //#endregion
+
+  //#region filter variables of form main eVaccine
+  filterByVaccineTypeIDArr: any = [];
+  startDateEVaccineFilterValue;
+  endDateEVaccineFilterValue;
+  filterEVaccinePredicates: string;
+  //#endregion
 
   //#region ViewChild template
   @ViewChild('healthPeriodID', { static: true })
@@ -346,7 +359,11 @@ export class EmployeeDetailComponent extends UIComponent {
   visaRowCount: Number;
   workPermitRowCount: Number;
   eExperienceRowCount;
+  certificateRowCount;
+  skillRowCount = 0;
   eAssetRowCount;
+  eHealthRowCount = 0;
+  eVaccineRowCount = 0;
   //#endregion
 
   //#region var functionID
@@ -361,7 +378,8 @@ export class EmployeeDetailComponent extends UIComponent {
   skillFuncID = 'HRTEM0603';
   eExperienceFuncID = 'HRTEM0505'; // Kinh nghiệm trước đây
   eAssetFuncID = 'HRTEM0406'; // Tài sản cấp phát
-
+  eHealthFuncID = 'HRTEM0801'; // Khám sức khỏe
+  eVaccinesFuncID = 'HRTEM0802'; // Tiêm vắc xin
   //#endregion
 
   //#region var formModel
@@ -378,7 +396,8 @@ export class EmployeeDetailComponent extends UIComponent {
   skillFormmodel: FormModel; // Kỹ năng
   eExperienceFormModel: FormModel; //Kinh nghiệm trước đây
   eAssetFormModel: FormModel; //Tài sản cấp phát
-
+  eHealthFormModel: FormModel; //Khám sức khỏe
+  eVaccineFormModel: FormModel //Tiêm vắc xin
   //#endregion
 
   //#region headerText
@@ -387,12 +406,10 @@ export class EmployeeDetailComponent extends UIComponent {
   eAssetHeaderText;
   certificateHeaderText;
   skillHeaderText;
+  eHealthHeaderText;
+  eVaccineHeaderText;
   //#endregion
 
-  //#region
-  certificateRowCount;
-  skillRowCount = 0;
-  //#endregion
 
   clickItem(evet) {}
 
@@ -444,9 +461,6 @@ export class EmployeeDetailComponent extends UIComponent {
     this.hrService.getFormModel(this.skillFuncID).then((res) => {
       this.skillFormmodel = res;
     });
-    // this.hrService.getFormModel(this.degreeFuncID).then((res) => {
-    //   this.degreeFormodel = res;
-    // });
 
     this.hrService.getFormModel(this.degreeFuncID).then((res) => {
       this.degreeFormodel = res;
@@ -455,6 +469,20 @@ export class EmployeeDetailComponent extends UIComponent {
     this.hrService.getFormModel(this.eAssetFuncID).then((res) => {
       this.eAssetFormModel = res;
     });
+
+    this.hrService.getFormModel(this.eHealthFuncID).then((res) => {
+      this.eHealthFormModel = res;
+    })
+
+    this.hrService.getFormModel(this.eVaccinesFuncID).then((res) =>{
+      this.eVaccineFormModel = res;
+      this.cache.gridViewSetup(this.eVaccineFormModel.formName, this.eVaccineFormModel.gridViewName)
+      .subscribe((res)=>{
+        this.eVaccineGrvSetup = res;
+        console.log('grv set up của evaccine', this.eVaccineGrvSetup);
+        
+      }) 
+    })
     //#endregion
 
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
@@ -532,7 +560,7 @@ export class EmployeeDetailComponent extends UIComponent {
         }, 100);
 
         //#endregion
-        ////////////////////
+        
         //#region eAsset - Tai san cap phat
         this.hrService.getHeaderText(this.eAssetFuncID).then((res) => {
           this.eAssetHeaderText = res;
@@ -576,7 +604,89 @@ export class EmployeeDetailComponent extends UIComponent {
           }
         }, 100);
         //#endregion
-        ////////////////////
+
+        //#region Kham suc khoe
+        this.hrService.getHeaderText(this.eHealthFuncID).then((res) => {
+          this.eHealthHeaderText = res;
+          this.eHealthColumnGrid = [
+            {
+              headerText: this.eHealthHeaderText['HealthDate'] + '|' + this.eHealthHeaderText['HealthPeriodID'] + '|' + this.eHealthHeaderText['HospitalID'],
+              template: this.tempCol1EHealthGrid,
+              width: '150',
+            },
+
+            {
+              headerText: this.eHealthHeaderText['HealthType'] + '|' + this.eHealthHeaderText['FinalConclusion'],
+              template: this.tempCol2EHealthGrid,
+              width: '150',
+            },
+
+            {
+              headerText: this.eHealthHeaderText['Suggestion'],
+              template: this.tempCol3EHealthGrid,
+              width: '150',
+            },
+          ];
+        });
+
+        let insEHealth = setInterval(() => {
+          if (this.eHealthsGrid) {
+            clearInterval(insEHealth);
+            let t = this;
+            this.eHealthsGrid.dataService.onAction.subscribe((res) => {
+              if (res) {
+                if (res.type == 'loaded') {
+                  t.eHealthRowCount = res['data'].length;
+                }
+              }
+            });
+            this.eHealthRowCount =
+              this.eHealthsGrid.dataService.rowCount;
+          }
+        }, 100);
+        //#endregion
+
+        //#region Tiem vaccine
+        this.hrService.getHeaderText(this.eVaccinesFuncID).then((res) => {
+          this.eVaccineHeaderText = res;
+          this.eVaccineColumnGrid = [
+            {
+              headerText: this.eVaccineHeaderText['VaccineTypeID'] + '|' + this.eVaccineHeaderText['HopitalID'],
+              template: this.tempEVaccineGridCol1,
+              width: '150',
+            },
+
+            {
+              headerText: this.eVaccineHeaderText['InjectDate'] +'|' + this.eVaccineHeaderText['NextInjectDate'],
+              template: this.tempEVaccineGridCol2,
+              width: '150',
+            },
+
+            {
+              headerText: this.eVaccineHeaderText['Note'],
+              template: this.tempEVaccineGridCol3,
+              width: '150',
+            },
+          ];
+        });
+
+        let insEVaccines = setInterval(() => {
+          if (this.eVaccinesGrid) {
+            clearInterval(insEVaccines);
+            let t = this;
+            this.eVaccinesGrid.dataService.onAction.subscribe((res) => {
+              if (res) {
+                if (res.type == 'loaded') {
+                  t.eVaccineRowCount = res['data'].length;
+                }
+              }
+            });
+            this.eVaccineRowCount =
+              this.eVaccinesGrid.dataService.rowCount;
+          }
+        }, 100);    
+        //#endregion
+
         //#region eExperience - Kinh nghiem truoc day
         this.hrService.getHeaderText(this.eExperienceFuncID).then((res) => {
           this.eExperienceHeaderText = res;
@@ -1436,7 +1546,6 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   clickMF(event: any, data: any, funcID = null) {
-    console.log('click vo MF');
     console.log('data ', data);
     switch (event.functionID) {
       case 'SYS03': //edit
@@ -1458,7 +1567,7 @@ export class EmployeeDetailComponent extends UIComponent {
         } else if (funcID == 'eexperiences') {
           this.handlEmployeeExperiences('edit', data);
         } else if (funcID == 'evaccines') {
-          this.addEditEVaccines('edit', data);
+          this.HandleEVaccinesInfo('edit', data);
         } else if (funcID == 'basicSalary') {
           this.HandleEmployeeBasicSalariesInfo('edit', data);
           this.df.detectChanges();
@@ -1479,8 +1588,19 @@ export class EmployeeDetailComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'Diseases') {
           this.HandleEmployeeDiseaseInfo('edit', data);
+          this.df.detectChanges();
+
         } else if (funcID == 'eSkill') {
           this.HandleEmployeeSkillsInfo('edit', data);
+          this.df.detectChanges();
+        }
+        else if (funcID == 'eHealth') {
+          this.HandleEmployeeEHealths('edit', data);
+          this.df.detectChanges();
+        }
+        else if (funcID == 'eVaccine') {
+          this.HandleEVaccinesInfo('edit', data);
+          this.df.detectChanges();
         }
         break;
 
@@ -1555,7 +1675,7 @@ export class EmployeeDetailComponent extends UIComponent {
               this.hrService
                 .DeleteEmployeeAssetInfo(data.recID)
                 .subscribe((p) => {
-                  if (p == true) {
+                  if (p != null) {
                     this.notify.notifyCode('SYS008');
                     (this.eAssetGrid.dataService as CRUDService)
                       .remove(data)
@@ -1570,7 +1690,39 @@ export class EmployeeDetailComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            } else if (funcID == 'jobSalary') {
+            }  else if (funcID == 'eHealth') {
+              this.hrService
+              .deleteEHealth(data)
+              .subscribe((p) => {
+                if (p != null) {
+                  this.notify.notifyCode('SYS008');
+                  (this.eHealthsGrid.dataService as CRUDService)
+                    .remove(data)
+                    .subscribe();
+                  this.eHealthRowCount = this.eHealthRowCount - 1;
+                  this.df.detectChanges();
+                } else {
+                  this.notify.notifyCode('SYS022');
+                }
+              });
+            }
+            else if (funcID == 'eVaccine') {
+              this.hrService
+              .deleteEVaccine(data)
+              .subscribe((p) => {
+                if (p != null) {
+                  this.notify.notifyCode('SYS008');
+                  (this.eVaccinesGrid.dataService as CRUDService)
+                    .remove(data)
+                    .subscribe();
+                  this.eVaccineRowCount = this.eVaccineRowCount - 1;
+                  this.df.detectChanges();
+                } else {
+                  this.notify.notifyCode('SYS022');
+                }
+              });
+            } 
+            else if (funcID == 'jobSalary') {
               this.hrService
                 .DeleteEmployeeJobsalaryInfo(data.recID)
                 .subscribe((p) => {
@@ -1765,6 +1917,12 @@ export class EmployeeDetailComponent extends UIComponent {
         } else if (funcID == 'eExperiences') {
           this.copyValue(data, 'eExperiences');
           this.df.detectChanges();
+        } else if (funcID == 'eHealth') {
+          this.copyValue(data, 'eHealth');
+          this.df.detectChanges();
+        } else if (funcID == 'eVaccine') {
+          this.copyValue(data, 'eVaccine');
+          this.df.detectChanges();
         } else if (funcID == 'Diseases') {
           this.HandleEmployeeDiseaseInfo('copy', data);
           this.df.detectChanges();
@@ -1776,22 +1934,22 @@ export class EmployeeDetailComponent extends UIComponent {
     }
   }
 
-  clickMFVaccine(event: any, data: any, vaccineGroup: any) {
-    switch (event.functionID) {
-      case 'SYS03': //edit
-        this.addEditEVaccines('edit', data);
-        break;
-      case 'SYS02': //delete
-        this.notifySvr.alertCode('SYS030').subscribe((x) => {
-          if (x.event?.status == 'Y') {
-            this.deleteEVaccine(data, vaccineGroup);
-          }
-        });
-        break;
-      case 'SYS04': //copy
-        break;
-    }
-  }
+  // clickMFVaccine(event: any, data: any, vaccineGroup: any) {
+  //   switch (event.functionID) {
+  //     case 'SYS03': //edit
+  //       this.HandleEVaccinesInfo('edit', data);
+  //       break;
+  //     case 'SYS02': //delete
+  //       this.notifySvr.alertCode('SYS030').subscribe((x) => {
+  //         if (x.event?.status == 'Y') {
+  //           this.deleteEVaccine(data, vaccineGroup);
+  //         }
+  //       });
+  //       break;
+  //     case 'SYS04': //copy
+  //       break;
+  //   }
+  // }
 
   getDataAsync(funcID: string) {
     this.getDataFromFunction(funcID);
@@ -2258,7 +2416,7 @@ export class EmployeeDetailComponent extends UIComponent {
       {
         employeeId: this.data.employeeID,
         actionType: actionType,
-        headerText: 'Phụ cấp',
+        headerText: this.getFormHeader(this.benefitFuncID),
         funcID: this.benefitFuncID,
         benefitObj: data,
       },
@@ -2267,10 +2425,10 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add' || actionType == 'copy') {
-          (this.grid.dataService as CRUDService).add(res.event).subscribe();
+          (this.grid?.dataService as CRUDService)?.add(res.event).subscribe();
           this.eBenefitRowCount += 1;
         } else if (actionType == 'edit') {
-          (this.grid.dataService as CRUDService).update(res.event).subscribe();
+          (this.grid?.dataService as CRUDService)?.update(res.event).subscribe();
         }
       }
     });
@@ -2665,7 +2823,7 @@ export class EmployeeDetailComponent extends UIComponent {
         //lstAssets: this.lstAsset,
         employeeId: this.data.employeeID,
         funcID: this.eAssetFuncID,
-        headerText: 'Tài sản cấp phát',
+        headerText: this.getFormHeader(this.eAssetFuncID),
       },
       option
     );
@@ -2917,63 +3075,73 @@ export class EmployeeDetailComponent extends UIComponent {
   //#region HR_EHealths
 
   HandleEmployeeEHealths(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
+    this.eHealthsGrid.dataService.dataSelected = this.data;
     let option = new SidebarModel();
-    option.Width = '850px';
+    option.Width = '550px';
+    option.FormModel = this.eHealthsGrid.formModel;
     let dialogAdd = this.callfunc.openSide(
       PopupEhealthsComponent,
       {
         actionType: actionType,
-        indexSelected: this.lstEhealth.indexOf(data),
-        lstEhealth: this.lstEhealth,
-        headerText: 'Khám sức khỏe',
+        healthObj: data,
+        //indexSelected: this.lstEhealth.indexOf(data),
+        //lstEhealth: this.lstEhealth,
+        headerText: this.getFormHeader(this.eHealthFuncID),
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020701',
+        funcID: this.eHealthFuncID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (res) {
-        console.log('current val', res.event);
-        this.df.detectChanges();
+      if (res.event) {
+        if (actionType == 'add' || actionType == 'copy') {
+          this.eHealthRowCount += 1;
+          (this.eHealthsGrid.dataService as CRUDService)
+            .add(res.event)
+            .subscribe();
+        } else if (actionType == 'edit') {
+          (this.eHealthsGrid.dataService as CRUDService)
+            .update(res.event)
+            .subscribe();
+        }
       }
-      if (res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
   //#endregion
 
   //#region HR_EVaccines
 
-  addEditEVaccines(actionType: string, data: any) {
-    // this.hrService.addEVaccine(null).subscribe();
-    // return;
-    // this.view.dataService.dataSelected = data;
+  HandleEVaccinesInfo(actionType: string, data: any) {
+    this.eVaccinesGrid.dataService.dataSelected = this.data;
     let option = new SidebarModel();
-    option.Width = '850px';
+    option.Width = '550px';
+    option.FormModel = this.eVaccinesGrid.formModel;
     let dialogAdd = this.callfunc.openSide(
       PopupEVaccineComponent,
       {
         actionType: actionType,
-        vaccineSelected: data,
-        listData: this.lstVaccine,
-        headerText: 'Tiêm Vaccine',
+        data: data,
+        headerText: this.getFormHeader(this.eVaccinesFuncID),
         employeeId: this.data.employeeID,
-        funcID: 'HRT03020702',
+        funcID: this.eVaccinesFuncID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (res) {
-        // this.hrService
-        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
-        //   .subscribe((p) => {
-        //     this.crrJobSalaries = p;
-        //   });
-        console.log('current val', res.event);
-        this.crrJobSalaries = res.event;
-        this.df.detectChanges();
+      if (res.event) {
+        if (actionType == 'add' || actionType == 'copy') {
+          this.eVaccineRowCount += 1;
+          (this.eVaccinesGrid.dataService as CRUDService)
+            .add(res.event)
+            .subscribe();
+        } else if (actionType == 'edit') {
+          (this.eVaccinesGrid.dataService as CRUDService)
+            .update(res.event)
+            .subscribe();
+        }
       }
-      if (res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
@@ -3190,6 +3358,8 @@ export class EmployeeDetailComponent extends UIComponent {
   @ViewChild('certificateGridView') certificateGrid: CodxGridviewComponent;
   @ViewChild('eExperienceGridView') eExperienceGrid: CodxGridviewComponent;
   @ViewChild('eAssetGridView') eAssetGrid: CodxGridviewComponent;
+  @ViewChild('eHealthsGridView') eHealthsGrid: CodxGridviewComponent;
+  @ViewChild('eVaccinesGridView') eVaccinesGrid: CodxGridviewComponent;
   @ViewChild('gridView') grid: CodxGridviewComponent;
   @ViewChild('degreeGridView') degreeGrid: CodxGridviewComponent;
   @ViewChild('appointionGridView') appointionGrid: CodxGridviewComponent;
@@ -3215,6 +3385,20 @@ export class EmployeeDetailComponent extends UIComponent {
   @ViewChild('templateDegreeGridMoreFunc', { static: true })
   templateDegreeGridMoreFunc: TemplateRef<any>;
 
+  @ViewChild('tempCol1EHealthGrid', { static: true })
+  tempCol1EHealthGrid: TemplateRef<any>;
+  @ViewChild('tempCol2EHealthGrid', { static: true })
+  tempCol2EHealthGrid: TemplateRef<any>;
+  @ViewChild('tempCol3EHealthGrid', { static: true })
+  tempCol3EHealthGrid: TemplateRef<any>;
+
+  @ViewChild('tempEVaccineGridCol1', { static: true })
+  tempEVaccineGridCol1: TemplateRef<any>;
+  @ViewChild('tempEVaccineGridCol2', { static: true })
+  tempEVaccineGridCol2: TemplateRef<any>;
+  @ViewChild('tempEVaccineGridCol3', { static: true })
+  tempEVaccineGridCol3: TemplateRef<any>;
+  
   @ViewChild('templateCertificateGridCol1', { static: true })
   templateCertificateGridCol1: TemplateRef<any>;
   @ViewChild('templateCertificateGridCol2', { static: true })
@@ -3405,6 +3589,20 @@ export class EmployeeDetailComponent extends UIComponent {
         .subscribe((res: any) => {
           this.HandlemployeeAssetInfo('copy', res);
         });
+    } else if(flag == 'eVaccine'){
+      this.eVaccinesGrid.dataService.dataSelected = data;
+      (this.eVaccinesGrid.dataService as CRUDService)
+        .copy()
+        .subscribe((res: any) => {
+          this.HandleEVaccinesInfo('copy', res);
+        });
+    } else if(flag == 'eHealth'){
+      this.eHealthsGrid.dataService.dataSelected = data;
+      (this.eHealthsGrid.dataService as CRUDService)
+        .copy()
+        .subscribe((res: any) => {
+          this.HandleEmployeeEHealths('copy', res);
+        });
     }
   }
   //#endregion
@@ -3459,7 +3657,7 @@ export class EmployeeDetailComponent extends UIComponent {
         this.filterEAssetPredicates += `AssetCategory==@${i}`
       }
       this.filterEAssetPredicates += ') ';
-      this.filterEAssetPredicates +=  `and (IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEBenefitFilterValue}")`;
+      this.filterEAssetPredicates +=  `and (IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEAssetFilterValue}")`;
       
       (this.eAssetGrid.dataService as CRUDService).setPredicates([this.filterEAssetPredicates],[this.filterByAssetCatIDArr.join(';')])
       .subscribe((item) => {
@@ -3481,7 +3679,7 @@ export class EmployeeDetailComponent extends UIComponent {
       });
     }
     else if(this.startDateEAssetFilterValue != null){
-      (this.eAssetGrid.dataService as CRUDService).setPredicates([`IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEBenefitFilterValue}"`], [])
+      (this.eAssetGrid.dataService as CRUDService).setPredicates([`IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEAssetFilterValue}"`], [])
       .subscribe((item) => {
         console.log('item tra ve sau khi loc 3', item);
       });
@@ -3499,5 +3697,64 @@ export class EmployeeDetailComponent extends UIComponent {
       this.endDateEAssetFilterValue = evt.toDate.toJSON();
     }
     this.UpdateEAssetPredicate();
+  }
+
+  UpdateEVaccinePredicate(){
+    this.filterEVaccinePredicates = ""
+    if(this.filterByVaccineTypeIDArr.length > 0 && this.startDateEVaccineFilterValue != null){
+      this.filterEVaccinePredicates = '('
+      let i = 0;
+      for(i; i< this.filterByVaccineTypeIDArr.length; i++){
+        if(i>0){
+          this.filterEVaccinePredicates +=' or '
+        }
+        this.filterEVaccinePredicates += `VaccineTypeID==@${i}`
+      }
+      this.filterEVaccinePredicates += ') ';
+      this.filterEVaccinePredicates +=  `and (InjectDate>="${this.startDateEVaccineFilterValue}" and InjectDate<="${this.endDateEVaccineFilterValue}")`;
+      
+      (this.eVaccinesGrid.dataService as CRUDService).setPredicates([this.filterEVaccinePredicates],[this.filterByVaccineTypeIDArr.join(';')])
+      .subscribe((item) => {
+        console.log('item tra ve sau khi loc 1', item);
+      });
+    }
+    else if(this.filterByVaccineTypeIDArr.length > 0 && this.startDateEVaccineFilterValue == undefined || this.startDateEVaccineFilterValue == null){
+      let i = 0;
+      for(i; i< this.filterByVaccineTypeIDArr.length; i++){
+        if(i>0){
+          this.filterEVaccinePredicates +=' or '
+        }
+        this.filterEVaccinePredicates += `VaccineTypeID==@${i}`
+      }
+
+      (this.eVaccinesGrid.dataService as CRUDService).setPredicates([this.filterEVaccinePredicates],[this.filterByVaccineTypeIDArr.join(';')])
+      .subscribe((item) => {
+        console.log('item tra ve sau khi loc 2', item);
+      });
+    }
+    else if(this.startDateEVaccineFilterValue != null){
+      (this.eVaccinesGrid.dataService as CRUDService).setPredicates([`InjectDate>="${this.startDateEVaccineFilterValue}" and InjectDate<="${this.endDateEVaccineFilterValue}"`], [])
+      .subscribe((item) => {
+        console.log('item tra ve sau khi loc 3', item);
+      });
+    }
+    
+  }
+
+  valueChangeFilterVaccineTypeID(evt) {
+    this.filterByVaccineTypeIDArr = evt.data;
+    this.UpdateEVaccinePredicate();
+  }
+
+  valueChangeYearFilterEVaccine(evt) {
+    if(evt.formatDate == undefined && evt.toDate == undefined){
+      this.startDateEVaccineFilterValue = null;
+      this.endDateEVaccineFilterValue = null;
+    }
+    else{
+      this.startDateEVaccineFilterValue = evt.fromDate.toJSON();
+      this.endDateEVaccineFilterValue = evt.toDate.toJSON();
+    }
+    this.UpdateEVaccinePredicate();
   }
 }

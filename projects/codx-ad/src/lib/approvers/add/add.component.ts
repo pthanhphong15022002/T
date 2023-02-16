@@ -129,7 +129,7 @@ export class AddApproversComponent implements OnInit {
       member.groupID = this.master.groupID;
       member.memberID = e.id;
       member.memberType = e.objectType;
-      member.memberName = e.text;
+      member.memberName = e.text || e.objectName;
       groupMembers.push(member);
     });
     this.api

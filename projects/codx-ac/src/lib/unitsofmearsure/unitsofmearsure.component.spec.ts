@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OkrToolbarComponent } from './okr-toolbar.component';
+import { UnitsofmearsureComponent } from './unitsofmearsure.component';
 
-describe('OkrToolbarComponent', () => {
-  let component: OkrToolbarComponent;
-  let fixture: ComponentFixture<OkrToolbarComponent>;
+describe('UnitsofmearsureComponent', () => {
+  let component: UnitsofmearsureComponent;
+  let fixture: ComponentFixture<UnitsofmearsureComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OkrToolbarComponent ]
+      declarations: [ UnitsofmearsureComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OkrToolbarComponent);
+    fixture = TestBed.createComponent(UnitsofmearsureComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

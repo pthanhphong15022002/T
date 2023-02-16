@@ -316,52 +316,20 @@ export class DynamicProcessComponent
   }
 
   changeDataMF(e, data) {
-    if (e != null && data != null) {
-      e.forEach((res) => {
-        switch (res.functionID) {
-          case 'SYS005':
-          case 'SYS004':
-          case 'SYS001':
-          case 'SYS002':
-          case 'SYS003':
-            res.disabled = true;
-            break;
-          //Xem chi tiết
-          case 'DP01011':
-            let isRead = this.checkPermissionRead(data);
-            if (!isRead) {
-              res.isblur = true;
-            }
-            break;
-          //Đổi tên, chỉnh sửa.
-          case 'DP01012':
-          case 'SYS03':
-            let isEdit = data.write;
-            if (!isEdit) {
-              if (res.functionID == 'SYS03') res.disabled = true;
-              else res.isblur = true;
-            }
-            break;
-          //Phân quyền:
-          case 'DP01014':
-            let isAssign = data.assign;
-            if (!isAssign) res.isblur = true;
-            break;
-          //Phát hành
-          case 'DP01015':
-            let isPublish = data.publish;
-            if (!isPublish) res.isblur = true;
-
-            break;
-          case 'SYS02': // xoa
-            let isDelete = data.delete;
-            if (!isDelete || data.deleted) {
-              res.disabled = true;
-            }
-            break;
-        }
-      });
-    }
+    // if (e != null && data != null) {
+    //   e.forEach((res) => {
+    //     switch (res.functionID) {
+    //       //maay cai nay là more chung của hệ thống-thích thì bỏ không thì thì thôi
+    //       case 'SYS005':
+    //       case 'SYS004':
+    //       case 'SYS001':
+    //       case 'SYS002':
+    //       case 'SYS003':
+    //         res.disabled = true;
+    //         break;
+    //     }
+    //   });
+    // }
   }
 
   //#popup roles
@@ -416,9 +384,9 @@ export class DynamicProcessComponent
     return isRead ? true : false;
   }
 
-  doubleClickViewProcess(data){
+  doubleClickViewProcess(data) {
     let isRead = this.checkPermissionRead(data);
-    if(isRead){
+    if (isRead) {
       this.viewDetailProcess(data);
     }
   }
@@ -449,14 +417,11 @@ export class DynamicProcessComponent
   //#endregion đang test
 
   viewDetailProcess(data) {
-    let isCreate =
-      data.create
-        ? true
-        : false;
+    let isCreate = data.create ? true : false;
     let obj = {
       data: data,
       nameAppyFor: this.getNameAppyFor(data?.applyFor),
-      isCreate: isCreate
+      isCreate: isCreate,
     };
 
     let dialogModel = new DialogModel();

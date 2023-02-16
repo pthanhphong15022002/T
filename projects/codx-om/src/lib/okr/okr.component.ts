@@ -314,6 +314,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.codxOmService.getFormModel(this.obFuncID).then((obFM) => {
       if (obFM) {
         this.formModelOB = obFM;
+        
       }
     });
     //Lấy tiêu đề theo FuncID cho Popup

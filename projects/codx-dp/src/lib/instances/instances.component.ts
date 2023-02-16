@@ -423,6 +423,7 @@ export class InstancesComponent
   viewDetail() {
     let option = new DialogModel();
     option.zIndex = 1010;
+    debugger
     let popup = this.callFunc.openForm(
       this.tmpDetail,
       '',
