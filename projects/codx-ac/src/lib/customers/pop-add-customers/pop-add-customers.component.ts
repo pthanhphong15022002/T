@@ -339,30 +339,13 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         }
       });
   }
-  deleteobject(data: any, type: any) {
-    if (type == 'databank') {
+  deleteobjectBank(data: any) {
       let index = this.objectBankaccount.findIndex(
         (x) => x.bankAcctID == data.bankAcctID && x.bankID == data.bankID
       );
       this.objectBankaccount.splice(index, 1);
       this.api
         .exec('ERM.Business.BS', 'BankAccountsBusiness', 'DeleteAsync', [
-          this.customerID,
-          data,
-        ])
-        .subscribe((res: any) => {
-          if (res) {
-            this.notification.notify('Xóa thành công');
-          }
-        });
-    }
-    if (type == 'datacontact') {
-      let index = this.objectContact.findIndex(
-        (x) => x.reference == data.reference && x.contactID == data.contactID
-      );
-      this.objectContact.splice(index, 1);
-      this.api
-        .exec('ERM.Business.BS', 'ContactBookBusiness', 'DeleteAsync', [
           this.objecttype,
           this.customerID,
           data,
@@ -372,33 +355,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             this.notification.notify('Xóa thành công');
           }
         });
-    }
-    if (type == 'dataaddress') {
-      let index = this.objectAddress.findIndex(
-        (x) =>
-          x.adressType == data.adressType && x.adressName == data.adressName
-      );
-      this.objectContactAddress.forEach((element, index) => {
-        if (element.reference == data.recID) {
-          this.objectContactAddress.splice(index, 1);
-        }
-      });
-      this.objectAddress.splice(index, 1);
-      this.api
-        .exec('ERM.Business.BS', 'AddressBookBusiness', 'DeleteAsync', [
-          this.objecttype,
-          this.customerID,
-          data,
-        ])
-        .subscribe((res: any) => {
-          if (res) {
-            this.notification.notify('Xóa thành công');
-          }
-        });
-    }
   }
-  editobject(data: any, type: any) {
-    if (type == 'databank') {
+  editobjectBank(data: any) {
       let index = this.objectBankaccount.findIndex(
         (x) => x.bankAcctID == data.bankAcctID
       );
@@ -437,46 +395,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             });
           }
         });
-    }
-    if (type == 'datacontact') {
-      let index = this.objectContact.findIndex(
-        (x) => x.contactName == data.contactName && x.phone == data.phone
-      );
-      var ob = {
-        headerText: 'Chỉnh sửa liên hệ',
-        data: { ...data },
-      };
-      let opt = new DialogModel();
-      let dataModel = new FormModel();
-      dataModel.formName = 'ContactBook';
-      dataModel.gridViewName = 'grvContactBook';
-      dataModel.entityName = 'BS_ContactBook';
-      opt.FormModel = dataModel;
-      this.cache
-        .gridViewSetup('ContactBook', 'grvContactBook')
-        .subscribe((res) => {
-          if (res) {
-            var dialogcontact = this.callfc.openForm(
-              PopAddContactComponent,
-              '',
-              650,
-              550,
-              '',
-              ob,
-              '',
-              opt
-            );
-            dialogcontact.closed.subscribe((x) => {
-              var datacontact = JSON.parse(localStorage.getItem('datacontact'));
-              if (datacontact != null) {
-                this.objectContact[index] = datacontact;
-              }
-              window.localStorage.removeItem('datacontact');
-            });
-          }
-        });
-    }
-    if (type == 'dataaddress') {
+  }
+  editobjectAddress(data: any) {
       let index = this.objectAddress.findIndex((x) => x.recID == data.recID);
       var obs = {
         headerText: 'Chỉnh sửa địa chỉ',
@@ -519,7 +439,83 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             });
           }
         });
-    }
+  }
+  deleteobjectAddress(data: any) {
+      let index = this.objectAddress.findIndex(
+        (x) =>
+          x.adressType == data.adressType && x.adressName == data.adressName
+      );
+      this.objectContactAddress.forEach((element, index) => {
+        if (element.reference == data.recID) {
+          this.objectContactAddress.splice(index, 1);
+        }
+      });
+      this.objectAddress.splice(index, 1);
+      this.api
+        .exec('ERM.Business.BS', 'AddressBookBusiness', 'DeleteAsync', [
+          this.objecttype,
+          this.customerID,
+          data,
+        ])
+        .subscribe((res: any) => {
+          if (res) {
+            this.notification.notify('Xóa thành công');
+          }
+        });
+  }
+  editobjectContact(data: any) {
+      let index = this.objectContact.findIndex(
+        (x) => x.recID == data.recID);
+      var ob = {
+        headerText: 'Chỉnh sửa liên hệ',
+        data: { ...data },
+      };
+      let opt = new DialogModel();
+      let dataModel = new FormModel();
+      dataModel.formName = 'ContactBook';
+      dataModel.gridViewName = 'grvContactBook';
+      dataModel.entityName = 'BS_ContactBook';
+      opt.FormModel = dataModel;
+      this.cache
+        .gridViewSetup('ContactBook', 'grvContactBook')
+        .subscribe((res) => {
+          if (res) {
+            var dialogcontact = this.callfc.openForm(
+              PopAddContactComponent,
+              '',
+              650,
+              550,
+              '',
+              ob,
+              '',
+              opt
+            );
+            dialogcontact.closed.subscribe((x) => {
+              var datacontact = JSON.parse(localStorage.getItem('datacontact'));
+              if (datacontact != null) {
+                this.objectContact[index] = datacontact;
+              }
+              window.localStorage.removeItem('datacontact');
+            });
+          }
+        });
+  }
+  deleteobjectContact(data: any) {
+      let index = this.objectContact.findIndex(
+        (x) => x.reference == data.reference && x.contactID == data.contactID
+      );
+      this.objectContact.splice(index, 1);
+      this.api
+        .exec('ERM.Business.BS', 'ContactBookBusiness', 'DeleteAsync', [
+          this.objecttype,
+          this.customerID,
+          data,
+        ])
+        .subscribe((res: any) => {
+          if (res) {
+            this.notification.notify('Xóa thành công');
+          }
+        });
   }
   //#endregion
  

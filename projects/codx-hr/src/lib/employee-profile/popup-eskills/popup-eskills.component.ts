@@ -124,19 +124,11 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     this.skillObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.addESlkillInfo(this.skillObj).subscribe((p) => {
-
-        console.log('pppppppppppppppppppppppppp', p);
         if (p != null) {
           this.skillObj.recID = p.recID;
           this.notify.notifyCode('SYS006');
-          // this.lstSkills.push(JSON.parse(JSON.stringify(this.skillObj)));
-          // if (this.listView) {
-          //   (this.listView.dataService as CRUDService)
-          //     .add(this.skillObj)
-          //     .subscribe();
-          // }
           this.dialog && this.dialog.close(this.skillObj);
-          // this.dialog.close(p)
+
         } else this.notify.notifyCode('SYS023');
       });
     } else {

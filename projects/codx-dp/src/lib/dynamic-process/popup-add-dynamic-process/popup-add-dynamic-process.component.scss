@@ -363,6 +363,20 @@
     right: -5px !important;
   }
 }
+.drap-drop:active {
+  cursor: grab;
+}
+.card-job:active{
+  cursor: grab;
+}
+.card-job{
+  transition: all 0.5s ease-out;
+  cursor: pointer;
+}
+.card-job:hover{
+  border-radius: 5px;
+  box-shadow: 0 0px 10px 0 rgb(38 38 38 / 20%);
+}
 
 // End Drop drap -- nvthuan
 
