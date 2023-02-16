@@ -1,0 +1,110 @@
+<codx-form [body]="body" [dialog]="dialogRef" [subHeader]="subheader" (onScroll)="onScroll($event)"></codx-form>
+<ng-template #subheader>
+ <div class="container">
+   <!-- tab -->
+   <div class="row">
+    <div class="d-flex align-items-center ">
+      <button class="me-2" (click)="clickTab1()">Tab1</button>
+      <button (click)="clickTab2()">Tab2</button>
+    </div>
+  </div>
+  <!-- filter -->
+  <div class="row">
+    <div class="codx-notification-filter">
+      <div class="overflow-hidden">
+        <div ngbDropdown container="body">
+          <button ngbDropdownToggle class="btn btn-sm btn-light-primary" *ngIf="entityName">
+            <span class="w-20px" [class]="entityName.icon">
+            </span>
+            <span>
+              {{entityName.text}}
+            </span>
+          </button>
+          <div ngbDropdownMenu>
+            <ng-container *ngFor="let item of vllEntityName">
+              <button (click)="entityNameChange(item)" ngbDropdownItem>
+                <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
+                </span>
+                <span>
+                  {{item.text}}
+                </span>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <!--  -->
+      <div class="overflow-hidden">
+        <div ngbDropdown container="body">
+          <button ngbDropdownToggle class="btn btn-sm btn-light-primary" *ngIf="isRead">
+            <span class="w-20px" [class]="isRead.icon">
+            </span>
+            <span>
+              {{isRead.text}}
+            </span>
+          </button>
+          <div ngbDropdownMenu>
+            <ng-container *ngFor="let item of vllIsRead">
+              <button (click)="isReadChange(item)" ngbDropdownItem>
+                <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
+                </span>
+                <span>
+                  {{item.text}}
+                </span>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ </div>
+</ng-template>
+<ng-template #body>
+  <div class="container">
+    <!-- data -->
+    <div class="row" >
+      <ng-container *ngIf="loaded;else noData">
+        <ng-container *ngIf="data.length > 0">
+          <ng-container *ngFor="let item of data;index as index">
+            <div class="d-flex align-items-center p-3 my-2 bg-hover cursor-pointer has-action-menu" 
+              (click)="clickNotification(item,index)">
+            <div class="me-3">
+              <codx-img [width]="35" 
+                [objectId]="item.createdBy" 
+                [objectName]="item.createdName"
+                [objectType]="'AD_Users'">
+              </codx-img>
+            </div>
+            <div class="w-100">
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="me-1" [innerHTML]="item.textValue | fTextValue:item.text | async"></span>
+                <span *ngIf="item.isBookmark" class="icon-16 icon-bookmark" style="color: rgb(255, 168, 0);"></span>
+              </div>
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="text-gray-500 ms-1">{{item.createdOn | timefrom}}</span>
+                <span *ngIf="!item.read" class="dots"></span>
+              </div>
+            </div>
+            <div>
+              <codx-mfunc 
+                [formModel]="formModel" 
+                (clickMF)="clickMF($event,item)" 
+                (changeDataMF)="changeDataMF($event)"
+                [dataItem]="item" 
+                [type]="'hover'">
+              </codx-mfunc>
+            </div>
+          </div>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+  <ng-template #noData>
+    <div class="text-center">
+      <img style="max-width:300px" src="assets/themes/sys/default/img/DataEmpty.svg" />
+      <p>{{mssgNoData}}</p>
+    </div>
+  </ng-template>
+</ng-template>

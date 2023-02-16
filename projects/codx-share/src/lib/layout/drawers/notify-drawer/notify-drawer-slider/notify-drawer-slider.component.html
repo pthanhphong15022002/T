@@ -3,7 +3,7 @@
 </codx-form>
 <ng-template #subheader>
   <div class="codx-notification-filter">
-    <div ngbDropdown ngbDropdownToggle #dropdown id="noti-dropdowTonggle-entityName">
+    <div ngbDropdown  ngbDropdownToggle #dropdown1 id="noti-dropdowTonggle-entityName-1">
       <button class="btn btn-sm btn-light-primary" *ngIf="entityName">
         <span class="w-20px" [class]="entityName.icon">
         </span>
@@ -11,22 +11,19 @@
           {{entityName.text}}
         </span>
       </button>
-      <div ngbDropdownMenu aria-labelledby="noti-dropdowTonggle-entityName" id="noti-dropdownPopup-entityName" class="dropdown-menu">
-        <div ngbDropdownMenu>
-          <ng-container *ngFor="let item of vllEntityName">
-            <button (click)="entityNameChange(item)" ngbDropdownItem>
-              <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
-              </span>
-              <span>
-                {{item.text}}
-              </span>
-            </button>
-          </ng-container>
-        </div>
+      <div ngbDropdownMenu container="body" aria-labelledby="noti-dropdowTonggle-entityName-1" id="noti-dropdownPopup-entityName-1" class="dropdown-menu">
+        <ng-container *ngFor="let item of vllEntityName">
+          <button (click)="entityNameChange(item)" ngbDropdownItem>
+            <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
+            </span>
+            <span>
+              {{item.text}}
+            </span>
+          </button>
+        </ng-container>
       </div>
     </div>
-    <!--  -->
-    <div ngbDropdown ngbDropdownToggle #dropdown id="noti-dropdowTonggle-isRead">
+    <div ngbDropdown ngbDropdownToggle #dropdown2 id="noti-dropdowTonggle-isRead-2">
       <button class="btn btn-sm btn-light-primary" *ngIf="isRead">
         <span class="w-20px" [class]="isRead.icon">
         </span>
@@ -34,7 +31,7 @@
           {{isRead.text}}
         </span>
       </button>
-      <div ngbDropdownMenu aria-labelledby="noti-dropdowTonggle-isRead" id="noti-dropdownPopup-isRead" class="dropdown-menu">
+      <div ngbDropdownMenu aria-labelledby="noti-dropdowTonggle-isRead-2" id="noti-dropdownPopup-isRead-2" class="dropdown-menu">
         <div ngbDropdownMenu>
           <ng-container *ngFor="let item of vllIsRead">
             <button (click)="isReadChange(item)" ngbDropdownItem>
@@ -59,32 +56,47 @@
             <ng-container *ngIf="index==0">
               <div class="d-flex justify-content-between">
                 <span>
-                  <codx-label class="fw-bold fs-5" [formModel]="" name="lblNew" default="Mới"></codx-label>
+                  <codx-label class="fw-bold fs-5" [formModel]="formModel" name="lblBookmark" default="Đã ghim"></codx-label>
                 </span>
                 <span (click)="viewAll()">
-                  <codx-label class="fst-italic fs-6 text-primary" [formModel]="" name="lblViewAll" default="Xem tất cả"></codx-label>
+                  <codx-label class="fst-italic fs-6 text-primary" [formModel]="formModel" name="lblAll" default="Xem tất cả"></codx-label>
                 </span>
               </div>
             </ng-container>
             <ng-container *ngIf="index==5">
               <div class="mt-3 row">
                 <span>
-                  <codx-label class="fw-bold fs-5" [formModel]="" name="lblNew" default="Trước đây"></codx-label>
+                  <codx-label class="fw-bold fs-5 cursor-pointer " [formModel]="formModel" name="lblBG_Notifilcation" default="Trước đây"></codx-label>
                 </span>
               </div>
             </ng-container>
-            <div class="d-flex align-items-center p-3 my-2 bg-hover cursor-pointer " (click)="clickNotification(item,index)">
+            <div class="d-flex align-items-center p-3 my-2 bg-hover cursor-pointer has-action-menu" 
+              (click)="clickNotification(item,index)">
               <div class="me-3">
-                <codx-img [width]="35" [objectId]="item.createdBy" [objectName]="item.createdName"
-                  [objectType]="'AD_Users'"></codx-img>
+                <codx-img [width]="35" 
+                  [objectId]="item.createdBy" 
+                  [objectName]="item.createdName"
+                  [objectType]="'AD_Users'">
+                </codx-img>
               </div>
               <div class="w-100">
-                <div [innerHTML]="item.textValue | fTextValue:item.text | async">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="me-1" [innerHTML]="item.textValue | fTextValue:item.text | async"></span>
+                  <span *ngIf="item.isBookmark" class="icon-16 icon-bookmark" style="color: rgb(255, 168, 0);"></span>
                 </div>
-                <span class="text-gray-500 ms-1">{{item.createdOn | timefrom}}</span>
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="text-gray-500 ms-1">{{item.createdOn | timefrom}}</span>
+                  <span *ngIf="!item.read" class="dots"></span>
+                </div>
               </div>
-              <div class="w-50px d-flex justify-content-end" *ngIf="!item.read">
-                <span class="dots"></span>
+              <div>
+                <codx-mfunc 
+                  [formModel]="formModel" 
+                  (clickMF)="clickMF($event,item)" 
+                  (changeDataMF)="changeDataMF($event)"
+                  [dataItem]="item" 
+                  [type]="'hover'">
+                </codx-mfunc>
               </div>
             </div>
           </div>

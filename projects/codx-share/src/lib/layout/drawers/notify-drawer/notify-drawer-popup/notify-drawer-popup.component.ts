@@ -1,84 +1,69 @@
-import { ChangeDetectorRef, Component, OnChanges, OnInit, Optional, SimpleChanges, } from '@angular/core';
-import { DialogRef, ApiHttpService, DialogData, ScrollComponent, DataRequest, CacheService, CodxService, AuthStore, DialogModel, CallFuncService, FormModel } from 'codx-core';
-import { NotifyDrawerPopupComponent } from '../notify-drawer-popup/notify-drawer-popup.component';
+
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, Optional } from '@angular/core';
+import { ApiHttpService, AuthStore, CacheService, CodxService, DataRequest, DialogData, DialogRef, FormModel, ScrollComponent } from 'codx-core';
 
 @Component({
-  selector: 'lib-notify-drawer-slider',
-  templateUrl: './notify-drawer-slider.component.html',
-  styleUrls: ['./notify-drawer-slider.component.scss']
+  selector: 'codx-notify-popup',
+  templateUrl: './notify-drawer-popup.component.html',
+  styleUrls: ['./notify-drawer-popup.component.scss']
 })
-export class NotifyDrawerSliderComponent implements OnInit {
+export class NotifyDrawerPopupComponent implements OnInit, AfterViewInit {
+
+  @Input() predicate:string = "";
+  @Input() dataValue:string = "";
+  @Input() predicates:string = "";
+  @Input() dataValues:string = "";
+  @Input() dataObj:string = "";
+  
   dialogRef: DialogRef;
-  lstNotify:any[] = [];
-  model:DataRequest = {
-    entityName:"BG_Notification",
-    predicate: "ActionType != @0",
-    dataValue: "AP",
-    formName:"Notification",
-    gridViewName:"grvNotification",
-    srtColumns:"CreatedOn",
-    srtDirections:"desc",
-    pageLoading: true,
-    pageSize:20,
-    page: 1
-  }
+  model:DataRequest;
+  formModel:FormModel;
+  user:any;
+  data:any[] = [];
+
+  scrolled:boolean = true;
   loaded:boolean = true;
-  user:any = null;
-  totalPage:number = 0;
-  isScroll = true;
-  messageNoData:string ="";
+  totalRecord:number = 0;
+  mssgNoData:string ="";
   vllEntityName:any[] = [];
   entityName:any = null;
   vllIsRead:any[] = [];
   isRead:any = null;
-  formModel:FormModel;
   notiMFC:any[] = [];
-  constructor(
+
+  constructor
+  (
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,
     private auth:AuthStore,
     private cache:CacheService,
     private codxService:CodxService,
-    private callFC:CallFuncService,
-
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) 
-  {    
+  {
     this.dialogRef = dialogRef;
+    this.model = new DataRequest("Notification","grvNotification","BG_Notification",this.predicate,this.dataValue,1,20);
+    this.model.predicate = this.predicate;
+    this.model.dataValue = this.dataValue;
+    this.model.predicates = this.predicates;
+    this.model.dataValues = this.dataValues;
+    this.model.dataObj = this.dataObj;
     this.formModel = new FormModel();
     this.user = this.auth.get();
+
   }
+ 
 
   ngOnInit(): void {
-    this.getNotifyAsync();
-    this.getMessage("SYS010");
-    this.cache.valueList("SYS055")
-    .subscribe((vll:any) => {
-      if(vll){
-        this.vllEntityName = vll.datas;
-        let _default  = vll.datas.find(x => x.value === "");
-        if(_default){
-          this.entityName = _default;
-        }
-        else{
-          this.entityName = vll.datas[0];
-        }
-      }
-    });
-    this.cache.valueList("SYS057")
-    .subscribe((vll:any) => {
-      if(vll){
-        this.vllIsRead = vll.datas;
-        let _default  = vll.datas.find(x => x.value === "");
-        if(_default){
-          this.isRead = _default;
-        }
-        else{
-          this.isRead = vll.datas[0];
-        }
-      }
-    });
+    this.getSetUp();
+    this.getNotiAsync();
+  }
+  ngAfterViewInit(): void {
+    ScrollComponent.reinitialization();
+  }
+  // get set up
+  getSetUp(){
     this.cache.functionList("BGT001")
     .subscribe((func:any)=>{
       this.formModel.funcID = func.funcID;
@@ -91,17 +76,40 @@ export class NotifyDrawerSliderComponent implements OnInit {
         this.notiMFC = mfc;
       });
     });
+    this.cache.message("SYS010").subscribe((mssg:any) => {
+      if(mssg){
+        this.mssgNoData = mssg.defaultName;
+      }
+    });
+    this.cache.valueList("SYS055").subscribe((vll:any) => {
+      if(vll){
+        this.vllEntityName = vll.datas;
+        let _default  = vll.datas.find(x => x.value === "");
+        if(_default){
+          this.entityName = _default;
+        }
+        else{
+          this.entityName = vll.datas[0];
+        }
+      }
+    });
+    this.cache.valueList("SYS057").subscribe((vll:any) => {
+      if(vll){
+        this.vllIsRead = vll.datas;
+        let _default  = vll.datas.find(x => x.value === "");
+        if(_default){
+          this.isRead = _default;
+        }
+        else{
+          this.isRead = vll.datas[0];
+        }
+      }
+    });
   }
 
-  ngAfterViewInit(){
-    ScrollComponent.reinitialization();
-  }
-  // close form
-  clickCloseFrom(){
-    this.dialogRef.close();
-  }
   // load data noti
-  getNotifyAsync(){
+  getNotiAsync(scroll:boolean = false){
+    this.loaded = true;
     this.api.execSv(
       'BG',
       'ERM.Business.BG',
@@ -109,15 +117,17 @@ export class NotifyDrawerSliderComponent implements OnInit {
       'GetNotiAsync',
       [this.model])
       .subscribe((res:any[]) => {
-      if(res && res[1] > 0)
+      if(res[1] > 0)
       {
-        this.lstNotify = res[0];
-        let totalRecord = res[1];
-        this.totalPage = totalRecord / this.model.pageSize;
-        this.isScroll = false;
+        if(scroll)
+          this.data = this.data.concat(res[0]);
+        else
+          this.data = res[0];
+        this.totalRecord = res[1];
+        this.scrolled = false;
         this.dt.detectChanges();
       }
-      else if(this.lstNotify.length == 0){
+      else if(this.data.length == 0){
         this.loaded = false;
       }
     });
@@ -126,32 +136,13 @@ export class NotifyDrawerSliderComponent implements OnInit {
   // scroll
   onScroll(event: any) {
     let dcScroll = event.srcElement;
-    if (dcScroll.scrollTop + dcScroll.clientHeight < dcScroll.scrollHeight - 150) return;
-    if(this.model.page > this.totalPage || this.isScroll) return;
+    if(this.scrolled || (dcScroll.scrollTop + dcScroll.clientHeight < dcScroll.scrollHeight - 150)  || this.data.length > this.totalRecord) return;
     this.loaded = true;
-    this.isScroll = true;
+    this.scrolled = true;
     this.model.page = this.model.page + 1;
-    this.api.execSv(
-      'BG',
-      'ERM.Business.BG',
-      'NotificationBusinesss',
-      'GetNotiAsync',
-      [this.model])
-    .subscribe((res:any[]) => {
-      if(res && res[1] > 0){
-        let notifications = res[0];
-        let totalRecord = res[1];
-        this.totalPage = totalRecord / this.model.pageSize;
-        this.lstNotify = this.lstNotify.concat(notifications);
-        this.isScroll = false;
-        this.dt.detectChanges();
-      }
-      else if(this.lstNotify.length == 0)
-      {
-        this.loaded = false;
-      }
-    });
+    this.getNotiAsync(this.scrolled);
   }
+
   // view detail noti
   clickNotification(item:any,index:number){
     if(item.transID){
@@ -171,21 +162,12 @@ export class NotifyDrawerSliderComponent implements OnInit {
         predicate:"RecID=@0",
         dataValue:item.transID
       };
-      this.lstNotify.splice(index,1);
+      this.data.splice(index,1);
       this.codxService.openUrlNewTab(item.function,"",query);
     }
   }
 
-  //
-  getMessage(mssgCode:string){
-    if(mssgCode){
-      this.cache.message(mssgCode).subscribe((mssg:any) => {
-        if(mssg){
-          this.messageNoData = mssg.defaultName;
-        }
-      });
-    }
-  }
+
   // filter selected change
   entityNameChange(event:any){
     this.entityName = event;
@@ -193,7 +175,7 @@ export class NotifyDrawerSliderComponent implements OnInit {
     this.model.dataValues = event.value;
     this.loaded = true;
     this.model.page = 1;
-    this.totalPage = 0;
+    this.totalRecord = 0;
     this.api.execSv(
       'BG',
       'ERM.Business.BG',
@@ -201,12 +183,11 @@ export class NotifyDrawerSliderComponent implements OnInit {
       'GetNotiAsync',
       [this.model])
       .subscribe((res:any[]) => {
-      if(res && res[1] > 0)
+      if(res[1] > 0)
       {
-        this.lstNotify = res[0];
-        let totalRecord = res[1];
-        this.totalPage = totalRecord / this.model.pageSize;
-        this.isScroll = false;
+        this.data = res[0];
+        this.totalRecord = res[1];
+        this.scrolled = false;
         this.dt.detectChanges();
       }
       else
@@ -221,7 +202,7 @@ export class NotifyDrawerSliderComponent implements OnInit {
     this.model.dataObj = event.value;
     this.loaded = true;
     this.model.page = 1;
-    this.totalPage = 0;
+    this.totalRecord = 0;
     this.api.execSv(
       'BG',
       'ERM.Business.BG',
@@ -231,10 +212,9 @@ export class NotifyDrawerSliderComponent implements OnInit {
       .subscribe((res:any[]) => {
       if(res && res[1] > 0)
       {
-        this.lstNotify = res[0];
-        let totalRecord = res[1];
-        this.totalPage = totalRecord / this.model.pageSize;
-        this.isScroll = false;
+        this.data = res[0];
+        this.totalRecord = res[1];
+        this.scrolled = false;
         this.dt.detectChanges();
       }
       else
@@ -244,16 +224,14 @@ export class NotifyDrawerSliderComponent implements OnInit {
     });
     this.dt.detectChanges();
   }
-
   //
-  viewAll(){
-    let _option = new DialogModel();
-    _option.IsFull = true;
-    _option.zIndex = 1001;
-    _option.IsModal = false;
-    this.callFC.openForm(NotifyDrawerPopupComponent,"",0,0,"",null,"",_option);
-  }
+  clickTab1(){
 
+  }
+  //
+  clickTab2(){
+
+  }
   clickMF(event,item){
     debugger
     if(event){
