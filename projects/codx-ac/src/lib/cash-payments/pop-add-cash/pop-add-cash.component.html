@@ -15,14 +15,7 @@
         <ejs-tab #cashRef>
           <e-tabitems>
             <!-- Tab thông tin chứng từ -->
-            <e-tabitem>  
-              <ng-template #headerText>
-                <codx-label                           
-                  [formModel]="form.formModel"
-                  fiedName="tabBasic"
-                  default="Thông tin chứng từ"
-                ></codx-label>
-              </ng-template>
+            <e-tabitem [header]="tabItem[0]">  
               <ng-template #content>
                 <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
               </ng-template>
@@ -33,14 +26,7 @@
         <ejs-tab>
             <e-tabitems>
               <!-- Tab chi tiết bút toán -->
-              <e-tabitem>  
-                <ng-template #headerText>
-                  <codx-label               
-                    [formModel]="form.formModel"
-                    fiedName="tabjournaling"
-                    default="Chi tiết bút toán"
-                  ></codx-label>
-                </ng-template>
+              <e-tabitem [header]="tabItem[1]">  
                 <ng-template #content>
                   <ng-container *ngTemplateOutlet="tabCashPaymentLine"></ng-container>
                 </ng-template>
@@ -183,8 +169,8 @@
                   >
                   </codx-label>
                   <codx-input
-                    [crrValue]="objectID"
                     *ngIf="cbxObjectID != null"
+                    [crrValue]="objectID"
                     field="objectID"                  
                     type="combobox"
                     [refValue]="cbxObjectID"
@@ -279,6 +265,7 @@
             field="memo"
             [formModel]="form.formModel"
             (valueChange)="valueChange($event,'')"
+            
           >
           </codx-input>
           </div>
@@ -369,7 +356,7 @@
       [formModel]="form.formModel"
       [objectID]="cashpayment.recID"
       [funcID]="form.formModel.funcID"
-      [TabControl]="tabInfo"
+      [TabControl]="tabInfo"     
     ></codx-tabs>
   </ng-template>
 <ng-template #subToolbar>
