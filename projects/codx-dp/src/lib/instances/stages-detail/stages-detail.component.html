@@ -1,12 +1,12 @@
-<div class="back-ground" *ngIf="listData != null">
+<div class="back-ground" *ngIf="dataStep != null">
   <div class="header-job">
     <div>
       <span class="title-train"
-        >{{ currentStep + 1 }}. {{ listData?.stepName }}</span
+        >{{ currentStep + 1 }}. {{ dataStep?.stepName }}</span
       >
       <i
         class="icon-work_outline text-primary-600"
-        (click)="openPopupSup(popupSup, listData)"
+        (click)="openPopupSup(popupSup, dataStep)"
       ></i>
     </div>
     <div class="ms-3">
@@ -36,8 +36,8 @@
         <div>
           <i class="icon-work_outline text-primary-600"></i>
           <span class=""
-            >Kỳ vọng: {{ listData?.durationDay }} ngày
-            {{ listData?.durationHour }} giờ</span
+            >Kỳ vọng: {{ dataStep?.durationDay }} ngày
+            {{ dataStep?.durationHour }} giờ</span
           >
         </div>
         <div class="d-flex align-items-start">
@@ -73,59 +73,7 @@
   </div>
 </div>
 <div class="back-info">
-  <div class="header-info">
-    <div class="left">
-      <span class="title">Thông tin nhập liệu</span>
-    </div>
-    <div class="right">
-      <div class="group-button">
-        <button class="button-custom">
-          <span
-            [ngClass]="isUpdate == true ? 'icon-edit icon-20 text-primary-600 py-2' : ''"
-            class=""
-            style="font-weight: 500"
-            (click)="popupCustomField(listData.fields)"
-          ></span>
-        </button>
-        <button class="button-custom" (click)="clickShow($event, 'role-main')">
-          <span
-            class="icon-expand_less icon-20 text-primary-600 py-2"
-            style="font-weight: 500"
-          ></span>
-        </button>
-      </div>
-    </div>
-  </div>
-  <div id="role-main" class="main" [ngClass]="'show-main'">
-    <div
-      class="ms-4 mt-2 mb-2"
-      *ngIf="lstFields != null && lstFields.length > 0"
-    >
-      <ng-container *ngFor="let item of lstFields">
-        <div
-          class="col-{{
-            12 / item.showColumnControl
-          }} p-3 has-action-menu crr-fiels mb-5"
-        >
-          <li class="text-gray-400">
-            {{ item.title }}
-          </li>
-          <span class="text-dark margin-l">
-            {{ item.dataValue }}
-          </span>
-          <codx-mfunc
-            [formModel]="formModel"
-            (clickMF)="clickMF($event, item)"
-            (changeDataMF)="changeFieldMF($event)"
-            [isBookMark]="true"
-            [dataItem]="item"
-            [type]="'hover'"
-          >
-          </codx-mfunc>
-        </div>
-      </ng-container>
-    </div>
-  </div>
+  <codx-field-detail [dataStep]="dataStep" [titleDefault]="'Thông tin nhập liệu'"></codx-field-detail>
   <!-- nvthuan -->
   <ng-container [ngTemplateOutlet]="task"> </ng-container>
 </div>
@@ -146,7 +94,7 @@
         height="150"
         (valueChange)="valueChange($event)"
         [placeholder]="'Nhập.....'"
-        [crrValue]="listData.memo"
+        [crrValue]="dataStep.memo"
         [disabled]="true"
       >
       </codx-input>

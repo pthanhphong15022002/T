@@ -50,7 +50,7 @@ export class StagesDetailComponent implements OnInit {
   @ViewChild('addGroupJobPopup') addGroupJobPopup: TemplateRef<any>;
   @ViewChild('updateProgress') updateProgress: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @Input() listData: any;
+  @Input() dataStep: any;
   @Input() formModel: any;
   @Input() currentStep: any;
   @Input() stepID: any;
@@ -155,16 +155,15 @@ export class StagesDetailComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    console.log(this.listData);
-    if (changes['listData']) {
-      if (changes['listData'].currentValue != null) {
-        if (changes['listData'].currentValue?.actualStart != null) {
+    if (changes['dataStep']) {
+      if (changes['dataStep'].currentValue != null) {
+        if (changes['dataStep'].currentValue?.actualStart != null) {
           this.dateActual = new Date(
-            changes['listData'].currentValue?.actualStart
+            changes['dataStep'].currentValue?.actualStart
           );
         }
-        if (changes['listData'].currentValue?.startDate != null) {
-          var date = new Date(changes['listData'].currentValue?.startDate);
+        if (changes['dataStep'].currentValue?.startDate != null) {
+          var date = new Date(changes['dataStep'].currentValue?.startDate);
           this.startDate =
             date.getHours() +
             ':' +
@@ -176,16 +175,16 @@ export class StagesDetailComponent implements OnInit {
             '/' +
             date.getFullYear();
         }
-        var tasks = changes['listData'].currentValue?.tasks;
-        var taskGroups = changes['listData'].currentValue?.taskGroups;
+        var tasks = changes['dataStep'].currentValue?.tasks;
+        var taskGroups = changes['dataStep'].currentValue?.taskGroups;
         this.totalProgress(tasks, taskGroups);
-        this.lstFields = changes['listData'].currentValue?.fields;
+        this.lstFields = changes['dataStep'].currentValue?.fields;
         //nvthuan
-        this.groupByTask(changes['listData'].currentValue);
-        this.step = changes['listData'].currentValue;
+        this.groupByTask(changes['dataStep'].currentValue);
+        this.step = changes['dataStep'].currentValue;
         console.log('Thuan', this.step);
       } else {
-        this.listData = null;
+        this.dataStep = null;
       }
     }
   }
