@@ -3996,7 +3996,8 @@
                 <div class="has-action-menu">
                   <div class="pf-skill d-flex align-items-center ms-9 mb-4">
                     <div class="sk-title w-150px fw-bold">
-                      {{ eSkill?.skillName ?? eSkill?.skillID }}
+                      <!-- {{ eSkill?.skillName ?? eSkill?.skillID }} -->
+                      {{eSkill?.skillID| formatvalue:skillFormmodel:"skillID"|async}}
                     </div>
 
                     <div
@@ -4110,6 +4111,7 @@
             </div>
           </div>
         </div>
+
         <!-- Đào tạo -->
         <div class="user-profile overview d-block mb-3" id="HRTEM0604">
           <div class="rounded-2 p-4 bg-white">
@@ -4128,9 +4130,30 @@
                   >
                   </codx-label> -->
                   {{getFormHeader('HRTEM0604')}}
+                  <span class="text-gray-500 ms-2">|</span>
+                  <span>({{0}})</span>
+                  <span></span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
+                <codx-dropdown-select
+                [cssClass]="'rounded-pill border-1'"
+                cssPopup="h-350px w-300px"
+                placeholder="Kỹ năng"
+                type="valuelist"
+                field="SkillID"
+
+                (valueChange)="valueChangeFilterSkill($event)"
+              ></codx-dropdown-select>
+              <codx-dropdown-select
+              [cssClass]="'rounded-pill border-1'"
+              cssPopup="h-350px w-300px"
+              placeholder="Kỹ năng"
+              type="valuelist"
+              field="SkillID"
+
+              (valueChange)="valueChangeFilterSkill($event)"
+            ></codx-dropdown-select>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="addEmployeeTrainCourseInfo()"
