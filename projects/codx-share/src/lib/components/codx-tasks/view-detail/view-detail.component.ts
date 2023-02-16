@@ -24,6 +24,7 @@ import {
 } from '../model/task.model';
 import { AuthStore, CRUDService } from 'codx-core/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
+import { NullVisitor } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
   selector: 'share-view-detail',
@@ -122,34 +123,39 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       });
   }
 
-  popoverEmpList(p: any, task) {
-    this.listTaskResousceSearch = [];
-    this.countResource = 0;
+  popoverEmpList(p: any, task=null) {
+  
     if (this.popoverCrr) {
       if (this.popoverCrr.isOpen()) this.popoverCrr.close();
     }
     if (this.popoverDataSelected) {
       if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
     }
-
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskResourcesBusiness',
-        'GetListTaskResourcesByTaskIDAsync',
-        task.taskID
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.listTaskResousce = res;
-          this.listTaskResousceSearch = res;
-          this.countResource = res.length;
-          p.open();
-          this.popoverDataSelected = p;
-          this.hoverPopover.emit(p);
-        }
-      });
+    //sua ngày 16/2/2023
+    p.open();
+    this.popoverDataSelected = p;       
+    this.hoverPopover.emit(p);
+    
+    // this.listTaskResousceSearch = [];
+    // this.countResource = 0;
+    // this.api
+    //   .execSv<any>(
+    //     'TM',
+    //     'ERM.Business.TM',
+    //     'TaskResourcesBusiness',
+    //     'GetListTaskResourcesByTaskIDAsync',
+    //     task.taskID
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.listTaskResousce = res;
+    //       this.listTaskResousceSearch = res;
+    //       this.countResource = res.length;
+    //       p.open();
+    //       this.popoverDataSelected = p;
+    //       this.hoverPopover.emit(p);
+    //     }
+    //   });
   }
   //#endregion
   //#region Event
