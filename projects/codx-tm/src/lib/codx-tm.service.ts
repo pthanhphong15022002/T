@@ -361,6 +361,15 @@ export class CodxTMService {
       [meetingID, data, startDate, endDate]
     );
   }
+  getListUserIDByListEmployeeID(listEmployeeID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDbyListEmployeeIDAsync',
+      listEmployeeID
+    );  
+  }
 
   convertListToObject(
     list: Array<object>,

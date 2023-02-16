@@ -165,10 +165,10 @@
 
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center mt-1">
-    <div class="d-flex align-items-end codx-badge">
+    <div class="d-flex align-items-end codx-badge" >
       <div class="font me-3">
-        <span >
-          {{getStepNameById(dataSelected.stepID)}}
+        <span>
+          {{getStepNameById(data.stepID)}}
         </span>
       </div>
       <span>
@@ -199,12 +199,12 @@
 
 <!--Detail-->
 <ng-template #templateDetail>
-  <codx-instance-detail
+  <codx-instance-detail #detailViewInstance
     [dataService]="view.dataService"
     [formModel]="view.formModel"
     [recID]="dataSelected.recID"
-    [currentStep]="dataSelected.currentStep"
     [progress]="dataSelected.progress"
     [dataSelect]="dataSelected"
+    (moreFunctionEvent)="clickMoreFunc($event)"
   ></codx-instance-detail>
 </ng-template>

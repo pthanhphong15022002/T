@@ -206,7 +206,7 @@
         <div class="AttachmentFile-group flex-nowrap">
           <codx-attachment #attachment [objectType]="formModel?.entityName" [showMessage]="0" hideBtnSave="1"
             hideFolder="1" hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="funcID"
-            [objectId]="data?.recID" [allowMultiFile]="0" [idBrowse]="'add'" displayThumb="full"
+            [objectId]="data?.recID" allowMultiFile="1" [idBrowse]="'add'" displayThumb="full"
             [addPermissions]="listFilePermission" (fileAdded)="fileAdded($event)" (fileCount)="fileCount($event)" [referType]="'2'">
           </codx-attachment>
         </div>

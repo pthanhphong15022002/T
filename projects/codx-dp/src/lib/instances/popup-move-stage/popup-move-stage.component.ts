@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
-import { log } from 'console';
+import { log, table } from 'console';
 import { CodxDpService } from '../../codx-dp.service';
 import { DP_Instances, DP_Instances_Steps, DP_Instances_Steps_Reasons } from '../../models/models';
 import { InstancesComponent } from '../instances.component';
@@ -33,6 +33,7 @@ export class PopupMoveStageComponent implements OnInit {
   isReason: any = null;
   stepReason = new DP_Instances_Steps_Reasons();
   stepIdClick: string = '';
+  idTest:any;
   //instanceStep = new DP_Instances_Steps;
 
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
@@ -56,11 +57,11 @@ export class PopupMoveStageComponent implements OnInit {
     this.instancesStepOld = this.listStepsCbx.filter(x => x.stepID === this.stepIdOld)[0];
     this.IdFail = this.listStepsCbx[this.listStepsCbx.length - 1]?.stepID;
     this.IdSuccess = this.listStepsCbx[this.listStepsCbx.length - 2]?.stepID;
-
   }
 
   ngOnInit(): void {
    this.autoClickedSteps(this.listStepsCbx, this.stepName);
+   
   }
 
   onSave() {
@@ -74,27 +75,29 @@ export class PopupMoveStageComponent implements OnInit {
 
   }
   beforeSave() {
-    if(this.instancesStepOld.stepID === this.IdSuccess || this.instancesStepOld.stepID === this.IdFail ) {
+    if(this.stepIdClick === this.IdSuccess || this.stepIdClick === this.IdFail ) {
       this.instance.stepID = this.stepIdOld;
       this.instancesStepOld.stepID = this.stepIdOld;
       this.stepIdOld = '';
       this.isReason = true;
     }
     else {
-      this.instance.stepID = this.stepIdClick;
+      this.instancesStepOld.stepID = this.stepIdClick;
     }
+
 
     var data = [this.instance.recID,this.stepIdOld ,this.instancesStepOld];
     this.codxDpService.moveStageByIdInstance(data).subscribe((res)=> {
       if(res){
-        this.listStep = res;
+        debugger;
+        this.instance = res[0];
+        this.listStep = res[1];
         var obj ={
           listStep: this.listStep,
           instance: this.instance,
           isReason: this.isReason,
         };
         this.dialog.close(obj);
-        // this.dialog.dataService.clear();
         this.notiService.notifyCode('Chuyển tiếp oke nha');
 
         this.changeDetectorRef.detectChanges();
@@ -113,39 +116,29 @@ export class PopupMoveStageComponent implements OnInit {
 
   autoClickedSteps(listStep: any, stepName: string) {
     for (let i = 0; i < listStep.length; i++) {
-      if (listStep[i].stepName === stepName) {
-      //  if(i === this.listStep.length - 1) {
-      //     this.instance.stepID = listStep[i]?.stepID;
-      //  this.autoLockStepEnd();
-      //  }
-      //  else {
+      if (listStep[i].stepID === this.stepIdOld) {
          this.stepIdClick = listStep[i + 1]?.stepID;
-  //    }
         break;
       }
     }
+
+    let idx = listStep.findIndex(x=> x.stepID === this.stepIdOld);
+    this.stepIdClick = listStep[idx + 1]?.stepID;
   }
-
-  // autoLockStepEnd(){
-
-  //   this.isLockStep = true;
-  // }
-  // deleteListReason(listStep: any): void {
-  //   listStep.pop();
-  //   listStep.pop();
-  // }
   cbxChange($event) {
     if($event){
         this.stepIdClick = $event;
-        this.isLockStep = this.stepIdOld === this.IdStepEnd && $event === this.IdStepEnd ? true:false;
-        let obj = this.listStepsCbx.filter(x => x.stepID === this.stepIdClick && x.indexNo > 0)[0];
-        if(obj !== null && obj) {
-          this.instancesStepOld = obj;
-        }
-        else {
-          this.instancesStepOld = this.listStepsCbx.filter(x => x.stepID === this.stepIdOld && x.indexNo > 0)[0] ;
-          this.instancesStepOld.stepID = $event;
-        }
+        // let idx = this.listStepsCbx.findIndex(x => x.stepID === this.stepIdClick && x.indexNo > 0);
+        // let obj = this.listStepsCbx[idx];
+        // if(obj !== null && obj) {
+        //   this.instancesStepOld = obj;
+        // }
+        // else {
+        //   // let idxStep = this.listStepsCbx.findIndex(x => x.stepID === this.stepIdOld && x.indexNo > 0);
+        //   // let obj111 = this.listStepsCbx[idxStep];
+        //   // this.instancesStepOld = obj111;
+        //   //  this.instancesStepOld.stepID = $event;
+        // }
         
         this.changeDetectorRef.detectChanges();
     }
