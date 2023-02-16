@@ -2,7 +2,12 @@
   <div class="header-info">
     <div class="left">
       <span class="title" *ngIf="titleDefault">
-        <codx-label name="titleDefault" formName="DPInstancesSteps" grvName="grvDPInstancesSteps" [default]="titleDefault"></codx-label>
+        <codx-label
+          name="titleDefault"
+          formName="DPInstancesSteps"
+          grvName="grvDPInstancesSteps"
+          [default]="titleDefault"
+        ></codx-label>
       </span>
       <span class="title" *ngIf="!titleDefault">{{ dataStep.stepName }}</span>
     </div>
@@ -15,7 +20,10 @@
             (click)="popupCustomField(dataStep.fields)"
           ></span>
         </button>
-        <button class="button-custom" (click)="clickShow($event, dataStep.recID)">
+        <button
+          class="button-custom"
+          (click)="clickShow($event, dataStep.recID)"
+        >
           <span
             class="icon-expand_less icon-20 text-primary-600 py-2"
             style="font-weight: 500"
@@ -42,24 +50,23 @@
   </div>
 </div>
 
-
 <ng-template #viewCustomFields let-data>
-<li class="text-gray-700">
-  {{ data.title }}
-</li>
+  <li class="text-gray-700">
+    {{ data.title }}
+  </li>
 
-<span class="text-dark margin-l" *ngIf="data.dataType == 'T'">
-  {{ data.dataValue }}
-</span>
+  <span class="text-dark margin-l" *ngIf="data.dataType == 'T'">
+    {{ data.dataValue }}
+  </span>
 
-<span class="text-dark margin-l" *ngIf="data.dataType == 'N'">
-  {{ data.dataValue }} <span *ngIf="data.dataFormat == 'P'">%</span>
-</span>
-<span class="text-dark margin-l" *ngIf="data.dataType == 'D'">
-  {{ data.dataValue | date : fomatvalue(data.dataFormat) }}
-</span>
+  <span class="text-dark margin-l" *ngIf="data.dataType == 'N'">
+    {{ data.dataValue }} <span *ngIf="data.dataFormat == 'P'">%</span>
+  </span>
+  <span class="text-dark margin-l" *ngIf="data.dataType == 'D'">
+    {{ data.dataValue | date : fomatvalue(data.dataFormat) }}
+  </span>
 
-<ng-container *ngIf="data.dataType == 'R'">
+  <ng-container *ngIf="data.dataType == 'R'">
     <ngb-rating
       [rate]="8"
       [max]="data?.rank"
@@ -75,9 +82,9 @@
         ></span>
       </ng-template>
     </ngb-rating>
-</ng-container> 
+  </ng-container>
 
-<!-- <codx-mfunc
+  <!-- <codx-mfunc
   [formModel]="formModel"
   (clickMF)="clickMF($event, data)"
   [isBookMark]="true"
