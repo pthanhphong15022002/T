@@ -174,12 +174,17 @@
           [formModel]="formModel"
           [currentStep]="currentNameStep"
           [stepID]="dataSelect.stepID"
+          [isDelete]="dataSelect.delete"
+          [isEdit]="dataSelect.edit"
+          [isUpdate]="dataSelect.write"
+          [isCreate]="dataSelect.create"
         ></codx-stages-detail>
       </ng-container>
       <ng-container *ngIf="idCbx == 'F'">
         <codx-field-detail
           [lstSteps]="listSteps"
           [formModel]="formModel"
+          [isUpdate]="dataSelect.write"
         ></codx-field-detail>
       </ng-container>
     </ng-template>

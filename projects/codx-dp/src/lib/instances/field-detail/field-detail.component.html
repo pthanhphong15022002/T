@@ -8,36 +8,23 @@
         <div class="right">
           <div class="group-button">
             <button class="button-custom">
-              <span
-                class="icon-edit icon-20 text-primary-600 py-2"
-                style="font-weight: 500"
-                (click)="popupCustomField(item.fields)"
-              ></span>
+              <span [ngClass]="isUpdate == true ? 'icon-edit icon-20 text-primary-600 py-2' : ''"
+                style="font-weight: 500" (click)="popupCustomField(item.fields)"></span>
             </button>
-            <button
-              class="button-custom"
-              (click)="clickShow($event, item.recID)"
-            >
-              <span
-                class="icon-expand_less icon-20 text-primary-600 py-2"
-                style="font-weight: 500"
-              ></span>
+            <button class="button-custom" (click)="clickShow($event, item.recID)">
+              <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
             </button>
           </div>
         </div>
       </div>
       <div id="{{ item.recID }}" class="main" [ngClass]="'show-main'">
-        <div
-          class="d-flex row class-field m-5"
-          *ngIf="item.fields != null && item.fields.length > 0"
-        >
+        <div class="d-flex row class-field m-5" *ngIf="item.fields != null && item.fields.length > 0">
           <ng-container *ngFor="let field of item.fields">
-            <div
-              class="col-{{
+            <div class="col-{{
                 12 / field.showColumnControl
-              }} p-3 has-action-menu crr-fiels mb-5"
-            >
-            <ng-container [ngTemplateOutlet]="viewCustomFields"  [ngTemplateOutletContext]="{ $implicit: field }"></ng-container>
+              }} p-3 has-action-menu crr-fiels mb-5">
+              <ng-container [ngTemplateOutlet]="viewCustomFields" [ngTemplateOutletContext]="{ $implicit: field }">
+              </ng-container>
             </div>
           </ng-container>
         </div>
@@ -51,14 +38,15 @@
     {{ data.title }}
   </li>
 
-  <span class="text-dark margin-l" *ngIf="data.dataType == 'S' || data.dataType == 'L' ||data.dataType == 'P' ||data.dataType == 'E'">
+  <span class="text-dark margin-l"
+    *ngIf="data.dataType == 'S' || data.dataType == 'L' ||data.dataType == 'P' ||data.dataType == 'E'">
     {{ data.dataValue }}
   </span>
 
   <span class="text-dark margin-l" *ngIf="data.dataType == 'I' || data.dataType == 'D' || data.dataType == 'P'">
     {{ data.dataValue }} <span *ngIf="data.dataType == 'P'">%</span>
   </span>
-   
+
   <!-- <ng-container *ngIf="field.dataType == 'R'">
       <ngb-rating
         [(rate)]="8"
@@ -77,12 +65,7 @@
       </ngb-rating>
   </ng-container>  -->
 
-  <codx-mfunc
-    [formModel]="formModel"
-    (clickMF)="clickMF($event, data)"
-    [isBookMark]="true"
-    [dataItem]="data"
-    [type]="'hover'"
-  >
+  <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true" [dataItem]="data"
+    [type]="'hover'" (changeDataMF)="changeFieldMF($event)">
   </codx-mfunc>
 </ng-template>
