@@ -184,7 +184,7 @@
       </ng-container>
       <ng-container *ngIf="idCbx == 'F'">
         <ng-container *ngFor="let item of listSteps">
-          <codx-field-detail [dataStep]="item"></codx-field-detail>
+          <codx-field-detail [dataStep]="item" [isUpdate]="dataSelect.write"></codx-field-detail>
         </ng-container>
       </ng-container>
     </ng-template>

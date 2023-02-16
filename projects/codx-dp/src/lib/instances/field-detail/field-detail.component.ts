@@ -62,9 +62,9 @@ export class FieldDetailComponent implements OnInit {
 
   changeFieldMF(e) {
     //đe vậy tính sau
-    // if (e != null) {
-    //   e.forEach((res) => {
-    //     switch (res.functionID) {
+     if (e != null) {
+      e.forEach((res) => {
+         switch (res.functionID) {
     //       case 'SYS104':
     //       case 'SYS04':
     //       case 'SYS102':
@@ -80,14 +80,14 @@ export class FieldDetailComponent implements OnInit {
     //       case 'DP10':
     //         res.disabled = true;
     //         break;
-    //       //edit
-    //       case 'SYS103':
-    //       case 'SYS03':
-    //           if (!this.isUpdate) res.disabled = true;
-    //           break;
-    //     }
-    //   });
-   //  }
+             //edit
+          case 'SYS103':
+          case 'SYS03':
+              if (!this.isUpdate) res.disabled = true;
+              break;
+        }
+      });
+    }
   }
 
   popupCustomField(data) {

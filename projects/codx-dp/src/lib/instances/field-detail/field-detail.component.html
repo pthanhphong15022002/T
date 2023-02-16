@@ -68,7 +68,7 @@
 
   <ng-container *ngIf="data.dataType == 'R'">
     <ngb-rating
-      [rate]="8"
+      [rate]="data.dataValue"
       [max]="data?.rank"
       (rateChange)="rateChange($event)"
       [readonly]="true"
