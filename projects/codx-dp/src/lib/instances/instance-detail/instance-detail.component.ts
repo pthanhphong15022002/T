@@ -28,12 +28,11 @@ export class InstanceDetailComponent implements OnInit {
   @Input() formModel: any;
   @Input() dataService: CRUDService;
   @Input() recID: any;
-  @ViewChild('locationCBB') locationCBB: any;
   @Output() progressEvent = new EventEmitter<object>();
   @Output() moreFunctionEvent = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @Input() stepName: string;
-  progress = '0';
+  @Input() progress = '0';
   @Input() dataSelect: any;
   id: any;
   totalInSteps: any;
@@ -67,6 +66,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+ 
     this.taskFields = {
       id: 'recID',
       name: 'name',
@@ -98,9 +98,10 @@ export class InstanceDetailComponent implements OnInit {
       this.dataSelect = changes['dataSelect'].currentValue;
       this.currentStep = this.dataSelect.currentStep;
       this.GetStepsByInstanceIDAsync(this.id);
-      if (this.listSteps == null && this.listSteps.length == 0) {
-        this.tmpTeps = null;
-      }
+      //cái này xóa luon di. chưa chạy xong api mà gọi ra la sai
+      // if (this.listSteps == null && this.listSteps.length == 0) {
+      //   this.tmpTeps = null;
+      // }
     }
     console.log(this.formModel);
   }
@@ -133,7 +134,7 @@ export class InstanceDetailComponent implements OnInit {
         this.stepName = '';
         this.progress = '0';
         this.tmpTeps = null;
-      }
+      }   
     });
   }
 

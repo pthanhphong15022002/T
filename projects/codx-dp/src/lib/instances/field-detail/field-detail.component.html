@@ -32,7 +32,7 @@
       </div>
     </div>
   </div>
-  <div id="{{ dataStep.recID }}" class="main" [ngClass]="'show-main'">
+  <div id="{{dataStep.recID }}" class="main" [ngClass]="'show-main'">
     <div
       class="d-flex row class-field m-5"
       *ngIf="dataStep.fields != null && dataStep.fields.length > 0"
@@ -68,7 +68,7 @@
 
   <ng-container *ngIf="data.dataType == 'R'">
     <ngb-rating
-      [rate]="data.dataValue"
+      [rate]="8"
       [max]="data?.rank"
       (rateChange)="rateChange($event)"
       [readonly]="true"

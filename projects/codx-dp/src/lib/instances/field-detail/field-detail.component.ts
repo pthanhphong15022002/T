@@ -14,7 +14,7 @@ import { PopupCustomFieldComponent } from '../popup-custom-field/popup-custom-fi
   styleUrls: ['./field-detail.component.scss'],
 })
 export class FieldDetailComponent implements OnInit {
-  @Input() dataStep: any;
+  @Input() dataStep!: any;
   @Input() formModel: any;
   @Input() titleDefault :string=''
   @Input() isUpdate = false;

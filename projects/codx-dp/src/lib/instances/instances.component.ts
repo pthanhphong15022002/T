@@ -40,16 +40,17 @@ export class InstancesComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
+  @Input() process: any;
+  @Input() isCreate: boolean;
   @ViewChild('templateDetail', { static: true })
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
   @ViewChild('detailViewInstance')
   detailViewInstance: InstanceDetailComponent;
-  @Input() process: any;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
-  @ViewChild('tmpDetail') tmpDetail: TemplateRef<any>;
+  @ViewChild('popDetail') popDetail: TemplateRef<any>;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   showButtonAdd = true;
@@ -90,7 +91,7 @@ export class InstancesComponent
   dataColums = [];
   dataDrop: any;
   isClick: boolean = true;
-  @Input() isCreate: boolean;
+
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -422,10 +423,9 @@ export class InstancesComponent
 
   viewDetail() {
     let option = new DialogModel();
-    option.zIndex = 1010;
-    debugger
+    option.zIndex = 101500;
     let popup = this.callFunc.openForm(
-      this.tmpDetail,
+      this.popDetail,
       '',
       1000,
       700,
@@ -644,7 +644,7 @@ export class InstancesComponent
     this.lstStepInstances = e.lstSteps;
     this.clickMF(e.e, e.data);
   }
-  changeMF(e){
+  changeMF(e) {
     this.changeDataMF(e.e, e.data);
   }
   #endregion;
