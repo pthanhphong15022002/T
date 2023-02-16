@@ -5,7 +5,8 @@ import {
   CallFuncService,
   CacheService,
 } from 'codx-core';
-import { PopupCustomFieldComponent } from '../popup-custom-field/popup-custom-field.component';
+import { PopupCustomFieldComponent } from './popup-custom-field/popup-custom-field.component';
+
 // import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 // imports: [NgbRatingModule];
 @Component({
