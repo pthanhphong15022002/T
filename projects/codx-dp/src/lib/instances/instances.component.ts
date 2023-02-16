@@ -416,14 +416,15 @@ export class InstancesComponent
         break;
       case 'dbClick':
         //xư lý dbClick
-        this.viewDetail();
+        this.viewDetail(e.data.recID);
         break;
     }
   }
 
-  viewDetail() {
+  viewDetail(recID) {
+  //  this.detailViewInstance.GetStepsByInstanceIDAsync(recID)
     let option = new DialogModel();
-    option.zIndex = 101500;
+    option.zIndex = 1010;
     let popup = this.callFunc.openForm(
       this.popDetail,
       '',

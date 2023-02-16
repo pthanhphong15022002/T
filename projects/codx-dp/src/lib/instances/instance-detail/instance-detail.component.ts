@@ -53,7 +53,14 @@ export class InstanceDetailComponent implements OnInit {
   //gantchat
   ganttDs = [];
   dataColors = [];
-  taskFields: any;
+  taskFields = {
+    id: 'recID',
+    name: 'name',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    type: 'type',
+    color:'color'
+  };
 
   constructor(
     private dpSv: CodxDpService,
@@ -67,15 +74,6 @@ export class InstanceDetailComponent implements OnInit {
 
   ngOnInit(): void {
  
-    this.taskFields = {
-      id: 'recID',
-      name: 'name',
-      startDate: 'startDate',
-      endDate: 'endDate',
-      type: 'type',
-      color:'color'
-    };
-    this.getDataGanttChart(this.recID);
   }
 
   ngAfterViewInit(): void {
@@ -102,12 +100,13 @@ export class InstanceDetailComponent implements OnInit {
       // if (this.listSteps == null && this.listSteps.length == 0) {
       //   this.tmpTeps = null;
       // }
+      this.getDataGanttChart(this.recID);
     }
     console.log(this.formModel);
   }
 
-  GetStepsByInstanceIDAsync(insID) {
-    this.dpSv.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
+  GetStepsByInstanceIDAsync(insID){
+     this.dpSv.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
       if (res) {
         this.listSteps = res;
         var total = 0;
@@ -134,8 +133,8 @@ export class InstanceDetailComponent implements OnInit {
         this.stepName = '';
         this.progress = '0';
         this.tmpTeps = null;
-      }   
-    });
+      }  
+    }); 
   }
 
   getStepsByInstanceID(list) {
