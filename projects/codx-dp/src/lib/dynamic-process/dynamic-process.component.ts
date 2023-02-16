@@ -306,10 +306,10 @@ export class DynamicProcessComponent
       case 'SYS02':
         this.delete(data);
         break;
-      case 'DP05':
+      case 'DP01014':
         this.roles(data);
         break;
-      case 'DP01':
+      case 'DP01011':
         this.viewDetailProcess(data);
         break;
     }
@@ -324,29 +324,17 @@ export class DynamicProcessComponent
           case 'SYS001':
           case 'SYS002':
           case 'SYS003':
-          case 'DP01011':
-          case 'DP01012':
-          case 'DP01014':
-          case 'DP01015':
-          case 'DP02':
-          case 'DP07':
-          case 'DP08':
-          case 'DP09':
-          case 'DP10':
-          case 'DP11':
-          case 'DP12':
-          case 'DP01013':
             res.disabled = true;
             break;
           //Xem chi tiết
-          case 'DP01':
+          case 'DP01011':
             let isRead = this.checkPermissionRead(data);
             if (!isRead) {
               res.isblur = true;
             }
             break;
           //Đổi tên, chỉnh sửa.
-          case 'DP03':
+          case 'DP01012':
           case 'SYS03':
             let isEdit = data.write;
             if (!isEdit) {
@@ -355,12 +343,12 @@ export class DynamicProcessComponent
             }
             break;
           //Phân quyền:
-          case 'DP05':
+          case 'DP01014':
             let isAssign = data.assign;
             if (!isAssign) res.isblur = true;
             break;
           //Phát hành
-          case 'DP06':
+          case 'DP01015':
             let isPublish = data.publish;
             if (!isPublish) res.isblur = true;
 
@@ -428,9 +416,9 @@ export class DynamicProcessComponent
     return isRead ? true : false;
   }
 
-  doubleClickViewProcess(data){
+  doubleClickViewProcess(data) {
     let isRead = this.checkPermissionRead(data);
-    if(isRead){
+    if (isRead) {
       this.viewDetailProcess(data);
     }
   }
@@ -461,14 +449,11 @@ export class DynamicProcessComponent
   //#endregion đang test
 
   viewDetailProcess(data) {
-    let isCreate =
-      data.create
-        ? true
-        : false;
+    let isCreate = data.create ? true : false;
     let obj = {
       data: data,
       nameAppyFor: this.getNameAppyFor(data?.applyFor),
-      isCreate: isCreate
+      isCreate: isCreate,
     };
 
     let dialogModel = new DialogModel();

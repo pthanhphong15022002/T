@@ -24,6 +24,7 @@ import {
 } from '../model/task.model';
 import { AuthStore, CRUDService } from 'codx-core/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
+import { NullVisitor } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
   selector: 'share-view-detail',
@@ -109,7 +110,12 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
             this.param = JSON.parse(JSON.stringify(this.paramDefaut));
             this.loadParam = true;
           }
-
+          //chinh 16/2/2023
+          if (res.listTaskResources.length > 0)
+            this.listTaskResousce = res.listTaskResources;
+          else this.listTaskResousce = [];
+          this.listTaskResousceSearch = this.listTaskResousce ;
+          this.countResource = this.listTaskResousce.length;
           this.loadTreeView();
           this.loadDataReferences();
           this.changeDetectorRef.detectChanges();
@@ -117,34 +123,39 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       });
   }
 
-  popoverEmpList(p: any, task) {
-    this.listTaskResousceSearch = [];
-    this.countResource = 0;
+  popoverEmpList(p: any, task=null) {
+  
     if (this.popoverCrr) {
       if (this.popoverCrr.isOpen()) this.popoverCrr.close();
     }
     if (this.popoverDataSelected) {
       if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
     }
-
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskResourcesBusiness',
-        'GetListTaskResourcesByTaskIDAsync',
-        task.taskID
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.listTaskResousce = res;
-          this.listTaskResousceSearch = res;
-          this.countResource = res.length;
-          p.open();
-          this.popoverDataSelected = p;
-          this.hoverPopover.emit(p);
-        }
-      });
+    //sua ngày 16/2/2023
+    p.open();
+    this.popoverDataSelected = p;       
+    this.hoverPopover.emit(p);
+    
+    // this.listTaskResousceSearch = [];
+    // this.countResource = 0;
+    // this.api
+    //   .execSv<any>(
+    //     'TM',
+    //     'ERM.Business.TM',
+    //     'TaskResourcesBusiness',
+    //     'GetListTaskResourcesByTaskIDAsync',
+    //     task.taskID
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.listTaskResousce = res;
+    //       this.listTaskResousceSearch = res;
+    //       this.countResource = res.length;
+    //       p.open();
+    //       this.popoverDataSelected = p;
+    //       this.hoverPopover.emit(p);
+    //     }
+    //   });
   }
   //#endregion
   //#region Event
@@ -225,15 +236,18 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           (x.functionID == 'SYS02' ||
             x.functionID == 'SYS03' ||
             x.functionID == 'SYS04') &&
-            (this.formModel?.funcID == 'TMT0206' ||  this.formModel?.funcID == 'MWP0063')
+          (this.formModel?.funcID == 'TMT0206' ||
+            this.formModel?.funcID == 'MWP0063')
         ) {
           x.disabled = true;
         }
         //an voi fun TMT03011
         if (
-          (this.formModel?.funcID == 'TMT03011' || this.formModel?.funcID == 'TMT05011') &&
+          (this.formModel?.funcID == 'TMT03011' ||
+            this.formModel?.funcID == 'TMT05011') &&
           data.category == '1' &&
-          data.createdBy != this.user.userID && !this.user?.administrator &&
+          data.createdBy != this.user.userID &&
+          !this.user?.administrator &&
           (x.functionID == 'SYS02' || x.functionID == 'SYS03')
         ) {
           x.disabled = true;
@@ -248,13 +262,13 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       this.listTaskResousceSearch = this.listTaskResousce;
       return;
     }
-
-    this.listTaskResousce.forEach((res) => {
-      var name = res.resourceName;
-      if (name.toLowerCase().includes(e.toLowerCase())) {
-        listTaskResousceSearch.push(res);
-      }
-    });
+    listTaskResousceSearch = this.listTaskResousce.filter(x=>x.resourceName.toLowerCase().includes(e.toLowerCase()))
+    // this.listTaskResousce.forEach((res) => {
+    //   var name = res.resourceName;
+    //   if (name.toLowerCase().includes(e.toLowerCase())) {
+    //     listTaskResousceSearch.push(res);
+    //   }
+    // });
     this.listTaskResousceSearch = listTaskResousceSearch;
   }
   //#endregion
