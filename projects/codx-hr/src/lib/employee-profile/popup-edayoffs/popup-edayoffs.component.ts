@@ -170,6 +170,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       else{
         this.hrSevice.UpdateEmployeeDayOffInfo(this.formModel.currentData).subscribe(p => {
           if(p != null){
+            this.successFlag = true;
             this.notify.notifyCode('SYS007')
           this.dialog && this.dialog.close(this.dayoffObj);
           // this.lstDayoffs[this.indexSelected] = p;
