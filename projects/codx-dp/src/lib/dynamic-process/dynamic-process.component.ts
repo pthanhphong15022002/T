@@ -449,6 +449,10 @@ export class DynamicProcessComponent
   //#endregion đang test
 
   viewDetailProcess(data) {
+    let isRead = this.checkPermissionRead(data);
+    if (!isRead) {
+      return
+    }
     let isCreate = data.create ? true : false;
     let obj = {
       data: data,
