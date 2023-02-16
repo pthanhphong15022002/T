@@ -5,6 +5,7 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  UrlUtil,
   Util,
 } from 'codx-core';
 import {
@@ -70,8 +71,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   loadingAll = false;
   gridViewSetup: any;
   formModel: any;
-  planholderTaskChild=''
-
+  planholderTaskChild = '';
+  referedFunction: any;
+  referedData: any;
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTasksService,
@@ -85,7 +87,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.getParam();
     this.task = {
       ...this.task,
-      ...dt?.data[0],
+      ...dt?.data?.task,
     };
     this.refID = this.task?.refID;
     this.refType = this.task?.refType || this.refType;
@@ -93,10 +95,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.dueDate = this.task?.dueDate;
     this.taskName = this.task?.taskName;
 
-    this.vllShare = dt?.data[1] ? dt?.data[1] : this.vllShare;
-    this.vllRole = dt?.data[2] ? dt?.data[2] : this.vllRole;
-    this.title = dt?.data[3] ? dt?.data[3] : this.title;
-    this.taskParent = dt?.data[4];
+    this.vllShare = dt?.data?.vllShare || this.vllShare;
+    this.vllRole = dt?.data?.vllRole || this.vllRole;
+    this.title = dt?.data?.title || this.title;
+    this.taskParent = dt?.data?.taskParent;
+    this.referedFunction = dt?.data?.referedFunction;
+    this.referedData = dt?.data?.referedData;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.formModel = this.dialog.formModel;
@@ -112,12 +116,25 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
-          this.planholderTaskChild= res['Memo']?.description;
+          this.planholderTaskChild = res['Memo']?.description;
         }
       });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (
+      this.referedData &&
+      this.referedFunction &&
+      this.referedFunction.defaultField
+    ) {
+      let dataField = Util.camelize(this.referedFunction.defaultField);
+      let dataValue = UrlUtil.modifiedByObj(
+        this.referedFunction.defaultValue,
+        this.referedData
+      );
+      this.task[dataField] = dataValue;
+    }
+  }
   ngAfterViewInit(): void {
     this.setDefault();
   }
@@ -436,14 +453,16 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     // this.listUserDetail = listUserDetail;
     // this.listTaskResources = listTaskResources;
 
-    var idxUser = this.listUser.findIndex(x=>x==userID) ;
-    if(idxUser!=-1) this.listUser.splice(idxUser,1) ;
+    var idxUser = this.listUser.findIndex((x) => x == userID);
+    if (idxUser != -1) this.listUser.splice(idxUser, 1);
 
-    var idxUserDt = this.listUserDetail.findIndex(x=>x.userID==userID) ;
-    if(idxUserDt!=-1) this.listUserDetail.splice(idxUserDt,1) ;
+    var idxUserDt = this.listUserDetail.findIndex((x) => x.userID == userID);
+    if (idxUserDt != -1) this.listUserDetail.splice(idxUserDt, 1);
 
-    var idxUserRs = this.listTaskResources.findIndex(x=>x.resourceID==userID) ;
-    if(idxUserRs!=-1) this.listTaskResources.splice(idxUserRs,1) ;
+    var idxUserRs = this.listTaskResources.findIndex(
+      (x) => x.resourceID == userID
+    );
+    if (idxUserRs != -1) this.listTaskResources.splice(idxUserRs, 1);
 
     var assignTo = '';
     if (this.listUser.length > 0) {
@@ -609,7 +628,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     var message = e?.data;
     var index = this.listTaskResources.findIndex((obj) => obj.resourceID == id);
     if (index != -1) {
-      this.listTaskResources[index].memo=message
+      this.listTaskResources[index].memo = message;
     }
     this.changeDetectorRef.detectChanges();
   }
