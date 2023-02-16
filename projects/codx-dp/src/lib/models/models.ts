@@ -110,7 +110,7 @@ export class DP_Steps {
   newProcessID: string;
 }
 export class DP_Steps_Roles {
-  recID: string;
+  recID: string = Util.uid();
   instanceID: string;
   stepID: string;
   roleType: string;

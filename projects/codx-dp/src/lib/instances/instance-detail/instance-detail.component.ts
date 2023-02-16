@@ -180,7 +180,7 @@ export class InstanceDetailComponent implements OnInit {
           element.functionID == 'SYS001' ||
           element.functionID == 'SYS004' ||
           element.functionID == 'SYS003' ||
-          element.functionID == 'SYS005' ||
+          element.functionID == 'SYS005'
           // element.functionID == 'DP04' ||
           // element.functionID == 'DP11' ||
           // element.functionID == 'DP08' ||
@@ -190,14 +190,14 @@ export class InstanceDetailComponent implements OnInit {
           // element.functionID == 'DP01' ||
           // element.functionID == 'DP03' ||
           // element.functionID == 'SYS102' ||
-          element.functionID == 'SYS02' ||
+          // element.functionID == 'SYS02' ||
           // element.functionID == 'SYS104' ||
-          element.functionID == 'SYS04' ||
+          // element.functionID == 'SYS04' ||
           // element.functionID == 'SYS103' ||
-          element.functionID == 'SYS03' ||
+          // element.functionID == 'SYS03' ||
           // element.functionID == 'SYS101' ||
           // element.functionID == 'SYS01' ||
-          element.functionID == 'DP011'
+          // element.functionID == 'DP011'
         )
           element.disabled = true;
       });
