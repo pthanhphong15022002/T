@@ -575,10 +575,6 @@
           </codx-label>
         </div>
         <div class="d-flex">
-          <!-- <div *ngIf="itemSelected.category == '3'" class="" (click)="openViewListTaskResource(itemSelected)">
-              <codx-imgs [objectId]="itemSelected?.assignTo" objectType="AD_Users" [numberImages]="10" >
-              </codx-imgs>
-            </div>-->
           <div *ngIf="itemSelected.category == '3'" class="user-groups">
             <codx-imgs
               [isToolTip]="false"
@@ -606,7 +602,17 @@
             >
             </codx-imgs>
           </div>
-          <div *ngIf="itemSelected.category == '2'" class="d-flex">
+          <div
+            *ngIf="itemSelected.category == '2'"
+            class="d-flex"
+            (mouseenter)="popoverCategory2.open()"
+            [ngbPopover]="popEmpList"
+            #popoverCategory2="ngbPopover"
+            placement="right bottom"
+            container="body"
+            autoClose="outside"
+            [openDelay]="500"
+          >
             <ng-container *ngFor="let item of itemSelected.listTaskResources">
               <div style="position: relative">
                 <codx-imgs
@@ -805,3 +811,4 @@
     </div>
   </div>
 </ng-template>
+
