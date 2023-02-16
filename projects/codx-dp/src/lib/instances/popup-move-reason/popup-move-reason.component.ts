@@ -94,17 +94,18 @@ export class PopupMoveReasonComponent implements OnInit {
   }
 
   onSave() {
-    // if(this.stepIdClick === this.stepIdOld) {
-    //   this.notiService.notifyCode('DP001');
+    // if(this.reasonStep.reasonControl === true) {
+    //   this.notiService.notifyCode('Chọn lý do kìa bạn');
     //   return;
     // }
     // else {
+    
       this.beforeSave();
     // }
 
   }
   beforeSave() {
-    var data = [this.instances,this.listReasonClick, this.moveProccess, this.memoStep, this.isReason];
+    var data = [this.instances.recID, this.moveProccess, this.reasonStep, this.isReason];
     this.codxDpService.moveReasonByIdInstance(data).subscribe((res)=> {
       if(res){
         this.instances = res[0];
@@ -159,7 +160,7 @@ export class PopupMoveReasonComponent implements OnInit {
   }
   valueChange($event){
     if($event){
-      this.memoStep = $event.data;
+      this.reasonStep.memo = $event.data;
     }
   }
 
@@ -181,9 +182,9 @@ export class PopupMoveReasonComponent implements OnInit {
   }
 
   cbxChange($event) {
-    // if($event){
-    //   this.stepReason.newProcessID = $event;
-    // }
+    if($event){
+      this.moveProccess = $event;
+    }
 
   }
 }
