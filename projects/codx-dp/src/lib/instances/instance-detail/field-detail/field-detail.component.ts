@@ -16,9 +16,10 @@ import { PopupCustomFieldComponent } from './popup-custom-field/popup-custom-fie
 })
 export class FieldDetailComponent implements OnInit {
   @Input() dataStep!: any;
-  @Input() formModel: any;
+  @Input() formModel: FormModel;
   @Input() titleDefault :string=''
   @Input() isUpdate = false;
+  @Input() showColumnControl= 1 ;
   currentRate = 0;
   dtFormatDate :any =[]
 
@@ -111,10 +112,9 @@ export class FieldDetailComponent implements OnInit {
     let field = this.callfc.openSide(PopupCustomFieldComponent, obj, option);
   }
 
-  partNum(num) {
+  partNum(num):number {
     return Number.parseInt(num);
   }
-  rateChange(e) {}
 
   fomatvalue(dt) {
     //xu ly tam

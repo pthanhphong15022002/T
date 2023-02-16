@@ -32,14 +32,17 @@
       </div>
     </div>
   </div>
-  <div id="{{dataStep.recID }}" class="main" [ngClass]="'show-main'">
+  <div id="{{ dataStep.recID }}" class="main" [ngClass]="'show-main'">
     <div
       class="d-flex row class-field m-5"
       *ngIf="dataStep.fields != null && dataStep.fields.length > 0"
     >
       <ng-container *ngFor="let field of dataStep.fields">
-        <!-- 12 / field.showColumnControl //lam sau -->
-        <div class="col-{{ 12 }} p-3 has-action-menu crr-fiels mb-5">
+        <div
+          class="col-{{
+            12 / showColumnControl
+          }} p-3 has-action-menu crr-fiels mb-5"
+        >
           <ng-container
             [ngTemplateOutlet]="viewCustomFields"
             [ngTemplateOutletContext]="{ $implicit: field }"
@@ -68,9 +71,8 @@
 
   <ng-container *ngIf="data.dataType == 'R'">
     <ngb-rating
-      [rate]="8"
+      [rate]="partNum(data.dataValue)"
       [max]="data?.rank"
-      (rateChange)="rateChange($event)"
       [readonly]="true"
       [starTemplate]="temp"
     >
@@ -84,12 +86,12 @@
     </ngb-rating>
   </ng-container>
 
-  <!-- <codx-mfunc
-  [formModel]="formModel"
-  (clickMF)="clickMF($event, data)"
-  [isBookMark]="true"
-  [dataItem]="data"
-  [type]="'hover'"
->
-</codx-mfunc> -->
+  <codx-mfunc
+    [formModel]="formModel"
+    (clickMF)="clickMF($event, data)"
+    [isBookMark]="true"
+    [dataItem]="data"
+    [type]="'hover'"
+  >
+  </codx-mfunc>
 </ng-template>
