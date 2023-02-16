@@ -56,6 +56,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ]
+  tabItem:any = [
+    { text: "Thông tin chứng từ", 'iconCss': 'icon-info' },
+    { text: "Chi tiết bút toán", 'iconCss': 'icon-playlist_add_check' },
+  ]
   constructor(
     private inject: Injector,
     cache: CacheService,
