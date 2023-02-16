@@ -597,9 +597,17 @@ export class InstancesComponent
                 data.stepID = this.crrStepID;
                 this.changeDetectorRef.detectChanges();
               }
-              if (e?.event && e?.event != null) {
-                this.view.dataService.clear();
-                this.view.dataService.update(e?.event).subscribe();
+              if (e && e.event != null) {
+                //xu ly data đổ về
+                data = e.event.instance;
+                this.listStepInstances = e.event.listStep;
+                if(e.event.isReason != null ) {
+                  this.moveReason(null,data, e.event.isReason)
+                }
+                this.dataSelected = data;
+                this.detailViewInstance.dataSelect = this.dataSelected;
+                this.detailViewInstance.GetStepsByInstanceIDAsync(this.dataSelected.recID);
+                this.view.dataService.update(data).subscribe();            
                 this.detectorRef.detectChanges();
               }
             });
@@ -634,13 +642,12 @@ export class InstancesComponent
   }
 
   getStepNameById(stepId: string): string {
-    // let listStep = JSON.parse(JSON.stringify(this.listStepsCbx));
+    // let listStep = JSON.parse(JSON.stringify(this.listStepsCbx))
     return this.listSteps
       .filter((x) => x.stepID === stepId)
       .map((x) => x.stepName)[0];
   }
-  clickMoreFunc(e) {
-    console.log(e);
+  clickMoreFunc(e){
     this.lstStepInstances = e.lstSteps;
     this.clickMF(e.e, e.data);
   }
