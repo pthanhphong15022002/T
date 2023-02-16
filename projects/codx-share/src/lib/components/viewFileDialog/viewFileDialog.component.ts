@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Input, ElementRef, ViewChild, Optional, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input, ElementRef, ViewChild, Optional, OnChanges, SimpleChanges, HostBinding } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DataItem } from '@shared/models/folder.model';
@@ -85,6 +85,8 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
     //  var data: any = this.auth.user$;
     // this.user = data.source.value;
   }
+  @HostBinding('class') someField = 'h-100 bg-white';
+
   ngOnChanges(changes: SimpleChanges): void {
     this.isImg = false;
     this.isVideo = false;

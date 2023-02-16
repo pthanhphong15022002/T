@@ -50,10 +50,15 @@ export class StagesDetailComponent implements OnInit {
   @ViewChild('addGroupJobPopup') addGroupJobPopup: TemplateRef<any>;
   @ViewChild('updateProgress') updateProgress: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @Input() listData: any;
+  @Input() dataStep: any;
   @Input() formModel: any;
   @Input() currentStep: any;
   @Input() stepID: any;
+  @Input() isDelete: boolean = false;
+  @Input() isEdit: boolean = false;
+  @Input() isUpdate: boolean = false;
+  @Input() isCreate: boolean = false;
+
   dateActual: any;
   startDate: any;
   progress: string = '0';
@@ -150,16 +155,15 @@ export class StagesDetailComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    console.log(this.listData);
-    if (changes['listData']) {
-      if (changes['listData'].currentValue != null) {
-        if (changes['listData'].currentValue?.actualStart != null) {
+    if (changes['dataStep']) {
+      if (changes['dataStep'].currentValue != null) {
+        if (changes['dataStep'].currentValue?.actualStart != null) {
           this.dateActual = new Date(
-            changes['listData'].currentValue?.actualStart
+            changes['dataStep'].currentValue?.actualStart
           );
         }
-        if (changes['listData'].currentValue?.startDate != null) {
-          var date = new Date(changes['listData'].currentValue?.startDate);
+        if (changes['dataStep'].currentValue?.startDate != null) {
+          var date = new Date(changes['dataStep'].currentValue?.startDate);
           this.startDate =
             date.getHours() +
             ':' +
@@ -171,16 +175,16 @@ export class StagesDetailComponent implements OnInit {
             '/' +
             date.getFullYear();
         }
-        var tasks = changes['listData'].currentValue?.tasks;
-        var taskGroups = changes['listData'].currentValue?.taskGroups;
+        var tasks = changes['dataStep'].currentValue?.tasks;
+        var taskGroups = changes['dataStep'].currentValue?.taskGroups;
         this.totalProgress(tasks, taskGroups);
-        this.lstFields = changes['listData'].currentValue?.fields;
+        this.lstFields = changes['dataStep'].currentValue?.fields;
         //nvthuan
-        this.groupByTask(changes['listData'].currentValue);
-        this.step = changes['listData'].currentValue;
+        this.groupByTask(changes['dataStep'].currentValue);
+        this.step = changes['dataStep'].currentValue;
         console.log('Thuan', this.step);
       } else {
-        this.listData = null;
+        this.dataStep = null;
       }
     }
   }
@@ -865,17 +869,32 @@ export class StagesDetailComponent implements OnInit {
     if (e != null) {
       e.forEach((res) => {
         switch (res.functionID) {
-          case 'SYS003':
+          //xóa
+          case 'SYS102':
           case 'SYS02':
-          case 'SYS03':
-          case 'SYS04':
+            if (!this.isDelete) res.disabled = true;
             break;
+          //EDIT
+          //Đính kèm file
+          case 'SYS003':
+          case 'SYS103':
+          case 'SYS03':
+            if (!this.isEdit) res.disabled = true;
+            break;
+          //copy
+          case 'SYS104':
+          case 'SYS04':
+            if (!this.isCreate) res.disabled = true;
+            break;
+          //"Chi tiết nhóm công việc"
           case 'DP12':
             if (type != 'group') res.disabled = true;
             break;
+          //Thêm công việc
           case 'DP08':
-            if (type != 'group') res.disabled = true;
+            if (type != 'group' && !this.isCreate) res.disabled = true;
             break;
+          //Chi tiết công việc
           case 'DP07':
             if (type == 'group') res.disabled = true;
             break;
@@ -886,5 +905,33 @@ export class StagesDetailComponent implements OnInit {
     }
   }
 
+  changeFieldMF(e) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS104':
+          case 'SYS04':
+          case 'SYS102':
+          case 'SYS02':
+          case 'SYS005':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+          case 'DP011':
+          case 'DP02':
+          case 'DP09':
+          case 'DP10':
+            res.disabled = true;
+            break;
+          //edit
+          case 'SYS103':
+          case 'SYS03':
+              if (!this.isUpdate) res.disabled = true;
+              break;
+        }
+      });
+    }
+  }
   //End task -- nvthuan
 }

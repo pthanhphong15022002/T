@@ -294,19 +294,13 @@ export class OkrTargetsComponent implements OnInit {
       }
 
       //phân bổ OB
-      case OMCONST.MFUNCID.DOBComp:
-      case OMCONST.MFUNCID.DOBDept:
-      case OMCONST.MFUNCID.DOBOrg:
-      case OMCONST.MFUNCID.DOBPers: {
+      case OMCONST.MFUNCID.OBDistribute: {
         this.distributeOKR(ob, e?.text);
         break;
       }
 
       //phân công OB
-      case OMCONST.MFUNCID.AOBComp:
-      case OMCONST.MFUNCID.AOBDept:
-      case OMCONST.MFUNCID.AOBOrg:
-      case OMCONST.MFUNCID.AOBPers: {
+      case OMCONST.MFUNCID.OBAssign: {
         this.assignmentOKR(ob, e?.text);
         break;
       }
@@ -330,19 +324,13 @@ export class OkrTargetsComponent implements OnInit {
       }
 
       //phân bổ KR
-      case OMCONST.MFUNCID.DKRComp:
-      case OMCONST.MFUNCID.DKRDept:
-      case OMCONST.MFUNCID.DKROrg:
-      case OMCONST.MFUNCID.DKRPers: {
+      case OMCONST.MFUNCID.KRDistribute: {
         this.distributeOKR(kr, e.text);
         break;
       }
 
       //phân công KR
-      case OMCONST.MFUNCID.AKRComp:
-      case OMCONST.MFUNCID.AKRDept:
-      case OMCONST.MFUNCID.AKROrg:
-      case OMCONST.MFUNCID.AKRPers: {
+      case OMCONST.MFUNCID.KRAssign: {
         this.assignmentOKR(kr, e.text);
         break;
       }

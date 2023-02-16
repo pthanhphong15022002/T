@@ -120,10 +120,12 @@
         ></codx-gantt-chart>
 
         <ng-template #ganttItems let-data>
-          <div class="badge badge-light badge-square badge-md fs-7 p-2" [ngStyle]="{'background-color': getColor(data.recID)}" >
-            <div class="fw-bold text-dark">{{ data.name }} </div>
+          <div
+            class="badge badge-light badge-square badge-md fs-7 p-2"
+            [ngStyle]="{ 'background-color': getColor(data.recID) }"
+          >
+            <div class="fw-bold text-dark">{{ data.name }}</div>
           </div>
-
         </ng-template>
       </ng-container>
 
@@ -170,17 +172,20 @@
           </div>
         </div>
         <codx-stages-detail
-          [listData]="tmpTeps"
+          [dataStep]="tmpTeps"
           [formModel]="formModel"
           [currentStep]="currentNameStep"
           [stepID]="dataSelect.stepID"
+          [isDelete]="dataSelect.delete"
+          [isEdit]="dataSelect.edit"
+          [isUpdate]="dataSelect.write"
+          [isCreate]="dataSelect.create"
         ></codx-stages-detail>
       </ng-container>
       <ng-container *ngIf="idCbx == 'F'">
-        <codx-field-detail
-          [lstSteps]="listSteps"
-          [formModel]="formModel"
-        ></codx-field-detail>
+        <ng-container *ngFor="let item of listSteps">
+          <codx-field-detail [dataStep]="item"></codx-field-detail>
+        </ng-container>
       </ng-container>
     </ng-template>
   </codx-detail-tmp>

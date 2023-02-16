@@ -41,7 +41,6 @@ import { PopupAddGroupTaskComponent } from './instances/stages-detail/popup-add-
 import { PopupTypeTaskComponent } from './dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
 import { StepTaskGroupComponent } from './dynamic-process/popup-add-dynamic-process/step-task/step-task-group/step-task-group.component';
 import { UserComponent } from './dynamic-process/popup-add-dynamic-process/step-task/user/user.component';
-import { PopupRolesInstanceComponent } from './instances/popup-roles-instance/popup-roles-instance.component';
 
 const routes: Routes = [
   {
@@ -91,7 +90,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupTypeTaskComponent,
     StepTaskGroupComponent,
     UserComponent,
-    PopupRolesInstanceComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

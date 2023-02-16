@@ -63,7 +63,7 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
   typeKR= OMCONST.VLL.OKRType.KResult;
   typeOB= OMCONST.VLL.OKRType.Obj;
   cbbOrg=[];  
-  fields: Object = { text: 'orgUnitName', value: 'orgUnitID' };
+  //fields: Object = { text: 'orgUnitName', value: 'orgUnitID' };
   assignmentOKR:any;
   distributeToType: string;
   distributeType: any;
@@ -186,7 +186,7 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
       this.notificationsService.notify("OM",'2',null);
       return;
     }
-    this.codxOmService.distributeOKR(this.dataOKR.recID,this.distributeToType,[this.assignmentOKR],this.isAdd)
+    this.codxOmService.distributeOKR(this.okrRecID,this.distributeToType,[this.assignmentOKR],this.isAdd)
     .subscribe(res=>{
       if(res){        
         this.notificationsService.notifyCode('SYS034');
@@ -202,9 +202,12 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
 
   //-----------------------Custom Func-----------------------//
   cbxOrgChange(evt:any){
-    if(evt?.data!=null){     
+    if(evt?.data!=null && evt?.data!=''){     
       this.assignmentOKR.orgUnitID= evt.data;
       this.assignmentOKR.orgUnitName= evt.component?.itemsSelected[0]?.OrgUnitName;
+      
+          let x= this.curUser;
+       
       this.detectorRef.detectChanges();
     }
   }
