@@ -1,20 +1,35 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormModel, SidebarModel, CallFuncService } from 'codx-core';
+import {
+  FormModel,
+  SidebarModel,
+  CallFuncService,
+  CacheService,
+} from 'codx-core';
 import { PopupCustomFieldComponent } from '../popup-custom-field/popup-custom-field.component';
-
+// import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
+// imports: [NgbRatingModule];
 @Component({
   selector: 'codx-field-detail',
   templateUrl: './field-detail.component.html',
   styleUrls: ['./field-detail.component.scss'],
 })
 export class FieldDetailComponent implements OnInit {
-  @Input() lstSteps: any;
-  @Input() lstFields: any;
+  @Input() dataStep: any;
   @Input() formModel: any;
+  @Input() titleDefault :string=''
+  currentRate = 0;
+  dtFormatDate :any =[]
 
-  constructor(private callfc: CallFuncService) {}
+  constructor(private callfc: CallFuncService, private cache: CacheService) {
+    this.cache.valueList('DP0274').subscribe(res=>{
+      if(res)this.dtFormatDate = res.datas
+    
+    });
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.currentRate = 8;
+  }
 
   clickShow(e, id) {
     let children = e.currentTarget.children[0];
@@ -63,8 +78,14 @@ export class FieldDetailComponent implements OnInit {
     let field = this.callfc.openSide(PopupCustomFieldComponent, obj, option);
   }
 
-   partNum(num){
-   return Number.parseInt(num) ;
-   }
-   rateChange(e){}
+  partNum(num) {
+    return Number.parseInt(num);
+  }
+  rateChange(e) {}
+
+  fomatvalue(dt) {
+    //xu ly tam
+    var fm = this.dtFormatDate.findIndex(x=>x.value==dt)
+    return fm?.text;
+  }
 }
