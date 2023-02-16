@@ -1,3 +1,4 @@
+import { CodxDpService } from './../../../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from './../../../models/models';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { CacheService, DialogData, DialogRef } from 'codx-core';
@@ -13,6 +14,7 @@ export class PopupRolesDynamicComponent implements OnInit {
   process = new DP_Processes();
   lstPermissions: DP_Processes_Permission[] = [];
   type = '';
+  data: any;
   currentPemission = 0;
   //Role
   full: boolean = false;
@@ -30,6 +32,7 @@ export class PopupRolesDynamicComponent implements OnInit {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
+    private dpSv: CodxDpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -101,8 +104,8 @@ export class PopupRolesDynamicComponent implements OnInit {
   //#endregion
 
   //#region Event user
-  valueChange(e, type) {
-    var data = e.data;
+  valueChange($event, type) {
+    var data = $event.data;
     // this.isSetFull = data;
     switch (type) {
       case 'full':
@@ -117,16 +120,13 @@ export class PopupRolesDynamicComponent implements OnInit {
         }
 
         break;
-      case 'delete':
-        if (data != null) this.delete = data;
-        break;
       default:
         this.isSetFull = false;
         this[type] = data;
+        // this.create = this.read;
         break;
     }
     if (type != 'full' && data == false) this.full = false;
-
     if (
       this.read &&
       this.create &&
@@ -168,6 +168,15 @@ export class PopupRolesDynamicComponent implements OnInit {
     }
     if(this.type == 'add'){
       this.dialog.close(this.process.permissions);
+    }else{
+      this.dpSv
+        .updatePermissionProcess(this.process)
+        .subscribe((res) => {
+          if (res.permissions.length > 0) {
+            // this.notifi.notifyCode('SYS034');
+            this.dialog.close(res);
+          }
+        });
     }
   }
   //#endregion

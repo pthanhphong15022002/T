@@ -11,7 +11,7 @@ export class FieldDetailComponent implements OnInit {
   @Input() lstSteps: any;
   @Input() lstFields: any;
   @Input() formModel: any;
-
+  @Input() isUpdate = false;
   constructor(private callfc: CallFuncService) {}
 
   ngOnInit(): void {}
@@ -43,6 +43,36 @@ export class FieldDetailComponent implements OnInit {
         break;
     }
   }
+
+  changeFieldMF(e) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS104':
+          case 'SYS04':
+          case 'SYS102':
+          case 'SYS02':
+          case 'SYS005':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+          case 'DP011':
+          case 'DP02':
+          case 'DP09':
+          case 'DP10':
+            res.disabled = true;
+            break;
+          //edit
+          case 'SYS103':
+          case 'SYS03':
+              if (!this.isUpdate) res.disabled = true;
+              break;
+        }
+      });
+    }
+  }
+
   popupCustomField(data) {
     var list = [];
     if (data && data.length > 0) {
@@ -66,4 +96,5 @@ export class FieldDetailComponent implements OnInit {
    partNum(num){
    return Number.parseInt(num) ;
    }
+   rateChange(e){}
 }

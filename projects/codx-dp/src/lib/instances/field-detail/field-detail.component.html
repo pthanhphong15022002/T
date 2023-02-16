@@ -8,68 +8,23 @@
         <div class="right">
           <div class="group-button">
             <button class="button-custom">
-              <span
-                class="icon-edit icon-20 text-primary-600 py-2"
-                style="font-weight: 500"
-                (click)="popupCustomField(item.fields)"
-              ></span>
+              <span [ngClass]="isUpdate == true ? 'icon-edit icon-20 text-primary-600 py-2' : ''"
+                style="font-weight: 500" (click)="popupCustomField(item.fields)"></span>
             </button>
-            <button
-              class="button-custom"
-              (click)="clickShow($event, item.recID)"
-            >
-              <span
-                class="icon-expand_less icon-20 text-primary-600 py-2"
-                style="font-weight: 500"
-              ></span>
+            <button class="button-custom" (click)="clickShow($event, item.recID)">
+              <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
             </button>
           </div>
         </div>
       </div>
       <div id="{{ item.recID }}" class="main" [ngClass]="'show-main'">
-        <div
-          class="d-flex row class-field m-5"
-          *ngIf="item.fields != null && item.fields.length > 0"
-        >
+        <div class="d-flex row class-field m-5" *ngIf="item.fields != null && item.fields.length > 0">
           <ng-container *ngFor="let field of item.fields">
-            <div
-              class="col-{{
+            <div class="col-{{
                 12 / field.showColumnControl
-              }} p-3 has-action-menu crr-fiels mb-5"
-            >
-              <li class="text-gray-400">
-                {{ field.title }}
-              </li>
-
-              <span class="text-dark margin-l" *ngIf="field.dataType == 'T'">
-                {{ field.dataValue }}
-              </span>
-              <!-- đang test cấm xóa -->
-              <!-- <ng-container *ngIf="field.dataType == 'R'">
-                <ngb-rating
-                  (rate)="partNum(field.dataValue)"
-                  [max]="field.rank"
-                  [readonly]="true"
-                  [starTemplate]="temp"
-                >
-                  <ng-template #temp let-fill="fill" let-index="index">
-                    <span
-                      class="rankIcon {{ field.rankIcon }} filled"
-                      [class.filled]="fill === 100"
-                      [class.bad]="index < field.rank"
-                    ></span>
-                  </ng-template>
-                </ngb-rating>
-              </ng-container> -->
-
-              <codx-mfunc
-                [formModel]="formModel"
-                (clickMF)="clickMF($event, field)"
-                [isBookMark]="true"
-                [dataItem]="field"
-                [type]="'hover'"
-              >
-              </codx-mfunc>
+              }} p-3 has-action-menu crr-fiels mb-5">
+              <ng-container [ngTemplateOutlet]="viewCustomFields" [ngTemplateOutletContext]="{ $implicit: field }">
+              </ng-container>
             </div>
           </ng-container>
         </div>
@@ -77,3 +32,40 @@
     </div>
   </ng-container>
 </div>
+
+<ng-template #viewCustomFields let-data>
+  <li class="text-gray-400">
+    {{ data.title }}
+  </li>
+
+  <span class="text-dark margin-l"
+    *ngIf="data.dataType == 'S' || data.dataType == 'L' ||data.dataType == 'P' ||data.dataType == 'E'">
+    {{ data.dataValue }}
+  </span>
+
+  <span class="text-dark margin-l" *ngIf="data.dataType == 'I' || data.dataType == 'D' || data.dataType == 'P'">
+    {{ data.dataValue }} <span *ngIf="data.dataType == 'P'">%</span>
+  </span>
+
+  <!-- <ng-container *ngIf="field.dataType == 'R'">
+      <ngb-rating
+        [(rate)]="8"
+        [max]="data?.rank"
+        (rateChange)="rateChange($event)"
+        [readonly]="true"
+        [starTemplate]="temp"
+      >
+        <ng-template #temp let-fill="fill" let-index="index">
+          <span
+            class="rankIcon {{ data?.rankIcon }} filled"
+            [class.filled]="fill === 100"
+            [class.bad]="index < data?.rank"
+          ></span>
+        </ng-template>
+      </ngb-rating>
+  </ng-container>  -->
+
+  <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true" [dataItem]="data"
+    [type]="'hover'" (changeDataMF)="changeFieldMF($event)">
+  </codx-mfunc>
+</ng-template>

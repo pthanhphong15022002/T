@@ -119,9 +119,9 @@ export class TMMeetingsComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
-    this.tmService
-            .RPASendMailAlert('TM_0024', 'TMT0501')
-            .subscribe();
+    // this.tmService
+    //         .RPASendMailAlert('TM_0024', 'TMT0501')
+    //         .subscribe();
     this.cache.moreFunction('TMMeetings', 'grvTMMeetings').subscribe((res) => {
       if (res) this.listMoreFunc = res;
     });

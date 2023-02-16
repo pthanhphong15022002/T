@@ -1,13 +1,6 @@
-<codx-views #view 
-  [autoLoad]="true" 
-  entityName="HR_OrganizationUnits" 
-  idField="orgUnitID" 
-  [views]="views"
-  [selectedFirst]="false" 
-  (selectedChange)="onSelectionChanged($event)" 
-  [button]="button"
-  (buttonClick)="btnClick($event)" 
-  (viewChanged)="changeView($event)">
+<codx-views #view [autoLoad]="true" entityName="HR_OrganizationUnits" idField="orgUnitID" [views]="views"
+  [selectedFirst]="false" (selectedChange)="onSelectionChanged($event)" [button]="button"
+  (buttonClick)="btnClick($event)" (viewChanged)="changeView($event)">
 </codx-views>
 <!-- tree -->
 <ng-template #tempTree let-data>
@@ -23,15 +16,18 @@
 
 <!-- tree master detail -->
 <ng-template #tmpMasterDetail>
-  <lib-organization-masterdetail [view]="view" [formModel]="view.formModel" [orgUnitID]="orgUnitID"></lib-organization-masterdetail>
+  <lib-organization-masterdetail [view]="view" [formModel]="view.formModel"
+    [orgUnitID]="orgUnitID"></lib-organization-masterdetail>
 </ng-template>
 <!-- tree orgChart -->
 <ng-template #tmpOrgChart>
-  <hr-organization-orgchart [view]="view" [dataService]="dataService"  [formModel]="view.formModel" [orgUnitID]="orgUnitID"></hr-organization-orgchart>
+  <hr-organization-orgchart [view]="view" [dataService]="dataService" [formModel]="view.formModel"
+    [orgUnitID]="orgUnitID"></hr-organization-orgchart>
 </ng-template>
 <!-- tree list -->
 <ng-template #tmpList>
-  <lib-organization-list [view]="view" [dataService]="dataService" [formModel]="view.formModel" [orgUnitID]="orgUnitID"></lib-organization-list>
+  <lib-organization-list [view]="view" [dataService]="dataService" [formModel]="view.formModel"
+    [orgUnitID]="orgUnitID"></lib-organization-list>
 </ng-template>
 
 <!--  -->
@@ -106,7 +102,7 @@
       </div>
       <div class="d-flex">
         <div #h class="mx-6 d-flex flex-column align-items-center" (click)="loadEmployList(h, item.departmentCode, '')">
-          <div class="fs-2 fw-bold text-dark mb-2">
+          <div class="fs-2 fw-bold text-dark mb-2 number-users">
             {{ item.headcounts ? item.headcounts : 0 }}
           </div>
           <span class="text-gray-500">
@@ -116,7 +112,7 @@
         </div>
         <div #c class="mx-6 d-flex flex-column align-items-center"
           (click)="loadEmployList(c, item.departmentCode, '50')">
-          <div class="fs-2 fw-bold mb-2 text-primary">
+          <div class="fs-2 fw-bold mb-2 text-primary number-users">
             {{ item.counts ? item.counts : 0 }}
           </div>
           <span class="text-gray-500">
@@ -126,7 +122,7 @@
         </div>
         <div #o class="mx-6 d-flex flex-column align-items-center"
           (click)="loadEmployList(o, item.departmentCode, '30')">
-          <div class="fs-2 fw-bold mb-2 text-warning">{{ item.onboard }}</div>
+          <div class="fs-2 fw-bold mb-2 text-warning number-users">{{ item.onboard }}</div>
           <span class="text-gray-500">
             <codx-label [formModel]="view.formModel" name="lblOnBoard" default="Onbroard">
             </codx-label>
@@ -134,7 +130,7 @@
         </div>
         <div #f class="mx-6 d-flex flex-column align-items-center"
           (click)="loadEmployList(f, item.departmentCode, '70')">
-          <div class="fs-2 fw-bold mb-2 text-danger">{{ item.offboard }}</div>
+          <div class="fs-2 fw-bold mb-2 text-danger number-users">{{ item.offboard }}</div>
           <span class="text-gray-500">
             <codx-label [formModel]="view.formModel" name="lblOffBoard" default="Offboard">
             </codx-label>

@@ -13,7 +13,7 @@ import { CodxDpService } from '../../codx-dp.service';
 export class PopupViewsDetailsProcessComponent implements OnInit {
   dialog: DialogRef;
   name = 'Mission';
-
+  isCreate = false;
   process = new DP_Processes();
   tabControl: TabModel[] = [
     { name: 'Mission', textDefault: 'Nhiệm vụ', isActive: true },
@@ -30,6 +30,7 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.process = dt?.data?.data;
+    this.isCreate = dt.data.isCreate;
     this.dpService
       .updateHistoryViewProcessesAsync(this.process.recID)
       .subscribe();

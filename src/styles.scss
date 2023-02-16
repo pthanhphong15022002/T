@@ -829,6 +829,7 @@ codx-header .menu-state-title-primary .menu-item:not(.here) .menu-link:hover:not
 
 .e-appointment-wrapper .e-appointment {
   margin-bottom: 5px !important;
+  border-bottom: 2px #fff solid !important;
 }
 
 .e-more-popup-wrapper .e-more-event-close {
@@ -1658,7 +1659,7 @@ codx-view-list-detail .codx-detail-footer .nav-tabs .nav-link.active,
 }
 
 codx-view-list-detail .codx-detail-footer .attach-group {
-  height: 185px;
+  max-height: 185px;
   overflow: auto;
 }
 
@@ -1708,6 +1709,9 @@ codx-toolbar .codx-search.codx-search-slide input {
   margin-top: 0 !important;
 }
 
+codx-vll.badge.badge-light.badge-md>span[class*="fa"] {
+  margin-right: 3px;
+}
 
 // fix dropdown
 // .dropdown[data-popper-placement="bottom-start"] {
