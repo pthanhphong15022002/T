@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FileService } from '@shared/services/file.service';
 import { AnimationSettingsModel, ButtonPropsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
@@ -236,7 +236,6 @@ export class ThumbnailComponent implements OnInit, OnChanges {
           this.cache.moreFunction("FileInfo","grvFileInfo").subscribe(item2=>{
               if(item2 && item2.length > 0)
               {
-                debugger
                 var c = item2.filter(x=>x.functionID == "DMT0210");
                 if(c && c[0])
                 {
@@ -245,8 +244,9 @@ export class ThumbnailComponent implements OnInit, OnChanges {
                     const queryParams = {
                       id: file.recID,
                     };
+                    var l = this.router.url.split("/");
                     const url = this.router.serializeUrl(
-                      this.router.createUrlTree([`/democodx/viewfile`],{
+                      this.router.createUrlTree([`/`+l[1]+`/viewfile`],{
                         queryParams: queryParams
                       })
                     );

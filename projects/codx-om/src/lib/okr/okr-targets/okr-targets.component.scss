@@ -168,7 +168,8 @@
     background-color: var(--text-primary) !important;
 }
 ::ng-deep {
-    .e-content .e-lib .e-touch {
+    #om-tab .e-content, #om-tab.e-lib, #om-tab.e-touch {
       padding: 0px !important;
+      padding-left: 0px !important;
     }
   }

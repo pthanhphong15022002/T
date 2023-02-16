@@ -1768,7 +1768,10 @@ export class EmployeeDetailComponent extends UIComponent {
         } else if (funcID == 'Diseases') {
           this.HandleEmployeeDiseaseInfo('copy', data);
           this.df.detectChanges();
-        }
+        } else if (funcID == 'eSkill') {
+          this.HandleEmployeeSkillsInfo('copy', data);
+          this.df.detectChanges();
+        } 
         break;
     }
   }
@@ -2815,15 +2818,20 @@ export class EmployeeDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if (actionType === 'add' || actionType === 'copy') {
-        console.log('resssssssssssss', res);
-        (this.skillGrid.dataService as CRUDService).add(res.event).subscribe();
-        this.skillRowCount++;
-      } else if (actionType === 'edit') {
-        (this.skillGrid.dataService as CRUDService)
-          .update(res.event)
-          .subscribe();
+      if(res?.event){
+        (this.skillGrid.dataService as CRUDService).clear();
       }
+      else{
+        if (actionType === 'add' || actionType === 'copy') {
+          (this.skillGrid.dataService as CRUDService).add(res.event).subscribe();
+          this.skillRowCount++;
+        } else if (actionType === 'edit') {
+          (this.skillGrid.dataService as CRUDService)
+            .update(res.event)
+            .subscribe();
+        }
+      }
+      this.df.detectChanges();
     });
 
     // this.view.dataService.dataSelected = this.data;
@@ -3419,13 +3427,19 @@ export class EmployeeDetailComponent extends UIComponent {
     actionType: string,
     dataItem: any
   ) {
-    if (actionType == 'add') {
-      (gridView.dataService as CRUDService).add(dataItem, 0).subscribe();
-    } else if (actionType == 'edit') {
-      (gridView.dataService as CRUDService).update(dataItem).subscribe();
-    } else if ((actionType = 'delete')) {
-      (gridView.dataService as CRUDService).remove(dataItem).subscribe();
+    if(!dataItem) (gridView.dataService as CRUDService).clear();
+    else{
+      if (actionType == 'add') {
+        (gridView.dataService as CRUDService).add(dataItem, 0).subscribe();
+        gridView.rowCount = gridView.rowCount + 1;
+      } else if (actionType == 'edit') {
+        (gridView.dataService as CRUDService).update(dataItem).subscribe();
+      } else if ((actionType = 'delete')) {
+        (gridView.dataService as CRUDService).remove(dataItem).subscribe();
+        gridView.rowCount = gridView.rowCount - 1;
+      }
     }
+    
   }
   valueChangeFilterAssetCategory(evt) {
     console.log('filter theo type', evt);

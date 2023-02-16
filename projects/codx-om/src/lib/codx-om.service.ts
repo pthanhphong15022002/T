@@ -424,13 +424,13 @@ export class CodxOmService {
       [recID,distributeToType,listDistribute,isAdd]
     );
   }
-  editOKRWeight(recID:string, type:string, listOKRWeight:any) {
+  editOKRWeight(recID:string, type:string, child:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'EditOKRWeightAsync',
-      [recID,type,listOKRWeight]
+      [recID,type,child]
     );
   }
   //-------------------------Get Data OKR---------------------------------//
