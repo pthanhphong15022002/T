@@ -16,17 +16,20 @@ import { PopupCustomFieldComponent } from './popup-custom-field/popup-custom-fie
 })
 export class FieldDetailComponent implements OnInit {
   @Input() dataStep!: any;
-  @Input() formModel: FormModel;
-  @Input() titleDefault :string=''
+  @Input() formModel!: FormModel;
+  @Input() titleDefault: string = '';
   @Input() isUpdate = false;
-  @Input() showColumnControl= 1 ;
+  @Input() showColumnControl = 1;
   currentRate = 0;
-  dtFormatDate :any =[]
+  dtFormatDate: any = [];
 
   constructor(private callfc: CallFuncService, private cache: CacheService) {
-    this.cache.valueList('DP0274').subscribe(res=>{
-      if(res)this.dtFormatDate = res.datas
-    
+    this.formModel = new FormModel();
+    this.formModel.formName='DPInstancesStepsFields'
+    this.formModel.gridViewName='grvDPInstancesStepsFields';
+    this.formModel.entityName='DP_Instances_Steps_Fields'
+    this.cache.valueList('DP0274').subscribe((res) => {
+      if (res) this.dtFormatDate = res.datas;
     });
   }
 
@@ -64,29 +67,29 @@ export class FieldDetailComponent implements OnInit {
 
   changeFieldMF(e) {
     //đe vậy tính sau
-     if (e != null) {
+    if (e != null) {
       e.forEach((res) => {
-         switch (res.functionID) {
-    //       case 'SYS104':
-    //       case 'SYS04':
-    //       case 'SYS102':
-    //       case 'SYS02':
-    //       case 'SYS005':
-    //       case 'SYS003':
-    //       case 'SYS004':
-    //       case 'SYS001':
-    //       case 'SYS002':
-    //       case 'DP011':
-    //       case 'DP02':
-    //       case 'DP09':
-    //       case 'DP10':
-    //         res.disabled = true;
-    //         break;
-             //edit
+        switch (res.functionID) {
+          //       case 'SYS104':
+          //       case 'SYS04':
+          //       case 'SYS102':
+          //       case 'SYS02':
+          //       case 'SYS005':
+          //       case 'SYS003':
+          //       case 'SYS004':
+          //       case 'SYS001':
+          //       case 'SYS002':
+          //       case 'DP011':
+          //       case 'DP02':
+          //       case 'DP09':
+          //       case 'DP10':
+          //         res.disabled = true;
+          //         break;
+          //edit
           case 'SYS103':
           case 'SYS03':
-              if (!this.isUpdate) res.disabled = true;
-              break;
+            if (!this.isUpdate) res.disabled = true;
+            break;
         }
       });
     }
@@ -112,13 +115,13 @@ export class FieldDetailComponent implements OnInit {
     let field = this.callfc.openSide(PopupCustomFieldComponent, obj, option);
   }
 
-  partNum(num):number {
+  partNum(num): number {
     return Number.parseInt(num);
   }
 
   fomatvalue(dt) {
     //xu ly tam
-    var fm = this.dtFormatDate.findIndex(x=>x.value==dt)
+    var fm = this.dtFormatDate.findIndex((x) => x.value == dt);
     return fm?.text;
   }
 }
