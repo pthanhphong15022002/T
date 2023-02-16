@@ -306,10 +306,10 @@ export class DynamicProcessComponent
       case 'SYS02':
         this.delete(data);
         break;
-      case 'DP05':
+      case 'DP01014':
         this.roles(data);
         break;
-      case 'DP01':
+      case 'DP01011':
         this.viewDetailProcess(data);
         break;
     }
