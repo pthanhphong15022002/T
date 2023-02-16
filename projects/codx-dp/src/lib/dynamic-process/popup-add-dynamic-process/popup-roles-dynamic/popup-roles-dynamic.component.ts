@@ -1,5 +1,8 @@
 import { CodxDpService } from './../../../codx-dp.service';
-import { DP_Processes, DP_Processes_Permission } from './../../../models/models';
+import {
+  DP_Processes,
+  DP_Processes_Permission,
+} from './../../../models/models';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { CacheService, DialogData, DialogRef } from 'codx-core';
 
@@ -117,14 +120,15 @@ export class PopupRolesDynamicComponent implements OnInit {
           this.delete = data;
           this.assign = data;
         }
-
         break;
       default:
         this.isSetFull = false;
         this[type] = data;
         break;
     }
+
     if (type != 'full' && data == false) this.full = false;
+
     if (
       this.read &&
       this.create &&
@@ -149,7 +153,7 @@ export class PopupRolesDynamicComponent implements OnInit {
     return false;
   }
 
-  onSave(){
+  onSave() {
     if (
       this.currentPemission > -1 &&
       this.process.permissions[this.currentPemission] != null &&
@@ -158,24 +162,20 @@ export class PopupRolesDynamicComponent implements OnInit {
       this.process.permissions[this.currentPemission].full = this.full;
       this.process.permissions[this.currentPemission].read = this.read;
       this.process.permissions[this.currentPemission].create = this.create;
-      this.process.permissions[this.currentPemission].assign =
-        this.assign;
+      this.process.permissions[this.currentPemission].assign = this.assign;
       this.process.permissions[this.currentPemission].delete = this.delete;
       this.process.permissions[this.currentPemission].edit = this.edit;
       this.process.permissions[this.currentPemission].publish = this.publish;
     }
-    if(this.type == 'add'){
+    if (this.type == 'add') {
       this.dialog.close(this.process.permissions);
-    }else{
-      this.dpSv
-        .updatePermissionProcess(this.process)
-        .subscribe((res) => {
-          if (res.permissions.length > 0) {
-            // this.notifi.notifyCode('SYS034');
-            this.dialog.close(res);
-          }
-        });
+    } else {
+      this.dpSv.updatePermissionProcess(this.process).subscribe((res) => {
+        if (res.permissions.length > 0) {
+          // this.notifi.notifyCode('SYS034');
+          this.dialog.close(res);
+        }
+      });
     }
   }
-  //#endregion
 }
