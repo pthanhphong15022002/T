@@ -31,8 +31,9 @@ export class InstanceDetailComponent implements OnInit {
   @ViewChild('locationCBB') locationCBB: any;
   @Output() progressEvent = new EventEmitter<object>();
   @Output() moreFunctionEvent = new EventEmitter<any>();
+  @Output() changeMF = new EventEmitter<any>();
   @Input() stepName: string;
-  @Input() progress = '0';
+  progress = '0';
   @Input() dataSelect: any;
   id: any;
   totalInSteps: any;
@@ -172,36 +173,20 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
-    console.log(e);
-    if (e) {
-      e.forEach((element) => {
-        if (
-          element.functionID == 'SYS002' ||
-          element.functionID == 'SYS001' ||
-          element.functionID == 'SYS004' ||
-          element.functionID == 'SYS003' ||
-          element.functionID == 'SYS005'
-          // element.functionID == 'DP04' ||
-          // element.functionID == 'DP11' ||
-          // element.functionID == 'DP08' ||
-          // element.functionID == 'DP07' ||
-          // element.functionID == 'DP06' ||
-          // element.functionID == 'DP05' ||
-          // element.functionID == 'DP01' ||
-          // element.functionID == 'DP03' ||
-          // element.functionID == 'SYS102' ||
-          // element.functionID == 'SYS02' ||
-          // element.functionID == 'SYS104' ||
-          // element.functionID == 'SYS04' ||
-          // element.functionID == 'SYS103' ||
-          // element.functionID == 'SYS03' ||
-          // element.functionID == 'SYS101' ||
-          // element.functionID == 'SYS01' ||
-          // element.functionID == 'DP011'
-        )
-          element.disabled = true;
-      });
-    }
+    this.changeMF.emit({e: e, data: data})
+    // console.log(e);
+    // if (e) {
+    //   e.forEach((element) => {
+    //     if (
+    //       element.functionID == 'SYS002' ||
+    //       element.functionID == 'SYS001' ||
+    //       element.functionID == 'SYS004' ||
+    //       element.functionID == 'SYS003' ||
+    //       element.functionID == 'SYS005'
+    //     )
+    //       element.disabled = true;
+    //   });
+    // }
   }
 
   click(indexNo, data) {

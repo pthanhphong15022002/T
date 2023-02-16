@@ -54,6 +54,11 @@ export class StagesDetailComponent implements OnInit {
   @Input() formModel: any;
   @Input() currentStep: any;
   @Input() stepID: any;
+  @Input() isDelete: boolean = false;
+  @Input() isEdit: boolean = false;
+  @Input() isUpdate: boolean = false;
+  @Input() isCreate: boolean = false;
+
   dateActual: any;
   startDate: any;
   progress: string = '0';
@@ -864,17 +869,32 @@ export class StagesDetailComponent implements OnInit {
     if (e != null) {
       e.forEach((res) => {
         switch (res.functionID) {
-          case 'SYS003':
+          //xóa
+          case 'SYS102':
           case 'SYS02':
-          case 'SYS03':
-          case 'SYS04':
+            if (!this.isDelete) res.disabled = true;
             break;
+          //EDIT
+          //Đính kèm file
+          case 'SYS003':
+          case 'SYS103':
+          case 'SYS03':
+            if (!this.isEdit) res.disabled = true;
+            break;
+          //copy
+          case 'SYS104':
+          case 'SYS04':
+            if (!this.isCreate) res.disabled = true;
+            break;
+          //"Chi tiết nhóm công việc"
           case 'DP12':
             if (type != 'group') res.disabled = true;
             break;
+          //Thêm công việc
           case 'DP08':
-            if (type != 'group') res.disabled = true;
+            if (type != 'group' && !this.isCreate) res.disabled = true;
             break;
+          //Chi tiết công việc
           case 'DP07':
             if (type == 'group') res.disabled = true;
             break;
@@ -885,5 +905,33 @@ export class StagesDetailComponent implements OnInit {
     }
   }
 
+  changeFieldMF(e) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS104':
+          case 'SYS04':
+          case 'SYS102':
+          case 'SYS02':
+          case 'SYS005':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+          case 'DP011':
+          case 'DP02':
+          case 'DP09':
+          case 'DP10':
+            res.disabled = true;
+            break;
+          //edit
+          case 'SYS103':
+          case 'SYS03':
+              if (!this.isUpdate) res.disabled = true;
+              break;
+        }
+      });
+    }
+  }
   //End task -- nvthuan
 }

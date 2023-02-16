@@ -90,7 +90,7 @@
         field="memo"
         type="textarea"
         headerposition="none"
-        format="ed2"
+        format="ed"
         height="150"
         (valueChange)="valueChange($event)"
         [placeholder]="'Nhập.....'"
@@ -112,13 +112,13 @@
         <div class="group-button">
           <button class="button-custom" (click)="openPopupTaskGroup()">
             <span
-              class="icon-add icon-20 text-primary-600 py-2"
+              [ngClass]="!this.isCreate ? '' : 'icon-add icon-20 text-primary-600 py-2'"
               style="font-weight: 500"
             ></span>
           </button>
           <button class="button-custom" (click)="openTypeJob()">
             <span
-              class="icon-add_task icon-20 text-primary-600 py-2"
+              [ngClass]="!this.isCreate ? '' : 'icon-add_task icon-20 text-primary-600 py-2'"
               style="font-weight: 500"
             ></span>
           </button>

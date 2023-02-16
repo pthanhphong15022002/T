@@ -17,6 +17,7 @@ export class FieldDetailComponent implements OnInit {
   @Input() dataStep: any;
   @Input() formModel: any;
   @Input() titleDefault :string=''
+  @Input() isUpdate = false;
   currentRate = 0;
   dtFormatDate :any =[]
 
@@ -58,6 +59,36 @@ export class FieldDetailComponent implements OnInit {
         break;
     }
   }
+
+  changeFieldMF(e) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS104':
+          case 'SYS04':
+          case 'SYS102':
+          case 'SYS02':
+          case 'SYS005':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+          case 'DP011':
+          case 'DP02':
+          case 'DP09':
+          case 'DP10':
+            res.disabled = true;
+            break;
+          //edit
+          case 'SYS103':
+          case 'SYS03':
+              if (!this.isUpdate) res.disabled = true;
+              break;
+        }
+      });
+    }
+  }
+
   popupCustomField(data) {
     var list = [];
     if (data && data.length > 0) {

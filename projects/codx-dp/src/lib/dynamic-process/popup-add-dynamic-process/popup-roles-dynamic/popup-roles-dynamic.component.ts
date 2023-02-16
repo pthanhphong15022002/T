@@ -123,7 +123,7 @@ export class PopupRolesDynamicComponent implements OnInit {
       default:
         this.isSetFull = false;
         this[type] = data;
-        this.create = this.read;
+        // this.create = this.read;
         break;
     }
     if (type != 'full' && data == false) this.full = false;

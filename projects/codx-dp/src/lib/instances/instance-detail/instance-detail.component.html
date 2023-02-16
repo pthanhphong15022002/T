@@ -176,6 +176,10 @@
           [formModel]="formModel"
           [currentStep]="currentNameStep"
           [stepID]="dataSelect.stepID"
+          [isDelete]="dataSelect.delete"
+          [isEdit]="dataSelect.edit"
+          [isUpdate]="dataSelect.write"
+          [isCreate]="dataSelect.create"
         ></codx-stages-detail>
       </ng-container>
       <ng-container *ngIf="idCbx == 'F'">

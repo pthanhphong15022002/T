@@ -655,7 +655,7 @@
           <div class="col-6">
             <codx-input
               type="valuelist"
-              [refValue]="gridViewSetup?.ShowInstanceControl.referedValue"
+              [refValue]="gridViewSetup?.ShowInstanceControl?.referedValue"
               [placeholder]="gridViewSetup['ShowInstanceControl']?.description"
               [crrValue]="process.showInstanceControl"
               (valueChange)="valueChange($event)"
@@ -1340,7 +1340,7 @@
                         cdkDrag
                         [cdkDragStartDelay]="200"
                         [cdkDragData]="task"
-                        class="drap-drop" 
+                        class="drap-drop"
 
                       >
                         <div

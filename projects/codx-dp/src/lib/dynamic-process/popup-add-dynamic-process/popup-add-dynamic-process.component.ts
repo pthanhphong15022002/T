@@ -598,8 +598,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           for (var i = 0; i < value.length; i++) {
             var data = value[i];
             var perm = new DP_Processes_Permission();
-            perm.objectName = data.text != null ? data.text : data.objectName;
-            perm.objectID = data.id != null ? data.id : null;
+            perm.objectName = (data.text != null || data.text != '') ? data.text : data.objectName;
+            perm.objectID = (data.id != null || data.id != '') ? data.id : null;
             perm.objectType = data.objectType;
             perm.full = true;
             perm.create = true;
