@@ -1,0 +1,30 @@
+export class UnitsOfMearsure {
+  allowEditKey: any;
+  assign: any;
+  buid: any;
+  createdBy: any;
+  createdOn: any;
+  delete: any;
+  divisionID: any;
+  employeeID: any;
+  idField: any;
+  includeTables: any;
+  invertConversion: any;
+  modifiedBy: any;
+  modifiedOn: any;
+  orgUnitID: any;
+  owner: any;
+  positionID: any;
+  roundBase: any;
+  roundOff: any;
+  roundType: any;
+  share: any;
+  stop: any;
+  umName: any;
+  umName2: any;
+  umType: any;
+  umid: any;
+  unbounds: any;
+  updateColumns: any;
+  write: any;
+}
