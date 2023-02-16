@@ -55,7 +55,7 @@
         </codx-input>
       </div>
 
-      <div class="col-4 form-group">
+      <div class="col-5 form-group">
         <codx-label fiedName="Capacity" [formModel]="form.formModel">
         </codx-label>
         <codx-input
@@ -67,7 +67,11 @@
         </codx-input>
       </div>
 
-      <div class="col-4 form-group">
+      
+    </div>
+
+    <div class="row">
+      <div class="col-5 form-group">
         <codx-label fiedName="Ranking" [formModel]="form.formModel">
         </codx-label>
         <codx-input
@@ -75,6 +79,13 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
+        </codx-input>
+      </div>
+
+      <div class="form-group col-5">
+        <codx-label fiedName="ValidateControl" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input ControlName="validateControl" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
     </div>
