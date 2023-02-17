@@ -53,7 +53,7 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.employId = data?.data?.employeeId;
-    this.formModel = dialog.formModel;
+    this.formModel = dialog?.formModel;
     this.actionType = data?.data?.actionType;
     this.data = data?.data?.eExperienceObj;
     this.fromdateVal = this.data.fromDate;

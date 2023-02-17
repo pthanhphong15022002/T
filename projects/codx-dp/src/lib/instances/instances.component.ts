@@ -40,16 +40,17 @@ export class InstancesComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
+  @Input() process: any;
+  @Input() isCreate: boolean;
   @ViewChild('templateDetail', { static: true })
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
   @ViewChild('detailViewInstance')
   detailViewInstance: InstanceDetailComponent;
-  @Input() process: any;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
-  @ViewChild('tmpDetail') tmpDetail: TemplateRef<any>;
+  @ViewChild('popDetail') popDetail: TemplateRef<any>;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   showButtonAdd = true;
@@ -90,7 +91,7 @@ export class InstancesComponent
   dataColums = [];
   dataDrop: any;
   isClick: boolean = true;
-  @Input() isCreate: boolean;
+
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -415,16 +416,17 @@ export class InstancesComponent
         break;
       case 'dbClick':
         //xư lý dbClick
-        this.viewDetail();
+        this.viewDetail(e.data.recID);
         break;
     }
   }
 
-  viewDetail() {
+  viewDetail(recID) {
+  //  this.detailViewInstance.GetStepsByInstanceIDAsync(recID)
     let option = new DialogModel();
     option.zIndex = 1010;
     let popup = this.callFunc.openForm(
-      this.tmpDetail,
+      this.popDetail,
       '',
       1000,
       700,
@@ -596,9 +598,17 @@ export class InstancesComponent
                 data.stepID = this.crrStepID;
                 this.changeDetectorRef.detectChanges();
               }
-              if (e?.event && e?.event != null) {
-                this.view.dataService.clear();
-                this.view.dataService.update(e?.event).subscribe();
+              if (e && e.event != null) {
+                //xu ly data đổ về
+                data = e.event.instance;
+                this.listStepInstances = e.event.listStep;
+                if(e.event.isReason != null ) {
+                  this.moveReason(null,data, e.event.isReason)
+                }
+                this.dataSelected = data;
+                this.detailViewInstance.dataSelect = this.dataSelected;
+                this.detailViewInstance.GetStepsByInstanceIDAsync(this.dataSelected.recID);
+                this.view.dataService.update(data).subscribe();            
                 this.detectorRef.detectChanges();
               }
             });
@@ -633,17 +643,16 @@ export class InstancesComponent
   }
 
   getStepNameById(stepId: string): string {
-    // let listStep = JSON.parse(JSON.stringify(this.listStepsCbx));
+    // let listStep = JSON.parse(JSON.stringify(this.listStepsCbx))
     return this.listSteps
       .filter((x) => x.stepID === stepId)
       .map((x) => x.stepName)[0];
   }
-  clickMoreFunc(e) {
-    console.log(e);
+  clickMoreFunc(e){
     this.lstStepInstances = e.lstSteps;
     this.clickMF(e.e, e.data);
   }
-  changeMF(e){
+  changeMF(e) {
     this.changeDataMF(e.e, e.data);
   }
   #endregion;

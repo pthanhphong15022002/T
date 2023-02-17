@@ -1,3 +1,4 @@
+import { AssignTaskModel } from './../../../../../codx-share/src/lib/models/assign-task.model';
 import {
   Component,
   Input,
@@ -355,16 +356,19 @@ export class ViewDetailComponent implements OnInit {
       task.refID = datas?.recID;
       task.refType = this.view?.formModel.entityName;
       task.dueDate = datas?.expiredOn;
-      var vllControlShare = 'TM003';
-      var vllRose = 'TM002';
-      var title = 'Giao việc';
+      let assignModel: AssignTaskModel = {
+        vllRole: 'TM002',
+        title: 'Giao việc',
+        vllShare: 'TM003',
+        task: task,
+      };
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
       let dialogAdd = this.callfunc.openSide(
         AssignInfoComponent,
-        [task, vllControlShare, vllRose, title],
+        assignModel,
         option
       );
       dialogAdd.closed.subscribe((e) => {});

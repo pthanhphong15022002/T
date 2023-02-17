@@ -944,6 +944,8 @@ codx-layout-add .card-header {
 }
 
 .aside-detail {
+  padding-top: 15px;
+
   codx-vll {
     display: flex;
     align-items: center;
@@ -1720,6 +1722,10 @@ codx-vll.badge.badge-light.badge-md>span[class*="fa"] {
 
 .codx-notification-filter .dropdown-menu {
   right: 0;
+}
+
+codx-view-list-detail .e-listview .e-list-parent {
+  border-top: 1px #fff solid;
 }
 
 // fix dropdown

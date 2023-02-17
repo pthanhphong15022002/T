@@ -50,7 +50,7 @@ export class ChartOfAccountsComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void { }
 
   ngAfterViewInit() {
     this.api.exec('PS', 'TestBusiness', 'Test').subscribe();
@@ -95,7 +95,7 @@ export class ChartOfAccountsComponent extends UIComponent {
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(e,data);
+        this.edit(e, data);
         break;
     }
   }
@@ -112,7 +112,7 @@ export class ChartOfAccountsComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      option.Width = '850px';
+      option.Width = '800px';
       this.dialog = this.callfunc.openSide(
         PopAddAccountsComponent,
         obj,
@@ -130,7 +130,7 @@ export class ChartOfAccountsComponent extends UIComponent {
     });
   }
 
-  edit(e,data) {
+  edit(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -144,7 +144,7 @@ export class ChartOfAccountsComponent extends UIComponent {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '850px';
+        option.Width = '800px';
         this.dialog = this.callfunc.openSide(
           PopAddAccountsComponent,
           obj,
@@ -161,7 +161,7 @@ export class ChartOfAccountsComponent extends UIComponent {
       .delete([data], true, (option: RequestOption) =>
         this.beforeDelete(option, data)
       )
-      .subscribe(() => {});
+      .subscribe(() => { });
   }
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
