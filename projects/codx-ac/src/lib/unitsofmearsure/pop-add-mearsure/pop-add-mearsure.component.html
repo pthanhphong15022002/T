@@ -72,19 +72,13 @@
           </div>
         </div>
       </div>
-      <div class="form-group">
-        <codx-input
-        [checked]="form.data.stop"
-        field="stop"
-        [formModel]="form.formModel"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
-        <codx-label
-            [formModel]="form.formModel"
-            fiedName="Stop"
-            default="Ngừng sử dụng"      
-          ></codx-label>   
+      <div class="d-flex align-items-center">
+        <div class="me-2">
+          <codx-input [formModel]="form.formModel" field="stop" (valueChange)="valueChange($event)"
+            [checked]="form.data.stop">
+          </codx-input>
+        </div>
+        <codx-label [formModel]="form.formModel" fiedName="stop" default="Ngừng sử dụng"></codx-label>
       </div>
 </ng-template>
 <ng-template #tabConversioninformation>
