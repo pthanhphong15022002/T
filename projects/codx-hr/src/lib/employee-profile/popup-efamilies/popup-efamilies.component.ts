@@ -35,23 +35,23 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
 
   formModel: FormModel;
   formGroup: FormGroup;
-  employId;
-  actionType;
+  employId: string;
+  actionType: string;
   dialog: DialogRef;
-  lstFamilyMembers;
-  indexSelected;
+  // lstFamilyMembers;
+  // indexSelected;
   isEmployee = false;
   idField = 'RecID';
 
   familyMemberObj;
-  funcID;
+  funcID: string;
   headerText: '';
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
   // @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private cr: ChangeDetectorRef,
     private notify: NotificationsService,
     private hrService: CodxHrService,
@@ -59,55 +59,25 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    this.lstFamilyMembers = data?.data?.lstFamilyMembers;
-    this.indexSelected =
-      data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
+    // this.lstFamilyMembers = data?.data?.lstFamilyMembers;
+    // this.indexSelected =
+    //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
     this.dialog = dialog;
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
     this.actionType = data?.data?.actionType;
+    this.familyMemberObj = JSON.parse(JSON.stringify(data?.data?.familyMemberObj));
+    this.formModel = dialog?.FormModel;
 
-    if (this.actionType == 'edit' || this.actionType == 'copy') {
-      this.familyMemberObj = JSON.parse(
-        JSON.stringify(this.lstFamilyMembers[this.indexSelected])
-      );
-    }
+    // if (this.actionType == 'edit' || this.actionType == 'copy') {
+    //   this.familyMemberObj = JSON.parse(
+    //     JSON.stringify(this.lstFamilyMembers[this.indexSelected])
+    //   );
+    // }
   }
 
   initForm() {
-    // this.hrService
-    // .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    // .then((item) => {
-    //   this.formGroup = item
-    //   if(this.actionType == 'add'){
-    //     this.hrService.getEFamilyModel().subscribe(p => {
-    //       console.log(this.formModel.currentData)
-    //       console.log('thong tin ng than', p)
-    //       this.familyMemberObj = p
-    //   //     this.familyMemberObj.idCardNo = this.familyMemberObj.idCardNo
-    //   // this.familyMemberObj.idIssuedOn = this.familyMemberObj.idIssuedOn
-    //   // this.familyMemberObj.idIssuedBy = this.familyMemberObj.idIssuedBy
-    //   // this.familyMemberObj.pidNumber = this.familyMemberObj.pitNumber
-    //   ///this.familyMemberObj.sIRegisterNo = this.familyMemberObj.siRegisterNo
-    //   this.formGroup.patchValue(this.familyMemberObj)
-    //   this.isAfterRender = true
-    //       this.formModel.currentData = this.familyMemberObj
-    //     })
-    //   }
-    //   else{
-    //   //   this.familyMemberObj.iDCardNo = this.familyMemberObj.idCardNo
-    //   // this.familyMemberObj.iDIssuedOn = this.familyMemberObj.idIssuedOn
-    //   // this.familyMemberObj.iDIssuedBy = this.familyMemberObj.idIssuedBy
-    //   // this.familyMemberObj.pITNumber = this.familyMemberObj.pitNumber
-    //   // this.familyMemberObj.sIRegisterNo = this.familyMemberObj.siRegisterNo
-    //   this.formGroup.patchValue(this.familyMemberObj)
-    //   this.fromdateVal = this.familyMemberObj.registerFrom
-    //   this.todateVal = this.familyMemberObj.registerTo
-    //   this.isAfterRender = true
-    //   }
-    // })
-
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
@@ -139,57 +109,59 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     }
   }
   onInit(): void {
-    this.hrService.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
-      }
-    });
+    if (!this.formModel) {
+      this.hrService.getFormModel(this.funcID).then((formModel) => {
+        if (formModel) {
+          this.formModel = formModel;
+          this.hrService
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .then((fg) => {
+              if (fg) {
+                this.formGroup = fg;
+                this.initForm();
+              }
+            });
+        }
+      });
+    } else
+      this.hrService
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .then((fg) => {
+          if (fg) {
+            this.formGroup = fg;
+            this.initForm();
+          }
+        });
   }
 
   onSaveForm() {
     let today = new Date();
-    if (this.familyMemberObj.Birthday >= today) {
+
+    this.familyMemberObj.registerFrom = this.fromdateVal;
+    this.familyMemberObj.registerTo = this.todateVal;
+
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
+    if (this.familyMemberObj.birthday >= today) {
       this.notify.notifyCode('HR004');
       return;
     }
 
-    this.familyMemberObj.registerFrom = this.fromdateVal;
-    this.familyMemberObj.registerTo = this.todateVal;
-    if (this.actionType === 'copy' || this.actionType === 'add') {
-      delete this.familyMemberObj.recID;
-    }
     this.familyMemberObj.employeeID = this.employId;
-
-    // this.familyMemberObj.idCardNo = this.familyMemberObj.iDCardNo
-    // this.familyMemberObj.idIssuedOn = this.familyMemberObj.iDIssuedOn
-    // this.familyMemberObj.idIssuedBy = this.familyMemberObj.iDIssuedBy
-    // this.familyMemberObj.pitNumber = this.familyMemberObj.pITNumber
-    // this.familyMemberObj.siRegisterNo = this.familyMemberObj.sIRegisterNo
-
-    // delete this.familyMemberObj.iDCardNo
-    // delete this.familyMemberObj.iDIssuedOn
-    // delete this.familyMemberObj.iDIssuedBy
-    // delete this.familyMemberObj.pITNumber
-    // delete this.familyMemberObj.sIRegisterNo
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
         .AddEmployeeFamilyInfo(this.familyMemberObj)
         .subscribe((p) => {
           if (p != null) {
-            this.familyMemberObj.recID = p.recID;
+            // this.familyMemberObj.recID = p.recID;
             this.notify.notifyCode('SYS006');
-            this.lstFamilyMembers.push(
-              JSON.parse(JSON.stringify(this.familyMemberObj))
-            );
+            // this.lstFamilyMembers.push(
+            //   JSON.parse(JSON.stringify(this.familyMemberObj))
+            // );
             // if (this.listView) {
             //   (this.listView.dataService as CRUDService)
             //     .add(this.familyMemberObj)
@@ -204,9 +176,8 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
         .UpdateEmployeeFamilyInfo(this.formModel.currentData)
         .subscribe((p) => {
           if (p != null) {
-            this
             this.notify.notifyCode('SYS006');
-            this.lstFamilyMembers[this.indexSelected] = p;
+            // this.lstFamilyMembers[this.indexSelected] = p;
             // if (this.listView) {
             //   (this.listView.dataService as CRUDService)
             //     .update(this.lstFamilyMembers[this.indexSelected])
@@ -218,21 +189,21 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     }
   }
 
-  click(data) {
-    console.log('formdata', data);
-    this.familyMemberObj = data;
-    this.formModel.currentData = JSON.parse(
-      JSON.stringify(this.familyMemberObj)
-    );
-    this.indexSelected = this.lstFamilyMembers.findIndex(
-      (p) => (p.recID = this.familyMemberObj.recID)
-    );
-    this.fromdateVal = this.familyMemberObj.registerFrom;
-    this.todateVal = this.familyMemberObj.registerTo;
-    this.actionType = 'edit';
-    this.formGroup?.patchValue(this.familyMemberObj);
-    this.cr.detectChanges();
-  }
+  // click(data) {
+  //   console.log('formdata', data);
+  //   this.familyMemberObj = data;
+  //   this.formModel.currentData = JSON.parse(
+  //     JSON.stringify(this.familyMemberObj)
+  //   );
+  //   // this.indexSelected = this.lstFamilyMembers.findIndex(
+  //   //   (p) => (p.recID = this.familyMemberObj.recID)
+  //   // );
+  //   this.fromdateVal = this.familyMemberObj.registerFrom;
+  //   this.todateVal = this.familyMemberObj.registerTo;
+  //   this.actionType = 'edit';
+  //   this.formGroup?.patchValue(this.familyMemberObj);
+  //   this.cr.detectChanges();
+  // }
 
   focus(evt) {
     let isChecked = evt.checked;

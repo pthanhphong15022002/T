@@ -41,6 +41,7 @@ import {
   CodxGridviewComponent,
   CRUDService,
   DataRequest,
+  DataService,
   DialogData,
   DialogRef,
   FormModel,
@@ -77,6 +78,11 @@ import { Sidebar } from '@syncfusion/ej2-angular-navigations';
 export class EmployeeDetailComponent extends UIComponent {
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   @ViewChild('button') button: TemplateRef<any>;
+  @ViewChild('itemTemplate') template: TemplateRef<any>;
+  @ViewChild('paneRight') panelRight: TemplateRef<any>;
+  @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
+
+  views: Array<ViewModel> | any = [];
   minType = 'MinRange';
   user;
 
@@ -100,14 +106,7 @@ export class EmployeeDetailComponent extends UIComponent {
     super(inject);
     this.user = this.auth.get();
     this.funcID = this.routeActive.snapshot.params['funcID'];
-    console.log('dtttt', dialog);
   }
-
-  @ViewChild('itemTemplate') template: TemplateRef<any>;
-  @ViewChild('paneRight') panelRight: TemplateRef<any>;
-  @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
-
-  views: Array<ViewModel> | any = [];
 
   navChange(evt: any) {
     if (!evt) return;
@@ -117,8 +116,6 @@ export class EmployeeDetailComponent extends UIComponent {
       block: 'start',
       inline: 'nearest',
     });
-
-    console.log('change', evt);
 
     // let footer = document.querySelector('.codx-detail-footer');
     // if (footer) {
@@ -131,20 +128,9 @@ export class EmployeeDetailComponent extends UIComponent {
     // }
   }
 
-  loadLabel(funcID) {
-    // function = this.lstFuncID.filter((p) => p.functionID == funcID)[0].customName ?? '';
-    return (
-      this.lstFuncID.filter((p) => p.functionID == funcID)[0]?.customName ?? ''
-    );
-  }
-
   infoPersonal: any = {};
 
   crrEContract: any;
-
-  formModelVisa: FormModel;
-  formModelPassport: FormModel;
-  formModelWPermit: FormModel;
 
   statusVll = 'L0225';
   funcID = '';
@@ -153,8 +139,8 @@ export class EmployeeDetailComponent extends UIComponent {
   entity = '';
   idField = 'recID';
   functionID: string;
-  data: any = {};
-  //family
+  // data: any = {};
+  // //family
   lstFamily: any;
   //degree
   lstEDegrees: any = [];
@@ -189,7 +175,6 @@ export class EmployeeDetailComponent extends UIComponent {
 
   formModel;
   itemDetail;
-  className = 'EExperiencesBusiness';
 
   employeeID;
   hrEContract;
@@ -329,42 +314,42 @@ export class EmployeeDetailComponent extends UIComponent {
   @ViewChild('visaGridview') visaGridview: CodxGridviewComponent;
   @ViewChild('workPermitGridview') workPermitGridview: CodxGridviewComponent;
   @ViewChild('basicSalaryGridview') basicSalaryGridview: CodxGridviewComponent;
-  @ViewChild('appointionGridView') appointionGrid: CodxGridviewComponent;
+  @ViewChild('appointionGridView') appointionGridView: CodxGridviewComponent;
   //#endregion
 
   //#endregion
-  objCollapes = {
-    '1': false,
-    '1.1': false,
-    '1.2': false,
-    '2': false,
-    '2.1': false,
-    '2.2': false,
-    '3': false,
-    '3.1': false,
-    '3.2': false,
-    '3.3': false,
-    '3.4': false,
-    '4': false,
-    '4.1': false,
-    '4.2': false,
-    '4.3': false,
-    '4.4': false,
-    '4.5': false,
-    '5': false,
-    '5.1': false,
-    '5.2': false,
-    '5.3': false,
-    '5.4': false,
-    '6': false,
-    '6.1': false,
-    '6.2': false,
-    '7': false,
-    '7.1': false,
-    '7.2': false,
-    '7.3': false,
-    '7.4': false,
-  };
+  // objCollapes = {
+  //   '1': false,
+  //   '1.1': false,
+  //   '1.2': false,
+  //   '2': false,
+  //   '2.1': false,
+  //   '2.2': false,
+  //   '3': false,
+  //   '3.1': false,
+  //   '3.2': false,
+  //   '3.3': false,
+  //   '3.4': false,
+  //   '4': false,
+  //   '4.1': false,
+  //   '4.2': false,
+  //   '4.3': false,
+  //   '4.4': false,
+  //   '4.5': false,
+  //   '5': false,
+  //   '5.1': false,
+  //   '5.2': false,
+  //   '5.3': false,
+  //   '5.4': false,
+  //   '6': false,
+  //   '6.1': false,
+  //   '6.2': false,
+  //   '7': false,
+  //   '7.1': false,
+  //   '7.2': false,
+  //   '7.3': false,
+  //   '7.4': false,
+  // };
 
   // vllTabs = [
   //   { icon: 'icon-apartment', text: 'Thông tin cá nhân' },
@@ -448,7 +433,7 @@ export class EmployeeDetailComponent extends UIComponent {
   eVisaFormModel: FormModel;
   eWorkPermitFormModel: FormModel; //Giay phep lao dong
   certificateFormModel: FormModel; // Chứng chỉ
-  degreeFormodel: FormModel; // Bằng cấp
+  degreeFormModel: FormModel; // Bằng cấp
   skillFormmodel: FormModel; // Kỹ năng
   eExperienceFormModel: FormModel; //Kinh nghiệm trước đây
   eAssetFormModel: FormModel; //Tài sản cấp phát
@@ -456,7 +441,7 @@ export class EmployeeDetailComponent extends UIComponent {
   trainCourseFormModel: FormModel; // Đào tạo
   eHealthFormModel: FormModel; //Khám sức khỏe
   eVaccineFormModel: FormModel; //Tiêm vắc xin
-  appointionFormodel: FormModel;
+  appointionFormModel: FormModel;
   //#endregion
 
   //#region headerText
@@ -479,7 +464,7 @@ export class EmployeeDetailComponent extends UIComponent {
   endDateBusinessTravelFilterValue;
   filterBusinessTravelPredicates: string;
   //#endregion
-
+  dataService: DataService = null;
   clickItem(evet) {}
 
   onSectionChange(data: any) {
@@ -512,15 +497,11 @@ export class EmployeeDetailComponent extends UIComponent {
     });
 
     this.hrService.getFormModel(this.degreeFuncID).then((res) => {
-      this.degreeFormodel = res;
+      this.degreeFormModel = res;
     });
 
     this.hrService.getFormModel(this.eExperienceFuncID).then((res) => {
       this.eExperienceFormModel = res;
-    });
-
-    this.hrService.getFormModel(this.degreeFuncID).then((res) => {
-      this.degreeFormodel = res;
     });
 
     this.hrService.getFormModel(this.certificateFuncID).then((res) => {
@@ -541,7 +522,7 @@ export class EmployeeDetailComponent extends UIComponent {
     });
 
     this.hrService.getFormModel(this.degreeFuncID).then((res) => {
-      this.degreeFormodel = res;
+      this.degreeFormModel = res;
     });
 
     this.hrService.getFormModel(this.eAssetFuncID).then((res) => {
@@ -590,7 +571,7 @@ export class EmployeeDetailComponent extends UIComponent {
     });
 
     this.hrService.getFormModel(this.appointionFuncID).then((res) => {
-      this.appointionFormodel = res;
+      this.appointionFormModel = res;
     });
     //#endregion
 
@@ -1285,24 +1266,24 @@ export class EmployeeDetailComponent extends UIComponent {
     });
 
     let ins = setInterval(() => {
-      if (this.appointionGrid) {
+      if (this.appointionGridView) {
         clearInterval(ins);
         let t = this;
-        this.appointionGrid.dataService.onAction.subscribe((res) => {
+        this.appointionGridView.dataService.onAction.subscribe((res) => {
           if (res) {
             if (res.type != null && res.type == 'loaded') {
               t.appointionRowCount = res['data'].length;
             }
           }
         });
-        this.appointionRowCount = this.appointionGrid.dataService.rowCount;
+        this.appointionRowCount = this.appointionGridView.dataService.rowCount;
       }
     }, 100);
     //#endregion
-    this.formModelVisa = new FormModel();
 
     this.routeActive.queryParams.subscribe((params) => {
       if (params.employeeID || this.user.userID) {
+        this.employeeID = params.employeeID;
         this.listEmp = history.state?.data;
         this.request = history.state?.request;
         if (!this.request && !this.listEmp) {
@@ -1504,9 +1485,8 @@ export class EmployeeDetailComponent extends UIComponent {
                 .getEmployeeInfo(params.employeeID)
                 .subscribe((emp) => {
                   if (emp) {
-                    this.data = emp;
+                    // this.data = emp;
                     this.infoPersonal = emp;
-                    console.log('data', this.data);
                   }
                 });
 
@@ -1661,6 +1641,7 @@ export class EmployeeDetailComponent extends UIComponent {
               op.entityName = 'HR_EExperiences';
               op.dataValue = params.employeeID;
               op.predicate = 'EmployeeID=@0';
+              op.page = 1;
               (op.page = 1),
                 this.hrService
                   .GetExperienceListByEmployeeIDAsync(op)
@@ -1766,6 +1747,7 @@ export class EmployeeDetailComponent extends UIComponent {
         op.entityName = 'HR_EExperiences';
         op.dataValue = params.employeeID;
         op.predicate = 'EmployeeID=@0';
+        op.page = 1;
         this.hrService
           .GetExperienceListByEmployeeIDAsync(op)
           .subscribe((res) => {
@@ -2776,7 +2758,7 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   handlEmployeeBenefit(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
+    this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -2784,7 +2766,7 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupEbenefitComponent,
       {
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         actionType: actionType,
         headerText: this.getFormHeader(this.benefitFuncID),
         funcID: this.benefitFuncID,
@@ -2807,7 +2789,7 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   handlEmployeeExperiences(actionType: string, data: any) {
-    this.eExperienceGrid.dataService.dataSelected = this.data;
+    this.eExperienceGrid.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     // option.DataService = this.view.dataService;
     option.FormModel = this.eExperienceGrid.formModel;
@@ -2817,10 +2799,10 @@ export class EmployeeDetailComponent extends UIComponent {
       PopupEexperiencesComponent,
       {
         actionType: actionType,
-        headerText: 'Kinh nghiệm trước đây',
+        headerText: this.getFormHeader(this.eExperienceFuncID),
         funcID: this.eExperienceFuncID,
         eExperienceObj: data,
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         //indexSelected: this.lstExperience.indexOf(data),
       },
       option
@@ -2843,7 +2825,7 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   HandleEmployeeJobSalariesInfo(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
+    this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     // option.FormModel = this.view.formModel
     option.Width = '850px';
@@ -2852,7 +2834,7 @@ export class EmployeeDetailComponent extends UIComponent {
       {
         actionType: actionType,
         headerText: 'Lương chức danh',
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         funcID: 'HRT03020302',
         lstJobSalaries: this.lstJobSalaries,
         indexSelected: this.lstJobSalaries.indexOf(data),
@@ -2883,11 +2865,9 @@ export class EmployeeDetailComponent extends UIComponent {
       PopupEBasicSalariesComponent,
       {
         actionType: actionType,
-        // lstEBSalary: this.lstEBSalary,
         headerText: this.getFormHeader(this.eBasicSalaryFuncID),
         funcID: this.eBasicSalaryFuncID,
-        // indexSelected: this.lstExperience.indexOf(data),
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         salaryObj: data,
       },
       option
@@ -2911,29 +2891,32 @@ export class EmployeeDetailComponent extends UIComponent {
 
   handleEFamilyInfo(actionType: string, data: any) {
     let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
+    // option.DataService = this.view.dataService;
+    option.FormModel = this.eFamilyFormModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       PopupEFamiliesComponent,
       {
         actionType: actionType,
-        employeeId: this.data.employeeID,
-        headerText: 'Quan hệ gia đình',
-        funcID: 'HRT03020103',
-        lstFamilyMembers: this.lstFamily,
-        indexSelected: this.lstFamily.indexOf(data),
+        employeeId: this.employeeID,
+        headerText: this.getFormHeader(this.eFamiliesFuncID),
+        funcID: this.eFamiliesFuncID,
+        familyMemberObj: data,
+        // lstFamilyMembers: this.lstFamily,
+        // indexSelected: this.lstFamily.indexOf(data),
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      // if (actionType == 'add' || actionType == 'copy') {
-      //   this.lstFamily.push(res?.event);
-      // } else {
-      //   let index = this.lstFamily.indexOf(data);
-      //   this.lstFamily[index] = res?.event;
-      // }
       if (!res?.event) this.view.dataService.clear();
+      else {
+        if (actionType == 'add' || actionType == 'copy') {
+          this.lstFamily.push(res?.event);
+        } else {
+          let index = this.lstFamily.indexOf(data);
+          this.lstFamily[index] = res?.event;
+        }
+      }
       this.df.detectChanges();
     });
   }
@@ -2951,7 +2934,7 @@ export class EmployeeDetailComponent extends UIComponent {
         // lstPassports: this.lstPassport,
         funcID: this.ePassportFuncID,
         headerText: this.getFormHeader(this.ePassportFuncID),
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         passportObj: data,
       },
       option
@@ -2978,7 +2961,7 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   HandleEmployeeDayOffInfo(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
+    this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -2991,7 +2974,7 @@ export class EmployeeDetailComponent extends UIComponent {
         indexSelected: this.lstDayOffs.indexOf(data),
         lstDayOffs: this.lstDayOffs,
         headerText: 'Nghỉ phép',
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         funcID: 'HRT03020403',
       },
       option
@@ -3015,7 +2998,7 @@ export class EmployeeDetailComponent extends UIComponent {
         // lstWorkPermit: this.lstWorkPermit,
         // selectedWorkPermit: data,
         headerText: this.getFormHeader(this.eWorkPermitFuncID),
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         funcID: this.eWorkPermitFuncID,
         workPermitObj: data,
       },
@@ -3049,7 +3032,7 @@ export class EmployeeDetailComponent extends UIComponent {
         // indexSelected: this.lstVisa.indexOf(data),
         // lstVisas: this.lstVisa,
         headerText: this.getFormHeader(this.eVisaFuncID),
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         funcID: this.eVisaFuncID,
         visaObj: data,
       },
@@ -3107,7 +3090,7 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   addEmployeeDisciplinesInfo(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
+    this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -3120,7 +3103,7 @@ export class EmployeeDetailComponent extends UIComponent {
         indexSelected: this.lstDiscipline.indexOf(data),
         lstDiscipline: this.lstDiscipline,
         headerText: 'Kỷ luật',
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         funcID: 'HRT03020602',
       },
       option
@@ -3132,7 +3115,7 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   addEmployeeAwardsInfo(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
+    this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -3144,7 +3127,7 @@ export class EmployeeDetailComponent extends UIComponent {
         actionType: actionType,
         indexSelected: this.lstAsset.indexOf(data),
         lstAwards: this.lstAwards,
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         headerText: 'Khen thưởng',
         funcID: 'HRT03020601',
       },
@@ -3157,7 +3140,7 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   HandleEmployeeAccidentInfo(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
+    this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -3170,7 +3153,7 @@ export class EmployeeDetailComponent extends UIComponent {
         actionType: actionType,
         indexSelected: this.lstAccident.indexOf(data),
         lstAccident: this.lstAccident,
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         headerText: 'Tai nạn lao động',
         funcID: 'HRT03020704',
       },
@@ -3183,7 +3166,7 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   HandlemployeeAssetInfo(actionType: string, data: any) {
-    this.eAssetGrid.dataService.dataSelected = this.data;
+    this.eAssetGrid.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.FormModel = this.eAssetGrid.formModel;
     option.Width = '550px';
@@ -3195,7 +3178,7 @@ export class EmployeeDetailComponent extends UIComponent {
         assetObj: data,
         ///indexSelected: this.lstAsset.indexOf(data),
         //lstAssets: this.lstAsset,
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         funcID: this.eAssetFuncID,
         headerText: this.getFormHeader(this.eAssetFuncID),
       },
@@ -3219,33 +3202,36 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   HandleEmployeeAppointionInfo(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
+    if (this.appointionGridView)
+      this.appointionGridView.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
+    option.DataService = this.appointionGridView?.dataService;
+    option.FormModel = this.appointionFormModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       PopupEappointionsComponent,
       {
         actionType: actionType,
         //indexSelected: this.lstAppointions.indexOf(data),
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         //lstEAppointions: this.lstAppointions,
         funcID: this.appointionFuncID,
         appointionObj: data,
-        headerText: 'Bổ nhiệm - Điều chuyển',
+        headerText: this.getFormHeader(this.appointionFuncID),
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
+      if (!res?.event)
+        (this.appointionGridView?.dataService as CRUDService).clear();
       if (res.event) {
         if (actionType == 'add' || actionType == 'copy') {
           this.appointionRowCount += 1;
-          (this.appointionGrid.dataService as CRUDService)
+          (this.appointionGridView?.dataService as CRUDService)
             .add(res.event)
             .subscribe();
         } else if (actionType == 'edit') {
-          (this.appointionGrid.dataService as CRUDService)
+          (this.appointionGridView?.dataService as CRUDService)
             .update(res.event)
             .subscribe();
         }
@@ -3264,7 +3250,7 @@ export class EmployeeDetailComponent extends UIComponent {
       {
         actionType: actionType,
         headerText: 'Chứng chỉ',
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         funcID: this.certificateFuncID,
         dataInput: data, // get data
       },
@@ -3314,8 +3300,8 @@ export class EmployeeDetailComponent extends UIComponent {
 
   HandleEmployeeDegreeInfo(actionType: string, data: any) {
     let option = new SidebarModel();
-    option.DataService = this.degreeGrid.dataService;
-    option.FormModel = this.degreeGrid.formModel;
+    option.DataService = this.degreeGrid?.dataService;
+    option.FormModel = this.eInfoFormModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       PopupEDegreesComponent,
@@ -3323,8 +3309,8 @@ export class EmployeeDetailComponent extends UIComponent {
         actionType: actionType,
         //indexSelected: this.lstEDegrees.indexOf(data),
         //lstEDegrees: this.lstEDegrees,
-        headerText: 'Bằng cấp',
-        employeeId: this.data.employeeID,
+        headerText: this.getFormHeader(this.degreeFuncID),
+        employeeId: this.employeeID,
         degreeObj: data,
         // dataSelected: data,
         funcID: this.degreeFuncID,
@@ -3353,8 +3339,8 @@ export class EmployeeDetailComponent extends UIComponent {
       PopupESkillsComponent,
       {
         actionType: actionType,
-        headerText: 'Kỹ năng',
-        employeeId: this.data.employeeID,
+        headerText: this.getFormHeader(this.skillFuncID),
+        employeeId: this.employeeID,
         funcID: this.skillFuncID,
         dataInput: data,
       },
@@ -3404,7 +3390,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
   HandleEmployeeTrainCourseInfo(actionType: string, data: any) {
     let option = new SidebarModel();
-    option.DataService = this.trainCourseGrid.dataService;
+    option.DataService = this.trainCourseGrid?.dataService;
     option.FormModel = this.trainCourseFormModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
@@ -3413,7 +3399,7 @@ export class EmployeeDetailComponent extends UIComponent {
         //isAdd: true,
         actionType: actionType,
         headerText: this.getFormHeader(this.trainCourseFuncID),
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         // actionType: 'add',
         funcID: this.trainCourseFuncID,
         dataInput: data,
@@ -3421,14 +3407,14 @@ export class EmployeeDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if (!res?.event) (this.trainCourseGrid?.dataService as CRUDService).clear();
       if (res && (actionType === 'add' || actionType === 'copy')) {
-        (this.trainCourseGrid.dataService as CRUDService)
+        (this.trainCourseGrid?.dataService as CRUDService)
           .add(res.event)
           .subscribe();
         this.trainCourseRowCount++;
       } else {
-        (this.trainCourseGrid.dataService as CRUDService)
+        (this.trainCourseGrid?.dataService as CRUDService)
           .update(res.event)
           .subscribe();
       }
@@ -3436,31 +3422,31 @@ export class EmployeeDetailComponent extends UIComponent {
     });
   }
 
-  collapse(id: any, isCollapse: string = '-1') {
-    let numberID = Number(id);
-    if (numberID) {
-      if (numberID % 1 == 0) {
-        for (let i = numberID + 0.1; i < numberID + 1; i = i + 0.1) {
-          id = i.toFixed(1);
-          if (this.objCollapes[id] != undefined) {
-            if (isCollapse != '-1') {
-              let value = isCollapse == '0' ? false : true;
-              this.objCollapes[id] = value;
-            } else {
-              this.objCollapes[id] = !this.objCollapes[id];
-            }
-          }
-        }
-      } else {
-        if (isCollapse != '-1') {
-          let value = isCollapse == '0' ? false : true;
-          this.objCollapes[id] = value;
-        } else {
-          this.objCollapes[id] = !this.objCollapes[id];
-        }
-      }
-    }
-  }
+  // collapse(id: any, isCollapse: string = '-1') {
+  //   let numberID = Number(id);
+  //   if (numberID) {
+  //     if (numberID % 1 == 0) {
+  //       for (let i = numberID + 0.1; i < numberID + 1; i = i + 0.1) {
+  //         id = i.toFixed(1);
+  //         if (this.objCollapes[id] != undefined) {
+  //           if (isCollapse != '-1') {
+  //             let value = isCollapse == '0' ? false : true;
+  //             this.objCollapes[id] = value;
+  //           } else {
+  //             this.objCollapes[id] = !this.objCollapes[id];
+  //           }
+  //         }
+  //       }
+  //     } else {
+  //       if (isCollapse != '-1') {
+  //         let value = isCollapse == '0' ? false : true;
+  //         this.objCollapes[id] = value;
+  //       } else {
+  //         this.objCollapes[id] = !this.objCollapes[id];
+  //       }
+  //     }
+  //   }
+  // }
 
   HandleBebefitInfo(actionType, s) {
     this.api
@@ -3473,7 +3459,7 @@ export class EmployeeDetailComponent extends UIComponent {
   //#region HR_EHealths
 
   HandleEmployeeEHealths(actionType: string, data: any) {
-    this.eHealthsGrid.dataService.dataSelected = this.data;
+    if(this.eHealthsGrid) this.eHealthsGrid.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.eHealthsGrid.formModel;
@@ -3485,7 +3471,7 @@ export class EmployeeDetailComponent extends UIComponent {
         //indexSelected: this.lstEhealth.indexOf(data),
         //lstEhealth: this.lstEhealth,
         headerText: this.getFormHeader(this.eHealthFuncID),
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         funcID: this.eHealthFuncID,
       },
       option
@@ -3511,7 +3497,7 @@ export class EmployeeDetailComponent extends UIComponent {
   //#region HR_EVaccines
 
   HandleEVaccinesInfo(actionType: string, data: any) {
-    this.eVaccinesGrid.dataService.dataSelected = this.data;
+    this.eVaccinesGrid.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.eVaccinesGrid.formModel;
@@ -3521,7 +3507,7 @@ export class EmployeeDetailComponent extends UIComponent {
         actionType: actionType,
         data: data,
         headerText: this.getFormHeader(this.eVaccinesFuncID),
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         funcID: this.eVaccinesFuncID,
       },
       option
@@ -3569,7 +3555,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
   //#region HR_EDesisease
   HandleEmployeeDiseaseInfo(actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.data;
+    this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     // option.FormModel = this.view.formModel
     option.Width = '850px';
@@ -3581,7 +3567,7 @@ export class EmployeeDetailComponent extends UIComponent {
         lstEdiseases: this.lstEdiseases,
         funcID: 'HRT03020703',
         headerText: 'Bệnh nghề nghiệp',
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
       },
       option
     );
@@ -3602,7 +3588,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
   //#region HR_EContracts
   addEContracts() {
-    this.view.dataService.dataSelected = this.data;
+    this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     // option.FormModel = this.view.formModel
     option.Width = '850px';
@@ -3612,7 +3598,7 @@ export class EmployeeDetailComponent extends UIComponent {
         actionType: 'add',
         salarySelected: null,
         headerText: 'Hợp đồng lao động',
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         funcID: 'HRT03020401',
       },
       option
@@ -3636,7 +3622,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
   //#region  HR_EBusinessTravels
   HandleEBusinessTravel(actionType: string, data: any) {
-    this.businessTravelGrid.dataService.dataSelected = this.data;
+    this.businessTravelGrid.dataService.dataSelected = this.infoPersonal;
     // (this.businessTravelGrid.dataService as CRUDService).addNew().subscribe(res =>{
     //   console.log('GridComponent', this.businessTravelGrid)
     // });
@@ -3648,7 +3634,7 @@ export class EmployeeDetailComponent extends UIComponent {
       PopupEmpBusinessTravelsComponent,
       {
         actionType: actionType,
-        employeeId: this.data.employeeID,
+        employeeId: this.employeeID,
         headerText: 'Nhật kí công tác',
         funcID: this.eBusinessTravelFuncID,
         businessTravelObj: data,
@@ -3684,7 +3670,7 @@ export class EmployeeDetailComponent extends UIComponent {
   nextEmp() {
     if (this.listEmp) {
       let index = this.listEmp.findIndex(
-        (p) => p.employeeID == this.data.employeeID
+        (p) => p.employeeID == this.employeeID
       );
       if (index > -1 && this.listEmp[index + 1]?.employeeID) {
         let urlView = '/hr/employeedetail/HRT03a1';
@@ -3727,7 +3713,7 @@ export class EmployeeDetailComponent extends UIComponent {
   previousEmp() {
     if (this.listEmp) {
       let index = this.listEmp.findIndex(
-        (p) => p.employeeID == this.data.employeeID
+        (p) => p.employeeID == this.employeeID
       );
       if (index > -1 && this.listEmp[index - 1]?.employeeID) {
         let urlView = '/hr/employeedetail/HRT03a1';
@@ -3995,8 +3981,8 @@ export class EmployeeDetailComponent extends UIComponent {
         this.handlEmployeeBenefit('copy', res);
       });
     } else if (flag == 'eAppointions') {
-      this.appointionGrid.dataService.dataSelected = data;
-      (this.appointionGrid.dataService as CRUDService)
+      this.appointionGridView.dataService.dataSelected = data;
+      (this.appointionGridView.dataService as CRUDService)
         .copy()
         .subscribe((res: any) => {
           this.HandleEmployeeAppointionInfo('copy', res);
@@ -4294,7 +4280,7 @@ export class EmployeeDetailComponent extends UIComponent {
     this.filterBusinessTravelPredicates = '';
     if (this.startDateBusinessTravelFilterValue == null) {
       (this.businessTravelGrid.dataService as CRUDService)
-        .setPredicates([`EmployeeID=@0`], [this.data.employeeID])
+        .setPredicates([`EmployeeID=@0`], [this.employeeID])
         .subscribe((item) => {
           console.log('item tra ve sau khi loc 3', item);
         });
