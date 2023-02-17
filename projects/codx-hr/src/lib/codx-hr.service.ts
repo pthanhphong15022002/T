@@ -1067,7 +1067,6 @@ export class CodxHrService {
 
   //#region EExperience
   GetExperienceListByEmployeeIDAsync(data) {
-    debugger;
     return this.api.execSv<any>(
       'HR',
       'HR',
