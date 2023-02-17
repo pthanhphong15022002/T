@@ -40,6 +40,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   trainFieldText: string;
   @ViewChild('form') form: CodxFormComponent;
   //@ViewChild('listView') listView: CodxListviewComponent;
+  ops = ['m', 'y'];
+  date = new Date();
 
   constructor(
     private injector: Injector,
@@ -66,6 +68,10 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     //   if (data?.data?.dataSelected)
     //     this.degreeObj = JSON.parse(JSON.stringify(data?.data?.dataSelected));
     // }
+  }
+
+  changeCalendar(event){
+    console.log(event);
   }
 
   ngAfterViewInit(){
