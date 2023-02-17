@@ -13,9 +13,15 @@ import {
   Util,
 } from 'codx-core';
 import { AssignInfoComponent } from './components/assign-info/assign-info.component';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { PopupCommentComponent } from 'projects/codx-es/src/lib/sign-file/popup-comment/popup-comment.component';
 import { environment } from 'src/environments/environment';
+import { AssignTaskModel } from './models/assign-task.model';
 
 @Injectable({
   providedIn: 'root',
@@ -37,10 +43,9 @@ export class CodxShareService {
     private cache: CacheService,
     private fb: FormBuilder
   ) {}
-  loadFuncID(functionID:any): Observable<any>
-  {
+  loadFuncID(functionID: any): Observable<any> {
     let paras = [functionID];
-    let keyRoot = "MFunc" + functionID;
+    let keyRoot = 'MFunc' + functionID;
     let key = JSON.stringify(paras).toLowerCase();
     if (this.caches.has(keyRoot)) {
       var c = this.caches.get(keyRoot);
@@ -49,21 +54,22 @@ export class CodxShareService {
       }
     }
     if (this.cachedObservables.has(key)) {
-      this.cachedObservables.get(key)
+      this.cachedObservables.get(key);
     }
-    let observable = this.api.execSv("SYS","SYS","MoreFunctionsBusiness","GetAsync",functionID)
-    .pipe(
-      map((res) => {
-        if (res) {
-          let c = this.caches.get(keyRoot);
-          c?.set(key, res);
-          return res;
-        }
-        return null
-      }),
-      share(),
-      finalize(() => this.cachedObservables.delete(key))
-    );
+    let observable = this.api
+      .execSv('SYS', 'SYS', 'MoreFunctionsBusiness', 'GetAsync', functionID)
+      .pipe(
+        map((res) => {
+          if (res) {
+            let c = this.caches.get(keyRoot);
+            c?.set(key, res);
+            return res;
+          }
+          return null;
+        }),
+        share(),
+        finalize(() => this.cachedObservables.delete(key))
+      );
     this.cachedObservables.set(key, observable);
     return observable;
   }
@@ -78,20 +84,26 @@ export class CodxShareService {
     var funcID = val?.functionID;
     switch (funcID) {
       //Giao việc
-      case 'SYS005': {
+      case 'ODT1013': {
         var task = new TM_Tasks();
         task.refID = data?.recID;
         task.refType = formModel.entityName;
-        var vllControlShare = 'TM003';
-        var vllRose = 'TM002';
-        var title = val?.data.customName;
+
         let option = new SidebarModel();
+        let assignModel: AssignTaskModel = {
+          vllRole: 'TM002',
+          title: val?.data.customName,
+          vllShare: 'TM003',
+          task: task,
+          referedData: data,
+          referedFunction: val.data,
+        };
         option.DataService = dataService;
         option.FormModel = formModel;
         option.Width = '550px';
         let dialog = this.callfunc.openSide(
           AssignInfoComponent,
-          [task, vllControlShare, vllRose, title],
+          assignModel,
           option
         );
         dialog.closed.subscribe((e) => {
@@ -230,9 +242,7 @@ export class CodxShareService {
 
   getFormGroup(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
-      this.cache
-      .gridViewSetup(formName, gridView)
-      .subscribe((gv: any) => {
+      this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
         if (gv) {
           var arrgv = Object.values(gv) as any[];
           const group: any = {};
@@ -248,10 +258,9 @@ export class CodxShareService {
               : new FormControl(value);
           });
           group['updateColumn'] = new FormControl('');
-         var formGroup = new FormGroup(group);
-         resolve(formGroup);
+          var formGroup = new FormGroup(group);
+          resolve(formGroup);
         }
-       
       });
       // this.cache
       //   .gridViewSetup(formName, gridView)
@@ -284,9 +293,7 @@ export class CodxShareService {
       //       model['assign'].push(false);
       //       model['share'].push(false);
       //     }
-       
-      
-         
+
       //   });
     });
   }
@@ -621,15 +628,13 @@ export class CodxShareService {
     );
   }
 
-  getThumbByUrl(url:any, width = 30)
-  {
-    if(url)
-    {
+  getThumbByUrl(url: any, width = 30) {
+    if (url) {
       var wt = width;
       var widthThumb = 1.2;
-      var arr = url.split("/");
-      var uploadID = arr[arr.length-2];
-      
+      var arr = url.split('/');
+      var uploadID = arr[arr.length - 2];
+
       if (width <= 30 * widthThumb) wt = 30;
       else if (width <= 60 * widthThumb) wt = 60;
       else if (width <= 120 * widthThumb) wt = 120;
@@ -637,9 +642,18 @@ export class CodxShareService {
       else if (width <= 500 * widthThumb) wt = 500;
       else if (width <= 650 * widthThumb) wt = 600;
 
-      return environment.urlUpload + "/api/" + environment.appName + "/thumbs/" + uploadID + "/" + wt + ".webp";
+      return (
+        environment.urlUpload +
+        '/api/' +
+        environment.appName +
+        '/thumbs/' +
+        uploadID +
+        '/' +
+        wt +
+        '.webp'
+      );
     }
-    return ""
+    return '';
   }
 }
 

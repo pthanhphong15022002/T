@@ -14,13 +14,10 @@ import {
   FormModel,
   Util,
 } from 'codx-core';
+import { DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from 'projects/codx-dp/src/lib/models/models';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-import {
-  DP_Instances_Steps_Tasks,
-  DP_Instances_Steps_Tasks_Roles,
-  DP_Steps_Tasks_Roles,
-} from '../../../models/models';
+
 
 @Component({
   selector: 'lib-popup-add-stask',

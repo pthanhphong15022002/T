@@ -378,23 +378,33 @@ export class CodxHrService {
     );
   }
 
-  updateEmployeeTrainCourseInfo(data) {
+  updateEmployeeTrainCourseInfo(data: any, functionID : string) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'ETrainCoursesBusiness',
       'EditETraincourseAsync',
+      [data, functionID]
+    );
+  }
+
+  deleteEmployeeTrainCourseInfo(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ETrainCoursesBusiness',
+      'DeleteETraincourseAsync',
       data
     );
   }
 
-  addETraincourse(data: any) {
+  addETraincourse(data: any, functionID: string) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'ETrainCoursesBusiness',
       'AddETraincourseAsync',
-      data
+      [data, functionID]
     );
   }
   //#endregion

@@ -19,6 +19,7 @@ import {
   AuthService,
 } from 'codx-core';
 import { environment } from 'src/environments/environment';
+import { AssignTaskModel } from '../../models/assign-task.model';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { TM_Tasks } from '../codx-tasks/model/task.model';
@@ -853,18 +854,23 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     task.refID = this.contents[index].recID;
     task.refType = this.objectType;
     task.taskName = this.contents[index].memo;
-    var vllControlShare = this.vllControlShare;
-    var vllRose = this.vllRose;
-    var title = '';
+    let assignModel: AssignTaskModel = {
+      vllRole: this.vllRose,
+      title: '',
+      vllShare: this.vllControlShare,
+      task: task,
+    };
+
     let option = new SidebarModel();
     var objFormModel = {
       entityName: this.objectType,
     };
+
     option.FormModel = objFormModel;
     option.Width = '550px';
     this.dialog = this.callfunc.openSide(
       AssignInfoComponent,
-      [task, vllControlShare, vllRose, title],
+      assignModel,
       option
     );
     this.dialog.closed.subscribe((e) => {
