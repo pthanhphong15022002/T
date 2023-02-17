@@ -5,6 +5,7 @@ import {
   CallFuncService,
   CacheService,
 } from 'codx-core';
+import moment from 'moment';
 import { PopupCustomFieldComponent } from './popup-custom-field/popup-custom-field.component';
 
 // import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
@@ -72,8 +73,8 @@ export class FieldDetailComponent implements OnInit {
         switch (res.functionID) {
           //       case 'SYS104':
           //       case 'SYS04':
-          //       case 'SYS102':
-          //       case 'SYS02':
+                case 'SYS102':
+                case 'SYS02':
           //       case 'SYS005':
           //       case 'SYS003':
           //       case 'SYS004':
@@ -83,8 +84,8 @@ export class FieldDetailComponent implements OnInit {
           //       case 'DP02':
           //       case 'DP09':
           //       case 'DP10':
-          //         res.disabled = true;
-          //         break;
+                  res.disabled = true;
+                  break;
           //edit
           case 'SYS103':
           case 'SYS03':
@@ -119,9 +120,17 @@ export class FieldDetailComponent implements OnInit {
     return Number.parseInt(num);
   }
 
-  fomatvalue(dt) {
+  fomatvalue(df) {
     //xu ly tam
-    var fm = this.dtFormatDate.findIndex((x) => x.value == dt);
-    return fm?.text;
+    var index = this.dtFormatDate.findIndex((x) => x.value == df);
+    if(index==-1)return '' ;
+    return this.dtFormatDate[index]?.text;
+  }
+  getFormatTime(dv){
+    if(!dv) return '' ;
+    var arrTime = dv.split(":") ;
+    return moment(new Date())
+      .set({ hour: arrTime[0], minute: arrTime[1] })
+      .toDate();
   }
 }

@@ -42,7 +42,7 @@ export class DP_Processes {
 }
 
 export class DP_Processes_Permission {
-  recID: string;
+  recID:  string = Util.uid();
   transID: string;
   roleType: string;
   objectType: string;

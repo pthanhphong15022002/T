@@ -28,14 +28,13 @@ export class CodxHistoryTempComponent implements OnInit {
   }
 
   getDataAsync(pObjectID: string) {
-    //đang test còn để comnet sau lộc thêm hàm get his
     if (pObjectID) {
       this.api
         .execSv(
           "BG",
           "ERM.Business.BG",
-          "CommentLogsBusiness",
-          'GetTotalCommentsAsync',
+          "TrackLogsBusiness",
+          'GetTotalHistoryAsync',
           [pObjectID]
         )
         .subscribe((res: number) => {

@@ -261,25 +261,38 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     });
     return this.tempReasonName;
   }
+  getListAttendees(resources:any){
+    if(resources){
+      let attendees='';
+      for(let i=0;i<resources.length;i++){
+        attendees+=resources[i]?.userID+';';
+      }
+      return attendees;
+    }
+    else {
+      return '';
+    }
+  }
+  
   getMoreInfo(recID: any) {
     this.selectBookingItems = [];
-    this.selectBookingAttendees = '';
+    //this.selectBookingAttendees = '';
 
     this.codxEpService.getListItems(recID).subscribe((item: any) => {
       if (item) {
         this.selectBookingItems = item;
       }
     });
-    this.codxEpService.getListAttendees(recID).subscribe((attendees: any) => {
-      if (attendees) {
-        let lstAttendees = attendees;
-        lstAttendees.forEach((element) => {
-          this.selectBookingAttendees =
-            this.selectBookingAttendees + element.userID + ';';
-        });
-        this.selectBookingAttendees;
-      }
-    });
+    // this.codxEpService.getListAttendees(recID).subscribe((attendees: any) => {
+    //   if (attendees) {
+    //     let lstAttendees = attendees;
+    //     lstAttendees.forEach((element) => {
+    //       this.selectBookingAttendees =
+    //         this.selectBookingAttendees + element.userID + ';';
+    //     });
+    //     this.selectBookingAttendees;
+    //   }
+    // });
   }
   changeItemDetail(event) {
     let recID = '';

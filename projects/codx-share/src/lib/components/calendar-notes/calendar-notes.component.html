@@ -455,9 +455,7 @@
               [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"
             ></span>
           </div>
-          <div class="d-flex flex-column note-option">
-            <span [innerHTML]="item?.memo"></span>
-          </div>
+          <div class="d-flex flex-column note-option"></div>
           <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.title"></span>
           </div>
@@ -478,7 +476,15 @@
             ></span>
           </div>
           <div class="d-flex flex-column note-option">
-            <span [innerHTML]="item?.memo"></span>
+            <div class="d-flex flex-column note-option">
+              <ng-container
+                *ngTemplateOutlet="
+                  fieldValue;
+                  context: { data: getFieldValue(item?.memo, item?.data) }
+                "
+              >
+              </ng-container>
+            </div>
           </div>
           <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.title"></span>
@@ -499,8 +505,15 @@
               [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"
             ></span>
           </div>
+
           <div class="d-flex flex-column note-option">
-            <span [innerHTML]="item?.memo"></span>
+            <ng-container
+              *ngTemplateOutlet="
+                fieldValue;
+                context: { data: getFieldValue(item?.memo, item?.data) }
+              "
+            >
+            </ng-container>
           </div>
           <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.title"></span>
@@ -510,3 +523,13 @@
     </div>
   </ng-template>
 </div>
+<ng-template #fieldValue let-data="data">
+  <codx-input
+    [type]="data?.type"
+    [refValue]="data?.refID"
+    [crrValue]="data.value"
+    [field]=""
+    [disabled]="true"
+  >
+  </codx-input>
+</ng-template>

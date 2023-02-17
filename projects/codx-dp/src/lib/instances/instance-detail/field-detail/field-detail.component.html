@@ -15,7 +15,7 @@
       <div class="group-button">
         <button class="button-custom">
           <span
-            class="icon-edit icon-20 text-primary-600 py-2"
+            [ngClass]="isUpdate ? 'icon-edit icon-20 text-primary-600 py-2' : ''"
             style="font-weight: 500"
             (click)="popupCustomField(dataStep.fields)"
           ></span>
@@ -66,9 +66,21 @@
     {{ data.dataValue }} <span *ngIf="data.dataFormat == 'P'">%</span>
   </span>
   <span class="text-dark margin-l" *ngIf="data.dataType == 'D'">
-    {{ data.dataValue | date : fomatvalue(data.dataFormat) }}
+    <span
+      *ngIf="
+        data.dataFormat == '1' ||
+        data.dataFormat == '2' ||
+        data.dataFormat == '3'
+      "
+    >
+      {{ data.dataValue | date : fomatvalue(data.dataFormat) }}</span
+    >
+    <span *ngIf="data.dataFormat == '4' || data.dataFormat == '5'">
+      {{
+        getFormatTime(data.dataValue) | date : fomatvalue(data.dataFormat)
+      }}</span
+    >
   </span>
-
   <ng-container *ngIf="data.dataType == 'R'">
     <ngb-rating
       [rate]="partNum(data.dataValue)"
@@ -92,7 +104,7 @@
     [isBookMark]="true"
     [dataItem]="data"
     [type]="'hover'"
-    
+    (changeDataMF)="changeFieldMF($event)"
   >
   </codx-mfunc>
 </ng-template>
