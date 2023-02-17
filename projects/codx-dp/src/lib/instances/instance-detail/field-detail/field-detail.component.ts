@@ -5,6 +5,7 @@ import {
   CallFuncService,
   CacheService,
 } from 'codx-core';
+import moment from 'moment';
 import { PopupCustomFieldComponent } from './popup-custom-field/popup-custom-field.component';
 
 // import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
@@ -119,9 +120,17 @@ export class FieldDetailComponent implements OnInit {
     return Number.parseInt(num);
   }
 
-  fomatvalue(dt) {
+  fomatvalue(df) {
     //xu ly tam
-    var fm = this.dtFormatDate.findIndex((x) => x.value == dt);
-    return fm?.text;
+    var index = this.dtFormatDate.findIndex((x) => x.value == df);
+    if(index==-1)return '' ;
+    return this.dtFormatDate[index]?.text;
+  }
+  getFormatTime(dv){
+    if(!dv) return '' ;
+    var arrTime = dv.split(":") ;
+    return moment(new Date())
+      .set({ hour: arrTime[0], minute: arrTime[1] })
+      .toDate();
   }
 }
