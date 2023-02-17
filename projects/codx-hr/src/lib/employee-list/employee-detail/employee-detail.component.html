@@ -3347,7 +3347,8 @@
                   <span>({{ eBenefitRowCount }})</span>
                 </div>
                 <div class="d-flex me-3">
-                  <codx-dropdown-select *ngIf="eBenefitGrvSetup"
+                  <codx-dropdown-select
+                    *ngIf="eBenefitGrvSetup"
                     [cssClass]="'rounded-pill border-1'"
                     cssPopup="h-350px w-300px"
                     [isMulti]="true"
@@ -3774,12 +3775,12 @@
                   </codx-label> -->
                   {{ getFormHeader("HRTEM0504") }}
                   <span class="text-gray-500 ms-2"> | </span>
-                  <span>({{eBusinessTravelRowCount}})</span>
+                  <span>({{ eBusinessTravelRowCount }})</span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
                 <codx-dropdown-calendar
-                [cssPopup]="'w-600px h-400px'"
+                  [cssPopup]="'w-600px h-400px'"
                   emptyText="Chọn năm..."
                   [firstChange]="false"
                   [displayOption]="ops"
@@ -4210,7 +4211,7 @@
                   (valueChange)="valueChangeViewAllESkill($event)"
                   [checked]="ViewAllEskillFlag"
                 ></codx-input>
-              
+
                 <!-- <span class="text-gray-500 ms-2">|</span>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-1"
@@ -4280,7 +4281,6 @@
                       [dataItem]="eSkill.listSkill[0]"
                     >
                     </codx-mfunc> -->
-
                   </div>
                 </div>
               </ng-container>
@@ -4323,15 +4323,15 @@
                     ></codx-dropdown-select> -->
 
                     <codx-dropdown-select
-                    *ngIf="eSkillgrvSetup"
-                    [cssClass]="'rounded-pill border-1'"
-                    cssPopup="h-350px w-300px"
-                    [isMulti]="true"
-                    type="combobox"
-                    field="SkillID"
-                    [refValue]="eSkillgrvSetup.SkillID.referedValue"
-                    (valueChange)="valueChangeFilterSkillID($event)"
-                  ></codx-dropdown-select>
+                      *ngIf="eSkillgrvSetup"
+                      [cssClass]="'rounded-pill border-1'"
+                      cssPopup="h-350px w-300px"
+                      [isMulti]="true"
+                      type="combobox"
+                      field="SkillID"
+                      [refValue]="eSkillgrvSetup.SkillID.referedValue"
+                      (valueChange)="valueChangeFilterSkillID($event)"
+                    ></codx-dropdown-select>
                   </div>
                 </div>
 
@@ -4384,21 +4384,36 @@
               </div>
               <div class="d-flex align-items-center ms-5">
                 <codx-dropdown-select
+                  *ngIf="eTrainCourseGrvSetup"
                   [cssClass]="'rounded-pill border-1'"
                   cssPopup="h-350px w-300px"
-                  placeholder="Kỹ năng"
+                  placeholder="Hình thức đào tạo"
                   type="valuelist"
-                  field="SkillID"
-                  (valueChange)="valueChangeFilterSkill($event)"
+                  field="TrainForm"
+                  [refValue]="eTrainCourseGrvSetup.TrainForm.referedValue"
+                  (valueChange)="valueChangeFilterTrainCourse($event)"
+                  
                 ></codx-dropdown-select>
-                <codx-dropdown-select
+
+                <!-- <codx-dropdown-select
+                  *ngIf="eTrainCourseGrvSetup"
                   [cssClass]="'rounded-pill border-1'"
                   cssPopup="h-350px w-300px"
-                  placeholder="Kỹ năng"
+                  placeholder="Năm"
                   type="valuelist"
-                  field="SkillID"
-                  (valueChange)="valueChangeFilterSkill($event)"
-                ></codx-dropdown-select>
+                  field="InYear"
+                  [refValue]="eTrainCourseGrvSetup.InYear.referedValue"
+                  (valueChange)="valueChangeFilterInYear($event)"
+                ></codx-dropdown-select> -->
+                <codx-dropdown-calendar
+                [cssPopup]="'w-600px h-400px'"
+                emptyText="Năm"
+                [firstChange]="false"
+                [displayOption]="ops"
+                [selectedType]="'y'"
+                [cssClass]="'rounded-pill'"
+                (change)="valueChangeYearFilterETrainCourse($event)"
+              ></codx-dropdown-calendar>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="HandleEmployeeTrainCourseInfo('add', data)"

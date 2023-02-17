@@ -215,6 +215,7 @@ export class EmployeeDetailComponent extends UIComponent {
   eVaccineGrvSetup;
   eSkillgrvSetup;
   eBenefitGrvSetup;
+  eTrainCourseGrvSetup;
   //#endregion
 
   //#region ColumnsGrid
@@ -259,7 +260,7 @@ export class EmployeeDetailComponent extends UIComponent {
   startDateEAssetFilterValue;
   endDateEAssetFilterValue;
   filterEAssetPredicates: string;
-  filterESkillPredicates: string;
+
   //#endregion
 
   //#region filter variables of form main eVaccine
@@ -267,10 +268,22 @@ export class EmployeeDetailComponent extends UIComponent {
   startDateEVaccineFilterValue;
   endDateEVaccineFilterValue;
   filterEVaccinePredicates: string;
+
+  //#endregion
+
+  //#region filter variables of form main eSKill
   filterBySkillIDArr: any = [];
   startDateESkillFilterValue;
   endDateESkillFilterValue;
+  filterESkillPredicates: string;
 
+  //#endregion
+
+  //#region filter variables of form main eTrainCourse
+  filterByTrainCourseIDArr: any = [];
+  startDateTrainCourseFilterValue;
+  endDateTrainCourseFilterValue;
+  filterTrainCoursePredicates: string;
   //#endregion
 
   //#region ViewChild template
@@ -553,6 +566,15 @@ export class EmployeeDetailComponent extends UIComponent {
     });
     this.hrService.getFormModel(this.trainCourseFuncID).then((res) => {
       this.trainCourseFormModel = res;
+      this.cache
+        .gridViewSetup(
+          this.trainCourseFormModel.formName,
+          this.trainCourseFormModel.gridViewName
+        )
+        .subscribe((res) => {
+          this.eTrainCourseGrvSetup = res;
+          console.log('traincourseeeeeeeeeeee', this.eTrainCourseGrvSetup);
+        });
     });
     this.hrService.getFormModel(this.eHealthFuncID).then((res) => {
       this.eHealthFormModel = res;
@@ -2133,7 +2155,7 @@ export class EmployeeDetailComponent extends UIComponent {
                 if (p == true) {
                   this.notify.notifyCode('SYS008');
                   this.skillRowCount--;
-                  (this.skillGrid.dataService as CRUDService)
+                  (this.skillGrid?.dataService as CRUDService)
                     .remove(data)
                     .subscribe();
                   this.df.detectChanges();
@@ -3363,15 +3385,15 @@ export class EmployeeDetailComponent extends UIComponent {
 
     dialogAdd.closed.subscribe((res) => {
       if (res?.event) {
-        (this.skillGrid.dataService as CRUDService).clear();
+        (this.skillGrid?.dataService as CRUDService).clear();
       } else {
         if (actionType === 'add' || actionType === 'copy') {
-          (this.skillGrid.dataService as CRUDService)
+          (this.skillGrid?.dataService as CRUDService)
             .add(res.event)
             .subscribe();
           this.skillRowCount++;
         } else if (actionType === 'edit') {
-          (this.skillGrid.dataService as CRUDService)
+          (this.skillGrid?.dataService as CRUDService)
             .update(res.event)
             .subscribe();
         }
@@ -4224,7 +4246,7 @@ export class EmployeeDetailComponent extends UIComponent {
         this.filterESkillPredicates += `SkillID==@${i}`;
       }
       this.filterESkillPredicates += ') ';
-      this.filterESkillPredicates += `and (InjectDate>="${this.startDateESkillFilterValue}" and InjectDate<="${this.endDateESkillFilterValue}")`;
+      //this.filterESkillPredicates += `and (InjectDate>="${this.startDateESkillFilterValue}" and InjectDate<="${this.endDateESkillFilterValue}")`;
 
       (this.skillGrid.dataService as CRUDService)
         .setPredicates(
@@ -4269,6 +4291,135 @@ export class EmployeeDetailComponent extends UIComponent {
     }
   }
 
+  UpdateTrainCoursePredicate() {
+    this.filterTrainCoursePredicates = '';
+    if (
+      this.filterByTrainCourseIDArr.length > 0 &&
+      this.startDateTrainCourseFilterValue != null
+    ) {
+      this.filterTrainCoursePredicates = '(';
+      let i = 0;
+      for (i; i < this.filterByTrainCourseIDArr.length; i++) {
+        if (i > 0) {
+          this.filterTrainCoursePredicates += ' or ';
+        }
+        this.filterTrainCoursePredicates += `TrainForm==@${i}`;
+      }
+      this.filterTrainCoursePredicates += ') ';
+      this.filterTrainCoursePredicates += `and (TrainFrom>="${this.startDateTrainCourseFilterValue}" and TrainTo<="${this.endDateTrainCourseFilterValue}")`;
+
+      (this.trainCourseGrid.dataService as CRUDService)
+        .setPredicates(
+          [this.filterTrainCoursePredicates],
+          [this.filterByTrainCourseIDArr.join(';')]
+        )
+        .subscribe((item) => {
+          console.log('item tra ve sau khi loc 1', item);
+        });
+    } else if (
+      (this.filterByTrainCourseIDArr.length > 0 &&
+        this.startDateTrainCourseFilterValue == undefined) ||
+      this.startDateTrainCourseFilterValue == null
+    ) {
+      let i = 0;
+      for (i; i < this.filterByTrainCourseIDArr.length; i++) {
+        if (i > 0) {
+          this.filterTrainCoursePredicates += ' or ';
+        }
+        this.filterTrainCoursePredicates += `TrainForm==@${i}`;
+      }
+
+      (this.trainCourseGrid.dataService as CRUDService)
+        .setPredicates(
+          [this.filterTrainCoursePredicates],
+          [this.filterByTrainCourseIDArr.join(';')],
+
+        )
+        .subscribe((item) => {
+          console.log('item tra ve sau khi loc 2', item);
+        });
+    } else if (this.startDateTrainCourseFilterValue != null) {
+      (this.trainCourseGrid.dataService as CRUDService)
+        .setPredicates(
+          [
+            `TrainFrom>="${this.startDateTrainCourseFilterValue}" and TrainTo<="${this.endDateTrainCourseFilterValue}"`,
+          ],
+          [this.filterByTrainCourseIDArr],
+        )
+        .subscribe((item) => {
+          console.log('item tra ve sau khi loc 3', item);
+        });
+    }
+  }
+  // UpdateInYearPredicate() {
+  //   this.filterInYearPredicates = '';
+  //   if (
+  //     this.filterByInYearIDArr.length > 0 &&
+  //     this.startDateInYearFilterValue != null
+  //   ) {
+  //     this.filterInYearPredicates = '(';
+  //     let i = 0;
+  //     for (i; i < this.filterByInYearIDArr.length; i++) {
+  //       if (i > 0) {
+  //         this.filterInYearPredicates += ' or ';
+  //       }
+  //       this.filterInYearPredicates += `TrainForm==@${i}`;
+  //     }
+  //     this.filterInYearPredicates += ') ';
+  //     //this.filterTrainFormPredicates += `and (InjectDate>="${this.startDateTrainFormFilterValue}" and InjectDate<="${this.endDateTrainFormFilterValue}")`;
+
+  //     (this.trainCourseGrid.dataService as CRUDService)
+  //       .setPredicates(
+  //         [this.filterInYearPredicates],
+  //         [this.filterByInYearIDArr.join(';')]
+  //       )
+  //       .subscribe((item) => {
+  //         console.log('item tra ve sau khi loc 1', item);
+  //       });
+  //   } else if (
+  //     (this.filterByInYearIDArr.length > 0 &&
+  //       this.startDateInYearFilterValue == undefined) ||
+  //     this.startDateInYearFilterValue == null
+  //   ) {
+  //     let i = 0;
+  //     for (i; i < this.filterByInYearIDArr.length; i++) {
+  //       if (i > 0) {
+  //         this.filterInYearPredicates += ' or ';
+  //       }
+  //       this.filterInYearPredicates += `TrainForm==@${i}`;
+  //     }
+
+  //     (this.trainCourseGrid.dataService as CRUDService)
+  //       .setPredicates(
+  //         [this.filterInYearPredicates],
+  //         [this.filterByInYearIDArr.join(';')]
+  //       )
+  //       .subscribe((item) => {
+  //         console.log('item tra ve sau khi loc 2', item);
+  //       });
+  //   } else if (this.startDateInYearFilterValue != null) {
+  //     (this.trainCourseGrid.dataService as CRUDService)
+  //       .setPredicates(
+  //         [
+  //           `InjectDate>="${this.startDateInYearFilterValue}" and InjectDate<="${this.endDateInYearFilterValue}"`,
+  //         ],
+  //         []
+  //       )
+  //       .subscribe((item) => {
+  //         console.log('item tra ve sau khi loc 3', item);
+  //       });
+  //   }
+  // }
+
+  // valueChangeFilterInYear(evt) {
+  //   this.filterByInYearIDArr = evt.data;
+  //   this.UpdateInYearPredicate();
+  // }
+
+  valueChangeFilterTrainCourse(evt) {
+    this.filterByTrainCourseIDArr = evt.data;
+    this.UpdateTrainCoursePredicate();
+  }
   valueChangeFilterSkillID(evt) {
     this.filterBySkillIDArr = evt.data;
     this.UpdateESkillPredicate();
@@ -4288,6 +4439,16 @@ export class EmployeeDetailComponent extends UIComponent {
       this.endDateEVaccineFilterValue = evt.toDate.toJSON();
     }
     this.UpdateEVaccinePredicate();
+  }
+  valueChangeYearFilterETrainCourse(evt) {
+    if (evt.formatDate == undefined && evt.toDate == undefined) {
+      this.startDateTrainCourseFilterValue = null;
+      this.endDateTrainCourseFilterValue = null;
+    } else {
+      this.startDateTrainCourseFilterValue = evt.fromDate.toJSON();
+      this.endDateTrainCourseFilterValue = evt.toDate.toJSON();
+    }
+    this.UpdateTrainCoursePredicate();
   }
 
   UpdateBusinessTravelPredicate() {
