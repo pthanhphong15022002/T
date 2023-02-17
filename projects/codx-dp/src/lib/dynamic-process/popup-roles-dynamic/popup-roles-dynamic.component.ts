@@ -1,17 +1,15 @@
-import { CodxDpService } from './../../../codx-dp.service';
-import {
-  DP_Processes,
-  DP_Processes_Permission,
-} from './../../../models/models';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { CacheService, DialogData, DialogRef } from 'codx-core';
+import { CodxDpService } from '../../codx-dp.service';
+import { DP_Processes, DP_Processes_Permission } from '../../models/models';
 
 @Component({
   selector: 'lib-popup-roles-dynamic',
   templateUrl: './popup-roles-dynamic.component.html',
-  styleUrls: ['./popup-roles-dynamic.component.css'],
+  styleUrls: ['./popup-roles-dynamic.component.css']
 })
 export class PopupRolesDynamicComponent implements OnInit {
+
   dialog: any;
   title = '';
   process = new DP_Processes();
@@ -178,4 +176,5 @@ export class PopupRolesDynamicComponent implements OnInit {
       });
     }
   }
+
 }

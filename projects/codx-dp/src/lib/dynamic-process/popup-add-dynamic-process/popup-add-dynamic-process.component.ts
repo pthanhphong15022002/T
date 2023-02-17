@@ -45,7 +45,6 @@ import {
   DP_Steps_Fields,
   DP_Steps_TaskGroups,
 } from '../../models/models';
-import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 import { format } from 'path';
 import { FormGroup } from '@angular/forms';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
@@ -53,6 +52,7 @@ import { ViewJobComponent } from './step-task/view-job/view-job.component';
 import { PopupTypeTaskComponent } from './step-task/popup-type-task/popup-type-task.component';
 import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-group.component';
 import { paste } from '@syncfusion/ej2-angular-richtexteditor';
+import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-dynamic.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -432,7 +432,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             let index = step['taskGroups'].findIndex(x => !x['recID']);
             if(index >= 0){
               step['taskGroups'].splice(index,1);
-            }   
+            }
             delete step['taskGroups']['task'];
           }
         });
