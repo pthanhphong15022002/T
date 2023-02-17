@@ -154,7 +154,7 @@ export class ActiviesSliderComponent implements OnInit {
                 'BG',
                 'ERM.Business.BG',
                 'NotificationBusinesss',
-                'UpdateNotificationAsync', 
+                'UpdateAsync', 
                 [item.recID]).subscribe();
             }
           }

@@ -110,6 +110,7 @@ export class AddEditComponent implements OnInit {
       .subscribe((res) => {
         if (res && !res.error) {
           this.dialog.dataService.hasSaved = false;
+          this.dialog.dataService.update(this.master).subscribe();
           this.dialog.close(true);
         }
       });

@@ -46,9 +46,13 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   customers: Customers;
   contact: Contact;
   objectBankaccount: Array<BankAccount> = [];
+  objectBankaccountDelete: Array<BankAccount> = [];
   objectContact: Array<Contact> = [];
+  objectContactDelete: Array<Contact> = [];
   objectAddress: Array<Address> = [];
+  objectAddressDelete: Array<Address> = [];
   objectContactAddress: Array<Contact> = [];
+  objectContactAddressDelete: Array<Contact> = [];
   objecttype:string = '1';
   gridViewSetup: any;
   valuelist: any;
@@ -277,7 +281,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             PopAddContactComponent,
             '',
             650,
-            550,
+            570,
             '',
             obj,
             '',
@@ -332,9 +336,9 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                 this.objectContactAddress.push(element);
               });
             }
-
             window.localStorage.removeItem('dataaddress');
             window.localStorage.removeItem('datacontactaddress');
+            window.localStorage.removeItem('datacontactaddressdelete');
           });
         }
       });
@@ -344,17 +348,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         (x) => x.bankAcctID == data.bankAcctID && x.bankID == data.bankID
       );
       this.objectBankaccount.splice(index, 1);
-      this.api
-        .exec('ERM.Business.BS', 'BankAccountsBusiness', 'DeleteAsync', [
-          this.objecttype,
-          this.customerID,
-          data,
-        ])
-        .subscribe((res: any) => {
-          if (res) {
-            this.notification.notify('Xóa thành công');
-          }
-        });
+      this.objectBankaccountDelete.push(data);
   }
   editobjectBank(data: any) {
       let index = this.objectBankaccount.findIndex(
@@ -428,14 +422,23 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
               var datacontactaddress = JSON.parse(
                 localStorage.getItem('datacontactaddress')
               );
+              var datacontactaddressdelete = JSON.parse(
+                localStorage.getItem('datacontactaddressdelete')
+              );
               if (dataaddress != null) {
                 this.objectAddress[index] = dataaddress;
               }
               if (datacontactaddress != null) {
                 this.objectContactAddress = datacontactaddress;
               }
+              if (datacontactaddressdelete != null) {
+                datacontactaddressdelete.forEach((element) => {
+                  this.objectContactAddressDelete.push(element);
+                });
+              }
               window.localStorage.removeItem('dataaddress');
               window.localStorage.removeItem('datacontactaddress');
+              window.localStorage.removeItem('datacontactaddressdelete');
             });
           }
         });
@@ -443,7 +446,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   deleteobjectAddress(data: any) {
       let index = this.objectAddress.findIndex(
         (x) =>
-          x.adressType == data.adressType && x.adressName == data.adressName
+          x.recID == data.recID
       );
       this.objectContactAddress.forEach((element, index) => {
         if (element.reference == data.recID) {
@@ -451,17 +454,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         }
       });
       this.objectAddress.splice(index, 1);
-      this.api
-        .exec('ERM.Business.BS', 'AddressBookBusiness', 'DeleteAsync', [
-          this.objecttype,
-          this.customerID,
-          data,
-        ])
-        .subscribe((res: any) => {
-          if (res) {
-            this.notification.notify('Xóa thành công');
-          }
-        });
+      this.objectAddressDelete.push(data);
   }
   editobjectContact(data: any) {
       let index = this.objectContact.findIndex(
@@ -502,20 +495,10 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   }
   deleteobjectContact(data: any) {
       let index = this.objectContact.findIndex(
-        (x) => x.reference == data.reference && x.contactID == data.contactID
+        (x) => x.reference == data.reference && x.recID == data.recID
       );
       this.objectContact.splice(index, 1);
-      this.api
-        .exec('ERM.Business.BS', 'ContactBookBusiness', 'DeleteAsync', [
-          this.objecttype,
-          this.customerID,
-          data,
-        ])
-        .subscribe((res: any) => {
-          if (res) {
-            this.notification.notify('Xóa thành công');
-          }
-        });
+      this.objectContactDelete.push(data);
   }
   //#endregion
  
@@ -598,6 +581,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                 this.objecttype,
                 this.customerID,
                 this.objectBankaccount,
+                this.objectBankaccountDelete
               ])
               .subscribe((res: any) => {});
             this.api
@@ -605,6 +589,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                 this.objecttype,
                 this.customerID,
                 this.objectAddress,
+                this.objectAddressDelete
               ])
               .subscribe((res: any) => {});
             this.api
@@ -612,7 +597,9 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                 this.objecttype,
                 this.customerID,
                 this.objectContact,
+                this.objectContactDelete,
                 this.objectContactAddress,
+                this.objectContactAddressDelete
               ])
               .subscribe((res: any) => {});
             this.dialog.close();

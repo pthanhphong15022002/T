@@ -608,7 +608,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.typeShare = '4';
         break;
     }
-    this.callfc.openForm(share, '', 420, window.innerHeight);
+    this.callfc.openForm(share, '', 420, 600);
   }
 
   applyShare(e, type) {
@@ -1756,7 +1756,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   createStepReason(stepReason: any, reasonValue: any) {
     stepReason = this.handleStepReason(stepReason, reasonValue);
-    stepReason.reasonControl = true;
   }
 
   handleReason(
