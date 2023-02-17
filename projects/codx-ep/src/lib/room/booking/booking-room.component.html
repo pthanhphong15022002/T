@@ -26,6 +26,10 @@
   </div>
 </ng-template>
 
+<!-- <ng-template #contentTmp let-data>
+<span>{{data?.title}}</span>
+<booking-room-schedule-content [recID]="data?.recID" ></booking-room-schedule-content>
+</ng-template> -->
 <ng-template #contentTmp let-data>
   <div class="d-flex justify-content-between">
     <span class="border-start fw-bold border-4 border-danger fs-3 ps-2">{{ data?.title }}
@@ -111,18 +115,20 @@
       
     </div>
   </div>
+
   <ng-template #popperAttachment>
     <span>
       <codx-label name="lblAttachment" [formModel]="view.formModel" default="Tài liệu đính kèm"></codx-label>
     </span>
   </ng-template>
+  
   <div class="d-flex mb-2">
     <div class="d-flex text-dark me-6">
       <codx-label name="lblAttendees" default="Người tham gia" class="fw-bold text-nowrap">
       </codx-label>
       <span class="me-2 fw-bold">:</span>
       <div class="d-flex justify-content-end">
-        <codx-imgs [objectId]="selectBookingAttendees" objectType="AD_Users" [numberImages]="6" [width]="30">
+        <codx-imgs [objectId]="getListAttendees(data.resources)" objectType="AD_Users" [numberImages]="6" [width]="30">
         </codx-imgs>
       </div>
     </div>
@@ -133,12 +139,12 @@
       <div class="d-flex mb-4 justify-content-between">
         <div class="d-flex flex-row">
           <div class="me-2">
-            <codx-img [objectId]="item.recID" imageType="circle" width="35" objectType="EP_Resources"
-              [objectName]="item.itemName"></codx-img>
+            <codx-img [objectId]="item?.recID" imageType="circle" width="35" objectType="EP_Resources"
+              [objectName]="item?.itemName"></codx-img>
           </div>
           <div class="">
             <div class="">
-              <span href="#" class="fw-bold">{{ item.itemName }}</span>
+              <span href="#" class="fw-bold">{{ item?.itemName }}</span>
             </div>
             <div class="d-flex flex-row flex-grow-1">
               <codx-label default="Đơn vị tính" name="lblQuantity" class="text-gray-800"></codx-label>
