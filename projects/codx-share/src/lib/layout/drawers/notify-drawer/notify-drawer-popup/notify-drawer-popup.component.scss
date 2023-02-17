@@ -1,5 +1,13 @@
+.dots {
+    height: 6px;
+    width: 6px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  
 .codx-notification-filter {
-  position: absolute;
   display: flex;
   justify-content: end;
   right: 52px;

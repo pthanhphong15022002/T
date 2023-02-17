@@ -1,0 +1,71 @@
+<codx-form [body]="body" [dialog]="dialogRef" [subHeader]="subheader"></codx-form>
+<ng-template #subheader>
+ <div class="container">
+   <!-- tab -->
+   <div class="row">
+    <div class="d-flex align-items-center ">
+      <button [class.active]="mode=='0'" class="me-2" (click)="clickTab('0')">
+        <codx-label  [formModel]="dialogRef.formModel" name="lblNotification" default="Thông báo"></codx-label>
+      </button>
+      <button [class.active]="mode=='1'" (click)="clickTab('1')">
+        <codx-label [formModel]="dialogRef.formModel" name="lblBookmark" default="Đã ghim"></codx-label>
+      </button>
+    </div>
+  </div>
+  <!-- filter -->
+  <div class="row">
+    <div class="codx-notification-filter">
+      <div class="overflow-hidden">
+        <div ngbDropdown container="body">
+          <button ngbDropdownToggle class="btn btn-sm btn-light-primary" *ngIf="type">
+            <span class="w-20px" [class]="type.icon">
+            </span>
+            <span>
+              {{type.text}}
+            </span>
+          </button>
+          <div ngbDropdownMenu>
+            <ng-container *ngFor="let item of vllType">
+              <button (click)="typeChange(item)" ngbDropdownItem>
+                <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
+                </span>
+                <span>
+                  {{item.text}}
+                </span>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <!--  -->
+      <div class="overflow-hidden">
+        <div ngbDropdown container="body">
+          <button ngbDropdownToggle class="btn btn-sm btn-light-primary" *ngIf="status">
+            <span class="w-20px" [class]="status.icon">
+            </span>
+            <span>
+              {{status.text}}
+            </span>
+          </button>
+          <div ngbDropdownMenu>
+            <ng-container *ngFor="let item of vllStatus">
+              <button (click)="statusChange(item)" ngbDropdownItem>
+                <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
+                </span>
+                <span>
+                  {{item.text}}
+                </span>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ </div>
+</ng-template>
+<ng-template #body>
+  <div class="h-100">
+    <codx-notify-body #notiBody [mode]="mode"></codx-notify-body>
+  </div>
+</ng-template>

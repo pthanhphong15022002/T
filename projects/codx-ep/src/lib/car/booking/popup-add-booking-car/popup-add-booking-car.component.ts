@@ -517,46 +517,82 @@ export class PopupAddBookingCarComponent extends UIComponent {
           this.curUser = tmpResource;
           this.resources.push(tmpResource);
         }
-        if (!this.isAdd) {
-          this.codxEpService
-            .getBookingAttendees(this.data.recID)
-            .subscribe((res) => {
-              if (res) {
-                this.attendees = res.msgBodyData[0];
-                this.attendees.forEach((people) => {
-                  let tmpResource = new BookingAttendees();
-                  tmpResource.userID = people?.userID;
-                  tmpResource.userName = people?.userName;
-                  tmpResource.roleType = people?.roleType;
-                  tmpResource.optional = false;
-                  this.listRoles.forEach((element) => {
-                    if (element.value == tmpResource.roleType) {
-                      tmpResource.icon = element.icon;
-                      tmpResource.roleName = element.text;
-                    }
-                  });
-
-                  if (tmpResource.userID == this.authService.userValue.userID) {
-                    this.curUser = tmpResource;
-                    this.resources.push(this.curUser);
-                  } else if (tmpResource.roleType == '2') {
-                    this.driver = tmpResource;
-                    this.driver.objectID = people.note;
-                    this.driver.objectType = 'EP_Resources';
-                  } else {
-                    this.lstPeople.push(tmpResource);
-                    this.resources.push(tmpResource);
-                  }
-                });
-                if (this.driver != null) {
-                  this.driverCheck = true;
-                } else {
-                  this.driverCheck = false;
+        if (!this.isAdd){
+          if(this.data.resources!=null){
+            this.data.resources.forEach((people) => {
+              let tmpResource = new BookingAttendees();
+              tmpResource.userID = people?.userID;
+              tmpResource.userName = people?.userName;
+              tmpResource.roleType = people?.roleType;
+              tmpResource.optional = false;
+              this.listRoles.forEach((element) => {
+                if (element.value == tmpResource.roleType) {
+                  tmpResource.icon = element.icon;
+                  tmpResource.roleName = element.text;
                 }
-                this.detectorRef.detectChanges();
+              });
+  
+              if (tmpResource.userID == this.authService.userValue.userID) {
+                this.curUser = tmpResource;
+                this.resources.push(this.curUser);
+              } else if (tmpResource.roleType == '2') {
+                this.driver = tmpResource;
+                this.driver.objectID = people.note;
+                this.driver.objectType = 'EP_Resources';
+              } else {
+                this.lstPeople.push(tmpResource);
+                this.resources.push(tmpResource);
               }
             });
+            if (this.driver != null) {
+              this.driverCheck = true;
+            } else {
+              this.driverCheck = false;
+            }
+            this.detectorRef.detectChanges();
+          }
+          else {
+            this.codxEpService
+              .getBookingAttendees(this.data.recID)
+              .subscribe((res) => {
+                if (res) {
+                  this.attendees = res.msgBodyData[0];
+                  this.attendees.forEach((people) => {
+                    let tmpResource = new BookingAttendees();
+                    tmpResource.userID = people?.userID;
+                    tmpResource.userName = people?.userName;
+                    tmpResource.roleType = people?.roleType;
+                    tmpResource.optional = false;
+                    this.listRoles.forEach((element) => {
+                      if (element.value == tmpResource.roleType) {
+                        tmpResource.icon = element.icon;
+                        tmpResource.roleName = element.text;
+                      }
+                    });
+  
+                    if (tmpResource.userID == this.authService.userValue.userID) {
+                      this.curUser = tmpResource;
+                      this.resources.push(this.curUser);
+                    } else if (tmpResource.roleType == '2') {
+                      this.driver = tmpResource;
+                      this.driver.objectID = people.note;
+                      this.driver.objectType = 'EP_Resources';
+                    } else {
+                      this.lstPeople.push(tmpResource);
+                      this.resources.push(tmpResource);
+                    }
+                  });
+                  if (this.driver != null) {
+                    this.driverCheck = true;
+                  } else {
+                    this.driverCheck = false;
+                  }
+                  this.detectorRef.detectChanges();
+                }
+              });
+          }
         }
+        
       }
     });
 
