@@ -421,11 +421,13 @@
   <div class="form-group row">
     <div class="col-6">
       <codx-label fiedName="TrainFrom" [formModel]="formModel"></codx-label>
-      <codx-input
+      <!-- <codx-input
         field="trainFrom"
         [Group]="formGroup"
         [formModel]="formModel"
-      ></codx-input>
+      ></codx-input> -->
+      <codx-dropdown-calendar cssPopup="h-500px w-500px" [value]="date" [selectedType]="'y'" [displayOption]="ops"
+          cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event)"></codx-dropdown-calendar>
     </div>
     <div class="col-6">
       <codx-label fiedName="TrainTo" [formModel]="formModel"></codx-label>

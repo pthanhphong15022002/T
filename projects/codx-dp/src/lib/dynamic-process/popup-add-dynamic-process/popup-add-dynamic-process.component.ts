@@ -225,6 +225,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.userId = this.user?.userID;
 
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    console.log('----------',this.process);
     if (this.action != 'add') {
       // this.showID = true;
       this.permissions = this.process.permissions;
@@ -398,8 +399,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   handleAddStep() {
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0) {
-      stepListSave.forEach((step) => {
+      stepListSave.forEach((step,index) => {
         if (step && step['taskGroups']) {
+          let index = step['taskGroups'].find(x => x['recID']);
+          step['taskGroups'].splice(index,1);
           delete step['taskGroups']['task'];
         }
       });
@@ -411,15 +414,30 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   handleUpdateStep() {
-    this.stepList.push(this.stepSuccess);
-    this.stepList.push(this.stepFail);
+    // this.stepList.push(this.stepSuccess);
+    // this.stepList.push(this.stepFail);
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
-    if (stepListSave.length > 0 || this.stepListAdd.length > 0) {
+    if (stepListSave.length > 0) {
       stepListSave.forEach((step) => {
         if (step && step['taskGroups']) {
+          let index = step['taskGroups'].findIndex(x => !x['recID']);
+          if(index >= 0)
+          step['taskGroups'].splice(index,1);
           delete step['taskGroups']['task'];
         }
       });
+      if(this.stepListAdd.length > 0){
+        this.stepListAdd.forEach((step) => {
+          if (step && step['taskGroups']) {
+            let index = step['taskGroups'].findIndex(x => !x['recID']);
+            if(index >= 0){
+              step['taskGroups'].splice(index,1);
+            }   
+            delete step['taskGroups']['task'];
+          }
+        });
+      }
+
       this.dpService
         .editStep([stepListSave, this.stepListAdd, this.stepListDelete])
         .subscribe((data) => {
@@ -1223,6 +1241,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       stepID: this.step?.recID,
     };
 
+    let rolePermission = new DP_Processes_Permission();
+    rolePermission = {
+      ...rolePermission,
+      ...this.taskGroup['roles'][0],
+      read: true,
+      roleType: 'R',
+    };
+
     if (!this.taskGroup['recID']) {
       this.taskGroup['recID'] = Util.uid();
       let index = this.taskGroupList.length;
@@ -1260,6 +1286,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           );
           this.step?.roles?.splice(index, 1);
         }
+
+        // add the role to the permissions process
+        console.log('----------',this.process);
+        let checkPermissions = this.process['permissions'].some((x) => x.objectID == this.roleGroupTask['objectID'])
       }
     }
   }
