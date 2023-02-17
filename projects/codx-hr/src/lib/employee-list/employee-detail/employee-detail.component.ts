@@ -270,7 +270,7 @@ export class EmployeeDetailComponent extends UIComponent {
   filterBySkillIDArr: any = [];
   startDateESkillFilterValue;
   endDateESkillFilterValue;
-  
+
   //#endregion
 
   //#region ViewChild template
@@ -529,11 +529,15 @@ export class EmployeeDetailComponent extends UIComponent {
 
     this.hrService.getFormModel(this.skillFuncID).then((res) => {
       this.skillFormmodel = res;
-      this.cache.gridViewSetup(this.skillFormmodel.formName, this.skillFormmodel.gridViewName)
-      .subscribe((res) => {
-        this.eSkillgrvSetup = res;
-        console.log('skillllllll', this.eSkillgrvSetup);
-      })
+      this.cache
+        .gridViewSetup(
+          this.skillFormmodel.formName,
+          this.skillFormmodel.gridViewName
+        )
+        .subscribe((res) => {
+          this.eSkillgrvSetup = res;
+          console.log('skillllllll', this.eSkillgrvSetup);
+        });
     });
 
     this.hrService.getFormModel(this.degreeFuncID).then((res) => {
@@ -549,7 +553,6 @@ export class EmployeeDetailComponent extends UIComponent {
     });
     this.hrService.getFormModel(this.trainCourseFuncID).then((res) => {
       this.trainCourseFormModel = res;
-
     });
     this.hrService.getFormModel(this.eHealthFuncID).then((res) => {
       this.eHealthFormModel = res;
@@ -4044,7 +4047,7 @@ export class EmployeeDetailComponent extends UIComponent {
   getFormHeader(functionID: string) {
     let funcObj = this.lstFuncID.filter((x) => x.functionID == functionID);
     let headerText = '';
-    if (funcObj) {
+    if (funcObj && funcObj.length > 0) {
       headerText = funcObj[0].description;
     }
     return headerText;
@@ -4206,51 +4209,68 @@ export class EmployeeDetailComponent extends UIComponent {
     }
   }
 
-  UpdateESkillPredicate(){
-    this.filterESkillPredicates = ""
-    if(this.filterBySkillIDArr.length > 0 && this.startDateESkillFilterValue != null){
-      this.filterESkillPredicates = '('
+  UpdateESkillPredicate() {
+    this.filterESkillPredicates = '';
+    if (
+      this.filterBySkillIDArr.length > 0 &&
+      this.startDateESkillFilterValue != null
+    ) {
+      this.filterESkillPredicates = '(';
       let i = 0;
-      for(i; i< this.filterBySkillIDArr.length; i++){
-        if(i>0){
-          this.filterESkillPredicates +=' or '
+      for (i; i < this.filterBySkillIDArr.length; i++) {
+        if (i > 0) {
+          this.filterESkillPredicates += ' or ';
         }
-        this.filterESkillPredicates += `SkillID==@${i}`
+        this.filterESkillPredicates += `SkillID==@${i}`;
       }
       this.filterESkillPredicates += ') ';
-      this.filterESkillPredicates +=  `and (InjectDate>="${this.startDateESkillFilterValue}" and InjectDate<="${this.endDateESkillFilterValue}")`;
-      
-      (this.skillGrid.dataService as CRUDService).setPredicates([this.filterESkillPredicates],[this.filterBySkillIDArr.join(';')])
-      .subscribe((item) => {
-        console.log('item tra ve sau khi loc 1', item);
-      });
-    }
-    else if(this.filterBySkillIDArr.length > 0 && this.startDateESkillFilterValue == undefined || this.startDateESkillFilterValue == null){
+      this.filterESkillPredicates += `and (InjectDate>="${this.startDateESkillFilterValue}" and InjectDate<="${this.endDateESkillFilterValue}")`;
+
+      (this.skillGrid.dataService as CRUDService)
+        .setPredicates(
+          [this.filterESkillPredicates],
+          [this.filterBySkillIDArr.join(';')]
+        )
+        .subscribe((item) => {
+          console.log('item tra ve sau khi loc 1', item);
+        });
+    } else if (
+      (this.filterBySkillIDArr.length > 0 &&
+        this.startDateESkillFilterValue == undefined) ||
+      this.startDateESkillFilterValue == null
+    ) {
       let i = 0;
-      for(i; i< this.filterBySkillIDArr.length; i++){
-        if(i>0){
-          this.filterESkillPredicates +=' or '
+      for (i; i < this.filterBySkillIDArr.length; i++) {
+        if (i > 0) {
+          this.filterESkillPredicates += ' or ';
         }
-        this.filterESkillPredicates += `SkillID==@${this.filterBySkillIDArr[i]}`
+        this.filterESkillPredicates += `SkillID==@${i}`;
       }
 
-      (this.skillGrid.dataService as CRUDService).setPredicates([this.filterESkillPredicates],[this.filterBySkillIDArr.join(';')])
-      .subscribe((item) => {
-        console.log('item tra ve sau khi loc 2', item);
-      });
+      (this.skillGrid.dataService as CRUDService)
+        .setPredicates(
+          [this.filterESkillPredicates],
+          [this.filterBySkillIDArr.join(';')]
+        )
+        .subscribe((item) => {
+          console.log('item tra ve sau khi loc 2', item);
+        });
+    } else if (this.startDateESkillFilterValue != null) {
+      (this.skillGrid.dataService as CRUDService)
+        .setPredicates(
+          [
+            `InjectDate>="${this.startDateESkillFilterValue}" and InjectDate<="${this.endDateESkillFilterValue}"`,
+          ],
+          []
+        )
+        .subscribe((item) => {
+          console.log('item tra ve sau khi loc 3', item);
+        });
     }
-    else if(this.startDateESkillFilterValue != null){
-      (this.skillGrid.dataService as CRUDService).setPredicates([`InjectDate>="${this.startDateESkillFilterValue}" and InjectDate<="${this.endDateESkillFilterValue}"`], [])
-      .subscribe((item) => {
-        console.log('item tra ve sau khi loc 3', item);
-      });
-    }
-    
   }
 
-
-  valueChangeFilterSkillID(evt){
-    this.filterESkillPredicates = evt.data;
+  valueChangeFilterSkillID(evt) {
+    this.filterBySkillIDArr = evt.data;
     this.UpdateESkillPredicate();
   }
 
