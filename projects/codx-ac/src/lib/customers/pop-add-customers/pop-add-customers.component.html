@@ -635,10 +635,10 @@
         <div class="text-gray-500">
           Liên hệ
         </div>
-        <div class="d-flex flex-wrap ms-14" *ngFor="let itemcontact of objectContactAddress">
-          <div class="row pb-5" *ngIf="itemcontact.reference == item.recID">
-              <div class="col-6 ps-0">
-                <div class="d-flex align-items-top">
+        <div class="d-flex flex-wrap ms-14">
+          <div class="row pb-5" *ngFor="let itemcontact of objectContactAddress">
+              <div class="col-6 ps-0" *ngIf="itemcontact.reference == item.recID">
+                <div id="functioncontact" class="d-flex align-items-top">
                   <div class="me-4">
                     <div>
                       <codx-img [objectId]="itemcontact?.recID" [objectName]="itemcontact?.contactName"
@@ -675,13 +675,16 @@
                 </div>
               </div>
             </div>
-        </div>
-         <div class="d-flex align-items-center">
-              <span (click)="editobjectAddress(item)" class="icon-edit icon-16 py-1"></span>
-              <span (click)="deleteobjectAddress(item)"  class="icon-delete icon-16"></span>
-        </div>
-      </div>    
-        
+            <div class="row pb-5">
+              <div class="form-group">
+                <div class="d-flex align-items-center">
+                  <span (click)="editobjectAddress(item)" class="icon-edit icon-16 py-1"></span>
+                  <span (click)="deleteobjectAddress(item)"  class="icon-delete icon-16"></span>
+                </div>    
+              </div>
+            </div>
+        </div>    
+      </div>          
 </ng-template>
 <ng-template #tabContact>
     <div class="row mx-0 mt-3">
@@ -702,9 +705,10 @@
           </div>
         </div>
       </div>
-      <div class="row pb-5" *ngFor="let item of objectContact">
+      <div class="d-flex" *ngFor="let item of objectContact">
+      <div class="row pb-5" >
         <div class="col-6 ps-0">
-          <div class="d-flex align-items-top">
+          <div id="itemcontact" class="d-flex align-items-top">
             <div class="me-4">
               <div>
                 <codx-img [objectId]="item?.recID" [objectName]="item?.contactName"
@@ -740,13 +744,14 @@
               <div class="d-flex" *ngFor="let value of valuelist">
                 <span *ngIf="item.contactType == value.value">{{value.text}}</span>
               </div>
-            </div>
-            <div class="d-flex align-items-center">
-              <span (click)="editobjectContact(item)" class="icon-edit icon-16 py-1"></span>
-              <span (click)="deleteobjectContact(item)"  class="icon-delete icon-16"></span>
-            </div>
+            </div>       
           </div>
-        </div>
+        </div>    
+      </div>
+      <div class="d-flex align-items-center">
+        <span (click)="editobjectContact(item)" class="icon-edit icon-16 py-1"></span>
+        <span (click)="deleteobjectContact(item)"  class="icon-delete icon-16"></span>
+      </div>
       </div>
 </ng-template>
 <ng-template #tabAtm>
@@ -768,14 +773,14 @@
       </div>
     </div>
   </div> 
-      <div class="row pb-5" *ngFor="let item of objectBankaccount">
+      <div class="d-flex" *ngFor="let item of objectBankaccount">
+      <div class="row pb-5">
         <div class="col-6 ps-0">
-          <div class="d-flex align-items-top">
+          <div id="itemcontact" class="d-flex align-items-top">
             <div class="me-4">
               <div>
-                <codx-img 
-                  [width]="40"
-                  imgSource="https://bstyle.vn/wp-content/uploads/2019/10/ngan-hang-BIDV.jpg">
+                <codx-img [objectId]="item?.bankAcctID" [objectName]="item?.owner"
+                             [objectType]="formModel?.entityName" [width]="40">
                 </codx-img>
               </div>
             </div>
@@ -783,22 +788,18 @@
               <div class="fw-bold text-dark fs-5">
                 <span>{{item.bankID}}</span>
               </div>
-              <div class="me-2">
-                {{item.bankAcctID}}
+              <div class="text-gray-500">
+                Số tài khoản: {{item.bankAcctID}}
               </div>
             </div>
-          <div class="d-flex align-items-center">
-            <span (click)="editobjectBank(item)" class="icon-edit icon-16 py-1"></span>
-            <span (click)="deleteobjectBank(item)"  class="icon-delete icon-16"></span>
-          </div>
           </div>
         </div>
-        <div class="col-6 ps-0" *ngIf="item.isDefault">
-          <codx-vll [showText]="true" [showBgColor]="true" [name]="'DP002'" value="0"
-          class="badge badge-light badge-square badge-md fs-7 p-2">
-        </codx-vll>
       </div>
+      <div class="d-flex align-items-center">
+        <span (click)="editobjectBank(item)" class="icon-edit icon-16 py-1"></span>
+        <span (click)="deleteobjectBank(item)"  class="icon-delete icon-16"></span>
       </div>
+    </div>
 </ng-template>
 <ng-template #tabinfo>
   <div class="form-group">

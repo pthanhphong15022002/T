@@ -104,7 +104,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
                     console.log('dataaaaaa', res);
                     // this.data = res?.data;
                     this.trainCourseObj = res?.data;
-                    this.data.employeeID = this.employId;
+                    this.trainCourseObj.employeeID = this.employId;
                     this.formModel.currentData = this.trainCourseObj;
                     this.formGroup.patchValue(this.trainCourseObj);
                     this.cr.detectChanges();
