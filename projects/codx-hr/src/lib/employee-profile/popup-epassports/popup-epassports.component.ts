@@ -36,7 +36,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
   // @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private notify: NotificationsService,
     private cr: ChangeDetectorRef,
     private hrService: CodxHrService,
@@ -44,20 +44,13 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    // if(!this.formModel){
-    //   this.formModel = new FormModel();
-    //   this.formModel.formName = 'EPassports';
-    //   this.formModel.entityName = 'HR_EPassports';
-    //   this.formModel.gridViewName = 'grvEPassports';
-    // }
-
     this.dialog = dialog;
-    this.formModel = dialog.formModel;
+    this.formModel = dialog?.formModel;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
-    this.passportObj = data?.data?.passportObj;
+    this.passportObj = JSON.stringify(data?.data?.passportObj);
     // this.lstPassports = data?.data?.lstPassports;
     // this.indexSelected =
     //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;

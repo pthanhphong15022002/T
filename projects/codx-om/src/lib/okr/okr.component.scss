@@ -58,7 +58,7 @@
 }
 
 .p-om-okr {
-  height: calc(100% - 128px);
+  //height: calc(100% - 128px);
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -212,4 +212,10 @@
   border-style: dashed !important;
   border-color: var(--primary) !important;
   border-width: 2px;
+}
+::ng-deep {
+  #om-tab .e-content, #om-tab.e-lib, #om-tab.e-touch {
+    padding: 0px !important;
+    padding-left: 0px !important;
+  }
 }

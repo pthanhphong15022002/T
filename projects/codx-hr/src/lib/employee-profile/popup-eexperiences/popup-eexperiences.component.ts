@@ -24,11 +24,12 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
+  successFlag = false;
   start: CalendarView = 'Year';
   depth: CalendarView = 'Year';
   format: string = 'MM/yyyy';
-  indexSelected;
-  lstExperience: any;
+  //indexSelected;
+  //lstExperience: any;
   fromdateVal: any;
   todateVal: any;
   idField = 'RecID';
@@ -38,7 +39,7 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   headerText: string;
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('listView') listView: CodxListviewComponent;
+  //@ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
     private injector: Injector,
@@ -52,44 +53,35 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.employId = data?.data?.employeeId;
+    this.formModel = dialog?.formModel;
     this.actionType = data?.data?.actionType;
-    // if(!this.formModel){
-    //   this.formModel = new FormModel()
-    //   this.formModel.formName = 'EExperiences'
-    //   this.formModel.entityName = 'HR_EExperiences'
-    //   this.formModel.gridViewName = 'grvEExperiences'
-    // }
+    this.data = data?.data?.eExperienceObj;
+    this.fromdateVal = this.data.fromDate;
+    this.todateVal = this.data.toDate;
     this.funcID = data?.data?.funcID;
-    this.indexSelected =
-      data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
+    // this.indexSelected =
+    //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
 
-    this.lstExperience = data?.data?.lstExperience;
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.data = JSON.parse(
-        JSON.stringify(this.lstExperience[this.indexSelected])
-      );
-      // this.formModel.currentData = this.data
+    // this.lstExperience = data?.data?.lstExperience;
+    // if (this.actionType === 'edit' || this.actionType === 'copy') {
+    //   this.data = JSON.parse(
+    //     JSON.stringify(this.lstExperience[this.indexSelected])
+    //   );
     }
-  }
+    ngAfterViewInit(){
+      this.dialog && this.dialog.closed.subscribe(res => {
+        if(!res.event){
+          if(this.successFlag == true){
+            this.dialog.close(this.data);
+          }
+          else{
+            this.dialog.close(null);
+          }
+        }
+      })
+    }
 
   initForm() {
-    // this.hrService
-    // .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    // .then((item) => {
-    //   this.formGroup = item;
-    //   if(this.actionType == 'add'){
-    //     this.hrService.GetEmployeeExperienceModel().subscribe(p => {
-    //       this.data = p;
-    //       console.log('du lieu form', p);
-    //       this.formModel.currentData = this.data
-    //     })
-    //   }
-    //   this.formGroup.patchValue(this.data)
-    //   this.fromdateVal = this.data.fromDate
-    //   this.todateVal = this.data.toDate
-    //   this.isAfterRender = true
-    // })
-
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
@@ -100,6 +92,8 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.data = res?.data;
+            this.data.beginDate = null;
+            this.data.endDate = null;
             this.data.employeeID = this.employId;
             this.formModel.currentData = this.data;
             this.formGroup.patchValue(this.data);
@@ -108,20 +102,15 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
-        this.formGroup.patchValue(this.data);
-        this.formModel.currentData = this.data;
-        this.cr.detectChanges();
-        this.isAfterRender = true;
-      }
+      this.formModel.currentData = this.data;
+      this.formGroup.patchValue(this.data);
+      this.cr.detectChanges();
+      this.isAfterRender = true;
     }
   }
 
   onInit(): void {
-    this.hrService.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrService
+    this.hrService
           .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
           .then((fg) => {
             if (fg) {
@@ -129,8 +118,19 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
               this.initForm();
             }
           });
-      }
-    });
+    // this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //   if (formModel) {
+    //     this.formModel = formModel;
+    //     this.hrService
+    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //       .then((fg) => {
+    //         if (fg) {
+    //           this.formGroup = fg;
+    //           this.initForm();
+    //         }
+    //       });
+    //   }
+    // });
   }
 
   onSaveForm() {
@@ -150,13 +150,15 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
         if (p != null) {
           this.data.recID = p.recID;
           this.notify.notifyCode('SYS006');
-          this.lstExperience.push(JSON.parse(JSON.stringify(this.data)));
+          this.successFlag = true;
+          this.dialog && this.dialog.close(this.data);
+          // this.lstExperience.push(JSON.parse(JSON.stringify(this.data)));
 
-          if (this.listView) {
-            (this.listView.dataService as CRUDService)
-              .add(this.data)
-              .subscribe();
-          }
+          // if (this.listView) {
+          //   (this.listView.dataService as CRUDService)
+          //     .add(this.data)
+          //     .subscribe();
+          // }
           // this.dialog.close(p)
         } else this.notify.notifyCode('SYS023');
       });
@@ -165,13 +167,15 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
         .UpdateEmployeeExperienceInfo(this.formModel.currentData)
         .subscribe((p) => {
           if (p != null) {
-            this.notify.notifyCode('SYS006');
-            this.lstExperience[this.indexSelected] = p;
-            if (this.listView) {
-              (this.listView.dataService as CRUDService)
-                .update(this.lstExperience[this.indexSelected])
-                .subscribe();
-            }
+            this.notify.notifyCode('SYS007');
+            this.successFlag = true;
+            this.dialog && this.dialog.close(this.data);
+            // this.lstExperience[this.indexSelected] = p;
+            // if (this.listView) {
+            //   (this.listView.dataService as CRUDService)
+            //     .update(this.lstExperience[this.indexSelected])
+            //     .subscribe();
+            // }
             // this.dialog.close(this.data);
           } else this.notify.notifyCode('SYS021');
         });
@@ -186,18 +190,18 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
     this.todateVal = e;
   }
 
-  click(data) {
-    this.data = data;
-    this.formModel.currentData = JSON.parse(JSON.stringify(this.data));
-    this.actionType = 'edit';
-    this.fromdateVal = this.data.fromDate;
-    this.todateVal = this.data.toDate;
-    this.formGroup?.patchValue(this.data);
-    this.cr.detectChanges();
-  }
+  // click(data) {
+  //   this.data = data;
+  //   this.formModel.currentData = JSON.parse(JSON.stringify(this.data));
+  //   this.actionType = 'edit';
+  //   this.fromdateVal = this.data.fromDate;
+  //   this.todateVal = this.data.toDate;
+  //   this.formGroup?.patchValue(this.data);
+  //   this.cr.detectChanges();
+  // }
 
-  afterRenderListView(evt) {
-    this.listView = evt;
-    console.log(this.listView);
-  }
+  // afterRenderListView(evt) {
+  //   this.listView = evt;
+  //   console.log(this.listView);
+  // }
 }

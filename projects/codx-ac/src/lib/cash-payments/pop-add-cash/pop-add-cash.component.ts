@@ -34,6 +34,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   currencyID:any;
   exchangeRate:any;
   gridViewSetup:any;
+  cashbookName:any;
   cashpaymentline: Array<CashPaymentLine> = [];
   cashpaymentlineDelete: Array<CashPaymentLine> = [];
   fmCashPaymentsLines: FormModel = {
@@ -54,6 +55,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
+  ]
+  tabItem:any = [
+    { text: "Thông tin chứng từ", 'iconCss': 'icon-info' },
+    { text: "Chi tiết bút toán", 'iconCss': 'icon-playlist_add_check' },
   ]
   constructor(
     private inject: Injector,
@@ -76,7 +81,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.objectID = '';
     this.cashBookID = '';
     this.currencyID = '';
-    this.exchangeRate = '';
+    this.exchangeRate = null;
     this.cashpayment = dialog.dataService!.dataSelected;
     this.cache.gridViewSetup('CashPayments', 'grvCashPayments').subscribe((res) => {
       if (res) {
@@ -91,6 +96,29 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.cashBookID = this.cashpayment.cashBookID;
       this.currencyID = this.cashpayment.currencyID;
       this.exchangeRate = this.cashpayment.exchangeRate;
+//#region load combobox đối tượng
+      switch(this.objectType){
+        case '1':
+          this.cbxObjectID = 'Customers';
+        break;
+        case '2':
+          this.cbxObjectID = 'VendorsAC';
+        break;
+        case '3':
+          this.cbxObjectID = 'EmployeesAC';
+        break;
+        case '4':
+          this.cbxObjectID = 'BanksAC';
+        break;
+        case '5':
+          this.cbxObjectID = 'BusinessUnits';
+        break;
+        case '6':
+          this.cbxObjectID = 'Warehouses';;
+        break;
+      }
+//#endregion
+//#region  load cashpaymentline
       this.acService
         .loadData(
           'ERM.Business.AC',
@@ -101,6 +129,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           this.cashpaymentline = res;
         });
+//#endregion
     }
   }
   //#endregion
@@ -108,9 +137,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //#region Init
 
   onInit(): void {
-    this.voucherDate = new Date();
+    if (this.voucherDate == null) {
+      this.voucherDate = new Date();
+    }
   }
-  
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
   }
@@ -149,6 +179,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   valueChangeCashBookID(e: any){
     this.cashBookID = e.data;
     this.cashpayment[e.field] = e.data;
+    this.getvalueNameCashBook(this.cashBookID);
   }
   valueChangeCurrency(e: any){
     this.currencyID = e.data;
@@ -173,9 +204,21 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   valueChange(e:any,type:any){
     this.cashpayment[e.field] = e.data;
   }
+  getvalueNameCashBook(data:any){
+    
+  }
   //#endregion
   
   //#region Function
+  gridCreated(e) {
+    let hBody, hTab, hNote;
+    if (this.cardbodyRef)
+      hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
+    if (this.cashRef) hTab = (this.cashRef as any).element.offsetHeight;
+    if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
+
+    this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
+  }
   addRow() {
     let idx = this.grid.dataSource.length;
     let data = this.grid.formGroup.value;
@@ -219,7 +262,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     );
     return;
   }
-  if (this.exchangeRate.trim() == '' || this.exchangeRate == null) {
+  if (this.exchangeRate == null) {
     this.notification.notifyCode(
       'SYS009',
       0,

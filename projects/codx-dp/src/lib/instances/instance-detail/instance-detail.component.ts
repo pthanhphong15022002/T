@@ -28,8 +28,9 @@ export class InstanceDetailComponent implements OnInit {
   @Input() formModel: any;
   @Input() dataService: CRUDService;
   @Input() recID: any;
-  @ViewChild('locationCBB') locationCBB: any;
   @Output() progressEvent = new EventEmitter<object>();
+  @Output() moreFunctionEvent = new EventEmitter<any>();
+  @Output() changeMF = new EventEmitter<any>();
   @Input() stepName: string;
   @Input() progress = '0';
   @Input() dataSelect: any;
@@ -52,7 +53,14 @@ export class InstanceDetailComponent implements OnInit {
   //gantchat
   ganttDs = [];
   dataColors = [];
-  taskFields: any;
+  taskFields = {
+    id: 'recID',
+    name: 'name',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    type: 'type',
+    color:'color'
+  };
 
   constructor(
     private dpSv: CodxDpService,
@@ -65,15 +73,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.taskFields = {
-      id: 'recID',
-      name: 'name',
-      startDate: 'startDate',
-      endDate: 'endDate',
-      type: 'type',
-      color:'color'
-    };
-    this.getDataGanttChart(this.recID);
+ 
   }
 
   ngAfterViewInit(): void {
@@ -95,26 +95,29 @@ export class InstanceDetailComponent implements OnInit {
       this.id = changes['dataSelect'].currentValue.recID;
       this.dataSelect = changes['dataSelect'].currentValue;
       this.currentStep = this.dataSelect.currentStep;
-      this.getStepsByProcessID(this.id);
-      if (this.listSteps == null && this.listSteps.length == 0) {
-        this.tmpTeps = null;
-      }
+      this.GetStepsByInstanceIDAsync(this.id);
+      //cái này xóa luon di. chưa chạy xong api mà gọi ra la sai
+      // if (this.listSteps == null && this.listSteps.length == 0) {
+      //   this.tmpTeps = null;
+      // }
+      this.getDataGanttChart(this.recID);
     }
     console.log(this.formModel);
   }
 
-  getStepsByProcessID(insID) {
-    this.dpSv.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
+  GetStepsByInstanceIDAsync(insID){
+     this.dpSv.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
       if (res) {
         this.listSteps = res;
         var total = 0;
         for (var i = 0; i < this.listSteps.length; i++) {
           var stepNo = i;
           var data = this.listSteps[i];
-          if (this.listSteps[i].recID == this.dataSelect.stepID) {
+          if (data.stepID == this.dataSelect.stepID) {
             this.stepName = data.stepName;
             this.currentStep = stepNo;
             this.currentNameStep = this.currentStep;
+            this.tmpTeps = data;
           }
           total += data.progress;
           stepNo = i + 1;
@@ -124,20 +127,14 @@ export class InstanceDetailComponent implements OnInit {
         } else {
           this.progress = '0';
         }
-        if (this.listSteps != null && this.listSteps.length > 0) {
-          this.listSteps.forEach((element) => {
-            if (element != null && element.recID == this.dataSelect.stepID) {
-              this.tmpTeps = element;
-            }
-          });
-        }
+
       } else {
         this.listSteps = [];
         this.stepName = '';
         this.progress = '0';
         this.tmpTeps = null;
-      }
-    });
+      }  
+    }); 
   }
 
   getStepsByInstanceID(list) {
@@ -161,49 +158,35 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   clickMF(e, data) {
-    console.log(e);
-    switch (e.functionID) {
-      case 'DP09':
-      // API của bảo nha
-     //   this.continues(data);
-        this.popupInstances.moveStage(e,data,this.listSteps);
-        break;
-      case 'DP02':
-        this
-        break;
-    }
+    this.moreFunctionEvent.emit({e: e, data: data, lstSteps: this.listSteps});
+    // console.log(e);
+    // switch (e.functionID) {
+    //   case 'DP09':
+    //   // API của bảo nha
+    //  //   this.continues(data);
+    //     this.popupInstances.moveStage(e,data,this.listSteps);
+    //     break;
+    //   case 'DP02':
+    //     this
+    //     break;
+    // }
   }
 
   changeDataMF(e, data) {
-    console.log(e);
-    if (e) {
-      e.forEach((element) => {
-        if (
-          element.functionID == 'SYS002' ||
-          element.functionID == 'SYS001' ||
-          element.functionID == 'SYS004' ||
-          element.functionID == 'SYS003' ||
-          element.functionID == 'SYS005' ||
-          element.functionID == 'DP04' ||
-          element.functionID == 'DP11' ||
-          element.functionID == 'DP08' ||
-          element.functionID == 'DP07' ||
-          element.functionID == 'DP06' ||
-          element.functionID == 'DP05' ||
-          element.functionID == 'DP01' ||
-          element.functionID == 'DP03' ||
-          element.functionID == 'SYS102' ||
-          element.functionID == 'SYS02' ||
-          element.functionID == 'SYS104' ||
-          element.functionID == 'SYS04' ||
-          element.functionID == 'SYS103' ||
-          element.functionID == 'SYS03' ||
-          element.functionID == 'SYS101' ||
-          element.functionID == 'SYS01'
-        )
-          element.disabled = true;
-      });
-    }
+    this.changeMF.emit({e: e, data: data})
+    // console.log(e);
+    // if (e) {
+    //   e.forEach((element) => {
+    //     if (
+    //       element.functionID == 'SYS002' ||
+    //       element.functionID == 'SYS001' ||
+    //       element.functionID == 'SYS004' ||
+    //       element.functionID == 'SYS003' ||
+    //       element.functionID == 'SYS005'
+    //     )
+    //       element.disabled = true;
+    //   });
+    // }
   }
 
   click(indexNo, data) {

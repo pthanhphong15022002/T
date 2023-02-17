@@ -127,7 +127,7 @@ export class DynamicProcessComponent
   }
 
   afterLoad() {
-    this.showButtonAdd =this.funcID == 'DP0101'
+    this.showButtonAdd = this.funcID == 'DP0101';
   }
   //chang data
   viewChanged(e) {
@@ -306,8 +306,11 @@ export class DynamicProcessComponent
       case 'SYS02':
         this.delete(data);
         break;
-      case 'DP05':
+      case 'DP01014':
         this.roles(data);
+        break;
+      case 'DP01011':
+        this.viewDetailProcess(data);
         break;
     }
   }
@@ -323,10 +326,44 @@ export class DynamicProcessComponent
           case 'SYS003':
             res.disabled = true;
             break;
+          //Xem chi tiết
+          case 'DP01011':
+            let isRead = this.checkPermissionRead(data);
+            if (!isRead) {
+              res.isblur = true;
+            }
+            break;
+          //Đổi tên, chỉnh sửa.
+          case 'DP01012':
+          case 'SYS03':
+            let isEdit = data.write;
+            if (!isEdit) {
+              if (res.functionID == 'SYS03') res.disabled = true;
+              else res.isblur = true;
+            }
+            break;
+          //Phân quyền:
+          case 'DP01014':
+            let isAssign = data.assign;
+            if (!isAssign) res.isblur = true;
+            break;
+          //Phát hành
+          case 'DP01015':
+            let isPublish = data.publish;
+            if (!isPublish) res.isblur = true;
+
+            break;
+          case 'SYS02': // xoa
+            let isDelete = data.delete;
+            if (!isDelete || data.deleted) {
+              res.disabled = true;
+            }
+            break;
         }
-      })
+      });
     }
   }
+
   //#popup roles
   roles(e: any) {
     let dialogModel = new DialogModel();
@@ -343,10 +380,10 @@ export class DynamicProcessComponent
         dialogModel
       )
       .closed.subscribe((e) => {
-        // if (e?.event && e?.event != null) {
-        //   this.view.dataService.update(e?.event).subscribe();
-        //   this.detectorRef.detectChanges();
-        // }
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
       });
   }
   //#region đang test ai cần list phần quyền la vô đâyu nha
@@ -379,6 +416,13 @@ export class DynamicProcessComponent
     return isRead ? true : false;
   }
 
+  doubleClickViewProcess(data) {
+    let isRead = this.checkPermissionRead(data);
+    if (isRead) {
+      this.viewDetailProcess(data);
+    }
+  }
+
   getListUser() {
     this.codxDpService
       .getUserByProcessId('675ef83a-f2a6-4798-b377-9071c52fa714')
@@ -400,14 +444,20 @@ export class DynamicProcessComponent
   //#endregion
 
   getNameAppyFor(value: string) {
-    return this.listAppyFor.find((x) => x.value === value).default ?? '';
+   return this.listAppyFor?.length > 0 ? (this.listAppyFor.find((x) => x.value === value)?.default ?? '') :'' ;
   }
   //#endregion đang test
 
-  doubleClickViewProcess(data) {
+  viewDetailProcess(data) {
+    let isRead = this.checkPermissionRead(data);
+    if (!isRead) {
+      return
+    }
+    let isCreate = data.create ? true : false;
     let obj = {
       data: data,
       nameAppyFor: this.getNameAppyFor(data?.applyFor),
+      isCreate: isCreate,
     };
 
     let dialogModel = new DialogModel();

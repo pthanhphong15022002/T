@@ -36,7 +36,6 @@ export class PopupMoveReasonComponent implements OnInit {
   listStep : DP_Instances_Steps_Reasons[]=[];
 
   instanceStep = new DP_Instances_Steps;
-  instance = new DP_Instances;
 
   isReason: boolean = true;
 
@@ -87,7 +86,7 @@ export class PopupMoveReasonComponent implements OnInit {
              // 'Không chuyển đến quy trình khác'
           };
           this.listCbxProccess.unshift(obj);
-          this.autoClickedProccess();
+          this.moveProccess =  this.listCbxProccess[0].recID;
         }
       });
     });
@@ -95,27 +94,29 @@ export class PopupMoveReasonComponent implements OnInit {
   }
 
   onSave() {
-    // if(this.stepIdClick === this.stepIdOld) {
-    //   this.notiService.notifyCode('DP001');
+    // if(this.reasonStep.reasonControl === true) {
+    //   this.notiService.notifyCode('Chọn lý do kìa bạn');
     //   return;
     // }
     // else {
+    
       this.beforeSave();
     // }
 
   }
   beforeSave() {
-    var data = [this.instance,this.listReasonClick, this.moveProccess, this.memoStep];
+    var data = [this.instances.recID, this.moveProccess, this.reasonStep, this.isReason];
     this.codxDpService.moveReasonByIdInstance(data).subscribe((res)=> {
       if(res){
-        this.listStep = res;
+        this.instances = res[0];
+        this.listStep = res[1];
         var obj ={
           listStep: this.listStep,
-          instance: this.instance,
+          instance: this.instances,
         };
         this.dialog.close(obj);
-        // this.dialog.dataService.clear();
         this.notiService.notifyCode('Đánh dấu oke nha');
+    
 
         this.changeDetectorRef.detectChanges();
       }
@@ -159,7 +160,7 @@ export class PopupMoveReasonComponent implements OnInit {
   }
   valueChange($event){
     if($event){
-      this.memoStep = $event.data;
+      this.reasonStep.memo = $event.data;
     }
   }
 
@@ -181,14 +182,10 @@ export class PopupMoveReasonComponent implements OnInit {
   }
 
   cbxChange($event) {
-    // if($event){
-    //   this.stepReason.newProcessID = $event;
-    // }
+    if($event){
+      this.moveProccess = $event;
+    }
 
-  }
-
-  autoClickedProccess() {
-    this.moveProccess =  this.listCbxProccess[0].recID;
   }
 }
 

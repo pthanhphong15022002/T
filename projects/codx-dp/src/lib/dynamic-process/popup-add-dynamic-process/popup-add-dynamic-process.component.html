@@ -655,7 +655,7 @@
           <div class="col-6">
             <codx-input
               type="valuelist"
-              [refValue]="gridViewSetup?.ShowInstanceControl.referedValue"
+              [refValue]="gridViewSetup?.ShowInstanceControl?.referedValue"
               [placeholder]="gridViewSetup['ShowInstanceControl']?.description"
               [crrValue]="process.showInstanceControl"
               (valueChange)="valueChange($event)"
@@ -1064,12 +1064,13 @@
             <div class="order">{{ i + 1 }}</div>
             <div class="p-3 content">
               <div style="font-weight: 600; font-size: 1.2rem">
-                <codx-label [default]="itemStep?.stepName"></codx-label>
+                <!-- <codx-label [default]="itemStep?.stepName"></codx-label> -->
+                <span>{{ itemStep?.stepName }}</span>
               </div>
 
               <div style="font-size: 1.1rem; font-weight: 500">
                 Thời hạn {{ itemStep?.durationDay || 0 }} ngày
-                {{ (itemStep?.durationHour / 60) * 100 || 0 }} giờ
+                {{ itemStep?.durationHour || 0 }} giờ
               </div>
               <div style="font-size: 1.1rem; font-weight: 500">
                 Công việc {{ itemStep?.taskGroups.length }}
@@ -1132,10 +1133,12 @@
               style="cursor: pointer"
             >
               <codx-mfunc
+                *ngIf="viewStepCrr == viewStepCustom"
                 [formModel]="dialog.formModel"
                 (clickMF)="clickMFStep($event, step)"
                 [dataItem]="action != 'edit' ? moreDefaut : step"
                 [type]="'hover'"
+                (changeDataMF)="changeDataMF($event, 'step')"
               >
               </codx-mfunc>
             </div>
@@ -1197,7 +1200,8 @@
           </div>
           <div>
             <span style="float: right; color: #2274ae; font-size: 1.1rem"
-              >0 ngày 4:05 giờ / 5 ngày 0:00 giờ</span
+              >{{ dayStep }} ngày {{ hourStep }} giờ /
+              {{ step?.durationDay }} ngày {{ step?.durationHour }} giờ</span
             >
           </div>
         </div>
@@ -1252,13 +1256,20 @@
         <div
           cdkDropList
           class="list"
-          (cdkDropListDropped)="drop($event, taskGroupList)"
+          (cdkDropListDropped)="drop($event, taskGroupList, true)"
         >
           <div cdkDropListGroup>
             <ng-container *ngFor="let taskList of taskGroupList">
-              <div class="card-job-list" cdkDrag [cdkDragData]="taskList">
-                <div class="card-job">
+              <div
+                class="card-job-list"
+                cdkDrag
+                [cdkDragData]="taskList"
+                [cdkDragStartDelay]="100"
+                [cdkDragDisabled]="taskList?.recID ? false : true"
+              >
+                <div class="card-job mx-5 p-3">
                   <div
+                    *ngIf="taskList?.recID"
                     class="d-flex justify-content-start align-items-center has-action-menu"
                   >
                     <div class="icon-container">
@@ -1278,10 +1289,6 @@
                           style="font-size: 1.2rem; font-weight: 500"
                           >{{ taskList?.taskGroupName }}</span
                         >
-                        <span
-                          class="icon-message icon-20 text-primary-600 py-2 ms-2"
-                          style="color: #06a9f7"
-                        ></span>
                       </div>
                       <div class="" style="font-weight: 400; font-size: 1.1rem">
                         <!-- TODO -->
@@ -1312,14 +1319,21 @@
                       [isBookMark]="true"
                       [dataItem]="moreDefaut"
                       [type]="'hover'"
+                      (changeDataMF)="changeDataMF($event, 'group')"
                     >
                     </codx-mfunc>
                   </div>
+                  <div
+                    *ngIf="!taskList?.recID"
+                    [ngStyle]="
+                      taskList?.task.length == 0 ? { height: '30px' } : {}
+                    "
+                  ></div>
                   <!-- kéo thả ở trong  -->
                   <div
                     cdkDropList
                     [cdkDropListData]="taskList?.task || []"
-                    (cdkDropListDropped)="drop($event)"
+                    (cdkDropListDropped)="drop($event,taskList, false)"
                   >
                     <ng-container *ngFor="let task of taskList?.task">
                       <div
@@ -1327,8 +1341,14 @@
                         [cdkDragStartDelay]="200"
                         [cdkDragData]="task"
                         class="drap-drop"
+
                       >
-                        <div style="margin-left: 50px" class="has-action-menu">
+                        <div
+                          [ngStyle]="
+                            taskList?.recID ? { 'margin-left': '50px' } : {}
+                          "
+                          class="has-action-menu"
+                        >
                           <div
                             class="d-flex justify-content-start align-items-center"
                             style="font-size: 1rem"
@@ -1354,10 +1374,6 @@
                                   style="font-size: 1.2rem; font-weight: 500"
                                   >{{ task?.taskName }}</span
                                 >
-                                <span
-                                  class="icon-message icon-20 text-primary-600 py-2 ms-2"
-                                  style="color: #06a9f7"
-                                ></span>
                               </div>
                               <div
                                 class=""
@@ -1409,6 +1425,7 @@
                             [isBookMark]="true"
                             [dataItem]="moreDefaut"
                             [type]="'hover'"
+                            (changeDataMF)="changeDataMF($event, 'task')"
                           >
                           </codx-mfunc>
                         </div>
@@ -1944,7 +1961,7 @@
           *ngIf="step.roles != null && step.roles.length > 0"
         >
           <ng-container *ngFor="let perm of step.roles; index as i">
-            <div class="me-4 d-flex align-items-center margin-form mb-4">
+            <div *ngIf="perm.roleType == 'S'" class="me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
                 <codx-img
                   class=""
@@ -1989,7 +2006,7 @@
         >
           <ng-container *ngFor="let perm of step.roles; index as i">
             <div
-              *ngIf="perm.roleType == 'O'"
+              *ngIf="perm.roleType == 'R'"
               class="me-4 d-flex align-items-center margin-form mb-4"
             >
               <div class="d-flex align-items-center position-relative">

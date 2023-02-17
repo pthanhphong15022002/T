@@ -1,15 +1,12 @@
 import {
-  AfterViewChecked,
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ContentChild,
   ElementRef,
   EventEmitter,
   Input,
   OnChanges,
   OnInit,
-  Optional,
   Output,
   SimpleChanges,
   TemplateRef,
@@ -23,10 +20,8 @@ import {
   CacheService,
   CallFuncService,
   DataRequest,
-  DialogData,
   DialogModel,
   DialogRef,
-  FormModel,
   NotificationsService,
   RequestOption,
   SidebarModel,
@@ -35,12 +30,10 @@ import {
 } from 'codx-core';
 import { ES_SignFile, File } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
-import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { CodxOdService } from '../../codx-od.service';
 import {
   convertHtmlAgency2,
@@ -167,7 +160,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     )
       this.gridViewSetup = changes?.gridViewSetup?.currentValue;
     this.active = 1;
-   
   }
 
   ngOnInit(): void {
@@ -177,10 +169,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     this.userID = this.authStore.get().userID;
     this.getGridViewSetup(this.pfuncID);
     this.setHeight();
-  
   }
   setHeight() {
-    let main = 0, header = 0;
+    let main = 0,
+      header = 0;
     let ele = document.getElementsByClassName(
       'codx-detail-main'
     ) as HTMLCollectionOf<HTMLElement>;
@@ -200,7 +192,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     ) as HTMLCollectionOf<HTMLElement>;
     if (nodes.length > 0) {
       var a = 0;
-      if(this.view.formModel.funcID.includes("ODT8")) a = 70
+      if (this.view.formModel.funcID.includes('ODT8')) a = 70;
       Array.from(
         document.getElementsByClassName(
           'codx-detail-body'
