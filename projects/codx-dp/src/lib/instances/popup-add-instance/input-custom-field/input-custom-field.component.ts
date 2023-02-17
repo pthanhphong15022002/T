@@ -168,7 +168,7 @@ export class InputCustomFieldComponent implements OnInit {
   valueCbxUserChange(e) {
     if (this.isPopupUserCbb) this.isPopupUserCbb = false;
     if (e && e.id) {
-      if (this.listIdUser || this.customField.dataFormat == '1')
+      if (!this.listIdUser || this.customField.dataFormat == '1')
         this.listIdUser = e.id;
       else this.listIdUser += ';' + e.id;
     }

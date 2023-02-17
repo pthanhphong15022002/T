@@ -53,7 +53,7 @@
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Note" default="Ghi chú"></codx-label>
     <codx-input [crrValue]="form.data != null ? form.data.note : ''" [formModel]="form.formModel" field="note"
-      (valueChange)="valueChange($event,'note')">
+      (valueChange)="valueChange($event)">
     </codx-input>
   </div>
   <div class="d-flex align-items-center justify-content-between mb-3">
@@ -97,7 +97,7 @@
   </div>
   <div class="d-flex align-items-center">
     <codx-input class="me-2" [checked]="form.data != null ? form.data.isDefault : false" type="switch" field="isDefault"
-      (valueChange)="valueChange($event,'isDefault')">
+      (valueChange)="valueChange($event)">
     </codx-input>
     <codx-label [formModel]="form.formModel" fiedName="IsDefault" default="Mặc định"></codx-label>
   </div>

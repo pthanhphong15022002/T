@@ -39,7 +39,6 @@
         </codx-label>
         <codx-input
           field="startDate"
-          [formModel]="grvTaskGroupsForm"
           (valueChange)="changeValueDate($event, taskGroup)"
           [crrValue]="taskGroup?.startDate"
           type="datetime"
@@ -56,7 +55,6 @@
         </codx-label>
         <codx-input
           field="endDate"
-          [formModel]="grvTaskGroupsForm"
           (valueChange)="changeValueDate($event, taskGroup)"
           [crrValue]="taskGroup?.endDate"
           format="F"

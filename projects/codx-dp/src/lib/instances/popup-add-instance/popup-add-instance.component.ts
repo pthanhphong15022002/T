@@ -141,9 +141,15 @@ export class PopupAddInstanceComponent implements OnInit {
   valueChangeCustom(event) {
     if (event && event.e && event.data) {
       var result = event.e?.data;
-      var field = event.data
-      if (field.dataType == 'D') {
-        result = event.e?.data.fromDate;
+      var field = event.data;
+      switch (field.dataType) {
+        case 'D':
+          result = event.e?.data.fromDate;
+          break;
+        case 'P':
+          result = event.e
+          break;
+          break;
       }
 
       var index = this.listStep.findIndex((x) => x.recID == field.stepID);

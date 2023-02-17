@@ -309,6 +309,7 @@ export class DynamicProcessComponent
       case 'DP01014':
       case 'DP02014':
       case 'DP02024':
+      case 'DP02034':
         this.roles(data);
         break;
       case 'DP01011':
@@ -354,6 +355,7 @@ export class DynamicProcessComponent
           case 'DP01012':
           case 'DP02012':
           case 'DP02022':
+          case 'DP02032':
           case 'SYS03':
             let isEdit = data.write;
             if (!isEdit || this.funcID == 'DP0203') {
@@ -365,6 +367,7 @@ export class DynamicProcessComponent
           case 'DP01014':
           case 'DP02014':
           case 'DP02024':
+          case 'DP02034':
             let isAssign = data.assign;
             if (!isAssign) res.isblur = true;
             break;

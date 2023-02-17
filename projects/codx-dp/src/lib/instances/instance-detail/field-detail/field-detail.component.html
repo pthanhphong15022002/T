@@ -15,7 +15,9 @@
       <div class="group-button">
         <button class="button-custom">
           <span
-            [ngClass]="isUpdate ? 'icon-edit icon-20 text-primary-600 py-2' : ''"
+            [ngClass]="
+              isUpdate ? 'icon-edit icon-20 text-primary-600 py-2' : ''
+            "
             style="font-weight: 500"
             (click)="popupCustomField(dataStep.fields)"
           ></span>
@@ -96,6 +98,15 @@
         ></span>
       </ng-template>
     </ngb-rating>
+  </ng-container>
+
+  <ng-container *ngIf="data.dataType == 'P'">
+    <codx-imgs
+      [width]="35"
+      [objectId]="data.dataValue"
+      [objectType]="'AD_Users'"
+      [numberImages]="5"
+    ></codx-imgs>
   </ng-container>
 
   <codx-mfunc

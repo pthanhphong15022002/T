@@ -10,6 +10,53 @@
         <codx-input [crrValue]="umid" [formModel]="form.formModel" field="umid" (valueChange)="valueChangeUMID($event)">
         </codx-input>
       </div>
+<<<<<<< HEAD
+      <div class="row mx-0 mt-3">
+        <div class="col-4 ps-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="RoundOff"
+            default="Làm tròn số"
+          ></codx-label>
+            <codx-input    
+                    [crrValue]="form.data.roundOff"             
+                    [formModel]="form.formModel"
+                    field="roundOff"
+                    (valueChange)="valueChange($event)" 
+                    [min]="0"                      
+                  >
+            </codx-input>
+          </div>   
+        </div>
+        <div class="col-8 pe-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="RoundType"
+            default="Cách thức làm tròn"      
+          ></codx-label>
+          <codx-input
+          [crrValue]="form.data.roundType"            
+          type="valuelist"
+          refValue="L0093"
+          field="roundType"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+            >
+        </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="me-2">
+          <codx-input [formModel]="form.formModel" field="stop" (valueChange)="valueChange($event)"
+            [checked]="form.data.stop">
+          </codx-input>
+        </div>
+        <codx-label [formModel]="form.formModel" fiedName="stop" default="Ngừng sử dụng"></codx-label>
+      </div>
+=======
     </div>
   </div>
   <div class="form-group">
@@ -44,6 +91,7 @@
     </span>
     <codx-label [formModel]="form.formModel" fiedName="Stop" default="Ngừng sử dụng"></codx-label>
   </div>
+>>>>>>> 86837da71b4c827e9963cf3c30de901215798236
 </ng-template>
 <ng-template #tabConversioninformation>
   <div class="row mx-0 mt-3">

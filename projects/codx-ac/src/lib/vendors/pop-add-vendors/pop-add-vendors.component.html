@@ -51,6 +51,16 @@
           (valueChange)="valueChange($event)">
         </codx-input>
       </div>
+<<<<<<< HEAD
+      <div class="d-flex align-items-center">
+        <div class="me-2">
+          <codx-input [formModel]="form.formModel" field="stop" (valueChange)="valueChange($event)"
+            [checked]="form.data.stop">
+          </codx-input>
+        </div>
+        <codx-label [formModel]="form.formModel" fiedName="stop" default="Ngừng sử dụng"></codx-label>
+      </div>
+=======
     </div>
     <div class="col-6 pe-0">
       <div class="form-group">
@@ -98,6 +108,7 @@
     </span>
     <codx-label [formModel]="form.formModel" fiedName="Stop" default="Ngừng sử dụng"></codx-label>
   </div>
+>>>>>>> 86837da71b4c827e9963cf3c30de901215798236
 </ng-template>
 <ng-template #tabestablish>
   <div class="form-group">
@@ -258,6 +269,52 @@
           (valueChange)="valueChange($event)">
         </codx-input>
       </div>
+<<<<<<< HEAD
+      <div class="row mx-0 mt-3">
+        <div class="col-1 ps-0">
+          <div class="form-group">
+            <codx-input
+        type="switch"
+        field="workingHour"  
+        (valueChange)="valueChange($event)"
+        [checked]="form.data.workingHour"
+        >
+        </codx-input>
+          </div>   
+        </div>
+        <div class="col-6 ps-0">
+          <div class="form-group">
+            <codx-label
+        [formModel]="form.formModel"
+        fiedName="WorkingHour"
+        default="Giao hàng giờ hành chính"      
+      ></codx-label>  
+          </div>   
+        </div>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-1 ps-0">
+          <div class="form-group">
+            <codx-input
+        type="switch"
+        field="calendarControl" 
+        (valueChange)="valueChange($event)" 
+        [checked]="form.data.calendarControl"
+        >
+        </codx-input>
+          </div>   
+        </div>
+        <div class="col-8 ps-0">
+          <div class="form-group">
+            <codx-label
+        [formModel]="form.formModel"
+        fiedName="calendarControl"
+        default="Cảnh báo khi không đủ thời gian giao hàng"      
+      ></codx-label>
+          </div>   
+        </div>
+      </div>  
+=======
     </div>
   </div>
   <div class="row mx-0 mt-3">
@@ -302,6 +359,7 @@
       default="Cảnh báo khi không đủ thời gian giao hàng"></codx-label>
 
   </div>
+>>>>>>> 86837da71b4c827e9963cf3c30de901215798236
 </ng-template>
 <ng-template #tabLocation>
   <div class="row mx-0 mt-3">
