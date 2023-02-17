@@ -319,7 +319,6 @@ export class IncommingAddComponent implements OnInit {
       }
       if (this.type == 'add')
         this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
-      this.dispatch.approveStatus = '1';
       this.attachment.objectId = this.dispatch.recID;
       this.addPermission();
       this.odService
