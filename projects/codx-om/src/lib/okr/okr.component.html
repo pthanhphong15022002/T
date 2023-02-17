@@ -1,9 +1,9 @@
 <codx-views #view [views]="views" (viewChanged)="viewChanged($event)" [autoLoad]="false" [toolbarDisplay]="false" *ngIf="isAfterRender" >
 </codx-views>
 <ng-template #panelRight>
-  <div class="w-100 h-100 bg-white px-5">
+  <div class="w-100 h-100 bg-white">
     <!-- <lib-okr-toolbar (click)="click($event)" (hiddenChart)="hiddenChartClick($event)" [data]="dataOKRPlans" [dataChild]="dataOKR" [formModel]="view?.formModel"></lib-okr-toolbar> -->
-    <div class="d-flex align-items-center justify-content-between pt-5">
+    <div class="d-flex align-items-center justify-content-between pt-3 mx-5">
       <div class="d-flex align-items-center col-3 text-white om-switch-room cursor-pointer">
         <div class="w-100px text-center bgC5C7D0 active py-2 om-rounded-pill-left" *ngIf="funcID!=compFuncID">
           Phòng tôi
@@ -62,8 +62,8 @@
 
     <div class="p-om-okr d-flex justify-content-center">
       <ejs-tab id="om-tab">
-        <e-tabitems style="padding: 0px;">
-          <e-tabitem style="padding: 0px;">
+        <e-tabitems>
+          <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-center">
                 <i class="fa-solid fa-bullseye me-2"></i>
@@ -84,16 +84,6 @@
                   <div class="col-2"></div>
                   <div class=" col-7 pb-10 bg-primary-lighter my-5 text-center d-flex flex-column justify-content-center align-item-center  border border-2 border-primary">
 
-                      <!-- <div class="my-2">
-                        <span> <span class="fw-bold">{{ funcID==compFuncID? compName : funcID==deptFuncID? deptName :
-                            funcID==orgFuncID? orgName :persName }}</span> chưa thiết lập mục tiêu cho
-                          <span class="fw-bold">{{periodID}}</span></span>
-                      </div>
-                      <div class="my-2">
-                        <span>Vui lòng chọn nút < </span><span class="text-primary fw-bold">Tạo bộ mục tiêu</span><span>
-                              > để thiết lập bộ mục tiêu cho <span class="fw-bold">{{ funcID==compFuncID? compName :
-                                funcID==deptFuncID? deptName : funcID==orgFuncID? orgName : persName }}</span></span>
-                      </div> -->
                       <span inlineSVG="./assets/themes/om/default/img/OKRs.svg"></span>
                       <span *ngIf="funcID==compFuncID" [innerHTML]="compPlanNull"></span>
                       <span *ngIf="funcID==deptFuncID" [innerHTML]="deptPlanNull"></span>

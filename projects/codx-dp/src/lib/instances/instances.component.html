@@ -16,7 +16,6 @@
   [autoLoad]="true"
   (onActions)="onActions($event)"
   (viewChanged)="changeView($event)"
-
 >
 </codx-views>
 <!-- KANBAN -->
@@ -39,10 +38,12 @@
 </ng-template>
 
 <ng-template #viewColumKaban let-data>
-    <div class="d-flex align-items-center justify-content-between cursor-pointer
-      w-100 has-actions-menu"  style="background-color: red;">
-      <div class="line-colums" >{{ data.headerText }}</div>
-    </div>
+  <div
+    class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu"
+    style="background-color: red"
+  >
+    <div class="line-colums">{{ data.headerText }}</div>
+  </div>
 </ng-template>
 
 <ng-template #cardTitleTmp let-data>
@@ -112,9 +113,8 @@
   </div>
 </ng-template>
 
-<ng-template #tmpDetail let-dialog>
-  <codx-form [body]="templateDetail" [dialog]="dialog" >
-  </codx-form>
+<ng-template #popDetail let-dialog>
+  <codx-form [body]="templateDetail" [dialog]="dialog"> </codx-form>
 </ng-template>
 <!-- end kanban -->
 
@@ -160,16 +160,17 @@
       </div>
     </div>
   </div>
-
 </ng-template>
 
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center mt-1">
-    <div class="d-flex align-items-end codx-badge" >
+    <div class="d-flex align-items-end codx-badge">
       <div class="font me-3">
-        <span>
-          {{getStepNameById(data.stepID)}}
-        </span>
+        <div *ngFor="let item of listSteps ">
+            <span *ngIf="item.stepID === data.stepID">
+                {{item.stepName}}
+            </span>
+        </div>
       </div>
       <span>
         <span class="fs-7 text-gray-600" #endDate>{{
@@ -186,25 +187,26 @@
     </div>
     <div class="d-flex justify-content-center">
       <codx-imgs
-      [isToolTip]="true"
-      [width]="25"
-      [objectId]="'ADMIN'"
-      ojectType="AD_Users"
-      [numberImages]="1"
-    >
-    </codx-imgs>
+        [isToolTip]="true"
+        [width]="25"
+        [objectId]="'ADMIN'"
+        ojectType="AD_Users"
+        [numberImages]="1"
+      >
+      </codx-imgs>
     </div>
   </div>
 </ng-template>
 
 <!--Detail-->
 <ng-template #templateDetail>
-  <codx-instance-detail #detailViewInstance
+  <codx-instance-detail
+    #detailViewInstance
     [dataService]="view.dataService"
     [formModel]="view.formModel"
     [recID]="dataSelected.recID"
-    [progress]="dataSelected.progress"
     [dataSelect]="dataSelected"
     (moreFunctionEvent)="clickMoreFunc($event)"
+    (changeMF)="changeMF($event)"
   ></codx-instance-detail>
 </ng-template>

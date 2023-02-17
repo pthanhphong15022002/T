@@ -17,7 +17,6 @@ export class CustomersComponent extends UIComponent {
   moreFuncName:any;
   funcName:any;
   objecttype:string = '1';
-  htxcusGroup:string = '';
   gridViewSetup:any;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   constructor(

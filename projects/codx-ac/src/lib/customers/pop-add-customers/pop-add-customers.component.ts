@@ -465,8 +465,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   }
   editobjectContact(data: any) {
       let index = this.objectContact.findIndex(
-        (x) => x.contactName == data.contactName && x.phone == data.phone
-      );
+        (x) => x.recID == data.recID);
       var ob = {
         headerText: 'Chỉnh sửa liên hệ',
         data: { ...data },

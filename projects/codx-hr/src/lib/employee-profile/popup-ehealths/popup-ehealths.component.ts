@@ -30,8 +30,8 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   healthObj: any;
   healthTemp: any;
-  lstEHealth
-  indexSelected
+  //lstEHealth
+  //indexSelected
   funcID: string;
   actionType: string;
   employId: string;
@@ -39,7 +39,7 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   headerText: string;
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('listView') listView: CodxListviewComponent;
+  //@ViewChild('listView') listView: CodxListviewComponent;
   @ViewChild('ultrasound') ultrasound: CodxListviewComponent;
   @ViewChild('bloodtest') bloodtest: CodxListviewComponent;
   dialog2: DialogRef
@@ -61,21 +61,25 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
     // }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
+    this.formModel = dialog.formModel;
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
-    this.lstEHealth = data?.data?.lstEHealth;
-    this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.healthObj = JSON.parse(JSON.stringify(this.lstEHealth[this.indexSelected]));
+    this.healthObj = data?.data?.healthObj;
+    if(this.healthObj){
+      if(this.healthObj?.healthDate == '0001-01-01T00:00:00'){
+        this.healthObj.healthDate = null;
+      }
     }
+    //this.lstEHealth = data?.data?.lstEHealth;
+    // this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
+    // if (this.actionType === 'edit' || this.actionType === 'copy') {
+    //   this.healthObj = JSON.parse(JSON.stringify(this.lstEHealth[this.indexSelected]));
+    // }
   }
 
   onInit(): void {
-    this.hrSevice.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrSevice
+    this.hrSevice
           .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
           .then((fg) => {
             if (fg) {
@@ -83,8 +87,20 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
               this.initForm();
             }
           });
-      }
-    });
+
+    // this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+    //   if (formModel) {
+    //     this.formModel = formModel;
+    //     this.hrSevice
+    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //       .then((fg) => {
+    //         if (fg) {
+    //           this.formGroup = fg;
+    //           this.initForm();
+    //         }
+    //       });
+    //   }
+    // });
   }
 
   initForm(){
@@ -98,6 +114,7 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.healthObj = res?.data;
+            this.healthObj.healthDate = null;
             this.healthObj.employeeID = this.employId;
             this.formModel.currentData = this.healthObj;
             this.formGroup.patchValue(this.healthObj);
@@ -130,11 +147,12 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
         if(p != null){
           this.healthObj.recID = p.recID
           this.notify.notifyCode('SYS006')
-          this.lstEHealth.push(JSON.parse(JSON.stringify(this.healthObj)));
-          if(this.listView){
-            (this.listView.dataService as CRUDService).add(this.healthObj).subscribe();
-          }
-          // this.dialog.close(p)
+          // this.lstEHealth.push(JSON.parse(JSON.stringify(this.healthObj)));
+          // if(this.listView){
+          //   (this.listView.dataService as CRUDService).add(this.healthObj).subscribe();
+          // }
+          this.dialog && this.dialog.close(this.healthObj);
+
         }
         else this.notify.notifyCode('SYS023')
       });
@@ -143,11 +161,12 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
       this.hrSevice.editEHealth(this.formModel.currentData).subscribe(p => {
         if(p != null){
           this.notify.notifyCode('SYS007')
-        this.lstEHealth[this.indexSelected] = p;
-        if(this.listView){
-          (this.listView.dataService as CRUDService).update(this.lstEHealth[this.indexSelected]).subscribe()
-        }
-          // this.dialog.close(this.data)
+        // this.lstEHealth[this.indexSelected] = p;
+        // if(this.listView){
+        //   (this.listView.dataService as CRUDService).update(this.lstEHealth[this.indexSelected]).subscribe()
+        // }
+        this.dialog && this.dialog.close(this.healthObj);
+
         }
         else this.notify.notifyCode('SYS021')
       });
@@ -174,11 +193,4 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
     this.healthObj = JSON.parse(JSON.stringify(this.healthTemp));
     this.dialog2.close()
   }
-
-  // afterRenderListView(event: any) {
-  //   this.listView = event;
-  //   console.log(this.listView);
-  // }
-
-  // click(data) {}
 }

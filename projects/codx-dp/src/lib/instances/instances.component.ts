@@ -30,7 +30,6 @@ import { InstanceDetailComponent } from './instance-detail/instance-detail.compo
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
-import { PopupRolesInstanceComponent } from './popup-roles-instance/popup-roles-instance.component';
 
 @Component({
   selector: 'codx-instances',
@@ -41,16 +40,17 @@ export class InstancesComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
+  @Input() process: any;
+  @Input() isCreate: boolean;
   @ViewChild('templateDetail', { static: true })
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
   @ViewChild('detailViewInstance')
   detailViewInstance: InstanceDetailComponent;
-  @Input() process: any;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
-  @ViewChild('tmpDetail') tmpDetail: TemplateRef<any>;
+  @ViewChild('popDetail') popDetail: TemplateRef<any>;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   showButtonAdd = true;
@@ -91,7 +91,7 @@ export class InstancesComponent
   dataColums = [];
   dataDrop: any;
   isClick: boolean = true;
-  @Input() isCreate: boolean;
+
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -304,7 +304,7 @@ export class InstancesComponent
   //Event
   clickMF(e, data?) {
     // this.itemSelected = data;
-     this.titleAction = e.text;
+    this.titleAction = e.text;
     this.moreFunc = e.functionID;
     switch (e.functionID) {
       case 'SYS03':
@@ -326,36 +326,48 @@ export class InstancesComponent
       case 'DP10':
         this.moveReason(e.data, data, this.isMoveSuccess);
         break;
-      case 'DP011':
-        this.roles(data);
-        break;
     }
   }
 
   //#popup roles
-  roles(e: any) {
-    let dialogModel = new DialogModel();
-    dialogModel.zIndex = 999;
-    this.callfc
-      .openForm(
-        PopupRolesInstanceComponent,
-        '',
-        950,
-        650,
-        '',
-        [e, this.titleAction],
-        '',
-        dialogModel
-      )
-      .closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          this.view.dataService.update(e?.event).subscribe();
-          this.detectorRef.detectChanges();
+
+  changeDataMF(e, data) {
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS005':
+          case 'SYS003':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+          case 'DP011':
+            res.disabled = true;
+            break;
+          //Chỉnh sửa, chuyển tiếp, thất bại, thành công
+          case 'SYS103':
+          case 'SYS03':
+          case 'DP02':
+          case 'DP09':
+          case 'DP10':
+            let isUpdate = data.write;
+            if (!isUpdate) res.disabled = true;
+            break;
+          //Copy
+          case 'SYS104':
+          case 'SYS04':
+            let isCopy = this.isCreate ? true : false;
+            if (!isCopy) res.disabled = true;
+            break;
+          //xóa
+          case 'SYS102':
+          case 'SYS02':
+            let isDelete = data.delete;
+            if (!isDelete) res.disabled = true;
+            break;
         }
       });
+    }
   }
-
-  changeDataMF(e, data) {}
   //End
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
@@ -375,8 +387,8 @@ export class InstancesComponent
     return desc + '</div>';
   }
 
-  selectedChange(task: any) {
-    this.dataSelected = task?.data ? task?.data : task;
+  selectedChange(data: any) {
+    this.dataSelected = data?.data ? data?.data : data;
     //formModel instances
     let formModel = new FormModel();
     formModel.formName = 'DPInstances';
@@ -404,24 +416,25 @@ export class InstancesComponent
         break;
       case 'dbClick':
         //xư lý dbClick
-        this.viewDetail() ;
+        this.viewDetail(e.data.recID);
         break;
     }
   }
 
-  viewDetail(){
-      let option = new DialogModel();
-       option.zIndex = 1010;
-      let popup = this.callFunc.openForm(
-        this.tmpDetail,
-        '',
-        1000,
-        700,
-        '',
-        null,
-        '',
-        option
-      );
+  viewDetail(recID) {
+  //  this.detailViewInstance.GetStepsByInstanceIDAsync(recID)
+    let option = new DialogModel();
+    option.zIndex = 1010;
+    let popup = this.callFunc.openForm(
+      this.popDetail,
+      '',
+      1000,
+      700,
+      '',
+      null,
+      '',
+      option
+    );
   }
 
   dropInstance(data) {
@@ -481,11 +494,11 @@ export class InstancesComponent
 
   #region;
   moveStage(dataMore, data, instanceStep) {
-    if(!this.isClick) {
+    if (!this.isClick) {
       return;
     }
     this.isClick = false;
-    this.crrStepID = data.stepID ;
+    this.crrStepID = data.stepID;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -525,13 +538,15 @@ export class InstancesComponent
                 //xu ly data đổ về
                 data = e.event.instance;
                 this.listStepInstances = e.event.listStep;
-                if(e.event.isReason != null ) {
-                  this.moveReason(null,data, e.event.isReason)
+                if (e.event.isReason != null) {
+                  this.moveReason(null, data, e.event.isReason);
                 }
                 this.dataSelected = data;
                 this.detailViewInstance.dataSelect = this.dataSelected;
-                this.detailViewInstance.GetStepsByInstanceIDAsync(this.dataSelected.recID);
-                this.view.dataService.update(data).subscribe();            
+                this.detailViewInstance.GetStepsByInstanceIDAsync(
+                  this.dataSelected.recID
+                );
+                this.view.dataService.update(data).subscribe();
                 this.detectorRef.detectChanges();
               }
             });
@@ -541,7 +556,7 @@ export class InstancesComponent
   }
 
   moveReason(dataMore, data: any, isMoveSuccess: Boolean) {
-    this.crrStepID = data.stepID ;
+    this.crrStepID = data.stepID;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -556,7 +571,9 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            let reason = isMoveSuccess ? this.listSteps[this.listSteps.length-2]: this.listSteps[this.listSteps.length-1];
+            let reason = isMoveSuccess
+              ? this.listSteps[this.listSteps.length - 2]
+              : this.listSteps[this.listSteps.length - 1];
             var obj = {
               dataMore: dataMore,
               headerTitle: fun.defaultName,
@@ -565,7 +582,7 @@ export class InstancesComponent
               isReason: isMoveSuccess,
               instance: data,
               objReason: reason,
-              applyFor: this.process.applyFor
+              applyFor: this.process.applyFor,
             };
 
             var dialogRevision = this.callfc.openForm(
@@ -581,9 +598,17 @@ export class InstancesComponent
                 data.stepID = this.crrStepID;
                 this.changeDetectorRef.detectChanges();
               }
-              if (e?.event && e?.event != null) {
-                this.view.dataService.clear();
-                this.view.dataService.update(e?.event).subscribe();
+              if (e && e.event != null) {
+                //xu ly data đổ về
+                data = e.event.instance;
+                this.listStepInstances = e.event.listStep;
+                if(e.event.isReason != null ) {
+                  this.moveReason(null,data, e.event.isReason)
+                }
+                this.dataSelected = data;
+                this.detailViewInstance.dataSelect = this.dataSelected;
+                this.detailViewInstance.GetStepsByInstanceIDAsync(this.dataSelected.recID);
+                this.view.dataService.update(data).subscribe();            
                 this.detectorRef.detectChanges();
               }
             });
@@ -618,15 +643,17 @@ export class InstancesComponent
   }
 
   getStepNameById(stepId: string): string {
-    // let listStep = JSON.parse(JSON.stringify(this.listStepsCbx));
+    // let listStep = JSON.parse(JSON.stringify(this.listStepsCbx))
     return this.listSteps
       .filter((x) => x.stepID === stepId)
       .map((x) => x.stepName)[0];
   }
   clickMoreFunc(e){
-    console.log(e);
     this.lstStepInstances = e.lstSteps;
     this.clickMF(e.e, e.data);
+  }
+  changeMF(e) {
+    this.changeDataMF(e.e, e.data);
   }
   #endregion;
 }

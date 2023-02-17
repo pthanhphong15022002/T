@@ -1,0 +1,17 @@
+<codx-form #form [headerText]="title" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog"
+  [formModel]="dialog.formModel" [data]="data" [openMore]="false"></codx-form>
+<ng-template #body>
+  <ng-container *ngFor="let item of data">
+    <div class="form-group">
+      <codx-input-custom-field [customField]="item" [formModel]="form.formModel"></codx-input-custom-field>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #footer>
+  <button type="button" (click)="onSave()" class="btn btn-primary">Lưu</button>
+</ng-template>
+
+<ng-template #controlShare let-dialogControl>
+  <codx-share [dialog]="dialogControl" [multiple]="true" (eventApply)="applyShare($event)" [listName]="vllShare">
+  </codx-share>
+</ng-template>

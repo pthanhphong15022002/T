@@ -301,8 +301,9 @@ export class IncommingAddComponent implements OnInit {
     /////////////////////////////////////////////////////////
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
     if (this.type == 'add' || this.type == 'copy') {
-      if(this.dispatch.owner != this.dispatch.createdBy) this.dispatch.status = '3';
-      else this.dispatch.status = '1';
+      // if(this.dispatch.owner != this.dispatch.createdBy) this.dispatch.status = '3';
+      // else this.dispatch.status = '1';
+      this.dispatch.status = '1';
       this.dispatch.approveStatus = '1';
       if (this.type == 'copy') 
       {
@@ -318,7 +319,6 @@ export class IncommingAddComponent implements OnInit {
       }
       if (this.type == 'add')
         this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
-      this.dispatch.approveStatus = '1';
       this.attachment.objectId = this.dispatch.recID;
       this.addPermission();
       this.odService

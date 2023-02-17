@@ -7,7 +7,6 @@
   [autoLoad]="false"
 >
 </codx-views>
-
 <ng-template #panelContent>
   <div class="page-pw h-employee p-3 rounded-2">
     <div class="page-profile">
@@ -189,7 +188,15 @@
                                       >
                                       </codx-label>
                                       <span class="text-dark fw-bold">
-                                        <span>{{ infoPersonal.userID }}</span>
+                                        <span>
+                                          {{
+                                            infoPersonal?.userID
+                                              | formatvalue
+                                                : eInfoFormModel
+                                                : "userID"
+                                              | async
+                                          }}
+                                        </span>
                                       </span>
                                     </div>
                                   </div>
@@ -890,7 +897,7 @@
             </div>
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="addEmployeeTrainCourseInfo()"
+              (click)="HandleEmployeeTrainCourseInfo('eTrainCourses', data)"
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -968,7 +975,7 @@
 
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="addEditEVaccines('add', null)"
+              (click)="HandleEVaccinesInfo('add', null)"
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -1071,7 +1078,7 @@
                     [default]="getFormHeader('HRTEM0101')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0101')}}
+                  {{ getFormHeader("HRTEM0101") }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -1524,7 +1531,7 @@
                     [default]="getFormHeader('HRTEM0102')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0102')}}
+                  {{ getFormHeader("HRTEM0102") }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -1616,7 +1623,7 @@
                     [default]="getFormHeader('HRTEM0103')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0103')}}
+                  {{ getFormHeader("HRTEM0103") }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -2172,7 +2179,7 @@
                     [default]="getFormHeader('HRTEM0204')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0204')}}
+                  {{ getFormHeader("HRTEM0204") }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -2255,8 +2262,8 @@
       (sectionChange)="onSectionChange($event)"
     >
       <ng-container>
-        <!-- thong tin chung -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0301">
+        <!-- Thông tin chung -->
+        <div class="user-profile overview d-block mb-3" [id]="jobGeneralFuncID">
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
@@ -2269,10 +2276,10 @@
                   <!-- <codx-label
                     [formModel]="view.formModel"
                     name="lblEmployeeJobGeneralTitle"
-                    [default]="getFormHeader('HRTEM0301')"
+                    [default]="getFormHeader(jobGeneralFuncID)"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0301')}}
+                  {{ getFormHeader(jobGeneralFuncID) }}
                 </div>
               </div>
 
@@ -2286,318 +2293,355 @@
               </div>
             </div>
             <div id="generalJobInfo" class="mb-1">
-              <div class="mt-6">
-                <!-- documentNo-status -->
-                <div class="row mb-2">
-                  <div class="col d-flex align-items-center" id="documentNo">
-                    <span
-                      class="icon-article icon-18 text-gray-600 me-1"
-                    ></span>
+              <div class="mt-6" *ngIf="eInfoFormModel">
+                <!-- Số lưu hồ sơ/ Tình trạng nhân viên/ Loại nhân viên -->
+                <div class="row form-group">
+                  <div class="col">
                     <codx-label
-                      class="text-gray-600 me-2 label-colon"
-                      [formModel]="view.formModel"
-                      fiedName="documentNo"
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="DocumentNo"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                    <div class="fw-bolder">
+                      {{
+                        infoPersonal?.documentNo
+                          | formatvalue : eInfoFormModel : "documentNo"
+                          | async
+                      }}
+                    </div>
+                  </div>
+                  <div class="col">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="Status"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
 
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.documentNo }}</span>
-                    </span>
+                    <div class="fw-bolder">
+                      {{
+                        infoPersonal?.status
+                          | formatvalue : eInfoFormModel : "status"
+                          | async
+                      }}
+                    </div>
                   </div>
-                  <div class="col d-flex align-items-center" id="status">
-                    <span
-                      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-                    ></span>
+                  <div class="col">
                     <codx-label
-                      class="text-gray-600 me-2 label-colon"
-                      [formModel]="view.formModel"
-                      fiedName="status"
+                      class="text-gray-600 fw-normal"
+                      fiedName="EmployeeTypeID"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
-                    <span #status>
-                      <codx-vll
-                        [showText]="true"
-                        [showBgColor]="true"
-                        [showIcon]="true"
-                        [formModel]="view.formModel"
-                        [field]="'status'"
-                        [value]="data?.status"
-                        class="text-dark"
+
+                    <div class="fw-bolder text-primary">
+                      {{
+                        infoPersonal?.employeeTypeID
+                          | formatvalue : eInfoFormModel : "employeeTypeID"
+                          | async
+                      }}
+                      <!-- <codx-vll
+                          [showText]="true"
+                          [showBgColor]="false"
+                          [showIcon]="false"
+                          [formModel]="view.formModel"
+                          [field]="'MaritalStatus'"
+                          [value]="data?.maritalStatus"
+                          class="text-dark"
+                        >
+                        </codx-vll> -->
+                    </div>
+                  </div>
+                </div>
+                <!-- Ngày vào làm/ ngày hợp đồng chính thức/ tài khoản portal -->
+                <div class="row form-group">
+                  <div class="col">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="JoinedOn"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                    <div class="d-flex align-items-center">
+                      <span
+                        class="icon-event icon-18 text-gray-600 me-2"
+                      ></span>
+                      <span class="fw-bolder">
+                        {{
+                          infoPersonal?.joinedOn
+                            | formatvalue : eInfoFormModel : "joinedOn"
+                            | async
+                        }}</span
                       >
-                      </codx-vll>
-                    </span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="HiredOn"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                    <div class="d-flex align-items-center">
+                      <span
+                        class="icon-event icon-18 text-gray-600 me-2"
+                      ></span>
+                      <span class="fw-bolder">
+                        {{
+                          infoPersonal?.hiredOn
+                            | formatvalue : eInfoFormModel : "hiredOn"
+                            | async
+                        }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <codx-label
+                      class="text-gray-600 fw-normal"
+                      fiedName="UserID"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                    <div class="d-flex align-items-center">
+                      <span
+                        class="icon-assignment_ind icon-18 text-gray-600 me-2"
+                      ></span>
+                      <div class="fw-bolder text-primary">
+                        {{
+                          infoPersonal?.userID
+                            | formatvalue : eInfoFormModel : "userID"
+                            | async
+                        }}
+                        <!-- <codx-vll
+                            [showText]="true"
+                            [showBgColor]="false"
+                            [showIcon]="false"
+                            [formModel]="view.formModel"
+                            [field]="'MaritalStatus'"
+                            [value]="data?.maritalStatus"
+                            class="text-dark"
+                          >
+                          </codx-vll> -->
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <!-- joinedOn-hiredOn -->
-                <div class="row mb-2">
-                  <div class="col d-flex align-items-center" id="joinedOn">
-                    <span class="icon-event icon-18 text-gray-600 me-1"></span>
+                <!-- Bộ phận làm việc -->
+                <div class="row form-group">
+                  <div class="col">
                     <codx-label
-                      class="text-gray-600 me-2 label-colon"
-                      [formModel]="view.formModel"
-                      fiedName="joinedOn"
-                    >
-                    </codx-label>
-
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.joinedOn }}</span>
-                    </span>
-                  </div>
-                  <div class="col d-flex align-items-center" id="hiredOn">
-                    <span
-                      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2 label-colon"
-                      [formModel]="view.formModel"
-                      fiedName="hiredOn"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.hiredOn }}</span>
-                    </span>
-                  </div>
-                </div>
-                <!-- userID-employeeID -->
-                <div class="row mb-2">
-                  <div class="col d-flex align-items-center" id="userID">
-                    <span
-                      class="icon-assignment_ind icon-18 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      [formModel]="view.formModel"
-                      fiedName="userID"
-                      class="text-gray-600 me-2"
-                    >
-                    </codx-label>
-
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.userID }}</span>
-                    </span>
-                  </div>
-                  <div class="col d-flex align-items-center" id="employeeID">
-                    <span
-                      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      [formModel]="view.formModel"
-                      class="text-gray-600 me-2 label-colon"
-                      fiedName="employeeID"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.employeeID }}</span>
-                    </span>
-                  </div>
-                </div>
-                <!-- positionID-jobLevel -->
-                <div class="row mb-2">
-                  <div class="col d-flex align-items-center" id="positionID">
-                    <span class="icon-book icon-18 text-primary me-1"></span>
-                    <codx-label
-                      class="text-gray-600 me-2 label-colon"
-                      [formModel]="view.formModel"
-                      fiedName="positionID"
-                    >
-                    </codx-label>
-
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.positionName }}</span>
-                    </span>
-                  </div>
-                  <div class="col d-flex align-items-center" id="jobLevel">
-                    <span
-                      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2 label-colon"
-                      [formModel]="view.formModel"
-                      fiedName="jobLevel"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.jobLevel }}</span>
-                    </span>
-                  </div>
-                </div>
-
-                <!-- orgUnitID -->
-                <div class="row mb-2">
-                  <div class="col d-flex align-items-center" id="orgUnitID">
-                    <span
-                      class="icon-connection-point icon-18 text-gray-600 me-1 text-primary"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2 label-colon"
-                      [formModel]="view.formModel"
+                      class="text-gray-600 me-2 fw-normal"
                       fiedName="orgUnitID"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
-
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.orgUnitID }}</span>
-                    </span>
+                    <div #idCardNo class="fw-bolder">
+                      {{
+                        infoPersonal?.orgUnitID
+                          | formatvalue : eInfoFormModel : "orgUnitID"
+                          | async
+                      }}
+                    </div>
                   </div>
                 </div>
-
-                <!-- lineManager-indirectManager -->
-                <div class="row mb-1">
-                  <div class="col d-flex align-items-center" id="lineManager">
-                    <span
-                      class="icon-supervised_user_circle icon-18 text-gray-600 me-1"
-                    ></span>
+                <!-- Địa điểm làm việc -->
+                <div class="row form-group">
+                  <div class="col">
                     <codx-label
-                      class="text-gray-600 me-2 label-colon"
-                      [formModel]="view.formModel"
-                      fiedName="lineManager"
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="LocationID"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
-
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.lineManager }}</span>
-                    </span>
-                  </div>
-                  <div
-                    class="col d-flex align-items-center"
-                    id="indirectManager"
-                  >
-                    <span
-                      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2 label-colon"
-                      [formModel]="view.formModel"
-                      fiedName="indirectManager"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.indirectManager }}</span>
-                    </span>
+                    <div #idCardNo class="fw-bolder">
+                      {{
+                        infoPersonal?.locationID
+                          | formatvalue : eInfoFormModel : "locationID"
+                          | async
+                      }}
+                    </div>
                   </div>
                 </div>
-
-                <!-- locationID -->
-                <div class="row mb-2">
-                  <div class="col d-flex align-items-center" id="locationID">
+                <!-- Chức danh công việc/ Cấp bậc -->
+                <div class="row form-group">
+                  <div class="col-4">
                     <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName=""
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="PositionID"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.locationID }}</span>
-                    </span>
+                    <div class="d-flex align-items-center">
+                      <span
+                        class="icon-event icon-18 text-gray-600 me-2"
+                      ></span>
+                      <span class="fw-bolder">
+                        {{
+                          infoPersonal?.positionID
+                            | formatvalue : eInfoFormModel : "positionID"
+                            | async
+                        }}</span
+                      >
+                    </div>
+                  </div>
+                  <div class="col-8">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="JobLevel"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                    <div class="d-flex align-items-center">
+                      <span class="fw-bolder">
+                        {{
+                          infoPersonal?.jobLevel
+                            | formatvalue : eInfoFormModel : "jobLevel"
+                            | async
+                        }}
+                      </span>
+                    </div>
                   </div>
                 </div>
-
-                <!-- labourType-labourConditions -->
-                <div class="row mb-2">
-                  <div class="col d-flex align-items-center" id="labourType">
-                    <span
-                      class="icon-person_pin_circle icon-18 text-gray-600 me-1"
-                    ></span>
+                <!-- Quản lí trực tiếp/ Quản lí gián tiếp -->
+                <div class="row form-group">
+                  <div class="col-4">
                     <codx-label
-                      class="text-gray-600 me-2 label-colon"
-                      [formModel]="view.formModel"
-                      fiedName="labourType"
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="LineManager"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
-
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.labourType }}</span>
-                    </span>
+                    <div class="d-flex align-items-center">
+                      <span class="fw-bolder">
+                        {{
+                          infoPersonal?.lineManager
+                            | formatvalue : eInfoFormModel : "lineManager"
+                            | async
+                        }}</span
+                      >
+                    </div>
                   </div>
-                  <div
-                    class="col d-flex align-items-center"
-                    id="labourConditions"
-                  >
-                    <span
-                      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-                    ></span>
+                  <div class="col-8">
                     <codx-label
-                      [formModel]="view.formModel"
-                      fiedName="labourConditions"
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="IndirectManager"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.labourConditions }}</span>
-                    </span>
-                  </div>
-                </div>
-
-                <!-- isTUnion-tUnionDate -->
-                <div class="row mb-2">
-                  <div class="col d-flex align-items-center" id="isTUnion">
-                    <span
-                      class="icon-i-check-circle-fill icon-14 text-primary me-1"
-                    ></span>
-
-                    <codx-label
-                      class="text-gray-600 me-2 label-colon"
-                      [formModel]="view.formModel"
-                      fiedName="isTUnion"
-                    >
-                    </codx-label>
-
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.isTUnion }}</span>
-                    </span>
-                  </div>
-                  <div class="col d-flex align-items-center" id="tUnionDate">
-                    <span
-                      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2 label-colon"
-                      [formModel]="view.formModel"
-                      fiedName="tUnionDate"
-                    >
-                    </codx-label>
-
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.tUnionDate }}</span>
-                    </span>
+                    <div class="d-flex align-items-center">
+                      <span class="fw-bolder">
+                        {{
+                          infoPersonal?.indirectManager
+                            | formatvalue : eInfoFormModel : "indirectManager"
+                            | async
+                        }}
+                      </span>
+                    </div>
                   </div>
                 </div>
-
-                <!-- isExpertRecruit-isExpertTrain -->
-                <div class="row mb-2">
-                  <div
-                    class="col d-flex align-items-center"
-                    id="isExpertRecruit"
-                  >
-                    <span
-                      class="icon-i-check-circle-fill icon-14 text-primary me-1"
-                    ></span>
-
+                <!-- Loại lao động/ Điều kiện lao động -->
+                <div class="row form-group">
+                  <div class="col-4">
                     <codx-label
-                      class="text-gray-600 me-2 label-colon"
-                      [formModel]="view.formModel"
-                      fiedName="isExpertRecruit"
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="LabourType"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
-
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.isExpertRecruit }}</span>
-                    </span>
+                    <div class="d-flex align-items-center">
+                      <span class="fw-bolder">
+                        {{
+                          infoPersonal?.labourType
+                            | formatvalue : eInfoFormModel : "labourType"
+                            | async
+                        }}</span
+                      >
+                    </div>
                   </div>
-                  <div class="col d-flex align-items-center" id="isExpertTrain">
-                    <span
-                      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-                    ></span>
-                    <span
-                      class="icon-i-check-circle-fill icon-14 text-primary me-1"
-                    ></span>
+                  <div class="col-8">
                     <codx-label
-                      class="text-gray-600 me-2 label-colon"
-                      [formModel]="view.formModel"
-                      fiedName="isExpertTrain"
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="LabourConditions"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.isExpertTrain }}</span>
-                    </span>
+                    <div class="d-flex align-items-center">
+                      <span class="fw-bolder">
+                        {{
+                          infoPersonal?.labourConditions
+                            | formatvalue : eInfoFormModel : "labourConditions"
+                            | async
+                        }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Tham gia công đoàn/ Là chuyên gia tuyển dụng/ Là chuyên gia đào tạo -->
+                <div class="row form-group">
+                  <div class="col">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="IsTUnion"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                    <div class="d-flex align-items-center">
+                      <span
+                        class="fw-bolder me-1"
+                        *ngIf="infoPersonal?.isTUnion"
+                      >
+                        <codx-input
+                          field="IsTUnion"
+                          [formModel]="eInfoFormModel"
+                          [crrValue]="infoPersonal?.isTUnion"
+                          [disabled]="true"
+                        ></codx-input>
+                      </span>
+                      <span class="fw-bolder">
+                        {{
+                          infoPersonal?.tUnionDate
+                            | formatvalue : eInfoFormModel : "tUnionDate"
+                            | async
+                        }}</span
+                      >
+                    </div>
+                  </div>
+                  <div class="col" *ngIf="infoPersonal?.isExpertRecruit">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="IsExpertRecruit"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                    <div class="d-flex align-items-center">
+                      <span class="fw-bolder">
+                        <codx-input
+                          field="IsExpertRecruit"
+                          [formModel]="eInfoFormModel"
+                          [crrValue]="infoPersonal?.isExpertRecruit"
+                          [disabled]="true"
+                        ></codx-input>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col" *ngIf="infoPersonal?.isExpertTrain">
+                    <codx-label
+                      class="text-gray-600 me-2 fw-normal"
+                      fiedName="IsExpertTrain"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                    <div class="d-flex align-items-center">
+                      <span class="fw-bolder">
+                        <codx-input
+                          field="IsExpertTrain"
+                          [formModel]="eInfoFormModel"
+                          [crrValue]="infoPersonal?.isExpertTrain"
+                          [disabled]="true"
+                        ></codx-input>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2605,7 +2649,7 @@
           </div>
         </div>
         <!-- Thông tin chấm công -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0302">
+        <div class="user-profile overview d-block mb-3" [id]="eTimeCardFuncID">
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
@@ -2618,10 +2662,10 @@
                   <!-- <codx-label
                     [formModel]="view.formModel"
                     name="lblEmployeeJobGeneralTitle"
-                    [default]="getFormHeader('HRTEM0302')"
+                    [default]="getFormHeader(eTimeCardFuncID)"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0302')}}
+                  {{ getFormHeader(eTimeCardFuncID) }}
                 </div>
               </div>
 
@@ -2634,117 +2678,140 @@
                 </a>
               </div>
             </div>
-            <div #timeKeepingInfo class="mb-1 mt-6">
-              <!-- timeCardNo-shiftCalendarID -->
-              <div class="row mb-2">
-                <div class="col d-flex align-items-center" id="timeCardNo">
-                  <span class="icon-fingerprint icon-14 me-1"></span>
+            <div #timeKeepingInfo class="mb-1 mt-6" *ngIf="eInfoFormModel">
+              <!-- Mã chấm công/ lịch làm việc/ đối tượng tính phép năm -->
+              <div class="row form-group">
+                <div class="col">
                   <codx-label
-                    class="text-gray-600 me-2 label-colon"
-                    [formModel]="view.formModel"
-                    fiedName="timeCardNo"
+                    class="text-gray-600 me-2 fw-normal"
+                    fiedName="TimeCardNo"
+                    [formModel]="eInfoFormModel"
+                  >
+                  </codx-label>
+                  <div class="d-flex align-items-center">
+                    <span
+                      class="icon-fingerprint icon-18 text-gray-600 me-2"
+                    ></span>
+                    <span class="fw-bolder">
+                      {{
+                        infoPersonal?.timeCardNo
+                          | formatvalue : eInfoFormModel : "timeCardNo"
+                          | async
+                      }}</span
+                    >
+                  </div>
+                </div>
+                <div class="col">
+                  <codx-label
+                    class="text-gray-600 me-2 fw-normal"
+                    fiedName="ShiftCalendarID"
+                    [formModel]="eInfoFormModel"
+                  >
+                  </codx-label>
+                  <div class="d-flex align-items-center">
+                    <span class="icon-event icon-18 text-gray-600 me-2"></span>
+                    <span class="fw-bolder">
+                      {{
+                        infoPersonal?.shiftCalendarID
+                          | formatvalue : eInfoFormModel : "shiftCalendarID"
+                          | async
+                      }}
+                    </span>
+                  </div>
+                </div>
+                <div class="col">
+                  <codx-label
+                    class="text-gray-600 fw-normal"
+                    fiedName="ALObjectID"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.timeCardNo }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex align-items-center" id="shiftCalendarID">
-                  <span
-                    class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-                  ></span>
-                  <codx-label
-                    class="text-gray-600 me-2 label-colon"
-                    [formModel]="view.formModel"
-                    fiedName="shiftCalendarID"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.shiftCalendarID }}</span>
-                  </span>
+                  <div class="fw-bolder">
+                    {{
+                      infoPersonal?.alObjectID
+                        | formatvalue : eInfoFormModel : "alObjectID"
+                        | async
+                    }}
+                  </div>
                 </div>
               </div>
-              <!-- aLObjectID-->
-              <div class="row mb-2">
-                <div class="col d-flex align-items-center" id="aLObjectID">
-                  <span class="icon-i-calendar2-month icon-14 me-1"></span>
-                  <codx-label
-                    class="text-gray-600 me-2 label-colon"
-                    [formModel]="view.formModel"
-                    fiedName="aLObjectID"
-                  >
-                  </codx-label>
-
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.aLObjectID }}</span>
-                  </span>
-                </div>
-              </div>
-              <!-- isNotScan-isNotOTKow -->
-              <div class="row mb-2">
-                <div class="col d-flex align-items-center" id="isNotScan">
-                  <span
-                    class="icon-i-check-circle-fill icon-14 text-primary me-1"
+              <!-- Không cần quét thẻ/ Không tính công ngoài giờ -->
+              <div class="row form-group">
+                <div class="col-4 d-flex align-items-center" id="isNotScan">
+                  <span class="me-2"
+                    ><codx-input
+                      field="IsNotScan"
+                      [formModel]="eInfoFormModel"
+                      [crrValue]="infoPersonal?.isNotScan"
+                      [disabled]="true"
+                    ></codx-input
                   ></span>
 
                   <codx-label
-                    class="text-gray-600 me-2 label-colon"
-                    [formModel]="view.formModel"
-                    fiedName="isNotScan"
+                    class="fw-bold me-2"
+                    [formModel]="eInfoFormModel"
+                    fiedName="IsNotScan"
                   >
                   </codx-label>
-
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isNotScan }}</span>
-                  </span>
                 </div>
-                <div class="col d-flex align-items-center" id="isNotOTKow">
-                  <span
-                    class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
+                <div class="col-8 d-flex align-items-center" id="isNotOTKow">
+                  <span class="me-2">
+                    <codx-input
+                      field="IsExpertTrain"
+                      [formModel]="eInfoFormModel"
+                      [crrValue]="infoPersonal?.isNotOTKow"
+                      [disabled]="true"
+                    ></codx-input
                   ></span>
                   <codx-label
-                    class="text-gray-600 me-2 label-colon"
-                    [formModel]="view.formModel"
+                    class="fw-bold me-2"
+                    [formModel]="eInfoFormModel"
                     fiedName="isNotOTKow"
                   >
                   </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isNotOTKow }}</span>
-                  </span>
                 </div>
               </div>
-              <!-- isNotLateEarly-isNotCLeaveKow-->
-              <div class="row mb-2">
-                <div class="col d-flex align-items-center" id="isNotLateEarly">
-                  <span
-                    class="icon-i-check-circle-fill icon-14 text-primary me-1"
+              <!-- Không tính đi trễ/ Không tính nghỉ bù-->
+              <div class="row form-group">
+                <div
+                  class="col-4 d-flex align-items-center"
+                  id="isNotLateEarly"
+                >
+                  <span class="me-2"
+                    ><codx-input
+                      field="IsNotLateEarly"
+                      [formModel]="eInfoFormModel"
+                      [crrValue]="infoPersonal?.isNotLateEarly"
+                      [disabled]="true"
+                    ></codx-input
                   ></span>
 
                   <codx-label
-                    class="text-gray-600 me-2 label-colon"
-                    [formModel]="view.formModel"
+                    class="fw-bold me-2"
+                    [formModel]="eInfoFormModel"
                     fiedName="isNotLateEarly"
                   >
                   </codx-label>
-
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isNotScan }}</span>
-                  </span>
                 </div>
-                <div class="col d-flex align-items-center" id="isNotCLeaveKow">
-                  <span
-                    class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
+                <div
+                  class="col-8 d-flex align-items-center"
+                  id="isNotCLeaveKow"
+                >
+                  <span class="me-2"
+                    ><codx-input
+                      field="IsNotCLeaveKow"
+                      [formModel]="eInfoFormModel"
+                      [crrValue]="infoPersonal?.isNotCLeaveKow"
+                      [disabled]="true"
+                    ></codx-input
                   ></span>
                   <codx-label
-                    class="text-gray-600 me-2 label-colon"
-                    [formModel]="view.formModel"
-                    fiedName="isNotCLeaveKow"
+                    class="fw-bold me-2"
+                    [formModel]="eInfoFormModel"
+                    fiedName="IsNotCLeaveKow"
                   >
                   </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isNotCLeaveKow }}</span>
-                  </span>
                 </div>
               </div>
             </div>
@@ -2752,7 +2819,7 @@
         </div>
 
         <!-- Thông tin tính lương -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0303">
+        <div class="user-profile overview d-block mb-3" [id]="eCalSalaryFuncID">
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
@@ -2765,10 +2832,10 @@
                   <!-- <codx-label
                     [formModel]="view.formModel"
                     name="lblEmployeeJobGeneralTitle"
-                    [default]="getFormHeader('HRTEM0303')"
+                    [default]="getFormHeader(eCalSalaryFuncID)"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0303')}}
+                  {{ getFormHeader(eCalSalaryFuncID) }}
                 </div>
               </div>
 
@@ -2782,85 +2849,100 @@
               </div>
             </div>
 
-            <div #salaryInfo class="mb-1 mt-6">
-              <!-- payrollGroupID-currencyID -->
-              <div class="row mb-2">
-                <div class="col d-flex align-items-center" id="payrollGroupID">
-                  <span class="icon-supervisor_account icon-14 me-1"></span>
+            <div #salaryInfo class="mb-1 mt-6" *ngIf="eInfoFormModel">
+              <!-- Nhóm tính lương/ Nguyên tệ tính lương/ Mức đóng thuế -->
+              <div class="row form-group">
+                <div class="col">
                   <codx-label
-                    class="text-gray-600 me-2 label-colon"
-                    [formModel]="view.formModel"
-                    fiedName="payrollGroupID"
+                    class="text-gray-600 me-2 fw-normal"
+                    fiedName="PayrollGroupID"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
-
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.timeCardNo }}</span>
-                  </span>
+                  <div class="d-flex align-items-center">
+                    <span class="fw-bolder">
+                      {{
+                        infoPersonal?.payrollGroupID
+                          | formatvalue : eInfoFormModel : "payrollGroupID"
+                          | async
+                      }}</span
+                    >
+                  </div>
                 </div>
-                <div class="col d-flex align-items-center" id="currencyID">
-                  <span
-                    class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-                  ></span>
+                <div class="col">
                   <codx-label
-                    class="text-gray-600 me-2 label-colon"
-                    [formModel]="view.formModel"
-                    fiedName="currencyID"
+                    class="text-gray-600 me-2 fw-normal"
+                    fiedName="CurrencyID"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.currencyID }}</span>
-                  </span>
+                  <div class="d-flex align-items-center">
+                    <span class="fw-bolder">
+                      {{
+                        infoPersonal?.currencyID
+                          | formatvalue : eInfoFormModel : "currencyID"
+                          | async
+                      }}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <!-- taxTableID-isSettleTax -->
-              <div class="row mb-2">
-                <div class="col d-flex align-items-center" id="taxTableID">
-                  <span
-                    class="icon-local_atm icon-16 text-danger me-1 fw-bold"
-                  ></span>
-
+                <div class="col">
                   <codx-label
-                    class="text-gray-600 me-2 label-colon"
-                    [formModel]="view.formModel"
-                    fiedName="taxTableID"
+                    class="text-gray-600 fw-normal"
+                    fiedName="TaxTableID"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
-
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.taxTableID }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex align-items-center" id="isSettleTax">
-                  <span
-                    class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-                  ></span>
-                  <codx-label
-                    class="text-gray-600 me-2 label-colon"
-                    [formModel]="view.formModel"
-                    fiedName="isSettleTax"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isSettleTax }}</span>
-                  </span>
+                  <div class="d-flex align-items-center">
+                    <span
+                      class="icon-local_atm icon-18 text-danger me-2"
+                    ></span>
+                    <div class="fw-bolder">
+                      {{
+                        infoPersonal?.taxTableID
+                          | formatvalue : eInfoFormModel : "taxTableID"
+                          | async
+                      }}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <!-- advanceAmount -->
-              <div class="row mb-2">
-                <div class="col d-flex align-items-center" id="advanceAmount">
-                  <span class="icon-money icon-14 text-gray-600 me-1"></span>
-
+              <!-- Cam kết quyết toàn thuế/ Tạm ứng lương theo số tiền quyết định -->
+              <div class="row form-group">
+                <div class="col-4">
                   <codx-label
-                    class="text-gray-600 me-2 label-colon"
-                    [formModel]="view.formModel"
-                    fiedName="advanceAmount"
+                    class="text-gray-600 me-2 fw-normal"
+                    fiedName="IsSettleTax"
+                    [formModel]="eInfoFormModel"
                   >
                   </codx-label>
-
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.advanceAmount }}</span>
-                  </span>
+                  <div class="d-flex align-items-center">
+                    <span class="fw-bolder"
+                      ><codx-input
+                        field="IsSettleTax"
+                        [formModel]="eInfoFormModel"
+                        [crrValue]="infoPersonal?.isSettleTax"
+                        [disabled]="true"
+                      ></codx-input>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-8">
+                  <codx-label
+                    class="text-gray-600 me-2 fw-normal"
+                    fiedName="AdvanceAmount"
+                    [formModel]="eInfoFormModel"
+                  >
+                  </codx-label>
+                  <div class="d-flex align-items-center">
+                    <span class="fw-bolder">
+                      {{
+                        infoPersonal?.advanceAmount
+                          | formatvalue : eInfoFormModel : "advanceAmount"
+                          | async
+                      }}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2912,7 +2994,10 @@
     >
       <ng-container>
         <!-- Lương cơ bản -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0401">
+        <div
+          class="user-profile overview d-block mb-3"
+          [id]="eBasicSalaryFuncID"
+        >
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
@@ -2923,60 +3008,169 @@
                   <!-- <codx-label
                     name="lblSalary&Benefit"
                     [formModel]="view.formModel"
-                    [default]="getFormHeader('HRTEM0401')"
+                    [default]="getFormHeader(eBasicSalaryFuncID)"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0401')}}
+
+                  {{ getFormHeader(eBasicSalaryFuncID) }}
                 </div>
               </div>
-              <button
-                class="btn btn-icon btn-sm position-relative ms-2"
-                (click)="handlEmployeeBenefit('add', null)"
-              >
-                <span
-                  class="icon-add icon-20 text-gray-600 text-hover-primary"
-                ></span>
-              </button>
+              <div class="d-flex align-items-center ms-5">
+                <button
+                  class="btn btn-icon btn-sm position-relative ms-2"
+                  (click)="HandleEmployeeBasicSalariesInfo('add', null)"
+                >
+                  <span
+                    class="icon-add icon-20 text-gray-600 text-hover-primary"
+                  ></span>
+                </button>
+                <span class="text-gray-500 ms-2">|</span>
+                <codx-label
+                  class="ms-2"
+                  name="lblSeeAllEBenefit"
+                  [formModel]="view.formModel"
+                  default="Xem tất cả"
+                >
+                </codx-label>
+                <codx-input
+                  class="ms-1"
+                  type="switch"
+                  (valueChange)="valueChangeViewAllEBasicSalary($event)"
+                  [checked]="ViewAllEBasicSalaryFlag"
+                ></codx-input>
+              </div>
             </div>
 
             <div class="mb-1">
-              <div class="d-flex flex-wrap py-3 px-4">
+
                 <div
-                  class="border rounded min-w-250px mw-300px me-4 mb-2"
-                  *ngIf="crrEBSalary != null"
+                  class="me-4 mb-2"
+                  *ngIf="crrEBSalary != null && eBasicSalaryFormmodel"
                 >
                   <codx-temp-full
                     (clickMF)="clickMF($event, crrEBSalary, 'basicSalary')"
                     [dataItem]="crrEBSalary"
-                    [formModel]="view.formModel"
+                    [formModel]="eBasicSalaryFormmodel"
                     [footer]="footerEBSalaries"
-                    cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+                    cardCss="px-2 pt-4 pb-2"
                     [typeMF]="'hover'"
                   >
                   </codx-temp-full>
                   <ng-template #footerEBSalaries let-data>
-                    <div class="d-flex align-items-center mt-1">
-                      <span
-                        class="icon-attach_money text-gray-600 pe-2 icon-14"
-                      ></span
-                      >Lương cơ bản:
-                      {{ crrEBSalary.bSalary }}
-                    </div>
-                    <div class="d-flex align-items-center mt-1">
-                      <span
-                        class="icon-monetization_on text-danger pe-2 icon-14"
-                      ></span
-                      >Lương đóng BH:
-                      {{ crrEBSalary.siSalary }}
-                    </div>
-                    <div class="d-flex align-items-center mt-1">
-                      <span class="icon-event text-gray-600 icon-14 pe-2"></span
-                      >Hiệu lực:
-                      {{ crrEBSalary.effectedDate | fmDT }}
-                      -
-                      {{ crrEBSalary.expiredDate | fmDT }}
+                    <div class="row form-group">
+                      <div class="col">
+                        <codx-label
+                          class="text-gray-600 me-2 fw-normal"
+                          fiedName="BSalary"
+                          [formModel]="eBasicSalaryFormmodel"
+                        >
+                        </codx-label>
+                        <div class="d-flex align-items-center mb-2">
+                          <span class="icon-attach_money icon-16 text-primary me-1"></span>
+                          <span class="fw-bolder text-primary">
+                            <span>{{
+                              data?.bSalary
+                                | formatvalue : eBasicSalaryFormmodel : "bSalary"
+                                | async
+                            }}</span>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <codx-label
+                          class="text-gray-600 me-2 fw-normal"
+                          fiedName="SISalary"
+                          [formModel]="eBasicSalaryFormmodel"
+                        >
+                        </codx-label>
+                        <div class="d-flex align-items-center">
+                          <span class="icon-monetization_on text-danger icon-18 me-2"></span>
+                          <span class="fw-bolder">
+                            {{ data?.siSalary | formatvalue : eBasicSalaryFormmodel : "siSalary"| async}}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <codx-label
+                          class="text-gray-600 fw-normal"
+                          fiedName="EffectedDate"
+                          [formModel]="eBasicSalaryFormmodel"
+                        >
+                        </codx-label>
+    
+                        <div class="d-flex align-items-center mb-2">
+                          <span class="icon-event icon-16 text-gray-800 me-1"></span>
+                          <span class="fw-bolder">
+                            <span>{{
+                              data?.effectedDate
+                                | formatvalue : eBasicSalaryFormmodel : "effectedDate"
+                                | async
+                            }}</span>
+                          </span>
+                          <span class="me-1 ms-1 fw-bolder">-</span>
+                          <span class="fw-bolder">
+                            <span>{{
+                              data?.expiredDate | formatvalue : eBasicSalaryFormmodel : "expiredDate" | async
+                            }}</span>
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </ng-template>
+                </div>
+
+              <div class="" *ngIf="ViewAllEBasicSalaryFlag">
+                <!-- <div
+                  class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5"
+                >
+                  <div class="d-flex me-3">
+                    <codx-label default="Chi tiết" class="text-uppercase">
+                    </codx-label>
+                    <span class="text-gray-500 ms-2"> | </span>
+                    <span>({{ eBasicSalaryRowCount }})</span>
+                  </div>
+                  <div class="d-flex me-3">
+                    <codx-dropdown-select
+                      [cssClass]="'rounded-pill border-1'"
+                      cssPopup="h-350px w-300px"
+                      [isMulti]="true"
+                      type="valuelist"
+                      field="BenefitID"
+                      [refValue]="'HR009'"
+                      (valueChange)="valueChangeFilterBenefit($event)"
+                    ></codx-dropdown-select>
+                    <codx-dropdown-calendar
+                      [cssPopup]="'w-600px h-400px'"
+                      emptyText="Chọn năm..."
+                      [firstChange]="false"
+                      [displayOption]="ops"
+                      [selectedType]="'y'"
+                      [cssClass]="'rounded-pill'"
+                      (change)="valueChangeYearFilterBenefit($event)"
+                    ></codx-dropdown-calendar>
+                  </div>
+                </div> -->
+                <div class="">
+                  <codx-gridview
+                    *ngIf="basicSalaryColumnGrid && eBasicSalaryFormmodel"
+                    #basicSalaryGridview
+                    [formModel]="eBasicSalaryFormmodel"
+                    [columnsGrid]="basicSalaryColumnGrid"
+                    [service]="'HR'"
+                    [assemblyName]="'Core'"
+                    [className]="'DataBusiness'"
+                    [method]="'LoadDataAsync'"
+                    [predicates]="'EmployeeID=@0'"
+                    [dataValues]="data.employeeID"
+                    [pageSize]="numPageSizeGridView"
+                    [rowHeight]="50"
+                    height="240px"
+                  ></codx-gridview>
+                  <!-- [height]="
+                passportRowCount > numPageSizeGridView
+                  ? numPageSizeGridView * 50 - 10
+                  : passportRowCount * 50 + 60
+              " -->
                 </div>
               </div>
             </div>
@@ -2997,12 +3191,12 @@
                     [default]="getFormHeader('HRTEM0402')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0402')}}
+                  {{ getFormHeader("HRTEM0402") }}
                 </div>
               </div>
               <button
                 class="btn btn-icon btn-sm position-relative ms-2"
-                (click)="handlEmployeeBenefit('add', null)"
+                (click)="HandleEmployeeJobSalariesInfo('add', null)"
               >
                 <span
                   class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -3060,7 +3254,7 @@
                     [default]="getFormHeader('HRTEM0403')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0403')}}
+                  {{ getFormHeader("HRTEM0403") }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -3185,7 +3379,7 @@
           </div>
         </div>
         <!-- Tài sản cấp phát -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0406">
+        <div class="user-profile overview d-block mb-3" [id]="eAssetFuncID">
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
@@ -3196,38 +3390,38 @@
                   <!-- <codx-label
                     name="lblDistributedAssets"
                     [formModel]="view.formModel"
-                    [default]="getFormHeader('HRTEM0406')"
+                    [default]="getFormHeader(eAssetFuncID)"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0406')}}
+                  {{ getFormHeader(eAssetFuncID) }}
                   <span class="text-gray-500 ms-2"> | </span>
                   <span class="text-dark fw-bold">
-                    <span>({{eAssetRowCount}})</span>
+                    <span>({{ eAssetRowCount }})</span>
                   </span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
                 <codx-dropdown-select
-                [cssClass]="'rounded-pill border-1'"
-                cssPopup="h-350px w-300px"
-                [isMulti]="true"
-                type="combobox"
-                field="AssetCategory"
-                [refValue]="'AssetCategory'"
-                (valueChange)="valueChangeFilterAssetCategory($event)"
-              ></codx-dropdown-select>
-              <span class="text-gray-500 ms-2">|</span>
+                  [cssClass]="'rounded-pill border-1'"
+                  cssPopup="h-350px w-300px"
+                  [isMulti]="true"
+                  type="combobox"
+                  field="AssetCategory"
+                  [refValue]="'AssetCategory'"
+                  (valueChange)="valueChangeFilterAssetCategory($event)"
+                ></codx-dropdown-select>
+                <span class="text-gray-500 ms-2">|</span>
 
-              <codx-dropdown-calendar
-              [cssPopup]="'w-600px h-400px'"
-                emptyText="Chọn năm..."
-                [firstChange]="false"
-                [displayOption]="ops"
-                [selectedType]="'y'"
-                [cssClass]="'rounded-pill'"
-                (change)="valueChangeYearFilterEAsset($event)"
-              ></codx-dropdown-calendar>
-              <span class="text-gray-500 ms-2">|</span>
+                <codx-dropdown-calendar
+                  [cssPopup]="'w-600px h-400px'"
+                  emptyText="Chọn năm..."
+                  [firstChange]="false"
+                  [displayOption]="ops"
+                  [selectedType]="'y'"
+                  [cssClass]="'rounded-pill'"
+                  (change)="valueChangeYearFilterEAsset($event)"
+                ></codx-dropdown-calendar>
+                <span class="text-gray-500 ms-2">|</span>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="HandlemployeeAssetInfo('add', null)"
@@ -3251,7 +3445,8 @@
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
-              <codx-gridview *ngIf="eAssetColumnGrid"
+                <codx-gridview
+                  *ngIf="eAssetColumnGrid"
                   #eAssetGridView
                   [formModel]="eAssetFormModel"
                   [columnsGrid]="eAssetColumnGrid"
@@ -3266,7 +3461,7 @@
                   [rowHeight]="50"
                   height="240px"
                 ></codx-gridview>
-            </div>
+              </div>
               <div class="d-flex flex-wrap mt-6 mb-3">
                 <div
                   [style.background]="'black'"
@@ -3353,7 +3548,7 @@
                     [default]="getFormHeader('HRTEM0501')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0501')}}
+                  {{ getFormHeader("HRTEM0501") }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -3451,7 +3646,7 @@
                     [default]="getFormHeader('HRTEM0502')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0502')}}
+                  {{ getFormHeader("HRTEM0502") }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -3493,7 +3688,7 @@
                     [default]="getFormHeader('HRTEM0503')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0503')}}
+                  {{ getFormHeader("HRTEM0503") }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -3518,9 +3713,6 @@
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
-
-
-
                 <!-- <codx-gridview-v2
                       idField="recID"
                       [columnsGrid]="rewardColumnsGrid"
@@ -3558,7 +3750,7 @@
                     [default]="getFormHeader('HRTEM0504')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0504')}}
+                  {{ getFormHeader("HRTEM0504") }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -3606,7 +3798,10 @@
           <hr />
         </div>
         <!-- Kinh nghiệm trước đây -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0505">
+        <div
+          class="user-profile overview d-block mb-3"
+          [id]="eExperienceFuncID"
+        >
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
@@ -3617,13 +3812,13 @@
                   <!-- <codx-label
                     name="lblExperience"
                     [formModel]="view.formModel"
-                    [default]="getFormHeader('HRTEM0505')"
+                    [default]="getFormHeader(eExperienceFuncID)"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0505')}}
+                  {{ getFormHeader(eExperienceFuncID) }}
                   <span class="text-gray-500 ms-2"> | </span>
                   <span class="text-dark fw-bold">
-                    <span>({{eExperienceRowCount}})</span>
+                    <span>({{ eExperienceRowCount }})</span>
                   </span>
                 </div>
               </div>
@@ -3642,21 +3837,22 @@
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
-              <codx-gridview *ngIf="eExperienceColumnGrid"
-                #eExperienceGridView
-                [formModel]="eExperienceFormModel"
-                [columnsGrid]="eExperienceColumnGrid"
-                [service]="'HR'"
-                [assemblyName]="'Core'"
-                [className]="'DataBusiness'"
-                [method]="'LoadDataAsync'"
-                [predicates]="'EmployeeID=@0'"
-                [dataValues]="data.employeeID"
-                [pageSize]="numPageSizeGridView"
-                [entityName]="'HR_EExperiences'"
-                [rowHeight]="50"
-                height="240px"
-              ></codx-gridview>
+                <codx-gridview
+                  *ngIf="eExperienceColumnGrid"
+                  #eExperienceGridView
+                  [formModel]="eExperienceFormModel"
+                  [columnsGrid]="eExperienceColumnGrid"
+                  [service]="'HR'"
+                  [assemblyName]="'Core'"
+                  [className]="'DataBusiness'"
+                  [method]="'LoadDataAsync'"
+                  [predicates]="'EmployeeID=@0'"
+                  [dataValues]="data.employeeID"
+                  [pageSize]="numPageSizeGridView"
+                  [entityName]="'HR_EExperiences'"
+                  [rowHeight]="50"
+                  height="240px"
+                ></codx-gridview>
               </div>
             </div>
           </div>
@@ -3718,7 +3914,7 @@
                     [default]="getFormHeader('HRTEM0601')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0601')}}
+                  {{ getFormHeader("HRTEM0601") }}
                   <span class="text-gray-500 ms-2"> | </span>
                   <span>({{ degreeRowCount }})</span>
                 </div>
@@ -3838,7 +4034,7 @@
                     [default]="getFormHeader('HRTEM0602')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0602')}}
+                  {{ getFormHeader("HRTEM0602") }}
                   <span class="text-gray-500 ms-2"> | </span>
                   <span>({{ certificateRowCount }})</span>
                 </div>
@@ -3959,7 +4155,7 @@
                     [default]="getFormHeader('HRTEM0603')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0603')}}
+                  {{ getFormHeader("HRTEM0603") }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -3996,7 +4192,12 @@
                 <div class="has-action-menu">
                   <div class="pf-skill d-flex align-items-center ms-9 mb-4">
                     <div class="sk-title w-150px fw-bold">
-                      {{ eSkill?.skillName ?? eSkill?.skillID }}
+                      <!-- {{ eSkill?.skillName ?? eSkill?.skillID }} -->
+                      {{
+                        eSkill?.skillID
+                          | formatvalue : skillFormmodel : "skillID"
+                          | async
+                      }}
                     </div>
 
                     <div
@@ -4082,7 +4283,6 @@
                       placeholder="Kỹ năng"
                       type="valuelist"
                       field="SkillID"
-
                       (valueChange)="valueChangeFilterSkill($event)"
                     ></codx-dropdown-select>
                   </div>
@@ -4110,6 +4310,7 @@
             </div>
           </div>
         </div>
+
         <!-- Đào tạo -->
         <div class="user-profile overview d-block mb-3" id="HRTEM0604">
           <div class="rounded-2 p-4 bg-white">
@@ -4127,13 +4328,33 @@
                     [default]="getFormHeader('HRTEM0604')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0604')}}
+                  {{ getFormHeader("HRTEM0604") }}
+                  <span class="text-gray-500 ms-2">|</span>
+                  <span>({{ trainCourseRowCount }})</span>
+                  <span></span>
+                  <fieldset></fieldset>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
+                <codx-dropdown-select
+                  [cssClass]="'rounded-pill border-1'"
+                  cssPopup="h-350px w-300px"
+                  placeholder="Kỹ năng"
+                  type="valuelist"
+                  field="SkillID"
+                  (valueChange)="valueChangeFilterSkill($event)"
+                ></codx-dropdown-select>
+                <codx-dropdown-select
+                  [cssClass]="'rounded-pill border-1'"
+                  cssPopup="h-350px w-300px"
+                  placeholder="Kỹ năng"
+                  type="valuelist"
+                  field="SkillID"
+                  (valueChange)="valueChangeFilterSkill($event)"
+                ></codx-dropdown-select>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
-                  (click)="addEmployeeTrainCourseInfo()"
+                  (click)="HandleEmployeeTrainCourseInfo('add', data)"
                 >
                   <span
                     class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4155,6 +4376,24 @@
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
+              <div>
+                <codx-gridview
+                  *ngIf="trainCourseColumnGrid"
+                  #trainCourseGridView
+                  [formModel]="trainCourseFormModel"
+                  [columnsGrid]="trainCourseColumnGrid"
+                  [service]="'HR'"
+                  [assemblyName]="'Core'"
+                  [className]="'DataBusiness'"
+                  [method]="'LoadDataAsync'"
+                  [predicates]="'EmployeeID=@0'"
+                  [dataValues]="data.employeeID"
+                  [pageSize]="numPageSizeGridView"
+                  [entityName]="'HR_ETrainCourses'"
+                  [rowHeight]="50"
+                  height="240px"
+                ></codx-gridview>
+              </div>
                 <!-- <codx-gridview-v2
                       idField="recID"
                       [service]="'HR'"
@@ -4238,7 +4477,7 @@
                     [default]="getFormHeader('HRTEM0701')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0701')}}
+                  {{ getFormHeader("HRTEM0701") }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -4254,7 +4493,7 @@
             </div>
 
             <div class="mb-1">
-              <codx-gridview-v2
+              <!-- <codx-gridview-v2
                 idField="recID"
                 [columnsGrid]="rewardColumnsGrid"
                 [service]="'HR'"
@@ -4271,7 +4510,7 @@
                 [contentEditable]="false"
                 [allowResizing]="true"
                 (clickMF)="clickMF($event, null, 'eAwards')"
-              ></codx-gridview-v2>
+              ></codx-gridview-v2> -->
             </div>
           </div>
         </div>
@@ -4294,7 +4533,7 @@
                     [default]="getFormHeader('HRTEM0702')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0702')}}
+                  {{ getFormHeader("HRTEM0702") }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -4310,7 +4549,7 @@
             </div>
 
             <div class="mb-1">
-              <codx-gridview-v2
+              <!-- <codx-gridview-v2
                 idField="recID"
                 [service]="'HR'"
                 [gridViewName]="'grvEDisciplines'"
@@ -4327,7 +4566,7 @@
                 [allowResizing]="true"
                 (clickMF)="clickMF($event, null, 'eDisciplines')"
                 [columnsGrid]="disciplineColumnGrid"
-              ></codx-gridview-v2>
+              ></codx-gridview-v2> -->
             </div>
           </div>
         </div>
@@ -4391,6 +4630,10 @@
                   >
                   </codx-label> -->
                   {{getFormHeader('HRTEM0801')}}
+                  <span class="text-gray-500 ms-2"> | </span>
+                  <span class="text-dark fw-bold">
+                    <span>({{eHealthRowCount}})</span>
+                  </span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -4419,25 +4662,26 @@
                 </button>
               </div>
             </div>
-            <div class="mb-3">
-              <!-- <codx-gridview-v2
-                    idField="recID"
-                    [columnsGrid]=""
-                    [service]="'HR'"
-                    [gridViewName]="'grvEHealths'"
-                    [formName]="'EHealths'"
-                    [assemblyName]="'Core'"
-                    [className]="'DataBusiness'"
-                    [method]="'LoadDataAsync'"
-                    [predicates]="'EmployeeID=@0'"
-                    [autoLoad]="true"
-                    [height]="200"
-                    [dataValues]="data.employeeID"
-                    [entityName]="'HR_EHealths'"
-                    [contentEditable]="false"
-                    [allowResizing]="true"
-                    (clickMF)="clickMF($event, null, 'eHealths')"
-                  ></codx-gridview-v2> -->
+            <div class="mb-1">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+              >
+              <codx-gridview *ngIf="eHealthColumnGrid"
+                  #eHealthsGridView
+                  [formModel]="eHealthFormModel"
+                  [columnsGrid]="eHealthColumnGrid"
+                  [service]="'HR'"
+                  [assemblyName]="'Core'"
+                  [className]="'DataBusiness'"
+                  [method]="'LoadDataAsync'"
+                  [predicates]="'EmployeeID=@0'"
+                  [dataValues]="data.employeeID"
+                  [pageSize]="numPageSizeGridView"
+                  [entityName]="'HR_EHealths'"
+                  [rowHeight]="50"
+                  height="240px"
+                ></codx-gridview>
+            </div>
             </div>
           </div>
         </div>
@@ -4457,12 +4701,38 @@
                   >
                   </codx-label> -->
                   {{getFormHeader('HRTEM0802')}}
+                  <span class="text-gray-500 ms-2"> | </span>
+                  <span class="text-dark fw-bold">
+                    <span>({{eVaccineRowCount}})</span>
+                  </span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
+                <codx-dropdown-select
+                  [cssClass]="'rounded-pill border-1'"
+                  cssPopup="h-350px w-300px"
+                  [isMulti]="true"
+                  type="combobox"
+                  field="VaccineTypeID"
+                  [refValue]="eVaccineGrvSetup.VaccineTypeID.referedValue"
+                  (valueChange)="valueChangeFilterVaccineTypeID($event)"
+                ></codx-dropdown-select>
+
+                <span class="text-gray-500 ms-2">|</span>
+
+                <codx-dropdown-calendar
+                [cssPopup]="'w-600px h-400px'"
+                  emptyText="Năm"
+                  [firstChange]="false"
+                  [displayOption]="ops"
+                  [selectedType]="'y'"
+                  [cssClass]="'rounded-pill'"
+                  (change)="valueChangeYearFilterEVaccine($event)"
+                ></codx-dropdown-calendar>
+              <span class="text-gray-500 ms-2">|</span>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
-                  (click)="addEditEVaccines('add', null)"
+                  (click)="HandleEVaccinesInfo('add', null)"
                 >
                   <span
                     class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4478,7 +4748,7 @@
             </div>
             <div class="mb-1">
               <div class="d-flex flex-wrap mt-6 mb-3">
-                <ng-container *ngFor="let item of lstVaccine">
+                <!-- <ng-container *ngFor="let item of lstVaccine">
                   <div class="mw-300px min-w-300px me-5">
                     <div
                       class="d-flex align-items-center p-1 ps-2 border rounded-2 pf-title mb-3"
@@ -4523,7 +4793,23 @@
                       </ng-container>
                     </div>
                   </div>
-                </ng-container>
+                </ng-container> -->
+
+                <codx-gridview *ngIf="eVaccineColumnGrid"
+                #eVaccinesGridView
+                [formModel]="eVaccineFormModel"
+                [columnsGrid]="eVaccineColumnGrid"
+                [service]="'HR'"
+                [assemblyName]="'Core'"
+                [className]="'DataBusiness'"
+                [method]="'LoadDataAsync'"
+                [predicates]="'EmployeeID=@0'"
+                [dataValues]="data.employeeID"
+                [pageSize]="numPageSizeGridView"
+                [entityName]="'HR_EVaccines'"
+                [rowHeight]="50"
+                height="240px"
+              ></codx-gridview>
               </div>
             </div>
           </div>
@@ -4543,7 +4829,7 @@
                     [default]="getFormHeader('HRTEM0803')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0803')}}
+                  {{ getFormHeader("HRTEM0803") }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -4605,7 +4891,7 @@
                     [default]="getFormHeader('HRTEM0804')"
                   >
                   </codx-label> -->
-                  {{getFormHeader('HRTEM0804')}}
+                  {{ getFormHeader("HRTEM0804") }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -4623,7 +4909,7 @@
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
-                <codx-gridview-v2
+                <!-- <codx-gridview-v2
                   idField="recID"
                   [service]="'HR'"
                   [gridViewName]="'grvEAccidents'"
@@ -4639,7 +4925,7 @@
                   [contentEditable]="false"
                   [allowResizing]="true"
                   (clickMF)="clickMF($event, null, 'eAccidents')"
-                ></codx-gridview-v2>
+                ></codx-gridview-v2> -->
               </div>
             </div>
           </div>
@@ -4915,16 +5201,15 @@
 
 <ng-template #templateEExperienceGridCol4 let-data>
   <div class="has-action-menu">
-    {{data?.position}}
+    {{ data?.position }}
     <codx-mfunc
-    [formModel]="eExperienceFormModel"
-    (clickMF)="clickMF($event, data, 'eExperiences')"
-    [dataItem]="data"
-    type="hover"
-  >
-  </codx-mfunc>
+      [formModel]="eExperienceFormModel"
+      (clickMF)="clickMF($event, data, 'eExperiences')"
+      [dataItem]="data"
+      type="hover"
+    >
+    </codx-mfunc>
   </div>
-  
 </ng-template>
 
 <ng-template #templateEAssetCol1 let-data>
@@ -4937,31 +5222,29 @@
           | async
       }}
     </div>
-      <div>
-        <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
-        {{
-          data?.assetNo
-        }}
-      </div>
+    <div>
+      <i
+        class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"
+      ></i>
+      {{ data?.assetNo }}
+    </div>
   </div>
 </ng-template>
 
 <ng-template #templateEAssetCol2 let-data>
   <div>
-    {{
-      data?.issuedDate | fmDT
-    }}
+    {{ data?.issuedDate | fmDT }}
     <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
   </div>
   <div>
-    {{data?.isAllowReturn}}
+    {{ data?.isAllowReturn }}
   </div>
 </ng-template>
 
 <ng-template #templateEAssetCol3 let-data>
-  <div *ngIf="data.isReturned == true" class="has-action-menu"> 
-    đã thu hồi 
-    {{data?.returnedDate | fmDT}}
+  <div *ngIf="data.isReturned == true" class="has-action-menu">
+    đã thu hồi
+    {{ data?.returnedDate | fmDT }}
     <codx-mfunc
       [formModel]="eAssetFormModel"
       (clickMF)="clickMF($event, data, 'Assets')"
@@ -4971,7 +5254,6 @@
     </codx-mfunc>
   </div>
 </ng-template>
-
 
 <!-- #region Passport columnGrid templates-->
 <ng-template #passportCol1 let-data>
@@ -5170,3 +5452,227 @@
 </ng-template>
 
 <!-- #endregion -->
+
+
+<!-- #region EBasicSalary columnGrid templates-->
+<ng-template #basicSalaryCol1 let-data>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-attach_money icon-16 text-gray-800 me-1"></span>
+      <span class="text-dark">
+        <span>{{
+          data?.bSalary
+            | formatvalue : eBasicSalaryFormmodel : "bSalary"
+            | async
+        }}</span>
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #basicSalaryCol2 let-data>
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon-monetization_on text-danger icon-16 me-1"></span>
+        <span class="text-dark">
+          <span>{{
+            data?.siSalary
+              | formatvalue : eBasicSalaryFormmodel : "siSalary"
+              | async
+          }}</span>
+        </span>
+      </div>
+    </div>
+</ng-template>
+
+<ng-template #basicSalaryCol3 let-data>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-event icon-16 text-gray-800 me-1"></span>
+      <span class="text-dark">
+        <span>{{
+          data?.effectedDate
+            | formatvalue : eBasicSalaryFormmodel : "effectedDate"
+            | async
+        }}</span>
+      </span>
+      <span class="me-1 ms-1">-</span>
+      <span class="text-dark">
+        <span>{{
+          data?.expiredDate | formatvalue : eBasicSalaryFormmodel : "expiredDate" | async
+        }}</span>
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #basicSalaryCol4 let-data>
+  <div class="has-action-menu">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon-event icon-16 text-primary me-1"></span>
+        <span class="text-dark">
+          <span>{{
+            data?.issuedDate
+              | formatvalue : eBasicSalaryFormmodel : "issuedDate"
+              | async
+          }}</span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon-event icon-16 text-danger me-1"></span>
+        <span class="text-dark">
+          <span>{{
+            data?.fromDate
+              | formatvalue : eBasicSalaryFormmodel : "fromDate"
+              | async
+          }}</span>
+        </span>
+        <span class="me-1 ms-1">-</span>
+        <span class="text-dark">
+          <span>{{
+            data?.toDate | formatvalue : eBasicSalaryFormmodel : "toDate" | async
+          }}</span>
+        </span>
+      </div>
+      <codx-mfunc
+        [formModel]="eBasicSalaryFormmodel"
+        (clickMF)="clickMF($event, data, 'basicSalary')"
+        type="hover"
+        [dataItem]="data"
+      >
+      </codx-mfunc>
+    </div>
+  </div>
+</ng-template>
+<!-- #endregion -->
+<!-- #region Đào tạo -->
+<ng-template #templateTrainCourseGridCol1 let-data>
+  <div>
+    {{data?.trainCourseID| formatvalue : trainCourseFormModel : "trainCourseID"| async}}
+  </div>
+  <div>
+    <i></i>
+    {{data?.trainForm| formatvalue : trainCourseFormModel : "trainForm"| async}}
+  </div>
+</ng-template>
+
+<ng-template #templateTrainCourseGridCol2 let-data>
+  <div>
+    <i class="icon-calendar_today"></i>
+    {{data?.trainFrom | fmDT}} - {{data?.trainTo | fmDT}} 
+  </div>
+  <div>
+    <i class="icon-year"></i>
+    {{data?.inYear}}
+  </div>
+</ng-template>
+
+<ng-template #templateTrainCourseGridCol3 let-data>
+  <div class="has-action-menu">
+    <div>
+      {{data?.trainSupplierID| formatvalue : trainCourseFormModel : "trainSupplierID"| async}}
+    </div>
+    <div>
+      <i></i>
+      {{data?.ranking| formatvalue : trainCourseFormModel : "ranking"| async}}
+      <i class="icon-class icon-20 me-1 text-primary"></i>
+      {{data?.totalScore}}
+      <i class="icon-class icon-20 me-1 text-primary"></i>
+      {{data?.result}}
+    </div>
+
+    <codx-mfunc
+    [formModel]="trainCourseFormModel"
+    (clickMF)="clickMF($event, data, 'eTrainCourses')"
+    type="hover"
+    [dataItem]="data"
+  >
+  </codx-mfunc>
+  </div>
+  </ng-template>
+
+<!-- #endregion -->
+
+<ng-template #tempCol1EHealthGrid let-data>
+  <div>
+    <i class="icon-calendar_today"></i>
+    {{
+      data?.healthDate | fmDT
+    }}
+    <i class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></i>
+    {{data?.healthPeriodID | formatvalue : eHealthFormModel : "healthPeriodID" | async}}
+  </div>
+  <div>
+    <i class="icon-add_box"></i>
+    {{data?.healthPlace}}
+  </div>
+</ng-template>
+
+<ng-template #tempCol2EHealthGrid let-data>
+  <div> Loại
+    {{
+      data?.healthType 
+    }}
+  </div>
+  <div>
+    {{data?.finalConclusion}}
+  </div>
+</ng-template>
+
+<ng-template #tempCol3EHealthGrid let-data>
+  <div class="has-action-menu">
+    {{
+      data?.suggestion
+    }}
+    <codx-mfunc
+    [formModel]="eHealthFormModel"
+    (clickMF)="clickMF($event, data, 'eHealth')"
+    type="hover"
+    [dataItem]="data"
+  >
+</codx-mfunc>
+  </div>
+</ng-template>
+
+
+<ng-template #tempEVaccineGridCol1 let-data>
+  <div>
+    {{
+      data?.vaccineTypeID | formatvalue : eVaccineFormModel : "vaccineTypeID" | async
+    }}
+    <i class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></i>
+    {{data?.vaccineName}}
+  </div>
+  <div>
+    {{data?.hopitalID | formatvalue : eVaccineFormModel : "hopitalID" | async}}
+  </div>
+</ng-template>
+
+<ng-template #tempEVaccineGridCol2 let-data>
+  <div>
+    <i class="icon-calendar_today"></i>
+    {{
+      data?.injectDate | fmDT
+    }}
+  </div>
+  <div *ngIf="data?.nextInjectDate">
+    <i class="icon-calendar_today"></i>
+    {{data?.nextInjectDate | fmDT}}
+  </div>
+</ng-template>
+
+<ng-template #tempEVaccineGridCol3 let-data>
+  <div class="has-action-menu">
+    {{
+      data?.note
+    }}
+    <codx-mfunc
+    [formModel]="eVaccineFormModel"
+    (clickMF)="clickMF($event, data, 'eVaccine')"
+    type="hover"
+    [dataItem]="data"
+  >
+</codx-mfunc>
+  </div>
+</ng-template>

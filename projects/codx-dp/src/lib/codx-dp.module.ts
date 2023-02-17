@@ -29,19 +29,18 @@ import { InstancesComponent } from './instances/instances.component';
 import { InstanceDetailComponent } from './instances/instance-detail/instance-detail.component';
 import { PopupAddInstanceComponent } from './instances/popup-add-instance/popup-add-instance.component';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
-import { StagesDetailComponent } from './instances/stages-detail/stages-detail.component';
-import { FieldDetailComponent } from './instances/field-detail/field-detail.component';
 import { InputCustomFieldComponent } from './instances/popup-add-instance/input-custom-field/input-custom-field.component';
 import { PopupMoveStageComponent } from './instances/popup-move-stage/popup-move-stage.component';
 import { PopupMoveReasonComponent } from './instances/popup-move-reason/popup-move-reason.component';
 import { ViewJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/view-job/view-job.component';
-import { PopupAddStaskComponent } from './instances/stages-detail/popup-add-stask/popup-add-stask.component';
-import { PopupCustomFieldComponent } from './instances/popup-custom-field/popup-custom-field.component';
-import { PopupAddGroupTaskComponent } from './instances/stages-detail/popup-add-group-task/popup-add-group-task.component';
 import { PopupTypeTaskComponent } from './dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
 import { StepTaskGroupComponent } from './dynamic-process/popup-add-dynamic-process/step-task/step-task-group/step-task-group.component';
 import { UserComponent } from './dynamic-process/popup-add-dynamic-process/step-task/user/user.component';
-import { PopupRolesInstanceComponent } from './instances/popup-roles-instance/popup-roles-instance.component';
+import { FieldDetailComponent } from './instances/instance-detail/field-detail/field-detail.component';
+import { PopupAddStaskComponent } from './instances/instance-detail/stages-detail/popup-add-stask/popup-add-stask.component';
+import { PopupCustomFieldComponent } from './instances/instance-detail/field-detail/popup-custom-field/popup-custom-field.component';
+import { PopupAddGroupTaskComponent } from './instances/instance-detail/stages-detail/popup-add-group-task/popup-add-group-task.component';
+import { StagesDetailComponent } from './instances/instance-detail/stages-detail/stages-detail.component';
 
 const routes: Routes = [
   {
@@ -91,7 +90,6 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupTypeTaskComponent,
     StepTaskGroupComponent,
     UserComponent,
-    PopupRolesInstanceComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

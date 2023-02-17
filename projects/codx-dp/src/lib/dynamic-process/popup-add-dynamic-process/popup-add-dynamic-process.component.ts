@@ -256,6 +256,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getGrvStep();
     this.getValListDayoff();
     this.autoHandleStepReason();
+    this.loadCbxProccess();
   }
 
   ngAfterViewInit(): void {
@@ -448,9 +449,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   valueChange(e) {
     this.process[e.field] = e.data;
-    if (this.process.applyFor) {
-      this.loadCbxProccess();
+    if(this.action === 'add'){
+      if (this.process.applyFor) {
+        this.loadCbxProccess();
+      }
     }
+
   }
   //#endregion
 
@@ -616,8 +620,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           for (var i = 0; i < value.length; i++) {
             var data = value[i];
             var perm = new DP_Processes_Permission();
-            perm.objectName = data.text != null ? data.text : data.objectName;
-            perm.objectID = data.id != null ? data.id : null;
+            perm.objectName = (data.text != null || data.text != '') ? data.text : data.objectName;
+            perm.objectID = (data.id != null || data.id != '') ? data.id : null;
             perm.objectType = data.objectType;
             perm.full = true;
             perm.create = true;
@@ -641,8 +645,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.objectType = data.objectType;
             perm.roleType = 'P';
             perm.full = false;
-            perm.create = false;
             perm.read = true;
+            perm.create = false;
             perm.assign = false;
             perm.edit = false;
             perm.publish = false;
@@ -662,8 +666,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.objectType = data.objectType;
             perm.roleType = 'F';
             perm.full = false;
-            perm.create = false;
             perm.read = true;
+            perm.create = false;
             perm.assign = false;
             perm.edit = false;
             perm.publish = false;
@@ -689,8 +693,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.objectType = data.objectType;
             perm.roleType = 'P';
             perm.full = false;
-            perm.create = false;
             perm.read = true;
+            perm.create = false;
             perm.assign = false;
             perm.edit = false;
             perm.publish = false;
@@ -1861,6 +1865,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   loadCbxProccess() {
+    debugger;
     this.cache.valueList('DP031').subscribe((data) => {
       this.dpService
         .getlistCbxProccess(this.process?.applyFor)

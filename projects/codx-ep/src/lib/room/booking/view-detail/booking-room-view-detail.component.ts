@@ -16,6 +16,7 @@ import { CodxEpService } from '../../../codx-ep.service';
 import { BookingRoomComponent } from '../booking-room.component';
 import { PopupAddBookingRoomComponent } from '../popup-add-booking-room/popup-add-booking-room.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { Permission } from '@shared/models/file.model';
 @Component({
   selector: 'booking-room-view-detail',
   templateUrl: 'booking-room-view-detail.component.html',
@@ -53,6 +54,7 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   files = [];
   dialog!: DialogRef;
   routerRecID: any;
+  listFilePermission= [];
 
   constructor(
     private injector: Injector,
@@ -99,21 +101,39 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            if(res.bookingAttendees!=null && res.bookingAttendees!=''){
+              let listAttendees = res.bookingAttendees.split(";");
+              listAttendees.forEach((item) => {
+                if(item!=''){
+                  let tmpPer= new Permission()
+                  tmpPer.objectID= item.userID;//
+                  tmpPer.objectType= 'U';
+                  tmpPer.read= true;
+                  tmpPer.share=  true;
+                  tmpPer.download=  true;
+                  tmpPer.isActive=  true;
+                  this.listFilePermission.push(tmpPer);
+                }
+                
+              });
+            }
+            
             this.detectorRef.detectChanges();
+
           }
         });
-      this.files = [];
-      this.api.execSv(
-        'DM',
-        'ERM.Business.DM',
-        'FileBussiness',
-        'GetFilesForOutsideAsync',
-        [this.funcID, this.itemDetail.recID, 'EP_BookingRooms']
-      ).subscribe((res: []) => {
-        if (res) {
-          this.files = res;
-        }
-      });
+      // this.files = [];
+      // this.api.execSv(
+      //   'DM',
+      //   'ERM.Business.DM',
+      //   'FileBussiness',
+      //   'GetFilesForOutsideAsync',
+      //   [this.funcID, this.itemDetail.recID, 'EP_BookingRooms']
+      // ).subscribe((res: []) => {
+      //   if (res) {
+      //     this.files = res;
+      //   }
+      // });
       //this.itemDetail = changes.itemDetail.currentValue;
       this.detectorRef.detectChanges();
     }

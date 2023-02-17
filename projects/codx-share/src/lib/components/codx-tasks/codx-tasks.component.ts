@@ -41,6 +41,7 @@ import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 import { X } from '@angular/cdk/keycodes';
+import { AssignTaskModel } from '../../models/assign-task.model';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -404,7 +405,7 @@ export class CodxTasksComponent
             var idx = this.views.findIndex((obj) => obj.type == x.view);
             if (idx != -1) {
               viewFunc.push(this.views[idx]);
-              if(x.isDefault) this.viewMode = x.view
+              if (x.isDefault) this.viewMode = x.view;
             }
           });
           this.views = viewFunc;
@@ -579,22 +580,20 @@ export class CodxTasksComponent
 
   assignTask(moreFunc, data) {
     this.view.dataService.dataSelected = data;
-    var vllControlShare = 'TM003';
-    var vllRose = 'TM001';
-    var title = moreFunc.customName;
+    let assignModel: AssignTaskModel = {
+      vllRole: 'TM001',
+      title: moreFunc.customName,
+      vllShare: 'TM003',
+      task: this.view.dataService.dataSelected,
+      taskParent: data,
+    };
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
     option.Width = '550px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      [
-        this.view.dataService.dataSelected,
-        vllControlShare,
-        vllRose,
-        title,
-        data,
-      ],
+      assignModel,
       option
     );
     this.dialog.closed.subscribe((e) => {
@@ -1614,7 +1613,7 @@ export class CodxTasksComponent
         }
         //an voi ca TMT03011
         if (
-         (this.funcID == 'TMT03011' || this.funcID == 'TMT05011' )  &&
+          (this.funcID == 'TMT03011' || this.funcID == 'TMT05011') &&
           data.category == '1' &&
           data.createdBy != this.user?.userID &&
           !this.user?.administrator &&
