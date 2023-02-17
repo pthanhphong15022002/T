@@ -308,6 +308,7 @@ export class PopupJobComponent implements OnInit {
         if (x.event && x.event.status == 'Y') {
           groupTask['durationDay'] = this.stepsTasks['durationDay'];
           groupTask['durationHour'] = this.stepsTasks['durationHour'];
+          this.dialog.close({ data: this.stepsTasks, status: this.status });
         }
       });
     }
