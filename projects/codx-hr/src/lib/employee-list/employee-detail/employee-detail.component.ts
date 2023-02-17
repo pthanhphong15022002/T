@@ -237,6 +237,7 @@ export class EmployeeDetailComponent extends UIComponent {
   trainCourseColumnGrid;
   eHealthColumnGrid;
   eVaccineColumnGrid;
+  appointionColumnGrid;
   //#endregion
 
   //#region filter variables of form main eAssets
@@ -292,6 +293,16 @@ export class EmployeeDetailComponent extends UIComponent {
   @ViewChild('basicSalaryCol4', { static: true })
   basicSalaryCol4: TemplateRef<any>;
 
+  // eAppointion - Bổ nhiệm điều chuyển
+  @ViewChild('templateAppointionGridCol1', { static: true })
+  templateAppointionGridCol1: TemplateRef<any>;
+  @ViewChild('templateAppointionGridCol2', { static: true })
+  templateAppointionGridCol2: TemplateRef<any>;
+  @ViewChild('templateAppointionGridCol3', { static: true })
+  templateAppointionGridCol3: TemplateRef<any>;
+  @ViewChild('templateAppointionGridMoreFunc', { static: true })
+  templateAppointionGridMoreFunc: TemplateRef<any>;
+
   //#endregion
 
   //#region gridView viewChild
@@ -299,7 +310,7 @@ export class EmployeeDetailComponent extends UIComponent {
   @ViewChild('visaGridview') visaGridview: CodxGridviewComponent;
   @ViewChild('workPermitGridview') workPermitGridview: CodxGridviewComponent;
   @ViewChild('basicSalaryGridview') basicSalaryGridview: CodxGridviewComponent;
-
+  @ViewChild('appointionGridView') appointionGrid: CodxGridviewComponent;
   //#endregion
 
   //#endregion
@@ -380,6 +391,7 @@ export class EmployeeDetailComponent extends UIComponent {
   trainCourseRowCount;
   eHealthRowCount = 0;
   eVaccineRowCount = 0;
+  appointionRowCount;
   //#endregion
 
   //#region var functionID
@@ -402,6 +414,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
   eHealthFuncID = 'HRTEM0801'; // Khám sức khỏe
   eVaccinesFuncID = 'HRTEM0802'; // Tiêm vắc xin
+  appointionFuncID = 'HRTEM0502';
   //#endregion
 
   //#region var formModel
@@ -420,6 +433,7 @@ export class EmployeeDetailComponent extends UIComponent {
   trainCourseFormModel: FormModel; // Đào tạo
   eHealthFormModel: FormModel; //Khám sức khỏe
   eVaccineFormModel: FormModel; //Tiêm vắc xin
+  appointionFormodel: FormModel;
   //#endregion
 
   //#region headerText
@@ -431,6 +445,7 @@ export class EmployeeDetailComponent extends UIComponent {
   trainCourseHeaderText;
   eHealthHeaderText;
   eVaccineHeaderText;
+  appointionHeaderTexts;
   //#endregion
 
   clickItem(evet) {}
@@ -513,6 +528,10 @@ export class EmployeeDetailComponent extends UIComponent {
           this.eVaccineGrvSetup = res;
           console.log('grv set up của evaccine', this.eVaccineGrvSetup);
         });
+    });
+
+    this.hrService.getFormModel(this.appointionFuncID).then((res) => {
+      this.appointionFormodel = res;
     });
     //#endregion
 
@@ -1128,6 +1147,50 @@ export class EmployeeDetailComponent extends UIComponent {
 
     //#endregion
 
+    //#region get columnGrid EAppointion - Bổ nhiệm điều chuyển
+    this.hrService.getHeaderText(this.appointionFuncID).then((res) => {
+      console.log('headerText bo nhiem dieu chuyen', res);
+
+      this.appointionHeaderTexts = res;
+      this.appointionColumnGrid = [
+        {
+          headerText:
+            this.appointionHeaderTexts['Appoint'] ?? '' + '| Hiệu lực',
+          template: this.templateAppointionGridCol1,
+          width: '150',
+        },
+        {
+          headerText: this.appointionHeaderTexts['PositionID'],
+          template: this.templateAppointionGridCol2,
+          width: '150',
+        },
+        {
+          headerText: this.appointionHeaderTexts['OrgUnitID'] + '/ Phòng ban',
+          template: this.templateAppointionGridCol3,
+          width: '150',
+        },
+        // {
+        //   template: this.templateAppointionGridMoreFunc,
+        //   width: '150',
+        // },
+      ];
+    });
+
+    let ins = setInterval(() => {
+      if (this.appointionGrid) {
+        clearInterval(ins);
+        let t = this;
+        this.appointionGrid.dataService.onAction.subscribe((res) => {
+          if (res) {
+            if (res.type != null && res.type == 'loaded') {
+              t.appointionRowCount = res['data'].length;
+            }
+          }
+        });
+        this.appointionRowCount = this.appointionGrid.dataService.rowCount;
+      }
+    }, 100);
+    //#endregion
     this.formModelVisa = new FormModel();
 
     this.routeActive.queryParams.subscribe((params) => {
@@ -2703,17 +2766,18 @@ export class EmployeeDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (res) {
-        // this.hrService
-        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
-        //   .subscribe((p) => {
-        //     this.crrJobSalaries = p;
-        //   });
-        console.log('current val', res.event);
-        this.crrEBSalary = res.event;
-        this.df.detectChanges();
-      }
-      if (res?.event) this.view.dataService.clear();
+      // if (res?.event) {
+      //   // this.hrService
+      //   //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+      //   //   .subscribe((p) => {
+      //   //     this.crrJobSalaries = p;
+      //   //   });
+      //   console.log('current val', res.event);
+      //   this.crrEBSalary = res.event;
+      //   this.df.detectChanges();
+      // }
+      if (!res?.event && this.basicSalaryGridview)
+        (this.basicSalaryGridview.dataService as CRUDService).clear();
       this.df.detectChanges();
     });
   }
@@ -3032,21 +3096,33 @@ export class EmployeeDetailComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '850px';
+    option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       PopupEappointionsComponent,
       {
         actionType: actionType,
-        indexSelected: this.lstAppointions.indexOf(data),
+        //indexSelected: this.lstAppointions.indexOf(data),
         employeeId: this.data.employeeID,
-        lstEAppointions: this.lstAppointions,
-        funcID: 'HRT03020402',
+        //lstEAppointions: this.lstAppointions,
+        funcID: this.appointionFuncID,
+        appointionObj: data,
         headerText: 'Bổ nhiệm - Điều chuyển',
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if (res.event) {
+        if (actionType == 'add' || actionType == 'copy') {
+          this.appointionRowCount += 1;
+          (this.appointionGrid.dataService as CRUDService)
+            .add(res.event)
+            .subscribe();
+        } else if (actionType == 'edit') {
+          (this.appointionGrid.dataService as CRUDService)
+            .update(res.event)
+            .subscribe();
+        }
+      }
       this.df.detectChanges();
     });
   }
@@ -3558,7 +3634,6 @@ export class EmployeeDetailComponent extends UIComponent {
   @ViewChild('eVaccinesGridView') eVaccinesGrid: CodxGridviewComponent;
   @ViewChild('gridView') grid: CodxGridviewComponent;
   @ViewChild('degreeGridView') degreeGrid: CodxGridviewComponent;
-  @ViewChild('appointionGridView') appointionGrid: CodxGridviewComponent;
   @ViewChild('templateBenefitID', { static: true })
   templateBenefitID: TemplateRef<any>;
   @ViewChild('templateBenefitAmt', { static: true })
