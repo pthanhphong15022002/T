@@ -4065,7 +4065,7 @@
                   (valueChange)="valueChangeViewAllESkill($event)"
                   [checked]="ViewAllEskillFlag"
                 ></codx-input>
-
+              
                 <!-- <span class="text-gray-500 ms-2">|</span>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-1"
@@ -4135,6 +4135,7 @@
                       [dataItem]="eSkill.listSkill[0]"
                     >
                     </codx-mfunc> -->
+
                   </div>
                 </div>
               </ng-container>
@@ -4167,14 +4168,24 @@
                   </div>
 
                   <div class="d-flex me-3">
-                    <codx-dropdown-select
+                    <!-- <codx-dropdown-select
                       [cssClass]="'rounded-pill border-1'"
                       cssPopup="h-350px w-300px"
                       placeholder="Kỹ năng"
                       type="valuelist"
                       field="SkillID"
                       (valueChange)="valueChangeFilterSkill($event)"
-                    ></codx-dropdown-select>
+                    ></codx-dropdown-select> -->
+
+                    <codx-dropdown-select
+                    [cssClass]="'rounded-pill border-1'"
+                    cssPopup="h-350px w-300px"
+                    [isMulti]="true"
+                    type="combobox"
+                    field="SkillID"
+                    [refValue]="eSkillgrvSetup.SkillID.referedValue"
+                    (valueChange)="valueChangeFilterSkillID($event)"
+                  ></codx-dropdown-select>
                   </div>
                 </div>
 
