@@ -117,7 +117,7 @@
         </div>
         <ng-container class="d-flex align-items-center fw-bold" *ngIf="data?.online && data.onlineUrl">
           <button (click)="connectMeetingNow()" class=" bg-transparent border-0 text-start">
-            <span class="text-decoration-underline  fw-bold" style="color: #007bff;">{{ data?.onlineUrl }}</span>
+            <span class="text-decoration-underline text-primary fw-bold" >{{ data?.onlineUrl }}</span>
           </button>
         </ng-container>
       </div>
@@ -156,11 +156,11 @@
           </codx-combobox-popup>
         </ng-container> -->
 
-        <ng-container *ngIf="isPopupUserCbb">
+        <!-- <ng-container *ngIf="isPopupUserCbb">
           <codx-combobox-popup [comboboxName]="'Users'" [field]="'cbbUser'" [multiple]="true" [width]="700"
             [height]="600" [value]="" [formModel]="formModel" (clickSave)="valueCbxUserChange($event)">
           </codx-combobox-popup>
-        </ng-container>
+        </ng-container> -->
 
         <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
           <div class="symbol-group-badge" *ngIf="curUser != null">
