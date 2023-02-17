@@ -23,7 +23,6 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { PopupAddDynamicProcessComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
 import { PopupJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/popup-job/popup-job.component';
 import { PopupAddCustomFieldComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-custom-field.component';
-import { PopupRolesDynamicComponent } from './dynamic-process/popup-add-dynamic-process/popup-roles-dynamic/popup-roles-dynamic.component';
 import { PopupViewsDetailsProcessComponent } from './dynamic-process/popup-views-details-process/popup-views-details-process.component';
 import { InstancesComponent } from './instances/instances.component';
 import { InstanceDetailComponent } from './instances/instance-detail/instance-detail.component';
@@ -41,6 +40,7 @@ import { PopupAddStaskComponent } from './instances/instance-detail/stages-detai
 import { PopupCustomFieldComponent } from './instances/instance-detail/field-detail/popup-custom-field/popup-custom-field.component';
 import { PopupAddGroupTaskComponent } from './instances/instance-detail/stages-detail/popup-add-group-task/popup-add-group-task.component';
 import { StagesDetailComponent } from './instances/instance-detail/stages-detail/stages-detail.component';
+import { PopupRolesDynamicComponent } from './dynamic-process/popup-roles-dynamic/popup-roles-dynamic.component';
 
 const routes: Routes = [
   {
