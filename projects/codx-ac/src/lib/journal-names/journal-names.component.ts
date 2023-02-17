@@ -7,6 +7,7 @@ import {
   ViewChild,
   TemplateRef,
 } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'lib-journal-names',
@@ -16,6 +17,7 @@ export class JournalNamesComponent extends UIComponent {
   //#region Constructor
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   views: Array<ViewModel> = [];
+  testimg = 'UyNhiemChi.svg';
   moreFuncName: string = '';
   button = {
     id: 'btnAdd',
@@ -63,11 +65,32 @@ export class JournalNamesComponent extends UIComponent {
 
   add(e) {
     let data = {
-      journalName: 'Phiếu chi',
-      description: 'Phiếu chi',
-      functionID: 'ACT0410',
+      JournalName: 'Giấy báo có',
+      Description: 'Giấy báo có',
+      PostedLayer: '1',
+      JournalType: '1',
+      AllowEdited: true,
+      InvoiceEdited: true,
+      Approval: '1',
+      CurrencyControl: true,
+      ExchangeRate: 1.0,
+      TransactionText: '1',
+      IsTransfer: true,
+      IsSettlement: true,
+      IsAllocation: true,
+      PeriodControl: true,
+      PostSubControl: true,
+      QtyControl: true,
+      AssetControl: true,
+      LoanControl: true,
+      ProjectControl: true,
+      Stop: false,
+      Owner: '1',
+      CreatedBy: 'THINH',
+      FunctionID: 'ACT0428',
+      Thumbnail: 'GiayBaoCo.JPG',
     };
-    this.api.exec('AC', 'JournalNamesBusiness', 'AddAsync', data).subscribe();
+    // this.api.exec('AC', 'JournalNamesBusiness', 'AddAsync', data).subscribe();
   }
   //#region Method
 }
