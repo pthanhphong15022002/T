@@ -1,6 +1,16 @@
-<codx-views #view [autoLoad]="true" entityName="HR_OrganizationUnits" idField="orgUnitID" [views]="views"
-  [selectedFirst]="false" (selectedChange)="onSelectionChanged($event)" [button]="button"
-  (buttonClick)="btnClick($event)" (viewChanged)="changeView($event)">
+<codx-views #view [autoLoad]="true" 
+  entityName="HR_OrganizationUnits" 
+  idField="OrgUnitID" 
+  service="HR"
+  assemblyName="ERM.Business.HR"
+  className = 'OrganizationUnitsBusiness'
+  method = 'GetDataOrgAsync'
+  [views]="views"
+  [selectedFirst]="false" 
+  (selectedChange)="onSelectionChanged($event)" 
+  [button]="button"
+  (buttonClick)="btnClick($event)" 
+  (viewChanged)="changeView($event)">
 </codx-views>
 <!-- tree -->
 <ng-template #tempTree let-data>
@@ -26,11 +36,13 @@
 </ng-template>
 <!-- tree list -->
 <ng-template #tmpList>
-  <lib-organization-list [view]="view" [dataService]="dataService" [formModel]="view.formModel"
+  <lib-organization-list [view]="view" 
+    [dataService]="dataService" 
+    [formModel]="view.formModel"
     [orgUnitID]="orgUnitID"></lib-organization-list>
 </ng-template>
 
-<!--  -->
+<!--template sài tạm mode view list -->
 
 <ng-template #itemTemplate let-item>
   <div class="d-flex flex-column p-4 border-bottom">

@@ -5,7 +5,6 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 import {
   ButtonModel,
   CodxFormDynamicComponent,
@@ -63,13 +62,13 @@ export class OrgorganizationComponent extends UIComponent {
         }
       }
     });
-    this.dataService = new CRUDService(this.inject);
-    this.dataService.service = 'HR';
-    this.dataService.assemblyName = 'ERM.Business.HR';
-    this.dataService.className = 'OrganizationUnitsBusiness';
-    this.dataService.method = 'GetOrgAsync';
-    this.dataService.idField = 'OrgUnitID';
-    this.dataService.request.entityName = 'HR_OrganizationUnits';
+    // this.dataService = new CRUDService(this.inject);
+    // this.dataService.service = 'HR';
+    // this.dataService.assemblyName = 'ERM.Business.HR';
+    // this.dataService.className = 'OrganizationUnitsBusiness';
+    // this.dataService.method = 'GetOrgAsync';
+    // this.dataService.idField = 'OrgUnitID';
+    // this.dataService.request.entityName = 'HR_OrganizationUnits';
     this.detectorRef.detectChanges();
   }
 
@@ -110,10 +109,10 @@ export class OrgorganizationComponent extends UIComponent {
       //   },
       // },
     ];
-    this.view.dataService.parentIdField = 'ParentID';
+    // this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
-    this.dataService.currentComponent =
-      this.view?.dataService?.currentComponent;
+    // this.dataService.currentComponent =
+      // this.view?.dataService?.currentComponent;
   }
 
   //loadEmployList
@@ -139,15 +138,16 @@ export class OrgorganizationComponent extends UIComponent {
   // delete data
   deleteData(data: any) {
     if (data) {
-      (this.dataService as CRUDService).delete([data], true).subscribe();
+      this.view.dataService.delete(data,true).subscribe();
+      // (this.dataService as CRUDService).delete([data], true).subscribe();
     }
   }
   // edit data
   editData(data: any, event: any) {
-    if (this.dataService) {
+    if (this.view) {
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.dataService;
+      option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       let object = {
         data: data,
@@ -165,7 +165,7 @@ export class OrgorganizationComponent extends UIComponent {
         if (res.event) {
           let org = res.event[0];
           let tmpOrg = res.event[1];
-          this.dataService.update(tmpOrg).subscribe();
+          this.view.dataService.update(tmpOrg).subscribe();
           this.view.dataService.add(org).subscribe();
         }
       });
@@ -176,13 +176,13 @@ export class OrgorganizationComponent extends UIComponent {
     if (data && text) {
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.dataService;
+      option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      this.dataService.dataSelected = JSON.parse(JSON.stringify(data));
-      (this.dataService as CRUDService).copy(data).subscribe((result: any) => {
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
+      this.view.dataService.copy(data).subscribe((result: any) => {
         if (result) {
           let data = {
-            dataService: this.dataService,
+            dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: result,
             function: this.view.formModel.funcID,
@@ -223,14 +223,13 @@ export class OrgorganizationComponent extends UIComponent {
       option.Width = '550px';
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      let currentView: any = this.view.currentView;
-      if (currentView) {
-        this.codxTreeView = currentView.currentComponent?.treeView;
-      }
+      // let currentView: any = this.view.currentView;
+      // if (currentView) {
+      //   this.codxTreeView = currentView.currentComponent?.treeView;
+      // }
       this.view.dataService.addNew()
       .subscribe((result: any) => {
         if (result) {
-          result["parentID"] = this.orgUnitID;
           let data = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,
@@ -249,11 +248,25 @@ export class OrgorganizationComponent extends UIComponent {
             if (res.event.save.data) {
               let org = res.event.save.data;
               this.orgUnitID = org.orgUnitID;
+              this.getOrgInfor(org);
               this.detectorRef.detectChanges();
             }
           });
         }
       });
     }
+  }
+
+  // convert org to tmp
+  getOrgInfor(data){
+    this.api.execSv("HR","ERM.Business.HR","OrganizationUnitsBusiness","GetOrgInforAsync",[data.orgUnitID])
+    .subscribe((res:any) => {
+      if(res){
+        data.parentName = res.parentName;
+        data.employeeManager = res.employeeManager;
+        data.positionName = res.positionName;
+        this.view.dataService.update(data).subscribe();
+      }
+    });
   }
 }
