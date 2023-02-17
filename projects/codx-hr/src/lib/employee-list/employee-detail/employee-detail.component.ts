@@ -212,7 +212,8 @@ export class EmployeeDetailComponent extends UIComponent {
   lstAwards: any = [];
 
   //#region getGridView
-  eVaccineGrvSetup
+  eVaccineGrvSetup;
+  eSkillgrvSetup;
   //#endregion
 
   //#region ColumnsGrid
@@ -243,6 +244,7 @@ export class EmployeeDetailComponent extends UIComponent {
   startDateEAssetFilterValue;
   endDateEAssetFilterValue;
   filterEAssetPredicates: string;
+  filterESkillPredicates: string;
   //#endregion
 
   //#region filter variables of form main eVaccine
@@ -250,6 +252,10 @@ export class EmployeeDetailComponent extends UIComponent {
   startDateEVaccineFilterValue;
   endDateEVaccineFilterValue;
   filterEVaccinePredicates: string;
+  filterBySkillIDArr: any = [];
+  startDateESkillFilterValue;
+  endDateESkillFilterValue;
+  
   //#endregion
 
   //#region ViewChild template
@@ -466,6 +472,11 @@ export class EmployeeDetailComponent extends UIComponent {
 
     this.hrService.getFormModel(this.skillFuncID).then((res) => {
       this.skillFormmodel = res;
+      this.cache.gridViewSetup(this.skillFormmodel.formName, this.skillFormmodel.gridViewName)
+      .subscribe((res) => {
+        this.eSkillgrvSetup = res;
+        console.log('skillllllll', this.eSkillgrvSetup);
+      })
     });
 
     this.hrService.getFormModel(this.degreeFuncID).then((res) => {
@@ -478,6 +489,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
     this.hrService.getFormModel(this.trainCourseFuncID).then((res) => {
       this.trainCourseFormModel = res;
+
     });
     this.hrService.getFormModel(this.eHealthFuncID).then((res) => {
       this.eHealthFormModel = res;
@@ -3825,8 +3837,7 @@ export class EmployeeDetailComponent extends UIComponent {
       });
     }
     else if(this.filterByVaccineTypeIDArr.length > 0 && this.startDateEVaccineFilterValue == undefined || this.startDateEVaccineFilterValue == null){
-      let i = 0;
-      for(i; i< this.filterByVaccineTypeIDArr.length; i++){
+      for(let i = 0; i< this.filterByVaccineTypeIDArr.length; i++){
         if(i>0){
           this.filterEVaccinePredicates +=' or '
         }
@@ -3845,6 +3856,54 @@ export class EmployeeDetailComponent extends UIComponent {
       });
     }
     
+  }
+
+  UpdateESkillPredicate(){
+    this.filterESkillPredicates = ""
+    if(this.filterBySkillIDArr.length > 0 && this.startDateESkillFilterValue != null){
+      this.filterESkillPredicates = '('
+      let i = 0;
+      for(i; i< this.filterBySkillIDArr.length; i++){
+        if(i>0){
+          this.filterESkillPredicates +=' or '
+        }
+        this.filterESkillPredicates += `SkillID==@${i}`
+      }
+      this.filterESkillPredicates += ') ';
+      this.filterESkillPredicates +=  `and (InjectDate>="${this.startDateESkillFilterValue}" and InjectDate<="${this.endDateESkillFilterValue}")`;
+      
+      (this.skillGrid.dataService as CRUDService).setPredicates([this.filterESkillPredicates],[this.filterBySkillIDArr.join(';')])
+      .subscribe((item) => {
+        console.log('item tra ve sau khi loc 1', item);
+      });
+    }
+    else if(this.filterBySkillIDArr.length > 0 && this.startDateESkillFilterValue == undefined || this.startDateESkillFilterValue == null){
+      let i = 0;
+      for(i; i< this.filterBySkillIDArr.length; i++){
+        if(i>0){
+          this.filterESkillPredicates +=' or '
+        }
+        this.filterESkillPredicates += `SkillID==@${this.filterBySkillIDArr[i]}`
+      }
+
+      (this.skillGrid.dataService as CRUDService).setPredicates([this.filterESkillPredicates],[this.filterBySkillIDArr.join(';')])
+      .subscribe((item) => {
+        console.log('item tra ve sau khi loc 2', item);
+      });
+    }
+    else if(this.startDateESkillFilterValue != null){
+      (this.skillGrid.dataService as CRUDService).setPredicates([`InjectDate>="${this.startDateESkillFilterValue}" and InjectDate<="${this.endDateESkillFilterValue}"`], [])
+      .subscribe((item) => {
+        console.log('item tra ve sau khi loc 3', item);
+      });
+    }
+    
+  }
+
+
+  valueChangeFilterSkillID(evt){
+    this.filterESkillPredicates = evt.data;
+    this.UpdateESkillPredicate();
   }
 
   valueChangeFilterVaccineTypeID(evt) {
