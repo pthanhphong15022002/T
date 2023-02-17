@@ -55,7 +55,7 @@ export class PopupRolesDynamicComponent implements OnInit {
   }
 
   //#region changePermissions click current
-  changePermission(index) {
+  async changePermission(index) {
     if (this.currentPemission > -1) {
       let oldIndex = this.currentPemission;
       if (
