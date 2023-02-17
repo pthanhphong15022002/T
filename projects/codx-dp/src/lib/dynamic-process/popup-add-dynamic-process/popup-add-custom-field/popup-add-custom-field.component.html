@@ -141,12 +141,7 @@
         </codx-input>
       </div>
       <ng-container
-        *ngIf="
-          field.dataType == 'C' ||
-          field.dataType == 'V' ||
-          field.dataType == 'M' ||
-          field.dataType == '1'
-        "
+        *ngIf="field.dataType == 'L'"
       >
         <div class="form-group">
           <codx-label
@@ -183,6 +178,7 @@
       <div class="form-group" *ngIf="field.dataType == 'A'">
         <codx-input
           type="checkbox"
+          field="multiselect"
           (valueChange)="valueChange($event)"
           labelPosition="After"
           label="Cho phép chọn nhiều giá trị"

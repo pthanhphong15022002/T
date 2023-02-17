@@ -1,7 +1,7 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { CacheService, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import { log } from 'console';
-import { DP_Instances_Steps_TaskGroups } from '../../../models/models';
+import { DP_Instances_Steps_TaskGroups } from 'projects/codx-dp/src/lib/models/models';
 
 @Component({
   selector: 'lib-popup-add-group-task',

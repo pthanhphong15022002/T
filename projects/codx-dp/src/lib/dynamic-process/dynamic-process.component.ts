@@ -444,11 +444,15 @@ export class DynamicProcessComponent
   //#endregion
 
   getNameAppyFor(value: string) {
-    return this.listAppyFor.find((x) => x.value === value).default ?? '';
+   return this.listAppyFor?.length > 0 ? (this.listAppyFor.find((x) => x.value === value)?.default ?? '') :'' ;
   }
   //#endregion đang test
 
   viewDetailProcess(data) {
+    let isRead = this.checkPermissionRead(data);
+    if (!isRead) {
+      return
+    }
     let isCreate = data.create ? true : false;
     let obj = {
       data: data,
