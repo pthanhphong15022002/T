@@ -16,6 +16,7 @@ import {
   RequestOption,
   SidebarModel,
 } from 'codx-core';
+import moment from 'moment';
 import { CodxDpService } from '../../codx-dp.service';
 import { DP_Instances, DP_Instances_Steps } from '../../models/models';
 
@@ -34,14 +35,14 @@ export class PopupAddInstanceComponent implements OnInit {
   titleAction: string = '';
 
   gridViewSetup: any;
-  action:any;
+  action: any;
   tabInfo: any[] = [];
   tabContent: any[] = [];
   listInstances: DP_Instances[] = [];
-  formModelCrr : FormModel;
+  formModelCrr: FormModel;
 
   instanceNo: string;
-  listStepCbx:any;
+  listStepCbx: any;
 
   instance: DP_Instances;
 
@@ -97,7 +98,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.action === 'add'){
+    if (this.action === 'add') {
       this.autoClickedSteps();
     }
   }
@@ -140,8 +141,13 @@ export class PopupAddInstanceComponent implements OnInit {
   valueChangeCustom(event) {
     if (event && event.e && event.data) {
       var result = event.e?.data;
-      var index = this.listStep.findIndex((x) => x.recID == event.data.stepID);
-      debugger
+      var field = event.data
+      if (field.dataType == 'D') {
+        result = event.e?.data.fromDate;
+      }
+
+      var index = this.listStep.findIndex((x) => x.recID == field.stepID);
+
       if (index != -1) {
         if (this.listStep[index].fields?.length > 0) {
           let idxField = this.listStep[index].fields.findIndex(
@@ -158,7 +164,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   valueChangeUser(event) {
-    if(event.data){
+    if (event.data) {
       this.instance.owner = event?.data;
     }
   }
@@ -166,8 +172,7 @@ export class PopupAddInstanceComponent implements OnInit {
   beforeSave(option: RequestOption) {
     if (this.action === 'add') {
       option.methodName = 'AddInstanceAsync';
-    }
-    else if (this.action === 'edit') {
+    } else if (this.action === 'edit') {
       option.methodName = 'EditInstanceAsync';
     }
     option.data = [this.instance, this.listStep];
@@ -183,11 +188,11 @@ export class PopupAddInstanceComponent implements OnInit {
         }
       });
   }
-  deleteListReason(listStep:any): void{
+  deleteListReason(listStep: any): void {
     listStep.pop();
     listStep.pop();
   }
   autoClickedSteps() {
-    this.instance.stepID =  this.listStep[0].stepID;
+    this.instance.stepID = this.listStep[0].stepID;
   }
 }

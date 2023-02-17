@@ -529,70 +529,72 @@
       </div>
 </ng-template>
 <ng-template #tabContact>
-    <div class="row mx-0 mt-3">
-        <div class="col-11 ps-0">
-          <div class="form-group">
-            <codx-label
-            [formModel]="form.formModel"
-            default="Danh sách người liên hệ"           
-          ></codx-label>
-          </div>   
-        </div>
-        <div class="col-1 ps-0">
-          <div class="form-group">
-            <span (click)="openPopupContact()">
-              <i class="fa-sharp fa-solid fa-plus"></i>
-              <i class="fa-solid fa-user-group"></i>
-            </span>        
-          </div>
+  <div class="row mx-0 mt-3">
+      <div class="col-11 ps-0">
+        <div class="form-group">
+          <codx-label
+          [formModel]="form.formModel"
+          default="Danh sách người liên hệ"           
+        ></codx-label>
+        </div>   
+      </div>
+      <div class="col-1 ps-0">
+        <div class="form-group">
+          <span (click)="openPopupContact()">
+            <i class="fa-sharp fa-solid fa-plus"></i>
+            <i class="fa-solid fa-user-group"></i>
+          </span>        
         </div>
       </div>
-      <div class="row pb-5" *ngFor="let item of objectContact">
-        <div class="col-6 ps-0">
-          <div class="d-flex align-items-top">
-            <div class="me-4">
-              <div>
-                <codx-img [objectId]="item?.recID" [objectName]="item?.contactName"
-                             [objectType]="formModel?.entityName" [width]="50">
-                </codx-img>
+    </div>
+    <div class="d-flex" *ngFor="let item of objectContact">
+    <div class="row pb-5" >
+      <div class="col-6 ps-0">
+        <div id="itemcontact" class="d-flex align-items-top">
+          <div class="me-4">
+            <div>
+              <codx-img [objectId]="item?.recID" [objectName]="item?.contactName"
+                           [objectType]="formModel?.entityName" [width]="50">
+              </codx-img>
+            </div>
+          </div>
+          <div class="d-flex flex-column space_personal">
+            <div class="fw-bold text-dark fs-5">
+              <span>{{item.contactName}}</span>
+            </div>
+            <div class="me-2">
+              {{item.jobTitle}}
+            </div>
+            <div class="d-flex">
+            <div class="row mx-0 mt-3">
+              <div class="col-6 ps-0">
+                <div class="d-flex">
+                  <span class="icon-email icon-16 me-1 text-gray-500"></span>
+                  <span>{{item.email}}</span>   
+                </div>   
               </div>
             </div>
-            <div class="d-flex flex-column space_personal">
-              <div class="fw-bold text-dark fs-5">
-                <span>{{item.contactName}}</span>
-              </div>
-              <div class="me-2">
-                {{item.jobTitle}}
-              </div>
-              <div class="d-flex">
-              <div class="row mx-0 mt-3">
-                <div class="col-6 ps-0">
+            <div class="row mx-0 mt-3">
+              <div class="col-6 pe-0">
                   <div class="d-flex">
-                    <span class="icon-email icon-16 me-1 text-gray-500"></span>
-                    <span>{{item.email}}</span>   
-                  </div>   
-                </div>
-              </div>
-              <div class="row mx-0 mt-3">
-                <div class="col-6 pe-0">
-                    <div class="d-flex">
-                      <span class="icon-phone_android icon-16 me-1 text-gray-500"></span>
-                      <span>{{item.phone}}</span>       
-                    </div>
+                    <span class="icon-phone_android icon-16 me-1 text-gray-500"></span>
+                    <span>{{item.phone}}</span>       
                   </div>
-              </div>
-              </div>
-              <div class="d-flex" *ngFor="let value of valuelist">
-                <span *ngIf="item.contactType == value.value">{{value.text}}</span>
-              </div>
+                </div>
             </div>
-            <div class="d-flex align-items-center">
-              <span (click)="editobject(item)" class="icon-edit icon-16 py-1"></span>
-              <span (click)="deleteobject(item)"  class="icon-delete icon-16"></span>
             </div>
-          </div>
+            <div class="d-flex" *ngFor="let value of valuelist">
+              <span *ngIf="item.contactType == value.value">{{value.text}}</span>
+            </div>
+          </div>       
         </div>
-      </div>
+      </div>    
+    </div>
+    <div class="d-flex align-items-center">
+      <span (click)="editobject(item)" class="icon-edit icon-16 py-1"></span>
+      <span (click)="deleteobject(item)"  class="icon-delete icon-16"></span>
+    </div>
+    </div>
 </ng-template>
 <ng-template #footer>
     <div class="d-flex justify-content-end">

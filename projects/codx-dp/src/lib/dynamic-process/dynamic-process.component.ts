@@ -28,7 +28,7 @@ import {
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
 import { PopupViewsDetailsProcessComponent } from './popup-views-details-process/popup-views-details-process.component';
-import { PopupRolesDynamicComponent } from './popup-add-dynamic-process/popup-roles-dynamic/popup-roles-dynamic.component';
+import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 
 @Component({
   selector: 'lib-dynamic-process',

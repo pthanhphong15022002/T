@@ -19,6 +19,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   dialog!: DialogRef;
   warehouses:WareHouses;
   objectContact: Array<Contact> = [];
+  objectContactDelete: Array<Contact> = [];
   valuelist:any;
   warehouseID: any;
   warehouseName: any;
@@ -185,25 +186,15 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   }
   deleteobject(data: any) {
       let index = this.objectContact.findIndex(
-        (x) => x.reference == data.reference && x.contactID == data.contactID
+        (x) => x.reference == data.reference && x.recID == data.recID
       );
       this.objectContact.splice(index, 1);
-      this.api
-        .exec('ERM.Business.BS', 'ContactBookBusiness', 'DeleteAsync', [
-          this.warehouseID,
-          data,
-        ])
-        .subscribe((res: any) => {
-          if (res) {
-            this.notification.notify('Xóa thành công');
-          }
-        });
+      this.objectContactDelete.push(data);
   }
   //#endregion
 
   //#region CRUD
   onSave(){
-    console.log(this.warehouses);
     if (this.warehouseID.trim() == '' || this.warehouseID == null) {
       this.notification.notifyCode(
         'SYS009',
@@ -266,6 +257,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
               this.objecttype,
               this.warehouseID,
               this.objectContact,
+              this.objectContactDelete
             ])
             .subscribe((res: []) => {});
           this.dialog.close();
