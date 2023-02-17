@@ -9,6 +9,7 @@ import { UMConversion } from '../../models/UMConversion.model';
   styleUrls: ['./pop-add-conversion.component.css']
 })
 export class PopAddConversionComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('form') public form: CodxFormComponent;
   dialog!: DialogRef;
   headerText:string;
@@ -18,6 +19,7 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
   toUMID:any;
   fromUMID:any;
   conversion:any;
+  inverted:any;
   umconversion:UMConversion;
   constructor(
     private inject: Injector,
@@ -36,6 +38,7 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
     this.itemID = '';
     this.toUMID = '';
     this.conversion = '';
+    this.inverted = false;
     if (dialogData.data?.umid != null) {
       this.fromUMID = dialogData.data?.umid;
     }
@@ -45,6 +48,11 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
       this.toUMID = this.umconversion.toUMID;
       this.conversion = this.umconversion.conversion;
       this.fromUMID = this.umconversion.fromUMID;
+      if (this.umconversion.fromUMID == 1) {
+        this.inverted = true;
+      }else{
+        this.inverted = false;
+      }
     }
     this.cache.gridViewSetup('UMConversion', 'grvUMConversion').subscribe((res) => {
       if (res) {
@@ -52,7 +60,9 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
       }
     });
    }
+//#endregion
 
+//#region Init
    onInit(): void {
   }
   ngAfterViewInit() {
@@ -61,11 +71,19 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
       this.umconversion = this.form.formGroup.value;
       this.umconversion.fromUMID = this.fromUMID;
       this.umconversion.recID = Guid.newGuid();
+      this.umconversion.inverted = 0;
     }
-    
   }
-  valueChange(e:any){
-    this.umconversion[e.field] = e.data;
+  //#endregion
+
+  //#region Function
+  valueChangeInverted(e:any){
+    this.inverted = e.data
+    if (e.data) {
+      this.umconversion[e.field] = 1;
+    }else{
+      this.umconversion[e.field] = 0;
+    }  
   }
   valueChangeItemID(e:any){
     this.itemID = e.data;
@@ -79,6 +97,9 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
     this.conversion = e.data;
     this.umconversion[e.field] = e.data;
   }
+  //#endregion
+
+  //#region CRUD
   onSave(){
     if (this.itemID.trim() == '' || this.itemID == null) {
       this.notification.notifyCode(
@@ -100,16 +121,16 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
       this.notification.notifyCode(
         'SYS009',
         0,
-        '"' + this.gridViewSetup['ToUMID'].headerText + '"'
+        '"' + this.gridViewSetup['Conversion'].headerText + '"'
       );
       return;
     }
-    // window.localStorage.setItem("dataumconversion",JSON.stringify(this.umconversion));
-    // this.dialog.close();
-    console.log(this.umconversion);
+    window.localStorage.setItem("dataumconversion",JSON.stringify(this.umconversion));
+    this.dialog.close();
   }
-
+  //#endregion
 }
+//#region Guid
 class Guid {
   static newGuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
@@ -122,3 +143,4 @@ class Guid {
     );
   }
 }
+//#endregion

@@ -133,7 +133,7 @@
         <div *ngIf="listSteps != null && listSteps.length > 0">
           <div class="d-flex arrow-steps flex-container">
             <div
-              *ngFor="let item of listSteps; index as i"
+              *ngFor="let item of listStepNew; index as i"
               id="step-click"
               style="flex-grow: 1"
               [ngClass]="item.stepStatus === '1' || item.stepStatus === '4' || item.stepStatus === '5' ? 'step current':  item.stepStatus === '3' ? 'step old': 'step' "

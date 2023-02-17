@@ -48,13 +48,13 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
       this.bankAcctID =  dialogData.data?.data.bankAcctID;
       this.bankID = dialogData.data?.data.bankID;
       this.owner = dialogData.data?.data.owner;
-      console.log(this.bankaccount);
     }
   }
 //#endregion
 
   //#region Init
 onInit(): void {
+  
   }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
@@ -94,14 +94,14 @@ onInit(): void {
       );
       return;
     }
-    if (this.bankID.trim() == '' || this.bankID == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['BankID'].headerText + '"'
-      );
-      return;
-    }
+    // if (this.bankID.trim() == '' || this.bankID == null) {
+    //   this.notification.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.gridViewSetup['BankID'].headerText + '"'
+    //   );
+    //   return;
+    // }
     if (this.owner.trim() == '' || this.owner == null) {
       this.notification.notifyCode(
         'SYS009',

@@ -26,6 +26,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   gridViewSetup:any;
   address: Address;
   objectContactAddress:Array<Contact> = [];
+  objectContactAddressDelete:Array<Contact> = [];
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -179,19 +180,9 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     });
   }
   deleteobject(data:any,type:any){
-      let index = this.objectContactAddress.findIndex(x => x.reference == data.reference && x.contactID == data.contactID);
+      let index = this.objectContactAddress.findIndex(x => x.reference == data.reference && x.recID == data.recID);
       this.objectContactAddress.splice(index, 1);
-      this.api.exec(
-        'ERM.Business.BS',
-        'ContactBookBusiness',
-        'DeleteContactAddressAsync',
-        [this.objectype,data]
-      ).subscribe((res:any)=>{
-        if (res) {
-          this.notification
-          .notify("Xóa thành công");
-        }
-      }); 
+      this.objectContactAddressDelete.push(data);
   }
   //#endregion
 
@@ -247,6 +238,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     // }
     window.localStorage.setItem("dataaddress",JSON.stringify(this.address));
     window.localStorage.setItem("datacontactaddress",JSON.stringify(this.objectContactAddress));
+    window.localStorage.setItem("datacontactaddressdelete",JSON.stringify(this.objectContactAddressDelete));
     this.dialog.close();
   } 
   //#endregion

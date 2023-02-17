@@ -15,6 +15,7 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  RequestOption,
   UIComponent,
 } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
@@ -28,6 +29,7 @@ import { PopAddConversionComponent } from '../pop-add-conversion/pop-add-convers
   styleUrls: ['./pop-add-mearsure.component.css'],
 })
 export class PopAddMearsureComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('form') form: CodxFormComponent;
   title: string;
   headerText: string;
@@ -39,6 +41,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
   umid:any;
   umName:any;
   objectUmconversion: Array<UMConversion> = [];
+  objectUmconversionDelete: Array<UMConversion> = [];
   tabInfo: any[] = [
     { 
       icon: 'icon-info', 
@@ -67,17 +70,36 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
     this.unitsofmearsure = dialog.dataService!.dataSelected;
     this.umid = '';
     this.umName = '';
+    if (this.unitsofmearsure.umid != null) {
+      this.umid = this.unitsofmearsure.umid;
+      this.umName = this.unitsofmearsure.umName;
+      this.acService
+        .loadData(
+          'ERM.Business.BS',
+          'UMConversionBusiness',
+          'LoadDataAsync',
+          [this.umid]
+        )
+        .subscribe((res: any) => {
+          this.objectUmconversion = res;
+        });
+    }
     this.cache.gridViewSetup('UnitsOfMearsure', 'grvUnitsOfMearsureAC').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
       }
     });
   }
+//#endregion
 
+//#region Init
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
   }
+  //#endregion
+
+  //#region Functione
   setTitle(e: any) {
     this.title = this.headerText;
     this.dt.detectChanges();
@@ -175,8 +197,15 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
       });
   }
   deleteobjectConversion(data:any){
-
+    let index = this.objectUmconversion.findIndex(
+      (x) => x.recID == data.recID
+    );
+    this.objectUmconversion.splice(index, 1);
+    this.objectUmconversionDelete.push(data);
   }
+  //#endregion
+
+  //#region CRUD
   onSave(){
     if (this.umid.trim() == '' || this.umid == null) {
       this.notification.notifyCode(
@@ -194,5 +223,50 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
       );
       return;
     }
+    if (this.formType == 'add') {
+      this.dialog.dataService
+        .save((opt: RequestOption) => {
+          opt.methodName = 'AddAsync';
+          opt.className = 'UnitsOfMearsureBusiness';
+          opt.assemblyName = 'BS';
+          opt.service = 'BS';
+          opt.data = [this.unitsofmearsure];
+          return true;
+        })
+        .subscribe((res) => {
+          if (res.save) {
+            this.acService
+              .addData('ERM.Business.BS', 'UMConversionBusiness', 'AddAsync', [
+                this.objectUmconversion
+              ])
+              .subscribe((res: []) => {});
+          }
+          this.dialog.close();
+          this.dt.detectChanges();
+        })
+    }  
+    if (this.formType == 'edit') {
+      this.dialog.dataService
+        .save((opt: RequestOption) => {
+          opt.methodName = 'UpdateAsync';
+          opt.className = 'UnitsOfMearsureBusiness';
+          opt.assemblyName = 'BS';
+          opt.service = 'BS';
+          opt.data = [this.unitsofmearsure];
+          return true;
+        })
+        .subscribe((res) => {
+          if (res.save || res.update) {
+            this.acService
+              .addData('ERM.Business.BS', 'UMConversionBusiness', 'UpdateAsync', [
+                this.objectUmconversion,this.objectUmconversionDelete
+              ])
+              .subscribe((res: []) => {});
+          }
+          this.dialog.close();
+          this.dt.detectChanges();
+        })
+    } 
   }
+  //#endregion
 }
