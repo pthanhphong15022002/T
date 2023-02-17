@@ -19,7 +19,7 @@
             default="Số tài khoản"
           ></codx-label>
             <codx-input
-                    [crrValue]="form.data != null ? form.data.bankAcctID : bankAcctID"
+                    [crrValue]="bankAcctID"
                     [formModel]="form.formModel"
                     field="bankAcctID"
                     (valueChange)="valueChangeBankAcctID($event)"
@@ -35,7 +35,7 @@
             default="Ngân hàng"      
           ></codx-label>
           <codx-input 
-          [crrValue]="form.data != null ? form.data.bankID : bankID"
+          [crrValue]="bankID"
           type="combobox" 
           refValue="BanksAC"
           field="bankID"
@@ -52,7 +52,7 @@
         default="Tên chủ tài khoản"
       ></codx-label>
         <codx-input
-                [crrValue]="form.data != null ? form.data.owner : owner"
+                [crrValue]="owner"
                 [formModel]="form.formModel"
                 field="owner"
                 (valueChange)="valueChangeOwner($event)"

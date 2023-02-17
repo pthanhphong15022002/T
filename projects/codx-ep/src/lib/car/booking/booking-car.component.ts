@@ -333,6 +333,18 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       }        
     });
   }
+  getListAttendees(resources:any){
+    if(resources){
+      let attendees='';
+      for(let i=0;i<resources.length;i++){
+        attendees+=resources[i]?.userID+';';
+      }
+      return attendees;
+    }
+    else {
+      return '';
+    }
+  }
   getResourceName(resourceID:any){
     this.tempCarName='';
     this.listCar.forEach(r=>{

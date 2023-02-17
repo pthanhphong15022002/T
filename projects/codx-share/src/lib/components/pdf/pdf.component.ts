@@ -418,52 +418,60 @@ export class PdfComponent
           }
         });
     }
-
-    document.onclick = (e) => {
-      let hlaCmt = document.getElementById('hla-Cmt');
-      if (hlaCmt) {
-        if (
-          e.target &&
-          (e.target as HTMLElement).classList.contains('highlighted')
-        ) {
-          hlaCmt.style.display = 'initial';
-          hlaCmt.style.top = e.clientY + 20 + 'px';
-          hlaCmt.style.left = e.clientX + 5 + 'px';
-          this.curCmtContent = this.curSelectedHLA.comment?.content ?? '';
-          let inputCmt = document.getElementById(
-            'input-Cmt'
-          ) as HTMLInputElement;
-          inputCmt.value = this.curCmtContent;
-        } else {
-          if (!(e.target as HTMLElement).classList.contains('hla-Cmt')) {
-            hlaCmt.style.display = 'none';
+    if(document)
+    {
+      document.onclick = (e) => {
+        let hlaCmt = document.getElementById('hla-Cmt');
+        if (hlaCmt) {
+          if (
+            e.target &&
+            (e.target as HTMLElement).classList.contains('highlighted')
+          ) {
+            hlaCmt.style.display = 'initial';
+            hlaCmt.style.top = e.clientY + 20 + 'px';
+            hlaCmt.style.left = e.clientX + 5 + 'px';
+            this.curCmtContent = this.curSelectedHLA.comment?.content ?? '';
+            let inputCmt = document.getElementById(
+              'input-Cmt'
+            ) as HTMLInputElement;
+            inputCmt.value = this.curCmtContent;
+          } else {
+            if (!(e.target as HTMLElement).classList.contains('hla-Cmt')) {
+              hlaCmt.style.display = 'none';
+            }
           }
         }
+      };
+      if(document.getElementById('add-cmt-btn'))
+      {
+        //add cmt
+        document.getElementById('add-cmt-btn').onclick = (e) => {
+          this.curCmtContent = (
+            document.getElementById('input-Cmt') as HTMLInputElement
+          ).value;
+          let tmpCmt: comment = {
+            author: this.user.userName,
+            content: this.curCmtContent,
+          };
+          this.curSelectedHLA.comment = tmpCmt;
+          this.changeHLComment();
+        };
       }
-    };
-    //add cmt
-    document.getElementById('add-cmt-btn').onclick = (e) => {
-      this.curCmtContent = (
-        document.getElementById('input-Cmt') as HTMLInputElement
-      ).value;
-      let tmpCmt: comment = {
-        author: this.user.userName,
-        content: this.curCmtContent,
-      };
-      this.curSelectedHLA.comment = tmpCmt;
-      this.changeHLComment();
-    };
-
-    //remove cmt
-    document.getElementById('delete-cmt-btn').onclick = (e) => {
-      this.curSelectedHLA.comment = {
-        author: '',
-        content: '',
-      };
-      this.curCmtContent = '';
-      (document.getElementById('input-Cmt') as HTMLInputElement).value = '';
-      this.changeHLComment();
-    };
+      if(document.getElementById('delete-cmt-btn'))
+      {
+        //remove cmt
+        document.getElementById('delete-cmt-btn').onclick = (e) => {
+          this.curSelectedHLA.comment = {
+            author: '',
+            content: '',
+          };
+          this.curCmtContent = '';
+          (document.getElementById('input-Cmt') as HTMLInputElement).value = '';
+          this.changeHLComment();
+        };
+      }
+    }
+   
 
     //this.hideShowTab();
   }

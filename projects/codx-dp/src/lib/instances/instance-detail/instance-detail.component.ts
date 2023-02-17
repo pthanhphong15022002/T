@@ -18,6 +18,7 @@ import {
 import { CRUDService, ApiHttpService, CacheService } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
+import { log } from 'console';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -28,13 +29,13 @@ export class InstanceDetailComponent implements OnInit {
   @Input() formModel: any;
   @Input() dataService: CRUDService;
   @Input() recID: any;
-  @ViewChild('locationCBB') locationCBB: any;
   @Output() progressEvent = new EventEmitter<object>();
   @Output() moreFunctionEvent = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @Input() stepName: string;
-  progress = '0';
+  @Input() progress = '0';
   @Input() dataSelect: any;
+  @Input() listStepNew: any;
   id: any;
   totalInSteps: any;
   @Input() listSteps: DP_Instances_Steps[] = [];
@@ -54,7 +55,14 @@ export class InstanceDetailComponent implements OnInit {
   //gantchat
   ganttDs = [];
   dataColors = [];
-  taskFields: any;
+  taskFields = {
+    id: 'recID',
+    name: 'name',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    type: 'type',
+    color:'color'
+  };
 
   constructor(
     private dpSv: CodxDpService,
@@ -63,19 +71,12 @@ export class InstanceDetailComponent implements OnInit {
     private changeDetec: ChangeDetectorRef,
     private popupInstances: InstancesComponent
   ) {
-
+   
   }
 
   ngOnInit(): void {
-    this.taskFields = {
-      id: 'recID',
-      name: 'name',
-      startDate: 'startDate',
-      endDate: 'endDate',
-      type: 'type',
-      color:'color'
-    };
-    this.getDataGanttChart(this.recID);
+   console.log(this.listStepNew);
+   
   }
 
   ngAfterViewInit(): void {
@@ -98,15 +99,17 @@ export class InstanceDetailComponent implements OnInit {
       this.dataSelect = changes['dataSelect'].currentValue;
       this.currentStep = this.dataSelect.currentStep;
       this.GetStepsByInstanceIDAsync(this.id);
-      if (this.listSteps == null && this.listSteps.length == 0) {
-        this.tmpTeps = null;
-      }
+      //cái này xóa luon di. chưa chạy xong api mà gọi ra la sai
+      // if (this.listSteps == null && this.listSteps.length == 0) {
+      //   this.tmpTeps = null;
+      // }
+      this.getDataGanttChart(this.recID);
     }
     console.log(this.formModel);
   }
 
-  GetStepsByInstanceIDAsync(insID) {
-    this.dpSv.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
+  GetStepsByInstanceIDAsync(insID){
+     this.dpSv.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
       if (res) {
         this.listSteps = res;
         var total = 0;
@@ -133,8 +136,9 @@ export class InstanceDetailComponent implements OnInit {
         this.stepName = '';
         this.progress = '0';
         this.tmpTeps = null;
-      }
-    });
+      } 
+      this.listStepNew = this.handleListStep(this.listStepNew,this.listSteps); 
+    }); 
   }
 
   getStepsByInstanceID(list) {
@@ -229,5 +233,16 @@ export class InstanceDetailComponent implements OnInit {
   getColor(recID){
     var idx =  this.ganttDs.findIndex(x=>x.recID==recID) ;
     return  this.ganttDs[idx]?.color
+  }
+
+  handleListStep(listStepNew:any, listStep:any){
+  const mapList = new Map(listStep.map(item => [item.stepID, item.stepStatus]));
+  
+  var updatedArray = listStepNew.map(item => ({
+    ...item,
+    stepStatus: mapList.get(item.stepID) || item.stepStatus || ''// Lấy giá trị từ Map, nếu không có thì giữ nguyên
+  }));
+    let list =  updatedArray.map(x=> {return {stepId: x.stepID, stepName: x.stepName, stepStatus: x.stepStatus}});
+  return list;
   }
 }

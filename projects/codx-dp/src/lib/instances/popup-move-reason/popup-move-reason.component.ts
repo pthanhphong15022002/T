@@ -94,17 +94,19 @@ export class PopupMoveReasonComponent implements OnInit {
   }
 
   onSave() {
-    // if(this.stepIdClick === this.stepIdOld) {
-    //   this.notiService.notifyCode('DP001');
-    //   return;
-    // }
+    if(this.reasonStep.reasonControl === true && this.listReasonClick.length > 0) {
+      this.notiService.notifyCode('Chọn lý do kìa bạn');
+      return;
+    }
     // else {
+    
       this.beforeSave();
     // }
 
   }
   beforeSave() {
-    var data = [this.instances,this.listReasonClick, this.moveProccess, this.memoStep, this.isReason];
+    this.reasonStep.reasons = this.listReasonClick;
+    var data = [this.instances.recID, this.moveProccess, this.reasonStep, this.isReason];
     this.codxDpService.moveReasonByIdInstance(data).subscribe((res)=> {
       if(res){
         this.instances = res[0];
@@ -120,32 +122,6 @@ export class PopupMoveReasonComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
       }
     })
-    // if(this.instancesStepOld.stepID === this.IdSuccess || this.instancesStepOld.stepID === this.IdFail ) {
-    //   this.instance.stepID = this.stepIdOld;
-    //   this.instancesStepOld.stepID = this.stepIdOld;
-    //   this.stepIdOld = '';
-    //   this.isReason = true;
-    // }
-    // else {
-    //   this.instance.stepID = this.stepIdClick;
-    // }
-
-    // var data = [this.instance.recID,this.stepIdOld ,this.instancesStepOld];
-    // this.codxDpService.moveStageByIdInstance(data).subscribe((res)=> {
-    //   if(res){
-    //     this.listStep = res;
-    //     var obj ={
-    //       listStep: this.listStep,
-    //       instance: this.instance,
-    //       isReason: this.isReason,
-    //     };
-    //     this.dialog.close(obj);
-    //     // this.dialog.dataService.clear();
-    //     this.notiService.notifyCode('Chuyển tiếp oke nha');
-
-    //     this.changeDetectorRef.detectChanges();
-    //   }
-    // })
   }
   checkValue($event,data){
     if($event && $event.currentTarget.checked){
@@ -159,7 +135,7 @@ export class PopupMoveReasonComponent implements OnInit {
   }
   valueChange($event){
     if($event){
-      this.memoStep = $event.data;
+      this.reasonStep.memo = $event.data;
     }
   }
 
@@ -170,7 +146,6 @@ export class PopupMoveReasonComponent implements OnInit {
     reason.stepID = this.reasonStep.stepID;
     reason.instanceID = this.instances.recID;
     reason.createdBy = this.userId;
-//    reason.createdOn = Date.UTC();
     reason.reasonType = this.isReason ? '1' : '2';
     return reason;
   }
@@ -181,9 +156,9 @@ export class PopupMoveReasonComponent implements OnInit {
   }
 
   cbxChange($event) {
-    // if($event){
-    //   this.stepReason.newProcessID = $event;
-    // }
+    if($event){
+      this.moveProccess = $event;
+    }
 
   }
 }

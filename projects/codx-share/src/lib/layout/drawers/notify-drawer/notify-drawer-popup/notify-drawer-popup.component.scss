@@ -1,0 +1,19 @@
+.dots {
+    height: 6px;
+    width: 6px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  
+.codx-notification-filter {
+  display: flex;
+  justify-content: end;
+  right: 52px;
+  top: 18px;
+}
+
+.codx-notification-filter .btn {
+  border-radius: 20px !important;
+}
