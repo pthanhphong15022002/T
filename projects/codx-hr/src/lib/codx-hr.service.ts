@@ -378,23 +378,33 @@ export class CodxHrService {
     );
   }
 
-  updateEmployeeTrainCourseInfo(data) {
+  updateEmployeeTrainCourseInfo(data: any, functionID : string) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'ETrainCoursesBusiness',
       'EditETraincourseAsync',
+      [data, functionID]
+    );
+  }
+
+  deleteEmployeeTrainCourseInfo(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ETrainCoursesBusiness',
+      'DeleteETraincourseAsync',
       data
     );
   }
 
-  addETraincourse(data: any) {
+  addETraincourse(data: any, functionID: string) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'ETrainCoursesBusiness',
       'AddETraincourseAsync',
-      data
+      [data, functionID]
     );
   }
   //#endregion
@@ -1056,7 +1066,7 @@ export class CodxHrService {
   //#endregion
 
   //#region EExperience
-  GetListByEmployeeIDAsync(data) {
+  GetExperienceListByEmployeeIDAsync(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -1802,6 +1812,16 @@ export class CodxHrService {
       'ERM.Business.Core',
       'DataBusiness',
       'LoadDataCbxAsync',
+      [dataRequest]
+    );
+  }
+
+  loadData(service: string, dataRequest: DataRequest = null) {
+    return this.api.execSv<any>(
+      service,
+      'ERM.Business.Core',
+      'DataBusiness',
+      'LoadDataAsync',
       [dataRequest]
     );
   }

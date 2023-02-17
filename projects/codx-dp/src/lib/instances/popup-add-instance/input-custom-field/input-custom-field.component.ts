@@ -51,21 +51,28 @@ export class InputCustomFieldComponent implements OnInit {
 
   ngOnInit(): void {
     //data test
-    // this.customField.isRequired = true;
-    // this.customField.note = 'Nhập số lượng';
-    // this.customField.fieldName = 'số lượng';
-    // this.customField.title = 'Số lượng nhân viên làm việc';
-    // this.customField.rank = 10;
-    // this.customField.rankIcon = 'fas fa-ambulance';
-    // this.customField.multiselect = true;
-    //  this.customField.dataType = 'T';
-    //  this.customField.dataFormat = 'T';
-
-    this.allowMultiFile = this.customField.multiselect ? '1' : '0';
-    if (this.customField.dataFormat == 'D') this.formatDate = 'd';
-    if (this.customField.dataFormat == 'DT') this.formatDate = 'F';
-    if (this.customField.DataType == 'P')
-      this.listIdUser = this.customField?.dataValue ?? '';
+   
+    switch (this.customField.dataType) {
+      case 'D':
+        if (this.customField.dataFormat == '3') this.formatDate = 'd';
+        if (
+          this.customField.dataFormat == '1' ||
+          this.customField.dataFormat == '2'
+        )
+          this.formatDate = 'F';
+        if (
+          this.customField.dataFormat == '4' ||
+          this.customField.dataFormat == '5'
+        )
+          this.formatDate = 't';
+        break;
+      case 'P':
+        this.listIdUser = this.customField?.dataValue ?? '';
+        break;
+      case 'A':
+        this.allowMultiFile = this.customField.multiselect ? '1' : '0';
+        break;
+    }
   }
 
   valueChange(e) {

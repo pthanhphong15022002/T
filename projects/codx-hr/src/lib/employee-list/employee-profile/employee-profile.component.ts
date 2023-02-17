@@ -974,7 +974,7 @@ export class EmployeeProfileComponent extends UIComponent {
               op.dataValue = params.employeeID;
               op.predicate = 'EmployeeID=@0';
               (op.page = 1),
-              this.hrService.GetListByEmployeeIDAsync(op).subscribe((res) => {
+              this.hrService.GetExperienceListByEmployeeIDAsync(op).subscribe((res) => {
                 console.log('e experience', res);
                 this.lstExperience = res;
               });
@@ -1076,7 +1076,7 @@ export class EmployeeProfileComponent extends UIComponent {
         op.entityName = 'HR_EExperiences';
         op.dataValue = params.employeeID;
         op.predicate = 'EmployeeID=@0';
-        this.hrService.GetListByEmployeeIDAsync(op).subscribe((res) => {
+        this.hrService.GetExperienceListByEmployeeIDAsync(op).subscribe((res) => {
           console.log('e experience', res);
           this.lstExperience = res;
         });
