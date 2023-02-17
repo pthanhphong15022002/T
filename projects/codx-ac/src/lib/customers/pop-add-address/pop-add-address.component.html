@@ -35,49 +35,6 @@
   <div class="row">
     <div class="col-6">
       <div class="form-group">
-<<<<<<< HEAD
-        <codx-label
-        [formModel]="form.formModel"
-        fiedName="Note"
-        default="Ghi chú"      
-      ></codx-label>
-      <codx-input 
-      [crrValue]="form.data != null ? form.data.note : ''"
-      [formModel]="form.formModel"
-      field="note"
-      (valueChange)="valueChange($event)"
-      >
-    </codx-input>
-      </div>
-      <div class="row mx-0 mt-3">
-        <div class="col-11 ps-0">
-          <div class="form-group">
-            <codx-label
-            [formModel]="form.formModel"
-            default="Người liên hệ"           
-          ></codx-label>
-          </div>   
-        </div>
-        <div class="col-1 ps-0">
-          <div class="form-group">
-            <span (click)="openPopupContact()">
-              <i class="fa-sharp fa-solid fa-plus"></i>
-              <i class="fa-solid fa-user-group"></i>
-            </span>        
-          </div>
-        </div>
-      </div>
-      <div *ngFor="let item of objectContactAddress">
-      <div class="row pb-5" *ngIf="item.reference == address.recID" >
-        <div class="col-6 ps-0">
-          <div class="d-flex align-items-top">
-            <div class="me-4">
-              <div>
-                <codx-img [objectId]="item?.recID" [objectName]="item?.contactName"
-                [objectType]="formModel?.entityName" [width]="50">
-                </codx-img>
-              </div>
-=======
         <codx-label [formModel]="form.formModel" fiedName="DistrictID" default="Quận/huyện"></codx-label>
         <codx-input [crrValue]="districtID" type="combobox" refValue="DistrictsAC" field="districtID"
           (valueChange)="valueChangeDistrictID($event)">
@@ -96,7 +53,7 @@
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Note" default="Ghi chú"></codx-label>
     <codx-input [crrValue]="form.data != null ? form.data.note : ''" [formModel]="form.formModel" field="note"
-      (valueChange)="valueChange($event,'note')">
+      (valueChange)="valueChange($event)">
     </codx-input>
   </div>
   <div class="d-flex align-items-center justify-content-between mb-3">
@@ -124,7 +81,6 @@
             <div class="d-flex me-3">
               <span class="icon-email icon-16 me-1 text-gray-500"></span>
               <span>{{item.email}}</span>
->>>>>>> 86837da71b4c827e9963cf3c30de901215798236
             </div>
             <div class="d-flex">
               <span class="icon-phone_android icon-16 me-1 text-gray-500"></span>
@@ -133,57 +89,6 @@
           </div>
         </div>
       </div>
-<<<<<<< HEAD
-      </div>   
-      <div class="row mx-0 mt-3">
-        <div class="col-1 ps-0">
-          <div class="form-group">
-           
-          </div>   
-        </div>
-        <div class="col-6 ps-0">
-          <div class="form-group">
-           
-          </div>   
-        </div>
-      </div>
-</ng-template>
-<ng-template #footer>
-  <div class="d-flex justify-content-end mt-1 me-3">
-    <div class="col-8 ps-0">
-      <div class="d-flex">
-        <div class="col-1 ps-0"> 
-          <codx-input
-          [checked]="form.data != null ? form.data.isDefault : false"
-          type="switch"
-          field="isDefault"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>  
-      </div>  
-      <div class="col-2 ps-0"> 
-        <codx-label
-        [formModel]="form.formModel"
-        fiedName="IsDefault"
-        default="Mặc định"
-      ></codx-label>
-    </div>     
-      </div>
-    </div>
-    <div class="ms-2">
-      <button type="button" class="btn btn-light-primary">
-        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-          [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
-      </button>
-    </div>
-    <div class="ms-2">
-      <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
-        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-          [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
-      </button>
-    </div>
-  </div>
-=======
       <div class="d-flex align-items-center">
         <span (click)="editobject(item,'datacontact')" class="icon-edit icon-16 py-1"></span>
         <span (click)="deleteobject(item,'datacontact')" class="icon-delete icon-16"></span>
@@ -192,7 +97,7 @@
   </div>
   <div class="d-flex align-items-center">
     <codx-input class="me-2" [checked]="form.data != null ? form.data.isDefault : false" type="switch" field="isDefault"
-      (valueChange)="valueChange($event,'isDefault')">
+      (valueChange)="valueChange($event)">
     </codx-input>
     <codx-label [formModel]="form.formModel" fiedName="IsDefault" default="Mặc định"></codx-label>
   </div>
@@ -208,5 +113,4 @@
       <codx-label [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
     </button>
   </div>
->>>>>>> 86837da71b4c827e9963cf3c30de901215798236
 </ng-template>
