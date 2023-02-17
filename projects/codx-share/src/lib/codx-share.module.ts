@@ -145,6 +145,7 @@ import { CodxCommentHistoryComponent } from './components/codx-tree-comment/codx
 import { ImageViewerComponent2 } from './components/ImageViewer2/imageViewer2.component';
 import { CodxHistoryTempComponent } from './components/codx-history-temp/codx-history-temp.component';
 import { NotifyDrawerPopupComponent } from './layout/drawers/notify-drawer/notify-drawer-popup/notify-drawer-popup.component';
+import { NotifyBodyComponent } from './layout/drawers/notify-drawer/notify-body/notify-body.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -244,7 +245,8 @@ const T_Component: Type<any>[] = [
   PopupAddEducationsComponent,
   ImageViewerComponent2,
   CodxHistoryTempComponent,
-  NotifyDrawerPopupComponent
+  NotifyDrawerPopupComponent,
+  NotifyBodyComponent
 ];
 
 const T_Pipe: Type<any>[] = [

@@ -7,3 +7,13 @@
   border-top-right-radius: 50rem;
   border-bottom-right-radius: 50rem;
 }
+
+.card {
+  border: 1px solid #f0f0f0 !important;
+}
+
+@media only screen and (max-width: 512px) {
+  .vr {
+    display: none;
+  }
+}

@@ -16,7 +16,7 @@ export class CustomersComponent extends UIComponent {
   dialog: DialogRef;
   moreFuncName:any;
   funcName:any;
-  htxcusGroup:string = '';
+  objecttype:string = '1';
   gridViewSetup:any;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   constructor(
@@ -122,21 +122,21 @@ export class CustomersComponent extends UIComponent {
         'ERM.Business.BS',
         'BankAccountsBusiness',
         'DeleteAsync',
-        [data.customerID]
+        [this.objecttype,data.customerID]
       ).subscribe((res:any)=>{
         if (res) {
           this.api.exec(
             'ERM.Business.BS',
             'AddressBookBusiness',
             'DeleteAsync',
-            [data.customerID]
+            [this.objecttype,data.customerID]
           ).subscribe((res:any)=>{
             if (res) {
               this.api.exec(
                 'ERM.Business.BS',
                 'ContactBookBusiness',
                 'DeleteAsync',
-                [data.customerID]
+                [this.objecttype,data.customerID]
               ).subscribe((res:any)=>{
                 
               }); 

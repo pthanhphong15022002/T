@@ -1,3 +1,4 @@
+import { CodxDpService } from './../../../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from './../../../models/models';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { CacheService, DialogData, DialogRef } from 'codx-core';
@@ -13,6 +14,7 @@ export class PopupRolesDynamicComponent implements OnInit {
   process = new DP_Processes();
   lstPermissions: DP_Processes_Permission[] = [];
   type = '';
+  data: any;
   currentPemission = 0;
   //Role
   full: boolean = false;
@@ -30,12 +32,13 @@ export class PopupRolesDynamicComponent implements OnInit {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
+    private dpSv: CodxDpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.process = JSON.parse(JSON.stringify(dt?.data[0]));
-    this.lstPermissions = this.process?.permissions;
+    this.data = JSON.parse(JSON.stringify(dt?.data[0]));
+    this.process = this.data;
     this.title = dt.data[1];
     this.type = dt.data[2];
     this.cache.valueList('DP010').subscribe((res) => {
@@ -46,7 +49,7 @@ export class PopupRolesDynamicComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.lstPermissions != null && this.lstPermissions.length > 0)
+    if (this.process.permissions != null && this.process.permissions.length > 0)
       this.changePermission(0);
   }
 
@@ -57,34 +60,34 @@ export class PopupRolesDynamicComponent implements OnInit {
       if (
         oldIndex != index &&
         oldIndex > -1 &&
-        this.lstPermissions[oldIndex] != null
+        this.process.permissions[oldIndex] != null
       ) {
-        this.lstPermissions[oldIndex].full = this.full;
-        this.lstPermissions[oldIndex].read = this.read;
-        this.lstPermissions[oldIndex].create = this.create;
-        this.lstPermissions[oldIndex].edit = this.edit;
-        this.lstPermissions[oldIndex].publish = this.publish;
-        this.lstPermissions[oldIndex].delete = this.delete;
-        this.lstPermissions[oldIndex].assign = this.assign;
+        this.process.permissions[oldIndex].full = this.full;
+        this.process.permissions[oldIndex].read = this.read;
+        this.process.permissions[oldIndex].create = this.create;
+        this.process.permissions[oldIndex].edit = this.edit;
+        this.process.permissions[oldIndex].publish = this.publish;
+        this.process.permissions[oldIndex].delete = this.delete;
+        this.process.permissions[oldIndex].assign = this.assign;
         // this.permissions[oldIndex].startDate = this.startDate;
         // this.process.permissions[oldIndex].endDate = this.endDate;
       }
     }
 
-    if (this.lstPermissions[index] != null) {
+    if (this.process.permissions[index] != null) {
       this.full =
-        this.lstPermissions[index].read &&
-        this.lstPermissions[index].create &&
-        this.lstPermissions[index].edit &&
-        this.lstPermissions[index].delete &&
-        this.lstPermissions[index].assign &&
-        this.lstPermissions[index].publish;
-      this.read = this.lstPermissions[index].read;
-      this.create = this.lstPermissions[index].create;
-      this.edit = this.lstPermissions[index].edit;
-      this.publish = this.lstPermissions[index].publish;
-      this.delete = this.lstPermissions[index].delete;
-      this.assign = this.lstPermissions[index].assign;
+        this.process.permissions[index].read &&
+        this.process.permissions[index].create &&
+        this.process.permissions[index].edit &&
+        this.process.permissions[index].delete &&
+        this.process.permissions[index].assign &&
+        this.process.permissions[index].publish;
+      this.read = this.process.permissions[index].read;
+      this.create = this.process.permissions[index].create;
+      this.edit = this.process.permissions[index].edit;
+      this.publish = this.process.permissions[index].publish;
+      this.delete = this.process.permissions[index].delete;
+      this.assign = this.process.permissions[index].assign;
       this.currentPemission = index;
     } else {
       this.full = false;
@@ -101,9 +104,8 @@ export class PopupRolesDynamicComponent implements OnInit {
   //#endregion
 
   //#region Event user
-  valueChange(e, type) {
-    var data = e.data;
-    // this.isSetFull = data;
+  valueChange($event, type) {
+    var data = $event.data;
     switch (type) {
       case 'full':
         this.full = data;
@@ -117,16 +119,12 @@ export class PopupRolesDynamicComponent implements OnInit {
         }
 
         break;
-      case 'delete':
-        if (data != null) this.delete = data;
-        break;
       default:
         this.isSetFull = false;
         this[type] = data;
         break;
     }
     if (type != 'full' && data == false) this.full = false;
-
     if (
       this.read &&
       this.create &&
@@ -168,6 +166,15 @@ export class PopupRolesDynamicComponent implements OnInit {
     }
     if(this.type == 'add'){
       this.dialog.close(this.process.permissions);
+    }else{
+      this.dpSv
+        .updatePermissionProcess(this.process)
+        .subscribe((res) => {
+          if (res.permissions.length > 0) {
+            // this.notifi.notifyCode('SYS034');
+            this.dialog.close(res);
+          }
+        });
     }
   }
   //#endregion

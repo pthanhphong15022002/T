@@ -127,7 +127,7 @@ export class DynamicProcessComponent
   }
 
   afterLoad() {
-    this.showButtonAdd =this.funcID == 'DP0101'
+    this.showButtonAdd = this.funcID == 'DP0101';
   }
   //chang data
   viewChanged(e) {
@@ -306,27 +306,32 @@ export class DynamicProcessComponent
       case 'SYS02':
         this.delete(data);
         break;
-      case 'DP05':
+      case 'DP01014':
         this.roles(data);
+        break;
+      case 'DP01011':
+        this.viewDetailProcess(data);
         break;
     }
   }
 
   changeDataMF(e, data) {
-    if (e != null && data != null) {
-      e.forEach((res) => {
-        switch (res.functionID) {
-          case 'SYS005':
-          case 'SYS004':
-          case 'SYS001':
-          case 'SYS002':
-          case 'SYS003':
-            res.disabled = true;
-            break;
-        }
-      })
-    }
+    // if (e != null && data != null) {
+    //   e.forEach((res) => {
+    //     switch (res.functionID) {
+    //       //maay cai nay là more chung của hệ thống-thích thì bỏ không thì thì thôi
+    //       case 'SYS005':
+    //       case 'SYS004':
+    //       case 'SYS001':
+    //       case 'SYS002':
+    //       case 'SYS003':
+    //         res.disabled = true;
+    //         break;
+    //     }
+    //   });
+    // }
   }
+
   //#popup roles
   roles(e: any) {
     let dialogModel = new DialogModel();
@@ -343,10 +348,10 @@ export class DynamicProcessComponent
         dialogModel
       )
       .closed.subscribe((e) => {
-        // if (e?.event && e?.event != null) {
-        //   this.view.dataService.update(e?.event).subscribe();
-        //   this.detectorRef.detectChanges();
-        // }
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
       });
   }
   //#region đang test ai cần list phần quyền la vô đâyu nha
@@ -379,6 +384,13 @@ export class DynamicProcessComponent
     return isRead ? true : false;
   }
 
+  doubleClickViewProcess(data) {
+    let isRead = this.checkPermissionRead(data);
+    if (isRead) {
+      this.viewDetailProcess(data);
+    }
+  }
+
   getListUser() {
     this.codxDpService
       .getUserByProcessId('675ef83a-f2a6-4798-b377-9071c52fa714')
@@ -404,10 +416,12 @@ export class DynamicProcessComponent
   }
   //#endregion đang test
 
-  doubleClickViewProcess(data) {
+  viewDetailProcess(data) {
+    let isCreate = data.create ? true : false;
     let obj = {
       data: data,
       nameAppyFor: this.getNameAppyFor(data?.applyFor),
+      isCreate: isCreate,
     };
 
     let dialogModel = new DialogModel();
