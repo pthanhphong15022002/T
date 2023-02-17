@@ -134,7 +134,7 @@
         </div>
         <div #o class="mx-6 d-flex flex-column align-items-center"
           (click)="loadEmployList(o, item.departmentCode, '30')">
-          <div class="fs-2 fw-bold mb-2 text-warning number-users">{{ item.onboard }}</div>
+          <div class="fs-2 fw-bold mb-2 text-warning number-users">{{ item.onboard ? item.onboard : 0 }}</div>
           <span class="text-gray-500">
             <codx-label [formModel]="view.formModel" name="lblOnBoard" default="Onbroard">
             </codx-label>
@@ -142,7 +142,7 @@
         </div>
         <div #f class="mx-6 d-flex flex-column align-items-center"
           (click)="loadEmployList(f, item.departmentCode, '70')">
-          <div class="fs-2 fw-bold mb-2 text-danger number-users">{{ item.offboard }}</div>
+          <div class="fs-2 fw-bold mb-2 text-danger number-users">{{item.offboard ? item.offboard : 0 }}</div>
           <span class="text-gray-500">
             <codx-label [formModel]="view.formModel" name="lblOffBoard" default="Offboard">
             </codx-label>
