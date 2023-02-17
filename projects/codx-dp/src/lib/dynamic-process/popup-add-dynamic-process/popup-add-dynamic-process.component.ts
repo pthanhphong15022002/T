@@ -1756,7 +1756,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   createStepReason(stepReason: any, reasonValue: any) {
     stepReason = this.handleStepReason(stepReason, reasonValue);
-    stepReason.reasonControl = true;
   }
 
   handleReason(

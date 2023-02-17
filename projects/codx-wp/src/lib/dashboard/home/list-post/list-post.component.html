@@ -123,7 +123,15 @@
     <div class="wp-contents">
       <div class="wp-contents-text">
         <ng-container *ngIf="item.content">
-          <div [innerHTML]="item.content | safe: 'html'"></div>
+          
+          <div [innerHTML]="item.isShowShortContent ? item.shortContent : item.content | safe: 'html'"></div>
+          <ng-container *ngIf="item.isShowShortContent">
+            <div>
+              <a href="javascript:void(0)" (click)="viewMore(item)">
+                <codx-label [formModel]="listview.formModel" name="lblViewMore" default="Xem thêm"></codx-label>
+              </a>
+            </div>
+          </ng-container>
         </ng-container>
       </div>
       <div class="wp-contents-files">
