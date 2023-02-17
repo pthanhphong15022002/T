@@ -41,3 +41,9 @@ export class NoteFile {
   recID: string;
   thumbnail: string;
 }
+
+export class tmpBookingCalendar {
+  type: string;
+  refID: string;
+  value: string;
+}

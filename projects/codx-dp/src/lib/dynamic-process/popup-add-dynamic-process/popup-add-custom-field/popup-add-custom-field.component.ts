@@ -103,6 +103,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (e && e.data && e.field) this.field[e.field] = e.data;
     this.changdef.detectChanges();
   }
+ 
   changeRequired(e) {
     this.field.isRequired = e.data;
   }

@@ -33,12 +33,11 @@ export class PopupECalculateSalaryComponent extends UIComponent implements OnIni
     super(injector);
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
-    console.log('formModel ecalculate salary', this.formModel);
     this.headerText = data?.data?.headerText;
     if(this.formModel){
       this.isAfterRender = true
   }
-  this.data = dialog?.dataService?.dataSelected
+  this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected))
 }
   onInit(): void{
 
@@ -46,9 +45,9 @@ export class PopupECalculateSalaryComponent extends UIComponent implements OnIni
 
   onSaveForm(){
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe(p => {
-      if(p === "True"){
+      if(p != null){
         this.notify.notifyCode('SYS006')
-        this.dialog.close()
+        this.dialog && this.dialog.close(p);
       }
       else this.notify.notifyCode('SYS023')
     })

@@ -1,14 +1,7 @@
 import { async } from '@angular/core/testing';
-import { Valuelist } from './../../../../../codx-fd/src/lib/models/model';
+
 import { update } from '@syncfusion/ej2-angular-inplace-editor';
-import {
-  DP_Instances_Steps,
-  DP_Instances_Steps_TaskGroups,
-  DP_Instances_Steps_TaskGroups_Roles,
-  DP_Instances_Steps_Tasks,
-  DP_Instances_Steps_Tasks_Roles,
-  DP_Steps_TaskGroups,
-} from './../../models/models';
+
 import {
   Component,
   Input,
@@ -35,11 +28,12 @@ import {
   Util,
 } from 'codx-core';
 import { PopupAddStaskComponent } from './popup-add-stask/popup-add-stask.component';
-import { CodxDpService } from '../../codx-dp.service';
-import { PopupCustomFieldComponent } from '../popup-custom-field/popup-custom-field.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { ViewJobComponent } from '../../dynamic-process/popup-add-dynamic-process/step-task/view-job/view-job.component';
 import { PopupAddGroupTaskComponent } from './popup-add-group-task/popup-add-group-task.component';
+import { DP_Instances_Steps, DP_Instances_Steps_TaskGroups, DP_Instances_Steps_TaskGroups_Roles, DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from '../../../models/models';
+import { CodxDpService } from '../../../codx-dp.service';
+import { PopupCustomFieldComponent } from '../field-detail/popup-custom-field/popup-custom-field.component';
+import { ViewJobComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/view-job/view-job.component';
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',

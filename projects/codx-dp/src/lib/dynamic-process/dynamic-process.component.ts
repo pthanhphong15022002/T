@@ -307,29 +307,84 @@ export class DynamicProcessComponent
         this.delete(data);
         break;
       case 'DP01014':
+      case 'DP02014':
+      case 'DP02024':
         this.roles(data);
         break;
       case 'DP01011':
+      case 'DP02011':
+      case 'DP02021':
+      case 'DP02031':
         this.viewDetailProcess(data);
         break;
     }
   }
 
   changeDataMF(e, data) {
-    // if (e != null && data != null) {
-    //   e.forEach((res) => {
-    //     switch (res.functionID) {
-    //       //maay cai nay là more chung của hệ thống-thích thì bỏ không thì thì thôi
-    //       case 'SYS005':
-    //       case 'SYS004':
-    //       case 'SYS001':
-    //       case 'SYS002':
-    //       case 'SYS003':
-    //         res.disabled = true;
-    //         break;
-    //     }
-    //   });
-    // }
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS005':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+          case 'SYS003':
+            res.disabled = true;
+            break;
+          case 'SYS104':
+          case 'SYS04':
+            if (
+              this.funcID == 'DP0201' ||
+              this.funcID == 'DP0202' ||
+              this.funcID == 'DP0203'
+            )
+              res.disabled = true;
+            break;
+          //Xem chi tiết
+          case 'DP01011':
+          case 'DP02011':
+          case 'DP02021':
+          case 'DP02031':
+            let isRead = this.checkPermissionRead(data);
+            if (!isRead || this.funcID == 'DP0203') {
+              res.isblur = true;
+            }
+            break;
+          //Đổi tên, chỉnh sửa.
+          case 'DP01012':
+          case 'DP02012':
+          case 'DP02022':
+          case 'SYS03':
+            let isEdit = data.write;
+            if (!isEdit || this.funcID == 'DP0203') {
+              if (res.functionID == 'SYS03') res.disabled = true;
+              else res.isblur = true;
+            }
+            break;
+          //Phân quyền:
+          case 'DP01014':
+          case 'DP02014':
+          case 'DP02024':
+            let isAssign = data.assign;
+            if (!isAssign) res.isblur = true;
+            break;
+          //Phát hành
+          // case 'DP01015':
+          // case 'DP02015':
+          // case 'DP02025':
+          //   let isPublish = data.publish;
+          //   if (!isPublish) res.isblur = true;
+
+          //   break;
+          case 'SYS02': // xoa
+            let isDelete = data.delete;
+            if (!isDelete || data.deleted || this.funcID == 'DP0203') {
+              res.disabled = true;
+            }
+            break;
+        }
+      });
+    }
   }
 
   //#popup roles
@@ -412,11 +467,17 @@ export class DynamicProcessComponent
   //#endregion
 
   getNameAppyFor(value: string) {
-    return this.listAppyFor.find((x) => x.value === value).default ?? '';
+    return this.listAppyFor?.length > 0
+      ? this.listAppyFor.find((x) => x.value === value)?.default ?? ''
+      : '';
   }
   //#endregion đang test
 
   viewDetailProcess(data) {
+    let isRead = this.checkPermissionRead(data);
+    if (!isRead) {
+      return;
+    }
     let isCreate = data.create ? true : false;
     let obj = {
       data: data,
