@@ -50,7 +50,8 @@ export class InstanceDetailComponent implements OnInit {
   value: Number = 30;
   cornerRadius: Number = 30;
   idCbx = 'S';
-
+  listStepUpdate:any;
+  instanceStatus: any;
   currentStep = 0;
   //gantchat
   ganttDs = [];
@@ -75,7 +76,6 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   console.log(this.listStepNew);
    
   }
 
@@ -98,7 +98,9 @@ export class InstanceDetailComponent implements OnInit {
       this.id = changes['dataSelect'].currentValue.recID;
       this.dataSelect = changes['dataSelect'].currentValue;
       this.currentStep = this.dataSelect.currentStep;
+      this.instanceStatus = this.dataSelect.status;
       this.GetStepsByInstanceIDAsync(this.id);
+
       //cái này xóa luon di. chưa chạy xong api mà gọi ra la sai
       // if (this.listSteps == null && this.listSteps.length == 0) {
       //   this.tmpTeps = null;
@@ -136,8 +138,17 @@ export class InstanceDetailComponent implements OnInit {
         this.stepName = '';
         this.progress = '0';
         this.tmpTeps = null;
-      } 
-      this.listStepNew = this.handleListStep(this.listStepNew,this.listSteps); 
+      }
+      debugger;
+      let listStepHandle = JSON.parse(JSON.stringify(this.listStepNew));
+      if(this.instanceStatus === '1' || this.instanceStatus === '2'  || this.instanceStatus === null || this.instanceStatus === ''){
+        this.deleteListReason(listStepHandle);
+        this.deleteListReason(this.listSteps);
+      }
+
+      this.listStepUpdate = this.handleListStep(listStepHandle,this.listSteps); 
+
+
     }); 
   }
 
@@ -245,4 +256,9 @@ export class InstanceDetailComponent implements OnInit {
     let list =  updatedArray.map(x=> {return {stepId: x.stepID, stepName: x.stepName, stepStatus: x.stepStatus}});
   return list;
   }
+  deleteListReason(listStep: any): void {
+    listStep.pop();
+    listStep.pop();
+  }
+
 }
