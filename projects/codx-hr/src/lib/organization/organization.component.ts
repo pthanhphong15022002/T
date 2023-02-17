@@ -165,8 +165,9 @@ export class OrgorganizationComponent extends UIComponent {
         if (res.event) {
           let org = res.event[0];
           let tmpOrg = res.event[1];
-          this.view.dataService.update(tmpOrg).subscribe();
-          this.view.dataService.add(org).subscribe();
+          this.getOrgInfor(org);
+          // this.view.dataService.update(tmpOrg).subscribe();
+          // this.view.dataService.add(org).subscribe();
         }
       });
     }
@@ -195,6 +196,14 @@ export class OrgorganizationComponent extends UIComponent {
             option,
             this.view.formModel.funcID
           );
+          popup.closed.subscribe((res: any) => {
+            if (res.event.save.data) {
+              let org = res.event.save.data;
+              this.orgUnitID = org.orgUnitID;
+              this.getOrgInfor(org);
+              this.detectorRef.detectChanges();
+            }
+          });
         }
       });
     }
