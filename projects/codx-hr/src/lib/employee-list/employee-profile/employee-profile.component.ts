@@ -974,7 +974,7 @@ export class EmployeeProfileComponent extends UIComponent {
               op.dataValue = params.employeeID;
               op.predicate = 'EmployeeID=@0';
               (op.page = 1),
-              this.hrService.GetListByEmployeeIDAsync(op).subscribe((res) => {
+              this.hrService.GetExperienceListByEmployeeIDAsync(op).subscribe((res) => {
                 console.log('e experience', res);
                 this.lstExperience = res;
               });
@@ -1076,7 +1076,7 @@ export class EmployeeProfileComponent extends UIComponent {
         op.entityName = 'HR_EExperiences';
         op.dataValue = params.employeeID;
         op.predicate = 'EmployeeID=@0';
-        this.hrService.GetListByEmployeeIDAsync(op).subscribe((res) => {
+        this.hrService.GetExperienceListByEmployeeIDAsync(op).subscribe((res) => {
           console.log('e experience', res);
           this.lstExperience = res;
         });
@@ -2908,89 +2908,110 @@ export class EmployeeProfileComponent extends UIComponent {
     this.hrService.addTest().subscribe();
   }
 
-  valueChangeFilterBenefit(evt){
+  valueChangeFilterBenefit(evt) {
     console.log('filter theo type', evt);
     this.filterByBenefitIDArr = evt.data;
+    // let predicates = '('
+    // for(let i =0 ; i< this.filterByBenefitIDArr.length; i++){
+    //   if(i>0){
+    //     predicates +=' or '
+    //   }
+    //   predicates += `BenefitID==@${i}`
+    // }
+    // predicates += ') and ';
+
+    // (this.grid.dataService as CRUDService).setPredicates(['BenefitID==@0'], ['1']).subscribe((item) => {
+    //   console.log('item tra ve', item);
+    // });
     this.UpdateEBenefitPredicate();
   }
 
-  UpdateEBenefitPredicate(){
-    this.filterEBenefitPredicates = ""
-    if(this.filterByBenefitIDArr.length > 0 && this.startDateEBenefitFilterValue != null){
-      this.filterEBenefitPredicates = '('
+  UpdateEBenefitPredicate() {
+    this.filterEBenefitPredicates = '';
+    if (
+      this.filterByBenefitIDArr.length > 0 &&
+      this.startDateEBenefitFilterValue != null
+    ) {
+      this.filterEBenefitPredicates = '(';
       let i = 0;
-      for(i; i< this.filterByBenefitIDArr.length; i++){
-        if(i>0){
-          this.filterEBenefitPredicates +=' or '
+      for (i; i < this.filterByBenefitIDArr.length; i++) {
+        if (i > 0) {
+          this.filterEBenefitPredicates += ' or ';
         }
-        this.filterEBenefitPredicates += `BenefitID==@${i}`
+        this.filterEBenefitPredicates += `BenefitID==@${i}`;
       }
       this.filterEBenefitPredicates += ') ';
-      this.filterEBenefitPredicates +=  `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
-      
-      (this.grid.dataService as CRUDService).setPredicates([this.filterEBenefitPredicates],[this.filterByBenefitIDArr.join(';')])
-      .subscribe((item) => {
-        console.log('item tra ve sau khi loc 1', item);
-      });
-    }
-    else if(this.filterByBenefitIDArr.length > 0 && this.startDateEBenefitFilterValue == undefined || this.startDateEBenefitFilterValue == null){
+      this.filterEBenefitPredicates += `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
+      //this.filterEBenefitDatavalues = this.filterByBenefitIDArr.concat([this.startDateEBenefitFilterValue, this.endDateEBenefitFilterValue]);
+
+      (this.grid.dataService as CRUDService)
+        .setPredicates(
+          [this.filterEBenefitPredicates],
+          [this.filterByBenefitIDArr.join(';')]
+        )
+        .subscribe((item) => {
+          console.log('item tra ve sau khi loc 1', item);
+        });
+    } else if (
+      (this.filterByBenefitIDArr.length > 0 &&
+        this.startDateEBenefitFilterValue == undefined) ||
+      this.startDateEBenefitFilterValue == null
+    ) {
       let i = 0;
-      for(i; i< this.filterByBenefitIDArr.length; i++){
-        if(i>0){
-          this.filterEBenefitPredicates +=' or '
+      for (i; i < this.filterByBenefitIDArr.length; i++) {
+        if (i > 0) {
+          this.filterEBenefitPredicates += ' or ';
         }
-        this.filterEBenefitPredicates += `BenefitID==@${i}`
+        this.filterEBenefitPredicates += `BenefitID==@${i}`;
       }
 
-      (this.grid.dataService as CRUDService).setPredicates([this.filterEBenefitPredicates],[this.filterByBenefitIDArr.join(';')])
-      .subscribe((item) => {
-        console.log('item tra ve sau khi loc 2', item);
-      });
+      (this.grid.dataService as CRUDService)
+        .setPredicates(
+          [this.filterEBenefitPredicates],
+          [this.filterByBenefitIDArr.join(';')]
+        )
+        .subscribe((item) => {
+          console.log('item tra ve sau khi loc 2', item);
+        });
+    } else if (this.startDateEBenefitFilterValue != null) {
+      (this.grid.dataService as CRUDService)
+        .setPredicates(
+          [
+            `EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}"`,
+          ],
+          []
+        )
+        .subscribe((item) => {
+          console.log('item tra ve sau khi loc 3', item);
+        });
     }
-    else if(this.startDateEBenefitFilterValue != null){
-      (this.grid.dataService as CRUDService).setPredicates([`EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}"`], [])
-      .subscribe((item) => {
-        console.log('item tra ve sau khi loc 3', item);
-      });
-    }
-    
   }
 
-  valueChangeYearFilterBenefit(evt){
+  valueChangeYearFilterBenefit(evt) {
     console.log('chon year', evt);
-    if(evt.formatDate == undefined && evt.toDate == undefined){
-      this.startDateEBenefitFilterValue = null;
-      this.endDateEBenefitFilterValue = null;
-    }
-    else{
-      this.startDateEBenefitFilterValue = evt.fromDate.toJSON();
-      this.endDateEBenefitFilterValue = evt.toDate.toJSON();
-    }
+    this.startDateEBenefitFilterValue = evt.fromDate.toJSON();
+    this.endDateEBenefitFilterValue = evt.toDate.toJSON();
     this.UpdateEBenefitPredicate();
-    
+
     // (this.grid.dataService as CRUDService).setPredicates(['EffectedDate>=@0 and EffectedDate<=@1'], [start, endDate]).subscribe((item) => {
     //   console.log('item tra ve', item);
     // });
   }
 
-  
-  valueChangeViewAllEBenefit(evt){
+  valueChangeViewAllEBenefit(evt) {
     this.ViewAllEBenefitFlag = evt.data;
-    let ins = setInterval(()=>{
-      if(this.grid){
+    let ins = setInterval(() => {
+      if (this.grid) {
         clearInterval(ins);
-        let t= this;
-        this.grid.dataService.onAction.subscribe((res)=>{
-          if(res){
-            if(res.type != null && res.type == 'loaded'){
-              t.eBenefitRowCount = res['data'].length
-            }
+        let t = this;
+        this.grid.dataService.onAction.subscribe((res) => {
+          if (res.type == 'loaded') {
+            t.eBenefitRowCount = res['data'].length;
           }
-          
-        })
-        this.eBenefitRowCount = this.grid.dataService.rowCount; 
+        });
+        this.eBenefitRowCount = this.grid.dataService.rowCount;
       }
-    },100)
+    }, 100);
   }
 
 copyValue(data, flag) {
