@@ -1056,7 +1056,7 @@ export class CodxHrService {
   //#endregion
 
   //#region EExperience
-  GetListByEmployeeIDAsync(data) {
+  GetExperienceListByEmployeeIDAsync(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -1802,6 +1802,16 @@ export class CodxHrService {
       'ERM.Business.Core',
       'DataBusiness',
       'LoadDataCbxAsync',
+      [dataRequest]
+    );
+  }
+
+  loadData(service: string, dataRequest: DataRequest = null) {
+    return this.api.execSv<any>(
+      service,
+      'ERM.Business.Core',
+      'DataBusiness',
+      'LoadDataAsync',
       [dataRequest]
     );
   }

@@ -45,7 +45,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.dialog = dialog;
-    this.formModel = dialog.formModel;
+    this.formModel = dialog?.formModel;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;

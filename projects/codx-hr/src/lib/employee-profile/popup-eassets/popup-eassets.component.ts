@@ -85,7 +85,7 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
-    this.formModel = dialog.formModel;
+    this.formModel = dialog?.formModel;
     this.actionType = data?.data?.actionType;
     this.assetObj = data?.data?.assetObj;
     // this.indexSelected =
