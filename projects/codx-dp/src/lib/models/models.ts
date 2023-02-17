@@ -325,7 +325,7 @@ export class DP_Instances_Steps {
   reasons: DP_Instances_Steps_Reasons[] = []; // objects
   stepStatus: string;
   memo: string;
-  reasonControl: boolean;
+  reasonControl: boolean = false;
 }
 
 export class DP_Instances_Steps_Roles {
