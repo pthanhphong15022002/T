@@ -56,7 +56,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
-    this.formModel = dialog.formModel;
+    this.formModel = dialog?.formModel;
     console.log(this.formModel);
     
     //this.lstDegrees = data?.data?.lstEDegrees;

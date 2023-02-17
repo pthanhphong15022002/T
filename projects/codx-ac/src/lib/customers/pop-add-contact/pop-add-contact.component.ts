@@ -31,7 +31,8 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     private callfunc: CallFuncService,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
-    @Optional() dialogData?: DialogData  ) {
+    @Optional() dialogData?: DialogData 
+     ) {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;

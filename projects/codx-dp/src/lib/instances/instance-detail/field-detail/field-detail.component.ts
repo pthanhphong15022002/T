@@ -1,20 +1,41 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormModel, SidebarModel, CallFuncService } from 'codx-core';
-import { PopupCustomFieldComponent } from '../popup-custom-field/popup-custom-field.component';
+import {
+  FormModel,
+  SidebarModel,
+  CallFuncService,
+  CacheService,
+} from 'codx-core';
+import { PopupCustomFieldComponent } from './popup-custom-field/popup-custom-field.component';
 
+// import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
+// imports: [NgbRatingModule];
 @Component({
   selector: 'codx-field-detail',
   templateUrl: './field-detail.component.html',
   styleUrls: ['./field-detail.component.scss'],
 })
 export class FieldDetailComponent implements OnInit {
-  @Input() lstSteps: any;
-  @Input() lstFields: any;
-  @Input() formModel: any;
+  @Input() dataStep!: any;
+  @Input() formModel!: FormModel;
+  @Input() titleDefault: string = '';
   @Input() isUpdate = false;
-  constructor(private callfc: CallFuncService) {}
+  @Input() showColumnControl = 1;
+  currentRate = 0;
+  dtFormatDate: any = [];
 
-  ngOnInit(): void {}
+  constructor(private callfc: CallFuncService, private cache: CacheService) {
+    this.formModel = new FormModel();
+    this.formModel.formName='DPInstancesStepsFields'
+    this.formModel.gridViewName='grvDPInstancesStepsFields';
+    this.formModel.entityName='DP_Instances_Steps_Fields'
+    this.cache.valueList('DP0274').subscribe((res) => {
+      if (res) this.dtFormatDate = res.datas;
+    });
+  }
+
+  ngOnInit(): void {
+    this.currentRate = 8;
+  }
 
   clickShow(e, id) {
     let children = e.currentTarget.children[0];
@@ -45,29 +66,30 @@ export class FieldDetailComponent implements OnInit {
   }
 
   changeFieldMF(e) {
+    //đe vậy tính sau
     if (e != null) {
       e.forEach((res) => {
         switch (res.functionID) {
-          case 'SYS104':
-          case 'SYS04':
-          case 'SYS102':
-          case 'SYS02':
-          case 'SYS005':
-          case 'SYS003':
-          case 'SYS004':
-          case 'SYS001':
-          case 'SYS002':
-          case 'DP011':
-          case 'DP02':
-          case 'DP09':
-          case 'DP10':
-            res.disabled = true;
-            break;
+          //       case 'SYS104':
+          //       case 'SYS04':
+          //       case 'SYS102':
+          //       case 'SYS02':
+          //       case 'SYS005':
+          //       case 'SYS003':
+          //       case 'SYS004':
+          //       case 'SYS001':
+          //       case 'SYS002':
+          //       case 'DP011':
+          //       case 'DP02':
+          //       case 'DP09':
+          //       case 'DP10':
+          //         res.disabled = true;
+          //         break;
           //edit
           case 'SYS103':
           case 'SYS03':
-              if (!this.isUpdate) res.disabled = true;
-              break;
+            if (!this.isUpdate) res.disabled = true;
+            break;
         }
       });
     }
@@ -93,8 +115,13 @@ export class FieldDetailComponent implements OnInit {
     let field = this.callfc.openSide(PopupCustomFieldComponent, obj, option);
   }
 
-   partNum(num){
-   return Number.parseInt(num) ;
-   }
-   rateChange(e){}
+  partNum(num): number {
+    return Number.parseInt(num);
+  }
+
+  fomatvalue(dt) {
+    //xu ly tam
+    var fm = this.dtFormatDate.findIndex((x) => x.value == dt);
+    return fm?.text;
+  }
 }

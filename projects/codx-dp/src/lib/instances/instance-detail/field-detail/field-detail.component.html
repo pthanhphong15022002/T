@@ -1,0 +1,98 @@
+<div class="back-info">
+  <div class="header-info">
+    <div class="left">
+      <span class="title" *ngIf="titleDefault">
+        <codx-label
+          name="titleDefault"
+          formName="DPInstancesSteps"
+          grvName="grvDPInstancesSteps"
+          [default]="titleDefault"
+        ></codx-label>
+      </span>
+      <span class="title" *ngIf="!titleDefault">{{ dataStep.stepName }}</span>
+    </div>
+    <div class="right">
+      <div class="group-button">
+        <button class="button-custom">
+          <span
+            class="icon-edit icon-20 text-primary-600 py-2"
+            style="font-weight: 500"
+            (click)="popupCustomField(dataStep.fields)"
+          ></span>
+        </button>
+        <button
+          class="button-custom"
+          (click)="clickShow($event, dataStep.recID)"
+        >
+          <span
+            class="icon-expand_less icon-20 text-primary-600 py-2"
+            style="font-weight: 500"
+          ></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="{{ dataStep.recID }}" class="main" [ngClass]="'show-main'">
+    <div
+      class="d-flex row class-field m-5"
+      *ngIf="dataStep.fields != null && dataStep.fields.length > 0"
+    >
+      <ng-container *ngFor="let field of dataStep.fields">
+        <div
+          class="col-{{
+            12 / showColumnControl
+          }} p-3 has-action-menu crr-fiels mb-5"
+        >
+          <ng-container
+            [ngTemplateOutlet]="viewCustomFields"
+            [ngTemplateOutletContext]="{ $implicit: field }"
+          ></ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #viewCustomFields let-data>
+  <li class="text-gray-700">
+    {{ data.title }}
+  </li>
+
+  <span class="text-dark margin-l" *ngIf="data.dataType == 'T'">
+    {{ data.dataValue }}
+  </span>
+
+  <span class="text-dark margin-l" *ngIf="data.dataType == 'N'">
+    {{ data.dataValue }} <span *ngIf="data.dataFormat == 'P'">%</span>
+  </span>
+  <span class="text-dark margin-l" *ngIf="data.dataType == 'D'">
+    {{ data.dataValue | date : fomatvalue(data.dataFormat) }}
+  </span>
+
+  <ng-container *ngIf="data.dataType == 'R'">
+    <ngb-rating
+      [rate]="partNum(data.dataValue)"
+      [max]="data?.rank"
+      [readonly]="true"
+      [starTemplate]="temp"
+    >
+      <ng-template #temp let-fill="fill" let-index="index">
+        <span
+          class="rankIcon {{ data?.rankIcon }} filled"
+          [class.filled]="fill === 100"
+          [class.bad]="index < data?.rank"
+        ></span>
+      </ng-template>
+    </ngb-rating>
+  </ng-container>
+
+  <codx-mfunc
+    [formModel]="formModel"
+    (clickMF)="clickMF($event, data)"
+    [isBookMark]="true"
+    [dataItem]="data"
+    [type]="'hover'"
+    
+  >
+  </codx-mfunc>
+</ng-template>

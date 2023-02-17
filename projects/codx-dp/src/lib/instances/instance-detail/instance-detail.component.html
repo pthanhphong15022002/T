@@ -120,10 +120,12 @@
         ></codx-gantt-chart>
 
         <ng-template #ganttItems let-data>
-          <div class="badge badge-light badge-square badge-md fs-7 p-2" [ngStyle]="{'background-color': getColor(data.recID)}" >
-            <div class="fw-bold text-dark">{{ data.name }} </div>
+          <div
+            class="badge badge-light badge-square badge-md fs-7 p-2"
+            [ngStyle]="{ 'background-color': getColor(data.recID) }"
+          >
+            <div class="fw-bold text-dark">{{ data.name }}</div>
           </div>
-
         </ng-template>
       </ng-container>
 
@@ -134,13 +136,7 @@
               *ngFor="let item of listSteps; index as i"
               id="step-click"
               style="flex-grow: 1"
-              [ngClass]="
-                i == currentStep
-                  ? 'step current'
-                  : i < currentStep
-                  ? 'step old'
-                  : 'step'
-              "
+              [ngClass]="item.stepStatus === '1' || item.stepStatus === '4' || item.stepStatus === '5' ? 'step current':  item.stepStatus === '3' ? 'step old': 'step' "
               (click)="click(i, item)"
             >
               <span> {{ item.stepName }}</span>
@@ -169,8 +165,9 @@
             </div>
           </div>
         </div>
-        <codx-stages-detail
-          [listData]="tmpTeps"
+        <ng-container *ngIf="tmpTeps">
+          <codx-stages-detail         
+          [dataStep]="tmpTeps"
           [formModel]="formModel"
           [currentStep]="currentNameStep"
           [stepID]="dataSelect.stepID"
@@ -179,13 +176,13 @@
           [isUpdate]="dataSelect.write"
           [isCreate]="dataSelect.create"
         ></codx-stages-detail>
+        </ng-container>
+      
       </ng-container>
       <ng-container *ngIf="idCbx == 'F'">
-        <codx-field-detail
-          [lstSteps]="listSteps"
-          [formModel]="formModel"
-          [isUpdate]="dataSelect.write"
-        ></codx-field-detail>
+        <ng-container *ngFor="let item of listSteps">
+          <codx-field-detail [dataStep]="item" [isUpdate]="dataSelect.write"></codx-field-detail>
+        </ng-container>
       </ng-container>
     </ng-template>
   </codx-detail-tmp>

@@ -1,0 +1,18 @@
+<codx-views
+  #view
+  [views]="views"
+  [button]="buttons"
+  service="BS"
+  entityName="BS_UnitsOfMearsure"
+  (buttonClick)="toolBarClick($event)"
+>
+</codx-views>
+<ng-template #templateMore let-data>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    (clickMF)="clickMF($event, data)"
+    [isBookMark]="true"
+    type="view"
+  ></codx-mfunc>
+</ng-template>
