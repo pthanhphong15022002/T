@@ -1,7 +1,6 @@
 declare var window: any;
-import { CO_Meetings } from './../../../../../codx-tm/src/lib/models/CO_Meetings.model';
 import { DataRequest } from './../../../../../../src/shared/models/data.request';
-import { EventEmitter, Output } from '@angular/core';
+import { Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import {
@@ -11,9 +10,7 @@ import {
   AuthStore,
   CRUDService,
   CodxListviewComponent,
-  ResourceModel,
   Util,
-  CodxScheduleComponent,
 } from 'codx-core';
 import {
   Component,
@@ -25,16 +22,14 @@ import {
   Injector,
   TemplateRef,
   ChangeDetectorRef,
-  ComponentRef,
 } from '@angular/core';
-import { Notes } from '@shared/models/notes.model';
+import { Notes, tmpBookingCalendar } from '@shared/models/notes.model';
 import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
 import { UpdateNotePinComponent } from 'projects/codx-wp/src/lib/dashboard/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/save-note/save-note.component';
 import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
 import moment from 'moment';
 import { CodxShareService } from '../../codx-share.service';
-import console from 'console';
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
 @Component({
   selector: 'app-calendar-notes',
@@ -593,7 +588,9 @@ export class CalendarNotesComponent
     requestDataTM.entityName = 'TM_Tasks';
     requestDataTM.entityPermission = 'TM_MyTasks';
     this.codxShareSV.getDataTM_Tasks(requestDataTM).subscribe((res) => {
-      this.getModelShare(res[0], param.Template, 'TM_Tasks');
+      if (res) {
+        this.getModelShare(res[0], param.Template, 'TM_Tasks');
+      }
     });
   }
 
@@ -613,7 +610,9 @@ export class CalendarNotesComponent
     requestDataCO.entityName = 'CO_Meetings';
     requestDataCO.entityPermission = 'CO_TMMeetings';
     this.codxShareSV.getDataCO_Meetings(requestDataCO).subscribe((res) => {
-      this.getModelShare(res[0], param.Template, 'CO_Meetings');
+      if (res) {
+        this.getModelShare(res[0], param.Template, 'CO_Meetings');
+      }
     });
   }
 
@@ -655,7 +654,9 @@ export class CalendarNotesComponent
     requestDataEP_Car.entityName = 'EP_Bookings';
     requestDataEP_Car.entityPermission = 'EP_BookingCars';
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Car).subscribe((res) => {
-      this.getModelShare(res[0], param.Template, 'EP_BookingCars');
+      if (res) {
+        this.getModelShare(res[0], param.Template, 'EP_BookingCars');
+      }
     });
   }
 
@@ -666,7 +667,9 @@ export class CalendarNotesComponent
     this.codxShareSV.getDataWP_Notes(predicate, dataValue).subscribe((res) => {
       this.countNotePin = 0;
       this.countNotePin = res[1];
-      this.getModelShare(res[0], param.Template, 'WP_Notes');
+      if (res) {
+        this.getModelShare(res[0], param.Template, 'WP_Notes');
+      }
     });
   }
 
@@ -740,6 +743,9 @@ export class CalendarNotesComponent
         );
       }
     }
+    console.log('co', this.CO_MeetingsTemp);
+    console.log('room', this.EP_BookingRoomsTemp);
+    console.log('car', this.EP_BookingCarsTemp);
   }
 
   onSwitchCountEven(transType) {
@@ -1366,5 +1372,23 @@ export class CalendarNotesComponent
       ' - ' +
       this.datePipe.transform(endDate, 'H:mm');
     return rHtml;
+  }
+
+  getFieldValue(field: string, data): tmpBookingCalendar {
+    let arr = field.replace(/ /g, '').split('|');
+    let tmpType_RefID: tmpBookingCalendar = new tmpBookingCalendar();
+    if (arr.length >= 2) {
+      field = arr[0];
+      field = field[0].toLowerCase() + field.slice(1);
+      let type_codeValue = arr[1].split(':');
+
+      if (type_codeValue.length >= 2) {
+        tmpType_RefID.type = type_codeValue[0];
+        tmpType_RefID.refID = type_codeValue[1];
+        tmpType_RefID.value = data[field];
+      }
+    }
+
+    return tmpType_RefID;
   }
 }

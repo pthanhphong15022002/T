@@ -45,7 +45,6 @@ import {
   DP_Steps_Fields,
   DP_Steps_TaskGroups,
 } from '../../models/models';
-import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 import { format } from 'path';
 import { FormGroup } from '@angular/forms';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
@@ -53,6 +52,7 @@ import { ViewJobComponent } from './step-task/view-job/view-job.component';
 import { PopupTypeTaskComponent } from './step-task/popup-type-task/popup-type-task.component';
 import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-group.component';
 import { paste } from '@syncfusion/ej2-angular-richtexteditor';
+import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-dynamic.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -606,7 +606,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.typeShare = '4';
         break;
     }
-    this.callfc.openForm(share, '', 420, window.innerHeight);
+    this.callfc.openForm(share, '', 420, 600);
   }
 
   applyShare(e, type) {
@@ -618,18 +618,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           for (var i = 0; i < value.length; i++) {
             var data = value[i];
             var perm = new DP_Processes_Permission();
-            perm.objectName =
-              data.text != null || data.text != ''
-                ? data.text
-                : data.objectName;
-            perm.objectID = data.id != null || data.id != '' ? data.id : null;
+            perm.objectName = (data.text != null || data.text == '') && data.objectType != "U" ? data.text : data.dataSelected.EmployeeName;
+            perm.objectID = (data.id != null || data.id != '') ? data.id : null;
             perm.objectType = data.objectType;
             perm.full = true;
             perm.create = true;
             perm.read = true;
             perm.assign = true;
             perm.edit = true;
-            perm.publish = true;
+            // perm.publish = true;
             perm.delete = true;
             perm.roleType = 'O';
             this.permissions = this.checkUserPermission(this.permissions, perm);
@@ -641,7 +638,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           for (var i = 0; i < value.length; i++) {
             var data = value[i];
             var perm = new DP_Processes_Permission();
-            perm.objectName = data.text != null ? data.text : data.objectName;
+            perm.objectName = (data.text != null || data.text == '') && data.objectType != "U" ? data.text : data.dataSelected.EmployeeName;
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';
@@ -650,7 +647,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.create = false;
             perm.assign = false;
             perm.edit = false;
-            perm.publish = false;
+            // perm.publish = false;
             perm.delete = false;
 
             this.permissions = this.checkUserPermission(this.permissions, perm);
@@ -662,7 +659,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           for (var i = 0; i < value.length; i++) {
             var data = value[i];
             var perm = new DP_Processes_Permission();
-            perm.objectName = data.text != null ? data.text : data.objectName;
+            perm.objectName = (data.text != null || data.text == '') && data.objectType != "U" ? data.text : data.dataSelected.EmployeeName;
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'F';
@@ -671,7 +668,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.create = false;
             perm.assign = false;
             perm.edit = false;
-            perm.publish = false;
+            // perm.publish = false;
             perm.delete = false;
             this.permissions = this.checkUserPermission(this.permissions, perm);
           }
@@ -683,13 +680,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           for (var i = 0; i < value.length; i++) {
             var data = value[i];
             var roles = new DP_Steps_Roles();
-            roles.objectName = data.text != null ? data.text : data.objectName;
+            roles.objectName = (data.text != null || data.text == '') && data.objectType != "U" ? data.text : data.dataSelected.EmployeeName;
             roles.objectID = data.id != null ? data.id : null;
             roles.objectType = data.objectType;
             roles.roleType = 'S';
             tmpRole = this.checkRolesStep(this.step.roles, roles);
             var perm = new DP_Processes_Permission();
-            perm.objectName = data.text != null ? data.text : data.objectName;
+            perm.objectName = (data.text != null || data.text == '') && data.objectType != "U" ? data.text : data.dataSelected.EmployeeName;
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';
@@ -698,7 +695,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.create = false;
             perm.assign = false;
             perm.edit = false;
-            perm.publish = false;
+            // perm.publish = false;
             perm.delete = false;
             this.permissions = this.checkUserPermission(this.permissions, perm);
           }
@@ -1798,7 +1795,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   createStepReason(stepReason: any, reasonValue: any) {
     stepReason = this.handleStepReason(stepReason, reasonValue);
-    stepReason.reasonControl = true;
   }
 
   handleReason(

@@ -25,9 +25,13 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   vendors:Vendors;
   contact:Contact;
   objectBankaccount:Array<BankAccount> = [];
+  objectBankaccountDelete:Array<BankAccount> = [];
   objectContact:Array<Contact> = [];
+  objectContactDelete:Array<Contact> = [];
   objectAddress:Array<Address> = [];
+  objectAddressDelete:Array<Address> = [];
   objectContactAddress:Array<Contact> = [];
+  objectContactAddressDelete:Array<Contact> = [];
   objecttype:string = '2';
   gridViewSetup:any;
   gridViewSetupBank:any;
@@ -227,7 +231,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
           PopAddContactComponent,
           '',
           650,
-          550,
+          570,
           '',
           obj,
           '',
@@ -294,17 +298,7 @@ deleteobjectBank(data: any) {
       (x) => x.bankAcctID == data.bankAcctID && x.bankID == data.bankID
     );
     this.objectBankaccount.splice(index, 1);
-    this.api
-      .exec('ERM.Business.BS', 'BankAccountsBusiness', 'DeleteAsync', [
-        this.objecttype,
-        this.vendorID,
-        data,
-      ])
-      .subscribe((res: any) => {
-        if (res) {
-          this.notification.notify('Xóa thành công');
-        }
-      });
+    this.objectBankaccountDelete.push(data);
 }
 editobjectBank(data: any) {
     let index = this.objectBankaccount.findIndex(
@@ -378,14 +372,23 @@ editobjectAddress(data: any) {
             var datacontactaddress = JSON.parse(
               localStorage.getItem('datacontactaddress')
             );
+            var datacontactaddressdelete = JSON.parse(
+              localStorage.getItem('datacontactaddressdelete')
+            );
             if (dataaddress != null) {
               this.objectAddress[index] = dataaddress;
             }
             if (datacontactaddress != null) {
               this.objectContactAddress = datacontactaddress;
             }
+            if (datacontactaddressdelete != null) {
+              datacontactaddressdelete.forEach((element) => {
+                this.objectContactAddressDelete.push(element);
+              });
+            }
             window.localStorage.removeItem('dataaddress');
             window.localStorage.removeItem('datacontactaddress');
+            window.localStorage.removeItem('datacontactaddressdelete');
           });
         }
       });
@@ -401,17 +404,7 @@ deleteobjectAddress(data: any) {
       }
     });
     this.objectAddress.splice(index, 1);
-    this.api
-      .exec('ERM.Business.BS', 'AddressBookBusiness', 'DeleteAsync', [
-        this.objecttype,
-        this.vendorID,
-        data,
-      ])
-      .subscribe((res: any) => {
-        if (res) {
-          this.notification.notify('Xóa thành công');
-        }
-      });
+    this.objectAddressDelete.push(data);
 }
 editobjectContact(data: any) {
     let index = this.objectContact.findIndex(
@@ -456,17 +449,7 @@ deleteobjectContact(data: any) {
       (x) => x.reference == data.reference && x.contactID == data.contactID
     );
     this.objectContact.splice(index, 1);
-    this.api
-      .exec('ERM.Business.BS', 'ContactBookBusiness', 'DeleteAsync', [
-        this.objecttype,
-        this.vendorID,
-        data,
-      ])
-      .subscribe((res: any) => {
-        if (res) {
-          this.notification.notify('Xóa thành công');
-        }
-      });
+    this.objectContactDelete.push(data);
 }
   //#endregion
 
@@ -548,6 +531,7 @@ deleteobjectContact(data: any) {
                 this.objecttype,
                 this.vendorID,
                 this.objectBankaccount,
+                this.objectBankaccountDelete
               ])
               .subscribe((res: any) => {});
             this.api
@@ -555,6 +539,7 @@ deleteobjectContact(data: any) {
                 this.objecttype,
                 this.vendorID,
                 this.objectAddress,
+                this.objectAddressDelete
               ])
               .subscribe((res: any) => {});
             this.api
@@ -562,7 +547,9 @@ deleteobjectContact(data: any) {
                 this.objecttype,
                 this.vendorID,
                 this.objectContact,
+                this.objectContactDelete,
                 this.objectContactAddress,
+                this.objectContactAddressDelete
               ])
               .subscribe((res: any) => {});
             this.dialog.close();

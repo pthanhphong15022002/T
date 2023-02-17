@@ -59,21 +59,24 @@
               >
         </codx-input>
       </div>  
-      <div class="d-flex">
-        <div class="form-group">
+      <div class="row mx-0 mt-3">
+        <div class="col-5 ps-0">
+          <div class="form-group">
             <codx-label
-            [formModel]="form.formModel"
-            fiedName="Phone"
-            default="Số di động"
-          ></codx-label>
-            <codx-input
-                    [crrValue]="phone"
-                    [formModel]="form.formModel"
-                    field="phone"
-                    (valueChange)="valueChangePhone($event)"
-                  >
-            </codx-input>
-          </div>  
+          [formModel]="form.formModel"
+          fiedName="Phone"
+          default="Số di động"
+        ></codx-label>
+          <codx-input
+                  [crrValue]="phone"
+                  [formModel]="form.formModel"
+                  field="phone"
+                  (valueChange)="valueChangePhone($event)"
+                >
+          </codx-input>
+          </div>   
+        </div>
+        <div class="col-5 pe-0">
           <div class="form-group">
             <codx-label
             [formModel]="form.formModel"
@@ -87,7 +90,9 @@
                     (valueChange)="valueChange($event)"
                   >
             </codx-input>
-          </div>  
+          </div>
+        </div>
+        <div class="col-2 pe-0">
           <div class="form-group">
             <codx-label
             [formModel]="form.formModel"
@@ -101,7 +106,8 @@
                     (valueChange)="valueChange($event)"
                   >
             </codx-input>
-          </div>  
+          </div>
+        </div>
       </div>
       <div class="form-group">
         <codx-label
@@ -148,15 +154,18 @@
       </div>  
 </ng-template>
 <ng-template #footer>
-  
-    <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary">
-            <codx-label  [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
-                default="Lưu & Thêm"></codx-label>
-        </button>
-        <button (click)="onSave()" type="button" class="btn btn-primary">
-            <codx-label  [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
-                default="Lưu"></codx-label>
-        </button>
+  <div class="d-flex justify-content-end mt-1 me-3">
+    <div class="ms-2">
+      <button type="button" class="btn btn-light-primary">
+        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+          [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+      </button>
     </div>
+    <div class="ms-2">
+      <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
+        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+          [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </div>
 </ng-template>

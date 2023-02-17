@@ -51,7 +51,7 @@ export class InputCustomFieldComponent implements OnInit {
 
   ngOnInit(): void {
     //data test
-   
+
     switch (this.customField.dataType) {
       case 'D':
         if (this.customField.dataFormat == '3') this.formatDate = 'd';
@@ -82,85 +82,82 @@ export class InputCustomFieldComponent implements OnInit {
         return;
       } else this.showErrMess = false;
     }
-
-    if (
-      this.customField.dataType == 'T' &&
-      this.customField.dataFormat == 'E'
-    ) {
-      let email = e.data;
-      var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-      // var mailformat =
-      //   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-      if (!email.match(mailformat)) {
-        this.cache.message(this.messCodeEmail).subscribe((res) => {
-          if (res) {
-            this.errorMessage = res.customName || res.defaultName;
-            this.showErrMess = true;
-          }
-          this.changeDef.detectChanges();
-          return;
-        });
-      } else this.showErrMess = false;
-    }
-    //format so dien thoai
-    if (
-      this.customField.dataType == 'T' &&
-      this.customField.dataFormat == 'P'
-    ) {
-      let phone = e.data;
-      var phonenumberFormat =
-        /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-      // //Thêm trường hợp +84
-      // var phonenumberFormat =
-      //   /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/;
-      if (!phone.match(phonenumberFormat)) {
-        this.cache.message(this.messCodePhoneNum).subscribe((res) => {
-          if (res) {
-            this.errorMessage = res.customName || res.defaultName;
-            this.showErrMess = true;
-          }
-          this.changeDef.detectChanges();
-          return;
-        });
-      } else this.showErrMess = false;
-    }
-    //Kiểm tra trường hợp số, số nguyên, số thập phân
-    if (this.customField.dataType == 'N') {
-      if (isNaN(e.data)) {
-        this.cache.message('RS006').subscribe((res) => {
-          if (res) {
-            this.showErrMess = true;
-            this.errorMessage = res.defaultName;
-          }
-          this.changeDef.detectChanges();
-          return;
-        });
-      } else {
-        this.showErrMess = false;
-      }
-      if (this.customField.dataFormat == 'I') {
-        if (!String(e.data).match(/^-?\d+$/)) {
-          this.showErrMess = true;
-          //Mssg chưa có
-          this.errorMessage = 'Vui lòng nhập số nguyên';
-          this.changeDef.detectChanges();
-          return;
+    switch (this.customField.dataType) {
+      case 'T':
+        if (this.customField.dataFormat == 'E') {
+          let email = e.data;
+          var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+          // var mailformat =
+          //   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+          if (!email.match(mailformat)) {
+            this.cache.message(this.messCodeEmail).subscribe((res) => {
+              if (res) {
+                this.errorMessage = res.customName || res.defaultName;
+                this.showErrMess = true;
+              }
+              this.changeDef.detectChanges();
+              return;
+            });
+          } else this.showErrMess = false;
         }
-      } else {
-        this.showErrMess = false;
-      }
-      if (this.customField.dataFormat == 'D') {
-        if (!String(e.data).match(/^-?\d+\.\d+$/)) {
-          this.showErrMess = true;
-          //Mssg chưa có
-          this.errorMessage = 'Vui lòng nhập số thập phân';
-          this.changeDef.detectChanges();
-          return;
+        //format so dien thoai
+        if (this.customField.dataFormat == 'P') {
+          let phone = e.data;
+          var phonenumberFormat =
+            /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+          // //Thêm trường hợp +84
+          // var phonenumberFormat =
+          //   /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/;
+          if (!phone.match(phonenumberFormat)) {
+            this.cache.message(this.messCodePhoneNum).subscribe((res) => {
+              if (res) {
+                this.errorMessage = res.customName || res.defaultName;
+                this.showErrMess = true;
+              }
+              this.changeDef.detectChanges();
+              return;
+            });
+          } else this.showErrMess = false;
         }
-      } else {
-        this.showErrMess = false;
-      }
+        break;
+      case 'N':
+        if (isNaN(e.data)) {
+          this.cache.message('RS006').subscribe((res) => {
+            if (res) {
+              this.showErrMess = true;
+              this.errorMessage = res.defaultName;
+            }
+            this.changeDef.detectChanges();
+            return;
+          });
+        } else {
+          this.showErrMess = false;
+        }
+        if (this.customField.dataFormat == 'I') {
+          if (!String(e.data).match(/^-?\d+$/)) {
+            this.showErrMess = true;
+            //Mssg chưa có
+            this.errorMessage = 'Vui lòng nhập số nguyên';
+            this.changeDef.detectChanges();
+            return;
+          }
+        } else {
+          this.showErrMess = false;
+        }
+        if (this.customField.dataFormat == 'D') {
+          if (!String(e.data).match(/^-?\d+\.\d+$/)) {
+            this.showErrMess = true;
+            //Mssg chưa có
+            this.errorMessage = 'Vui lòng nhập số thập phân';
+            this.changeDef.detectChanges();
+            return;
+          }
+        } else {
+          this.showErrMess = false;
+        }
+        break;
     }
+   
     this.valueChangeCustom.emit({ e: e, data: this.customField });
   }
   //combox user
@@ -171,12 +168,14 @@ export class InputCustomFieldComponent implements OnInit {
   valueCbxUserChange(e) {
     if (this.isPopupUserCbb) this.isPopupUserCbb = false;
     if (e && e.id) {
-      if (this.listIdUser || this.customField.dataFormat == '1')
+      if (!this.listIdUser || this.customField.dataFormat == '1')
         this.listIdUser = e.id;
       else this.listIdUser += ';' + e.id;
     }
     this.valueChangeCustom.emit({ e: this.listIdUser, data: this.customField });
   }
+
+  valueChangeTime() {}
 
   addFile() {
     this.attachment.uploadFile();
