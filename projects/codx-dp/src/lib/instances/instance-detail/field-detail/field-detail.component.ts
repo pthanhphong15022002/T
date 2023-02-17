@@ -72,8 +72,8 @@ export class FieldDetailComponent implements OnInit {
         switch (res.functionID) {
           //       case 'SYS104':
           //       case 'SYS04':
-          //       case 'SYS102':
-          //       case 'SYS02':
+                case 'SYS102':
+                case 'SYS02':
           //       case 'SYS005':
           //       case 'SYS003':
           //       case 'SYS004':
@@ -83,8 +83,8 @@ export class FieldDetailComponent implements OnInit {
           //       case 'DP02':
           //       case 'DP09':
           //       case 'DP10':
-          //         res.disabled = true;
-          //         break;
+                  res.disabled = true;
+                  break;
           //edit
           case 'SYS103':
           case 'SYS03':

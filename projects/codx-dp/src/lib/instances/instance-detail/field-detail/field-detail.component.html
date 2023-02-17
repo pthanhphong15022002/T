@@ -15,7 +15,7 @@
       <div class="group-button">
         <button class="button-custom">
           <span
-            class="icon-edit icon-20 text-primary-600 py-2"
+            [ngClass]="isUpdate ? 'icon-edit icon-20 text-primary-600 py-2' : ''"
             style="font-weight: 500"
             (click)="popupCustomField(dataStep.fields)"
           ></span>
@@ -92,7 +92,7 @@
     [isBookMark]="true"
     [dataItem]="data"
     [type]="'hover'"
-    
+    (changeDataMF)="changeFieldMF($event)"
   >
   </codx-mfunc>
 </ng-template>
