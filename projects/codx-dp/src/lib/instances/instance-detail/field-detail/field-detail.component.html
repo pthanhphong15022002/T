@@ -109,6 +109,26 @@
     ></codx-imgs>
   </ng-container>
 
+  <ng-container *ngIf="data.dataType == 'A' && data.dataValue">
+    <codx-attachment
+      #attachment
+      [objectId]="data.dataValue.split(';')[0]"
+      [objectType]="data.dataValue.split(';')[1]"
+      hideFolder="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      hideDes="1"
+      type="inline"
+      [allowMultiFile]="data.multiple?'1':'0'"
+      displayThumb="full"
+      showMessage="0"
+      [hideDelete]="'1'"
+      [hideMoreF]="'0'"
+    >
+    </codx-attachment>
+  </ng-container>
+
   <codx-mfunc
     [formModel]="formModel"
     (clickMF)="clickMF($event, data)"

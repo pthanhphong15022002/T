@@ -147,8 +147,8 @@ export class PopupAddInstanceComponent implements OnInit {
           result = event.e?.data.fromDate;
           break;
         case 'P':
-          result = event.e
-          break;
+        case 'A':
+          result = event.e;
           break;
       }
 
@@ -189,7 +189,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
-        if (res && res.save) {
+        if (res && res.save) {       
           this.dialog.close(res);
         }
       });

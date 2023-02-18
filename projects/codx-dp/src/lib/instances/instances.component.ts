@@ -227,8 +227,11 @@ export class InstancesComponent
               dialogCustomField.closed.subscribe((e) => {
                 if (!e?.event) this.view.dataService.clear();
                 if (e && e.event != null) {
-                  //xu ly data đổ về
-
+                if(this.kanban){
+                   if(this.kanban?.dataSource?.length==1){
+                    this.kanban.refresh();
+                   }
+                }
                   this.detectorRef.detectChanges();
                 }
               });
