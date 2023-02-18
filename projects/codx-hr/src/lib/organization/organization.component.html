@@ -1,6 +1,16 @@
-<codx-views #view [autoLoad]="true" entityName="HR_OrganizationUnits" idField="orgUnitID" [views]="views"
-  [selectedFirst]="false" (selectedChange)="onSelectionChanged($event)" [button]="button"
-  (buttonClick)="btnClick($event)" (viewChanged)="changeView($event)">
+<codx-views #view [autoLoad]="true" 
+  entityName="HR_OrganizationUnits" 
+  idField="OrgUnitID" 
+  service="HR"
+  assemblyName="ERM.Business.HR"
+  className = 'OrganizationUnitsBusiness'
+  method = 'GetDataOrgAsync'
+  [views]="views"
+  [selectedFirst]="false" 
+  (selectedChange)="onSelectionChanged($event)" 
+  [button]="button"
+  (buttonClick)="btnClick($event)" 
+  (viewChanged)="changeView($event)">
 </codx-views>
 <!-- tree -->
 <ng-template #tempTree let-data>
@@ -26,11 +36,13 @@
 </ng-template>
 <!-- tree list -->
 <ng-template #tmpList>
-  <lib-organization-list [view]="view" [dataService]="dataService" [formModel]="view.formModel"
+  <lib-organization-list [view]="view" 
+    [dataService]="dataService" 
+    [formModel]="view.formModel"
     [orgUnitID]="orgUnitID"></lib-organization-list>
 </ng-template>
 
-<!--  -->
+<!--template sài tạm mode view list -->
 
 <ng-template #itemTemplate let-item>
   <div class="d-flex flex-column p-4 border-bottom">
@@ -122,7 +134,7 @@
         </div>
         <div #o class="mx-6 d-flex flex-column align-items-center"
           (click)="loadEmployList(o, item.departmentCode, '30')">
-          <div class="fs-2 fw-bold mb-2 text-warning number-users">{{ item.onboard }}</div>
+          <div class="fs-2 fw-bold mb-2 text-warning number-users">{{ item.onboard ? item.onboard : 0 }}</div>
           <span class="text-gray-500">
             <codx-label [formModel]="view.formModel" name="lblOnBoard" default="Onbroard">
             </codx-label>
@@ -130,7 +142,7 @@
         </div>
         <div #f class="mx-6 d-flex flex-column align-items-center"
           (click)="loadEmployList(f, item.departmentCode, '70')">
-          <div class="fs-2 fw-bold mb-2 text-danger number-users">{{ item.offboard }}</div>
+          <div class="fs-2 fw-bold mb-2 text-danger number-users">{{item.offboard ? item.offboard : 0 }}</div>
           <span class="text-gray-500">
             <codx-label [formModel]="view.formModel" name="lblOffBoard" default="Offboard">
             </codx-label>
