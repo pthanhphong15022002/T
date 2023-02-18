@@ -422,6 +422,10 @@ export class CodxTasksComponent
 
   //#region CRUD
   add() {
+    // this.api.execSv<any>("TM","TM","TaskBusiness","CheckRecIDAndTaskIDAsync",[]).subscribe(res=>{
+    //   if(res){}
+    //   debugger
+    // }) 
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
