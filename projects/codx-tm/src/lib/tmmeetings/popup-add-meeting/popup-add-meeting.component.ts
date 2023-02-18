@@ -102,6 +102,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   fields: Object = { text: 'resourceName', value: 'resourceID' };
   disabledProject = false;
   listResources: string = '';
+  isClickSave =false;
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -449,6 +450,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   async save() {
+    if(this.isClickSave) return;
+    this.isClickSave = true ;
     if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
