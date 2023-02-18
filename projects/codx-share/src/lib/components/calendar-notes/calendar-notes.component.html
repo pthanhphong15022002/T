@@ -477,13 +477,14 @@
           </div>
           <div class="d-flex flex-column note-option">
             <div class="d-flex flex-column note-option">
-              <ng-container
+              {{ item?.location }}
+              <!-- <ng-container
                 *ngTemplateOutlet="
                   fieldValue;
                   context: { data: getFieldValue(item?.memo, item?.data) }
                 "
               >
-              </ng-container>
+              </ng-container> -->
             </div>
           </div>
           <div class="d-flex flex-column note-option">
@@ -507,13 +508,15 @@
           </div>
 
           <div class="d-flex flex-column note-option">
-            <ng-container
+            {{ item?.location }}
+
+            <!-- <ng-container
               *ngTemplateOutlet="
                 fieldValue;
                 context: { data: getFieldValue(item?.memo, item?.data) }
               "
             >
-            </ng-container>
+            </ng-container> -->
           </div>
           <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.title"></span>
