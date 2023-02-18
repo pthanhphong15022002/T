@@ -11,6 +11,7 @@ import {
 } from '@syncfusion/ej2-angular-inputs';
 import {
   CacheService,
+  CodxFormComponent,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -24,6 +25,7 @@ import { DP_Steps_Fields } from '../../../models/models';
   styleUrls: ['./popup-add-custom-field.component.css'],
 })
 export class PopupAddCustomFieldComponent implements OnInit {
+  @ViewChild('form') form : CodxFormComponent ;
   title = 'Thêm trường tùy chỉnh';
   dialog: DialogRef;
   field: DP_Steps_Fields;
