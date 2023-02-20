@@ -54,7 +54,7 @@ export class PopupAddSprintsComponent implements OnInit {
   isHaveFile = false;
   titleAction = '';
   customName = '';
-
+  isClickSave =false ;
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @Output() loadData = new EventEmitter();
@@ -141,7 +141,8 @@ export class PopupAddSprintsComponent implements OnInit {
     if (this.resources == '') this.master.resources = null;
     else this.master.resources = this.resources;
     var isAdd = this.action == 'edit' ? false : true;
-
+    if(this.isClickSave) return;
+    this.isClickSave = true ;
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {

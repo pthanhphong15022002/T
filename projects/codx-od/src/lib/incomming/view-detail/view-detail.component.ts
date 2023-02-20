@@ -998,7 +998,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         .subscribe((item) => {
           if (item) {
             data.approveStatus = '0';
-            this.odService.updateDispatch(data, false).subscribe((item) => {
+            this.odService.updateDispatch(data , "", false).subscribe((item) => {
               if (item.status == 0) {
                 this.view.dataService.update(item?.data).subscribe();
               } else this.notifySvr.notify(item.message);
@@ -1243,7 +1243,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           data.status = '3';
           data.approveStatus = '3';
           this.notifySvr.notifyCode('ES007');
-          this.odService.updateDispatch(data, false).subscribe((item) => {
+          this.odService.updateDispatch(data , "", false).subscribe((item) => {
             if (item.status == 0) {
               this.view.dataService.update(item?.data).subscribe();
             } else this.notifySvr.notify(item.message);
@@ -1307,7 +1307,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             if (res.event && res.event?.approved == true) {
               datas.status = '3';
               datas.approveStatus = '3';
-              this.odService.updateDispatch(datas, false).subscribe((item) => {
+              this.odService.updateDispatch(datas , "", false).subscribe((item) => {
                 if (item.status == 0) {
                   this.view.dataService.update(item?.data).subscribe();
                 } else this.notifySvr.notify(item.message);

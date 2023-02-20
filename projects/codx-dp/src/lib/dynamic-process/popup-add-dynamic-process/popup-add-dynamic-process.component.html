@@ -1301,8 +1301,7 @@
                         </codx-label>
                         <span>
                           {{
-                            +taskList?.durationDay * 24 +
-                              +taskList?.durationHour || 0
+                            (+taskList?.durationDay || 0)* 24 + (+taskList?.durationHour || 0)
                           }}
                         </span>
                         <codx-label
@@ -1389,8 +1388,8 @@
                                 </codx-label>
                                 <span>
                                   {{
-                                    +task?.durationDay * 24 +
-                                      task?.durationHour || 0
+                                    (+task?.durationDay || 0) * 24 +
+                                      (+task?.durationHour || 0)
                                   }}
                                 </span>
                                 <codx-label
