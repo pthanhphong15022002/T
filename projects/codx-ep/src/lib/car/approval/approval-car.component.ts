@@ -271,6 +271,62 @@ export class ApprovalCarsComponent extends UIComponent {
         break;
     }
   }
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
+      event.forEach((func) => {
+        if (
+          func.functionID == 'SYS04' /*Copy*/ ||
+          func.functionID == 'EPT40203'
+        ) {
+          func.disabled = true;
+        }
+      });
+      if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = false;
+          }
+          if (
+            func.functionID == 'EPT40204' /*MF phân công tài xế*/ ||
+            func.functionID == 'EPT40206' /*Thu hoi*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = true;
+          }
+          if (func.functionID == 'EPT40204') {
+            func.disabled = false;
+          }
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            
+            let havedDriver = false;
+            if(data?.resources){              
+              for (let i = 0; i < data?.resources.length; i++) {
+                if (data?.resources[i].roleType == '2') {
+                  havedDriver = true;                  
+                }
+              }
+            }            
+            if (!havedDriver) {
+              func.disabled = false;
+            } else {
+              func.disabled = true;
+            }
+          }
+        });
+      }
+    }
+  }
   undo(data: any) {
     this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
       if (res != null) {
@@ -364,62 +420,7 @@ export class ApprovalCarsComponent extends UIComponent {
     this.itemDetail = event?.data;
   }
 
-  changeDataMF(event, data: any) {
-    if (event != null && data != null) {
-      event.forEach((func) => {
-        if (
-          func.functionID == 'SYS04' /*Copy*/ ||
-          func.functionID == 'EPT40203'
-        ) {
-          func.disabled = true;
-        }
-      });
-      if (data.approveStatus == '3') {
-        event.forEach((func) => {
-          if (
-            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
-            func.functionID == 'EPT40202' /*MF từ chối*/
-          ) {
-            func.disabled = false;
-          }
-          if (
-            func.functionID == 'EPT40204' /*MF phân công tài xế*/ ||
-            func.functionID == 'EPT40206' /*Thu hoi*/
-          ) {
-            func.disabled = true;
-          }
-        });
-      } else {
-        event.forEach((func) => {
-          if (
-            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
-            func.functionID == 'EPT40202' /*MF từ chối*/
-          ) {
-            func.disabled = true;
-          }
-          if (func.functionID == 'EPT40204') {
-            func.disabled = false;
-          }
-          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
-            
-            let havedDriver = false;
-            if(data?.resources){              
-              for (let i = 0; i < data?.resources.length; i++) {
-                if (data?.resources[i].roleType == '2') {
-                  havedDriver = true;                  
-                }
-              }
-            }            
-            if (!havedDriver) {
-              func.disabled = false;
-            } else {
-              func.disabled = true;
-            }
-          }
-        });
-      }
-    }
-  }
+ 
   sameDayCheck(sDate: any, eDate: any) {
     if (sDate && eDate) {
       return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
