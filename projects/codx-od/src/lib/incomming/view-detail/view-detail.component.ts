@@ -160,6 +160,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     )
       this.gridViewSetup = changes?.gridViewSetup?.currentValue;
     this.active = 1;
+    this.setHeight();
   }
 
   ngOnInit(): void {
@@ -168,7 +169,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
     this.getGridViewSetup(this.pfuncID);
-    this.setHeight();
   }
   setHeight() {
     let main = 0,
@@ -197,7 +197,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         document.getElementsByClassName(
           'codx-detail-body'
         ) as HTMLCollectionOf<HTMLElement>
-      )[0].style.height = main - header - 27 - a + 'px';
+      )[0].style.height = main - header - 115 - a + 'px';
     }
   }
   getGridViewSetup(funcID: any) {
@@ -998,7 +998,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         .subscribe((item) => {
           if (item) {
             data.approveStatus = '0';
-            this.odService.updateDispatch(data, false).subscribe((item) => {
+            this.odService.updateDispatch(data , "", false).subscribe((item) => {
               if (item.status == 0) {
                 this.view.dataService.update(item?.data).subscribe();
               } else this.notifySvr.notify(item.message);
@@ -1243,7 +1243,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           data.status = '3';
           data.approveStatus = '3';
           this.notifySvr.notifyCode('ES007');
-          this.odService.updateDispatch(data, false).subscribe((item) => {
+          this.odService.updateDispatch(data , "", false).subscribe((item) => {
             if (item.status == 0) {
               this.view.dataService.update(item?.data).subscribe();
             } else this.notifySvr.notify(item.message);
@@ -1307,7 +1307,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             if (res.event && res.event?.approved == true) {
               datas.status = '3';
               datas.approveStatus = '3';
-              this.odService.updateDispatch(datas, false).subscribe((item) => {
+              this.odService.updateDispatch(datas , "", false).subscribe((item) => {
                 if (item.status == 0) {
                   this.view.dataService.update(item?.data).subscribe();
                 } else this.notifySvr.notify(item.message);

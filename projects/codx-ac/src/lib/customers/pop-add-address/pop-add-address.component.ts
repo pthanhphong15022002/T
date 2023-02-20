@@ -85,7 +85,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Function
-  valueChange(e:any,type:any){
+  valueChange(e:any){
     this.address[e.field] = e.data;
   }
   valueChangeAdressType(e: any) {

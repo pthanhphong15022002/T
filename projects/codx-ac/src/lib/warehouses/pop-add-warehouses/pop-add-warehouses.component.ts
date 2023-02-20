@@ -130,7 +130,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
             PopAddContactComponent,
             '',
             650,
-            550,
+            570,
             '',
             obj,
             '',
