@@ -6,7 +6,7 @@
           name="titleDefault"
           formName="DPInstancesSteps"
           grvName="grvDPInstancesSteps"
-          [default]="titleDefault"
+          default="{{ titleDefault }}"
         ></codx-label>
       </span>
       <span class="title" *ngIf="!titleDefault">{{ dataStep.stepName }}</span>
@@ -120,7 +120,7 @@
       hideUploadBtn="1"
       hideDes="1"
       type="inline"
-      [allowMultiFile]="data.multiple?'1':'0'"
+      [allowMultiFile]="data.multiple ? '1' : '0'"
       displayThumb="full"
       showMessage="0"
       [hideDelete]="'1'"

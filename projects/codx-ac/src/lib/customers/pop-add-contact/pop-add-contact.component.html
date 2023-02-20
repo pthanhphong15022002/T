@@ -2,8 +2,8 @@
   [footer]="footer" subToolbarCss="text-end" [data]="contact">
 </codx-form>
 <ng-template #body>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
+  <div class="row">
+    <div class="col-8">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="ContactName" default="Họ tên"></codx-label>
         <codx-input [crrValue]="contactName" [formModel]="form.formModel" field="contactName"
@@ -11,7 +11,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-6 pe-0">
+    <div class="col-4">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Gender" default="Giới tính"></codx-label>
         <codx-input [crrValue]="form.data != null ? form.data.gender : ''" type="valuelist" refValue="AC014"
@@ -26,8 +26,8 @@
       (valueChange)="valueChangeJobTitle($event)">
     </codx-input>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-5 ps-0">
+  <div class="row">
+    <div class="col-4">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Phone" default="Số di động"></codx-label>
         <codx-input [crrValue]="phone" [formModel]="form.formModel" field="phone"
@@ -35,7 +35,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-5 pe-0">
+    <div class="col-4">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="HomePhone" default="Số di động cố định"></codx-label>
         <codx-input [crrValue]="form.data != null ? form.data.homePhone : ''" [formModel]="form.formModel"
@@ -43,7 +43,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-2 pe-0">
+    <div class="col-4">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="PhoneExt" default="Số ext."></codx-label>
         <codx-input [crrValue]="form.data != null ? form.data.phoneExt : ''" [formModel]="form.formModel"
