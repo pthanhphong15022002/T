@@ -30,7 +30,13 @@ import {
 import { PopupAddStaskComponent } from './popup-add-stask/popup-add-stask.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { PopupAddGroupTaskComponent } from './popup-add-group-task/popup-add-group-task.component';
-import { DP_Instances_Steps, DP_Instances_Steps_TaskGroups, DP_Instances_Steps_TaskGroups_Roles, DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from '../../../models/models';
+import {
+  DP_Instances_Steps,
+  DP_Instances_Steps_TaskGroups,
+  DP_Instances_Steps_TaskGroups_Roles,
+  DP_Instances_Steps_Tasks,
+  DP_Instances_Steps_Tasks_Roles,
+} from '../../../models/models';
 import { CodxDpService } from '../../../codx-dp.service';
 import { PopupCustomFieldComponent } from '../field-detail/popup-custom-field/popup-custom-field.component';
 import { ViewJobComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/view-job/view-job.component';
@@ -48,6 +54,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() formModel: any;
   @Input() currentStep: any;
   @Input() stepID: any;
+  @Input() titleDefault = '';
   @Input() isDelete: boolean = false;
   @Input() isEdit: boolean = false;
   @Input() isUpdate: boolean = false;
@@ -921,8 +928,8 @@ export class StagesDetailComponent implements OnInit {
           //edit
           case 'SYS103':
           case 'SYS03':
-              if (!this.isUpdate) res.disabled = true;
-              break;
+            if (!this.isUpdate) res.disabled = true;
+            break;
         }
       });
     }

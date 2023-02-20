@@ -57,6 +57,7 @@ export class PopupMoveStageComponent implements OnInit {
     this.instancesStepOld = this.listStepsCbx.filter(x => x.stepID === this.stepIdOld)[0];
     this.IdFail = this.listStepsCbx[this.listStepsCbx.length - 1]?.stepID;
     this.IdSuccess = this.listStepsCbx[this.listStepsCbx.length - 2]?.stepID;
+    this.stepIdClick = JSON.parse(JSON.stringify(dt?.data?.stepIdClick))
   }
 
   ngOnInit(): void {
