@@ -39,7 +39,10 @@ export class CodxSvService {
       queryParams: { funcID: func },
     });
   }
-
+  getSV(recID:any)
+  {
+    return this.api.execSv("SV","SV","SurveysBusiness","GetItemByRecIDAsync",recID)
+  }
   convertListToObject(
     list: Array<object>,
     fieldName: string,
