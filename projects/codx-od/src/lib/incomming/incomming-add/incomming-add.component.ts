@@ -216,6 +216,7 @@ export class IncommingAddComponent implements OnInit {
   //Người được chia sẻ
   changeDataShare(event: any)
   {
+    debugger
     if(event?.data?.value) this.relations = event?.data?.value
   }
   //Nơi nhận
