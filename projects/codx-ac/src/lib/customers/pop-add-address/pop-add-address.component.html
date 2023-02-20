@@ -57,7 +57,8 @@
     </codx-input>
   </div>
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <codx-label class="mb-3 text-primary fw-bold fs-6" [formModel]="form.formModel" default="Người liên hệ"></codx-label>
+    <codx-label class="mb-3 text-primary fw-bold fs-6" [formModel]="form.formModel"
+      default="Người liên hệ"></codx-label>
     <button type="button" class="btn btn-sm btn-icon btn-light-primary" (click)="openPopupContact()">
       <i class="icon-person_add icon-16"></i>
     </button>
@@ -95,13 +96,13 @@
       </div>
     </div>
   </div>
-  
+
 </ng-template>
 <ng-template #footer>
   <div class="d-flex align-items-center justify-content-between mb-3">
     <div class="d-flex align-items-center">
-      <codx-input class="me-2" [checked]="form.data != null ? form.data.isDefault : false" type="switch" field="isDefault"
-        (valueChange)="valueChange($event)">
+      <codx-input class="me-2" [checked]="form.data != null ? form.data.isDefault : false" type="switch"
+        field="isDefault" (valueChange)="valueChange($event)">
       </codx-input>
       <codx-label [formModel]="form.formModel" fiedName="IsDefault" default="Mặc định"></codx-label>
     </div>
