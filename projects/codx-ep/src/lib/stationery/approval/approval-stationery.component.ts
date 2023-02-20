@@ -156,6 +156,11 @@ export class ApprovalStationeryComponent
           ) {
             func.disabled = false;
           }
+          if (
+            func.functionID == 'EPT40306' /*MF Undo*/ 
+          ) {
+            func.disabled = true;
+          }
         });
       } else {
         event.forEach((func) => {
@@ -165,7 +170,13 @@ export class ApprovalStationeryComponent
           ) {
             func.disabled = true;
           }
+          if (
+            func.functionID == 'EPT40306' /*MF Undo*/ 
+          ) {
+            func.disabled = false;
+          }
         });
+        
       }
     }
   }
