@@ -204,7 +204,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //end data Test
   isShowstage = true;
   titleAdd = 'Thêm';
-
+  titleDefault ='' ;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -225,7 +225,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.userId = this.user?.userID;
 
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
-    console.log('----------', this.process);
+  
     if (this.action != 'add') {
       // this.showID = true;
       this.permissions = this.process.permissions;
@@ -253,6 +253,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (mfAdd) this.titleAdd = mfAdd?.customName;
       }
     });
+    this.cache.functionList('DPT03').subscribe((fun) => {
+        if (fun) this.titleDefault = fun.customName || fun.description;
+      });
+    
     this.getGrvStep();
     this.getValListDayoff();
     this.autoHandleStepReason();
