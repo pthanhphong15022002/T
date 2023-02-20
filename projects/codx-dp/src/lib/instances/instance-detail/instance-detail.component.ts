@@ -64,7 +64,8 @@ export class InstanceDetailComponent implements OnInit {
     type: 'type',
     color:'color'
   };
-
+  titleDefault ='';
+  
   constructor(
     private dpSv: CodxDpService,
     private api: ApiHttpService,
@@ -72,7 +73,9 @@ export class InstanceDetailComponent implements OnInit {
     private changeDetec: ChangeDetectorRef,
     private popupInstances: InstancesComponent
   ) {
-   
+    this.cache.functionList('DPT03').subscribe((fun) => {
+      if (fun) this.titleDefault = fun.customName || fun.description;
+    });
   }
 
   ngOnInit(): void {
@@ -139,11 +142,10 @@ export class InstanceDetailComponent implements OnInit {
         this.progress = '0';
         this.tmpTeps = null;
       }
-      debugger;
       let listStepHandle = JSON.parse(JSON.stringify(this.listStepNew));
       if(this.instanceStatus === '1' || this.instanceStatus === '2'  || this.instanceStatus === null || this.instanceStatus === ''){
         this.deleteListReason(listStepHandle);
-        this.deleteListReason(this.listSteps);
+       // this.deleteListReason(this.listSteps);
       }
 
       this.listStepUpdate = this.handleListStep(listStepHandle,this.listSteps); 
@@ -173,7 +175,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   clickMF(e, data) {
-    this.moreFunctionEvent.emit({e: e, data: data, lstSteps: this.listSteps});
+    this.moreFunctionEvent.emit({e: e, data: data, lstStepCbx: this.listStepNew});
     // console.log(e);
     // switch (e.functionID) {
     //   case 'DP09':
@@ -188,7 +190,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
-    this.changeMF.emit({e: e, data: data})
+    this.changeMF.emit({e: e, data: data, listStepCbx: this.listStepNew})
     // console.log(e);
     // if (e) {
     //   e.forEach((element) => {
@@ -226,6 +228,7 @@ export class InstanceDetailComponent implements OnInit {
 
   setHTMLCssStages(oldStage, newStage) {}
 
+  //ganttchar
   getDataGanttChart(instanceID) {
     this.api
       .exec<any>(
@@ -245,7 +248,8 @@ export class InstanceDetailComponent implements OnInit {
     var idx =  this.ganttDs.findIndex(x=>x.recID==recID) ;
     return  this.ganttDs[idx]?.color
   }
-
+ //end ganttchar
+ 
   handleListStep(listStepNew:any, listStep:any){
   const mapList = new Map(listStep.map(item => [item.stepID, item.stepStatus]));
   

@@ -165,7 +165,6 @@ export class DynamicProcessComponent
     ];
     this.view.dataService.methodSave = 'AddProcessAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessAsync';
-
     this.changeDetectorRef.detectChanges();
   }
 

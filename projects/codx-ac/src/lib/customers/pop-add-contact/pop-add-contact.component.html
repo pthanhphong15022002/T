@@ -1,157 +1,74 @@
-<codx-form
-  #form
-  [headerText]="headerText"
-  [body]="body"
-  [formModel]="dialog.formModel"
-  [dialog]="dialog"
-  [footer]="footer"
-  subToolbarCss="text-end"
-  [data]="contact"
->
+<codx-form #form [headerText]="headerText" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog"
+  [footer]="footer" subToolbarCss="text-end" [data]="contact">
 </codx-form>
 <ng-template #body>
-    <div class="row mx-0 mt-3">
-        <div class="col-6 ps-0">
-          <div class="form-group">
-            <codx-label
-            [formModel]="form.formModel"
-            fiedName="ContactName"
-            default="Họ tên"
-          ></codx-label>
-            <codx-input
-                    [crrValue]="contactName"
-                    [formModel]="form.formModel"
-                    field="contactName"
-                    (valueChange)="valueChangeContactName($event)"
-                  >
-            </codx-input>
-          </div>   
-        </div>
-        <div class="col-6 pe-0">
-          <div class="form-group">
-            <codx-label
-            [formModel]="form.formModel"
-            fiedName="Gender"
-            default="Giới tính"      
-          ></codx-label>
-          <codx-input 
-          [crrValue]="form.data != null ? form.data.gender : ''"
-          type="valuelist"
-          refValue="AC014"
-          field="gender"
-          (valueChange)="valueChange($event)"
-          >
+  <div class="row">
+    <div class="col-8">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="ContactName" default="Họ tên"></codx-label>
+        <codx-input [crrValue]="contactName" [formModel]="form.formModel" field="contactName"
+          (valueChange)="valueChangeContactName($event)">
         </codx-input>
-          </div>
-        </div>
       </div>
+    </div>
+    <div class="col-4">
       <div class="form-group">
-        <codx-label
-        [formModel]="form.formModel"
-        fiedName="JobTitle"
-        default="Chức danh"
-      ></codx-label>
-        <codx-input
-                [crrValue]="jobTitle"
-                [formModel]="form.formModel"
-                field="jobTitle"
-                (valueChange)="valueChangeJobTitle($event)"
-              >
+        <codx-label [formModel]="form.formModel" fiedName="Gender" default="Giới tính"></codx-label>
+        <codx-input [crrValue]="form.data != null ? form.data.gender : ''" type="valuelist" refValue="AC014"
+          field="gender" (valueChange)="valueChange($event)">
         </codx-input>
-      </div>  
-      <div class="row mx-0 mt-3">
-        <div class="col-5 ps-0">
-          <div class="form-group">
-            <codx-label
-          [formModel]="form.formModel"
-          fiedName="Phone"
-          default="Số di động"
-        ></codx-label>
-          <codx-input
-                  [crrValue]="phone"
-                  [formModel]="form.formModel"
-                  field="phone"
-                  (valueChange)="valueChangePhone($event)"
-                >
-          </codx-input>
-          </div>   
-        </div>
-        <div class="col-5 pe-0">
-          <div class="form-group">
-            <codx-label
-            [formModel]="form.formModel"
-            fiedName="HomePhone"
-            default="Số di động cố định"
-          ></codx-label>
-            <codx-input
-                    [crrValue]="form.data != null ? form.data.homePhone : ''"
-                    [formModel]="form.formModel"
-                    field="homePhone"
-                    (valueChange)="valueChange($event)"
-                  >
-            </codx-input>
-          </div>
-        </div>
-        <div class="col-2 pe-0">
-          <div class="form-group">
-            <codx-label
-            [formModel]="form.formModel"
-            fiedName="PhoneExt"
-            default="Số ext."
-          ></codx-label>
-            <codx-input
-                    [crrValue]="form.data != null ? form.data.phoneExt : ''"
-                    [formModel]="form.formModel"
-                    field="phoneExt"
-                    (valueChange)="valueChange($event)"
-                  >
-            </codx-input>
-          </div>
-        </div>
       </div>
-      <div class="form-group">
-        <codx-label
-        [formModel]="form.formModel"
-        fiedName="Email"
-        default="Email"
-      ></codx-label>
-        <codx-input
-                [crrValue]="email"
-                [formModel]="form.formModel"
-                field="email"
-                (valueChange)="valueChangeEmail($event)"
-              >
-        </codx-input>
-      </div>  
-      <div class="form-group">
-        <codx-label
-        [formModel]="form.formModel"
-        fiedName="ContactType"
-        default="Loại liên hệ"      
-      ></codx-label>
-      <codx-input 
-      [crrValue]="contactType"
-      type="valuelist"
-      refValue="AC015"
-      field="contactType"
-      (valueChange)="valueChangeContactType($event)"
-      >
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="JobTitle" default="Chức danh"></codx-label>
+    <codx-input [crrValue]="jobTitle" [formModel]="form.formModel" field="jobTitle"
+      (valueChange)="valueChangeJobTitle($event)">
     </codx-input>
-      </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
       <div class="form-group">
-        <codx-label
-        [formModel]="form.formModel"
-        fiedName="Note"
-        default="Ghi chú"
-      ></codx-label>
-        <codx-input
-                [crrValue]="form.data != null ? form.data.note : ''"
-                [formModel]="form.formModel"
-                field="note"
-                (valueChange)="valueChange($event)"
-              >
+        <codx-label [formModel]="form.formModel" fiedName="Phone" default="Số di động"></codx-label>
+        <codx-input [crrValue]="phone" [formModel]="form.formModel" field="phone"
+          (valueChange)="valueChangePhone($event)">
         </codx-input>
-      </div>  
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="HomePhone" default="Số di động cố định"></codx-label>
+        <codx-input [crrValue]="form.data != null ? form.data.homePhone : ''" [formModel]="form.formModel"
+          field="homePhone" (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="PhoneExt" default="Số ext."></codx-label>
+        <codx-input [crrValue]="form.data != null ? form.data.phoneExt : ''" [formModel]="form.formModel"
+          field="phoneExt" (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="Email" default="Email"></codx-label>
+    <codx-input [crrValue]="email" [formModel]="form.formModel" field="email" (valueChange)="valueChangeEmail($event)">
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="ContactType" default="Loại liên hệ"></codx-label>
+    <codx-input [crrValue]="contactType" type="valuelist" refValue="AC015" field="contactType"
+      (valueChange)="valueChangeContactType($event)">
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="Note" default="Ghi chú"></codx-label>
+    <codx-input [crrValue]="form.data != null ? form.data.note : ''" [formModel]="form.formModel" field="note"
+      (valueChange)="valueChange($event)">
+    </codx-input>
+  </div>
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end mt-1 me-3">
