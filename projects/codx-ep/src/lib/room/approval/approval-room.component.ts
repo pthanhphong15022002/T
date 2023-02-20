@@ -256,9 +256,11 @@ export class ApprovalRoomsComponent extends UIComponent {
           this.approve(datas, '4');
         }
         break;
-
-      default:
-        '';
+      case 'EPT40106':
+        {
+          //alert('Từ chối');
+          this.approve(datas, '4');
+        }
         break;
     }
   }
@@ -312,6 +314,9 @@ export class ApprovalRoomsComponent extends UIComponent {
           ) {
             func.disabled = false;
           }
+          if (func.functionID == 'EPT40106' /*MF Thu Hồi*/) {
+            func.disabled = true;
+          }
         });
       } else {
         event.forEach((func) => {
@@ -320,6 +325,9 @@ export class ApprovalRoomsComponent extends UIComponent {
             func.functionID == 'EPT40105' /*MF từ chối*/
           ) {
             func.disabled = true;
+          }
+          if (func.functionID == 'EPT40106' /*MF Thu Hồi*/) {
+            func.disabled = false;
           }
         });
       }
