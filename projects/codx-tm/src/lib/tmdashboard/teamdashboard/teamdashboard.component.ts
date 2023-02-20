@@ -9,6 +9,7 @@ import {
   ViewChildren,
   QueryList,
 } from '@angular/core';
+import { Panel } from '@syncfusion/ej2-angular-layouts';
 import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
 import {
   AuthStore,
@@ -209,7 +210,7 @@ export class TeamDashboardComponent
     ],
   };
 
-  panels = [];
+  panels: Panel[] = [];
   datas = [];
 
   constructor(
