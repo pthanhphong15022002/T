@@ -103,8 +103,8 @@
   <div class="mb-3 text-primary fw-bold fs-6">
     <codx-label [formModel]="form.formModel" default="Thanh toán"></codx-label>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
+  <div class="row">
+    <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="PmtMethodID" default="Hình thức thanh toán"></codx-label>
         <codx-input [crrValue]="form.data.pmtMethodID" type="combobox" refValue="PaymentMethods" field="pmtMethodID"
@@ -112,7 +112,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-6 pe-0">
+    <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="PmtTermID" default="Điều khoản thanh toán"></codx-label>
         <codx-input [crrValue]="form.data.pmtTermID" type="combobox" refValue="PaymentTerms" field="pmtTermID"
@@ -124,8 +124,8 @@
   <div class="mb-3 text-primary fw-bold fs-6">
     <codx-label [formModel]="form.formModel" default="Kiểm soát công nợ"></codx-label>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
+  <div class="row">
+    <div class="col-12">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="PostDetail" default="Loại công nợ"></codx-label>
         <codx-input [crrValue]="form.data.postDetail" type="valuelist" refValue="AC007" field="postDetail"
@@ -134,8 +134,8 @@
       </div>
     </div>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
+  <div class="row">
+    <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="SettleInvoice" default="Cấn trừ thanh toán"></codx-label>
         <codx-input [crrValue]="form.data.settleInvoice" type="valuelist" refValue="AC008" field="settleInvoice"
@@ -143,7 +143,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-6 pe-0">
+    <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="SettlePayment" default="Cấn trừ hóa đơn"></codx-label>
         <codx-input [crrValue]="form.data.settlePayment" type="valuelist" refValue="AC009" field="settlePayment"
@@ -152,8 +152,8 @@
       </div>
     </div>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
+  <div class="row">
+    <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="CreditLimit" default="Hạn mức công nợ"></codx-label>
         <codx-input [crrValue]="form.data.creditLimit" field="creditLimit" [formModel]="form.formModel"
@@ -161,7 +161,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-6 pe-0">
+    <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="CreditBalance" default="Kiểm soát hạn mức"></codx-label>
         <codx-input [crrValue]="form.data.creditBalance" type="valuelist" refValue="AC010" field="creditBalance"
@@ -170,8 +170,8 @@
       </div>
     </div>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
+  <div class="row">
+    <div class="col-12">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="DebtComparision" default="Đối chiều công nợ"></codx-label>
         <codx-input [crrValue]="form.data.debtComparision" type="valuelist" refValue="AC012" field="debtComparision"
@@ -183,8 +183,8 @@
   <div class="mb-3 text-primary fw-bold fs-6">
     <codx-label [formModel]="form.formModel" default="Kiểm soát nợ quá hạn"></codx-label>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-4 ps-0">
+  <div class="row">
+    <div class="col-3 pe-0">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="OverdueAmt" default="Hạn mức quá hạn"></codx-label>
         <codx-input [crrValue]="form.data.overdueAmt" field="overdueAmt" [formModel]="form.formModel"
@@ -192,7 +192,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-4 pe-0">
+    <div class="col-3">
       <div class="form-group">
         <codx-label fiedName="OverDueDays" default="Số ngày quá hạn"></codx-label>
         <codx-input [crrValue]="form.data.overDueDays" field="overDueDays" [formModel]="form.formModel"
@@ -200,7 +200,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-4 pe-0">
+    <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="OverDueInvoices" default="Số hóa đơn quá hạn"></codx-label>
         <codx-input [crrValue]="form.data.overDueInvoices" field="overDueInvoices" [formModel]="form.formModel"
@@ -209,8 +209,8 @@
       </div>
     </div>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
+  <div class="row">
+    <div class="col-12">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="OverDueControl" default="Kiểm soát quá hạn"></codx-label>
         <codx-input [crrValue]="form.data.overDueControl" type="valuelist" refValue="AC011" field="overDueControl"
@@ -224,8 +224,8 @@
   <div class="mb-3 text-primary fw-bold fs-6">
     <codx-label [formModel]="form.formModel" default="Thông tin giao hàng"></codx-label>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
+  <div class="row">
+    <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="DelTermID" default="Điều khoản giao hàng"></codx-label>
         <codx-input [crrValue]="form.data.delTermID" type="combobox" refValue="DeliveryTerms"
@@ -233,7 +233,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-6 pe-0">
+    <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="DelModeID" default="Hình thức giao hàng"></codx-label>
         <codx-input [crrValue]="form.data.delModeID" [formModel]="form.formModel" type="combobox"
@@ -242,8 +242,8 @@
       </div>
     </div>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
+  <div class="row">
+    <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="WarehouseID" default="Kho xuất hàng mặc định"></codx-label>
         <codx-input [crrValue]="form.data.warehouseID" type="combobox" refValue="Warehouses" field="warehouseID"
@@ -251,7 +251,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-6 pe-0">
+    <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="DelRouteID" default="Tuyến giao hàng"></codx-label>
         <codx-input [crrValue]="form.data.delRouteID" type="combobox" refValue="Warehouses" field="delRouteID"
@@ -260,8 +260,8 @@
       </div>
     </div>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
+  <div class="row">
+    <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Distance" default="Khoảng cách (km)"></codx-label>
         <codx-input [crrValue]="form.data.distance" type="number" [min]="0" [formModel]="form.formModel"
@@ -269,7 +269,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-6 pe-0">
+    <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Leadtime" default="Thời gian (giờ)"></codx-label>
         <codx-input [crrValue]="form.data.leadtime" type="number" [min]="0" [formModel]="form.formModel"
@@ -278,19 +278,16 @@
       </div>
     </div>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="WorkingDays" default="Thời gian giao hàng"></codx-label>
-        <codx-input [crrValue]="form.data.workingDays" type="combobox" refValue="CalendarsAC" field="workingDays"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="WorkingDays" default="Thời gian giao hàng"></codx-label>
+    <codx-input [crrValue]="form.data.workingDays" type="combobox" refValue="CalendarsAC" field="workingDays"
+      (valueChange)="valueChange($event)">
+    </codx-input>
   </div>
   <div class="d-flex align-items-center mb-2">
     <div class="me-2">
-      <codx-input type="switch" field="workingHour" (valueChange)="valueChange($event)" [checked]="form.data.workingHour">
+      <codx-input type="switch" field="workingHour" (valueChange)="valueChange($event)"
+        [checked]="form.data.workingHour">
       </codx-input>
     </div>
     <codx-label [formModel]="form.formModel" fiedName="WorkingHour" default="Giao hàng giờ hành chính"></codx-label>
@@ -298,8 +295,8 @@
   <div class="d-flex align-items-center mb-2">
     <div class="me-2">
       <codx-input type="switch" field="calendarControl" (valueChange)="valueChange($event)"
-      [checked]="form.data.calendarControl">
-    </codx-input>
+        [checked]="form.data.calendarControl">
+      </codx-input>
     </div>
     <codx-label [formModel]="form.formModel" fiedName="calendarControl"
       default="Cảnh báo khi không đủ thời gian giao hàng"></codx-label>
@@ -307,7 +304,8 @@
 </ng-template>
 <ng-template #tabLocation>
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <codx-label class="mb-3 text-primary fw-bold fs-6" [formModel]="form.formModel" default="Danh sách địa chỉ"></codx-label>
+    <codx-label class="mb-3 text-primary fw-bold fs-6" [formModel]="form.formModel"
+      default="Danh sách địa chỉ"></codx-label>
     <span (click)="openPopupAddress()">
       <i class="fa-sharp fa-solid fa-plus"></i>
       <i class="fa-sharp fa-solid fa-location-dot"></i>
@@ -370,13 +368,14 @@
         <span (click)="deleteobjectAddress(item)" class="icon-delete icon-16"></span>
       </div>
     </div>
-    
+
   </div>
 
 </ng-template>
 <ng-template #tabContact>
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <codx-label class="mb-3 text-primary fw-bold fs-6" [formModel]="form.formModel" default="Danh sách người liên hệ"></codx-label>
+    <codx-label class="mb-3 text-primary fw-bold fs-6" [formModel]="form.formModel"
+      default="Danh sách người liên hệ"></codx-label>
     <button type="button" class="btn btn-sm btn-icon btn-light-primary" (click)="openPopupContact()">
       <i class="icon-person_add icon-16"></i>
     </button>
@@ -422,18 +421,19 @@
             </div>
           </div>
         </div>
-      </div>  
+      </div>
     </div>
     <div class="d-flex align-items-center">
       <span (click)="editobjectContact(item)" class="icon-edit icon-16 py-1"></span>
       <span (click)="deleteobjectContact(item)" class="icon-delete icon-16"></span>
     </div>
   </div>
-  
+
 </ng-template>
 <ng-template #tabAtm>
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <codx-label class="mb-3 text-primary fw-bold fs-6" [formModel]="form.formModel" default="Tài khoản ngân hàng"></codx-label>
+    <codx-label class="mb-3 text-primary fw-bold fs-6" [formModel]="form.formModel"
+      default="Tài khoản ngân hàng"></codx-label>
     <span (click)="openPopupBank()">
       <i class="fa-sharp fa-solid fa-plus"></i>
       <i class="fa-solid fa-chart-column"></i>
