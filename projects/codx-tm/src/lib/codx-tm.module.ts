@@ -69,6 +69,7 @@ import { PopupRescheduleMeetingComponent } from './tmmeetings/popup-reschedule-m
 import { PopupAddResourcesComponent } from './tmmeetings/popup-add-resources/popup-add-resources.component';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { TMDashboardComponent } from './tmdashboard/tmdashboard.component';
+import { LayoutNoToolbarComponent } from './tmdashboard/_noToolbar/_noToolbar.component';
 
 export const routes: Routes = [
   {
@@ -95,10 +96,6 @@ export const routes: Routes = [
       {
         path: 'meeting/:funcID',
         component: TMMeetingsComponent,
-      },
-      {
-        path: 'tmdashboard/:funcID',
-        component: TMDashboardComponent,
       },
       // {
       //   path: 'reports',
@@ -140,18 +137,6 @@ export const routes: Routes = [
         path: 'meetingdetails/:funcID',
         component: MeetingDetailComponent,
       },
-      {
-        path: 'mydashboard/:funcID',
-        component: MyDashboardComponent,
-      },
-      {
-        path: 'teamdashboard/:funcID',
-        component: TeamDashboardComponent,
-      },
-      {
-        path: 'assigndashboard/:funcID',
-        component: AssignDashboardComponent,
-      },
     ],
   },
   {
@@ -191,6 +176,16 @@ export const routes: Routes = [
       {
         path: 'sprintdetails/:funcID',
         component: SprintDetailsComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutNoToolbarComponent,
+    children: [
+      {
+        path: 'tmdashboard/:funcID',
+        component: TMDashboardComponent,
       },
     ],
   },
@@ -238,6 +233,7 @@ const T_Component: Type<any>[] = [
   PopupTabsViewsDetailsComponent,
   PopupRescheduleMeetingComponent,
   PopupAddResourcesComponent,
+  LayoutNoToolbarComponent,
 ];
 @NgModule({
   imports: [

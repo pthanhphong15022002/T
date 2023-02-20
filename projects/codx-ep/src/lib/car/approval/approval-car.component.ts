@@ -243,10 +243,10 @@ export class ApprovalCarsComponent extends UIComponent {
         {
           // if(datas.allowToApprove == true){
 
-             this.approve(datas, '5');
+          this.approve(datas, '5');
           // }
           // else{
-            
+
           //   this.notificationsService.notifyCode('EP020');
           //   return;
           // }
@@ -263,12 +263,26 @@ export class ApprovalCarsComponent extends UIComponent {
         this.assignDriver(datas);
         break;
       }
-      default:
-        '';
+      case 'EPT40206':
+        {
+          //alert('Thu hồi');
+          this.undo(datas);
+        }
         break;
     }
   }
-
+  undo(data: any) {
+    this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
+      if (res != null) {
+        this.notificationsService.notifyCode('SYS034'); //đã thu hồi
+        data.approveStatus = '3';
+        data.status = '3';
+        this.view.dataService.update(data).subscribe();
+      } else {
+        this.notificationsService.notifyCode(res?.msgCodeError);
+      }
+    });
+  }
   approve(data: any, status: string) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
@@ -368,7 +382,10 @@ export class ApprovalCarsComponent extends UIComponent {
           ) {
             func.disabled = false;
           }
-          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+          if (
+            func.functionID == 'EPT40204' /*MF phân công tài xế*/ ||
+            func.functionID == 'EPT40206' /*Thu hoi*/
+          ) {
             func.disabled = true;
           }
         });
@@ -380,8 +397,20 @@ export class ApprovalCarsComponent extends UIComponent {
           ) {
             func.disabled = true;
           }
+          if (func.functionID == 'EPT40204') {
+            func.disabled = false;
+          }
           if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
-            if (data.approveStatus == 5 && data.driverName == null) {
+            
+            let havedDriver = false;
+            if(data?.resources){              
+              for (let i = 0; i < data?.resources.length; i++) {
+                if (data?.resources[i].roleType == '2') {
+                  havedDriver = true;                  
+                }
+              }
+            }            
+            if (!havedDriver) {
               func.disabled = false;
             } else {
               func.disabled = true;
