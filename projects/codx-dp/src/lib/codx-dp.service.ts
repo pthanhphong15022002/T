@@ -287,4 +287,19 @@ export class CodxDpService {
       recID
     );
   }
+
+  setViewRatings(
+    recID: string,
+    ratting: string,
+    comment: string,
+    funcID: string,
+    entityName: string
+  ) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'SetViewRatingAsync',
+      [recID, ratting, comment, funcID, entityName]
+    );
+  }
 }

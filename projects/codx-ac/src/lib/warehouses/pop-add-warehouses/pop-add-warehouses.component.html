@@ -131,27 +131,21 @@
   <div class="form-group">
     <codx-label [formModel]="form.formModel" default="Thiết lập vị trí kho"></codx-label>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
-      <div class="form-group">
-        <codx-input [checked]="form.data.includeAisle" type="switch" field="includeAisle"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-        <codx-label [formModel]="form.formModel" fiedName="IncludeAisle" default="Bao gồm dây"></codx-label>
-
-      </div>
+  <div class="d-flex align-items-center mb-2">
+    <div class="me-2">
+      <codx-input [checked]="form.data.includeAisle" type="switch" field="includeAisle"
+        (valueChange)="valueChange($event)">
+      </codx-input>
     </div>
+    <codx-label [formModel]="form.formModel" fiedName="IncludeAisle" default="Bao gồm dây"></codx-label>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
-      <div class="form-group">
-        <codx-input [checked]="form.data.includeSheft" type="switch" field="includeSheft"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-        <codx-label fiedName="IncludeSheft" default="Bao gồm kệ"></codx-label>
-
-      </div>
+  <div class="d-flex align-items-center mb-2">
+    <div class="me-2">
+      <codx-input [checked]="form.data.includeSheft" type="switch" field="includeSheft"
+        (valueChange)="valueChange($event)">
+      </codx-input>
     </div>
+    <codx-label fiedName="IncludeSheft" default="Bao gồm kệ"></codx-label>
   </div>
   <div class="row mx-0 mt-3">
     <div class="col-6 ps-0">
@@ -163,16 +157,13 @@
       </div>
     </div>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
-      <div class="form-group">
-        <codx-input [checked]="form.data.includeRack" type="switch" field="includeRack"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-        <codx-label [formModel]="form.formModel" fiedName="IncludeRack" default="Bao gồm rack"></codx-label>
-
-      </div>
+  <div class="d-flex align-items-center mb-2">
+    <div class="me-2">
+      <codx-input [checked]="form.data.includeRack" type="switch" field="includeRack"
+        (valueChange)="valueChange($event)">
+      </codx-input>
     </div>
+    <codx-label [formModel]="form.formModel" fiedName="IncludeRack" default="Bao gồm rack"></codx-label>
   </div>
   <div class="row mx-0 mt-3">
     <div class="col-6 ps-0">
@@ -184,16 +175,12 @@
       </div>
     </div>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
-      <div class="form-group">
-        <codx-input [checked]="form.data.includeBin" type="switch" field="includeBin"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-        <codx-label [formModel]="form.formModel" fiedName="IncludeBin" default="Bao gồm BIN"></codx-label>
-
-      </div>
+  <div class="d-flex align-items-center mb-2">
+    <div class="me-2">
+      <codx-input [checked]="form.data.includeBin" type="switch" field="includeBin" (valueChange)="valueChange($event)">
+      </codx-input>
     </div>
+    <codx-label [formModel]="form.formModel" fiedName="IncludeBin" default="Bao gồm BIN"></codx-label>
   </div>
   <div class="row mx-0 mt-3">
     <div class="col-6 ps-0">
@@ -225,16 +212,13 @@
       </div>
     </div>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
-      <div class="form-group">
-        <codx-input [checked]="form.data.fulfillment" type="switch" field="fulfillment"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-        <codx-label [formModel]="form.formModel" fiedName="Fulfillment" default="Giữ đầy kho"></codx-label>
-
-      </div>
+  <div class="d-flex align-items-center mb-2">
+    <div class="me-2">
+      <codx-input [checked]="form.data.fulfillment" type="switch" field="fulfillment"
+        (valueChange)="valueChange($event)">
+      </codx-input>
     </div>
+    <codx-label [formModel]="form.formModel" fiedName="Fulfillment" default="Giữ đầy kho"></codx-label>
   </div>
   <div class="row mx-0 mt-3">
     <div class="col-6 ps-0">
@@ -264,37 +248,26 @@
       </div>
     </div>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
-      <div class="form-group">
-        <codx-input [checked]="form.data.workdays" type="switch" field="workdays" (valueChange)="valueChange($event)">
-        </codx-input>
-        <codx-label [formModel]="form.formModel" fiedName="Workdays" default="Giờ hành chính"></codx-label>
-
-      </div>
+  <div class="d-flex align-items-center mb-2">
+    <div class="me-2">
+      <codx-input [checked]="form.data.workdays" type="switch" field="workdays" (valueChange)="valueChange($event)">
+      </codx-input>
     </div>
+    <codx-label [formModel]="form.formModel" fiedName="Workdays" default="Giờ hành chính"></codx-label>
   </div>
 </ng-template>
 <ng-template #tabContact>
-  <div class="row mx-0 mt-3">
-    <div class="col-11 ps-0">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" default="Danh sách người liên hệ"></codx-label>
-      </div>
-    </div>
-    <div class="col-1 ps-0">
-      <div class="form-group">
-        <span (click)="openPopupContact()">
-          <i class="fa-sharp fa-solid fa-plus"></i>
-          <i class="fa-solid fa-user-group"></i>
-        </span>
-      </div>
-    </div>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <codx-label class="mb-3 text-primary fw-bold fs-6" [formModel]="form.formModel"
+      default="Danh sách người liên hệ"></codx-label>
+    <button type="button" class="btn btn-sm btn-icon btn-light-primary" (click)="openPopupContact()">
+      <i class="icon-person_add icon-16"></i>
+    </button>
   </div>
-  <div class="d-flex" *ngFor="let item of objectContact">
+  <div class="d-flex align-items-center justify-content-between mb-3" *ngFor="let item of objectContact">
     <div class="row pb-5">
       <div class="col-6 ps-0">
-        <div id="itemcontact" class="d-flex align-items-top">
+        <div class="d-flex align-items-top">
           <div class="me-4">
             <div>
               <codx-img [objectId]="item?.recID" [objectName]="item?.contactName" [objectType]="formModel?.entityName"
@@ -327,7 +300,7 @@
                 </div>
               </div>
             </div>
-            <div class="d-flex" *ngFor="let value of valuelist">
+            <div class="me-2" *ngFor="let value of valuelist">
               <span *ngIf="item.contactType == value.value">{{value.text}}</span>
             </div>
           </div>
@@ -339,6 +312,7 @@
       <span (click)="deleteobject(item)" class="icon-delete icon-16"></span>
     </div>
   </div>
+
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">

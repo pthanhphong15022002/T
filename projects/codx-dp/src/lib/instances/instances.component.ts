@@ -91,7 +91,7 @@ export class InstancesComponent
   dataColums = [];
   dataDrop: any;
   isClick: boolean = true;
-
+  stepIdClick = '';
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -221,14 +221,18 @@ export class InstancesComponent
                   this.titleAction,
                   formMD,
                   this.listStepsCbx,
+                  this.instanceNo
                 ],
                 option
               );
               dialogCustomField.closed.subscribe((e) => {
                 if (!e?.event) this.view.dataService.clear();
                 if (e && e.event != null) {
-                  //xu ly data đổ về
-
+                  if (this.kanban) {
+                    if (this.kanban?.dataSource?.length == 1) {
+                      this.kanban.refresh();
+                    }
+                  }
                   this.detectorRef.detectChanges();
                 }
               });
@@ -406,13 +410,17 @@ export class InstancesComponent
   onActions(e) {
     switch (e.type) {
       case 'drop':
-        // xử lý data chuyển công đoạn
         this.dataDrop = e.data;
-        if (this.crrStepID != e?.data?.stepID) this.dropInstance(this.dataDrop);
+        this.stepIdClick = JSON.parse(JSON.stringify(this.dataDrop.stepID));
+        // xử lý data chuyển công đoạn
+        if (this.crrStepID != this.dataDrop.stepID)
+          this.dropInstance(this.dataDrop);
+
         break;
       case 'drag':
         ///bắt data khi kéo
         this.crrStepID = e?.data?.stepID;
+
         break;
       case 'dbClick':
         //xư lý dbClick
@@ -422,7 +430,7 @@ export class InstancesComponent
   }
 
   viewDetail(recID) {
-  //  this.detailViewInstance.GetStepsByInstanceIDAsync(recID)
+    //  this.detailViewInstance.GetStepsByInstanceIDAsync(recID)
     let option = new DialogModel();
     option.zIndex = 1010;
     let popup = this.callFunc.openForm(
@@ -443,7 +451,7 @@ export class InstancesComponent
       this.changeDetectorRef.detectChanges();
       return;
     }
-
+    data.stepID = this.crrStepID;
     if (
       this.kanban &&
       this.kanban.columns?.length > 0 &&
@@ -452,7 +460,7 @@ export class InstancesComponent
       this.dataColums = this.kanban.columns;
     if (this.dataColums.length > 0) {
       var idx = this.dataColums.findIndex(
-        (x) => x.dataColums.recID == data.stepID
+        (x) => x.dataColums.recID == this.stepIdClick
       );
       if (idx != -1) {
         var stepCrr = this.dataColums[idx].dataColums;
@@ -518,6 +526,7 @@ export class InstancesComponent
               instance: data,
               listStep: this.listStepsCbx,
               instanceStep: instanceStep,
+              stepIdClick: this.stepIdClick,
             };
             var dialogMoveStage = this.callfc.openForm(
               PopupMoveStageComponent,
@@ -602,13 +611,15 @@ export class InstancesComponent
                 //xu ly data đổ về
                 data = e.event.instance;
                 this.listStepInstances = e.event.listStep;
-                if(e.event.isReason != null ) {
-                  this.moveReason(null,data, e.event.isReason)
+                if (e.event.isReason != null) {
+                  this.moveReason(null, data, e.event.isReason);
                 }
                 this.dataSelected = data;
                 this.detailViewInstance.dataSelect = this.dataSelected;
-                this.detailViewInstance.GetStepsByInstanceIDAsync(this.dataSelected.recID);
-                this.view.dataService.update(data).subscribe();            
+                this.detailViewInstance.GetStepsByInstanceIDAsync(
+                  this.dataSelected.recID
+                );
+                this.view.dataService.update(data).subscribe();
                 this.detectorRef.detectChanges();
               }
             });
@@ -649,8 +660,8 @@ export class InstancesComponent
       .map((x) => x.stepName)[0];
   }
   clickMoreFunc(e){
-    this.lstStepInstances = e.lstSteps;
-    this.clickMF(e.e, e.data);
+    this.lstStepInstances = e.lstStepCbx;
+    this.clickMF(e.e, e.data,);
   }
   changeMF(e) {
     this.changeDataMF(e.e, e.data);

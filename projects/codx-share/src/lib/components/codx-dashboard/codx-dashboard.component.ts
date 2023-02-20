@@ -53,9 +53,9 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     //   }
     // }, 200);
   }
-  @Input() columns: number = 10;
+  @Input() columns: number = 48;
   @Input() cellSpacing: number[] = [0, 0];
-  @Input() cellAspectRatio: number = 200 / 100;
+  @Input() cellAspectRatio: number = 1 / 1;
   @Input() name!: string;
   @Input() templates!: any;
 

@@ -204,7 +204,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //end data Test
   isShowstage = true;
   titleAdd = 'Thêm';
-
+  titleDefault ='' ;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -225,7 +225,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.userId = this.user?.userID;
 
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
-    console.log('----------', this.process);
+  
     if (this.action != 'add') {
       // this.showID = true;
       this.permissions = this.process.permissions;
@@ -253,6 +253,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (mfAdd) this.titleAdd = mfAdd?.customName;
       }
     });
+    this.cache.functionList('DPT03').subscribe((fun) => {
+        if (fun) this.titleDefault = fun.customName || fun.description;
+      });
+    
     this.getGrvStep();
     this.getValListDayoff();
     this.autoHandleStepReason();
@@ -365,6 +369,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
+        this.attachment?.clearData();
         this.imageAvatar.clearData();
         if (res) {
           this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
@@ -378,10 +383,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
+        this.attachment?.clearData();
+        this.imageAvatar.clearData();
         if (res.update) {
           this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
           this.handleUpdateStep();
-          this.imageAvatar.clearData();
           this.dialog.close(res.update);
         }
       });
@@ -610,8 +616,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             var data = value[i];
             var perm = new DP_Processes_Permission();
             perm.objectName =
-              (data.text != null || data.text == '') && data.objectType != 'U'
+              (data.text != null || data.text != '') && data.objectType != 'U'
                 ? data.text
+                : data.objectType == '9' || data.objectType == '0'
+                ? data.objectName
                 : data.dataSelected.EmployeeName;
             perm.objectID = data.id != null || data.id != '' ? data.id : null;
             perm.objectType = data.objectType;
@@ -632,10 +640,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           for (var i = 0; i < value.length; i++) {
             var data = value[i];
             var perm = new DP_Processes_Permission();
-            perm.objectName =
-              (data.text != null || data.text == '') && data.objectType != 'U'
-                ? data.text
-                : data.dataSelected.EmployeeName;
+            perm.objectName = perm.objectName =
+              (data.text == null || data.text == '') && data.objectType == 'U'
+                ? data.dataSelected.EmployeeName
+                : ((data.text == null || data.text == '') &&
+                    data.objectType == '9') ||
+                  data.objectType == '0'
+                ? data.objectName
+                : data.text;
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';
@@ -657,9 +669,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             var data = value[i];
             var perm = new DP_Processes_Permission();
             perm.objectName =
-              (data.text != null || data.text == '') && data.objectType != 'U'
-                ? data.text
-                : data.dataSelected.EmployeeName;
+              (data.text == null || data.text == '') && data.objectType == 'U'
+                ? data.dataSelected.EmployeeName
+                : ((data.text == null || data.text == '') &&
+                    data.objectType == '9') ||
+                  data.objectType == '0'
+                ? data.objectName
+                : data.text;
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'F';
@@ -681,18 +697,26 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             var data = value[i];
             var roles = new DP_Steps_Roles();
             roles.objectName =
-              (data.text != null || data.text == '') && data.objectType != 'U'
-                ? data.text
-                : data.dataSelected.EmployeeName;
+              (data.text == null || data.text == '') && data.objectType == 'U'
+                ? data.dataSelected.EmployeeName
+                : ((data.text == null || data.text == '') &&
+                    data.objectType == '9') ||
+                  data.objectType == '0'
+                ? data.objectName
+                : data.text;
             roles.objectID = data.id != null ? data.id : null;
             roles.objectType = data.objectType;
             roles.roleType = 'S';
             tmpRole = this.checkRolesStep(this.step.roles, roles);
             var perm = new DP_Processes_Permission();
             perm.objectName =
-              (data.text != null || data.text == '') && data.objectType != 'U'
-                ? data.text
-                : data.dataSelected.EmployeeName;
+              (data.text == null || data.text == '') && data.objectType == 'U'
+                ? data.dataSelected.EmployeeName
+                : ((data.text == null || data.text == '') &&
+                    data.objectType == '9') ||
+                  data.objectType == '0'
+                ? data.objectName
+                : data.text;
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';

@@ -32,6 +32,7 @@ export class DP_Processes {
   attachments: number;
   comments: number;
   permissions: DP_Processes_Permission[] = []; // string
+  ratings: DP_Processes_Ratings[] = [];
   owner: string;
   bUID: string;
   createdOn: Date;
@@ -74,6 +75,19 @@ export class DP_Processes_Permission {
   approvedOn: Date;
 
 }
+
+export class DP_Processes_Ratings{
+  id: string;
+  recID: string;
+  objectID: string;
+  objectName: string;
+  positionName: string;
+  comment: string;
+  rating: number;
+  createdOn: Date;
+  createdBy: string;
+}
+
 export class DP_Steps {
   recID: string = Util.uid();
   processID: string;

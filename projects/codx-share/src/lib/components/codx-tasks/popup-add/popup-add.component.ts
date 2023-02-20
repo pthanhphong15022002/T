@@ -97,6 +97,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   changTimeCount = 2;
   dataReferences = [];
   disabledProject = false;
+  isClickSave = false ;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -536,6 +537,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   async actionSave(id) {
     if (this.taskType) this.task.taskType = this.taskType;
     else this.task.taskType = '1';
+    if(this.isClickSave) return;
+    this.isClickSave = true ;
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -593,6 +596,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         return true;
       })
       .subscribe((res) => {
+        this.isClickSave = false ;
         this.dialog.close(res);
         this.attachment?.clearData();
         if (res && res.save) {

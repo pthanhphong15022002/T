@@ -1,78 +1,77 @@
 export class Customers {
-address:any
-allowEditKey:any
-assign:any
-buid:any
-calendarControl:any
-channelID:any
-countryID:any
-createdBy:any
-createdOn:any
-creditBalance:any
-creditLimit:any
-creditLimitControl:any
-creditRate:any
-currencyID:any
-custGroupID:any
-custTaxCode:any
-customerID:any
-customerName:any
-customerName2:any
-debtComparision:any
-delModeID:any
-delRouteID:any
-delTermID:any
-delete:any
-distance:any
-districtID:any
-email:any
-establishYear:any
-faxNo:any
-id:any
-idField:any
-includeTables:any
-industries:any
-industryID:any;
-invoiceAccount:any
-latitude:any
-leadtime:any
-longitude:any
-modifiedBy:any
-modifiedOn:any
-noOfEmployees:any
-orderDeadline:any
-overDueControl:any
-overDueDays:any
-overDueInvoices:any
-overdueAmt:any
-owner:any
-phone:any
-pmtMethodID:any
-pmtTermID:any
-postDetail:any
-postItems:any
-provinceID:any
-quotationDeadline:any
-recID:any
-regionID:any
-salesConsultantID:any
-salespersonID:any
-segmentID:any
-settleInvoice:any
-settlePayment:any
-share:any
-status:any
-stop:any
-stopOn:any
-stopReason:any
-timeZone:any
-unbounds:any
-updateColumns:any
-vendorID:any
-warehouseID:any
-webPage:any
-workingDays:any
-workingHour:any
-write:any
-  }
-  
+  address: any;
+  allowEditKey: any;
+  assign: any;
+  buid: any;
+  calendarControl: any;
+  channelID: any;
+  countryID: any;
+  createdBy: any;
+  createdOn: any;
+  creditBalance: any;
+  creditLimit: any;
+  creditLimitControl: any;
+  creditRate: any;
+  currencyID: any;
+  custGroupID: any;
+  custTaxCode: any;
+  customerID: any;
+  customerName: any;
+  customerName2: any;
+  debtComparision: any;
+  delModeID: any;
+  delRouteID: any;
+  delTermID: any;
+  delete: any;
+  distance: any;
+  districtID: any;
+  email: any;
+  establishYear: any;
+  faxNo: any;
+  id: any;
+  idField: any;
+  includeTables: any;
+  industries: any;
+  industryID: any;
+  invoiceAccount: any;
+  latitude: any;
+  leadtime: any;
+  longitude: any;
+  modifiedBy: any;
+  modifiedOn: any;
+  noOfEmployees: any;
+  orderDeadline: any;
+  overDueControl: any;
+  overDueDays: any;
+  overDueInvoices: any;
+  overdueAmt: any;
+  owner: any;
+  phone: any;
+  pmtMethodID: any;
+  pmtTermID: any;
+  postDetail: any;
+  postItems: any;
+  provinceID: any;
+  quotationDeadline: any;
+  recID: any;
+  regionID: any;
+  salesConsultantID: any;
+  salespersonID: any;
+  segmentID: any;
+  settleInvoice: any;
+  settlePayment: any;
+  share: any;
+  status: any;
+  stop: any;
+  stopOn: any;
+  stopReason: any;
+  timeZone: any;
+  unbounds: any;
+  updateColumns: any;
+  vendorID: any;
+  warehouseID: any;
+  webPage: any;
+  workingDays: any;
+  workingHour: any;
+  write: any;
+}

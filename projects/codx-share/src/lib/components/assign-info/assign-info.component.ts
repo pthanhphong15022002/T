@@ -74,6 +74,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   planholderTaskChild = '';
   referedFunction: any;
   referedData: any;
+  isClickSave = false;
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTasksService,
@@ -343,6 +344,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       // }
     }
     var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID : null;
+    if(this.isClickSave) return;
+    this.isClickSave = true ;
     if (this.isHaveFile && this.attachment)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {

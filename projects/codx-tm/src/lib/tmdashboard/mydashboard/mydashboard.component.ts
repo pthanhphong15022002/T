@@ -212,7 +212,7 @@ export class MyDashboardComponent extends UIComponent {
       {
         type: ViewType.content,
         active: true,
-        sameData: true,
+        sameData: false,
         model: {
           panelLeftRef: this.content,
         },
