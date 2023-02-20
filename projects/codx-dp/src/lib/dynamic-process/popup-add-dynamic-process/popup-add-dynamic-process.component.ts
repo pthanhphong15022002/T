@@ -204,7 +204,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //end data Test
   isShowstage = true;
   titleAdd = 'Thêm';
-  titleDefault ='' ;
+  titleDefault = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -225,7 +225,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.userId = this.user?.userID;
 
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
-  
+
     if (this.action != 'add') {
       // this.showID = true;
       this.permissions = this.process.permissions;
@@ -254,9 +254,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     });
     this.cache.functionList('DPT03').subscribe((fun) => {
-        if (fun) this.titleDefault = fun.customName || fun.description;
-      });
-    
+      if (fun) this.titleDefault = fun.customName || fun.description;
+    });
+
     this.getGrvStep();
     this.getValListDayoff();
     this.autoHandleStepReason();
@@ -1050,7 +1050,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  dropFile(event: CdkDragDrop<string[]>, recID) {
+  dropFields(event: CdkDragDrop<string[]>, recID) {
     if (event.previousIndex == event.currentIndex) return;
     let crrIndex = this.stepList.findIndex((x) => x.recID == recID);
     if (crrIndex == -1) return;
@@ -1062,6 +1062,27 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   checkBackground(i) {
     if (this.isHover == i) return true;
     return false;
+  }
+  dropCustomFile(event: CdkDragDrop<string[]>, stepID) {
+     if (event.previousContainer === event.container) {
+    //   // if (stepID) {
+      this.dropFields(event, stepID);
+    //   //   } else {
+    //   //     this.dropPhase(event);
+    //   //   }
+    } else {
+       this.dropFieldsToStep(event, stepID);
+     }
+  }
+  dropFieldsToStep(event, stepID) {
+    var data = event.item?.data;
+    debugger;
+    transferArrayItem(
+      event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
   }
   //#endregion
 
