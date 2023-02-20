@@ -111,7 +111,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
             this.loadParam = true;
           }
           //chinh 16/2/2023
-          if (res.listTaskResources.length > 0)
+          if (res?.listTaskResources?.length > 0)
             this.listTaskResousce = res.listTaskResources;
           else this.listTaskResousce = [];
           this.listTaskResousceSearch = this.listTaskResousce ;
