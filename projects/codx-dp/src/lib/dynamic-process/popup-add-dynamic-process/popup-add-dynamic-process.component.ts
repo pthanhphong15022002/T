@@ -1059,7 +1059,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       //   // if (stepID) {
       this.dropFields(event, stepID);
       //   //   } else {
-      //   //     this.dropPhase(event);
+      //   //     this.dropSteps(event);
       //   //   }
     } else {
       this.dropFieldsToStep(event, stepID);
@@ -1067,7 +1067,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   dropFieldsToStep(event, stepID) {
     var data = event.item?.data;
-    debugger;
+    // var stepIDPrevious = stepID
+    // this.dataChild = this.stepList[].fields;
+
+    //mai xu ly
     transferArrayItem(
       event.previousContainer.data,
       event.container.data,
