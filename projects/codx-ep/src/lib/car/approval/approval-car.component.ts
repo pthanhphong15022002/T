@@ -263,12 +263,27 @@ export class ApprovalCarsComponent extends UIComponent {
         this.assignDriver(datas);
         break;
       }
-      default:
-        '';
+      case 'EPT40206':
+        {
+          //alert('Thu hồi');
+          this.undo(datas);
+        }
         break;
     }
   }
-
+  undo(data: any) {
+    this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
+        if (res != null) {
+          
+          this.notificationsService.notifyCode('SYS034'); //đã thu hồi
+          data.approveStatus = '3';
+          data.status = '3';         
+          this.view.dataService.update(data).subscribe();
+        } else {
+          this.notificationsService.notifyCode(res?.msgCodeError);
+        }
+      });
+  }
   approve(data: any, status: string) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
