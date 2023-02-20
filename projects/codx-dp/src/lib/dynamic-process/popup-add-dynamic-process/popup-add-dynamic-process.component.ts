@@ -1055,15 +1055,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return false;
   }
   dropCustomFile(event: CdkDragDrop<string[]>, stepID) {
-     if (event.previousContainer === event.container) {
-    //   // if (stepID) {
+    if (event.previousContainer === event.container) {
+      //   // if (stepID) {
       this.dropFields(event, stepID);
-    //   //   } else {
-    //   //     this.dropPhase(event);
-    //   //   }
+      //   //   } else {
+      //   //     this.dropPhase(event);
+      //   //   }
     } else {
-       this.dropFieldsToStep(event, stepID);
-     }
+      this.dropFieldsToStep(event, stepID);
+    }
   }
   dropFieldsToStep(event, stepID) {
     var data = event.item?.data;
