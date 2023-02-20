@@ -368,7 +368,7 @@ export class CodxTMService {
       'EmployeesBusiness',
       'GetListUserIDbyListEmployeeIDAsync',
       listEmployeeID
-    );  
+    );
   }
 
   convertListToObject(
@@ -430,13 +430,12 @@ export class CodxTMService {
     );
   }
 
-RPASendMailAlert(valueRuleNo: string, funcID: string) {
+RPASendMailAlert() {
     return this.api.execSv(
       'CO',
       'CO',
       'MeetingsBusiness',
-      'RPASendAlertMeetingMailAsync',
-      [valueRuleNo, funcID]
+      'RPASendAlertMeetingMailAsync'
     );
   }
 
