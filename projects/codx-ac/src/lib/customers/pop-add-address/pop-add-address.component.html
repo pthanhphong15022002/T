@@ -57,9 +57,10 @@
     </codx-input>
   </div>
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <codx-label class="mb-3 text-primary fw-bold fs-6" [formModel]="form.formModel" default="Người liên hệ"></codx-label>
-    <button type="button" class="btn btn-sm btn-icon btn-light-primary" (click)="openPopupContact()">
-      <i class="icon-person_add icon-16"></i>
+    <codx-label class="mb-3 text-primary fw-bold fs-6" [formModel]="form.formModel"
+      default="Người liên hệ"></codx-label>
+    <button type="button" class="btn btn-icon btn-primary" (click)="openPopupContact()">
+      <i class="icon-person_add"></i>
     </button>
   </div>
   <div *ngFor="let item of objectContactAddress">
@@ -67,45 +68,52 @@
       <div class="d-flex align-items-top">
         <div class="me-3">
           <codx-img [objectId]="item?.recID" [objectName]="item?.contactName" [objectType]="formModel?.entityName"
-            [width]="30">
+            [width]="35">
           </codx-img>
         </div>
         <div class="d-flex flex-column space_personal">
-          <div class="fw-bold text-dark fs-6">
+          <div class="fw-bold text-dark">
             <span>{{item.contactName}}</span>
           </div>
-          <div class="text-gray-600">
+          <div class="text-gray-700 fs-7">
             {{item.jobTitle}}
           </div>
           <div class="d-flex align-items-center">
-            <div class="d-flex me-3">
+            <div class="d-flex align-items-center me-3">
               <span class="icon-email icon-16 me-1 text-gray-500"></span>
-              <span>{{item.email}}</span>
+              <span class="text-gray-500 fs-7">{{item.email}}</span>
             </div>
-            <div class="d-flex">
+            <div class="d-flex align-items-center">
               <span class="icon-phone_android icon-16 me-1 text-gray-500"></span>
-              <span>{{item.phone}}</span>
+              <span class="text-gray-500 fs-7">{{item.phone}}</span>
             </div>
           </div>
         </div>
       </div>
       <div class="d-flex align-items-center">
-        <span (click)="editobject(item,'datacontact')" class="icon-edit icon-16 py-1"></span>
-        <span (click)="deleteobject(item,'datacontact')" class="icon-delete icon-16"></span>
+        <span type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="editobject(item,'datacontact')">
+          <i class="icon-edit icon-16"></i>
+        </span>
+        <span type="button" class="btn btn-icon btn-sm btn-light-danger ms-1"
+          (click)="deleteobject(item,'datacontact')">
+          <i class="icon-delete icon-16"></i>
+        </span>
       </div>
     </div>
   </div>
-  
+
 </ng-template>
 <ng-template #footer>
-  <div class="d-flex align-items-center justify-content-between mb-3">
+  <div class="d-flex align-items-center justify-content-between">
     <div class="d-flex align-items-center">
-      <codx-input class="me-2" [checked]="form.data != null ? form.data.isDefault : false" type="switch" field="isDefault"
-        (valueChange)="valueChange($event)">
-      </codx-input>
+      <span class="me-2 mt-1">
+        <codx-input [checked]="form.data != null ? form.data.isDefault : false" type="switch" field="isDefault"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </span>
       <codx-label [formModel]="form.formModel" fiedName="IsDefault" default="Mặc định"></codx-label>
     </div>
-    <div class="d-flex justify-content-end mt-1 me-3">
+    <div class="d-flex justify-content-end">
       <div class="ms-2">
         <button type="button" class="btn btn-light-primary">
           <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
