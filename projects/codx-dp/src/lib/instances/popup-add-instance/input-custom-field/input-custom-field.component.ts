@@ -17,7 +17,7 @@ import { DP_Steps_Fields } from '../../../models/models';
   styleUrls: ['./input-custom-field.component.css'],
 })
 export class InputCustomFieldComponent implements OnInit {
-  @Input() customField: any;
+  @Input() customField : any =null;
   @Output() valueChangeCustom = new EventEmitter<any>();
   //file - đặc thù cần hỏi lại sau
   @Input() objectId: any = '';
@@ -50,8 +50,6 @@ export class InputCustomFieldComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //data test
-
     switch (this.customField.dataType) {
       case 'D':
         if (this.customField.dataFormat == '3') this.formatDate = 'd';
@@ -157,7 +155,7 @@ export class InputCustomFieldComponent implements OnInit {
         }
         break;
     }
-   
+
     this.valueChangeCustom.emit({ e: e, data: this.customField });
   }
   //combox user
@@ -168,7 +166,7 @@ export class InputCustomFieldComponent implements OnInit {
   valueCbxUserChange(e) {
     if (this.isPopupUserCbb) this.isPopupUserCbb = false;
     if (e && e.id) {
-      if (this.listIdUser || this.customField.dataFormat == '1')
+      if (!this.listIdUser || this.customField.dataFormat == '1')
         this.listIdUser = e.id;
       else this.listIdUser += ';' + e.id;
     }
@@ -183,6 +181,14 @@ export class InputCustomFieldComponent implements OnInit {
   fileAdded(e) {}
   getfileCount(e) {}
 
+  fileSave(e) {
+    let result = '';
+    if (e && typeof e === 'object') {
+      var filed = Array.isArray(e) ? e[0].data : e;
+      result = filed?.objectID + ';' + filed?.objectType;
+    }
+    this.valueChangeCustom.emit({ e: result, data: this.customField });
+  }
   rateChange(e) {
     //rank
     if (this.customField.dataFormat == 'R') {

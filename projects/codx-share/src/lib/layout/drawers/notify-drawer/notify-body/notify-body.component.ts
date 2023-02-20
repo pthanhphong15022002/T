@@ -108,7 +108,6 @@ export class NotifyBodyComponent implements OnInit {
       'GetNotiAsync',
       [this.model])
       .subscribe((res:any[]) => {
-        debugger
         if(scroll)
           this.noti = this.noti.concat(res[1]);
         else
@@ -137,7 +136,7 @@ export class NotifyBodyComponent implements OnInit {
         'BG',
         'ERM.Business.BG',
         'NotificationBusinesss',
-        'UpdateNotificationAsync', 
+        'UpdateAsync', 
         [item.recID]).subscribe((res:boolean) => {
           if(res)
           {
@@ -149,7 +148,6 @@ export class NotifyBodyComponent implements OnInit {
         predicate:"RecID=@0",
         dataValue:item.transID
       };
-      this.noti.splice(index,1);
       this.codxService.openUrlNewTab(item.function,"",query);
     }
   }
@@ -197,6 +195,7 @@ export class NotifyBodyComponent implements OnInit {
 
   // change More funtion
   changeDataMF(arrMFC){
+    debugger
     if(this.notiMFC.length > 0){
       let _lstMoreFcID = this.notiMFC.map(e => e.functionID);
       arrMFC.map(e => {

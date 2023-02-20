@@ -146,6 +146,8 @@ import { ImageViewerComponent2 } from './components/ImageViewer2/imageViewer2.co
 import { CodxHistoryTempComponent } from './components/codx-history-temp/codx-history-temp.component';
 import { NotifyDrawerPopupComponent } from './layout/drawers/notify-drawer/notify-drawer-popup/notify-drawer-popup.component';
 import { NotifyBodyComponent } from './layout/drawers/notify-drawer/notify-body/notify-body.component';
+import { CodxBookingCarScheduleContentComponent } from './components/codx-booking-car-schedule-content/codx-booking-car-schedule-content.component';
+import { CodxBookingRoomScheduleContentComponent } from './components/codx-booking-room-schedule-content/codx-booking-room-schedule-content.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -246,7 +248,10 @@ const T_Component: Type<any>[] = [
   ImageViewerComponent2,
   CodxHistoryTempComponent,
   NotifyDrawerPopupComponent,
-  NotifyBodyComponent
+  NotifyBodyComponent,
+  //booking
+  CodxBookingCarScheduleContentComponent,
+  CodxBookingRoomScheduleContentComponent,
 ];
 
 const T_Pipe: Type<any>[] = [

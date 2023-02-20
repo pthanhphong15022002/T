@@ -94,7 +94,7 @@ export class PopupMoveReasonComponent implements OnInit {
   }
 
   onSave() {
-    if(this.reasonStep.reasonControl === true && this.listReasonClick.length > 0) {
+    if(this.reasonStep.reasonControl === true && this.listReasonClick.length === 0) {
       this.notiService.notifyCode('Chọn lý do kìa bạn');
       return;
     }

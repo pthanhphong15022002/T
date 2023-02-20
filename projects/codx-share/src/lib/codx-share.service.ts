@@ -588,13 +588,25 @@ export class CodxShareService {
       'EP',
       'EP',
       'BookingsBusiness',
-      'GetListBookingAsync',
+      'GetListBookingCalendarAsync',
       requestData
     );
   }
   #endregion_calendar;
 
+  #region_EP_Booking;
+  getBookingByRecID(recID: string) {
+    return this.api.exec<any>(
+      'EP',
+      'BookingsBusiness',
+      'GetBookingByIDAsync',
+      recID
+    );
+  }
+  #endregion_EP_Booking;
+
   #region_EP_BookingCars;
+
   getListAttendees(recID: any) {
     return this.api.execSv(
       'EP',
