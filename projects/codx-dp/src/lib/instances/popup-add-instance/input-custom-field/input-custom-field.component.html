@@ -153,8 +153,10 @@
     [allowMultiFile]="allowMultiFile"
     [functionID]="funID"
     [formModel]="formModel"
+    [isSaveSelected]="1"
     (fileAdded)="fileAdded($event)"
     (fileCount)="getfileCount($event)"
+    (fileSave)="fileSave($event)"
     displayThumb="full"
     showMessage="0"
   >

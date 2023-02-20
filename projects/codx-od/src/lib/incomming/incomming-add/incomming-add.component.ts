@@ -4,6 +4,7 @@ import {
   OnInit,
   Optional,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -30,6 +31,7 @@ import { Permission } from '@shared/models/file.model';
   selector: 'app-imcomming-add',
   templateUrl: './incomming-add.component.html',
   styleUrls: ['./incomming-add.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class IncommingAddComponent implements OnInit {
   getJSONString = getJSONString;
@@ -61,7 +63,10 @@ export class IncommingAddComponent implements OnInit {
   objRequied = [];
   fileDelete:any;
   service:any;
-  listPermission = []
+  listPermission = [];
+  relations :any;
+  lrelations :any;
+  user:any;
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -81,8 +86,8 @@ export class IncommingAddComponent implements OnInit {
     if (this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
 
-    var user = this.auth.get();
-    if (user?.userID) this.dispatch.createdBy = user?.userID;
+    this.user = this.auth.get();
+    if (this.user?.userID) this.dispatch.createdBy = this.user?.userID;
 
     this.gridViewSetup = this.data?.gridViewSetup;
     this.headerText = this.data?.headerText;
@@ -108,7 +113,7 @@ export class IncommingAddComponent implements OnInit {
         // this.getDispathOwner("BGĐ");
         if(this.formModel?.funcID == "ODT41") 
         {
-          this.dispatch.owner = user?.userID;
+          this.dispatch.owner = this.user?.userID;
           // this.getInforByUser(this.dispatch.owner).subscribe(item=>{
           //   if(item) this.dispatch.orgUnitID = item.orgUnitID
           // })
@@ -136,7 +141,14 @@ export class IncommingAddComponent implements OnInit {
     } 
     else if (this.type == 'edit') 
     {
+      debugger
       this.dispatch.agencyName = this.dispatch.agencyName.toString();
+      if(this.dispatch.relations && this.dispatch.relations.length>0)
+      {
+        this.lrelations = this.dispatch.relations.filter(x=>x.relationType == "6")
+        if(this.lrelations) this.lrelations = this.lrelations.map(u=>u.userID).join(";")
+
+      }
       if(this.dispatch.deptName) 
       {
         this.activeDiv = "dv"
@@ -199,6 +211,13 @@ export class IncommingAddComponent implements OnInit {
         }
       })
     }
+  }
+
+  //Người được chia sẻ
+  changeDataShare(event: any)
+  {
+    debugger
+    if(event?.data?.value) this.relations = event?.data?.value
   }
   //Nơi nhận
   changeValueBUID(event: any) {
@@ -300,15 +319,17 @@ export class IncommingAddComponent implements OnInit {
     if(this.dispatchForm.invalid || this.checkAgenciesErrors) return; */
     /////////////////////////////////////////////////////////
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
+    this.addRelations();
     if (this.type == 'add' || this.type == 'copy') {
       // if(this.dispatch.owner != this.dispatch.createdBy) this.dispatch.status = '3';
       // else this.dispatch.status = '1';
+     
       this.dispatch.status = '1';
       this.dispatch.approveStatus = '1';
       if (this.type == 'copy') 
       {
         delete this.dispatch.id;
-        this.dispatch.relations = null;
+        //this.dispatch.relations = null;
         this.dispatch.updates = null;
         this.dispatch.permissions = null;
         this.dispatch.links = null;
@@ -320,7 +341,7 @@ export class IncommingAddComponent implements OnInit {
       if (this.type == 'add')
         this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
       this.attachment.objectId = this.dispatch.recID;
-      this.addPermission();
+      this.addRelations();
       this.odService
       .saveDispatch(this.dataRq, this.dispatch)
       .subscribe(async (item) => {
@@ -357,7 +378,7 @@ export class IncommingAddComponent implements OnInit {
       
     } else if (this.type == 'edit') {
       this.odService
-        .updateDispatch(this.dispatch, false)
+        .updateDispatch(this.dispatch,this.formModel?.funcID , false)
         .subscribe(async (item) => {
           if (item.status == 0) {
             if(this.fileDelete && this.fileDelete.length > 0)
@@ -383,6 +404,23 @@ export class IncommingAddComponent implements OnInit {
             }
           } else this.notifySvr.notify(item.message);
         });
+    }
+  }
+  addRelations()
+  {
+    if(this.relations && this.relations.length>0)
+    {
+      this.dispatch.relations = [];
+      for(var i = 0 ; i < this.relations.length ; i++)
+      {
+        var obj = {
+          relationType : "6",
+          userID : this.relations[i],
+          status : 1,
+          createdBy : this.user?.userID
+        }
+        this.dispatch.relations.push(obj);
+      }
     }
   }
   getfileCount(e: any) {

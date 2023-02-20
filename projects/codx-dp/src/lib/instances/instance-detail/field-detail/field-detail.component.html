@@ -15,7 +15,9 @@
       <div class="group-button">
         <button class="button-custom">
           <span
-            class="icon-edit icon-20 text-primary-600 py-2"
+            [ngClass]="
+              isUpdate ? 'icon-edit icon-20 text-primary-600 py-2' : ''
+            "
             style="font-weight: 500"
             (click)="popupCustomField(dataStep.fields)"
           ></span>
@@ -66,9 +68,21 @@
     {{ data.dataValue }} <span *ngIf="data.dataFormat == 'P'">%</span>
   </span>
   <span class="text-dark margin-l" *ngIf="data.dataType == 'D'">
-    {{ data.dataValue | date : fomatvalue(data.dataFormat) }}
+    <span
+      *ngIf="
+        data.dataFormat == '1' ||
+        data.dataFormat == '2' ||
+        data.dataFormat == '3'
+      "
+    >
+      {{ data.dataValue | date : fomatvalue(data.dataFormat) }}</span
+    >
+    <span *ngIf="data.dataFormat == '4' || data.dataFormat == '5'">
+      {{
+        getFormatTime(data.dataValue) | date : fomatvalue(data.dataFormat)
+      }}</span
+    >
   </span>
-
   <ng-container *ngIf="data.dataType == 'R'">
     <ngb-rating
       [rate]="partNum(data.dataValue)"
@@ -86,13 +100,42 @@
     </ngb-rating>
   </ng-container>
 
+  <ng-container *ngIf="data.dataType == 'P'">
+    <codx-imgs
+      [width]="35"
+      [objectId]="data.dataValue"
+      [objectType]="'AD_Users'"
+      [numberImages]="5"
+    ></codx-imgs>
+  </ng-container>
+
+  <ng-container *ngIf="data.dataType == 'A' && data.dataValue">
+    <codx-attachment
+      #attachment
+      [objectId]="data.dataValue.split(';')[0]"
+      [objectType]="data.dataValue.split(';')[1]"
+      hideFolder="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      hideDes="1"
+      type="inline"
+      [allowMultiFile]="data.multiple?'1':'0'"
+      displayThumb="full"
+      showMessage="0"
+      [hideDelete]="'1'"
+      [hideMoreF]="'0'"
+    >
+    </codx-attachment>
+  </ng-container>
+
   <codx-mfunc
     [formModel]="formModel"
     (clickMF)="clickMF($event, data)"
     [isBookMark]="true"
     [dataItem]="data"
     [type]="'hover'"
-    
+    (changeDataMF)="changeFieldMF($event)"
   >
   </codx-mfunc>
 </ng-template>

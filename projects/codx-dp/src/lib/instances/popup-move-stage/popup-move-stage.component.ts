@@ -79,7 +79,7 @@ export class PopupMoveStageComponent implements OnInit {
       this.instance.stepID = this.stepIdOld;
       this.instancesStepOld.stepID = this.stepIdOld;
       this.stepIdOld = '';
-      this.isReason = true;
+      this.isReason = this.stepIdClick === this.IdFail ? false:true;
     }
     else {
       this.instancesStepOld.stepID = this.stepIdClick;
@@ -89,7 +89,6 @@ export class PopupMoveStageComponent implements OnInit {
     var data = [this.instance.recID,this.stepIdOld ,this.instancesStepOld];
     this.codxDpService.moveStageByIdInstance(data).subscribe((res)=> {
       if(res){
-        debugger;
         this.instance = res[0];
         this.listStep = res[1];
         var obj ={
