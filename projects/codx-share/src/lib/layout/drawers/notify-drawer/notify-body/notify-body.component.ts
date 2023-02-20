@@ -137,7 +137,7 @@ export class NotifyBodyComponent implements OnInit {
         'BG',
         'ERM.Business.BG',
         'NotificationBusinesss',
-        'UpdateNotificationAsync', 
+        'UpdateAsync', 
         [item.recID]).subscribe((res:boolean) => {
           if(res)
           {
