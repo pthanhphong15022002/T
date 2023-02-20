@@ -38,13 +38,10 @@
         </codx-label>
       </div>
       <div>
-        <codx-label
-          [default]="taskName"
-        >
-        </codx-label>
+        <codx-label [default]="taskName"> </codx-label>
         <span *ngIf="taskGroupName"> > </span>
-        <span style="font-weight: 500;">
-          {{taskGroupName}}
+        <span style="font-weight: 500">
+          {{ taskGroupName }}
         </span>
       </div>
     </div>
@@ -67,7 +64,7 @@
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
             (valueChange)="filterText($event, 'taskGroupID')"
-            [readonly]="false"
+            [readonly]="taskGroupID"
           ></ejs-dropdownlist>
         </div>
       </div>
@@ -170,6 +167,40 @@
     </div>
     <!--End ten Cong Viec -->
 
+    <!-- Khảo sát -->
+    <div class="form-group" *ngIf="taskType == 'S'">
+      <div class="d-flex justify-content-between align-items-center mail">
+        <codx-label
+          fiedName="Reference"
+          [formModel]="dialog?.formModel"
+          default="Bảng khảo sát"
+        ></codx-label>
+        <a
+          class="d-flex justify-content-end align-items-center cursor-pointer"
+          *ngIf="stepsTasks?.reference"
+          (click)="viewDetailSurveys()"
+        >
+          <span
+            class="icon-insert_link icon-20 text-primary-600 me-2 m-2"
+          ></span>
+        </a>
+      </div>
+      <codx-input
+        field="reference"
+        [formModel]="dialog?.formModel"
+        (valueChange)="changeQuestion($event)"
+      >
+      </codx-input>
+      <a
+        *ngIf="linkQuesiton"
+        class="cursor-pointer text-primary"
+        (click)="viewDetailSurveys()"
+      >
+        {{ linkQuesiton }}</a
+      >
+    </div>
+    <!-- Khảo sát -->
+
     <div class="form-group" *ngIf="taskType == 'Q'">
       <div class="d-flex justify-content-between align-items-center mail">
         <codx-label name="Reference" default="Tên khảo sát"></codx-label>
@@ -200,7 +231,7 @@
           >
           </codx-label>
           <div class="d-flex justify-content-between row">
-            <div class="col-6">
+            <div class="col-6 position-relative">
               <codx-input
                 field="durationDay"
                 [formModel]="dialog?.formModel"
@@ -209,9 +240,20 @@
                 (valueChange)="valueChangeText($event)"
               >
               </codx-input>
+              <div
+                class="position-absolute text-gray-400"
+                style="top: 7px; right: 14px"
+              >
+                <codx-label
+                  fiedName=""
+                  [formModel]="dialog?.formModel"
+                  default="Ngày"
+                >
+                </codx-label>
+              </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-6 position-relative">
               <codx-input
                 field="durationHour"
                 [formModel]="dialog?.formModel"
@@ -220,6 +262,17 @@
                 (valueChange)="valueChangeText($event)"
               >
               </codx-input>
+              <div
+                class="position-absolute text-gray-400"
+                style="top: 7px; right: 14px"
+              >
+                <codx-label
+                  fiedName=""
+                  [formModel]="dialog?.formModel"
+                  default="Giờ"
+                >
+                </codx-label>
+              </div>
             </div>
           </div>
         </div>
@@ -274,7 +327,6 @@
       </codx-input>
       </div>
     </div> -->
-
     <div class="form-group">
       <div>
         <codx-label

@@ -1056,7 +1056,7 @@
         </button>
       </div>
     </div>
-    <div style="font-weight: 500; margin-left: 30px" class="float-left">
+    <!-- <div style="font-weight: 500; margin-left: 30px" class="float-left">
       <span style="font-size: 1rem">Mẫu giai đoạn: cơ hội</span>
       <button type="button" class="btn btn-outline-primary ms-2">
         Đổi mẫu
@@ -1064,7 +1064,7 @@
       <button type="button" class="btn btn-outline-primary ms-2">
         Lưu mẫu mới
       </button>
-    </div>
+    </div> -->
   </div>
 </ng-template>
 
@@ -1350,9 +1350,8 @@
                       </div>
                     </div>
                     <codx-mfunc
-                      [formModel]="dialog.formModel"
-                      (clickMF)="clickMFTaskGroup($event, taskList)"
-                      [isBookMark]="true"
+                      [formModel]="grvMoreFunction"
+                      (clickMF)="clickMFTaskGroup($event, taskList)"                  
                       [dataItem]="moreDefaut"
                       [type]="'hover'"
                       (changeDataMF)="changeDataMF($event, 'group')"
@@ -1453,7 +1452,7 @@
                             </codx-attachment>
                           </div>
                           <codx-mfunc
-                            [formModel]="dialog.formModel"
+                            [formModel]="grvMoreFunction"
                             (clickMF)="
                               clickMFTask($event, taskList?.task, task)
                             "

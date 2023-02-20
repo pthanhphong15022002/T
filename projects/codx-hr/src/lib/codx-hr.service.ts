@@ -1071,7 +1071,7 @@ export class CodxHrService {
       'HR',
       'HR',
       'EExperiencesBusiness',
-      'GetExperiencesByEmpIDAsync',
+      'GetListByEmployeeIDAsync',
       data
     );
   }

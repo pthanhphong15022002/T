@@ -53,11 +53,9 @@ export class ChartOfAccountsComponent extends UIComponent {
   onInit(): void { }
 
   ngAfterViewInit() {
-    this.api.exec('PS', 'TestBusiness', 'Test').subscribe();
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) {
         this.funcName = res.defaultName;
-        console.log(this.funcName);
       }
     });
     this.views = [
@@ -81,7 +79,6 @@ export class ChartOfAccountsComponent extends UIComponent {
 
   //#region Event
   toolBarClick(e) {
-    console.log(e);
     switch (e.id) {
       case 'btnAdd':
         this.add();

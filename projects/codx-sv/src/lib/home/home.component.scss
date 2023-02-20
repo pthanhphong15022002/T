@@ -1,7 +1,16 @@
+.w-170px
+{
+  width: 170px;
+}
+.title-add-survey-s
+{
+  padding: 10px 182px;
+
+}
 .survey-home {
   .body-survey {
-    background-color: #e6fff7 !important;
-    height: 264px !important;
+    background-color: #F1F3F4 !important;
+    height: 225px !important;
   }
 
   .list-survey {
@@ -17,26 +26,29 @@
   }
 
   .card-survey {
-    width: 173px;
-    height: 130px;
-    background-color: white;
+    width: 167px;
+    height: 127px;
     margin-right: 10px;
     align-content: center;
     cursor: pointer;
+    border-radius: 7px;
   }
 
   .card-survey:hover {
-    border-color: aqua !important;
+    border: solid 1px #EE4428;
   }
-
-  .upper-part {
-    height: 100% !important;
-    width: fit-content;
-    margin: auto;
-  }
+.list-survey
+{
+  height: calc(100% - 225px);
+}
+.ic-cl-EE4428
+{
+  color: #EE4428;
+} 
 
   img {
-    width: 173px;
-    height: 130px;
+    width: 165px;
+    height: 125px;
+    border-radius: 7px;
   }
 }
