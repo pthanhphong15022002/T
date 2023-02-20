@@ -429,6 +429,7 @@ export class EmployeeDetailComponent extends UIComponent {
   eCalSalaryFuncID = 'HRTEM0303';
   jobGeneralFuncID = 'HRTEM0301';
   eBasicSalaryFuncID = 'HRTEM0401';
+  eJobSalFuntionID = 'HRTEM0402'; //Lương chức danh
   trainCourseFuncID = 'HRTEM0604';
   eBusinessTravelFuncID = 'HRTEM0504';
   eHealthFuncID = 'HRTEM0801'; // Khám sức khỏe
@@ -601,7 +602,7 @@ export class EmployeeDetailComponent extends UIComponent {
       console.log('functionList', res);
       if (res && res[1] > 0) {
         this.lstTab = res[0].filter((p) => p.parentID == this.funcID);
-        this.crrFuncTab = this.lstTab[2].functionID;
+        this.crrFuncTab = this.lstTab[3].functionID;
         console.log('crrFuncTab', this.crrFuncTab);
         this.lstFuncID = res[0];
 
@@ -3429,7 +3430,8 @@ export class EmployeeDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) (this.trainCourseGrid?.dataService as CRUDService).clear();
+      if (!res?.event)
+        (this.trainCourseGrid?.dataService as CRUDService).clear();
       if (res && (actionType === 'add' || actionType === 'copy')) {
         (this.trainCourseGrid?.dataService as CRUDService)
           .add(res.event)
@@ -3481,7 +3483,8 @@ export class EmployeeDetailComponent extends UIComponent {
   //#region HR_EHealths
 
   HandleEmployeeEHealths(actionType: string, data: any) {
-    if(this.eHealthsGrid) this.eHealthsGrid.dataService.dataSelected = this.infoPersonal;
+    if (this.eHealthsGrid)
+      this.eHealthsGrid.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.eHealthsGrid.formModel;
@@ -4318,8 +4321,7 @@ export class EmployeeDetailComponent extends UIComponent {
       (this.trainCourseGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterTrainCoursePredicates],
-          [this.filterByTrainCourseIDArr.join(';')],
-
+          [this.filterByTrainCourseIDArr.join(';')]
         )
         .subscribe((item) => {
           console.log('item tra ve sau khi loc 2', item);
@@ -4330,7 +4332,7 @@ export class EmployeeDetailComponent extends UIComponent {
           [
             `TrainFrom>="${this.startDateTrainCourseFilterValue}" and TrainTo<="${this.endDateTrainCourseFilterValue}"`,
           ],
-          [this.filterByTrainCourseIDArr],
+          [this.filterByTrainCourseIDArr]
         )
         .subscribe((item) => {
           console.log('item tra ve sau khi loc 3', item);
