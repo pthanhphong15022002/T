@@ -20,40 +20,41 @@ import {
   UIComponent,
   ViewsComponent,
 } from 'codx-core';
-import { CodxEpService } from '../../../codx-ep.service';
-import { BookingRoomComponent } from '../booking-room.component';
-import { PopupAddBookingRoomComponent } from '../popup-add-booking-room/popup-add-booking-room.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Permission } from '@shared/models/file.model';
+import { CodxShareService } from '../../codx-share.service';
+import moment from 'moment';
 @Component({
-  selector: 'booking-room-schedule-content',
-  templateUrl: 'booking-room-schedule-content.component.html',
-  styleUrls: ['booking-room-schedule-content.component.scss'],
+  selector: 'codx-booking-car-schedule-content',
+  templateUrl: 'codx-booking-car-schedule-content.component.html',
+  styleUrls: ['codx-booking-car-schedule-content.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class BookingRoomScheduleContentComponent
+export class CodxBookingCarScheduleContentComponent
   extends UIComponent
   implements AfterViewInit
 {
   @Input() recID: any;
-
+  data:any;
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService,
-    private callFuncService: CallFuncService
+    private codxShareService: CodxShareService,
+    private callFuncService: CallFuncService,
   ) {
     super(injector);
   }
 
   onInit(): void {
-    this.codxEpService.getBookingByRecID(this.recID).subscribe((data) => {
-      if (data) {
-        let x = data;
+    this.codxShareService.getBookingByRecID(this.recID).subscribe((res) => {
+      if (res) {
+        this.data = res;
       }
     });
   }
   ngAfterViewInit(): void {}
-
+  sameDayCheck(sDate: any, eDate: any) {
+    return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
+  }
   showHour(date: any) {
     let temp = new Date(date);
     let time =

@@ -91,6 +91,11 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     //#endregion
  
     //#region Function
+  valueChange(e: any) {
+    if (e) {
+      this.currencies[e.field] = e.data;
+    }
+  }
   valueChangecurID(e: any) {
     if (e) {
       this.curID = e.data;
