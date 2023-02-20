@@ -1071,7 +1071,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
           //   if(item) that.data.tasks= item;
           // })
-          that.odService.updateDispatch(e.data, false).subscribe((item) => {
+          that.odService.updateDispatch(e.data , "", false).subscribe((item) => {
             if (item.status == 0) {
               that.view.dataService.update(e.data).subscribe();
             } else that.notifySvr.notify(item.message);
