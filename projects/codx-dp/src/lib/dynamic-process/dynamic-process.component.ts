@@ -31,6 +31,7 @@ import { DP_Processes, DP_Processes_Permission } from '../models/models';
 import { PopupViewsDetailsProcessComponent } from './popup-views-details-process/popup-views-details-process.component';
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 import { environment } from 'src/environments/environment';
+import { PopupPropertiesComponent } from './popup-properties/popup-properties.component';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -334,6 +335,9 @@ export class DynamicProcessComponent
       case 'DP02031':
         this.viewDetailProcess(data);
         break;
+      case 'DP01013':
+        this.properties(data);
+        break;
     }
   }
 
@@ -428,6 +432,18 @@ export class DynamicProcessComponent
         }
       });
   }
+
+  properties(data){
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '550px';
+    this.dialog = this.callfc.openSide(PopupPropertiesComponent, data, option);
+    this.dialog.closed.subscribe((e) => {
+      if (!e.event) this.view.dataService.clear();
+    });
+  }
+
   //#region đang test ai cần list phần quyền la vô đâyu nha
   setTextPopover(text) {
     return text;
