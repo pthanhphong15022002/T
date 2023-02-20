@@ -64,7 +64,8 @@ export class InstanceDetailComponent implements OnInit {
     type: 'type',
     color:'color'
   };
-
+  titleDefault ='';
+  
   constructor(
     private dpSv: CodxDpService,
     private api: ApiHttpService,
@@ -72,7 +73,9 @@ export class InstanceDetailComponent implements OnInit {
     private changeDetec: ChangeDetectorRef,
     private popupInstances: InstancesComponent
   ) {
-   
+    this.cache.functionList('DPT03').subscribe((fun) => {
+      if (fun) this.titleDefault = fun.customName || fun.description;
+    });
   }
 
   ngOnInit(): void {
@@ -226,6 +229,7 @@ export class InstanceDetailComponent implements OnInit {
 
   setHTMLCssStages(oldStage, newStage) {}
 
+  //ganttchar
   getDataGanttChart(instanceID) {
     this.api
       .exec<any>(
@@ -245,7 +249,8 @@ export class InstanceDetailComponent implements OnInit {
     var idx =  this.ganttDs.findIndex(x=>x.recID==recID) ;
     return  this.ganttDs[idx]?.color
   }
-
+ //end ganttchar
+ 
   handleListStep(listStepNew:any, listStep:any){
   const mapList = new Map(listStep.map(item => [item.stepID, item.stepStatus]));
   
