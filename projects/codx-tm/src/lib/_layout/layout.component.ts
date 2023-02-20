@@ -1,9 +1,16 @@
 import { Observable } from 'rxjs';
-import { Component, ViewChild, ElementRef, Injector, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Injector,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   CallFuncService,
   DialogRef,
-  LayoutBaseComponent, SidebarModel
+  LayoutBaseComponent,
+  SidebarModel,
 } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { NotifyDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/notify-drawer.component';
@@ -15,36 +22,35 @@ import { E } from '@angular/cdk/keycodes';
   selector: 'codx-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'TM';
   dialog!: DialogRef;
-  funcID: string = "";
+  funcID: string = '';
   // override toolbarFixed: boolean = false;
-  constructor(inject: Injector,
+  
+  constructor(
+    inject: Injector,
     private route: ActivatedRoute,
     private tmService: CodxTMService,
-    private callfc: CallFuncService) {
+    private callfc: CallFuncService
+  ) {
     super(inject);
   }
 
-  onInit(): void { }
+  onInit(): void {}
 
   childMenuClick(e) {
     this.tmService.childMenuClick.next(e);
   }
-  menuClick(e){
-    
-  }
-  onAfterViewInit(): void {
-
-  }
+  menuClick(e) {}
+  onAfterViewInit(): void {}
 
   openFormNoteDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';
     this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
-    this.dialog.closed.subscribe()
+    this.dialog.closed.subscribe();
   }
 }

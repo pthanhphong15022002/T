@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   HostListener,
@@ -56,12 +57,13 @@ export class PopupJobComponent implements OnInit {
   valueInput = '';
   litsParentID = [];
   listJobType = [];
-  taskGroup: any;
+  taskGroupID: any;
   view = [];
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
+    private changeDef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -74,13 +76,18 @@ export class PopupJobComponent implements OnInit {
       this.stepsTasks = new DP_Steps_Tasks();
       this.stepsTasks['taskType'] = this.taskType;
       this.stepsTasks['stepID'] = this.stepID;
+      this.stepsTasks['taskGroupID'] = dt?.data[7];
+    } else if (this.status == 'copy') {
+      this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
+      this.taskType = this.stepsTasks.taskType;
+      this.stepsTasks['recID'] = Util.uid();
     } else {
       this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
       this.taskType = this.stepsTasks.taskType;
     }
     this.taskList = dt?.data[5];
     this.taskName = dt?.data[6];
-    this.taskGroup = dt?.data[7];
+    this.taskGroupID = dt?.data[7];
   }
   ngOnInit(): void {
     this.getTypeTask();
@@ -174,7 +181,7 @@ export class PopupJobComponent implements OnInit {
     let data = {
       dialog: this.dialog,
       formGroup: null,
-      templateID: this.recIdEmail,
+      templateID: this.stepsTasks['reference'] || '',
       showIsTemplate: true,
       showIsPublish: true,
       showSendLater: true,
@@ -192,8 +199,7 @@ export class PopupJobComponent implements OnInit {
     );
     popEmail.closed.subscribe((res) => {
       if (res && res.event) {
-        // this.processSteps['reference'] = res.event?.recID;
-        this.recIdEmail = res.event?.recID ? res.event?.recID : '';
+        this.stepsTasks['reference'] = res.event?.recID ? res.event?.recID : '';
         this.isNewEmails = this.recIdEmail ? true : false;
       }
     });
@@ -241,34 +247,6 @@ export class PopupJobComponent implements OnInit {
     return max;
   }
 
-  checkDate(hour, day) {
-    if (
-      this.stepsTasks['taskGroupID'] &&
-      this.stepsTasks['dependRule'] == '1' &&
-      this.stepsTasks['parentID']
-    ) {
-      let groupTask = this.groupTackList.find(
-        (x) => x.recID == this.stepsTasks['taskGroupID']
-      );
-      let max = 0;
-      groupTask['task'].forEach((element) => {
-        let hour = +element['durationDay'] * 24 + +element['durationHour'];
-        if (max < hour) {
-        }
-      });
-    }
-    if (
-      this.taskGroup['durationDay'] > 0 ||
-      this.taskGroup['durationHour'] > 0
-    ) {
-      let sum =
-        Number(this.taskGroup['durationDay']) * 24 +
-        Number(this.taskGroup['durationHour']);
-      let sumTask = day * 24 + hour;
-      return sum > sumTask ? true : false;
-    }
-    return true;
-  }
   getFormModel() {
     this.cache.gridView('grvDPStepsTasks').subscribe((res) => {
       this.cache
@@ -286,7 +264,8 @@ export class PopupJobComponent implements OnInit {
   }
 
   getHour(data) {
-    let hour = +data['durationDay'] * 24 + +data['durationHour'];
+    let hour =
+      Number(data['durationDay'] || 0) * 24 + Number(data['durationHour'] || 0);
     return hour || 0;
   }
 
@@ -298,16 +277,23 @@ export class PopupJobComponent implements OnInit {
     }
   }
 
-  checkSave(groupTask) {
-    if (this.getHour(groupTask) > this.getHour(this.stepsTasks)) {
+  checkSave(groupTask, timeInput?: number) {
+    let time = timeInput ? timeInput : this.getHour(this.stepsTasks);
+    if (this.getHour(groupTask) > time) {
       // nếu thời gian ko vượt quá thời gian cho phép lưu
       this.dialog.close({ data: this.stepsTasks, status: this.status });
     } else {
       // nếu vượt quá thì hỏi ý kiến
       this.notiService.alertCode(this.MESSAGETIME).subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          groupTask['durationDay'] = this.stepsTasks['durationDay'];
-          groupTask['durationHour'] = this.stepsTasks['durationHour'];
+          if (timeInput) {
+            groupTask['durationDay'] = Math.floor(time / 24);
+            groupTask['durationHour'] = time % 24;
+          } else {
+            groupTask['durationDay'] = this.stepsTasks['durationDay'];
+            groupTask['durationHour'] = this.stepsTasks['durationHour'];
+          }
+
           this.dialog.close({ data: this.stepsTasks, status: this.status });
         }
       });
@@ -315,15 +301,47 @@ export class PopupJobComponent implements OnInit {
   }
 
   checkSaveDependRule(groupTask, task) {
-    let idTask = task['parentID'].split(';');
-    let taskMax;
-    idTask?.forEach((element) => {
-      let task = groupTask['task'].find((x) => x.recID == element);
-      if (task && this.getHour(taskMax) < this.getHour(task)) {
-        taskMax = task;
+    let idTask = task['parentID'].trim() ? task['parentID'].split(';') : [];
+    if (idTask.length > 0) {
+      let taskMax = 0;
+      let taskFind;
+      idTask?.forEach((element) => {
+        taskFind = groupTask['task'].find((x) => x.recID == element);
+        if (taskFind && this.getHour(taskFind) <= this.getHour(task)) {
+          taskMax = this.getHour(taskFind) || 0;
+        }
+      });
+      if (taskMax == 0) {
+        return this.getHour(task);
+      } else {
+        return (
+          this.getHour(task) + this.checkSaveDependRule(groupTask, taskFind)
+        );
       }
-    });
-    if (!taskMax) {
+    } else {
+      return this.getHour(task);
+    }
+  }
+
+  viewDetailSurveys() {
+    if (this.linkQuesiton) window.open(this.linkQuesiton);
+  }
+
+  changeQuestion(e) {
+    if (e?.data) {
+      this.stepsTasks['reference'] = e?.data;
+      let url = window.location.href;
+      let index = url.indexOf('/bp/');
+      if (index != -1)
+        this.linkQuesiton =
+          url.substring(0, index) +
+          Util.stringFormat(
+            '/sv/add-survey?funcID={0}&title={1}&recID={2}',
+            'SVT01',
+            '',
+            e?.data
+          );
+      this.changeDef.detectChanges();
     }
   }
 
@@ -350,13 +368,14 @@ export class PopupJobComponent implements OnInit {
         } else {
           // nếu công việc thực hiện sau những công việc khác thì tính tổng thời gian những công việc liên quan
           if (
-            this.stepsTasks['parentID'].trim() ||
+            !this.stepsTasks['parentID'].trim() ||
             groupTask['task'].length === 0
           ) {
             // nếu chưa có công việc liên quan
             this.checkSave(groupTask);
           } else {
-            this.checkSaveDependRule(groupTask, this.stepsTasks);
+            let time = this.checkSaveDependRule(groupTask, this.stepsTasks);
+            this.checkSave(groupTask, time);
           }
         }
       } else {

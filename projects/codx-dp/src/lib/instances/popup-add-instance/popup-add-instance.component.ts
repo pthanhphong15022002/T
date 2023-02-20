@@ -95,6 +95,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.titleAction = dt?.data[3];
     this.formModelCrr = dt?.data[4];
     this.listStepCbx = dt?.data[5];
+    this.instance.instanceNo = dt?.data[6];
   }
 
   ngOnInit(): void {

@@ -29,13 +29,13 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
-  //listData: any; // 
+  //listData: any; //
   funcID: string;
   idField: string = 'recID';
   actionType: string;
   employeeId: string;
   successFlag = false;
-  oldVaccineTypeID : string; // xử lí binding data main view
+  oldVaccineTypeID: string; // xử lí binding data main view
   isAfterRender = false;
   headerText: string;
   @ViewChild('form') form: CodxFormComponent;
@@ -58,39 +58,38 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
     this.formModel = dialog.formModel;
     this.data = data?.data?.data;
     console.log('data nhan vao la', this.data);
-    
+
     //this.listData = data?.data?.listData;
 
     //console.log('list', this.listData);
-    
 
     // if (this.actionType === 'edit' || this.actionType === 'copy') {
     //   this.data = JSON.parse(JSON.stringify(data?.data?.vaccineSelected));
     // }
   }
 
-  ngAfterViewInit(){
-    this.dialog && this.dialog.closed.subscribe(res => {
-      if(!res.event){
-        if(this.successFlag == true){
-          this.dialog.close(this.data);
+  ngAfterViewInit() {
+    this.dialog &&
+      this.dialog.closed.subscribe((res) => {
+        if (!res.event) {
+          if (this.successFlag == true) {
+            this.dialog.close(this.data);
+          } else {
+            this.dialog.close(null);
+          }
         }
-        else{
-          this.dialog.close(null)
-        }
-      }
-    })
+      });
   }
 
   onInit(): void {
     this.hrService
-    .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    .then((formGroup) => {
-      if (formGroup) {
-        this.formGroup = formGroup;
-        this.initForm();
-      }
-    });
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((formGroup) => {
+        if (formGroup) {
+          this.formGroup = formGroup;
+          this.initForm();
+        }
+      });
 
     // this.hrService.getFormModel(this.funcID).then((formModel) => {
     //   if (formModel) {
@@ -125,14 +124,14 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
             this.isAfterRender = true;
           } else {
             this.notify.notify('Error');
-        }
-      });
+          }
+        });
     } else {
-      this.oldVaccineTypeID = this.data.vaccineTypeID
+      this.oldVaccineTypeID = this.data.vaccineTypeID;
 
       this.formModel.currentData = this.data;
       this.formGroup.patchValue(this.data);
-      this.cr.detectChanges();;
+      this.cr.detectChanges();
       this.isAfterRender = true;
     }
   }
@@ -146,25 +145,23 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
       this.hrService.addEVaccine(this.data).subscribe((res) => {
         if (res) {
           this.data = res;
-          this.notify.notifyCode('SYS006')
+          this.notify.notifyCode('SYS006');
           this.successFlag = true;
           // (this.listView.dataService as CRUDService).add(res).subscribe();
           // this.updateListData(this.data, this.actionType);
           // this.actionType = 'edit';
           this.dialog && this.dialog.close(this.data);
-        }
-        else this.notify.notifyCode('SYS023')
+        } else this.notify.notifyCode('SYS023');
       });
     } else if (this.actionType == 'edit') {
       this.hrService.editEVaccine(this.data).subscribe((res) => {
         if (res) {
           this.data = res;
-          this.notify.notifyCode('SYS007')
+          this.notify.notifyCode('SYS007');
           // this.updateListData(this.data, this.actionType);
           // (this.listView.dataService as CRUDService).update(res).subscribe();
           this.dialog && this.dialog.close(this.data);
-        }
-        else this.notify.notifyCode('SYS021')
+        } else this.notify.notifyCode('SYS021');
       });
     }
 
@@ -179,11 +176,10 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   // updateListData(data: any, actionType: string){
   //   let grpVType = this.listData.filter(p => p.vaccineTypeID == this.data.vaccineTypeID)
   //   if(grpVType)
-    
 
   //   if(actionType == 'add' || actionType == 'copy'){
   //     if(grpVType){
-  //       let lstVaccine = grpVType[0].vaccines;        
+  //       let lstVaccine = grpVType[0].vaccines;
   //       lstVaccine.push(this.data)
   //       lstVaccine.sort((a, b) =>Date.parse(b.injectDate) - Date.parse(a.injectDate))
   //     }
