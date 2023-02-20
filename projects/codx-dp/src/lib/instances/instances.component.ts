@@ -221,6 +221,7 @@ export class InstancesComponent
                   this.titleAction,
                   formMD,
                   this.listStepsCbx,
+                  this.instanceNo
                 ],
                 option
               );
@@ -652,8 +653,8 @@ export class InstancesComponent
       .map((x) => x.stepName)[0];
   }
   clickMoreFunc(e){
-    this.lstStepInstances = e.lstSteps;
-    this.clickMF(e.e, e.data);
+    this.lstStepInstances = e.lstStepCbx;
+    this.clickMF(e.e, e.data,);
   }
   changeMF(e) {
     this.changeDataMF(e.e, e.data);

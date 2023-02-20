@@ -114,12 +114,6 @@ export class PopupMoveStageComponent implements OnInit {
   changeTime($event) {}
 
   autoClickedSteps(listStep: any, stepName: string) {
-    for (let i = 0; i < listStep.length; i++) {
-      if (listStep[i].stepID === this.stepIdOld) {
-         this.stepIdClick = listStep[i + 1]?.stepID;
-        break;
-      }
-    }
 
     let idx = listStep.findIndex(x=> x.stepID === this.stepIdOld);
     this.stepIdClick = listStep[idx + 1]?.stepID;
@@ -127,17 +121,6 @@ export class PopupMoveStageComponent implements OnInit {
   cbxChange($event) {
     if($event){
         this.stepIdClick = $event;
-        // let idx = this.listStepsCbx.findIndex(x => x.stepID === this.stepIdClick && x.indexNo > 0);
-        // let obj = this.listStepsCbx[idx];
-        // if(obj !== null && obj) {
-        //   this.instancesStepOld = obj;
-        // }
-        // else {
-        //   // let idxStep = this.listStepsCbx.findIndex(x => x.stepID === this.stepIdOld && x.indexNo > 0);
-        //   // let obj111 = this.listStepsCbx[idxStep];
-        //   // this.instancesStepOld = obj111;
-        //   //  this.instancesStepOld.stepID = $event;
-        // }
         
         this.changeDetectorRef.detectChanges();
     }

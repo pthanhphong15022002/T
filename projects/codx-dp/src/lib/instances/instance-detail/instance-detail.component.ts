@@ -139,11 +139,10 @@ export class InstanceDetailComponent implements OnInit {
         this.progress = '0';
         this.tmpTeps = null;
       }
-      debugger;
       let listStepHandle = JSON.parse(JSON.stringify(this.listStepNew));
       if(this.instanceStatus === '1' || this.instanceStatus === '2'  || this.instanceStatus === null || this.instanceStatus === ''){
         this.deleteListReason(listStepHandle);
-        this.deleteListReason(this.listSteps);
+       // this.deleteListReason(this.listSteps);
       }
 
       this.listStepUpdate = this.handleListStep(listStepHandle,this.listSteps); 
@@ -173,7 +172,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   clickMF(e, data) {
-    this.moreFunctionEvent.emit({e: e, data: data, lstSteps: this.listSteps});
+    this.moreFunctionEvent.emit({e: e, data: data, lstStepCbx: this.listStepNew});
     // console.log(e);
     // switch (e.functionID) {
     //   case 'DP09':
@@ -188,7 +187,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
-    this.changeMF.emit({e: e, data: data})
+    this.changeMF.emit({e: e, data: data, listStepCbx: this.listStepNew})
     // console.log(e);
     // if (e) {
     //   e.forEach((element) => {

@@ -184,7 +184,7 @@ export class StagesDetailComponent implements OnInit {
   }
 
   totalProgress(tasks, taskGroups) {
-    if (tasks.length > 0 || taskGroups.length > 0) {
+    if (tasks?.length > 0 || taskGroups?.length > 0) {
       var totalTask = 0;
       var totalTaskGroup = 0;
       for (var i = 0; i < tasks.length; i++) {
