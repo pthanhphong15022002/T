@@ -167,7 +167,7 @@
       <div [innerHTML]="data?.data?.memo2"></div>
     </ng-template>
   </ng-container>
-  <ng-container
+  <!-- <ng-container
     #tmpEP_BookingRooms
     *ngIf="data?.transType == 'EP_BookingRooms'"
   >
@@ -298,8 +298,16 @@
         </div>
       </div>
     </div>
-  </ng-container>
+  </ng-container> -->
   <ng-container #EP_BookingCars *ngIf="data?.transType == 'EP_BookingCars'">
+    
+  <codx-booking-car-schedule-content [recID]="data?.transID"></codx-booking-car-schedule-content>
+  </ng-container>
+  <ng-container #tmpEP_BookingRooms *ngIf="data?.transType == 'EP_BookingRooms'">
+    
+    <codx-booking-room-schedule-content [recID]="data?.transID"></codx-booking-room-schedule-content>
+    </ng-container>
+  <!-- <ng-container #EP_BookingCars *ngIf="data?.transType == 'EP_BookingCars'">
     <div>
       <codx-label
         [default]="data?.data?.title"
@@ -432,7 +440,7 @@
         </div>
       </div>
     </div>
-  </ng-container>
+  </ng-container> -->
   <ng-container #CO_Meetings *ngIf="data?.transType == 'CO_Meetings'">
     <div>
       <h5 #meetingName>

@@ -51,16 +51,6 @@
           (valueChange)="valueChange($event)">
         </codx-input>
       </div>
-<<<<<<< HEAD
-      <div class="d-flex align-items-center">
-        <div class="me-2">
-          <codx-input [formModel]="form.formModel" field="stop" (valueChange)="valueChange($event)"
-            [checked]="form.data.stop">
-          </codx-input>
-        </div>
-        <codx-label [formModel]="form.formModel" fiedName="stop" default="Ngừng sử dụng"></codx-label>
-      </div>
-=======
     </div>
     <div class="col-6 pe-0">
       <div class="form-group">
@@ -108,10 +98,9 @@
     </span>
     <codx-label [formModel]="form.formModel" fiedName="Stop" default="Ngừng sử dụng"></codx-label>
   </div>
->>>>>>> 86837da71b4c827e9963cf3c30de901215798236
 </ng-template>
 <ng-template #tabestablish>
-  <div class="form-group">
+  <div class="mb-3 text-primary fw-bold fs-6">
     <codx-label [formModel]="form.formModel" default="Thanh toán"></codx-label>
   </div>
   <div class="row mx-0 mt-3">
@@ -132,7 +121,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group">
+  <div class="mb-3 text-primary fw-bold fs-6">
     <codx-label [formModel]="form.formModel" default="Kiểm soát công nợ"></codx-label>
   </div>
   <div class="row mx-0 mt-3">
@@ -191,7 +180,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group">
+  <div class="mb-3 text-primary fw-bold fs-6">
     <codx-label [formModel]="form.formModel" default="Kiểm soát nợ quá hạn"></codx-label>
   </div>
   <div class="row mx-0 mt-3">
@@ -232,7 +221,7 @@
   </div>
 </ng-template>
 <ng-template #tabShipment>
-  <div class="form-group">
+  <div class="mb-3 text-primary fw-bold fs-6">
     <codx-label [formModel]="form.formModel" default="Thông tin giao hàng"></codx-label>
   </div>
   <div class="row mx-0 mt-3">
@@ -269,52 +258,6 @@
           (valueChange)="valueChange($event)">
         </codx-input>
       </div>
-<<<<<<< HEAD
-      <div class="row mx-0 mt-3">
-        <div class="col-1 ps-0">
-          <div class="form-group">
-            <codx-input
-        type="switch"
-        field="workingHour"  
-        (valueChange)="valueChange($event)"
-        [checked]="form.data.workingHour"
-        >
-        </codx-input>
-          </div>   
-        </div>
-        <div class="col-6 ps-0">
-          <div class="form-group">
-            <codx-label
-        [formModel]="form.formModel"
-        fiedName="WorkingHour"
-        default="Giao hàng giờ hành chính"      
-      ></codx-label>  
-          </div>   
-        </div>
-      </div>
-      <div class="row mx-0 mt-3">
-        <div class="col-1 ps-0">
-          <div class="form-group">
-            <codx-input
-        type="switch"
-        field="calendarControl" 
-        (valueChange)="valueChange($event)" 
-        [checked]="form.data.calendarControl"
-        >
-        </codx-input>
-          </div>   
-        </div>
-        <div class="col-8 ps-0">
-          <div class="form-group">
-            <codx-label
-        [formModel]="form.formModel"
-        fiedName="calendarControl"
-        default="Cảnh báo khi không đủ thời gian giao hàng"      
-      ></codx-label>
-          </div>   
-        </div>
-      </div>  
-=======
     </div>
   </div>
   <div class="row mx-0 mt-3">
@@ -345,37 +288,30 @@
       </div>
     </div>
   </div>
-  <div class="d-flex">
-    <codx-input type="switch" field="workingHour" (valueChange)="valueChange($event)" [checked]="form.data.workingHour">
-    </codx-input>
+  <div class="d-flex align-items-center mb-2">
+    <div class="me-2">
+      <codx-input type="switch" field="workingHour" (valueChange)="valueChange($event)" [checked]="form.data.workingHour">
+      </codx-input>
+    </div>
     <codx-label [formModel]="form.formModel" fiedName="WorkingHour" default="Giao hàng giờ hành chính"></codx-label>
-
   </div>
-  <div class="d-flex">
-    <codx-input type="switch" field="calendarControl" (valueChange)="valueChange($event)"
+  <div class="d-flex align-items-center mb-2">
+    <div class="me-2">
+      <codx-input type="switch" field="calendarControl" (valueChange)="valueChange($event)"
       [checked]="form.data.calendarControl">
     </codx-input>
+    </div>
     <codx-label [formModel]="form.formModel" fiedName="calendarControl"
       default="Cảnh báo khi không đủ thời gian giao hàng"></codx-label>
-
   </div>
->>>>>>> 86837da71b4c827e9963cf3c30de901215798236
 </ng-template>
 <ng-template #tabLocation>
-  <div class="row mx-0 mt-3">
-    <div class="col-11 ps-0">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" default="Danh sách địa chỉ"></codx-label>
-      </div>
-    </div>
-    <div class="col-1 ps-0">
-      <div class="form-group">
-        <span (click)="openPopupAddress()">
-          <i class="fa-sharp fa-solid fa-plus"></i>
-          <i class="fa-sharp fa-solid fa-location-dot"></i>
-        </span>
-      </div>
-    </div>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <codx-label class="mb-3 text-primary fw-bold fs-6" [formModel]="form.formModel" default="Danh sách địa chỉ"></codx-label>
+    <span (click)="openPopupAddress()">
+      <i class="fa-sharp fa-solid fa-plus"></i>
+      <i class="fa-sharp fa-solid fa-location-dot"></i>
+    </span>
   </div>
   <div *ngFor="let item of objectAddress">
     <div class="fw-bold text-dark fs-5" *ngFor="let value of valuelist">
@@ -387,38 +323,40 @@
     <div class="text-gray-500">
       Liên hệ
     </div>
-    <div class="d-flex flex-wrap ms-14">
-      <div class="row pb-5" *ngFor="let itemcontact of objectContactAddress">
-        <div class="col-6 ps-0" *ngIf="itemcontact.reference == item.recID">
-          <div id="functioncontact" class="d-flex align-items-top">
-            <div class="me-4">
-              <div>
-                <codx-img [objectId]="itemcontact?.recID" [objectName]="itemcontact?.contactName"
-                  [objectType]="formModel?.entityName" [width]="50">
-                </codx-img>
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <div class="d-flex flex-wrap ms-14" *ngFor="let itemcontact of objectContactAddress">
+        <div class="row pb-5" *ngIf="itemcontact.reference == item.recID">
+          <div class="col-6 ps-0">
+            <div class="d-flex align-items-top">
+              <div class="me-4">
+                <div>
+                  <codx-img [objectId]="itemcontact?.recID" [objectName]="itemcontact?.contactName"
+                    [objectType]="formModel?.entityName" [width]="50">
+                  </codx-img>
+                </div>
               </div>
-            </div>
-            <div class="d-flex flex-column space_personal">
-              <div class="fw-bold text-dark fs-5">
-                <span>{{itemcontact.contactName}}</span>
-              </div>
-              <div class="me-2">
-                {{itemcontact.jobTitle}}
-              </div>
-              <div class="d-flex">
-                <div class="row mx-0 mt-3">
-                  <div class="col-6 ps-0">
-                    <div class="d-flex">
-                      <span class="icon-email icon-16 me-1 text-gray-500"></span>
-                      <span>{{itemcontact.email}}</span>
+              <div class="d-flex flex-column space_personal">
+                <div class="fw-bold text-dark fs-5">
+                  <span>{{itemcontact.contactName}}</span>
+                </div>
+                <div class="me-2">
+                  {{itemcontact.jobTitle}}
+                </div>
+                <div class="d-flex">
+                  <div class="row mx-0 mt-3">
+                    <div class="col-6 ps-0">
+                      <div class="d-flex">
+                        <span class="icon-email icon-16 me-1 text-gray-500"></span>
+                        <span>{{itemcontact.email}}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="row mx-0 mt-3">
-                  <div class="col-6 pe-0">
-                    <div class="d-flex">
-                      <span class="icon-phone_android icon-16 me-1 text-gray-500"></span>
-                      <span>{{itemcontact.phone}}</span>
+                  <div class="row mx-0 mt-3">
+                    <div class="col-6 pe-0">
+                      <div class="d-flex">
+                        <span class="icon-phone_android icon-16 me-1 text-gray-500"></span>
+                        <span>{{itemcontact.phone}}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -427,37 +365,26 @@
           </div>
         </div>
       </div>
-      <div class="row pb-5">
-        <div class="form-group">
-          <div class="d-flex align-items-center">
-            <span (click)="editobjectAddress(item)" class="icon-edit icon-16 py-1"></span>
-            <span (click)="deleteobjectAddress(item)" class="icon-delete icon-16"></span>
-          </div>
-        </div>
+      <div class="d-flex align-items-center">
+        <span (click)="editobjectAddress(item)" class="icon-edit icon-16 py-1"></span>
+        <span (click)="deleteobjectAddress(item)" class="icon-delete icon-16"></span>
       </div>
     </div>
+    
   </div>
+
 </ng-template>
 <ng-template #tabContact>
-  <div class="row mx-0 mt-3">
-    <div class="col-11 ps-0">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" default="Danh sách người liên hệ"></codx-label>
-      </div>
-    </div>
-    <div class="col-1 ps-0">
-      <div class="form-group">
-        <span (click)="openPopupContact()">
-          <i class="fa-sharp fa-solid fa-plus"></i>
-          <i class="fa-solid fa-user-group"></i>
-        </span>
-      </div>
-    </div>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <codx-label class="mb-3 text-primary fw-bold fs-6" [formModel]="form.formModel" default="Danh sách người liên hệ"></codx-label>
+    <button type="button" class="btn btn-sm btn-icon btn-light-primary" (click)="openPopupContact()">
+      <i class="icon-person_add icon-16"></i>
+    </button>
   </div>
-  <div class="d-flex" *ngFor="let item of objectContact">
+  <div class="d-flex align-items-center justify-content-between mb-3" *ngFor="let item of objectContact">
     <div class="row pb-5">
       <div class="col-6 ps-0">
-        <div id="itemcontact" class="d-flex align-items-top">
+        <div class="d-flex align-items-top">
           <div class="me-4">
             <div>
               <codx-img [objectId]="item?.recID" [objectName]="item?.contactName" [objectType]="formModel?.entityName"
@@ -490,60 +417,56 @@
                 </div>
               </div>
             </div>
-            <div class="d-flex" *ngFor="let value of valuelist">
+            <div class="me-2" *ngFor="let value of valuelist">
               <span *ngIf="item.contactType == value.value">{{value.text}}</span>
             </div>
           </div>
         </div>
-      </div>
+      </div>  
     </div>
     <div class="d-flex align-items-center">
       <span (click)="editobjectContact(item)" class="icon-edit icon-16 py-1"></span>
       <span (click)="deleteobjectContact(item)" class="icon-delete icon-16"></span>
     </div>
   </div>
+  
 </ng-template>
 <ng-template #tabAtm>
-  <div class="row mx-0 mt-3">
-    <div class="col-11 ps-0">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" default="Tài khoản ngân hàng"></codx-label>
-      </div>
-    </div>
-    <div class="col-1 ps-0">
-      <div class="form-group">
-        <span (click)="openPopupBank()">
-          <i class="fa-sharp fa-solid fa-plus"></i>
-          <i class="fa-solid fa-chart-column"></i>
-        </span>
-      </div>
-    </div>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <codx-label class="mb-3 text-primary fw-bold fs-6" [formModel]="form.formModel" default="Tài khoản ngân hàng"></codx-label>
+    <span (click)="openPopupBank()">
+      <i class="fa-sharp fa-solid fa-plus"></i>
+      <i class="fa-solid fa-chart-column"></i>
+    </span>
   </div>
-  <div class="d-flex" *ngFor="let item of objectBankaccount">
-    <div class="row pb-5">
-      <div class="col-6 ps-0">
-        <div id="itemcontact" class="d-flex align-items-top">
-          <div class="me-4">
-            <div>
-              <codx-img [objectId]="item?.bankAcctID" [objectName]="item?.owner" [objectType]="formModel?.entityName"
-                [width]="40">
-              </codx-img>
-            </div>
+  <div class="row pb-5" *ngFor="let item of objectBankaccount">
+    <div class="col-6 ps-0">
+      <div class="d-flex align-items-top">
+        <div class="me-4">
+          <div>
+            <codx-img [objectId]="item?.bankAcctID" [objectName]="item?.owner" [objectType]="formModel?.entityName"
+              [width]="40">
+            </codx-img>
           </div>
-          <div class="d-flex flex-column space_personal">
-            <div class="fw-bold text-dark fs-5">
-              <span>{{item.bankID}}</span>
-            </div>
-            <div class="text-gray-500">
-              Số tài khoản: {{item.bankAcctID}}
-            </div>
+        </div>
+        <div class="d-flex flex-column space_personal">
+          <div class="fw-bold text-dark fs-5">
+            <span>{{item.bankID}}</span>
           </div>
+          <div class="me-2">
+            {{item.bankAcctID}}
+          </div>
+        </div>
+        <div class="d-flex align-items-center">
+          <span (click)="editobjectBank(item)" class="icon-edit icon-16 py-1"></span>
+          <span (click)="deleteobjectBank(item)" class="icon-delete icon-16"></span>
         </div>
       </div>
     </div>
-    <div class="d-flex align-items-center">
-      <span (click)="editobjectBank(item)" class="icon-edit icon-16 py-1"></span>
-      <span (click)="deleteobjectBank(item)" class="icon-delete icon-16"></span>
+    <div class="col-6 ps-0" *ngIf="item.isDefault">
+      <codx-vll [showText]="true" [showBgColor]="true" [name]="'DP002'" value="0"
+        class="badge badge-light badge-square badge-md fs-7 p-2">
+      </codx-vll>
     </div>
   </div>
 </ng-template>
