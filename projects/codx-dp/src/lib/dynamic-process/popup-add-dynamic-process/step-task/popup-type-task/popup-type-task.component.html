@@ -13,6 +13,7 @@
      class="d-flex body-set-job"
      style="justify-content: space-between; padding: 10px 0"
      (click)="getTypeJob(item)"
+     [ngStyle]="item?.checked ? {'background-color':'aliceblue'} : {}"
    >
      <div style="display: flex; align-items: center" class="job">
        <span
@@ -39,12 +40,12 @@
        type="button"
        class="btn btn-primary"
        [disabled]="jobType ? false : true"
+       (click)="handlerContinue()"
      >
        <codx-label
          name="Save"
          formName="Tasks"
          default="Tiếp tục"
-         (click)="handlerContinue()"
        ></codx-label>
      </button>
    </div>
