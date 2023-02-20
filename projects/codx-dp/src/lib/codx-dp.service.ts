@@ -167,10 +167,6 @@ export class CodxDpService {
     );
   }
 
-  GetAutoNumberNo(formName: string , funcID: any ,entityName: string , key: any){
-      return this.api.execSv<any>('SYS','AD','AutoNumbersBusiness','GenAutoNumberAsync', [formName , funcID , entityName , key])
-
-  }
   getStep(data) {
     return this.api.exec<any>(
       'DP',

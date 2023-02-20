@@ -123,8 +123,6 @@ export class DynamicProcessComponent
       this.crrFunID = this.funcID;
     }
     this.afterLoad();
-    // gán tạm để test
-    this.getListUser();
   }
 
   afterLoad() {
@@ -466,15 +464,12 @@ export class DynamicProcessComponent
       this.viewDetailProcess(data);
     }
   }
-
-  getListUser() {
-    this.codxDpService
-      .getUserByProcessId('675ef83a-f2a6-4798-b377-9071c52fa714')
-      .subscribe((res) => {
-        if (res) {
-          this.listUserInUse = res;
-        }
-      });
+  getNameUsersStr(data){
+    if(data.length > 0 && data !== null){
+      var ids = data.map(obj => obj.objectID);
+      var listStr = ids.join(';');
+    }
+    return listStr || null || '';
   }
 
   //#region Của Bảo
