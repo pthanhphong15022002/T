@@ -8,7 +8,7 @@
             <div class="form-group">
                 <codx-label [formModel]="form.formModel" fiedName="InventModelID"
                     default="Mã mô hình tồn kho"></codx-label>
-                <codx-input  [crrValue]="inventModelID" [formModel]="form.formModel" field="inventModelID"
+                <codx-input [crrValue]="inventModelID" [formModel]="form.formModel" field="inventModelID"
                     (valueChange)="valueChangeInventModelID($event)">
                 </codx-input>
             </div>
@@ -28,12 +28,14 @@
             <div class="form-group">
                 <codx-label [formModel]="form.formModel" fiedName="InventCosting"
                     default="Phương pháp tính giá xuất kho"></codx-label>
-                <codx-input *ngIf="form.data.inventCosting != null" [crrValue]="form.data.inventCosting" type="valuelist" refValue="AC033"
-                    [formModel]="form.formModel" field="inventCosting" (valueChange)="valueChange($event)">
+                <codx-input *ngIf="form.data.inventCosting != null" [crrValue]="form.data.inventCosting"
+                    type="valuelist" refValue="AC033" [formModel]="form.formModel" field="inventCosting"
+                    (valueChange)="valueChange($event)">
                 </codx-input>
-                <codx-input *ngIf="form.data.inventCosting == null" [crrValue]="form.data.inventCosting" type="valuelist" refValue="AC033"
-                [formModel]="form.formModel" field="inventCosting" (valueChange)="valueChange($event)">
-            </codx-input>
+                <codx-input *ngIf="form.data.inventCosting == null" [crrValue]="form.data.inventCosting"
+                    type="valuelist" refValue="AC033" [formModel]="form.formModel" field="inventCosting"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
             </div>
         </div>
     </div>
@@ -77,10 +79,12 @@
         <div class="col-7 ps-0">
             <div class="form-group">
                 <codx-label [formModel]="form.formModel" fiedName="CheckOnhand" default="Số dư tồn kho"></codx-label>
-                <codx-input *ngIf="form.data.checkOnhand != null" [crrValue]="form.data.checkOnhand" type="valuelist" refValue="AC034" [formModel]="form.formModel" field="checkOnhand"
+                <codx-input *ngIf="form.data.checkOnhand != null" [crrValue]="form.data.checkOnhand" type="valuelist"
+                    refValue="AC034" [formModel]="form.formModel" field="checkOnhand"
                     (valueChange)="valueChange($event)">
                 </codx-input>
-                <codx-input *ngIf="form.data.checkOnhand == null" [crrValue]="form.data.checkOnhand" type="valuelist" refValue="AC034" [formModel]="form.formModel" field="checkOnhand"
+                <codx-input *ngIf="form.data.checkOnhand == null" [crrValue]="form.data.checkOnhand" type="valuelist"
+                    refValue="AC034" [formModel]="form.formModel" field="checkOnhand"
                     (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
@@ -180,11 +184,13 @@
             <div class="form-group">
                 <codx-label [formModel]="form.formModel" fiedName="ReserveMethod"
                     default="Phương pháp dành hàng"></codx-label>
-                <codx-input *ngIf="form.data.reserveMethod !=null" type="combobox" refValue="AC035" [crrValue]="form.data.reserveMethod"
-                    [formModel]="form.formModel" field="reserveMethod" (valueChange)="valueChange($event)">
+                <codx-input *ngIf="form.data.reserveMethod !=null" type="combobox" refValue="AC035"
+                    [crrValue]="form.data.reserveMethod" [formModel]="form.formModel" field="reserveMethod"
+                    (valueChange)="valueChange($event)">
                 </codx-input>
-                <codx-input *ngIf="form.data.reserveMethod ==null" type="combobox" refValue="AC035" [crrValue]="form.data.reserveMethod"
-                    [formModel]="form.formModel" field="reserveMethod" (valueChange)="valueChange($event)">
+                <codx-input *ngIf="form.data.reserveMethod ==null" type="combobox" refValue="AC035"
+                    [crrValue]="form.data.reserveMethod" [formModel]="form.formModel" field="reserveMethod"
+                    (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
         </div>
@@ -192,11 +198,13 @@
             <div class="form-group">
                 <codx-label [formModel]="form.formModel" fiedName="ReserveRule"
                     default="Dành hàng tự động"></codx-label>
-                <codx-input  *ngIf="form.data.reserveRule !=null" type="combobox" refValue="AC036" [crrValue]="form.data.reserveRule" field="reserveRule"
-                    [formModel]="form.formModel" (valueChange)="valueChange($event)">
+                <codx-input *ngIf="form.data.reserveRule !=null" type="combobox" refValue="AC036"
+                    [crrValue]="form.data.reserveRule" field="reserveRule" [formModel]="form.formModel"
+                    (valueChange)="valueChange($event)">
                 </codx-input>
-                <codx-input  *ngIf="form.data.reserveRule ==null" type="combobox" refValue="AC036" [crrValue]="form.data.reserveRule" field="reserveRule"
-                    [formModel]="form.formModel" (valueChange)="valueChange($event)">
+                <codx-input *ngIf="form.data.reserveRule ==null" type="combobox" refValue="AC036"
+                    [crrValue]="form.data.reserveRule" field="reserveRule" [formModel]="form.formModel"
+                    (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
         </div>
@@ -248,16 +256,16 @@
 <ng-template #footer>
     <div class="d-flex justify-content-end mt-1 me-3">
         <div class="ms-2">
-          <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-              [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
-          </button>
+            <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
+                <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                    [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+            </button>
         </div>
         <div class="ms-2">
-          <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-              [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
-          </button>
+            <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
+                <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                    [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+            </button>
         </div>
-      </div>
+    </div>
 </ng-template>

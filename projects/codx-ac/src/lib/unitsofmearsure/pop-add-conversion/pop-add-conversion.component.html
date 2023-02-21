@@ -18,26 +18,31 @@
     </div>
     <div class="col-6 pe-0">
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="ToUMID" default="Cách thức làm tròn"></codx-label>
+        <codx-label [formModel]="form.formModel" fiedName="ToUMID" default="Đến đơn vị"></codx-label>
         <codx-input [crrValue]="toUMID" type="combobox" refValue="UnitsOfMearsure" field="toUMID"
           [formModel]="form.formModel" (valueChange)="valueChangeToUMID($event)">
         </codx-input>
       </div>
     </div>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Conversion" default="Hệ số quy đổi"></codx-label>
-        <codx-input [crrValue]="conversion" [formModel]="form.formModel" field="conversion"
-          (valueChange)="valueChangeConversion($event)">
-        </codx-input>
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <div class="row mx-0 mt-3">
+      <div class="col-12 ps-0">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Conversion" default="Hệ số quy đổi"></codx-label>
+          <codx-input [crrValue]="conversion" [formModel]="form.formModel" field="conversion"
+            (valueChange)="valueChangeConversion($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
     <div class="col-6 pe-0">
-      <div class="form-group">
-        <codx-input field="inverted" [formModel]="form.formModel" (valueChange)="valueChangeInverted($event)">
-        </codx-input>
+      <div class="d-flex align-items-center mb-2">
+        <div class="me-2">
+          <codx-input class="check-circle" [checked]="inverted" field="inverted" [formModel]="form.formModel"
+            (valueChange)="valueChangeInverted($event)">
+          </codx-input>
+        </div>
         <codx-label [formModel]="form.formModel" fiedName="Inverted" default="Quy đổi ngược"></codx-label>
       </div>
     </div>

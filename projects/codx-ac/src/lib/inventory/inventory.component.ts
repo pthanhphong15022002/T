@@ -1,14 +1,32 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
-import { ButtonModel, CallFuncService, DialogRef, RequestOption, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  ButtonModel,
+  CallFuncService,
+  DialogRef,
+  RequestOption,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { PopAddInventoryComponent } from './pop-add-inventory/pop-add-inventory.component';
 
 @Component({
   selector: 'lib-inventory',
   templateUrl: './inventory.component.html',
-  styleUrls: ['./inventory.component.css']
+  styleUrls: ['./inventory.component.css'],
 })
-export class InventoryComponent extends UIComponent{
+export class InventoryComponent extends UIComponent {
+  //#region Contructor
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   buttons: ButtonModel = { id: 'btnAdd' };
@@ -21,7 +39,7 @@ export class InventoryComponent extends UIComponent{
     private dt: ChangeDetectorRef,
     private callfunc: CallFuncService,
     @Optional() dialog?: DialogRef
-  ) { 
+  ) {
     super(inject);
     this.dialog = dialog;
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
@@ -31,9 +49,10 @@ export class InventoryComponent extends UIComponent{
       }
     });
   }
+  //#endregion
 
-  onInit(): void {
-  }
+  //#region Init
+  onInit(): void {}
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) this.funcName = res.defaultName;
@@ -45,11 +64,14 @@ export class InventoryComponent extends UIComponent{
         sameData: true,
         model: {
           template2: this.templateMore,
-          frozenColumns: 1
+          frozenColumns: 1,
         },
       },
     ];
   }
+  //#endregion
+
+  //#region Function
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
@@ -79,10 +101,14 @@ export class InventoryComponent extends UIComponent{
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '850px';
-      this.dialog = this.callfunc.openSide(PopAddInventoryComponent, obj, option, this.view.funcID);
+      this.dialog = this.callfunc.openSide(
+        PopAddInventoryComponent,
+        obj,
+        option,
+        this.view.funcID
+      );
       this.dialog.closed.subscribe((x) => {
-        if (x.event == null)
-          this.view.dataService.clear();
+        if (x.event == null) this.view.dataService.clear();
       });
     });
   }
@@ -90,29 +116,36 @@ export class InventoryComponent extends UIComponent{
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-      var obj = {
-        formType: 'edit',
-        headerText: e.text + ' ' + this.funcName
-      };
-      let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '850px';
-      this.dialog = this.callfunc.openSide(PopAddInventoryComponent, obj, option);
-    });
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'edit',
+          headerText: e.text + ' ' + this.funcName,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '850px';
+        this.dialog = this.callfunc.openSide(
+          PopAddInventoryComponent,
+          obj,
+          option
+        );
+      });
   }
   delete(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.delete([data], true, (option: RequestOption) =>
-      this.beforeDelete(option, data)
-    ).subscribe((res: any) => {
-      if (res) {
-        
-      }
-    });
+    this.view.dataService
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option, data)
+      )
+      .subscribe((res: any) => {
+        if (res) {
+        }
+      });
   }
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
@@ -122,5 +155,5 @@ export class InventoryComponent extends UIComponent{
     opt.data = data;
     return true;
   }
+  //#endregion
 }
-

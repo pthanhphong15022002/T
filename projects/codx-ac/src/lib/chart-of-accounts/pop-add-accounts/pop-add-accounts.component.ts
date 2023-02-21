@@ -121,14 +121,6 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
       );
       return;
     }
-    if (this.parID.trim() == '' || this.parID == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['ParentID'].headerText + '"'
-      );
-      return;
-    }
     if (this.chartOfAccounts.subLGControl) {
       if (this.subLGType == '' || this.subLGType == null) {
         this.notification.notify('Hãy chọn loại công nợ', '2');
