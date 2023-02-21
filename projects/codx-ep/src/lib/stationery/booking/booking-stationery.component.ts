@@ -107,15 +107,7 @@ export class BookingStationeryComponent
 
     this.detectorRef.detectChanges();
   }
-  getReasonName(reasonID: any) {
-    this.tempReasonName = '';
-    this.listReason.forEach((r) => {
-      if (r.reasonID == reasonID) {
-        this.tempReasonName = r.description;
-      }
-    });
-    return this.tempReasonName;
-  }
+
   click(evt: any) {
     this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.id) {
