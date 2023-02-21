@@ -3193,7 +3193,7 @@
           </div>
         </div>
         <!-- Lương chức danh -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0402">
+        <div class="user-profile overview d-block mb-3" [id]="eJobSalFuntionID">
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
@@ -3204,10 +3204,10 @@
                   <!-- <codx-label
                     name="lblSalary&Benefit"
                     [formModel]="view.formModel"
-                    [default]="getFormHeader('HRTEM0402')"
+                    [default]="getFormHeader(eJobSalFuntionID)"
                   >
                   </codx-label> -->
-                  {{ getFormHeader("HRTEM0402") }}
+                  {{ getFormHeader(eJobSalFuntionID) }}
                 </div>
               </div>
               <button
@@ -5101,7 +5101,7 @@
 </ng-template>
 <!--#endregion -->
 
-<!--#Region template Bằng cấp-->
+<!--#region template Bằng cấp-->
 <ng-template #templateDegreeGridCol1 let-data>
   <div>
     <i class="icon-school"></i>
@@ -5149,7 +5149,7 @@
     </codx-mfunc>
   </div>
 </ng-template>
-<!--#endRegion-->
+<!--#endregion-->
 
 <ng-template #templateCertificateGridCol1 let-data>
   <div>
@@ -5539,7 +5539,7 @@
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
       <span class="icon-monetization_on text-danger icon-16 me-1"></span>
-      <span class="text-dark">
+      <span class="text-dark fw-bolder">
         <span>{{
           data?.siSalary
             | formatvalue : eBasicSalaryFormmodel : "siSalary"
@@ -5554,7 +5554,7 @@
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
       <span class="icon-event icon-16 text-gray-800 me-1"></span>
-      <span class="text-dark">
+      <span class="text-dark fw-bolder">
         <span>{{
           data?.effectedDate
             | formatvalue : eBasicSalaryFormmodel : "effectedDate"
@@ -5562,7 +5562,7 @@
         }}</span>
       </span>
       <span class="me-1 ms-1">-</span>
-      <span class="text-dark">
+      <span class="text-dark fw-bolder">
         <span>{{
           data?.expiredDate
             | formatvalue : eBasicSalaryFormmodel : "expiredDate"

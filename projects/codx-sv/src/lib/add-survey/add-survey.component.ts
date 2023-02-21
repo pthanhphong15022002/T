@@ -23,9 +23,14 @@ export class AddSurveyComponent extends UIComponent {
   views: Array<ViewModel> = [];
   viewType = ViewType;
   mode: any = 'Q';
-  title: any;
+  seletedQ = false;
+  seletedA = false;
+  seletedS = false;
+  sv:any;
+  title: any ;
   signal: any = null;
   url: any;
+  titleNull = "Mẫu không có tiêu đề";
   questions: SV_Questions = new SV_Questions();
   surveys: SV_Surveys = new SV_Surveys();
 
@@ -35,12 +40,11 @@ export class AddSurveyComponent extends UIComponent {
   constructor(private injector: Injector, private SvService: CodxSvService) {
     super(injector);
     this.router.queryParams.subscribe((queryParams) => {
+      this.title = this.titleNull;
       if (queryParams?.funcID) this.funcID = queryParams.funcID;
       if (queryParams?.recID) {
         this.recID = queryParams.recID;
-      }
-      if (queryParams?.title) {
-        this.title = queryParams.title;
+        this.getSV();
       }
       this.url = queryParams;
     });
@@ -48,12 +52,19 @@ export class AddSurveyComponent extends UIComponent {
       if (res) this.functionList = res;
     });
   }
-
+  getSV()
+  {
+    this.SvService.getSV(this.recID).subscribe((item :any)=>{
+      if(item) this.title = item.title;
+      else this.title = this.titleNull;
+    })
+  }
   onInit(): void {
     if (!this.funcID) {
       this.codxService.navigate('SVT01');
     }
-    this.getSignalAfterSave();
+    //this.getSV();
+    //this.getSignalAfterSave();
   }
 
   generateGUID() {
@@ -155,9 +166,18 @@ export class AddSurveyComponent extends UIComponent {
   }
 
   onSelected(e: any) {
-    if (e.selectedIndex == 0) this.mode = 'Q';
-    else if (e.selectedIndex == 1) this.mode = 'A';
-    else if (e.selectedIndex == 2) this.mode = 'S';
+    if (e.selectedIndex == 0 && !this.seletedQ) {
+      this.seletedQ = true;
+      this.mode = 'Q';
+    }
+    else if (e.selectedIndex == 1 && !this.seletedA){
+      this.seletedA = true;
+      this.mode = 'A';
+    } 
+    else if (e.selectedIndex == 2 && !this.seletedS) {
+      this.seletedS = true;
+      this.mode = 'S';
+    }
   }
 
   onSubmit() {}

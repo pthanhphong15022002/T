@@ -140,7 +140,7 @@ export class CalendarNotesComponent
           var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
             ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
           let numbF = this.convertStrToDate(eleFromDate);
-          const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+          const fDayOfMonth = moment(numbF).add(1, 'day').toJSON();
           let length =
             htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
               .length;
@@ -151,7 +151,7 @@ export class CalendarNotesComponent
           let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
             ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
           let numbL = this.convertStrToDate(eleToDate);
-          const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
+          const lDayOfMonth = moment(numbL).add(1, 'day').toJSON();
           this.getParamCalendar(fDayOfMonth, lDayOfMonth, true);
         }
       }, 500);
@@ -340,10 +340,9 @@ export class CalendarNotesComponent
       this.lstView.dataService.data = [];
     }
     if (args) {
-      this.getParamCalendar(
-        moment(args.fromDate).toISOString(),
-        moment(args.toDate).toISOString()
-      );
+      let startDate = moment(args.fromDate).toJSON();
+      let endDate = moment(args.toDate).toJSON();
+      this.getParamCalendar(startDate, endDate);
     }
     let myInterval = setInterval(() => {
       if (
@@ -366,14 +365,8 @@ export class CalendarNotesComponent
 
   changeDayOfMonth(args: any) {
     args['date'] = args.value;
-    let crrDate = moment(this.FDdate)
-      .startOf('month')
-      .add(1, 'day')
-      .toISOString();
-    let newDate = moment(args.value)
-      .startOf('month')
-      .add(1, 'day')
-      .toISOString();
+    let crrDate = moment(this.FDdate).startOf('month').add(1, 'day').toJSON();
+    let newDate = moment(args.value).startOf('month').add(1, 'day').toJSON();
     if (crrDate != newDate) this.changeNewMonth(args);
     else {
       this.FDdate = args.value;
@@ -393,7 +386,7 @@ export class CalendarNotesComponent
       var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
         ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
       let numbF = this.convertStrToDate(eleFromDate);
-      const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+      const fDayOfMonth = moment(numbF).add(1, 'day').toJSON();
       let length =
         htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes.length;
       let eleClass = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
@@ -403,7 +396,7 @@ export class CalendarNotesComponent
       let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
         ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
       let numbL = this.convertStrToDate(eleToDate);
-      const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
+      const lDayOfMonth = moment(numbL).add(1, 'day').toJSON();
       this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
       var data = args.date;
       this.setDate(data, this.lstView);
@@ -416,7 +409,7 @@ export class CalendarNotesComponent
       //let dateT = new Date(date).toLocaleDateString();
       var fromDate = date;
       this.dateSelected = date;
-      var toDate = moment(date).add(1, 'day').toDate(); //;.toISOString();
+      var toDate = moment(date).add(1, 'day').toDate(); //;.toJSON();
       if (lstView) {
         let myInterval = setInterval(() => {
           if (
@@ -473,7 +466,7 @@ export class CalendarNotesComponent
             var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
               ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
             let numbF = this.convertStrToDate(eleFromDate);
-            const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+            const fDayOfMonth = moment(numbF).add(1, 'day').toJSON();
             let length =
               htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
                 .length;
@@ -485,7 +478,7 @@ export class CalendarNotesComponent
               ?.childNodes[indexLast]?.childNodes[6]
               .childNodes[0] as HTMLElement;
             let numbL = this.convertStrToDate(eleToDate);
-            const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
+            const lDayOfMonth = moment(numbL).add(1, 'day').toJSON();
             this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
             this.setDate(this.FDdate, this.lstView);
             this.change.detectChanges();
@@ -534,9 +527,7 @@ export class CalendarNotesComponent
               this.EP_BookingRoomsParam?.ShowEvent;
             this.checkEP_BookingCarsParam = this.EP_BookingCarsParam?.ShowEvent;
           }
-          const lDayTimeOfMonth = moment(lDayOfMonth)
-            .endOf('date')
-            .toISOString();
+          const lDayTimeOfMonth = moment(lDayOfMonth).endOf('date').toJSON();
           const dataValueTM = fDayOfMonth + ';' + lDayTimeOfMonth;
           this.getRequestTM(
             dt[0]?.TM_Tasks[0],
@@ -1188,7 +1179,7 @@ export class CalendarNotesComponent
                   ?.childNodes[1]?.childNodes[0]?.childNodes[0]
                   ?.childNodes[0] as HTMLElement;
                 let numbF = this.convertStrToDate(eleFromDate);
-                const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+                const fDayOfMonth = moment(numbF).add(1, 'day').toJSON();
                 let length =
                   htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
                     .length;
@@ -1201,7 +1192,7 @@ export class CalendarNotesComponent
                   ?.childNodes[1]?.childNodes[indexLast]?.childNodes[6]
                   .childNodes[0] as HTMLElement;
                 let numbL = this.convertStrToDate(eleToDate);
-                const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
+                const lDayOfMonth = moment(numbL).add(1, 'day').toJSON();
                 this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
               } else {
                 if (this.typeCalendar == 'week') {
@@ -1209,7 +1200,7 @@ export class CalendarNotesComponent
                     '.week-item[data-date]'
                   );
                   let htmlEleFD = eleWeek[0] as HTMLElement;
-                  // var fromDate = moment(htmlEleFD?.dataset?.date).toISOString();
+                  // var fromDate = moment(htmlEleFD?.dataset?.date).toJSON();
                   let fromDate = this.convertDMY_MDY(htmlEleFD?.dataset?.date);
                   let htmlEleTD = eleWeek[eleWeek.length - 1] as HTMLElement;
                   // var toDate = moment(htmlEleTD?.dataset?.date).toJSON();

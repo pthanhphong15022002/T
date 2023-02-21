@@ -1,84 +1,42 @@
-<codx-form
-  #form
-  [headerText]="headerText"
-  [body]="body"
-  [formModel]="dialog.formModel"
-  [dialog]="dialog"
-  [footer]="footer"
-  [data]="bankaccount"
-  subToolbarCss="text-end"
->
+<codx-form #form [headerText]="headerText" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog"
+  [footer]="footer" [data]="bankaccount" subToolbarCss="text-end">
 </codx-form>
 <ng-template #body>
-    <div class="row mx-0 mt-3">
-        <div class="col-6 ps-0">
-          <div class="form-group">
-            <codx-label
-            [formModel]="form.formModel"
-            fiedName="BankAcctID"
-            default="Số tài khoản"
-          ></codx-label>
-            <codx-input
-                    [crrValue]="bankAcctID"
-                    [formModel]="form.formModel"
-                    field="bankAcctID"
-                    (valueChange)="valueChangeBankAcctID($event)"
-                  >
-            </codx-input>
-          </div>   
-        </div>
-        <div class="col-6 pe-0">
-          <div class="form-group">
-            <codx-label
-            [formModel]="form.formModel"
-            fiedName="BankID"
-            default="Ngân hàng"      
-          ></codx-label>
-          <codx-input 
-          [crrValue]="bankID"
-          type="combobox" 
-          refValue="BanksAC"
-          field="bankID"
-          (valueChange)="valueChangeBankID($event)"
-          >
+  <div class="row mx-0 mt-3">
+    <div class="col-6 ps-0">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="BankAcctID" default="Số tài khoản"></codx-label>
+        <codx-input [crrValue]="bankAcctID" [formModel]="form.formModel" field="bankAcctID"
+          (valueChange)="valueChangeBankAcctID($event)">
         </codx-input>
-          </div>
-        </div>
       </div>
+    </div>
+    <div class="col-6 pe-0">
       <div class="form-group">
-        <codx-label
-        [formModel]="form.formModel"
-        fiedName="Owner"
-        default="Tên chủ tài khoản"
-      ></codx-label>
-        <codx-input
-                [crrValue]="owner"
-                [formModel]="form.formModel"
-                field="owner"
-                (valueChange)="valueChangeOwner($event)"
-              >
+        <codx-label [formModel]="form.formModel" fiedName="BankID" default="Ngân hàng"></codx-label>
+        <codx-input [crrValue]="bankID" type="combobox" refValue="BanksAC" field="bankID"
+          (valueChange)="valueChangeBankID($event)">
         </codx-input>
-      </div>   
-      <div class="form-group">
-        <codx-label
-        [formModel]="form.formModel"
-        fiedName="Description"
-        default="Ghi chú"
-      ></codx-label>
-        <codx-input
-                [crrValue]="form.data != null ? form.data.description : ''"
-                [formModel]="form.formModel"
-                field="description"
-                (valueChange)="valueChange($event)"
-              >
-        </codx-input>
-      </div>    
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="Owner" default="Tên chủ tài khoản"></codx-label>
+    <codx-input [crrValue]="owner" [formModel]="form.formModel" field="owner" (valueChange)="valueChangeOwner($event)">
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="Description" default="Ghi chú"></codx-label>
+    <codx-input [crrValue]="form.data != null ? form.data.description : ''" [formModel]="form.formModel"
+      field="description" (valueChange)="valueChange($event)">
+    </codx-input>
+  </div>
 </ng-template>
 <ng-template #footer>
   <div class="d-flex align-items-center justify-content-between mb-3">
     <div class="d-flex align-items-center">
-      <codx-input class="me-2" [checked]="form.data != null ? form.data.isDefault : false" type="switch" field="isDefault"
-        (valueChange)="valueChange($event)">
+      <codx-input class="me-2" [checked]="form.data != null ? form.data.isDefault : false" type="switch"
+        field="isDefault" (valueChange)="valueChange($event)">
       </codx-input>
       <codx-label [formModel]="form.formModel" fiedName="IsDefault" default="Mặc định"></codx-label>
     </div>

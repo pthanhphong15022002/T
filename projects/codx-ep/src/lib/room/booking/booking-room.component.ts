@@ -343,7 +343,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
           if (
             func.functionID == 'EP4T1102' /*MF sửa*/ ||
-            func.functionID == 'EP4T1101' /*MF xóa*/
+            func.functionID == 'EP4T1101' /*MF xóa*/ // || func.functionID == 'EPT40302' /*MF Cancel*/
           ) {
             func.disabled = true;
           }
@@ -364,6 +364,14 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           ) {
             func.disabled = false;
           }
+          // if(data.approveStatus == '3' && func.functionID == 'EPT40302' /*MF Cancel*/){
+            
+          //   func.disabled = false;
+          // }
+          // if(data.approveStatus != '3' && func.functionID == 'EPT40302' /*MF Cancel*/){
+            
+          //   func.disabled = true;
+          // }
         });
       } else {
         event.forEach((func) => {
@@ -454,6 +462,18 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         .subscribe();
     }
   }
+  // cancel(data: any) {
+  //   this.codxEpService.cancel(data?.approvalTransRecID).subscribe((res: any) => {
+  //       if (res != null) {
+          
+  //         this.notificationsService.notifyCode('SYS034'); //đã thu hồi
+  //         data.approveStatus = '1';       
+  //         this.view.dataService.update(data).subscribe();
+  //       } else {
+  //         this.notificationsService.notifyCode(res?.msgCodeError);
+  //       }
+  //     });
+  // }
   reschedule(data: any) {
     if (
       this.authService.userValue.userID != data?.owner &&
