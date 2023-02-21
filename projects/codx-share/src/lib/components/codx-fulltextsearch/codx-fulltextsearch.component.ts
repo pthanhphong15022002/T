@@ -81,6 +81,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
   ngOnChanges(changes: SimpleChanges): void {}
   getGridViewSetup() {
     this.cache.functionList(this.funcID).subscribe((fuc) => {
+      debugger
       this.cache
         .gridViewSetup(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {

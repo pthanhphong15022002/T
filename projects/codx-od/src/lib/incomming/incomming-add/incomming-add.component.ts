@@ -362,8 +362,6 @@ export class IncommingAddComponent implements OnInit {
                
               // }
               if (item2?.status == 0 || Array.isArray(item2)) {
-                this.dialog.close(item.data);
-                this.notifySvr.notify(item.message);
                 //Lưu thông tin người chia sẻ
                 if(this.dispatch.relations && this.dispatch.relations.length>0)
                 {
@@ -378,11 +376,20 @@ export class IncommingAddComponent implements OnInit {
                   per.download = true;
                   per.share = true;
                   this.odService.shareDispatch(per).subscribe(item3=>{
-                    this.data.listInformationRel = this.data.listInformationRel.concat(
-                      item3?.data[1]
-                    );
+                    if(item3)
+                    {
+                      item.data.relations = item3?.data[0].relations
+                      this.notifySvr.notify(item.message);
+                      this.dialog.close(item.data);
+                    }
+                    
                   });
                  
+                }
+                else
+                {
+                  this.notifySvr.notify(item.message);
+                  this.dialog.close(item.data);
                 }
               } 
               else {

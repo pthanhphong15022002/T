@@ -316,4 +316,34 @@ export class CodxDpService {
       recID
     );
   }
+
+  GetListUserIDByListTmpEmpIDAsync(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListTmpEmpIDAsync',
+      data
+    );
+  }
+
+  getListUserIDByListPositionsID(listPositionID) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListPositionsIDAsync',
+      listPositionID
+    );
+  }
+
+  getUserByID(e){
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetAsync',
+      e
+    );
+  }
 }

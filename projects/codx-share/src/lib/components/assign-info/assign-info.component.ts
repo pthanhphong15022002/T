@@ -122,20 +122,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       });
   }
 
-  ngOnInit(): void {
-    if (
-      this.referedData &&
-      this.referedFunction &&
-      this.referedFunction.defaultField
-    ) {
-      let dataField = Util.camelize(this.referedFunction.defaultField);
-      let dataValue = UrlUtil.modifiedByObj(
-        this.referedFunction.defaultValue,
-        this.referedData
-      );
-      this.task[dataField] = dataValue;
-    }
-  }
+  ngOnInit(): void {}
   ngAfterViewInit(): void {
     this.setDefault();
   }
@@ -160,6 +147,22 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       });
   }
 
+  defaultField() {
+    if (
+      this.referedData &&
+      this.referedFunction &&
+      this.referedFunction.defaultField
+    ) {
+      let dataField = Util.camelize(this.referedFunction.defaultField);
+      let dataValue = UrlUtil.modifiedByObj(
+        this.referedFunction.defaultValue,
+        this.referedData
+      );
+      this.task[dataField] = dataValue;
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
   closePanel() {
     this.dialog.close();
   }
@@ -179,6 +182,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.task.refID = this.refID;
     this.task.refType = this.refType;
     this.task.taskName = this.taskName;
+    this.defaultField();
     if (this.taskParent) {
       this.task.parentID =
         this.taskParent.category == '1' ? null : this.taskParent.recID;
@@ -206,6 +210,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       if (this.taskParent?.taskGroupID)
         this.logicTaskGroup(this.taskParent?.taskGroupID);
     }
+
     this.loadDataReferences();
     this.changeDetectorRef.detectChanges();
   }
@@ -302,7 +307,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       return;
     }
     if (
-      this.param?.MaxHoursControl !=null && this.param?.MaxHoursControl != '0' && this.param?.MaxHours !=null &&
+      this.param?.MaxHoursControl != null &&
+      this.param?.MaxHoursControl != '0' &&
+      this.param?.MaxHours != null &&
       this.task.estimated > Number.parseFloat(this.param?.MaxHours)
     ) {
       this.notiService.notifyCode('TM058', 0, [this.param?.MaxHours]);
@@ -344,8 +351,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       // }
     }
     var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID : null;
-    if(this.isClickSave) return;
-    this.isClickSave = true ;
+    if (this.isClickSave) return;
+    this.isClickSave = true;
     if (this.isHaveFile && this.attachment)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -578,12 +585,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           }
         });
         if (arrNew.length > 0) {
-          assignTo = arrNew.join(';');
-          this.task.assignTo += ';' + assignTo;
+          // assignTo = arrNew.join(';');
+          // this.task.assignTo += ';' + assignTo;
           this.getListUser(assignTo);
         }
       } else {
-        this.task.assignTo = assignTo;
+        // this.task.assignTo = assignTo;
         this.getListUser(assignTo);
       }
     }
@@ -596,7 +603,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     }
     var arrUser = listUser.split(';');
     if (!this.listUser) this.listUser = [];
-    this.listUser = this.listUser.concat(arrUser);
+
     this.api
       .execSv<any>(
         'HR',
@@ -606,8 +613,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         JSON.stringify(listUser.split(';'))
       )
       .subscribe((res) => {
-        this.listUserDetail = this.listUserDetail.concat(res);
         if (res && res.length > 0) {
+          this.listUserDetail = this.listUserDetail.concat(res);
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
             var taskResource = new tmpTaskResource();
@@ -618,6 +625,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
             taskResource.roleType = 'R';
             this.listTaskResources.push(taskResource);
           }
+
+          if (arrUser.length != res.length) {
+            arrUser = res.map((x) => x.userID);
+          }
+          this.listUser = this.listUser.concat(arrUser);
+          this.task.assignTo = this.listUser.join(';');
         }
       });
   }
@@ -651,7 +664,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   }
 
   valueChangeEstimated(data) {
-    if (!data.data) return;
+    if (data.data==undefined) return;
     var num = data.data;
     if (num < 0) {
       this.notiService.notifyCode('TM033');
