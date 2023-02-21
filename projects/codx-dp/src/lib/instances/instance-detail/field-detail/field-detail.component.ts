@@ -18,7 +18,7 @@ import { PopupCustomFieldComponent } from './popup-custom-field/popup-custom-fie
 export class FieldDetailComponent implements OnInit {
   @Input() dataStep!: any;
   @Input() formModel!: FormModel;
-  @Input() titleDefault: string = '';
+  @Input() titleDefault = '';
   @Input() isUpdate = false;
   @Input() showColumnControl = 1;
   currentRate = 0;
@@ -26,12 +26,13 @@ export class FieldDetailComponent implements OnInit {
 
   constructor(private callfc: CallFuncService, private cache: CacheService) {
     this.formModel = new FormModel();
-    this.formModel.formName='DPInstancesStepsFields'
-    this.formModel.gridViewName='grvDPInstancesStepsFields';
-    this.formModel.entityName='DP_Instances_Steps_Fields'
+    this.formModel.formName = 'DPInstancesStepsFields';
+    this.formModel.gridViewName = 'grvDPInstancesStepsFields';
+    this.formModel.entityName = 'DP_Instances_Steps_Fields';
     this.cache.valueList('DP0274').subscribe((res) => {
       if (res) this.dtFormatDate = res.datas;
     });
+   
   }
 
   ngOnInit(): void {
@@ -73,19 +74,19 @@ export class FieldDetailComponent implements OnInit {
         switch (res.functionID) {
           //       case 'SYS104':
           //       case 'SYS04':
-                case 'SYS102':
-                case 'SYS02':
-          //       case 'SYS005':
-          //       case 'SYS003':
-          //       case 'SYS004':
-          //       case 'SYS001':
-          //       case 'SYS002':
-          //       case 'DP011':
-          //       case 'DP02':
-          //       case 'DP09':
-          //       case 'DP10':
-                  res.disabled = true;
-                  break;
+          case 'SYS102':
+          case 'SYS02':
+            //       case 'SYS005':
+            //       case 'SYS003':
+            //       case 'SYS004':
+            //       case 'SYS001':
+            //       case 'SYS002':
+            //       case 'DP011':
+            //       case 'DP02':
+            //       case 'DP09':
+            //       case 'DP10':
+            res.disabled = true;
+            break;
           //edit
           case 'SYS103':
           case 'SYS03':
@@ -123,12 +124,12 @@ export class FieldDetailComponent implements OnInit {
   fomatvalue(df) {
     //xu ly tam
     var index = this.dtFormatDate.findIndex((x) => x.value == df);
-    if(index==-1)return '' ;
+    if (index == -1) return '';
     return this.dtFormatDate[index]?.text;
   }
-  getFormatTime(dv){
-    if(!dv) return '' ;
-    var arrTime = dv.split(":") ;
+  getFormatTime(dv) {
+    if (!dv) return '';
+    var arrTime = dv.split(':');
     return moment(new Date())
       .set({ hour: arrTime[0], minute: arrTime[1] })
       .toDate();

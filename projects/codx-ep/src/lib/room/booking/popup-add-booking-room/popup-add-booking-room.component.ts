@@ -117,7 +117,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   isCopy = false;
   ep8Avaiable: any;
   sysSetting: any;
-
+  guestNumber=0;
   lstEquipment = [];
 
   listRoles = [];
@@ -136,6 +136,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   private autoApproveItem = '0';
   dueDateControl: any;
   listFilePermission = [];
+  attendeesNumber=0;
 
   constructor(
     private injector: Injector,
@@ -170,7 +171,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.data.bookingOn = new Date();
       }
       this.data.attendees = 1;
-      this.data.reminder = 0;
+      this.data.reminder = 15;
     } else if (!this.isAdd) {
       let tmpStartTime = new Date(this.data?.startDate);
       let tmpEndTime = new Date(this.data?.endDate);
@@ -183,6 +184,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         ':' +
         ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
     }
+    
+    this.attendeesNumber=this.data.attendees;
   }
 
   onInit(): void {
@@ -502,7 +505,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           this.curUser.userName = people.userName;
           this.curUser.status = '1';
           this.curUser.roleType = '1';
-          this.curUser.optional = false;
+          this.curUser.optional = false;          
+          this.curUser.quantity = 1;
           this.listRoles.forEach((element) => {
             if (element.value == this.curUser.roleType) {
               this.curUser.icon = element.icon;
@@ -514,7 +518,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         } else {
           //lấy ds người tham gia khi sửa
           if (this.data.resources != null) {
-          
+            this.guestNumber=this.data.attendees-this.data.resources.length;
             this.peopleAttend = this.data.resources;
                 this.peopleAttend.forEach((people) => {
                   let tempAttender = new BookingAttendees();
@@ -522,6 +526,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                   tempAttender.userName = people.userName;
                   tempAttender.status = people.status;
                   tempAttender.roleType = people.roleType;
+                  tempAttender.quantity = people.quantity;
                   tempAttender.optional = people.optional;
                   this.listRoles.forEach((element) => {
                     if (element.value == tempAttender.roleType) {
@@ -543,7 +548,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                   }
               });
           }
-          this.apiHttpService
+          else{
+            this.apiHttpService
             .callSv(
               'EP',
               'ERM.Business.EP',
@@ -554,6 +560,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             .subscribe((res) => {
               if (res) {
                 this.peopleAttend = res.msgBodyData[0];
+                this.guestNumber=this.data.attendees-this.peopleAttend.length;
                 this.peopleAttend.forEach((people) => {
                   let tempAttender = new BookingAttendees();
                   tempAttender.userID = people.userID;
@@ -589,6 +596,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                 this.changeDetectorRef.detectChanges();
               }
             });
+          }
+          
         }
       }
     });
@@ -755,7 +764,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.data.approval = this.approvalRule;
       this.data.resourceType = '1';
       this.data.requester = this.curUser.userName;
-      this.data.attendees = this.tmpAttendeesList.length;
+      this.data.attendees = this.tmpAttendeesList.length +this.guestNumber;
       this.data.attachments = this.attachment.fileUploadList.length;
       //check
       this.codxEpService
@@ -798,7 +807,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           this.saveCheck = false;
           return;
         } else {
-          if (this.data.attendees > this.roomCapacity) {
+          if (this.attendeesNumber > this.roomCapacity) {
             this.notificationsService.alertCode('EP004').subscribe((x) => {
               if (x.event.status == 'N') {
                 this.saveCheck = false;
@@ -813,7 +822,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         }
       });
     } else {
-      if (this.data.attendees > this.roomCapacity) {
+      if (this.attendeesNumber > this.roomCapacity) {
         this.notificationsService.alertCode('EP004').subscribe((x) => {
           if (x.event.status == 'N') {
             this.saveCheck = false;
@@ -1008,7 +1017,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.tmplstDevice[index].isSelected = event.data;
     }
   }
-
+  guestChange(evt:any){
+    if(evt?.data!=null){
+      this.guestNumber=evt?.data;
+      this.attendeesNumber=this.attendeesList.length + 1 +this.guestNumber;      
+      this.changeDetectorRef.detectChanges();
+    }
+  }
   openPopupDevice(template: any) {
     var dialog = this.callfc.openForm(template, '', 550, 560);
     this.changeDetectorRef.detectChanges();
@@ -1177,13 +1192,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
   }
   valueAttendeesChange(event: any) {
-    if (event?.data != null) {
-      if (event.data < 0) {
-        event.data = 0;
-      }
-      this.data.attendees = event.data;
-      this.changeDetectorRef.detectChanges();
-    }
+    // if (event?.data != null) {
+    //   if (event.data < 0) {
+    //     event.data = 0;
+    //   }
+    //   this.attendeesNumber = event.data +this.guestNumber;
+    //   this.changeDetectorRef.detectChanges();
+    // }
   }
   //Attachment
   popup(evt: any) {
@@ -1315,7 +1330,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         objectID: string;
       } = {
         id: item.ResourceID,
-        quantity: this.data.attendees,
+        quantity: this.attendeesNumber,
         text: item.ResourceName,
         umid: item.UMID,
         objectType: 'EP_Resources',
@@ -1512,7 +1527,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               tmpResource.userName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
               tmpResource.roleType = '1';
+              tmpResource.quantity  = 1;
               tmpResource.optional = false;
+
               this.listRoles.forEach((element) => {
                 if (element.value == tmpResource.roleType) {
                   tmpResource.icon = element.icon;
@@ -1541,7 +1558,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             }
           });
           this.attendeesList = this.filterArray(this.attendeesList);
-          this.data.attendees = this.attendeesList.length + 1;
+          this.attendeesNumber = this.attendeesList.length + 1 +this.guestNumber;
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -1554,7 +1571,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     });
     this.attendeesList.splice(this.attendeesList.indexOf(tempDelete), 1);
-    this.data.attendees = this.attendeesList.length + 1;
+    this.attendeesNumber = this.attendeesList.length + 1 +this.guestNumber;
     this.changeDetectorRef.detectChanges();
   }
   cbbResource = [];

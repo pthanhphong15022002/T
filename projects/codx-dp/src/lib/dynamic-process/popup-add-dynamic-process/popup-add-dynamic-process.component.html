@@ -827,17 +827,18 @@
 <ng-template #dynamicFieldsOneSteps>
   <ng-container
     [ngTemplateOutlet]="dynamicFields"
-    [ngTemplateOutletContext]="{ $implicit: step }"
+    [ngTemplateOutletContext]="{ $implicit: step ,haveTitle :true }"
   >
   </ng-container>
 </ng-template>
 
-<ng-template #dynamicFields let-item>
+<ng-template #dynamicFields let-item let-haveTitle= 'haveTitle'>
   <div class="background-job mb-5">
     <div class="header-job p-3">
       <div class="left">
         <div>
-          <span class="title">{{ item.stepName }}</span>
+          <span class="title" *ngIf="haveTitle">{{ titleDefault }}</span>
+          <span class="title" *ngIf="!haveTitle">{{ item.stepName }}</span>
         </div>
         <div>
           <span style="color: #898989">

@@ -160,6 +160,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     )
       this.gridViewSetup = changes?.gridViewSetup?.currentValue;
     this.active = 1;
+    this.setHeight();
   }
 
   ngOnInit(): void {
@@ -168,7 +169,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
     this.getGridViewSetup(this.pfuncID);
-    this.setHeight();
   }
   setHeight() {
     let main = 0,
@@ -197,7 +197,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         document.getElementsByClassName(
           'codx-detail-body'
         ) as HTMLCollectionOf<HTMLElement>
-      )[0].style.height = main - header - 27 - a + 'px';
+      )[0].style.height = main - header - 115 - a + 'px';
     }
   }
   getGridViewSetup(funcID: any) {
@@ -1071,7 +1071,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
           //   if(item) that.data.tasks= item;
           // })
-          that.odService.updateDispatch(e.data, false).subscribe((item) => {
+          that.odService.updateDispatch(e.data , "", false).subscribe((item) => {
             if (item.status == 0) {
               that.view.dataService.update(e.data).subscribe();
             } else that.notifySvr.notify(item.message);

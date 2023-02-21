@@ -80,7 +80,6 @@ export class ApprovalStationeryViewDetailComponent
 
   clickMF(value, datas: any = null) {
     let funcID = value?.functionID;
-
     switch (funcID) {
       case 'EPT40301':
         {
@@ -88,17 +87,32 @@ export class ApprovalStationeryViewDetailComponent
           this.approve(datas, '5');
         }
         break;
-
       case 'EPT40302':
         {
           //alert('Từ chối');
           this.approve(datas, '4');
         }
         break;
-      default:
-        '';
-        break;
+        case 'EPT40306':
+          {
+            //alert('Thu hồi');
+            this.undo(datas);
+          }
+          break;
     }
+  }
+  undo(data: any) {
+    this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
+        if (res != null) {
+          
+          this.notificationsService.notifyCode('SYS034'); //đã thu hồi
+          data.approveStatus = '3';
+          data.status = '3';
+          this.updateStatus.emit(data);
+        } else {
+          this.notificationsService.notifyCode(res?.msgCodeError);
+        }
+      });
   }
   approve(data: any, status: string) {
     this.codxEpService
@@ -127,7 +141,11 @@ export class ApprovalStationeryViewDetailComponent
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
       event.forEach((func) => {
-        if (func.functionID == 'SYS04' /*Copy*/) {
+        if (
+          func.functionID == 'SYS02' /*Delete*/ ||
+          func.functionID == 'SYS03' /*Edit*/ ||
+          func.functionID == 'SYS04' /*Copy*/
+        ) {
           func.disabled = true;
         }
       });
@@ -136,8 +154,14 @@ export class ApprovalStationeryViewDetailComponent
           if (
             func.functionID == 'EPT40301' /*MF Duyệt*/ ||
             func.functionID == 'EPT40302' /*MF từ chối*/
+            
           ) {
             func.disabled = false;
+          }
+          if (
+            func.functionID == 'EPT40306' /*MF Undo*/ //||
+          ) {
+            func.disabled = true;
           }
         });
       } else {
@@ -148,7 +172,13 @@ export class ApprovalStationeryViewDetailComponent
           ) {
             func.disabled = true;
           }
+          if (
+            func.functionID == 'EPT40306' /*MF Undo*/ 
+          ) {
+            func.disabled = false;
+          }
         });
+        
       }
     }
   }

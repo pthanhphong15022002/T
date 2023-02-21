@@ -56,6 +56,16 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'approvals',
+    component: LayoutNewsComponent,
+    children:[
+      {
+        path: ':funcID',
+        component: AppropvalNewsComponent,
+    },
+    ]
+  },
+  {
     path: '',
     redirectTo: 'news/WPT02/home',
     pathMatch: 'full',
