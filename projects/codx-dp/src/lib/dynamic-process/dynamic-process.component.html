@@ -21,73 +21,140 @@
 ></codx-views>
 
 <ng-template #templateViewCard let-data>
-  <codx-card-img
-    cardCss="card-process border border-gray-200 rounded-2 h-100
-    w-225px card-no-body"
-    [imageObjType]="'DP_Processes'"
-    imgCss="w-100 h-150px"
-    [imageObjName]="data?.processName"
-    [imageId]="data?.recID"
-    [imgOn]="data?.modifiedOn"
-    [imageWidth]="1000"
-    [imageReferType]="'avt'"
-    [rootData]="data"
-    [dataItem]="data"
-    [formModel]="view.formModel"
-    [footer]="footerbg"
-    [typeMF]="'hover'"
-    (clickMF)="clickMF($event, data)"
-    (changeDataMF)="changeDataMF($event, data)"
-    (dblclick)="doubleClickViewProcess(data)"
-  >
-  </codx-card-img>
-  <ng-template #footerbg let-data>
-    <div class="d-flex bg-footer m-n3 mt-2">
-      <div class="d-flex flex-column w-100 p-3 pt-0">
-        <div class="d-flex justify-content-between">
-          <div style="width: 100%">
-            <div
-              #processName
-              class="fs-6 fw-bold line-clamp line-clamp-1 pt-6"
-              [ngbPopover]="setTextPopover(data?.processName)"
-              #p="ngbPopover"
-              [openDelay]="500"
-              (mouseenter)="PopoverDetail($event, p, data)"
-              (mouseleave)="p.close()"
-              placement="bottom right top"
-              [popoverClass]="data.recID"
-            >
-              {{
-                data?.processName
-                  | formatvalue
-                    : view.formModel
-                    : "processName"
-                    : processName
-                    : "Processes"
-                    : "grvProcesses"
-                  | async
-              }}
+  <div></div>
+      <codx-card-img
+      cardCss="card-process border border-gray-200 rounded-2 h-100
+      w-225px card-no-body"
+      [imageObjType]="'DP_Processes'"
+      imgCss="w-100 h-150px"
+      [imageObjName]="data?.processName"
+      [imageId]="data?.recID"
+      [imgOn]="data?.modifiedOn"
+      [imageWidth]="1000"
+      [imageReferType]="'avt'"
+      [rootData]="data"
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      [footer]="footerbg"
+      [typeMF]="'hover'"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
+      (dblclick)="doubleClickViewProcess(data)"
+    >
+    </codx-card-img>
+    <ng-template #footerbg let-data>
+      <div class="d-flex bg-footer m-n3 mt-2">
+        <div class="d-flex flex-column w-100 p-3 pt-0">
+          <div class="d-flex justify-content-between">
+            <div style="width: 100%">
+              <div
+                #processName
+                class="fs-6 fw-bold line-clamp line-clamp-1 pt-6"
+                [ngbPopover]="setTextPopover(data?.processName)"
+                #p="ngbPopover"
+                [openDelay]="500"
+                (mouseenter)="PopoverDetail($event, p, data)"
+                (mouseleave)="p.close()"
+                placement="bottom right top"
+                [popoverClass]="data.recID"
+              >
+                {{
+                  data?.processName
+                    | formatvalue
+                      : view.formModel
+                      : "processName"
+                      : processName
+                      : "Processes"
+                      : "grvProcesses"
+                    | async
+                }}
+              </div>
             </div>
           </div>
-        </div>
-        <div class="footerCard-item">
-          <div class="d-flex justify-content-start mt-1">
-            <div class="me-2 mt-1"><i class="icon-adjust"></i></div>
-            <div class="me-2 mt-1">
-              {{ getNameAppyFor(data?.applyFor) }}
-            </div>
-            <div class="ms-auto">
-              <codx-imgs
-                [width]="25"
-                [objectId]="listUserInUse"
-                objectType="AD_Users"
-                [numberImages]="2"
-              >
-              </codx-imgs>
+          <div class="footerCard-item">
+            <div class="d-flex justify-content-start mt-1">
+              <div class="me-2 mt-1"><i class="icon-adjust"></i></div>
+              <div class="me-2 mt-1">
+                {{ getNameAppyFor(data?.applyFor) }}
+              </div>
+              <div class="ms-auto">
+                <codx-imgs
+                  [width]="25"
+                  [objectId]="getNameUsersStr(data?.permissions)"
+                  objectType="AD_Users"
+                  [numberImages]="2"
+                >
+                </codx-imgs>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </ng-template>
+
+</ng-template>
+
+<ng-template #editNameProcess>
+  <codx-form
+    [headerText]="TITLENAME"
+    [body]="editNameBody"
+    [footer]="editNameFooter"
+    [dialog]="popupEditName"
+  >
+  </codx-form>
+</ng-template>
+
+<ng-template #editNameBody>
+  <div class="mt-5">
+    <div class="form-group">
+      <div>
+        <codx-label
+          fiedName="processName"
+          [formModel]="view.formModel"
+          default="Tên giai đoạn"
+        ></codx-label>
+      </div>
+      <codx-input
+        field="processName"
+        [formModel]="view.formModel"
+        type="text"
+        [crrValue]="processName"
+        (valueChange)="changeValueInput($event)"
+      >
+      </codx-input>
     </div>
-  </ng-template>
+  </div>
+</ng-template>
+
+<ng-template #editNameFooter>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-outline-primary me-5">
+      <codx-label
+        name="Save"
+        formName="Tasks"
+        default="Hủy"
+        (click)="popupEditName.close()"
+      ></codx-label>
+    </button>
+    <button type="button" class="btn btn-primary">
+      <codx-label
+        name="Save"
+        formName="Tasks"
+        default="Đồng ý"
+        (click)="editName()"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #headerTemplate>
+  <ng-container *ngIf="view.formModel.funcID == 'DP04'">
+    <div class="nondata-container w-100 mb-2">
+      <div class="d-flex justify-content-between page-heading align-items-center
+        p-2">
+        <codx-label fiedName="lbl" default="Các mục trong thùng rác sẽ xóa vĩnh
+          viễn trong 30 ngày"></codx-label>
+      </div>
+    </div>
+  </ng-container>
 </ng-template>

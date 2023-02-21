@@ -30,7 +30,10 @@
     <div class="col-8 pe-0">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="RoundType" default="Cách thức làm tròn"></codx-label>
-        <codx-input [crrValue]="form.data.roundType" type="valuelist" refValue="L0093" field="roundType"
+        <codx-input *ngIf="form.data.roundType != null" [crrValue]="form.data.roundType" type="valuelist" refValue="L0093" field="roundType"
+          [formModel]="form.formModel" (valueChange)="valueChange($event)">
+        </codx-input>
+        <codx-input *ngIf="form.data.roundType == null" [crrValue]="form.data.roundType" type="valuelist" refValue="L0093" field="roundType"
           [formModel]="form.formModel" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
@@ -46,48 +49,47 @@
   </div>
 </ng-template>
 <ng-template #tabConversioninformation>
-  <div class="row mx-0 mt-3">
-    <div class="col-11 ps-0">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" default="Thông tin quy đổi"></codx-label>
-      </div>
-    </div>
-    <div class="col-1 ps-0">
-      <div class="form-group">
-        <span (click)="openPopupConversion()">
-          <i class="fa-sharp fa-solid fa-plus"></i>
-          <i class="fa-solid fa-chart-column"></i>
-        </span>
-      </div>
-    </div>
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <codx-label class="text-primary fw-bold fs-5" [formModel]="form.formModel" default="Thông tin quy đổi"></codx-label>
+    <span (click)="openPopupConversion()">
+      <i class="fa-sharp fa-solid fa-plus"></i>
+      <i class="fa-solid fa-chart-column"></i>
+    </span>
   </div>
-  <div *ngFor="let item of objectUmconversion">
-    <div class="row mx-0 mt-3">
-      <div class="col-11 ps-0">
-        <div class="form-group">
-          <div class="fw-bold text-dark fs-5">
-            <span>{{item.itemID}}</span>
-          </div>
-          <div class="text-gray-500">
-            1 {{item.fromUMID}} = {{item.conversion}} {{item.toUMID}}
-          </div>
+  <div class="d-flex align-items-center justify-content-between mb-4" *ngFor="let item of objectUmconversion">
+    <div class="col-6 ps-0">
+      <div class="form-group">
+        <div class="fw-bold text-dark fs-5">
+          <span>{{item.itemID}}</span>
+        </div>
+        <div class="text-gray-500">
+          1 {{item.fromUMID}} = {{item.conversion}} {{item.toUMID}}
         </div>
       </div>
-      <div class="col-1 ps-0">
-        <div class="form-group">
-          <div class="d-flex align-items-center">
-            <span (click)="editobjectConversion(item)" class="icon-edit icon-16 py-1"></span>
-            <span (click)="deleteobjectConversion(item)" class="icon-delete icon-16"></span>
-          </div>
-        </div>
-      </div>
+    </div>
+    <div class="d-flex align-items-top ms-5">
+      <span type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="editobjectConversion(item)">
+        <i class="icon-edit icon-16"></i>
+      </span>
+      <span type="button" class="btn btn-icon btn-sm btn-light-danger ms-1" (click)="editobjectConversion(item)">
+        <i class="icon-delete icon-16"></i>
+      </span>
     </div>
   </div>
 </ng-template>
 <ng-template #footer>
-  <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" (click)="onSave()">
-      <codx-label [formModel]="form.formModel" default="Lưu"></codx-label>
-    </button>
-  </div>
+  <div class="d-flex justify-content-end mt-1 me-3">
+    <div class="ms-2">
+        <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
+            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+        </button>
+    </div>
+    <div class="ms-2">
+        <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
+            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+        </button>
+    </div>
+</div>
 </ng-template>

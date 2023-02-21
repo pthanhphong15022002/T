@@ -16,7 +16,6 @@ export class CurrencyFormComponent extends UIComponent {
   moreFuncName:any;
   funcName:any;
   views: Array<ViewModel> = [];
-  columnsGrid = [];
   itemSelected: any;
   dialog: DialogRef;
   button?: ButtonModel;
@@ -73,7 +72,6 @@ export class CurrencyFormComponent extends UIComponent {
       sameData: true,
       active: true,
       model : {
-        resources: this.columnsGrid,
         template2: this.itemTemplate,  
         frozenColumns:1
       }
@@ -150,7 +148,18 @@ export class CurrencyFormComponent extends UIComponent {
     }
     this.view.dataService.delete([data], true, (option: RequestOption) =>
     this.beforeDelete(option,data)
-  ).subscribe(() => {});
+  ).subscribe((res:any) => {
+    if (res) {
+      this.api.exec(
+        'ERM.Business.BS',
+        'ExchangeRatesBusiness',
+        'DeleteAsync',
+        [data.currencyID]
+      ).subscribe((res: any) => {
+
+      });
+    }
+  });
   }
   beforeDelete(opt: RequestOption,data) {
     opt.methodName = 'DeleteAsync';

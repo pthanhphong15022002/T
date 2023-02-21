@@ -114,6 +114,40 @@ export class ApprovalRoomViewDetailComponent
       ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
+      event.forEach((func) => {
+        if (func.functionID == 'SYS04' /*Copy*/) {
+          func.disabled = true;
+        }
+      });
+      if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40101' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40105' /*MF từ chối*/
+          ) {
+            func.disabled = false;
+          }
+          if (func.functionID == 'EPT40106' /*MF Thu Hồi*/) {
+            func.disabled = true;
+          }
+        });
+      } else {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40101' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40105' /*MF từ chối*/
+          ) {
+            func.disabled = true;
+          }
+          if (func.functionID == 'EPT40106' /*MF Thu Hồi*/) {
+            func.disabled = false;
+          }
+        });
+      }
+    }
+  }
   clickMF(value, datas: any = null) {
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;
@@ -125,25 +159,37 @@ export class ApprovalRoomViewDetailComponent
     // }
     switch (funcID) {
       case 'EPT40101':
-      case 'EPT40201':
-      case 'EPT40301':
         {
           //alert('Duyệt');
           this.approve(datas, '5');
         }
         break;
       case 'EPT40105':
-      case 'EPT40205':
-      case 'EPT40305':
         {
           //alert('Từ chối');
           this.approve(datas, '4');
         }
         break;
-      default:
-        '';
+      case 'EPT40106':
+        {
+          //alert('Thu hồi');
+          this.undo(datas);
+        }
         break;
     }
+  }
+  undo(data: any) {
+    this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
+        if (res != null) {
+          
+          this.notificationsService.notifyCode('SYS034'); //đã thu hồi
+          data.approveStatus = '3';
+          data.status = '3';
+          this.updateStatus.emit(data);
+        } else {
+          this.notificationsService.notifyCode(res?.msgCodeError);
+        }
+      });
   }
   approve(data: any, status: string) {
     this.codxEpService
@@ -173,34 +219,34 @@ export class ApprovalRoomViewDetailComponent
           });
       });
   }
-  changeDataMF(event, data: any) {
-    if (event != null && data != null) {
-      event.forEach((func) => {
-        if (func.functionID == 'SYS04' /*Copy*/) {
-          func.disabled = true;
-        }
-      });
-      if (data.approveStatus == '3') {
-        event.forEach((func) => {
-          if (
-            func.functionID == 'EPT40101' /*MF Duyệt*/ ||
-            func.functionID == 'EPT40105' /*MF từ chối*/
-          ) {
-            func.disabled = false;
-          }
-        });
-      } else {
-        event.forEach((func) => {
-          if (
-            func.functionID == 'EPT40101' /*MF Duyệt*/ ||
-            func.functionID == 'EPT40105' /*MF từ chối*/
-          ) {
-            func.disabled = true;
-          }
-        });
-      }
-    }
-  }
+  // changeDataMF(event, data: any) {
+  //   if (event != null && data != null) {
+  //     event.forEach((func) => {
+  //       if (func.functionID == 'SYS04' /*Copy*/) {
+  //         func.disabled = true;
+  //       }
+  //     });
+  //     if (data.approveStatus == '3') {
+  //       event.forEach((func) => {
+  //         if (
+  //           func.functionID == 'EPT40101' /*MF Duyệt*/ ||
+  //           func.functionID == 'EPT40105' /*MF từ chối*/
+  //         ) {
+  //           func.disabled = false;
+  //         }
+  //       });
+  //     } else {
+  //       event.forEach((func) => {
+  //         if (
+  //           func.functionID == 'EPT40101' /*MF Duyệt*/ ||
+  //           func.functionID == 'EPT40105' /*MF từ chối*/
+  //         ) {
+  //           func.disabled = true;
+  //         }
+  //       });
+  //     }
+  //   }
+  // }
 
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;

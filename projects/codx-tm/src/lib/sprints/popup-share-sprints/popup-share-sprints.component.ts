@@ -74,10 +74,11 @@ export class PopupShareSprintsComponent implements OnInit {
   saveData() {
     var strIdUser = '';
     if (this.listIdUser.length > 0) {
-      strIdUser = this.listIdUser[0];
-      for (var i = 1; i < this.listIdUser.length; i++) {
-        strIdUser += ';' + this.listIdUser[i];
-      }
+      // strIdUser = this.listIdUser[0];
+      // for (var i = 1; i < this.listIdUser.length; i++) {
+      //   strIdUser += ';' + this.listIdUser[i];
+      // }
+      strIdUser = this.listIdUser.join(";");
     }
     this.api
       .execSv('TM', 'TM', 'SprintsBusiness', 'AddShareOfSprintsAsync', [

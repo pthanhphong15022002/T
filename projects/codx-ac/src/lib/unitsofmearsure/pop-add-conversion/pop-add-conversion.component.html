@@ -1,104 +1,57 @@
-<codx-form
-  #form
-  [headerText]="headerText"
-  [body]="body"
-  [formModel]="dialog.formModel"
-  [dialog]="dialog"
-  [footer]="footer"
-  subToolbarCss="text-end"
-  [data]="umconversion"
->
+<codx-form #form [headerText]="headerText" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog"
+  [footer]="footer" subToolbarCss="text-end" [data]="umconversion">
 </codx-form>
 <ng-template #body>
-    <div class="form-group">
-        <codx-label
-            [formModel]="form.formModel"
-            fiedName="ItemID"
-            default="Mặt hàng"      
-          ></codx-label>
-          <codx-input
-          [crrValue]="itemID"
-          field="itemID"
-          [formModel]="form.formModel"
-          (valueChange)="valueChangeItemID($event)"
-        >
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="ItemID" default="Mặt hàng"></codx-label>
+    <codx-input type="combobox" refValue="Items" [crrValue]="itemID" field="itemID" [formModel]="form.formModel"
+      (valueChange)="valueChangeItemID($event)">
+    </codx-input>
+  </div>
+  <div class="row mx-0 mt-3">
+    <div class="col-6 ps-0">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="FromUMID" default="Từ đơn vị"></codx-label>
+        <codx-input [crrValue]="fromUMID" type="text" field="fromUMID" [disabled]="true">
         </codx-input>
       </div>
-      <div class="row mx-0 mt-3">
-        <div class="col-6 ps-0">
-          <div class="form-group">
-            <codx-label
-            [formModel]="form.formModel"
-            fiedName="FromUMID"
-            default="Từ đơn vị"
-          ></codx-label>
-            <codx-input    
-                    [crrValue]="fromUMID"   
-                    type="text"
-                    field="fromUMID"
-                    [disabled]="true"                
-                  >
-            </codx-input>
-          </div>   
-        </div>
-        <div class="col-6 pe-0">
-          <div class="form-group">
-            <codx-label
-            [formModel]="form.formModel"
-            fiedName="ToUMID"
-            default="Cách thức làm tròn"      
-          ></codx-label>
-          <codx-input
-          [crrValue]="toUMID"
-          type="combobox"
-          refValue="UnitsOfMearsure"
-          field="toUMID"
-          [formModel]="form.formModel"
-          (valueChange)="valueChangeToUMID($event)"
-            >
+    </div>
+    <div class="col-6 pe-0">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="ToUMID" default="Đến đơn vị"></codx-label>
+        <codx-input [crrValue]="toUMID" type="combobox" refValue="UnitsOfMearsure" field="toUMID"
+          [formModel]="form.formModel" (valueChange)="valueChangeToUMID($event)">
         </codx-input>
-          </div>
-        </div>
       </div>
-      <div class="row mx-0 mt-3">
-        <div class="col-6 ps-0">
-          <div class="form-group">
-            <codx-label
-            [formModel]="form.formModel"
-            fiedName="Conversion"
-            default="Hệ số quy đổi"
-          ></codx-label>
-            <codx-input    
-                    [crrValue]="conversion"           
-                    [formModel]="form.formModel"
-                    field="conversion"
-                    (valueChange)="valueChangeConversion($event)"                  
-                  >
-            </codx-input>
-          </div>  
-        </div>
-        <div class="col-6 pe-0">
-            <div class="form-group">
-            <codx-input
-            field="inverted"
-            [formModel]="form.formModel"
-            (valueChange)="valueChangeInverted($event)"
-              >
+    </div>
+  </div>
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <div class="row mx-0 mt-3">
+      <div class="col-12 ps-0">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Conversion" default="Hệ số quy đổi"></codx-label>
+          <codx-input [crrValue]="conversion" [formModel]="form.formModel" field="conversion"
+            (valueChange)="valueChangeConversion($event)">
           </codx-input>
-          <codx-label
-              [formModel]="form.formModel"
-              fiedName="Inverted"
-              default="Quy đổi ngược"      
-            ></codx-label>
-            </div>
-          </div> 
+        </div>
       </div>
+    </div>
+    <div class="col-6 pe-0">
+      <div class="d-flex align-items-center mb-2">
+        <div class="me-2">
+          <codx-input class="check-circle" [checked]="inverted" field="inverted" [formModel]="form.formModel"
+            (valueChange)="valueChangeInverted($event)">
+          </codx-input>
+        </div>
+        <codx-label [formModel]="form.formModel" fiedName="Inverted" default="Quy đổi ngược"></codx-label>
+      </div>
+    </div>
+  </div>
 </ng-template>
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
-        <button (click)="onSave()" type="button" class="btn btn-primary">
-            <codx-label  [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
-                default="Lưu"></codx-label>
-        </button>
-    </div>
+  <div class="d-flex justify-content-end">
+    <button (click)="onSave()" type="button" class="btn btn-primary">
+      <codx-label [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+    </button>
+  </div>
 </ng-template>

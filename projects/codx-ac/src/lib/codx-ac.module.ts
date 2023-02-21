@@ -39,7 +39,12 @@ import { PopAddWarehousesComponent } from './warehouses/pop-add-warehouses/pop-a
 import { UnitsofmearsureComponent } from './unitsofmearsure/unitsofmearsure.component';
 import { PopAddMearsureComponent } from './unitsofmearsure/pop-add-mearsure/pop-add-mearsure.component';
 import { PopAddConversionComponent } from './unitsofmearsure/pop-add-conversion/pop-add-conversion.component';
+<<<<<<< HEAD
 import { ItempostingaccountsComponent } from './item-posting-accounts/item-posting-accounts.component';
+=======
+import { InventoryComponent } from './inventory/inventory.component';
+import { PopAddInventoryComponent } from './inventory/pop-add-inventory/pop-add-inventory.component';
+>>>>>>> 761841ff947e3997ac72029a221ee797c09500d3
 
 export const routes: Routes = [
   {
@@ -84,6 +89,10 @@ export const routes: Routes = [
         path: 'unitsofmearsure/:funcID',
         component: UnitsofmearsureComponent,
       },
+      {
+        path: 'inventorymodels/:funcID',
+        component: InventoryComponent,
+      },
     ],
   },
 ];
@@ -114,7 +123,12 @@ export const routes: Routes = [
     UnitsofmearsureComponent,
     PopAddMearsureComponent,
     PopAddConversionComponent,
+<<<<<<< HEAD
     ItempostingaccountsComponent,
+=======
+    InventoryComponent,
+    PopAddInventoryComponent,
+>>>>>>> 761841ff947e3997ac72029a221ee797c09500d3
   ],
   imports: [
     RouterModule.forChild(routes),

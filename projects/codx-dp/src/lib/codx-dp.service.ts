@@ -167,10 +167,6 @@ export class CodxDpService {
     );
   }
 
-  GetAutoNumberNo(formName: string , funcID: any ,entityName: string , key: any){
-      return this.api.execSv<any>('SYS','AD','AutoNumbersBusiness','GenAutoNumberAsync', [formName , funcID , entityName , key])
-
-  }
   getStep(data) {
     return this.api.exec<any>(
       'DP',
@@ -284,6 +280,39 @@ export class CodxDpService {
       'DP',
       'ProcessesBusiness',
       'UpdateHistoryViewAsync',
+      recID
+    );
+  }
+
+  setViewRatings(
+    recID: string,
+    ratting: string,
+    comment: string,
+    funcID: string,
+    entityName: string
+  ) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'SetViewRatingAsync',
+      [recID, ratting, comment, funcID, entityName]
+    );
+  }
+
+  //process
+  renameProcess(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'RenameProcessAsync',
+      data
+    );
+  }
+  restoreBinById(recID){
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'RestoreProcessAsync',
       recID
     );
   }

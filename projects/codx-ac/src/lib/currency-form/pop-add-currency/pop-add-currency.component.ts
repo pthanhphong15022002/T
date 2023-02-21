@@ -26,6 +26,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   currencies: Currency;
   exchangerate : ExchangeRates;
   objectExchange:Array<ExchangeRates> = [];
+  objectExchangeDelete:Array<ExchangeRates> = [];
   toDate:any;
   exchange:any;
   formType:any;
@@ -133,12 +134,18 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
         '',
         optionForm
       );
+      dialog.closed.subscribe((x) => {
+        var dataexchange = JSON.parse(localStorage.getItem('dataexchange'));
+            if (dataexchange != null) {
+              this.currencies.multiply = dataexchange.multiply;
+              this.currencies.calculation = dataexchange.calculation;
+            }
+      });
   }
   openPopup(){
     this.title = 'Thêm tỷ giá';
     var obj = {
             headerText: this.title,
-            formtype: 'addexrate'
           };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -161,18 +168,14 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
         dialogexchange.closed.subscribe((x) => {
           var dataexchangeRate = JSON.parse(localStorage.getItem('dataexchangeRate'));
           if (dataexchangeRate != null) {      
-            let customObj = new ExchangeRates();
-            customObj.toDate = dataexchangeRate.toDate;
-            customObj.exchangeRate = dataexchangeRate.exchangeRate;
             this.api.exec(
               'ERM.Business.BS',
               'ExchangeRatesBusiness',
               'ValidateExchangeDateAsync',
-              [this.objectExchange,customObj]
+              [this.objectExchange,dataexchangeRate]
             ).subscribe((res:[])=>{
               if(res){
-                this.objectExchange.push(customObj);
-               
+                this.objectExchange.push(dataexchangeRate);
               }else{
                 this.notification
                 .notify('Tỷ giá ngày '+formatDate(dataexchangeRate.toDate, 'dd/MM/yyyy', 'en-US')+' đã tồn tại' ,'2');
@@ -185,34 +188,15 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     });
   }
   deleteExchangerate(data : any){
-    if (this.formType == 'add') {
-      let index = this.objectExchange.findIndex(x => x.toDate == data.toDate);
+    let index = this.objectExchange.findIndex(x => x.recID == data.recID);
       this.objectExchange.splice(index, 1);
-    }else{
-      this.api.exec(
-        'ERM.Business.BS',
-        'ExchangeRatesBusiness',
-        'DeleteAsync',
-        [data]
-      ).subscribe((res:[])=>{
-        if (res) {
-          this.notification
-                .notify("Xóa thành công")
-          let index = this.objectExchange.findIndex(x => x.toDate == data.toDate);
-      this.objectExchange.splice(index, 1);
-        }else{
-          let index = this.objectExchange.findIndex(x => x.toDate == data.toDate);
-      this.objectExchange.splice(index, 1);
-        }
-      });  
-    }
+      this.objectExchangeDelete.push(data);
   }
   editExchangerate(data:any){
     this.title = 'Thêm tỷ giá';
     var obj = {
             headerText: this.title,
-            dataex : data,
-            formtype: 'editexrate'
+            data : {...data},
           };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -234,8 +218,10 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
         );
         dialogexchangeedit.closed.subscribe((x) => {    
           var dataexchangeRate = JSON.parse(localStorage.getItem('dataexchangeRate'));
-          let index = this.objectExchange.findIndex(x => x.toDate == dataexchangeRate.toDate);
-          this.objectExchange[index] = dataexchangeRate;
+          if (dataexchangeRate != null) {      
+            let index = this.objectExchange.findIndex(x => x.recID == dataexchangeRate.recID);
+            this.objectExchange[index] = dataexchangeRate;
+          }
           window.localStorage.removeItem("dataexchangeRate");
         });
       }
@@ -245,12 +231,6 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
 
   //#region CRUD
   onSave(){
-    var dataexchange = JSON.parse(localStorage.getItem('dataexchange'));
-    if (dataexchange != null) {
-      if (dataexchange.Multiply != null) {
-        this.currencies.multiply = dataexchange.Multiply;
-      }     
-    }
     if (this.curID.trim() == '' || this.curID == null) {
       this.notification.notifyCode(
         'SYS009',
@@ -287,18 +267,13 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
       })
       .subscribe((res) => {
         if (res.save) {        
-          for(var i=0;i<this.objectExchange.length;i++){
-            this.objectExchange[i].CurrencyID = this.curID;   
-          }
           this.api.exec(
             'ERM.Business.BS',
             'ExchangeRatesBusiness',
             'AddAsync',
-            [this.objectExchange]
+            [this.curID,this.objectExchange]
           ).subscribe((res:[])=>{
             if(res){
-              window.localStorage.removeItem("dataexchangeRate");
-              window.localStorage.removeItem("dataexchange");
               this.dialog.close();
               this.dt.detectChanges();
             }
@@ -326,18 +301,13 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         console.log(res);
         if (res.save || res.update) {
-          for(var i=0;i<this.objectExchange.length;i++){
-            this.objectExchange[i].CurrencyID = this.curID;   
-          }
           this.api.exec(
             'ERM.Business.BS',
             'ExchangeRatesBusiness',
             'UpdateAsync',
-            [this.objectExchange]
+            [this.curID,this.objectExchange,this.objectExchangeDelete]
           ).subscribe((res:[])=>{
             if(res){
-              window.localStorage.removeItem("dataexchangeRate");
-              window.localStorage.removeItem("dataexchange");
               this.dialog.close();
               this.dt.detectChanges();
             }

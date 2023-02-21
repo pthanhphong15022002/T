@@ -27,6 +27,7 @@ export class StepTaskGroupComponent implements OnInit {
   minutes = 0;
   seconds = 0;
   clear: any;
+  type: string;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -40,7 +41,7 @@ export class StepTaskGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.getFormModel();
-
+    this.type = this.taskGroup['recID'] ? 'edit' : 'add'
     this.setTime();
   }
 
@@ -110,7 +111,7 @@ export class StepTaskGroupComponent implements OnInit {
   }
 
   setTime() {
-    if (this.taskGroup?.createdOn) {
+    if (this.taskGroup?.createdOn && this.type === 'edit') {
       let date = new Date(this.taskGroup?.createdOn);
       date.setHours(date.getHours() + Number(this.taskGroup?.durationHour));
       date.setDate(date.getDate() + Number(this.taskGroup?.durationDay));

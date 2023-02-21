@@ -52,11 +52,14 @@
       default="Mã nhiệm vụ"
     >
     </codx-label>
+    <!-- đang gán cứng -->
     <codx-input
       field="instanceNo"
       [formModel]="form.formModel"
       [Group]="form.formGroup"
+      [crrValue]="instance?.instanceNo"
       (valueChange)="valueChange($event)"
+      [disabled]="true"
     >
     </codx-input>
   </div>

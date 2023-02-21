@@ -41,14 +41,14 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label fiedName="ActivedOn" [formModel]="form.formModel" default="Ngày hiệu lực"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="activedOn">
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="activedOn"  (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
       <div class="col-6">
         <div class="form-group">
           <codx-label fiedName="ExpiredOn" [formModel]="form.formModel" default="Ngày hết hạn"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="expiredOn">
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="expiredOn" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>

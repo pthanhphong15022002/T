@@ -95,6 +95,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.titleAction = dt?.data[3];
     this.formModelCrr = dt?.data[4];
     this.listStepCbx = dt?.data[5];
+    this.instance.instanceNo = dt?.data[6];
   }
 
   ngOnInit(): void {
@@ -122,7 +123,6 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   buttonClick(e: any) {
-    console.log(e);
   }
 
   setTitle(e: any) {
@@ -186,6 +186,10 @@ export class PopupAddInstanceComponent implements OnInit {
     return true;
   }
   saveInstances() {
+   if(this.instance?.title === null || this.instance?.title.trim() === '' ) {
+    this.notificationsService.notifyCode('DP001');
+    return;
+   }
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
@@ -200,5 +204,14 @@ export class PopupAddInstanceComponent implements OnInit {
   }
   autoClickedSteps() {
     this.instance.stepID = this.listStep[0].stepID;
+  }
+   async genAutoNumberNo() {
+    this.codxDpService
+      .genAutoNumber(this.formModelCrr.funcID, 'DP_Instances', 'InstanceNo')
+      .subscribe((res) => {
+        if (res) {
+          this.instance.instanceNo = res;
+        }
+      });
   }
 }

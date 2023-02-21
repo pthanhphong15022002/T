@@ -29,6 +29,7 @@
         // margin: 0 auto;
         margin: 0 20px;
     }
+
     .toolbar {
         margin-bottom: 0 !important;
     }
@@ -50,6 +51,7 @@
         padding-right: 0;
     }
 }
+
 /***/
 .popup-process-detail {
     codx-views>.container-fluid {
@@ -73,5 +75,14 @@
             height: calc(100vh - 342px) !important;
         }
 
+        .view-details-content {
+            height: calc(100% - 42px) !important;
+            border: 1px aqua solid;
+        }
+
+    }
+
+    .view-details-main {
+        height: calc(100vh - 54px);
     }
 }
