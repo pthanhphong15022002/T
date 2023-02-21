@@ -216,7 +216,7 @@ export class EmployeeDetailComponent extends UIComponent {
   positionColumnsGrid;
   holidayColumnsGrid;
   workDiaryColumnGrid;
-  rewardColumnsGrid;
+  awardColumnsGrid;
   disciplineColumnGrid;
   degreeColumnGrid;
   certificateColumnGrid;
@@ -422,6 +422,7 @@ export class EmployeeDetailComponent extends UIComponent {
   eHealthRowCount = 0;
   eVaccineRowCount = 0;
   appointionRowCount;
+  awardRowCount;
   //#endregion
 
   //#region var functionID
@@ -448,6 +449,7 @@ export class EmployeeDetailComponent extends UIComponent {
   benefitFuncID = 'HRTEM0403';
   dayoffFuncID = 'HRTEM0503';
   appointionFuncID = 'HRTEM0502';
+  awardFuncID = 'HRTEM0701';
   //#endregion
 
   //#region var formModel
@@ -469,6 +471,7 @@ export class EmployeeDetailComponent extends UIComponent {
   eVaccineFormModel: FormModel; //Tiêm vắc xin
   appointionFormModel: FormModel;
   dayofFormModel: FormModel;
+  awardFormModel: FormModel; // Khen thưởng
   //#endregion
 
   //#region headerText
@@ -484,6 +487,7 @@ export class EmployeeDetailComponent extends UIComponent {
   eHealthHeaderText;
   eVaccineHeaderText;
   appointionHeaderTexts;
+  awardHeaderText;
   //#endregion
 
   //#region headerTextString
@@ -639,6 +643,10 @@ export class EmployeeDetailComponent extends UIComponent {
 
     this.hrService.getFormModel(this.appointionFuncID).then((res) => {
       this.appointionFormModel = res;
+    });
+
+    this.hrService.getFormModel(this.awardFuncID).then((res) => {
+      this.awardFormModel = res;
     });
     //#endregion
 
@@ -1377,6 +1385,56 @@ export class EmployeeDetailComponent extends UIComponent {
     }, 100);
     //#endregion
 
+    //#region EReward - Khen thưởng
+
+    this.hrService.getHeaderText(this.awardFuncID).then((res) => {
+      this.awardHeaderText = res;
+      console.log('awardddd', this.awardHeaderText);
+      this.awardColumnsGrid = [
+        {
+          headerText:
+            this.awardHeaderText['AwardID'] +
+            '|' +
+            this.awardHeaderText['AwardFormCategory'],
+          template: this.templateAwardGridCol1,
+          width: '150',
+        },
+        {
+          headerText:
+            this.awardHeaderText['AwardDate'] +
+            '-' +
+            this.awardHeaderText['InYear'] +
+            '|' +
+            this.awardHeaderText['DecisionNo'] +
+            '-' +
+            this.awardHeaderText['SignedDate'],
+          template: this.templateAwardGridCol2,
+          width: '150',
+        },
+        {
+          headerText: this.awardHeaderText['Reason'],
+          template: this.templateAwardGridCol3,
+          width: '150',
+        },
+      ];
+    });
+
+    let insAward = setInterval(() => {
+      if (this.AwardGrid) {
+        clearInterval(insAward);
+        let t = this;
+        this.AwardGrid.dataService.onAction.subscribe((res) => {
+          if (res) {
+            if (res.type == 'loaded') {
+              t.awardRowCount = res['data'].length;
+            }
+          }
+        });
+        this.awardRowCount = this.AwardGrid.dataService.rowCount;
+      }
+    }, 100);
+    //#endregion
+
     this.routeActive.queryParams.subscribe((params) => {
       if (params.employeeID || this.user.userID) {
         this.employeeID = params.employeeID;
@@ -1886,6 +1944,9 @@ export class EmployeeDetailComponent extends UIComponent {
         } else if (funcID == 'eVaccine') {
           this.HandleEVaccinesInfo(event.text, 'edit', data);
           this.df.detectChanges();
+        } else if (funcID == 'eAwards') {
+          this.HandleEmployeeAwardsInfo(event.text, 'edit', data);
+          this.df.detectChanges();
         }
         break;
 
@@ -2190,6 +2251,25 @@ export class EmployeeDetailComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
+            } else if (funcID == 'eAwards') {
+              this.hrService
+                .DeleteEmployeeAwardInfo(data.recID)
+                .subscribe((p) => {
+                  if ((p = !null)) {
+                    this.notify.notifyCode('SYS008');
+                    // let i = this.lstEdiseases.indexOf(data);
+                    // if (i != -1) {
+                    //   this.lstEdiseases.splice(i, 1);
+                    // }
+                    (this.AwardGrid.dataService as CRUDService)
+                      .remove(data)
+                      .subscribe();
+                    this.awardRowCount--;
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
             }
           }
         });
@@ -2247,6 +2327,9 @@ export class EmployeeDetailComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'eBenefit') {
           this.copyValue(event.text, data, 'benefit');
+          this.df.detectChanges();
+        } else if (funcID == 'eAwards') {
+          this.HandleEmployeeAwardsInfo(event.text, 'copy', data);
           this.df.detectChanges();
         }
         break;
@@ -2366,45 +2449,6 @@ export class EmployeeDetailComponent extends UIComponent {
     //   });
 
     //Khen thưởng
-    this.rewardColumnsGrid = [
-      {
-        field: '',
-        headerText: '',
-        width: 30,
-        template: this.itemAction,
-        textAlign: 'center',
-      },
-      {
-        field: 'inYear',
-        headerText: 'InYear',
-        template: '',
-        width: 100,
-      },
-      {
-        field: 'awardDate',
-        headerText: 'AwardDate',
-        template: '',
-        width: 180,
-      },
-      {
-        field: 'awardID',
-        headerText: 'AwardID',
-        template: '',
-        width: 80,
-      },
-      {
-        field: 'signedDate',
-        headerText: 'SignedDate',
-        template: '',
-        width: 180,
-      },
-      {
-        field: 'decisionNo',
-        headerText: 'DecisionNo',
-        template: '',
-        width: 80,
-      },
-    ];
 
     this.disciplineColumnGrid = [
       {
@@ -3117,31 +3161,6 @@ export class EmployeeDetailComponent extends UIComponent {
     });
   }
 
-  addEmployeeAwardsInfo(actionHeaderText, actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.infoPersonal;
-    let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    option.Width = '800px';
-    let dialogAdd = this.callfunc.openSide(
-      // EmployeeAwardsDetailComponent,
-      PopupEAwardsComponent,
-      {
-        actionType: actionType,
-        indexSelected: this.lstAwards.indexOf(data),
-        lstAwards: this.lstAwards,
-        employeeId: this.employeeID,
-        headerText: actionHeaderText + ' ' + this.getFormHeader('HRTEM0701'),
-        funcID: 'HRTEM0701',
-      },
-      option
-    );
-    dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
-      this.df.detectChanges();
-    });
-  }
-
   HandleEmployeeAccidentInfo(actionHeaderText, actionType: string, data: any) {
     this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
@@ -3255,8 +3274,8 @@ export class EmployeeDetailComponent extends UIComponent {
     data: any
   ) {
     let option = new SidebarModel();
-    option.DataService = this.certificateGrid.dataService;
-    option.FormModel = this.certificateGrid.formModel;
+    option.DataService = this.certificateGrid?.dataService;
+    option.FormModel = this.certificateFormModel;
     option.Width = '550px';
     let dialogAdd = this.callfc.openSide(
       PopupECertificatesComponent,
@@ -3273,7 +3292,6 @@ export class EmployeeDetailComponent extends UIComponent {
     // RELOAD
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
-      console.log('res eventttttttttttttttttttttttt', res.event);
       if (res != null) {
         if (actionType === 'add' || actionType === 'copy') {
           (this.certificateGrid.dataService as CRUDService)
@@ -3518,36 +3536,37 @@ export class EmployeeDetailComponent extends UIComponent {
   }
   //#endregion
 
-  //#region HR_EVaccines
+  //#region HR_EAward ---------
 
-  HandleEVaccinesInfo(actionHeaderText, actionType: string, data: any) {
-    this.eVaccinesGrid.dataService.dataSelected = this.infoPersonal;
+  HandleEmployeeAwardsInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
+    option.DataService = this.AwardGrid?.dataService;
+    option.FormModel = this.awardFormModel;
     option.Width = '550px';
-    option.FormModel = this.eVaccinesGrid.formModel;
     let dialogAdd = this.callfunc.openSide(
-      PopupEVaccineComponent,
+      PopupEAwardsComponent,
       {
+        //isAdd: true,
         actionType: actionType,
-        data: data,
-        headerText: this.getFormHeader(this.eVaccinesFuncID),
+        headerText:
+          actionHeaderText + ' ' + this.getFormHeader(this.awardFuncID),
         employeeId: this.employeeID,
-        funcID: this.eVaccinesFuncID,
+        // actionType: 'add',
+        funcID: this.awardFuncID,
+        dataInput: data,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (res.event) {
-        if (actionType == 'add' || actionType == 'copy') {
-          this.eVaccineRowCount += 1;
-          (this.eVaccinesGrid.dataService as CRUDService)
-            .add(res.event)
-            .subscribe();
-        } else if (actionType == 'edit') {
-          (this.eVaccinesGrid.dataService as CRUDService)
-            .update(res.event)
-            .subscribe();
-        }
+      console.log('awardddd', res);
+      if (!res?.event) (this.AwardGrid?.dataService as CRUDService).clear();
+      if (res && (actionType === 'add' || actionType === 'copy')) {
+        (this.AwardGrid?.dataService as CRUDService).add(res.event).subscribe();
+        this.awardRowCount++;
+      } else {
+        (this.AwardGrid?.dataService as CRUDService)
+          .update(res.event)
+          .subscribe();
       }
       this.df.detectChanges();
     });
@@ -3686,6 +3705,41 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   //#endregion
+
+  //#region handle rewards
+  HandleEVaccinesInfo(actionHeaderText, actionType: string, data: any) {
+    this.eVaccinesGrid.dataService.dataSelected = this.infoPersonal;
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.FormModel = this.eVaccinesGrid.formModel;
+    let dialogAdd = this.callfunc.openSide(
+      PopupEVaccineComponent,
+      {
+        actionType: actionType,
+        data: data,
+        headerText: this.getFormHeader(this.eVaccinesFuncID),
+        employeeId: this.employeeID,
+        funcID: this.eVaccinesFuncID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res.event) {
+        if (actionType == 'add' || actionType == 'copy') {
+          this.eVaccineRowCount += 1;
+          (this.eVaccinesGrid.dataService as CRUDService)
+            .add(res.event)
+            .subscribe();
+        } else if (actionType == 'edit') {
+          (this.eVaccinesGrid.dataService as CRUDService)
+            .update(res.event)
+            .subscribe();
+        }
+      }
+      this.df.detectChanges();
+    });
+  }
+  // #region
   addSkill() {
     this.hrService.addSkill(null).subscribe();
   }
@@ -3771,6 +3825,7 @@ export class EmployeeDetailComponent extends UIComponent {
   //#region Phụ cấp
 
   numPageSizeGridView = 5;
+  @ViewChild('awardGridView') AwardGrid: CodxGridviewComponent;
   @ViewChild('businessTravelGrid') businessTravelGrid: CodxGridviewComponent;
   @ViewChild('trainCourseGridView') trainCourseGrid: CodxGridviewComponent;
   @ViewChild('skillGridViewID') skillGrid: CodxGridviewComponent;
@@ -3856,6 +3911,13 @@ export class EmployeeDetailComponent extends UIComponent {
   templateBusinessTravelGridCol3: TemplateRef<any>;
   @ViewChild('templateBusinessTravelMoreFunc', { static: true })
   templateBusinessTravelMoreFunc: TemplateRef<any>;
+
+  @ViewChild('templateAwardGridCol1', { static: true })
+  templateAwardGridCol1: TemplateRef<any>;
+  @ViewChild('templateAwardGridCol2', { static: true })
+  templateAwardGridCol2: TemplateRef<any>;
+  @ViewChild('templateAwardGridCol3', { static: true })
+  templateAwardGridCol3: TemplateRef<any>;
 
   valueChangeFilterBenefit(evt) {
     console.log('filter theo type', evt);
@@ -4413,6 +4475,7 @@ export class EmployeeDetailComponent extends UIComponent {
     }
     this.UpdateEVaccinePredicate();
   }
+  valueChangeYearFilterEAward($event) {}
   valueChangeYearFilterETrainCourse(evt) {
     if (evt.formatDate == undefined && evt.toDate == undefined) {
       this.startDateTrainCourseFilterValue = null;
