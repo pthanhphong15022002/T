@@ -122,20 +122,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       });
   }
 
-  ngOnInit(): void {
-    if (
-      this.referedData &&
-      this.referedFunction &&
-      this.referedFunction.defaultField
-    ) {
-      let dataField = Util.camelize(this.referedFunction.defaultField);
-      let dataValue = UrlUtil.modifiedByObj(
-        this.referedFunction.defaultValue,
-        this.referedData
-      );
-      this.task[dataField] = dataValue;
-    }
-  }
+  ngOnInit(): void {}
   ngAfterViewInit(): void {
     this.setDefault();
   }
@@ -160,6 +147,22 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       });
   }
 
+  defaultField() {
+    if (
+      this.referedData &&
+      this.referedFunction &&
+      this.referedFunction.defaultField
+    ) {
+      let dataField = Util.camelize(this.referedFunction.defaultField);
+      let dataValue = UrlUtil.modifiedByObj(
+        this.referedFunction.defaultValue,
+        this.referedData
+      );
+      this.task[dataField] = dataValue;
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
   closePanel() {
     this.dialog.close();
   }
@@ -179,6 +182,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.task.refID = this.refID;
     this.task.refType = this.refType;
     this.task.taskName = this.taskName;
+    this.defaultField();
     if (this.taskParent) {
       this.task.parentID =
         this.taskParent.category == '1' ? null : this.taskParent.recID;
@@ -206,6 +210,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       if (this.taskParent?.taskGroupID)
         this.logicTaskGroup(this.taskParent?.taskGroupID);
     }
+
     this.loadDataReferences();
     this.changeDetectorRef.detectChanges();
   }
@@ -344,8 +349,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       // }
     }
     var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID : null;
-    if(this.isClickSave) return;
-    this.isClickSave = true ;
+    if (this.isClickSave) return;
+    this.isClickSave = true;
     if (this.isHaveFile && this.attachment)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
