@@ -578,7 +578,7 @@ export class CodxShareService {
       'CO',
       'CO',
       'MeetingsBusiness',
-      'GetListMeetingsAsync',
+      'GetListMeetingsCalendarAsync',
       requestData
     );
   }

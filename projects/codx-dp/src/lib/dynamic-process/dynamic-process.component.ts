@@ -24,11 +24,14 @@ import {
   Util,
   RequestOption,
   DialogRef,
+  CodxCardImgComponent,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
 import { PopupViewsDetailsProcessComponent } from './popup-views-details-process/popup-views-details-process.component';
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
+import { environment } from 'src/environments/environment';
+import { PopupPropertiesComponent } from './popup-properties/popup-properties.component';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -47,7 +50,6 @@ export class DynamicProcessComponent
   // view child
   @ViewChild('templateViewCard', { static: true })
   templateViewCard: TemplateRef<any>;
-
   // Input
   @Input() dataObj?: any;
   @Input() showButtonAdd = false;
@@ -82,7 +84,7 @@ export class DynamicProcessComponent
   popoverDetail: any;
   popupOld: any;
   popoverList: any;
-
+  linkAvt = '';
   // Call API Dynamic Proccess
   readonly service = 'DP';
   readonly assemblyName = 'ERM.Business.DP';
@@ -122,8 +124,6 @@ export class DynamicProcessComponent
       this.crrFunID = this.funcID;
     }
     this.afterLoad();
-    // gán tạm để test
-    this.getListUser();
   }
 
   afterLoad() {
@@ -163,7 +163,6 @@ export class DynamicProcessComponent
     ];
     this.view.dataService.methodSave = 'AddProcessAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessAsync';
-
     this.changeDetectorRef.detectChanges();
   }
 
@@ -246,18 +245,12 @@ export class DynamicProcessComponent
         );
         this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
-          // if (e?.event == null)
-          //   this.view.dataService.delete(
-          //     [this.view.dataService.dataSelected],
-          //     false
-          //   );
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
-            this.detectorRef.detectChanges();
+            this.changeDetectorRef.detectChanges();
           }
         });
       });
-    this.changeDetectorRef.detectChanges();
   }
   copy(data: any) {
     this.changeDetectorRef.detectChanges();
@@ -282,6 +275,30 @@ export class DynamicProcessComponent
     opt.data = [itemSelected.recID];
     return true;
   }
+  async getAvatar(process) {
+    var link = '';
+    let avatar = [
+      '',
+      this.funcID,
+      process?.recID,
+      'DP_Processes',
+      'inline',
+      1000,
+      process?.processName,
+      'avt',
+      false,
+    ];
+    this.api
+      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', avatar)
+      .subscribe(res => {
+        if (res && res?.url) {
+          link = environment.urlUpload + '/' + res?.url;
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+    return link;
+  }
+
 
   // More functions
   receiveMF(e: any) {
@@ -317,6 +334,12 @@ export class DynamicProcessComponent
       case 'DP02021':
       case 'DP02031':
         this.viewDetailProcess(data);
+        break;
+      case 'DP01013':
+      case 'DP02033':
+      case 'DP02023':
+      case 'DP02013':
+        this.properties(data);
         break;
     }
   }
@@ -412,6 +435,18 @@ export class DynamicProcessComponent
         }
       });
   }
+
+  properties(data){
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '550px';
+    this.dialog = this.callfc.openSide(PopupPropertiesComponent, data, option);
+    this.dialog.closed.subscribe((e) => {
+      if (!e.event) this.view.dataService.clear();
+    });
+  }
+
   //#region đang test ai cần list phần quyền la vô đâyu nha
   setTextPopover(text) {
     return text;
@@ -448,15 +483,12 @@ export class DynamicProcessComponent
       this.viewDetailProcess(data);
     }
   }
-
-  getListUser() {
-    this.codxDpService
-      .getUserByProcessId('675ef83a-f2a6-4798-b377-9071c52fa714')
-      .subscribe((res) => {
-        if (res) {
-          this.listUserInUse = res;
-        }
-      });
+  getNameUsersStr(data){
+    if(data.length > 0 && data !== null){
+      var ids = data.map(obj => obj.objectID);
+      var listStr = ids.join(';');
+    }
+    return listStr || null || '';
   }
 
   //#region Của Bảo

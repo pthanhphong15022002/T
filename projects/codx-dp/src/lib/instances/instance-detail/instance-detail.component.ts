@@ -53,6 +53,7 @@ export class InstanceDetailComponent implements OnInit {
   listStepUpdate:any;
   instanceStatus: any;
   currentStep = 0;
+  instance:any;
   //gantchat
   ganttDs = [];
   dataColors = [];
@@ -64,7 +65,8 @@ export class InstanceDetailComponent implements OnInit {
     type: 'type',
     color:'color'
   };
-
+  titleDefault ='';
+  
   constructor(
     private dpSv: CodxDpService,
     private api: ApiHttpService,
@@ -72,7 +74,9 @@ export class InstanceDetailComponent implements OnInit {
     private changeDetec: ChangeDetectorRef,
     private popupInstances: InstancesComponent
   ) {
-   
+    this.cache.functionList('DPT03').subscribe((fun) => {
+      if (fun) this.titleDefault = fun.customName || fun.description;
+    });
   }
 
   ngOnInit(): void {
@@ -94,11 +98,13 @@ export class InstanceDetailComponent implements OnInit {
     //   this.getStepsByInstanceID(this.id);
     // }
     if (changes['dataSelect']) {
+      debugger;
       if (changes['dataSelect'].currentValue.recID == this.id) return;
       this.id = changes['dataSelect'].currentValue.recID;
       this.dataSelect = changes['dataSelect'].currentValue;
       this.currentStep = this.dataSelect.currentStep;
       this.instanceStatus = this.dataSelect.status;
+      this.instance = this.dataSelect;
       this.GetStepsByInstanceIDAsync(this.id);
 
       //cái này xóa luon di. chưa chạy xong api mà gọi ra la sai
@@ -139,16 +145,7 @@ export class InstanceDetailComponent implements OnInit {
         this.progress = '0';
         this.tmpTeps = null;
       }
-      debugger;
-      let listStepHandle = JSON.parse(JSON.stringify(this.listStepNew));
-      if(this.instanceStatus === '1' || this.instanceStatus === '2'  || this.instanceStatus === null || this.instanceStatus === ''){
-        this.deleteListReason(listStepHandle);
-        this.deleteListReason(this.listSteps);
-      }
-
-      this.listStepUpdate = this.handleListStep(listStepHandle,this.listSteps); 
-
-
+      this.getListStepsStatus();
     }); 
   }
 
@@ -173,7 +170,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   clickMF(e, data) {
-    this.moreFunctionEvent.emit({e: e, data: data, lstSteps: this.listSteps});
+    this.moreFunctionEvent.emit({e: e, data: data, lstStepCbx: this.listStepNew, lstStepInstance: this.listSteps});
     // console.log(e);
     // switch (e.functionID) {
     //   case 'DP09':
@@ -188,7 +185,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
-    this.changeMF.emit({e: e, data: data})
+    this.changeMF.emit({e: e, data: data, listStepCbx: this.listStepNew})
     // console.log(e);
     // if (e) {
     //   e.forEach((element) => {
@@ -210,22 +207,23 @@ export class InstanceDetailComponent implements OnInit {
     this.tmpTeps = data;
   }
 
-  continues(data) {
-    if (this.currentStep + 1 == this.listSteps.length) return;
-    this.dpSv.GetStepsByInstanceIDAsync(data.recID).subscribe(res =>{
-      res.forEach((element) => {
-        if (element != null && element.recID == this.dataSelect.stepID) {
-          this.tmpTeps = element;
-        }
-      })
-    })
-    this.currentStep++;
-    this.currentNameStep = this.currentStep;
-    this.changeDetec.detectChanges();
-  }
+  // continues(data) {
+  //   if (this.currentStep + 1 == this.listSteps.length) return;
+  //   this.dpSv.GetStepsByInstanceIDAsync(data.recID).subscribe(res =>{
+  //     res.forEach((element) => {
+  //       if (element != null && element.recID == this.dataSelect.stepID) {
+  //         this.tmpTeps = element;
+  //       }
+  //     })
+  //   })
+  //   this.currentStep++;
+  //   this.currentNameStep = this.currentStep;
+  //   this.changeDetec.detectChanges();
+  // }
 
   setHTMLCssStages(oldStage, newStage) {}
 
+  //ganttchar
   getDataGanttChart(instanceID) {
     this.api
       .exec<any>(
@@ -245,7 +243,8 @@ export class InstanceDetailComponent implements OnInit {
     var idx =  this.ganttDs.findIndex(x=>x.recID==recID) ;
     return  this.ganttDs[idx]?.color
   }
-
+ //end ganttchar
+ 
   handleListStep(listStepNew:any, listStep:any){
   const mapList = new Map(listStep.map(item => [item.stepID, item.stepStatus]));
   
@@ -260,5 +259,21 @@ export class InstanceDetailComponent implements OnInit {
     listStep.pop();
     listStep.pop();
   }
+
+  getListStepsStatus(){
+    debugger;
+    let listStepHandle = JSON.parse(JSON.stringify(this.listStepNew));
+    this.listStepUpdate = this.handleListStep(listStepHandle,this.listSteps);
+    if(this.instanceStatus === '3' || this.instanceStatus === '4') {
+      this.listStepUpdate.pop(); // Xóa phần tử cuối cùng
+    }
+    else if (this.instanceStatus === '5' || this.instanceStatus === '6'){
+      this.listStepUpdate.splice(this.listStepUpdate.length - 2, 1); 
+    }
+    else {
+      this.deleteListReason(this.listStepUpdate);
+    }
+
+   }
 
 }

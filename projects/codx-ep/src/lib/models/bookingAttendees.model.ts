@@ -7,7 +7,7 @@ export class BookingAttendees {
     optional: boolean;    
     icon: string;
     roleName:string;
-    //modifiedOn: string;
+    quantity: number;
   }
   export class DriverModel {
     driverID: string;
