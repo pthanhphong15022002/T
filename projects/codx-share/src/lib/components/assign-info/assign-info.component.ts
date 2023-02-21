@@ -134,7 +134,6 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         this.referedData
       );
       this.task[dataField] = dataValue;
-      debugger
     }
   }
   ngAfterViewInit(): void {
@@ -660,7 +659,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   }
 
   valueChangeEstimated(data) {
-    if (!data.data) return;
+    if (data.data==undefined) return;
     var num = data.data;
     if (num < 0) {
       this.notiService.notifyCode('TM033');
