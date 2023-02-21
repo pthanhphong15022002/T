@@ -317,8 +317,8 @@ export class RoleDetailComponent
           } else {
           }
         } else {
-          if (dt && dt.length > 0 && !dt.includes(id)) {
-            dt.push(id);
+          if (dt && dt.length > 0) {
+            if (!dt.includes(id)) dt.push(id);
           } else {
             var arr = [];
             arr.push(id);
