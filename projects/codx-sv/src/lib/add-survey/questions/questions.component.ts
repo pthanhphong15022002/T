@@ -118,6 +118,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   itemActive: any;
   indexSessionA = 0;
   indexQuestionA = 0;
+  @Input() title: any;
   @Input() changeModeQ: any;
   @Input() formModel: any;
   @Input() dataService: any;
@@ -142,6 +143,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       fontFormat: 'B',
     };
     this.router.queryParams.subscribe((queryParams) => {
+      debugger
       if (queryParams?.funcID) {
         this.funcID = queryParams.funcID;
         this.cache.functionList(this.funcID).subscribe((res) => {
@@ -149,47 +151,51 @@ export class QuestionsComponent extends UIComponent implements OnInit {
             this.functionList = res;
             if (queryParams?.recID) {
               this.recID = queryParams.recID;
+              this.loadData(this.recID);
             }
-            this.loadData(this.recID);
+            else this.createNewQ();
           }
         });
-      } else {
-        this.questions = [
-          {
-            seqNo: 0,
-            question: null,
-            answers: null,
-            other: false,
-            mandatory: false,
-            answerType: null,
-            category: 'S',
-            children: [
-              {
-                seqNo: 0,
-                question: 'Câu hỏi 1',
-                answers: [
-                  {
-                    seqNo: 0,
-                    answer: 'Tùy chọn 1',
-                    other: false,
-                    isColumn: false,
-                    hasPicture: false,
-                  },
-                ],
-                other: true,
-                mandatory: false,
-                answerType: 'O',
-                category: 'Q',
-              },
-            ],
-          },
-        ];
-        this.questions[0].children[0]['active'] = true;
-        this.itemActive = this.questions[0].children[0];
-      }
+      } else this.createNewQ();
     });
   }
 
+  createNewQ()
+  {
+    debugger
+    this.questions = [
+      {
+        seqNo: 0,
+        question: this.title,
+        answers: null,
+        other: false,
+        mandatory: false,
+        answerType: null,
+        category: 'S',
+        children: [
+          {
+            seqNo: 0,
+            question: 'Câu hỏi 1',
+            answers: [
+              {
+                seqNo: 0,
+                answer: 'Tùy chọn 1',
+                other: false,
+                isColumn: false,
+                hasPicture: false,
+              },
+            ],
+            other: true,
+            mandatory: false,
+            answerType: 'O',
+            category: 'Q',
+          },
+        ],
+      },
+    ];
+    this.questions[0].children[0]['active'] = true;
+    this.itemActive = this.questions[0].children[0];
+  }
   onInit(): void {}
 
   ngAfterViewInit() {
@@ -215,58 +221,56 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   loadData(recID) {
     this.questions = null;
     this.api
-      .exec('ERM.Business.SV', 'QuestionsBusiness', 'GetByRecIDAsync', [recID])
+      .execSv("SV",'SV', 'QuestionsBusiness', 'GetByRecIDAsync', recID)
       .subscribe((res: any) => {
-        if (res) {
-          if (res[0] && res[0].length > 0) {
-            this.questions = this.getHierarchy(res[0], res[1]);
-            this.SVServices.getFilesByObjectType(
-              this.functionList.entityName
-            ).subscribe((res: any) => {
-              if (res) {
-                res.forEach((x) => {
-                  if (x.referType == this.REFER_TYPE.VIDEO)
-                    x['srcVideo'] = `${environment.urlUpload}/${x.pathDisk}`;
-                });
-                this.lstEditIV = res;
-              }
-              console.log('check lstFile', this.lstEditIV);
-            });
-          } else {
-            this.questions = [
-              {
-                seqNo: 0,
-                question: null,
-                answers: null,
-                other: false,
-                mandatory: false,
-                answerType: null,
-                category: 'S',
-                children: [
-                  {
-                    seqNo: 0,
-                    question: 'Câu hỏi 1',
-                    answers: [
-                      {
-                        seqNo: 0,
-                        answer: 'Tùy chọn 1',
-                        other: false,
-                        isColumn: false,
-                        hasPicture: false,
-                      },
-                    ],
-                    other: true,
-                    mandatory: false,
-                    answerType: 'O',
-                    category: 'Q',
-                  },
-                ],
-              },
-            ];
-          }
-          this.questions[0].children[0]['active'] = true;
-          this.itemActive = this.questions[0].children[0];
+        if (res && res[0] && res[0].length > 0) {
+          this.questions = this.getHierarchy(res[0], res[1]);
+          this.SVServices.getFilesByObjectType(
+            this.functionList.entityName
+          ).subscribe((res: any) => {
+            if (res) {
+              res.forEach((x) => {
+                if (x.referType == this.REFER_TYPE.VIDEO)
+                  x['srcVideo'] = `${environment.urlUpload}/${x.pathDisk}`;
+              });
+              this.lstEditIV = res;
+            }
+            console.log('check lstFile', this.lstEditIV);
+          });
+        } else {
+          this.questions = [
+            {
+              seqNo: 0,
+              question: null,
+              answers: null,
+              other: false,
+              mandatory: false,
+              answerType: null,
+              category: 'S',
+              children: [
+                {
+                  seqNo: 0,
+                  question: 'Câu hỏi 1',
+                  answers: [
+                    {
+                      seqNo: 0,
+                      answer: 'Tùy chọn 1',
+                      other: false,
+                      isColumn: false,
+                      hasPicture: false,
+                    },
+                  ],
+                  other: true,
+                  mandatory: false,
+                  answerType: 'O',
+                  category: 'Q',
+                },
+              ],
+            },
+          ];
         }
+        this.questions[0].children[0]['active'] = true;
+        this.itemActive = this.questions[0].children[0];
       });
   }
 

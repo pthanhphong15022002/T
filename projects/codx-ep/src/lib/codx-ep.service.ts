@@ -556,7 +556,24 @@ export class CodxEpService {
       [recID, status, reasonID, comment, '']
     );
   }
-
+  undo(recID: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'UndoAsync',
+      [recID]
+    );
+  }
+  cancel(recID: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'CancelAsync',
+      [recID,'']
+    );
+  }
   getCategoryByEntityName(entityName: string) {
     return this.api.execSv(
       'ES',

@@ -1,4 +1,3 @@
-import { BookingRoomScheduleContentComponent } from './booking/booking-room-schedule-content/booking-room-schedule-content.component';
 import { PopupRescheduleBookingComponent } from './booking/popup-reschedule-booking/popup-reschedule-booking.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule, Type } from '@angular/core';
@@ -83,7 +82,6 @@ const Components: Type<any>[] = [
   ApprovalRoomViewDetailComponent,
   PopupRescheduleBookingComponent,
   PopupAddAttendeesComponent,
-  BookingRoomScheduleContentComponent,
 ];
 
 @NgModule({

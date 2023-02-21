@@ -141,7 +141,7 @@
             <codx-label fiedName="CurrencyID" [formModel]="form.formModel" default="Tiền tệ">
             </codx-label>
             <codx-input [crrValue]="currencyID" field="currencyID" [formModel]="form.formModel"
-              (valueChange)="valueChangeCurrency($event)">
+            type="combobox" refValue="Currencies"  (valueChange)="valueChangeCurrency($event)">
             </codx-input>
           </div>
         </div>

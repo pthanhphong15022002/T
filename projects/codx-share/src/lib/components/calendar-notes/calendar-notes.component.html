@@ -455,7 +455,17 @@
               [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"
             ></span>
           </div>
-          <div class="d-flex flex-column note-option"></div>
+          <div class="d-flex flex-column note-option">
+            {{ item?.data?.location }}
+
+            <!-- <ng-container
+              *ngTemplateOutlet="
+                fieldValue;
+                context: { data: getFieldValue(item?.memo, item?.data) }
+              "
+            >
+            </ng-container> -->
+          </div>
           <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.title"></span>
           </div>
@@ -477,13 +487,14 @@
           </div>
           <div class="d-flex flex-column note-option">
             <div class="d-flex flex-column note-option">
-              <ng-container
+              {{ item?.data?.location }}
+              <!-- <ng-container
                 *ngTemplateOutlet="
                   fieldValue;
                   context: { data: getFieldValue(item?.memo, item?.data) }
                 "
               >
-              </ng-container>
+              </ng-container> -->
             </div>
           </div>
           <div class="d-flex flex-column note-option">
@@ -507,13 +518,15 @@
           </div>
 
           <div class="d-flex flex-column note-option">
-            <ng-container
+            {{ item?.data?.location }}
+
+            <!-- <ng-container
               *ngTemplateOutlet="
                 fieldValue;
                 context: { data: getFieldValue(item?.memo, item?.data) }
               "
             >
-            </ng-container>
+            </ng-container> -->
           </div>
           <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.title"></span>
