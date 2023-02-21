@@ -34,6 +34,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() vllRefType: any = 'TM018';
   //update quyen cho file tai TM
   @Input() isUpPermission = false;
+  @Input() isEdit = false ;
   //Attachment
   @Input() hideFolder: string = '1';
   @Input() type: string = 'inline';

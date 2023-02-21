@@ -278,9 +278,9 @@ export class PopupAddProcessesComponent implements OnInit {
       return;
     }
     if (this.process?.activedOn && this.process?.expiredOn) {
-      var dateActive = moment(this.process?.activedOn).format('YYYY-MM-DD HH:mm:ss');
-      var dateExpiredOn = moment(this.process?.expiredOn).format('YYYY-MM-DD HH:mm:ss');
-      if (dateActive >= dateExpiredOn) {
+      // var dateActive = moment(this.process?.activedOn).format('YYYY-MM-DD HH:mm:ss');
+      // var dateExpiredOn = moment(this.process?.expiredOn).format('YYYY-MM-DD HH:mm:ss');
+      if (this.process?.activedOn >= this.process?.expiredOn) {
         this.notiService.notifyCode('BP003');
         return;
       }
