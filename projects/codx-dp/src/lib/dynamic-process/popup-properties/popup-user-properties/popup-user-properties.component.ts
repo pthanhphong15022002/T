@@ -33,9 +33,9 @@ export class PopupUserPropertiesComponent implements OnInit {
       return;
     }
     let value = e.trim().toLowerCase();
-    resouscesSearch = this.listUser.filter(
+    this.listUserSearch = this.listUser.filter(
       (item) => item.objectName.toString().toLowerCase().search(value) >= 0
     );
-    this.listUserSearch = resouscesSearch;
+    // this.listUserSearch = resouscesSearch;
   }
 }
