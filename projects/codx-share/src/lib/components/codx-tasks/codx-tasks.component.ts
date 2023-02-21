@@ -152,6 +152,7 @@ export class CodxTasksComponent
   crrStatus = '';
   disabledProject = false;
   crrFuncID = '';
+  isHoverPop = false;
 
   constructor(
     inject: Injector,
@@ -1140,6 +1141,7 @@ export class CodxTasksComponent
   //#endregion
 
   popoverEmpList(p: any, task) {
+   
     this.listTaskResousceSearch = [];
     this.countResource = 0;
     if (this.popoverCrr) {
@@ -1148,6 +1150,8 @@ export class CodxTasksComponent
     if (this.popoverDataSelected) {
       if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
     }
+    if(this.isHoverPop) return
+    this.isHoverPop= true ;
     this.api
       .execSv<any>(
         'TM',
@@ -1161,9 +1165,11 @@ export class CodxTasksComponent
           this.listTaskResousce = res;
           this.listTaskResousceSearch = res;
           this.countResource = res.length;
-          p.open();
+          
+          if(this.isHoverPop)p.open();
           this.popoverCrr = p;
         }
+        this.isHoverPop= false;
       });
   }
 

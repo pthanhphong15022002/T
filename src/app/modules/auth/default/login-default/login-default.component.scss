@@ -117,3 +117,13 @@ a:hover {
 	border-radius: 10px;
 	margin-left: -4px;
 }
+
+@media (max-width: 992px) {
+	.order-2.order-lg-2 {
+		display: none !important;
+	}
+
+	.login-image {
+		display: none !important;
+	}
+}

@@ -55,7 +55,6 @@ export class CodxAttachmentTempComponent implements OnInit {
   }
 
   getDataAsync(pObjectID: string) {
-    debugger
     if (pObjectID) {
       this.api
         .execSv(

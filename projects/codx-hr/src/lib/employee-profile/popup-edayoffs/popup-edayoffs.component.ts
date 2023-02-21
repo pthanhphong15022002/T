@@ -12,6 +12,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { CalendarView } from '@syncfusion/ej2-angular-calendars';
 
 @Component({
   selector: 'lib-popup-edayoffs',
@@ -35,6 +36,10 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   employId: string;
   isAfterRender = false;
   headerText: string;
+  start: CalendarView = 'Year';
+  depth: CalendarView = 'Year';
+  format: string = 'MM/yyyy';
+  pregnancyFromVal;
   @ViewChild('form') form: CodxFormComponent;
   //@ViewChild('listView') listView: CodxListviewComponent;
 
@@ -83,8 +88,19 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
     this.dayoffObj = data?.data?.dayoffObj;
+    
+    if(this.dayoffObj){
+      this.pregnancyFromVal = this.dayoffObj.pregnancyFrom;
+      if(this.dayoffObj.beginDate == '0001-01-01T00:00:00'){
+        this.dayoffObj.beginDate = null;
+      }
+      if(this.dayoffObj.endDate == '0001-01-01T00:00:00'){
+        this.dayoffObj.endDate = null;
+      }
+    }
     this.formModel = dialog.formModel;
     //this.lstDayoffs = data?.data?.lstDayOffs
+    
     this.actionType = data?.data?.actionType;
     // if (this.actionType === 'edit' || this.actionType === 'copy') {
     //   this.dayoffObj = JSON.parse(
@@ -115,8 +131,19 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           .subscribe((p) => {
             this.lstPregnantType = p.datas;
             console.log('pregnanttype', this.lstPregnantType);
+            if(this.dayoffObj){
+              console.log('chay vao kiem tra day off obj');
+              
+              if(this.dayoffObj.newChildBirthType == this.lstPregnantType[0].value){
+                this.isnormalPregnant = true;
+              }
+              else if(this.dayoffObj.newChildBirthType == this.lstPregnantType[1].value){
+                this.isNotNormalPregnant = true;
+              }
+            }
           });
       });
+
 
     if (this.actionType == 'add') {
       this.hrSevice
@@ -149,7 +176,21 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     }
   }
 
+  UpdateFromDate(e) {
+    this.pregnancyFromVal = e;
+  }
+
   onSaveForm() {
+    if(this.isnormalPregnant == true && this.isNotNormalPregnant == false ){
+      this.dayoffObj.newChildBirthType = this.lstPregnantType[0].value;
+    }
+    else if(this.isNotNormalPregnant == true && this.isnormalPregnant == false){
+      this.dayoffObj.newChildBirthType = this.lstPregnantType[1].value;
+    }
+    console.log('kieu du lieu ', typeof this.dayoffObj);
+      
+    console.log('du lieu khi luu xuong db ', this.dayoffObj.newChildBirthType);
+    this.dayoffObj.pregnancyFrom = this.pregnancyFromVal;
     if (this.actionType === 'copy' || this.actionType === 'add') {
       delete this.dayoffObj.recID;
     }
@@ -165,6 +206,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         return;
       }
 
+      
       this.hrSevice.AddEmployeeDayOffInfo(this.dayoffObj).subscribe((p) => {
         if (p != null) {
           this.dayoffObj.recID = p.recID;

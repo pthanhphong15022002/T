@@ -42,6 +42,7 @@ export class ViewListComponent implements OnInit {
   @Output() viewTask = new EventEmitter<any>();
 
   lstTaskbyParent = [];
+  isHoverPop=false;
 
   constructor(
     private api: ApiHttpService,
@@ -125,6 +126,8 @@ export class ViewListComponent implements OnInit {
     if (this.popoverCrr) {
       if (this.popoverCrr.isOpen()) this.popoverCrr.close();
     }
+    if(this.isHoverPop) return
+    this.isHoverPop= true ;
     this.api
       .execSv<any>(
         'TM',
@@ -138,8 +141,10 @@ export class ViewListComponent implements OnInit {
           this.listTaskResousce = res;
           this.listTaskResousceSearch = res;
           this.countResource = res.length;
-          p.open();
+          if(this.isHoverPop)p.open();
+          this.popoverCrr = p;
         }
+        this.isHoverPop= false;
       });
   }
 
