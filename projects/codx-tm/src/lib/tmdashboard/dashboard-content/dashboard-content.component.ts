@@ -1,3 +1,4 @@
+import { TMDashboardService } from './../tmdashboard.service';
 import {
   AfterViewInit,
   Component,
@@ -15,8 +16,9 @@ import {
   TreeMapTheme,
 } from '@syncfusion/ej2-angular-treemap';
 import { UIComponent } from 'codx-core';
-import { ChartSettings } from 'projects/codx-om/src/lib/model/chart.model';
+import { BI_Charts, ChartSettings } from '../models/chart.model';
 import { Panel, PanelData } from '../models/panel.model';
+import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
 
 @Component({
   selector: 'dashboard-content',
@@ -28,7 +30,7 @@ export class DashboardContentComponent
   implements AfterViewInit
 {
   @ViewChild('template') template: TemplateRef<any>;
-  @ViewChildren('chart_template') templates: QueryList<any>;
+  @ViewChildren('team_dashboard') templates: QueryList<any>;
 
   @Input() reportID: string = 'TMD002';
 
@@ -37,20 +39,20 @@ export class DashboardContentComponent
   panels: Panel[] = [];
   datas: PanelData[] = [];
 
-  chartSettings2: ChartSettings = {
-    title: 'Tỷ lệ công việc được giao',
-    primaryXAxis: {
-      valueType: 'Category',
-      majorGridLines: { width: 0 },
-      labelStyle: {
-        color: 'transparent',
-      },
-    },
-    primaryYAxis: {
-      majorTickLines: { width: 0 },
-      lineStyle: { width: 0 },
-    },
-  };
+  // chartSettings2: ChartSettings = {
+  //   title: 'Tỷ lệ công việc được giao',
+  //   primaryXAxis: {
+  //     valueType: 'Category',
+  //     majorGridLines: { width: 0 },
+  //     labelStyle: {
+  //       color: 'transparent',
+  //     },
+  //   },
+  //   primaryYAxis: {
+  //     majorTickLines: { width: 0 },
+  //     lineStyle: { width: 0 },
+  //   },
+  // };
 
   chartSettings6: ChartSettings = {
     seriesSetting: [
@@ -81,7 +83,7 @@ export class DashboardContentComponent
     ],
   };
 
-  dataSource: any;
+  // dataSource: any;
   dataSource2: any = [{ Country: 'Canada', GDP: 3.05, WorldShare: 2.04 }];
   CarSales: object[] = [
     { Continent: 'China', Company: 'Volkswagen', Sales: 3005994 },
@@ -132,7 +134,7 @@ export class DashboardContentComponent
         : 'Country: ${Continent}<br>Company: ${Company}<br>Sales: ${Sales}';
   };
 
-  // custom code start
+  // // custom code start
   public load = (args: ILoadEventArgs) => {
     let theme: string = location.hash.split('/')[1];
     theme = theme ? theme : 'Material';
@@ -143,7 +145,7 @@ export class DashboardContentComponent
     );
   };
 
-  // custom code end
+  // // custom code end
   titleSettings: object = {
     text: 'Car Sales by Country - 2017',
     textStyle: {
@@ -187,7 +189,170 @@ export class DashboardContentComponent
     width: 0.5,
   };
 
-  constructor(private inject: Injector) {
+  topEmp = [];
+
+  dataSource: any;
+
+  rangeColors: RangeColorModel[] = [
+    { start: 0, end: 50, color: 'red' },
+    { start: 50, end: 100, color: 'orange' },
+  ];
+  isGradient: boolean = true;
+
+  //#region gauge
+  tooltip: Object = {
+    enable: true,
+  };
+
+  font1: Object = {
+    size: '15px',
+    color: '#00CC66',
+  };
+  rangeWidth: number = 25;
+  //Initializing titleStyle
+  titleStyle: Object = { size: '18px' };
+  font2: Object = {
+    size: '15px',
+    color: '#fcde0b',
+  };
+  rangeLinearGradient1: Object = {
+    startValue: '0%',
+    endValue: '100%',
+    colorStop: [
+      { color: '#5465FF', offset: '0%', opacity: 0.9 },
+      { color: '#04DEB7', offset: '90%', opacity: 0.9 },
+    ],
+  };
+
+  rangeLinearGradient2: Object = {
+    startValue: '0%',
+    endValue: '100%',
+    colorStop: [
+      { color: '#FF8008', offset: '0%', opacity: 0.9 },
+      { color: '#FFC837', offset: '90%', opacity: 0.9 },
+    ],
+  };
+
+  minorTicks: Object = {
+    width: 0,
+  };
+
+  majorTicks1: Object = {
+    position: 'Outside',
+    height: 1,
+    width: 1,
+    offset: 0,
+    interval: 30,
+  };
+  majorTicks2: Object = {
+    height: 0,
+  };
+
+  lineStyle: Object = {
+    width: 0,
+  };
+
+  labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
+  labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
+  //#endregion gauge
+
+  legendSettings1: Object = {
+    position: 'Top',
+    visible: true,
+  };
+
+  legendSettings2: Object = {
+    position: 'Right',
+    visible: true,
+  };
+
+  //#endregion gauge
+
+  // legendSettings: Object = {
+  //   position: 'Top',
+  //   visible: true,
+  // };
+  legendRateDoneSettings: Object = {
+    position: 'Right',
+    visible: true,
+    textWrap: 'Wrap',
+    height: '30%',
+    width: '50%',
+  };
+
+  //#region chartcolumn
+  columnXAxis: Object = {
+    interval: 1,
+    valueType: 'Category',
+    rangePadding: 'None',
+    majorGridLines: { width: 0 },
+    majorTickLines: { width: 0 },
+    lineStyle: { width: 0 },
+    labelStyle: {
+      color: 'dark',
+    },
+  };
+
+  columnYAxis: Object = {
+    minimum: 0,
+    interval: 10,
+    labelStyle: {
+      color: 'gray',
+    },
+  };
+
+  chartArea: Object = {
+    border: {
+      width: 0,
+    },
+  };
+
+  radius: Object = {
+    topLeft: 10,
+    topRight: 10,
+  };
+  //#endregion chartcolumn
+
+  headerText: Object = [
+    { text: 'Khối lượng công việc' },
+    { text: 'Thời gian thực hiện' },
+  ];
+
+  chartSettings2: ChartSettings = {
+    title: 'Tỷ lệ công việc theo nhóm',
+    seriesSetting: [
+      {
+        type: 'Pie',
+        xName: 'status',
+        yName: 'value',
+        innerRadius: '80%',
+        radius: '70%',
+        startAngle: 0,
+        explodeIndex: 1,
+        explode: true,
+        endAngle: 360,
+      },
+    ],
+    service: 'OM',
+    assembly: 'ERM.Business.OM',
+    className: 'DashBoardBusiness',
+    method: 'GetChartData1Async',
+  };
+
+  chartSettings5: ChartSettings = {
+    title: 'Thống kê công việc hoàn thành và số giờ thực hiện',
+    seriesSetting: [
+      {
+        type: 'Column',
+        name: 'Tasks',
+        xName: 'label',
+        yName: 'value',
+        cornerRadius: { topLeft: 10, topRight: 10 },
+      },
+    ],
+  };
+
+  constructor(private inject: Injector, private dbSerivce: TMDashboardService) {
     super(inject);
     this.reportID = this.router.snapshot.params['reportID'];
   }
@@ -198,12 +363,19 @@ export class DashboardContentComponent
 
   ngAfterViewInit(): void {
     this.panels = JSON.parse(
-      '[{"id":"0.5424032823689648_layout","row":0,"col":0,"sizeX":3,"sizeY":2,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.26516454554256064_layout","row":0,"col":3,"sizeX":3,"sizeY":2,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.5994517199966756_layout","row":0,"col":6,"sizeX":3,"sizeY":2,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.7626223401346761_layout","row":2,"col":0,"sizeX":3,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.8917770078511407_layout","row":2,"col":3,"sizeX":3,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.4942285241369997_layout","row":2,"col":6,"sizeX":3,"sizeY":7,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.7295624332564068_layout","row":6,"col":0,"sizeX":6,"sizeY":3,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"0.5293183694893755_layout","row":14,"col":26,"sizeX":22,"sizeY":6,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.7462735198778399_layout","row":14,"col":0,"sizeX":26,"sizeY":6,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.932033280876619_layout","row":4,"col":17,"sizeX":16,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.6076202141678433_layout","row":4,"col":33,"sizeX":15,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.5296463903570827_layout","row":4,"col":0,"sizeX":17,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.18375208371519292_layout","row":0,"col":0,"sizeX":48,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}]'
+    );
+    this.datas = JSON.parse(
+      '[{"panelId":"0.5293183694893755_layout","data":"6"},{"panelId":"0.7462735198778399_layout","data":"5"},{"panelId":"0.932033280876619_layout","data":"4"},{"panelId":"0.6076202141678433_layout","data":"3"},{"panelId":"0.5296463903570827_layout","data":"2"},{"panelId":"0.18375208371519292_layout","data":"1"}]'
     );
 
-    this.datas = JSON.parse(
-      '[{"panelId":"0.5424032823689648_layout","data":"1"},{"panelId":"0.26516454554256064_layout","data":"2"},{"panelId":"0.5994517199966756_layout","data":"3"},{"panelId":"0.7626223401346761_layout","data":"4"},{"panelId":"0.8917770078511407_layout","data":"5"},{"panelId":"0.4942285241369997_layout","data":"6"},{"panelId":"0.7295624332564068_layout","data":"7"}]'
-    );
+    this.dbSerivce.loadCharts(this.reportID).subscribe((res: BI_Charts[]) => {
+      if (res) {
+        res.map((item: BI_Charts) => {
+          this.panels.push(JSON.parse(item.location));
+        });
+      }
+    });
 
     this.detectorRef.detectChanges();
   }

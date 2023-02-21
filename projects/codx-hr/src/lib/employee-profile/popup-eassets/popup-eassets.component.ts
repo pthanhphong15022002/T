@@ -88,6 +88,10 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
     this.formModel = dialog?.formModel;
     this.actionType = data?.data?.actionType;
     this.assetObj = data?.data?.assetObj;
+    if(this.assetObj){
+      console.log('du lieu truyen vao', this.assetObj);
+      
+    }
     // this.indexSelected =
     //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
 

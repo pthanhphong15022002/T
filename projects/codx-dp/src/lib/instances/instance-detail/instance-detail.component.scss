@@ -20,11 +20,10 @@
 	transition: 1s ease 0.3s;
 }
 
-.arrow-steps {
+.group-steps {
 	width: 100%;
-	border: 1px aqua solid;
 	overflow-x: auto;
-	padding-bottom: 15px;
+	padding-bottom: 10px;
 }
 
 .arrow-steps .step {
@@ -32,12 +31,12 @@
 	text-align: center;
 	color: #666;
 	cursor: default;
-	margin-right: 2px;
+	margin-right: 3px;
 	padding: 5px;
 	height: 44px;
 	text-indent: 10px;
+	width: 180px;
 	min-width: 180px;
-	float: left;
 	position: relative;
 	background-color: #d9e3f7;
 	-webkit-user-select: none;
@@ -45,6 +44,9 @@
 	-ms-user-select: none;
 	user-select: none;
 	transition: background-color 0.2s ease;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .arrow-steps .step:after,
@@ -52,12 +54,12 @@
 	content: " ";
 	position: absolute;
 	top: 0;
-	right: -17px;
+	right: -22px;
 	width: 0;
 	height: 0;
-	border-top: 19px solid transparent;
-	border-bottom: 17px solid transparent;
-	border-left: 17px solid #d9e3f7;
+	border-top: 22px solid transparent;
+	border-bottom: 22px solid transparent;
+	border-left: 22px solid #d9e3f7;
 	z-index: 2;
 	transition: border-color 0.2s ease;
 }
@@ -65,7 +67,7 @@
 .arrow-steps .step:before {
 	right: auto;
 	left: 0;
-	border-left: 17px solid #fff;
+	border-left: 22px solid #fff;
 	z-index: 0;
 }
 
@@ -97,7 +99,7 @@
 }
 
 .arrow-steps .step.current:after {
-	border-left: 17px solid #3699ff;
+	border-left: 22px solid #3699ff;
 }
 
 .arrow-steps .step.old {
@@ -106,7 +108,7 @@
 }
 
 .arrow-steps .step.old:after {
-	border-left: 17px solid #23468c;
+	border-left: 22px solid #23468c;
 }
 
 
@@ -122,11 +124,11 @@
 
 .process-wrap {
 	background: #d9e3f7;
-	margin: 20px 0;
+	width: 180px;
 	min-width: 180px;
 	height: 5px;
 	margin-right: 3px !important;
-	margin-top: -18px !important;
+	margin-top: 2px !important;
 
 }
 
