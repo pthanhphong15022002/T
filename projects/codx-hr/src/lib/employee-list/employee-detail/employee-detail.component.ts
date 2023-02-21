@@ -1222,7 +1222,7 @@ export class EmployeeDetailComponent extends UIComponent {
     });
 
     let insWorkPermit = setInterval(() => {
-      if (this.passportGridview) {
+      if (this.workPermitGridview) {
         clearInterval(insWorkPermit);
         let t = this;
         this.workPermitGridview?.dataService.onAction.subscribe((res) => {
