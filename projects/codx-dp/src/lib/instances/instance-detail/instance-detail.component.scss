@@ -1,10 +1,10 @@
 .progress {
-	background-color: #d8d8d8;
+	background-color: var(--gray-200);
 	border-radius: 20px;
 	position: relative;
-	margin: 15px 0;
-	height: 30px;
-	width: 300px;
+	margin-bottom: 10px;
+	height: 20px;
+	width: 200px;
 }
 
 .progress-done {
@@ -35,7 +35,7 @@
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-  transition: background-color 0.2s ease;
+	transition: background-color 0.2s ease;
 }
 
 .arrow-steps .step:after,
@@ -50,7 +50,7 @@
 	border-bottom: 17px solid transparent;
 	border-left: 17px solid #d9e3f7;
 	z-index: 2;
-  transition: border-color 0.2s ease;
+	transition: border-color 0.2s ease;
 }
 
 .arrow-steps .step:before {
@@ -101,46 +101,42 @@
 }
 
 
-.text-body{
-  color: #1b4ab0 !important;
-  font-size: 14px;
-  font-weight: 700;
-}
 
 
 .font {
 	font-size: 14px;
-  max-width: 180px;
-  text-align: center;
-  color: #fff;
-  background-color: #3699ff;
-  position: relative;
-  border-radius: 20px;
+	max-width: 180px;
+	text-align: center;
+	color: #fff;
+	background-color: #3699ff;
+	position: relative;
+	border-radius: 20px;
 }
 
-.process-wrap{
-  background: #d9e3f7;
-  margin: 20px 0;
-  min-width: 180px;
-  height: 10px;
-  margin-left: 3px !important;
-  margin-top: 5px !important;
-  overflow: hidden;
-  position: relative;
+.process-wrap {
+	background: #d9e3f7;
+	margin: 20px 0;
+	min-width: 180px;
+	height: 10px;
+	margin-left: 3px !important;
+	margin-top: 5px !important;
+	overflow: hidden;
+	position: relative;
 
 }
 
 .progress-current {
-  background: #3699ff;
-  left: 0;
-  position: absolute;
-  height: 10px;
-  top: 0;
+	background: #3699ff;
+	left: 0;
+	position: absolute;
+	height: 10px;
+	top: 0;
 }
-.progress-bar{
-  background: #23468c;
-  left: 0;
-  height: 10px;
-  position: absolute;
-  top: 0;
+
+.progress-bar {
+	background: #23468c;
+	left: 0;
+	height: 10px;
+	position: absolute;
+	top: 0;
 }

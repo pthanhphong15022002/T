@@ -298,4 +298,22 @@ export class CodxDpService {
       [recID, ratting, comment, funcID, entityName]
     );
   }
+
+  //process
+  renameProcess(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'RenameProcessAsync',
+      data
+    );
+  }
+  restoreBinById(recID){
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'RestoreProcessAsync',
+      recID
+    );
+  }
 }
