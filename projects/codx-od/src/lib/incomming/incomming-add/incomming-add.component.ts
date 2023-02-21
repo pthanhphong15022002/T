@@ -362,7 +362,6 @@ export class IncommingAddComponent implements OnInit {
                
               // }
               if (item2?.status == 0 || Array.isArray(item2)) {
-               
                 //Lưu thông tin người chia sẻ
                 if(this.dispatch.relations && this.dispatch.relations.length>0)
                 {
@@ -386,6 +385,11 @@ export class IncommingAddComponent implements OnInit {
                     
                   });
                  
+                }
+                else
+                {
+                  this.notifySvr.notify(item.message);
+                  this.dialog.close(item.data);
                 }
               } 
               else {
