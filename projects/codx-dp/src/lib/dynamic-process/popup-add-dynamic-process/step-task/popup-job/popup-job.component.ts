@@ -16,6 +16,7 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import {
   DP_Steps_Tasks,
@@ -29,6 +30,7 @@ import {
 })
 export class PopupJobComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
+  @ViewChild('attachment') attachment: AttachmentComponent;
   REQUIRE = ['taskName', 'roles', 'dependRule'];
   MESSAGETIME =
     'Thời hạn công việc lớn hơn nhóm công việc bạn có muốn lưu và thay đổi thời hạn nhóm công việc';
@@ -58,6 +60,9 @@ export class PopupJobComponent implements OnInit {
   litsParentID = [];
   listJobType = [];
   taskGroupID: any;
+  isHaveFile = false;
+  showLabelAttachment = false;
+  folderID = '';
   view = [];
   constructor(
     private cache: CacheService,
@@ -81,9 +86,11 @@ export class PopupJobComponent implements OnInit {
       this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
       this.taskType = this.stepsTasks.taskType;
       this.stepsTasks['recID'] = Util.uid();
+      this.showLabelAttachment = true;
     } else {
       this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
       this.taskType = this.stepsTasks.taskType;
+      this.showLabelAttachment = true;
     }
     this.taskList = dt?.data[5];
     this.taskName = dt?.data[6];
@@ -154,9 +161,7 @@ export class PopupJobComponent implements OnInit {
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
-  addFile(evt: any) {
-    // this.attachment.uploadFile();
-  }
+
   applyOwner(e, datas) {
     if (!e || e?.data.length == 0) return;
     let listUser = e?.data;
@@ -343,6 +348,19 @@ export class PopupJobComponent implements OnInit {
           );
       this.changeDef.detectChanges();
     }
+  }
+
+  addFile(evt: any) {
+    this.attachment.uploadFile();
+  }
+  fileAdded(e) {}
+  getfileCount(e) {
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    this.showLabelAttachment = this.isHaveFile;
+  }
+  getfileDelete(event) {
+    event.data.length;
   }
 
   saveData() {
