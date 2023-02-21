@@ -559,9 +559,12 @@ export class InstancesComponent
                 }
                 this.dataSelected = data;
                 this.detailViewInstance.dataSelect = this.dataSelected;
-                this.detailViewInstance.GetStepsByInstanceIDAsync(
-                  this.dataSelected.recID
-                );
+                this.detailViewInstance.instance = this.dataSelected;
+                this.detailViewInstance.listSteps = this.listStepInstances;
+                // debugger;
+                // this.detailViewInstance.GetStepsByInstanceIDAsync(
+                //   this.dataSelected.recID
+                // );
                 this.view.dataService.update(data).subscribe();
                 this.detectorRef.detectChanges();
               }
@@ -623,9 +626,9 @@ export class InstancesComponent
                 }
                 this.dataSelected = data;
                 this.detailViewInstance.dataSelect = this.dataSelected;
-                this.detailViewInstance.GetStepsByInstanceIDAsync(
-                  this.dataSelected.recID
-                );
+                // this.detailViewInstance.GetStepsByInstanceIDAsync(
+                //   this.dataSelected.recID
+                // );
                 this.view.dataService.update(data).subscribe();
                 this.detectorRef.detectChanges();
               }

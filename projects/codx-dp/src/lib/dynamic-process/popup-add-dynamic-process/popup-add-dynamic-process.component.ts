@@ -388,7 +388,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
         if (res.update) {
-          this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
+        //  this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
           this.handleUpdateStep();
           this.dialog.close(res.update);
         }
