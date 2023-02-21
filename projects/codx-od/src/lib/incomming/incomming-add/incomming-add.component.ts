@@ -379,7 +379,6 @@ export class IncommingAddComponent implements OnInit {
                   this.odService.shareDispatch(per).subscribe(item3=>{
                     if(item3)
                     {
-                      debugger
                       item.data.relations = item3?.data[0].relations
                       this.notifySvr.notify(item.message);
                       this.dialog.close(item.data);
