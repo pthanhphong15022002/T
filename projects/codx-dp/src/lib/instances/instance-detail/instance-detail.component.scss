@@ -1,10 +1,10 @@
 .progress {
-	background-color: var(--gray-200);
+	background-color: #d8d8d8;
 	border-radius: 20px;
 	position: relative;
-	margin-bottom: 10px;
-	height: 20px;
-	width: 200px;
+	margin: 15px 0;
+	height: 30px;
+	width: 300px;
 }
 
 .progress-done {
@@ -20,13 +20,22 @@
 	transition: 1s ease 0.3s;
 }
 
+.arrow-steps {
+	width: 100%;
+	border: 1px aqua solid;
+	overflow-x: auto;
+	padding-bottom: 15px;
+}
+
 .arrow-steps .step {
-	font-size: 14px;
+	font-size: 12px;
 	text-align: center;
 	color: #666;
 	cursor: default;
-	margin: 0 3px;
-	padding: 10px 10px 10px 30px;
+	margin-right: 2px;
+	padding: 5px;
+	height: 44px;
+	text-indent: 10px;
 	min-width: 180px;
 	float: left;
 	position: relative;
@@ -101,8 +110,6 @@
 }
 
 
-
-
 .font {
 	font-size: 14px;
 	max-width: 180px;
@@ -117,11 +124,9 @@
 	background: #d9e3f7;
 	margin: 20px 0;
 	min-width: 180px;
-	height: 10px;
-	margin-left: 3px !important;
-	margin-top: 5px !important;
-	overflow: hidden;
-	position: relative;
+	height: 5px;
+	margin-right: 3px !important;
+	margin-top: -18px !important;
 
 }
 
