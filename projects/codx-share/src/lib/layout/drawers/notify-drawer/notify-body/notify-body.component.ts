@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, CodxService, DataRequest, DialogModel, FormModel } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, CodxService, DataRequest, DialogModel, FormModel, NotificationsService } from 'codx-core';
+import { map, of } from 'rxjs';
 import { NotifyDrawerPopupComponent } from '../notify-drawer-popup/notify-drawer-popup.component';
 
 @Component({
@@ -10,8 +11,9 @@ import { NotifyDrawerPopupComponent } from '../notify-drawer-popup/notify-drawer
 export class NotifyBodyComponent implements OnInit {
 
   @Input() mode:string = "";
+  @Input() formModel:FormModel = null;
+
   model:DataRequest;
-  formModel:FormModel;
   user:any;
   noti:any[] = [];
   bookmark:any[] = [];
@@ -23,7 +25,6 @@ export class NotifyBodyComponent implements OnInit {
   type:any = null;
   vllStatus:any[] = [];
   status:any = null;
-  notiMFC:any[] = [];
   notiFilter = {
     mode:"",
     type:"",
@@ -35,12 +36,12 @@ export class NotifyBodyComponent implements OnInit {
     private auth:AuthStore,
     private cache:CacheService,
     private codxService:CodxService,
-    private callFC:CallFuncService
+    private callFC:CallFuncService,
+    private notiSV:NotificationsService,
   ) 
   {
     this.model = new DataRequest("Notification","grvNotification","BG_Notification","","",1,20);
     this.model.dataObj = JSON.stringify(this.notiFilter);
-    this.formModel = new FormModel();
     this.user = auth.get();
   }
 
@@ -52,18 +53,6 @@ export class NotifyBodyComponent implements OnInit {
 
    // get set up
    getSetUp(){
-    this.cache.functionList("BGT001")
-    .subscribe((func:any)=>{
-      this.formModel.funcID = func.funcID;
-      this.formModel.formName = func.formName;
-      this.formModel.gridViewName = func.gridViewName;
-      this.formModel.entityName = func.entityName;
-      this.formModel.userPermission = func.userPermission;
-      this.cache.moreFunction(this.formModel.formName,this.formModel.gridViewName)
-      .subscribe((mfc:any) => {
-        this.notiMFC = mfc;
-      });
-    });
     this.cache.message("SYS010").subscribe((mssg:any) => {
       if(mssg){
         this.mssgNoData = mssg.defaultName;
@@ -130,25 +119,25 @@ export class NotifyBodyComponent implements OnInit {
   }
 
   // view detail noti
-  clickNotification(item:any,index:number){
-    if(item.transID){
-      this.api.execSv(
-        'BG',
-        'ERM.Business.BG',
-        'NotificationBusinesss',
-        'UpdateAsync', 
-        [item.recID]).subscribe((res:boolean) => {
-          if(res)
-          {
-            item.read = true;
-            this.dt.detectChanges();
-          }
-      });
-      let query = {
-        predicate:"RecID=@0",
-        dataValue:item.transID
-      };
-      this.codxService.openUrlNewTab(item.function,"",query);
+  clickNotification(item:any,element:any){
+    if(element.target.tagName !== 'A'){
+      if(!item.read){
+        this.api.execSv(
+          'BG',
+          'ERM.Business.BG',
+          'NotificationBusinesss',
+          'UpdateAsync', 
+          [item.recID]).subscribe((res:boolean) => {
+            item.read = res;
+        });
+      }
+      if(item.transID){
+        let query = {
+          predicate:"RecID=@0",
+          dataValue:item.transID
+        };
+        this.codxService.openUrlNewTab(item.function,"",query);
+      }
     }
   }
 
@@ -170,7 +159,7 @@ export class NotifyBodyComponent implements OnInit {
     this.getNotiAsync();
   }
   //click more FC
-  clickMF(event,item){
+  clickMF(event:any,item:any,type:string,index){
     if(event){
       switch(event.functionID){
         case "WP005": // ghim
@@ -186,6 +175,27 @@ export class NotifyBodyComponent implements OnInit {
           .subscribe((res:boolean) => item.read = res);
           break; 
         case "WP008": // xóa
+          this.notiSV.alertCode("SYS030").subscribe((res1:any) => {
+            if(res1.event.status === "Y"){
+              this.api.execSv(
+                "BG",
+                "ERM.Business.BG",
+                "NotificationBusinesss",
+                "DeleteAsync",
+                [item.recID])
+                .subscribe((res2:boolean) => {
+                  debugger
+                  if(res2){
+                    this.notiSV.notifyCode("SYS008");
+                    if(type == "bookmark")
+                      this.bookmark.splice(index,1);
+                    else
+                      this.noti.splice(index,1);
+                  }
+                  else this.notiSV.notifyCode("SYS022");
+                });
+            }
+          });
           break;
         default:
           break;
@@ -195,13 +205,12 @@ export class NotifyBodyComponent implements OnInit {
 
   // change More funtion
   changeDataMF(arrMFC){
-    debugger
-    if(this.notiMFC.length > 0){
-      let _lstMoreFcID = this.notiMFC.map(e => e.functionID);
       arrMFC.map(e => {
-        e.disabled = !_lstMoreFcID.includes(e.functionID)
+        if(e.functionID == "WP005" || e.functionID == "WP006" || e.functionID == "WP007" || e.functionID == "WP008")
+          e.disabled = false;
+        else
+          e.disabled = true;
       });
-    }
   }
 
   // bookmark noti
@@ -223,5 +232,20 @@ export class NotifyBodyComponent implements OnInit {
         [recID]);
   }
 
+  // check read all
+  checkReadAll(){
+    this.api.execSv("BG","ERM.Business.BG","NotificationBusinesss","ReadAllAsync",[])
+    .subscribe((res:boolean) => {
+      if(res){
+        debugger
+        if(this.bookmark.length > 0){
+          this.bookmark.map(e => e.read = true);
+        }
+        if(this.noti.length > 0){
+          this.noti.map(e => e.read = true);
+        }
+      }
+    })
+  }
   
 }
