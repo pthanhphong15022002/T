@@ -53,7 +53,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   objectAddressDelete: Array<Address> = [];
   objectContactAddress: Array<Contact> = [];
   objectContactAddressDelete: Array<Contact> = [];
-  objecttype:string = '1';
+  objecttype: string = '1';
   gridViewSetup: any;
   valuelist: any;
   gridViewSetupBank: any;
@@ -123,35 +123,26 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     if (this.customers.customerID != null) {
       this.customerID = this.customers.customerID;
       this.acService
-        .loadData(
-          'ERM.Business.BS',
-          'BankAccountsBusiness',
-          'LoadDataAsync',
-          [this.objecttype,
-          this.customerID]
-        )
+        .loadData('ERM.Business.BS', 'BankAccountsBusiness', 'LoadDataAsync', [
+          this.objecttype,
+          this.customerID,
+        ])
         .subscribe((res: any) => {
           this.objectBankaccount = res;
         });
       this.acService
-        .loadData(
-          'ERM.Business.BS',
-          'ContactBookBusiness',
-          'LoadDataAsync',
-          [this.objecttype,
-            this.customerID]
-        )
+        .loadData('ERM.Business.BS', 'ContactBookBusiness', 'LoadDataAsync', [
+          this.objecttype,
+          this.customerID,
+        ])
         .subscribe((res: any) => {
           this.objectContact = res;
         });
       this.acService
-        .loadData(
-          'ERM.Business.BS',
-          'AddressBookBusiness',
-          'LoadDataAsync',
-          [this.objecttype,
-            this.customerID]
-        )
+        .loadData('ERM.Business.BS', 'AddressBookBusiness', 'LoadDataAsync', [
+          this.objecttype,
+          this.customerID,
+        ])
         .subscribe((res: any) => {
           this.objectAddress = res;
           for (var i = 0; i < this.objectAddress.length; i++) {
@@ -161,7 +152,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                 'ERM.Business.BS',
                 'ContactBookBusiness',
                 'LoadDataAsync',
-                [this.objecttype,recID]
+                [this.objecttype, recID]
               )
               .subscribe((res: any) => {
                 res.forEach((element) => {
@@ -173,14 +164,14 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     }
   }
   //#endregion
-  
+
   //#region Init
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
   }
   //#endregion
-  
+
   //#region Function
   setTitle(e: any) {
     this.title = this.headerText;
@@ -195,7 +186,6 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   valueChangeCustomerID(e: any) {
     this.customerID = e.data;
     this.customers[e.field] = e.data;
-    console.log(this.customerID);
   }
   valueChangeEstablishYear(e: any) {
     e.data = e.data.fromDate;
@@ -301,7 +291,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     var obj = {
       headerText: 'Thêm địa chỉ',
       dataContact: this.objectContact,
-      objectype:this.objecttype
+      objectype: this.objecttype,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -344,165 +334,161 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       });
   }
   deleteobjectBank(data: any) {
-      let index = this.objectBankaccount.findIndex(
-        (x) => x.bankAcctID == data.bankAcctID && x.bankID == data.bankID
-      );
-      this.objectBankaccount.splice(index, 1);
-      this.objectBankaccountDelete.push(data);
+    let index = this.objectBankaccount.findIndex(
+      (x) => x.bankAcctID == data.bankAcctID && x.bankID == data.bankID
+    );
+    this.objectBankaccount.splice(index, 1);
+    this.objectBankaccountDelete.push(data);
   }
   editobjectBank(data: any) {
-      let index = this.objectBankaccount.findIndex(
-        (x) => x.bankAcctID == data.bankAcctID
-      );
-      var obj = {
-        headerText: 'Chỉnh sửa',
-        data: data,
-      };
-      let opt = new DialogModel();
-      let dataModel = new FormModel();
-      dataModel.formName = 'BankAccounts';
-      dataModel.gridViewName = 'grvBankAccounts';
-      dataModel.entityName = 'BS_BankAccounts';
-      opt.FormModel = dataModel;
-      this.cache
-        .gridViewSetup('BankAccounts', 'grvBankAccounts')
-        .subscribe((res) => {
-          if (res) {
-            var dialogbank = this.callfc.openForm(
-              PopAddBankComponent,
-              '',
-              650,
-              550,
-              '',
-              obj,
-              '',
-              opt
+    let index = this.objectBankaccount.findIndex(
+      (x) => x.bankAcctID == data.bankAcctID
+    );
+    var obj = {
+      headerText: 'Chỉnh sửa',
+      data: data,
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'BankAccounts';
+    dataModel.gridViewName = 'grvBankAccounts';
+    dataModel.entityName = 'BS_BankAccounts';
+    opt.FormModel = dataModel;
+    this.cache
+      .gridViewSetup('BankAccounts', 'grvBankAccounts')
+      .subscribe((res) => {
+        if (res) {
+          var dialogbank = this.callfc.openForm(
+            PopAddBankComponent,
+            '',
+            650,
+            550,
+            '',
+            obj,
+            '',
+            opt
+          );
+          dialogbank.closed.subscribe((x) => {
+            var databankaccount = JSON.parse(
+              localStorage.getItem('databankaccount')
             );
-            dialogbank.closed.subscribe((x) => {
-              var databankaccount = JSON.parse(
-                localStorage.getItem('databankaccount')
-              );
-              if (databankaccount != null) {
-                this.objectBankaccount[index] = databankaccount;
-              }
-              window.localStorage.removeItem('databankaccount');
-            });
-          }
-        });
-  }
-  editobjectAddress(data: any) {
-      let index = this.objectAddress.findIndex((x) => x.recID == data.recID);
-      var obs = {
-        headerText: 'Chỉnh sửa địa chỉ',
-        data: { ...data },
-        datacontactaddress: [...this.objectContactAddress],
-      };
-      let opt = new DialogModel();
-      let dataModel = new FormModel();
-      dataModel.formName = 'AddressBook';
-      dataModel.gridViewName = 'grvAddressBook';
-      dataModel.entityName = 'BS_AddressBook';
-      opt.FormModel = dataModel;
-      this.cache
-        .gridViewSetup('AddressBook', 'grvAddressBook')
-        .subscribe((res) => {
-          if (res) {
-            var dialogaddress = this.callfc.openForm(
-              PopAddAddressComponent,
-              '',
-              550,
-              650,
-              '',
-              obs,
-              '',
-              opt
-            );
-            dialogaddress.closed.subscribe((x) => {
-              var dataaddress = JSON.parse(localStorage.getItem('dataaddress'));
-              var datacontactaddress = JSON.parse(
-                localStorage.getItem('datacontactaddress')
-              );
-              var datacontactaddressdelete = JSON.parse(
-                localStorage.getItem('datacontactaddressdelete')
-              );
-              if (dataaddress != null) {
-                this.objectAddress[index] = dataaddress;
-              }
-              if (datacontactaddress != null) {
-                this.objectContactAddress = datacontactaddress;
-              }
-              if (datacontactaddressdelete != null) {
-                datacontactaddressdelete.forEach((element) => {
-                  this.objectContactAddressDelete.push(element);
-                });
-              }
-              window.localStorage.removeItem('dataaddress');
-              window.localStorage.removeItem('datacontactaddress');
-              window.localStorage.removeItem('datacontactaddressdelete');
-            });
-          }
-        });
-  }
-  deleteobjectAddress(data: any) {
-      let index = this.objectAddress.findIndex(
-        (x) =>
-          x.recID == data.recID
-      );
-      this.objectContactAddress.forEach((element, index) => {
-        if (element.reference == data.recID) {
-          this.objectContactAddress.splice(index, 1);
+            if (databankaccount != null) {
+              this.objectBankaccount[index] = databankaccount;
+            }
+            window.localStorage.removeItem('databankaccount');
+          });
         }
       });
-      this.objectAddress.splice(index, 1);
-      this.objectAddressDelete.push(data);
+  }
+  editobjectAddress(data: any) {
+    let index = this.objectAddress.findIndex((x) => x.recID == data.recID);
+    var obs = {
+      headerText: 'Chỉnh sửa địa chỉ',
+      data: { ...data },
+      datacontactaddress: [...this.objectContactAddress],
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'AddressBook';
+    dataModel.gridViewName = 'grvAddressBook';
+    dataModel.entityName = 'BS_AddressBook';
+    opt.FormModel = dataModel;
+    this.cache
+      .gridViewSetup('AddressBook', 'grvAddressBook')
+      .subscribe((res) => {
+        if (res) {
+          var dialogaddress = this.callfc.openForm(
+            PopAddAddressComponent,
+            '',
+            550,
+            650,
+            '',
+            obs,
+            '',
+            opt
+          );
+          dialogaddress.closed.subscribe((x) => {
+            var dataaddress = JSON.parse(localStorage.getItem('dataaddress'));
+            var datacontactaddress = JSON.parse(
+              localStorage.getItem('datacontactaddress')
+            );
+            var datacontactaddressdelete = JSON.parse(
+              localStorage.getItem('datacontactaddressdelete')
+            );
+            if (dataaddress != null) {
+              this.objectAddress[index] = dataaddress;
+            }
+            if (datacontactaddress != null) {
+              this.objectContactAddress = datacontactaddress;
+            }
+            if (datacontactaddressdelete != null) {
+              datacontactaddressdelete.forEach((element) => {
+                this.objectContactAddressDelete.push(element);
+              });
+            }
+            window.localStorage.removeItem('dataaddress');
+            window.localStorage.removeItem('datacontactaddress');
+            window.localStorage.removeItem('datacontactaddressdelete');
+          });
+        }
+      });
+  }
+  deleteobjectAddress(data: any) {
+    let index = this.objectAddress.findIndex((x) => x.recID == data.recID);
+    this.objectContactAddress.forEach((element, index) => {
+      if (element.reference == data.recID) {
+        this.objectContactAddress.splice(index, 1);
+      }
+    });
+    this.objectAddress.splice(index, 1);
+    this.objectAddressDelete.push(data);
   }
   editobjectContact(data: any) {
-      let index = this.objectContact.findIndex(
-        (x) => x.recID == data.recID);
-      var ob = {
-        headerText: 'Chỉnh sửa liên hệ',
-        data: { ...data },
-      };
-      let opt = new DialogModel();
-      let dataModel = new FormModel();
-      dataModel.formName = 'ContactBook';
-      dataModel.gridViewName = 'grvContactBook';
-      dataModel.entityName = 'BS_ContactBook';
-      opt.FormModel = dataModel;
-      this.cache
-        .gridViewSetup('ContactBook', 'grvContactBook')
-        .subscribe((res) => {
-          if (res) {
-            var dialogcontact = this.callfc.openForm(
-              PopAddContactComponent,
-              '',
-              650,
-              550,
-              '',
-              ob,
-              '',
-              opt
-            );
-            dialogcontact.closed.subscribe((x) => {
-              var datacontact = JSON.parse(localStorage.getItem('datacontact'));
-              if (datacontact != null) {
-                this.objectContact[index] = datacontact;
-              }
-              window.localStorage.removeItem('datacontact');
-            });
-          }
-        });
+    let index = this.objectContact.findIndex((x) => x.recID == data.recID);
+    var ob = {
+      headerText: 'Chỉnh sửa liên hệ',
+      data: { ...data },
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'ContactBook';
+    dataModel.gridViewName = 'grvContactBook';
+    dataModel.entityName = 'BS_ContactBook';
+    opt.FormModel = dataModel;
+    this.cache
+      .gridViewSetup('ContactBook', 'grvContactBook')
+      .subscribe((res) => {
+        if (res) {
+          var dialogcontact = this.callfc.openForm(
+            PopAddContactComponent,
+            '',
+            650,
+            550,
+            '',
+            ob,
+            '',
+            opt
+          );
+          dialogcontact.closed.subscribe((x) => {
+            var datacontact = JSON.parse(localStorage.getItem('datacontact'));
+            if (datacontact != null) {
+              this.objectContact[index] = datacontact;
+            }
+            window.localStorage.removeItem('datacontact');
+          });
+        }
+      });
   }
   deleteobjectContact(data: any) {
-      let index = this.objectContact.findIndex(
-        (x) => x.reference == data.reference && x.recID == data.recID
-      );
-      this.objectContact.splice(index, 1);
-      this.objectContactDelete.push(data);
+    let index = this.objectContact.findIndex(
+      (x) => x.reference == data.reference && x.recID == data.recID
+    );
+    this.objectContact.splice(index, 1);
+    this.objectContactDelete.push(data);
   }
   //#endregion
- 
- //#region CRUD
+
+  //#region CRUD
   onSave() {
     if (this.customerID.trim() == '' || this.customerID == null) {
       this.notification.notifyCode(
@@ -541,7 +527,6 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                 this.objecttype,
                 this.customerID,
                 this.objectAddress,
-                
               ])
               .subscribe((res: []) => {});
             this.acService
@@ -581,7 +566,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                 this.objecttype,
                 this.customerID,
                 this.objectBankaccount,
-                this.objectBankaccountDelete
+                this.objectBankaccountDelete,
               ])
               .subscribe((res: any) => {});
             this.api
@@ -589,7 +574,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                 this.objecttype,
                 this.customerID,
                 this.objectAddress,
-                this.objectAddressDelete
+                this.objectAddressDelete,
               ])
               .subscribe((res: any) => {});
             this.api
@@ -599,7 +584,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                 this.objectContact,
                 this.objectContactDelete,
                 this.objectContactAddress,
-                this.objectContactAddressDelete
+                this.objectContactAddressDelete,
               ])
               .subscribe((res: any) => {});
             this.dialog.close();
@@ -608,5 +593,5 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         });
     }
   }
-//#endregion
+  //#endregion
 }
