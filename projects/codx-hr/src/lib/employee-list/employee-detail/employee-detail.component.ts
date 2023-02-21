@@ -439,6 +439,7 @@ export class EmployeeDetailComponent extends UIComponent {
   eCalSalaryFuncID = 'HRTEM0303';
   jobGeneralFuncID = 'HRTEM0301';
   eBasicSalaryFuncID = 'HRTEM0401';
+  eJobSalFuntionID = 'HRTEM0402'; //Lương chức danh
   trainCourseFuncID = 'HRTEM0604';
   eBusinessTravelFuncID = 'HRTEM0504';
   eHealthFuncID = 'HRTEM0801'; // Khám sức khỏe
@@ -644,7 +645,7 @@ export class EmployeeDetailComponent extends UIComponent {
       console.log('functionList', res);
       if (res && res[1] > 0) {
         this.lstTab = res[0].filter((p) => p.parentID == this.funcID);
-        this.crrFuncTab = this.lstTab[2].functionID;
+        this.crrFuncTab = this.lstTab[3].functionID;
         console.log('crrFuncTab', this.crrFuncTab);
         this.lstFuncID = res[0];
 
