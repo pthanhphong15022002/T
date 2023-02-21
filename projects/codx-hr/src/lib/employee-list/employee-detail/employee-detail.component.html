@@ -110,7 +110,7 @@
                                     ></span>
                                     <span class="text-dark">
                                       <span>{{
-                                        infoPersonal.personalEmail
+                                        infoPersonal?.personalEmail
                                       }}</span>
                                     </span>
                                   </div>
@@ -121,7 +121,7 @@
                                         [formModel]="view.formModel"
                                       >
                                       </codx-label>
-                                      <span>{{ infoPersonal.pitNumber }}</span>
+                                      <span>{{ infoPersonal?.pitNumber }}</span>
                                     </div>
                                   </div>
                                   <div class="form-group">
@@ -134,7 +134,7 @@
                                       >
                                       </codx-label>
                                       <span class="text-dark">
-                                        {{ infoPersonal.siRegisterNo }}</span
+                                        {{ infoPersonal?.siRegisterNo }}</span
                                       >
                                     </div>
                                   </div>
@@ -147,7 +147,7 @@
                                       </codx-label>
                                       <span class="text-dark fw-bold">
                                         <span>{{
-                                          infoPersonal.joinedOn | fmDT
+                                          infoPersonal?.joinedOn | fmDT
                                         }}</span>
                                       </span>
                                     </div>
@@ -161,7 +161,7 @@
                                       </codx-label>
                                       <span class="text-dark fw-bold">
                                         <span>{{
-                                          infoPersonal.hiredOn | fmDT
+                                          infoPersonal?.hiredOn | fmDT
                                         }}</span>
                                       </span>
                                     </div>
@@ -175,7 +175,7 @@
                                       </codx-label>
                                       <span class="text-dark fw-bold">
                                         <span>{{
-                                          infoPersonal.employeeTypeID
+                                          infoPersonal?.employeeTypeID
                                         }}</span>
                                       </span>
                                     </div>
@@ -209,7 +209,7 @@
                                       </codx-label>
                                       <span class="text-dark fw-bold">
                                         <span>{{
-                                          infoPersonal.lineManager
+                                          infoPersonal?.lineManager
                                         }}</span>
                                       </span>
                                     </div>
@@ -224,7 +224,7 @@
 
                                       <span class="text-dark fw-bold">
                                         <span>{{
-                                          infoPersonal.timeCardNo
+                                          infoPersonal?.timeCardNo
                                         }}</span>
                                       </span>
                                     </div>
@@ -238,7 +238,7 @@
                                       </codx-label>
                                       <span class="text-dark fw-bold">
                                         <span>{{
-                                          infoPersonal.shiftCalendarID
+                                          infoPersonal?.shiftCalendarID
                                         }}</span>
                                       </span>
                                     </div>
@@ -253,7 +253,7 @@
 
                                       <span class="text-dark fw-bold">
                                         <span>{{
-                                          infoPersonal.aLObjectID
+                                          infoPersonal?.aLObjectID
                                         }}</span>
                                       </span>
                                     </div>
@@ -268,7 +268,7 @@
 
                                       <span class="text-dark fw-bold">
                                         <span>{{
-                                          infoPersonal.timeCardNo
+                                          infoPersonal?.timeCardNo
                                         }}</span>
                                       </span>
                                     </div>
@@ -293,10 +293,10 @@
 
                   <!-- end ngpopup -->
                   <div class="fw-bold font-size-h5 mb-2">
-                    {{ infoPersonal.employeeName }}
+                    {{ infoPersonal?.employeeName }}
                   </div>
                   <div class="text-primary">
-                    {{ infoPersonal.positionName }}
+                    {{ infoPersonal?.positionName }}
                   </div>
                 </div>
               </div>
@@ -309,7 +309,7 @@
                   class="icon-qr_code_scanner icon-16 text-danger me-1"
                 ></span>
                 <span class="text-danger w-bold">
-                  <span #id>{{ infoPersonal.employeeID }}</span>
+                  <span #id>{{ infoPersonal?.employeeID }}</span>
                 </span>
               </div>
 
@@ -319,7 +319,7 @@
                 ></span>
                 <span class="icon-date_range icon-16 text-gray-800"></span>
                 <span class="text-dark fw-bold">
-                  <span #joinedOn>{{ infoPersonal.joinedOn | fmDT }}</span>
+                  <span #joinedOn>{{ infoPersonal?.joinedOn | fmDT }}</span>
                 </span>
               </div>
 
@@ -329,7 +329,7 @@
                 ></span>
                 <codx-vll
                   [field]="'Status'"
-                  [value]="infoPersonal.status"
+                  [value]="infoPersonal?.status"
                   [formModel]="view.formModel"
                   [showText]="true"
                   [showBgColor]="true"
@@ -350,20 +350,20 @@
             <div class="d-flex align-items-center mb-2">
               <span class="icon-email icon-16 text-gray-800 me-1"></span>
               <span class="text-primary text-decoration-underline">
-                <span #email>{{ infoPersonal.email }}</span>
+                <span #email>{{ infoPersonal?.email }}</span>
               </span>
             </div>
             <div class="d-flex align-items-center mb-2">
               <span class="icon-local_phone icon-16 text-gray-800 me-1"></span>
               <span class="text-gray-400">
-                <span #phone>{{ infoPersonal.phone }}</span>
+                <span #phone>{{ infoPersonal?.phone }}</span>
               </span>
 
               <span
                 class="icon-phone_android icon-16 text-gray-800 me-1 ms-2"
               ></span>
               <span class="text-dark">
-                <span>{{ infoPersonal.mobile }}</span>
+                <span>{{ infoPersonal?.mobile }}</span>
               </span>
             </div>
           </div>
@@ -1166,7 +1166,7 @@
                   >
                   </codx-label>
                   <div class="text-dark fw-bolder">
-                    {{ infoPersonal.birthPlaceName }}
+                    {{ infoPersonal?.birthPlaceName }}
                   </div>
                 </div>
                 <!-- Giới tính -->
@@ -1205,7 +1205,7 @@
                       class="icon-wysiwyg icon-18 text-gray-600 me-2"
                     ></span>
                     <span #nationality class="fw-bolder">
-                      {{ infoPersonal.nationalityName }}</span
+                      {{ infoPersonal?.nationalityName }}</span
                     >
                   </div>
                 </div>
@@ -1217,7 +1217,7 @@
                   >
                   </codx-label>
                   <div #ethnicGroup class="fw-bolder">
-                    {{ infoPersonal.ethnicGroupName }}
+                    {{ infoPersonal?.ethnicGroupName }}
                   </div>
                 </div>
                 <div class="col">
@@ -1228,7 +1228,7 @@
                   >
                   </codx-label>
                   <div #religion class="fw-bolder">
-                    {{ infoPersonal.religionName }}
+                    {{ infoPersonal?.religionName }}
                   </div>
                 </div>
               </div>
@@ -1242,7 +1242,7 @@
                   >
                   </codx-label>
                   <div #idCardNo class="fw-bolder">
-                    {{ infoPersonal.idCardNo }}
+                    {{ infoPersonal?.idCardNo }}
                   </div>
                 </div>
                 <div class="col">
@@ -1255,7 +1255,7 @@
                   <div class="d-flex align-items-center">
                     <span class="icon-event icon-18 text-gray-600 me-2"></span>
                     <span #issuedOn class="fw-bolder">
-                      {{ infoPersonal.issuedOn | fmDT }}</span
+                      {{ infoPersonal?.issuedOn | fmDT }}</span
                     >
                   </div>
                 </div>
@@ -1267,7 +1267,7 @@
                   >
                   </codx-label>
                   <span #issuedBy class="fw-bolder"
-                    >{{ infoPersonal.issuedByName }}
+                    >{{ infoPersonal?.issuedByName }}
                   </span>
                 </div>
               </div>
@@ -1281,7 +1281,7 @@
                   >
                   </codx-label>
                   <div #education class="fw-bolder">
-                    {{ infoPersonal.passportNo }}
+                    {{ infoPersonal?.passportNo }}
                   </div>
                 </div>
                 <div class="col">
@@ -1294,7 +1294,7 @@
                   <div class="d-flex align-items-center">
                     <span class="icon-event icon-18 text-gray-600 me-2"></span>
                     <div #education class="fw-bolder">
-                      {{ infoPersonal.issuedDate | fmDT }}
+                      {{ infoPersonal?.issuedDate | fmDT }}
                     </div>
                   </div>
                 </div>
@@ -1308,7 +1308,7 @@
                   <div class="d-flex align-items-center">
                     <span class="icon-event icon-18 me-2 text-danger"></span>
                     <span #degreeName class="fw-bolder">
-                      {{ infoPersonal.expiredDate | fmDT }}</span
+                      {{ infoPersonal?.expiredDate | fmDT }}</span
                     >
                   </div>
                 </div>
@@ -1364,7 +1364,7 @@
                 <div class="d-flex align-items-center">
                   <span class="icon-mood icon-18 text-primary me-2"></span>
                   <span #Achievement class="fw-bolder">
-                    {{ infoPersonal.achievement }}</span
+                    {{ infoPersonal?.achievement }}</span
                   >
                 </div>
               </div>
@@ -1378,7 +1378,7 @@
                 </codx-label>
                 <div class="d-flex align-items-center">
                   <span class="icon-spa icon-18 text-success me-1"></span>
-                  <span #Forte class="fw-bolder">{{ infoPersonal.forte }}</span>
+                  <span #Forte class="fw-bolder">{{ infoPersonal?.forte }}</span>
                 </div>
               </div>
               <!-- Sở thích -->
@@ -1391,7 +1391,7 @@
                 </codx-label>
                 <div class="d-flex">
                   <span class="icon-i-heart icon-16 text-danger me-2"></span>
-                  <span #Hobby class="fw-bolder">{{ infoPersonal.hobby }}</span>
+                  <span #Hobby class="fw-bolder">{{ infoPersonal?.hobby }}</span>
                 </div>
               </div>
 
@@ -1420,7 +1420,7 @@
                         <span
                           class="icon-email icon-16 text-gray-800 me-1"
                         ></span>
-                        <span class="fw-bolder"> {{ infoPersonal.email }}</span>
+                        <span class="fw-bolder"> {{ infoPersonal?.email }}</span>
                       </div>
                     </div>
                     <div class="col-8">
@@ -1435,7 +1435,7 @@
                           class="icon-local_phone icon-16 text-gray-800 me-1"
                         ></span>
                         <span class="fw-bolder">
-                          <span #phone>{{ infoPersonal.phone }}</span>
+                          <span #phone>{{ infoPersonal?.phone }}</span>
                         </span>
                       </div>
                     </div>
@@ -1454,7 +1454,7 @@
                           class="icon-email icon-16 text-gray-800 me-1"
                         ></span>
                         <span class="fw-bolder">
-                          {{ infoPersonal.personalEmail }}</span
+                          {{ infoPersonal?.personalEmail }}</span
                         >
                       </div>
                     </div>
@@ -1470,7 +1470,7 @@
                           class="icon-phone_android icon-16 text-gray-800 me-1"
                         ></span>
                         <span class="fw-bolder">
-                          {{ infoPersonal.mobile }}</span
+                          {{ infoPersonal?.mobile }}</span
                         >
                       </div>
                     </div>
@@ -1488,7 +1488,7 @@
                         class="icon-place icon-18 text-gray-600 me-2"
                       ></span>
                       <span #street class="fw-bolder">
-                        {{ infoPersonal.street ?? infoPersonal.address }}</span
+                        {{ infoPersonal?.street ?? infoPersonal?.address }}</span
                       >
                     </div>
                   </div>
@@ -1505,7 +1505,7 @@
                         class="icon-place icon-18 text-gray-600 me-2"
                       ></span>
                       <span #pitNumber class="fw-bold">
-                        {{ infoPersonal.tAddress }}</span
+                        {{ infoPersonal?.tAddress }}</span
                       >
                     </div>
                   </div>
@@ -1555,7 +1555,7 @@
                   <div class="d-flex align-items-center">
                     <span class="icon-event icon-18 text-gray-600 me-2"></span>
                     <span class="text-dark fw-bolder">
-                      {{ infoPersonal.yUnionDate | fmDT }}</span
+                      {{ infoPersonal?.yUnionDate | fmDT }}</span
                     >
                   </div>
                 </div>
@@ -1568,7 +1568,7 @@
                   </codx-label>
                   <div class="d-flex">
                     <span #yUnionAt class="text-dark fw-bolder">
-                      {{ infoPersonal.yUnionAt }}
+                      {{ infoPersonal?.yUnionAt }}
                     </span>
                   </div>
                 </div>
@@ -1584,7 +1584,7 @@
                   <div class="d-flex align-items-center">
                     <span class="icon-event icon-18 text-gray-600 me-2"></span>
                     <span #partyDate class="text-dark fw-bolder">
-                      {{ infoPersonal.partyDate | fmDT }}</span
+                      {{ infoPersonal?.partyDate | fmDT }}</span
                     >
                   </div>
                 </div>
@@ -1597,7 +1597,7 @@
                   </codx-label>
                   <div class="d-flex align-items-center">
                     <span #partyAt class="text-dark fw-bolder"
-                      >{{ infoPersonal.partyAt }}
+                      >{{ infoPersonal?.partyAt }}
                     </span>
                   </div>
                 </div>
@@ -1832,7 +1832,7 @@
                     >
                     </codx-label>
                     <div class="fw-bolder">
-                      {{ infoPersonal.siRegisterNo }}
+                      {{ infoPersonal?.siRegisterNo }}
                     </div>
                   </div>
                   <div class="col-8">
@@ -1847,7 +1847,7 @@
                         class="icon-event icon-18 text-gray-600 me-2"
                       ></span>
                       <span class="fw-bolder">{{
-                        infoPersonal.siRegisterOn | fmDT
+                        infoPersonal?.siRegisterOn | fmDT
                       }}</span>
                     </div>
                   </div>
@@ -1862,7 +1862,7 @@
                     >
                     </codx-label>
                     <div #HICardNo class="fw-bolder">
-                      {{ infoPersonal.hiCardNo }}
+                      {{ infoPersonal?.hiCardNo }}
                     </div>
                   </div>
                   <div class="col-8">
@@ -1877,8 +1877,8 @@
                         class="icon-event icon-18 text-gray-600 me-2"
                       ></span>
                       <span class="fw-bolder"
-                        >{{ infoPersonal.HICardFrom | fmDT }} -
-                        {{ infoPersonal.HICardTo | fmDT }}</span
+                        >{{ infoPersonal?.HICardFrom | fmDT }} -
+                        {{ infoPersonal?.HICardTo | fmDT }}</span
                       >
                     </div>
                   </div>
@@ -1897,7 +1897,7 @@
                         class="icon-event icon-18 text-gray-600 me-2"
                       ></span>
                       <span class="fw-bolder">
-                        {{ infoPersonal.hiDateOf5Years | fmDT }}
+                        {{ infoPersonal?.hiDateOf5Years | fmDT }}
                       </span>
                     </div>
                   </div>
@@ -1910,7 +1910,7 @@
                     </codx-label>
                     <div class="d-flex align-items-center">
                       <span class="fw-bolder">{{
-                        infoPersonal.hiHospitalID
+                        infoPersonal?.hiHospitalID
                       }}</span>
                     </div>
                   </div>
@@ -1941,7 +1941,7 @@
                     </codx-label>
                     <div class="d-flex align-items-center">
                       <span class="fw-bolder">
-                        {{ infoPersonal.pitNumber }}</span
+                        {{ infoPersonal?.pitNumber }}</span
                       >
                     </div>
                   </div>
@@ -1957,7 +1957,7 @@
                         class="icon-event icon-18 text-gray-600 me-2"
                       ></span>
                       <span class="fw-bolder">{{
-                        infoPersonal.pitIssuedOn | fmDT
+                        infoPersonal?.pitIssuedOn | fmDT
                       }}</span>
                     </div>
                   </div>
@@ -1969,7 +1969,7 @@
                     >
                     </codx-label>
                     <div class="d-flex align-items-center">
-                      <span class="fw-bolder">{{ infoPersonal.pitPlace }}</span>
+                      <span class="fw-bolder">{{ infoPersonal?.pitPlace }}</span>
                     </div>
                   </div>
                 </div>
@@ -1999,7 +1999,7 @@
                     </codx-label>
                     <div class="d-flex align-items-center">
                       <span class="fw-bolder">
-                        {{ infoPersonal.idCardNo }}</span
+                        {{ infoPersonal?.idCardNo }}</span
                       >
                     </div>
                   </div>
@@ -2012,7 +2012,7 @@
                     </codx-label>
                     <div class="d-flex align-items-center">
                       <span class="fw-bolder">
-                        {{ infoPersonal.accountBankID }}</span
+                        {{ infoPersonal?.accountBankID }}</span
                       >
                     </div>
                   </div>
@@ -2028,7 +2028,7 @@
                     </codx-label>
                     <div class="d-flex align-items-center">
                       <span class="fw-bolder">
-                        {{ infoPersonal.accountName }}</span
+                        {{ infoPersonal?.accountName }}</span
                       >
                     </div>
                   </div>
@@ -2041,7 +2041,7 @@
                     </codx-label>
                     <div class="d-flex align-items-center">
                       <span class="fw-bolder">
-                        {{ infoPersonal.accountBankBranch }}</span
+                        {{ infoPersonal?.accountBankBranch }}</span
                       >
                     </div>
                   </div>
@@ -3193,7 +3193,7 @@
           </div>
         </div>
         <!-- Lương chức danh -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0402">
+        <div class="user-profile overview d-block mb-3" [id]="eJobSalFuntionID">
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
@@ -3204,10 +3204,10 @@
                   <!-- <codx-label
                     name="lblSalary&Benefit"
                     [formModel]="view.formModel"
-                    [default]="getFormHeader('HRTEM0402')"
+                    [default]="getFormHeader(eJobSalFuntionID)"
                   >
                   </codx-label> -->
-                  {{ getFormHeader("HRTEM0402") }}
+                  {{ getFormHeader(eJobSalFuntionID) }}
                 </div>
               </div>
               <button
@@ -4281,12 +4281,6 @@
                           {{ i + 1 }}
                         </div>
                       </ng-container>
-
-                      <div class="sk-item active">2</div>
-                      <div class="sk-item active">3</div>
-                      <div class="sk-item active selected">4</div>
-                      <div class="sk-item">5</div>
-                      <div class="sk-item">6</div>
                     </div>
                     <!-- <codx-mfunc
                       [formModel]="formModel"
@@ -4361,7 +4355,7 @@
                     [method]="'LoadDataAsync'"
                     [predicates]="'EmployeeID=@0'"
                     [dataValues]="employeeID"
-                    [pageSize]="numPageSizeGridView"
+                    [pageSize]="20"
                     [entityName]="'HR_ESkills'"
                     [rowHeight]="50"
                     height="240px"
@@ -4401,33 +4395,23 @@
                   *ngIf="eTrainCourseGrvSetup"
                   [cssClass]="'rounded-pill border-1'"
                   cssPopup="h-350px w-300px"
+                  [isMulti]="true"
                   placeholder="Hình thức đào tạo"
                   type="valuelist"
                   field="TrainForm"
                   [refValue]="eTrainCourseGrvSetup.TrainForm.referedValue"
                   (valueChange)="valueChangeFilterTrainCourse($event)"
-                  
                 ></codx-dropdown-select>
 
-                <!-- <codx-dropdown-select
-                  *ngIf="eTrainCourseGrvSetup"
-                  [cssClass]="'rounded-pill border-1'"
-                  cssPopup="h-350px w-300px"
-                  placeholder="Năm"
-                  type="valuelist"
-                  field="InYear"
-                  [refValue]="eTrainCourseGrvSetup.InYear.referedValue"
-                  (valueChange)="valueChangeFilterInYear($event)"
-                ></codx-dropdown-select> -->
                 <codx-dropdown-calendar
-                [cssPopup]="'w-600px h-400px'"
-                emptyText="Năm"
-                [firstChange]="false"
-                [displayOption]="ops"
-                [selectedType]="'y'"
-                [cssClass]="'rounded-pill'"
-                (change)="valueChangeYearFilterETrainCourse($event)"
-              ></codx-dropdown-calendar>
+                  [cssPopup]="'w-600px h-400px'"
+                  emptyText="Năm"
+                  [firstChange]="false"
+                  [displayOption]="ops"
+                  [selectedType]="'y'"
+                  [cssClass]="'rounded-pill'"
+                  (change)="valueChangeYearFilterETrainCourse($event)"
+                ></codx-dropdown-calendar>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="HandleEmployeeTrainCourseInfo(addHeaderText, 'add', null)"
@@ -4449,9 +4433,7 @@
             </div>
 
             <div class="mb-1">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
+              <div class="mt-6 mb-3">
                 <div>
                   <codx-gridview
                     *ngIf="trainCourseColumnGrid && trainCourseFormModel"
@@ -4464,7 +4446,7 @@
                     [method]="'LoadDataAsync'"
                     [predicates]="'EmployeeID=@0'"
                     [dataValues]="employeeID"
-                    [pageSize]="numPageSizeGridView"
+                    [pageSize]="20"
                     [entityName]="'HR_ETrainCourses'"
                     [rowHeight]="50"
                     height="240px"
@@ -5002,23 +4984,23 @@
 
 <ng-template #healthPeriodID let-data>
   {{ data }}
-  {{ infoPersonal.healthPeriodName }}
+  {{ infoPersonal?.healthPeriodName }}
 </ng-template>
 <ng-template #healthPeriodDate let-data>
   <div>
-    {{ infoPersonal.fromDate }}
+    {{ infoPersonal?.fromDate }}
   </div>
 </ng-template>
 <ng-template #healthPeriodPlace let-data>
   <div>
-    {{ infoPersonal.hospitalID }}
+    {{ infoPersonal?.hospitalID }}
   </div>
 </ng-template>
 <ng-template #healthType let-data>
-  {{ infoPersonal.healthType }}
+  {{ infoPersonal?.healthType }}
 </ng-template>
 <ng-template #healthPeriodResult let-data>
-  {{ infoPersonal.healthPeriodResult }}
+  {{ infoPersonal?.healthPeriodResult }}
 </ng-template>
 
 <ng-template #EExperience let-data>
@@ -5119,7 +5101,7 @@
 </ng-template>
 <!--#endregion -->
 
-<!--#Region template Bằng cấp-->
+<!--#region template Bằng cấp-->
 <ng-template #templateDegreeGridCol1 let-data>
   <div>
     <i class="icon-school"></i>
@@ -5138,7 +5120,7 @@
     }}
   </div>
   <div>
-    {{ data?.ranking }}
+    {{ data?.ranking | formatvalue : degreeFormModel : "ranking" | async }}
     <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
     {{ data?.totalScore }}
   </div>
@@ -5149,8 +5131,6 @@
     <div>
       <i class="icon-calendar_today"></i>
       {{ data?.yearGraduated }}
-    </div>
-    <div>
       <i
         class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"
       ></i>
@@ -5169,7 +5149,7 @@
     </codx-mfunc>
   </div>
 </ng-template>
-<!--#endRegion-->
+<!--#endregion-->
 
 <ng-template #templateCertificateGridCol1 let-data>
   <div>
@@ -5243,9 +5223,12 @@
     {{ data?.skillID | formatvalue : skillFormmodel : "skillID" | async }}
   </div>
   <div>
-    {{
+    <!-- {{
       data?.skillGradeID | formatvalue : skillFormmodel : "skillGradeID" | async
-    }}
+    }} -->
+    <codx-vll>
+      
+    </codx-vll>
   </div>
 </ng-template>
 
@@ -5338,7 +5321,7 @@
   </div>
 </ng-template>
 
-<!-- #region Passport columnGrid templates-->
+<!-- #region Hộ chiếu columnGrid templates-->
 <ng-template #passportCol1 let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
@@ -5400,7 +5383,7 @@
 
 <!-- #endregion -->
 
-<!-- #region Visa columnGrid templates-->
+<!-- #region Thị thực columnGrid templates-->
 <ng-template #visaCol1 let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
@@ -5468,7 +5451,7 @@
 
 <!-- #endregion -->
 
-<!-- #region WorkPermit columnGrid templates-->
+<!-- #region Giấy phép lao động columnGrid templates-->
 <ng-template #workPermitCol1 let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
@@ -5536,7 +5519,7 @@
 
 <!-- #endregion -->
 
-<!-- #region EBasicSalary columnGrid templates-->
+<!-- #region Lương cơ bản columnGrid templates-->
 <ng-template #basicSalaryCol1 let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
@@ -5556,7 +5539,7 @@
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
       <span class="icon-monetization_on text-danger icon-16 me-1"></span>
-      <span class="text-dark">
+      <span class="text-dark fw-bolder">
         <span>{{
           data?.siSalary
             | formatvalue : eBasicSalaryFormmodel : "siSalary"
@@ -5571,7 +5554,7 @@
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
       <span class="icon-event icon-16 text-gray-800 me-1"></span>
-      <span class="text-dark">
+      <span class="text-dark fw-bolder">
         <span>{{
           data?.effectedDate
             | formatvalue : eBasicSalaryFormmodel : "effectedDate"
@@ -5579,7 +5562,7 @@
         }}</span>
       </span>
       <span class="me-1 ms-1">-</span>
-      <span class="text-dark">
+      <span class="text-dark fw-bolder">
         <span>{{
           data?.expiredDate
             | formatvalue : eBasicSalaryFormmodel : "expiredDate"
@@ -5632,6 +5615,105 @@
   </div>
 </ng-template>
 <!-- #endregion -->
+
+<!-- #region Lương chức danh columnGrid templates-->
+<ng-template #jobSalaryCol1 let-data>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-attach_money icon-16 text-gray-800 me-1"></span>
+      <span class="text-dark">
+        <span>{{
+          data?.bSalary
+            | formatvalue : eBasicSalaryFormmodel : "bSalary"
+            | async
+        }}</span>
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #jobSalaryCol2 let-data>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-monetization_on text-danger icon-16 me-1"></span>
+      <span class="text-dark fw-bolder">
+        <span>{{
+          data?.siSalary
+            | formatvalue : eBasicSalaryFormmodel : "siSalary"
+            | async
+        }}</span>
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #jobSalaryCol3 let-data>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-event icon-16 text-gray-800 me-1"></span>
+      <span class="text-dark fw-bolder">
+        <span>{{
+          data?.effectedDate
+            | formatvalue : eBasicSalaryFormmodel : "effectedDate"
+            | async
+        }}</span>
+      </span>
+      <span class="me-1 ms-1">-</span>
+      <span class="text-dark fw-bolder">
+        <span>{{
+          data?.expiredDate
+            | formatvalue : eBasicSalaryFormmodel : "expiredDate"
+            | async
+        }}</span>
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #jobSalaryCol4 let-data>
+  <div class="has-action-menu">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon-event icon-16 text-primary me-1"></span>
+        <span class="text-dark">
+          <span>{{
+            data?.issuedDate
+              | formatvalue : eBasicSalaryFormmodel : "issuedDate"
+              | async
+          }}</span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon-event icon-16 text-danger me-1"></span>
+        <span class="text-dark">
+          <span>{{
+            data?.fromDate
+              | formatvalue : eBasicSalaryFormmodel : "fromDate"
+              | async
+          }}</span>
+        </span>
+        <span class="me-1 ms-1">-</span>
+        <span class="text-dark">
+          <span>{{
+            data?.toDate
+              | formatvalue : eBasicSalaryFormmodel : "toDate"
+              | async
+          }}</span>
+        </span>
+      </div>
+      <codx-mfunc
+        [formModel]="eBasicSalaryFormmodel"
+        (clickMF)="clickMF($event, data, 'basicSalary')"
+        type="hover"
+        [dataItem]="data"
+      >
+      </codx-mfunc>
+    </div>
+  </div>
+</ng-template>
+<!-- #endregion -->
+
+
 <!-- #region Đào tạo -->
 <ng-template #templateTrainCourseGridCol1 let-data>
   <div>
@@ -5669,15 +5751,57 @@
           | async
       }}
     </div>
-    <div>
+    <!-- <div>
       <i></i>
       {{
         data?.ranking | formatvalue : trainCourseFormModel : "ranking" | async
       }}
       <i class="icon-class icon-20 me-1 text-primary"></i>
-      {{ data?.totalScore }}
+      {{
+        data?.totalScore
+          | formatvalue : trainCourseFormModel : "totalScore"
+          | async
+      }}
       <i class="icon-class icon-20 me-1 text-primary"></i>
-      {{ data?.result }}
+      {{
+        data?.result
+          | formatvalue : trainCourseFormModel : "result"
+          | async
+      }}
+    </div> -->
+    <div class="d-flex flex-wrap mb-1">
+      <div class="d-flex align-items-center">
+        <span class="icon-insights icon-14 text-warning me-1"></span>
+        <span class="text-primary" #ranking>
+          {{
+            data?.ranking | formatvalue : trainCourseFormModel : "ranking" | async
+          }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span
+          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+        ></span>
+        <span class="fw-bold text-primary">
+          <span>{{
+            data?.totalScore
+              | formatvalue : trainCourseFormModel : "totalScore"
+              | async
+          }}</span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span
+          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+        ></span>
+        <span class="fw-bold">
+          <span>{{
+            data?.result
+              | formatvalue : trainCourseFormModel : "result"
+              | async
+          }}</span>
+        </span>
+      </div>
     </div>
 
     <codx-mfunc
@@ -5869,3 +5993,4 @@
   </div>
 </ng-template>
 <!-- #endregion -->
+

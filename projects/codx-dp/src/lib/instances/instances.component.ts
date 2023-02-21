@@ -86,6 +86,7 @@ export class InstancesComponent
   kanban: any;
   listStepsCbx: any;
   lstStepInstances = [];
+  lstStepCbx = [];
   crrStepID: string;
   moreFuncInstance = [];
   dataColums = [];
@@ -110,6 +111,9 @@ export class InstancesComponent
           }
         });
     });
+
+    // em bảo gán tạm
+    this.genAutoNumberNo(this.process?.applyFor === 'D' ? 'DPT0406' : 'DPT0405');
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -206,12 +210,13 @@ export class InstancesComponent
               formMD.entityName = fun.entityName;
               formMD.formName = fun.formName;
               formMD.gridViewName = fun.gridViewName;
-
+             
               option.Width = '850px';
               option.zIndex = 1010;
               this.view.dataService.dataSelected.processID = this.process.recID;
               // const titleForm = res.defaultName;
               // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
+              this.genAutoNumberNo(formMD.funcID);
               var dialogCustomField = this.callfc.openSide(
                 PopupAddInstanceComponent,
                 [
@@ -246,6 +251,7 @@ export class InstancesComponent
     if (data) {
       this.view.dataService.dataSelected = data;
     }
+
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
@@ -256,6 +262,7 @@ export class InstancesComponent
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+         
           this.cache.gridView(fun.gridViewName).subscribe((grv) => {
             this.cache
               .gridViewSetup(fun.formName, fun.gridViewName)
@@ -294,14 +301,14 @@ export class InstancesComponent
       });
   }
 
-  async genAutoNumberNo() {
+  async genAutoNumberNo(funcID) {
     this.codxDpService
-      .GetAutoNumberNo('DPInstances', this.funcID, 'DP_Instances', 'InstanceNo')
-      .subscribe((res) => {
-        if (res) {
-          this.instanceNo = res;
-        }
-      });
+    .genAutoNumber(funcID, 'DP_Instances', 'InstanceNo')
+    .subscribe((res) => {
+      if (res) {
+        this.instanceNo = res;
+      }
+    });
   }
   //End
 
@@ -660,8 +667,8 @@ export class InstancesComponent
       .map((x) => x.stepName)[0];
   }
   clickMoreFunc(e){
-    this.lstStepInstances = e.lstStepCbx;
-    this.clickMF(e.e, e.data,);
+    this.lstStepInstances = e.lstStepInstance;
+    this.clickMF(e.e, e.data);
   }
   changeMF(e) {
     this.changeDataMF(e.e, e.data);

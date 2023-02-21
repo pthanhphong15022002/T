@@ -52,6 +52,7 @@ import { PopupTypeTaskComponent } from './step-task/popup-type-task/popup-type-t
 import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-group.component';
 import { paste } from '@syncfusion/ej2-angular-richtexteditor';
 import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-dynamic.component';
+import { T } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -299,7 +300,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   ngOnInit(): void {
     // this.updateNodeStatus(0,1);
-    this.grvMoreFunction = this.dialog?.formModel;
+    this.grvMoreFunction = JSON.parse(JSON.stringify(this.dialog?.formModel));
     this.grvMoreFunction.entityName = 'DP_InstancesSteps';
     this.grvMoreFunction.formName = 'DPInstancesSteps';
     this.grvMoreFunction.gridViewName = 'grvDPInstancesSteps';
@@ -1232,7 +1233,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.openTaskGroup(data);
         break;
       case 'SYS04':
-        // this.copy(data);
+        this.openTaskGroup(data,'copy');
         break;
       case 'DP08':
         this.groupTaskID = data?.recID;
@@ -1245,7 +1246,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.taskGroup = new DP_Steps_TaskGroups();
     if (data) {
       this.roleGroupTaskOld = JSON.parse(JSON.stringify(data?.roles)) || [];
-      this.taskGroup = data;
+      if(type === 'copy'){
+        this.taskGroup = JSON.parse(JSON.stringify(data));
+        this.taskGroup['recID'] = null;
+      }else{
+        this.taskGroup = data;
+      }
     } else {
       this.roleGroupTaskOld = [];
       this.taskGroup['createdBy'] = this.userId;
@@ -1262,7 +1268,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
     this.popupGroupJob.closed.subscribe((res) => {
       if (res?.event) {
-        this.savePopupGroupJob();
+        this.savePopupGroupJob(type);
         this.sumTimeStep();
       }
     });
@@ -1357,7 +1363,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  async savePopupGroupJob() {
+  async savePopupGroupJob(type: string) {
     this.popupGroupJob.close();
     if (this.taskGroup['roles']?.length == 0) {
       let role = new DP_Steps_TaskGroups_Roles();
@@ -1368,10 +1374,23 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (!this.taskGroup['recID']) {
       this.taskGroup['recID'] = Util.uid();
       let index = this.taskGroupList.length;
+      if(index === 0){
+        let taskGroup = new DP_Steps_TaskGroups();
+        taskGroup['task'] = [];
+        taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+        this.taskGroupList.push(taskGroup);
+      }
       this.taskGroupList.splice(index - 1, 0, this.taskGroup);
-      let taskGroupList = JSON.parse(JSON.stringify(this.taskGroup));
-      delete taskGroupList['task'];
-      this.taskGroupListSave.push(taskGroupList);
+
+      if(type === 'copy' && this.taskGroup['task'].length > 0){
+        for(let task of this.taskGroup['task']) {
+          task['recID'] = Util.uid();
+          task['taskGroupID'] = this.taskGroup['recID'];
+          task['createdOn'] =  new Date();
+          task['createdBy'] = this.userId;
+          this.taskList.push(task);
+        }
+      }
       // add role vào step
       this.addRole(this.taskGroup['roles'][0]);
     } else {
@@ -1391,9 +1410,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           (step) => step.recID == data.recID
         );
         if (index >= 0) {
-          this.taskGroupList.splice(index, 1);
+          this.taskGroupList.splice(index, 1);          
           this.sumTimeStep();
         }
+        for(let i =0 ; i < this.taskList.length; i++){
+          if(this.taskList[i]['taskGroupID'] === data['recID']){
+            this.taskList.splice(i,1);
+          }
+        }
+        console.log(this.taskList);
+        
       }
     });
   }

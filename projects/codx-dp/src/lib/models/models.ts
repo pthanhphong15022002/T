@@ -339,6 +339,7 @@ export class DP_Instances_Steps {
   reasons: DP_Instances_Steps_Reasons[] = []; // objects
   stepStatus: string;
   memo: string;
+  newProcessID:string;
   reasonControl: boolean = false;
 }
 

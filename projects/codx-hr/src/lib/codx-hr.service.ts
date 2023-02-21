@@ -1071,7 +1071,7 @@ export class CodxHrService {
       'HR',
       'HR',
       'EExperiencesBusiness',
-      'GetListByEmployeeIDAsync',
+      'GetExperiencesByEmpIDAsync',
       data
     );
   }
@@ -1436,6 +1436,15 @@ export class CodxHrService {
       'ESkillsBusiness',
       'DeleteESkillAsync',
       recID
+    );
+  }
+  deleteESkill1(obj: any){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'ESkillsBusiness',
+      'DeleteESkillAsync',
+      obj
     );
   }
   //#endregion

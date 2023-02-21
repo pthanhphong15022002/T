@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import {
   ChangeDetectorRef,
   Component,
@@ -16,6 +17,7 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import {
   DP_Steps_Tasks,
@@ -29,6 +31,7 @@ import {
 })
 export class PopupJobComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
+  @ViewChild('attachment') attachment: AttachmentComponent;
   REQUIRE = ['taskName', 'roles', 'dependRule'];
   MESSAGETIME =
     'Thời hạn công việc lớn hơn nhóm công việc bạn có muốn lưu và thay đổi thời hạn nhóm công việc';
@@ -58,6 +61,9 @@ export class PopupJobComponent implements OnInit {
   litsParentID = [];
   listJobType = [];
   taskGroupID: any;
+  isHaveFile = false;
+  showLabelAttachment = false;
+  folderID = '';
   view = [];
   constructor(
     private cache: CacheService,
@@ -81,9 +87,11 @@ export class PopupJobComponent implements OnInit {
       this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
       this.taskType = this.stepsTasks.taskType;
       this.stepsTasks['recID'] = Util.uid();
+      this.showLabelAttachment = true;
     } else {
       this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
       this.taskType = this.stepsTasks.taskType;
+      this.showLabelAttachment = true;
     }
     this.taskList = dt?.data[5];
     this.taskName = dt?.data[6];
@@ -154,9 +162,7 @@ export class PopupJobComponent implements OnInit {
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
-  addFile(evt: any) {
-    // this.attachment.uploadFile();
-  }
+
   applyOwner(e, datas) {
     if (!e || e?.data.length == 0) return;
     let listUser = e?.data;
@@ -345,7 +351,20 @@ export class PopupJobComponent implements OnInit {
     }
   }
 
-  saveData() {
+  addFile(evt: any) {
+    this.attachment.uploadFile();
+  }
+  fileAdded(e) {}
+  getfileCount(e) {
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    this.showLabelAttachment = this.isHaveFile;
+  }
+  getfileDelete(event) {
+    event.data.length;
+  }
+
+  async saveData() {
     this.stepsTasks['roles'] = this.listOwner;
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
     let message = [];
@@ -357,30 +376,41 @@ export class PopupJobComponent implements OnInit {
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
     } else {
-      if (this.stepsTasks['taskGroupID']) {
-        let groupTask = this.groupTackList.find(
-          (x) => x.recID == this.stepsTasks['taskGroupID']
-        );
+      if (this.attachment && this.attachment.fileUploadList.length){
+        (await this.attachment.saveFilesObservable()).subscribe((res) => {
+          if (res) {this.handelSave();}
+        });
+      } else {
+        this.handelSave();
+      } 
+      
+    }
+  }
 
-        if (this.stepsTasks['dependRule'] != '1') {
-          // nếu công việc được thực hiện sau khi tạo
+  handelSave(){
+    if (this.stepsTasks['taskGroupID']) {
+      let groupTask = this.groupTackList.find(
+        (x) => x.recID == this.stepsTasks['taskGroupID']
+      );
+
+      if (this.stepsTasks['dependRule'] != '1') {
+        // nếu công việc được thực hiện sau khi tạo
+        this.checkSave(groupTask);
+      } else {
+        // nếu công việc thực hiện sau những công việc khác thì tính tổng thời gian những công việc liên quan
+        if (
+          !this.stepsTasks['parentID'].trim() ||
+          groupTask['task'].length === 0
+        ) {
+          // nếu chưa có công việc liên quan
           this.checkSave(groupTask);
         } else {
-          // nếu công việc thực hiện sau những công việc khác thì tính tổng thời gian những công việc liên quan
-          if (
-            !this.stepsTasks['parentID'].trim() ||
-            groupTask['task'].length === 0
-          ) {
-            // nếu chưa có công việc liên quan
-            this.checkSave(groupTask);
-          } else {
-            let time = this.checkSaveDependRule(groupTask, this.stepsTasks);
-            this.checkSave(groupTask, time);
-          }
+          let time = this.checkSaveDependRule(groupTask, this.stepsTasks);
+          this.checkSave(groupTask, time);
         }
-      } else {
-        this.dialog.close({ data: this.stepsTasks, status: this.status });
       }
+    } else {
+      this.dialog.close({ data: this.stepsTasks, status: this.status });
     }
   }
 }
