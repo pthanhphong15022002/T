@@ -26,6 +26,7 @@ import {
 import { FileService } from '@shared/services/file.service';
 import { Observable } from 'rxjs';
 import { Permission } from '@shared/models/file.model';
+import { permissionDis } from '../../models/dispatch.model';
 
 @Component({
   selector: 'app-imcomming-add',
@@ -363,6 +364,26 @@ export class IncommingAddComponent implements OnInit {
               if (item2?.status == 0 || Array.isArray(item2)) {
                 this.dialog.close(item.data);
                 this.notifySvr.notify(item.message);
+                //Lưu thông tin người chia sẻ
+                if(this.dispatch.relations && this.dispatch.relations.length>0)
+                {
+                  var per = new permissionDis();
+                  per.to = [];
+                  for(var i =0 ; i < this.dispatch.relations.length ; i++)
+                  {
+                    per.to.push(this.dispatch.relations[i].userID);
+                  }
+                  per.recID = item?.data?.recID;
+                  per.funcID = this.formModel?.funcID;
+                  per.download = true;
+                  per.share = true;
+                  this.odService.shareDispatch(per).subscribe(item3=>{
+                    this.data.listInformationRel = this.data.listInformationRel.concat(
+                      item3?.data[1]
+                    );
+                  });
+                 
+                }
               } 
               else {
                 this.notifySvr.notify(item2.message);
@@ -372,7 +393,8 @@ export class IncommingAddComponent implements OnInit {
             }
           );
          
-        } else this.notifySvr.notify(item.message);
+        } 
+        else this.notifySvr.notify(item.message);
       });
      
       

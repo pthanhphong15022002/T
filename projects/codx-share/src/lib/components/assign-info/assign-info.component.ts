@@ -302,7 +302,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       return;
     }
     if (
-      this.param?.MaxHoursControl != '0' &&
+      this.param?.MaxHoursControl !=null && this.param?.MaxHoursControl != '0' && this.param?.MaxHours !=null &&
       this.task.estimated > Number.parseFloat(this.param?.MaxHours)
     ) {
       this.notiService.notifyCode('TM058', 0, [this.param?.MaxHours]);
