@@ -97,7 +97,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   changTimeCount = 2;
   dataReferences = [];
   disabledProject = false;
-  isClickSave = false ;
+  isClickSave = false;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -537,8 +537,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   async actionSave(id) {
     if (this.taskType) this.task.taskType = this.taskType;
     else this.task.taskType = '1';
-    if(this.isClickSave) return;
-    this.isClickSave = true ;
+    if (this.isClickSave) return;
+    this.isClickSave = true;
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -596,7 +596,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         return true;
       })
       .subscribe((res) => {
-        this.isClickSave = false ;
+        this.isClickSave = false;
         this.dialog.close(res);
         this.attachment?.clearData();
         if (res && res.save) {
@@ -748,12 +748,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           }
         });
         if (arrNew.length > 0) {
-          assignTo = arrNew.join(';');
-          this.task.assignTo += ';' + assignTo;
+          // assignTo = arrNew.join(';');
+          // this.task.assignTo += ';' + assignTo;
           this.getListUser(assignTo);
         }
       } else {
-        this.task.assignTo = assignTo;
+        // this.task.assignTo = assignTo;
         this.getListUser(assignTo);
       }
     }
@@ -892,7 +892,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       listUser = listUser.replace(' ', '');
     }
     var arrUser = listUser.split(';');
-    this.listUser = this.listUser.concat(arrUser);
+   
     this.api
       .execSv<any>(
         'HR',
@@ -902,8 +902,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         JSON.stringify(listUser.split(';'))
       )
       .subscribe((res) => {
-        this.listUserDetail = this.listUserDetail.concat(res);
         if (res && res.length > 0) {
+          this.listUserDetail = this.listUserDetail.concat(res);
+
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
             var taskResource = new tmpTaskResource();
@@ -914,6 +915,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             taskResource.roleType = 'R';
             this.listTaskResources.push(taskResource);
           }
+          if(arrUser.length!= res.length){
+              arrUser = res.map(x=>x.userID) ;
+          } 
+          this.listUser = this.listUser.concat(arrUser);
+          this.task.assignTo = this.listUser.join(";");
         }
       });
   }
