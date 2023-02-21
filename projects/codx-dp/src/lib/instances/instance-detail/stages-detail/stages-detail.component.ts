@@ -32,6 +32,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { PopupAddGroupTaskComponent } from './popup-add-group-task/popup-add-group-task.component';
 import {
   DP_Instances_Steps,
+  DP_Instances_Steps_Reasons,
   DP_Instances_Steps_TaskGroups,
   DP_Instances_Steps_TaskGroups_Roles,
   DP_Instances_Steps_Tasks,
@@ -50,6 +51,7 @@ export class StagesDetailComponent implements OnInit {
   @ViewChild('addGroupJobPopup') addGroupJobPopup: TemplateRef<any>;
   @ViewChild('updateProgress') updateProgress: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('viewReason', { static: true }) viewReason;
   @Input() dataStep: any;
   @Input() formModel: any;
   @Input() currentStep: any;
@@ -59,6 +61,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() isEdit: boolean = false;
   @Input() isUpdate: boolean = false;
   @Input() isCreate: boolean = false;
+  @Input() listStepReason: any;
 
   dateActual: any;
   startDate: any;
@@ -87,6 +90,9 @@ export class StagesDetailComponent implements OnInit {
     download: true,
     delete: true,
   };
+  moreReason = {
+    delete: true,
+  }
   frmModel: FormModel = {
     entityName: 'DP_Processes',
     formName: 'DPProcesses',
@@ -102,6 +108,10 @@ export class StagesDetailComponent implements OnInit {
   taskList: DP_Instances_Steps_Tasks[] = [];
   userGroupJob = [];
   listJobType = [];
+
+  listReasonStep: DP_Instances_Steps_Reasons[] = [];
+
+  dialogPopupReason: DialogRef;
 
   constructor(
     private callfc: CallFuncService,
@@ -935,4 +945,59 @@ export class StagesDetailComponent implements OnInit {
     }
   }
   //End task -- nvthuan
+
+  openPopupReason(){
+    debugger;
+    this.dialogPopupReason = this.callfc.openForm(this.viewReason, '', 500, 10);
+  }
+  changeReasonMF(e) {
+    console.table(e);
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS104':
+            res.disabled = true;
+            break;
+          case 'SYS04':
+            res.disabled = true;
+            break;
+          case 'SYS102':
+          case 'SYS02':
+          case 'SYS005':
+          case 'SYS003':
+
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+          case 'DP011':
+          case 'DP02':
+          case 'DP09':
+          case 'DP10':
+          case 'SYS103':
+          case 'SYS03':
+        }
+      });
+    }
+  }
+  checkValue($event,data){
+    if($event && $event.currentTarget.checked){
+        var reason = this.handleReason(data);
+        this.dataStep?.reasons.push(reason);
+    }
+    else {
+      let idx = this.dataStep?.reasons.findIndex(x=> x.reasonName  === data.reasonName);
+      if(idx>=0) this.dataStep?.reasons.splice(idx, 1);
+    }
+  }
+  handleReason(
+    reason: DP_Instances_Steps_Reasons
+  ) {
+    reason.processID = this.dataStep.processID;
+    reason.stepID = this.dataStep.stepID;
+    reason.instanceID = this.dataStep.recID;
+    // reason.createdBy = this.userId;
+    // reason.reasonType = this.isReason ? '1' : '2';
+    return reason;
+  }
+
 }
