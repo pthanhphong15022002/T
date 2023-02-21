@@ -165,9 +165,7 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
         );
         if (lstIsAppendix?.length > 0) {
           if (this.data?.effectedDate < lstIsAppendix[0].expiredDate) {
-            this.notify.notifyCode(
-              'Khoảng Thời gian HĐ này trùng với HĐ đang tồn tại. Vui lòng nhập lại khoảng thời gian HĐ!'
-            );
+            this.notify.notifyCode('HR007');
             return;
           }
         }
@@ -183,15 +181,11 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
             (p) => p.contractTypeID == crrValidContract.contractTypeID
           );
           if (cType && cType?.contractGroup == 1) {
-            this.notify
-              .alertCode(
-                'Đã tồn tại HĐ vô thời hạn. Bạn có muốn tiếp tục tạo HĐ mới?'
-              )
-              .subscribe((x) => {
-                if (x.event?.status == 'Y') {
-                  this.onSaveForm(false);
-                } else return;
-              });
+            this.notify.alertCode('HR008').subscribe((x) => {
+              if (x.event?.status == 'Y') {
+                this.onSaveForm(false);
+              } else return;
+            });
           }
         }
 

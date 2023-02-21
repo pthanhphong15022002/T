@@ -1,5 +1,13 @@
 .contain{
-  cursor: pointer;
+  width: 30px;
+    height: 30px;
+    background: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: white;
+    font-weight: 400;
 }
 .popup-search{
   display: flex;
