@@ -8,7 +8,7 @@
                 </span>
             </div>
             <ng-container *ngFor="let item of bookmark;index as index">
-                <div class="d-flex align-items-center p-3 my-2 bg-hover cursor-pointer has-action-menu"
+                <div class="d-flex align-items-center p-3 mb-3 bg-hover rounded-2 cursor-pointer has-action-menu"
                     (click)="clickNotification(item,index)">
                     <div class="me-3">
                         <codx-img [width]="35" [objectId]="item.createdBy" [objectName]="item.createdName"
@@ -42,7 +42,7 @@
                 </span>
             </div>
             <ng-container *ngFor="let item of noti;index as index">
-                <div class="d-flex align-items-center p-3 my-2 bg-hover cursor-pointer has-action-menu"
+                <div class="d-flex align-items-center p-3 my-2 bg-hover rounded-2 cursor-pointer has-action-menu"
                     (click)="clickNotification(item,index)">
                     <div class="me-3">
                         <codx-img [width]="35" [objectId]="item.createdBy" [objectName]="item.createdName"

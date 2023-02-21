@@ -1,70 +1,74 @@
-<codx-form [body]="body" [dialog]="dialogRef" [subHeader]="subheader"></codx-form>
+<div class="notify-popup">
+  <codx-form [body]="body" [dialog]="dialogRef" [subHeader]="subheader"></codx-form>
+</div>
 <ng-template #subheader>
-  <!-- tab -->
-
-  <!-- filter -->
 </ng-template>
+
 <ng-template #body>
-  <div class="d-flex align-items-center justify-content-between mb-4">
-    <div class="d-flex align-items-center">
-      <button type="button" [class.active]="mode=='0'" class="btn btn-sm btn-light-primary me-2"
-        (click)="clickTab('0')">
-        <codx-label class="fs-6 fw-normal" [formModel]="dialogRef.formModel" name="lblNotification"
-          default="Thông báo"></codx-label>
-      </button>
-      <button type="button" [class.active]="mode=='1'" class="btn btn-sm btn-light-primary" (click)="clickTab('1')">
-        <codx-label class="fs-6 fw-normal" [formModel]="dialogRef.formModel" name="lblBookmark"
-          default="Đã ghim"></codx-label>
-      </button>
-    </div>
-    <div class="d-flex codx-notification-filter me-5">
-      <div class="overflow-hidden">
-        <div ngbDropdown container="body">
-          <button ngbDropdownToggle class="btn btn-sm btn-light-primary" *ngIf="type">
-            <span class="w-20px" [class]="type.icon">
-            </span>
-            <span>
-              {{type.text}}
-            </span>
-          </button>
-          <div ngbDropdownMenu>
-            <ng-container *ngFor="let item of vllType">
-              <button (click)="typeChange(item)" ngbDropdownItem>
-                <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
-                </span>
-                <span>
-                  {{item.text}}
-                </span>
-              </button>
-            </ng-container>
-          </div>
-        </div>
-      </div>
-      <div class="overflow-hidden ms-2">
-        <div ngbDropdown container="body">
-          <button ngbDropdownToggle class="btn btn-sm btn-light-primary" *ngIf="status">
-            <span class="w-20px icon-16" [class]="status.icon">
-            </span>
-            <span class="fs-6 fw-normal">
-              {{status.text}}
-            </span>
-          </button>
-          <div ngbDropdownMenu>
-            <ng-container *ngFor="let item of vllStatus">
-              <button (click)="statusChange(item)" ngbDropdownItem>
-                <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
-                </span>
-                <span class="fs-6 fw-normal">
-                  {{item.text}}
-                </span>
-              </button>
-            </ng-container>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
   <div class="notify-content">
-    <codx-notify-body #notiBody [mode]="mode"></codx-notify-body>
+    <div class="d-flex align-items-center justify-content-center">
+      <div class="w-auto notify-tab">
+        <button type="button" [class.active]="mode=='0'" class="btn btn-white me-3" (click)="clickTab('0')">
+          <codx-label class="fs-6 fw-normal" [formModel]="dialogRef.formModel" name="lblNotification"
+            default="Thông báo"></codx-label>
+        </button>
+        <button type="button" [class.active]="mode=='1'" class="btn btn-white" (click)="clickTab('1')">
+          <codx-label class="fs-6 fw-normal" [formModel]="dialogRef.formModel" name="lblBookmark"
+            default="Đã ghim"></codx-label>
+        </button>
+      </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-end mb-2 notify-header">
+      <div class="d-flex codx-notification-filter me-5">
+        <div class="overflow-hidden">
+          <div ngbDropdown container="body">
+            <button ngbDropdownToggle class="btn btn-sm btn-light-primary" *ngIf="type">
+              <span class="w-20px" [class]="type.icon">
+              </span>
+              <span>
+                {{type.text}}
+              </span>
+            </button>
+            <div ngbDropdownMenu>
+              <ng-container *ngFor="let item of vllType">
+                <button (click)="typeChange(item)" ngbDropdownItem>
+                  <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
+                  </span>
+                  <span>
+                    {{item.text}}
+                  </span>
+                </button>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div class="overflow-hidden ms-2">
+          <div ngbDropdown container="body">
+            <button ngbDropdownToggle class="btn btn-sm btn-light-primary" *ngIf="status">
+              <span class="w-20px icon-16" [class]="status.icon">
+              </span>
+              <span class="fs-6 fw-normal">
+                {{status.text}}
+              </span>
+            </button>
+            <div ngbDropdownMenu>
+              <ng-container *ngFor="let item of vllStatus">
+                <button (click)="statusChange(item)" ngbDropdownItem>
+                  <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
+                  </span>
+                  <span class="fs-6 fw-normal">
+                    {{item.text}}
+                  </span>
+                </button>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="notify-cont">
+      <codx-notify-body #notiBody [mode]="mode"></codx-notify-body>
+    </div>
+
   </div>
 </ng-template>
