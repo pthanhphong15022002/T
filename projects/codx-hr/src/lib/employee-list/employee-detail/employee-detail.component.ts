@@ -53,7 +53,7 @@ import {
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 // import { EmployeeSelfInfoComponent } from '../../employee-profile/employee-self-info/employee-self-info.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 // import { EmployeeFamilyRelationshipComponent } from '../../employee-profile/employee-family-relationship/employee-family-relationship.component';
 import { E, I } from '@angular/cdk/keycodes';
 import { PopupEPassportsComponent } from '../../employee-profile/popup-epassports/popup-epassports.component';
@@ -99,6 +99,7 @@ export class EmployeeDetailComponent extends UIComponent {
     private notify: NotificationsService,
     private cacheSv: CacheService,
     private notifySvr: NotificationsService,
+    private route: ActivatedRoute,
 
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -108,7 +109,6 @@ export class EmployeeDetailComponent extends UIComponent {
     this.funcID = this.routeActive.snapshot.params['funcID'];
     // this.infoPersonal =
   }
-
   navChange(evt: any) {
     if (!evt) return;
     let element = document.getElementById(evt.nextId);
@@ -783,7 +783,7 @@ export class EmployeeDetailComponent extends UIComponent {
               headerText:
                 this.certificateHeaderText['IssuedDate'] +
                 '|' +
-                this.certificateHeaderText['LimitMonths'],
+                this.certificateHeaderText['EffectedDate'],
               template: this.templateCertificateGridCol3,
               width: '150',
             },
@@ -1073,7 +1073,7 @@ export class EmployeeDetailComponent extends UIComponent {
               headerText:
                 this.skillHeaderText['TrainFrom'] +
                 '|' +
-                this.skillHeaderText['TrainTo'],
+                this.skillHeaderText['TrainForm'],
               template: this.templateSkillGridCol3,
               width: '150',
             },
@@ -2087,13 +2087,15 @@ export class EmployeeDetailComponent extends UIComponent {
                   }
                 });
             } else if (funcID == 'eSkill') {
-              this.hrService.deleteESkill(data.recID).subscribe((p) => {
-                if (p == true) {
+              this.hrService.deleteESkill1(data).subscribe((p) => {
+                if (p[0] == true) {
                   this.notify.notifyCode('SYS008');
-                  this.skillRowCount--;
+
                   (this.skillGrid?.dataService as CRUDService)
                     .remove(data)
                     .subscribe();
+                  this.skillRowCount--;
+                  this.lstESkill = p[1];
                   this.df.detectChanges();
                 } else {
                   this.notify.notifyCode('SYS022');
@@ -3364,12 +3366,12 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res?.event) {
         (this.skillGrid?.dataService as CRUDService).clear();
-      } else {
         if (actionType === 'add' || actionType === 'copy') {
           (this.skillGrid?.dataService as CRUDService)
-            .add(res.event)
+            .add(res.event[0])
             .subscribe();
           this.skillRowCount++;
+          this.lstESkill = res?.event[1];
         } else if (actionType === 'edit') {
           (this.skillGrid?.dataService as CRUDService)
             .update(res.event)
@@ -4232,8 +4234,6 @@ export class EmployeeDetailComponent extends UIComponent {
         this.filterESkillPredicates += `SkillID==@${i}`;
       }
       this.filterESkillPredicates += ') ';
-      //this.filterESkillPredicates += `and (InjectDate>="${this.startDateESkillFilterValue}" and InjectDate<="${this.endDateESkillFilterValue}")`;
-
       (this.skillGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterESkillPredicates],
@@ -4263,17 +4263,6 @@ export class EmployeeDetailComponent extends UIComponent {
         .subscribe((item) => {
           console.log('item tra ve sau khi loc 2', item);
         });
-    } else if (this.startDateESkillFilterValue != null) {
-      (this.skillGrid.dataService as CRUDService)
-        .setPredicates(
-          [
-            `InjectDate>="${this.startDateESkillFilterValue}" and InjectDate<="${this.endDateESkillFilterValue}"`,
-          ],
-          []
-        )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 3', item);
-        });
     }
   }
 
@@ -4292,8 +4281,7 @@ export class EmployeeDetailComponent extends UIComponent {
         this.filterTrainCoursePredicates += `TrainForm==@${i}`;
       }
       this.filterTrainCoursePredicates += ') ';
-      this.filterTrainCoursePredicates += `and (TrainFrom>="${this.startDateTrainCourseFilterValue}" and TrainTo<="${this.endDateTrainCourseFilterValue}")`;
-
+      this.filterTrainCoursePredicates += `and (TrainFrom>="${this.startDateTrainCourseFilterValue}" and TrainFrom<="${this.endDateTrainCourseFilterValue}")`;
       (this.trainCourseGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterTrainCoursePredicates],
@@ -4327,9 +4315,9 @@ export class EmployeeDetailComponent extends UIComponent {
       (this.trainCourseGrid.dataService as CRUDService)
         .setPredicates(
           [
-            `TrainFrom>="${this.startDateTrainCourseFilterValue}" and TrainTo<="${this.endDateTrainCourseFilterValue}"`,
+            `TrainFrom>="${this.startDateTrainCourseFilterValue}" and TrainFrom<="${this.endDateTrainCourseFilterValue}"`,
           ],
-          [this.filterByTrainCourseIDArr]
+          []
         )
         .subscribe((item) => {
           console.log('item tra ve sau khi loc 3', item);

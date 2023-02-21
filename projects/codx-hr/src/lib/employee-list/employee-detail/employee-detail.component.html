@@ -4281,12 +4281,6 @@
                           {{ i + 1 }}
                         </div>
                       </ng-container>
-
-                      <div class="sk-item active">2</div>
-                      <div class="sk-item active">3</div>
-                      <div class="sk-item active selected">4</div>
-                      <div class="sk-item">5</div>
-                      <div class="sk-item">6</div>
                     </div>
                     <!-- <codx-mfunc
                       [formModel]="formModel"
@@ -4361,7 +4355,7 @@
                     [method]="'LoadDataAsync'"
                     [predicates]="'EmployeeID=@0'"
                     [dataValues]="employeeID"
-                    [pageSize]="numPageSizeGridView"
+                    [pageSize]="20"
                     [entityName]="'HR_ESkills'"
                     [rowHeight]="50"
                     height="240px"
@@ -4401,33 +4395,23 @@
                   *ngIf="eTrainCourseGrvSetup"
                   [cssClass]="'rounded-pill border-1'"
                   cssPopup="h-350px w-300px"
+                  [isMulti]="true"
                   placeholder="Hình thức đào tạo"
                   type="valuelist"
                   field="TrainForm"
                   [refValue]="eTrainCourseGrvSetup.TrainForm.referedValue"
                   (valueChange)="valueChangeFilterTrainCourse($event)"
-                  
                 ></codx-dropdown-select>
 
-                <!-- <codx-dropdown-select
-                  *ngIf="eTrainCourseGrvSetup"
-                  [cssClass]="'rounded-pill border-1'"
-                  cssPopup="h-350px w-300px"
-                  placeholder="Năm"
-                  type="valuelist"
-                  field="InYear"
-                  [refValue]="eTrainCourseGrvSetup.InYear.referedValue"
-                  (valueChange)="valueChangeFilterInYear($event)"
-                ></codx-dropdown-select> -->
                 <codx-dropdown-calendar
-                [cssPopup]="'w-600px h-400px'"
-                emptyText="Năm"
-                [firstChange]="false"
-                [displayOption]="ops"
-                [selectedType]="'y'"
-                [cssClass]="'rounded-pill'"
-                (change)="valueChangeYearFilterETrainCourse($event)"
-              ></codx-dropdown-calendar>
+                  [cssPopup]="'w-600px h-400px'"
+                  emptyText="Năm"
+                  [firstChange]="false"
+                  [displayOption]="ops"
+                  [selectedType]="'y'"
+                  [cssClass]="'rounded-pill'"
+                  (change)="valueChangeYearFilterETrainCourse($event)"
+                ></codx-dropdown-calendar>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="HandleEmployeeTrainCourseInfo(addHeaderText, 'add', null)"
@@ -4449,9 +4433,7 @@
             </div>
 
             <div class="mb-1">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
+              <div class="mt-6 mb-3">
                 <div>
                   <codx-gridview
                     *ngIf="trainCourseColumnGrid && trainCourseFormModel"
@@ -4464,7 +4446,7 @@
                     [method]="'LoadDataAsync'"
                     [predicates]="'EmployeeID=@0'"
                     [dataValues]="employeeID"
-                    [pageSize]="numPageSizeGridView"
+                    [pageSize]="20"
                     [entityName]="'HR_ETrainCourses'"
                     [rowHeight]="50"
                     height="240px"
@@ -5138,7 +5120,7 @@
     }}
   </div>
   <div>
-    {{ data?.ranking }}
+    {{ data?.ranking | formatvalue : degreeFormModel : "ranking" | async }}
     <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
     {{ data?.totalScore }}
   </div>
@@ -5149,8 +5131,6 @@
     <div>
       <i class="icon-calendar_today"></i>
       {{ data?.yearGraduated }}
-    </div>
-    <div>
       <i
         class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"
       ></i>
@@ -5243,9 +5223,12 @@
     {{ data?.skillID | formatvalue : skillFormmodel : "skillID" | async }}
   </div>
   <div>
-    {{
+    <!-- {{
       data?.skillGradeID | formatvalue : skillFormmodel : "skillGradeID" | async
-    }}
+    }} -->
+    <codx-vll>
+      
+    </codx-vll>
   </div>
 </ng-template>
 
@@ -5768,15 +5751,57 @@
           | async
       }}
     </div>
-    <div>
+    <!-- <div>
       <i></i>
       {{
         data?.ranking | formatvalue : trainCourseFormModel : "ranking" | async
       }}
       <i class="icon-class icon-20 me-1 text-primary"></i>
-      {{ data?.totalScore }}
+      {{
+        data?.totalScore
+          | formatvalue : trainCourseFormModel : "totalScore"
+          | async
+      }}
       <i class="icon-class icon-20 me-1 text-primary"></i>
-      {{ data?.result }}
+      {{
+        data?.result
+          | formatvalue : trainCourseFormModel : "result"
+          | async
+      }}
+    </div> -->
+    <div class="d-flex flex-wrap mb-1">
+      <div class="d-flex align-items-center">
+        <span class="icon-insights icon-14 text-warning me-1"></span>
+        <span class="text-primary" #ranking>
+          {{
+            data?.ranking | formatvalue : trainCourseFormModel : "ranking" | async
+          }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span
+          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+        ></span>
+        <span class="fw-bold text-primary">
+          <span>{{
+            data?.totalScore
+              | formatvalue : trainCourseFormModel : "totalScore"
+              | async
+          }}</span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span
+          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+        ></span>
+        <span class="fw-bold">
+          <span>{{
+            data?.result
+              | formatvalue : trainCourseFormModel : "result"
+              | async
+          }}</span>
+        </span>
+      </div>
     </div>
 
     <codx-mfunc
