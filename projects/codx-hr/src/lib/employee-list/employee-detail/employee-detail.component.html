@@ -5338,7 +5338,7 @@
   </div>
 </ng-template>
 
-<!-- #region Passport columnGrid templates-->
+<!-- #region Hộ chiếu columnGrid templates-->
 <ng-template #passportCol1 let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
@@ -5400,7 +5400,7 @@
 
 <!-- #endregion -->
 
-<!-- #region Visa columnGrid templates-->
+<!-- #region Thị thực columnGrid templates-->
 <ng-template #visaCol1 let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
@@ -5468,7 +5468,7 @@
 
 <!-- #endregion -->
 
-<!-- #region WorkPermit columnGrid templates-->
+<!-- #region Giấy phép lao động columnGrid templates-->
 <ng-template #workPermitCol1 let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
@@ -5536,7 +5536,7 @@
 
 <!-- #endregion -->
 
-<!-- #region EBasicSalary columnGrid templates-->
+<!-- #region Lương cơ bản columnGrid templates-->
 <ng-template #basicSalaryCol1 let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
@@ -5632,6 +5632,105 @@
   </div>
 </ng-template>
 <!-- #endregion -->
+
+<!-- #region Lương chức danh columnGrid templates-->
+<ng-template #jobSalaryCol1 let-data>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-attach_money icon-16 text-gray-800 me-1"></span>
+      <span class="text-dark">
+        <span>{{
+          data?.bSalary
+            | formatvalue : eBasicSalaryFormmodel : "bSalary"
+            | async
+        }}</span>
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #jobSalaryCol2 let-data>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-monetization_on text-danger icon-16 me-1"></span>
+      <span class="text-dark fw-bolder">
+        <span>{{
+          data?.siSalary
+            | formatvalue : eBasicSalaryFormmodel : "siSalary"
+            | async
+        }}</span>
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #jobSalaryCol3 let-data>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-event icon-16 text-gray-800 me-1"></span>
+      <span class="text-dark fw-bolder">
+        <span>{{
+          data?.effectedDate
+            | formatvalue : eBasicSalaryFormmodel : "effectedDate"
+            | async
+        }}</span>
+      </span>
+      <span class="me-1 ms-1">-</span>
+      <span class="text-dark fw-bolder">
+        <span>{{
+          data?.expiredDate
+            | formatvalue : eBasicSalaryFormmodel : "expiredDate"
+            | async
+        }}</span>
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #jobSalaryCol4 let-data>
+  <div class="has-action-menu">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon-event icon-16 text-primary me-1"></span>
+        <span class="text-dark">
+          <span>{{
+            data?.issuedDate
+              | formatvalue : eBasicSalaryFormmodel : "issuedDate"
+              | async
+          }}</span>
+        </span>
+      </div>
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon-event icon-16 text-danger me-1"></span>
+        <span class="text-dark">
+          <span>{{
+            data?.fromDate
+              | formatvalue : eBasicSalaryFormmodel : "fromDate"
+              | async
+          }}</span>
+        </span>
+        <span class="me-1 ms-1">-</span>
+        <span class="text-dark">
+          <span>{{
+            data?.toDate
+              | formatvalue : eBasicSalaryFormmodel : "toDate"
+              | async
+          }}</span>
+        </span>
+      </div>
+      <codx-mfunc
+        [formModel]="eBasicSalaryFormmodel"
+        (clickMF)="clickMF($event, data, 'basicSalary')"
+        type="hover"
+        [dataItem]="data"
+      >
+      </codx-mfunc>
+    </div>
+  </div>
+</ng-template>
+<!-- #endregion -->
+
+
 <!-- #region Đào tạo -->
 <ng-template #templateTrainCourseGridCol1 let-data>
   <div>
