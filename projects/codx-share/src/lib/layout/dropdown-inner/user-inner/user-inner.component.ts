@@ -246,6 +246,11 @@ export class UserInnerComponent implements OnInit, OnDestroy {
       l.href =this.themeMode.id == 'dark'? l.href.replace('.css','-dark.css'):l.href.replace('-dark.css','.css');
     }
   }
+  // link my profile
+  myProfile(){
+    debugger
+    this.codxService.navigate("MWP009","",{funcID:"MWP009"});
+  }
 }
 
 interface LanguageFlag {
