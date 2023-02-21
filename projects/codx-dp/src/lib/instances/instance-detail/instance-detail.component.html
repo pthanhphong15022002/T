@@ -89,7 +89,7 @@
       </ng-container>
 
       <ng-container *ngIf="idCbx == 'S'">
-        <div *ngIf="listSteps != null && listSteps.length > 0">
+        <div class="group-steps" *ngIf="listSteps != null && listSteps.length > 0">
           <div class="d-flex arrow-steps flex-container">
             <ng-container *ngFor="let item of listStepUpdate; index as i">
               <div *ngIf="item?.stepStatus !== '' && !isHiddenReason " id="step-click" style="flex-grow: 1"
