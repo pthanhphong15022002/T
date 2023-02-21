@@ -18,6 +18,51 @@
   border-radius: 20px !important;
 }
 
+.notify-popup .card {
+  background-color: var(--gray-100) !important;
+}
+
+.notify-popup .codx-form>.card-header {
+  background-color: var(--white);
+}
+
+.notify-popup .codx-form>.card-header>div:first-child {
+  display: flex !important;
+  justify-content: end !important;
+  padding-right: 10px;
+}
+
+.notify-popup .codx-form>.card-header::after {
+  display: none;
+}
+
+.notify-popup .card-header .card-toolbar {
+  display: flex;
+  justify-content: end;
+}
+
 .notify-content {
-  height: calc(100% - 45px);
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: var(--bg-body);
+  border-radius: 8px;
+  margin-top: 15px;
+
+}
+
+.notify-tab {
+  padding: 7px 10px;
+  background-color: var(--bg-body);
+  box-shadow: 0px 4px 16px 0px rgb(82 63 105 / 15%);
+  border-radius: 0 0 5px 5px;
+}
+
+.notify-header {
+  padding: 5px;
+}
+
+.notify-cont {
+  height: calc(100vh - 176px);
+  padding: 2px 10px;
+  overflow: auto;
 }

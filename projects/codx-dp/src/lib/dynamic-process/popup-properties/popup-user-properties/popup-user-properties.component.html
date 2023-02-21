@@ -1,11 +1,11 @@
 <div class="contain">
-  <span *ngIf="item?.objectID != null && item.objectID != ''">
+  <!-- <span *ngIf="item?.objectID != null && item.objectID != ''">
     <codx-img [width]="25" class="me-2" [objectId]="item?.objectID" objectType="AD_Users"></codx-img>
   </span>
   <span *ngIf="item?.objectID == null || item.objectID == ''"
     class="d-flex justify-content-between user-mini align-items-center">
     <img class="svg-icon w-20px user-admin" src="../../../assets/codx/user/user-admin.svg">
-  </span>
+  </span> -->
   <div class="view-all symbol symbol-35px symbol-circle" #search="ngbPopover" (click)="seachUser($event,list,search)"
     [ngbPopover]="searchLst" autoClose="outside" placement="bottom top left right">
     {{list.length - 2}}+

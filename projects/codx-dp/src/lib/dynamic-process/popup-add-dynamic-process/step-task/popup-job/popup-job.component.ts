@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import {
   ChangeDetectorRef,
   Component,
@@ -363,7 +364,7 @@ export class PopupJobComponent implements OnInit {
     event.data.length;
   }
 
-  saveData() {
+  async saveData() {
     this.stepsTasks['roles'] = this.listOwner;
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
     let message = [];
@@ -375,30 +376,41 @@ export class PopupJobComponent implements OnInit {
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
     } else {
-      if (this.stepsTasks['taskGroupID']) {
-        let groupTask = this.groupTackList.find(
-          (x) => x.recID == this.stepsTasks['taskGroupID']
-        );
+      if (this.attachment && this.attachment.fileUploadList.length){
+        (await this.attachment.saveFilesObservable()).subscribe((res) => {
+          if (res) {this.handelSave();}
+        });
+      } else {
+        this.handelSave();
+      } 
+      
+    }
+  }
 
-        if (this.stepsTasks['dependRule'] != '1') {
-          // nếu công việc được thực hiện sau khi tạo
+  handelSave(){
+    if (this.stepsTasks['taskGroupID']) {
+      let groupTask = this.groupTackList.find(
+        (x) => x.recID == this.stepsTasks['taskGroupID']
+      );
+
+      if (this.stepsTasks['dependRule'] != '1') {
+        // nếu công việc được thực hiện sau khi tạo
+        this.checkSave(groupTask);
+      } else {
+        // nếu công việc thực hiện sau những công việc khác thì tính tổng thời gian những công việc liên quan
+        if (
+          !this.stepsTasks['parentID'].trim() ||
+          groupTask['task'].length === 0
+        ) {
+          // nếu chưa có công việc liên quan
           this.checkSave(groupTask);
         } else {
-          // nếu công việc thực hiện sau những công việc khác thì tính tổng thời gian những công việc liên quan
-          if (
-            !this.stepsTasks['parentID'].trim() ||
-            groupTask['task'].length === 0
-          ) {
-            // nếu chưa có công việc liên quan
-            this.checkSave(groupTask);
-          } else {
-            let time = this.checkSaveDependRule(groupTask, this.stepsTasks);
-            this.checkSave(groupTask, time);
-          }
+          let time = this.checkSaveDependRule(groupTask, this.stepsTasks);
+          this.checkSave(groupTask, time);
         }
-      } else {
-        this.dialog.close({ data: this.stepsTasks, status: this.status });
       }
+    } else {
+      this.dialog.close({ data: this.stepsTasks, status: this.status });
     }
   }
 }
