@@ -336,6 +336,9 @@ export class DynamicProcessComponent
         this.viewDetailProcess(data);
         break;
       case 'DP01013':
+      case 'DP02033':
+      case 'DP02023':
+      case 'DP02013':
         this.properties(data);
         break;
     }
