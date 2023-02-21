@@ -26,8 +26,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   awardObj;
   employeeName: string;
-  lstAwards;
-  indexSelected;
+
   actionType;
   headerText: '';
   funcID;
@@ -52,15 +51,10 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
-    this.lstAwards = data?.data?.lstAwards;
-    this.indexSelected =
-      data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
+ 
+    this.awardObj = JSON.parse(JSON.stringify(data?.data?.dataInput));
+      
 
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.awardObj = JSON.parse(
-        JSON.stringify(this.lstAwards[this.indexSelected])
-      );
-    }
   }
 
   initForm() {
@@ -109,7 +103,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
 
   onSaveForm() {
     //Check SignerID
-    if (
+    if (this.awardObj.signerID && 
       this.awardObj.signer.replace(/\s/g, '') !=
       this.employeeName.replace(/\s/g, '')
     ) {
@@ -121,24 +115,14 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
-    }
-
-    if (this.actionType === 'copy' || this.actionType === 'add') {
-      delete this.awardObj.recID;
-    }
+    } 
     this.awardObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrService.AddEmployeeAwardInfo(this.awardObj).subscribe((p) => {
+      this.hrService.AddEmployeeAwardInfo(this.formModel.currentData).subscribe((p) => {
         if (p != null) {
-          this.awardObj.recID = p.recID;
+          this.awardObj = p;
           this.notify.notifyCode('SYS006');
-          this.lstAwards.push(JSON.parse(JSON.stringify(this.awardObj)));
-          if (this.listView) {
-            (this.listView.dataService as CRUDService)
-              .add(this.awardObj)
-              .subscribe();
-          }
-          // this.dialog.close(p)
+          this.dialog && this.dialog.close(this.awardObj);
         } else this.notify.notifyCode('SYS023');
       });
     } else {
@@ -147,34 +131,12 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            this.lstAwards[this.indexSelected] = p;
-            if (this.listView) {
-              (this.listView.dataService as CRUDService)
-                .update(this.lstAwards[this.indexSelected])
-                .subscribe();
-            }
-            // this.dialog.close(this.data)
+            this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS021');
         });
     }
   }
 
-  click(data) {
-    console.log('formdata', data);
-    this.awardObj = data;
-    this.formModel.currentData = JSON.parse(JSON.stringify(this.awardObj));
-    this.indexSelected = this.lstAwards.findIndex(
-      (p) => p.recID == this.awardObj.recID
-    );
-    this.actionType = 'edit';
-    this.formGroup?.patchValue(this.awardObj);
-    this.cr.detectChanges();
-  }
-
-  afterRenderListView(evt) {
-    this.listView = evt;
-    console.log(this.listView);
-  }
 
   handleSelectAwardDate(event) {
     this.awardObj.inYear = new Date(event.data).getFullYear();
