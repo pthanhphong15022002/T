@@ -6,7 +6,7 @@
           name="titleDefault"
           formName="DPInstancesSteps"
           grvName="grvDPInstancesSteps"
-          [default]="titleDefault"
+          default="{{ titleDefault }}"
         ></codx-label>
       </span>
       <span class="title" *ngIf="!titleDefault">{{ dataStep.stepName }}</span>
@@ -15,7 +15,9 @@
       <div class="group-button">
         <button class="button-custom">
           <span
-            [ngClass]="isUpdate ? 'icon-edit icon-20 text-primary-600 py-2' : ''"
+            [ngClass]="
+              isUpdate ? 'icon-edit icon-20 text-primary-600 py-2' : ''
+            "
             style="font-weight: 500"
             (click)="popupCustomField(dataStep.fields)"
           ></span>
@@ -96,6 +98,35 @@
         ></span>
       </ng-template>
     </ngb-rating>
+  </ng-container>
+
+  <ng-container *ngIf="data.dataType == 'P'">
+    <codx-imgs
+      [width]="35"
+      [objectId]="data.dataValue"
+      [objectType]="'AD_Users'"
+      [numberImages]="5"
+    ></codx-imgs>
+  </ng-container>
+
+  <ng-container *ngIf="data.dataType == 'A' && data.dataValue">
+    <codx-attachment
+      #attachment
+      [objectId]="data.dataValue.split(';')[0]"
+      [objectType]="data.dataValue.split(';')[1]"
+      hideFolder="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      hideDes="1"
+      type="inline"
+      [allowMultiFile]="data.multiple ? '1' : '0'"
+      displayThumb="full"
+      showMessage="0"
+      [hideDelete]="'1'"
+      [hideMoreF]="'0'"
+    >
+    </codx-attachment>
   </ng-container>
 
   <codx-mfunc

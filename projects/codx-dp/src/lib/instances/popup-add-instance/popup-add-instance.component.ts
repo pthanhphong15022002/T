@@ -95,6 +95,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.titleAction = dt?.data[3];
     this.formModelCrr = dt?.data[4];
     this.listStepCbx = dt?.data[5];
+    this.instance.instanceNo = dt?.data[6];
   }
 
   ngOnInit(): void {
@@ -141,9 +142,15 @@ export class PopupAddInstanceComponent implements OnInit {
   valueChangeCustom(event) {
     if (event && event.e && event.data) {
       var result = event.e?.data;
-      var field = event.data
-      if (field.dataType == 'D') {
-        result = event.e?.data.fromDate;
+      var field = event.data;
+      switch (field.dataType) {
+        case 'D':
+          result = event.e?.data.fromDate;
+          break;
+        case 'P':
+        case 'A':
+          result = event.e;
+          break;
       }
 
       var index = this.listStep.findIndex((x) => x.recID == field.stepID);
@@ -183,7 +190,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
-        if (res && res.save) {
+        if (res && res.save) {       
           this.dialog.close(res);
         }
       });

@@ -24,11 +24,13 @@ import {
   Util,
   RequestOption,
   DialogRef,
+  CodxCardImgComponent,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
 import { PopupViewsDetailsProcessComponent } from './popup-views-details-process/popup-views-details-process.component';
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -47,7 +49,6 @@ export class DynamicProcessComponent
   // view child
   @ViewChild('templateViewCard', { static: true })
   templateViewCard: TemplateRef<any>;
-
   // Input
   @Input() dataObj?: any;
   @Input() showButtonAdd = false;
@@ -82,7 +83,7 @@ export class DynamicProcessComponent
   popoverDetail: any;
   popupOld: any;
   popoverList: any;
-
+  linkAvt = '';
   // Call API Dynamic Proccess
   readonly service = 'DP';
   readonly assemblyName = 'ERM.Business.DP';
@@ -163,7 +164,6 @@ export class DynamicProcessComponent
     ];
     this.view.dataService.methodSave = 'AddProcessAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessAsync';
-
     this.changeDetectorRef.detectChanges();
   }
 
@@ -246,18 +246,12 @@ export class DynamicProcessComponent
         );
         this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
-          // if (e?.event == null)
-          //   this.view.dataService.delete(
-          //     [this.view.dataService.dataSelected],
-          //     false
-          //   );
           if (e && e.event != null) {
             this.view.dataService.update(e.event).subscribe();
-            this.detectorRef.detectChanges();
+            this.changeDetectorRef.detectChanges();
           }
         });
       });
-    this.changeDetectorRef.detectChanges();
   }
   copy(data: any) {
     this.changeDetectorRef.detectChanges();
@@ -282,6 +276,30 @@ export class DynamicProcessComponent
     opt.data = [itemSelected.recID];
     return true;
   }
+  async getAvatar(process) {
+    var link = '';
+    let avatar = [
+      '',
+      this.funcID,
+      process?.recID,
+      'DP_Processes',
+      'inline',
+      1000,
+      process?.processName,
+      'avt',
+      false,
+    ];
+    this.api
+      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', avatar)
+      .subscribe(res => {
+        if (res && res?.url) {
+          link = environment.urlUpload + '/' + res?.url;
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+    return link;
+  }
+
 
   // More functions
   receiveMF(e: any) {
@@ -309,6 +327,7 @@ export class DynamicProcessComponent
       case 'DP01014':
       case 'DP02014':
       case 'DP02024':
+      case 'DP02034':
         this.roles(data);
         break;
       case 'DP01011':
@@ -354,6 +373,7 @@ export class DynamicProcessComponent
           case 'DP01012':
           case 'DP02012':
           case 'DP02022':
+          case 'DP02032':
           case 'SYS03':
             let isEdit = data.write;
             if (!isEdit || this.funcID == 'DP0203') {
@@ -365,6 +385,7 @@ export class DynamicProcessComponent
           case 'DP01014':
           case 'DP02014':
           case 'DP02024':
+          case 'DP02034':
             let isAssign = data.assign;
             if (!isAssign) res.isblur = true;
             break;

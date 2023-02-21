@@ -1,5 +1,5 @@
 <div class="back-ground" *ngIf="dataStep != null">
-  <div class="header-job">
+  <div class="header-job p-3">
     <div>
       <span class="title-train"
         >{{ currentStep + 1 }}. {{ dataStep?.stepName }}</span
@@ -73,7 +73,7 @@
   </div>
 </div>
 <div class="back-info">
-  <codx-field-detail [dataStep]="dataStep" [titleDefault]="'Thông tin nhập liệu'" [isUpdate]="isUpdate"></codx-field-detail>
+  <codx-field-detail [dataStep]="dataStep" [titleDefault]="titleDefault" [isUpdate]="isUpdate"></codx-field-detail>
   <!-- nvthuan -->
   <ng-container [ngTemplateOutlet]="task"> </ng-container>
 </div>

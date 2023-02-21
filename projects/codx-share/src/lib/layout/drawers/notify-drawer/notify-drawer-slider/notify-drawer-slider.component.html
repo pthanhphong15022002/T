@@ -1,5 +1,4 @@
-<codx-form [body]="body" [subHeader]="subheader" [headerText]="'Thông báo'"
-  [dialog]="dialogRef">
+<codx-form [body]="body" [subHeader]="subheader" [headerText]="'Thông báo'" [dialog]="dialogRef">
 </codx-form>
 <ng-template #subheader>
   <div class="codx-notification-filter">
@@ -25,7 +24,7 @@
         </div>
       </div>
     </div>
-    <div class="overflow-hidden">
+    <div class="overflow-hidden ms-1">
       <div ngbDropdown container="body">
         <button ngbDropdownToggle class="btn btn-sm btn-light-primary" *ngIf="status">
           <span class="w-20px" [class]="status.icon">
@@ -34,7 +33,7 @@
             {{status.text}}
           </span>
         </button>
-        <div ngbDropdownMenu >
+        <div ngbDropdownMenu>
           <ng-container *ngFor="let item of vllStatus">
             <button (click)="statusChange(item)" ngbDropdownItem>
               <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
@@ -50,9 +49,10 @@
   </div>
   <div class="d-flex align-items-center justify-content-end w-100 cursor-pointer">
     <span (click)="viewAll()">
-        <codx-label class="fst-italic fs-6 text-primary" [formModel]="dialogRef.formModel" name="lblAll" default="Xem tất cả"></codx-label>
-      </span>
-</div>
+      <codx-label class="fst-italic fs-6 text-primary" [formModel]="dialogRef.formModel" name="lblAll"
+        default="Xem tất cả"></codx-label>
+    </span>
+  </div>
 </ng-template>
 <ng-template #body>
   <div class="h-100">
