@@ -302,7 +302,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       return;
     }
     if (
+      this.param?.MaxHoursControl != null &&
       this.param?.MaxHoursControl != '0' &&
+      this.param?.MaxHours != null &&
       this.task.estimated > Number.parseFloat(this.param?.MaxHours)
     ) {
       this.notiService.notifyCode('TM058', 0, [this.param?.MaxHours]);
@@ -344,8 +346,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       // }
     }
     var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID : null;
-    if(this.isClickSave) return;
-    this.isClickSave = true ;
+    if (this.isClickSave) return;
+    this.isClickSave = true;
     if (this.isHaveFile && this.attachment)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -578,12 +580,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           }
         });
         if (arrNew.length > 0) {
-          assignTo = arrNew.join(';');
-          this.task.assignTo += ';' + assignTo;
+          // assignTo = arrNew.join(';');
+          // this.task.assignTo += ';' + assignTo;
           this.getListUser(assignTo);
         }
       } else {
-        this.task.assignTo = assignTo;
+        // this.task.assignTo = assignTo;
         this.getListUser(assignTo);
       }
     }
@@ -596,7 +598,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     }
     var arrUser = listUser.split(';');
     if (!this.listUser) this.listUser = [];
-    this.listUser = this.listUser.concat(arrUser);
+
     this.api
       .execSv<any>(
         'HR',
@@ -606,8 +608,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         JSON.stringify(listUser.split(';'))
       )
       .subscribe((res) => {
-        this.listUserDetail = this.listUserDetail.concat(res);
         if (res && res.length > 0) {
+          this.listUserDetail = this.listUserDetail.concat(res);
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
             var taskResource = new tmpTaskResource();
@@ -618,6 +620,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
             taskResource.roleType = 'R';
             this.listTaskResources.push(taskResource);
           }
+
+          if (arrUser.length != res.length) {
+            arrUser = res.map((x) => x.userID);
+          }
+          this.listUser = this.listUser.concat(arrUser);
+          this.task.assignTo = this.listUser.join(';');
         }
       });
   }

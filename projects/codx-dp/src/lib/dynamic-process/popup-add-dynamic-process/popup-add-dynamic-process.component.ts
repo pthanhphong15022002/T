@@ -1056,6 +1056,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return false;
   }
   dropCustomFile(event: CdkDragDrop<string[]>, stepID) {
+  
     if (event.previousContainer === event.container) {
       //   // if (stepID) {
       this.dropFields(event, stepID);
@@ -1063,15 +1064,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       //   //     this.dropSteps(event);
       //   //   }
     } else {
+  
       this.dropFieldsToStep(event, stepID);
     }
   }
   dropFieldsToStep(event, stepID) {
-    var data = event.item?.data;
-    // var stepIDPrevious = stepID
-    // this.dataChild = this.stepList[].fields;
-
-    //mai xu ly
+    var stepIDContain = event.container.id;
+    var stepIDPrevious = event.previousContainer.id;
+    // var data = event.item?.data;
+    event.item.data.stepID = stepIDContain;
     transferArrayItem(
       event.previousContainer.data,
       event.container.data,
