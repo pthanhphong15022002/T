@@ -5,3 +5,7 @@
     box-sizing: content-box;
     max-height: none !important;
 }
+
+::ng-deep .e-toast-top-right{
+    z-index: 10050 !important;
+  }

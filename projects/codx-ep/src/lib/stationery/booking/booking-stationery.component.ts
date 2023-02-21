@@ -145,6 +145,9 @@ export class BookingStationeryComponent
       case 'EP8T1101': //Gui duyet
         this.release(data);
         break;
+        case 'EP8T1102': //hủy
+        this.cancel(data);
+        break;
     }
   }
   viewChanged(evt: any) {
@@ -169,36 +172,99 @@ export class BookingStationeryComponent
     });
     this.detectorRef.detectChanges();
   }
+  cancel(data: any) {
+    this.codxEpService.cancel(data?.recID).subscribe((res: any) => {
+      if (res != null) {
+        this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
+        data.approveStatus = '1';
+        data.status = '1';
+        this.view.dataService.update(data).subscribe();
+      } else {
+        this.notificationsService.notifyCode(res?.msgCodeError);
+      }
+    });
+  }
   changeDataMF(event, data: any) {
     if (event != null && data != null && this.funcID == 'EP8T11') {
-      event.forEach((func) => {
+      
         if (data.approveStatus == '1') {
           event.forEach((func) => {
+            //Mới tạo
             if (
+              // Hiện: sửa - xóa - chép - gửi duyệt -
               func.functionID == 'SYS02' /*MF sửa*/ ||
               func.functionID == 'SYS03' /*MF xóa*/ ||
               func.functionID == 'SYS04' /*MF chép*/ ||
-              func.functionID == 'EP8T1101' /*MF gửi duyệt*/
+              func.functionID == 'EP8T1101' /*MF gửi duyệt*/
             ) {
               func.disabled = false;
             }
+            if (
+              //Ẩn: hủy 
+              func.functionID == 'EP8T1102' /*MF hủy*/ 
+            ) {
+              func.disabled = true;
+            }
           });
-        } else {
+        } else if (data.approveStatus == '5') {
           event.forEach((func) => {
-            if (func.functionID == 'SYS04' /*MF chép*/) {
+            //Đã duyệt
+            if (
+              // Hiện: Chép 
+              func.functionID == 'SYS04' /*MF chép*/
+            ) {
               func.disabled = false;
             }
-            if (
+            if (//Ẩn: sửa - xóa - duyệt - hủy 
               func.functionID == 'SYS02' /*MF sửa*/ ||
               func.functionID == 'SYS03' /*MF xóa*/ ||
-              func.functionID == 'EP8T1101' /*MF gửi duyệt*/
+              func.functionID == 'EP8T1101' /*MF gửi duyệt*/||
+              func.functionID == 'EP8T1102' /*MF hủy*/
+            ) {
+              func.disabled = true;
+            }
+          });
+        } else if (data.approveStatus == '3') {
+          event.forEach((func) => {
+            //Gửi duyệt
+            if ( //Hiện: chép - hủy
+            func.functionID == 'SYS04' /*MF chép*/||
+            func.functionID == 'EP8T1102' /*MF hủy*/
+            ) {
+              func.disabled = false;
+            }
+            if (//Ẩn: sửa - xóa - gửi duyệt
+              
+              func.functionID == 'SYS02' /*MF sửa*/ ||
+              func.functionID == 'SYS03' /*MF xóa*/ ||
+              func.functionID == 'EP8T1101' /*MF gửi duyệt*/
             ) {
               func.disabled = true;
             }
           });
         }
-      });
+        else if (data.approveStatus == '4') {
+          event.forEach((func) => {
+            //Gửi duyệt
+            if ( //Hiện: chép 
+            func.functionID == 'SYS04' /*MF chép*/
+            ) {
+              func.disabled = false;
+            }
+            if (//Ẩn: sửa - xóa - gửi duyệt - hủy          
+              func.functionID == 'SYS02' /*MF sửa*/ ||
+              func.functionID == 'SYS03' /*MF xóa*/ ||
+              func.functionID == 'EP8T1101' /*MF gửi duyệt*/||
+              func.functionID == 'EP8T1102' /*MF hủy*/
+            ) {
+              func.disabled = true;
+            }
+          });
+        }
+      
+    
     }
+    //Cấp phát
     if (event != null && data != null && this.funcID == 'EP8T12') {
       event.forEach((func) => {
         if (
