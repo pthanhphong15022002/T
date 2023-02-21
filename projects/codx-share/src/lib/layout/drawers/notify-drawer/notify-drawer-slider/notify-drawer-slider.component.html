@@ -2,7 +2,7 @@
 </codx-form>
 <ng-template #subheader>
   <div class="codx-notification-filter">
-    <div class="overflow-hidden">
+    <div class="overflow-hidden me-1">
       <div ngbDropdown container="body">
         <button ngbDropdownToggle class="btn btn-sm btn-light-primary" *ngIf="type">
           <span class="w-20px" [class]="type.icon">
@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <div class="overflow-hidden ms-1">
+    <div class="overflow-hidden me-1">
       <div ngbDropdown container="body">
         <button ngbDropdownToggle class="btn btn-sm btn-light-primary" *ngIf="status">
           <span class="w-20px" [class]="status.icon">
@@ -46,16 +46,21 @@
         </div>
       </div>
     </div>
+    <div *ngIf="formModel?.funcID">
+      <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event)"
+          (changeDataMF)="changeDataMF($event)" >
+      </codx-mfunc>
+  </div>
   </div>
   <div class="d-flex align-items-center justify-content-end w-100 cursor-pointer">
     <span (click)="viewAll()">
-      <codx-label class="fst-italic fs-6 text-primary" [formModel]="dialogRef.formModel" name="lblAll"
+      <codx-label class="fst-italic fs-6 text-primary cursor-pointer" [formModel]="dialogRef.formModel" name="lblAll"
         default="Xem tất cả"></codx-label>
     </span>
   </div>
 </ng-template>
 <ng-template #body>
   <div class="h-100">
-    <codx-notify-body #notiBody></codx-notify-body>
+    <codx-notify-body #notiBody [formModel]="formModel"></codx-notify-body>
   </div>
 </ng-template>

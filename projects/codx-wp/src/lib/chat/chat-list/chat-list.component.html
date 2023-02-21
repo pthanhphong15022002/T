@@ -41,37 +41,19 @@
             data-kt-scroll-wrappers="#kt_content, #kt_chat_contacts_body" data-kt-scroll-offset="0px"
             style="max-height: 600px; overflow-x:hidden">
             <ng-container *ngIf="searched;else tmpListGroup">
-                <div class="row mt-3">
-                    <div>
-                        Users
-                    </div>
-                    <ng-container *ngIf="dataSerach[0]">
-                        <ng-container *ngFor="let item of dataSerach[0]">
-                            <ng-container *ngTemplateOutlet="
-                            itemTemplateSearchUser;
-                            context: { $implicit: item }
-                          "></ng-container>
-                        </ng-container>
-                    </ng-container>
-                </div>
-                <div class="row mt-3">
-                    <div>
-                        Groups
-                    </div>
-                    <ng-container *ngIf="dataSerach[1]">
-                        <ng-container *ngFor="let group of dataSerach[1]">
-                            <ng-container *ngTemplateOutlet="
-                            itemTemplateSearch;
-                            context: { $implicit: group }
-                          "></ng-container>
-                        </ng-container>
-                    </ng-container>
-                </div>
+                <codx-listview #codxListViewSerach
+                    [itemTemplate]="itemTemplateSearch" 
+                    [funcId]="funcID"
+                    service="WP" 
+                    assemblyName="ERM.Business.WP" 
+                    className="GroupBusiness"
+                    method="SearchAsync">
+                </codx-listview>
             </ng-container>
             <ng-template #tmpListGroup>
-                <codx-listview #codxListView 
+                <codx-listview #codxListViewGroup
                     [itemTemplate]="itemTemplateGroup" 
-                    [funcId]="'WPT11'" 
+                    [funcId]="funcID"
                     service="WP" 
                     assemblyName="ERM.Business.WP" 
                     className="GroupBusiness"
@@ -121,42 +103,30 @@
     </div>
 </ng-template>
 <!-- template search chat -->
-<ng-template #itemTemplateSearchUser let-item>
-    <div class="row my-2 p-2" (click)="openChatBox(item)">
-        <codx-img [objectId]="item.userID" [objectType]="'AD_Users'" [objectName]="item.userName" [width]="40" [referType]="'avt'"></codx-img>
-        <span>{{item.userName}}</span>
-    </div>
-</ng-template>
-<!-- template search group -->
 <ng-template #itemTemplateSearch let-item>
-    <div class="row my-2 p-2" (click)="openChatBox(item)">
-        <!-- image -->
-        <div class="col-2">
-            <ng-container *ngIf="item.groupType == '1' ; else group1_n">
-                <codx-img 
-                    [objectId]="item.groupID2" 
-                    [objectName]="item.groupName2" 
-                    [objectType]="'AD_Users'"
-                    [referType]="'image'"
-                    [width]="50">
-                </codx-img>
-            </ng-container>
-            <ng-template #group1_n>
-                <codx-img 
-                    [objectId]="item.groupID"
-                    [isDefaulImg]="true" 
-                    [objectType]="'WP_Groups'"
-                    [referType]="'image'"
-                    [width]="50">
-                </codx-img>
-            </ng-template>
-        </div>
-        <!-- group name - created - seen -->
-        <div class="col-10">
-            <span class="fw-bolder m-0 p-0">{{ item.groupType == '1' ? item.groupName2 : item.groupName}}</span>
-        </div>
+    <div class="row" (click)="openChatBox(item)">
+        <ng-container *ngIf="item.type == 'U'">
+            <codx-temp-full 
+                [dataItem]="item" 
+                [title]="item.userName" 
+                [imageId]="item.userID" 
+                [imageObjType]="'AD_Users'" 
+                [imageObjName]="item.userName">
+            </codx-temp-full>
+        </ng-container>
+        <ng-template #tmpGroup>
+            <codx-temp-full 
+                [dataItem]="item" 
+                [title]="item.groupType == '1' ? item.groupName2 : item.groupName" 
+                [imageId]="item.userID" 
+                [imageObjType]="item.groupType == '1' ? 'AD_Users' : 'WP_Groups'" 
+                [imageObjName]="item.groupType == '1' ? item.groupName2 : item.groupName">
+            </codx-temp-full>
+        </ng-template>
     </div>
 </ng-template>
+
+
 <ng-template #chatBox let-data>
     <codx-chat-box [groupID]="data"></codx-chat-box>
 </ng-template>

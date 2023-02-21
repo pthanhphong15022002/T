@@ -300,7 +300,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   ngOnInit(): void {
     // this.updateNodeStatus(0,1);
-    this.grvMoreFunction = this.dialog?.formModel;
+    this.grvMoreFunction = JSON.parse(JSON.stringify(this.dialog?.formModel));
     this.grvMoreFunction.entityName = 'DP_InstancesSteps';
     this.grvMoreFunction.formName = 'DPInstancesSteps';
     this.grvMoreFunction.gridViewName = 'grvDPInstancesSteps';
@@ -1056,6 +1056,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return false;
   }
   dropCustomFile(event: CdkDragDrop<string[]>, stepID) {
+  
     if (event.previousContainer === event.container) {
       //   // if (stepID) {
       this.dropFields(event, stepID);
@@ -1063,15 +1064,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       //   //     this.dropSteps(event);
       //   //   }
     } else {
+  
       this.dropFieldsToStep(event, stepID);
     }
   }
   dropFieldsToStep(event, stepID) {
-    var data = event.item?.data;
-    // var stepIDPrevious = stepID
-    // this.dataChild = this.stepList[].fields;
-
-    //mai xu ly
+    var stepIDContain = event.container.id;
+    var stepIDPrevious = event.previousContainer.id;
+    // var data = event.item?.data;
+    event.item.data.stepID = stepIDContain;
     transferArrayItem(
       event.previousContainer.data,
       event.container.data,

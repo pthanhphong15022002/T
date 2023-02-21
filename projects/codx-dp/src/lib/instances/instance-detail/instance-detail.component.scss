@@ -20,13 +20,22 @@
 	transition: 1s ease 0.3s;
 }
 
+.arrow-steps {
+	width: 100%;
+	border: 1px aqua solid;
+	overflow-x: auto;
+	padding-bottom: 15px;
+}
+
 .arrow-steps .step {
-	font-size: 14px;
+	font-size: 12px;
 	text-align: center;
 	color: #666;
 	cursor: default;
-	margin: 0 3px;
-	padding: 10px 10px 10px 30px;
+	margin-right: 2px;
+	padding: 5px;
+	height: 44px;
+	text-indent: 10px;
 	min-width: 180px;
 	float: left;
 	position: relative;
@@ -35,7 +44,7 @@
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-  transition: background-color 0.2s ease;
+	transition: background-color 0.2s ease;
 }
 
 .arrow-steps .step:after,
@@ -50,7 +59,7 @@
 	border-bottom: 17px solid transparent;
 	border-left: 17px solid #d9e3f7;
 	z-index: 2;
-  transition: border-color 0.2s ease;
+	transition: border-color 0.2s ease;
 }
 
 .arrow-steps .step:before {
@@ -101,46 +110,38 @@
 }
 
 
-.text-body{
-  color: #1b4ab0 !important;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-
 .font {
 	font-size: 14px;
-  max-width: 180px;
-  text-align: center;
-  color: #fff;
-  background-color: #3699ff;
-  position: relative;
-  border-radius: 20px;
+	max-width: 180px;
+	text-align: center;
+	color: #fff;
+	background-color: #3699ff;
+	position: relative;
+	border-radius: 20px;
 }
 
-.process-wrap{
-  background: #d9e3f7;
-  margin: 20px 0;
-  min-width: 180px;
-  height: 10px;
-  margin-left: 3px !important;
-  margin-top: 5px !important;
-  overflow: hidden;
-  position: relative;
+.process-wrap {
+	background: #d9e3f7;
+	margin: 20px 0;
+	min-width: 180px;
+	height: 5px;
+	margin-right: 3px !important;
+	margin-top: -18px !important;
 
 }
 
 .progress-current {
-  background: #3699ff;
-  left: 0;
-  position: absolute;
-  height: 10px;
-  top: 0;
+	background: #3699ff;
+	left: 0;
+	position: absolute;
+	height: 10px;
+	top: 0;
 }
-.progress-bar{
-  background: #23468c;
-  left: 0;
-  height: 10px;
-  position: absolute;
-  top: 0;
+
+.progress-bar {
+	background: #23468c;
+	left: 0;
+	height: 10px;
+	position: absolute;
+	top: 0;
 }
