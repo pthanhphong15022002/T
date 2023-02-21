@@ -381,6 +381,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         if (res) {
           this.isSaved = true;
           if (isClose) {
+            this.notify.notifyCode('SYS006')
             this.dialog && this.dialog.close(res);
           }
         }
@@ -390,6 +391,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         if (res) {
           this.isSaved = true;
           if (isClose) {
+            this.notify.notifyCode('SYS007')
             this.dialog && this.dialog.close(res);
           }
         }

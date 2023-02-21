@@ -1,3 +1,4 @@
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -50,6 +51,8 @@ export class DynamicProcessComponent
   // view child
   @ViewChild('templateViewCard', { static: true })
   templateViewCard: TemplateRef<any>;
+  @ViewChild('editNameProcess') editNameProcess: TemplateRef<any>;
+  @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   // Input
   @Input() dataObj?: any;
   @Input() showButtonAdd = false;
@@ -85,6 +88,11 @@ export class DynamicProcessComponent
   popupOld: any;
   popoverList: any;
   linkAvt = '';
+  TITLENAME = "Thay đổi tên quy trình";
+  popupEditName: DialogRef;
+  processRename: DP_Processes;
+  processName = '';
+  user;
   // Call API Dynamic Proccess
   readonly service = 'DP';
   readonly assemblyName = 'ERM.Business.DP';
@@ -105,7 +113,7 @@ export class DynamicProcessComponent
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
     private callFunc: CallFuncService,
-    private dpService: CodxDpService
+    private dpService: CodxDpService,
   ) {
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
@@ -113,6 +121,7 @@ export class DynamicProcessComponent
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     // this.genAutoNumber();
     this.getListAppyFor();
+    this.user = this.authStore.get();
   }
 
   onInit(): void {
@@ -124,8 +133,6 @@ export class DynamicProcessComponent
       this.crrFunID = this.funcID;
     }
     this.afterLoad();
-    // gán tạm để test
-    this.getListUser();
   }
 
   afterLoad() {
@@ -160,6 +167,7 @@ export class DynamicProcessComponent
         active: true,
         model: {
           template: this.templateViewCard,
+          headerTemplate: this.headerTemplate,
         },
       },
     ];
@@ -338,7 +346,16 @@ export class DynamicProcessComponent
         this.viewDetailProcess(data);
         break;
       case 'DP01013':
+      case 'DP02033':
+      case 'DP02023':
+      case 'DP02013':
         this.properties(data);
+        break;
+      case 'DP01012': // edit name
+        this.renameProcess(data);
+        break;
+      case 'DP042': // edit name
+        this.restoreProcess(data);
         break;
     }
   }
@@ -359,7 +376,8 @@ export class DynamicProcessComponent
             if (
               this.funcID == 'DP0201' ||
               this.funcID == 'DP0202' ||
-              this.funcID == 'DP0203'
+              this.funcID == 'DP0203' ||
+              this.funcID === 'DP04'
             )
               res.disabled = true;
             break;
@@ -380,7 +398,7 @@ export class DynamicProcessComponent
           case 'DP02032':
           case 'SYS03':
             let isEdit = data.write;
-            if (!isEdit || this.funcID == 'DP0203') {
+            if (!isEdit || this.funcID == 'DP0203' || this.funcID === 'DP04') {
               if (res.functionID == 'SYS03') res.disabled = true;
               else res.isblur = true;
             }
@@ -403,7 +421,7 @@ export class DynamicProcessComponent
           //   break;
           case 'SYS02': // xoa
             let isDelete = data.delete;
-            if (!isDelete || data.deleted || this.funcID == 'DP0203') {
+            if (!isDelete || data.deleted || this.funcID == 'DP0203' || this.funcID === 'DP04') {
               res.disabled = true;
             }
             break;
@@ -482,15 +500,12 @@ export class DynamicProcessComponent
       this.viewDetailProcess(data);
     }
   }
-
-  getListUser() {
-    this.codxDpService
-      .getUserByProcessId('675ef83a-f2a6-4798-b377-9071c52fa714')
-      .subscribe((res) => {
-        if (res) {
-          this.listUserInUse = res;
-        }
-      });
+  getNameUsersStr(data){
+    if(data.length > 0 && data !== null){
+      var ids = data.map(obj => obj.objectID);
+      var listStr = ids.join(';');
+    }
+    return listStr || null || '';
   }
 
   //#region Của Bảo
@@ -536,4 +551,45 @@ export class DynamicProcessComponent
       dialogModel
     );
   }
+
+
+// nvthuan
+  renameProcess(process) {
+    this.processRename = process;
+    this.processName = process['processName'];
+    this.popupEditName = this.callfc.openForm(this.editNameProcess, '', 500, 280);
+  }
+
+  changeValueInput(event) {
+    this.processName = event?.data;
+  }
+
+  editName(){ 
+    this.dpService.renameProcess([this.processName, this.processRename['recID']]).subscribe((res) => {
+      if(res){
+        this.processRename['processName'] = this.processName;
+        this.processRename['modifiedOn'] = res || new Date();
+        this.processRename['modifiedBy'] = this.user?.userID; 
+        this.processName = '';
+        this.popupEditName.close();
+        this.notificationsService.notifyCode('SYS007');
+      }else{
+        this.notificationsService.notifyCode('SYS008');
+      }
+    })
+  }
+  restoreProcess(data){
+    console.log(data);
+    this.dpService.restoreBinById(data.recID).subscribe((res) => {
+      if(res){
+        this.view.dataService.remove(data).subscribe();
+        this.detectorRef.detectChanges();
+        this.notificationsService.notifyCode('SYS007');
+      }else{
+        this.notificationsService.notifyCode('SYS008');
+      }
+       
+    });
+  }
+
 }

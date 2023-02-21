@@ -77,36 +77,45 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
     //   this.formGroup.patchValue(this.data)
     //   this.isAfterRender = true
     // })
+    this.hrService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((item) => {
+        if (item) {
+          this.formGroup = item;
+          if (this.actionType == 'add') {
+            this.hrService
+              .getDataDefault(
+                this.formModel.funcID,
+                this.formModel.entityName,
+                this.idField
+              )
+              .subscribe((res: any) => {
+                if (res) {
+                  this.data = res?.data;
 
-    if (this.actionType == 'add') {
-      this.hrService
-        .getDataDefault(
-          this.formModel.funcID,
-          this.formModel.entityName,
-          this.idField
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.data = res?.data;
+                  this.data.employeeID = this.employId;
+                  this.data.fromDate = null;
+                  this.data.toDate = null;
 
-            this.data.employeeID = this.employId;
-            this.data.fromDate = null;
-            this.data.toDate = null;
-
-            this.formModel.currentData = this.data;
-            this.formGroup.patchValue(this.data);
-            this.cr.detectChanges();
-            this.isAfterRender = true;
+                  this.formModel.currentData = this.data;
+                  this.formGroup.patchValue(this.data);
+                  this.cr.detectChanges();
+                  this.isAfterRender = true;
+                }
+              });
+          } else {
+            if (this.actionType === 'edit' || this.actionType === 'copy') {
+              this.formGroup.patchValue(this.data);
+              this.formModel.currentData = this.data;
+              this.cr.detectChanges();
+              this.isAfterRender = true;
+            }
           }
-        });
-    } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
-        this.formGroup.patchValue(this.data);
-        this.formModel.currentData = this.data;
-        this.cr.detectChanges();
-        this.isAfterRender = true;
-      }
-    }
+        }
+        else{
+          this.notify.notifyCode('ABCDE');
+        }
+      });
   }
 
   onInit(): void {

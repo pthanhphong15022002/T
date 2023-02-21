@@ -54,7 +54,7 @@
         [objectType]="entityName"
         [objectId]="objectID"
         [hideFolder]="1"
-        [hideUploadBtn]="0"
+        [hideUploadBtn]="isEdit?1:0"
         [hideDes]="hideFolder"
         [type]="type"
         [allowExtensions]="allowExtensions"
@@ -67,6 +67,8 @@
         [displayThumb]="displayThumb"
         [isSaveSelected]="1"
         [isTab]="true"
+        [hideDelete]="1"
+        [hideMoreF]="isEdit?'1':'0'"
         [referType]="referType"
         [addPermissions]="addPermissions"
       >

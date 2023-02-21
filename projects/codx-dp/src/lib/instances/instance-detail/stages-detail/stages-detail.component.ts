@@ -830,7 +830,7 @@ export class StagesDetailComponent implements OnInit {
       let average = 0;
       data.forEach((item, index) => {
         item[value] = index + 1; // cập nhật số thứ tự
-        sum += item['progress'] + 0; // tổng tiến độ
+        sum += Number(item['progress']); // tổng tiến độ
       });
       if (isProgress) {
         average = parseFloat((sum / data.length).toFixed(1)) || 0;

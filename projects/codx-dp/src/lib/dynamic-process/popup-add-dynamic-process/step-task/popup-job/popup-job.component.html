@@ -499,6 +499,42 @@
       </span>
     </div>
   </div>
+
+  <ng-container>
+    <div class="d-flex align-items-center justify-content-between mt-4"
+      *ngIf="showLabelAttachment"
+      style="float: left; clear: left">
+      <div class="d-flex align-items-center mb-2">
+        <div class="fw-bold text-primary">
+          <codx-label fiedName="lblAttachments" [formModel]="dialog.formModel"
+            default="Tài liệu">
+          </codx-label>
+        </div>
+      </div>
+    </div>
+    <div>
+      <codx-attachment
+        #attachment
+        [objectId]="stepsTasks?.recID"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)"
+        (viewFile)="getfileDelete($event)"
+        displayThumb="full"
+        showMessage="0"
+        [fdID]="folderID"
+        [fdName]="stepsTasks?.stepID"
+        [parentID]="folderID"
+        [dataSelected]="stepsTasks">
+      </codx-attachment>
+    </div>
+  </ng-container>
 </ng-template>
 <!-- End Form Group -->
 

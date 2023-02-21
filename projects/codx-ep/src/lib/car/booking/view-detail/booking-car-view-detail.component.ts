@@ -29,6 +29,7 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   @Output('copy') copy: EventEmitter<any> = new EventEmitter();  
   @Output('release') release: EventEmitter<any> = new EventEmitter();  
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
+  @Output('cancel') cancel: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
   @Input() itemDetail: any;
   @Input() funcID;
@@ -115,6 +116,14 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
       case 'EP7T1101': //Gửi duyệt
         this.lviewRelease(data);
         break;
+        case 'EP7T1102': //Hủy gửi duyệt
+        this.lviewCancel(data);
+        break;
+    }
+  }
+  lviewCancel(data?) {
+    if (data) {      
+      this.cancel.emit(data);
     }
   }
   lviewRelease(data?) {
@@ -141,35 +150,82 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   }
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
-      // event.forEach(func => {
-      //   func.disabled=true;
-      // });
-      if (data.status == '1') {
+      if (data.approveStatus == '1') {
         event.forEach((func) => {
+          //Mới tạo
           if (
+            // Hiện: sửa - xóa - chép - gửi duyệt -
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'SYS04' /*MF chép*/ ||
-            func.functionID == 'EP7T1101' /*MF gửi duyệt*/ 
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/
           ) {
             func.disabled = false;
           }
+          if (
+            //Ẩn: hủy 
+            func.functionID == 'EP7T1102' /*MF hủy*/ 
+          ) {
+            func.disabled = true;
+          }
         });
-      } else {
+      } else if (data.approveStatus == '5') {
         event.forEach((func) => {
-          if (func.functionID == 'SYS04' /*MF chép*/) {
+          //Đã duyệt
+          if (
+            // Hiện: Chép 
+            func.functionID == 'SYS04' /*MF chép*/
+          ) {
             func.disabled = false;
           }
-          if (
+          if (//Ẩn: sửa - xóa - duyệt - hủy 
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP7T1101' /*MF gửi duyệt*/ 
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/||
+            func.functionID == 'EP7T1102' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if ( //Hiện: chép - hủy
+          func.functionID == 'SYS04' /*MF chép*/||
+          func.functionID == 'EP7T1102' /*MF hủy*/
+          ) {
+            func.disabled = false;
+          }
+          if (//Ẩn: sửa - xóa - gửi duyệt
+            
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
+      else if (data.approveStatus == '4') {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if ( //Hiện: chép 
+          func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (//Ẩn: sửa - xóa - gửi duyệt - hủy          
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/||
+            func.functionID == 'EP7T1102' /*MF hủy*/
           ) {
             func.disabled = true;
           }
         });
       }
     }
+  
   }
   sameDayCheck(sDate:any, eDate:any){
     return moment(new Date(sDate)).isSame(new Date(eDate),'day');

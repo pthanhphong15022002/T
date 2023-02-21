@@ -4,7 +4,7 @@
 <ng-template #body>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="ItemID" default="Mặt hàng"></codx-label>
-    <codx-input [crrValue]="itemID" field="itemID" [formModel]="form.formModel"
+    <codx-input type="combobox" refValue="Items" [crrValue]="itemID" field="itemID" [formModel]="form.formModel"
       (valueChange)="valueChangeItemID($event)">
     </codx-input>
   </div>
