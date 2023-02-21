@@ -15,6 +15,8 @@ export class NotifyDrawerSliderComponent implements OnInit {
   type:any = null;
   vllStatus:any[] = [];
   status:any = null;
+  moreFC:any[] = [];
+  formModel:FormModel = null;
   @ViewChild("notiBody") notiBody:NotifyBodyComponent; 
   constructor(
     private cache:CacheService,
@@ -24,6 +26,7 @@ export class NotifyDrawerSliderComponent implements OnInit {
   ) 
   {    
     this.dialogRef = dialogRef;
+    this.formModel = new FormModel();
   }
 
   ngOnInit(): void {
@@ -48,6 +51,18 @@ export class NotifyDrawerSliderComponent implements OnInit {
         else
           this.status = vll.datas[0];
       }
+    });
+    this.cache.functionList("BGT001")
+    .subscribe((func:any)=>{
+      this.formModel.funcID = func.functionID;
+      this.formModel.formName = func.formName;
+      this.formModel.gridViewName = func.gridViewName;
+      this.formModel.entityName = func.entityName;
+      this.formModel.userPermission = func.userPermission;
+      this.cache.moreFunction(this.formModel.formName,this.formModel.gridViewName)
+      .subscribe((mfc:any) => {
+        this.moreFC = mfc;
+      });
     });
   }
 
@@ -74,6 +89,30 @@ export class NotifyDrawerSliderComponent implements OnInit {
     _option.zIndex = 1001;
     _option.IsModal = false;
     this.callFC.openForm(NotifyDrawerPopupComponent,"",0,0,"",null,"",_option);
+  }
+  //click more FC
+  clickMF(event){
+    if(event){
+      switch(event.functionID){
+        case "WP009": // đánh dấu đọc tất cả
+          this.notiBody.checkReadAll();
+          break;
+        case "WP010": // xem tất cả
+          this.viewAll();
+          break; 
+        default:
+          break;
+      }
+    }
+  }
+   // change More funtion
+  changeDataMF(arrMFC){
+      arrMFC.map(e => {
+        if(e.functionID == "WP009" || e.functionID == "WP010")
+          e.disabled = false;
+        else
+          e.disabled = true;
+      });
   }
 
 }

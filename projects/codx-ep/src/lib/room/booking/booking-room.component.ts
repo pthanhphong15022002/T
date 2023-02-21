@@ -93,7 +93,8 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   selectBookingItems = [];
   selectBookingAttendees = '';
   queryParams: any;
-  navigated=false;
+  navigated = false;
+  columnGrids=[];
   constructor(
     private injector: Injector,
     private callFuncService: CallFuncService,
@@ -179,6 +180,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.view.dataService.methodDelete = 'DeleteBookingAsync';
+    this.columnGrids = [
+      
+      
+    ]
     this.views = [
       {
         sameData: false,
@@ -211,34 +216,40 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           panelRightRef: this.panelRight,
         },
       },
-      // {
-      //   sameData: true,
-      //   type: ViewType.content,
-      //   active: false,
-      //   model: {
-      //     panelLeftRef: this.chart,
-      //   },
-      // },
+      {
+        sameData: true,
+      type: ViewType.grid,
+      active: true,
+      model: {
+        resources: this.columnGrids,
+      },
+    }
     ];
-    if(this.queryParams?.predicate && this.queryParams?.dataValue){    
-      this.codxEpService.getBookingByRecID(this.queryParams?.dataValue).subscribe((res:any)=>{
-        if(res){
-          setInterval(()=> this.navigate(res.startDate),2000);
-        }
-      });
-    }  
+    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
+      this.codxEpService
+        .getBookingByRecID(this.queryParams?.dataValue)
+        .subscribe((res: any) => {
+          if (res) {
+            setInterval(() => this.navigate(res.startDate), 2000);
+          }
+        });
+    }
     this.detectorRef.detectChanges();
   }
 
-  
   navigate(date) {
-    if(!this.navigated){
+    if (!this.navigated) {
       let ele = document.getElementsByTagName('codx-schedule')[0];
       if (ele) {
-        if((window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj.first.element.id=='Schedule'){
-          (window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj.first.selectedDate = new Date(date);
-          this.navigated=true;
-        }        
+        if (
+          (window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj
+            .first.element.id == 'Schedule'
+        ) {
+          (
+            window.ng.getComponent(ele) as CodxScheduleComponent
+          ).scheduleObj.first.selectedDate = new Date(date);
+          this.navigated = true;
+        }
       }
     }
   }
@@ -261,19 +272,18 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     });
     return this.tempReasonName;
   }
-  getListAttendees(resources:any){
-    if(resources){
-      let attendees='';
-      for(let i=0;i<resources.length;i++){
-        attendees+=resources[i]?.userID+';';
+  getListAttendees(resources: any) {
+    if (resources) {
+      let attendees = '';
+      for (let i = 0; i < resources.length; i++) {
+        attendees += resources[i]?.userID + ';';
       }
       return attendees;
-    }
-    else {
+    } else {
       return '';
     }
   }
-  
+
   getMoreInfo(recID: any) {
     this.selectBookingItems = [];
     //this.selectBookingAttendees = '';
@@ -327,12 +337,11 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
-      // event.forEach((func) => {
-      //   func.disabled = true;
-      // });
       if (data.approveStatus == '1') {
         event.forEach((func) => {
+          //Mới tạo
           if (
+            // Hiện: sửa - xóa - chép - gửi duyệt -
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'SYS04' /*MF chép*/ ||
@@ -340,50 +349,71 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           ) {
             func.disabled = false;
           }
-
           if (
+            //Ẩn: dời - mời - hủy 
             func.functionID == 'EP4T1102' /*MF sửa*/ ||
-            func.functionID == 'EP4T1101' /*MF xóa*/ // || func.functionID == 'EPT40302' /*MF Cancel*/
+            func.functionID == 'EP4T1101' /*MF xóa*/ ||
+            func.functionID == 'EP4T1104' /*MF hủy*/ 
           ) {
             func.disabled = true;
           }
         });
-      } else if (data.approveStatus == '5' || data.approveStatus == '3') {
+      } else if (data.approveStatus == '5') {
         event.forEach((func) => {
+          //Đã duyệt
           if (
-            func.functionID == 'SYS02' /*MF sửa*/ ||
-            func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP4T1103' /*MF gửi duyệt*/
-          ) {
-            func.disabled = true;
-          }
-          if (
+            // Hiện: Mời - dời - Chép 
             func.functionID == 'EP4T1102' /*MF mời*/ ||
             func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          // if(data.approveStatus == '3' && func.functionID == 'EPT40302' /*MF Cancel*/){
-            
-          //   func.disabled = false;
-          // }
-          // if(data.approveStatus != '3' && func.functionID == 'EPT40302' /*MF Cancel*/){
-            
-          //   func.disabled = true;
-          // }
-        });
-      } else {
-        event.forEach((func) => {
-          if (func.functionID == 'SYS04' /*MF chép*/) {
-            func.disabled = false;
-          }
-          if (
-            func.functionID == 'EP4T1103' /*MF gửi duyệt*/ ||
+          if (//Ẩn: sửa - xóa - duyệt - hủy 
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+            func.functionID == 'EP4T1104' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if ( //Hiện: dời - mời - chép - hủy
+          func.functionID == 'EP4T1102' /*MF mời*/ ||
+          func.functionID == 'EP4T1101' /*MF dời*/ ||
+          func.functionID == 'SYS04' /*MF chép*/||
+          func.functionID == 'EP4T1104' /*MF hủy*/
+          ) {
+            func.disabled = false;
+          }
+          if (//Ẩn: sửa - xóa - gửi duyệt
+            
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
+      else if (data.approveStatus == '4') {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if ( //Hiện: chép
+          func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (//Ẩn: còn lại            
             func.functionID == 'EP4T1102' /*MF mời*/ ||
-            func.functionID == 'EP4T1101' /*MF dời*/
+            func.functionID == 'EP4T1101' /*MF dời*/ ||
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+            func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = true;
           }
@@ -396,7 +426,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(event.data);
     }
-    
   }
   clickMF(event, data) {
     this.popupTitle = event?.text + ' ' + this.funcIDName;
@@ -421,13 +450,13 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       case 'EP4T1103': //Gửi duyệt
         this.release(data);
         break;
+      case 'EP4T1104': //Hủy gửi duyệt
+        this.cancel(data);
+        break;
     }
   }
   release(data: any) {
-    if (
-      this.authService.userValue.userID != data?.owner
-      //&& !this.authService.userValue.administrator
-    ) {
+    if (this.authService.userValue.userID != data?.owner) {
       this.notificationsService.notifyCode('TM052');
       return;
     }
@@ -462,18 +491,18 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         .subscribe();
     }
   }
-  // cancel(data: any) {
-  //   this.codxEpService.cancel(data?.approvalTransRecID).subscribe((res: any) => {
-  //       if (res != null) {
-          
-  //         this.notificationsService.notifyCode('SYS034'); //đã thu hồi
-  //         data.approveStatus = '1';       
-  //         this.view.dataService.update(data).subscribe();
-  //       } else {
-  //         this.notificationsService.notifyCode(res?.msgCodeError);
-  //       }
-  //     });
-  // }
+  cancel(data: any) {
+    this.codxEpService.cancel(data?.recID).subscribe((res: any) => {
+      if (res != null) {
+        this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
+        data.approveStatus = '1';
+        data.status = '1';
+        this.view.dataService.update(data).subscribe();
+      } else {
+        this.notificationsService.notifyCode(res?.msgCodeError);
+      }
+    });
+  }
   reschedule(data: any) {
     if (
       this.authService.userValue.userID != data?.owner &&

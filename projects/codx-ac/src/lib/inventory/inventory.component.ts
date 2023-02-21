@@ -1,30 +1,27 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { ViewModel, ButtonModel, UIComponent, CallFuncService, ViewType, DialogRef, SidebarModel, RequestOption } from 'codx-core';
-import { PopAddCustomersComponent } from './pop-add-customers/pop-add-customers.component';
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
+import { ButtonModel, CallFuncService, DialogRef, RequestOption, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { PopAddInventoryComponent } from './pop-add-inventory/pop-add-inventory.component';
 
 @Component({
-  selector: 'lib-customers',
-  templateUrl: './customers.component.html',
-  styleUrls: ['./customers.component.css']
+  selector: 'lib-inventory',
+  templateUrl: './inventory.component.html',
+  styleUrls: ['./inventory.component.css']
 })
-export class CustomersComponent extends UIComponent {
-  //#region Contructor
+export class InventoryComponent extends UIComponent{
+  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   buttons: ButtonModel = { id: 'btnAdd' };
   headerText: any;
-  columnsGrid = [];
   dialog: DialogRef;
   moreFuncName: any;
   funcName: any;
-  objecttype: string = '1';
-  gridViewSetup: any;
-  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
     private callfunc: CallFuncService,
     @Optional() dialog?: DialogRef
-  ) {
+  ) { 
     super(inject);
     this.dialog = dialog;
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
@@ -34,9 +31,7 @@ export class CustomersComponent extends UIComponent {
       }
     });
   }
-  //#endregion
 
-  //#region Init
   onInit(): void {
   }
   ngAfterViewInit() {
@@ -55,9 +50,6 @@ export class CustomersComponent extends UIComponent {
       },
     ];
   }
-  //#endregion
-
-  //#region Function
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
@@ -74,9 +66,9 @@ export class CustomersComponent extends UIComponent {
         this.edit(e, data);
         break;
     }
-
   }
   add() {
+    console.log(this.view.dataService);
     this.headerText = this.moreFuncName + ' ' + this.funcName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
@@ -87,7 +79,7 @@ export class CustomersComponent extends UIComponent {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '850px';
-      this.dialog = this.callfunc.openSide(PopAddCustomersComponent, obj, option, this.view.funcID);
+      this.dialog = this.callfunc.openSide(PopAddInventoryComponent, obj, option, this.view.funcID);
       this.dialog.closed.subscribe((x) => {
         if (x.event == null)
           this.view.dataService.clear();
@@ -107,7 +99,7 @@ export class CustomersComponent extends UIComponent {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '850px';
-      this.dialog = this.callfunc.openSide(PopAddCustomersComponent, obj, option);
+      this.dialog = this.callfunc.openSide(PopAddInventoryComponent, obj, option);
     });
   }
   delete(data) {
@@ -118,42 +110,17 @@ export class CustomersComponent extends UIComponent {
       this.beforeDelete(option, data)
     ).subscribe((res: any) => {
       if (res) {
-        this.api.exec(
-          'ERM.Business.BS',
-          'BankAccountsBusiness',
-          'DeleteAsync',
-          [this.objecttype, data.customerID]
-        ).subscribe((res: any) => {
-          if (res) {
-            this.api.exec(
-              'ERM.Business.BS',
-              'AddressBookBusiness',
-              'DeleteAsync',
-              [this.objecttype, data.customerID]
-            ).subscribe((res: any) => {
-              if (res) {
-                this.api.exec(
-                  'ERM.Business.BS',
-                  'ContactBookBusiness',
-                  'DeleteAsync',
-                  [this.objecttype, data.customerID]
-                ).subscribe((res: any) => {
-
-                });
-              }
-            });
-          }
-        });
+        
       }
     });
   }
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
-    opt.className = 'CustomersBusiness';
-    opt.assemblyName = 'SM';
-    opt.service = 'SM';
+    opt.className = 'InventoryModelsBusiness';
+    opt.assemblyName = 'IV';
+    opt.service = 'IV';
     opt.data = data;
     return true;
   }
-  //#endregion
 }
+
