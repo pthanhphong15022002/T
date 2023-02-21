@@ -127,8 +127,14 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
         console.log('save eSkill', p);
         if (p != null) {
           this.skillObj.recID = p.recID;
+          this.skillObj = p[0];
+          this.lstSkills = p[1];
           this.notify.notifyCode('SYS006');
-          this.dialog && this.dialog.close(this.skillObj);
+          console.log('skil OBJjjjjjjjjj', this.skillObj);
+          console.log('lst e skilllllllllll', this.lstSkills);
+          this.dialog && this.dialog.close(
+            [this.skillObj, this.lstSkills]
+          );
 
         } else this.notify.notifyCode('SYS023');
       });

@@ -244,8 +244,6 @@ export class PopupAddPostComponent implements OnInit {
       this.data.attachments = _files.length;
       this.data.medias = this.codxViewFiles.medias;
     }
-    debugger
-
     this.api.execSv(
       "WP",
       "ERM.Business.WP",
@@ -338,20 +336,14 @@ export class PopupAddPostComponent implements OnInit {
 
   // add permission share
   addPerrmissonShares(event:any){
-    if(event?.length > 0)
-    {
+    if(event?.length > 0){
       let _permisisons = event;
       let _permission = _permisisons[0];
       this.data.shareControl = _permission.objectType;
       if(this.data.permissions.length == 0)
-      {
         this.data.permissions = [];
-      }
       else
-      {
-        // remove permissions share old
         this.data.permissions = this.data.permissions.filter((e:any) => e.memberType != "2");
-      }
       switch (this.data.shareControl) {
         case this.SHARECONTROLS.OWNER:
           break;
@@ -406,14 +398,10 @@ export class PopupAddPostComponent implements OnInit {
 
   // add permission tag
   addPerrmissonTags(event:any){
-    if(event?.dataSelected?.length > 0)
-    {
+    if(event?.dataSelected?.length > 0){
       let _permissons = event.dataSelected;
-
       if(this.data.permissions?.length == 0)
-      {
         this.data.permissions = [];
-      }
       _permissons.forEach((x: any) => {
         let p = new Permission();
         p.memberType = this.MEMBERTYPE.TAGS;

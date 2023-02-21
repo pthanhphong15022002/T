@@ -67,6 +67,11 @@ export class InstanceDetailComponent implements OnInit {
   };
   titleDefault ='';
   
+  isHiddenReason: boolean = false;
+
+  readonly strInstnace: string = 'instnace';
+  readonly strInstnaceStep: string = 'instnaceStep';
+
   constructor(
     private dpSv: CodxDpService,
     private api: ApiHttpService,
@@ -261,19 +266,17 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   getListStepsStatus(){
-    debugger;
     let listStepHandle = JSON.parse(JSON.stringify(this.listStepNew));
     this.listStepUpdate = this.handleListStep(listStepHandle,this.listSteps);
-    if(this.instanceStatus === '3' || this.instanceStatus === '4') {
-      this.listStepUpdate.pop(); // Xóa phần tử cuối cùng
-    }
-    else if (this.instanceStatus === '5' || this.instanceStatus === '6'){
-      this.listStepUpdate.splice(this.listStepUpdate.length - 2, 1); 
+    this.checkCompletedInstance(this.instanceStatus);
+   }
+   checkCompletedInstance(instanceStatus:any){
+    if(Number(instanceStatus) >= 3 ) {
+      this.isHiddenReason = true;
     }
     else {
-      this.deleteListReason(this.listStepUpdate);
+      this.isHiddenReason = false;
     }
-
    }
 
 }

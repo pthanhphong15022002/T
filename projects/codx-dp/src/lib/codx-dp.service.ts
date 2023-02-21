@@ -299,6 +299,24 @@ export class CodxDpService {
     );
   }
 
+  //process
+  renameProcess(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'RenameProcessAsync',
+      data
+    );
+  }
+  restoreBinById(recID){
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'RestoreProcessAsync',
+      recID
+    );
+  }
+
   GetListUserIDByListTmpEmpIDAsync(data) {
     return this.api.execSv<any>(
       'HR',

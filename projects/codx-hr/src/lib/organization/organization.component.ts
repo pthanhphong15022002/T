@@ -227,6 +227,7 @@ export class OrgorganizationComponent extends UIComponent {
   }
   // button add toolbar
   btnClick(e) {
+    debugger
     if (this.view) {
       let option = new SidebarModel();
       option.Width = '550px';

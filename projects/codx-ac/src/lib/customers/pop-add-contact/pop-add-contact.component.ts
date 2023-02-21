@@ -16,6 +16,7 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
   headerText:string;
   formModel: FormModel;
   contact:Contact;
+  objectContact: Array<Contact> = [];
   gridViewSetup:any;
   contactName:any;
   jobTitle:any;
@@ -41,6 +42,7 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     this.phone = '';
     this.email = '';
     this.contactType = '';
+    this.objectContact = dialogData.data?.datacontact;
     this.cache.gridViewSetup('ContactBook', 'grvContactBook').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -102,6 +104,10 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     this.contactType = e.data;
     this.contact[e.field] = e.data;
   }
+  clearContact(){
+      this.contactName = ''
+      this.jobTitle = '';
+  }
   //#endregion
 
   //#region CRUD
@@ -148,6 +154,11 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     }
     window.localStorage.setItem("datacontact",JSON.stringify(this.contact));
     this.dialog.close();
+  }
+  onSaveAdd(){
+      this.clearContact();
+      this.objectContact.push(this.contact);
+      
   }
   //#endregion
 }

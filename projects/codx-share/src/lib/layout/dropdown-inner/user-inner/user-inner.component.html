@@ -34,7 +34,7 @@
       <div class="separator my-2"></div>
 
       <div class="menu-item">
-        <a [routerLink]="['/user/profile-overview']" [queryParams]="{ funcID: 'POR004', type: 'U', id: 'admin' }"
+        <a (click)="myProfile()"
           class="menu-link px-5">
           <codx-label fiedName="lblMyProfile" [formModel]="formModel" default="My Profile"></codx-label>
         </a>
