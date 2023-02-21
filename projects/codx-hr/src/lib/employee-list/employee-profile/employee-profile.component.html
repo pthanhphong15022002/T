@@ -3468,7 +3468,7 @@
                       *ngFor="let asset of lstAsset"
                     >
                       <div class="has-action-menu">
-                        {{ asset.assetCategory }} gan cung
+                        {{ asset.assetCategory }} 
                         <codx-mfunc
                           [formModel]="formModel"
                           (clickMF)="clickMF($event, asset, 'Assets')"
@@ -5407,8 +5407,12 @@
 </ng-template>
 
 <ng-template #templateBusinessTravelGridCol3 let-data>
-  <div>
+  <div class="has-action-menu">
     {{data?.businessPurpose}}
+    <codx-mfunc
+    [formModel]="EBusinessTravelFormodel"
+    (clickMF)="clickMF($event, data, 'eBusinessTravels')">
+  </codx-mfunc>
   </div>
 </ng-template>
 

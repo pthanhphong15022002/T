@@ -1,3 +1,4 @@
+import { format } from 'path';
 import { PopupJobGeneralInfoComponent } from './../../employee-profile/popup-job-general-info/popup-job-general-info.component';
 import { PopupEbenefitComponent } from './../../employee-profile/popup-ebenefit/popup-ebenefit.component';
 import { PopupEdayoffsComponent } from './../../employee-profile/popup-edayoffs/popup-edayoffs.component';
@@ -238,6 +239,7 @@ export class EmployeeDetailComponent extends UIComponent {
   endDateEBenefitFilterValue;
 
   ViewAllEBenefitFlag = false;
+  ViewAllEAssetFlag = false;
   ViewAllEskillFlag = false;
   ViewAllEBasicSalaryFlag = false;
   ops = ['y'];
@@ -696,10 +698,6 @@ export class EmployeeDetailComponent extends UIComponent {
               template: this.templateBusinessTravelGridCol3,
               width: '150',
             },
-            {
-              template: this.templateBusinessTravelMoreFunc,
-              width: '150',
-            },
           ];
         });
 
@@ -951,16 +949,20 @@ export class EmployeeDetailComponent extends UIComponent {
           this.eExperienceColumnGrid = [
             {
               headerText: this.eExperienceHeaderText['FromDate'],
-              // field: 'fromDate',
-              template: this.tempFromDate,
+              field: 'fromDate',
+              //template: this.tempFromDate,
               width: '150',
+              format: 'MM/y',
+              type: 'Date',
             },
 
             {
               headerText: this.eExperienceHeaderText['ToDate'],
-              // field: 'toDate',
-              template: this.tempToDate,
+              field: 'toDate',
+              // template: this.tempToDate,
               width: '150',
+              format: 'MM/y',
+              type: 'Date',
             },
 
             {
@@ -2007,6 +2009,12 @@ export class EmployeeDetailComponent extends UIComponent {
         } else if (funcID == 'eVaccine') {
           this.HandleEVaccinesInfo(event.text, 'edit', data);
           this.df.detectChanges();
+        } else if (funcID == 'eDayoff') {
+          this.HandleEmployeeDayOffInfo(event.text, 'edit', data);
+          this.df.detectChanges();
+        } else if (funcID == 'eBusinessTravels'){
+          this.HandleEBusinessTravel(event.text, 'edit', data);
+          this.df.detectChanges();
         }
         break;
 
@@ -2062,6 +2070,19 @@ export class EmployeeDetailComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
+            } else if (funcID == 'eDayoff') {
+              this.hrService.DeleteEmployeeDayOffInfo(data).subscribe((p) => {
+                if (p != null) {
+                  this.notify.notifyCode('SYS008');
+                  (this.dayoffGrid.dataService as CRUDService)
+                    .remove(data)
+                    .subscribe();
+                  this.dayoffRowCount = this.dayoffRowCount - 1;
+                  this.df.detectChanges();
+                } else {
+                  this.notify.notifyCode('SYS022');
+                }
+              });
             } else if (funcID == 'family') {
               this.hrService
                 .DeleteEmployeeFamilyInfo(data.recID)
@@ -2087,10 +2108,21 @@ export class EmployeeDetailComponent extends UIComponent {
                       .remove(data)
                       .subscribe();
                     this.eAssetRowCount = this.eAssetRowCount - 1;
+                    let i = this.lstAsset.findIndex(
+                      (x) => x.recID == data.recID
+                    );
                     // let i = this.lstAsset.indexOf(data);
-                    // if (i != -1) {
-                    //   this.lstAsset.splice(i, 1);
-                    // }
+                    console.log('data can xoa', data);
+
+                    console.log(
+                      'ds tai trc khi xoa',
+                      this.lstAsset,
+                      'index ',
+                      i
+                    );
+                    if (i != -1) {
+                      this.lstAsset.splice(i, 1);
+                    }
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2309,6 +2341,19 @@ export class EmployeeDetailComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
+            } else if (funcID == 'eBusinessTravels') {
+              this.hrService
+                .deleteEBusinessTravels(data)
+                .subscribe((p) => {
+                  if (p != null) {
+                    this.notify.notifyCode('SYS008');
+                    (this.businessTravelGrid.dataService as CRUDService).remove(data).subscribe();
+                    this.eBusinessTravelRowCount = this.eBusinessTravelRowCount - 1; 
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
             }
           }
         });
@@ -2317,6 +2362,9 @@ export class EmployeeDetailComponent extends UIComponent {
       case 'SYS04': //copy
         if (funcID == 'passport') {
           this.handleEmployeePassportInfo(event.text, 'copy', data);
+          this.df.detectChanges();
+        } else if (funcID == 'eDayoff') {
+          this.copyValue(event.text, data, 'eDayoff');
           this.df.detectChanges();
         } else if (funcID == 'workpermit') {
           this.handleEmployeeWorkingPermitInfo(event.text, 'copy', data);
@@ -2335,7 +2383,6 @@ export class EmployeeDetailComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'Assets') {
           this.copyValue(event.text, data, 'Assets');
-          // this.HandlemployeeAssetInfo('copy', data);
           this.df.detectChanges();
         } else if (funcID == 'eDegrees') {
           this.HandleEmployeeDegreeInfo(event.text, 'copy', data);
@@ -2366,6 +2413,9 @@ export class EmployeeDetailComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'eBenefit') {
           this.copyValue(event.text, data, 'benefit');
+          this.df.detectChanges();
+        } else if(funcID == 'eBusinessTravels'){
+          this.copyValue(event.text, data, 'eBusinessTravels');
           this.df.detectChanges();
         }
         break;
@@ -3068,17 +3118,20 @@ export class EmployeeDetailComponent extends UIComponent {
     });
   }
 
-  HandleEmployeeDayOffInfo(actionType: string, data: any) {
+  HandleEmployeeDayOffInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.DataService = this.dayoffGrid.dataService;
     option.FormModel = this.dayoffGrid.formModel;
     option.Width = '550px';
+    console.log('data ngay nghi truyen vao', data);
+
     let dialogAdd = this.callfunc.openSide(
       PopupEdayoffsComponent,
       {
         actionType: actionType,
         dayoffObj: data,
-        headerText: 'Nghỉ phép',
+        headerText:
+          actionHeaderText + ' ' + this.getFormHeader(this.dayoffFuncID),
         employeeId: this.employeeID,
         funcID: this.dayoffFuncID,
       },
@@ -3288,9 +3341,8 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   HandlemployeeAssetInfo(actionHeaderText, actionType: string, data: any) {
-    this.eAssetGrid.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
-    option.FormModel = this.eAssetGrid.formModel;
+    option.FormModel = this.eAssetFormModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       // EmployeeAllocatedPropertyDetailComponent,
@@ -3311,9 +3363,11 @@ export class EmployeeDetailComponent extends UIComponent {
       if (res.event) {
         if (actionType == 'add' || actionType == 'copy') {
           this.eAssetRowCount += 1;
-          (this.eAssetGrid.dataService as CRUDService)
-            .add(res.event)
+          (this.eAssetGrid?.dataService as CRUDService)
+            ?.add(res.event)
             .subscribe();
+          this.lstAsset.push(res.event);
+          this.df.detectChanges();
         } else if (actionType == 'edit') {
           (this.eAssetGrid.dataService as CRUDService)
             .update(res.event)
@@ -3765,14 +3819,14 @@ export class EmployeeDetailComponent extends UIComponent {
 
   //#region  HR_EBusinessTravels
   HandleEBusinessTravel(actionHeaderText, actionType: string, data: any) {
-    this.businessTravelGrid.dataService.dataSelected = this.infoPersonal;
+    // this.businessTravelGrid.dataService.dataSelected = this.infoPersonal;
     // (this.businessTravelGrid.dataService as CRUDService).addNew().subscribe(res =>{
     //   console.log('GridComponent', this.businessTravelGrid)
     // });
 
     let option = new SidebarModel();
     option.Width = '550px';
-    option.FormModel = this.businessTravelGrid.formModel;
+    option.FormModel = this.EBusinessTravelFormodel;
     let dialogAdd = this.callfunc.openSide(
       PopupEmpBusinessTravelsComponent,
       {
@@ -3791,8 +3845,8 @@ export class EmployeeDetailComponent extends UIComponent {
       if (res.event) {
         if (actionType == 'add' || actionType == 'copy') {
           this.eBusinessTravelRowCount += 1;
-          (this.businessTravelGrid.dataService as CRUDService)
-            .add(res.event)
+          (this.businessTravelGrid?.dataService as CRUDService)
+            ?.add(res.event)
             .subscribe();
         } else if (actionType == 'edit') {
           (this.businessTravelGrid.dataService as CRUDService)
@@ -3973,8 +4027,6 @@ export class EmployeeDetailComponent extends UIComponent {
   templateBusinessTravelGridCol2: TemplateRef<any>;
   @ViewChild('templateBusinessTravelGridCol3', { static: true })
   templateBusinessTravelGridCol3: TemplateRef<any>;
-  @ViewChild('templateBusinessTravelMoreFunc', { static: true })
-  templateBusinessTravelMoreFunc: TemplateRef<any>;
 
   valueChangeFilterBenefit(evt) {
     console.log('filter theo type', evt);
@@ -4084,6 +4136,24 @@ export class EmployeeDetailComponent extends UIComponent {
     }, 100);
   }
 
+  valueChangeViewAllEAsset(evt) {
+    this.ViewAllEAssetFlag = evt.data;
+    let ins = setInterval(() => {
+      if (this.eAssetGrid) {
+        clearInterval(ins);
+        let t = this;
+        this.eAssetGrid.dataService.onAction.subscribe((res) => {
+          if (res) {
+            if (res.type == 'loaded') {
+              t.eAssetRowCount = res['data'].length;
+            }
+          }
+        });
+        this.eAssetRowCount = this.eAssetGrid.dataService.rowCount;
+      }
+    }, 100);
+  }
+
   valueChangeViewAllESkill(evt) {
     this.ViewAllEskillFlag = evt.data;
     let ins = setInterval(() => {
@@ -4165,6 +4235,18 @@ export class EmployeeDetailComponent extends UIComponent {
         .subscribe((res: any) => {
           this.HandleEmployeeEHealths(actionHeaderText, 'copy', res);
         });
+    } else if (flag == 'eDayoff') {
+      this.dayoffGrid.dataService.dataSelected = data;
+      (this.dayoffGrid.dataService as CRUDService)
+        .copy()
+        .subscribe((res: any) => {
+          this.HandleEmployeeDayOffInfo(actionHeaderText, 'copy', res);
+        });
+    } else if(flag == 'eBusinessTravels'){
+      this.businessTravelGrid.dataService.dataSelected = data;
+      (this.businessTravelGrid.dataService as CRUDService).copy().subscribe((res: any) => {
+      this.HandleEBusinessTravel(actionHeaderText, 'copy', res);
+      })
     }
   }
   //#endregion

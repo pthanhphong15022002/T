@@ -3352,6 +3352,7 @@
                     *ngIf="eBenefitGrvSetup"
                     [cssClass]="'rounded-pill border-1'"
                     cssPopup="h-350px w-300px"
+                    emptyText="Loại phụ cấp"
                     [isMulti]="true"
                     type="combobox"
                     field="BenefitID"
@@ -3360,7 +3361,7 @@
                   ></codx-dropdown-select>
                   <codx-dropdown-calendar
                     [cssPopup]="'w-600px h-400px'"
-                    emptyText="Chọn năm..."
+                    emptyText="Chọn năm"
                     [firstChange]="false"
                     [displayOption]="ops"
                     [selectedType]="'y'"
@@ -3407,34 +3408,9 @@
                   >
                   </codx-label> -->
                   {{ getFormHeader(eAssetFuncID) }}
-                  <span class="text-gray-500 ms-2"> | </span>
-                  <span class="text-dark fw-bold">
-                    <span>({{ eAssetRowCount }})</span>
-                  </span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
-                <codx-dropdown-select
-                  [cssClass]="'rounded-pill border-1'"
-                  cssPopup="h-350px w-300px"
-                  [isMulti]="true"
-                  type="combobox"
-                  field="AssetCategory"
-                  [refValue]="'AssetCategory'"
-                  (valueChange)="valueChangeFilterAssetCategory($event)"
-                ></codx-dropdown-select>
-                <span class="text-gray-500 ms-2">|</span>
-
-                <codx-dropdown-calendar
-                  [cssPopup]="'w-600px h-400px'"
-                  emptyText="Chọn năm..."
-                  [firstChange]="false"
-                  [displayOption]="ops"
-                  [selectedType]="'y'"
-                  [cssClass]="'rounded-pill'"
-                  (change)="valueChangeYearFilterEAsset($event)"
-                ></codx-dropdown-calendar>
-                <span class="text-gray-500 ms-2">|</span>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="HandlemployeeAssetInfo(addHeaderText, 'add', null)"
@@ -3444,20 +3420,72 @@
                   ></span>
                 </button>
                 <span class="text-gray-500 ms-2">|</span>
-                <button
-                  class="btn btn-icon btn-sm position-relative ms-1"
-                  (click)="addTest()"
-                >
-                  <span
-                    class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
-                  ></span>
-                </button>
+                <codx-label name="lblSeeAllEAsset" default="Xem tất cả">
+                </codx-label>
+                <codx-input
+                  type="switch"
+                  (valueChange)="valueChangeViewAllEAsset($event)"
+                  [checked]="ViewAllEAssetFlag"
+                ></codx-input>
               </div>
             </div>
+
             <div class="mb-1">
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+              ></div>
+              <div class="d-flex flex-wrap mt-6 mb-3">
+                <div
+                  [style.background]="'black'"
+                  class="badge border-0 me-2"
+                  *ngFor="let asset of lstAsset"
+                >
+                  <div class="has-action-menu">
+                    {{
+                      asset.assetCategory
+                        | formatvalue : eAssetFormModel : "assetCategory"
+                        | async
+                    }}
+                  </div>
+                </div>
+              </div>
+              <div class="row form-group"></div>
+            </div>
+
+            <div *ngIf="ViewAllEAssetFlag == true">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5"
               >
+                <div class="d-flex me-3">
+                  <codx-label default="Chi tiết" class="text-uppercase">
+                  </codx-label>
+                  <span class="text-gray-500 ms-2"> | </span>
+                  <span>({{ eAssetRowCount }})</span>
+                </div>
+                <div class="d-flex me-3">
+                  <codx-dropdown-select
+                    [cssClass]="'rounded-pill border-1'"
+                    cssPopup="h-350px w-300px"
+                    [isMulti]="true"
+                    type="combobox"
+                    emptyText="Loại tài sản"
+                    field="AssetCategory"
+                    [refValue]="'AssetCategory'"
+                    (valueChange)="valueChangeFilterAssetCategory($event)"
+                  ></codx-dropdown-select>
+    
+                  <codx-dropdown-calendar
+                    [cssPopup]="'w-600px h-400px'"
+                    emptyText="Năm"
+                    [firstChange]="false"
+                    [displayOption]="ops"
+                    [selectedType]="'y'"
+                    [cssClass]="'rounded-pill'"
+                    (change)="valueChangeYearFilterEAsset($event)"
+                  ></codx-dropdown-calendar>
+                </div>
+              </div>
+              <div>
                 <codx-gridview
                   *ngIf="eAssetColumnGrid"
                   #eAssetGridView
@@ -3474,8 +3502,7 @@
                   [rowHeight]="50"
                   height="240px"
                 ></codx-gridview>
-              </div>
-              <div class="d-flex flex-wrap mt-6 mb-3">
+              <!-- <div class="d-flex flex-wrap mt-6 mb-3">
                 <div
                   [style.background]="'black'"
                   class="badge border-0 me-2"
@@ -3492,8 +3519,10 @@
                     </codx-mfunc>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
+            </div>
+
           </div>
           <hr />
         </div>
@@ -3735,15 +3764,10 @@
               <span class="text-gray-500 ms-2">|</span>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
-                  (click)="HandleEmployeeDayOffInfo('add', null)"
+                  (click)="HandleEmployeeDayOffInfo(addHeaderText,'add', null)"
                 >
                   <span
                     class="icon-add icon-20 text-gray-600 text-hover-primary"
-                  ></span>
-                </button>
-                <button class="btn btn-icon btn-sm position-relative ms-1">
-                  <span
-                    class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
                   ></span>
                 </button>
               </div>
@@ -3795,7 +3819,7 @@
               <div class="d-flex align-items-center ms-5">
                 <codx-dropdown-calendar
                   [cssPopup]="'w-600px h-400px'"
-                  emptyText="Chọn năm..."
+                  emptyText="Năm"
                   [firstChange]="false"
                   [displayOption]="ops"
                   [selectedType]="'y'"
@@ -3812,36 +3836,27 @@
                     class="icon-add icon-20 text-gray-600 text-hover-primary"
                   ></span>
                 </button>
-                <span class="text-gray-500 ms-2">|</span>
-                <button class="btn btn-icon btn-sm position-relative ms-1">
-                  <span
-                    class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
-                  ></span>
-                </button>
               </div>
             </div>
             <div class="mb-1">
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
-                <!-- <codx-gridview-v2
-                      idField="recID"
-                      [columnsGrid]="workDiaryColumnGrid"
-                      [service]="'HR'"
-                      [gridViewName]="'grvEBusinessTravels'"
-                      [formName]="'EBusinessTravels'"
-                      [assemblyName]="'Core'"
-                      [className]="'DataBusiness'"
-                      [method]="'LoadDataAsync'"
-                      [predicates]="'EmployeeID=@0'"
-                      [autoLoad]="true"
-                      [height]="200"
-                      [dataValues]="data.employeeID"
-                      [entityName]="'HR_EBusinessTravels'"
-                      [contentEditable]="false"
-                      [allowResizing]="true"
-                      (clickMF)="clickMF($event, null, 'eBusinessTravels')"
-                    ></codx-gridview-v2> -->
+              <codx-gridview *ngIf="businessTravelColumnGrid"
+                #businessTravelGrid
+                [formModel]="EBusinessTravelFormodel"
+                [columnsGrid]="businessTravelColumnGrid"
+                [service]="'HR'"
+                [assemblyName]="'Core'"
+                [className]="'DataBusiness'"
+                [method]="'LoadDataAsync'"
+                [predicates]="'EmployeeID=@0'"
+                [dataValues]="employeeID"
+                [pageSize]="numPageSizeGridView"
+                [entityName]="'HR_EBusinessTravels'"
+                [rowHeight]="50"
+                height="240px"
+              ></codx-gridview>
               </div>
             </div>
           </div>
@@ -4625,24 +4640,6 @@
             </div>
 
             <div class="mb-1">
-              <!-- <codx-gridview-v2
-                idField="recID"
-                [service]="'HR'"
-                [gridViewName]="'grvEDisciplines'"
-                [formName]="'EDisciplines'"
-                [assemblyName]="'Core'"
-                [className]="'DataBusiness'"
-                [method]="'LoadDataAsync'"
-                [predicates]="'EmployeeID=@0'"
-                [autoLoad]="true"
-                [height]="200"
-                [dataValues]="data.employeeID"
-                [entityName]="'HR_EDisciplines'"
-                [contentEditable]="false"
-                [allowResizing]="true"
-                (clickMF)="clickMF($event, null, 'eDisciplines')"
-                [columnsGrid]="disciplineColumnGrid"
-              ></codx-gridview-v2> -->
             </div>
           </div>
         </div>
@@ -5298,7 +5295,6 @@
 <ng-template #templateEAssetCol1 let-data>
   <div>
     <div>
-      <i class="icon-class icon-20 me-1 text-primary"></i>
       {{
         data?.assetCategory
           | formatvalue : eAssetFormModel : "assetCategory"
@@ -5306,9 +5302,8 @@
       }}
     </div>
     <div>
-      <i
-        class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"
-      ></i>
+      <i class="icon-class icon-20 me-1 text-primary"></i>
+
       {{ data?.assetNo }}
     </div>
   </div>
@@ -5319,14 +5314,15 @@
     {{ data?.issuedDate | fmDT }}
     <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
   </div>
-  <div>
-    {{ data?.isAllowReturn }}
+  <div *ngIf="data?.isAllowReturn == true">
+    {{ eAssetHeaderText['IsAllowReturn'] }}
   </div>
 </ng-template>
 
 <ng-template #templateEAssetCol3 let-data>
-  <div *ngIf="data.isReturned == true" class="has-action-menu">
-    đã thu hồi
+  <div *ngIf="data?.isReturned == true" class="has-action-menu">
+     {{eAssetHeaderText['IsReturned']}}
+    <i class="icon-calendar_today"></i>
     {{ data?.returnedDate | fmDT }}
     <codx-mfunc
       [formModel]="eAssetFormModel"
@@ -5866,6 +5862,41 @@
       type="hover"
     >
     </codx-mfunc>
+  </div>
+</ng-template>
+
+<ng-template #templateBusinessTravelGridCol1 let-data>
+  <div>
+    <i class="icon-home_work"></i>
+    {{data?.businessPlace }}
+  </div>
+  <div>
+    <i class="icon-connection-point icon-18 text-gray-600 me-1 text-primary"></i>
+    {{data?.kowID | formatvalue: EBusinessTravelFormodel:"kowID" | async}}
+  </div>
+</ng-template>
+
+<ng-template #templateBusinessTravelGridCol2 let-data>
+  <div>
+    <i class="icon-calendar_today"></i>
+    {{data?.beginDate | fmDT}} - {{ data?.endDate| fmDT }}
+  </div>
+  <div>
+    <i class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></i>
+    {{data?.days}}
+  </div>
+</ng-template>
+
+<ng-template #templateBusinessTravelGridCol3 let-data>
+  <div class="has-action-menu">
+    {{data?.businessPurpose}}
+    <codx-mfunc
+    [formModel]="EBusinessTravelFormodel"
+    (clickMF)="clickMF($event, data, 'eBusinessTravels')"
+    type="hover"
+    [dataItem]="data"
+    >
+  </codx-mfunc>
   </div>
 </ng-template>
 <!-- #endregion -->
