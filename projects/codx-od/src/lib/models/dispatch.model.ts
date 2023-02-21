@@ -1,6 +1,7 @@
 //Chia sẻ công văn
 class permissionDis
 {
+    to             : string[];
     recID          : string;
     objID          : string;
     objType        : string;
@@ -9,8 +10,9 @@ class permissionDis
     download       : boolean;
     formDate       : Date;
     toDate         : Date
-    sendMail       : boolean;
+    sendMail       : boolean = false;
     description    : string;
+    funcID         : string;
     inforSentEMail : inforSentEMail 
 }
 
