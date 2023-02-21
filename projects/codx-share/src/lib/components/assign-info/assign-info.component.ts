@@ -134,7 +134,6 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         this.referedData
       );
       this.task[dataField] = dataValue;
-      debugger
     }
   }
   ngAfterViewInit(): void {
