@@ -300,7 +300,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   ngOnInit(): void {
     // this.updateNodeStatus(0,1);
-    this.grvMoreFunction = this.dialog?.formModel;
+    this.grvMoreFunction = JSON.parse(JSON.stringify(this.dialog?.formModel));
     this.grvMoreFunction.entityName = 'DP_InstancesSteps';
     this.grvMoreFunction.formName = 'DPInstancesSteps';
     this.grvMoreFunction.gridViewName = 'grvDPInstancesSteps';

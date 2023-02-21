@@ -94,3 +94,67 @@
 
 </ng-template>
 
+<ng-template #editNameProcess>
+  <codx-form
+    [headerText]="TITLENAME"
+    [body]="editNameBody"
+    [footer]="editNameFooter"
+    [dialog]="popupEditName"
+  >
+  </codx-form>
+</ng-template>
+
+<ng-template #editNameBody>
+  <div class="mt-5">
+    <div class="form-group">
+      <div>
+        <codx-label
+          fiedName="processName"
+          [formModel]="view.formModel"
+          default="Tên giai đoạn"
+        ></codx-label>
+      </div>
+      <codx-input
+        field="processName"
+        [formModel]="view.formModel"
+        type="text"
+        [crrValue]="processName"
+        (valueChange)="changeValueInput($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #editNameFooter>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-outline-primary me-5">
+      <codx-label
+        name="Save"
+        formName="Tasks"
+        default="Hủy"
+        (click)="popupEditName.close()"
+      ></codx-label>
+    </button>
+    <button type="button" class="btn btn-primary">
+      <codx-label
+        name="Save"
+        formName="Tasks"
+        default="Đồng ý"
+        (click)="editName()"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #headerTemplate>
+  <ng-container *ngIf="view.formModel.funcID == 'DP04'">
+    <div class="nondata-container w-100 mb-2">
+      <div class="d-flex justify-content-between page-heading align-items-center
+        p-2">
+        <codx-label fiedName="lbl" default="Các mục trong thùng rác sẽ xóa vĩnh
+          viễn trong 30 ngày"></codx-label>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
