@@ -3,7 +3,7 @@ export class ExchangeRates {
   createdBy: any;
   createdOn: any;
   currencyID: any;
-  exchangeRate: 1;
+  exchangeRate: any;
   modifiedBy: any;
   modifiedOn: any;
   note: any;
