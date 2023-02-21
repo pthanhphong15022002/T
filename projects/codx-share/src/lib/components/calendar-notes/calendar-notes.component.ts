@@ -600,11 +600,12 @@ export class CalendarNotesComponent
     requestDataCO.pageSize = 1000;
     requestDataCO.entityName = 'CO_Meetings';
     requestDataCO.entityPermission = 'CO_TMMeetings';
-    this.codxShareSV.getDataCO_Meetings(requestDataCO).subscribe((res) => {
-      if (res) {
-        this.getModelShare(res[0], param.Template, 'CO_Meetings');
-      }
-    });
+    // tạm thời comment lại vì không tìn thấy hàm  GetListMeetingsCalendarAsync 
+    // this.codxShareSV.getDataCO_Meetings(requestDataCO).subscribe((res) => {
+    //   if (res) {
+    //     this.getModelShare(res[0], param.Template, 'CO_Meetings');
+    //   }
+    // });
   }
 
   getRequestEP_BookingRoom(predicate, dataValue, param, showEvent) {
