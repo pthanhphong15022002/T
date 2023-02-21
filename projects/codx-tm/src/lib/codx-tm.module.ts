@@ -45,9 +45,6 @@ import { TaskByProjectsComponent } from './reports/task-by-projects/task-by-proj
 import { ProjectChartComponent } from './reports/task-by-projects/project-chart/project-chart.component';
 import { CalendarComponent } from './setting/calendar/calendar.component';
 import { FormsModule } from '@angular/forms';
-import { MyDashboardComponent } from './tmdashboard/mydashboard/mydashboard.component';
-import { TeamDashboardComponent } from './tmdashboard/teamdashboard/teamdashboard.component';
-import { AssignDashboardComponent } from './tmdashboard/assigndashboard/assigndashboard.component';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
@@ -70,6 +67,7 @@ import { PopupAddResourcesComponent } from './tmmeetings/popup-add-resources/pop
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { TMDashboardComponent } from './tmdashboard/tmdashboard.component';
 import { LayoutNoToolbarComponent } from './tmdashboard/_noToolbar/_noToolbar.component';
+import { DashboardContentComponent } from './tmdashboard/dashboard-content/dashboard-content.component';
 
 export const routes: Routes = [
   {
@@ -186,6 +184,12 @@ export const routes: Routes = [
       {
         path: 'tmdashboard/:funcID',
         component: TMDashboardComponent,
+        children: [
+          {
+            path: ':reportID',
+            component: DashboardContentComponent,
+          },
+        ],
       },
     ],
   },
@@ -217,9 +221,6 @@ const T_Component: Type<any>[] = [
   PopupShareSprintsComponent,
   TasksComponent,
   TMDashboardComponent,
-  MyDashboardComponent,
-  TeamDashboardComponent,
-  AssignDashboardComponent,
   TMMeetingsComponent,
   PopupAddMeetingComponent,
   ViewListMeetComponent,
@@ -234,6 +235,7 @@ const T_Component: Type<any>[] = [
   PopupRescheduleMeetingComponent,
   PopupAddResourcesComponent,
   LayoutNoToolbarComponent,
+  DashboardContentComponent,
 ];
 @NgModule({
   imports: [

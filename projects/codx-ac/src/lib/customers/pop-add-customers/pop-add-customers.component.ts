@@ -256,6 +256,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   openPopupContact() {
     var obj = {
       headerText: 'Thêm người liên hệ',
+      datacontact:this.objectContact
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
