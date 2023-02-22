@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, CodxFormComponent, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
+import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { ApiHttpService, CacheService, CallFuncService, CodxFormComponent, CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { BankAccount } from '../../models/BankAccount.model';
 import { Contact } from '../../models/Contact.model';
@@ -21,8 +22,14 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
   contactName:any;
   jobTitle:any;
   phone:any;
+  homePhone:any;
+  phoneExt:any;
   email:any;
+  gender:any;
+  note:any;
+  recIdAddress:any;
   contactType:any;
+  type:any;
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -37,12 +44,18 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
+    this.type = dialogData.data?.type;
     this.contactName = '';
     this.jobTitle = '';
     this.phone = '';
     this.email = '';
-    this.contactType = '';
+    this.gender = null;
+    this.homePhone = '';
+    this.contactType = null;
+    this.phoneExt = '';
+    this.note = '';
     this.objectContact = dialogData.data?.datacontact;
+    this.recIdAddress = dialogData.data?.recIdAddress;
     this.cache.gridViewSetup('ContactBook', 'grvContactBook').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -55,6 +68,10 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
       this.phone = dialogData.data?.data.phone;
       this.email = dialogData.data?.data.email;
       this.contactType = dialogData.data?.data.contactType;
+      this.gender = dialogData.data?.data.gender;
+      this.homePhone = dialogData.data?.data.homePhone;
+      this.phoneExt = dialogData.data?.data.phoneExt;
+      this.note = dialogData.data?.data.note;
     }
   }
 //#endregion
@@ -82,6 +99,26 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     return number.toString();
   }
   valueChange(e:any){
+    switch(e.field){
+      case 'gender':
+        this.gender = e.data;
+      break;
+      case 'homePhone':
+        this.homePhone = e.data;
+      break;
+      case 'phoneExt':
+        this.phoneExt = e.data;
+      break;
+      case 'phoneExt':
+        this.phoneExt = e.data;
+      break;
+      case 'contactType':
+        this.contactType = e.data;
+      break;
+      case 'note':
+        this.note = e.data;
+      break;
+    }
     this.contact[e.field] = e.data;   
   }
   valueChangeContactName(e: any) {
@@ -107,6 +144,15 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
   clearContact(){
       this.contactName = ''
       this.jobTitle = '';
+      this.gender = null;
+      this.phone = '';
+      this.homePhone = '';
+      this.phoneExt = '';
+      this.email = '';
+      this.contactType = null;
+      this.note = '';
+      this.contact.recID = Guid.newGuid();
+      this.contact.contactID = this.randomNumber();
   }
   //#endregion
 
@@ -156,9 +202,51 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     this.dialog.close();
   }
   onSaveAdd(){
-      this.clearContact();
-      this.objectContact.push(this.contact);
-      
+    if (this.contactName.trim() == '' || this.contactName == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ContactName'].headerText + '"'
+      );
+      return;
+    }
+    if (this.jobTitle.trim() == '' || this.jobTitle == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['JobTitle'].headerText + '"'
+      );
+      return;
+    }
+    if (this.phone.trim() == '' || this.phone == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Phone'].headerText + '"'
+      );
+      return;
+    }
+    if (this.email.trim() == '' || this.email == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Email'].headerText + '"'
+      );
+      return;
+    }
+    if (this.contactType.trim() == '' || this.contactType == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ContactType'].headerText + '"'
+      );
+      return;
+    }
+    if (this.recIdAddress != null) {
+      this.contact.reference = this.recIdAddress;
+    }
+    this.objectContact.push({...this.contact});
+    this.clearContact();   
   }
   //#endregion
 }
