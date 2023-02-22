@@ -36,6 +36,7 @@ export class PopupUpdateProgressComponent implements OnInit {
   percentage100 = false;
   submitted = false;
   crrpercentage = 0;
+  isSave = false ;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -93,6 +94,8 @@ export class PopupUpdateProgressComponent implements OnInit {
     } else this.actionUpdatePercentage();
   }
   actionUpdatePercentage() {
+    if(this.isSave) return ;
+    this.isSave=true ;
     this.tmSv
       .updateProgressTask(
         this.funcID,

@@ -93,6 +93,16 @@
               : gridViewSetup?.RefDate?.headerText
               }}</span>
           </div>
+          <div class="d-flex align-items-center me-5 mb-1">
+            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="ContactName"
+              ngClass="fw-bold label-colon"></codx-label>
+            <!--             <span class="text-gray-700">{{data?.refDate | formatvalue:formModel:'refDate':'headerText' | async | date: 'dd/MM/yyyy'}}</span> -->
+            <span class="text-gray-700">{{
+              data?.contactName
+              ? data?.contactName
+              : gridViewSetup?.ContactName?.headerText
+              }}</span>
+          </div>
         </div>
       </div>
       <div class="d-flex flex-column justify-content-start w-100px pt-2">
