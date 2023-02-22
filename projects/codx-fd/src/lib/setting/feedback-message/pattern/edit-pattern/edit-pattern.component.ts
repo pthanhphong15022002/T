@@ -198,6 +198,8 @@ export class EditPatternComponent implements OnInit {
               }
             );
           } else {
+            if(this.formType == 'edit') res.update.imageSrc = this.pattern?.imageSrc;
+            else res.save.imageSrc = this.pattern?.imageSrc;
             var obj = { data: res, listFile: null };
             this.dialog.close(obj);
           }
