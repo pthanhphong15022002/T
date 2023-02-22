@@ -117,27 +117,24 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
   // searrch
   search(event: any) {
-    if(event){
-      debugger
-      this.searched = true;
+    this.searched = event ? true : false;
+    this.dt.detectChanges();
+    if(this.codxListViewSerach.dataService)
       this.codxListViewSerach.dataService.search(event).subscribe();
-      // this.api.execSv("WP","ERM.Business.WP","GroupBusiness","SearchAsync",[event,0])
-      // .subscribe((res:any) =>{
-      //   this.dataSerach = res;
-      //   this.dt.detectChanges();
-      // });
-    }
-    else
-      this.searched = false;
-    
   }
   // click group chat - chat box
   openChatBox(group: any) {
-    if (group) 
-    {
-      if(!group.isRead)
-      {
-        //update status message
+    debugger
+    if(group["type"] === "U"){
+      this.api.execSv("WP","ERM.Business.WP","GroupBusiness","GetGroupByUserIDAsync",[group.id,group.name])
+      .subscribe((res:any)=>{
+        if(res){
+          this.addBoxChat(res.groupID);
+        }
+      });
+    }
+    else{
+      if(!group.isRead){
         this.api.execSv(
           "WP",
           "ERM.Business.WP",
@@ -151,6 +148,10 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // get group chat by userID
+  getGroupByUserID(userID:string){
+    return 
+  }
   // open popup add group chat
   openPopupAddGroup() {
     if (this.function) {

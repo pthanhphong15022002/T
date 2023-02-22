@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container h-100">
     <div id="kt_chat_list_header">
         <!-- title -->
         <div class="row">
@@ -38,8 +38,9 @@
             data-kt-scroll-activate="{default: false, lg: true}"
             data-kt-scroll-max-height="auto"
             data-kt-scroll-dependencies="#kt_header, #kt_toolbar, #kt_footer, #kt_chat_list_header"
-            data-kt-scroll-wrappers="#kt_content, #kt_chat_contacts_body" data-kt-scroll-offset="0px"
-            style="max-height: 600px; overflow-x:hidden">
+            data-kt-scroll-wrappers="#kt_content, #kt_chat_contacts_body" 
+            data-kt-scroll-offset="0px"
+            style="overflow-x:hidden">
             <ng-container *ngIf="searched;else tmpListGroup">
                 <codx-listview #codxListViewSerach
                     [itemTemplate]="itemTemplateSearch" 
@@ -104,25 +105,14 @@
 </ng-template>
 <!-- template search chat -->
 <ng-template #itemTemplateSearch let-item>
-    <div class="row" (click)="openChatBox(item)">
-        <ng-container *ngIf="item.type == 'U'">
-            <codx-temp-full 
-                [dataItem]="item" 
-                [title]="item.userName" 
-                [imageId]="item.userID" 
-                [imageObjType]="'AD_Users'" 
-                [imageObjName]="item.userName">
-            </codx-temp-full>
-        </ng-container>
-        <ng-template #tmpGroup>
-            <codx-temp-full 
-                [dataItem]="item" 
-                [title]="item.groupType == '1' ? item.groupName2 : item.groupName" 
-                [imageId]="item.userID" 
-                [imageObjType]="item.groupType == '1' ? 'AD_Users' : 'WP_Groups'" 
-                [imageObjName]="item.groupType == '1' ? item.groupName2 : item.groupName">
-            </codx-temp-full>
-        </ng-template>
+    <div class="row my-1" (click)="openChatBox(item)">
+        <codx-temp-full 
+            [dataItem]="item" 
+            [title]="item.name" 
+            [imageId]="item.id" 
+            [imageObjType]="item.type == 'U' ? 'AD_Users':'WP_Groups'" 
+            [imageObjName]="item.name">
+        </codx-temp-full>
     </div>
 </ng-template>
 

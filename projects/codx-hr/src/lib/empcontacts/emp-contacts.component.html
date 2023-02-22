@@ -19,6 +19,7 @@
   <codx-card-center
     cardCss="border  d-flex flex-center flex-column  card-user"
     [imageId]="data.employeeID"
+    imageObjType="HR_Employees"
     imageWidth="50"
     [formModel]="view.formModel"
     [title]="
@@ -69,7 +70,7 @@
       [objectId]="data.employeeID"
       [objectName]="data.employeeName"
       objectType="HR_Employees"
-    >
+      [referType]="'avt'">
     </codx-img>
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex align-items-center">
@@ -96,12 +97,8 @@
 </ng-template>
 
 <ng-template #itemStatusName let-data>
-  <div
-    class="badge badge-danger me-2"
-    [style.background-color]="data?.statusColor"
-  >
-    {{ data.statusName }}
-  </div>
+  <codx-vll [value]="data.status" [name]="'HR003'" [showText]="true" [showBgColor]="true"
+          [className]="'badge badge-success badge-sm badge-inline'"></codx-vll>
 </ng-template>
 
 <ng-template #itemBirthDay let-data>
