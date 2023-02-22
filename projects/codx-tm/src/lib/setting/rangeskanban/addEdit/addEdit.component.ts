@@ -81,9 +81,18 @@ export class AddEditComponent implements OnInit {
       });
 
     this.dialog.beforeClose.subscribe((res) => {
-      if (res.event == null && this.action == 'edit') {
-        this.master.rangeName = this.orgData.rangeName;
-        this.master.note = this.orgData.note;
+      if (res.event == null) {
+        if (this.action == 'edit') {
+          this.master.rangeName = this.orgData.rangeName;
+          this.master.note = this.orgData.note;
+        } else {
+          if (this.dialog.dataService.hasSaved)
+            this.dialog.dataService
+              .delete([this.dialog.dataService.dataSelected], false)
+              .subscribe((res) => {
+                if (res) this.dialog.dataService.hasSaved = false;
+              });
+        }
       }
       this.dialog.dataService.clear();
     });
@@ -123,6 +132,7 @@ export class AddEditComponent implements OnInit {
         if ((res && !res.save.error) || !res.save.error.isError) {
           this.line.rangeID = this.master.rangeID =
             this.dialog.dataService.dataSelected.rangeID;
+          this.dialog.dataService.hasSaved = true;
           this.callfc.openForm(template, '', 500, 400);
         }
       });

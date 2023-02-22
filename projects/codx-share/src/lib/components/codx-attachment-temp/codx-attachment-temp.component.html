@@ -5,11 +5,19 @@
         <div>{{countData}}</div>
     </div>
 </div>
+
 <div *ngIf="viewType=='1'">
     <div (click)="openViewPopup? openPopup():''">
         <span class="icon-attach_file icon-18"> </span>
         <span class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary">
             {{ count}}</span>
+    </div>
+</div>
+<div *ngIf="viewType=='2'">
+    <div (click)="openViewPopup? openPopup():''">
+        <span class="icon-attach_file icon-18"> </span>
+        <span class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary">
+            {{ countData}}</span>
     </div>
 </div>
 <ng-template #tmpListItem let-dialog>

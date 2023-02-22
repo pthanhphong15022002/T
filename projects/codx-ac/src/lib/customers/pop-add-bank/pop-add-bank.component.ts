@@ -15,11 +15,14 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
   headerText:string;
   formModel: FormModel;
   bankaccount: BankAccount;
+  objectBankaccount: Array<BankAccount> = [];
   gridViewSetup:any;
   bankAcctID:any;
   bankID:any;
-  formType:any;
   owner:any;
+  description:any;
+  isDefault:any;
+  type:any;
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -34,10 +37,13 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
-    this.formType = dialogData.data?.formType;
+    this.type = dialogData.data?.type;
+    this.objectBankaccount = dialogData.data?.dataBank;
     this.bankAcctID ='';
-    this.bankID = '';
+    this.bankID = null;
     this.owner = '';
+    this.description = '';
+    this.isDefault = false;
     this.cache.gridViewSetup('BankAccounts', 'grvBankAccounts').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -48,6 +54,8 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
       this.bankAcctID =  dialogData.data?.data.bankAcctID;
       this.bankID = dialogData.data?.data.bankID;
       this.owner = dialogData.data?.data.owner;
+      this.description = dialogData.data?.data.description;
+      this.isDefault = dialogData.data?.data.isDefault;
     }
   }
 //#endregion
@@ -67,6 +75,14 @@ onInit(): void {
   
   //#region Function
   valueChange(e:any){
+    switch(e.field){
+      case 'description':
+        this.description = e.data;
+      break;
+      case 'isDefault':
+        this.isDefault = e.data;
+      break;
+    }
     this.bankaccount[e.field] = e.data; 
   }
   valueChangeBankAcctID(e: any) {
@@ -81,6 +97,14 @@ onInit(): void {
   valueChangeOwner(e: any) {
     this.owner = e.data;
     this.bankaccount[e.field] = e.data;   
+  }
+  clearBankAccount(){
+    this.bankAcctID = '';
+    this.bankID = null;
+    this.owner = '';
+    this.description = '';
+    this.isDefault = false;
+    this.bankaccount.bankAcctNo = '';
   }
   //#endregion
 
@@ -112,6 +136,10 @@ onInit(): void {
     }
       window.localStorage.setItem("databankaccount",JSON.stringify(this.bankaccount));
     this.dialog.close();
+  }
+  onSaveAdd(){
+    this.objectBankaccount.push({...this.bankaccount});
+    this.clearBankAccount();
   }
   //#endregion
 }

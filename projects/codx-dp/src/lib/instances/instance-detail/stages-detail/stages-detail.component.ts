@@ -62,6 +62,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() isUpdate: boolean = false;
   @Input() isCreate: boolean = false;
   @Input() listStepReason: any;
+  @Input() instance: any;
 
   dateActual: any;
   startDate: any;
@@ -110,7 +111,7 @@ export class StagesDetailComponent implements OnInit {
   listJobType = [];
 
   listReasonStep: DP_Instances_Steps_Reasons[] = [];
-
+  listReasonsClick: DP_Instances_Steps_Reasons[] = [];
   dialogPopupReason: DialogRef;
 
   constructor(
@@ -947,14 +948,15 @@ export class StagesDetailComponent implements OnInit {
   //End task -- nvthuan
 
   openPopupReason(){
-    debugger;
     this.dialogPopupReason = this.callfc.openForm(this.viewReason, '', 500, 10);
   }
   changeReasonMF(e) {
+    console.table(e);
     if (e != null) {
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS02':
+          case 'SYS102':
           default:
             res.disabled = true;
         }
@@ -963,23 +965,31 @@ export class StagesDetailComponent implements OnInit {
   }
   checkValue($event,data){
     if($event && $event.currentTarget.checked){
-        var reason = this.handleReason(data);
-        this.dataStep?.reasons.push(reason);
+        var reason = this.handleReason(data,this.dataStep);
+        this.listReasonsClick.push(reason);
     }
     else {
-      let idx = this.dataStep?.reasons.findIndex(x=> x.reasonName  === data.reasonName);
-      if(idx>=0) this.dataStep?.reasons.splice(idx, 1);
+      let idx = this.listReasonsClick.findIndex(x=> x.reasonName  === data.recID);
+      if(idx>=0) this.listReasonsClick.splice(idx, 1);
     }
   }
   handleReason(
-    reason: DP_Instances_Steps_Reasons
+    reason: DP_Instances_Steps_Reasons,
+    instanceStep: DP_Instances_Steps
   ) {
-    reason.processID = this.dataStep.processID;
-    reason.stepID = this.dataStep.stepID;
-    reason.instanceID = this.dataStep.recID;
-    // reason.createdBy = this.userId;
+    reason.stepID = instanceStep.stepID;
+    reason.instanceID = instanceStep.recID;
+    reason.createdBy = this.user
     // reason.reasonType = this.isReason ? '1' : '2';
     return reason;
   }
-
+  onSaveReason(){
+    this.dataStep.reasons = this.listReasonsClick
+    var data = [this.instance.recID,this.dataStep.stepID, this.dataStep.reasons];
+    this.dpService.updateListReason(data).subscribe((res) => {
+      if(res){
+        this.notiService.notifyCode('SYS06');
+      }
+    })
+  }
 }

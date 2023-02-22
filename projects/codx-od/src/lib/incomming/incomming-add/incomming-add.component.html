@@ -67,6 +67,14 @@
     </div>
   </div>
   <div class="row form-group">
+    <div class="col-12">
+      <codx-label [formModel]="form.formModel" fiedName="ContactName" class="fw-bold"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="contactName"
+        >
+      </codx-input>
+    </div>
+  </div>
+  <div class="row form-group">
     <div class="col-6">
       <codx-label [formModel]="form.formModel" fiedName="CategoryID" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="categoryID"
@@ -79,6 +87,7 @@
       </codx-input>
     </div>
   </div>
+ 
   <div class="row form-group">
     <div class="col-6">
       <codx-label [formModel]="form.formModel" fiedName="DispatchNo" class="fw-bold"></codx-label>

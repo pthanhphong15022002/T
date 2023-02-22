@@ -95,7 +95,8 @@
               <div
               id="step-click"
               style="flex-grow: 1"
-              [ngClass]="item?.stepStatus === '1' ? 'step current':  item?.stepStatus === '3' || item?.stepStatus === '4' || item?.stepStatus === '5' || item?.stepStatus === '' || item?.stepStatus === null  ? 'step old': 'step' "
+              class="focus "
+              [ngClass]="getColorStepName(item?.stepStatus)"
               (click)="click(i, item.stepID)"
             >
               <span> {{ item.stepName }}</span>
@@ -126,6 +127,7 @@
           [isUpdate]="dataSelect.write"
           [isCreate]="dataSelect.create"
           [titleDefault]="titleDefault"
+          [instance]="instance"
           [listStepReason]="getReasonByStepId(dataSelect.stepID)"
         ></codx-stages-detail>
         </ng-container>

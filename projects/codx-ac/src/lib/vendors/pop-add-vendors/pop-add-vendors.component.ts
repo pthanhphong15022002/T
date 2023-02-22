@@ -1,5 +1,24 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, CodxFormComponent, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
+import {
+  ApiHttpService,
+  CacheService,
+  CallFuncService,
+  CodxFormComponent,
+  DialogData,
+  DialogModel,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+  RequestOption,
+  UIComponent,
+} from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { PopAddAddressComponent } from '../../customers/pop-add-address/pop-add-address.component';
 import { PopAddBankComponent } from '../../customers/pop-add-bank/pop-add-bank.component';
@@ -13,54 +32,70 @@ import { Vendors } from '../../models/Vendors.model';
 @Component({
   selector: 'lib-pop-add-vendors',
   templateUrl: './pop-add-vendors.component.html',
-  styleUrls: ['./pop-add-vendors.component.css']
+  styleUrls: ['./pop-add-vendors.component.css'],
 })
 export class PopAddVendorsComponent extends UIComponent implements OnInit {
   //#region Contructor
   @ViewChild('form') form: CodxFormComponent;
-  title:string;
-  headerText:string;
+  title: string;
+  headerText: string;
   formModel: FormModel;
   dialog!: DialogRef;
-  vendors:Vendors;
-  contact:Contact;
-  objectBankaccount:Array<BankAccount> = [];
-  objectBankaccountDelete:Array<BankAccount> = [];
-  objectContact:Array<Contact> = [];
-  objectContactDelete:Array<Contact> = [];
-  objectAddress:Array<Address> = [];
-  objectAddressDelete:Array<Address> = [];
-  objectContactAddress:Array<Contact> = [];
-  objectContactAddressDelete:Array<Contact> = [];
-  objecttype:string = '2';
-  gridViewSetup:any;
-  gridViewSetupBank:any;
-  vendorID:any;
-  valuelist:any;
-  formType :any;
+  vendors: Vendors;
+  contact: Contact;
+  objectBankaccount: Array<BankAccount> = [];
+  objectBankaccountDelete: Array<BankAccount> = [];
+  objectContact: Array<Contact> = [];
+  objectContactDelete: Array<Contact> = [];
+  objectAddress: Array<Address> = [];
+  objectAddressDelete: Array<Address> = [];
+  objectContactAddress: Array<Contact> = [];
+  objectContactAddressDelete: Array<Contact> = [];
+  objecttype: string = '2';
+  gridViewSetup: any;
+  gridViewSetupBank: any;
+  vendorID: any;
+  valuelist: any;
+  formType: any;
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
-    { icon: 'icon-settings icon-20 me-3', text: 'Thiết lập', name: 'Establish' },
-    { icon: 'icon-train', text: 'Thông tin giao hàng', name: 'Shipment Details'},
-    { icon: 'icon-location_on me-1', text: 'Danh sách địa chỉ', name: 'Location' },
+    {
+      icon: 'icon-settings icon-20 me-3',
+      text: 'Thiết lập',
+      name: 'Establish',
+    },
+    {
+      icon: 'icon-train',
+      text: 'Thông tin giao hàng',
+      name: 'Shipment Details',
+    },
+    {
+      icon: 'icon-location_on me-1',
+      text: 'Danh sách địa chỉ',
+      name: 'Location',
+    },
     { icon: 'icon-contacts', text: 'Người liên hệ', name: 'Contact' },
     { icon: 'icon-credit_card', text: 'Tài khoản ngân hàng', name: 'Atm' },
-    { icon: 'icon-20 me-2 icon-tune', text: 'Thông tin khác', name: 'Infomation' },
+    {
+      icon: 'icon-20 me-2 icon-tune',
+      text: 'Thông tin khác',
+      name: 'Infomation',
+    },
   ];
   constructor(
     private inject: Injector,
     cache: CacheService,
     private acService: CodxAcService,
     override api: ApiHttpService,
-    private dt: ChangeDetectorRef, 
+    private dt: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
-    @Optional() dialogData?: DialogData,
+    @Optional() dialogData?: DialogData
   ) {
     super(inject);
     this.dialog = dialog;
-    this.vendors=dialog.dataService!.dataSelected;
+    this.vendors = dialog.dataService!.dataSelected;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.vendorID = '';
@@ -70,46 +105,39 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
         console.log(this.gridViewSetup);
       }
     });
-    this.cache.gridViewSetup('BankAccounts', 'grvBankAccounts').subscribe((res) => {
-      if (res) {
-        this.gridViewSetupBank = res;
-      }
-    });
+    this.cache
+      .gridViewSetup('BankAccounts', 'grvBankAccounts')
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetupBank = res;
+        }
+      });
     this.cache.valueList('AC015').subscribe((res) => {
       this.valuelist = res.datas;
     });
     if (this.vendors.vendorID != null) {
       this.vendorID = this.vendors.vendorID;
       this.acService
-        .loadData(
-          'ERM.Business.BS',
-          'BankAccountsBusiness',
-          'LoadDataAsync',
-          [this.objecttype,
-          this.vendorID]
-        )
+        .loadData('ERM.Business.BS', 'BankAccountsBusiness', 'LoadDataAsync', [
+          this.objecttype,
+          this.vendorID,
+        ])
         .subscribe((res: any) => {
           this.objectBankaccount = res;
         });
       this.acService
-        .loadData(
-          'ERM.Business.BS',
-          'ContactBookBusiness',
-          'LoadDataAsync',
-          [this.objecttype,
-            this.vendorID]
-        )
+        .loadData('ERM.Business.BS', 'ContactBookBusiness', 'LoadDataAsync', [
+          this.objecttype,
+          this.vendorID,
+        ])
         .subscribe((res: any) => {
           this.objectContact = res;
         });
       this.acService
-        .loadData(
-          'ERM.Business.BS',
-          'AddressBookBusiness',
-          'LoadDataAsync',
-          [this.objecttype,
-            this.vendorID]
-        )
+        .loadData('ERM.Business.BS', 'AddressBookBusiness', 'LoadDataAsync', [
+          this.objecttype,
+          this.vendorID,
+        ])
         .subscribe((res: any) => {
           this.objectAddress = res;
           for (var i = 0; i < this.objectAddress.length; i++) {
@@ -119,7 +147,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
                 'ERM.Business.BS',
                 'ContactBookBusiness',
                 'LoadDataAsync',
-                [this.objecttype,recID]
+                [this.objecttype, recID]
               )
               .subscribe((res: any) => {
                 res.forEach((element) => {
@@ -129,13 +157,12 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
           }
         });
     }
-   }
+  }
   //#endregion
 
   //#region Init
-   onInit(): void {
-   }
-   ngAfterViewInit() {
+  onInit(): void {}
+  ngAfterViewInit() {
     this.formModel = this.form?.formModel;
   }
   //#endregion
@@ -145,31 +172,31 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     this.title = this.headerText;
     this.dt.detectChanges();
   }
-  valueChangeTags(e:any){
+  valueChangeTags(e: any) {
     this.vendors[e.field] = e.data;
   }
-  valueChange(e:any){
+  valueChange(e: any) {
     this.vendors[e.field] = e.data;
   }
   valueChangeVendorID(e: any) {
-    this.vendorID = e.data;      
+    this.vendorID = e.data;
     this.vendors[e.field] = e.data;
   }
   valueChangeEstablishYear(e: any) {
     e.data = e.data.fromDate;
     this.vendors[e.field] = e.data;
   }
-  valueChangeOverdueControl(e:any){
+  valueChangeOverdueControl(e: any) {
     if (e.data == '0') {
       this.vendors[e.field] = false;
-    }else{
+    } else {
       this.vendors[e.field] = true;
     }
   }
-  openPopupBank(){
+  openPopupBank() {
     var obj = {
       headerText: 'Thêm tài khoản ngân hàng',
-      formType:this.formType
+      dataBank : this.objectBankaccount
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -177,47 +204,54 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     dataModel.gridViewName = 'grvBankAccounts';
     dataModel.entityName = 'BS_BankAccounts';
     opt.FormModel = dataModel;
-    this.cache.gridViewSetup('BankAccounts','grvBankAccounts').subscribe(res=>{
-      if(res){  
-        var dialogbank = this.callfc.openForm(
-          PopAddBankComponent,
-          '',
-          650,
-          550,
-          '',
-          obj,
-          '',
-          opt
-        ); 
-        dialogbank.closed.subscribe((x) => {
-          var databankaccount = JSON.parse(localStorage.getItem('databankaccount'));
-          if (databankaccount != null) {   
-            this.api.exec(
-              'ERM.Business.BS',
-              'BankAccountsBusiness',
-              'CheckBankAccount',
-              [this.objectBankaccount,databankaccount]
-            ).subscribe((res:any)=>{
-              if (res) {
-                this.objectBankaccount.push(databankaccount);
-              }else{
-                this.notification.notifyCode(
-                  'SYS031',
-                  0,
-                  '"' + databankaccount.bankAcctID + '"'
-                );
-                return;  
-              }
-            });               
-          }
-          window.localStorage.removeItem("databankaccount");
-        });
-      }
-    });
+    this.cache
+      .gridViewSetup('BankAccounts', 'grvBankAccounts')
+      .subscribe((res) => {
+        if (res) {
+          var dialogbank = this.callfc.openForm(
+            PopAddBankComponent,
+            '',
+            650,
+            550,
+            '',
+            obj,
+            '',
+            opt
+          );
+          dialogbank.closed.subscribe((x) => {
+            var databankaccount = JSON.parse(
+              localStorage.getItem('databankaccount')
+            );
+            if (databankaccount != null) {
+              this.api
+                .exec(
+                  'ERM.Business.BS',
+                  'BankAccountsBusiness',
+                  'CheckBankAccount',
+                  [this.objectBankaccount, databankaccount]
+                )
+                .subscribe((res: any) => {
+                  if (res) {
+                    this.objectBankaccount.push(databankaccount);
+                  } else {
+                    this.notification.notifyCode(
+                      'SYS031',
+                      0,
+                      '"' + databankaccount.bankAcctID + '"'
+                    );
+                    return;
+                  }
+                });
+            }
+            window.localStorage.removeItem('databankaccount');
+          });
+        }
+      });
   }
-  openPopupContact(){
+  openPopupContact() {
     var obj = {
       headerText: 'Thêm người liên hệ',
+      datacontact:this.objectContact
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -225,33 +259,36 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     dataModel.gridViewName = 'grvContactBook';
     dataModel.entityName = 'BS_ContactBook';
     opt.FormModel = dataModel;
-    this.cache.gridViewSetup('ContactBook','grvContactBook').subscribe(res=>{
-      if(res){  
-        var dialogcontact = this.callfc.openForm(
-          PopAddContactComponent,
-          '',
-          650,
-          570,
-          '',
-          obj,
-          '',
-          opt
-        );
-        dialogcontact.closed.subscribe((x) => {
-          var datacontact = JSON.parse(localStorage.getItem('datacontact'));
-          if (datacontact != null) {      
-            this.objectContact.push(datacontact);
-          }
-          window.localStorage.removeItem("datacontact");
-        });
-      }
-    });
+    this.cache
+      .gridViewSetup('ContactBook', 'grvContactBook')
+      .subscribe((res) => {
+        if (res) {
+          var dialogcontact = this.callfc.openForm(
+            PopAddContactComponent,
+            '',
+            650,
+            570,
+            '',
+            obj,
+            '',
+            opt
+          );
+          dialogcontact.closed.subscribe((x) => {
+            var datacontact = JSON.parse(localStorage.getItem('datacontact'));
+            if (datacontact != null) {
+              this.objectContact.push(datacontact);
+            }
+            window.localStorage.removeItem('datacontact');
+          });
+        }
+      });
   }
   openPopupAddress() {
     var obj = {
       headerText: 'Thêm địa chỉ',
-      dataContact: this.objectContact,
-      objectype:this.objecttype
+      dataAddress: this.objectAddress,
+      dataContactAddress : this.objectContactAddress,
+      objectype: this.objecttype,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -274,6 +311,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
             opt
           );
           dialogaddress.closed.subscribe((x) => {
+            console.log(this.objectContactAddress);
             var dataaddress = JSON.parse(localStorage.getItem('dataaddress'));
             var datacontactaddress = JSON.parse(
               localStorage.getItem('datacontactaddress')
@@ -286,27 +324,28 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
                 this.objectContactAddress.push(element);
               });
             }
-
             window.localStorage.removeItem('dataaddress');
             window.localStorage.removeItem('datacontactaddress');
+            window.localStorage.removeItem('datacontactaddressdelete');
           });
         }
       });
   }
-deleteobjectBank(data: any) {
+  deleteobjectBank(data: any) {
     let index = this.objectBankaccount.findIndex(
       (x) => x.bankAcctID == data.bankAcctID && x.bankID == data.bankID
     );
     this.objectBankaccount.splice(index, 1);
     this.objectBankaccountDelete.push(data);
-}
-editobjectBank(data: any) {
+  }
+  editobjectBank(data: any) {
     let index = this.objectBankaccount.findIndex(
       (x) => x.bankAcctID == data.bankAcctID
     );
     var obj = {
       headerText: 'Chỉnh sửa',
-      data: data,
+      type: 'editbank',
+      data: {...data},
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -339,11 +378,12 @@ editobjectBank(data: any) {
           });
         }
       });
-}
-editobjectAddress(data: any) {
+  }
+  editobjectAddress(data: any) {
     let index = this.objectAddress.findIndex((x) => x.recID == data.recID);
     var obs = {
       headerText: 'Chỉnh sửa địa chỉ',
+      type:'editaddress',
       data: { ...data },
       datacontactaddress: [...this.objectContactAddress],
     };
@@ -392,12 +432,9 @@ editobjectAddress(data: any) {
           });
         }
       });
-}
-deleteobjectAddress(data: any) {
-    let index = this.objectAddress.findIndex(
-      (x) =>
-        x.adressType == data.adressType && x.adressName == data.adressName
-    );
+  }
+  deleteobjectAddress(data: any) {
+    let index = this.objectAddress.findIndex((x) => x.recID == data.recID);
     this.objectContactAddress.forEach((element, index) => {
       if (element.reference == data.recID) {
         this.objectContactAddress.splice(index, 1);
@@ -405,13 +442,12 @@ deleteobjectAddress(data: any) {
     });
     this.objectAddress.splice(index, 1);
     this.objectAddressDelete.push(data);
-}
-editobjectContact(data: any) {
-    let index = this.objectContact.findIndex(
-      (x) => x.contactName == data.contactName && x.phone == data.phone
-    );
+  }
+  editobjectContact(data: any) {
+    let index = this.objectContact.findIndex((x) => x.recID == data.recID);
     var ob = {
       headerText: 'Chỉnh sửa liên hệ',
+      type:'editContact',
       data: { ...data },
     };
     let opt = new DialogModel();
@@ -443,14 +479,14 @@ editobjectContact(data: any) {
           });
         }
       });
-}
-deleteobjectContact(data: any) {
+  }
+  deleteobjectContact(data: any) {
     let index = this.objectContact.findIndex(
-      (x) => x.reference == data.reference && x.contactID == data.contactID
+      (x) => x.reference == data.reference && x.recID == data.recID
     );
     this.objectContact.splice(index, 1);
     this.objectContactDelete.push(data);
-}
+  }
   //#endregion
 
   //#region CRUD
@@ -531,7 +567,7 @@ deleteobjectContact(data: any) {
                 this.objecttype,
                 this.vendorID,
                 this.objectBankaccount,
-                this.objectBankaccountDelete
+                this.objectBankaccountDelete,
               ])
               .subscribe((res: any) => {});
             this.api
@@ -539,7 +575,7 @@ deleteobjectContact(data: any) {
                 this.objecttype,
                 this.vendorID,
                 this.objectAddress,
-                this.objectAddressDelete
+                this.objectAddressDelete,
               ])
               .subscribe((res: any) => {});
             this.api
@@ -549,7 +585,7 @@ deleteobjectContact(data: any) {
                 this.objectContact,
                 this.objectContactDelete,
                 this.objectContactAddress,
-                this.objectContactAddressDelete
+                this.objectContactAddressDelete,
               ])
               .subscribe((res: any) => {});
             this.dialog.close();

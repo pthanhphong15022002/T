@@ -115,6 +115,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   openPopupContact() {
     var obj = {
       headerText: 'Thêm người liên hệ',
+      datacontact:this.objectContact
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -152,6 +153,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
       );
       var ob = {
         headerText: 'Chỉnh sửa liên hệ',
+        type:'editContact',
         data: { ...data },
       };
       let opt = new DialogModel();

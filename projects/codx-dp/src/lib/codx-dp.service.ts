@@ -275,6 +275,14 @@ export class CodxDpService {
       data
     );
   }
+  updateListReason(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateReasonStepAsync',
+      data
+    );
+  }
   updateHistoryViewProcessesAsync(recID: string) {
     return this.api.exec<any>(
       'DP',

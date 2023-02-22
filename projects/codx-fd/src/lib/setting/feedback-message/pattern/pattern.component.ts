@@ -79,13 +79,10 @@ export class PatternComponent extends UIComponent implements OnInit {
   }
 
   LoadData() {
-    this.api
-      .call('ERM.Business.FD', 'PatternsBusiness', 'GetCardTypeAsync', [
-        this.type,
-      ])
+    this.api.execSv("FD",'ERM.Business.FD', 'PatternsBusiness', 'GetCardTypeAsync', this.type)
       .subscribe((res) => {
-        if (res && res.msgBodyData[0]) {
-          var data = res.msgBodyData[0] as any[];
+        if (res) {
+          var data = res as any[];
           this.lstPattern = data;
           this.lstPattern.push({});
           this.lstPattern.forEach((dt) => {
