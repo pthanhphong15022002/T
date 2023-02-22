@@ -13,11 +13,9 @@
     </div>
     <div class="right">
       <div class="group-button">
-        <button class="button-custom">
-          <span
-            [ngClass]="
-              isUpdate ? 'icon-edit icon-20 text-primary-600 py-2' : ''
-            "
+        <button class="button-custom"   *ngIf="dataStep?.stepStatus < 3 && isUpdate">
+          <span 
+            [ngClass]="'icon-edit icon-20 text-primary-600 py-2'"
             style="font-weight: 500"
             (click)="popupCustomField(dataStep.fields)"
           ></span>
@@ -128,14 +126,15 @@
     >
     </codx-attachment>
   </ng-container>
-
-  <codx-mfunc
-    [formModel]="formModel"
-    (clickMF)="clickMF($event, data)"
-    [isBookMark]="true"
-    [dataItem]="data"
-    [type]="'hover'"
-    (changeDataMF)="changeFieldMF($event)"
-  >
-  </codx-mfunc>
+  <ng-container *ngIf="dataStep?.stepStatus < 3">
+    <codx-mfunc
+      [formModel]="formModel"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="true"
+      [dataItem]="data"
+      [type]="'hover'"
+      (changeDataMF)="changeFieldMF($event)"
+    >
+    </codx-mfunc>
+  </ng-container>
 </ng-template>
