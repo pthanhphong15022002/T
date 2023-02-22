@@ -37,12 +37,12 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
       name: 'Establish',
     },
     {
-      icon: 'icon-train',
+      icon: 'icon-directions_bus',
       text: 'Hoạch định',
       name: 'Plan',
     },
     { 
-      icon: 'icon-contacts', 
+      icon: 'icon-person_pin',
       text: 'Liên hệ', 
       name: 'Contact' },
   ];

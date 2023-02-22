@@ -42,6 +42,9 @@ import { PopAddConversionComponent } from './unitsofmearsure/pop-add-conversion/
 import { InventoryComponent } from './inventory/inventory.component';
 import { PopAddInventoryComponent } from './inventory/pop-add-inventory/pop-add-inventory.component';
 import { ItempostingaccountsComponent } from './item-posting-accounts/item-posting-accounts.component';
+import { DimensionGroupsComponent } from './dimension-groups/dimension-groups.component';
+import { PopAddDimensionGroupsComponent } from './dimension-groups/pop-add-dimension-groups/pop-add-dimension-groups.component';
+import { PopAddDimensionSetupComponent } from './dimension-groups/pop-add-dimension-setup/pop-add-dimension-setup.component';
 
 export const routes: Routes = [
   {
@@ -94,6 +97,10 @@ export const routes: Routes = [
         path: 'itempostingaccounts/:funcID',
         component: ItempostingaccountsComponent,
       },
+      {
+        path: 'dimensiongroups/:funcID',
+        component: DimensionGroupsComponent,
+      },
     ],
   },
 ];
@@ -127,6 +134,9 @@ export const routes: Routes = [
     InventoryComponent,
     PopAddInventoryComponent,
     ItempostingaccountsComponent,
+    DimensionGroupsComponent,
+    PopAddDimensionGroupsComponent,
+    PopAddDimensionSetupComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
