@@ -111,7 +111,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
             this.param = JSON.parse(JSON.stringify(this.paramDefaut));
             this.loadParam = true;
             if (
-              this.param.EditControl != '1' &&
+              this.param.EditControl == '1' &&
               this.itemSelected.category == '2'
             )
               this.isEdit = true;
