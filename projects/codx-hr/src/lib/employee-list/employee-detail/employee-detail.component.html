@@ -3594,13 +3594,14 @@
                 </div>
                 <div class="d-flex me-3">
                   <codx-dropdown-select
+                  *ngIf="eAssetGrvSetup"
                     [cssClass]="'rounded-pill border-1'"
                     cssPopup="h-350px w-300px"
                     [isMulti]="true"
                     type="combobox"
                     emptyText="Loại tài sản"
                     field="AssetCategory"
-                    [refValue]="'AssetCategory'"
+                    [refValue] = "eAssetGrvSetup?.AssetCategory?.referedValue"
                     (valueChange)="valueChangeFilterAssetCategory($event)"
                   ></codx-dropdown-select>
 
@@ -3985,7 +3986,7 @@
               </div>
             </div>
             <div class="mb-1">
-              <div class="d-flex justify-content-between mt-6 mb-3">
+              <div class="d-flex justify-content-between mt-6 mb-3" *ngIf="reRenderGrid == true">
                 <codx-gridview
                   *ngIf="appointionColumnGrid"
                   #appointionGridView
@@ -4026,12 +4027,13 @@
               </div>
               <div class="d-flex align-items-center ms-5">
                 <codx-dropdown-select
+                *ngIf="eDayOffGrvSetup"
                   [cssClass]="'rounded-pill border-1'"
                   cssPopup="h-350px w-300px"
                   [isMulti]="true"
                   type="combobox"
                   field="KowID"
-                  [refValue]="'HRKowsOff'"
+                  [refValue]= "eDayOffGrvSetup?.KowID?.referedValue"
                   (valueChange)="valueChangeFilterDayOff($event)"
                 ></codx-dropdown-select>
                 <span class="text-gray-500 ms-2">|</span>
@@ -4088,14 +4090,16 @@
                 <div class="user-status d-flex align-items-center">
                   <span class="icon-local_taxi icon-20 me-1"></span>
                 </div>
-                <div class="fs-5 fw-bold text-uppercase text-primary">
+                <div class="fs-5 fw-bold text-primary">
                   <!-- <codx-label
                     name="lblWorkDiary"
                     [formModel]="view.formModel"
                     [default]="getFormHeader('HRTEM0504')"
                   >
                   </codx-label> -->
-                  {{ getFormHeader("HRTEM0504") }}
+                  <span class="text-uppercase">
+                    {{ getFormHeader("HRTEM0504") }}
+                  </span>
                   <span class="text-gray-500 ms-2"> | </span>
                   <span>({{ eBusinessTravelRowCount }})</span>
                 </div>

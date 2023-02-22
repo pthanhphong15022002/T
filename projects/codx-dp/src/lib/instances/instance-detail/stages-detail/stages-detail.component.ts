@@ -95,9 +95,9 @@ export class StagesDetailComponent implements OnInit {
     delete: true,
   }
   frmModel: FormModel = {
-    entityName: 'DP_Processes',
-    formName: 'DPProcesses',
-    gridViewName: 'grvDPProcesses',
+    entityName: 'DP_InstancesSteps',
+    formName: 'DPInstancesSteps',
+    gridViewName: 'grvDPInstancesSteps',
     entityPer: 'DP_Processes',
     funcID: 'DP0101',
   };
@@ -374,6 +374,7 @@ export class StagesDetailComponent implements OnInit {
                 this.taskList.push(taskData);
                 this.taskGroupList[progress?.indexGroup]['progress'] =
                   progress?.average; // cập nhật tiến độ của cha
+                this.calculateProgressStep();
               }
             });
         } else {
@@ -382,6 +383,7 @@ export class StagesDetailComponent implements OnInit {
             if (res) {
               if (taskData?.taskGroupID != taskGroupIdOld) {
                 this.changeGroupTask(taskData, taskGroupIdOld);
+                this.calculateProgressStep();
                 this.notiService.notifyCode('SYS007');
               }
             }
@@ -415,6 +417,7 @@ export class StagesDetailComponent implements OnInit {
             1
           );
           this.notiService.notifyCode('SYS008');
+          this.calculateProgressStep();
         }
       });
     });
@@ -522,6 +525,7 @@ export class StagesDetailComponent implements OnInit {
       taskGroup['task'] = taskGroupList['null'] || [];
       taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
       this.taskGroupList.push(taskGroup);
+      this.taskList = step['tasks'];
       console.log(this.taskGroupList);
     }
   }
@@ -607,7 +611,7 @@ export class StagesDetailComponent implements OnInit {
           if (res) {
             this.notiService.notifyCode('SYS006');
             this.taskGroupList.splice(index - 1, 0, value);
-            console.log(value);
+            this.calculateProgressStep();
           }
         });
     } else {
@@ -616,6 +620,7 @@ export class StagesDetailComponent implements OnInit {
       this.dpService.updateTaskGroups(value).subscribe(async (res) => {
         if (res) {
           this.notiService.notifyCode('SYS007');
+          this.calculateProgressStep();
           await this.copyValue(value, dataOld);
         }
       });
@@ -634,6 +639,7 @@ export class StagesDetailComponent implements OnInit {
             (x) => x.recID == data.recID
           );
           this.taskGroupList.splice(index, 1);
+          this.calculateProgressStep();
           this.notiService.notifyCode('SYS008');
         }
       });
@@ -697,7 +703,9 @@ export class StagesDetailComponent implements OnInit {
     this.dpService.updateTask(dataSave).subscribe((res) => {
       if (res) {
         this.taskGroupList[value?.indexGroup]['progress'] = value?.average;
-        this.notiService.notifyCode('SYS006');
+        this.notiService.notifyCode('SYS007');
+        this.popupUpdateProgress.close();
+      }else{
         this.popupUpdateProgress.close();
       }
     });
@@ -751,6 +759,15 @@ export class StagesDetailComponent implements OnInit {
         }
       }
     }
+  }
+
+  calculateProgressStep(){
+    // const sum = this.taskGroupList.reduce((accumulator, currentValue) => {
+    //   return accumulator + currentValue['progress'];
+    // }, 0);
+    // let medium = (sum/this.taskGroupList.length).toFixed(2);
+    // this.step.progress = Number(medium);
+    // this.progress = medium;
   }
 
   async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) {
