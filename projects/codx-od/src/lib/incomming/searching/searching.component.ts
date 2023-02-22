@@ -15,7 +15,7 @@ export class SearchingComponent extends UIComponent implements OnDestroy, AfterV
   convertHtmlAgency = convertHtmlAgency;
   getIdUser = getIdUser;
   gridViewSetup: any;
-  funcID = "ODT31";
+  funcID = "ODT6";
   service = "OD"
   entityName = "OD_Dispatches"
   formModel: any = {};
