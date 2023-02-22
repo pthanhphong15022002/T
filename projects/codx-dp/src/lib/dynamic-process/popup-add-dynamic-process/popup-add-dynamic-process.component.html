@@ -1067,7 +1067,8 @@
             <li>
               {{ item.reasonName }}
               <codx-mfunc [formModel]="dialog.formModel" (clickMF)="clickMFReason($event, item, viewStepReasonSuccess)"
-                [dataItem]="action != 'edit' ? moreDefaut : item" [type]="'hover'">
+              (changeDataMF)="changeReasonMF($event)"
+                [dataItem]="moreDefaut" [type]="'hover'">
               </codx-mfunc>
             </li>
           </ul>
@@ -1185,7 +1186,8 @@
             <li>
               {{ item.reasonName }}
               <codx-mfunc [formModel]="dialog.formModel" (clickMF)="clickMFReason($event, item, viewStepReasonFail)"
-                [dataItem]="action != 'edit' ? moreDefaut : item" [type]="'hover'">
+              (changeDataMF)="changeReasonMF($event)"
+              [dataItem]="moreDefaut" [type]="'hover'">
               </codx-mfunc>
             </li>
           </ul>
