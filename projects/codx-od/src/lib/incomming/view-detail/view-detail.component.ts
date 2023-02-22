@@ -885,7 +885,11 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                                               "",
                                               this.formModel.entityName]
                                             ).subscribe(res3=>{
-                                              if(res3) this.notifySvr.notify('Hủy yêu cầu xét duyệt thành công.');
+                                              if(res3) {
+                                                this.data.approveStatus = '0';
+                                                this.view.dataService.update(this.data).subscribe();
+                                                this.notifySvr.notify('Hủy yêu cầu xét duyệt thành công.');
+                                              }
                                               else this.notifySvr.notify('Hủy yêu cầu xét duyệt không thành công.');
                                             })
                                           }
