@@ -5,7 +5,7 @@
   <div class="ms-20 me-6 gift-list">
     <div class="float-left">
       <div class="gift-card w-100px card-with-dropdown-item ms-9 mb-9"
-        *ngFor="let item of lstPattern; trackBy: trackByfn; let i = index">
+        *ngFor="let item of lstPattern; let i = index">
         <div class="card-img has-action-menu cursor-pointer" #elm *ngIf="i < lstPattern.length - 1; else template">
           <div class="action-menu d-flex">
             <div class="d-flex align-items-center">
