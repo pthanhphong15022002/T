@@ -21,3 +21,12 @@
     max-height: 400px;
     overflow: auto;
 }
+.view-link {
+    color: var(--text-primary);
+    font-style: italic;
+    margin: 0px 4px;
+}
+.view-link:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
