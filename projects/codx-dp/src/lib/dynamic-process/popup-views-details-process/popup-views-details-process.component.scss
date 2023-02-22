@@ -68,8 +68,10 @@
     }
 
     .process-views-detail {
-        height: calc(100vh - 186px) !important;
+        height: calc(100vh - 120px) !important;
         overflow: hidden;
+
+
 
         .card-body.fillter-card-body.scroll-y {
             height: calc(100vh - 342px) !important;
