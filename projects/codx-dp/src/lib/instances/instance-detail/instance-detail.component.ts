@@ -36,6 +36,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() progress = '0';
   @Input() dataSelect: any;
   @Input() listStepNew: any;
+  @Input() listCbxProccess: any;
   id: any;
   totalInSteps: any;
   @Input() listSteps: DP_Instances_Steps[] = [];
@@ -70,6 +71,7 @@ export class InstanceDetailComponent implements OnInit {
   isHiddenReason: boolean = false;
 
   instanceId:string;
+  proccesNameMove: string;
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
 
@@ -296,5 +298,20 @@ export class InstanceDetailComponent implements OnInit {
     var idx =  this.listStepNew.findIndex(x=>x.stepID === stepId) ;
     return  this.listStepNew[idx];
    }
+   getStepNameIsComlepte(){
+    var idx =  this.listSteps.findIndex(x=> x.stepStatus === '4' || x.stepStatus === '5');
+    if(idx > -1) {
+      var reasonStep = this.listSteps[idx];
+      var idxProccess =  this.listCbxProccess.findIndex(x=> x.recID === this.instance?.newProcessID);
+      var proccesMove = this.listCbxProccess[idxProccess];
+      this.proccesNameMove = proccesMove?.processName ?? ''
+      
+    }
+    return  reasonStep?.stepName?? '';
+   }
+  //  getProccessNameIsMove(index:any){
+
+  //   return  this.listSteps[idx]?.stepName ?? '';
+  //  }
 
 }
