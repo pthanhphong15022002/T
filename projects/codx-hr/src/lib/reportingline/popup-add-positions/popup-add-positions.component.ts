@@ -55,6 +55,10 @@ export class PopupAddPositionsComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getFucnName(this.functionID);
+    if(this.isAdd)
+      this.blocked = !this.data.allowEditKey;
+    else
+      this.blocked = true;
   }
   // get function name
   getFucnName(funcID:string){
@@ -63,10 +67,10 @@ export class PopupAddPositionsComponent implements OnInit {
         if(func)
         {
           this.title = `${this.title} ${func.description}`;
-          this.cacheService
-          .gridViewSetup(func.formName,func.gridViewName).subscribe((gv: any) => {
-            console.log('form', gv);
-          });
+          // this.cacheService
+          // .gridViewSetup(func.formName,func.gridViewName).subscribe((gv: any) => {
+          //   console.log('form', gv);
+          // });
         }
       });
     }
@@ -92,12 +96,10 @@ export class PopupAddPositionsComponent implements OnInit {
       _method, 
       [this.data])
       .subscribe((res) => {
-        if(this.isAdd){
+        if(this.isAdd)
           this.dialogRef.dataService.add(res,0).subscribe();
-        }
-        else{
+        else
           this.dialogRef.dataService.update(res).subscribe();
-        }
         this.dialogRef.close(res);
     });
   }
