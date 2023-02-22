@@ -243,7 +243,7 @@ export class ApprovalCarsComponent extends UIComponent {
         {
           // if(datas.allowToApprove == true){
 
-          this.approve(datas, '5');
+          this.approve(datas);
           // }
           // else{
 
@@ -254,7 +254,7 @@ export class ApprovalCarsComponent extends UIComponent {
         break;
       case 'EPT40202': //Từ chối
         {
-          this.approve(datas, '4');
+          this.reject(datas);
         }
         break;
       case 'EPT40204': {
@@ -339,29 +339,49 @@ export class ApprovalCarsComponent extends UIComponent {
       }
     });
   }
-  approve(data: any, status: string) {
+  approve(data: any) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((res: any) => {
         this.codxEpService
           .approve(
             data?.approvalTransRecID, //ApprovelTrans.RecID
-            status,
+            '5',
             '',
             ''
           )
           .subscribe((res: any) => {
             if (res?.msgCodeError == null && res?.rowCount >= 0) {
-              if (status == '5') {
+              
                 this.notificationsService.notifyCode('SYS034'); //đã duyệt
                 data.approveStatus = '5';
-                data.status = '5';
-              }
-              if (status == '4') {
+                data.status = '5';             
+
+              this.view.dataService.update(data).subscribe();
+            } else {
+              this.notificationsService.notifyCode(res?.msgCodeError);
+            }
+          });
+      });
+  }
+  reject(data: any) {
+    this.codxEpService
+      .getCategoryByEntityName(this.formModel.entityName)
+      .subscribe((res: any) => {
+        this.codxEpService
+          .approve(
+            data?.approvalTransRecID, //ApprovelTrans.RecID
+            '4',
+            '',
+            ''
+          )
+          .subscribe((res: any) => {
+            if (res?.msgCodeError == null && res?.rowCount >= 0) {
+              
                 this.notificationsService.notifyCode('SYS034'); //bị hủy
                 data.approveStatus = '4';
                 data.status = '4';
-              }
+              
 
               this.view.dataService.update(data).subscribe();
             } else {
