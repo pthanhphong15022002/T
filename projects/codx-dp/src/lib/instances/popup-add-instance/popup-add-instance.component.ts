@@ -122,8 +122,7 @@ export class PopupAddInstanceComponent implements OnInit {
     }
   }
 
-  buttonClick(e: any) {
-  }
+  buttonClick(e: any) {}
 
   setTitle(e: any) {
     this.title =
@@ -186,14 +185,34 @@ export class PopupAddInstanceComponent implements OnInit {
     return true;
   }
   saveInstances() {
-   if(this.instance?.title === null || this.instance?.title.trim() === '' ) {
-    this.notificationsService.notifyCode('DP001');
-    return;
-   }
+    if (this.instance?.title === null || this.instance?.title.trim() === '') {
+      this.notificationsService.notifyCode('DP001');
+      return;
+    }
+    if (this.listStep.length > 0) {
+      let check = true;
+      let checkFormat = true;
+      this.listStep?.forEach((obj) => {
+        if (obj.fields?.length > 0) {
+          obj.fields.forEach((f) => {
+            if (f.isRequired && (!f.dataValue || f.trim() == '')) {
+              this.notificationsService.notifyCode(
+                'SYS009',
+                0,
+                '"' + f.title + '"'
+              );
+              check = false;
+            }
+            checkFormat = this.checkFormat(f);
+          });
+        }
+      });
+      if (!check || !checkFormat) return;
+    }
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
-        if (res && res.save) {       
+        if (res && res.save) {
           this.dialog.close(res);
         }
       });
@@ -205,7 +224,7 @@ export class PopupAddInstanceComponent implements OnInit {
   autoClickedSteps() {
     this.instance.stepID = this.listStep[0].stepID;
   }
-   async genAutoNumberNo() {
+  async genAutoNumberNo() {
     this.codxDpService
       .genAutoNumber(this.formModelCrr.funcID, 'DP_Instances', 'InstanceNo')
       .subscribe((res) => {
@@ -213,5 +232,43 @@ export class PopupAddInstanceComponent implements OnInit {
           this.instance.instanceNo = res;
         }
       });
+  }
+
+  checkFormat(field) {
+    if (field.dataType == 'T') {
+      if (field.dataFormat == 'E') {
+        var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (!field.dataValue.toLowerCase().match(validEmail)) {
+          this.cache.message('SYS037').subscribe((res) => {
+            if (res) {
+              var errorMessage = res.customName || res.defaultName;
+              this.notificationsService.notifyCode(
+                'SYS009',
+                0,
+                '"' + errorMessage + '"'
+              );
+            }
+          });
+          return false;
+        }
+      }
+      if (field.dataFormat == 'P') {
+        var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+        if (!field.dataValue.toLowerCase().match(validPhone)) {
+          this.cache.message('RS030').subscribe((res) => {
+            if (res) {
+              var errorMessage = res.customName || res.defaultName;
+              this.notificationsService.notifyCode(
+                'SYS009',
+                0,
+                '"' + errorMessage + '"'
+              );
+            }
+          });
+          return false;
+        }
+      }
+    }
+    return true;
   }
 }
