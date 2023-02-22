@@ -491,17 +491,38 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         .subscribe();
     }
   }
+
   cancel(data: any) {
-    this.codxEpService.cancel(data?.recID).subscribe((res: any) => {
-      if (res != null) {
-        this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
-        data.approveStatus = '1';
-        data.status = '1';
-        this.view.dataService.update(data).subscribe();
-      } else {
-        this.notificationsService.notifyCode(res?.msgCodeError);
+    this.notificationsService.alertCode('ES015').subscribe((x) => {
+      if (x.event?.status == 'Y') {
+        if (data.approveStatus == '1') {
+          this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
+            if (res) {
+              this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
+              data.approveStatus = '0';
+              data.status = '1';
+              this.view.dataService.update(data).subscribe();
+            } else {
+              this.notificationsService.notifyCode(res?.msgCodeError);
+            }
+          });
+        }
+        else{
+          this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
+            if (res != null) {
+              this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
+              data.approveStatus = '1';
+              data.status = '1';
+              this.view.dataService.update(data).subscribe();
+            } else {
+              this.notificationsService.notifyCode(res?.msgCodeError);
+            }
+          });
+        }
       }
-    });
+    })
+
+    
   }
   reschedule(data: any) {
     if (

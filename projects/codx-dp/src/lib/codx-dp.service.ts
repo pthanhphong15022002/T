@@ -275,6 +275,14 @@ export class CodxDpService {
       data
     );
   }
+  updateListReason(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateReasonStepAsync',
+      data
+    );
+  }
   updateHistoryViewProcessesAsync(recID: string) {
     return this.api.exec<any>(
       'DP',
@@ -314,6 +322,36 @@ export class CodxDpService {
       'ProcessesBusiness',
       'RestoreProcessAsync',
       recID
+    );
+  }
+
+  GetListUserIDByListTmpEmpIDAsync(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListTmpEmpIDAsync',
+      data
+    );
+  }
+
+  getListUserIDByListPositionsID(listPositionID) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListPositionsIDAsync',
+      listPositionID
+    );
+  }
+
+  getUserByID(e){
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetAsync',
+      e
     );
   }
 }

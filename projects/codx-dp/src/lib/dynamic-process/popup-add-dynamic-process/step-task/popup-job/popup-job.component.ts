@@ -39,7 +39,7 @@ export class PopupJobComponent implements OnInit {
   dialog!: DialogRef;
   formModelMenu: FormModel;
   taskType = '';
-  vllShare = 'BP021';
+  vllShare = 'DP0331';
   taskName = '';
   taskGroupName = '';
   linkQuesiton = 'http://';
@@ -310,18 +310,19 @@ export class PopupJobComponent implements OnInit {
     let idTask = task['parentID'].trim() ? task['parentID'].split(';') : [];
     if (idTask.length > 0) {
       let taskMax = 0;
-      let taskFind;
+      let taskFindMax;
       idTask?.forEach((element) => {
-        taskFind = groupTask['task'].find((x) => x.recID == element);
-        if (taskFind && this.getHour(taskFind) <= this.getHour(task)) {
+        let taskFind = groupTask['task'].find((x) => x.recID == element);
+        if (taskFind && this.getHour(taskFind) >= taskMax) {
           taskMax = this.getHour(taskFind) || 0;
+          taskFindMax = taskFind;
         }
       });
       if (taskMax == 0) {
         return this.getHour(task);
       } else {
         return (
-          this.getHour(task) + this.checkSaveDependRule(groupTask, taskFind)
+          this.getHour(task) + this.checkSaveDependRule(groupTask, taskFindMax)
         );
       }
     } else {

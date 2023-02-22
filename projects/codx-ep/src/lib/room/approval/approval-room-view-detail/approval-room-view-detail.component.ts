@@ -32,6 +32,9 @@ export class ApprovalRoomViewDetailComponent
   @ViewChild('attachment') attachment;
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
+  @Output('approve') approve: EventEmitter<any> = new EventEmitter();  
+  @Output('reject') reject: EventEmitter<any> = new EventEmitter(); 
+  @Output('undo') undo: EventEmitter<any> = new EventEmitter();
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -85,20 +88,7 @@ export class ApprovalRoomViewDetailComponent
           }
         });
       this.files = [];
-      this.api
-        .execSv(
-          'DM',
-          'ERM.Business.DM',
-          'FileBussiness',
-          'GetFilesForOutsideAsync',
-          [this.funcID, this.itemDetail.recID, 'EP_Bookings']
-        )
-        .subscribe((res: []) => {
-          if (res) {
-            console.log(res);
-            this.files = res;
-          }
-        });
+      
 
       this.detectorRef.detectChanges();
     }
@@ -161,64 +151,88 @@ export class ApprovalRoomViewDetailComponent
       case 'EPT40101':
         {
           //alert('Duyệt');
-          this.approve(datas, '5');
+          this.approve.emit(datas);
         }
         break;
       case 'EPT40105':
         {
           //alert('Từ chối');
-          this.approve(datas, '4');
+          this.reject.emit(datas);
         }
         break;
       case 'EPT40106':
         {
           //alert('Thu hồi');
-          this.undo(datas);
+          this.undo.emit(datas);
         }
         break;
     }
   }
-  undo(data: any) {
-    this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
-        if (res != null) {
+  // undo(data: any) {
+  //   this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
+  //       if (res != null) {
           
-          this.notificationsService.notifyCode('SYS034'); //đã thu hồi
-          data.approveStatus = '3';
-          data.status = '3';
-          this.updateStatus.emit(data);
-        } else {
-          this.notificationsService.notifyCode(res?.msgCodeError);
-        }
-      });
-  }
-  approve(data: any, status: string) {
-    this.codxEpService
-      .getCategoryByEntityName(this.formModel.entityName)
-      .subscribe((res: any) => {
-        this.codxEpService
-          .approve(
-            data?.approvalTransRecID, //ApprovelTrans.RecID
-            status,
-            '',
-            ''
-          )
-          .subscribe(async (res: any) => {
-            if (res?.msgCodeError == null && res?.rowCount >= 0) {
-              if (status == '5') {
-                this.notificationsService.notifyCode('SYS034'); //đã duyệt
-                data.approveStatus = '5';
-              }
-              if (status == '4') {
-                this.notificationsService.notifyCode('SYS034'); //bị hủy
-                data.approveStatus = '4';
-              }
-              this.updateStatus.emit(data);
-            } else {
-              this.notificationsService.notifyCode(res?.msgCodeError);
-            }
-          });
-      });
-  }
+  //         this.notificationsService.notifyCode('SYS034'); //đã thu hồi
+  //         data.approveStatus = '3';
+  //         data.status = '3';
+  //         this.updateStatus.emit(data);
+  //       } else {
+  //         this.notificationsService.notifyCode(res?.msgCodeError);
+  //       }
+  //     });
+  // }
+  // approve(data: any) {
+  //   this.codxEpService
+  //     .getCategoryByEntityName(this.formModel.entityName)
+  //     .subscribe((res: any) => {
+  //       this.codxEpService
+  //         .approve(
+  //           data?.approvalTransRecID, //ApprovelTrans.RecID
+  //           '5',
+  //           '',
+  //           ''
+  //         )
+  //         .subscribe(async (res: any) => {
+  //           if (res?.msgCodeError == null && res?.rowCount >= 0) {
+              
+  //               this.notificationsService.notifyCode('SYS034'); //đã duyệt
+  //               data.approveStatus = '5';              
+              
+  //             this.updateStatus.emit(data);
+  //           } else {
+  //             this.notificationsService.notifyCode(res?.msgCodeError);
+  //           }
+  //         });
+  //     });
+  // }
+  // reject(data: any) {
+  //   this.codxEpService
+  //     .getCategoryByEntityName(this.formModel.entityName)
+  //     .subscribe((res: any) => {
+  //       this.codxEpService
+  //         .approve(
+  //           data?.approvalTransRecID, //ApprovelTrans.RecID
+  //           '4',
+  //           '',
+  //           ''
+  //         )
+  //         .subscribe(async (res: any) => {
+  //           if (res?.msgCodeError == null && res?.rowCount >= 0) {
+  //             if (status == '5') {
+  //               this.notificationsService.notifyCode('SYS034'); //đã duyệt
+  //               data.approveStatus = '5';
+  //             }
+  //             if (status == '4') {
+  //               this.notificationsService.notifyCode('SYS034'); //bị hủy
+  //               data.approveStatus = '4';
+  //             }
+  //             this.updateStatus.emit(data);
+  //           } else {
+  //             this.notificationsService.notifyCode(res?.msgCodeError);
+  //           }
+  //         });
+  //     });
+  // }
   // changeDataMF(event, data: any) {
   //   if (event != null && data != null) {
   //     event.forEach((func) => {

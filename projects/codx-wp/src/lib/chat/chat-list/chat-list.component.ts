@@ -118,19 +118,18 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   // searrch
   search(event: any) {
     if(event){
+      debugger
       this.searched = true;
-      this.codxListViewSerach.searchText = event;
-      this.codxListViewSerach.onChangeSearch();
+      this.codxListViewSerach.dataService.search(event).subscribe();
       // this.api.execSv("WP","ERM.Business.WP","GroupBusiness","SearchAsync",[event,0])
       // .subscribe((res:any) =>{
       //   this.dataSerach = res;
       //   this.dt.detectChanges();
       // });
     }
-    else{
+    else
       this.searched = false;
-
-    }
+    
   }
   // click group chat - chat box
   openChatBox(group: any) {

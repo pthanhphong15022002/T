@@ -1,3 +1,4 @@
+import { DP_Instances_Permissions } from './../../models/models';
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import { log, table } from 'console';
@@ -23,7 +24,7 @@ export class PopupMoveStageComponent implements OnInit {
   isLockStep: boolean = false;
   memo = '';
   instanceSteps: DP_Instances_Steps[];
-  instance = new DP_Instances_Steps();
+  instance = new DP_Instances();
   stepIdOld: string = '';
   IdFail: string = '';
   IdSuccess: string = '';
@@ -38,10 +39,15 @@ export class PopupMoveStageComponent implements OnInit {
 
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
 
+  lstRoles = [];
+
+  fieldCbxRole = {text: 'objectName', value: 'objectID'}
+
   constructor(
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
+    private dpSv: CodxDpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -51,18 +57,59 @@ export class PopupMoveStageComponent implements OnInit {
     this.headerText = 'Chuyển tiếp giai đoạn'; //  gán sau button add
     this.viewClick = this.viewKanban;
     this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
-    this.stepIdOld = this.instance.stepID; 
+    this.stepIdOld = this.instance.stepID;
     this.listStep = JSON.parse(JSON.stringify(dt?.data.instanceStep));
     this.listStepsCbx = JSON.parse(JSON.stringify(this.listStep));
     this.instancesStepOld = this.listStepsCbx.filter(x => x.stepID === this.stepIdOld)[0];
     this.IdFail = this.listStepsCbx[this.listStepsCbx.length - 1]?.stepID;
     this.IdSuccess = this.listStepsCbx[this.listStepsCbx.length - 2]?.stepID;
     this.stepIdClick = JSON.parse(JSON.stringify(dt?.data?.stepIdClick))
+    // this.loadListUser(this.instance.permissions);
   }
 
   ngOnInit(): void {
    this.autoClickedSteps(this.listStepsCbx, this.stepName);
-   
+
+  }
+
+  loadListUser(permissions = []){
+    var idO = '';
+    var idD = '';
+    var idP = '';
+    permissions.forEach(element => {
+      switch(element.objectType){
+        case 'O':
+          idO = idO != '' ? idO + ';' + element.objectID : element.objectID ;
+          break;
+        case 'D':
+          idD = idD != '' ? idD + ';' + element.objectID : element.objectID ;
+          break;
+        case 'P':
+          idP = idP != '' ? idP + ';' + element.objectID : element.objectID ;
+      }
+    });
+    if(idO != ''){
+      this.dpSv.GetListUserIDByListTmpEmpIDAsync([idO, 'O']).subscribe(res=>{
+        if(res){
+          var test = res;
+        }
+      })
+    }
+    if(idD != ''){
+      this.dpSv.GetListUserIDByListTmpEmpIDAsync([idD, 'D']).subscribe(res=>{
+        if(res){
+          var test1 = res;
+        }
+      })
+    }
+
+    if(idP != ''){
+      this.dpSv.GetListUserIDByListTmpEmpIDAsync([idP, 'P']).subscribe(res=>{
+        if(res){
+          var test2 = res;
+        }
+      })
+    }
   }
 
   onSave() {
@@ -122,10 +169,10 @@ export class PopupMoveStageComponent implements OnInit {
   cbxChange($event) {
     if($event){
         this.stepIdClick = $event;
-        
+
         this.changeDetectorRef.detectChanges();
     }
   }
 
-  
+
 }

@@ -152,6 +152,7 @@ export class CodxTasksComponent
   crrStatus = '';
   disabledProject = false;
   crrFuncID = '';
+  isHoverPop = false;
 
   constructor(
     inject: Injector,
@@ -425,7 +426,7 @@ export class CodxTasksComponent
     // this.api.execSv<any>("TM","TM","TaskBusiness","CheckRecIDAndTaskIDAsync",[]).subscribe(res=>{
     //   if(res){}
     //   debugger
-    // }) 
+    // })
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
@@ -1148,6 +1149,8 @@ export class CodxTasksComponent
     if (this.popoverDataSelected) {
       if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
     }
+    if (this.isHoverPop) return;
+    this.isHoverPop = true;
     this.api
       .execSv<any>(
         'TM',
@@ -1161,9 +1164,11 @@ export class CodxTasksComponent
           this.listTaskResousce = res;
           this.listTaskResousceSearch = res;
           this.countResource = res.length;
-          p.open();
+
+          if (this.isHoverPop) p.open();
           this.popoverCrr = p;
         }
+        this.isHoverPop = false;
       });
   }
 
@@ -1538,6 +1543,7 @@ export class CodxTasksComponent
         this.changeStatusTask(e.data, data);
         break;
       case 'TMT02019':
+      case 'TMT02027':
         this.openExtendsAction(e.data, data);
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
@@ -1625,6 +1631,12 @@ export class CodxTasksComponent
         ) {
           x.disabled = true;
         }
+        //an gia hạn cong viec
+        if (
+          (x.functionID == 'TMT02019' || x.functionID == 'TMT02026') &&
+          (data.status == '80' || data.status == '90')
+        )
+          x.disabled = true;
       });
     }
   }

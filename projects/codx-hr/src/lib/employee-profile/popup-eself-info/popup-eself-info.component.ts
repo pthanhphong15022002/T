@@ -40,7 +40,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
-    this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected))
+    this.data = JSON.parse(JSON.stringify(data?.data?.dataObj))
   }
 
   initForm(){

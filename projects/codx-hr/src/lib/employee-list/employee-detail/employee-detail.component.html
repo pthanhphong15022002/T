@@ -1074,7 +1074,7 @@
     >
       <ng-container>
         <!-- Thông tin bản thân -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0101">
+        <div class="user-profile overview d-block mb-3" [id]="eInfoFuncID">
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
@@ -1085,10 +1085,10 @@
                   <!-- <codx-label
                     [formModel]="view.formModel"
                     name="lblPersonalInfo"
-                    [default]="getFormHeader('HRTEM0101')"
+                    [default]="getFormHeader(eInfoFuncID)"
                   >
                   </codx-label> -->
-                  {{ getFormHeader("HRTEM0101") }}
+                  {{ getFormHeader(eInfoFuncID) }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -1533,7 +1533,7 @@
           </div>
         </div>
         <!-- Thông tin Đảng - Đoàn -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0102">
+        <div class="user-profile overview d-block mb-3" [id]="ePartyFuncID">
           <div class="rounded-2 p-4 bg-white mt-5">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
@@ -1546,10 +1546,10 @@
                   <!-- <codx-label
                     [formModel]="eInfoFormModel"
                     name="lblLegalInfo"
-                    [default]="getFormHeader('HRTEM0102')"
+                    [default]="getFormHeader(ePartyFuncID)"
                   >
                   </codx-label> -->
-                  {{ getFormHeader("HRTEM0102") }}
+                  {{ getFormHeader(ePartyFuncID) }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -1625,7 +1625,8 @@
           </div>
         </div>
 
-        <div class="user-profile overview d-block mb-3" id="HRTEM0103">
+        <!-- Quan hệ gia đình -->
+        <div class="user-profile overview d-block mb-3" [id]="eFamiliesFuncID">
           <div class="rounded-2 p-4 bg-white mt-5">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
@@ -1638,10 +1639,10 @@
                   <!-- <codx-label
                     [formModel]="view.formModel"
                     name="lblLegalInfo"
-                    [default]="getFormHeader('HRTEM0103')"
+                    [default]="getFormHeader(eFamiliesFuncID)"
                   >
                   </codx-label> -->
-                  {{ getFormHeader("HRTEM0103") }}
+                  {{ getFormHeader(eFamiliesFuncID) }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -2209,7 +2210,9 @@
                   {{ getFormHeader("HRTEM0204") }}
                 </div>
                 <span class="fs-5 text-gray-500 ms-2"> | </span>
-                <span class="text-gray-500 ms-1">({{ workPermitRowCount }})</span>
+                <span class="text-gray-500 ms-1"
+                  >({{ workPermitRowCount }})</span
+                >
               </div>
               <div class="d-flex align-items-center ms-5">
                 <a class="btn btn-xs btn-icon btn-white btn-hover-primary">
@@ -3231,7 +3234,7 @@
           </div>
         </div>
         <!-- Lương chức danh -->
-        <div class="user-profile overview d-block mb-3" [id]="eJobSalFuntionID">
+        <div class="user-profile overview d-block mb-3" [id]="eJobSalFuncID">
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
@@ -3245,7 +3248,7 @@
                     [default]="getFormHeader(eJobSalFuntionID)"
                   >
                   </codx-label> -->
-                  {{ getFormHeader(eJobSalFuntionID) }}
+                  {{ getFormHeader(eJobSalFuncID) }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -3277,7 +3280,10 @@
             </div>
 
             <div class="mb-1">
-              <div class="me-4 mb-2" *ngIf="crrJobSalaries != null && eJobSalaryFormModel">
+              <div
+                class="me-4 mb-2"
+                *ngIf="crrJobSalaries != null && eJobSalaryFormModel"
+              >
                 <codx-temp-full
                   (clickMF)="clickMF($event, crrJobSalaries, 'jobSalary')"
                   [dataItem]="crrJobSalaries"
@@ -3597,7 +3603,7 @@
                     [refValue]="'AssetCategory'"
                     (valueChange)="valueChangeFilterAssetCategory($event)"
                   ></codx-dropdown-select>
-    
+
                   <codx-dropdown-calendar
                     [cssPopup]="'w-600px h-400px'"
                     emptyText="Năm"
@@ -3626,7 +3632,7 @@
                   [rowHeight]="50"
                   height="240px"
                 ></codx-gridview>
-              <!-- <div class="d-flex flex-wrap mt-6 mb-3">
+                <!-- <div class="d-flex flex-wrap mt-6 mb-3">
                 <div
                   [style.background]="'black'"
                   class="badge border-0 me-2"
@@ -3644,9 +3650,8 @@
                   </div>
                 </div>
               </div> -->
+              </div>
             </div>
-            </div>
-
           </div>
           <hr />
         </div>
@@ -3697,7 +3702,7 @@
     >
       <ng-container>
         <!-- Hợp đồng lao động -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0501">
+        <div class="user-profile overview d-block mb-3" [id]="eContractFuncID">
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
@@ -3708,10 +3713,10 @@
                   <!-- <codx-label
                     name="lblEmployeeCurContract"
                     [formModel]="view.formModel"
-                    [default]="getFormHeader('HRTEM0501')"
+                    [default]="getFormHeader(eContractFuncID)"
                   >
                   </codx-label> -->
-                  {{ getFormHeader("HRTEM0501") }}
+                  {{ getFormHeader(eContractFuncID) }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -3783,12 +3788,162 @@
                 <div class="more-function">
                   <codx-mfunc
                     type="hover"
-                    [formModel]="view.formModel"
+                    [formModel]="eContractFormModel"
                     (clickMF)="clickMF($event, crrEContract, 'eContract')"
                     [isBookMark]="false"
                     [dataItem]="crrEContract"
                   >
                   </codx-mfunc>
+                </div>
+              </div>
+              <div class="mb-1">
+                <div
+                  class="me-4 mb-2"
+                  *ngIf="crrEBSalary != null && eBasicSalaryFormmodel"
+                >
+                  <codx-temp-full
+                    (clickMF)="clickMF($event, crrEBSalary, 'basicSalary')"
+                    [dataItem]="crrEBSalary"
+                    [formModel]="eContractFormModel"
+                    [footer]="footerEBSalaries"
+                    cardCss="px-2 pt-4 pb-2"
+                    [typeMF]="'hover'"
+                  >
+                  </codx-temp-full>
+                  <ng-template #footerEBSalaries let-data>
+                    <div class="row form-group">
+                      <div class="col">
+                        <codx-label
+                          class="text-gray-600 me-2 fw-normal"
+                          fiedName="ContractTypeID"
+                          [formModel]="eContractFormModel"
+                        >
+                        </codx-label>
+                        <div class="d-flex align-items-center mb-2">
+                          <span
+                            class="icon-attach_money icon-16 text-primary me-1"
+                          ></span>
+                          <span class="fw-bolder text-primary">
+                            <span>{{
+                              data?.contractTypeID
+                                | formatvalue
+                                  : eContractFormModel
+                                  : "contractTypeID"
+                                | async
+                            }}</span>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <codx-label
+                          class="text-gray-600 me-2 fw-normal"
+                          fiedName="SISalary"
+                          [formModel]="eContractFormModel"
+                        >
+                        </codx-label>
+                        <div class="d-flex align-items-center">
+                          <span
+                            class="icon-monetization_on text-danger icon-18 me-2"
+                          ></span>
+                          <span class="fw-bolder">
+                            {{
+                              data?.siSalary
+                                | formatvalue : eContractFormModel : "siSalary"
+                                | async
+                            }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <codx-label
+                          class="text-gray-600 fw-normal"
+                          fiedName="EffectedDate"
+                          [formModel]="eContractFormModel"
+                        >
+                        </codx-label>
+
+                        <div class="d-flex align-items-center mb-2">
+                          <span
+                            class="icon-event icon-16 text-gray-800 me-1"
+                          ></span>
+                          <span class="fw-bolder">
+                            <span>{{
+                              data?.effectedDate
+                                | formatvalue
+                                  : eContractFormModel
+                                  : "effectedDate"
+                                | async
+                            }}</span>
+                          </span>
+                          <span class="me-1 ms-1 fw-bolder">-</span>
+                          <span class="fw-bolder">
+                            <span>{{
+                              data?.expiredDate
+                                | formatvalue
+                                  : eContractFormModel
+                                  : "expiredDate"
+                                | async
+                            }}</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+
+                <div class="" *ngIf="ViewAllEBasicSalaryFlag">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5"
+                  >
+                    <div class="d-flex me-3">
+                      <codx-label default="Chi tiết" class="text-uppercase">
+                      </codx-label>
+                      <span class="text-gray-500 ms-2"> | </span>
+                      <span>({{ eContractRowCount }})</span>
+                    </div>
+                    <!-- <div class="d-flex me-3">
+                      <codx-dropdown-select
+                        [cssClass]="'rounded-pill border-1'"
+                        cssPopup="h-350px w-300px"
+                        [isMulti]="true"
+                        type="valuelist"
+                        field="BenefitID"
+                        [refValue]="'HR009'"
+                        (valueChange)="valueChangeFilterBenefit($event)"
+                      ></codx-dropdown-select>
+                      <codx-dropdown-calendar
+                        [cssPopup]="'w-600px h-400px'"
+                        emptyText="Chọn năm..."
+                        [firstChange]="false"
+                        [displayOption]="ops"
+                        [selectedType]="'y'"
+                        [cssClass]="'rounded-pill'"
+                        (change)="valueChangeYearFilterBenefit($event)"
+                      ></codx-dropdown-calendar>
+                    </div> -->
+                  </div>
+                  <div class="">
+                    <codx-gridview
+                      *ngIf="basicSalaryColumnGrid && eBasicSalaryFormmodel"
+                      #eContractGridview
+                      [formModel]="eBasicSalaryFormmodel"
+                      [columnsGrid]="basicSalaryColumnGrid"
+                      [service]="'HR'"
+                      [assemblyName]="'Core'"
+                      [className]="'DataBusiness'"
+                      [method]="'LoadDataAsync'"
+                      [predicates]="'EmployeeID=@0'"
+                      [dataValues]="employeeID"
+                      [pageSize]="numPageSizeGridView"
+                      [rowHeight]="50"
+                      height="240px"
+                    ></codx-gridview>
+                    <!-- [height]="
+                  passportRowCount > numPageSizeGridView
+                    ? numPageSizeGridView * 50 - 10
+                    : passportRowCount * 50 + 60
+                " -->
+                  </div>
                 </div>
               </div>
             </div>
@@ -3892,7 +4047,7 @@
                 <span class="text-gray-500 ms-2">|</span>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
-                  (click)="HandleEmployeeDayOffInfo(addHeaderText,'add', null)"
+                  (click)="HandleEmployeeDayOffInfo(addHeaderText, 'add', null)"
                 >
                   <span
                     class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -3971,21 +4126,22 @@
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
-              <codx-gridview *ngIf="businessTravelColumnGrid"
-                #businessTravelGrid
-                [formModel]="EBusinessTravelFormodel"
-                [columnsGrid]="businessTravelColumnGrid"
-                [service]="'HR'"
-                [assemblyName]="'Core'"
-                [className]="'DataBusiness'"
-                [method]="'LoadDataAsync'"
-                [predicates]="'EmployeeID=@0'"
-                [dataValues]="employeeID"
-                [pageSize]="numPageSizeGridView"
-                [entityName]="'HR_EBusinessTravels'"
-                [rowHeight]="50"
-                height="240px"
-              ></codx-gridview>
+                <codx-gridview
+                  *ngIf="businessTravelColumnGrid"
+                  #businessTravelGrid
+                  [formModel]="EBusinessTravelFormodel"
+                  [columnsGrid]="businessTravelColumnGrid"
+                  [service]="'HR'"
+                  [assemblyName]="'Core'"
+                  [className]="'DataBusiness'"
+                  [method]="'LoadDataAsync'"
+                  [predicates]="'EmployeeID=@0'"
+                  [dataValues]="employeeID"
+                  [pageSize]="numPageSizeGridView"
+                  [entityName]="'HR_EBusinessTravels'"
+                  [rowHeight]="50"
+                  height="240px"
+                ></codx-gridview>
               </div>
             </div>
           </div>
@@ -4785,8 +4941,7 @@
               </div>
             </div>
 
-            <div class="mb-1">
-            </div>
+            <div class="mb-1"></div>
           </div>
         </div>
       </ng-container>
@@ -5458,13 +5613,13 @@
     <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
   </div>
   <div *ngIf="data?.isAllowReturn == true">
-    {{ eAssetHeaderText['IsAllowReturn'] }}
+    {{ eAssetHeaderText["IsAllowReturn"] }}
   </div>
 </ng-template>
 
 <ng-template #templateEAssetCol3 let-data>
   <div *ngIf="data?.isReturned == true" class="has-action-menu">
-     {{eAssetHeaderText['IsReturned']}}
+    {{ eAssetHeaderText["IsReturned"] }}
     <i class="icon-calendar_today"></i>
     {{ data?.returnedDate | fmDT }}
     <codx-mfunc
@@ -6122,35 +6277,39 @@
 <ng-template #templateBusinessTravelGridCol1 let-data>
   <div>
     <i class="icon-home_work"></i>
-    {{data?.businessPlace }}
+    {{ data?.businessPlace }}
   </div>
   <div>
-    <i class="icon-connection-point icon-18 text-gray-600 me-1 text-primary"></i>
-    {{data?.kowID | formatvalue: EBusinessTravelFormodel:"kowID" | async}}
+    <i
+      class="icon-connection-point icon-18 text-gray-600 me-1 text-primary"
+    ></i>
+    {{ data?.kowID | formatvalue : EBusinessTravelFormodel : "kowID" | async }}
   </div>
 </ng-template>
 
 <ng-template #templateBusinessTravelGridCol2 let-data>
   <div>
     <i class="icon-calendar_today"></i>
-    {{data?.beginDate | fmDT}} - {{ data?.endDate| fmDT }}
+    {{ data?.beginDate | fmDT }} - {{ data?.endDate | fmDT }}
   </div>
   <div>
-    <i class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></i>
-    {{data?.days}}
+    <i
+      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
+    ></i>
+    {{ data?.days }}
   </div>
 </ng-template>
 
 <ng-template #templateBusinessTravelGridCol3 let-data>
   <div class="has-action-menu">
-    {{data?.businessPurpose}}
+    {{ data?.businessPurpose }}
     <codx-mfunc
-    [formModel]="EBusinessTravelFormodel"
-    (clickMF)="clickMF($event, data, 'eBusinessTravels')"
-    type="hover"
-    [dataItem]="data"
+      [formModel]="EBusinessTravelFormodel"
+      (clickMF)="clickMF($event, data, 'eBusinessTravels')"
+      type="hover"
+      [dataItem]="data"
     >
-  </codx-mfunc>
+    </codx-mfunc>
   </div>
 </ng-template>
 <!-- #endregion -->

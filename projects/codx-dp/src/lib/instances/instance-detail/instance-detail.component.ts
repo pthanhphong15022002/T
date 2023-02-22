@@ -69,6 +69,7 @@ export class InstanceDetailComponent implements OnInit {
   
   isHiddenReason: boolean = false;
 
+  instanceId:string;
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
 
@@ -103,14 +104,12 @@ export class InstanceDetailComponent implements OnInit {
     //   this.getStepsByInstanceID(this.id);
     // }
     if (changes['dataSelect']) {
-      debugger;
-      if (changes['dataSelect'].currentValue.recID == this.id) return;
       this.id = changes['dataSelect'].currentValue.recID;
       this.dataSelect = changes['dataSelect'].currentValue;
       this.currentStep = this.dataSelect.currentStep;
       this.instanceStatus = this.dataSelect.status;
       this.instance = this.dataSelect;
-      this.GetStepsByInstanceIDAsync(this.id);
+     this.GetStepsByInstanceIDAsync(this.id);
 
       //cái này xóa luon di. chưa chạy xong api mà gọi ra la sai
       // if (this.listSteps == null && this.listSteps.length == 0) {
@@ -209,7 +208,8 @@ export class InstanceDetailComponent implements OnInit {
   click(indexNo, data) {
     if (this.currentStep < indexNo) return;
     this.currentNameStep = indexNo;
-    this.tmpTeps = data;
+   
+    this.tmpTeps =  this.listSteps[indexNo];
   }
 
   // continues(data) {
@@ -271,12 +271,30 @@ export class InstanceDetailComponent implements OnInit {
     this.checkCompletedInstance(this.instanceStatus);
    }
    checkCompletedInstance(instanceStatus:any){
-    if(Number(instanceStatus) >= 3 ) {
-      this.isHiddenReason = true;
+    if(instanceStatus === '3' ||  instanceStatus === '4' ) {
+      this.listStepUpdate.pop();
+    }
+    else if (instanceStatus === '5' ||  instanceStatus === '6' ) {
+      this.listStepUpdate.splice(this.listStepUpdate.length -2 , 1);
     }
     else {
-      this.isHiddenReason = false;
+      this.deleteListReason(this.listStepUpdate);
     }
+   }
+
+   getColorStepName(status: string){
+    if(status === '1'){
+      return 'step current';
+    }
+    else if(status === '3' || status === '4' || status === '5' ||  status === '' ||status === null) {
+      return 'step old';
+    }
+    return 'step';
+   // item?.stepStatus === '1' ? 'step current':  item?.stepStatus === '3' || item?.stepStatus === '4' || item?.stepStatus === '5' ||  item?.stepStatus === '' ||item?.stepStatus === null ? 'step old': 'step' "
+   }
+   getReasonByStepId(stepId:string){
+    var idx =  this.listStepNew.findIndex(x=>x.stepID === stepId) ;
+    return  this.listStepNew[idx];
    }
 
 }
