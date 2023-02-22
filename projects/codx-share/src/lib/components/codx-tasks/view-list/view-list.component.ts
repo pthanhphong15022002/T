@@ -30,7 +30,7 @@ export class ViewListComponent implements OnInit {
   @Input() vllStatus?: any;
   @Input() listRoles?: any;
   @Input() showMoreFunc?: any;
-  @Input() user : any ;
+  @Input() user: any;
 
   listTaskResousceSearch = [];
   listTaskResousce = [];
@@ -42,16 +42,14 @@ export class ViewListComponent implements OnInit {
   @Output() viewTask = new EventEmitter<any>();
 
   lstTaskbyParent = [];
-  isHoverPop=false;
+  isHoverPop = false;
 
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) {
- 
-  }
+  ) {}
 
   ngOnInit(): void {}
 
@@ -83,31 +81,48 @@ export class ViewListComponent implements OnInit {
         if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
-        if ((x.functionID == 'TMT02015'|| x.functionID == 'TMT02025')&& data.status=='90') {
-          x.disabled = true;
-        }
-         //an cap nhat tien do khi hoan tat 
-         if ((x.functionID == 'TMT02018'|| x.functionID == 'TMT02026'||x.functionID == 'TMT02035')&& data.status=="90") {
-          x.disabled = true;
-        }
-          //an voi ca TMT026
-          if (
-            (x.functionID == 'SYS02' ||
-              x.functionID == 'SYS03' ||
-              x.functionID == 'SYS04') &&
-              (this.formModel?.funcID == 'TMT0206' ||  this.formModel?.funcID == 'MWP0063')
-          ) {
-            x.disabled = true;
-          }
-            //an voi fun TMT03011
         if (
-          (this.formModel?.funcID == 'TMT03011' || this.formModel?.funcID == 'TMT05011') &&
+          (x.functionID == 'TMT02015' || x.functionID == 'TMT02025') &&
+          data.status == '90'
+        ) {
+          x.disabled = true;
+        }
+        //an cap nhat tien do khi hoan tat
+        if (
+          (x.functionID == 'TMT02018' ||
+            x.functionID == 'TMT02026' ||
+            x.functionID == 'TMT02035') &&
+          data.status == '90'
+        ) {
+          x.disabled = true;
+        }
+        //an voi ca TMT026
+        if (
+          (x.functionID == 'SYS02' ||
+            x.functionID == 'SYS03' ||
+            x.functionID == 'SYS04') &&
+          (this.formModel?.funcID == 'TMT0206' ||
+            this.formModel?.funcID == 'MWP0063')
+        ) {
+          x.disabled = true;
+        }
+        //an voi fun TMT03011
+        if (
+          (this.formModel?.funcID == 'TMT03011' ||
+            this.formModel?.funcID == 'TMT05011') &&
           data.category == '1' &&
-          data.createdBy != this.user?.userID && !this.user?.administrator &&
+          data.createdBy != this.user?.userID &&
+          !this.user?.administrator &&
           (x.functionID == 'SYS02' || x.functionID == 'SYS03')
         ) {
           x.disabled = true;
         }
+        //an TMT02019
+        if (
+          x.functionID == 'TMT02019' &&
+          (data.status == '80' || data.status == '90')
+        )
+          x.disabled = true;
       });
     }
   }
@@ -126,8 +141,8 @@ export class ViewListComponent implements OnInit {
     if (this.popoverCrr) {
       if (this.popoverCrr.isOpen()) this.popoverCrr.close();
     }
-    if(this.isHoverPop) return
-    this.isHoverPop= true ;
+    if (this.isHoverPop) return;
+    this.isHoverPop = true;
     this.api
       .execSv<any>(
         'TM',
@@ -141,10 +156,10 @@ export class ViewListComponent implements OnInit {
           this.listTaskResousce = res;
           this.listTaskResousceSearch = res;
           this.countResource = res.length;
-          if(this.isHoverPop)p.open();
+          if (this.isHoverPop) p.open();
           this.popoverCrr = p;
         }
-        this.isHoverPop= false;
+        this.isHoverPop = false;
       });
   }
 
