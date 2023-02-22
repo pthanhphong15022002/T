@@ -64,16 +64,16 @@
 	transition: border-color 0.2s ease;
 }
 
-.arrow-steps .focus {
-	background-color: var(--primary-dark);
-	color: var(--primary-inverse);
-}
+// .arrow-steps .focus {
+// 	background-color: var(--primary-dark);
+// 	color: var(--primary-inverse);
+// }
 
-.arrow-steps .focus::after,
-.arrow-steps .focus::before {
-	border-left-color: var(--primary-dark);
-	border-right-color: var(--primary-dark);
-}
+// .arrow-steps .focus::after,
+// .arrow-steps .focus::before {
+// 	border-left-color: var(--primary-dark);
+// 	border-right-color: var(--primary-dark);
+// }
 
 .arrow-steps .step:hover {
 	background-color: var(--primary-light);

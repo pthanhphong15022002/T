@@ -398,16 +398,24 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   handleAddStep() {
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0) {
-      stepListSave.forEach((step, index) => {
+      stepListSave.forEach((step) => {
         if (step && step['taskGroups']) {
-          let index = step['taskGroups'].find((x) => x['recID']);
-          step['taskGroups'].splice(index, 1);
-          delete step['taskGroups']['task'];
+          this.convertGroupSave(step['taskGroups']);
         }
       });
       this.dpService.addStep([stepListSave]).subscribe((data) => {
         if (data) {
         }
+      });
+    }
+  }
+
+  convertGroupSave(group){
+    if(group && group.length > 0){
+      let index = group?.findIndex((x) => !x['recID']);
+      group?.splice(index, 1);
+      group?.forEach(element => {
+        delete element['task'];
       });
     }
   }
@@ -419,23 +427,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (stepListSave.length > 0) {
       stepListSave.forEach((step) => {
         if (step && step['taskGroups']) {
-          let index = step['taskGroups'].findIndex((x) => !x['recID']);
-          if (index >= 0) step['taskGroups'].splice(index, 1);
-          delete step['taskGroups']['task'];
+          this.convertGroupSave(step['taskGroups']);
         }
       });
       if (this.stepListAdd.length > 0) {
         this.stepListAdd.forEach((step) => {
           if (step && step['taskGroups']) {
-            let index = step['taskGroups'].findIndex((x) => !x['recID']);
-            if (index >= 0) {
-              step['taskGroups'].splice(index, 1);
-            }
-            delete step['taskGroups']['task'];
+            this.convertGroupSave(step['taskGroups']);
           }
         });
       }
-
       this.dpService
         .editStep([stepListSave, this.stepListAdd, this.stepListDelete])
         .subscribe((data) => {

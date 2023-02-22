@@ -56,7 +56,7 @@ export class PopupAddPositionsComponent implements OnInit {
   ngOnInit(): void {
     this.getFucnName(this.functionID);
     if(this.isAdd)
-      this.blocked = !this.data.allowEditKey;
+      this.blocked = this.dialogRef.dataService.keyField ? true : false;
     else
       this.blocked = true;
   }
