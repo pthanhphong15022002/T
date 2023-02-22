@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { CacheService, DialogData, DialogRef } from 'codx-core';
+import { CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { CodxDpService } from '../../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../../models/models';
 
@@ -32,6 +32,7 @@ export class PopupRolesDynamicComponent implements OnInit {
   listRoles = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private noti: NotificationsService,
     private cache: CacheService,
     private dpSv: CodxDpService,
     @Optional() dt?: DialogData,
@@ -171,6 +172,7 @@ export class PopupRolesDynamicComponent implements OnInit {
       this.dpSv.updatePermissionProcess(this.process).subscribe((res) => {
         if (res.permissions.length > 0) {
           // this.notifi.notifyCode('SYS034');
+          this.noti.notifyCode('SYS034');
           this.dialog.close(res);
         }
       });

@@ -647,7 +647,9 @@
                     class="align-items-center d-flex h-35px justify-content-center rounded-circle text-white w-35px"
                     style="background-color: rgb(50, 219, 183)"
                   >
-                    <span style="font-size: 14px"> {{ itemSelected.listTaskResources.length - 10 }}+</span>
+                    <span style="font-size: 14px">
+                      {{ itemSelected.listTaskResources.length - 10 }}+</span
+                    >
                   </div>
                 </div>
               </ng-container>
@@ -706,7 +708,7 @@
         <div class="text-gray-700" [innerHTML]="itemSelected.memo2"></div>
       </div>
 
-      <div class="mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals.length > 0">
+      <div class="mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals?.length > 0">
         <!-- <div class="text-primary fw-bold"> -->
         <!-- <div class="text-gray-700">
           <codx-label name="lblListTaskBoard" formName="Tasks" default="Danh sách việc cần làm"></codx-label>:
@@ -766,7 +768,9 @@
   <div class="d-flex justify-content-end me-2">
     <ng-container *ngFor="let item of listRoles">
       <div class="d-flex align-items-center ms-4">
-        <span class="me-1"><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt="" /></span>
+        <span class="me-1"
+          ><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt=""
+        /></span>
         <div class="fs-8 text-gray-500">{{ item.text }}</div>
       </div>
     </ng-container>
