@@ -93,6 +93,10 @@ export class InstancesComponent
   dataDrop: any;
   isClick: boolean = true;
   stepIdClick = '';
+  listProccessCbx:any;
+  dataProccess:any;
+
+  readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -113,7 +117,10 @@ export class InstancesComponent
     });
 
     // em bảo gán tạm
-    this.genAutoNumberNo(this.process?.applyFor === 'D' ? 'DPT0406' : 'DPT0405');
+    this.dataProccess = dt?.data?.data;
+    this.genAutoNumberNo(this.dataProccess?.applyFor === '1' ? 'DPT0406' : 'DPT0405');
+    this.getListCbxProccess(this.dataProccess?.applyFor);
+    
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -197,7 +204,7 @@ export class InstancesComponent
   add() {
     this.view.dataService.addNew().subscribe((res) => {
       const funcIDApplyFor =
-        this.process.applyFor === 'D' ? 'DPT0406' : 'DPT0405';
+        this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
@@ -258,7 +265,7 @@ export class InstancesComponent
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
         const funcIDApplyFor =
-          this.process.applyFor === 'D' ? 'DPT0406' : 'DPT0405';
+          this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
         const applyFor = this.process.applyFor;
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -603,7 +610,7 @@ export class InstancesComponent
               isReason: isMoveSuccess,
               instance: data,
               objReason: reason,
-              applyFor: this.process.applyFor,
+              listProccessCbx: this.listProccessCbx,
             };
 
             var dialogRevision = this.callfc.openForm(
@@ -677,6 +684,20 @@ export class InstancesComponent
   }
   changeMF(e) {
     this.changeDataMF(e.e, e.data);
+  }
+  getListCbxProccess(applyFor:any){
+    this.cache.valueList('DP031').subscribe((data) => {
+      this.codxDpService.getlistCbxProccess(applyFor).subscribe((res)=>{
+        this.listProccessCbx = res[0];
+        var obj = {
+          recID: this.guidEmpty,
+          processName: data.datas[0].default
+        };
+        this.listProccessCbx.unshift(obj);
+      });
+    });
+    
+
   }
   #endregion;
 }

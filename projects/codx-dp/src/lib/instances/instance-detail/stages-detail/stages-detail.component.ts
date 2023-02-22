@@ -63,6 +63,9 @@ export class StagesDetailComponent implements OnInit {
   @Input() isCreate: boolean = false;
   @Input() listStepReason: any;
   @Input() instance: any;
+  @Input() stepNameEnd: any;
+  @Input() proccesNameMove: any;
+  
 
   dateActual: any;
   startDate: any;
@@ -114,6 +117,9 @@ export class StagesDetailComponent implements OnInit {
   listReasonsClick: DP_Instances_Steps_Reasons[] = [];
   dialogPopupReason: DialogRef;
 
+
+  readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
+  
   constructor(
     private callfc: CallFuncService,
     private notiService: NotificationsService,
@@ -965,6 +971,7 @@ export class StagesDetailComponent implements OnInit {
   //End task -- nvthuan
 
   openPopupReason(){
+    this.listReasonsClick = [];
     this.dialogPopupReason = this.callfc.openForm(this.viewReason, '', 500, 10);
   }
   changeReasonMF(e) {
@@ -974,10 +981,22 @@ export class StagesDetailComponent implements OnInit {
         switch (res.functionID) {
           case 'SYS02':
           case 'SYS102':
+            // this.deleteReason();
+            break;
           default:
             res.disabled = true;
+            break;
         }
       });
+    }
+  }
+  clickMFReason($event,data){
+    switch ($event.functionID) {
+      case 'SYS02':
+        this.deleteReason(data);
+        break; 
+      default:
+        break;
     }
   }
   checkValue($event,data){
@@ -986,7 +1005,7 @@ export class StagesDetailComponent implements OnInit {
         this.listReasonsClick.push(reason);
     }
     else {
-      let idx = this.listReasonsClick.findIndex(x=> x.reasonName  === data.recID);
+      let idx = this.listReasonsClick.findIndex(x=> x.recID  === data.recID);
       if(idx>=0) this.listReasonsClick.splice(idx, 1);
     }
   }
@@ -996,16 +1015,42 @@ export class StagesDetailComponent implements OnInit {
   ) {
     reason.stepID = instanceStep.stepID;
     reason.instanceID = instanceStep.recID;
-    reason.createdBy = this.user
+    reason.createdBy = this.user.userID;
+    reason.processID = this.instance.processID;
     // reason.reasonType = this.isReason ? '1' : '2';
     return reason;
   }
   onSaveReason(){
-    this.dataStep.reasons = this.listReasonsClick
-    var data = [this.instance.recID,this.dataStep.stepID, this.dataStep.reasons];
+
+    var data = [this.instance.recID,this.dataStep.stepID, this.listReasonsClick];
     this.dpService.updateListReason(data).subscribe((res) => {
       if(res){
-        this.notiService.notifyCode('SYS06');
+        this.dataStep.reasons = this.listReasonsClick;
+        this.dialogPopupReason.close();
+        this.notiService.notifyCode('SYS007');
+        return;
+      }
+    })
+  }
+  deleteReason(data){
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x?.event && x.event?.status == 'Y') {
+          this.onDeleteReason(data);
+      }
+      else {
+          return;
+      }
+    });
+  }
+
+  onDeleteReason(dataReason){
+    var data = [this.instance.recID,this.dataStep.stepID, dataReason.recID];
+    this.dpService.DeleteListReason(data).subscribe((res) => {
+      if(res){
+        let idx = this.dataStep.reasons.findIndex(x=> x.recID  === dataReason.recID);
+        if(idx >= 0) this.dataStep.reasons.splice(idx, 1);
+        this.notiService.notifyCode('SYS008');
+        return;
       }
     })
   }

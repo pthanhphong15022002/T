@@ -1,6 +1,6 @@
 import { DP_Instances_Permissions } from './../../models/models';
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService, CallFuncService } from 'codx-core';
+import { CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService, CallFuncService, CacheService } from 'codx-core';
 import { log, table } from 'console';
 import { CodxDpService } from '../../codx-dp.service';
 import { DP_Instances, DP_Instances_Steps, DP_Instances_Steps_Reasons } from '../../models/models';
@@ -40,7 +40,7 @@ export class PopupMoveStageComponent implements OnInit {
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
 
   lstRoles = [];
-
+  assignControl: any;
   fieldCbxRole = {text: 'objectName', value: 'objectID'}
 
   constructor(
@@ -48,6 +48,7 @@ export class PopupMoveStageComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
+    private cache: CacheService,
     private dpSv: CodxDpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -58,6 +59,9 @@ export class PopupMoveStageComponent implements OnInit {
     this.headerText = 'Chuyển tiếp giai đoạn'; //  gán sau button add
     this.viewClick = this.viewKanban;
     this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
+    if(this.instance.permissions != null && this.instance.permissions.length > 0){
+      this.lstParticipants = this.instance.permissions.filter(x=> x.roleType === 'P');
+    }
     this.stepIdOld = this.instance.stepID;
     this.listStep = JSON.parse(JSON.stringify(dt?.data.instanceStep));
     this.listStepsCbx = JSON.parse(JSON.stringify(this.listStep));
@@ -65,6 +69,12 @@ export class PopupMoveStageComponent implements OnInit {
     this.IdFail = this.listStepsCbx[this.listStepsCbx.length - 1]?.stepID;
     this.IdSuccess = this.listStepsCbx[this.listStepsCbx.length - 2]?.stepID;
     this.stepIdClick = JSON.parse(JSON.stringify(dt?.data?.stepIdClick))
+    this.cache.valueList('DP019').subscribe(res =>{
+      if (res) {
+        this.assignControl = res.datas;
+
+      }
+    });
     // this.loadListUser(this.instance.permissions);
   }
 
@@ -73,43 +83,11 @@ export class PopupMoveStageComponent implements OnInit {
 
   }
 
-  loadListUser(permissions = []){
-    var idO = '';
-    var idD = '';
-    var idP = '';
-    permissions.forEach(element => {
-      switch(element.objectType){
-        case 'O':
-          idO = idO != '' ? idO + ';' + element.objectID : element.objectID ;
-          break;
-        case 'D':
-          idD = idD != '' ? idD + ';' + element.objectID : element.objectID ;
-          break;
-        case 'P':
-          idP = idP != '' ? idP + ';' + element.objectID : element.objectID ;
-      }
-    });
-    if(idO != ''){
-      this.dpSv.GetListUserIDByListTmpEmpIDAsync([idO, 'O']).subscribe(res=>{
-        if(res){
-          var test = res;
-        }
-      })
-    }
-    if(idD != ''){
-      this.dpSv.GetListUserIDByListTmpEmpIDAsync([idD, 'D']).subscribe(res=>{
-        if(res){
-          var test1 = res;
-        }
-      })
-    }
+  checkAssignControl(assignControl = []){
+    if(assignControl != null && assignControl.length > 0){
+      for(let i = 0; i < assignControl.length; i++){
 
-    if(idP != ''){
-      this.dpSv.GetListUserIDByListTmpEmpIDAsync([idP, 'P']).subscribe(res=>{
-        if(res){
-          var test2 = res;
-        }
-      })
+      }
     }
   }
 

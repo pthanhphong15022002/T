@@ -224,6 +224,24 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
           }
         });
       }
+      else {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if ( //Hiện: chép 
+          func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (//Ẩn: sửa - xóa - gửi duyệt - hủy          
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/||
+            func.functionID == 'EP7T1102' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
     }
   
   }
