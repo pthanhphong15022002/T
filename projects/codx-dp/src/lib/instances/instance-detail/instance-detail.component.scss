@@ -64,6 +64,15 @@
 	transition: border-color 0.2s ease;
 }
 
+.arrow-steps .step:hover {
+	background-color: #F2709C;
+
+	::after,
+	::before {
+		border-color: #F2709C;
+	}
+}
+
 .arrow-steps .step:before {
 	right: auto;
 	left: 0;
