@@ -6,7 +6,7 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
-  [formModel]="formModelMenu"
+  [formModel]="frmModel"
   [data]="stepsTasks"
   [openMore]="false"
 ></codx-form>
@@ -32,7 +32,7 @@
       <div class="text-primary mb-1">
         <codx-label
           fiedName="StepName"
-          [formModel]="dialog?.formModel"
+          [formModel]="form?.formModel"
           default="Thuộc giai đoạn/nhóm"
         >
         </codx-label>
@@ -53,7 +53,7 @@
         <div>
           <codx-label
             fiedName="StepName"
-            [formModel]="dialog?.formModel"
+            [formModel]="form?.formModel"
             default="Nhóm công việc"
           >
           </codx-label>
@@ -79,14 +79,14 @@
         <div>
           <codx-label
             fiedName="taskName"
-            [formModel]="dialog?.formModel"
+            [formModel]="form?.formModel"
             default="Tên công việc"
           >
           </codx-label>
         </div>
         <codx-input
           field="taskName"
-          [formModel]="dialog?.formModel"
+          [formModel]="form?.formModel"
           type="text"
           [crrValue]="stepsTasks?.taskName"
           (valueChange)="valueChangeText($event)"
@@ -99,7 +99,7 @@
         <div>
           <codx-label
             fiedName="callType"
-            [formModel]="dialog?.formModel"
+            [formModel]="form?.formModel"
             default="Loại cuộc gọi"
           >
           </codx-label>
@@ -120,7 +120,7 @@
         <div class="d-flex justify-content-end">
           <codx-label
             fiedName="isOnline"
-            [formModel]="dialog?.formModel"
+            [formModel]="form?.formModel"
             default="Họp trực tuyến"
           >
           </codx-label>
@@ -172,7 +172,7 @@
       <div class="d-flex justify-content-between align-items-center mail">
         <codx-label
           fiedName="Reference"
-          [formModel]="dialog?.formModel"
+          [formModel]="form?.formModel"
           default="Bảng khảo sát"
         ></codx-label>
         <a
@@ -187,7 +187,7 @@
       </div>
       <codx-input
         field="reference"
-        [formModel]="dialog?.formModel"
+        [formModel]="form?.formModel"
         (valueChange)="changeQuestion($event)"
       >
       </codx-input>
@@ -212,7 +212,7 @@
       </div>
       <codx-input
         field="stepName"
-        [formModel]="dialog?.formModel"
+        [formModel]="form?.formModel"
         type="text"
         [Group]=""
         (valueChange)="valueChangeText($event)"
@@ -226,7 +226,7 @@
         <div class="col-6">
           <codx-label
             fiedName="durationDay"
-            [formModel]="dialog?.formModel"
+            [formModel]="form?.formModel"
             default="Thời lượng công việc"
           >
           </codx-label>
@@ -234,7 +234,7 @@
             <div class="col-6 position-relative">
               <codx-input
                 field="durationDay"
-                [formModel]="dialog?.formModel"
+                [formModel]="form?.formModel"
                 [crrValue]="stepsTasks?.durationDay"
                 type="text"
                 (valueChange)="valueChangeText($event)"
@@ -246,7 +246,7 @@
               >
                 <codx-label
                   fiedName=""
-                  [formModel]="dialog?.formModel"
+                  [formModel]="form?.formModel"
                   default="Ngày"
                 >
                 </codx-label>
@@ -256,7 +256,7 @@
             <div class="col-6 position-relative">
               <codx-input
                 field="durationHour"
-                [formModel]="dialog?.formModel"
+                [formModel]="form?.formModel"
                 type="text"
                 [crrValue]="stepsTasks?.durationHour"
                 (valueChange)="valueChangeText($event)"
@@ -268,7 +268,7 @@
               >
                 <codx-label
                   fiedName=""
-                  [formModel]="dialog?.formModel"
+                  [formModel]="form?.formModel"
                   default="Giờ"
                 >
                 </codx-label>
@@ -279,16 +279,16 @@
         <div class="col-6">
           <codx-label
             fiedName="reminders"
-            [formModel]="dialog?.formModel"
+            [formModel]="form?.formModel"
             default="Nhắc nhở trước khi bắt đầu"
           >
           </codx-label>
           <div>
             <codx-input
               field="reminders"
-              [formModel]="dialog?.formModel"
+              [formModel]="form?.formModel"
               [crrValue]="stepsTasks?.reminders"
-              refValue="DP024"
+              refValue="DP030"
               type="valuelist"
               (valueChange)="valueChangeText($event)"
             >
@@ -302,7 +302,7 @@
       <div>
         <codx-label
           fiedName="parentID"
-          [formModel]="dialog?.formModel"
+          [formModel]="form?.formModel"
           default="Công việc liên kết"
         >
         </codx-label>
@@ -322,7 +322,7 @@
         refValue="DPStepTasks"
         type="combobox"
         [crrValue]="stepsTasks?.parentID"
-        [formModel]="dialog?.formModel"
+        [formModel]="form?.formModel"
       >
       </codx-input>
       </div>
@@ -331,7 +331,7 @@
       <div>
         <codx-label
           fiedName="parentID"
-          [formModel]="dialog?.formModel"
+          [formModel]="form?.formModel"
           default="Công việc liên kết"
         >
         </codx-label>
@@ -348,7 +348,7 @@
       <div>
         <codx-label
           fiedName="dependRule"
-          [formModel]="dialog?.formModel"
+          [formModel]="form?.formModel"
           default="Bắt đầu công việc khi"
         >
         </codx-label>
@@ -371,7 +371,7 @@
         <div>
           <codx-label
             fiedName="roles"
-            [formModel]="dialog?.formModel"
+            [formModel]="form?.formModel"
             default="Người chủ trì"
           ></codx-label>
         </div>
@@ -398,7 +398,7 @@
         <div>
           <codx-label
             fiedName="roles"
-            [formModel]="dialog?.formModel"
+            [formModel]="form?.formModel"
             default="Vai trò bộ phận thực hiện"
           >
           </codx-label>
@@ -425,7 +425,7 @@
       <div>
         <codx-label
           fiedName="assignControl"
-          [formModel]="dialog?.formModel"
+          [formModel]="form?.formModel"
           default="Phân công công việc khi"
         >
         </codx-label>
@@ -444,13 +444,13 @@
       <div>
         <codx-label
           fiedName="memo"
-          [formModel]="dialog?.formModel"
+          [formModel]="form?.formModel"
           default="Ghi chú"
         ></codx-label>
       </div>
       <codx-input
         field="memo"
-        [formModel]="dialog?.formModel"
+        [formModel]="form?.formModel"
         [crrValue]="stepsTasks?.memo"
         [Group]=""
         format="ed"
@@ -506,7 +506,7 @@
       style="float: left; clear: left">
       <div class="d-flex align-items-center mb-2">
         <div class="fw-bold text-primary">
-          <codx-label fiedName="lblAttachments" [formModel]="dialog.formModel"
+          <codx-label fiedName="lblAttachments" [formModel]="form?.formModel"
             default="Tài liệu">
           </codx-label>
         </div>
