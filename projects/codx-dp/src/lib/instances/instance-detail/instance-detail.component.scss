@@ -64,10 +64,20 @@
 	transition: border-color 0.2s ease;
 }
 
+.arrow-steps .step:hover {
+	background-color: var(--primary-light);
+}
+
+.arrow-steps .step:hover::after,
+.arrow-steps .step:hover::before {
+	border-left-color: var(--primary-light);
+	border-right-color: var(--primary-light);
+}
+
 .arrow-steps .step:before {
 	right: auto;
 	left: 0;
-	border-left: 22px solid #fff;
+	border-left: 22px solid #fff !important;
 	z-index: 0;
 }
 

@@ -176,7 +176,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
         .UpdateEmployeeFamilyInfo(this.formModel.currentData)
         .subscribe((p) => {
           if (p != null) {
-            this.notify.notifyCode('SYS006');
+            this.notify.notifyCode('SYS007');
             // this.lstFamilyMembers[this.indexSelected] = p;
             // if (this.listView) {
             //   (this.listView.dataService as CRUDService)

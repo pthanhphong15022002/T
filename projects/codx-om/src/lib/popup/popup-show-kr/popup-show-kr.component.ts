@@ -149,11 +149,11 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.headerText = 'Xem chi tiết - Kết quả chính'; //dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.krRecID=dialogData.data[0];
     this.title = dialogData.data[1];
     this.krParentID = dialogData.data[2];
+    this.headerText = dialogData?.data[3];
     this.formModel=dialogRef.formModel;
 
     
