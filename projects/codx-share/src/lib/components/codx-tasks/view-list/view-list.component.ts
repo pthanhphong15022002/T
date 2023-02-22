@@ -119,7 +119,7 @@ export class ViewListComponent implements OnInit {
         }
         //an TMT02019
         if (
-          x.functionID == 'TMT02019' &&
+          (x.functionID == 'TMT02019' || x.functionID == 'TMT02026') &&
           (data.status == '80' || data.status == '90')
         )
           x.disabled = true;

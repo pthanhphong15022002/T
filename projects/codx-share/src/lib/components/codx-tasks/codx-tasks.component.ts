@@ -1543,6 +1543,7 @@ export class CodxTasksComponent
         this.changeStatusTask(e.data, data);
         break;
       case 'TMT02019':
+      case 'TMT02027':
         this.openExtendsAction(e.data, data);
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
@@ -1630,9 +1631,9 @@ export class CodxTasksComponent
         ) {
           x.disabled = true;
         }
-        //an TMT02019
+        //an gia hạn cong viec
         if (
-          x.functionID == 'TMT02019' &&
+          (x.functionID == 'TMT02019' || x.functionID == 'TMT02026') &&
           (data.status == '80' || data.status == '90')
         )
           x.disabled = true;
