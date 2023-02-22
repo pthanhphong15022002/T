@@ -62,6 +62,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() isUpdate: boolean = false;
   @Input() isCreate: boolean = false;
   @Input() listStepReason: any;
+  @Input() instance: any;
 
   dateActual: any;
   startDate: any;
@@ -947,7 +948,6 @@ export class StagesDetailComponent implements OnInit {
   //End task -- nvthuan
 
   openPopupReason(){
-    debugger;
     this.dialogPopupReason = this.callfc.openForm(this.viewReason, '', 500, 10);
   }
   changeReasonMF(e) {
@@ -984,7 +984,12 @@ export class StagesDetailComponent implements OnInit {
     return reason;
   }
   onSaveReason(){
-
+    this.dataStep.reasons = this.listReasonsClick
+    var data = [this.instance.recID,this.dataStep.stepID, this.dataStep.reasons];
+    this.dpService.updateListReason(data).subscribe((res) => {
+      if(res){
+        this.notiService.notifyCode('SYS06');
+      }
+    })
   }
-
 }
