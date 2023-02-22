@@ -373,7 +373,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         taskIDParent,
       ])
       .subscribe((res) => {
-        if (res[0]) {
+        if (res && res[0]) {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
           var taskParent = res[1][0];
@@ -438,7 +438,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
             });
         } else {
           this.notiService.notifyCode('TM038');
-          return;
+          this.dialog.close();
         }
       });
   }
@@ -664,7 +664,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   }
 
   valueChangeEstimated(data) {
-    if (data.data==undefined) return;
+    if (data.data == undefined) return;
     var num = data.data;
     if (num < 0) {
       this.notiService.notifyCode('TM033');

@@ -1,0 +1,7 @@
+<codx-views #view idField="recID" [views]="views" [button]="buttons" service="IV" entityName="IV_DimensionGroups"
+  (buttonClick)="toolBarClick($event)">
+</codx-views>
+<ng-template #templateMore let-data>
+  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
+    type="view"></codx-mfunc>
+</ng-template>
