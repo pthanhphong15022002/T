@@ -50,7 +50,10 @@
     [itemDetail]="itemDetail"
     [funcID]="funcID"
     [formModel]="formModel"
-    [view]="view"
+    [view]="view"    
+    (reject)="reject($event)"
+    (approve)="approve($event)"
+    (undo)="undo($event)"
     (updateStatus)="updateStatus($event)"
   ></approval-stationery-view-detail>
 </ng-template>

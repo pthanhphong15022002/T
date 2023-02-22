@@ -37,16 +37,17 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
   dialog!: DialogRef;
   formType: any;
   unitsofmearsure: UnitsOfMearsure;
-  gridViewSetup:any;
-  umid:any;
-  umName:any;
+  gridViewSetup: any;
+  umid: any;
+  umName: any;
   objectUmconversion: Array<UMConversion> = [];
   objectUmconversionDelete: Array<UMConversion> = [];
   tabInfo: any[] = [
-    { 
-      icon: 'icon-info', 
-      text: 'Thông tin chung', 
-      name: 'Description' },
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'Description',
+    },
     {
       icon: 'icon-playlist_add_check',
       text: 'Thông tin quy đổi',
@@ -74,25 +75,24 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
       this.umid = this.unitsofmearsure.umid;
       this.umName = this.unitsofmearsure.umName;
       this.acService
-        .loadData(
-          'ERM.Business.BS',
-          'UMConversionBusiness',
-          'LoadDataAsync',
-          [this.umid]
-        )
+        .loadData('ERM.Business.BS', 'UMConversionBusiness', 'LoadDataAsync', [
+          this.umid,
+        ])
         .subscribe((res: any) => {
           this.objectUmconversion = res;
         });
     }
-    this.cache.gridViewSetup('UnitsOfMearsure', 'grvUnitsOfMearsureAC').subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
+    this.cache
+      .gridViewSetup('UnitsOfMearsure', 'grvUnitsOfMearsureAC')
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
-//#endregion
+  //#endregion
 
-//#region Init
+  //#region Init
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
@@ -104,18 +104,18 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
     this.title = this.headerText;
     this.dt.detectChanges();
   }
-  valueChange(e:any){
+  valueChange(e: any) {
     this.unitsofmearsure[e.field] = e.data;
   }
-  valueChangeUMID(e:any){
+  valueChangeUMID(e: any) {
     this.umid = e.data;
     this.unitsofmearsure[e.field] = e.data;
   }
-  valueChangeUMName(e:any){
+  valueChangeUMName(e: any) {
     this.umName = e.data;
     this.unitsofmearsure[e.field] = e.data;
   }
-  openPopupConversion(){
+  openPopupConversion() {
     if (this.umid.trim() == '' || this.umid == null) {
       this.notification.notifyCode(
         'SYS009',
@@ -126,7 +126,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
     }
     var obj = {
       headerText: 'Thêm mới thông tin quy đổi',
-      umid:this.umid
+      umid: this.umid,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -149,7 +149,9 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
             opt
           );
           dialogumconversion.closed.subscribe((x) => {
-            var dataumconversiont = JSON.parse(localStorage.getItem('dataumconversion'));
+            var dataumconversiont = JSON.parse(
+              localStorage.getItem('dataumconversion')
+            );
             if (dataumconversiont != null) {
               this.objectUmconversion.push(dataumconversiont);
             }
@@ -158,13 +160,11 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
         }
       });
   }
-  editobjectConversion(data:any){
-    let index = this.objectUmconversion.findIndex(
-      (x) => x.recID == data.recID
-    );
+  editobjectConversion(data: any) {
+    let index = this.objectUmconversion.findIndex((x) => x.recID == data.recID);
     var obj = {
       headerText: 'Thêm mới thông tin quy đổi',
-      data:{ ...data }
+      data: { ...data },
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -187,7 +187,9 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
             opt
           );
           dialogumconversion.closed.subscribe((x) => {
-            var dataumconversiont = JSON.parse(localStorage.getItem('dataumconversion'));
+            var dataumconversiont = JSON.parse(
+              localStorage.getItem('dataumconversion')
+            );
             if (dataumconversiont != null) {
               this.objectUmconversion[index] = dataumconversiont;
             }
@@ -196,17 +198,25 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
         }
       });
   }
-  deleteobjectConversion(data:any){
-    let index = this.objectUmconversion.findIndex(
-      (x) => x.recID == data.recID
-    );
+  deleteobjectConversion(data: any) {
+    let index = this.objectUmconversion.findIndex((x) => x.recID == data.recID);
     this.objectUmconversion.splice(index, 1);
     this.objectUmconversionDelete.push(data);
+  }
+  clearUnitsofmearsure() {
+    this.umid = '';
+    this.umName = '';
+    this.unitsofmearsure.roundOff = 0;
+    this.unitsofmearsure.roundType = null;
+    this.unitsofmearsure.stop = false;
+    this.unitsofmearsure.recID = Guid.newGuid();;
+    this.objectUmconversion = [];
+    this.objectUmconversionDelete = [];
   }
   //#endregion
 
   //#region CRUD
-  onSave(){
+  onSave() {
     if (this.umid.trim() == '' || this.umid == null) {
       this.notification.notifyCode(
         'SYS009',
@@ -237,14 +247,14 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
           if (res.save) {
             this.acService
               .addData('ERM.Business.BS', 'UMConversionBusiness', 'AddAsync', [
-                this.objectUmconversion
+                this.objectUmconversion,
               ])
               .subscribe((res: []) => {});
           }
           this.dialog.close();
           this.dt.detectChanges();
-        })
-    }  
+        });
+    }
     if (this.formType == 'edit') {
       this.dialog.dataService
         .save((opt: RequestOption) => {
@@ -258,15 +268,105 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
         .subscribe((res) => {
           if (res.save || res.update) {
             this.acService
-              .addData('ERM.Business.BS', 'UMConversionBusiness', 'UpdateAsync', [
-                this.objectUmconversion,this.objectUmconversionDelete
-              ])
+              .addData(
+                'ERM.Business.BS',
+                'UMConversionBusiness',
+                'UpdateAsync',
+                [this.objectUmconversion, this.objectUmconversionDelete]
+              )
               .subscribe((res: []) => {});
           }
           this.dialog.close();
           this.dt.detectChanges();
+        });
+    }
+  }
+  onSaveAdd() {
+    if (this.umid.trim() == '' || this.umid == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['UMID'].headerText + '"'
+      );
+      return;
+    }
+    if (this.umName.trim() == '' || this.umName == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['UMName'].headerText + '"'
+      );
+      return;
+    }
+    if (this.formType == 'add') {
+      this.dialog.dataService
+        .save((opt: RequestOption) => {
+          opt.methodName = 'AddAsync';
+          opt.className = 'UnitsOfMearsureBusiness';
+          opt.assemblyName = 'BS';
+          opt.service = 'BS';
+          opt.data = [this.unitsofmearsure];
+          return true;
         })
-    } 
+        .subscribe((res) => {
+          if (res.save) {
+            this.acService
+              .addData('ERM.Business.BS', 'UMConversionBusiness', 'AddAsync', [
+                this.objectUmconversion,
+              ])
+              .subscribe((res) => {
+                if (res) {
+                  this.clearUnitsofmearsure();
+                  this.dialog.dataService.addNew().subscribe();
+                }
+              });
+          }
+        });
+    }
+    if (this.formType == 'edit') {
+      this.dialog.dataService
+        .save((opt: RequestOption) => {
+          opt.methodName = 'UpdateAsync';
+          opt.className = 'UnitsOfMearsureBusiness';
+          opt.assemblyName = 'BS';
+          opt.service = 'BS';
+          opt.data = [this.unitsofmearsure];
+          return true;
+        })
+        .subscribe((res) => {
+          if (res.save || res.update) {
+            this.acService
+              .addData(
+                'ERM.Business.BS',
+                'UMConversionBusiness',
+                'UpdateAsync',
+                [this.objectUmconversion, this.objectUmconversionDelete]
+              )
+              .subscribe((res) => {
+                if (res) {
+                  this.dialog.dataService
+                    .edit(this.dialog.dataService.dataSelected)
+                    .subscribe();
+                }
+              });
+          }
+        });
+    }
+    
   }
   //#endregion
 }
+//#region Guid
+class Guid {
+  static newGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
+  }
+}
+//#endregion

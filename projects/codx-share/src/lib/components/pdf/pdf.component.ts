@@ -98,6 +98,7 @@ export class PdfComponent
   @Output() confirmChange = new EventEmitter<boolean>();
 
   @Input() hideActions = false;
+  @Input() isSignMode = false;
   @Output() changeSignerInfo = new EventEmitter();
   @Output() eventHighlightText = new EventEmitter();
 
@@ -709,8 +710,11 @@ export class PdfComponent
 
     let ngxService: NgxExtendedPdfViewerService =
       new NgxExtendedPdfViewerService();
-    if (this.curPage == 0) {
-      this.curPage = this.pageMax;
+   
+    if(this.isSignMode){
+      if (this.curPage == 0) {
+        this.curPage = this.pageMax;
+      }
     }
     ngxService.addPageToRenderQueue(this.curPage);
   }

@@ -237,3 +237,7 @@ lib-company-setting .e-tab .e-tab-header.e-vertical:before {
   width: 35px !important;
   height: auto;
 }
+
+.list-app .h-125px.min-h-125px:hover {
+  background-color: var(--gray-100);
+}

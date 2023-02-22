@@ -741,6 +741,7 @@
         [dataTree]="dataTree"
         [dataReferences]="dataReferences"
         [isUpPermission]="true"
+        [isEdit]="isEdit"
       ></codx-tabs>
     </ng-template>
   </codx-detail-tmp>
@@ -761,6 +762,14 @@
       *ngIf="countResource > 0"
       (searchEvent)="searchName($event)"
     ></codx-searchbar>
+  </div>
+  <div class="d-flex justify-content-end me-2">
+    <ng-container *ngFor="let item of listRoles">
+      <div class="d-flex align-items-center ms-4">
+        <span class="me-1"><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt="" /></span>
+        <div class="fs-8 text-gray-500">{{ item.text }}</div>
+      </div>
+    </ng-container>
   </div>
   <div class="mh-300px overflow-auto my-2 pe-2">
     <div
@@ -801,7 +810,7 @@
           <div class="d-flex align-items-end codx-badge">
             <div class="d-status">
               <codx-vll
-                [name]="vllStatus"
+                [name]="'TM004'"
                 [field]="'Status'"
                 [value]="item?.status"
                 [showText]="true"

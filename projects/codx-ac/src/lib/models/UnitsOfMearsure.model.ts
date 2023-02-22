@@ -1,4 +1,5 @@
 export class UnitsOfMearsure {
+  recID:any;
   allowEditKey: any;
   assign: any;
   buid: any;

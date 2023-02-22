@@ -324,6 +324,14 @@
   <div class="mb-1">
     <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>
   </div>
+  <div class="d-flex justify-content-end me-2">
+    <ng-container *ngFor="let item of listRoles">
+      <div class="d-flex align-items-center ms-4">
+        <span class="me-1"><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt="" /></span>
+        <div class="fs-8 text-gray-500">{{ item.text }}</div>
+      </div>
+    </ng-container>
+  </div>
   <div class="listuser-box">
     <div class="d-flex align-items-start user-card py-2" *ngFor="let item of listTaskResousceSearch">
       <div class="me-3">
@@ -344,10 +352,10 @@
         <div class="text-gray-700 fs-7">{{ item?.positionName }}</div>
         <div class="text-gray-500 fs-7">{{ item?.memo }}</div>
         <!-- || item?.roleType == 'A'  trước đó có A mà giờ ko A vì a ko thực hiện => ko status ? ?? thương-->
-        <div class="d-flex align-items-center mt-1" *ngIf="item?.roleType == 'R'">
+        <div class="d-flex align-items-center mt-1" *ngIf="item?.roleType == 'R'|| item?.roleType == 'A'">
           <div class="d-flex align-items-end me-2 codx-badge">
             <span>
-              <codx-vll [name]="vllStatus" [formModel]="view.formModel" [field]="'Status'" [value]="item?.status"
+              <codx-vll [name]="'TM004'" [field]="'Status'" [value]="item?.status"
                 [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
               </codx-vll>
             </span>

@@ -155,6 +155,14 @@
   <div class="my-1">
     <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>
   </div>
+  <div class="d-flex justify-content-end me-2">
+    <ng-container *ngFor="let item of listRoles">
+      <div class="d-flex align-items-center ms-4">
+        <span class="me-1"><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt="" /></span>
+        <div class="fs-8 text-gray-500">{{ item.text }}</div>
+      </div>
+    </ng-container>
+  </div>
   <div class="userlist mh-300px overflow-auto">
     <div class="d-flex align-items-start user-card p-3" *ngFor="let item of listTaskResousceSearch">
       <div class="me-3">
@@ -178,7 +186,7 @@
         </div>
         <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R' || item?.roleType == 'A'">
           <div class="d-flex align-items-end me-2 codx-badge">
-            <codx-vll [name]="vllStatus" [field]="'Status'" [value]="item?.status" [showText]="true"
+            <codx-vll [name]="'TM004'" [field]="'Status'" [value]="item?.status" [showText]="true"
               [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
             </codx-vll>
             <span class="text-gray-700"#dueDate>

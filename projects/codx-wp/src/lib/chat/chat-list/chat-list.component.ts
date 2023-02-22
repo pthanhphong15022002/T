@@ -1,4 +1,3 @@
-import { I } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   ApplicationRef,
@@ -11,9 +10,7 @@ import {
   Output,
   TemplateRef,
   ViewChild,
-  ViewContainerRef,
 } from '@angular/core';
-import { Data } from '@syncfusion/ej2-angular-grids';
 import {
   ApiHttpService,
   AuthStore,
@@ -27,7 +24,6 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
-import { iif } from 'rxjs/internal/observable/iif';
 import { PopupAddGroupComponent } from './popup/popup-add-group/popup-add-group.component';
 
 @Component({
@@ -48,7 +44,8 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   user:any = null;
   dataSerach:any[] = [];
   searched:boolean = false;
-  @ViewChild('codxListView') codxListView: CodxListviewComponent;
+  @ViewChild('codxListViewGroup') codxListViewGroup: CodxListviewComponent;
+  @ViewChild('codxListViewSerach') codxListViewSerach: CodxListviewComponent;
   @ViewChild("chatBox") chatBox:TemplateRef<any>;
   constructor(
     private api: ApiHttpService,
@@ -101,7 +98,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     this.signalRSV.signalGroup.subscribe((res: any) => {
       if (res) 
       {
-        (this.codxListView.dataService as CRUDService).add(res).subscribe();
+        (this.codxListViewGroup.dataService as CRUDService).add(res).subscribe();
       }
     });
     // add mesage
@@ -109,7 +106,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
       if (res) 
       {
         this.addBoxChat(res.groupID);
-        let _group = this.codxListView.dataService.data;
+        let _group = this.codxListViewGroup.dataService.data;
         let _index = _group.findIndex(e => e['groupID'] === res.groupID);
         if(_index > -1){
           _group[_index].message = res.message;
@@ -121,17 +118,18 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   // searrch
   search(event: any) {
     if(event){
+      debugger
       this.searched = true;
-      this.api.execSv("WP","ERM.Business.WP","GroupBusiness","SearchAsync",[event,0])
-      .subscribe((res:any) =>{
-        this.dataSerach = res;
-        this.dt.detectChanges();
-      });
+      this.codxListViewSerach.dataService.search(event).subscribe();
+      // this.api.execSv("WP","ERM.Business.WP","GroupBusiness","SearchAsync",[event,0])
+      // .subscribe((res:any) =>{
+      //   this.dataSerach = res;
+      //   this.dt.detectChanges();
+      // });
     }
-    else{
+    else
       this.searched = false;
-
-    }
+    
   }
   // click group chat - chat box
   openChatBox(group: any) {
@@ -159,7 +157,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
       this.isOpen = false;
       this.isOpenChange.emit(this.isOpen);
       let option = new DialogModel();
-      option.DataService = this.codxListView.dataService;
+      option.DataService = this.codxListViewGroup.dataService;
       option.FormModel = this.formModel;
       let data = {
         headerText: 'Tạo nhóm chat',
@@ -181,7 +179,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
         // if (res.event) 
         // {
         //   let group = res.event;
-        //   (this.codxListView.dataService as CRUDService).add(group).subscribe();
+        //   (this.codxListViewGroup.dataService as CRUDService).add(group).subscribe();
         // }
       });
     }

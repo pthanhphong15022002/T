@@ -68,6 +68,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   ];
   loadParam = false;
   param?: TM_Parameter = new TM_Parameter();
+  isEdit = true;
 
   constructor(
     private api: ApiHttpService,
@@ -109,12 +110,18 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           } else {
             this.param = JSON.parse(JSON.stringify(this.paramDefaut));
             this.loadParam = true;
+            if (
+              this.param.EditControl != '1' &&
+              this.itemSelected.category == '2'
+            )
+              this.isEdit = true;
+            else this.isEdit = false;
           }
           //chinh 16/2/2023
           if (res?.listTaskResources?.length > 0)
             this.listTaskResousce = res.listTaskResources;
           else this.listTaskResousce = [];
-          this.listTaskResousceSearch = this.listTaskResousce ;
+          this.listTaskResousceSearch = this.listTaskResousce;
           this.countResource = this.listTaskResousce.length;
           this.loadTreeView();
           this.loadDataReferences();
@@ -123,8 +130,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       });
   }
 
-  popoverEmpList(p: any, task=null) {
-  
+  popoverEmpList(p: any, task = null) {
     if (this.popoverCrr) {
       if (this.popoverCrr.isOpen()) this.popoverCrr.close();
     }
@@ -133,9 +139,9 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     }
     //sua ngày 16/2/2023
     p.open();
-    this.popoverDataSelected = p;       
+    this.popoverDataSelected = p;
     this.hoverPopover.emit(p);
-    
+
     // this.listTaskResousceSearch = [];
     // this.countResource = 0;
     // this.api
@@ -252,6 +258,12 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         ) {
           x.disabled = true;
         }
+        //an TMT02019
+        if (
+          (x.functionID == 'TMT02019' || x.functionID == 'TMT02026') &&
+          (data.status == '80' || data.status == '90')
+        )
+          x.disabled = true;
       });
     }
   }
@@ -262,7 +274,9 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       this.listTaskResousceSearch = this.listTaskResousce;
       return;
     }
-    listTaskResousceSearch = this.listTaskResousce.filter(x=>x.resourceName.toLowerCase().includes(e.toLowerCase()))
+    listTaskResousceSearch = this.listTaskResousce.filter((x) =>
+      x.resourceName.toLowerCase().includes(e.toLowerCase())
+    );
     // this.listTaskResousce.forEach((res) => {
     //   var name = res.resourceName;
     //   if (name.toLowerCase().includes(e.toLowerCase())) {
@@ -428,6 +442,12 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         if (res) {
           this.loadParam = true;
           this.convertParameterByTaskGroup(res);
+          if (
+            this.param.EditControl != '1' &&
+            this.itemSelected.category == '2'
+          )
+            this.isEdit = true;
+          else this.isEdit = false;
           this.changeDetectorRef.detectChanges();
         }
       });
