@@ -127,13 +127,11 @@ export class ActiviesSliderComponent implements OnInit {
     }
   }
   //xét duyệt
-  approvalAsync(item:any,status:string){
+  approvalAsync(item:any,status:string,index:number){
     if(item.recID && item.transID && status)
     {
       item["blocked"] = true;
-      if(status == ApprovalStatus.approved || status == ApprovalStatus.denied)
-      {
-        this.api
+      this.api
         .execSv(
           'ES',
           'ERM.Business.ES',
@@ -144,12 +142,9 @@ export class ActiviesSliderComponent implements OnInit {
           if (!res?.msgCodeError) 
           {
             let mssgCodeNoti = status == ApprovalStatus.approved ? "WP005" : "WP007";
+            this.lstApproval.splice(index,1);
             this.notiSV.notifyCode(mssgCodeNoti);
-            let index = this.lstApproval.findIndex(x => x.recID == item.recID);
-            if(index > -1)
-            {
-              this.lstApproval.splice(index,1);
-              this.lstApproval = JSON.parse(JSON.stringify(this.lstApproval));
+            if(index > -1){
               this.api.execSv(
                 'BG',
                 'ERM.Business.BG',
@@ -161,7 +156,6 @@ export class ActiviesSliderComponent implements OnInit {
           item["blocked"] = false;
           this.dt.detectChanges();
         });
-      }
     }
   }
 

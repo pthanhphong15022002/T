@@ -1,5 +1,5 @@
-<div class="back-ground" *ngIf="dataStep != null">
-  <div class="header-job p-3" >
+<div class="back-ground" *ngIf="dataStep != null && dataStep.stepStatus !== '' && dataStep.stepStatus !== null">
+  <div class="header-job p-3"  >
     <div>
       <span class="title-train"
         >{{ currentStep + 1 }}. {{ dataStep?.stepName }}</span
@@ -72,12 +72,16 @@
     </div>
   </div>
  
-  <!-- <ng-container [ngTemplateOutlet]="task" *ngIf="dataStep.stepStatus === '' && dataStep.stepStatus === null"> </ng-container> -->
 </div>
-<div class="back-info">
+<div class="back-info" *ngIf="dataStep.stepStatus !== '' && dataStep.stepStatus !== null">
   <codx-field-detail [dataStep]="dataStep" [titleDefault]="titleDefault" [isUpdate]="isUpdate"></codx-field-detail>
   <!-- nvthuan -->
   <ng-container [ngTemplateOutlet]="task"> </ng-container>
+  
+</div>
+
+<div *ngIf="dataStep?.stepStatus === '' || dataStep?.stepStatus === null" >
+  <ng-container [ngTemplateOutlet]="reason"> </ng-container>
 </div>
 
 <ng-template #popupSup let-dialog>
@@ -582,76 +586,112 @@
 
 <!--Control group user-->
 
-<!-- view reason  -->
-<ng-template #reasonStep>
-  <div class="header-job p-3">
-    <div>
-      <span class="title-train"
-        >{{ dataStep?.stepName }}</span
-      >
-    </div>
-    <div class="ms-3">
-      <div class="d-flex justify-content-between">
-        <div>
-          <span>Ngày chuyển đến giai đoạn: 09:00 11/10/2022</span>
-        </div>
-        <div class="d-flex align-items-start">
-          <span *ngIf="startDate != null">Bắt đầu lúc: {{ startDate }}</span>
-        </div>
-      </div>
-      <div>
-        <div class="progress">
-          <div
-            class="progress-done"
-            role="progressbar"
-            [style.width]="progress + '%'"
-            aria-valuenow="50"
-            aria-valuemin="0"
-            aria-valuemax="100"
-          >
-            {{ progress }}%
+
+<ng-template #reason>
+  <div class="back-info my-5">
+    <div class="header-info p-3">
+      <div class="left">
+        <span class="title-train">{{dataStep.stepName}} </span>
+        <div class="ms-3">
+          <div class="d-flex justify-content-between">
+            <div>
+              <codx-label default="Ngày chuyển đến giai đoạn"></codx-label>
+            </div>
+            <div class="d-flex align-items-start">
+              <span>{{ dataStep.actualStart }}</span>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between">
+            <div>
+              <codx-label default="Giai đoạn đánh dấu"></codx-label>
+            </div>
+            <div class="d-flex align-items-start">
+              <span >{{ startDate }}</span>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between">
+            <div>
+              <codx-label default="Quy trình được chuyển đến"></codx-label>
+            </div>
+            <div class="d-flex align-items-start">
+              <span> {{ dataStep.newProcessID }}</span>
+            </div>
           </div>
         </div>
       </div>
-      <div class="d-flex justify-content-between">
-        <div>
-          <i class="icon-work_outline text-primary-600"></i>
-          <span class=""
-            >Kỳ vọng: {{ dataStep?.durationDay }} ngày
-            {{ dataStep?.durationHour }} giờ</span
+    </div>
+  </div>
+
+  <div class="back-info my-5">
+    <div class="header-info p-3">
+      <div class="left">
+        <codx-label class="title" default="Lý do thành công gán tạm"></codx-label>
+      </div>
+      <div class="right">
+        <div class="group-button">
+          <button class="button-custom"  (click)="openPopupReason()">
+            <span
+              [ngClass]="!this.isCreate ? '' : 'icon-edit icon-20 text-primary-600 py-2'"
+              style="font-weight: 500"
+            ></span>
+          </button>
+          <button
+            class="button-custom"
+            (click)="clickShow($event, 'step-reason')"
           >
-        </div>
-        <div class="d-flex align-items-start">
-          <i class="icon-work_outline text-primary-600"></i>
-          <span>Đã sử dụng: {{ dateActual | timefrom }} </span>
+            <span
+              class="icon-expand_less icon-20 text-primary-600 py-2"
+              style="font-weight: 500"
+            ></span>
+          </button>
         </div>
       </div>
     </div>
-    <div class="d-flex justify-content-between">
-      <div>
-        <span style="margin-right: 5px">Người liên quan: </span>
-        <codx-img
-          [objectId]="'ADMIN'"
-          [isToolTip]="true"
-          [width]="25"
-          objectType="AD_Users"
-          [numberImages]="3"
-        >
-        </codx-img>
+    <div id="step-reason" class="main" [ngClass]="'show-main'">
+      <div class="main-body m-5" *ngIf="dataStep?.reasons.length > 0">
+        <ng-container *ngFor="let item of dataStep?.reasons" class="pb-2">
+          <ul class="text-left drap-drop me-5 py-2 has-action-menu">
+            <li>
+              {{ item.reasonName }}
+              <codx-mfunc
+                [formModel]="formModel"
+                (click)="openPopupReason()"
+                [dataItem]="moreDefaut"
+                (changeDataMF)="changeReasonMF($event)"
+                [type]="'hover'"
+              >
+              </codx-mfunc>
+            </li>
+          </ul>
+        </ng-container>   
       </div>
-      <div class="d-flex align-items-start">
-        <span style="margin-right: 5px">Người phụ trách: </span>
-        <codx-img
-          [objectId]="'ADMIN'"
-          [isToolTip]="true"
-          [width]="25"
-          objectType="AD_Users"
-          [numberImages]="3"
-        >
-        </codx-img>
+    </div>
+
+
+  </div>
+</ng-template>
+
+
+<ng-template #viewReason let-dialog="dialogPopupReason">
+  <codx-form headerText="Chọn lý do thành công" [body]="bodyFormReName" [footer]="footerFormReName" [dialog]="dialogPopupReason">
+  </codx-form>
+</ng-template>
+
+<ng-template #bodyFormReName>
+  <div class="form-group mt-3">
+    <div *ngFor="let item of listStepReason.reasons">
+      <div class="form-check py-2">
+        <input class="form-check-input rounded-circle" type="checkbox" (change)="checkValue($event,item)"/>
+        <span class="form-check-label">
+          {{ item?.reasonName }}
+        </span>
       </div>
     </div>
   </div>
 </ng-template>
 
-<!-- *ngIf="dataStep.stepStatus !== null && dataStep.stepStatus ==='' "  -->
+<ng-template #footerFormReName>
+  <button type="button" class="btn btn-primary" (click)="onSave()">
+    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
+  </button>
+</ng-template>
