@@ -373,7 +373,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         taskIDParent,
       ])
       .subscribe((res) => {
-        if (res[0]) {
+        if (res && res[0]) {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
           var taskParent = res[1][0];
