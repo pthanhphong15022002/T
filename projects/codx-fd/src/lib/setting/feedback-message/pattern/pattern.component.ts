@@ -204,14 +204,15 @@ export class PatternComponent extends UIComponent implements OnInit {
         var dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
         dialog.closed.subscribe((e) => {
           if (e?.event?.data.update) {
-            debugger;
             this.lstPattern.forEach((dt, index) => {
               if (dt.recID == e.event.data.update.recID)
+              {
                 this.lstPattern[index] = e.event.data.update;
+                this.change.detectChanges();
+              }
               else this.lstPattern[index].isDefault = false;
             });
             var data = e?.event?.data?.update;
-            data['modifiedOn'] = new Date();
             this.view.dataService.update(data).subscribe();
           }
           this.view.dataService.clear();

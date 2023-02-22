@@ -1,0 +1,212 @@
+<codx-form #form [headerText]="headerText" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog"
+    [footer]="footer" [data]="dimensionGroups" subToolbarCss="text-end">
+</codx-form>
+<ng-template #body>
+    <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+            <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="DimGroupID" default="Mã yếu tố tồn kho"></codx-label>
+                <codx-input [crrValue]="dimGroupID" [formModel]="form.formModel" field="dimGroupID"
+                    (valueChange)="valueChangeDimGroupID($event)">
+                </codx-input>
+            </div>
+        </div>
+    </div>
+    <div class="col-11 ps-0">
+        <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="DimGroupName" default="Tên yếu tố tồn kho"></codx-label>
+            <codx-input [crrValue]="dimGroupName" field="dimGroupName" [formModel]="form.formModel"
+                (valueChange)="valueChangeDimGroupName($event)">
+            </codx-input>
+        </div>
+    </div>
+    <div class="mt-1 text-primary fw-bold fs-4">
+        <codx-label [formModel]="form.formModel" default="Thuộc tính mặt hàng"></codx-label>
+    </div>
+    <div class="row mx-0 mt-3">
+        <div class="col-10 ps-0">
+            <div class="mt-1  fw-bold fs-5">
+                <codx-label fiedName="Active0" [formModel]="form.formModel" default="Qui cách đóng gói"></codx-label>
+            </div>
+            <span class="text-gray-600 fs-7 fw-bold">Quy cách đóng gói: Thùng,bao,họp,bịch,viên....</span>
+        </div>
+        <div class="col-2 ps-0">
+            <div class="form-group">
+                <codx-input type="switch" field="active0" [checked]="form.data.active0"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+                <span (click)="openPopupSetup()">
+                    <i class="icon-edit_square"></i>
+                </span>  
+            </div>
+        </div>
+    </div>
+    <div class="row mx-0 mt-3">
+        <div class="col-10 ps-0">
+            <div class="mt-1  fw-bold fs-5">
+                <codx-label fiedName="Active1" [formModel]="form.formModel" default="Thuộc tính"></codx-label>
+            </div>
+            <span class="text-gray-600 fs-7 fw-bold">Thuộc tính bao gồm: chất liệu(sắt,nhựa gỗ,...); xuất
+                xứ:US,JP,EU,...</span>
+        </div>
+        <div class="col-2 ps-0">
+            <div class="form-group">
+                <codx-input type="switch" field="active1" [checked]="form.data.active1"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+                <i class="icon-edit_square"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-0 mt-3">
+        <div class="col-10 ps-0">
+            <div class="mt-1  fw-bold fs-5">
+                <codx-label fiedName="Active2" [formModel]="form.formModel" default="Màu sắc"></codx-label>
+            </div>
+            <span class="text-gray-600 fs-7 fw-bold">Màu sắc bao gồm: Xanh,đỏ,vàng,tím,đen...</span>
+        </div>
+        <div class="col-2 ps-0">
+            <div class="form-group">
+                <codx-input type="switch" field="active2" [checked]="form.data.active2"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+                <i class="icon-edit_square"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-0 mt-3">
+        <div class="col-10 ps-0">
+            <div class="mt-1  fw-bold fs-5">
+                <codx-label fiedName="Active3" [formModel]="form.formModel" default="Quy cách"></codx-label>
+            </div>
+            <span class="text-gray-600 fs-7 fw-bold">Qui cách bao gồm: dày-rộng-dài; phi(tròn)</span>
+        </div>
+        <div class="col-2 ps-0">
+            <div class="form-group">
+                <codx-input type="switch" field="active3" [checked]="form.data.active3"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+                <i class="icon-edit_square"></i>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="mt-1 text-primary fw-bold fs-4">
+        <codx-label [formModel]="form.formModel" default="Cấp tồn kho"></codx-label>
+    </div>
+    <div class="row mx-0 mt-3">
+        <div class="col-10 ps-0">
+            <div class="mt-1  fw-bold fs-5">
+                <codx-label fiedName="Active4" [formModel]="form.formModel" default="Kho"></codx-label>
+            </div>
+            <span class="text-gray-600 fs-7 fw-bold">Cấp kho: Kho thành phẩm, kho trung chuyển, kho gởi bán...</span>
+        </div>
+        <div class="col-2 ps-0">
+            <div class="form-group">
+                <codx-input type="switch" field="active4" [checked]="form.data.active4"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+                <i class="icon-edit_square"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-0 mt-3">
+        <div class="col-10 ps-0">
+            <div class="mt-1  fw-bold fs-5">
+                <codx-label fiedName="Active5" [formModel]="form.formModel" default="Vị trí"></codx-label>
+            </div>
+            <span class="text-gray-600 fs-7 fw-bold">Theo dõi vị trí trong kho: Dãy - kệ - Tầng - Ngăn(Pin)</span>
+        </div>
+        <div class="col-2 ps-0">
+            <div class="form-group">
+                <codx-input type="switch" field="active5" [checked]="form.data.active5"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+                <i class="icon-edit_square"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-0 mt-3">
+        <div class="col-10 ps-0">
+            <div class="mt-1  fw-bold fs-5">
+                <codx-label fiedName="Active6" [formModel]="form.formModel" default="Lô"></codx-label>
+            </div>
+            <span class="text-gray-600 fs-7 fw-bold">Theo dõi nguồn gốc lô sản xuất: Số lô, ngày sản xuất, hạn sử
+                dụng...</span>
+        </div>
+        <div class="col-2 ps-0">
+            <div class="form-group">
+                <codx-input type="switch" field="active6" [checked]="form.data.active6"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+                <i class="icon-edit_square"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-0 mt-3">
+        <div class="col-10 ps-0">
+            <div class="mt-1  fw-bold fs-5">
+                <codx-label fiedName="Active7" [formModel]="form.formModel" default="Số seri"></codx-label>
+            </div>
+            <span class="text-gray-600 fs-7 fw-bold">Theo dõi chi tiết: số seri(barcode hoặc QR code), hạn bảo
+                hành</span>
+        </div>
+        <div class="col-2 ps-0">
+            <div class="form-group">
+                <codx-input type="switch" field="active7" [checked]="form.data.active7"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+                <i class="icon-edit_square"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-0 mt-3">
+        <div class="col-10 ps-0">
+            <div class="mt-1  fw-bold fs-5">
+                <codx-label fiedName="Active8" [formModel]="form.formModel" default="Palet"></codx-label>
+            </div>
+            <span class="text-gray-600 fs-7 fw-bold">Quản lý đóng palet: Qui cách palet, số lượng/palet, nhãn palet...
+            </span>
+        </div>
+        <div class="col-2 ps-0">
+            <div class="form-group">
+                <codx-input type="switch" field="active8" [checked]="form.data.active8"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+                <i class="icon-edit_square"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-0 mt-3">
+        <div class="col-10 ps-0">
+            <div class="mt-1  fw-bold fs-5">
+                <codx-label fiedName="Active9" [formModel]="form.formModel" default="Khác"></codx-label>
+            </div>
+            <span class="text-gray-600 fs-7 fw-bold">Tham số mở rộng</span>
+        </div>
+        <div class="col-2 ps-0">
+            <div class="form-group">
+                <codx-input type="switch" field="active9" [checked]="form.data.active9"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+                <i class="icon-edit_square"></i>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end mt-1 me-3">
+        <div *ngIf="formType != 'edit'" class="ms-2">
+            <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
+                <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                    [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+            </button>
+        </div>
+        <div class="ms-2">
+            <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
+                <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                    [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </div>
+</ng-template>

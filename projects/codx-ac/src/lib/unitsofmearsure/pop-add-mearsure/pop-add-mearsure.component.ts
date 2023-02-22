@@ -93,7 +93,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void { }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
   }
@@ -141,7 +141,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
           var dialogumconversion = this.callfc.openForm(
             PopAddConversionComponent,
             '',
-            400,
+            500,
             400,
             '',
             obj,
@@ -179,7 +179,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
           var dialogumconversion = this.callfc.openForm(
             PopAddConversionComponent,
             '',
-            400,
+            500,
             400,
             '',
             obj,
@@ -249,7 +249,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
               .addData('ERM.Business.BS', 'UMConversionBusiness', 'AddAsync', [
                 this.objectUmconversion,
               ])
-              .subscribe((res: []) => {});
+              .subscribe((res: []) => { });
           }
           this.dialog.close();
           this.dt.detectChanges();
@@ -274,7 +274,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
                 'UpdateAsync',
                 [this.objectUmconversion, this.objectUmconversionDelete]
               )
-              .subscribe((res: []) => {});
+              .subscribe((res: []) => { });
           }
           this.dialog.close();
           this.dt.detectChanges();
@@ -352,7 +352,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
           }
         });
     }
-    
+
   }
   //#endregion
 }
