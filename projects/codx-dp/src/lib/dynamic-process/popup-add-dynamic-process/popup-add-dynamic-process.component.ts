@@ -413,8 +413,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   handleUpdateStep() {
-    // this.stepList.push(this.stepSuccess);
-    // this.stepList.push(this.stepFail);
+    this.stepList.push(this.stepSuccess);
+    this.stepList.push(this.stepFail);
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0) {
       stepListSave.forEach((step) => {
@@ -2053,6 +2053,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
       }
     });
+  }
+  changeReasonMF(e) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+
+          case 'SYS02':
+          case 'SYS03':
+            break;
+          default:
+            res.disabled = true;
+        }
+      });
+    }
   }
 
   loadCbxProccess() {
