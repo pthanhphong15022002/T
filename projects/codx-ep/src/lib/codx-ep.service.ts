@@ -565,13 +565,13 @@ export class CodxEpService {
       [recID]
     );
   }
-  cancel(recID: string) {
+  cancel(recID: string, comment: string, entityName: string) {
     return this.api.execSv(
-      'ES',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
+      'EP',
+      'ERM.Business.Core',
+      'DataBusiness',
       'CancelAsync',
-      [recID,'']
+      [recID, comment, entityName]
     );
   }
   getCategoryByEntityName(entityName: string) {

@@ -165,7 +165,7 @@ export class BookingStationeryComponent
     this.detectorRef.detectChanges();
   }
   cancel(data: any) {
-    this.codxEpService.cancel(data?.recID).subscribe((res: any) => {
+    this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
       if (res != null) {
         this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
         data.approveStatus = '1';
