@@ -203,13 +203,10 @@ export class PopupAddInstanceComponent implements OnInit {
                 '"' + f.title + '"'
               );
               check = false;
-              // return;
             }
             checkFormat = this.checkFormat(f);
-            // if (!checkFormat) return;
           });
         }
-        // if (!check || !checkFormat) return;
       });
       if (!check || !checkFormat) return;
     }
