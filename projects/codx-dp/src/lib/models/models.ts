@@ -98,6 +98,7 @@ export class DP_Steps {
   durationHour: number = 0;
   numbererval: string;
   excludeDayoff: string;
+  owner: string;
   note: string;
   assignControl: string = '1';
   transferControl: string = '0';
@@ -326,6 +327,7 @@ export class DP_Instances_Steps {
   actualStart: Date;
   actualEnd: Date;
   actualHours: number;
+  assignControl: string;
   roles: DP_Instances_Steps_Roles[] = []; // objects;
   taskGroups: DP_Instances_Steps_TaskGroups[] = []; // objects;
   tasks: DP_Instances_Steps_Tasks[] = []; // objects;
@@ -489,7 +491,7 @@ export class DP_Instances_Steps_Reasons {
   stepID: string;
   reasonName: string;
   reasonType: string;
-  createdOn: Date;
+  createdOn: Date = new Date();
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;

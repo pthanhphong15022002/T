@@ -39,6 +39,10 @@ export class ApprovalCarViewDetailComponent
     new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
     new EventEmitter();
+    
+  @Output('approve') approve: EventEmitter<any> = new EventEmitter();  
+  @Output('reject') reject: EventEmitter<any> = new EventEmitter(); 
+  @Output('undo') undo: EventEmitter<any> = new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
   @Input() funcID;
@@ -119,7 +123,7 @@ export class ApprovalCarViewDetailComponent
         {
           // if(datas.allowToApprove == true){
 
-          this.approve(datas, '5');
+          this.approve.emit(datas);
           // }
           // else{
 
@@ -130,7 +134,7 @@ export class ApprovalCarViewDetailComponent
         break;
       case 'EPT40202': //Từ chối
         {
-          this.approve(datas, '4');
+          this.reject.emit(datas);
         }
         break;
       case 'EPT40204': {
@@ -142,7 +146,7 @@ export class ApprovalCarViewDetailComponent
       case 'EPT40206':
         {
           //alert('Thu hồi');
-          this.undo(datas);
+          this.undo.emit(datas);
         }
         break;
     }
@@ -203,46 +207,46 @@ export class ApprovalCarViewDetailComponent
       }
     }
   }
-  undo(data: any) {
-    this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
-      if (res != null) {
-        this.notificationsService.notifyCode('SYS034'); //đã thu hồi
-        data.approveStatus = '3';
-        data.status = '3';
-        this.updateStatus.emit(data);
-      } else {
-        this.notificationsService.notifyCode(res?.msgCodeError);
-      }
-    });
-  }
-  approve(data: any, status: string) {
-    this.codxEpService
-      .getCategoryByEntityName(this.formModel.entityName)
-      .subscribe((res: any) => {
-        this.codxEpService
-          .approve(
-            data?.approvalTransRecID, //ApprovelTrans.RecID
-            status,
-            '',
-            ''
-          )
-          .subscribe((res: any) => {
-            if (res?.msgCodeError == null && res?.rowCount >= 0) {
-              if (status == '5') {
-                this.notificationsService.notifyCode('SYS034'); //đã duyệt
-                data.approveStatus = '5';
-              }
-              if (status == '4') {
-                this.notificationsService.notifyCode('SYS034'); //bị hủy
-                data.approveStatus = '4';
-              }
-              this.updateStatus.emit(data);
-            } else {
-              this.notificationsService.notifyCode(res?.msgCodeError);
-            }
-          });
-      });
-  }
+  // undo(data: any) {
+  //   this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
+  //     if (res != null) {
+  //       this.notificationsService.notifyCode('SYS034'); //đã thu hồi
+  //       data.approveStatus = '3';
+  //       data.status = '3';
+  //       this.updateStatus.emit(data);
+  //     } else {
+  //       this.notificationsService.notifyCode(res?.msgCodeError);
+  //     }
+  //   });
+  // }
+  // approve(data: any, status: string) {
+  //   this.codxEpService
+  //     .getCategoryByEntityName(this.formModel.entityName)
+  //     .subscribe((res: any) => {
+  //       this.codxEpService
+  //         .approve(
+  //           data?.approvalTransRecID, //ApprovelTrans.RecID
+  //           status,
+  //           '',
+  //           ''
+  //         )
+  //         .subscribe((res: any) => {
+  //           if (res?.msgCodeError == null && res?.rowCount >= 0) {
+  //             if (status == '5') {
+  //               this.notificationsService.notifyCode('SYS034'); //đã duyệt
+  //               data.approveStatus = '5';
+  //             }
+  //             if (status == '4') {
+  //               this.notificationsService.notifyCode('SYS034'); //bị hủy
+  //               data.approveStatus = '4';
+  //             }
+  //             this.updateStatus.emit(data);
+  //           } else {
+  //             this.notificationsService.notifyCode(res?.msgCodeError);
+  //           }
+  //         });
+  //     });
+  // }
   assignDriver(data: any) {
     let startDate = new Date(data.startDate);
     let endDate = new Date(data.endDate);

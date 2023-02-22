@@ -749,11 +749,18 @@
                     fiedName="PregnancyFrom"
                     [formModel]="formModel"
                 ></codx-label>
-                <codx-input
+                <!-- <codx-input
                     field="pregnancyFrom"
                     [formModel]="formModel"
                     [Group]="formGroup"
-                ></codx-input>
+                ></codx-input> -->
+                <ejs-datepicker 
+                [start]='start' 
+                [depth]='depth' 
+                [value]="pregnancyFromVal"
+                [format]='format'
+                (valueChange)="UpdateFromDate($event)"
+                ></ejs-datepicker>
             </div>
             <div class="col-6">
                 <codx-label
@@ -801,7 +808,7 @@
                     fiedName="NewChildBirthType"
                     [formModel]="formModel"
                 ></codx-label> -->
-                <div>
+                <div *ngIf="lstPregnantType">
                     <codx-input
                 type="checkbox" 
                 [label]="lstPregnantType[0].text"
@@ -810,7 +817,7 @@
                 ></codx-input>
                 </div>
 
-                <div>
+                <div *ngIf="lstPregnantType">
                     <codx-input
                     type="checkbox" 
                     [checked]="isNotNormalPregnant"
