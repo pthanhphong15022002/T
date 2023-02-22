@@ -951,30 +951,12 @@ export class StagesDetailComponent implements OnInit {
     this.dialogPopupReason = this.callfc.openForm(this.viewReason, '', 500, 10);
   }
   changeReasonMF(e) {
-    console.table(e);
     if (e != null) {
       e.forEach((res) => {
         switch (res.functionID) {
-          case 'SYS104':
-            res.disabled = true;
-            break;
-          case 'SYS04':
-            res.disabled = true;
-            break;
-          case 'SYS102':
           case 'SYS02':
-          case 'SYS005':
-          case 'SYS003':
-
-          case 'SYS004':
-          case 'SYS001':
-          case 'SYS002':
-          case 'DP011':
-          case 'DP02':
-          case 'DP09':
-          case 'DP10':
-          case 'SYS103':
-          case 'SYS03':
+          default:
+            res.disabled = true;
         }
       });
     }

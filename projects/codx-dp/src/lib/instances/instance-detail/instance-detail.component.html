@@ -93,11 +93,10 @@
           <div class="d-flex arrow-steps flex-container">
             <ng-container *ngFor="let item of listStepUpdate; index as i">
               <div
-              *ngIf="item?.stepStatus !== '' && !isHiddenReason "
               id="step-click"
               style="flex-grow: 1"
-              [ngClass]="item?.stepStatus === '1' ? 'step current':  item?.stepStatus === '3' || item?.stepStatus === '4' || item?.stepStatus === '5'  ? 'step old': 'step' "
-              (click)="click(i, item)"
+              [ngClass]="item?.stepStatus === '1' ? 'step current':  item?.stepStatus === '3' || item?.stepStatus === '4' || item?.stepStatus === '5' || item?.stepStatus === '' || item?.stepStatus === null  ? 'step old': 'step' "
+              (click)="click(i, item.stepID)"
             >
               <span> {{ item.stepName }}</span>
             </div>
