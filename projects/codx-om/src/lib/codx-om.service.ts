@@ -358,22 +358,22 @@ export class CodxOmService {
       [recID, checkIn]
     );
   }
-  addOB(ob:any) {
+  addOB(ob:any,listShares:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OB,
       'AddOBAsync',
-      [ob]
+      [ob,listShares]
     );
   }
-  editOB(ob:any) {
+  editOB(ob:any,listShares:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OB,
       'EditOBAsync',
-      [ob]
+      [ob,listShares]
     );
   }
   deleteOB(kr:any) {

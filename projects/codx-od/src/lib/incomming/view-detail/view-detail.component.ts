@@ -845,6 +845,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           .closed.subscribe((x) => {
             if (x.event.status == 'Y') {
               if (isData) {
+                debugger
                 this.odService
                   .getDetailDispatch(datas.recID, this.formModel.entityName)
                   .subscribe((item) => {
@@ -985,6 +986,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
   //Hủy yêu cầu xét duyệt
   cancelAproval(data: any) {
+    debugger
     //Có thiết lập duyệt
     if (data.bsCategory) {
       this.api
@@ -1005,6 +1007,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             });
             this.notifySvr.notify('Hủy yêu cầu duyệt thành công');
           }
+          else this.notifySvr.notify('Hủy yêu cầu duyệt không thành công');
         });
     }
   }

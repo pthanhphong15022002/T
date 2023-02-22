@@ -68,34 +68,18 @@ export class PopupMoveReasonComponent implements OnInit {
     this.userId = this.user?.userID
     this.isReason = dt?.data?.isReason;
 
-    this.loadCbxProccess();
+    this.listCbxProccess = dt?.data?.listProccessCbx;
+    this.moveProccess =  this.listCbxProccess[0].recID;
 
   }
 
   ngOnInit(): void {
     
   }
-  loadCbxProccess() {
-    this.cache.valueList('DP031').subscribe((data) => {
-      this.codxDpService.getlistCbxProccess(this.applyFor).subscribe((res) => {
-        if (res) {
-          this.listCbxProccess = res[0];
-          var obj = {
-            recID: this.guidEmpty,
-            processName: data.datas[0].default
-             // 'Không chuyển đến quy trình khác'
-          };
-          this.listCbxProccess.unshift(obj);
-          this.moveProccess =  this.listCbxProccess[0].recID;
-        }
-      });
-    });
-
-  }
 
   onSave() {
     if(this.reasonStep.reasonControl === true && this.listReasonClick.length === 0) {
-      this.notiService.notifyCode('Chọn lý do kìa bạn');
+      this.notiService.notifyCode('DP006');
       return;
     }
     // else {
@@ -116,7 +100,7 @@ export class PopupMoveReasonComponent implements OnInit {
           instance: this.instances,
         };
         this.dialog.close(obj);
-        this.notiService.notifyCode('Đánh dấu oke nha');
+        this.notiService.notifyCode('SYS006');
     
 
         this.changeDetectorRef.detectChanges();

@@ -3,8 +3,8 @@
     ,tabConversioninformation]" [data]="unitsofmearsure">
 </codx-layout-add>
 <ng-template #tabDescription>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
+  <div class="row">
+    <div class="col-12">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="UMID" default="Mã đơn vị tính"></codx-label>
         <codx-input [crrValue]="umid" [formModel]="form.formModel" field="umid" (valueChange)="valueChangeUMID($event)">
@@ -18,8 +18,8 @@
       (valueChange)="valueChangeUMName($event)">
     </codx-input>
   </div>
-  <div class="row mx-0 mt-3">
-    <div class="col-4 ps-0">
+  <div class="row">
+    <div class="col-4">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="RoundOff" default="Làm tròn số"></codx-label>
         <codx-input [crrValue]="form.data.roundOff" [formModel]="form.formModel" field="roundOff"
@@ -27,19 +27,19 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-8 pe-0">
+    <div class="col-8">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="RoundType" default="Cách thức làm tròn"></codx-label>
-        <codx-input *ngIf="form.data.roundType != null" [crrValue]="form.data.roundType" type="valuelist" refValue="L0093" field="roundType"
-          [formModel]="form.formModel" (valueChange)="valueChange($event)">
+        <codx-input *ngIf="form.data.roundType != null" [crrValue]="form.data.roundType" type="valuelist"
+          refValue="L0093" field="roundType" [formModel]="form.formModel" (valueChange)="valueChange($event)">
         </codx-input>
-        <codx-input *ngIf="form.data.roundType == null" [crrValue]="form.data.roundType" type="valuelist" refValue="L0093" field="roundType"
-          [formModel]="form.formModel" (valueChange)="valueChange($event)">
+        <codx-input *ngIf="form.data.roundType == null" [crrValue]="form.data.roundType" type="valuelist"
+          refValue="L0093" field="roundType" [formModel]="form.formModel" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
     </div>
   </div>
-  <div class="form-group d-flex">
+  <div class="d-flex">
     <span class="me-2">
       <codx-input [checked]="form.data.stop" field="stop" [formModel]="form.formModel"
         (valueChange)="valueChange($event)">
@@ -49,16 +49,15 @@
   </div>
 </ng-template>
 <ng-template #tabConversioninformation>
-  <div class="d-flex align-items-center justify-content-between mb-4">
-    <codx-label class="text-primary fw-bold fs-5" [formModel]="form.formModel" default="Thông tin quy đổi"></codx-label>
-    <span (click)="openPopupConversion()">
-      <i class="fa-sharp fa-solid fa-plus"></i>
-      <i class="fa-solid fa-chart-column"></i>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <codx-label class="text-primary fw-bold fs-6" [formModel]="form.formModel" default="Thông tin quy đổi"></codx-label>
+    <span type="button" class="btn btn-icon btn-primary" (click)="openPopupConversion()">
+      <i class="icon-addchart"></i>
     </span>
   </div>
   <div class="d-flex align-items-center justify-content-between mb-4" *ngFor="let item of objectUmconversion">
-    <div class="col-6 ps-0">
-      <div class="form-group">
+    <div class="w-100">
+      <div class="d-flex flex-column">
         <div class="fw-bold text-dark fs-5">
           <span>{{item.itemID}}</span>
         </div>
@@ -80,16 +79,16 @@
 <ng-template #footer>
   <div class="d-flex justify-content-end mt-1 me-3">
     <div class="ms-2">
-        <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-                [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
-        </button>
+      <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
+        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+          [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+      </button>
     </div>
     <div class="ms-2">
-        <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
-            <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-                [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
-        </button>
+      <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
+        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+          [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+      </button>
     </div>
-</div>
+  </div>
 </ng-template>

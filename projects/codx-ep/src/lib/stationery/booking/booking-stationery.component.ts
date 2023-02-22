@@ -165,11 +165,18 @@ export class BookingStationeryComponent
     this.detectorRef.detectChanges();
   }
   cancel(data: any) {
+    if (
+      this.authService.userValue.userID != data?.owner &&
+      !this.authService.userValue.administrator
+    ) {
+      this.notificationsService.notifyCode('TM052');
+      return;
+    }
     this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
       if (res != null) {
         this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
-        data.approveStatus = '1';
-        data.status = '1';
+        data.approveStatus = '0';
+        data.status = '0';
         this.view.dataService.update(data).subscribe();
       } else {
         this.notificationsService.notifyCode(res?.msgCodeError);
@@ -253,7 +260,24 @@ export class BookingStationeryComponent
             }
           });
         }
-      
+        else {
+          event.forEach((func) => {
+            //Gửi duyệt
+            if ( //Hiện: chép 
+            func.functionID == 'SYS04' /*MF chép*/
+            ) {
+              func.disabled = false;
+            }
+            if (//Ẩn: sửa - xóa - gửi duyệt - hủy          
+              func.functionID == 'SYS02' /*MF sửa*/ ||
+              func.functionID == 'SYS03' /*MF xóa*/ ||
+              func.functionID == 'EP8T1101' /*MF gửi duyệt*/||
+              func.functionID == 'EP8T1102' /*MF hủy*/
+            ) {
+              func.disabled = true;
+            }
+          });
+        }
     
     }
     //Cấp phát

@@ -95,7 +95,7 @@
               <div
               id="step-click"
               style="flex-grow: 1"
-              class="focus "
+
               [ngClass]="getColorStepName(item?.stepStatus)"
               (click)="click(i, item.stepID)"
             >
@@ -129,6 +129,8 @@
           [titleDefault]="titleDefault"
           [instance]="instance"
           [listStepReason]="getReasonByStepId(dataSelect.stepID)"
+          [stepNameEnd]="getStepNameIsComlepte()"
+          [proccesNameMove]="proccesNameMove"
         ></codx-stages-detail>
         </ng-container>
 

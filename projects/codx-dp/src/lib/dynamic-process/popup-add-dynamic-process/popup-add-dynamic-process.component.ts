@@ -1985,6 +1985,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             break;
           default:
             res.disabled = true;
+            break;
         }
       });
     }
