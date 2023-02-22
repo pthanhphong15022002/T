@@ -101,25 +101,24 @@
           ControlName="plan"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+          (valueChange)="planChange($event)"
         >
         </codx-input>
-      </div>
-
-      <div class="form-group col-4 position-relative">        
-        <button class="position-absolute bottom-0 btn btn-outline-primary d-flex flex-row justify-content-center" (click)="openPopupTarget(popupTarget)">
-          <span class="icon-airplay btn-text-primary me-2"></span>
-          <codx-label
-            name="lbl"
-            class="fw-normal"
-            default="Phân bố chỉ tiêu"
-            [formModel]="form.formModel"
-          ></codx-label>
-        </button>
       </div>
 
     </div>
 
     <div class="row">
+      <div class="form-group col-4">
+        <codx-label fiedName="CheckInMode" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          ControlName="checkInMode"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-input>
+      </div>
       <div class="form-group col-4">
         <codx-label  fiedName="Frequence" [formModel]="form.formModel">
         </codx-label>
@@ -130,17 +129,10 @@
         >
         </codx-input>
       </div>
-
-      <div class="form-group col-6">
-        <codx-label fiedName="CheckInMode" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input
-          ControlName="checkInMode"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-input>
+      <div class="form-group col-1 position-relative">
+        <span class="icon-settings text-mute position-absolute bottom-0"></span>
       </div>
+      
 
     </div>
 
@@ -173,16 +165,16 @@
     </div> -->
 
     <div class="form-group">
-      <codx-label fiedName="Note" [formModel]="form.formModel">
-      </codx-label>
-      <codx-input
-        ControlName="note"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      >
+      <codx-label [formModel]="form.formModel" fiedName="Owner"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="owner">
       </codx-input>
     </div>
-    <div class="row">
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="note">
+      </codx-input>
+    </div>
+    <!-- <div class="row">
       <div class="form-group col-10 d-flex align-items-center">      
         <codx-label default="Liên kết mục tiêu" fiedName="" [formModel]="form.formModel">
         </codx-label>
@@ -190,12 +182,21 @@
       <div class="form-group col-2 d-flex justify-content-end">
         <span role="button" class="icon-i-signpost-2 text-primary "></span>
       </div>
-    </div>
+    </div> -->
   </ng-container>
   </ng-template>
 
   <ng-template #footer>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex flex-row justify-content-between">
+      <button class="btn btn-outline-primary d-flex flex-row justify-content-center" (click)="openPopupTarget(popupTarget)">
+        <span class="icon-airplay btn-text-primary me-2"></span>
+        <codx-label
+          name="lbl"
+          class="fw-normal"
+          default="Phân bố chỉ tiêu"
+          [formModel]="form.formModel"
+        ></codx-label>
+      </button>
       <button class="btn btn-primary" (click)="onSaveForm()">
         <codx-label
           name="lblSave"
@@ -239,28 +240,40 @@
         </div>
       </div>
       <div class="modal-body">
-        <div class="px-5 d-flex flex-column justify-content-center" *ngIf="kr.plan=='M'">
-          <div *ngFor="let item of this.kr?.targets" >
-            <div class="d-flex justify-content-between">
-              <div class="form-group col-3">
-                <codx-label [name]=" kr.plan=='M'? month + item.number : quarter + item.number"></codx-label>              
+        <div class="px-5 d-flex flex-column justify-content-center align-items-center" >
+          <div class="d-flex justify-content-between align-items-center w-100 my-2" *ngFor="let item of this.kr?.targets;let i=index" >
+            
+              <div class="col-4 ms-3">
+                <codx-label [name]=" this.planVLL[i]?.text"></codx-label>              
               </div>
-              <div class="form-group col-8">
+              <div class="col-7">
                 <codx-input 
                   type="number"
                   [min]="0"
                   [showSpinButton]="false"
                   [crrValue]="item.target"
-                  (valueChange)="valuePlanTargetChange($event,item.index)"
+                  (valueChange)="valuePlanTargetChange($event,i)"
                 ></codx-input>               
               </div>
-            </div>
+              <div class="col-1 d-flex justify-content-center align-items-center">
+                <span *ngIf="item.isEdited" class="icon-i-info-circle text-danger"></span>
+              
+              </div>
           </div>
         </div>        
         
       </div>
       <div class="modal-footer">
-        <div class="d-flex justify-content-end">
+        <div class="w-100 d-flex justify-content-between">
+          <button class="btn btn-outline-primary d-flex flex-row justify-content-center" (click)="calculatorTarget(kr?.plan)">
+            <span class="icon-airplay btn-text-primary me-2"></span>
+            <codx-label
+              name="lbl"
+              class="fw-normal"
+              default="Phân bố lại"
+              [formModel]="form.formModel"
+            ></codx-label>
+          </button>
           <button class="btn btn-primary" (click)="onSaveTarget()">
             <codx-label
               name="lblSave"

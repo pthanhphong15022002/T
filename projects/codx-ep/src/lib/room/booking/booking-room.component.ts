@@ -419,6 +419,26 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           }
         });
       }
+      else  {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if ( //Hiện: chép
+          func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (//Ẩn: còn lại            
+            func.functionID == 'EP4T1102' /*MF mời*/ ||
+            func.functionID == 'EP4T1101' /*MF dời*/ ||
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+            func.functionID == 'EP4T1104' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
     }
   }
   onActionClick(event?) {
@@ -493,35 +513,51 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
 
   cancel(data: any) {
-    this.notificationsService.alertCode('ES015').subscribe((x) => {
-      if (x.event?.status == 'Y') {
-        if (data.approveStatus == '1') {
-          this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
-            if (res) {
-              this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
-              data.approveStatus = '0';
-              data.status = '1';
-              this.view.dataService.update(data).subscribe();
-            } else {
-              this.notificationsService.notifyCode(res?.msgCodeError);
-            }
-          });
-        }
-        else{
-          this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
-            if (res != null) {
-              this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
-              data.approveStatus = '1';
-              data.status = '1';
-              this.view.dataService.update(data).subscribe();
-            } else {
-              this.notificationsService.notifyCode(res?.msgCodeError);
-            }
-          });
-        }
+    if (
+      this.authService.userValue.userID != data?.owner &&
+      !this.authService.userValue.administrator
+    ) {
+      this.notificationsService.notifyCode('TM052');
+      return;
+    }
+    // this.notificationsService.alertCode('ES015').subscribe((x) => {
+    //   if (x.event?.status == 'Y') {
+    //     if (data.approveStatus == '1') {
+    //       this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
+    //         if (res) {
+    //           this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
+    //           data.approveStatus = '0';
+    //           data.status = '1';
+    //           this.view.dataService.update(data).subscribe();
+    //         } else {
+    //           this.notificationsService.notifyCode(res?.msgCodeError);
+    //         }
+    //       });
+    //     }
+    //     else{
+    //       this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
+    //         if (res != null) {
+    //           this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
+    //           data.approveStatus = '1';
+    //           data.status = '1';
+    //           this.view.dataService.update(data).subscribe();
+    //         } else {
+    //           this.notificationsService.notifyCode(res?.msgCodeError);
+    //         }
+    //       });
+    //     }
+    //   }
+    // })
+    this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
+      if (res != null) {
+        this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
+        data.approveStatus = '0';
+        data.status = '0';
+        this.view.dataService.update(data).subscribe();
+      } else {
+        this.notificationsService.notifyCode(res?.msgCodeError);
       }
-    })
-
+    });
     
   }
   reschedule(data: any) {

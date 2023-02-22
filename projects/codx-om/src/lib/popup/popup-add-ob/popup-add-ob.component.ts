@@ -68,7 +68,9 @@ export class PopupAddOBComponent extends UIComponent {
   isSubKR: boolean;
   ob:any;
   oldOB:any;
-  okrPlan: any;//Chờ c thương thiết lập vll
+  okrPlan: any;
+  listShares=[];
+  //Chờ c thương thiết lập vll
   //Giả lập vll
   //OM003
   // vll={
@@ -142,6 +144,7 @@ export class PopupAddOBComponent extends UIComponent {
           if (this.ob.shares && this.ob.shares.length > 0) {
             this.shareModel = this.ob.shares[0];
             this.ob.shares=[];
+            this.createShares(this.shareModel)
           }
         } else if (this.funcType == OMCONST.MFUNCID.Edit) {
           this.ob = krModel;
@@ -221,13 +224,13 @@ export class PopupAddOBComponent extends UIComponent {
     this.fGroupAddOB.patchValue(this.ob);
     
     if (this.funcType == OMCONST.MFUNCID.Add || this.funcType == OMCONST.MFUNCID.Copy) {
-      this.methodAdd(this.ob);
+      this.methodAdd(this.ob,this.listShares);
     } else if(this.funcType == OMCONST.MFUNCID.Edit) {
-      this.methodEdit(this.ob);
+      this.methodEdit(this.ob,this.listShares);
     }
   }
-  methodAdd(ob:any) {
-    this.codxOmService.addOB(this.ob).subscribe((res: any) => {
+  methodAdd(ob:any,listShares:any) {
+    this.codxOmService.addOB(ob,listShares).subscribe((res: any) => {
       if (res) {
         res.write = true;
         res.delete = true;
@@ -236,8 +239,8 @@ export class PopupAddOBComponent extends UIComponent {
     });
   }
 
-  methodEdit(ob:any) {
-    this.codxOmService.editOB(this.ob).subscribe((res: any) => {
+  methodEdit(ob:any,listShares:any) {
+    this.codxOmService.editOB(ob,listShares).subscribe((res: any) => {
       if (res) {
         res.write = true;
         res.delete = true;
@@ -261,7 +264,25 @@ export class PopupAddOBComponent extends UIComponent {
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Func-----------------------//
-  
+  createShares(shareModel){
+    if(shareModel!=null){
+      let tmpShare = {...shareModel};
+      tmpShare.objectType='U';
+      tmpShare.permission='1'
+      tmpShare.read=1;
+      tmpShare.view=1;
+      tmpShare.write=1;
+      tmpShare.delete=1;
+      tmpShare.download=1;
+      tmpShare.upload=1;
+      tmpShare.share=1;
+      tmpShare.autoCreated=1;
+      tmpShare.objectID=this.authService.userValue.userID;
+      this.listShares.push(tmpShare);      
+      tmpShare.objectID=this.okrPlan?.owner;
+      this.listShares.push(tmpShare);
+    }
+  }
   //Thiết lập OKRLevel theo funcID
   OKRLevel() {
     switch (this.funcID) {
