@@ -132,6 +132,7 @@ export class EditPatternComponent implements OnInit {
       this.typeView = true;
       this.listFile = files;
       this.pattern.imageSrc = e.data[0].avatar
+      this.pattern.backgroundColor = null;
       this.checkFileUpload = !this.checkFileUpload;
     }
   }
@@ -200,6 +201,16 @@ export class EditPatternComponent implements OnInit {
           } else {
             if(this.formType == 'edit') res.update.imageSrc = this.pattern?.imageSrc;
             else res.save.imageSrc = this.pattern?.imageSrc;
+            debugger
+            if(!this.pattern?.imageSrc && this.pattern.backgroundColor)
+            {
+              debugger
+              this.patternSV.deleteFile(this.pattern.recID).subscribe((item) => {
+                if (item) {
+                  this.onSave();
+                }
+              });
+            }
             var obj = { data: res, listFile: null };
             this.dialog.close(obj);
           }
@@ -231,16 +242,16 @@ export class EditPatternComponent implements OnInit {
 
   colorClick(ele, item, index) {
     this.listFile = '';
-    var label = document.querySelectorAll('.symbol-label[data-color]');
+    var label = document.querySelectorAll('.color-check');
     if (label) {
       label.forEach((ele) => {
-        if (ele.className == 'symbol-label pointer color-check')
           ele.classList.remove('color-check');
       });
     }
     var element = ele as HTMLElement;
     element.classList.add('color-check');
     this.pattern.backgroundColor = item.default;
+    this.pattern.imageSrc = null;
     this.change.detectChanges();
   }
 }
