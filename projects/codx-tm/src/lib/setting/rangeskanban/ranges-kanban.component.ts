@@ -106,21 +106,6 @@ export class RangesKanbanComponent implements OnInit {
         ['add', this.titleAction],
         option
       );
-      this.dialog.closed.subscribe((x) => {
-        // if (!x?.event)
-        this.view.dataService.clear();
-        // if (x?.event == null)
-        //   this.view.dataService.delete(
-        //     [this.view.dataService.dataSelected],
-        //     false
-        //   );
-        // if (x.event == null && this.view.dataService.hasSaved)
-        //   this.view.dataService
-        //     .delete([this.view.dataService.dataSelected])
-        //     .subscribe(x => {
-        //       this.dt.detectChanges();
-        //     });
-      });
     });
   }
 

@@ -135,6 +135,7 @@ export class InstancesComponent
         model: {
           template: this.cardKanban,
           template2: this.viewColumKaban,
+          setColorHeader : true,
         },
       },
     ];
@@ -153,6 +154,7 @@ export class InstancesComponent
     this.codxDpService
       .createListInstancesStepsByProcess(this.process?.recID)
       .subscribe((dt) => {
+        debugger
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
@@ -216,7 +218,7 @@ export class InstancesComponent
               this.view.dataService.dataSelected.processID = this.process.recID;
               // const titleForm = res.defaultName;
               // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
-              this.genAutoNumberNo(formMD.funcID);
+              this.genAutoNumberNo(formMD.funcID); // gan tam thoi chư sai vỡ mỏ
               var dialogCustomField = this.callfc.openSide(
                 PopupAddInstanceComponent,
                 [

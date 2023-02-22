@@ -93,11 +93,11 @@
           <div class="d-flex arrow-steps flex-container">
             <ng-container *ngFor="let item of listStepUpdate; index as i">
               <div
-              *ngIf="item?.stepStatus !== '' && !isHiddenReason "
               id="step-click"
               style="flex-grow: 1"
-              [ngClass]="item?.stepStatus === '1' ? 'step current':  item?.stepStatus === '3' || item?.stepStatus === '4' || item?.stepStatus === '5'  ? 'step old': 'step' "
-              (click)="click(i, item)"
+              class="focus "
+              [ngClass]="getColorStepName(item?.stepStatus)"
+              (click)="click(i, item.stepID)"
             >
               <span> {{ item.stepName }}</span>
             </div>
@@ -127,6 +127,7 @@
           [isUpdate]="dataSelect.write"
           [isCreate]="dataSelect.create"
           [titleDefault]="titleDefault"
+          [instance]="instance"
           [listStepReason]="getReasonByStepId(dataSelect.stepID)"
         ></codx-stages-detail>
         </ng-container>
@@ -134,7 +135,7 @@
       </ng-container>
       <ng-container *ngIf="idCbx == 'F'">
         <ng-container *ngFor="let item of listSteps">
-          <codx-field-detail [dataStep]="item" [isUpdate]="dataSelect.write"></codx-field-detail>
+          <codx-field-detail *ngIf="!item?.isSuccessStep && !item?.isFailStep" [dataStep]="item" [isUpdate]="dataSelect.write"></codx-field-detail>
         </ng-container>
       </ng-container>
     </ng-template>

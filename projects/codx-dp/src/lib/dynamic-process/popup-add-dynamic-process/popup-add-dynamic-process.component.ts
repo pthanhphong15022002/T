@@ -402,11 +402,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   handleAddStep() {
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0) {
-      stepListSave.forEach((step, index) => {
+      stepListSave.forEach((step) => {
         if (step && step['taskGroups']) {
-          let index = step['taskGroups'].find((x) => x['recID']);
-          step['taskGroups'].splice(index, 1);
-          delete step['taskGroups']['task'];
+          this.convertGroupSave(step['taskGroups']);
         }
       });
       this.dpService.addStep([stepListSave]).subscribe((data) => {
@@ -416,30 +414,33 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
+  convertGroupSave(group){
+    if(group && group.length > 0){
+      let index = group?.findIndex((x) => !x['recID']);
+      group?.splice(index, 1);
+      group?.forEach(element => {
+        delete element['task'];
+      });
+    }
+  }
+
   handleUpdateStep() {
-    // this.stepList.push(this.stepSuccess);
-    // this.stepList.push(this.stepFail);
+    this.stepList.push(this.stepSuccess);
+    this.stepList.push(this.stepFail);
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0) {
       stepListSave.forEach((step) => {
         if (step && step['taskGroups']) {
-          let index = step['taskGroups'].findIndex((x) => !x['recID']);
-          if (index >= 0) step['taskGroups'].splice(index, 1);
-          delete step['taskGroups']['task'];
+          this.convertGroupSave(step['taskGroups']);
         }
       });
       if (this.stepListAdd.length > 0) {
         this.stepListAdd.forEach((step) => {
           if (step && step['taskGroups']) {
-            let index = step['taskGroups'].findIndex((x) => !x['recID']);
-            if (index >= 0) {
-              step['taskGroups'].splice(index, 1);
-            }
-            delete step['taskGroups']['task'];
+            this.convertGroupSave(step['taskGroups']);
           }
         });
       }
-
       this.dpService
         .editStep([stepListSave, this.stepListAdd, this.stepListDelete])
         .subscribe((data) => {
@@ -1973,6 +1974,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
       }
     });
+  }
+  changeReasonMF(e) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+
+          case 'SYS02':
+          case 'SYS03':
+            break;
+          default:
+            res.disabled = true;
+        }
+      });
+    }
   }
 
   loadCbxProccess() {

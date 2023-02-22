@@ -10,6 +10,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-popup-etime-card',
@@ -18,6 +19,7 @@ import {
 })
 export class PopupETimeCardComponent extends UIComponent implements OnInit {
   formModel: FormModel;
+  formGroup: FormGroup;
   dialog: DialogRef;
   data;
   isAfterRender = false;
@@ -36,13 +38,26 @@ export class PopupETimeCardComponent extends UIComponent implements OnInit {
     this.formModel = dialog?.formModel;
 
     this.headerText = data?.data?.headerText;
-    if (this.formModel) {
-      this.isAfterRender = true;
-    }
-    this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
+    // if (this.formModel) {
+    //   this.isAfterRender = true;
+    // }
+    this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
   }
 
-  onInit(): void {}
+  onInit(): void {
+    if (this.formModel) {
+      this.hrService
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .then((res) => {
+          if (res) {
+            this.formGroup = res;
+            this.formModel.currentData = this.data;
+            this.formGroup.patchValue(this.data);
+            this.isAfterRender = true;
+          }
+        });
+    }
+  }
 
   onSaveForm() {
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe((p) => {
