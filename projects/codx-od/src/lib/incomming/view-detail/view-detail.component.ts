@@ -844,18 +844,57 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           )
           .closed.subscribe((x) => {
             if (x.event.status == 'Y') {
-              if (isData) {
                 this.odService
                   .getDetailDispatch(datas.recID, this.formModel.entityName)
                   .subscribe((item) => {
                     //this.getChildTask(id);
-                    if (item) {
-                      this.cancelAproval(item);
-                    }
-                  });
-              } else this.cancelAproval(datas);
-            }
-          });
+                     //Có thiết lập bước duyệt
+                      if (item.bsCategory.approval) {
+                        this.api
+                          .execSv(
+                            'ES',
+                            'ES',
+                            'CategoriesBusiness',
+                            'GetByCategoryIDAsync',
+                            item.bsCategory.categoryID
+                          )
+                          .subscribe((item2: any) => {
+                            if (item2) {
+                              this.api.execSv(
+                                        'ES',
+                                        'ES',
+                                        'ApprovalTransBusiness',
+                                        'GetCategoryByProcessIDAsync',
+                                        item2?.processID
+                                      )
+                                      .subscribe((res2: any) => {
+                                        //trình ký
+                                        if (res2?.eSign == true) {
+                                          this.cancelAproval(item);
+                                          //this.callfunc.openForm();
+                                        } 
+                                        else if (res2?.eSign == false)
+                                          {
+                                            this.api
+                                            .execSv(
+                                              'OD',
+                                              'ERM.Business.Core',
+                                              'DataBusiness',
+                                              'CancelAsync',
+                                              [item?.recID,
+                                              "",
+                                              this.formModel.entityName]
+                                            ).subscribe(res3=>{
+                                              if(res3) this.notifySvr.notify('Hủy yêu cầu xét duyệt thành công.');
+                                              else this.notifySvr.notify('Hủy yêu cầu xét duyệt không thành công.');
+                                            })
+                                          }
+                                      });
+                                    }});
+                            } 
+                     
+                });
+            }});
         break;
       }
       //Hoàn tất
@@ -985,6 +1024,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
   //Hủy yêu cầu xét duyệt
   cancelAproval(data: any) {
+    debugger
     //Có thiết lập duyệt
     if (data.bsCategory) {
       this.api
@@ -1005,6 +1045,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             });
             this.notifySvr.notify('Hủy yêu cầu duyệt thành công');
           }
+          else this.notifySvr.notify('Hủy yêu cầu duyệt không thành công');
         });
     }
   }
