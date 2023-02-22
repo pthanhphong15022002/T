@@ -872,7 +872,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                                         if (res2?.eSign == true) {
                                           this.cancelAproval(item);
                                           //this.callfunc.openForm();
-                                        } else if (res2?.eSign == false)
+                                        } 
+                                        else if (res2?.eSign == false)
                                           {
                                             this.api
                                             .execSv(
