@@ -1,6 +1,6 @@
 import { DP_Instances_Permissions } from './../../models/models';
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
+import { CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService, CallFuncService } from 'codx-core';
 import { log, table } from 'console';
 import { CodxDpService } from '../../codx-dp.service';
 import { DP_Instances, DP_Instances_Steps, DP_Instances_Steps_Reasons } from '../../models/models';
@@ -36,7 +36,7 @@ export class PopupMoveStageComponent implements OnInit {
   stepIdClick: string = '';
   idTest:any;
   //instanceStep = new DP_Instances_Steps;
-
+  lstParticipants = [];
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
 
   lstRoles = [];
@@ -47,6 +47,7 @@ export class PopupMoveStageComponent implements OnInit {
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
+    private callfc: CallFuncService,
     private dpSv: CodxDpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -175,4 +176,11 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
 
+  openPopupParticipants(popupParticipants) {
+    this.callfc.openForm(popupParticipants, '', 950, 650);
+  }
+
+  eventUser(e){
+
+  }
 }

@@ -51,6 +51,7 @@ export class PopupPropertiesComponent implements OnInit {
   lstO = [];
   lstP = [];
   lstF = [];
+
   userIdLogin: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -78,10 +79,17 @@ export class PopupPropertiesComponent implements OnInit {
     this.funcID = this.dialog.formModel.funcID;
     this.entityName = this.dialog.formModel.entityName;
     this.getAvatar(this.process);
+    this.getUserName(this.process.createdBy);
   }
 
   ngOnInit(): void {
     this.openProperties(this.process.recID);
+  }
+
+  getUserName(id){
+    this.dpSv.getUserByID(id).subscribe(res=>{
+      this.userName = res.userName;
+    })
   }
 
   extendShow() {}
