@@ -1,7 +1,7 @@
 import { TM_Sprints } from './TM_Sprints.model';
 
 export class TM_Tasks {
-  recID: string = '';
+  recID: string ;
   taskID: string = '';
   taskName?: string = '';
   tags: string = '';
@@ -91,11 +91,11 @@ export class TM_Tasks {
   departmentID: string = '';
   companyID: string = '';
   write: boolean;
-  sprints: TM_Sprints;
+ // sprints: TM_Sprints;
 }
 
 export class tmpTaskResource {
-  recID: string = '';
+  recID: string ;
   taskID: string = '';
   resourceID: string = '';
   resourceName: string = '';
@@ -115,7 +115,7 @@ export class tmpTaskResource {
 }
 
 export class TM_TaskExtends {
-  recID: string = '';
+  recID: string ;
   taskID: string = '';
   extendApprover: string = '';
   extendApproverName: string = '';
@@ -131,28 +131,29 @@ export class TM_TaskExtends {
 }
 
 export class TM_Parameter {
-  AdjustHours: string = '';
-  ApproveBy: string = '';
-  ApproveControl: string = '';
-  Approver: string = '';
-  AutoCompleted: string = '';
-  CalendarID: string = '';
-  CompletedControl: string = '';
-  ConfirmControl: string = '';
-  DueDateControl: string = '';
-  EditControl: string = '';
-  ExtendBy: string = '';
-  ExtendControl: string = '';
-  LocationControl: string = '';
-  MaxHours: string = '';
-  MaxHoursControl: string = '';
-  PlanControl: string = '';
-  ProjectControl: string = '';
-  SetPermissionAttachments: string = '';
-  TaskDefault: string = '';
-  UpdateControl: string = '';
-  VerifyBy: string = '';
-  VerifyByType: string = '';
-  VerifyControl: string = '';
-  ReOpenDays: string = '';
+  AdjustHours: string;
+  ApproveBy: string;
+  ApproveControl: string;
+  Approvers: string;
+  Approver: string;
+  AutoCompleted: string;
+  CalendarID: string;
+  CompletedControl: string;
+  ConfirmControl: string;
+  DueDateControl: string;
+  EditControl: string;
+  ExtendBy: string;
+  ExtendControl: string;
+  LocationControl: string;
+  MaxHours: string;
+  MaxHoursControl: string;
+  PlanControl: string;
+  ProjectControl: string;
+  SetPermissionAttachments: string;
+  TaskDefault: string;
+  UpdateControl: string;
+  VerifyBy: string;
+  VerifyByType: string;
+  VerifyControl: string;
+  ReOpenDays: string;
 }
