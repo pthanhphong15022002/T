@@ -14,7 +14,10 @@
     <div class="col-4">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Gender" default="Giới tính"></codx-label>
-        <codx-input [crrValue]="form.data != null ? form.data.gender : ''" type="valuelist" refValue="AC014"
+        <codx-input *ngIf="gender == null" [crrValue]="gender" type="valuelist" refValue="AC014"
+          field="gender" (valueChange)="valueChange($event)">
+        </codx-input>
+        <codx-input *ngIf="gender != null" [crrValue]="gender" type="valuelist" refValue="AC014"
           field="gender" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
@@ -38,7 +41,7 @@
     <div class="col-4">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="HomePhone" default="Số di động cố định"></codx-label>
-        <codx-input [crrValue]="form.data != null ? form.data.homePhone : ''" [formModel]="form.formModel"
+        <codx-input [crrValue]="homePhone" [formModel]="form.formModel"
           field="homePhone" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
@@ -46,7 +49,7 @@
     <div class="col-4">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="PhoneExt" default="Số ext."></codx-label>
-        <codx-input [crrValue]="form.data != null ? form.data.phoneExt : ''" [formModel]="form.formModel"
+        <codx-input [crrValue]="phoneExt" [formModel]="form.formModel"
           field="phoneExt" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
@@ -59,20 +62,23 @@
   </div>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="ContactType" default="Loại liên hệ"></codx-label>
-    <codx-input [crrValue]="contactType" type="valuelist" refValue="AC015" field="contactType"
+    <codx-input *ngIf="contactType == null" [crrValue]="contactType" type="valuelist" refValue="AC015" field="contactType"
+      (valueChange)="valueChangeContactType($event)">
+    </codx-input>
+    <codx-input *ngIf="contactType != null" [crrValue]="contactType" type="valuelist" refValue="AC015" field="contactType"
       (valueChange)="valueChangeContactType($event)">
     </codx-input>
   </div>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Note" default="Ghi chú"></codx-label>
-    <codx-input [crrValue]="form.data != null ? form.data.note : ''" [formModel]="form.formModel" field="note"
+    <codx-input [crrValue]="note" [formModel]="form.formModel" field="note"
       (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end mt-1 me-3">
-    <div class="ms-2">
+    <div *ngIf="type != 'editContact'" class="ms-2">
       <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()" >
         <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
           [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>

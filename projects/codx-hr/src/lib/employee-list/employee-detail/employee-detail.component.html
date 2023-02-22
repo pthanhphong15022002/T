@@ -861,7 +861,7 @@
           <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030205'">
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="HandleEmployeeDegreeInfo(addHeaderText, 'add', null)"
+              (click)="HandleEmployeeEDegreeInfo(addHeaderText, 'add', null)"
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -876,7 +876,7 @@
             <div
               class="d-flex btn btn-hover-primary"
               (click)="
-                HandleEmployeeCertificateInfo(addHeaderText, 'add', null)
+                HandleEmployeeECertificateInfo(addHeaderText, 'add', null)
               "
             >
               <span
@@ -891,7 +891,7 @@
             </div>
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="HandleEmployeeSkillsInfo(addHeaderText, 'add', null)"
+              (click)="HandleEmployeeESkillsInfo(addHeaderText, 'add', null)"
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -923,7 +923,7 @@
           <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030206'">
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="HandleEmployeeAwardsInfo(addHeaderText, 'add', null)"
+              (click)="HandleEmployeeEAwardsInfo(addHeaderText, 'add', null)"
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -937,7 +937,7 @@
             </div>
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="addEmployeeDisciplinesInfo(addHeaderText, 'add', null)"
+              (click)="HandleEmployeeEDisciplinesInfo(addHeaderText, 'add', null)"
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -4269,14 +4269,16 @@
                   >
                   </codx-label> -->
                   {{ getFormHeader("HRTEM0601") }}
+                </div>
+                <div class="text-secondary fw-bold text-uppercase">
                   <span class="text-gray-500 ms-2"> | </span>
-                  <span>({{ degreeRowCount }})</span>
+                  <span>({{ eDegreeRowCount }})</span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
-                  (click)="HandleEmployeeDegreeInfo(addHeaderText, 'add', null)"
+                  (click)="HandleEmployeeEDegreeInfo(addHeaderText, 'add', null)"
                 >
                   <span
                     class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4354,10 +4356,10 @@
               </div> -->
               <div>
                 <codx-gridview
-                  *ngIf="degreeColumnGrid && degreeFormModel"
-                  #degreeGridView
-                  [formModel]="degreeFormModel"
-                  [columnsGrid]="degreeColumnGrid"
+                  *ngIf="eDegreeColumnsGrid && eDegreeFormModel"
+                  #eDegreeGridView
+                  [formModel]="eDegreeFormModel"
+                  [columnsGrid]="eDegreeColumnsGrid"
                   [service]="'HR'"
                   [assemblyName]="'Core'"
                   [className]="'DataBusiness'"
@@ -4389,15 +4391,17 @@
                   >
                   </codx-label> -->
                   {{ getFormHeader("HRTEM0602") }}
+                </div>
+                <div class="text-secondary fw-bold text-uppercase">
                   <span class="text-gray-500 ms-2"> | </span>
-                  <span>({{ certificateRowCount }})</span>
+                  <span>({{ eCertificateRowCount }})</span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="
-                    HandleEmployeeCertificateInfo(addHeaderText, 'add', null)
+                    HandleEmployeeECertificateInfo(addHeaderText, 'add', null)
                   "
                 >
                   <span
@@ -4475,10 +4479,10 @@
 
               <div>
                 <codx-gridview
-                  *ngIf="certificateColumnGrid"
-                  #certificateGridView
-                  [formModel]="certificateFormModel"
-                  [columnsGrid]="certificateColumnGrid"
+                  *ngIf="eCertificateColumnGrid"
+                  #eCertificateGridView
+                  [formModel]="eCertificateFormModel"
+                  [columnsGrid]="eCertificateColumnGrid"
                   [service]="'HR'"
                   [assemblyName]="'Core'"
                   [className]="'DataBusiness'"
@@ -4517,14 +4521,18 @@
               <div class="d-flex align-items-center ms-5">
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
-                  (click)="HandleEmployeeSkillsInfo(addHeaderText, 'add', null)"
+                  (click)="HandleEmployeeESkillsInfo(addHeaderText, 'add', null)"
                 >
                   <span
                     class="icon-add icon-20 text-gray-600 text-hover-primary"
                   ></span>
                 </button>
                 <span class="text-gray-500 ms-2">|</span>
-                <codx-label name="lblSeeAllEBenefit" default="Xem tất cả">
+                <codx-label
+                  class="text-success"
+                  name="lblSeeAllEBenefit"
+                  default="Xem tất cả"
+                >
                 </codx-label>
                 <codx-input
                   type="switch"
@@ -4547,11 +4555,11 @@
               <ng-container *ngFor="let eSkill of lstESkill">
                 <div class="has-action-menu">
                   <div class="pf-skill d-flex align-items-center ms-9 mb-4">
-                    <div class="sk-title w-150px fw-bold">
+                    <div class="sk-title w-150px">
                       <!-- {{ eSkill?.skillName ?? eSkill?.skillID }} -->
                       {{
                         eSkill?.skillID
-                          | formatvalue : skillFormmodel : "skillID"
+                          | formatvalue : eSkillFormmodel : "skillID"
                           | async
                       }}
                     </div>
@@ -4618,11 +4626,12 @@
                 <div
                   class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5"
                 >
-                  <div class="d-flex me-3">
+                  <div class="d-flex me-3" class="text-success">
                     <codx-label default="Chi tiết" class="text-uppercase">
                     </codx-label>
+
                     <span class="text-gray-500 ms-2"> | </span>
-                    <span>({{ skillRowCount }})</span>
+                    <span>({{ eSkillRowCount }})</span>
                     <!-- <span>({{ skillGrid?.rowCount }})</span> -->
                   </div>
 
@@ -4651,10 +4660,10 @@
 
                 <div>
                   <codx-gridview
-                    *ngIf="skillColumnGrid"
-                    #skillGridViewID
-                    [formModel]="skillFormmodel"
-                    [columnsGrid]="skillColumnGrid"
+                    *ngIf="eSkillColumnGrid"
+                    #eSkillGridViewID
+                    [formModel]="eSkillFormmodel"
+                    [columnsGrid]="eSkillColumnGrid"
                     [service]="'HR'"
                     [assemblyName]="'Core'"
                     [className]="'DataBusiness'"
@@ -4690,10 +4699,10 @@
                   >
                   </codx-label> -->
                   {{ getFormHeader("HRTEM0604") }}
+                </div>
+                <div class="text-secondary text-uppercase fw-bold">
                   <span class="text-gray-500 ms-2">|</span>
-                  <span>({{ trainCourseRowCount }})</span>
-                  <span></span>
-                  <fieldset></fieldset>
+                  <span>({{ eTrainCourseRowCount }})</span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -4744,10 +4753,10 @@
               <div class="mt-6 mb-3">
                 <div>
                   <codx-gridview
-                    *ngIf="trainCourseColumnGrid && trainCourseFormModel"
-                    #trainCourseGridView
-                    [formModel]="trainCourseFormModel"
-                    [columnsGrid]="trainCourseColumnGrid"
+                    *ngIf="eTrainCourseColumnGrid && eTrainCourseFormModel"
+                    #eTrainCourseGridView
+                    [formModel]="eTrainCourseFormModel"
+                    [columnsGrid]="eTrainCourseColumnGrid"
                     [service]="'HR'"
                     [assemblyName]="'Core'"
                     [className]="'DataBusiness'"
@@ -4844,7 +4853,9 @@
                   >
                   </codx-label> -->
                   {{ getFormHeader("HRTEM0701") }}
-                  <span class="text-gray-500 ms-2">|</span>
+                </div>
+                <div class="text-secondary fw-bold">
+                  <span class="text-gray-500 ms-2"> | </span>
                   <span>({{ awardRowCount }})</span>
                 </div>
               </div>
@@ -4856,12 +4867,12 @@
                   [displayOption]="ops"
                   [selectedType]="'y'"
                   [cssClass]="'rounded-pill'"
+                  (change)="valueChangeYearFilterAward($event)"
                 ></codx-dropdown-calendar>
-                <!-- (change)="valueChangeYearFilterEReward($event)" -->
                 <span class="text-gray-500 ms-2">|</span>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
-                  (click)="HandleEmployeeAwardsInfo(addHeaderText, 'add', null)"
+                  (click)="HandleEmployeeEAwardsInfo(addHeaderText, 'add', null)"
                 >
                   <span
                     class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4873,7 +4884,7 @@
             <div class="mb-1">
               <codx-gridview
                 *ngIf="awardColumnsGrid && awardFormModel"
-                #awardGridView
+                #eAwardGridView
                 [formModel]="awardFormModel"
                 [columnsGrid]="awardColumnsGrid"
                 [service]="'HR'"
@@ -4930,12 +4941,16 @@
                   </codx-label> -->
                   {{ getFormHeader("HRTEM0702") }}
                 </div>
+                <div class="text-secondary fw-bold">
+                  <span class="text-gray-500 ms-2"> | </span>
+                  <span>({{ eDisciplineRowCount }})</span>
+                </div>
               </div>
               <div class="d-flex align-items-center ms-5">
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="
-                    addEmployeeDisciplinesInfo(addHeaderText, 'add', null)
+                  HandleEmployeeEDisciplinesInfo(addHeaderText, 'add', null)
                   "
                 >
                   <span
@@ -4945,7 +4960,25 @@
               </div>
             </div>
 
-            <div class="mb-1"></div>
+            <div class="mb-1">
+              <codx-gridview
+                *ngIf="eDisciplineColumnsGrid && eDisciplineFormModel"
+                #eDisciplineGridView
+                [formModel]="eDisciplineFormModel"
+                [columnsGrid]="eDisciplineColumnsGrid"
+                [service]="'HR'"
+                [assemblyName]="'Core'"
+                [className]="'DataBusiness'"
+                [method]="'LoadDataAsync'"
+                [predicates]="'EmployeeID=@0'"
+                [dataValues]="employeeID"
+                [pageSize]="numPageSizeGridView"
+                [entityName]="'HR_EDisciplines'"
+                [rowHeight]="50"
+                height="240px"
+              >
+              </codx-gridview>
+            </div>
           </div>
         </div>
       </ng-container>
@@ -5419,47 +5452,64 @@
 <ng-template #templateBenefitMoreFunc let-data> </ng-template>
 <!--#endregion -->
 
-<!--#region template Bằng cấp-->
-<ng-template #templateDegreeGridCol1 let-data>
+<!--#region template Bằng cấp 123123-->
+<ng-template #templateEDegreeGridCol1 let-data>
   <div>
-    <i class="icon-school"></i>
-    {{ data?.degreeName }}
+    <i class="icon-school text-primary"></i>
+    <span class="fw-bolder">{{ data?.degreeName }}</span>
   </div>
   <div>
     {{ data?.trainFieldDetail }}
   </div>
 </ng-template>
-<ng-template #templateDegreeGridCol2 let-data>
+<ng-template #templateEDegreeGridCol2 let-data>
   <div>
     {{
       data?.trainSupplierID
-        | formatvalue : degreeFormModel : "trainSupplierID"
+        | formatvalue : eDegreeFormModel : "trainSupplierID"
         | async
     }}
   </div>
-  <div>
-    {{ data?.ranking | formatvalue : degreeFormModel : "ranking" | async }}
-    <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
-    {{ data?.totalScore }}
+  <div class="d-flex flex-wrap mb-1">
+    <div class="d-flex align-items-center">
+      <span class="icon-insights icon-14 text-warning me-1"></span>
+      <span class="text-primary" #ranking>
+        {{ data?.ranking | formatvalue : eDegreeFormModel : "ranking" | async }}
+      </span>
+    </div>
+    <div class="d-flex align-items-center">
+      <span
+        class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+      ></span>
+      <span class="fw-bold text-primary">
+        <span>{{
+          data?.totalScore
+            | formatvalue : eDegreeFormModel : "totalScore"
+            | async
+        }}</span>
+      </span>
+    </div>
   </div>
 </ng-template>
 
-<ng-template #templateDegreeGridCol3 let-data>
+<ng-template #templateEDegreeGridCol3 let-data>
   <div class="has-action-menu">
     <div>
       <i class="icon-calendar_today"></i>
-      {{ data?.yearGraduated }}
+      <span class="fw-bolder">
+        {{ data?.yearGraduated }}
+      </span>
       <i
         class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"
       ></i>
       {{ data?.issuedDate | fmDT }}
     </div>
     <div *ngIf="data.isMain">
-      <label>Là bằng cấp chính</label>
+      <span class="text-success">Là bằng cấp chính</span>
     </div>
 
     <codx-mfunc
-      [formModel]="degreeFormModel"
+      [formModel]="eDegreeFormModel"
       (clickMF)="clickMF($event, data, 'eDegrees')"
       [dataItem]="data"
       type="hover"
@@ -5469,64 +5519,80 @@
 </ng-template>
 <!--#endregion-->
 
-<ng-template #templateCertificateGridCol1 let-data>
-  <div>
+<ng-template #templateECertificateGridCol1 let-data>
+  <div class="fw-bolder">
     <i class="icon-class icon-20 me-1 text-primary"></i>
     {{
       data?.certificateID
-        | formatvalue : certificateFormModel : "certificateID"
+        | formatvalue : eCertificateFormModel : "certificateID"
         | async
     }}
     <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
     {{
       data?.certificateGradeID
-        | formatvalue : certificateFormModel : "certificateGradeID"
+        | formatvalue : eCertificateFormModel : "certificateGradeID"
         | async
     }}
     <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
   </div>
   <div>
-    <i class="icon-dashboard"></i>
+    <i class="icon-dashboard text-primary"></i>
     {{
       data?.certificateType
-        | formatvalue : certificateFormModel : "certificateType"
+        | formatvalue : eCertificateFormModel : "certificateType"
         | async
     }}
   </div>
 </ng-template>
 
-<ng-template #templateCertificateGridCol2 let-data>
+<ng-template #templateECertificateGridCol2 let-data>
   <div>
     {{
       data?.trainSupplierID
-        | formatvalue : certificateFormModel : "trainSupplierID"
+        | formatvalue : eCertificateFormModel : "trainSupplierID"
         | async
     }}
+    <div class="d-flex flex-wrap mb-1">
+      <div class="d-flex align-items-center">
+        <span class="icon-insights icon-14 text-warning me-1"></span>
+        <span class="text-primary" #ranking>
+          {{
+            data?.ranking
+              | formatvalue : eCertificateFormModel : "ranking"
+              | async
+          }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span
+          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+        ></span>
+        <span class="fw-bold text-primary">
+          <span>
+            {{
+              data?.totalScore
+                | formatvalue : eCertificateFormModel : "totalScore"
+                | async
+            }}
+          </span>
+        </span>
+      </div>
+    </div>
     <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
-  </div>
-  <div>
-    <i class=""></i>
-    {{ data?.ranking | formatvalue : certificateFormModel : "ranking" | async }}
-    <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
-    {{
-      data?.totalScore
-        | formatvalue : certificateFormModel : "totalScore"
-        | async
-    }}
   </div>
 </ng-template>
 
-<ng-template #templateCertificateGridCol3 let-data>
+<ng-template #templateECertificateGridCol3 let-data>
   <div class="has-action-menu">
     <div>
       <i class="icon-calendar_today"></i>
       {{ data?.issuedDate | fmDT }}
-      <span *ngIf="data?.isExpire"> Hết hạn </span>
+      <span *ngIf="data?.isExpire" class="text-primary"> Hết hạn </span>
       <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
     </div>
     <div>{{ data?.effectedDate | fmDT }} - {{ data?.expiredDate | fmDT }}</div>
     <codx-mfunc
-      [formModel]="certificateFormModel"
+      [formModel]="eCertificateFormModel"
       (clickMF)="clickMF($event, data, 'eCertificate')"
       [dataItem]="data"
       type="hover"
@@ -5536,43 +5602,67 @@
 </ng-template>
 
 <!--Template ESkills-->
-<ng-template #templateSkillGridCol1 let-data>
-  <div>
-    {{ data?.skillID | formatvalue : skillFormmodel : "skillID" | async }}
+<ng-template #templateESkillGridCol1 let-data>
+  <div class="fw-bolder">
+    {{ data?.skillID | formatvalue : eSkillFormmodel : "skillID" | async }}
   </div>
   <div>
-    <!-- {{
-      data?.skillGradeID | formatvalue : skillFormmodel : "skillGradeID" | async
-    }} -->
-    <codx-vll> </codx-vll>
+    <span class="active sk-item">
+      {{
+        data?.skillGradeID
+          | formatvalue : eSkillFormmodel : "skillGradeID"
+          | async
+      }}
+    </span>
   </div>
 </ng-template>
 
-<ng-template #templateSkillGridCol2 let-data>
+<ng-template #templateESkillGridCol2 let-data>
   <div>
     {{
       data?.trainSupplierID
-        | formatvalue : skillFormmodel : "trainSupplierID"
+        | formatvalue : eSkillFormmodel : "trainSupplierID"
         | async
     }}
   </div>
-  <div>
-    <i></i>
-    {{ data?.ranking | formatvalue : skillFormmodel : "ranking" | async }}
-    <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
-    {{ data?.totalScore }}
+
+  <div class="d-flex flex-wrap mb-1">
+    <div class="d-flex align-items-center">
+      <span class="icon-insights icon-14 text-warning me-1"></span>
+      <span class="text-primary" #ranking>
+        {{ data?.ranking | formatvalue : eSkillFormmodel : "ranking" | async }}
+      </span>
+    </div>
+    <div class="d-flex align-items-center">
+      <span
+        class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+      ></span>
+      <span class="fw-bold text-primary">
+        <span>
+          {{
+            data?.totalScore
+              | formatvalue : eSkillFormmodel : "totalScore"
+              | async
+          }}
+        </span>
+      </span>
+    </div>
   </div>
 </ng-template>
 
-<ng-template #templateSkillGridCol3 let-data>
+<ng-template #templateESkillGridCol3 let-data>
   <div class="has-action-menu">
     <div>{{ data?.trainFrom | fmDT }} - {{ data?.trainTo | fmDT }}</div>
-    <i></i>
-    <div>
-      {{ data?.trainForm | formatvalue : skillFormmodel : "trainForm" | async }}
+    <div class="text-primary">
+      <i></i>
+      <div>
+        {{
+          data?.trainForm | formatvalue : eSkillFormmodel : "trainForm" | async
+        }}
+      </div>
     </div>
     <codx-mfunc
-      [formModel]="skillFormmodel"
+      [formModel]="eSkillFormmodel"
       (clickMF)="clickMF($event, data, 'eSkill')"
       [dataItem]="data"
       type="hover"
@@ -5999,17 +6089,17 @@
 
 <!-- #region Đào tạo -->
 <ng-template #templateTrainCourseGridCol1 let-data>
-  <div>
+  <div class="fw-bold">
     {{
       data?.trainCourseID
-        | formatvalue : trainCourseFormModel : "trainCourseID"
+        | formatvalue : eTrainCourseFormModel : "trainCourseID"
         | async
     }}
   </div>
-  <div>
+  <div class="text-primary">
     <i></i>
     {{
-      data?.trainForm | formatvalue : trainCourseFormModel : "trainForm" | async
+      data?.trainForm | formatvalue : eTrainCourseFormModel : "trainForm" | async
     }}
   </div>
 </ng-template>
@@ -6021,7 +6111,9 @@
   </div>
   <div>
     <i class="icon-year"></i>
-    {{ data?.inYear }}
+    <span class="fw-bolder">
+      {{ data?.inYear | formatvalue : eTrainCourseFormModel : "inYear" | async }}
+    </span>
   </div>
 </ng-template>
 
@@ -6030,35 +6122,17 @@
     <div>
       {{
         data?.trainSupplierID
-          | formatvalue : trainCourseFormModel : "trainSupplierID"
+          | formatvalue : eTrainCourseFormModel : "trainSupplierID"
           | async
       }}
     </div>
-    <!-- <div>
-      <i></i>
-      {{
-        data?.ranking | formatvalue : trainCourseFormModel : "ranking" | async
-      }}
-      <i class="icon-class icon-20 me-1 text-primary"></i>
-      {{
-        data?.totalScore
-          | formatvalue : trainCourseFormModel : "totalScore"
-          | async
-      }}
-      <i class="icon-class icon-20 me-1 text-primary"></i>
-      {{
-        data?.result
-          | formatvalue : trainCourseFormModel : "result"
-          | async
-      }}
-    </div> -->
     <div class="d-flex flex-wrap mb-1">
       <div class="d-flex align-items-center">
         <span class="icon-insights icon-14 text-warning me-1"></span>
         <span class="text-primary" #ranking>
           {{
             data?.ranking
-              | formatvalue : trainCourseFormModel : "ranking"
+              | formatvalue : eTrainCourseFormModel : "ranking"
               | async
           }}
         </span>
@@ -6070,7 +6144,7 @@
         <span class="fw-bold text-primary">
           <span>{{
             data?.totalScore
-              | formatvalue : trainCourseFormModel : "totalScore"
+              | formatvalue : eTrainCourseFormModel : "totalScore"
               | async
           }}</span>
         </span>
@@ -6081,14 +6155,14 @@
         ></span>
         <span class="fw-bold">
           <span>{{
-            data?.result | formatvalue : trainCourseFormModel : "result" | async
+            data?.result | formatvalue : eTrainCourseFormModel : "result" | async
           }}</span>
         </span>
       </div>
     </div>
 
     <codx-mfunc
-      [formModel]="trainCourseFormModel"
+      [formModel]="eTrainCourseFormModel"
       (clickMF)="clickMF($event, data, 'eTrainCourses')"
       type="hover"
       [dataItem]="data"
@@ -6320,10 +6394,10 @@
 
 <!--region Award - Khen thưởng-->
 <ng-template #templateAwardGridCol1 let-data>
-  <div>
+  <div class="fw-bolder">
     {{ data?.awardID | formatvalue : awardFormModel : "awardID" | async }}
   </div>
-  <div>
+  <div clas="text-primary">
     <i></i>
     {{
       data?.awardFormCategory
@@ -6334,8 +6408,37 @@
 </ng-template>
 
 <ng-template #templateAwardGridCol2 let-data>
-  <div>
-    <i class="icon-calendar_today"></i>
+  <div class="d-flex flex-wrap mb-1">
+    <div class="d-flex align-items-center">
+      <span class="me-1"></span>
+      <span #ranking>
+        <i class="icon-calendar_today text-primary"></i>
+        {{ data?.awardDate | fmDT }}
+        <i
+          class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
+        ></i>
+        <i class="icon-year fw-bolder"></i>
+        {{ data?.inYear | formatvalue : awardFormModel : "inYear" | async }}
+      </span>
+    </div>
+
+    <div class="d-flex align-items-center">
+      <span class="me-1"></span>
+      <span>
+        <i class="icon-calendar_today"></i>
+        {{ data?.decisionNo }}
+        <span class="text-secondary">
+          <i
+            class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
+          >
+          </i>
+          {{ data?.signedDate | fmDT }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <!-- <div>
+    <i class="icon-calendar_today text-primary"></i>
     {{ data?.awardDate | fmDT }}
     <i
       class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
@@ -6343,21 +6446,14 @@
     <i class="icon-year"></i>
     {{ data?.inYear | formatvalue : awardFormModel : "inYear" | async }}
   </div>
-  <div>
-    <i class="icon-calendar_today"></i>
-    {{ data?.decisionNo }}
-    <i
-      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-    ></i>
-    {{ data?.signedDate | fmDT }}
-  </div>
+ -->
 </ng-template>
 
 <ng-template #templateAwardGridCol3 let-data>
   <div class="has-action-menu">
     {{ data?.reason | formatvalue : awardFormModel : "reason" | async }}
     <codx-mfunc
-      [formModel]="dayofFormModel"
+      [formModel]="awardFormModel"
       (clickMF)="clickMF($event, data, 'eAwards')"
       [dataItem]="data"
       type="hover"
@@ -6366,3 +6462,39 @@
   </div>
 </ng-template>
 <!--#end region-->
+
+<ng-template #templateDisciplineGridCol1 let-data>
+  <div class="fw-bold">
+    {{ data?.disciplineID | formatvalue : eDisciplineFormModel : "DisciplineID" | async }}
+  </div>
+  <div class="text-warning">
+    <i></i>
+    {{ data?.disciplineFormCategory | formatvalue : eDisciplineFormModel : "disciplineFormCategory" | async }}
+  </div>
+
+</ng-template>
+<ng-template #templateDisciplineGridCol2 let-data>
+  <div>
+    <i class="icon-calendar_today text-danger"></i>
+    {{ data?.disciplineDate | fmDT }}
+  </div>
+  <div>
+    <i class="icon-calendar_today text-dark"></i>
+    {{ data?.fromDate | fmDT }}
+    <i class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></i>
+    <i class="icon-library_books"></i>
+    {{ data?.decisionNo | formatvalue : eDisciplineFormModel : "decisionNo" | async }}
+  </div>
+</ng-template>
+<ng-template #templateDisciplineGridCol3 let-data>
+  <div class="has-action-menu">
+    {{data?.reason}}
+    <codx-mfunc
+    [formModel]="eDisciplineFormModel"
+    (clickMF)="clickMF($event, data, 'eDisciplines')"
+    [dataItem]="data"
+    type="hover"
+  >
+  </codx-mfunc>
+  </div>
+</ng-template>

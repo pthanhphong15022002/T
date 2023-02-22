@@ -43,6 +43,7 @@ import { StagesDetailComponent } from './instances/instance-detail/stages-detail
 import { PopupRolesDynamicComponent } from './dynamic-process/popup-roles-dynamic/popup-roles-dynamic.component';
 import { PopupPropertiesComponent } from './dynamic-process/popup-properties/popup-properties.component';
 import { PopupUserPropertiesComponent } from './dynamic-process/popup-properties/popup-user-properties/popup-user-properties.component';
+import { PopupParticipantsComponent } from './dynamic-process/popup-participants/popup-participants.component';
 
 const routes: Routes = [
   {
@@ -94,6 +95,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     UserComponent,
     PopupPropertiesComponent,
     PopupUserPropertiesComponent,
+    PopupParticipantsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

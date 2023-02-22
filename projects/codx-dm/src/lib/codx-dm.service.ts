@@ -639,6 +639,7 @@ export class CodxDMService {
   }
 
   filterMoreFunction(e: any, data: any, modeView = false) {
+    debugger
     var type = this.getType(data, 'entity');
     var bookmark = this.isBookmark(data);
     var list =

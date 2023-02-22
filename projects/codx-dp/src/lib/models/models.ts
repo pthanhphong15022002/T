@@ -491,7 +491,7 @@ export class DP_Instances_Steps_Reasons {
   stepID: string;
   reasonName: string;
   reasonType: string;
-  createdOn: Date;
+  createdOn: Date = new Date();
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;

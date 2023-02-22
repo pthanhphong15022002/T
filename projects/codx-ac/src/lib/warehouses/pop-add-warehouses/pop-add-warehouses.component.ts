@@ -37,12 +37,12 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
       name: 'Establish',
     },
     {
-      icon: 'icon-train',
+      icon: 'icon-directions_bus',
       text: 'Hoạch định',
       name: 'Plan',
     },
     { 
-      icon: 'icon-contacts', 
+      icon: 'icon-person_pin',
       text: 'Liên hệ', 
       name: 'Contact' },
   ];
@@ -115,6 +115,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   openPopupContact() {
     var obj = {
       headerText: 'Thêm người liên hệ',
+      datacontact:this.objectContact
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -152,6 +153,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
       );
       var ob = {
         headerText: 'Chỉnh sửa liên hệ',
+        type:'editContact',
         data: { ...data },
       };
       let opt = new DialogModel();

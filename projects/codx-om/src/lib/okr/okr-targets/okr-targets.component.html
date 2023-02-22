@@ -75,7 +75,7 @@
               <div class="w-100 d-flex justify-content-between">
                 <div class="d-flex align-items-center flex-row cursor-pointer w-100">
                   <span class="fa-solid fa-bullseye me-3 fs-2 txt-color-0E4C55"></span>
-                  <span class="ob-kr" (click)="showOB(item)">{{ item?.okrName }}</span>
+                  <span >{{ item?.okrName }}</span>
                   <codx-vll *ngIf="item?.category"
                     [showText]="true"
                     [showBgColor]="true"
@@ -138,7 +138,7 @@
                 <div class="rounded-circle p-4px w-h-circle bg-2D3958 fw-bold text-white me-2 text-center">
                   KR
                 </div>
-                <span class="ob-kr" (click)="showKR(item)"> {{ item?.okrName }} </span>
+                <span > {{ item?.okrName }} </span>
                 <span class="mx-2">|</span>
                 <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>                
                 <span *ngIf="item?.umid"> {{item?.umid}} </span>
@@ -185,9 +185,7 @@
                 <div class="rounded-circle p-4px w-h-circle bg-2D3958 text-white me-2 text-center fs-9 d-flex align-items-center justify-content-between ">
                   SKR
                 </div>
-                <div class="ob-kr" (click)="showKR(item)">
-                  {{ item?.okrName }}
-                </div>
+                <div >{{ item?.okrName }} </div>
                 <span class="mx-2">|</span>
                 <span class="me-2" *ngIf="item?.target"> {{item?.target}} </span>                
                 <span *ngIf="item?.umid"> {{item?.umid}} </span>

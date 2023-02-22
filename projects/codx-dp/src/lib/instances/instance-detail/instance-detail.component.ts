@@ -69,6 +69,7 @@ export class InstanceDetailComponent implements OnInit {
   
   isHiddenReason: boolean = false;
 
+  instanceId:string;
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
 

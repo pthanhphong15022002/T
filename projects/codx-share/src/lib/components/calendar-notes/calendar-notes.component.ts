@@ -1087,8 +1087,11 @@ export class CalendarNotesComponent
       '',
       option
     );
+    dialog.closed.subscribe((e) => {
+      this.detectorRef.detectChanges();
+    });
     // dialog.closed.subscribe((e) => {
-    //   (this.lstView.dataService as CRUDService).add(e.event).subscribe();
+    //   (this.lstView.dataService as CRUDService).addd(e.event).subscribe();
     // });
   }
 
@@ -1381,5 +1384,15 @@ export class CalendarNotesComponent
     }
 
     return tmpType_RefID;
+  }
+
+  redirectToFuncID(item) {
+    console.log('item', item);
+
+    let query = {
+      predicate: 'RecID=@0',
+      dataValue: item.transID,
+    };
+    this.codxService.openUrlNewTab(item.functionID, '', query);
   }
 }

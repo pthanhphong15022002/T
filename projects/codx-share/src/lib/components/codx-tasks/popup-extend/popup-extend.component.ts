@@ -32,6 +32,7 @@ export class PopupExtendComponent implements OnInit, AfterViewInit {
   moreFunc: any;
   url: any;
   nameApprover: any;
+  isSave = false;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -74,6 +75,8 @@ export class PopupExtendComponent implements OnInit, AfterViewInit {
       return;
     }
     //goi hàm luu data
+    if (this.isSave) return;
+    this.isSave = true;
     this.api
       .execSv<any>('TM', 'TM', 'TaskBusiness', 'ExtendTaskAsync', [
         this.funcID,
