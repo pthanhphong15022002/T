@@ -5,68 +5,38 @@
   <div class="ms-20 me-6 gift-list">
     <div class="float-left">
       <div class="gift-card w-100px card-with-dropdown-item ms-9 mb-9"
-        *ngFor="let item of lstPattern; trackBy: trackByfn; let i = index">
+        *ngFor="let item of lstPattern; let i = index">
         <div class="card-img has-action-menu cursor-pointer" #elm *ngIf="i < lstPattern.length - 1; else template">
           <div class="action-menu d-flex">
             <div class="d-flex align-items-center">
-              <a class="action-item" (click)="openFormEdit(item, i, elm)">
+              <a class="action-item" (click)="openFormEdit(item)">
                 <div class="d-flex align-items-center btn-tooltip">
-                  <span class="icon-edit icon-16 py-1"></span>
-                  <span class="tooltiptext">
-                    <codx-label name="lblEdit" [formModel]="" default="Edit">
-                    </codx-label>
-                  </span>
+                  <span class="icon-edit icon-14 py-1"></span>
                 </div>
               </a>
               <a class="action-item" (click)="delete(item, i)">
                 <div class="d-flex align-items-center btn-tooltip">
-                  <span class="icon-close icon-16 text-danger py-1"></span>
-                  <span class="tooltiptext">
-                    <codx-label name="lblDelete" [formModel]="" default="Delete">
-                    </codx-label>
-                  </span>
+                  <span class="icon-close icon-14 text-danger py-1"></span>
                 </div>
               </a>
             </div>
           </div>
-          <ng-container #viewImage>
-            <div *ngIf="!item?.backgroundColor; else otherColor">
-              <div *ngIf="lstFile">
-                <ng-container *ngFor="let dt of lstFile">
-                  <div class="w-100 position-relative" *ngIf="dt.objectID == item.recID">
-                    <ng-container *ngIf="dt.referType == REFER_TYPE.IMAGE">
-                      <ng-container *ngIf="dt.recID; else imageSrc">
-                        <codx-img class="img-pat pointer" [objectId]="item.recID" [objectName]="item.patternName"
-                          [objectType]="functionList?.entityName" [width]="100" [imgOn]="item?.modifiedOn"
-                          cssClass="pic symbol-100px symbol-3by2" imageType="square">
-                        </codx-img>
-                      </ng-container>
-                      <ng-template #imageSrc>
-                        <img [src]="dt.data || dt.avatar" alt="" class="image" />
-                      </ng-template>
-                    </ng-container>
-                  </div>
-                </ng-container>
-              </div>
-            </div>
+          <ng-container *ngIf="!item?.imageSrc else viewImage2">
+            <span class="img-pat-edit noimage symbol-label text-white rounded-2"
+            [style.background-color]="item.backgroundColor" ></span>
           </ng-container>
+          <ng-template #viewImage2>
+            <div class="w-100 position-relative card-img img-pat-edit div-bg-img" [style.background-image]="'url('+(environment.urlUpload + '/' + item?.imageSrc)+')'">
+            </div>
+          </ng-template>
+         
           <ng-template #otherColor>
             <span class="img-pat-edit noimage symbol-label text-white rounded-2"
-              [style.background-color]="item.backgroundColor" style="
-                background-image: none;
-                width: 100px !important;
-                height: 150px !important;
-              "></span>
+              [style.background-color]="item.backgroundColor"></span>
           </ng-template>
           <span class="icon-check text-white default icon-16" *ngIf="item.isDefault"></span>
         </div>
-        <ng-template #template>
-          <div class="card-img create-card cursor-pointer rounded-2">
-            <a id="create_card_toggle" (click)="openFormAdd()">
-              <img alt="" src="../assets/demos/card/card-add.png" />
-            </a>
-          </div>
-        </ng-template>
+       
         <div class="mt-3 mb-2 text-dark fw-bold text-center card-name">
           {{ item.patternName }}
         </div>
@@ -85,6 +55,13 @@
           </span>
         </div>
       </div>
+      <ng-template #template>
+        <div class="card-img create-card cursor-pointer rounded-2">
+          <a id="create_card_toggle" (click)="openFormAdd()">
+            <img alt="" src="../assets/demos/card/card-add.png" />
+          </a>
+        </div>
+      </ng-template>
     </div>
   </div>
 </ng-template>
