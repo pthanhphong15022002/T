@@ -3,7 +3,7 @@
     <div class="flex-grow-1">
       <div class="d-flex align-items-start ph-card">
         <div class="pic-edit mt-2">
-          <div class="row justify-content-between h-100" *ngIf="pattern">
+          <div class="row justify-content-between h-100" *ngIf="pattern?.imageSrc">
             <div class="w-100 position-relative card-img img-pat-edit div-bg-img" [style.background-image]="'url('+(!typeView?(environment.urlUpload + '/' + pattern?.imageSrc):pattern?.imageSrc)+')'">
             </div>
           </div>
