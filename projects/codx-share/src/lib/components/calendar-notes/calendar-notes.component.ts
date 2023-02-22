@@ -1382,4 +1382,14 @@ export class CalendarNotesComponent
 
     return tmpType_RefID;
   }
+
+  redirectToFuncID(item) {
+    console.log('item', item);
+
+    let query = {
+      predicate: 'RecID=@0',
+      dataValue: item.transID,
+    };
+    this.codxService.openUrlNewTab(item.functionID, '', query);
+  }
 }
