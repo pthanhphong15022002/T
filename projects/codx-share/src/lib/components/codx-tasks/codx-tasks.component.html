@@ -352,10 +352,10 @@
         <div class="text-gray-700 fs-7">{{ item?.positionName }}</div>
         <div class="text-gray-500 fs-7">{{ item?.memo }}</div>
         <!-- || item?.roleType == 'A'  trước đó có A mà giờ ko A vì a ko thực hiện => ko status ? ?? thương-->
-        <div class="d-flex align-items-center mt-1" *ngIf="item?.roleType == 'R'">
+        <div class="d-flex align-items-center mt-1" *ngIf="item?.roleType == 'R'|| item?.roleType == 'A'">
           <div class="d-flex align-items-end me-2 codx-badge">
             <span>
-              <codx-vll [name]="vllStatus" [formModel]="view.formModel" [field]="'Status'" [value]="item?.status"
+              <codx-vll [name]="'TM004'" [field]="'Status'" [value]="item?.status"
                 [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
               </codx-vll>
             </span>
