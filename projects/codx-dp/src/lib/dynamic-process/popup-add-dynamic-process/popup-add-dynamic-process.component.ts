@@ -400,9 +400,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (stepListSave.length > 0) {
       stepListSave.forEach((step, index) => {
         if (step && step['taskGroups']) {
-          let index = step['taskGroups'].find((x) => x['recID']);
+          let index = step['taskGroups'].find((x) => !x['recID']);
           step['taskGroups'].splice(index, 1);
-          delete step['taskGroups']['task'];
+
+          step['taskGroups']?.forEach(element => {
+            delete element['taskGroups']['task'];
+          });
         }
       });
       this.dpService.addStep([stepListSave]).subscribe((data) => {
@@ -419,9 +422,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (stepListSave.length > 0) {
       stepListSave.forEach((step) => {
         if (step && step['taskGroups']) {
-          let index = step['taskGroups'].findIndex((x) => !x['recID']);
-          if (index >= 0) step['taskGroups'].splice(index, 1);
-          delete step['taskGroups']['task'];
+          let index = step['taskGroups'].find((x) => !x['recID']);
+          step['taskGroups'].splice(index, 1);
+          
+          step['taskGroups']?.forEach(element => {
+            delete element['taskGroups']['task'];
+          });
         }
       });
       if (this.stepListAdd.length > 0) {
@@ -431,7 +437,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             if (index >= 0) {
               step['taskGroups'].splice(index, 1);
             }
-            delete step['taskGroups']['task'];
+            step['taskGroups']?.forEach(element => {
+              delete element['taskGroups']['task'];
+            });
           }
         });
       }

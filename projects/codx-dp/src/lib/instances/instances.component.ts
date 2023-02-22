@@ -153,6 +153,7 @@ export class InstancesComponent
     this.codxDpService
       .createListInstancesStepsByProcess(this.process?.recID)
       .subscribe((dt) => {
+        debugger
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
