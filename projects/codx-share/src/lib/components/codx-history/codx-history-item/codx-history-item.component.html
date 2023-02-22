@@ -370,14 +370,16 @@
           ></codx-img>
         </div>
         <div class="">
-          <div class="d-flex justify-content-between">
+          <div class="d-flex align-items-center justify-content-between">
             <span *ngIf="data.description" [innerHTML]="data.description"></span>
             <ng-container *ngIf="data.datas">
-              <span (click)="isCollapsed = !isCollapsed"
-                [attr.aria-expanded]="!isCollapsed"
-                aria-controls="collapseExample"
-                 class="icon-unfold_more icon-20" >
-              </span>
+              <button class="btn btn-white btn-icon ">
+                <span (click)="isCollapsed = !isCollapsed"
+                  [attr.aria-expanded]="!isCollapsed"
+                  aria-controls="collapseExample"
+                  class="icon-unfold_more icon-20" >
+                </span>
+              </button>
             </ng-container>
           </div>
           <div
