@@ -1109,7 +1109,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     // }
     switch (e?.funcID) {
       //Giao việc
-      case 'SYS005': {
+      case 'ODT1013': {
         if (e?.result && e?.result[0]) {
           e.data.status = '3';
           // debugger;
