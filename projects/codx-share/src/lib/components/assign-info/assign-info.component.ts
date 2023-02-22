@@ -438,7 +438,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
             });
         } else {
           this.notiService.notifyCode('TM038');
-          return;
+          this.dialog.close();
         }
       });
   }

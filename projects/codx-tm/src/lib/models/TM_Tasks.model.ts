@@ -1,7 +1,7 @@
 import { TM_Sprints } from './TM_Sprints.model';
 
 export class TM_Tasks {
-  recID: string = '';
+  recID: string ;
   taskID: string = '';
   taskName?: string = '';
   tags: string = '';
@@ -91,11 +91,11 @@ export class TM_Tasks {
   departmentID: string = '';
   companyID: string = '';
   write: boolean;
-  sprints: TM_Sprints;
+ // sprints: TM_Sprints;
 }
 
 export class tmpTaskResource {
-  recID: string = '';
+  recID: string ;
   taskID: string = '';
   resourceID: string = '';
   resourceName: string = '';
@@ -115,7 +115,7 @@ export class tmpTaskResource {
 }
 
 export class TM_TaskExtends {
-  recID: string = '';
+  recID: string ;
   taskID: string = '';
   extendApprover: string = '';
   extendApproverName: string = '';
