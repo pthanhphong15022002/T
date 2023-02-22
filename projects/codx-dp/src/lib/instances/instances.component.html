@@ -39,9 +39,7 @@
 
 <ng-template #viewColumKaban let-data>
   <div
-    class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu"
-    style="background-color: red"
-  >
+    class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu">
     <div class="line-colums">{{ data.headerText }}</div>
   </div>
 </ng-template>
@@ -166,10 +164,10 @@
   <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
       <div class="font me-3">
-        <div *ngFor="let item of listSteps ">
-            <span *ngIf="item.stepID === data.stepID">
-                {{item.stepName}}
-            </span>
+        <div *ngFor="let item of listSteps">
+          <span *ngIf="item.stepID === data.stepID">
+            {{ item.stepName }}
+          </span>
         </div>
       </div>
       <span>
