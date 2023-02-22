@@ -1,84 +1,98 @@
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
-        <button class="btn btn-primary" (click)="onSaveForm()">
-            <i class="icon-save"></i>
-        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
-        </button>
-    </div>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveForm()">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+  </div>
 </ng-template>
 
 <codx-form
-    #form
-    [headerText] = "headerText"
-    [body] = "body"
-    [formModel]="formModel"
-    [footer]="footer"
-    [dialog]="dialog"
-    [data]="data"
-    *ngIf="isAfterRender"
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [formModel]="formModel"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="data"
+  *ngIf="isAfterRender"
 >
-    <ng-template #body>
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label fiedName="PayrollGroupID" [formModel]="formModel"></codx-label>
-                <codx-input
-                    field = "payrollGroupID"
-                    [formModel]="form.formModel"
-                    [Group] = "form.formGroup"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label fiedName="CurrencyID" [formModel]="formModel"></codx-label>
-                <codx-input
-                    field="currencyID"
-                    [formModel] = "form.formModel"
-                    [Group] = "form.formGroup"
-                ></codx-input>
-            </div>
-        </div>
+  <ng-template #body>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label
+          fiedName="PayrollGroupID"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+          field="payrollGroupID"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="CurrencyID" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="currencyID"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
 
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label fiedName="TaxTableID" [formModel]="formModel"></codx-label>
-                <codx-input
-                    field = "taxTableID"
-                    [formModel]="form.formModel"
-                    [Group] = "form.formGroup"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <div class="d-flex flex-column">
-                    <codx-label fiedName="IsSettleTax" [formModel]="formModel"></codx-label>
-                    <codx-input
-                        field="isSettleTax"
-                        [formModel] = "form.formModel"
-                        [Group] = "form.formGroup"
-                    ></codx-input>
-                </div>
-               
-            </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="TaxTableID" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="taxTableID"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <div class="d-flex flex-column">
+          <codx-label
+            fiedName="IsSettleTax"
+            [formModel]="formModel"
+          ></codx-label>
+          <codx-input
+            field="isSettleTax"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
         </div>
+      </div>
+    </div>
 
-        <div class="form-group row">
-            <div class="col-6">
-                <div class="d-flex flex-column">
-                    <codx-label fiedName="IsFixAdvanceAmount" [formModel]="formModel"></codx-label>
-                    <codx-input
-                        field = "isFixAdvanceAmount"
-                        [formModel]="form.formModel"
-                        [Group] = "form.formGroup"
-                    ></codx-input>
-                </div>
-                
-            </div>
-            <div class="col-6">
-                <codx-label fiedName="AdvanceAmount" [formModel]="formModel"></codx-label>
-                <codx-input
-                    field="advanceAmount"
-                    [formModel] = "form.formModel"
-                    [Group] = "form.formGroup"
-                ></codx-input>
-            </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <div class="d-flex flex-column">
+          <codx-label
+            fiedName="IsFixAdvanceAmount"
+            [formModel]="formModel"
+          ></codx-label>
+          <codx-input
+            field="isFixAdvanceAmount"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
         </div>
-    </ng-template>
+      </div>
+      <div class="col-6">
+        <codx-label
+          fiedName="AdvanceAmount"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+          field="advanceAmount"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
+  </ng-template>
 </codx-form>
