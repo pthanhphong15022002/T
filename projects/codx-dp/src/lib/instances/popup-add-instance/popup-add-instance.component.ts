@@ -189,23 +189,27 @@ export class PopupAddInstanceComponent implements OnInit {
       this.notificationsService.notifyCode('DP001');
       return;
     }
-    if (this.listStep.length > 0) {
+    if (this.listStep?.length > 0) {
       let check = true;
       let checkFormat = true;
-      this.listStep?.forEach((obj) => {
-        if (obj.fields?.length > 0) {
-          obj.fields.forEach((f) => {
-            if (f.isRequired && (!f.dataValue || f.trim() == '')) {
+      this.listStep.forEach((obj) => {
+        if (obj?.fields?.length > 0) {
+          var arrField = obj.fields;
+          arrField.forEach((f) => {
+            if (f.isRequired && (!f.dataValue || f.dataValue?.toString().trim() == '')) {
               this.notificationsService.notifyCode(
                 'SYS009',
                 0,
                 '"' + f.title + '"'
               );
               check = false;
+              // return;
             }
             checkFormat = this.checkFormat(f);
+            // if (!checkFormat) return;
           });
         }
+        // if (!check || !checkFormat) return;
       });
       if (!check || !checkFormat) return;
     }
