@@ -125,7 +125,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         },
       },
     ];
-    this.getGridViewSetup();
+    // this.getGridViewSetup();
 
     this.dataRequest.funcID = this.funcID;
     this.dataRequest.entityName = 'OM_OKRs';
@@ -335,15 +335,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
 
   //Lấy data danh sách mục tiêu
-  getGridViewSetup() {
-    this.okrService.loadFunctionList(this.view.funcID).subscribe((fuc) => {
-      this.okrService
-        .loadGridView(fuc?.formName, fuc?.gridViewName)
-        .subscribe((grd) => {
-          this.gridView = grd;
-        });
-    });
-  }
+  // getGridViewSetup() {
+  //   this.okrService.loadFunctionList(this.view.funcID).subscribe((fuc) => {
+  //     this.okrService
+  //       .loadGridView(fuc?.formName, fuc?.gridViewName)
+  //       .subscribe((grd) => {
+  //         this.gridView = grd;
+  //       });
+  //   });
+  // }
 
   //-----------------------End-------------------------------//
 
