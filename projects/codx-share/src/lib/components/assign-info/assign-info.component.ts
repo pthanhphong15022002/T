@@ -389,7 +389,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           //     .sendAlertMail(taskParent?.recID, 'TM_0001', this.functionID)
           //     .subscribe();
 
-          //lưu his giao việc da chuyen vao BE -Thao chuyen
+          //lưu his giao việc da chuyen vao BE -Thao chuyen - 22/2/2023
          // var taskParent = res[1][0];
           // var objectType = this.formModel.entityName;
           // var objectID = this.task.refID;
