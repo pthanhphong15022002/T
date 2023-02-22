@@ -142,7 +142,6 @@ export class IncommingAddComponent implements OnInit {
     } 
     else if (this.type == 'edit') 
     {
-      debugger
       this.dispatch.agencyName = this.dispatch.agencyName.toString();
       if(this.dispatch.relations && this.dispatch.relations.length>0)
       {
@@ -343,12 +342,14 @@ export class IncommingAddComponent implements OnInit {
         this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
       this.attachment.objectId = this.dispatch.recID;
       this.addRelations();
+      this.addPermission();
       this.odService
       .saveDispatch(this.dataRq, this.dispatch)
       .subscribe(async (item) => {
         if (item.status == 0) {
           this.data = item;
           this.attachment.dataSelected = item.data;
+       
           (await this.attachment.saveFilesObservable()).subscribe(
             (item2: any) => {
               //Chưa xử lý Upload nhìu file

@@ -42,11 +42,27 @@
     border-radius: 20px;
     padding: 3px;
   }
-
+  .img-pat-edit
+  {
+    background-image: none;
+    width: 100px !important;
+    height: 150px !important;
+  }
 
 }
 
 .gift-card .card-name {
-  height: 38px;
+  height: 20px;
   overflow: hidden;
+}
+.div-bg-img
+{
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+#create_card_toggle
+{
+  background-image: url(../../../../../../../src/assets/demos/card/card-add.png);
+  height: 100%;
 }
