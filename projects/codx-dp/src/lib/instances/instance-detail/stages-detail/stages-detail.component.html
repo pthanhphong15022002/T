@@ -28,7 +28,7 @@
             aria-valuemin="0"
             aria-valuemax="100"
           >
-            {{ progress }}%
+            {{ progress || 0 }}%
           </div>
         </div>
       </div>
@@ -530,7 +530,6 @@
         </codx-label>
         <codx-input
           field="actualEnd"
-          [formModel]="grvTaskGroupsForm"
           (valueChange)="changeValueDate($event, dataProgress)"
           [crrValue]="dataProgress?.actualEnd"
           format="F"
