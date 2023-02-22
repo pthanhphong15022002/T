@@ -18,7 +18,7 @@
             class="form-control" 
             [formModel]="form.formModel" 
             [Group]="form.formGroup"
-            [disabled]="!data.allowEditKey"
+            [disabled]="blocked"
             [ControlName]="'PositionID'">
           </codx-input>
         </div>

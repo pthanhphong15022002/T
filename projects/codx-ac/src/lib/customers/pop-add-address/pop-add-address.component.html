@@ -4,7 +4,10 @@
 <ng-template #body>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="AdressType" default="Loại địa chỉ"></codx-label>
-    <codx-input [crrValue]="adressType" type="valuelist" refValue="AC015" field="adressType"
+    <codx-input *ngIf="adressType != null" [crrValue]="adressType" type="valuelist" refValue="AC015" field="adressType"
+      (valueChange)="valueChangeAdressType($event)">
+    </codx-input>
+    <codx-input *ngIf="adressType == null" [crrValue]="adressType" type="valuelist" refValue="AC015" field="adressType"
       (valueChange)="valueChangeAdressType($event)">
     </codx-input>
   </div>
@@ -18,7 +21,10 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="CountryID" default="Quốc gia"></codx-label>
-        <codx-input [crrValue]="countryID" type="combobox" refValue="Countries" field="countryID"
+        <codx-input *ngIf="countryID != null" [crrValue]="countryID" type="combobox" refValue="Countries" field="countryID"
+          (valueChange)="valueChangeCountryID($event)">
+        </codx-input>
+        <codx-input *ngIf="countryID == null" [crrValue]="countryID" type="combobox" refValue="Countries" field="countryID"
           (valueChange)="valueChangeCountryID($event)">
         </codx-input>
       </div>
@@ -26,9 +32,12 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="ProvinceID" default="Tỉnh/thành"></codx-label>
-        <codx-input [crrValue]="provinceID" type="combobox" refValue="Provinces" field="provinceID"
+        <codx-input *ngIf="provinceID != null" [crrValue]="provinceID" type="combobox" refValue="Provinces" field="provinceID"
           (valueChange)="valueChangeProvinceID($event)">
         </codx-input>
+        <codx-input *ngIf="provinceID == null" [crrValue]="provinceID" type="combobox" refValue="Provinces" field="provinceID"
+        (valueChange)="valueChangeProvinceID($event)">
+      </codx-input>
       </div>
     </div>
   </div>
@@ -36,7 +45,10 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="DistrictID" default="Quận/huyện"></codx-label>
-        <codx-input [crrValue]="districtID" type="combobox" refValue="DistrictsAC" field="districtID"
+        <codx-input *ngIf="districtID != null" [crrValue]="districtID" type="combobox" refValue="DistrictsAC" field="districtID"
+          (valueChange)="valueChangeDistrictID($event)">
+        </codx-input>
+        <codx-input *ngIf="districtID == null" [crrValue]="districtID" type="combobox" refValue="DistrictsAC" field="districtID"
           (valueChange)="valueChangeDistrictID($event)">
         </codx-input>
       </div>
@@ -44,15 +56,18 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="PostalCode" default="Phường/xã"></codx-label>
-        <codx-input [crrValue]="postalCode" type="combobox" refValue="PostalCodes" field="postalCode"
+        <codx-input *ngIf="districtID != null" [crrValue]="postalCode" type="combobox" refValue="PostalCodes" field="postalCode"
           (valueChange)="valueChangePostalCode($event)">
         </codx-input>
+        <codx-input *ngIf="districtID == null" [crrValue]="postalCode" type="combobox" refValue="PostalCodes" field="postalCode"
+        (valueChange)="valueChangePostalCode($event)">
+      </codx-input>
       </div>
     </div>
   </div>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Note" default="Ghi chú"></codx-label>
-    <codx-input [crrValue]="form.data != null ? form.data.note : ''" [formModel]="form.formModel" field="note"
+    <codx-input [crrValue]="note" [formModel]="form.formModel" field="note"
       (valueChange)="valueChange($event)">
     </codx-input>
   </div>
@@ -107,15 +122,15 @@
   <div class="d-flex align-items-center justify-content-between">
     <div class="d-flex align-items-center">
       <span class="me-2 mt-1">
-        <codx-input [checked]="form.data != null ? form.data.isDefault : false" type="switch" field="isDefault"
+        <codx-input [checked]="isDefault" type="switch" field="isDefault"
           (valueChange)="valueChange($event)">
         </codx-input>
       </span>
       <codx-label [formModel]="form.formModel" fiedName="IsDefault" default="Mặc định"></codx-label>
     </div>
     <div class="d-flex justify-content-end">
-      <div class="ms-2">
-        <button type="button" class="btn btn-light-primary">
+      <div *ngIf="type != 'editaddress'" class="ms-2">
+        <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
           <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
             [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
         </button>

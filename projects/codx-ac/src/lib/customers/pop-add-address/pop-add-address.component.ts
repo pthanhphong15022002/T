@@ -23,9 +23,14 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   districtID:any;
   postalCode:any;
   objectype:any;
+  note:any;
+  isDefault:any;
+  type:any;
   gridViewSetup:any;
   address: Address;
+  objectAddress:Array<Address> = [];
   objectContactAddress:Array<Contact> = [];
+  objectContactAddressAfter:Array<Contact> = [];
   objectContactAddressDelete:Array<Contact> = [];
   constructor(
     private inject: Injector,
@@ -41,13 +46,18 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
+    this.type = dialogData.data?.type;
     this.objectype = dialogData.data?.objectype;
-    this.adressType = '';
+    this.objectAddress = dialogData.data?.dataAddress;
+    this.objectContactAddressAfter = dialogData.data?.dataContactAddress;  
+    this.adressType = null;
     this.adressName = '';
     this.countryID = '';
     this.provinceID = '';
     this.districtID = '';
     this.postalCode = '';
+    this.note = '';
+    this.isDefault = false;
     this.cache.gridViewSetup('AddressBook', 'grvAddressBook').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -61,6 +71,8 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
       this.provinceID = dialogData.data?.data.provinceID;
       this.districtID = dialogData.data?.data.districtID;
       this.postalCode = dialogData.data?.data.postalCode;
+      this.note = dialogData.data?.data.note;
+      this.isDefault = dialogData.data?.data.isDefault;
     }
     if (dialogData.data?.datacontactaddress != null) {
       this.objectContactAddress = dialogData.data?.datacontactaddress;
@@ -86,6 +98,14 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
 
   //#region Function
   valueChange(e:any){
+    switch(e.field){
+      case 'note':
+        this.note = e.data;
+      break;
+      case 'isDefault':
+        this.isDefault = e.data;
+      break;
+    }
     this.address[e.field] = e.data;
   }
   valueChangeAdressType(e: any) {
@@ -115,6 +135,8 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   openPopupContact(){
     var obj = {
       headerText: 'Thêm người liên hệ',
+      datacontact: this.objectContactAddress,
+      recIdAddress: this.address.recID
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -149,6 +171,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     let index = this.objectContactAddress.findIndex(x => x.contactID == data.contactID);
     var ob = {
       headerText: 'Chỉnh sửa liên hệ',
+      type:'editContact',
       data:{...data}
     };
     let opt = new DialogModel();
@@ -183,6 +206,17 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
       let index = this.objectContactAddress.findIndex(x => x.reference == data.reference && x.recID == data.recID);
       this.objectContactAddress.splice(index, 1);
       this.objectContactAddressDelete.push(data);
+  }
+  clearAddress(){
+    this.adressType = null;
+    this.adressName = '';
+    this.countryID = null;
+    this.provinceID = null;
+    this.districtID = null;
+    this.postalCode = null;
+    this.note = '';
+    this.isDefault = false;
+    this.address.recID = Guid.newGuid();
   }
   //#endregion
 
@@ -241,8 +275,33 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     window.localStorage.setItem("datacontactaddressdelete",JSON.stringify(this.objectContactAddressDelete));
     this.dialog.close();
   } 
+  onSaveAdd(){
+    if (this.adressType.trim() == '' || this.adressType == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['AdressType'].headerText + '"'
+      );
+      return;
+    }
+    if (this.adressName.trim() == '' || this.adressName == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['AdressName'].headerText + '"'
+      );
+      return;
+    }
+    this.objectAddress.push({...this.address});
+    this.objectContactAddress.forEach((element) => {
+    this.objectContactAddressAfter.push({...element});
+    });
+    this.objectContactAddress = [];
+    this.clearAddress();
+  }
   //#endregion
 }
+//#region Guid
 class Guid {
   static newGuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
@@ -255,3 +314,4 @@ class Guid {
     );
   }
 }
+//#endregion
