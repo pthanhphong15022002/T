@@ -252,7 +252,7 @@
 </ng-template>
 
 <ng-template #tabInputInfo>
-  <ng-container *ngIf="listStep.length > 0">
+  <ng-container *ngIf="listStep?.length > 0">
     <ng-container *ngFor="let step of listStep">
       <ng-container *ngIf="step?.fields?.length > 0">
         <ng-container *ngFor="let item of step.fields">

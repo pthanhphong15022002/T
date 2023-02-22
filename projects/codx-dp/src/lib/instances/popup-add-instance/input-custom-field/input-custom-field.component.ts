@@ -87,7 +87,7 @@ export class InputCustomFieldComponent implements OnInit {
           var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
           // var mailformat =
           //   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-          if (!email.match(mailformat)) {
+          if (!email.toLocaleLowerCase().match(mailformat)) {
             this.cache.message(this.messCodeEmail).subscribe((res) => {
               if (res) {
                 this.errorMessage = res.customName || res.defaultName;
@@ -106,7 +106,7 @@ export class InputCustomFieldComponent implements OnInit {
           // //Thêm trường hợp +84
           // var phonenumberFormat =
           //   /([\+84|84|0]+(3|5|7|8|9|1[2|6|8|9]))+([0-9]{8})\b/;
-          if (!phone.match(phonenumberFormat)) {
+          if (!phone.toLocaleLowerCase().match(phonenumberFormat)) {
             this.cache.message(this.messCodePhoneNum).subscribe((res) => {
               if (res) {
                 this.errorMessage = res.customName || res.defaultName;

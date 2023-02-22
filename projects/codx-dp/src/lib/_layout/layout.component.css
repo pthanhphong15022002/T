@@ -2,3 +2,7 @@
 .process-views-detail .container-toolbar .container-fluid {
     padding: 0;
 }
+
+.process-views-detail .codx-detail-main {
+    bottom: 0 !important;
+}

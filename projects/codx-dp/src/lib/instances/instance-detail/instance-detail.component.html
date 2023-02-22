@@ -127,6 +127,7 @@
           [isUpdate]="dataSelect.write"
           [isCreate]="dataSelect.create"
           [titleDefault]="titleDefault"
+          [instance]="instance"
           [listStepReason]="getReasonByStepId(dataSelect.stepID)"
         ></codx-stages-detail>
         </ng-container>
@@ -134,7 +135,7 @@
       </ng-container>
       <ng-container *ngIf="idCbx == 'F'">
         <ng-container *ngFor="let item of listSteps">
-          <codx-field-detail [dataStep]="item" [isUpdate]="dataSelect.write"></codx-field-detail>
+          <codx-field-detail *ngIf="!item?.isSuccessStep && !item?.isFailStep" [dataStep]="item" [isUpdate]="dataSelect.write"></codx-field-detail>
         </ng-container>
       </ng-container>
     </ng-template>

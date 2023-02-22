@@ -64,15 +64,30 @@
 	transition: border-color 0.2s ease;
 }
 
+// .arrow-steps .focus {
+// 	background-color: var(--primary-dark);
+// 	color: var(--primary-inverse);
+// }
+
+// .arrow-steps .focus::after,
+// .arrow-steps .focus::before {
+// 	border-left-color: var(--primary-dark);
+// 	border-right-color: var(--primary-dark);
+// }
+
 .arrow-steps .step:hover {
 	background-color: var(--primary-light);
+	color: var(--primary-dark);
+	transition: 0.2s;
 }
 
 .arrow-steps .step:hover::after,
 .arrow-steps .step:hover::before {
 	border-left-color: var(--primary-light);
 	border-right-color: var(--primary-light);
+	transition: 0.2s;
 }
+
 
 .arrow-steps .step:before {
 	right: auto;
