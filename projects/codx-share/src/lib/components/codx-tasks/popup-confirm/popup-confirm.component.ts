@@ -37,6 +37,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   defautComment = 'Bình luận';
   comment = '';
   action = 'confirm';
+  isSave = false;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -87,6 +88,8 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   // }
 
   saveData() {
+    if(this.isSave) return ;
+    this.isSave=true ;
     switch (this.action) {
       case 'confirm':
         this.saveConfirmStatus();

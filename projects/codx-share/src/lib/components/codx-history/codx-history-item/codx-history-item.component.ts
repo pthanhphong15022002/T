@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { C } from '@angular/cdk/keycodes';
+import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { isObject } from '@syncfusion/ej2-base';
-import { FormModel, ApiHttpService, AuthService, CacheService, NotificationsService, CallFuncService } from 'codx-core';
+import { FormModel, ApiHttpService, AuthService, CacheService, NotificationsService, CallFuncService, DialogModel, DialogRef } from 'codx-core';
 import { environment } from 'src/environments/environment';
 @Component({
   selector: 'codx-history-item',
@@ -20,6 +21,8 @@ export class CodxHistoryItemComponent implements OnInit {
     VIDEO: "video",
     APPLICATION: 'application'
   }
+  isCollapsed=true;
+  @ViewChild("popupViewDetail") popupViewDetail:TemplateRef<any>;
   constructor(
     private api: ApiHttpService,
     private auth: AuthService,
@@ -39,8 +42,7 @@ export class CodxHistoryItemComponent implements OnInit {
     }
   }
 
-  getFileByObjectID(objetcID:string)
-  {
+  getFileByObjectID(objetcID:string){
     if(objetcID)
     {
       this.api.execSv(
@@ -82,4 +84,15 @@ export class CodxHistoryItemComponent implements OnInit {
         return false;
     }
   }
+  // open popup view detail
+  clickViewDetail(){
+    let option = new DialogModel();
+    this.callFuc.openForm(this.popupViewDetail,"",0,0,"",null,"",option);
+  }
+
+  //
+  clickClosePopup(dialog:DialogRef){
+    dialog.close();
+  }
+
 }
