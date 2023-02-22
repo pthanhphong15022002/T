@@ -41,6 +41,7 @@ import { PopAddMearsureComponent } from './unitsofmearsure/pop-add-mearsure/pop-
 import { PopAddConversionComponent } from './unitsofmearsure/pop-add-conversion/pop-add-conversion.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { PopAddInventoryComponent } from './inventory/pop-add-inventory/pop-add-inventory.component';
+import { ItempostingaccountsComponent } from './item-posting-accounts/item-posting-accounts.component';
 
 export const routes: Routes = [
   {
@@ -89,6 +90,10 @@ export const routes: Routes = [
         path: 'inventorymodels/:funcID',
         component: InventoryComponent,
       },
+      {
+        path: 'itempostingaccounts/:funcID',
+        component: ItempostingaccountsComponent,
+      },
     ],
   },
 ];
@@ -121,6 +126,7 @@ export const routes: Routes = [
     PopAddConversionComponent,
     InventoryComponent,
     PopAddInventoryComponent,
+    ItempostingaccountsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
