@@ -66,12 +66,8 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     this.actionType = data?.data?.actionType;
     this.lstDiscipline = data?.data?.lstDiscipline;
     this.indexSelected = data?.data?.indexSelected ?? -1;
+    this.disciplineObj = data?.data?.dataInput;
 
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.disciplineObj = JSON.parse(
-        JSON.stringify(this.lstDiscipline[this.indexSelected])
-      );
-    }
   }
 
   initForm() {
@@ -140,14 +136,15 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
           if (p != null) {
             this.disciplineObj.recID = p.recID;
             this.notify.notifyCode('SYS006');
-            this.lstDiscipline.push(
-              JSON.parse(JSON.stringify(this.disciplineObj))
-            );
-            if (this.listView) {
-              (this.listView.dataService as CRUDService)
-                .add(this.disciplineObj)
-                .subscribe();
-            }
+            this.dialog && this.dialog.close(p);
+            // this.lstDiscipline.push(
+            //   JSON.parse(JSON.stringify(this.disciplineObj))
+            // );
+            // if (this.listView) {
+            //   (this.listView.dataService as CRUDService)
+            //     .add(this.disciplineObj)
+            //     .subscribe();
+            // }
             // this.dialog.close(p)
           } else this.notify.notifyCode('SYS023');
         });
@@ -157,12 +154,13 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            this.lstDiscipline[this.indexSelected] = p;
-            if (this.listView) {
-              (this.listView.dataService as CRUDService)
-                .update(this.lstDiscipline[this.indexSelected])
-                .subscribe();
-            }
+            this.dialog && this.dialog.close(p);
+            // this.lstDiscipline[this.indexSelected] = p;
+            // if (this.listView) {
+            //   (this.listView.dataService as CRUDService)
+            //     .update(this.lstDiscipline[this.indexSelected])
+            //     .subscribe();
+            // }
             // this.dialog.close(this.data)
           } else this.notify.notifyCode('SYS021');
         });

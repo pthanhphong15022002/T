@@ -37,19 +37,28 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   //@ViewChild('listView') listView: CodxListviewComponent;
 
   onInit(): void {
-    this.hrService.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
+    this.hrService
+    .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    .then((fg) => {
+      if (fg) {
+        this.formGroup = fg;
+        this.initForm();
       }
     });
+
+    // this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //   if (formModel) {
+    //     this.formModel = formModel;
+    //     this.hrService
+    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //       .then((fg) => {
+    //         if (fg) {
+    //           this.formGroup = fg;
+    //           this.initForm();
+    //         }
+    //       });
+    //   }
+    // });
   }
 
   constructor(
@@ -74,6 +83,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     this.EAppointionObj = data?.data?.appointionObj;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    this.formModel = dialog.formModel;
     //this.lstEAppointions = data?.data?.lstEAppointions;
 
     // this.indexSelected =
@@ -147,8 +157,9 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         .AddEmployeeAppointionsInfo(this.EAppointionObj)
         .subscribe((p) => {
           if (p != null) {
-            this.EAppointionObj.recID = p.recID;
             this.notify.notifyCode('SYS006');
+            debugger
+            this.EAppointionObj = p;
             this.successFlag = true;
           this.dialog && this.dialog.close(this.EAppointionObj);
 

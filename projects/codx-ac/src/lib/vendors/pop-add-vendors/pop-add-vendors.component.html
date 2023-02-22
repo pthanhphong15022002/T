@@ -100,7 +100,7 @@
   </div>
 </ng-template>
 <ng-template #tabestablish>
-  <div class="mt-1 text-primary fw-bold fs-5">
+  <div class="mt-2 text-primary fw-bold fs-6">
     <codx-label [formModel]="form.formModel" default="Thanh toán"></codx-label>
   </div>
   <div class="row">
@@ -121,7 +121,7 @@
       </div>
     </div>
   </div>
-  <div class="mt-1 text-primary fw-bold fs-5">
+  <div class="mt-2 text-primary fw-bold fs-6">
     <codx-label [formModel]="form.formModel" default="Kiểm soát công nợ"></codx-label>
   </div>
   <div class="row">
@@ -180,7 +180,7 @@
       </div>
     </div>
   </div>
-  <div class="mt-1 text-primary fw-bold fs-5">
+  <div class="mt-2 text-primary fw-bold fs-6">
     <codx-label [formModel]="form.formModel" default="Kiểm soát nợ quá hạn"></codx-label>
   </div>
   <div class="row">
@@ -221,7 +221,7 @@
   </div>
 </ng-template>
 <ng-template #tabShipment>
-  <div class="mt-1 text-primary fw-bold fs-5">
+  <div class="mt-2 text-primary fw-bold fs-6">
     <codx-label [formModel]="form.formModel" default="Thông tin giao hàng"></codx-label>
   </div>
   <div class="row">
@@ -308,7 +308,7 @@
 </ng-template>
 <ng-template #tabLocation>
   <div class="d-flex align-items-center justify-content-between mb-2">
-    <codx-label class="mt-1 text-primary fw-bold fs-5" [formModel]="form.formModel"
+    <codx-label class="mt-2 text-primary fw-bold fs-6" [formModel]="form.formModel"
       default="Danh sách địa chỉ"></codx-label>
     <span type="button" class="btn btn-icon btn-primary" (click)="openPopupAddress()">
       <i class="icon-add_location_alt"></i>
@@ -377,7 +377,7 @@
     <codx-label class="text-primary fw-bold fs-5" [formModel]="form.formModel"
       default="Danh sách người liên hệ"></codx-label>
     <button type="button" class="btn btn-icon btn-primary" (click)="openPopupContact()">
-      <i class="icon-person_add"></i>
+      <i class="icon-group_add"></i>
     </button>
   </div>
   <div class="d-flex align-items-top justify-content-between py-2 border-bottom" *ngFor="let item of objectContact">
@@ -428,32 +428,29 @@
       <i class="icon-addchart"></i>
     </span>
   </div>
-  <div class="py-2 border-bottom" *ngFor="let item of objectBankaccount">
-    <div class="col-6 ps-0">
-      <div class="d-flex align-items-top">
-        <div class="me-3">
-          <codx-img [objectId]="item?.bankAcctID" [objectName]="item?.owner" [objectType]="formModel?.entityName"
-            [width]="35">
-          </codx-img>
+  <div class="d-flex align-items-top justify-content-between py-2 border-bottom" *ngFor="let item of objectBankaccount">
+    <div class="d-flex align-items-top w-100">
+      <div class="me-3">
+        <codx-img [objectId]="item?.bankAcctID" [objectName]="item?.owner" [objectType]="formModel?.entityName"
+          [width]="35">
+        </codx-img>
+      </div>
+      <div class="d-flex flex-column w-100 space_personal">
+        <div class="fw-bold text-dark fs-6">
+          <span>{{item.bankID}}</span>
         </div>
-        <div class="d-flex flex-column space_personal">
-          <div class="fw-bold text-dark fs-5">
-            <span>{{item.bankID}}</span>
-          </div>
-          <div class="me-2">
-            {{item.bankAcctID}}
-          </div>
-        </div>
-        <div class="d-flex align-items-center">
-          <span (click)="editobjectBank(item)" class="icon-edit icon-16 py-1"></span>
-          <span (click)="deleteobjectBank(item)" class="icon-delete icon-16"></span>
+        <div class="mb-1">
+          {{item.bankAcctID}}
         </div>
       </div>
     </div>
-    <div class="col-6 ps-0" *ngIf="item.isDefault">
-      <codx-vll [showText]="true" [showBgColor]="true" [name]="'DP002'" value="0"
-        class="badge badge-light badge-square badge-md fs-7 p-2">
-      </codx-vll>
+    <div class="d-flex align-items-top ms-5">
+      <span type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="editobjectBank(item)">
+        <i class="icon-edit icon-16"></i>
+      </span>
+      <span type="button" class="btn btn-icon btn-sm btn-light-danger ms-1" (click)="deleteobjectBank(item)">
+        <i class="icon-delete icon-16"></i>
+      </span>
     </div>
   </div>
 </ng-template>

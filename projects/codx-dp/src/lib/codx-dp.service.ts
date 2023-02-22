@@ -333,13 +333,13 @@ export class CodxDpService {
     );
   }
 
-  GetListUserIDByListTmpEmpIDAsync(data) {
+  GetListUserIDByListTmpEmpIDAsync(id) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmployeesBusiness',
       'GetListUserIDByListTmpEmpIDAsync',
-      data
+      id
     );
   }
 
@@ -360,6 +360,16 @@ export class CodxDpService {
       'UsersBusiness',
       'GetAsync',
       e
+    );
+  }
+
+  getListUserByRoleID(id){
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetListUserByRoleIDAsync',
+      id
     );
   }
 }

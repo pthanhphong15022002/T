@@ -12,17 +12,17 @@ export class UnitsofmearsureComponent extends UIComponent {
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   buttons: ButtonModel = { id: 'btnAdd' };
-  headerText :any;
+  headerText: any;
   columnsGrid = [];
   dialog: DialogRef;
-  moreFuncName:any;
-  funcName:any;
+  moreFuncName: any;
+  funcName: any;
   constructor(
     private inject: Injector,
-    private dt: ChangeDetectorRef, 
+    private dt: ChangeDetectorRef,
     private callfunc: CallFuncService,
     @Optional() dialog?: DialogRef
-  ) { 
+  ) {
     super(inject);
     this.dialog = dialog;
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
@@ -32,9 +32,9 @@ export class UnitsofmearsureComponent extends UIComponent {
       }
     });
   }
-//#endregion
+  //#endregion
 
-//#region Init
+  //#region Init
   onInit(): void {
   }
   ngAfterViewInit() {
@@ -48,7 +48,7 @@ export class UnitsofmearsureComponent extends UIComponent {
         sameData: true,
         model: {
           template2: this.templateMore,
-          frozenColumns:1
+          frozenColumns: 1
         },
       },
     ];
@@ -66,12 +66,12 @@ export class UnitsofmearsureComponent extends UIComponent {
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-       this.delete(data);
+        this.delete(data);
         break;
       case 'SYS03':
-        this.edit(e,data);
+        this.edit(e, data);
         break;
-    } 
+    }
   }
   add() {
     console.log(this.view.dataService);
@@ -84,15 +84,15 @@ export class UnitsofmearsureComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      option.Width = '850px';
-      this.dialog = this.callfunc.openSide(PopAddMearsureComponent, obj, option,this.view.funcID);
+      option.Width = '800px';
+      this.dialog = this.callfunc.openSide(PopAddMearsureComponent, obj, option, this.view.funcID);
       this.dialog.closed.subscribe((x) => {
         if (x.event == null)
-        this.view.dataService.clear();
+          this.view.dataService.clear();
       });
     });
   }
-  edit(e,data) {
+  edit(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -104,29 +104,29 @@ export class UnitsofmearsureComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '850px';
+      option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopAddMearsureComponent, obj, option);
     });
   }
-  delete(data){
+  delete(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService.delete([data], true, (option: RequestOption) =>
-    this.beforeDelete(option,data)
-  ).subscribe((res:any) => {
-    if (res) {
-      this.api.exec(
-        'ERM.Business.BS',
-        'UMConversionBusiness',
-        'DeleteAsync',
-        [data.umid]
-      ).subscribe((res:any)=>{
-      });   
-    }
-  });
+      this.beforeDelete(option, data)
+    ).subscribe((res: any) => {
+      if (res) {
+        this.api.exec(
+          'ERM.Business.BS',
+          'UMConversionBusiness',
+          'DeleteAsync',
+          [data.umid]
+        ).subscribe((res: any) => {
+        });
+      }
+    });
   }
-  beforeDelete(opt: RequestOption,data) {
+  beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'UnitsOfMearsureBusiness';
     opt.assemblyName = 'BS';

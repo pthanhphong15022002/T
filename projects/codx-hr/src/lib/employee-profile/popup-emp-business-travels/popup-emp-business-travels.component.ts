@@ -38,6 +38,7 @@ export class PopupEmpBusinessTravelsComponent
   funcID;
   employId;
   data;
+  isNotOverseaFlag = true;
 
   idField = 'RecID';
 
@@ -87,6 +88,18 @@ export class PopupEmpBusinessTravelsComponent
     this.employId = data?.data?.employeeId;
 
     this.dataValues = this.employId;
+  }
+
+  changOverSeaFlag(event){
+    console.log('di cong tac nc ngoai', event.checked);
+    
+    
+    this.isNotOverseaFlag = !event.checked;
+    console.log('co hieu ', this.isNotOverseaFlag);
+    if(this.isNotOverseaFlag == true){
+      this.data.country = null;
+      this.formGroup.patchValue(this.data.country);
+    }
   }
 
   ngAfterViewInit(){
@@ -139,6 +152,8 @@ export class PopupEmpBusinessTravelsComponent
           if (res) {
             this.data = res?.data;
             this.data.beginDate = null;
+            this.data.isOversea = null;
+            this.data.country = null;
             this.data.endDate = null;
             this.data.employeeID = this.employId;
             this.formModel.currentData = this.data;
@@ -160,6 +175,10 @@ export class PopupEmpBusinessTravelsComponent
     //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
     //   return;
     // }
+    if(this.data.isOversea == true && this.data.country == null){
+      this.notitfy.notifyCode('HR011');
+      return;
+    }
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.data.contractTypeID = '1';

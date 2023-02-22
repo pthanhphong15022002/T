@@ -109,6 +109,7 @@ export class TMMeetingsComponent
   heightWin: any;
   widthWin: any;
   disabledProject = false;
+  queryParams: any;
 
   constructor(
     inject: Injector,
@@ -128,6 +129,7 @@ export class TMMeetingsComponent
 
     this.dataValue = this.user?.userID;
     this.getParams();
+    this.queryParams = this.router.snapshot.queryParams;
 
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
@@ -169,7 +171,12 @@ export class TMMeetingsComponent
     this.requestSchedule.assemblyName = 'CO';
     this.requestSchedule.className = 'MeetingsBusiness';
     this.requestSchedule.method = 'GetListMeetingsAsync';
+    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
+      this.requestSchedule.predicate = this.queryParams?.predicate;
+      this.requestSchedule.dataValue = this.queryParams?.dataValue;
+    }
     this.requestSchedule.idField = 'meetingID';
+
   }
 
   receiveMF(e: any) {
