@@ -139,7 +139,7 @@
         <span class="text-gray-600 me-1 text-nowrap">
           <codx-label [formModel]="view.formModel" fiedName="BirthPlace" default="Nơi sinh: "></codx-label>
         </span>
-        <span *ngIf="data.provinceName" class="text-dark fw-bold">{{data.provinceName}}</span>
+        <span *ngIf="data.birthPlaceName" class="text-dark fw-bold">{{data.birthPlaceName}}</span>
       </div>
       <div *ngIf="data.status">
         <codx-vll [value]="data.status" [name]="'HR003'" [showText]="true" [showBgColor]="true"
