@@ -810,6 +810,9 @@
   </codx-share>
 </ng-template>
 
+<ng-template #popupParticipants let-dialogPar>
+  <codx-popup-participants [lstParticipants]="lstParticipants" [dialog]="dialogPar" [isType]="'S'" (eventUser)="eventUser($event)"></codx-popup-participants>
+</ng-template>
 <!--End-->
 <!--End-->
 
@@ -1996,35 +1999,46 @@
                 default="Người giám sát"
               >
               </codx-label>
+              <i
+                class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
+                (click)="openPopupParticipants(popupParticipants)"
+              ></i>
             </div>
             <div>
               <codx-label
                 class="fw-normal text-gray-400"
                 fiedName="LocationControl"
                 default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
-              viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa
-              nhiệm vụ"
+                viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa
+                nhiệm vụ"
               >
               </codx-label>
             </div>
           </div>
         </div>
-        <div class="col-6">
-          <div *ngIf="step != null && step.roles.length > 0">
-            <codx-input
-              service="SYS"
-              type="combobox"
-              name="combobox"
-              ngDefaultControl
-              [crrValue]="checkRoleType(step.roles)"
-              refValue="Users"
-              [loadFull]="true"
-              field="userID"
-              inputmode="text"
-              (valueChange)="valueChangeSteps($event)"
+        <div
+          class="col-6 group-permission witdh-roles scroll-user"
+          *ngIf="step.roles != null && step.roles.length > 0"
+        >
+          <ng-container *ngFor="let perm of step.roles; index as i">
+            <div
+              *ngIf="perm.roleType == 'S'"
+              class="me-4 d-flex align-items-center margin-form mb-4"
             >
-            </codx-input>
-          </div>
+              <div class="d-flex align-items-center position-relative">
+                <codx-img
+                  class=""
+                  [width]="25"
+                  [objectId]="perm.objectName"
+                  objectType="AD_Users"
+                >
+                </codx-img>
+              </div>
+              <div class="ms-1">
+                <div class="text-dark fw-bold">{{ perm.objectName }}</div>
+              </div>
+            </div>
+          </ng-container>
         </div>
       </div>
       <div class="row">
