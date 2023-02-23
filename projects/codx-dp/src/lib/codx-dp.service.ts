@@ -399,4 +399,13 @@ export class CodxDpService {
       'GetFirstIntanceAsync',
     );
   }
+
+  getProcess(id){
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetAsync',
+      id
+    );
+  }
 }

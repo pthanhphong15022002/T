@@ -72,6 +72,7 @@ export class InstanceDetailComponent implements OnInit {
 
   instanceId:string;
   proccesNameMove: string;
+  onwer:string;
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
 
@@ -212,6 +213,7 @@ export class InstanceDetailComponent implements OnInit {
     this.currentNameStep = indexNo;
    
     this.tmpTeps =  this.listSteps[indexNo];
+    this.onwer = this.tmpTeps.owner;
   }
 
   // continues(data) {
