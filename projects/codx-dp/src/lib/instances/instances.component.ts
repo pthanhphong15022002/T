@@ -374,19 +374,19 @@ export class InstancesComponent
           case 'DP09':
           case 'DP10':
             let isUpdate = data.write;
-            if (!isUpdate) res.disabled = true;
+            if (!isUpdate || data.status =="3") res.disabled = true;
             break;
           //Copy
           case 'SYS104':
           case 'SYS04':
             let isCopy = this.isCreate ? true : false;
-            if (!isCopy) res.disabled = true;
+            if (!isCopy || data.status =="3") res.disabled = true;
             break;
           //xóa
           case 'SYS102':
           case 'SYS02':
             let isDelete = data.delete;
-            if (!isDelete) res.disabled = true;
+            if (!isDelete || data.status =="3") res.disabled = true;
             break;
         }
       });
