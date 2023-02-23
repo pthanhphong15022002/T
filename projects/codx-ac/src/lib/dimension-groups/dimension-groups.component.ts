@@ -107,6 +107,12 @@ export class DimensionGroupsComponent extends UIComponent {
       this.beforeDelete(option, data)
     ).subscribe((res: any) => {
       if (res) {    
+        this.api.exec(
+          'ERM.Business.IV',
+          'DimensionSetupBusiness',
+          'DeleteAsync',
+          [data.dimGroupID]
+        ).subscribe((res: any) => {})
       }
     });
   }

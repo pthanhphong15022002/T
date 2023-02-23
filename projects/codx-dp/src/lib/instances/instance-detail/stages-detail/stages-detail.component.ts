@@ -223,7 +223,7 @@ export class StagesDetailComponent implements OnInit {
 
       this.progress = (
         totalTask / tasks.length
-      ).toString();
+      ).toFixed(1).toString();
     } else {
       this.progress = '0';
     }

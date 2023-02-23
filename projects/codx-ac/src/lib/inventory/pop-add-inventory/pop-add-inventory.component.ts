@@ -92,6 +92,7 @@ export class PopAddInventoryComponent extends UIComponent {
   }
   valueChange(e: any) {
     this.inventory[e.field] = e.data;
+    console.log('sssssssss',e.data)
   }
   valueChangeInventModelID(e: any) {
     this.inventModelID = e.data;
