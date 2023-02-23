@@ -168,6 +168,7 @@ export class InstancesComponent
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
           this.deleteListReason(this.listStepsCbx);
+          this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
       });
     //kanban
@@ -697,6 +698,13 @@ export class InstancesComponent
         this.listProccessCbx.unshift(obj);
       });
     });
+  }
+
+  getSumDurationDayOfSteps(listStepCbx:any){
+    let total = listStepCbx.reduce((sum, f) => sum + f.durationDay, 0)
+    // let total = listStepCbx.reduce(function(sum, listStepCbx) {
+    //   return sum + currentValue;
+    // }, 0);
   }
   #endregion;
 }
