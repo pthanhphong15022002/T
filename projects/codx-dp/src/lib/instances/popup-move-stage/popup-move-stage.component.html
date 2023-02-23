@@ -32,12 +32,12 @@
         ></i>
       </div>
       <div class="me-3 d-flex align-items-center" *ngIf="stepCurrent != null">
-        <div *ngIf="stepCurrent.assignControl == '0'">
+        <div>
           <div class="d-flex align-items-center position-relative">
             <codx-img
               class=""
               [width]="30"
-              [objectId]="stepCurrent.owner"
+              [objectId]="owner"
               objectType="AD_Users"
             >
             </codx-img>

@@ -34,9 +34,9 @@ export class PopupCustomFieldComponent implements OnInit {
 
   ngOnInit(): void {
     // this.checkRequired = this.data.some((x) => x.isRequired == true);
-    this.cache.message('SYS028').subscribe((res) => {
-      if (res) this.errorMessage = res.customName || res.defaultName;
-    });
+    // this.cache.message('SYS028').subscribe((res) => {
+    //   if (res) this.errorMessage = res.customName || res.defaultName;
+    // });
   }
 
   valueChange(e, field) {

@@ -96,6 +96,7 @@ export class InstancesComponent
   stepIdClick = '';
   listProccessCbx: any;
   dataProccess: any;
+  sumDaySteps: number;
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
@@ -239,6 +240,7 @@ export class InstancesComponent
                   formMD,
                   this.listStepsCbx,
                   this.instanceNo,
+                  this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)
                 ],
                 option
               );
@@ -372,19 +374,19 @@ export class InstancesComponent
           case 'DP09':
           case 'DP10':
             let isUpdate = data.write;
-            if (!isUpdate) res.disabled = true;
+            if (!isUpdate || data.status =="3") res.disabled = true;
             break;
           //Copy
           case 'SYS104':
           case 'SYS04':
             let isCopy = this.isCreate ? true : false;
-            if (!isCopy) res.disabled = true;
+            if (!isCopy || data.status =="3") res.disabled = true;
             break;
           //xóa
           case 'SYS102':
           case 'SYS02':
             let isDelete = data.delete;
-            if (!isDelete) res.disabled = true;
+            if (!isDelete || data.status =="3") res.disabled = true;
             break;
         }
       });
@@ -450,7 +452,7 @@ export class InstancesComponent
   viewDetail(recID) {
     //  this.detailViewInstance.GetStepsByInstanceIDAsync(recID)
     let option = new DialogModel();
-    option.zIndex = 1010;
+     option.zIndex = 1001;
     let popup = this.callFunc.openForm(
       this.popDetail,
       '',
@@ -538,6 +540,7 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
+            debugger
             var obj = {
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
@@ -701,10 +704,8 @@ export class InstancesComponent
   }
 
   getSumDurationDayOfSteps(listStepCbx:any){
-    let total = listStepCbx.reduce((sum, f) => sum + f.durationDay, 0)
-    // let total = listStepCbx.reduce(function(sum, listStepCbx) {
-    //   return sum + currentValue;
-    // }, 0);
+    let total = listStepCbx.reduce((sum, f) => sum + f.durationDay, 0);
+    return total;
   }
   #endregion;
 }

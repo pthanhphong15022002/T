@@ -51,13 +51,14 @@ export class PopupParticipantsComponent implements OnInit {
           .subscribe((res) => {
             this.isLoading = false;
             if (res && res.length > 0) {
+              this.isDisable = false;
               this.lstOrg = res;
               if (this.lstOrg.length > 0) {
                 this.valueChangeRight(0, this.lstOrg[this.currentRight]);
               }
             } else {
               if (this.isType == 'S') {
-                this.isDisable = true;
+                this.isDisable = false;
                 let lst = {};
                 lst['userID'] = this.lstParticipants[this.currentLeft].objectID;
                 lst['userName'] =
@@ -88,6 +89,7 @@ export class PopupParticipantsComponent implements OnInit {
           this.isLoading = false;
           if (res && res.length > 0) {
             this.lstOrg = res;
+            this.isDisable = false;
             if (this.lstOrg.length > 0) {
               this.valueChangeRight(0, this.lstOrg[this.currentRight]);
             }
