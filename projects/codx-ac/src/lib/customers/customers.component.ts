@@ -86,7 +86,7 @@ export class CustomersComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      option.Width = '850px';
+      option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopAddCustomersComponent, obj, option, this.view.funcID);
       this.dialog.closed.subscribe((x) => {
         if (x.event == null)
@@ -106,7 +106,7 @@ export class CustomersComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '850px';
+      option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopAddCustomersComponent, obj, option);
     });
   }

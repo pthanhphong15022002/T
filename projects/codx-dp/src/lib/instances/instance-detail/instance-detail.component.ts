@@ -66,6 +66,14 @@ export class InstanceDetailComponent implements OnInit {
     type: 'type',
     color:'color'
   };
+
+  tabControl = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+    { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+    { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+  ];
   titleDefault ='';
   
   isHiddenReason: boolean = false;

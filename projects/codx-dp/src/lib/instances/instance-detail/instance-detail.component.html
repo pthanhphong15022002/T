@@ -141,5 +141,15 @@
         </ng-container>
       </ng-container>
     </ng-template>
+    
+    <ng-template #footer>
+      <codx-tabs
+        [entityName]="formModel.entityName"
+        [formModel]="formModel"
+        [TabControl]="tabControl"
+        [objectID]="dataSelect.recID"
+        [funcID]="formModel.funcID"
+      ></codx-tabs>
+    </ng-template>
   </codx-detail-tmp>
 </ng-container>

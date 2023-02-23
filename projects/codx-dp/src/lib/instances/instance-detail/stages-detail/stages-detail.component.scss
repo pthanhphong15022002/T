@@ -61,7 +61,6 @@
 .show-main {
   display: block;
   transition: display 12s;
-  padding-bottom: 10px;
 }
 
 .hidden-main {
@@ -82,14 +81,13 @@
 
 //nvthuan
 .icon-container {
-  height: 40px;
-  width: 40px;
+  height: 36px;
+  width: 36px;
   border-radius: 50%;
-  background-color: #e4e4e4;
+  background-color: var(--gray-150);
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 10px;
 }
 
 .progress-task {
