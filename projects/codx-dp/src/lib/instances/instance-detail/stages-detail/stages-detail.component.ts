@@ -601,6 +601,7 @@ export class StagesDetailComponent implements OnInit {
           if (res) {
             this.notiService.notifyCode('SYS006');
             this.taskGroupList.splice(index - 1, 0, value);
+            this.calculateProgressStep();
           }
         });
     } else {
@@ -610,6 +611,7 @@ export class StagesDetailComponent implements OnInit {
         if (res) {
           this.notiService.notifyCode('SYS007');
           await this.copyValue(value, dataOld);
+          this.calculateProgressStep();
         }
       });
     }
@@ -729,7 +731,7 @@ export class StagesDetailComponent implements OnInit {
 
   calculateProgressStep(){
     const sum = this.taskGroupList.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue['progress'];
+      return accumulator + Number(currentValue['progress'] || 0);
     }, 0);
     let medium = (sum/this.taskGroupList.length).toFixed(2);
     this.step.progress = Number(medium);
