@@ -17,8 +17,8 @@ export class PopupAddGroupComponent implements OnInit {
   gridViewSetUp:any = null;
   user:any = null;
   headerText:string = "";
-  group:WP_Groups = new WP_Groups();
-  gridModel:DataRequest = new DataRequest();
+  group:WP_Groups ;
+  gridModel:DataRequest;
   strUserID:string = "";
   arrUsers:string[] = [];
   @ViewChild("codxImg") codxImg:ImageViewerComponent;
@@ -37,6 +37,8 @@ export class PopupAddGroupComponent implements OnInit {
     this.dialogData = dialogData.data;
     this.dialogRef = dialogRef;
     this.user = this.auth.get();
+    this.group = new WP_Groups();
+    this.gridModel = new DataRequest();
   }
   
 
@@ -54,12 +56,10 @@ export class PopupAddGroupComponent implements OnInit {
   }
 
   searchEvent(textSearch:any){
-    debugger
     this.listview.dataService.search(textSearch).subscribe();
   }
   // value change
-  valueChange(event)
-  {
+  valueChange(event){
     if(event)
     {
       this.group.groupName = event.data;
@@ -88,8 +88,7 @@ export class PopupAddGroupComponent implements OnInit {
         this.strUserID += itemSelected.UserID + ";";
         (this.listviewSelected.dataService as CRUDService) 
         .add(itemSelected)
-        .subscribe((x) => 
-        {
+        .subscribe((x) => {
           this.dt.detectChanges();
           var input = document.querySelector(`codx-input[data-id="${itemSelected.UserID}"] ejs-checkbox span.e-icons`);
           if (input) {
@@ -109,8 +108,7 @@ export class PopupAddGroupComponent implements OnInit {
     }
   }
   //remove member
-  removeMember(data:any)
-  {
+  removeMember(data:any){
     if(data)
     {
       this.group.members = this.group.members.filter(x => x != data.UserID);

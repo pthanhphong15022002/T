@@ -138,8 +138,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.modelResource.className = 'BookingsBusiness';
     this.modelResource.service = 'EP';
     this.modelResource.method = 'GetResourceAsync';
-    this.modelResource.predicate = 'ResourceType=@0';
+    this.modelResource.predicate = 'ResourceType=@0 ';
     this.modelResource.dataValue = '1';
+    
 
     this.fields = {
       id: 'recID',
