@@ -1119,7 +1119,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   saveStep() {
-    if(!this.stepName.trim()){
+    if(!this.step['stepName'] || !this.step['stepName'].trim()){
       this.notiService.notifyCode('SYS009', 0, 'Tên giai đoạn');
       return;
     }

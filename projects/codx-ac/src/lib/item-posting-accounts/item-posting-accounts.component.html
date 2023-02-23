@@ -1,4 +1,12 @@
-<codx-views #view [views]="views" [autoLoad]="false"> </codx-views>
+<codx-views
+  #view
+  [views]="views"
+  [button]="button"
+  [autoLoad]="true"
+  entityName="AC_ChartOfAccounts"
+  (buttonClick)="add($event)"
+>
+</codx-views>
 <ng-template #templateLeft>
   <div class="aside-secondary d-flex flex-row-fluid bg-white">
     <!--begin::Workspace-->
@@ -30,12 +38,21 @@
                       <span class="menu-icon">
                         <span class="icon-house"></span>
                       </span>
-                      <span class="menu-title fw-bold">Tồn kho</span>
+                      <span class="menu-title fw-bold">
+                        <codx-label
+                          name="lblText1"
+                          formName="ItemPostingAccounts"
+                          default="Tồn kho"
+                        ></codx-label>
+                      </span>
                       <span class="menu-arrow"></span>
                     </span>
                     <div class="menu-sub menu-sub-accordion">
                       <div class="menu-item" *ngFor="let m of menu1">
-                        <a class="menu-link without-sub active">
+                        <a
+                          class="menu-link without-sub active"
+                          (click)="load('Detail', m.value)"
+                        >
                           <span class="menu-bullet">
                             <span class="bullet bullet-dot"></span>
                           </span>
@@ -53,12 +70,21 @@
                       <span class="menu-icon">
                         <span class="icon-store"></span>
                       </span>
-                      <span class="menu-title fw-bold">Bán hàng</span>
+                      <span class="menu-title fw-bold">
+                        <codx-label
+                          name="lblText1"
+                          formName="ItemPostingAccounts"
+                          default="Bán hàng"
+                        ></codx-label>
+                      </span>
                       <span class="menu-arrow"></span>
                     </span>
                     <div class="menu-sub menu-sub-accordion">
                       <div class="menu-item" *ngFor="let m of menu1">
-                        <a class="menu-link without-sub active">
+                        <a
+                          class="menu-link without-sub active"
+                          (click)="load('', m.value)"
+                        >
                           <span class="menu-bullet">
                             <span class="bullet bullet-dot"></span>
                           </span>
@@ -79,24 +105,13 @@
   </div>
 </ng-template>
 <ng-template #templateRight>
-  <codx-gridview-v2
-    #grid
-    formName="EIInvoices"
-    gridViewName="grvEIInvoices"
-    entityName="EI_Invoices"
-    service="EI"
-    [autoFitColumns]="false"
-    [allowResizing]="true"
-    [allowFiltering]="true"
-    [allowSorting]="true"
-    [editSettings]="editSettings"
-    [autoLoad]="false"
-    height="300px"
-    idField="recID"
-    [enableAvg]="false"
-    [enableCount]="false"
-    [enableMax]="false"
-    [enableMin]="false"
-    [enableSum]="false"
-  ></codx-gridview-v2>
-</ng-template>
+  <div class="px-4">
+    <codx-gridview
+      #grid
+      funcID="TMT0201"
+      [dataService]="view.dataService"
+      entityName="AC_ChartOfAccounts"
+      height="300px"
+      idField="recID"
+    ></codx-gridview></div
+></ng-template>

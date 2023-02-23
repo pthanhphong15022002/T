@@ -210,9 +210,9 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   valueChange($event) {
-    if ($event) {
-      this.instancesStepOld[$event.field] = $event.data;
-    }
+    // if ($event) {
+    //   this.instancesStepOld[$event.field] = $event.data;
+    // }
     this.changeDetectorRef.detectChanges();
   }
 
