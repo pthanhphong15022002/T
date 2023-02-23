@@ -325,30 +325,27 @@
 
 <ng-template #reason>
   <div class="back-info mb-4">
-    <div class="header-info p-3">
+    <div class="header-info py-3 px-5">
       <div class="fw-bold fs-4 text-dark">{{dataStep.stepName}} </div>
-      <div class="d-flex justify-content-between">
-        <div class="me-2">
+      <div class="d-flex align-items-center">
+        <div class="me-2 text-dark fw-bold">
           <codx-label default="Ngày chuyển đến giai đoạn"></codx-label>
         </div>
-        <span>{{ dataStep.actualStart | date : "HH:mm - dd/MM/yyyy" }}</span>
+        <span class="text-gray-600">{{ dataStep.actualStart | date : "HH:mm - dd/MM/yyyy" }}</span>
       </div>
-      <div class="d-flex justify-content-between">
-        <div>
+
+      <div class="d-flex align-items-center">
+        <div class="me-2 text-dark fw-bold">
           <codx-label default="Giai đoạn đánh dấu"></codx-label>
         </div>
-        <div class="d-flex align-items-start">
-          <span>{{ stepNameEnd }}</span>
-        </div>
+        <span class="text-gray-600">{{ stepNameEnd }}</span>
       </div>
-      <div class="d-flex justify-content-between"
-        *ngIf="dataStep.newProcessID !== null && dataStep.newProcessID !=='' ">
-        <div>
+
+      <div class="d-flex align-items-center" *ngIf="dataStep.newProcessID !== null && dataStep.newProcessID !=='' ">
+        <div class="me-2 text-dark fw-bold">
           <codx-label default="Quy trình được chuyển đến"></codx-label>
         </div>
-        <div class="d-flex align-items-start">
-          <span> {{ proccesNameMove}}</span>
-        </div>
+        <span class="text-gray-600">{{ proccesNameMove}}</span>
       </div>
     </div>
   </div>
