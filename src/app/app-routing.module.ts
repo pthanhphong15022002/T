@@ -1,3 +1,4 @@
+import { environment } from './../environments/environment.prod';
 import { LayoutTenantComponent } from './modules/auth/tenants/layout/layout.component';
 import { DynamicFormComponent } from './../../projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { NgModule } from '@angular/core';
@@ -8,7 +9,6 @@ import { SosComponent } from '@pages/sos/sos.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
-import { ExternalSigningComponent } from 'projects/codx-es/src/lib/external-signing/external-signing.component';
 import { TenantsComponent } from '@modules/auth/tenants/tenants.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 
@@ -257,9 +257,13 @@ export const routes: Routes = [
     path: ':tenant',
     children: childRoutes,
   },
-  // { path: '', redirectTo: 'auth', pathMatch: 'full' },
+  {
+    path: '',
+    redirectTo: 'auth',
+    pathMatch: 'full',
+  },
 ];
-export const routes1: Routes = childRoutes;
+export const routes1: Routes = environment.saas == 1 ? routes : childRoutes;
 
 @NgModule({
   imports: [
