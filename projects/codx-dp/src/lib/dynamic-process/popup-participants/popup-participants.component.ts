@@ -23,6 +23,7 @@ export class PopupParticipantsComponent implements OnInit {
     name: '',
     type: '',
   };
+  isDisable = false;
   constructor(private dpSv: CodxDpService) {}
 
   ngOnInit(): void {
@@ -56,6 +57,7 @@ export class PopupParticipantsComponent implements OnInit {
               }
             } else {
               if (this.isType == 'S') {
+                this.isDisable = true;
                 let lst = {};
                 lst['userID'] = this.lstParticipants[this.currentLeft].objectID;
                 lst['userName'] =
@@ -70,8 +72,13 @@ export class PopupParticipantsComponent implements OnInit {
                 this.data.type =
                   this.lstParticipants[this.currentLeft].objectType;
               } else {
-                this.data = { id: '', name: '', type: '' };
-                this.lstOrg = [];
+                if (this.lstOrg.length == 0) {
+                  this.isDisable = true;
+                  this.data = { id: '', name: '', type: '' };
+                  this.lstOrg = [];
+                } else {
+                  this.isDisable = false;
+                }
               }
             }
           });
@@ -100,14 +107,20 @@ export class PopupParticipantsComponent implements OnInit {
               this.data.type =
                 this.lstParticipants[this.currentLeft].objectType;
             } else {
-              this.data = { id: '', name: '', type: '' };
-              this.lstOrg = [];
+              if (this.lstOrg.length == 0) {
+                this.isDisable = true;
+                this.data = { id: '', name: '', type: '' };
+                this.lstOrg = [];
+              } else {
+                this.isDisable = false;
+              }
             }
           }
         });
         break;
       case 'U':
         this.isLoading = false;
+        this.isDisable = false;
         let lst = {};
         lst['userID'] = data.objectID;
         lst['userName'] = data.objectName;
