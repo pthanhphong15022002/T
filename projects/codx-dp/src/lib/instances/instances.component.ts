@@ -360,6 +360,8 @@ export class InstancesComponent
         switch (res.functionID) {
           case 'SYS005':
           case 'SYS003':
+            if (data.status !== '1' && data.status !== '2' ) res.disabled = true;
+            break;
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':
@@ -373,7 +375,7 @@ export class InstancesComponent
           case 'DP09':
           case 'DP10':
             let isUpdate = data.write;
-            if (!isUpdate || data.status =="3") res.disabled = true;
+            if (!isUpdate ||  ( data.status !== '1' && data.status !== '2' ) ) res.disabled = true;
             break;
           //Copy
           case 'SYS104':
