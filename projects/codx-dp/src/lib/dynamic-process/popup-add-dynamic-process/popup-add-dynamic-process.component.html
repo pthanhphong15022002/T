@@ -1524,13 +1524,13 @@
       <div>
         <codx-label
           fiedName="StepName"
-          [formModel]="dialog.formModel"
+          [formModel]="grvStep"
           default="Tên giai đoạn"
         ></codx-label>
       </div>
       <codx-input
         field="stepName"
-        [formModel]="dialog.formModel"
+        [formModel]="grvStep"
         [Group]=""
         type="text"
         [crrValue]="stepName"
@@ -1540,8 +1540,7 @@
     </div>
     <div class="form-group text-gray-400" *ngIf="isAddStage">
       <codx-label
-        fiedName="StepName"
-        [formModel]="dialog.formModel"
+        [formModel]="grvStep"
         default="Mặc định giai đoạn sẽ được thêm vào vị trí cuối cùng (trước
         giai đoạn hoàn tất)"
       ></codx-label>

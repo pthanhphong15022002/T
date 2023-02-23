@@ -67,4 +67,7 @@
   ::ng-deep span.e-icons.e-frame{
     border-radius: 50%;
   }
+  ::ng-deep .e-toast-container{
+    z-index: 11111!important;
+  }
   
