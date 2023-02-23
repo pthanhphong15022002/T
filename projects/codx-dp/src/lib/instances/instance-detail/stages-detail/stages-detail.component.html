@@ -17,12 +17,12 @@
       </div>
       <div class="d-flex justify-content-between mt-3">
         <div class="d-flex align-items-center">
-          <i class="icon-work_outline icon-16 me-1 "></i>
+          <i class="icon-work_outline icon-16 me-2 "></i>
           <span class="">Kỳ vọng: {{ dataStep?.durationDay }} ngày
             {{ dataStep?.durationHour }} giờ</span>
         </div>
         <div class="d-flex align-items-center">
-          <i class="icon-work_outline icon-16 me-1"></i>
+          <i class="icon-work_outline icon-16 me-2"></i>
           <span>Đã sử dụng: {{ dateActual | timefrom }} </span>
         </div>
       </div>
@@ -67,7 +67,7 @@
 
 <ng-template #task>
   <div class="back-info">
-    <div class="header-info d-flex align-items-center justify-content-between">
+    <div class="header-info d-flex align-items-center justify-content-between mb-0">
       <div class="title">Công việc</div>
       <div class="group-button">
         <button class="button-custom" (click)="openPopupTaskGroup()">
@@ -83,26 +83,26 @@
         </button>
       </div>
     </div>
-    <div id="step-task" class="main" [ngClass]="'show-main'">
+    <div id="step-task" class="main p-3" [ngClass]="'show-main'">
       <!-- drap drop công việc ngoài-->
-      <div class="main-body m-5" *ngIf="taskGroupList.length > 0">
+      <div class="main-body" *ngIf="taskGroupList.length > 0">
         <div cdkDropList class="list" (cdkDropListDropped)="drop($event, taskGroupList, true)">
           <div cdkDropListGroup>
             <ng-container *ngFor="let taskList of taskGroupList">
-              <div class="card-job-list" cdkDrag [cdkDragData]="taskList" [cdkDragStartDelay]="200"
-                [cdkDragDisabled]="taskList?.recID ? false : true">
-                <div class="card-job px-3 pt-3">
-                  <div *ngIf="taskList?.recID" class="d-flex align-items-center justify-content-between">
+              <div class="card-job-list mb-3 mb-3 border-bottom" cdkDrag [cdkDragData]="taskList"
+                [cdkDragStartDelay]="200" [cdkDragDisabled]="taskList?.recID ? false : true">
+                <div class="card-job p-4">
+                  <div *ngIf="taskList?.recID" class="d-flex align-items-center justify-content-between mb-3">
                     <div class="d-flex justify-content-start align-items-center has-action-menu" style="flex-grow: 1">
-                      <div class="icon-container" (click)="clickShowTask(taskList?.recID)">
-                        <span class="icon-add_circle icon-20 text-primary-600 py-2"></span>
+                      <div class="icon-container me-4" (click)="clickShowTask(taskList?.recID)">
+                        <span class="icon-post_add icon-20"></span>
                       </div>
-                      <div class="steplist-hearder ms-5">
-                        <div>
-                          <span class="" style="font-size: 1.2rem; font-weight: 500">{{ taskList?.taskGroupName
-                            }}</span>
+                      <div class="steplist-hearder">
+                        <div class="text-dark fw-bold fs-6">
+                          {{ taskList?.taskGroupName
+                          }}
                         </div>
-                        <div class="" style="font-weight: 400; font-size: 1.1rem">
+                        <div class="text-gray-600">
                           <span>Cập nhật:
                             {{
                             taskList?.modifiedOn || taskList?.createdOn
