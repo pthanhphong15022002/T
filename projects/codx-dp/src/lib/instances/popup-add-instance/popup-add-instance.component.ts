@@ -48,6 +48,7 @@ export class PopupAddInstanceComponent implements OnInit {
 
   isApplyFor: string = ''; // this is instance opportunity general
 
+  totalDaySteps: number;
   menuGeneralInfo = {
     icon: 'icon-info',
     text: 'Thông tin chung',
@@ -96,6 +97,9 @@ export class PopupAddInstanceComponent implements OnInit {
     this.formModelCrr = dt?.data[4];
     this.listStepCbx = dt?.data[5];
     this.instance.instanceNo = dt?.data[6];
+    this.totalDaySteps = dt?.data[7];
+    console.log(this.totalDaySteps);
+   this.handleEndDayInstnace(this.totalDaySteps);
   }
 
   ngOnInit(): void {
@@ -186,7 +190,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
   saveInstances() {
     if (this.instance?.title === null || this.instance?.title.trim() === '') {
-      this.notificationsService.notifyCode('DP001');
+      this.notificationsService.notifyCode('Vui lòng nhập tên nhiệm vụ');
       return;
     }
     if (this.listStep?.length > 0) {
@@ -271,5 +275,10 @@ export class PopupAddInstanceComponent implements OnInit {
       }
     }
     return true;
+  }
+  handleEndDayInstnace(durationDay: number) {
+    var today = new Date();
+    var dayEnd = new Date();
+    this.instance.endDate = new Date(dayEnd.setDate(today.getDate()+durationDay).toString());
   }
 }
