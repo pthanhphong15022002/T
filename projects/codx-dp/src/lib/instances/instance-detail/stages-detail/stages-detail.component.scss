@@ -7,11 +7,7 @@
     padding: 0.3rem;
     margin-left: 0, 5rem;
 
-    .title-train {
-      font-weight: 600;
-      color: #000000;
-      font-size: 1.2rem;
-    }
+
   }
 }
 
@@ -19,8 +15,6 @@
   background-color: #d8d8d8;
   border-radius: 20px;
   position: relative;
-  margin: 15px 0;
-  height: 30px;
   width: 100%;
 }
 
@@ -37,43 +31,30 @@
   transition: 1s ease 0.3s;
 }
 
-.back-info {
+.header-info {
+  background-color: var(--bg-gray-100);
+  padding: 5px 15px;
+  margin-left: 0, 5rem;
   box-shadow: 2px 2px 5px 0px rgb(76 87 125 / 16%);
-  margin-top: 20px;
 
-  .header-info {
-    background-color: #cde7f1;
-    display: flex;
-    justify-content: space-between;
-    padding: 0.3rem;
-    margin-left: 0, 5rem;
-
-    .left {
-      .title {
-        font-weight: 600;
-        color: #2392ef;
-        font-size: 1.2rem;
-      }
-    }
-
-    .right {
-      display: flex;
-      align-items: center;
-    }
+  .title {
+    font-weight: 600;
+    color: var(--primary-dark);
+    font-size: 1.1rem;
   }
 
-  .show-main {
-    display: block;
-    transition: display 12s;
-    padding-bottom: 10px;
-  }
-
-  .hidden-main {
-    display: none;
-    transition: display 12s;
-  }
 }
 
+.show-main {
+  display: block;
+  transition: display 12s;
+  padding-bottom: 10px;
+}
+
+.hidden-main {
+  display: none;
+  transition: display 12s;
+}
 
 .button-custom {
   border: none;
@@ -275,9 +256,3 @@
 }
 
 // End Drop drap -- nvthuan
-
-.title-train {
-  font-weight: 600;
-  color: #000000;
-  font-size: 1.2rem;
-}

@@ -425,8 +425,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   handleUpdateStep() {
-    this.stepList.push(this.stepSuccess);
-    this.stepList.push(this.stepFail);
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0) {
       stepListSave.forEach((step) => {
