@@ -168,7 +168,7 @@
     <!--End ten Cong Viec -->
 
     <div class="form-group d-flex justify-content-between">
-      <div>
+      <div class="me-2">
         <codx-label
           fiedName="startDate"
           [formModel]="dialog?.formModel"
@@ -177,7 +177,6 @@
         </codx-label>
         <codx-input
           field="startDate"
-          [formModel]="dialog?.formModel"
           (valueChange)="changeValueDate($event)"
           [crrValue]="stepsTasks?.startDate"
           type="datetime"
@@ -185,7 +184,7 @@
         >
         </codx-input>
       </div>
-      <div>
+      <div class="ms-2">
         <codx-label
           fiedName="endDate"
           [formModel]="dialog?.formModel"
@@ -194,7 +193,6 @@
         </codx-label>
         <codx-input
           field="endDate"
-          [formModel]="dialog?.formModel"
           (valueChange)="changeValueDate($event)"
           [crrValue]="stepsTasks?.endDate"
           type="datetime"
@@ -257,7 +255,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-6 ps-1">
           <codx-label
             fiedName="reminders"
             [formModel]="dialog?.formModel"

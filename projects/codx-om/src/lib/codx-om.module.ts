@@ -29,6 +29,7 @@ import { PopupAssignmentOKRComponent } from './popup/popup-assignment-okr/popup-
 import { OkrPlanShareComponent } from './okr/okr-plans/okr-plans-share/okr-plans-share.component';
 import { OkrTreesComponent } from './okr/okr-trees/okr-trees.component';
 import { PopupAddOBComponent } from './popup/popup-add-ob/popup-add-ob.component';
+import { PopupAddOKRPlanComponent } from './popup/popup-add-okr-plan/popup-add-okr-plan.component';
 
 const routes: Routes = [
   {
@@ -88,7 +89,7 @@ const routes: Routes = [
     PopupOKRWeightComponent,
     OkrPlanShareComponent,
     OkrTreesComponent,
-
+    PopupAddOKRPlanComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -169,6 +169,12 @@ export class CodxTasksComponent
         this.listRoles = res.datas;
       }
     });
+    // this.api.callSv(
+    //   'TM',
+    //   'TM',
+    //   'TaskBusiness',
+    //   'RPASendAlertMailIsOverDue1Async'
+    // ).subscribe();
   }
 
   //#region Init
@@ -406,18 +412,18 @@ export class CodxTasksComponent
             var idx = this.views.findIndex((obj) => obj.type == x.view);
             if (idx != -1) {
               viewFunc.push(this.views[idx]);
-              if (x.isDefault) this.viewMode = x.view;
+              if (x.isDefault && !this.viewMode) this.viewMode = x.view;
             }
           });
-          this.views = viewFunc;
+          this.views = viewFunc.sort((a,b)=>{return  b.id -a.id }  );
         }
       });
 
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
     this.view.dataService.methodDelete = 'DeleteTaskAsync';
-    //this.getParam();
-    //this.detectorRef.detectChanges();
+    
+    this.detectorRef.detectChanges();
   }
   //#endregion
 

@@ -304,6 +304,26 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
           }
         });
       }
+      else  {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if ( //Hiện: chép
+          func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+          func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (//Ẩn: còn lại            
+            func.functionID == 'EP4T1102' /*MF mời*/ ||
+            func.functionID == 'EP4T1101' /*MF dời*/ ||
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP4T1104' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
     }
   }
 

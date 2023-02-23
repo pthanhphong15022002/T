@@ -116,6 +116,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     } 
+    if(this.actionType === 'copy') delete this.awardObj.recID;
     this.awardObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddEmployeeAwardInfo(this.formModel.currentData).subscribe((p) => {

@@ -112,7 +112,7 @@ export class CompanySettingComponent
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     var auth = authStore as any;
     this.tenant = auth.tenantStore?.activeTenant;
-    this.userID = auth.userID;
+    this.userID = this.authStore.get()?.userID;
     this.loadData();
   }
 

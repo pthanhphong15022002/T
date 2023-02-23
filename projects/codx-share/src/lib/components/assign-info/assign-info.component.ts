@@ -371,12 +371,14 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         this.listTaskResources,
         this.listTodo,
         taskIDParent,
+        this.formModel.entityName,
+        this.formModel.funcID
       ])
       .subscribe((res) => {
-        if (res[0]) {
+        if (res && res[0]) {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
-          var taskParent = res[1][0];
+        
           //send mail FE
           // if (this.param?.ConfirmControl == '1')
           //   this.tmSv
@@ -387,58 +389,51 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           //     .sendAlertMail(taskParent?.recID, 'TM_0001', this.functionID)
           //     .subscribe();
 
-          //lưu his giao việc
-          var objectType = this.formModel.entityName;
-          var objectID = this.task.refID;
+          //lưu his giao việc da chuyen vao BE -Thao chuyen - 22/2/2023
+         // var taskParent = res[1][0];
+          // var objectType = this.formModel.entityName;
+          // var objectID = this.task.refID;
+          // this.api
+          //   .execSv<any>(
+          //     'SYS',
+          //     'AD',
+          //     'UsersBusiness',
+          //     'LoadUserListByIDAsync',
+          //     JSON.stringify(taskParent.assignTo.split(';'))
+          //   )
+          //   .subscribe((users) => {
+          //     if (users?.length > 0) {
+          //       var dataObj = [];
+          //       users.forEach((user) => {
+          //         dataObj.push({
+          //           objectType: objectType,
+          //           objectID: user.userID,
+          //           objectName: user.userName,
+          //         });
+          //       });
 
-          // var objectName = this.user.userName;
-          // var dataObj = {
-          //   objectType: objectType,
-          //   objectID: taskParent.assignTo,
-          //   objectName: objectName,
-          // };
+          //       var tmpHistorry = {
+          //         objectType: objectType,
+          //         objectID: objectID,
+          //         actionType: 'T',
+          //         functionID: this.formModel.funcID,
+          //         sendToObjects: dataObj,
+          //       };
 
-          this.api
-            .execSv<any>(
-              'SYS',
-              'AD',
-              'UsersBusiness',
-              'LoadUserListByIDAsync',
-              JSON.stringify(taskParent.assignTo.split(';'))
-            )
-            .subscribe((users) => {
-              if (users?.length > 0) {
-                var dataObj = [];
-                users.forEach((user) => {
-                  dataObj.push({
-                    objectType: objectType,
-                    objectID: user.userID,
-                    objectName: user.userName,
-                  });
-                });
-
-                var tmpHistorry = {
-                  objectType: objectType,
-                  objectID: objectID,
-                  actionType: 'T',
-                  functionID: this.formModel.funcID,
-                  sendToObjects: dataObj,
-                };
-
-                this.api
-                  .execSv<any>(
-                    'BG',
-                    'ERM.Business.BG',
-                    'TrackLogsBusiness',
-                    'InsertAsync',
-                    tmpHistorry
-                  )
-                  .subscribe();
-              }
-            });
+          //       this.api
+          //         .execSv<any>(
+          //           'BG',
+          //           'ERM.Business.BG',
+          //           'TrackLogsBusiness',
+          //           'InsertAsync',
+          //           tmpHistorry
+          //         )
+          //         .subscribe();
+          //     }
+          //   });
         } else {
           this.notiService.notifyCode('TM038');
-          return;
+          this.dialog.close();
         }
       });
   }
