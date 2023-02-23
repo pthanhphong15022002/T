@@ -679,6 +679,7 @@ export class StagesDetailComponent implements OnInit {
       if (res) {
         this.notiService.notifyCode('SYS006');
         this.popupUpdateProgress.close();
+        this.calculateProgressStep();
       }
     });
   }
@@ -694,6 +695,7 @@ export class StagesDetailComponent implements OnInit {
         this.taskGroupList[value?.indexGroup]['progress'] = value?.average;
         this.notiService.notifyCode('SYS007');
         this.popupUpdateProgress.close();
+        this.calculateProgressStep();
       }else{
         this.popupUpdateProgress.close();
       }
