@@ -51,7 +51,7 @@
           </div>  -->
         <div class="symbol symbol-30px symbol-circle cursor-pointer">
           <span class="symbol-label bg-om-gray">
-            <codx-mfunc [formModel]="formModel"></codx-mfunc>
+            <codx-mfunc [formModel]="formModelPlan"></codx-mfunc>
           </span>
           <!-- <span (click)="sharePlan()">Chia sẻ</span> -->
         </div>
@@ -71,7 +71,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <ng-container *ngIf="dataOKRPlans != null; else elseOKR">
+              <ng-container *ngIf="!planNull ; else elseOKR">
                 <ng-container *ngIf="dataOKR != null">
                   <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel"
                     [gridView]="gridView" [obFuncID]="obFuncID" [krFuncID]="krFuncID" [skrFuncID]="skrFuncID"
