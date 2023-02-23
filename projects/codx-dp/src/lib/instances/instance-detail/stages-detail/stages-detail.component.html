@@ -624,7 +624,7 @@
   <div class="back-info my-5">
     <div class="header-info p-3">
       <div class="left">
-        <codx-label class="title" default="Lý do thành công gán tạm"></codx-label>
+        <codx-label class="title" [default]=" dataStep.isSuccessStep ? 'Lý do thành công' :  dataStep.isFailStep ?  'Lý do thất bại' : '' "></codx-label>
       </div>
       <div class="right">
         <div class="group-button">

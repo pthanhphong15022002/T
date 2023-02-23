@@ -96,6 +96,7 @@ export class InstancesComponent
   stepIdClick = '';
   listProccessCbx: any;
   dataProccess: any;
+  sumDaySteps: number;
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
@@ -239,6 +240,7 @@ export class InstancesComponent
                   formMD,
                   this.listStepsCbx,
                   this.instanceNo,
+                  this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)
                 ],
                 option
               );
@@ -538,6 +540,7 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
+            debugger
             var obj = {
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
@@ -701,10 +704,8 @@ export class InstancesComponent
   }
 
   getSumDurationDayOfSteps(listStepCbx:any){
-    let total = listStepCbx.reduce((sum, f) => sum + f.durationDay, 0)
-    // let total = listStepCbx.reduce(function(sum, listStepCbx) {
-    //   return sum + currentValue;
-    // }, 0);
+    let total = listStepCbx.reduce((sum, f) => sum + f.durationDay, 0);
+    return total;
   }
   #endregion;
 }
