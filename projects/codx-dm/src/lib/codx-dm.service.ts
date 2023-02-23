@@ -1316,17 +1316,22 @@ export class CodxDMService {
       }
 
       case 'DMT0213': // chinh sua file
-        this.callfc.openForm(
-          EditFileComponent,
-          '',
-          800,
-          800,
-          '',
-          ['', data],
-          ''
-        );
-        break;
-
+      this.fileService.getFile(data.recID).subscribe((file) => {
+        if(file)
+        {
+          this.callfc.openForm(
+            EditFileComponent,
+            '',
+            800,
+            800,
+            '',
+            ['', file],
+            ''
+          );
+       
+        }
+      });
+      break;
       case 'DMT0207': // permission
       case 'DMT0220': {
         if (type == 'file' || this.type == 'DM_FileInfo') {
