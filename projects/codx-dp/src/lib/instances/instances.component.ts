@@ -23,6 +23,7 @@ import {
   FormModel,
   ResourceModel,
   RequestOption,
+  Util,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Instances } from '../models/models';
@@ -93,10 +94,10 @@ export class InstancesComponent
   dataDrop: any;
   isClick: boolean = true;
   stepIdClick = '';
-  listProccessCbx:any;
-  dataProccess:any;
+  listProccessCbx: any;
+  dataProccess: any;
 
-  readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
+  readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -118,9 +119,10 @@ export class InstancesComponent
 
     // em bảo gán tạm
     this.dataProccess = dt?.data?.data;
-    this.genAutoNumberNo(this.dataProccess?.applyFor === '1' ? 'DPT0406' : 'DPT0405');
+    this.genAutoNumberNo(
+      this.dataProccess?.applyFor === '1' ? 'DPT0406' : 'DPT0405'
+    );
     this.getListCbxProccess(this.dataProccess?.applyFor);
-    
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -142,7 +144,7 @@ export class InstancesComponent
         model: {
           template: this.cardKanban,
           template2: this.viewColumKaban,
-          setColorHeader : true,
+          setColorHeader: true,
         },
       },
     ];
@@ -161,7 +163,7 @@ export class InstancesComponent
     this.codxDpService
       .createListInstancesStepsByProcess(this.process?.recID)
       .subscribe((dt) => {
-        debugger
+        debugger;
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
@@ -219,7 +221,7 @@ export class InstancesComponent
               formMD.entityName = fun.entityName;
               formMD.formName = fun.formName;
               formMD.gridViewName = fun.gridViewName;
-             
+
               option.Width = '850px';
               option.zIndex = 1010;
               this.view.dataService.dataSelected.processID = this.process.recID;
@@ -235,7 +237,7 @@ export class InstancesComponent
                   this.titleAction,
                   formMD,
                   this.listStepsCbx,
-                  this.instanceNo
+                  this.instanceNo,
                 ],
                 option
               );
@@ -271,7 +273,6 @@ export class InstancesComponent
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-         
           this.cache.gridView(fun.gridViewName).subscribe((grv) => {
             this.cache
               .gridViewSetup(fun.formName, fun.gridViewName)
@@ -312,12 +313,12 @@ export class InstancesComponent
 
   async genAutoNumberNo(funcID) {
     this.codxDpService
-    .genAutoNumber(funcID, 'DP_Instances', 'InstanceNo')
-    .subscribe((res) => {
-      if (res) {
-        this.instanceNo = res;
-      }
-    });
+      .genAutoNumber(funcID, 'DP_Instances', 'InstanceNo')
+      .subscribe((res) => {
+        if (res) {
+          this.instanceNo = res;
+        }
+      });
   }
   //End
 
@@ -452,8 +453,8 @@ export class InstancesComponent
     let popup = this.callFunc.openForm(
       this.popDetail,
       '',
-      1000,
-      700,
+      Util.getViewPort().width - 200,
+      Util.getViewPort().height - 200,
       '',
       null,
       '',
@@ -678,26 +679,24 @@ export class InstancesComponent
       .filter((x) => x.stepID === stepId)
       .map((x) => x.stepName)[0];
   }
-  clickMoreFunc(e){
+  clickMoreFunc(e) {
     this.lstStepInstances = e.lstStepInstance;
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {
     this.changeDataMF(e.e, e.data);
   }
-  getListCbxProccess(applyFor:any){
+  getListCbxProccess(applyFor: any) {
     this.cache.valueList('DP031').subscribe((data) => {
-      this.codxDpService.getlistCbxProccess(applyFor).subscribe((res)=>{
+      this.codxDpService.getlistCbxProccess(applyFor).subscribe((res) => {
         this.listProccessCbx = res[0];
         var obj = {
           recID: this.guidEmpty,
-          processName: data.datas[0].default
+          processName: data.datas[0].default,
         };
         this.listProccessCbx.unshift(obj);
       });
     });
-    
-
   }
   #endregion;
 }
