@@ -62,6 +62,9 @@ export class PopupMoveStageComponent implements OnInit {
   fieldCbxRole = { text: 'objectName', value: 'objectID' };
   positionName = '';
   userName = '';
+  owner = '';
+  stepOld: any;
+  firstInstance: any;
   constructor(
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -101,6 +104,11 @@ export class PopupMoveStageComponent implements OnInit {
         this.assignControl = res.datas;
       }
     });
+    this.dpSv.getFirstIntance().subscribe(res=>{
+      if(res){
+        this.firstInstance = res;
+      }
+    });
     // this.loadListUser(this.instance.permissions);
   }
 
@@ -121,8 +129,42 @@ export class PopupMoveStageComponent implements OnInit {
     this.dpSv.getStepByStepIDAndInID(insID, stepID).subscribe((res) => {
       if (res) {
         this.stepCurrent = res;
-        if (this.stepCurrent.owner != null)
-          this.getNameAndPosition(this.stepCurrent.owner);
+        var i = -1;
+        this.assignControl = this.stepCurrent.assignControl;
+        switch (this.assignControl) {
+          //Phụ trách giai đoạn hiện tại
+          case '0':
+            this.owner = this.stepCurrent.owner;
+            if (this.owner != null) this.getNameAndPosition(this.owner);
+            break;
+          //Phụ trách giai đoạn chuyển tiếp
+          case '1':
+            var index = -1;
+            index = this.listStep.findIndex(x=>x.stepID == this.stepIdClick);
+            var check = this.listStep.findIndex(x=>x.stepID == this.IdFail || x.stepID == this.IdSuccess);
+            if(index > -1 && index != check){
+              this.owner = this.listStep[index].owner;
+              if (this.owner != null) this.getNameAndPosition(this.owner);
+            }
+            break;
+          //Giữ nguyên phụ trách trước
+          case '2':
+            i = this.listStep.findIndex((x) => x.stepID == this.stepCurrent.stepID);
+            this.stepOld = this.listStep[i - 1].owner;
+            this.owner = this.stepOld;
+            if (this.owner != null) this.getNameAndPosition(this.owner);
+            break;
+          //Người nhận nhiệm vụ đầu tiên
+          case '3':
+            this.owner = this.firstInstance.owner;
+            if (this.owner != null) this.getNameAndPosition(this.owner);
+            break;
+          //Người nhận nhiệm vụ hiện tại
+          case '4':
+            this.owner = this.instance.owner;
+            if (this.owner != null) this.getNameAndPosition(this.owner);
+            break;
+        }
       }
     });
   }
@@ -145,6 +187,7 @@ export class PopupMoveStageComponent implements OnInit {
       this.stepIdOld = '';
       this.isReason = this.stepIdClick === this.IdFail ? false : true;
     } else {
+      this.instancesStepOld.owner = this.owner;
       this.instancesStepOld.stepID = this.stepIdClick;
     }
 
@@ -167,9 +210,9 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   valueChange($event) {
-    if ($event) {
-      this.instancesStepOld[$event.field] = $event.data;
-    }
+    // if ($event) {
+    //   this.instancesStepOld[$event.field] = $event.data;
+    // }
     this.changeDetectorRef.detectChanges();
   }
 
@@ -182,7 +225,7 @@ export class PopupMoveStageComponent implements OnInit {
   cbxChange($event) {
     if ($event) {
       this.stepIdClick = $event;
-
+      this.getStepByStepIDAndInID(this.instance.recID, this.stepIdClick);
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -191,5 +234,9 @@ export class PopupMoveStageComponent implements OnInit {
     this.callfc.openForm(popupParticipants, '', 950, 650);
   }
 
-  eventUser(e) {}
+  eventUser(e) {
+    this.owner = e.id;
+    this.userName = e.name;
+    if (this.owner != null) this.getNameAndPosition(this.owner);
+  }
 }

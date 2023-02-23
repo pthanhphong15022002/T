@@ -63,6 +63,7 @@
     type="datetime"
     [format]="formatDate"
     [placeholder]="customField.note"
+    [crrValue]="customField.dataValue"
     (valueChange)="valueChange($event)"
   >
   </codx-input>
@@ -74,6 +75,7 @@
     type="valuelist"
     [refValue]="customField.refValue"
     [placeholder]="customField.note"
+    [crrValue]="customField.dataValue"
     (valueChange)="valueChange($event)"
   >
   </codx-input>

@@ -201,7 +201,6 @@ export class StagesDetailComponent implements OnInit {
         //nvthuan
         this.groupByTask(changes['dataStep'].currentValue);
         this.step = changes['dataStep'].currentValue;
-        console.log('Thuan', this.step);
       } else {
         this.dataStep = null;
       }
@@ -309,12 +308,12 @@ export class StagesDetailComponent implements OnInit {
   }
 
   //task -- nvthuan
-  openTypeJob() {
+  openTypeTask() {
     this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
     this.jobType['checked'] = false;
   }
 
-  getTypeJob(e, value) {
+  getTypeTask(e, value) {
     if (this.jobType) {
       this.jobType['checked'] = false;
     }
@@ -322,12 +321,12 @@ export class StagesDetailComponent implements OnInit {
     this.jobType['checked'] = true;
   }
 
-  openPopupJob(data?: any, status?: string) {
+  handleTask(data?: any, status?: string) {
     let taskGroupIdOld = '';
     let frmModel: FormModel = {
-      entityName: 'DP_Steps_Tasks',
-      formName: 'DPStepsTasks',
-      gridViewName: 'grvDPStepsTasks',
+      entityName: 'DP_Instances_Steps_Tasks',
+      formName: 'DPInstancesStepsTasks',
+      gridViewName: 'grvDPInstancesStepsTasks',
     };
     if (!data) {
       this.popupJob.close();
@@ -348,7 +347,7 @@ export class StagesDetailComponent implements OnInit {
     ];
     let option = new SidebarModel();
     option.Width = '550px';
-    option.zIndex = 1001;
+    option.zIndex = 1011;
     option.FormModel = frmModel;
     let dialog = this.callfc.openSide(PopupAddStaskComponent, listData, option);
 
@@ -405,7 +404,6 @@ export class StagesDetailComponent implements OnInit {
         taskData?.stepID,
         progress?.average,
       ];
-      console.log(value);
       this.dpService.deleteTask(value).subscribe((res) => {
         if (res) {
           this.taskGroupList[progress.indexGroup]['progress'] =
@@ -431,7 +429,7 @@ export class StagesDetailComponent implements OnInit {
             (type) => type.value === task.taskType
           );
         }
-        this.openPopupJob(task, 'edit');
+        this.handleTask(task, 'edit');
         break;
       case 'SYS04':
         if (task.taskType) {
@@ -439,7 +437,7 @@ export class StagesDetailComponent implements OnInit {
             (type) => type.value === task.taskType
           );
         }
-        this.openPopupJob(task, 'copy');
+        this.handleTask(task, 'copy');
         break;
       case 'DP07':
         if (task.taskType) {
@@ -447,12 +445,12 @@ export class StagesDetailComponent implements OnInit {
             (type) => type?.value === task?.taskType
           );
         }
-        this.openPopupViewJob(task);
+        this.viewTask(task);
         break;
     }
   }
   //View task
-  openPopupViewJob(data?: any) {
+  viewTask(data?: any) {
     let status = 'edit';
     let frmModel: FormModel = {
       entityName: 'DP_Steps_Tasks',
@@ -521,7 +519,6 @@ export class StagesDetailComponent implements OnInit {
       taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
       this.taskGroupList.push(taskGroup);
       this.taskList = step['tasks'];
-      console.log(this.taskGroupList);
     }
   }
 
@@ -538,7 +535,7 @@ export class StagesDetailComponent implements OnInit {
         break;
       case 'DP08':
         this.groupTaskID = data?.recID;
-        this.openTypeJob();
+        this.openTypeTask();
         break;
     }
   }
@@ -625,7 +622,6 @@ export class StagesDetailComponent implements OnInit {
       if (x.event && x.event.status == 'Y') {
       }
       let value = [data?.recID, data?.stepID];
-      console.log(value);
       this.dpService.deleteTaskGroups(value).subscribe((res) => {
         if (res) {
           let index = this.taskGroupList.findIndex(
@@ -650,7 +646,6 @@ export class StagesDetailComponent implements OnInit {
   openUpdateProgress(data?: any) {
     if (data) {
       this.dataProgress = data;
-      console.log(this.dataProgress);
     }
     this.popupUpdateProgress = this.callfc.openForm(
       this.updateProgress,
@@ -702,9 +697,8 @@ export class StagesDetailComponent implements OnInit {
       }
     });
   }
-
+   // check checkbox 100%
   checkProgress(event, data) {
-    // check checkbox 100%
     if (event?.data) {
       data[event?.field] = 100;
     }
@@ -872,22 +866,6 @@ export class StagesDetailComponent implements OnInit {
     data[event?.field] = event?.data?.fromDate;
   }
 
-  addFile(evt: any) {
-    this.attachment.uploadFile();
-  }
-
-  fileAdded(e) {}
-
-  getfileCount(e) {
-    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
-    else this.isHaveFile = false;
-    this.showLabelAttachment = this.isHaveFile;
-  }
-
-  getfileDelete(event) {
-    event.data.length;
-  }
-
   async changeDataMF(e, type) {
     if (e != null) {
       e.forEach((res) => {
@@ -932,29 +910,32 @@ export class StagesDetailComponent implements OnInit {
     if (e != null) {
       e.forEach((res) => {
         switch (res.functionID) {
-          case 'SYS104':
-          case 'SYS04':
-          case 'SYS102':
-          case 'SYS02':
-          case 'SYS005':
-          case 'SYS003':
-          case 'SYS004':
-          case 'SYS001':
-          case 'SYS002':
-          case 'DP011':
-          case 'DP02':
-          case 'DP09':
-          case 'DP10':
-            res.disabled = true;
-            break;
-          //edit
           case 'SYS103':
           case 'SYS03':
             if (!this.isUpdate) res.disabled = true;
             break;
+          default:
+            res.disabled = true;
+            break;
         }
       });
     }
+  }
+
+  addFile(evt: any) {
+    this.attachment.uploadFile();
+  }
+
+  fileAdded(e) {}
+
+  getfileCount(e) {
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    this.showLabelAttachment = this.isHaveFile;
+  }
+
+  getfileDelete(event) {
+    event.data.length;
   }
   //End task -- nvthuan
 

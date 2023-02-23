@@ -159,7 +159,8 @@ export class EditPatternComponent implements OnInit {
   }
 
   uploadFile() {
-    // this.attachment.uploadFile();
+    this.removeSelectColor();
+    //this.attachment.uploadFile();
   }
 
   async handleFileInput(event) {}
@@ -189,15 +190,18 @@ export class EditPatternComponent implements OnInit {
             this.listFile[0].objectId = dt.recID;
             this.attachment.objectId = dt.recID;
             this.attachment.fileUploadList = this.listFile;
-            (await this.attachment.saveFilesObservable()).subscribe(
-              (result: any) => {
-                if(this.formType == 'edit') res.update.imageSrc = result?.data?.pathDisk;
-                else res.save.imageSrc = result?.data?.pathDisk;
-                var obj = { data: res, listFile: this.listFile };
-                this.dialog.close(obj);
-                this.change.detectChanges();
-              }
-            );
+            this.patternSV.deleteFile(this.pattern.recID).subscribe(item=>{
+              this.attachment.saveFilesMulObservable().subscribe(
+                (result: any) => {
+                  if(this.formType == 'edit') res.update.imageSrc = result?.data?.pathDisk;
+                  else res.save.imageSrc = result?.data?.pathDisk;
+                  var obj = { data: res, listFile: this.listFile };
+                  this.dialog.close(obj);
+                  this.change.detectChanges();
+                }
+              );
+            });
+            
           } else {
             if(this.formType == 'edit') res.update.imageSrc = this.pattern?.imageSrc;
             else res.save.imageSrc = this.pattern?.imageSrc;
@@ -223,7 +227,6 @@ export class EditPatternComponent implements OnInit {
     op.data = data;
     return true;
   }
-
   checkDisable(pattern) {}
 
   checkActive() {
@@ -233,19 +236,23 @@ export class EditPatternComponent implements OnInit {
       if (htmlE) htmlE.classList.add('color-check');
     }
   }
-
+  
   colorClick(ele, item, index) {
     this.listFile = '';
+    this.removeSelectColor();
+    var element = ele as HTMLElement;
+    element.classList.add('color-check');
+    this.pattern.backgroundColor = item.default;
+    this.pattern.imageSrc = null;
+    this.change.detectChanges();
+  }
+  removeSelectColor()
+  {
     var label = document.querySelectorAll('.color-check');
     if (label) {
       label.forEach((ele) => {
           ele.classList.remove('color-check');
       });
     }
-    var element = ele as HTMLElement;
-    element.classList.add('color-check');
-    this.pattern.backgroundColor = item.default;
-    this.pattern.imageSrc = null;
-    this.change.detectChanges();
   }
 }

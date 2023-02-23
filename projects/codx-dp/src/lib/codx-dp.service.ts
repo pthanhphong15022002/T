@@ -391,4 +391,21 @@ export class CodxDpService {
       [insID, stepID]
     );
   }
+
+  getFirstIntance(){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetFirstIntanceAsync',
+    );
+  }
+
+  getProcess(id){
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetAsync',
+      id
+    );
+  }
 }

@@ -382,13 +382,13 @@ export class InstancesComponent
           case 'SYS104':
           case 'SYS04':
             let isCopy = this.isCreate ? true : false;
-            if (!isCopy) res.disabled = true;
+            if (!isCopy || data.status =="3") res.disabled = true;
             break;
           //xóa
           case 'SYS102':
           case 'SYS02':
             let isDelete = data.delete;
-            if (!isDelete) res.disabled = true;
+            if (!isDelete || data.status =="3") res.disabled = true;
             break;
         }
       });
@@ -454,7 +454,7 @@ export class InstancesComponent
   viewDetail(recID) {
     //  this.detailViewInstance.GetStepsByInstanceIDAsync(recID)
     let option = new DialogModel();
-    option.zIndex = 1010;
+     option.zIndex = 1001;
     let popup = this.callFunc.openForm(
       this.popDetail,
       '',
