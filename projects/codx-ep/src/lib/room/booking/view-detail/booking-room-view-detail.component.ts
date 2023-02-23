@@ -308,6 +308,7 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
         event.forEach((func) => {
           //Gửi duyệt
           if ( //Hiện: chép
+          func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
           func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
@@ -317,7 +318,6 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
             func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
             func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = true;
