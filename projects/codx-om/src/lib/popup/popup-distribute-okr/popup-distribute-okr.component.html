@@ -17,7 +17,7 @@
       <codx-label [default]="'Mục tiêu'" fiedName="lblOB" class="fw-bold fs-2"></codx-label>    
       <span class="fw-bold fs-2">: {{okrName}}</span>        
     </div>
-    <div class="d-flex justify-content-center my-1">
+    <!-- <div class="d-flex justify-content-center my-1">
       <div class="d-flex align-items-center mx-2">
         <codx-input type="radio" name="category" field="R" [checked]="radioKRCheck" 
         [label]="'Phân bổ thành kết quả'"
@@ -30,7 +30,7 @@
           [label]="'Phân bổ thành mục tiêu'">
         </codx-input>
       </div>
-    </div>
+    </div> -->
     <div class="flex-grow-1 overflow-auto">
       <ejs-tab id="om-tab" class="h-100">
         <e-tabitems>
@@ -70,7 +70,7 @@
                       class="icon-home justify-content-center align-items-center text-light"></span></div>
                   <!-- <codx-label name="lbl" [default]="orgUnitTree?.orgUnitName"
                     class="ps-2 fs-5 fw-bolder"></codx-label> -->
-                    <span class="ps-2 fs-5 fw-bolder">{{orgUnitTree?.orgUnitName}}</span>
+                    <span class="ms-5 fs-5 fw-bolder">{{orgUnitTree?.orgUnitName}}</span>
                 </div>
                 <!--content-->
                 <div class="d-flex flex-column" *ngIf=" listDistribute && listDistribute?.length>0">
