@@ -21,16 +21,18 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     public codxService:CodxService,
     private api:ApiHttpService,
     private signalRSV:SignalRService,
-    private dt:ChangeDetectorRef,
-    private _applicationRef: ApplicationRef,
   ) 
   { }
-  ngAfterViewInit(): void {
-  }
+  
 
   
   ngOnInit(): void {
     this.getTotalMessage();
+  }
+
+  ngAfterViewInit(): void {
+    this.signalRSV.signalBoxChat.subscribe((res:any) => {
+    });
   }
   // get total message
   getTotalMessage(){

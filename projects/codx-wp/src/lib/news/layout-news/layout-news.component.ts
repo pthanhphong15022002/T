@@ -7,7 +7,7 @@ import { ApiHttpService, CacheService, LayoutBaseComponent } from 'codx-core';
   styleUrls: ['./layout-news.component.scss'],
 })
 export class LayoutNewsComponent extends LayoutBaseComponent {
-  module = 'WP';
+  module = 'WP2';
   override toolbar = false;
   override aside = false;
   override asideFixed = false;
