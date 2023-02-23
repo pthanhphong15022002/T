@@ -100,46 +100,21 @@ export class PopupJobComponent implements OnInit {
     this.taskName = dt?.data[6];
     this.taskGroupID = dt?.data[7];
   }
-  ngOnInit(): void {
+  async ngOnInit() {
     this.getTypeTask();
     this.getFormModel();
     this.listOwner = this.stepsTasks['roles'];
     if (this.stepsTasks['parentID']) {
       this.litsParentID = this.stepsTasks['parentID'].split(';');
     }
-    if (this.taskList.length > 0) {
-      this.dataCombobox = this.taskList.map((data) => {
-        if (this.litsParentID.some((x) => x == data.recID)) {
-          return {
-            key: data.recID,
-            value: data.taskName,
-            checked: true,
-          };
-        } else {
-          return {
-            key: data.recID,
-            value: data.taskName,
-            checked: false,
-          };
-        }
-      });
-      if (this.status == 'edit') {
-        let index = this.dataCombobox.findIndex(
-          (x) => x.key === this.stepsTasks.recID
-        );
-        this.dataCombobox.splice(index, 1);
-        this.taskGroupName = this.groupTackList.find(
-          (x) => x.recID === this.stepsTasks.taskGroupID
-        )['taskGroupName'];
-      }
-      this.valueInput = this.dataCombobox
-        .filter((x) => x.checked)
-        .map((y) => y.value)
-        .join('; ');
-    }
+    this.dataCombobox = await this.setTaskLink(this.stepsTasks?.taskGroupID);
+    this.valueInput = this.dataCombobox
+      .filter((x) => x.checked)
+      .map((y) => y.value)
+      .join('; ');
   }
 
-  setTaskLink(groupTaskID?: string) {
+  async setTaskLink(groupTaskID?: string) {
     let taskLinks = [];
     if (groupTaskID) {
       if (this.status == 'add' || this.status == 'copy') {
@@ -148,19 +123,16 @@ export class PopupJobComponent implements OnInit {
           taskLinks = this.mapDataTask(groupTask['task']);
         }
       } else {
-        if (this.stepsTasks['parentID']) {
-          let litsParentID = this.stepsTasks['parentID'].split(';');
-          let groupTask = this.groupTackList.find(
-            (x) => x.recID === groupTaskID
+        let litsParentID = this.stepsTasks['parentID'].split(';');
+        let groupTask = this.groupTackList.find((x) => x.recID === groupTaskID);
+        if (groupTask && groupTask['task']) {
+          let tasks = groupTask['task'].filter(
+            (task) => !task['parentID'].includes(this.stepsTasks?.recID)
           );
-          if (groupTask && groupTask['task']) {
-            taskLinks = this.mapDataTask(groupTask['task'], litsParentID);
-          }
-          let index = taskLinks.findIndex(
-            (x) => x.key === this.stepsTasks.recID
-          );
-          taskLinks.splice(index, 1);
+          taskLinks = this.mapDataTask(tasks, litsParentID);
         }
+        let index = taskLinks.findIndex((x) => x.key === this.stepsTasks.recID);
+        taskLinks.splice(index, 1);
       }
     } else {
       if (this.status == 'add' || this.status == 'copy') {
@@ -172,9 +144,7 @@ export class PopupJobComponent implements OnInit {
         if (this.taskList?.length > 0) {
           taskLinks = this.mapDataTask(this.taskList, litsParentID);
         }
-        let index = taskLinks.findIndex(
-          (x) => x.key === this.stepsTasks.recID
-        );
+        let index = taskLinks.findIndex((x) => x.key === this.stepsTasks.recID);
         taskLinks.splice(index, 1);
       }
     }
@@ -197,10 +167,10 @@ export class PopupJobComponent implements OnInit {
     }
 
     if (listID && listID.length > 0 && taskLinks.length > 0) {
-      data = taskLinks.map((data) => {
-        return listID.some((x) => x == data.recID)
-          ? { ...data, checked: true }
-          : { ...data };
+      data = taskLinks.map((task) => {
+        return listID.some((x) => x == task.key)
+          ? { ...task, checked: true }
+          : { ...task };
       });
       taskLinks = data;
     }
@@ -216,21 +186,25 @@ export class PopupJobComponent implements OnInit {
       }
     });
   }
+
   valueChangeText(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
+
   valueChangeCombobox(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
 
-  filterText(value, key) {
+  async filterText(value, key) {
     if (value) {
       this.stepsTasks[key] = value;
       this.taskGroupName = this.groupTackList.find((x) => x.recID === value)[
         'taskGroupName'
       ];
     }
+    this.dataCombobox = await this.setTaskLink(value);
   }
+
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
@@ -282,16 +256,11 @@ export class PopupJobComponent implements OnInit {
       }
     });
   }
+
   showCombobox() {
     this.show = !this.show;
   }
-  outFocus() {
-    console.log('thuan ');
-  }
-  ID(element: string) {
-    const idx = 'check';
-    return idx + '_' + element;
-  }
+
   @HostListener('document:click', ['$event'])
   clickout(event) {
     let a = this.inputContainer?.nativeElement.contains(event.target);
@@ -299,6 +268,7 @@ export class PopupJobComponent implements OnInit {
       this.show = false;
     }
   }
+
   handelCheck(data) {
     data.checked = !data.checked;
     let dataCheck = this.dataCombobox
@@ -362,7 +332,7 @@ export class PopupJobComponent implements OnInit {
 
   checkSave(groupTask, timeInput?: number) {
     let time = timeInput ? timeInput : this.getHour(this.stepsTasks);
-    if (this.getHour(groupTask) > time) {
+    if (this.getHour(groupTask) >= time) {
       // nếu thời gian ko vượt quá thời gian cho phép lưu
       this.dialog.close({ data: this.stepsTasks, status: this.status });
     } else {
@@ -433,11 +403,13 @@ export class PopupJobComponent implements OnInit {
     this.attachment.uploadFile();
   }
   fileAdded(e) {}
+
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
   }
+  
   getfileDelete(event) {
     event.data.length;
   }
