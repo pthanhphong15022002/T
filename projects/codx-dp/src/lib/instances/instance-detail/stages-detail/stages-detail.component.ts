@@ -355,41 +355,31 @@ export class StagesDetailComponent implements OnInit {
       if (e?.event) {
         let taskData = e?.event?.data;
         if (e.event?.status === 'add' || e.event?.status === 'copy') {
-          let lengthTask = this.taskGroupList.find(
-            (x) => x.recID === taskData.taskGroupID
-          );
+          let lengthTask = this.taskGroupList.find((x) => x.recID === taskData.taskGroupID);
           let role = new DP_Instances_Steps_Tasks_Roles();
-          debugger;
           this.setRole(role);
           taskData['roles'] = [role];
           taskData['createdOn'] = new Date();
           taskData['indexNo'] = lengthTask['task'].length;
-          let progress = await this.updateProgressTaskGroupByTaskGroupID(
-            taskData,
-            'add'
-          );
-          this.dpService
-            .addTask([taskData, progress?.average])
-            .subscribe((res) => {
-              if (res) {
-                this.notiService.notifyCode('SYS006');
-                let index = this.taskGroupList.findIndex(
-                  (task) => task.recID == taskData.taskGroupID
-                );
-                this.taskGroupList[index]['task'].push(taskData);
-                this.taskList.push(taskData);
-                this.taskGroupList[progress?.indexGroup]['progress'] =
-                  progress?.average; // cập nhật tiến độ của cha
-                this.calculateProgressStep();
-              }
-            });
+          let progress = await this.calculateProgressTaskGroup(taskData,'add');
+          this.dpService.addTask([taskData, progress?.average]).subscribe((res) => {
+            if (res) {
+              this.notiService.notifyCode('SYS006');
+              let index = this.taskGroupList.findIndex(
+                (task) => task.recID == taskData.taskGroupID
+              );
+              this.taskGroupList[index]['task'].push(taskData);
+              this.taskList.push(taskData);
+              this.taskGroupList[progress?.indexGroup]['progress'] =
+                progress?.average; // cập nhật tiến độ của cha
+            }
+          });
         } else {
           taskData['modifiedOn'] = new Date();
           this.dpService.updateTask(taskData).subscribe((res) => {
             if (res) {
               if (taskData?.taskGroupID != taskGroupIdOld) {
                 this.changeGroupTask(taskData, taskGroupIdOld);
-                this.calculateProgressStep();
                 this.notiService.notifyCode('SYS007');
               }
             }
@@ -403,7 +393,7 @@ export class StagesDetailComponent implements OnInit {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
       }
-      let progress = this.updateProgressTaskGroupByTaskGroupID(
+      let progress = this.calculateProgressTaskGroup(
         taskData,
         'delete'
       );
@@ -423,7 +413,6 @@ export class StagesDetailComponent implements OnInit {
             1
           );
           this.notiService.notifyCode('SYS008');
-          this.calculateProgressStep();
         }
       });
     });
@@ -489,14 +478,11 @@ export class StagesDetailComponent implements OnInit {
       option
     );
   }
+
   changeGroupTask(taskData, taskGroupIdOld) {
     let tastClone = JSON.parse(JSON.stringify(taskData));
-    let indexNew = this.taskGroupList.findIndex(
-      (task) => task.recID == taskData.taskGroupID
-    );
-    let index = this.taskGroupList.findIndex(
-      (task) => task.recID == taskGroupIdOld
-    );
+    let indexNew = this.taskGroupList.findIndex((task) => task.recID == taskData.taskGroupID);
+    let index = this.taskGroupList.findIndex((task) => task.recID == taskGroupIdOld);
     let listTaskOld = this.taskGroupList[indexNew]['task'] || [];
     let listTaskNew = this.taskGroupList[indexNew]['task'] || [];
     listTaskOld.push(tastClone);
@@ -508,6 +494,7 @@ export class StagesDetailComponent implements OnInit {
     this.changeValueDrop(listTaskOld, 'indexNo');
     this.changeValueDrop(listTaskNew, 'indexNo');
   }
+
   //taskGroup
   groupByTask(data) {
     let step = JSON.parse(JSON.stringify(data));
@@ -617,7 +604,6 @@ export class StagesDetailComponent implements OnInit {
           if (res) {
             this.notiService.notifyCode('SYS006');
             this.taskGroupList.splice(index - 1, 0, value);
-            this.calculateProgressStep();
           }
         });
     } else {
@@ -626,7 +612,6 @@ export class StagesDetailComponent implements OnInit {
       this.dpService.updateTaskGroups(value).subscribe(async (res) => {
         if (res) {
           this.notiService.notifyCode('SYS007');
-          this.calculateProgressStep();
           await this.copyValue(value, dataOld);
         }
       });
@@ -645,7 +630,6 @@ export class StagesDetailComponent implements OnInit {
             (x) => x.recID == data.recID
           );
           this.taskGroupList.splice(index, 1);
-          this.calculateProgressStep();
           this.notiService.notifyCode('SYS008');
         }
       });
@@ -701,7 +685,7 @@ export class StagesDetailComponent implements OnInit {
   }
 
   updateProgressTask() {
-    let value = this.updateProgressTaskGroupByTaskGroupID(
+    let value = this.calculateProgressTaskGroup(
       this.dataProgress,
       'update'
     );
@@ -725,7 +709,7 @@ export class StagesDetailComponent implements OnInit {
     this.disabledProgressInput = event?.data;
   }
   // Common
-  updateProgressTaskGroupByTaskGroupID(data, status) {
+  calculateProgressTaskGroup(data, status) {
     let proggress = 0;
     let average = 0;
     let indexTask = -1;
@@ -745,7 +729,17 @@ export class StagesDetailComponent implements OnInit {
       proggress += parseFloat(item?.progress) || 0;
     });
     average = parseFloat((proggress / taskGroupFind.length).toFixed(1)) || 0;
+    this.calculateProgressStep();
     return { average: average, indexGroup: indexGroup, indexTask: indexTask };
+  }
+
+  calculateProgressStep(){
+    const sum = this.taskGroupList.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue['progress'];
+    }, 0);
+    let medium = (sum/this.taskGroupList.length).toFixed(2);
+    this.step.progress = Number(medium);
+    this.progress = medium;
   }
 
   setRole<T>(role: T) {
@@ -765,15 +759,6 @@ export class StagesDetailComponent implements OnInit {
         }
       }
     }
-  }
-
-  calculateProgressStep(){
-    // const sum = this.taskGroupList.reduce((accumulator, currentValue) => {
-    //   return accumulator + currentValue['progress'];
-    // }, 0);
-    // let medium = (sum/this.taskGroupList.length).toFixed(2);
-    // this.step.progress = Number(medium);
-    // this.progress = medium;
   }
 
   async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) {
@@ -874,6 +859,7 @@ export class StagesDetailComponent implements OnInit {
       let index = this.taskGroupList.findIndex((group) => group.recID == recID);
       this.taskGroupList[index]['progress'] = 0;
     }
+    this.calculateProgressStep();
   }
 
   changeValueInput(event, data) {
