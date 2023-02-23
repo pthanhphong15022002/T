@@ -282,27 +282,6 @@
           <div class="form-group margin-form">
             <div>
               <codx-label
-                fiedName="ProcessNo"
-                [formModel]="dialog.formModel"
-                default="Mã quy trình"
-              >
-              </codx-label>
-            </div>
-            <codx-input
-              field="processNo"
-              type="text"
-              [placeholder]="gridViewSetup['ProcessNo']?.description"
-              [crrValue]="process.processNo"
-              (valueChange)="valueChange($event)"
-              [disabled]="showID"
-            >
-            </codx-input>
-            <!-- <codx-input field="processNo" [crrValue]="process.processNo" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" [disabled]="showID">
-            </codx-input> -->
-          </div>
-          <div class="form-group margin-form">
-            <div>
-              <codx-label
                 fiedName="GroupID"
                 [formModel]="dialog.formModel"
                 default="Nhóm quy trình"

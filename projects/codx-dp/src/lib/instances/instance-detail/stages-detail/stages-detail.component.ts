@@ -65,7 +65,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() instance: any;
   @Input() stepNameEnd: any;
   @Input() proccesNameMove: any;
-  
+
 
   dateActual: any;
   startDate: any;
@@ -120,7 +120,7 @@ export class StagesDetailComponent implements OnInit {
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   titleReason:any;
-  
+
   constructor(
     private callfc: CallFuncService,
     private notiService: NotificationsService,
@@ -222,8 +222,7 @@ export class StagesDetailComponent implements OnInit {
       }
 
       this.progress = (
-        totalTask / tasks.length +
-        totalTaskGroup / taskGroups.length
+        totalTask / tasks.length
       ).toString();
     } else {
       this.progress = '0';
@@ -967,7 +966,7 @@ export class StagesDetailComponent implements OnInit {
     switch ($event.functionID) {
       case 'SYS02':
         this.deleteReason(data);
-        break; 
+        break;
       default:
         break;
     }
