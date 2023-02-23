@@ -223,9 +223,8 @@ export class InstancesComponent
               formMD.entityName = fun.entityName;
               formMD.formName = fun.formName;
               formMD.gridViewName = fun.gridViewName;
-
               option.Width = '850px';
-              option.zIndex = 1010;
+              option.zIndex = 1001;
               this.view.dataService.dataSelected.processID = this.process.recID;
               // const titleForm = res.defaultName;
               // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
@@ -287,7 +286,7 @@ export class InstancesComponent
                 formMD.gridViewName = fun.gridViewName;
 
                 option.Width = '850px';
-                option.zIndex = 1010;
+                option.zIndex = 1001;
                 this.view.dataService.dataSelected.processID =
                   this.process.recID;
                 var dialogCustomField = this.callfc.openSide(
@@ -361,6 +360,8 @@ export class InstancesComponent
         switch (res.functionID) {
           case 'SYS005':
           case 'SYS003':
+            if (data.status !== '1' && data.status !== '2' ) res.disabled = true;
+            break;
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':
@@ -374,19 +375,19 @@ export class InstancesComponent
           case 'DP09':
           case 'DP10':
             let isUpdate = data.write;
-            if (!isUpdate) res.disabled = true;
+            if (!isUpdate ||  ( data.status !== '1' && data.status !== '2' ) ) res.disabled = true;
             break;
           //Copy
           case 'SYS104':
           case 'SYS04':
             let isCopy = this.isCreate ? true : false;
-            if (!isCopy) res.disabled = true;
+            if (!isCopy || data.status =="3") res.disabled = true;
             break;
           //xóa
           case 'SYS102':
           case 'SYS02':
             let isDelete = data.delete;
-            if (!isDelete) res.disabled = true;
+            if (!isDelete || data.status =="3") res.disabled = true;
             break;
         }
       });
