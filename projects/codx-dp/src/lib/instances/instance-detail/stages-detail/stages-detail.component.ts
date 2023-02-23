@@ -119,6 +119,7 @@ export class StagesDetailComponent implements OnInit {
 
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
+  titleReason:any;
   
   constructor(
     private callfc: CallFuncService,
@@ -203,6 +204,7 @@ export class StagesDetailComponent implements OnInit {
       } else {
         this.dataStep = null;
       }
+      this.titleReason = changes['dataStep'].currentValue?.isSuccessStep ? 'Lý do thành công' :  changes['dataStep'].currentValue?.isFailStep ?  'Lý do thất bại' : ''
     }
   }
 
@@ -941,7 +943,7 @@ export class StagesDetailComponent implements OnInit {
 
   openPopupReason(){
     this.listReasonsClick = [];
-    this.dialogPopupReason = this.callfc.openForm(this.viewReason, '', 500, 10);
+    this.dialogPopupReason = this.callfc.openForm(this.viewReason, '', 500, 500);
   }
   changeReasonMF(e) {
     console.table(e);
