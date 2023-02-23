@@ -61,12 +61,9 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.lstEdiseases = data?.data?.lstEdiseases;
-    this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
+    this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1;
+    this.ediseasesObj = data?.data?.dataInput;
 
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.ediseasesObj = JSON.parse(JSON.stringify(this.lstEdiseases[this.indexSelected]));
-      // this.formModel.currentData = this.ediseasesObj;
-    }
   }
 
   onInit(): void {
@@ -114,7 +111,7 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    if(this.actionType === 'copy' || this.actionType === 'add'){
+    if(this.actionType === 'copy'){
       delete this.ediseasesObj.recID
     }
     this.ediseasesObj.employeeID = this.employeeId 
@@ -122,12 +119,8 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
       this.hrSevice.AddEmployeeDiseasesInfo(this.ediseasesObj).subscribe(p => {
         if(p != null){
           this.ediseasesObj.recID = p.recID
-          this.notify.notifyCode('SYS006')
-          this.lstEdiseases.push(JSON.parse(JSON.stringify(this.ediseasesObj)));
-          if(this.listView){
-            (this.listView.dataService as CRUDService).add(this.ediseasesObj).subscribe();
-          }
-          // this.dialog.close(p)
+          this.notify.notifyCode('SYS006');
+          this.dialog && this.dialog.close(p);
         }
         else this.notify.notifyCode('SYS023')
       });
@@ -135,14 +128,9 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
     else{
       this.hrSevice.UpdateEmployeeDiseasesInfo(this.formModel.currentData).subscribe(p => {
         if(p != null){
-          this.notify.notifyCode('SYS007')
-        this.lstEdiseases[this.indexSelected] = p;
-        if(this.listView){
-          (this.listView.dataService as CRUDService).update(this.lstEdiseases[this.indexSelected]).subscribe()
-        }
-          // this.dialog.close(this.data)
-        }
-        else this.notify.notifyCode('SYS021')
+          this.notify.notifyCode('SYS007');
+          this.dialog && this.dialog.close(p);
+        } else this.notify.notifyCode('SYS021')
       });
     }
   }
