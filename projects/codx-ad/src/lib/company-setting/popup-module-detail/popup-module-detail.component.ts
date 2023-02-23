@@ -41,7 +41,7 @@ export class PopupModuleDetailComponent extends UIComponent {
     this.lstModule = dt.data.lstModule as Array<TN_OrderModule>;
     this.childMD = this.lstModule.find(
       (md: TN_OrderModule) =>
-        md.boughtModule.refID == this.module.boughtModule.moduleID
+        md.boughtModule?.refID == this.module?.boughtModule?.moduleID
     );
   }
   dialog;
@@ -68,7 +68,7 @@ export class PopupModuleDetailComponent extends UIComponent {
     console.log('md', this.module);
     console.log('child md', this.childMD);
     this.predicate = 'TenantID=@0 and Module=@1';
-    this.dataValue = this.module.moduleID + ';' + this.tenantID;
+    this.dataValue = this.module?.boughtModule?.moduleID + ';' + this.tenantID;
 
     this.clmnGrid = [
       {
@@ -96,8 +96,8 @@ export class PopupModuleDetailComponent extends UIComponent {
 
     this.api
       .execSv('Tenant', 'Tenant', 'UserRolesBusiness', 'GetListUserRoleAsync', [
-        this.module.moduleID,
-        this.childMD.moduleID,
+        this.module?.boughtModule?.moduleID,
+        this.childMD?.boughtModule?.moduleID,
       ])
       .subscribe((res: any) => {
         console.log('res', res);
