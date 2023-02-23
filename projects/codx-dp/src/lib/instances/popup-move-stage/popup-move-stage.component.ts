@@ -62,6 +62,9 @@ export class PopupMoveStageComponent implements OnInit {
   fieldCbxRole = { text: 'objectName', value: 'objectID' };
   positionName = '';
   userName = '';
+  owner = '';
+  stepOld: any;
+  firstInstance: any;
   constructor(
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -101,6 +104,11 @@ export class PopupMoveStageComponent implements OnInit {
         this.assignControl = res.datas;
       }
     });
+    this.dpSv.getFirstIntance().subscribe(res=>{
+      if(res){
+        this.firstInstance = res;
+      }
+    });
     // this.loadListUser(this.instance.permissions);
   }
 
@@ -121,8 +129,41 @@ export class PopupMoveStageComponent implements OnInit {
     this.dpSv.getStepByStepIDAndInID(insID, stepID).subscribe((res) => {
       if (res) {
         this.stepCurrent = res;
-        if (this.stepCurrent.owner != null)
-          this.getNameAndPosition(this.stepCurrent.owner);
+        var i = -1;
+        i = this.listStep.findIndex((x) => x.recID == this.stepCurrent.recID);
+        this.assignControl = this.stepCurrent.assignControl;
+        if (i <= 0) {
+          this.assignControl = '0';
+        } else {
+          this.stepOld = this.listStep[i - 1].owner;
+        }
+        switch (this.assignControl) {
+          //Phụ trách giai đoạn hiện tại
+          case '0':
+            this.owner = this.stepCurrent.owner;
+            if (this.owner != '' || this.owner != null) this.getNameAndPosition(this.owner);
+            break;
+          //Phụ trách giai đoạn chuyển tiếp
+          case '1':
+            this.owner = this.listStep[i + 1].owner;
+            if (this.owner != '' || this.owner != null) this.getNameAndPosition(this.owner);
+            break;
+          //Giữ nguyên phụ trách trước
+          case '2':
+            this.owner = this.stepOld;
+            if (this.owner != '' || this.owner != null) this.getNameAndPosition(this.owner);
+            break;
+          //Người nhận nhiệm vụ đầu tiên
+          case '3':
+            this.owner = this.firstInstance.owner;
+            if (this.owner != '' || this.owner != null) this.getNameAndPosition(this.owner);
+            break;
+          //Người nhận nhiệm vụ hiện tại
+          case '4':
+            this.owner = this.instance.owner;
+            if (this.owner != '' || this.owner != null) this.getNameAndPosition(this.owner);
+            break;
+        }
       }
     });
   }
@@ -142,6 +183,7 @@ export class PopupMoveStageComponent implements OnInit {
     ) {
       this.instance.stepID = this.stepIdOld;
       this.instancesStepOld.stepID = this.stepIdOld;
+      this.instancesStepOld.owner = this.owner;
       this.stepIdOld = '';
       this.isReason = this.stepIdClick === this.IdFail ? false : true;
     } else {
@@ -191,5 +233,9 @@ export class PopupMoveStageComponent implements OnInit {
     this.callfc.openForm(popupParticipants, '', 950, 650);
   }
 
-  eventUser(e) {}
+  eventUser(e) {
+    this.owner = e.id;
+    this.userName = e.name;
+    if (this.owner != '') this.getNameAndPosition(this.owner);
+  }
 }
