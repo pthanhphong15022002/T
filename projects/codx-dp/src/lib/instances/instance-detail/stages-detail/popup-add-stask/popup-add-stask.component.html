@@ -177,7 +177,6 @@
         </codx-label>
         <codx-input
           field="startDate"
-          [formModel]="dialog?.formModel"
           (valueChange)="changeValueDate($event)"
           [crrValue]="stepsTasks?.startDate"
           type="datetime"
@@ -194,7 +193,6 @@
         </codx-label>
         <codx-input
           field="endDate"
-          [formModel]="dialog?.formModel"
           (valueChange)="changeValueDate($event)"
           [crrValue]="stepsTasks?.endDate"
           type="datetime"
