@@ -37,6 +37,11 @@ export class StepTaskGroupComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.taskGroup = dt?.data;
+    this.grvTaskGroupsForm = {
+      entityName: 'DP_Steps_TaskGroups',
+      formName: 'DPStepsTaskGroups',
+      gridViewName: 'grvDPStepsTaskGroups',
+    };
   }
 
   ngOnInit(): void {

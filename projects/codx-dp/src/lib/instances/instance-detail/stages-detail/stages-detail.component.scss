@@ -7,11 +7,7 @@
     padding: 0.3rem;
     margin-left: 0, 5rem;
 
-    .title-train {
-      font-weight: 600;
-      color: #000000;
-      font-size: 1.2rem;
-    }
+
   }
 }
 
@@ -19,8 +15,6 @@
   background-color: #d8d8d8;
   border-radius: 20px;
   position: relative;
-  margin: 15px 0;
-  height: 30px;
   width: 100%;
 }
 
@@ -37,43 +31,42 @@
   transition: 1s ease 0.3s;
 }
 
+.header-info {
+  border: 1px var(--primary-light) solid;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  background-color: var(--primary-lighter);
+}
+
 .back-info {
-  box-shadow: 2px 2px 5px 0px rgb(76 87 125 / 16%);
-  margin-top: 20px;
+  border: 1px var(--gray-150) solid;
+  box-shadow: 0px 2px 5px 1px rgb(76 87 125 / 16%);
+  border-radius: 4px;
+  margin-bottom: 15px;
 
   .header-info {
-    background-color: #cde7f1;
-    display: flex;
-    justify-content: space-between;
-    padding: 0.3rem;
-    margin-left: 0, 5rem;
+    background-color: var(--primary-lighter);
+    padding: 10px 15px;
+    border-radius: 4px;
 
-    .left {
-      .title {
-        font-weight: 600;
-        color: #2392ef;
-        font-size: 1.2rem;
-      }
+    .title {
+      font-weight: 600;
+      color: var(--primary-dark);
+      font-size: 1.1rem;
     }
 
-    .right {
-      display: flex;
-      align-items: center;
-    }
-  }
-
-  .show-main {
-    display: block;
-    transition: display 12s;
-    padding-bottom: 10px;
-  }
-
-  .hidden-main {
-    display: none;
-    transition: display 12s;
   }
 }
 
+.show-main {
+  display: block;
+  transition: display 12s;
+}
+
+.hidden-main {
+  display: none;
+  transition: display 12s;
+}
 
 .button-custom {
   border: none;
@@ -88,14 +81,13 @@
 
 //nvthuan
 .icon-container {
-  height: 40px;
-  width: 40px;
+  height: 36px;
+  width: 36px;
   border-radius: 50%;
-  background-color: #e4e4e4;
+  background-color: var(--gray-150);
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 10px;
 }
 
 .progress-task {
@@ -232,7 +224,7 @@
 }
 
 .drap-drop:hover {
-  box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
+  box-shadow: 0 0px 5px 0 rgba(0, 174, 255, 0.2) inset;
   border-radius: 5px;
   background-color: #f0f8ff;
   cursor: pointer;
@@ -275,9 +267,3 @@
 }
 
 // End Drop drap -- nvthuan
-
-.title-train {
-  font-weight: 600;
-  color: #000000;
-  font-size: 1.2rem;
-}

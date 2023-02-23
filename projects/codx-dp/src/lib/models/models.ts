@@ -343,6 +343,8 @@ export class DP_Instances_Steps {
   memo: string;
   newProcessID:string;
   reasonControl: boolean = false;
+  isSuccessStep: boolean =  false;
+  isFailStep: boolean = false;
 }
 
 export class DP_Instances_Steps_Roles {

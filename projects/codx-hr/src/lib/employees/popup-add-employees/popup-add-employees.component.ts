@@ -177,17 +177,13 @@ export class PopupAddEmployeesComponent implements OnInit {
   // add employee
   addEmployeeAsync(employee: any) {
     if (employee) {
-      debugger
       this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","SaveAsync",[employee])
       .subscribe((res:any) => {
+        debugger
         if(res)
-        {
           this.notifiSV.notifyCode("SYS006");
-        }
         else
-        {
           this.notifiSV.notifyCode('SYS023');
-        }
         this.dialogRef.close(res);
       });
     }
