@@ -46,6 +46,7 @@ export class PopupAddPostComponent implements OnInit {
     GROUPS: "G",
     USER: "U",
   }
+  copyFormat:string = "clean";
   // emoji  
   emojiMode = 'apple';
   // end emoji
@@ -426,5 +427,21 @@ export class PopupAddPostComponent implements OnInit {
       }
       this.dt.detectChanges();
     }
+  }
+  // get settingform
+  getSettingForm(){
+    this.api.execSv(
+      "SYS",
+      "ERM.Business.SYS",
+      "SettingValuesBusiness",
+      "GetSettingValueAsync",
+      ["WPParameters"])
+      .subscribe((res:any) => {
+        if(res){
+          let _param = JSON.stringify(res);
+          if(_param["CopyFormat"] === "1")
+            this.copyFormat = 'keepFormat';
+        }
+      })
   }
 }

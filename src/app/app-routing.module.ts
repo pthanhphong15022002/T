@@ -257,7 +257,7 @@ export const routes: Routes = [
     path: ':tenant',
     children: childRoutes,
   },
-  { path: '', redirectTo: 'auth', pathMatch: 'full' },
+  // { path: '', redirectTo: 'auth', pathMatch: 'full' },
 ];
 export const routes1: Routes = childRoutes;
 
