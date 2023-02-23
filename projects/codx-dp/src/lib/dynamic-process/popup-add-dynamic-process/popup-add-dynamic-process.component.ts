@@ -167,7 +167,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   roleGroupTaskOld: DP_Steps_Roles[] = [];
 
   grvMoreFunction: FormModel;
-  grvTaskGroups: any;
+  grvTaskGroups: FormModel;
+  grvStep: FormModel;
 
   dayStep = 0;
   hourStep = 0;
@@ -286,6 +287,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.showID = false;
         }
       });
+
+    this.grvStep = {
+      entityName: 'DP_Steps',
+      formName: 'DPSteps',
+      gridViewName: 'grvDPSteps',
+    };
   }
 
   //genAutoNumber
@@ -1112,6 +1119,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   saveStep() {
+    if(!this.stepName.trim()){
+      this.notiService.notifyCode('SYS009', 0, 'Tên giai đoạn');
+      return;
+    }
     if (!this.stepName) {
       this.stepList.push(this.step);
       this.viewStepSelect(this.step);
