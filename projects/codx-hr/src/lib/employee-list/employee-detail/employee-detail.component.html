@@ -3505,6 +3505,7 @@
                 <codx-gridview
                   *ngIf="benefitColumnGrid"
                   #gridView
+                  [sort] = "[benefitSortModel]"
                   [formModel]="benefitFormodel"
                   [columnsGrid]="benefitColumnGrid"
                   [service]="'HR'"
@@ -3620,6 +3621,7 @@
                 <codx-gridview
                   *ngIf="eAssetColumnGrid"
                   #eAssetGridView
+                  [sort] = "[assetSortModel]"
                   [formModel]="eAssetFormModel"
                   [columnsGrid]="eAssetColumnGrid"
                   [service]="'HR'"
@@ -4064,6 +4066,7 @@
               >
                 <codx-gridview
                   *ngIf="dayoffColumnGrid"
+                  [sort]="[dayOffSortModel]"
                   #dayoffGridView
                   [formModel]="dayofFormModel"
                   [columnsGrid]="dayoffColumnGrid"
@@ -4077,6 +4080,7 @@
                   [entityName]="'HR_EDayOffs'"
                   [rowHeight]="50"
                   height="240px"
+                  [allowSorting]="true"
                 ></codx-gridview>
               </div>
             </div>
@@ -4133,6 +4137,7 @@
                 <codx-gridview
                   *ngIf="businessTravelColumnGrid"
                   #businessTravelGrid
+                  [sort] = "[businessTravelSortModel]"
                   [formModel]="EBusinessTravelFormodel"
                   [columnsGrid]="businessTravelColumnGrid"
                   [service]="'HR'"
@@ -4194,6 +4199,7 @@
                 <codx-gridview
                   *ngIf="eExperienceColumnGrid"
                   #eExperienceGridView
+                  [sort] = "[experienceSortModel]"
                   [formModel]="eExperienceFormModel"
                   [columnsGrid]="eExperienceColumnGrid"
                   [service]="'HR'"

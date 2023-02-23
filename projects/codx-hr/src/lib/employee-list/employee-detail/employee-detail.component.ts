@@ -48,6 +48,7 @@ import {
   FormModel,
   NotificationsService,
   SidebarModel,
+  SortModel,
   UIComponent,
   ViewModel,
   ViewType,
@@ -204,6 +205,14 @@ export class EmployeeDetailComponent extends UIComponent {
   eAssetGrvSetup;
   eDayOffGrvSetup;
   eTrainCourseGrvSetup;
+  //#endregion
+
+  //#region sortModels
+  dayOffSortModel: SortModel;
+  assetSortModel: SortModel;
+  experienceSortModel: SortModel;
+  businessTravelSortModel: SortModel;
+  benefitSortModel: SortModel;
   //#endregion
 
   reRenderGrid = true;
@@ -526,6 +535,26 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   onInit(): void {
+    this.dayOffSortModel = new SortModel();
+    this.dayOffSortModel.field = 'BeginDate';
+    this.dayOffSortModel.dir = 'desc';
+
+    this.assetSortModel = new SortModel();
+    this.assetSortModel.field = 'IssuedDate';
+    this.assetSortModel.dir = 'desc';
+
+    this.experienceSortModel = new SortModel();
+    this.experienceSortModel.field = 'FromDate';
+    this.experienceSortModel.dir = 'asc';
+    
+    this.businessTravelSortModel = new SortModel();
+    this.businessTravelSortModel.field = 'BeginDate';
+    this.businessTravelSortModel.dir = 'desc';
+
+    this.benefitSortModel = new SortModel();
+    this.benefitSortModel.field = 'EffectedDate';
+    this.benefitSortModel.dir = 'desc';
+
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       this.addHeaderText = res[0].customName;
       this.editHeaderText = res[2].customName;
@@ -752,6 +781,7 @@ export class EmployeeDetailComponent extends UIComponent {
                 this.dayoffHeaderTexts['RegisteredDate'],
               template: this.templateDayOffGridCol1,
               width: '150',
+              
             },
             {
               headerText: 'Thời gian nghỉ ' + '|' + 'Số ngày',
@@ -2942,14 +2972,26 @@ export class EmployeeDetailComponent extends UIComponent {
         if (actionType == 'add' || actionType == 'copy') {
           (this.dayoffGrid.dataService as CRUDService)
             .add(res.event)
-            .subscribe();
-          this.dayoffRowCount += 1;
-        } else if (actionType == 'edit') {
-          (this.dayoffGrid.dataService as CRUDService)
+            .subscribe(res=>{
+              if(this.dayoffGrid){
+              //this.dayoffGrid.sort = [this.dayOffSortModel]
+              //this.dayoffGrid.gridRef.allowSorting =true;
+              this.dayoffGrid.gridRef.sortColumn("BeginDate", "Descending", false);
+              }
+            });
+            this.dayoffRowCount += 1;
+          } else if (actionType == 'edit') {
+            (this.dayoffGrid.dataService as CRUDService)
             .update(res.event)
-            .subscribe();
+            .subscribe(res=>{
+              if(this.dayoffGrid){
+                debugger
+                this.dayoffGrid.gridRef.allowSorting =true;
+                this.dayoffGrid.gridRef.sortColumn("BeginDate", "Descending", false);
+              }
+            });
+          }
         }
-      }
       this.df.detectChanges();
     });
   }
@@ -3187,11 +3229,11 @@ export class EmployeeDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      this.reRenderGrid = false;
-      this.df.detectChanges();
-      this.reRenderGrid = true;
-      this.df.detectChanges();
       if (res.event) {
+        this.reRenderGrid = false;
+        this.df.detectChanges();
+        this.reRenderGrid = true;
+        this.df.detectChanges();
         if (actionType == 'add' ) {
           this.appointionRowCount+=1;
 
