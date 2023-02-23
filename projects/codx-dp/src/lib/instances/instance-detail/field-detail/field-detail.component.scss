@@ -1,10 +1,10 @@
-.back-info{
-  font-size: 16px;
-  box-shadow: #e4e4e4 5px 5px 15px 5px;
-  margin-top: 20px;
+.back-info {
+  box-shadow: 2px 2px 5px 0px rgb(76 87 125 / 16%);
+  border: 1px var(--gray-100) solid;
+  margin-bottom: 15px;
 
   .header-info {
-    background-color: #cde7f1;
+    background-color: var(--primary-lighter);
     display: flex;
     justify-content: space-between;
     padding: 0.3rem;
@@ -41,14 +41,16 @@
   outline: none;
   background: none;
   color: #0077b1;
+
   span {
     font-weight: 400;
   }
 }
 
-.margin-l{
+.margin-l {
   margin-left: 20px;
 }
+
 .margin-user {
   margin-left: 10px;
 }
@@ -69,6 +71,7 @@
 .card-rating .rating-group+div {
   text-align: center;
 }
+
 .rankIcon {
   font-size: 1.5rem;
   color: #b0c4de;
@@ -76,10 +79,11 @@
 
 .filled {
   color: #FFA800 !important
-      /* #1e90ff;*/
+    /* #1e90ff;*/
 }
+
 //Thao css
-.class-field > .crr-fiels:hover {
+.class-field>.crr-fiels:hover {
   box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
   border-radius: 5px;
   background-color: #f0f8ff;
