@@ -57,11 +57,11 @@
                   <span class="badge badge-primary"> {{ stepName }}</span>
                 </div>
                 <div class="text-gray-500 my-2">
-                  {{ dataSelect.createdOn }}
+                  {{ dataSelect.createdOn | date : "HH:mm - dd/MM/yyyy"  }}
                 </div>
               </div>
               <div class="ms-3">
-                <codx-img [objectId]="'ADMIN'" objectType="AD_Users" [width]="45">
+                <codx-img [objectId]="onwer" objectType="AD_Users" [width]="45">
                 </codx-img>
               </div>
             </div>

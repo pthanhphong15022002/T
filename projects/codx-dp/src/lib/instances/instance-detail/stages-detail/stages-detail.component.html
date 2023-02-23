@@ -6,8 +6,8 @@
     </div>
     <div class="mb-3">
       <div class="d-flex align-items-center justify-content-between">
-        <span>Ngày chuyển đến giai đoạn: 09:00 11/10/2022</span>
-        <span *ngIf="startDate != null">Bắt đầu lúc: {{ startDate }}</span>
+        <span>Ngày chuyển đến giai đoạn: {{ dataStep.actualStart | date : "HH:mm - dd/MM/yyyy"  }}</span>
+        <span>Bắt đầu lúc {{ startDate }}</span>
       </div>
       <div class="progress mt-2 h-20px">
         <div class="progress-done" role="progressbar" [style.width]="progress + '%'" aria-valuenow="50"
@@ -327,13 +327,14 @@
   <div class="back-info mb-4">
     <div class="header-info p-3">
       <div class="fw-bold fs-4 text-dark">{{dataStep.stepName}} </div>
-      <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between py-3">
         <div class="me-2">
           <codx-label default="Ngày chuyển đến giai đoạn"></codx-label>
         </div>
+        <!-- Gán tạm -->
         <span>{{ dataStep.actualStart | date : "HH:mm - dd/MM/yyyy" }}</span>
       </div>
-      <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between pb-3">
         <div>
           <codx-label default="Giai đoạn đánh dấu"></codx-label>
         </div>
@@ -341,7 +342,7 @@
           <span>{{ stepNameEnd }}</span>
         </div>
       </div>
-      <div class="d-flex justify-content-between"
+      <div class="d-flex justify-content-between pb-3"
         *ngIf="dataStep.newProcessID !== null && dataStep.newProcessID !=='' ">
         <div>
           <codx-label default="Quy trình được chuyển đến"></codx-label>
@@ -354,10 +355,10 @@
   </div>
   <div class="back-info mb-4">
     <div class="header-info p-3 d-flex align-items-center justify-content-between">
-      <codx-label class="title" default="Lý do thành công gán tạm"></codx-label>
+      <span class="title" >{{titleReason}}</span>
       <div class="group-button">
         <button class="button-custom" (click)="openPopupReason()">
-          <span [ngClass]="!this.isCreate ? '' : 'icon-edit icon-20 text-primary-600 py-2'"
+          <span [ngClass]="'icon-edit icon-20 text-primary-600 py-2'"
             style="font-weight: 500"></span>
         </button>
         <button class="button-custom" (click)="clickShow($event, 'step-reason')">
