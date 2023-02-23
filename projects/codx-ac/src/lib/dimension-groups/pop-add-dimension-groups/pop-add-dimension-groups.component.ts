@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } f
 import { UIComponent, CodxFormComponent, FormModel, DialogRef, CacheService, CallFuncService, NotificationsService, DialogData, RequestOption, DialogModel } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { DimensionGroups } from '../../models/DimensionGroups.model';
+import { DimensionSetup } from '../../models/DimensionSetup.model';
 import { PopAddDimensionSetupComponent } from '../pop-add-dimension-setup/pop-add-dimension-setup.component';
 
 @Component({
@@ -19,6 +20,8 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
   dimGroupID:any;
   dimGroupName:any;
   dimensionGroups:DimensionGroups;
+  dimensionSetup:DimensionSetup;
+  objectDimensionSetup:Array<DimensionSetup> = [];
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -39,6 +42,13 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
     if (this.dimensionGroups.dimGroupID != null) {
         this.dimGroupID = this.dimensionGroups.dimGroupID;
         this.dimGroupName = this.dimensionGroups.dimGroupName;
+        this.acService
+        .loadData('ERM.Business.IV', 'DimensionSetupBusiness', 'LoadDataAsync', [
+          this.dimGroupID
+        ])
+        .subscribe((res: any) => {
+          this.objectDimensionSetup = res;
+        });
     }
     this.cache.gridViewSetup('DimensionGroups', 'grvDimensionGroups').subscribe((res) => {
       if (res) {
@@ -62,9 +72,17 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
     this.dimGroupName = e.data;
     this.dimensionGroups[e.field] = e.data;
   }
-  openPopupSetup() {
+  openPopupSetup(hearder:any,type:any) {
+    let index = this.objectDimensionSetup.findIndex((x) => x.dimType == type);
+    if (index == -1) {
+      this.dimensionSetup = null;
+    }else{
+      this.dimensionSetup = this.objectDimensionSetup[index];
+    }
     var obj = {
-      headerText: 'Thiết lập kiểm soát',
+      headerText: 'Thiết lập kiểm soát ' + hearder,
+      type:type,
+      data:this.dimensionSetup
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -80,14 +98,23 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
             PopAddDimensionSetupComponent,
             '',
             550,
-            1000,
+            900,
             '',
             obj,
             '',
             opt
           );
           dialog.closed.subscribe((x) => {
-           
+            var datadimensionSetup = JSON.parse(localStorage.getItem('datadimensionSetup'));
+            if (datadimensionSetup != null) {
+              let index = this.objectDimensionSetup.findIndex((x) => x.dimType == datadimensionSetup.dimType);
+              if (index == -1) {
+                this.objectDimensionSetup.push(datadimensionSetup);
+              }else{
+                this.objectDimensionSetup[index] = datadimensionSetup;
+              }
+            }
+            window.localStorage.removeItem('datadimensionSetup');
           });
         }
       });
@@ -135,6 +162,11 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
         })
         .subscribe((res) => {
           if (res.save) {
+            this.acService
+              .addData('ERM.Business.IV', 'DimensionSetupBusiness', 'AddAsync', [
+                this.dimGroupID,this.objectDimensionSetup,
+              ])
+              .subscribe((res: []) => {});
             this.dialog.close();
             this.dt.detectChanges();
           }else {
@@ -159,6 +191,11 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
         })
         .subscribe((res) => {
           if (res.save || res.update) {
+            this.acService
+              .addData('ERM.Business.IV', 'DimensionSetupBusiness', 'UpdateAsync', [
+                this.dimGroupID,this.objectDimensionSetup,
+              ])
+              .subscribe((res: []) => {});
             this.dialog.close();
             this.dt.detectChanges();
           }else {
