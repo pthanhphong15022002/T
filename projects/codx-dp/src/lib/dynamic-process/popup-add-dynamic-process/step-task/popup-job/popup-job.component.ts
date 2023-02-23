@@ -1,3 +1,5 @@
+import { map } from 'rxjs';
+import { group } from '@angular/animations';
 import { async } from '@angular/core/testing';
 import {
   ChangeDetectorRef,
@@ -136,6 +138,75 @@ export class PopupJobComponent implements OnInit {
         .join('; ');
     }
   }
+
+  setTaskLink(groupTaskID?: string) {
+    let taskLinks = [];
+    if (groupTaskID) {
+      if (this.status == 'add' || this.status == 'copy') {
+        let groupTask = this.groupTackList.find((x) => x.recID === groupTaskID);
+        if (groupTask && groupTask['task']) {
+          taskLinks = this.mapDataTask(groupTask['task']);
+        }
+      } else {
+        if (this.stepsTasks['parentID']) {
+          let litsParentID = this.stepsTasks['parentID'].split(';');
+          let groupTask = this.groupTackList.find(
+            (x) => x.recID === groupTaskID
+          );
+          if (groupTask && groupTask['task']) {
+            taskLinks = this.mapDataTask(groupTask['task'], litsParentID);
+          }
+          let index = taskLinks.findIndex(
+            (x) => x.key === this.stepsTasks.recID
+          );
+          taskLinks.splice(index, 1);
+        }
+      }
+    } else {
+      if (this.status == 'add' || this.status == 'copy') {
+        if (this.taskList?.length > 0) {
+          taskLinks = this.mapDataTask(this.taskList);
+        }
+      } else {
+        let litsParentID = this.stepsTasks['parentID'].split(';');
+        if (this.taskList?.length > 0) {
+          taskLinks = this.mapDataTask(this.taskList, litsParentID);
+        }
+        let index = taskLinks.findIndex(
+          (x) => x.key === this.stepsTasks.recID
+        );
+        taskLinks.splice(index, 1);
+      }
+    }
+    return taskLinks;
+  }
+
+  mapDataTask(liskTask, listID?) {
+    let taskLinks = [];
+    let data;
+    if (liskTask?.length > 0) {
+      liskTask.forEach((element) => {
+        if (element['recID'] && element['taskName']) {
+          taskLinks.push({
+            key: element.recID,
+            value: element.taskName,
+            checked: false,
+          });
+        }
+      });
+    }
+
+    if (listID && listID.length > 0 && taskLinks.length > 0) {
+      data = taskLinks.map((data) => {
+        return listID.some((x) => x == data.recID)
+          ? { ...data, checked: true }
+          : { ...data };
+      });
+      taskLinks = data;
+    }
+    return taskLinks;
+  }
+
   getTypeTask() {
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
@@ -255,7 +326,6 @@ export class PopupJobComponent implements OnInit {
   }
 
   getFormModel() {
-
     this.frmModel = {
       entityName: 'DP_Steps_Tasks',
       formName: 'DPStepsTasks',
@@ -384,18 +454,19 @@ export class PopupJobComponent implements OnInit {
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
     } else {
-      if (this.attachment && this.attachment.fileUploadList.length){
+      if (this.attachment && this.attachment.fileUploadList.length) {
         (await this.attachment.saveFilesObservable()).subscribe((res) => {
-          if (res) {this.handelSave();}
+          if (res) {
+            this.handelSave();
+          }
         });
       } else {
         this.handelSave();
-      } 
-      
+      }
     }
   }
 
-  handelSave(){
+  handelSave() {
     if (this.stepsTasks['taskGroupID']) {
       let groupTask = this.groupTackList.find(
         (x) => x.recID == this.stepsTasks['taskGroupID']
