@@ -89,6 +89,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   role = true;
   settingProcess = true;
   memoProcess = true;
+  listCombobox = {};
   //!--ID SHOW FORM !--//
 
   // create value initialize
@@ -239,7 +240,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.processTab = 2;
       this.getAvatar(this.process);
     } else {
-      this.process.processNo = dt.data.processNo;
       this.process.instanceNoSetting = dt.data.instanceNo;
       // this.step.owner = this.user.userID;
       // this.process.instanceNoSetting = this.process.processNo;
@@ -296,20 +296,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     };
   }
 
-  //genAutoNumber
-  async genAutoNumber() {
-    this.dpService
-      .genAutoNumber(this.funcID, 'DP_Processes', 'processNo')
-      .subscribe((res) => {
-        if (res) {
-          this.process.processNo = res;
-          this.showID = true;
-          this.process.instanceNoSetting = this.process.processNo;
-        } else {
-          this.showID = false;
-        }
-      });
-  }
+
 
   ngOnInit(): void {
     // this.updateNodeStatus(0,1);
@@ -526,8 +513,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     switch (currentTab) {
       case 0:
         if (
-          this.process.processNo == null ||
-          this.process.processNo == '' ||
           this.process.processName == null ||
           this.process.processName == ''
         ) {
@@ -602,22 +587,35 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //Control share
   sharePerm(share, type) {
+    this.listCombobox = {};
+    this.multiple = true;
     switch (type) {
       case 'supervisor':
         this.vllShare = 'DP0331';
         this.typeShare = '1';
+        this.multiple = true;
         break;
       case 'participants':
         this.vllShare = 'DP0331';
         this.typeShare = '2';
+        this.multiple = true;
         break;
       case 'followers':
         this.vllShare = 'DP0332';
         this.typeShare = '3';
+        this.multiple = true;
         break;
       case 'participants-2':
-        this.vllShare = 'Users';
+        this.vllShare = 'DP0331';
         this.typeShare = '4';
+        this.multiple = false;
+        this.listCombobox = {
+          U: 'Share_Users_Sgl',
+          P: 'Share_Positions_Sgl',
+          R: 'Share_UserRoles_Sgl',
+          D: 'Departments',
+          O: 'Share_OrgUnits'
+        };
         break;
     }
     this.callfc.openForm(share, '', 420, 600);
@@ -714,6 +712,34 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
           this.process.permissions = this.permissions;
           break;
+          case '4':
+            var value = e;
+            var tmpRole = [];
+            for (var i = 0; i < value.length; i++) {
+              var data = value[i];
+              var roles = new DP_Steps_Roles();
+              roles.objectName = (data.text != null || data.text == '') && data.objectType != "U" ? data.text : data.dataSelected.EmployeeName;
+              roles.objectID = data.id != null ? data.id : null;
+              roles.objectType = data.objectType;
+              roles.roleType = 'S';
+              tmpRole = this.checkRolesStep(this.step.roles, roles);
+              var perm = new DP_Processes_Permission();
+              perm.objectName = (data.text != null || data.text == '') && data.objectType != "U" ? data.text : data.dataSelected.EmployeeName;
+              perm.objectID = data.id != null ? data.id : null;
+              perm.objectType = data.objectType;
+              perm.roleType = 'P';
+              perm.full = false;
+              perm.read = true;
+              perm.create = false;
+              perm.assign = false;
+              perm.edit = false;
+              // perm.publish = false;
+              perm.delete = false;
+              this.permissions = this.checkUserPermission(this.permissions, perm);
+            }
+            this.step.roles = tmpRole;
+            this.process.permissions = this.permissions;
+            break;
       }
     }
     this.changeDetectorRef.detectChanges();
@@ -846,7 +872,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       );
       popupAutoNum.closed.subscribe((res) => {
         if (res?.event) {
-          this.process.instanceNoSetting = this.process.processNo;
         }
       });
     }
@@ -1515,7 +1540,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   checkButtonContinue() {
     if (this.currentTab == 0) {
-      return this.process.processNo && this.process.processName ? true : false;
+      return this.process.processName ? true : false;
     } else {
       return this.stepList?.length > 0 ? true : false;
     }

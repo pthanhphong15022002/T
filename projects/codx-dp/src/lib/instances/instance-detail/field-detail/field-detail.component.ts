@@ -113,7 +113,7 @@ export class FieldDetailComponent implements OnInit {
     let option = new SidebarModel();
     option.FormModel = formModel;
     option.Width = '550px';
-    option.zIndex = 1005;
+    option.zIndex = 1000;
     let field = this.callfc.openSide(PopupCustomFieldComponent, obj, option);
   }
 

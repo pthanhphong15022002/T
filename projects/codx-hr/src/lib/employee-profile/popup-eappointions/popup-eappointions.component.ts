@@ -194,7 +194,39 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
           } else this.notify.notifyCode('SYS021');
         });
     }
-  }
+    }
+
+    valueChange(event) {
+      if (event?.field && event?.component && event?.data != '') {
+        switch (event.field) {
+          case 'SignerID': {
+            let employee = event?.component?.itemsSelected[0];
+            if (employee) {
+              if (employee?.PositionID) {
+                this.hrService
+                  .getPositionByID(employee.PositionID)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.EAppointionObj.signerPosition = res.positionName;
+                      this.formGroup.patchValue({
+                        signerPosition: this.EAppointionObj.signerPosition,
+                      });
+                      this.cr.detectChanges();
+                    }
+                  });
+              } else {
+                this.EAppointionObj.signerPosition = null;
+                this.formGroup.patchValue({
+                  signerPosition: this.EAppointionObj.signerPosition,
+                });
+              }
+            }
+            break;
+          }
+        }
+        this.cr.detectChanges();
+      }
+    }
 
   ngAfterViewInit(){
     this.dialog && this.dialog.closed.subscribe(res => {
@@ -206,22 +238,4 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       }
     })
   }
-
-  // click(data) {
-  //   this.EAppointionObj = data;
-  //   this.formModel.currentData = JSON.parse(
-  //     JSON.stringify(this.EAppointionObj)
-  //   );
-  //   this.indexSelected = this.lstEAppointions.findIndex(
-  //     (p) => p.recID == this.EAppointionObj.recID
-  //   );
-  //   this.actionType = 'edit';
-  //   this.formGroup?.patchValue(this.EAppointionObj);
-  //   this.cr.detectChanges();
-  // }
-
-  // afterRenderListView(evt) {
-  //   this.listView = evt;
-  //   console.log(this.listView);
-  // }
 }
