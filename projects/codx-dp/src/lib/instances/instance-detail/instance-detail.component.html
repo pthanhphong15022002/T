@@ -1,6 +1,6 @@
 <ng-container *ngIf="dataSelect?.recID">
   <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [dataItem]="dataSelect" [hideMF]="false"
-    (changeDataMF)="changeDataMF($event, dataSelect)" (clickMF)="clickMF($event, dataSelect)">
+    (changeDataMF)="changeDataMF($event, dataSelect)" (clickMF)="clickMF($event, dataSelect)" [footer]="tabs">
     <ng-template #header>
       <div class="container_detail mt-3">
         <div class="d-flex flex-grow-1 mb-4">
@@ -142,7 +142,7 @@
       </ng-container>
     </ng-template>
     
-    <ng-template #footer>
+    <ng-template #tabs>
       <codx-tabs
         [entityName]="formModel.entityName"
         [formModel]="formModel"

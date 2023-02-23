@@ -453,12 +453,13 @@ export class InstancesComponent
   viewDetail(recID) {
     //  this.detailViewInstance.GetStepsByInstanceIDAsync(recID)
     let option = new DialogModel();
-     option.zIndex = 1001;
+    option.IsFull = true;
+    option.zIndex = 999;
     let popup = this.callFunc.openForm(
       this.popDetail,
       '',
-      Util.getViewPort().width - 200,
-      Util.getViewPort().height - 200,
+      Util.getViewPort().width ,
+      Util.getViewPort().height,
       '',
       null,
       '',
