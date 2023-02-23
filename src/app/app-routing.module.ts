@@ -214,7 +214,6 @@ var childRoutes = [
         path: 'dynamic/:funcID',
         component: DynamicFormComponent,
       },
-      
     ],
   },
   {
@@ -225,7 +224,7 @@ var childRoutes = [
     path: 'sos',
     component: SosComponent,
   },
- 
+
   {
     path: '',
     redirectTo: 'wp',
@@ -248,7 +247,7 @@ export const routes: Routes = [
     component: LayoutTenantComponent,
     children: [{ path: '', component: TenantsComponent }],
   },
- 
+
   {
     path: 'auth',
     loadChildren: () =>
@@ -258,6 +257,7 @@ export const routes: Routes = [
     path: ':tenant',
     children: childRoutes,
   },
+  // { path: '', redirectTo: 'auth', pathMatch: 'full' },
 ];
 export const routes1: Routes = childRoutes;
 

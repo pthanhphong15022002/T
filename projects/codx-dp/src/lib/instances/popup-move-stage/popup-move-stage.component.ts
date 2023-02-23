@@ -202,7 +202,7 @@ export class PopupMoveStageComponent implements OnInit {
           isReason: this.isReason,
         };
         this.dialog.close(obj);
-        this.notiService.notifyCode('Chuyển tiếp oke nha');
+        this.notiService.notifyCode('SYS007');
 
         this.changeDetectorRef.detectChanges();
       }
@@ -210,9 +210,9 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   valueChange($event) {
-    if ($event) {
-      this.instancesStepOld[$event.field] = $event.data;
-    }
+    // if ($event) {
+    //   this.instancesStepOld[$event.field] = $event.data;
+    // }
     this.changeDetectorRef.detectChanges();
   }
 

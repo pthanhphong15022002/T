@@ -76,7 +76,6 @@
           <div class="position-relative">
             <codx-input
               field="durationDay"
-              [formModel]="grvTaskGroupsForm"
               type="number"
               [min]="0"
               (valueChange)="changeValueInput($event, taskGroup)"
@@ -94,7 +93,6 @@
           <div class="position-relative ms-2">
             <codx-input
               field="durationHour"
-              [formModel]="grvTaskGroupsForm"
               type="number"
               [min]="0"
               (valueChange)="changeValueInput($event, taskGroup)"
