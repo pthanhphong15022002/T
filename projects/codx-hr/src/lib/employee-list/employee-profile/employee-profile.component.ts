@@ -1456,7 +1456,7 @@ export class EmployeeProfileComponent extends UIComponent {
                 });
             } else if (funcID == 'Diseases') {
               this.hrService
-                .DeleteEmployeeDiseasesInfo(data.recID)
+                .DeleteEmployeeEDiseasesInfo(data.recID)
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');

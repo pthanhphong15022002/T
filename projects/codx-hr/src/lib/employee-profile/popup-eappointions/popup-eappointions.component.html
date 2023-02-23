@@ -356,6 +356,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+                [disabled]="true"
                 field="oldOrgUnitID"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -381,6 +382,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+                [disabled]="true"
                 field="oldJobLevel"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -406,6 +408,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+                [disabled]="true"
                 field="oldPositionID"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -431,6 +434,7 @@
                 [formModel]="formModel"
             ></codx-label>
             <codx-input
+                [disabled]="true"
                 field="oldLocationID"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -447,6 +451,7 @@
                 field="signerID"
                 [formModel]="formModel"
                 [Group]="formGroup"
+            (valueChange)="valueChange($event)"
             ></codx-input>
     </div>
 

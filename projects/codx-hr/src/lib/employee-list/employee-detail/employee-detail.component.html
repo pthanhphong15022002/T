@@ -937,7 +937,9 @@
             </div>
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="HandleEmployeeEDisciplinesInfo(addHeaderText, 'add', null)"
+              (click)="
+                HandleEmployeeEDisciplinesInfo(addHeaderText, 'add', null)
+              "
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -3505,6 +3507,7 @@
                 <codx-gridview
                   *ngIf="benefitColumnGrid"
                   #gridView
+                  [sort] = "[benefitSortModel]"
                   [formModel]="benefitFormodel"
                   [columnsGrid]="benefitColumnGrid"
                   [service]="'HR'"
@@ -3594,13 +3597,14 @@
                 </div>
                 <div class="d-flex me-3">
                   <codx-dropdown-select
+                    *ngIf="eAssetGrvSetup"
                     [cssClass]="'rounded-pill border-1'"
                     cssPopup="h-350px w-300px"
                     [isMulti]="true"
                     type="combobox"
                     emptyText="Loại tài sản"
                     field="AssetCategory"
-                    [refValue]="'AssetCategory'"
+                    [refValue]="eAssetGrvSetup?.AssetCategory?.referedValue"
                     (valueChange)="valueChangeFilterAssetCategory($event)"
                   ></codx-dropdown-select>
 
@@ -3619,6 +3623,7 @@
                 <codx-gridview
                   *ngIf="eAssetColumnGrid"
                   #eAssetGridView
+                  [sort] = "[assetSortModel]"
                   [formModel]="eAssetFormModel"
                   [columnsGrid]="eAssetColumnGrid"
                   [service]="'HR'"
@@ -3985,7 +3990,10 @@
               </div>
             </div>
             <div class="mb-1">
-              <div class="d-flex justify-content-between mt-6 mb-3">
+              <div
+                class="d-flex justify-content-between mt-6 mb-3"
+                *ngIf="reRenderGrid == true"
+              >
                 <codx-gridview
                   *ngIf="appointionColumnGrid"
                   #appointionGridView
@@ -4026,12 +4034,13 @@
               </div>
               <div class="d-flex align-items-center ms-5">
                 <codx-dropdown-select
+                  *ngIf="eDayOffGrvSetup"
                   [cssClass]="'rounded-pill border-1'"
                   cssPopup="h-350px w-300px"
                   [isMulti]="true"
                   type="combobox"
                   field="KowID"
-                  [refValue]="'HRKowsOff'"
+                  [refValue]="eDayOffGrvSetup?.KowID?.referedValue"
                   (valueChange)="valueChangeFilterDayOff($event)"
                 ></codx-dropdown-select>
                 <span class="text-gray-500 ms-2">|</span>
@@ -4062,6 +4071,7 @@
               >
                 <codx-gridview
                   *ngIf="dayoffColumnGrid"
+                  [sort]="[dayOffSortModel]"
                   #dayoffGridView
                   [formModel]="dayofFormModel"
                   [columnsGrid]="dayoffColumnGrid"
@@ -4075,6 +4085,7 @@
                   [entityName]="'HR_EDayOffs'"
                   [rowHeight]="50"
                   height="240px"
+                  [allowSorting]="true"
                 ></codx-gridview>
               </div>
             </div>
@@ -4088,14 +4099,16 @@
                 <div class="user-status d-flex align-items-center">
                   <span class="icon-local_taxi icon-20 me-1"></span>
                 </div>
-                <div class="fs-5 fw-bold text-uppercase text-primary">
+                <div class="fs-5 fw-bold text-primary">
                   <!-- <codx-label
                     name="lblWorkDiary"
                     [formModel]="view.formModel"
                     [default]="getFormHeader('HRTEM0504')"
                   >
                   </codx-label> -->
-                  {{ getFormHeader("HRTEM0504") }}
+                  <span class="text-uppercase">
+                    {{ getFormHeader("HRTEM0504") }}
+                  </span>
                   <span class="text-gray-500 ms-2"> | </span>
                   <span>({{ eBusinessTravelRowCount }})</span>
                 </div>
@@ -4129,6 +4142,7 @@
                 <codx-gridview
                   *ngIf="businessTravelColumnGrid"
                   #businessTravelGrid
+                  [sort] = "[businessTravelSortModel]"
                   [formModel]="EBusinessTravelFormodel"
                   [columnsGrid]="businessTravelColumnGrid"
                   [service]="'HR'"
@@ -4190,6 +4204,7 @@
                 <codx-gridview
                   *ngIf="eExperienceColumnGrid"
                   #eExperienceGridView
+                  [sort] = "[experienceSortModel]"
                   [formModel]="eExperienceFormModel"
                   [columnsGrid]="eExperienceColumnGrid"
                   [service]="'HR'"
@@ -4274,7 +4289,9 @@
               <div class="d-flex align-items-center ms-5">
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
-                  (click)="HandleEmployeeEDegreeInfo(addHeaderText, 'add', null)"
+                  (click)="
+                    HandleEmployeeEDegreeInfo(addHeaderText, 'add', null)
+                  "
                 >
                   <span
                     class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4517,7 +4534,9 @@
               <div class="d-flex align-items-center ms-5">
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
-                  (click)="HandleEmployeeESkillsInfo(addHeaderText, 'add', null)"
+                  (click)="
+                    HandleEmployeeESkillsInfo(addHeaderText, 'add', null)
+                  "
                 >
                   <span
                     class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4841,18 +4860,21 @@
                 <div class="user-status d-flex align-items-center">
                   <span class="icon-sentiment_satisfied icon-20 me-1"></span>
                 </div>
-                <div class="fs-5 fw-bold text-uppercase">
-                  <!-- <codx-label
+                <!-- <div class="fs-5 fw-bold text-uppercase">
+                  <codx-label
                     name="lblReward"
                     [formModel]="view.formModel"
                     [default]="getFormHeader('HRTEM0701')"
                   >
-                  </codx-label> -->
+                  </codx-label>
                   {{ getFormHeader("HRTEM0701") }}
-                </div>
-                <div class="text-secondary fw-bold">
+                </div> -->
+                <div class="fs-5 fw-bold text-uppercase text-primary">
+                  {{ getFormHeader("HRTEM0701") }}
                   <span class="text-gray-500 ms-2"> | </span>
-                  <span>({{ awardRowCount }})</span>
+                  <span class="text-dark fw-bold">
+                    <span>({{ awardRowCount }})</span>
+                  </span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -4868,7 +4890,9 @@
                 <span class="text-gray-500 ms-2">|</span>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
-                  (click)="HandleEmployeeEAwardsInfo(addHeaderText, 'add', null)"
+                  (click)="
+                    HandleEmployeeEAwardsInfo(addHeaderText, 'add', null)
+                  "
                 >
                   <span
                     class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4928,25 +4952,20 @@
                 <div class="user-status d-flex align-items-center">
                   <span class="icon-sentiment_dissatisfied icon-20 me-1"></span>
                 </div>
+
                 <div class="fs-5 fw-bold text-uppercase text-primary">
-                  <!-- <codx-label
-                    name="lblDiscipline"
-                    [formModel]="view.formModel"
-                    [default]="getFormHeader('HRTEM0702')"
-                  >
-                  </codx-label> -->
                   {{ getFormHeader("HRTEM0702") }}
-                </div>
-                <div class="text-secondary fw-bold">
                   <span class="text-gray-500 ms-2"> | </span>
-                  <span>({{ eDisciplineRowCount }})</span>
+                  <span class="text-dark fw-bold">
+                    <span>({{ eDisciplineRowCount }})</span>
+                  </span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="
-                  HandleEmployeeEDisciplinesInfo(addHeaderText, 'add', null)
+                    HandleEmployeeEDisciplinesInfo(addHeaderText, 'add', null)
                   "
                 >
                   <span
@@ -5219,22 +5238,35 @@
                   <span class="icon-sick icon-20 me-1"></span>
                 </div>
                 <div class="fs-5 fw-bold text-uppercase text-primary">
-                  <!-- <codx-label
-                    name="lblOccupationalDisease"
-                    [formModel]="view.formModel"
-                    [default]="getFormHeader('HRTEM0803')"
-                  >
-                  </codx-label> -->
                   {{ getFormHeader("HRTEM0803") }}
+                  <span class="text-gray-500 ms-2"> | </span>
+                  <span class="text-dark fw-bold">
+                    <span>({{ eDiseasesRowCount }})</span>
+                  </span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
+                <span>
+                  <codx-dropdown-select
+                    *ngIf="eDiseasesGrvSetup"
+                    [cssClass]="'rounded-pill border-1'"
+                    cssPopup="h-350px w-300px"
+                    [isMulti]="true"
+                    type="combobox"
+                    field="DiseaseID"
+                    [refValue]="eDiseasesGrvSetup.DiseaseID.referedValue"
+                    (valueChange)="valueChangeFilterDiseasesTypeID($event)"
+                  >
+                    <i class="icon-filter_alt"></i>
+                  </codx-dropdown-select>
+                </span>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="
-                    HandleEmployeeDiseaseInfo(addHeaderText, 'add', null)
+                    HandleEmployeeEDiseasesInfo(addHeaderText, 'add', null)
                   "
                 >
+                  <!--topdiseases-->
                   <span
                     class="icon-add icon-20 text-gray-600 text-hover-primary"
                   ></span>
@@ -5248,8 +5280,26 @@
               </div>
             </div>
 
+            <!--Griddiseases-->
             <div class="mb-1">
-              <div
+              <codx-gridview
+                *ngIf="eDiseasesColumnsGrid && eDiseasesFormModel"
+                #eDiseasesGridView
+                [formModel]="eDiseasesFormModel"
+                [columnsGrid]="eDiseasesColumnsGrid"
+                [service]="'HR'"
+                [assemblyName]="'Core'"
+                [className]="'DataBusiness'"
+                [method]="'LoadDataAsync'"
+                [predicates]="'EmployeeID=@0'"
+                [dataValues]="employeeID"
+                [pageSize]="numPageSizeGridView"
+                [entityName]="'HR_EDiseases'"
+                [rowHeight]="50"
+                height="240px"
+              >
+              </codx-gridview>
+              <!-- <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               ></div>
               <div class="d-flex flex-wrap mt-6 mb-3">
@@ -5270,7 +5320,7 @@
                     </codx-mfunc>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -6095,7 +6145,9 @@
   <div class="text-primary">
     <i></i>
     {{
-      data?.trainForm | formatvalue : eTrainCourseFormModel : "trainForm" | async
+      data?.trainForm
+        | formatvalue : eTrainCourseFormModel : "trainForm"
+        | async
     }}
   </div>
 </ng-template>
@@ -6108,7 +6160,9 @@
   <div>
     <i class="icon-year"></i>
     <span class="fw-bolder">
-      {{ data?.inYear | formatvalue : eTrainCourseFormModel : "inYear" | async }}
+      {{
+        data?.inYear | formatvalue : eTrainCourseFormModel : "inYear" | async
+      }}
     </span>
   </div>
 </ng-template>
@@ -6151,7 +6205,9 @@
         ></span>
         <span class="fw-bold">
           <span>{{
-            data?.result | formatvalue : eTrainCourseFormModel : "result" | async
+            data?.result
+              | formatvalue : eTrainCourseFormModel : "result"
+              | async
           }}</span>
         </span>
       </div>
@@ -6461,13 +6517,20 @@
 
 <ng-template #templateDisciplineGridCol1 let-data>
   <div class="fw-bold">
-    {{ data?.disciplineID | formatvalue : eDisciplineFormModel : "DisciplineID" | async }}
+    {{
+      data?.disciplineID
+        | formatvalue : eDisciplineFormModel : "DisciplineID"
+        | async
+    }}
   </div>
   <div class="text-warning">
     <i></i>
-    {{ data?.disciplineFormCategory | formatvalue : eDisciplineFormModel : "disciplineFormCategory" | async }}
+    {{
+      data?.disciplineFormCategory
+        | formatvalue : eDisciplineFormModel : "disciplineFormCategory"
+        | async
+    }}
   </div>
-
 </ng-template>
 <ng-template #templateDisciplineGridCol2 let-data>
   <div>
@@ -6477,20 +6540,67 @@
   <div>
     <i class="icon-calendar_today text-dark"></i>
     {{ data?.fromDate | fmDT }}
-    <i class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></i>
+    <i
+      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
+    ></i>
     <i class="icon-library_books"></i>
-    {{ data?.decisionNo | formatvalue : eDisciplineFormModel : "decisionNo" | async }}
+    {{
+      data?.decisionNo
+        | formatvalue : eDisciplineFormModel : "decisionNo"
+        | async
+    }}
   </div>
 </ng-template>
 <ng-template #templateDisciplineGridCol3 let-data>
   <div class="has-action-menu">
-    {{data?.reason}}
+    {{ data?.reason }}
     <codx-mfunc
-    [formModel]="eDisciplineFormModel"
-    (clickMF)="clickMF($event, data, 'eDisciplines')"
+      [formModel]="eDisciplineFormModel"
+      (clickMF)="clickMF($event, data, 'eDisciplines')"
+      [dataItem]="data"
+      type="hover"
+    >
+    </codx-mfunc>
+  </div>
+</ng-template>
+
+<ng-template #templateDiseasesGridCol1 let-data>
+  <i></i>
+  <div class="fw-bolder mb-1">
+    {{
+      data?.diseaseID | formatvalue : eDiseasesFormModel : "diseaseID" | async
+    }}
+  </div>
+  <div class="text-warning">
+    <span class="text-info" *ngIf="data.isInspect"> Có giám định Y khoa </span>
+    <i class="icon-calendar_today"></i>
+    {{ data?.diseaseDate | fmDT }}
+  </div>
+</ng-template>
+<ng-template #templateDiseasesGridCol2 let-data>
+  <div class="fw-bold mb-1">
+    <i class="icon-calendar_today"></i>
+    {{ data?.fromDate | fmDT }} - {{ data?.toDate | fmDT }}
+  </div>
+  <div class="text-uppercase">
+    {{
+      data?.treatHopitalID
+        | formatvalue : eDiseasesFormModel : "treatHopitalID"
+        | async
+    }}
+  </div>
+</ng-template>
+<ng-template #templateDiseasesGridCol3 let-data>
+  <div class="has-action-menu">
+    {{
+      data?.conclusion | formatvalue : eDiseasesFormModel : "Conclusion" | async
+    }}
+  </div>
+  <codx-mfunc
+    [formModel]="eDiseasesFormModel"
+    (clickMF)="clickMF($event, data, 'eDiseases')"
     [dataItem]="data"
     type="hover"
   >
   </codx-mfunc>
-  </div>
 </ng-template>

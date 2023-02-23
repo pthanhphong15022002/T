@@ -194,6 +194,7 @@ export class EmployeesComponent extends UIComponent {
             option
           );
           popup.closed.subscribe((res: any) => {
+            debugger
             if (res?.event) {
               let data = res.event;
               this.view.dataService.add(data, 0).subscribe();

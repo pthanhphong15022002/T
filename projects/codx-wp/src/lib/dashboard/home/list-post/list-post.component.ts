@@ -399,4 +399,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   viewMore(item){
     item.isShowShortContent = !item.isShowShortContent; 
   }
+
+  
 }

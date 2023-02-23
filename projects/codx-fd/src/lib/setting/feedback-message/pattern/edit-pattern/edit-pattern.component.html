@@ -2,12 +2,12 @@
   <ng-template #body>
     <div class="flex-grow-1">
       <div class="d-flex align-items-start ph-card">
-        <div class="pic-edit mt-2">
-          <div class="row justify-content-between h-100" *ngIf="pattern">
+        <div class="pic-edit  mt-2">
+          <div class="row justify-content-between h-100" *ngIf="pattern?.imageSrc">
             <div class="w-100 position-relative card-img img-pat-edit div-bg-img" [style.background-image]="'url('+(!typeView?(environment.urlUpload + '/' + pattern?.imageSrc):pattern?.imageSrc)+')'">
             </div>
           </div>
-          <span class="fs-3 fw-bold img-pat-edit noimage symbol-label text-white"
+          <span class="fs-3 fw-bold img-pat-edit noimage symbol-label text-white card-img "
             [style.background-color]="pattern?.backgroundColor" [hidden]="!pattern?.backgroundColor"
             style="background-image: none"></span>
           <div class="ph-card-header fs-5 fw-bold header-pattern" [style.color]="pattern?.headerColor">

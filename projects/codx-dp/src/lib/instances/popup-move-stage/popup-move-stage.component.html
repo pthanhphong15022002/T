@@ -1,50 +1,105 @@
-<codx-form #form [headerText]="headerText" [subHeader]="subHeader" [body]="body" [formModel]="formModel"
-  [footer]="footer" [dialog]="dialog" [data]="instancesStepOld"></codx-form>
+<codx-form
+  #form
+  [headerText]="headerText"
+  [subHeader]="subHeader"
+  [body]="body"
+  [formModel]="formModel"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="instancesStepOld"
+></codx-form>
 
 <ng-template #subHeader>
   <span>{{ stepName }}</span>
 </ng-template>
 <ng-template #body>
-  <div class="title-step pb-18">
-  </div>
+  <div class="title-step pb-18"></div>
   <div class="content-step">
     <ng-container [ngTemplateOutlet]="test"></ng-container>
     <div class="form-group">
       <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
         <div class="d-flex align-items-center">
-          <codx-label fiedName="owner" [formModel]="form.formModel" default="Phân bổ lại cho">
+          <codx-label
+            fiedName="owner"
+            [formModel]="form.formModel"
+            default="Phân bổ lại cho"
+          >
           </codx-label>
         </div>
-        <i class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
-          (click)="openPopupParticipants(popupParticipants)"></i>
+        <i
+          class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
+          (click)="openPopupParticipants(popupParticipants)"
+        ></i>
+      </div>
+      <div class="me-3 d-flex align-items-center" *ngIf="stepCurrent != null">
+        <div>
+          <div class="d-flex align-items-center position-relative">
+            <codx-img
+              class=""
+              [width]="30"
+              [objectId]="owner"
+              objectType="AD_Users"
+            >
+            </codx-img>
+            <div class="ms-3">
+              <div class="text-dark fw-bold">
+                {{ userName }}
+              </div>
+              <div class="text-gray-700">
+                {{ positionName }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="form-group">
       <div>
-        <codx-label fiedName="ActualEnd" [formModel]="form.formModel" [Group]="form.formGroup"
-          default="Ngày hoàn thành thực tế">
+        <codx-label
+          fiedName="ActualEnd"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          default="Ngày hoàn thành thực tế"
+        >
         </codx-label>
       </div>
 
-      <codx-input [formModel]="form.formModel" field="actualEnd" [Group]="form.formGroup"
-        (valueChange)="valueChange($event)">
+      <codx-input
+        [formModel]="form.formModel"
+        field="actualEnd"
+        [Group]="form.formGroup"
+        (valueChange)="valueChange($event)"
+      >
       </codx-input>
     </div>
 
     <div class="form-group">
       <div>
-        <codx-label fiedName="Memo" [formModel]="form.formModel" [Group]="form.formGroup" default="Ghi chú">
+        <codx-label
+          fiedName="Memo"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          default="Ghi chú"
+        >
         </codx-label>
       </div>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="memo"
-        [crrValue]="instancesStepOld?.memo || ''" (valueChange)="valueChange($event)">
+      <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="memo"
+        (valueChange)="valueChange($event)"
+      >
       </codx-input>
     </div>
 
     <div class="form-group">
       <div>
-        <codx-label fiedName="taskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
-          default="Công việc chưa hoàn tất">
+        <codx-label
+          fiedName="taskGroups"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          default="Công việc chưa hoàn tất"
+        >
         </codx-label>
       </div>
     </div>
@@ -54,24 +109,47 @@
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <div class="" id="buttonSave">
-      <button type="button" class="btn btn-primary ms-1" [disabled]="isLockStep" (click)="onSave()">
-        <codx-label name="Save" [formModel]="form.formModel" [Group]="form.formGroup" default="Chuyển tiếp">
+      <button
+        type="button"
+        class="btn btn-primary ms-1"
+        [disabled]="isLockStep"
+        (click)="onSave()"
+      >
+        <codx-label
+          name="Save"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          default="Chuyển tiếp"
+        >
         </codx-label>
       </button>
     </div>
   </div>
 </ng-template>
 
-
 <ng-template #test>
   <div class="form-group">
-    <codx-label fiedName="stepID" formName="Instances" gridViewName="grvInstances" default="Giai đoạn chuyển đến">
+    <codx-label
+      fiedName="stepID"
+      formName="Instances"
+      gridViewName="grvInstances"
+      default="Giai đoạn chuyển đến"
+    >
     </codx-label>
-    <ejs-combobox [dataSource]="listStepsCbx" [fields]="fieldCbxStep" [value]="stepIdClick"
-      (valueChange)="cbxChange($event)"></ejs-combobox>
+    <ejs-combobox
+      [dataSource]="listStepsCbx"
+      [fields]="fieldCbxStep"
+      [value]="stepIdClick"
+      (valueChange)="cbxChange($event)"
+    ></ejs-combobox>
   </div>
 </ng-template>
 
 <ng-template #popupParticipants let-dialog>
-  <codx-popup-participants [lstParticipants]="lstParticipants" [dialog]="dialog" [isType]="'I'" (eventUser)="eventUser($event)"></codx-popup-participants>
+  <codx-popup-participants
+    [lstParticipants]="lstParticipants"
+    [dialog]="dialog"
+    [isType]="'I'"
+    (eventUser)="eventUser($event)"
+  ></codx-popup-participants>
 </ng-template>

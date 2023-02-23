@@ -283,6 +283,14 @@ export class CodxDpService {
       data
     );
   }
+  DeleteListReason(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'DeleteReasonStepAsync',
+      data
+    );
+  }
   updateHistoryViewProcessesAsync(recID: string) {
     return this.api.exec<any>(
       'DP',
@@ -361,6 +369,42 @@ export class CodxDpService {
       'ERM.Business.AD',
       'UsersBusiness',
       'GetListUserByRoleIDAsync',
+      id
+    );
+  }
+
+  getPositionByID(id) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetPositionByUserIDAsync',
+      id
+    );
+  }
+
+  getStepByStepIDAndInID(insID, stepID){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetStepByStepIDAndInIDAsync',
+      [insID, stepID]
+    );
+  }
+
+  getFirstIntance(){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetFirstIntanceAsync',
+    );
+  }
+
+  getProcess(id){
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetAsync',
       id
     );
   }

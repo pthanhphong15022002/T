@@ -1,96 +1,74 @@
-export const OMCONST = {
-  OMPARAM: 'OMParameters',
-  SERVICES: 'OM',
-  ASSEMBLY: 'ERM.Business.OM',
-  BUSINESS: {
-    DashBoard: 'DashBoardBusiness',
-    OKR: 'OKRBusiness',
-    KR: 'KRBusiness',
-    OB: 'OBBusiness',
-    OKRPlan: 'OKRPlansBusiness',
-    OM: 'OMBusiness',
-    Reviews: 'ReviewsBusiness',
-    Reports: 'ReportsBusiness',
-  },
-  FUNCID: {
-    COMP: 'OMT01',
-    DEPT: 'OMT02',
-    ORG: 'OMT03',
-    PERS: 'OMT04',
-  },
+import { Util } from 'codx-core';
+import { OMCONST } from './../../codx-om.constant';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Injector,
+  Input,
+  Optional,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
-  OBFUNCID: {
-    COMP: 'OMT011',
-    DEPT: 'OMT021',
-    ORG: 'OMT031',
-    PERS: 'OMT041',
-  },
+import {
+  AuthService,
+  CodxFormComponent,
+  CRUDService,
+  DialogData,
+  DialogRef,
+  FormModel,
+  ImageViewerComponent,
+  NotificationsService,
+  RequestOption,
+  UIComponent,
+} from 'codx-core';
+import { CodxOmService } from '../../codx-om.service';
+import { Targets } from '../../model/okr.model';
+import { row } from '@syncfusion/ej2-angular-grids';
 
-  KRFUNCID: {
-    COMP: 'OMT012',
-    DEPT: 'OMT022',
-    ORG: 'OMT032',
-    PERS: 'OMT042',
-  },
-  SKRFUNCID: {
-    COMP: 'OMT013',
-    DEPT: 'OMT023',
-    ORG: 'OMT033',
-    PERS: 'OMT043',
-  },
+//import { CodxEpService } from '../../../codx-ep.service';
 
-  MFUNCID: {
-    Add: 'SYS01',
-    Delete: 'SYS02',
-    Edit: 'SYS03',
-    Copy: 'SYS04',
+@Component({
+  selector: 'popup-add-okr-plan',
+  templateUrl: 'popup-add-okr-plan.component.html',
+  styleUrls: ['popup-add-okr-plan.component.scss'],
+})
+export class PopupAddOKRPlanComponent extends UIComponent implements AfterViewInit {
+  @ViewChild('form') form: CodxFormComponent;
+  
+  formModel: FormModel;
+  dialogRef: DialogRef;
+  isAfterRender: boolean;
+  fGroupAddKR: FormGroup;
+  funcID: any;
+  constructor(
+    private injector: Injector,
+    private authService: AuthService,
+    private codxOmService: CodxOmService,
+    private notificationsService: NotificationsService,
+    @Optional() dialogData?: DialogData,
+    @Optional() dialogRef?: DialogRef
+  ) {
+    super(injector);
+    this.funcID = dialogData.data[0];
+    this.dialogRef = dialogRef;
+    this.formModel = dialogRef.formModel;
+    
+  }
 
-    //OB
-    OBDetail: 'OMT101',
-    OBAssign: 'OMT102',
-    OBDistribute: 'OMT103',
-    OBEditKRWeight: 'OMT104',
-
-    //KR
-    KRDetail: 'OMT201',
-    KRAssign: 'OMT202',
-    KRDistribute: 'OMT203',
-    KREditSKRWeight: 'OMT204',
-    KRCheckIn: 'OMT205',
-  },
-
-  VLL: {
-    OKRType: {
-      Obj: 'O',
-      KResult: 'R',
-      SKResult: 'S',
-    },
-
-    OKRLevel: {
-      COMP: '1',
-      DEPT: '3',
-      ORG: '5',
-      PERS: '9',
-    },
-
-    Plan: {
-      Month: 'M',
-      Quarter: 'Q',
-    },
-    RefType_Link: {
-      Align: '1',
-      Assign: '2',
-    },
-  },
-  GRVNAME: {},
-  FORMMODEL: {},
-
-  //region format
 
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
+  ngAfterViewInit(): void {
+    
+  }
 
+  onInit(): void {
+
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
@@ -124,7 +102,7 @@ export const OMCONST = {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
+  
 
-
-
+  
 }

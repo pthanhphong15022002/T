@@ -874,8 +874,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
   attendeesValidateStep(approval) {
     this.api
-      .callSv(
-        'EP',
+      .exec(
         'ERM.Business.EP',
         'BookingsBusiness',
         'BookingAttendeesValidatorAsync',
@@ -886,10 +885,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           this.data.recID,
         ]
       )
-      .subscribe((res) => {
-        if (res != null && res.msgBodyData[0].length > 0) {
+      .subscribe((res:any) => {
+        if (res != null && res.length > 0) {
           this.busyAttendees = '';
-          res.msgBodyData[0].forEach((item) => {
+          res.forEach((item) => {
             this.busyAttendees += item.objectName + ', ';
           });
           this.notificationsService
@@ -1031,9 +1030,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   //Date time validate
 
   valueDateChange(event: any) {
-    if (event.data) {
+    if (event?.data && event?.data?.fromDate) {
       this.data.bookingOn = event.data.fromDate;
-
+      
       if (!this.bookingOnCheck()) {
         this.checkLoop = !this.checkLoop;
         if (!this.checkLoop) {
