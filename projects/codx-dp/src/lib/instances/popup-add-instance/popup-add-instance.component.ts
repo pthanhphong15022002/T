@@ -9,6 +9,7 @@ import {
 import {
   ApiHttpService,
   CacheService,
+  CallFuncService,
   DialogData,
   DialogRef,
   FormModel,
@@ -48,6 +49,7 @@ export class PopupAddInstanceComponent implements OnInit {
 
   isApplyFor: string = ''; // this is instance opportunity general
 
+  totalDaySteps: number;
   menuGeneralInfo = {
     icon: 'icon-info',
     text: 'Thông tin chung',
@@ -76,6 +78,9 @@ export class PopupAddInstanceComponent implements OnInit {
   // step = new DP_Instances_Steps() ;
   listStep = [];
   recID: any;
+  lstParticipants = [];
+  userName = '';
+  positionName = '';
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
   acction: string = 'add';
   constructor(
@@ -83,6 +88,7 @@ export class PopupAddInstanceComponent implements OnInit {
     private notificationsService: NotificationsService,
     private cache: CacheService,
     private codxDpService: CodxDpService,
+    private callfc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -92,10 +98,16 @@ export class PopupAddInstanceComponent implements OnInit {
     this.action = dt?.data[0];
     this.isApplyFor = dt?.data[1];
     this.listStep = dt?.data[2];
+    this.getProcess(this.instance.processID);
     this.titleAction = dt?.data[3];
     this.formModelCrr = dt?.data[4];
     this.listStepCbx = dt?.data[5];
     this.instance.instanceNo = dt?.data[6];
+    this.totalDaySteps = dt?.data[7];
+    console.log(this.totalDaySteps);
+    this.handleEndDayInstnace(this.totalDaySteps);
+    if (this.instance.owner != null)
+      this.getNameAndPosition(this.instance.owner);
   }
 
   ngOnInit(): void {
@@ -123,6 +135,21 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   buttonClick(e: any) {}
+
+  getProcess(id){
+    this.codxDpService.getProcess(id).subscribe(res=>{
+      if(res){
+        if (
+          res.permissions != null &&
+          res.permissions.length > 0
+        ) {
+          this.lstParticipants = res.permissions.filter(
+            (x) => x.roleType === 'P'
+          );
+        }
+      }
+    })
+  }
 
   setTitle(e: any) {
     this.title =
@@ -186,7 +213,11 @@ export class PopupAddInstanceComponent implements OnInit {
   }
   saveInstances() {
     if (this.instance?.title === null || this.instance?.title.trim() === '') {
-      this.notificationsService.notifyCode('DP001');
+      this.notificationsService.notifyCode('Vui lòng nhập tên nhiệm vụ');
+      return;
+    }
+    if (this.instance?.owner === null || this.instance?.owner.trim() === '') {
+      this.notificationsService.notifyCode('Vui lòng chọn người phụ trách');
       return;
     }
     if (this.listStep?.length > 0) {
@@ -196,7 +227,10 @@ export class PopupAddInstanceComponent implements OnInit {
         if (obj?.fields?.length > 0) {
           var arrField = obj.fields;
           arrField.forEach((f) => {
-            if (f.isRequired && (!f.dataValue || f.dataValue?.toString().trim() == '')) {
+            if (
+              f.isRequired &&
+              (!f.dataValue || f.dataValue?.toString().trim() == '')
+            ) {
               this.notificationsService.notifyCode(
                 'SYS009',
                 0,
@@ -271,5 +305,31 @@ export class PopupAddInstanceComponent implements OnInit {
       }
     }
     return true;
+  }
+  handleEndDayInstnace(durationDay: number) {
+    var today = new Date();
+    var dayEnd = new Date();
+    this.instance.endDate = new Date(
+      dayEnd.setDate(today.getDate() + durationDay).toString()
+    );
+  }
+
+  openPopupParticipants(popupParticipants) {
+    this.callfc.openForm(popupParticipants, '', 950, 650);
+  }
+
+  eventUser(e) {
+    this.instance.owner = e.id;
+    this.userName = e.name;
+    if (this.instance.owner != null)
+      this.getNameAndPosition(this.instance.owner);
+  }
+  getNameAndPosition(id) {
+    this.codxDpService.getPositionByID(id).subscribe((res) => {
+      if (res) {
+        this.userName = res.userName;
+        this.positionName = res.positionName;
+      }
+    });
   }
 }

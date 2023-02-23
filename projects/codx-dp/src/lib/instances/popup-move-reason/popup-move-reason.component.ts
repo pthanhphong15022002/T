@@ -100,7 +100,7 @@ export class PopupMoveReasonComponent implements OnInit {
           instance: this.instances,
         };
         this.dialog.close(obj);
-        this.notiService.notifyCode('SYS006');
+        this.notiService.notifyCode('SYS007');
     
 
         this.changeDetectorRef.detectChanges();

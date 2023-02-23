@@ -372,4 +372,40 @@ export class CodxDpService {
       id
     );
   }
+
+  getPositionByID(id) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetPositionByUserIDAsync',
+      id
+    );
+  }
+
+  getStepByStepIDAndInID(insID, stepID){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetStepByStepIDAndInIDAsync',
+      [insID, stepID]
+    );
+  }
+
+  getFirstIntance(){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetFirstIntanceAsync',
+    );
+  }
+
+  getProcess(id){
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetAsync',
+      id
+    );
+  }
 }

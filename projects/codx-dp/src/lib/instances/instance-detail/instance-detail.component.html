@@ -57,11 +57,11 @@
                   <div class="d-flex flex-column">
                     <div class="badge badge-primary"> {{ stepName }}</div>
                     <div class="text-gray-500 my-2">
-                      {{ dataSelect.createdOn }}
+                      {{ dataSelect.createdOn | date : "HH:mm - dd/MM/yyyy"  }}
                     </div>
                   </div>
                   <div class="ms-3">
-                    <codx-img [objectId]="'ADMIN'" objectType="AD_Users" [width]="50">
+                    <codx-img [objectId]="onwer" objectType="AD_Users" [width]="45">
                     </codx-img>
                   </div>
                 </div>
@@ -101,7 +101,7 @@
             >
               <span> {{ item.stepName }}</span>
             </div>
-            </ng-container> 
+            </ng-container>
           </div>
           <div class="d-flex flex-container">
             <div *ngFor="let item of listSteps; index as i" class="process-wrap">
@@ -117,7 +117,7 @@
           </div>
         </div>
         <ng-container *ngIf="tmpTeps">
-          <codx-stages-detail         
+          <codx-stages-detail
           [dataStep]="tmpTeps"
           [formModel]="formModel"
           [currentStep]="currentNameStep"

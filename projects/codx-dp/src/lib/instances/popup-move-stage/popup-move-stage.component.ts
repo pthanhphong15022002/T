@@ -1,9 +1,27 @@
 import { DP_Instances_Permissions } from './../../models/models';
-import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService, CallFuncService, CacheService } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
+import {
+  CodxInputComponent,
+  DialogData,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+  CallFuncService,
+  CacheService,
+} from 'codx-core';
 import { log, table } from 'console';
 import { CodxDpService } from '../../codx-dp.service';
-import { DP_Instances, DP_Instances_Steps, DP_Instances_Steps_Reasons } from '../../models/models';
+import {
+  DP_Instances,
+  DP_Instances_Steps,
+  DP_Instances_Steps_Reasons,
+} from '../../models/models';
 import { InstancesComponent } from '../instances.component';
 
 @Component({
@@ -34,15 +52,19 @@ export class PopupMoveStageComponent implements OnInit {
   isReason: any = null;
   stepReason = new DP_Instances_Steps_Reasons();
   stepIdClick: string = '';
-  idTest:any;
+  idTest: any;
   //instanceStep = new DP_Instances_Steps;
   lstParticipants = [];
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
-
+  stepCurrent: any;
   lstRoles = [];
   assignControl: any;
-  fieldCbxRole = {text: 'objectName', value: 'objectID'}
-
+  fieldCbxRole = { text: 'objectName', value: 'objectID' };
+  positionName = '';
+  userName = '';
+  owner = '';
+  stepOld: any;
+  firstInstance: any;
   constructor(
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -59,106 +81,162 @@ export class PopupMoveStageComponent implements OnInit {
     this.headerText = 'Chuyển tiếp giai đoạn'; //  gán sau button add
     this.viewClick = this.viewKanban;
     this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
-    if(this.instance.permissions != null && this.instance.permissions.length > 0){
-      this.lstParticipants = this.instance.permissions.filter(x=> x.roleType === 'P');
+    if (
+      this.instance.permissions != null &&
+      this.instance.permissions.length > 0
+    ) {
+      this.lstParticipants = this.instance.permissions.filter(
+        (x) => x.roleType === 'P'
+      );
     }
     this.stepIdOld = this.instance.stepID;
     this.listStep = JSON.parse(JSON.stringify(dt?.data.instanceStep));
     this.listStepsCbx = JSON.parse(JSON.stringify(this.listStep));
-    this.instancesStepOld = this.listStepsCbx.filter(x => x.stepID === this.stepIdOld)[0];
+    this.instancesStepOld = this.listStepsCbx.filter(
+      (x) => x.stepID === this.stepIdOld
+    )[0];
     this.IdFail = this.listStepsCbx[this.listStepsCbx.length - 1]?.stepID;
     this.IdSuccess = this.listStepsCbx[this.listStepsCbx.length - 2]?.stepID;
-    this.stepIdClick = JSON.parse(JSON.stringify(dt?.data?.stepIdClick))
-    this.cache.valueList('DP019').subscribe(res =>{
+    this.stepIdClick = JSON.parse(JSON.stringify(dt?.data?.stepIdClick));
+    this.getStepByStepIDAndInID(this.instance.recID, this.stepIdOld);
+    this.cache.valueList('DP019').subscribe((res) => {
       if (res) {
         this.assignControl = res.datas;
-
+      }
+    });
+    this.dpSv.getFirstIntance().subscribe(res=>{
+      if(res){
+        this.firstInstance = res;
       }
     });
     // this.loadListUser(this.instance.permissions);
   }
 
   ngOnInit(): void {
-   this.autoClickedSteps(this.listStepsCbx, this.stepName);
-
+    this.autoClickedSteps(this.listStepsCbx, this.stepName);
   }
 
-  checkAssignControl(assignControl = []){
-    if(assignControl != null && assignControl.length > 0){
-      for(let i = 0; i < assignControl.length; i++){
-
+  getNameAndPosition(id) {
+    this.dpSv.getPositionByID(id).subscribe((res) => {
+      if (res) {
+        this.userName = res.userName;
+        this.positionName = res.positionName;
       }
-    }
+    });
+  }
+
+  getStepByStepIDAndInID(insID, stepID) {
+    this.dpSv.getStepByStepIDAndInID(insID, stepID).subscribe((res) => {
+      if (res) {
+        this.stepCurrent = res;
+        var i = -1;
+        this.assignControl = this.stepCurrent.assignControl;
+        switch (this.assignControl) {
+          //Phụ trách giai đoạn hiện tại
+          case '0':
+            this.owner = this.stepCurrent.owner;
+            if (this.owner != null) this.getNameAndPosition(this.owner);
+            break;
+          //Phụ trách giai đoạn chuyển tiếp
+          case '1':
+            var index = -1;
+            index = this.listStep.findIndex(x=>x.stepID == this.stepIdClick);
+            var check = this.listStep.findIndex(x=>x.stepID == this.IdFail || x.stepID == this.IdSuccess);
+            if(index > -1 && index != check){
+              this.owner = this.listStep[index].owner;
+              if (this.owner != null) this.getNameAndPosition(this.owner);
+            }
+            break;
+          //Giữ nguyên phụ trách trước
+          case '2':
+            i = this.listStep.findIndex((x) => x.stepID == this.stepCurrent.stepID);
+            this.stepOld = this.listStep[i - 1].owner;
+            this.owner = this.stepOld;
+            if (this.owner != null) this.getNameAndPosition(this.owner);
+            break;
+          //Người nhận nhiệm vụ đầu tiên
+          case '3':
+            this.owner = this.firstInstance.owner;
+            if (this.owner != null) this.getNameAndPosition(this.owner);
+            break;
+          //Người nhận nhiệm vụ hiện tại
+          case '4':
+            this.owner = this.instance.owner;
+            if (this.owner != null) this.getNameAndPosition(this.owner);
+            break;
+        }
+      }
+    });
   }
 
   onSave() {
-    if(this.stepIdClick === this.stepIdOld) {
+    if (this.stepIdClick === this.stepIdOld) {
       this.notiService.notifyCode('DP001');
       return;
-    }
-    else {
+    } else {
       this.beforeSave();
     }
-
   }
   beforeSave() {
-    if(this.stepIdClick === this.IdSuccess || this.stepIdClick === this.IdFail ) {
+    if (
+      this.stepIdClick === this.IdSuccess ||
+      this.stepIdClick === this.IdFail
+    ) {
       this.instance.stepID = this.stepIdOld;
       this.instancesStepOld.stepID = this.stepIdOld;
       this.stepIdOld = '';
-      this.isReason = this.stepIdClick === this.IdFail ? false:true;
-    }
-    else {
+      this.isReason = this.stepIdClick === this.IdFail ? false : true;
+    } else {
+      this.instancesStepOld.owner = this.owner;
       this.instancesStepOld.stepID = this.stepIdClick;
     }
 
-
-    var data = [this.instance.recID,this.stepIdOld ,this.instancesStepOld];
-    this.codxDpService.moveStageByIdInstance(data).subscribe((res)=> {
-      if(res){
+    var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
+    this.codxDpService.moveStageByIdInstance(data).subscribe((res) => {
+      if (res) {
         this.instance = res[0];
         this.listStep = res[1];
-        var obj ={
+        var obj = {
           listStep: this.listStep,
           instance: this.instance,
           isReason: this.isReason,
         };
         this.dialog.close(obj);
-        this.notiService.notifyCode('Chuyển tiếp oke nha');
+        this.notiService.notifyCode('SYS007');
 
         this.changeDetectorRef.detectChanges();
       }
-    })
+    });
   }
 
   valueChange($event) {
-    if($event){
-      this.instancesStepOld[$event.field] = $event.data;
-    }
+    // if ($event) {
+    //   this.instancesStepOld[$event.field] = $event.data;
+    // }
     this.changeDetectorRef.detectChanges();
   }
 
   changeTime($event) {}
 
   autoClickedSteps(listStep: any, stepName: string) {
-
-    let idx = listStep.findIndex(x=> x.stepID === this.stepIdOld);
+    let idx = listStep.findIndex((x) => x.stepID === this.stepIdOld);
     this.stepIdClick = listStep[idx + 1]?.stepID;
   }
   cbxChange($event) {
-    if($event){
-        this.stepIdClick = $event;
-
-        this.changeDetectorRef.detectChanges();
+    if ($event) {
+      this.stepIdClick = $event;
+      this.getStepByStepIDAndInID(this.instance.recID, this.stepIdClick);
+      this.changeDetectorRef.detectChanges();
     }
   }
-
 
   openPopupParticipants(popupParticipants) {
     this.callfc.openForm(popupParticipants, '', 950, 650);
   }
 
-  eventUser(e){
-
+  eventUser(e) {
+    this.owner = e.id;
+    this.userName = e.name;
+    if (this.owner != null) this.getNameAndPosition(this.owner);
   }
 }

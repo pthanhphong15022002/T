@@ -13,7 +13,7 @@ export class PopupAddGroupTaskComponent implements OnInit {
   grvTaskGroupsForm: FormModel;
   taskGroup: DP_Instances_Steps_TaskGroups;
   view = {};
-  REQUIRE = ['memo','endDate','startDate','taskGroupName','reminders'];
+  REQUIRE = ['endDate','startDate','taskGroupName'];
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -65,6 +65,9 @@ export class PopupAddGroupTaskComponent implements OnInit {
       if(!this.taskGroup[key]){
         message.push(this.view[key]);
       }
+    }
+    if (!this.taskGroup['durationDay'] && !this.taskGroup['durationHour']) {
+      message.push(this.view['durationDay']);
     }
     if(message.length > 0){
       this.notiService.notifyCode(

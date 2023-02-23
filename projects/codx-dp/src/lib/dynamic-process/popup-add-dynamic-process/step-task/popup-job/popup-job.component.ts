@@ -64,6 +64,7 @@ export class PopupJobComponent implements OnInit {
   isHaveFile = false;
   showLabelAttachment = false;
   folderID = '';
+  frmModel: FormModel;
   view = [];
   constructor(
     private cache: CacheService,
@@ -254,6 +255,12 @@ export class PopupJobComponent implements OnInit {
   }
 
   getFormModel() {
+
+    this.frmModel = {
+      entityName: 'DP_Steps_Tasks',
+      formName: 'DPStepsTasks',
+      gridViewName: 'grvDPStepsTasks',
+    };
     this.cache.gridView('grvDPStepsTasks').subscribe((res) => {
       this.cache
         .gridViewSetup('DPStepsTasks', 'grvDPStepsTasks')
