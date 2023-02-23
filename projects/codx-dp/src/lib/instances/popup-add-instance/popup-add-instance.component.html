@@ -74,6 +74,7 @@
     <codx-input
       field="title"
       [formModel]="form.formModel"
+    
       [Group]="form.formGroup"
       (valueChange)="valueChange($event)"
     >
@@ -83,6 +84,7 @@
   <div class="form-group">
     <codx-label
       fiedName="Owner"
+      [Group]="form.formGroup"
       [formModel]="form.formModel"
       default="Người phụ trách"
     >
@@ -90,6 +92,8 @@
     <codx-input
       type="combobox"
       [crrValue]="instance?.owner"
+      [Group]="form.formGroup"
+      [formModel]="form.formModel"
       [refValue]="'Users'"
       field="owner"
       (valueChange)="valueChangeUser($event)"
@@ -100,6 +104,7 @@
   <div class="form-group">
     <codx-label
       fiedName="StepID"
+      [Group]="form.formGroup"
       [formModel]="form.formModel"
       default="Giai đoạn quy trình"
     >

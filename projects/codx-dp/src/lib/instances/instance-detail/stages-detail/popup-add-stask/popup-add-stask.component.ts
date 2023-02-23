@@ -12,6 +12,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  NotificationsService,
   Util,
 } from 'codx-core';
 import { DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from 'projects/codx-dp/src/lib/models/models';
@@ -27,6 +28,7 @@ import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-
 export class PopupAddStaskComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  REQUIRE = ['taskName','endDate','startDate'];
   title = '';
   dialog!: DialogRef;
   formModelMenu: FormModel;
@@ -56,9 +58,11 @@ export class PopupAddStaskComponent implements OnInit {
   funcIDparent: any;
   folderID = '';
   groupTaskID = ''
+  view = [];
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -87,7 +91,7 @@ export class PopupAddStaskComponent implements OnInit {
 
   ngOnInit(): void {
     this.listOwner = this.stepsTasks['roles'];
-    console.log(this.taskList);
+    this.getFormModel();
     if (this.stepsTasks['parentID']) {
       this.litsParentID = this.stepsTasks['parentID'].split(';');
     }
@@ -122,6 +126,21 @@ export class PopupAddStaskComponent implements OnInit {
         .join('; ');
     }
   }
+
+  getFormModel() {
+    this.cache
+      .gridViewSetup('DPInstancesStepsTasks', 'grvDPInstancesStepsTasks')
+      .subscribe((res) => {
+        for (let key in res) {
+          if (res[key]['isRequire']) {
+            let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
+            this.view[keyConvert] = res[key]['headerText'];
+          }
+        }
+        console.log(this.view);
+      });
+  }
+
   valueChangeText(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
@@ -164,35 +183,37 @@ export class PopupAddStaskComponent implements OnInit {
   }
 
   async saveData() {
-    debugger
     this.stepsTasks['roles'] = this.listOwner;
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
-    if (this.attachment && this.attachment.fileUploadList.length){
-      (await this.attachment.saveFilesObservable()).subscribe((res) => {
-        if (res) {
-          if(this.status === 'copy'){
-            this.stepsTasks['recID'] = Util.uid();
-          }
-          this.dialog.close({ data: this.stepsTasks, status: this.status });
-        }
-      });
-    } else {
-      if(this.status === 'copy'){
-        this.stepsTasks['recID'] = Util.uid();
-      }
-      this.dialog.close({ data: this.stepsTasks, status: this.status });
-    } 
-    
 
-    // let headerText = await this.checkValidate();
-    // if (headerText.length > 0) {
-    //   this.notiService.notifyCode(
-    //     'SYS009',
-    //     0,
-    //     '"' + headerText.join(', ') + '"'
-    //   );
-    //   return;
-    // }
+    let message = [];
+    for (let key of this.REQUIRE) {
+      if (!this.stepsTasks[key] || this.stepsTasks[key]?.length === 0) {
+        message.push(this.view[key]);
+      }
+    }
+    if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
+      message.push(this.view['durationDay']);
+    }
+    if (message.length > 0) {
+      this.notiService.notifyCode('SYS009', 0, message.join(', '));
+    }else{
+      if (this.attachment && this.attachment.fileUploadList.length){
+        (await this.attachment.saveFilesObservable()).subscribe((res) => {
+          if (res) {
+            if(this.status === 'copy'){
+              this.stepsTasks['recID'] = Util.uid();
+            }
+            this.dialog.close({ data: this.stepsTasks, status: this.status });
+          }
+        });
+      } else {
+        if(this.status === 'copy'){
+          this.stepsTasks['recID'] = Util.uid();
+        }
+        this.dialog.close({ data: this.stepsTasks, status: this.status });
+      } 
+    }
   }
   handelMail() {
     let data = {
