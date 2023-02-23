@@ -98,6 +98,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.action = dt?.data[0];
     this.isApplyFor = dt?.data[1];
     this.listStep = dt?.data[2];
+    this.getProcess(this.instance.processID);
     this.titleAction = dt?.data[3];
     this.formModelCrr = dt?.data[4];
     this.listStepCbx = dt?.data[5];

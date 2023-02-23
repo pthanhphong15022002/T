@@ -223,9 +223,8 @@ export class InstancesComponent
               formMD.entityName = fun.entityName;
               formMD.formName = fun.formName;
               formMD.gridViewName = fun.gridViewName;
-
               option.Width = '850px';
-              option.zIndex = 1010;
+              option.zIndex = 1001;
               this.view.dataService.dataSelected.processID = this.process.recID;
               // const titleForm = res.defaultName;
               // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
@@ -287,7 +286,7 @@ export class InstancesComponent
                 formMD.gridViewName = fun.gridViewName;
 
                 option.Width = '850px';
-                option.zIndex = 1010;
+                option.zIndex = 1001;
                 this.view.dataService.dataSelected.processID =
                   this.process.recID;
                 var dialogCustomField = this.callfc.openSide(
