@@ -283,6 +283,14 @@ export class CodxDpService {
       data
     );
   }
+  DeleteListReason(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'DeleteReasonStepAsync',
+      data
+    );
+  }
   updateHistoryViewProcessesAsync(recID: string) {
     return this.api.exec<any>(
       'DP',
@@ -325,13 +333,13 @@ export class CodxDpService {
     );
   }
 
-  GetListUserIDByListTmpEmpIDAsync(data) {
+  GetListUserIDByListTmpEmpIDAsync(id) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmployeesBusiness',
       'GetListUserIDByListTmpEmpIDAsync',
-      data
+      id
     );
   }
 
@@ -352,6 +360,43 @@ export class CodxDpService {
       'UsersBusiness',
       'GetAsync',
       e
+    );
+  }
+
+  getListUserByRoleID(id){
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetListUserByRoleIDAsync',
+      id
+    );
+  }
+
+  getPositionByID(id) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetPositionByUserIDAsync',
+      id
+    );
+  }
+
+  getStepByStepIDAndInID(insID, stepID){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetStepByStepIDAndInIDAsync',
+      [insID, stepID]
+    );
+  }
+
+  getFirstIntance(){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetFirstIntanceAsync',
     );
   }
 }

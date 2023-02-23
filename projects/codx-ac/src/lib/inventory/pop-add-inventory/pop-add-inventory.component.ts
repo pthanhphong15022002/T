@@ -186,8 +186,7 @@ export class PopAddInventoryComponent extends UIComponent {
         });
     }
   }
-  onSaveAdd() {
-    if (this.formType == 'add') {
+  onSaveAdd() {  
       this.dialog.dataService
         .save((opt: RequestOption) => {
           opt.methodName = 'AddAsync';
@@ -201,7 +200,9 @@ export class PopAddInventoryComponent extends UIComponent {
           if (res.save) {
             this.clearInventory();
             this.dialog.dataService.clear();
-            this.dialog.dataService.addNew().subscribe();
+            this.dialog.dataService.addNew().subscribe((res)=>{
+              this.inventory = this.dialog.dataService!.dataSelected;
+            });
           } else {
             this.notification.notifyCode(
               'SYS031',
@@ -211,25 +212,6 @@ export class PopAddInventoryComponent extends UIComponent {
             return;
           }
         });
-    }
-    if (this.formType == 'edit') {
-      this.dialog.dataService
-        .save((opt: RequestOption) => {
-          opt.methodName = 'UpdateAsync';
-          opt.className = 'InventoryModelsBusiness';
-          opt.assemblyName = 'IV';
-          opt.service = 'IV';
-          opt.data = [this.inventory];
-          return true;
-        })
-        .subscribe((res) => {
-          if (res.save || res.update) {
-            this.dialog.dataService
-              .edit(this.dialog.dataService.dataSelected)
-              .subscribe();
-          }
-        });
-    }
   }
   //#endregion
 }

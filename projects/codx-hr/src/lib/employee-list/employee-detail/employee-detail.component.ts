@@ -65,7 +65,6 @@ import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/
 import { PopupEContractComponent } from '../../employee-profile/popup-econtract/popup-econtract.component';
 import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
-import { log } from 'console';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 import { Sidebar } from '@syncfusion/ej2-angular-navigations';
@@ -202,9 +201,12 @@ export class EmployeeDetailComponent extends UIComponent {
   eVaccineGrvSetup;
   eSkillgrvSetup;
   eBenefitGrvSetup;
+  eAssetGrvSetup;
   eDayOffGrvSetup;
   eTrainCourseGrvSetup;
   //#endregion
+
+  reRenderGrid = true;
 
   //#region ColumnsGrid
   passportColumnGrid;
@@ -576,6 +578,13 @@ export class EmployeeDetailComponent extends UIComponent {
 
     this.hrService.getFormModel(this.eAssetFuncID).then((res) => {
       this.eAssetFormModel = res;
+      this.cache
+      .gridViewSetup(
+        this.eAssetFormModel.formName,
+        this.eAssetFormModel.gridViewName)
+        .subscribe((res) => {
+          this.eAssetGrvSetup = res;
+        })
     });
 
     this.hrService.getFormModel(this.eBasicSalaryFuncID).then((res) => {
@@ -1381,12 +1390,15 @@ export class EmployeeDetailComponent extends UIComponent {
         clearInterval(ins);
         let t = this;
         this.appointionGridView.dataService.onAction.subscribe((res) => {
+          debugger
           if (res) {
+            debugger
             if (res.type != null && res.type == 'loaded') {
               t.appointionRowCount = res['data'].length;
             }
           }
         });
+        debugger
         this.appointionRowCount = this.appointionGridView.dataService.rowCount;
       }
     }, 100);
@@ -2125,11 +2137,16 @@ export class EmployeeDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    let i = this.lstAppointions.indexOf(data);
-                    if (i != -1) {
-                      this.lstAppointions.splice(i, 1);
-                    }
-                    this.df.detectChanges();
+                    // let i = this.lstAppointions.indexOf(data);
+                    // if (i != -1) {
+                    //   this.lstAppointions.splice(i, 1);
+                    // }
+                    this.appointionRowCount--;
+                    (this.appointionGridView.dataService as CRUDService)
+                      .remove(data)
+                      .subscribe();
+                    //this.df.detectChanges();
+                    //(this.appointionGridView as any).deleteData(data)
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -2727,7 +2744,7 @@ export class EmployeeDetailComponent extends UIComponent {
     this.eExperienceGrid.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     // option.DataService = this.view.dataService;
-    option.FormModel = this.eExperienceGrid.formModel;
+    option.FormModel = this.eExperienceFormModel;
     option.Width = '550px';
 
     let dialogAdd = this.callfunc.openSide(
@@ -2907,7 +2924,6 @@ export class EmployeeDetailComponent extends UIComponent {
     option.DataService = this.dayoffGrid.dataService;
     option.FormModel = this.dayoffGrid.formModel;
     option.Width = '550px';
-    console.log('data ngay nghi truyen vao', data);
 
     let dialogAdd = this.callfunc.openSide(
       PopupEdayoffsComponent,
@@ -3149,6 +3165,7 @@ export class EmployeeDetailComponent extends UIComponent {
     actionType: string,
     data: any
   ) {
+
     if (this.appointionGridView)
       this.appointionGridView.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
@@ -3170,11 +3187,34 @@ export class EmployeeDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event)
-        (this.appointionGridView?.dataService as CRUDService).clear();
+      this.reRenderGrid = false;
+      this.df.detectChanges();
+      this.reRenderGrid = true;
+      this.df.detectChanges();
       if (res.event) {
-        if (actionType == 'add' || actionType == 'copy') {
-          this.appointionRowCount += 1;
+        if (actionType == 'add' ) {
+          this.appointionRowCount+=1;
+
+          // this.appointionRowCount+=1
+          // this.appointionGridView.dataSource = [];
+          // this.appointionGridView.gridRef!.dataSource = [];
+          // this.appointionGridView.dataService.loading = false;
+          // this.appointionGridView.dataService.loaded = false;
+          // this.appointionGridView.loadData();
+
+          //Khong duoc xoa comment nay
+          // this.appointionGridView.dataService.load().subscribe(res=>{
+          //     this.appointionGridView.dataSource = [];
+          // this.appointionGridView.gridRef!.dataSource = []
+          //   this.appointionGridView.dataSource = this.appointionGridView.dataService.oriData;
+          //   this.appointionGridView.gridRef!.dataSource = this.appointionGridView.dataSource;
+          //   this.appointionGridView.dataService.data =this.appointionGridView.dataService.oriData;
+          //   this.appointionGridView.gridRef?.refreshColumns();
+          //   this.appointionRowCount =this.appointionGridView.dataSource.length ;
+          // })
+
+        } else if(actionType == 'copy'){
+           this.appointionRowCount+=1;
           (this.appointionGridView?.dataService as CRUDService)
             .add(res.event)
             .subscribe();
@@ -3742,7 +3782,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
   //#region Phụ cấp
 
-  numPageSizeGridView = 5;
+  numPageSizeGridView = 100;
   @ViewChild('eAwardGridView') AwardGrid: CodxGridviewComponent;
   @ViewChild('eDisciplineGridView') eDisciplineGrid: CodxGridviewComponent;
   @ViewChild('businessTravelGrid') businessTravelGrid: CodxGridviewComponent;

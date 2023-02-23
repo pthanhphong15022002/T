@@ -67,17 +67,17 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       name: 'Establish',
     },
     {
-      icon: 'icon-train',
+      icon: 'icon-directions_bus',
       text: 'Thông tin giao hàng',
       name: 'Shipment Details',
     },
     {
-      icon: 'icon-location_on me-1',
+      icon: 'icon-location_on',
       text: 'Danh sách địa chỉ',
       name: 'Location',
     },
-    { icon: 'icon-contacts', text: 'Người liên hệ', name: 'Contact' },
-    { icon: 'icon-credit_card', text: 'Tài khoản ngân hàng', name: 'Atm' },
+    { icon: 'icon-person_pin', text: 'Người liên hệ', name: 'Contact' },
+    { icon: 'icon-i-credit-card-2-back', text: 'Tài khoản ngân hàng', name: 'Atm' },
     {
       icon: 'icon-20 me-2 icon-tune',
       text: 'Thông tin khác',

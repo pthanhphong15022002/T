@@ -206,11 +206,13 @@ export class PatternComponent extends UIComponent implements OnInit {
           if (e?.event?.data.update) {
             this.lstPattern.forEach((dt, index) => {
               if (dt.recID == e.event.data.update.recID)
+              {
                 this.lstPattern[index] = e.event.data.update;
+                this.change.detectChanges();
+              }
               else this.lstPattern[index].isDefault = false;
             });
             var data = e?.event?.data?.update;
-            data['modifiedOn'] = new Date();
             this.view.dataService.update(data).subscribe();
           }
           this.view.dataService.clear();
