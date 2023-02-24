@@ -541,7 +541,7 @@ export class CatagoryComponent implements OnInit {
         if (!value === schedule[field]) return;
         schedule[field] = !value;
         this.api
-          .execAction('AD_ScheduledTasks', [schedule], 'UpdateAsync')
+          .execAction('BG_ScheduleTasks', [schedule], 'UpdateAsync')
           .subscribe((res) => {
             if (res) {
             }
