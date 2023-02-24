@@ -6,6 +6,15 @@
     [default]="customField.title"
   >
   </codx-label>
+  <span *ngIf="customField.isRequired"
+    ><codx-label
+      class="text-danger"
+      name="attentionIsRequired"
+      formName="DPInstancesStepsFields"
+      gridViewName="grvDPInstancesStepsFields"
+      default="*"
+    ></codx-label
+  ></span>
   <span
     *ngIf="customField.dataType == 'A'"
     class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"

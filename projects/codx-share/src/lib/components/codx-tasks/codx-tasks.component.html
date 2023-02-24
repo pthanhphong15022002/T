@@ -22,7 +22,7 @@
   <codx-temp-full cardCss="card-template border-bottom p-3 list-task" (clickMF)="clickMF($event, data)"
     [hideMF]="!showMoreFunc" [moreFuncCss]="'me-15'" (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
     [imageId]="data.createdBy" [imageObjName]="data?.userNameCreate" [imageWidth]="35" imgCss="me-3"
-    imageObjType="AD_Users" [title]="data.userNameCreate" [subTitle]="data.positionNameCreate" [content]="data.taskName"
+    imageObjType="AD_Users" [title]="data.userNameCreate" [subTitle]="data.positionNameCreate" [desc]="data.taskName"
     [formModel]="view.formModel" [footer]="footerList" [dataItem]="data" [baseHeaderRightTmp]="baseHeaderRightTmp">
   </codx-temp-full>
   <!-- [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''"
@@ -355,8 +355,8 @@
         <div class="d-flex align-items-center mt-1" *ngIf="item?.roleType == 'R'|| item?.roleType == 'A'">
           <div class="d-flex align-items-end me-2 codx-badge">
             <span>
-              <codx-vll [name]="'TM004'" [field]="'Status'" [value]="item?.status"
-                [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
+              <codx-vll [name]="'TM004'" [field]="'Status'" [value]="item?.status" [showText]="true"
+                [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
               </codx-vll>
             </span>
             <span>

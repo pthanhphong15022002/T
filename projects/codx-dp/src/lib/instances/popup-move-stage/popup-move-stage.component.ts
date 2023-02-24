@@ -197,7 +197,7 @@ export class PopupMoveStageComponent implements OnInit {
           isReason: this.isReason,
         };
         this.dialog.close(obj);
-        this.notiService.notifyCode('SYS007');
+      //  this.notiService.notifyCode('SYS007');
 
         this.changeDetectorRef.detectChanges();
       }
