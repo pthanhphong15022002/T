@@ -378,10 +378,10 @@ export class PopupRequestStationeryComponent extends UIComponent {
     if (this.approvalRule == '0' && approval) {
       this.data.approveStatus = '5';
       this.data.status = '5';
-    } else {
-      this.data.approveStatus = '1';
-      this.data.status = '1';
-    }
+    } 
+    this.data.approveStatus = this.data.approveStatus?? '1';
+    this.data.status = this.data.status ?? '1';    
+    
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
       .subscribe((res) => {
