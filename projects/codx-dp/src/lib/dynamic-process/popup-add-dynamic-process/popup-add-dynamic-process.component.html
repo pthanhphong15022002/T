@@ -567,7 +567,7 @@
                           <codx-vll [name]="vllType" [value]="item1?.dataType" [showText]="true" [showBgColor]="true">
                           </codx-vll>
                         </div>
-                        <codx-label class="text-danger" fiedName="IsRequired" default="Bắt buộc *"></codx-label>
+                        <codx-label class="text-danger" fiedName="IsRequired" formName="DPStepsFields" gridViewName="grvDPStepsFields" default="Bắt buộc *"></codx-label>
                         <codx-input type="switch" field="isRequired" [checked]="item1?.isRequired"
                           (valueChange)="changeRequired($event, item1)">
                         </codx-input>
@@ -710,9 +710,10 @@
               <codx-input class="test-check" type="switch" style="width: 100%" field="read">
               </codx-input>
             </div>
+            <!-- more function step -->
             <div *ngIf="step" class="icon-more_vert has-action-menu more-funtion-step" style="cursor: pointer">
               <codx-mfunc *ngIf="viewStepCrr == viewStepCustom" [formModel]="dialog.formModel"
-                (clickMF)="clickMFStep($event, step)" [dataItem]="action != 'edit' ? moreDefaut : step" [type]="'hover'"
+                (clickMF)="clickMFStep($event, step)" [dataItem]="moreDefaut" [type]="'hover'"
                 (changeDataMF)="changeDataMF($event, 'step')">
               </codx-mfunc>
             </div>

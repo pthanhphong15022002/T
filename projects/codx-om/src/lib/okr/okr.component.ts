@@ -34,6 +34,7 @@ import { ActivatedRoute } from '@angular/router';
 import { OkrPlanShareComponent } from './okr-plans/okr-plans-share/okr-plans-share.component';
 import { PopupAddOBComponent } from '../popup/popup-add-ob/popup-add-ob.component';
 import { PopupOKRWeightComponent } from '../popup/popup-okr-weight/popup-okr-weight.component';
+import { PopupAddOKRPlanComponent } from '../popup/popup-add-okr-plan/popup-add-okr-plan.component';
 const _isAdd = true;
 const _isSubKR = true;
 const _notSubKR = false;
@@ -61,6 +62,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   deptPlanNull = '';
   orgPlanNull = '';
   persPlanNull = '';
+  curOrg='';
   compFuncID = OMCONST.FUNCID.COMP;
   deptFuncID = OMCONST.FUNCID.DEPT;
   orgFuncID = OMCONST.FUNCID.ORG;
@@ -76,8 +78,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   interval = '';
   //Năm
   year = new Date().getFullYear();
+  fromDate:any;
+  toDate:any;
   dataDate = null;
   curUser: any;
+  okrVll:any;
   dataRequest = new DataRequest();
   formModelKR = new FormModel();
   formModelSKR = new FormModel();
@@ -97,6 +102,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   isAfterRender = false;
   planNull = true;
   addPlanTitle='';
+  modelOKR: any;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -127,13 +133,14 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
+    this.getCacheData();
     this.funcIDChanged();
     this.formModelChanged();
     this.setTitle();
     this.getOKRPlans(this.periodID, this.interval, this.year);
     this.curUser = this.auth.get();
   }
-  //---------------------------------------------------------------------------------//
+  //---------------------------------------------------------------------------------// 
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
   //Lấy form Model con
@@ -180,6 +187,13 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
+  getCacheData(){
+    this.cache.valueList('OM004').subscribe((vll)=>{
+      if(vll){
+        this.okrVll= vll?.datas;
+      }
+    });
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Data Func---------------------------------//
   //---------------------------------------------------------------------------------//
@@ -193,16 +207,21 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
           this.dataOKRPlans = null;
           this.dataOKR = null;
           if (item) {
-            this.planNull = item.planNull;
             this.dataOKRPlans = item.planData;
+            this.modelOKR=item.modelOKR;
+            this.planNull = item.planNull;
+            if(this.planNull==true){
+              this.dataOKRPlans.fromDate=this.fromDate;
+              this.dataOKRPlans.toDate=this.toDate;
+            }
             //----------
             this.dataRequest.dataValue = item.recID;
             //----------
             this.okrService
               .getAllOKROfPlan(this.dataOKRPlans.recID)
-              .subscribe((item: any) => {
-                if (item) {
-                  this.dataOKR = item;
+              .subscribe((item1: any) => {
+                if (item1) {
+                  this.dataOKR = item1;
                 }
 
                 this.isAfterRender = true;
@@ -315,9 +334,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     var date = new Date(data.toDate);
     this.year = date.getFullYear();
     this.dataDate = {
-      formDate: data.formDate,
+      formDate: data.fromDate,
       toDate: data.toDate,
     };
+    this.fromDate=data.fromDate;
+    this.toDate=data.toDate;
     if (data.type == 'year') {
       this.periodID = this.year.toString();
       this.interval = 'Y';
@@ -372,6 +393,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         : '';
     this.cache.message('OM001').subscribe((mess) => {
       if (mess) {
+        this.setNotifyPlan()
         this.notifyPlanNull = mess.defaultName;
         this.compPlanNull = '';
         this.deptPlanNull = '';
@@ -389,23 +411,22 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     });
   }
   setNotifyPlan() {
-    let owner = '';
     switch (this.funcID) {
       case OMCONST.FUNCID.COMP:
-        owner = this.compName;
+        this.curOrg = this.compName;
         break;
       case OMCONST.FUNCID.DEPT:
-        owner = this.deptName;
+        this.curOrg = this.deptName;
         break;
       case OMCONST.FUNCID.ORG:
-        owner = this.orgName;
+        this.curOrg = this.orgName;
         break;
       case OMCONST.FUNCID.PERS:
-        owner = this.persName;
+        this.curOrg = this.persName;
         break;
     }
-    this.notifyPlanNull.replace('{0}', owner);
-    this.notifyPlanNull.replace('{1}', this.dataOKRPlans.periodID);
+    this.notifyPlanNull.replace('{0}', this.curOrg);
+    this.notifyPlanNull.replace('{1}', this.periodID);
   }
 
   
@@ -503,13 +524,17 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     dialogModel.IsFull = true;
     dialogModel.FormModel=this.formModelPlan;
     let dialog = this.callfc.openForm(
-      OkrPlansComponent,
+      PopupAddOKRPlanComponent,
       '',
       null,
       null,
       null,
       [
+        this.funcID,
         this.dataOKRPlans,
+        this.modelOKR,
+        this.addPlanTitle,
+        this.curOrg,
       ],
       '',
       dialogModel

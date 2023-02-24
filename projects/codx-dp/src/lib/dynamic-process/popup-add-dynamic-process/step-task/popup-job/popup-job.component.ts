@@ -126,6 +126,7 @@ export class PopupJobComponent implements OnInit {
         let litsParentID = this.stepsTasks['parentID'].split(';');
         let groupTask = this.groupTackList.find((x) => x.recID === groupTaskID);
         if (groupTask && groupTask['task']) {
+           //lấy những task mà không có liên kết với task đang edit
           let tasks = groupTask['task'].filter(
             (task) => !task['parentID'].includes(this.stepsTasks?.recID)
           );
@@ -142,7 +143,11 @@ export class PopupJobComponent implements OnInit {
       } else {
         let litsParentID = this.stepsTasks['parentID'].split(';');
         if (this.taskList?.length > 0) {
-          taskLinks = this.mapDataTask(this.taskList, litsParentID);
+          //lấy những task mà không có liên kết với task đang edit
+          let tasks = this.taskList.filter(
+            (task) => !task['parentID'].includes(this.stepsTasks?.recID)
+          );
+          taskLinks = this.mapDataTask(tasks, litsParentID);
         }
         let index = taskLinks.findIndex((x) => x.key === this.stepsTasks.recID);
         taskLinks.splice(index, 1);
@@ -196,12 +201,10 @@ export class PopupJobComponent implements OnInit {
   }
 
   async filterText(value, key) {
-    if (value) {
-      this.stepsTasks[key] = value;
-      this.taskGroupName = this.groupTackList.find((x) => x.recID === value)[
-        'taskGroupName'
-      ];
-    }
+    this.stepsTasks[key] = value;
+    this.taskGroupName = this.groupTackList.find((x) => x.recID === value)[
+      'taskGroupName'
+    ];
     this.dataCombobox = await this.setTaskLink(value);
   }
 
@@ -409,7 +412,7 @@ export class PopupJobComponent implements OnInit {
     else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
   }
-  
+
   getfileDelete(event) {
     event.data.length;
   }
