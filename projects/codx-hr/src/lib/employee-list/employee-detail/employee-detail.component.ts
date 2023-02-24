@@ -636,10 +636,14 @@ export class EmployeeDetailComponent extends UIComponent {
     });
     this.hrService.getFormModel(this.eHealthFuncID).then((res) => {
       this.eHealthFormModel = res;
+      console.log('ehealth form mo do` ne` ', res);
+
     });
 
     this.hrService.getFormModel(this.benefitFuncID).then((res) => {
       this.benefitFormodel = res;
+      console.log('benefit form mo do` ne` ', res);
+      
       this.cache
         .gridViewSetup(
           this.benefitFormodel.formName,
@@ -767,6 +771,21 @@ export class EmployeeDetailComponent extends UIComponent {
             },
           ];
         });
+
+        let insBusinessTravel = setInterval(() => {
+          if (this.businessTravelGrid) {
+            clearInterval(insBusinessTravel);
+            let t = this;
+            this.businessTravelGrid.dataService.onAction.subscribe((res) => {
+              if (res) {
+                if (res.type != null && res.type == 'loaded') {
+                  t.eBusinessTravelRowCount = res['data'].length;
+                }
+              }
+            });
+            this.eBusinessTravelRowCount = this.businessTravelGrid.dataService.rowCount;
+          }
+        }, 100);
 
         //#endregion
 
@@ -3666,7 +3685,6 @@ export class EmployeeDetailComponent extends UIComponent {
   addEContracts(actionHeaderText) {
     this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
-    // option.FormModel = this.view.formModel
     option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEContractComponent,
