@@ -43,6 +43,10 @@ export class PopupAddOKRPlanComponent extends UIComponent implements AfterViewIn
   isAfterRender: boolean;
   fGroupAddKR: FormGroup;
   funcID: any;
+  okrPlan: any;
+  headerText='';
+  modelOKR: any;
+  curOrg='';
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -53,6 +57,10 @@ export class PopupAddOKRPlanComponent extends UIComponent implements AfterViewIn
   ) {
     super(injector);
     this.funcID = dialogData.data[0];
+    this.okrPlan = dialogData.data[1];
+    this.modelOKR = dialogData.data[2];
+    this.headerText = dialogData.data[3];
+    this.curOrg = dialogData.data[4];
     this.dialogRef = dialogRef;
     this.formModel = dialogRef.formModel;
     
@@ -63,7 +71,7 @@ export class PopupAddOKRPlanComponent extends UIComponent implements AfterViewIn
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   ngAfterViewInit(): void {
-    
+
   }
 
   onInit(): void {

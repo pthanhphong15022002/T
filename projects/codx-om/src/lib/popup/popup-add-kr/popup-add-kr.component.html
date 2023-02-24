@@ -1,19 +1,10 @@
-<codx-form
-  #form
-  [headerText]="headerText"
-  [subHeaderText]="subHeaderText"
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialogRef"
-  [formModel]="formModel"
-  [data]="kr"
-  *ngIf="isAfterRender"
->
+<codx-form #form [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
+  [dialog]="dialogRef" [formModel]="formModel" [data]="kr" *ngIf="isAfterRender">
   <ng-template #body>
     <ng-container *ngIf="form && form.formGroup">
-    
 
-    <!-- <div class="form-group" >
+
+      <!-- <div class="form-group" >
       <codx-label fiedName="lblObjectParent" default="Mục tiêu"  *ngIf="!isSubKR">
       </codx-label>
       <codx-input type="combobox" [refValue]="'Objectives'" [crrValue]="kr.parentID" *ngIf="!isSubKR"
@@ -25,118 +16,83 @@
       (valueChange)="valueChange($event)" field="parentID">        
       </codx-input>
     </div> -->
-    <div class="form-group">
-      <codx-label fiedName="ParentID" [formModel]="form.formModel">
-      </codx-label>
-      <codx-input
-        ControlName="parentID"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      >
-      </codx-input>
-    </div>
-
-    <div class="form-group">
-      <codx-label fiedName="OKRName" [formModel]="form.formModel">
-      </codx-label>
-      <codx-input
-        ControlName="okrName"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      >
-      </codx-input>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-4">
-        <codx-label fiedName="Measurement" [formModel]="form.formModel">
+      <div class="form-group">
+        <codx-label fiedName="ParentID" [formModel]="form.formModel">
         </codx-label>
-        <codx-input
-          ControlName="measurement"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-      </div>
-
-      <div class="form-group col-4">
-        <codx-label  fiedName="Target" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input
-          ControlName="target"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
+        <codx-input ControlName="parentID" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
 
-      <div class="form-group col-4">
-        <codx-label  fiedName="UMID" [formModel]="form.formModel">
+      <div class="form-group">
+        <codx-label fiedName="OKRName" [formModel]="form.formModel">
         </codx-label>
-        <codx-input
-          ControlName="umid"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
+        <codx-input ControlName="okrName" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
 
-    </div>
+      <div class="row">
+        <div class="form-group col-4">
+          <codx-label fiedName="Measurement" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input ControlName="measurement" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+        </div>
 
-    <div class="row">
-      <div class="form-group col-4">
-        <codx-label  fiedName="Category" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input
-          ControlName="category"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-input>
+        <div class="form-group col-4">
+          <codx-label fiedName="Target" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input ControlName="target" [formModel]="form.formModel" [Group]="form.formGroup">
+          </codx-input>
+        </div>
+
+        <div class="form-group col-4">
+          <codx-label fiedName="UMID" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input ControlName="umid" [formModel]="form.formModel" [Group]="form.formGroup">
+          </codx-input>
+        </div>
+
       </div>
 
-      <div class="form-group col-4">
-        <codx-label  fiedName="Plan" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input
-          ControlName="plan"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="planChange($event)"
-        >
-        </codx-input>
+      <div class="row">
+        <div class="form-group col-4">
+          <codx-label fiedName="Category" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input ControlName="category" [formModel]="form.formModel" [Group]="form.formGroup">
+          </codx-input>
+        </div>
+
+        <div class="form-group col-4">
+          <codx-label fiedName="Plan" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input ControlName="plan" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="planChange($event)">
+          </codx-input>
+        </div>
+
       </div>
 
-    </div>
+      <div class="row">
+        <div class="form-group col-4">
+          <codx-label fiedName="CheckInMode" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input ControlName="checkInMode" [formModel]="form.formModel" [Group]="form.formGroup">
+          </codx-input>
+        </div>
+        <div class="form-group col-4">
+          <codx-label fiedName="Frequence" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input ControlName="frequence" [formModel]="form.formModel" [Group]="form.formGroup">
+          </codx-input>
+        </div>
+        <div class="form-group col-1 position-relative">
+          <span class="icon-settings text-mute position-absolute bottom-0"
+            (click)="openPopupFrequence(popupFrequence)"></span>
+        </div>
 
-    <div class="row">
-      <div class="form-group col-4">
-        <codx-label fiedName="CheckInMode" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input
-          ControlName="checkInMode"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-input>
-      </div>
-      <div class="form-group col-4">
-        <codx-label  fiedName="Frequence" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input
-          ControlName="frequence"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-input>
-      </div>
-      <div class="form-group col-1 position-relative">
-        <span class="icon-settings text-mute position-absolute bottom-0"></span>
-      </div>
-      
 
-    </div>
+      </div>
 
-    <!-- <div class="row">
+      <!-- <div class="row">
       <div class="form-group col-4">
         <codx-label default="Nguồn dữ liệu" fiedName="" [formModel]="form.formModel">
         </codx-label>
@@ -164,17 +120,17 @@
       
     </div> -->
 
-    <div class="form-group">
-      <codx-label [formModel]="form.formModel" fiedName="Owner"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="owner">
-      </codx-input>
-    </div>
-    <div class="form-group">
-      <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="note">
-      </codx-input>
-    </div>
-    <!-- <div class="row">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Owner"></codx-label>
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="owner">
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="note">
+        </codx-input>
+      </div>
+      <!-- <div class="row">
       <div class="form-group col-10 d-flex align-items-center">      
         <codx-label default="Liên kết mục tiêu" fiedName="" [formModel]="form.formModel">
         </codx-label>
@@ -183,26 +139,18 @@
         <span role="button" class="icon-i-signpost-2 text-primary "></span>
       </div>
     </div> -->
-  </ng-container>
+    </ng-container>
   </ng-template>
 
   <ng-template #footer>
     <div class="d-flex flex-row justify-content-between">
-      <button class="btn btn-outline-primary d-flex flex-row justify-content-center" (click)="openPopupTarget(popupTarget)">
+      <button class="btn btn-outline-primary d-flex flex-row justify-content-center"
+        (click)="openPopupTarget(popupTarget)">
         <span class="icon-airplay btn-text-primary me-2"></span>
-        <codx-label
-          name="lbl"
-          class="fw-normal"
-          default="Phân bố chỉ tiêu"
-          [formModel]="form.formModel"
-        ></codx-label>
+        <codx-label name="lbl" class="fw-normal" default="Phân bố chỉ tiêu" [formModel]="form.formModel"></codx-label>
       </button>
       <button class="btn btn-primary" (click)="onSaveForm()">
-        <codx-label
-          name="lblSave"
-          default="Lưu"
-          [formModel]="form.formModel"
-        ></codx-label>
+        <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
       </button>
     </div>
   </ng-template>
@@ -213,77 +161,111 @@
         <div class="d-flex flex-column flex-grow-1">
           <div class="d-flex justify-content-between align-items-center">
             <h2 id="modal-basic-title">
-              <codx-label
-                name="lbl"
-                default="Kế hoạch chỉ tiêu"
-                [formModel]="form.formModel"
-              ></codx-label>
+              <codx-label name="lbl" default="Kế hoạch chỉ tiêu" [formModel]="form.formModel"></codx-label>
             </h2>
-            <button
-              type="button"
-              class="btn btn-xs btn-icon btn-light btn-hover-primary"
-              aria-label="Close"
-              (click)="dialogRef.close()"
-            >
-              <span
-                class="icon-close icon-20 text-dark text-hover-primary"
-              ></span>
+            <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
+              (click)="dialogRef.close()">
+              <span class="icon-close icon-20 text-dark text-hover-primary"></span>
             </button>
           </div>
           <div class="text-dark-50">
-            <codx-label
-              name="lblChooseCarEquipments"
-              default="Thay đổi giá trị mục tiêu theo từng chu kì check-in"
-              
-            ></codx-label>
+            <codx-label name="lblChooseCarEquipments"
+              default="Thay đổi giá trị mục tiêu theo từng chu kì check-in"></codx-label>
           </div>
         </div>
       </div>
       <div class="modal-body">
-        <div class="px-5 d-flex flex-column justify-content-center align-items-center" >
-          <div class="d-flex justify-content-between align-items-center w-100 my-2" *ngFor="let item of this.kr?.targets;let i=index" >
-            
-              <div class="col-4 ms-3">
-                <codx-label [name]=" this.planVLL[i]?.text"></codx-label>              
-              </div>
-              <div class="col-7">
-                <codx-input 
-                  type="number"
-                  [min]="0"
-                  [showSpinButton]="false"
-                  [crrValue]="item.target"
-                  (valueChange)="valuePlanTargetChange($event,i)"
-                ></codx-input>               
-              </div>
-              <div class="col-1 d-flex justify-content-center align-items-center">
-                <span *ngIf="item.isEdited" class="icon-i-info-circle text-danger"></span>
-              
-              </div>
+        <div class="px-5 d-flex flex-column justify-content-center align-items-center">
+          <div class="d-flex justify-content-between align-items-center w-100 my-2"
+            *ngFor="let item of this.kr?.targets;let i=index">
+
+            <div class="col-4 ms-3">
+              <codx-label [name]=" this.planVLL[i]?.text"></codx-label>
+            </div>
+            <div class="col-7">
+              <codx-input type="number" [min]="0" [showSpinButton]="false" [crrValue]="item.target"
+                (valueChange)="valuePlanTargetChange($event,i)"></codx-input>
+            </div>
+            <div class="col-1 d-flex justify-content-center align-items-center">
+              <span *ngIf="item.isEdited" class="icon-i-info-circle text-danger"></span>
+
+            </div>
           </div>
-        </div>        
-        
+        </div>
+
       </div>
       <div class="modal-footer">
         <div class="w-100 d-flex justify-content-between">
-          <button class="btn btn-outline-primary d-flex flex-row justify-content-center" (click)="calculatorTarget(kr?.plan)">
+          <button class="btn btn-outline-primary d-flex flex-row justify-content-center"
+            (click)="calculatorTarget(kr?.plan)">
             <span class="icon-airplay btn-text-primary me-2"></span>
-            <codx-label
-              name="lbl"
-              class="fw-normal"
-              default="Phân bố lại"
-              [formModel]="form.formModel"
-            ></codx-label>
+            <codx-label name="lbl" class="fw-normal" default="Phân bố lại" [formModel]="form.formModel"></codx-label>
           </button>
           <button class="btn btn-primary" (click)="onSaveTarget()">
-            <codx-label
-              name="lblSave"
-              default="Lưu"
-              [formModel]="form.formModel"
-            ></codx-label>
+            <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
           </button>
         </div>
       </div>
     </div>
-    
+
+  </ng-template>
+
+  <ng-template #popupFrequence let-dialogRef>
+    <div class=" h-100 d-flex flex-column justify-content-between">
+      <div class="modal-header">
+        <div class="d-flex flex-column flex-grow-1">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 id="modal-basic-title">
+              <codx-label name="lbl" default="Tần suất cập nhật" [formModel]="form.formModel"></codx-label>
+            </h2>
+            <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
+              (click)="dialogRef.close()">
+              <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="px-5 d-flex flex-row justify-content-start">
+          <div class="d-flex flex-row justify-content-start align-items-center" *ngIf="kr.frequence=='M'">
+            <span class="mx-2">Ngày</span>
+            <codx-input type="number" [class]="'w-40px text-center mx-2'" style="width: 35px;" [showSpinButton]="false" field="day"
+              [crrValue]="kr?.checkIn?.day" (valueChange)="checkInChange($event)"></codx-input>
+            <span class="mx-2">trong tháng vào lúc</span>
+            <codx-input type="number" [class]="'w-40px text-center mx-2'" style="width: 35px;" [showSpinButton]="false" field="hour"
+              [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
+            <span class="mx-2">giờ</span>
+          </div>
+
+          <div class="d-flex flex-row justify-content-start align-items-center" *ngIf="kr.frequence=='W'">
+            <span class="mx-2">Ngày</span>
+            <codx-input type="valuelist" [refValue]="'L0012'" [class]="'w-40px text-center mx-2'" style="width: 100px;" [showSpinButton]="false" field="day"
+              [crrValue]="kr?.checkIn?.day" (valueChange)="checkInChange($event)"></codx-input>
+            <span class="mx-2">trong tuần vào lúc</span>
+            <codx-input type="number" [class]="'w-40px text-center mx-2'" style="width: 35px;" [showSpinButton]="false" field="hour"
+              [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
+            <span class="mx-2">giờ</span>
+          </div>
+
+          <div class="d-flex flex-row justify-content-start align-items-center" *ngIf="kr.frequence=='D'">
+            <span class="mx-2">Trong ngày vào lúc</span>
+            <codx-input type="number" [class]="'w-40px text-center mx-2'" style="width: 35px;" [showSpinButton]="false" field="hour"
+              [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
+            <span class="mx-2">giờ</span>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class="modal-footer">
+        <div class="w-100 d-flex justify-content-end">
+         
+          <button class="btn btn-primary" (click)="onSaveTarget()">
+            <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
+          </button>
+        </div>
+      </div>
+    </div>
   </ng-template>
 </codx-form>
