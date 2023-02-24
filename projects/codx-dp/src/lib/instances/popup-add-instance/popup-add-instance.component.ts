@@ -286,7 +286,6 @@ export class PopupAddInstanceComponent implements OnInit {
     this.dialog.dataService
     .save((option: any) => this.beforeSave(option), 0)
     .subscribe((res) => {
-      debugger;
       if (res && res.save) {
         this.dialog.close(res);
         this.changeDetectorRef.detectChanges();
@@ -309,15 +308,17 @@ export class PopupAddInstanceComponent implements OnInit {
   autoClickedSteps() {
     this.instance.stepID = this.listStep[0].stepID;
   }
-  async genAutoNumberNo() {
-    this.codxDpService
-      .genAutoNumber(this.formModelCrr.funcID, 'DP_Instances', 'InstanceNo')
-      .subscribe((res) => {
-        if (res) {
-          this.instance.instanceNo = res;
-        }
-      });
-  }
+
+  // Em bảo gắn tạm
+  // async genAutoNumberNo() {
+  //   this.codxDpService
+  //     .genAutoNumber(this.formModelCrr.funcID, 'DP_Instances', 'InstanceNo')
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.instance.instanceNo = res;
+  //       }
+  //     });
+  // }
 
   checkFormat(field) {
     if (field.dataType == 'T') {
