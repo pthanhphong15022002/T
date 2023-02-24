@@ -5976,9 +5976,14 @@
 <!-- #region Lương cơ bản columnGrid templates-->
 <ng-template #basicSalaryCol1 let-data>
   <div class="d-flex flex-column">
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-attach_money icon-16 text-gray-800 me-1"></span>
-      <span class="text-dark">
+    <div
+      class="d-flex align-items-center mb-2"
+      [ngClass]="
+        data.isCurrent ? 'text-primary fw-bolder' : 'text-dart fw-bold'
+      "
+    >
+      <span class="icon-attach_money icon-16 me-1"></span>
+      <span class="">
         <span>{{
           data?.bSalary
             | formatvalue : eBasicSalaryFormmodel : "bSalary"
@@ -5992,8 +5997,17 @@
 <ng-template #basicSalaryCol2 let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
-      <span class="icon-monetization_on text-danger icon-16 me-1"></span>
-      <span class="text-dark fw-bolder">
+      <span
+        class="icon-monetization_on icon-16 fw-bold me-1"
+        [ngClass]="
+          data.isCurrent ? 'text-danger fw-bolder' : 'text-dart fw-bold'
+        "
+      ></span>
+      <span
+        [ngClass]="
+          data.isCurrent ? 'text-primary fw-bolder' : 'text-dart fw-bold'
+        "
+      >
         <span>{{
           data?.siSalary
             | formatvalue : eBasicSalaryFormmodel : "siSalary"
@@ -6042,7 +6056,7 @@
           <span
             class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
           ></span>
-          <span class="text-gray-800 fw-bold">
+          <span class="text-gray-600 fw-bold">
             <span>{{
               data?.signedDate
                 | formatvalue : eBasicSalaryFormmodel : "signedDate"
@@ -6066,9 +6080,14 @@
 <!-- #region Lương chức danh columnGrid templates-->
 <ng-template #jobSalaryCol1 let-data>
   <div class="d-flex flex-column">
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-attach_money icon-16 text-gray-800 me-1"></span>
-      <span class="text-dark">
+    <div
+      class="d-flex align-items-center mb-2"
+      [ngClass]="
+        data.isCurrent ? 'text-primary fw-bolder' : 'text-dart fw-bold'
+      "
+    >
+      <span class="icon-attach_money icon-16 me-1"></span>
+      <span class="">
         <span>{{
           data?.jSalary | formatvalue : eJobSalaryFormModel : "jSalary" | async
         }}</span>
@@ -6115,7 +6134,7 @@
           <span
             class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
           ></span>
-          <span class="text-gray-800 fw-bold">
+          <span class="text-gray-600 fw-bold">
             <span>{{
               data?.signedDate
                 | formatvalue : eJobSalaryFormModel : "signedDate"
@@ -6126,7 +6145,7 @@
       </div>
       <codx-mfunc
         [formModel]="eBasicSalaryFormmodel"
-        (clickMF)="clickMF($event, data, 'basicSalary')"
+        (clickMF)="clickMF($event, data, 'jobSalary')"
         type="hover"
         [dataItem]="data"
       >

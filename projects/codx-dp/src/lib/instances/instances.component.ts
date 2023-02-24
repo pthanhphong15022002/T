@@ -380,13 +380,13 @@ export class InstancesComponent
           case 'SYS104':
           case 'SYS04':
             let isCopy = this.isCreate ? true : false;
-            if (!isCopy || data.status =="3") res.disabled = true;
+            if (!isCopy) res.disabled = true;
             break;
           //xóa
           case 'SYS102':
           case 'SYS02':
             let isDelete = data.delete;
-            if (!isDelete || data.status =="3") res.disabled = true;
+            if (!isDelete) res.disabled = true;
             break;
         }
       });
