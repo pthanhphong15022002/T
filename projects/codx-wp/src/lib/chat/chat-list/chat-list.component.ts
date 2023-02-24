@@ -122,6 +122,11 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     if(this.codxListViewSerach.dataService)
       this.codxListViewSerach.dataService.search(event).subscribe();
   }
+
+  // check read all
+  clickCheckReadAll(){
+    
+  }
   // click group chat - chat box
   openChatBox(group: any) {
     debugger
@@ -139,8 +144,8 @@ export class ChatListComponent implements OnInit, AfterViewInit {
           "WP",
           "ERM.Business.WP",
           "ChatBusiness",
-          "UpdateMessageAsync",
-          [group.lastMssgID])
+          "SeenMessageByGroupAsync",
+          [group.groupID])
           .subscribe();
         group.isRead = true;
       }
