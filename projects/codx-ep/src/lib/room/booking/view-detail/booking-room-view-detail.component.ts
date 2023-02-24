@@ -106,7 +106,6 @@ renderFooter=false;
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
-            debugger;
             this.listFilePermission=[];
             if(res.bookingAttendees!=null && res.bookingAttendees!=''){
               let listAttendees = res.bookingAttendees.split(";");
@@ -322,6 +321,8 @@ renderFooter=false;
           //Gửi duyệt
           if ( //Hiện: chép
           func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+          func.functionID == 'SYS02' /*MF sửa*/ ||
+          func.functionID == 'SYS03' /*MF xóa*/ ||
           func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
@@ -329,8 +330,6 @@ renderFooter=false;
           if (//Ẩn: còn lại            
             func.functionID == 'EP4T1102' /*MF mời*/ ||
             func.functionID == 'EP4T1101' /*MF dời*/ ||
-            func.functionID == 'SYS02' /*MF sửa*/ ||
-            func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = true;
