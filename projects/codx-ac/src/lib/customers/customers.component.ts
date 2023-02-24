@@ -152,7 +152,7 @@ export class CustomersComponent extends UIComponent {
     opt.className = 'CustomersBusiness';
     opt.assemblyName = 'SM';
     opt.service = 'SM';
-    opt.data = data;
+    opt.data = data.customerID;
     return true;
   }
   //#endregion
