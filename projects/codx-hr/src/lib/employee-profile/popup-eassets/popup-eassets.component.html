@@ -186,7 +186,12 @@
   <ng-template #body>
     <div class="form-group">
       <codx-label fiedName="AssetID" [formModel]="formModel"> </codx-label>
-      <codx-input field="assetID" [formModel]="formModel" [Group]="formGroup">
+      <codx-input 
+        field="assetID" 
+        [formModel]="formModel" 
+        [Group]="formGroup"
+        (valueChange)="selectAssetId($event)"
+        >
       </codx-input>
     </div>
 
