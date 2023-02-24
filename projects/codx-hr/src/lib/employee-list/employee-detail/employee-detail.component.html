@@ -3594,14 +3594,14 @@
                 </div>
                 <div class="d-flex me-3">
                   <codx-dropdown-select
-                  *ngIf="eAssetGrvSetup"
+                    *ngIf="eAssetGrvSetup"
                     [cssClass]="'rounded-pill border-1'"
                     cssPopup="h-350px w-300px"
                     [isMulti]="true"
                     type="combobox"
                     emptyText="Loại tài sản"
                     field="AssetCategory"
-                    [refValue] = "eAssetGrvSetup?.AssetCategory?.referedValue"
+                    [refValue]="eAssetGrvSetup?.AssetCategory?.referedValue"
                     (valueChange)="valueChangeFilterAssetCategory($event)"
                   ></codx-dropdown-select>
 
@@ -4027,13 +4027,13 @@
               </div>
               <div class="d-flex align-items-center ms-5">
                 <codx-dropdown-select
-                *ngIf="eDayOffGrvSetup"
+                  *ngIf="eDayOffGrvSetup"
                   [cssClass]="'rounded-pill border-1'"
                   cssPopup="h-350px w-300px"
                   [isMulti]="true"
                   type="combobox"
                   field="KowID"
-                  [refValue]= "eDayOffGrvSetup?.KowID?.referedValue"
+                  [refValue]="eDayOffGrvSetup?.KowID?.referedValue"
                   (valueChange)="valueChangeFilterDayOff($event)"
                 ></codx-dropdown-select>
                 <span class="text-gray-500 ms-2">|</span>
@@ -4950,7 +4950,7 @@
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="
-                  HandleEmployeeEDisciplinesInfo(addHeaderText, 'add', null)
+                    HandleEmployeeEDisciplinesInfo(addHeaderText, 'add', null)
                   "
                 >
                   <span
@@ -5927,9 +5927,14 @@
 <!-- #region Lương cơ bản columnGrid templates-->
 <ng-template #basicSalaryCol1 let-data>
   <div class="d-flex flex-column">
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-attach_money icon-16 text-gray-800 me-1"></span>
-      <span class="text-dark">
+    <div
+      class="d-flex align-items-center mb-2"
+      [ngClass]="
+        data.isCurrent ? 'text-primary fw-bolder' : 'text-dart fw-bold'
+      "
+    >
+      <span class="icon-attach_money icon-16 me-1"></span>
+      <span class="">
         <span>{{
           data?.bSalary
             | formatvalue : eBasicSalaryFormmodel : "bSalary"
@@ -5943,8 +5948,17 @@
 <ng-template #basicSalaryCol2 let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
-      <span class="icon-monetization_on text-danger icon-16 me-1"></span>
-      <span class="text-dark fw-bolder">
+      <span
+        class="icon-monetization_on icon-16 fw-bold me-1"
+        [ngClass]="
+          data.isCurrent ? 'text-danger fw-bolder' : 'text-dart fw-bold'
+        "
+      ></span>
+      <span
+        [ngClass]="
+          data.isCurrent ? 'text-primary fw-bolder' : 'text-dart fw-bold'
+        "
+      >
         <span>{{
           data?.siSalary
             | formatvalue : eBasicSalaryFormmodel : "siSalary"
@@ -5993,7 +6007,7 @@
           <span
             class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
           ></span>
-          <span class="text-gray-800 fw-bold">
+          <span class="text-gray-600 fw-bold">
             <span>{{
               data?.signedDate
                 | formatvalue : eBasicSalaryFormmodel : "signedDate"
@@ -6017,9 +6031,14 @@
 <!-- #region Lương chức danh columnGrid templates-->
 <ng-template #jobSalaryCol1 let-data>
   <div class="d-flex flex-column">
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-attach_money icon-16 text-gray-800 me-1"></span>
-      <span class="text-dark">
+    <div
+      class="d-flex align-items-center mb-2"
+      [ngClass]="
+        data.isCurrent ? 'text-primary fw-bolder' : 'text-dart fw-bold'
+      "
+    >
+      <span class="icon-attach_money icon-16 me-1"></span>
+      <span class="">
         <span>{{
           data?.jSalary | formatvalue : eJobSalaryFormModel : "jSalary" | async
         }}</span>
@@ -6066,7 +6085,7 @@
           <span
             class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
           ></span>
-          <span class="text-gray-800 fw-bold">
+          <span class="text-gray-600 fw-bold">
             <span>{{
               data?.signedDate
                 | formatvalue : eJobSalaryFormModel : "signedDate"
@@ -6077,7 +6096,7 @@
       </div>
       <codx-mfunc
         [formModel]="eBasicSalaryFormmodel"
-        (clickMF)="clickMF($event, data, 'basicSalary')"
+        (clickMF)="clickMF($event, data, 'jobSalary')"
         type="hover"
         [dataItem]="data"
       >
@@ -6099,7 +6118,9 @@
   <div class="text-primary">
     <i></i>
     {{
-      data?.trainForm | formatvalue : eTrainCourseFormModel : "trainForm" | async
+      data?.trainForm
+        | formatvalue : eTrainCourseFormModel : "trainForm"
+        | async
     }}
   </div>
 </ng-template>
@@ -6112,7 +6133,9 @@
   <div>
     <i class="icon-year"></i>
     <span class="fw-bolder">
-      {{ data?.inYear | formatvalue : eTrainCourseFormModel : "inYear" | async }}
+      {{
+        data?.inYear | formatvalue : eTrainCourseFormModel : "inYear" | async
+      }}
     </span>
   </div>
 </ng-template>
@@ -6155,7 +6178,9 @@
         ></span>
         <span class="fw-bold">
           <span>{{
-            data?.result | formatvalue : eTrainCourseFormModel : "result" | async
+            data?.result
+              | formatvalue : eTrainCourseFormModel : "result"
+              | async
           }}</span>
         </span>
       </div>
@@ -6465,13 +6490,20 @@
 
 <ng-template #templateDisciplineGridCol1 let-data>
   <div class="fw-bold">
-    {{ data?.disciplineID | formatvalue : eDisciplineFormModel : "DisciplineID" | async }}
+    {{
+      data?.disciplineID
+        | formatvalue : eDisciplineFormModel : "DisciplineID"
+        | async
+    }}
   </div>
   <div class="text-warning">
     <i></i>
-    {{ data?.disciplineFormCategory | formatvalue : eDisciplineFormModel : "disciplineFormCategory" | async }}
+    {{
+      data?.disciplineFormCategory
+        | formatvalue : eDisciplineFormModel : "disciplineFormCategory"
+        | async
+    }}
   </div>
-
 </ng-template>
 <ng-template #templateDisciplineGridCol2 let-data>
   <div>
@@ -6481,20 +6513,26 @@
   <div>
     <i class="icon-calendar_today text-dark"></i>
     {{ data?.fromDate | fmDT }}
-    <i class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></i>
+    <i
+      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
+    ></i>
     <i class="icon-library_books"></i>
-    {{ data?.decisionNo | formatvalue : eDisciplineFormModel : "decisionNo" | async }}
+    {{
+      data?.decisionNo
+        | formatvalue : eDisciplineFormModel : "decisionNo"
+        | async
+    }}
   </div>
 </ng-template>
 <ng-template #templateDisciplineGridCol3 let-data>
   <div class="has-action-menu">
-    {{data?.reason}}
+    {{ data?.reason }}
     <codx-mfunc
-    [formModel]="eDisciplineFormModel"
-    (clickMF)="clickMF($event, data, 'eDisciplines')"
-    [dataItem]="data"
-    type="hover"
-  >
-  </codx-mfunc>
+      [formModel]="eDisciplineFormModel"
+      (clickMF)="clickMF($event, data, 'eDisciplines')"
+      [dataItem]="data"
+      type="hover"
+    >
+    </codx-mfunc>
   </div>
 </ng-template>
