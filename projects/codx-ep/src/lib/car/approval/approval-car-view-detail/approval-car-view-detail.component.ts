@@ -39,6 +39,10 @@ export class ApprovalCarViewDetailComponent
     new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
     new EventEmitter();
+    
+  @Output('approve') approve: EventEmitter<any> = new EventEmitter();  
+  @Output('reject') reject: EventEmitter<any> = new EventEmitter(); 
+  @Output('undo') undo: EventEmitter<any> = new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
   @Input() funcID;
@@ -57,6 +61,7 @@ export class ApprovalCarViewDetailComponent
   popupDialog: DialogRef;
   popupTitle: any;
   dialog: any;
+  listDriverAssign = [];
   tabControl: TabModel[] = [];
   fields: Object = { text: 'driverName', value: 'driverID' };
   constructor(
@@ -113,75 +118,39 @@ export class ApprovalCarViewDetailComponent
   }
   clickMF(value, datas: any = null) {
     let funcID = value?.functionID;
-    // if (!datas) datas = this.data;
-    // else {
-    //   var index = this.view.dataService.data.findIndex((object) => {
-    //     return object.recID === datas.recID;
-    //   });
-    //   datas = this.view.dataService.data[index];
-    // }
     switch (funcID) {
-      case 'EPT40201':
+      case 'EPT40201': //Duyệt
         {
           // if(datas.allowToApprove == true){
 
-          this.approve(datas, '5');
+          this.approve.emit(datas);
           // }
           // else{
-            
+
           //   this.notificationsService.notifyCode('EP020');
           //   return;
           // }
         }
         break;
-      case 'EPT40205':
+      case 'EPT40202': //Từ chối
         {
-          //alert('Từ chối');
-          this.approve(datas, '4');
+          this.reject.emit(datas);
         }
         break;
-      case 'EPT40204':
-        {
-          this.popupTitle = value.text;
-          this.lviewSetPopupTitle(this.popupTitle);
-          this.lviewDriverAssign(datas);
-        }
+      case 'EPT40204': {
+        //Phân công tài xế
+        this.popupTitle = value.text;
+        this.assignDriver(datas);
         break;
-
-      default:
-        '';
+      }
+      case 'EPT40206':
+        {
+          //alert('Thu hồi');
+          this.undo.emit(datas);
+        }
         break;
     }
   }
-  approve(data: any, status: string) {
-    this.codxEpService
-      .getCategoryByEntityName(this.formModel.entityName)
-      .subscribe((res: any) => {
-        this.codxEpService
-          .approve(
-            data?.approvalTransRecID, //ApprovelTrans.RecID
-            status,
-            '',
-            ''
-          )
-          .subscribe((res: any) => {
-            if (res?.msgCodeError == null && res?.rowCount >= 0) {
-              if (status == '5') {
-                this.notificationsService.notifyCode('SYS034'); //đã duyệt
-                data.approveStatus = '5';
-              }
-              if (status == '4') {
-                this.notificationsService.notifyCode('SYS034'); //bị hủy
-                data.approveStatus = '4';
-              }
-              this.updateStatus.emit(data);
-            } else {
-              this.notificationsService.notifyCode(res?.msgCodeError);
-            }
-          });
-      });
-  }
-
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
       event.forEach((func) => {
@@ -200,7 +169,10 @@ export class ApprovalCarViewDetailComponent
           ) {
             func.disabled = false;
           }
-          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+          if (
+            func.functionID == 'EPT40204' /*MF phân công tài xế*/ ||
+            func.functionID == 'EPT40206' /*Thu hoi*/
+          ) {
             func.disabled = true;
           }
         });
@@ -212,10 +184,22 @@ export class ApprovalCarViewDetailComponent
           ) {
             func.disabled = true;
           }
+          if (func.functionID == 'EPT40204') {
+            func.disabled = false;
+          }
           if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
-            if (data.approveStatus == 5 && data.driverName == null)
+            
+            let havedDriver = false;
+            if(data?.resources){              
+              for (let i = 0; i < data?.resources.length; i++) {
+                if (data?.resources[i].roleType == '2') {
+                  havedDriver = true;                  
+                }
+              }
+            }            
+            if (!havedDriver) {
               func.disabled = false;
-            else {
+            } else {
               func.disabled = true;
             }
           }
@@ -223,6 +207,84 @@ export class ApprovalCarViewDetailComponent
       }
     }
   }
+  // undo(data: any) {
+  //   this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
+  //     if (res != null) {
+  //       this.notificationsService.notifyCode('SYS034'); //đã thu hồi
+  //       data.approveStatus = '3';
+  //       data.status = '3';
+  //       this.updateStatus.emit(data);
+  //     } else {
+  //       this.notificationsService.notifyCode(res?.msgCodeError);
+  //     }
+  //   });
+  // }
+  // approve(data: any, status: string) {
+  //   this.codxEpService
+  //     .getCategoryByEntityName(this.formModel.entityName)
+  //     .subscribe((res: any) => {
+  //       this.codxEpService
+  //         .approve(
+  //           data?.approvalTransRecID, //ApprovelTrans.RecID
+  //           status,
+  //           '',
+  //           ''
+  //         )
+  //         .subscribe((res: any) => {
+  //           if (res?.msgCodeError == null && res?.rowCount >= 0) {
+  //             if (status == '5') {
+  //               this.notificationsService.notifyCode('SYS034'); //đã duyệt
+  //               data.approveStatus = '5';
+  //             }
+  //             if (status == '4') {
+  //               this.notificationsService.notifyCode('SYS034'); //bị hủy
+  //               data.approveStatus = '4';
+  //             }
+  //             this.updateStatus.emit(data);
+  //           } else {
+  //             this.notificationsService.notifyCode(res?.msgCodeError);
+  //           }
+  //         });
+  //     });
+  // }
+  assignDriver(data: any) {
+    let startDate = new Date(data.startDate);
+    let endDate = new Date(data.endDate);
+    this.codxEpService
+      .getAvailableDriver(startDate.toUTCString(), endDate.toUTCString())
+      .subscribe((res: any) => {
+        if (res) {
+          this.cbbDriver = [];
+          this.listDriverAssign = res;
+          this.listDriverAssign.forEach((dri) => {
+            var tmp = new DriverModel();
+            tmp['driverID'] = dri.resourceID;
+            tmp['driverName'] = dri.resourceName;
+            this.cbbDriver.push(tmp);
+          });
+          this.popupDialog = this.callfc.openForm(
+            PopupDriverAssignComponent,
+            '',
+            550,
+            250,
+            this.funcID,
+            [
+              this.view.dataService.dataSelected,
+              this.popupTitle,
+              this.view.dataService,
+              this.cbbDriver,
+            ]
+          );
+          this.dialog.closed.subscribe((x) => {
+            if (!x.event) this.view.dataService.clear();
+            else {
+              this.view.dataService.update(x.event).subscribe();
+            }
+          });
+        }
+      });
+  }
+  
   lviewSetPopupTitle(data) {
     if (data) {
       this.setPopupTitle.emit(data);

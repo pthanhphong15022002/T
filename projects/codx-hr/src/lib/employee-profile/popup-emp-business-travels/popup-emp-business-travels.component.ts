@@ -30,8 +30,7 @@ export class PopupEmpBusinessTravelsComponent
   implements OnInit
 {
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('listView') listView: CodxListviewComponent;
-
+  successFlag = false;
   formGroup: FormGroup;
   formModel: FormModel;
   dialog: DialogRef;
@@ -39,6 +38,7 @@ export class PopupEmpBusinessTravelsComponent
   funcID;
   employId;
   data;
+  isNotOverseaFlag = true;
 
   idField = 'RecID';
 
@@ -63,51 +63,79 @@ export class PopupEmpBusinessTravelsComponent
     this.headerText = data?.data?.headerText;
     this.actionType = data?.data?.actionType;
     this.funcID = data?.data?.funcID;
-    // if (!this.formModel) {
-    //   this.formModel = new FormModel();
-    //   this.formModel.formName = 'EBusinessTravels';
-    //   this.formModel.entityName = 'HR_EBusinessTravels';
-    //   this.formModel.gridViewName = 'grvEBusinessTravels';
-    this.cache.functionList(this.funcID).subscribe((funcList) => {
-      if (funcList) {
-        console.log(funcList);
-        this.headerText = this.headerText + ' 1 ' + funcList.description;
-        this.cr.detectChanges();
+    this.data = data?.data?.businessTravelObj;
+    console.log('data khi copy truyen vao', this.data);
+    
+    if(this.data){
+      if(this.data.beginDate == '0001-01-01T00:00:00'){
+        this.data.beginDate = null;
       }
-    });
-    // }
+      if(this.data.endDate == '0001-01-01T00:00:00'){
+        this.data.endDate = null;
+      }
+    }
+    
+    // this.cache.functionList(this.funcID).subscribe((funcList) => {
+    //   if (funcList) {
+    //     console.log(funcList);
+    //     this.headerText = this.headerText + ' 1 ' + funcList.description;
+    //     console.log('headerText sau khi goi funcID', this.headerText);
+        
+    //   }
+    // });
+
+    this.formModel = dialog.formModel;
     this.employId = data?.data?.employeeId;
 
     this.dataValues = this.employId;
   }
 
-  onInit(): void {
-    // if(this.formModel){
-    //   this.hrService
-    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    //   .then((fg) => {
-    //     if (fg) {
-    //       this.formGroup = fg;
-    //       this.initForm();
-    //     }
-    //   });
-    // }
-    // else {
+  changOverSeaFlag(event){
+    console.log('di cong tac nc ngoai', event.checked);
+    this.isNotOverseaFlag = !event.checked;
+    console.log('co hieu ', this.isNotOverseaFlag);
+    if(this.isNotOverseaFlag == true){
+      this.data.country = null;
+      this.formGroup.patchValue(this.data.country);
+    }
+  }
 
-    this.hrService.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
+  ngAfterViewInit(){
+    this.dialog && this.dialog.closed.subscribe(res => {
+      if(!res.event){
+        if(this.successFlag == true){
+          this.dialog.close(this.data);
+        }
+        else{
+          this.dialog.close(null);
+        }
+      }
+    })
+  }
+
+  onInit(): void {
+    this.hrService
+    .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    .then((fg) => {
+      if (fg) {
+        this.formGroup = fg;
+        this.initForm();
       }
     });
-    // }
+
+    // this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //   if (formModel) {
+    //     this.formModel = formModel;
+    //     this.hrService
+    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //       .then((fg) => {
+    //         if (fg) {
+    //           this.formGroup = fg;
+    //           this.initForm();
+    //         }
+    //       });
+    //   }
+    // });
   }
 
   initForm() {
@@ -121,6 +149,10 @@ export class PopupEmpBusinessTravelsComponent
         .subscribe((res: any) => {
           if (res) {
             this.data = res?.data;
+            this.data.beginDate = null;
+            this.data.isOversea = null;
+            this.data.country = null;
+            this.data.endDate = null;
             this.data.employeeID = this.employId;
             this.formModel.currentData = this.data;
             this.formGroup.patchValue(this.data);
@@ -137,8 +169,12 @@ export class PopupEmpBusinessTravelsComponent
   }
 
   onSaveForm(isCloseForm: boolean) {
-    if(this.formGroup.invalid){
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
+    if(this.data.isOversea == true && this.data.country == null){
+      this.notitfy.notifyCode('HR011');
       return;
     }
 
@@ -150,60 +186,21 @@ export class PopupEmpBusinessTravelsComponent
           //code test
 
           this.data = res;
-          (this.listView.dataService as CRUDService).add(res).subscribe();
-          this.actionType = 'edit';
-          if (isCloseForm) {
-            this.dialog && this.dialog.close();
-          }
+          this.notitfy.notifyCode('SYS006');
+          this.successFlag = true;
+          this.dialog && this.dialog.close(this.data);
         }
       });
     } else if (this.actionType == 'edit') {
       this.hrService.editEBusinessTravels(this.data).subscribe((res) => {
         if (res) {
-          (this.listView.dataService as CRUDService).update(res).subscribe();
-          if (isCloseForm) {
-            this.dialog && this.dialog.close();
-          }
+          this.notitfy.notifyCode('SYS007');
+          this.dialog && this.dialog.close(this.data);
+
         }
       });
     }
-
     this.cr.detectChanges();
   }
 
-  afterRenderListView(event) {
-    this.listView = event;
-    console.log(this.listView);
-  }
-
-  click(data) {
-    if (data) {
-      this.data = data;
-      this.formModel.currentData = this.data;
-      this.formGroup.patchValue(this.data);
-
-      this.cr.detectChanges();
-      this.actionType = 'edit';
-    }
-  }
-
-  swipeToRightTab(e) {
-    if (e.isSwiped) {
-      e.cancel = true;
-    }
-  }
-
-  valueChange(event) {
-    console.log(event);
-    if (event && event.data) {
-      let predicates =
-        this.predicates + ' and @1.Contains(' + event.field + ')';
-      let dataValues = this.dataValues + ';' + event.data;
-
-      (this.listView.dataService as CRUDService)
-        .setPredicates([predicates], [dataValues])
-        .subscribe();
-      this.cr.detectChanges();
-    }
-  }
 }

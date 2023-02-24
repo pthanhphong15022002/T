@@ -40,7 +40,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
-    this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected))
+    this.data = JSON.parse(JSON.stringify(data?.data?.dataObj))
   }
 
   initForm(){
@@ -124,7 +124,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe(p => {
       if(p != null){
         this.notitfy.notifyCode('SYS006')
-        this.dialog.close()
+        this.dialog && this.dialog.close(p)
       }
       else this.notitfy.notifyCode('SYS021')
     })

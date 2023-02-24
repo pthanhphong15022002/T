@@ -9,6 +9,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { Permission } from '@shared/models/file.model';
 import { ApiHttpService } from 'codx-core';
 import { TabModel } from './model/tabControl.model';
 
@@ -31,18 +32,22 @@ export class CodxTabsComponent implements OnInit {
   //references
   @Input() dataReferences: any[] = [];
   @Input() vllRefType: any = 'TM018';
+  //update quyen cho file tai TM
+  @Input() isUpPermission = false;
+  @Input() isEdit = true ;  //mac dinh bằn true - Thao them sua ngay 23/2/2023
   //Attachment
   @Input() hideFolder: string = '1';
   @Input() type: string = 'inline';
   @Input() allowExtensions: string = '.jpg,.png';
   @Input() allowMultiFile: string = '1';
   @Input() displayThumb: string = 'full';
+  @Input() addPermissions: Permission[] = [];
   opened = false;
   @Output() tabChange = new EventEmitter();
   //ApprovalProcess
   @Input() transID: string;
   @Input() approveStatus: string;
-  @Input() referType: string =""; //de mac định the any moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
+  @Input() referType: string = ''; //de mac định the any moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
   private all: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
@@ -87,6 +92,20 @@ export class CodxTabsComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  ngOnChanges() {
+    if (this.objectID) {
+      this.api
+        .execSv('BG', 'BG', 'TrackLogsBusiness', 'CountFooterAsync', [
+          this.objectID,
+          this.referType,
+          this.transID,
+        ])
+        .subscribe((res) => {
+          if (res) this.oCountFooter = res;
+        });
+    }
+  }
+
   fileAdded(e: any) {
     console.log(e);
   }
@@ -106,5 +125,18 @@ export class CodxTabsComponent implements OnInit {
       }
     }
     this.tabChange.emit(evt);
+  }
+
+  //xu ly quyen file tm
+  fileSave(e) {
+    if (e && typeof e === 'object' && this.isUpPermission) {
+      var createdBy = Array.isArray(e) ? e[0].data.createdBy : e.createdBy;
+      this.api
+        .execSv<any>('TM', 'TM', 'TaskBusiness', 'AddPermissionFileAsync', [
+          this.objectID,
+          createdBy
+        ])
+        .subscribe();
+    }
   }
 }

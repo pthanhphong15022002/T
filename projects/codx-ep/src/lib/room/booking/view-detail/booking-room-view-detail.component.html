@@ -131,11 +131,7 @@
         </div>
       </div>
     </div>
-    <!-- <div class="mb-2">
-      <ng-container *ngIf="files.length > 0">
-        <codx-thumbnail [files]="files" displayThumb="simple"> </codx-thumbnail>
-      </ng-container>
-    </div> -->
+    
   </ng-template>
 
   <ng-template #body>
@@ -242,7 +238,7 @@
   </ng-template>
 
   <ng-template #footer>
-    <codx-tabs
+    <codx-tabs #tabModel *ngIf="renderFooter"
       [entityName]="formModel?.entityName"
       [objectID]="itemDetail?.recID"
       [funcID]="formModel?.funcID"
@@ -251,6 +247,8 @@
       [transID]="itemDetail?.recID"
       [approveStatus]="itemDetail?.approveStatus"
       [referType]="'2'"
+      [addPermissions]="listFilePermission"
+      [isEdit]="isEdit"
     ></codx-tabs>
   </ng-template>
 </codx-detail-tmp>

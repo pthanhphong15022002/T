@@ -1,12 +1,6 @@
-<codx-views #view [views]="views" 
-  entityName="HR_Employees" 
-  [button]="button" 
-  (buttonClick)="btnClick($event)"
-  idField="employeeID" service="HR" 
-  assemblyName="ERM.Business.HR" 
-  className="EmployeesBusiness"
-  method="GetModelFormEmployAsync" 
-  [selectedFirst]="true">
+<codx-views #view [views]="views" entityName="HR_Employees" [button]="button" (buttonClick)="btnClick($event)"
+  idField="employeeID" service="HR" assemblyName="ERM.Business.HR" className="EmployeesBusiness"
+  method="GetModelFormEmployAsync" [selectedFirst]="true">
 </codx-views>
 
 <ng-template #panelLeftRef>
@@ -43,13 +37,13 @@
   <div class="d-flex align-items-top mt-2">
     <span class="icon-email icon-16 me-2"> </span>
     <span class="text-dark fw-bold">
-      <span >{{data.email | formatvalue: view.formModel:"email" | async}}</span>
+      <span>{{data.email | formatvalue: view.formModel:"email" | async}}</span>
     </span>
   </div>
   <div class="d-flex align-items-center">
     <span class="icon-phone_android icon-16 me-2"></span>
     <span class="text-dark fw-bold">
-      <span #phone>{{
+      <span>{{
         data.phone | formatvalue: view.formModel:"phone" | async
         }}</span>
     </span>
@@ -57,7 +51,8 @@
 </ng-template>
 
 <ng-template #itemAction let-data>
-  <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data" [typeMF]="'hover'">
+  <codx-mfunc [formModel]="view.formModel" (changeDataMF)="changeDataMF($event)" (clickMF)="clickMF($event, data)"
+    [dataItem]="data" [typeMF]="'hover'">
   </codx-mfunc>
 </ng-template>
 
@@ -73,11 +68,7 @@
             <div class="text-dark fw-bold fs-6 me-2 text-nowrap">
               {{data.employeeName }}
             </div>
-            <codx-vll 
-              class="badge badge-sm" 
-              [name]="'HR001'" 
-              [value]="data.gender" 
-              [showText]="true"
+            <codx-vll class="badge badge-sm" [name]="'HR001'" [value]="data.gender" [showText]="true"
               [showBgColor]="true">
             </codx-vll>
           </div>
@@ -93,6 +84,7 @@
             <span *ngIf="data.departmentName">{{
               data.departmentName
               }}</span>
+            <span class="text-gray-300 mx-2">|</span>
             <span *ngIf="data.divisionName">{{
               data.divisionName
               }}</span>
@@ -147,17 +139,11 @@
         <span class="text-gray-600 me-1 text-nowrap">
           <codx-label [formModel]="view.formModel" fiedName="BirthPlace" default="Nơi sinh: "></codx-label>
         </span>
-        <span class="text-dark fw-bold">
-          <span >{{data.provinceName}}</span>
-        </span>
+        <span *ngIf="data.birthPlaceName" class="text-dark fw-bold">{{data.birthPlaceName}}</span>
       </div>
-      <div class="d-flex align-items-center">
-        <span class="text-gray-600 me-1">
-          <codx-label [formModel]="view.formModel" fiedName="Education" default="Trình độ: "></codx-label>
-        </span>
-        <span class="text-dark fw-bold">
-          <codx-vll [name]="'HR002'" [value]="data.education" [showText]="true"></codx-vll>
-        </span>
+      <div *ngIf="data.status">
+        <codx-vll [value]="data.status" [name]="'HR003'" [showText]="true" [showBgColor]="true"
+          [className]="'badge badge-success badge-sm badge-inline'"></codx-vll>
       </div>
     </div>
   </div>
@@ -166,9 +152,7 @@
 <ng-template #itemStatusName let-data>
   <div (dblclick)="doubleClick(data)" class="w-100">
     <div class="d-flex flex-column employee-info">
-      <div *ngIf="data.status">
-        <codx-vll [value]="data.status" [name]="'HR003'" [showText]="true" [showBgColor]="true" [className]="'badge badge-success badge-sm badge-inline'"></codx-vll>
-      </div>
+
       <div class="align-items-center my-1">
         <span class="text-gray-600 me-1">
           <codx-label [formModel]="view.formModel" fiedName="JoinedOn" default="Ngày vào làm: ">

@@ -23,9 +23,11 @@ import {
   FormModel,
   ResourceModel,
   RequestOption,
+  Util,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Instances } from '../models/models';
+import { InstanceDetailComponent } from './instance-detail/instance-detail.component';
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
@@ -39,16 +41,19 @@ export class InstancesComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
+  @Input() process: any;
+  @Input() isCreate: boolean;
   @ViewChild('templateDetail', { static: true })
   templateDetail: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true })
   itemTemplate: TemplateRef<any>;
-  views: Array<ViewModel> = [];
-  moreFuncs: Array<ButtonModel> = [];
-
-  @Input() process: any;
+  @ViewChild('detailViewInstance')
+  detailViewInstance: InstanceDetailComponent;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
+  @ViewChild('popDetail') popDetail: TemplateRef<any>;
+  views: Array<ViewModel> = [];
+  moreFuncs: Array<ButtonModel> = [];
   showButtonAdd = true;
   button?: ButtonModel;
   dataSelected: any;
@@ -81,18 +86,44 @@ export class InstancesComponent
   instances = new DP_Instances();
   kanban: any;
   listStepsCbx: any;
+  lstStepInstances = [];
+  lstStepCbx = [];
+  crrStepID: string;
+  moreFuncInstance = [];
+  dataColums = [];
+  dataDrop: any;
+  isClick: boolean = true;
+  stepIdClick = '';
+  listProccessCbx: any;
+  dataProccess: any;
+  sumDaySteps: number;
 
+  readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
-
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     super(inject);
     this.dialog = dialog;
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f)
+        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+          if (res && res.length > 0) {
+            this.moreFuncInstance = res;
+          }
+        });
+    });
+
+    // em bảo gán tạm
+    this.dataProccess = dt?.data?.data;
+    this.genAutoNumberNo(
+      this.dataProccess?.applyFor === '1' ? 'DPT0406' : 'DPT0405'
+    );
+    this.getListCbxProccess(this.dataProccess?.applyFor);
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -113,7 +144,8 @@ export class InstancesComponent
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
-          // template2: this.viewColumKaban,
+          template2: this.viewColumKaban,
+          setColorHeader: true,
         },
       },
     ];
@@ -121,6 +153,7 @@ export class InstancesComponent
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
   onInit(): void {
+    this.showButtonAdd = this.isCreate ? true : false;
     this.button = {
       id: 'btnAdd',
     };
@@ -135,6 +168,7 @@ export class InstancesComponent
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
           this.deleteListReason(this.listStepsCbx);
+          this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
       });
     //kanban
@@ -152,19 +186,13 @@ export class InstancesComponent
     this.resourceKanban.className = 'StepsBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
-
-    // this.api.execSv<any>(this.service, this.assemblyName, this.className, 'AddInstanceAsync').subscribe();
   }
 
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        //   this.genAutoNumberNo();
         this.titleAction = evt.text;
         this.add();
-        // this.delete(this.instances);
-        // this.moveStage();
-
         break;
     }
   }
@@ -178,9 +206,8 @@ export class InstancesComponent
   //CRUD
   add() {
     this.view.dataService.addNew().subscribe((res) => {
-      console.log(this.kanban);
       const funcIDApplyFor =
-        this.process.applyFor === 'D' ? 'DPT0406' : 'DPT0405';
+        this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
@@ -195,12 +222,10 @@ export class InstancesComponent
               formMD.entityName = fun.entityName;
               formMD.formName = fun.formName;
               formMD.gridViewName = fun.gridViewName;
-
               option.Width = '850px';
-              option.zIndex = 1010;
+              option.zIndex = 1001;
               this.view.dataService.dataSelected.processID = this.process.recID;
-              // const titleForm = res.defaultName;
-              // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
+             // this.genAutoNumberNo(formMD.funcID); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
               var dialogCustomField = this.callfc.openSide(
                 PopupAddInstanceComponent,
                 [
@@ -210,12 +235,19 @@ export class InstancesComponent
                   this.titleAction,
                   formMD,
                   this.listStepsCbx,
+                  this.instanceNo,
+                  this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)
                 ],
                 option
               );
               dialogCustomField.closed.subscribe((e) => {
+                if (!e?.event) this.view.dataService.clear();
                 if (e && e.event != null) {
-                  //xu ly data đổ về
+                  if (this.kanban) {
+                    if (this.kanban?.dataSource?.length == 1) {
+                      this.kanban.refresh();
+                    }
+                  }
                   this.detectorRef.detectChanges();
                 }
               });
@@ -229,11 +261,12 @@ export class InstancesComponent
     if (data) {
       this.view.dataService.dataSelected = data;
     }
+
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
         const funcIDApplyFor =
-          this.process.applyFor === 'D' ? 'DPT0406' : 'DPT0405';
+          this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
         const applyFor = this.process.applyFor;
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
@@ -250,22 +283,24 @@ export class InstancesComponent
                 formMD.gridViewName = fun.gridViewName;
 
                 option.Width = '850px';
-                option.zIndex = 1010;
+                option.zIndex = 1001;
                 this.view.dataService.dataSelected.processID =
                   this.process.recID;
-                var dialogCustomField = this.callfc.openSide(
+                var dialogEditInstance= this.callfc.openSide(
                   PopupAddInstanceComponent,
                   [
                     'edit',
                     applyFor,
                     this.listSteps,
-                    titleAction,
+                    this.titleAction,
                     formMD,
                     this.listStepsCbx,
+                    this.instanceNo,
+                    this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)
                   ],
                   option
                 );
-                dialogCustomField.closed.subscribe((e) => {
+                dialogEditInstance.closed.subscribe((e) => {
                   if (e && e.event != null) {
                     //xu ly data đổ về
                     this.detectorRef.detectChanges();
@@ -277,9 +312,9 @@ export class InstancesComponent
       });
   }
 
-  async genAutoNumberNo() {
+  async genAutoNumberNo(funcID) {
     this.codxDpService
-      .GetAutoNumberNo('DPInstances', this.funcID, 'DP_Instances', 'InstanceNo')
+      .genAutoNumber(funcID, 'DP_Instances', 'InstanceNo')
       .subscribe((res) => {
         if (res) {
           this.instanceNo = res;
@@ -291,7 +326,7 @@ export class InstancesComponent
   //Event
   clickMF(e, data?) {
     // this.itemSelected = data;
-    // this.titleAction = e.text;
+    this.titleAction = e.text;
     this.moreFunc = e.functionID;
     switch (e.functionID) {
       case 'SYS03':
@@ -304,18 +339,59 @@ export class InstancesComponent
         this.delete(data);
         break;
       case 'DP09':
-        this.moveStage(e.data, data, e.functionID);
+        // listStep by Id Instacess is null
+        this.moveStage(e.data, data, this.lstStepInstances);
         break;
       case 'DP02':
-        this.moveReason(e.data, data, e.functionID, !this.isMoveSuccess);
+        this.moveReason(e.data, data, !this.isMoveSuccess);
         break;
       case 'DP10':
-        this.moveReason(e.data, data, e.functionID, this.isMoveSuccess);
+        this.moveReason(e.data, data, this.isMoveSuccess);
         break;
     }
   }
 
-  changeDataMF(e, data) {}
+  //#popup roles
+
+  changeDataMF(e, data) {
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS005':
+          case 'SYS003':
+            if (data.status !== '1' && data.status !== '2' ) res.disabled = true;
+            break;
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+          case 'DP011':
+            res.disabled = true;
+            break;
+          //Chỉnh sửa, chuyển tiếp, thất bại, thành công
+          case 'SYS103':
+          case 'SYS03':
+          case 'DP02':
+          case 'DP09':
+          case 'DP10':
+            let isUpdate = data.write;
+            if (!isUpdate ||  ( data.status !== '1' && data.status !== '2' ) ) res.disabled = true;
+            break;
+          //Copy
+          case 'SYS104':
+          case 'SYS04':
+            let isCopy = this.isCreate ? true : false;
+            if (!isCopy) res.disabled = true;
+            break;
+          //xóa
+          case 'SYS102':
+          case 'SYS02':
+            let isDelete = data.delete;
+            if (!isDelete) res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
   //End
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
@@ -335,8 +411,8 @@ export class InstancesComponent
     return desc + '</div>';
   }
 
-  selectedChange(task: any) {
-    this.dataSelected = task?.data ? task?.data : task;
+  selectedChange(data: any) {
+    this.dataSelected = data?.data ? data?.data : data;
     //formModel instances
     let formModel = new FormModel();
     formModel.formName = 'DPInstances';
@@ -354,14 +430,84 @@ export class InstancesComponent
   onActions(e) {
     switch (e.type) {
       case 'drop':
-        // xử lý data
+        this.dataDrop = e.data;
+        this.stepIdClick = JSON.parse(JSON.stringify(this.dataDrop.stepID));
+        // xử lý data chuyển công đoạn
+        if (this.crrStepID != this.dataDrop.stepID)
+          this.dropInstance(this.dataDrop);
+
         break;
       case 'drag':
         ///bắt data khi kéo
+        this.crrStepID = e?.data?.stepID;
+
         break;
       case 'dbClick':
         //xư lý dbClick
+        this.viewDetail(e.data.recID);
         break;
+    }
+  }
+
+  viewDetail(recID) {
+    //  this.detailViewInstance.GetStepsByInstanceIDAsync(recID)
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 999;
+    let popup = this.callFunc.openForm(
+      this.popDetail,
+      '',
+      Util.getViewPort().width ,
+      Util.getViewPort().height,
+      '',
+      null,
+      '',
+      option
+    );
+  }
+
+  dropInstance(data) {
+    if (this.moreFuncInstance?.length == 0) {
+      data.stepID = this.crrStepID;
+      this.changeDetectorRef.detectChanges();
+      return;
+    }
+    data.stepID = this.crrStepID;
+    if (
+      this.kanban &&
+      this.kanban.columns?.length > 0 &&
+      this.dataColums.length == 0
+    )
+      this.dataColums = this.kanban.columns;
+    if (this.dataColums.length > 0) {
+      var idx = this.dataColums.findIndex(
+        (x) => x.dataColums.recID == this.stepIdClick
+      );
+      if (idx != -1) {
+        var stepCrr = this.dataColums[idx].dataColums;
+        if (!stepCrr?.isSuccessStep && !stepCrr?.isFailStep) {
+          idx = this.moreFuncInstance.findIndex((x) => x.functionID == 'DP09');
+          if (idx != -1)
+            this.moveStage(this.moreFuncInstance[idx], data, this.listSteps);
+        } else {
+          if (stepCrr?.isSuccessStep) {
+            idx = this.moreFuncInstance.findIndex(
+              (x) => x.functionID == 'DP10'
+            );
+            if (idx != -1)
+              this.moveReason(this.moreFuncInstance[idx], data, true);
+          } else {
+            idx = this.moreFuncInstance.findIndex(
+              (x) => x.functionID == 'DP02'
+            );
+            if (idx != -1)
+              this.moveReason(this.moreFuncInstance[idx], data, false);
+          }
+        }
+      } else {
+        data.stepID = this.crrStepID;
+        this.changeDetectorRef.detectChanges();
+      }
     }
   }
 
@@ -369,78 +515,141 @@ export class InstancesComponent
     if (e?.view.type == 6) {
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
+
       this.changeDetectorRef.detectChanges();
     }
   }
   // end code
 
   #region;
-  moveStage(dataMore, data, functionId) {
+  moveStage(dataMore, data, instanceStep) {
+    if (!this.isClick) {
+      return;
+    }
+    this.isClick = false;
+    this.crrStepID = data.stepID;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     this.cache.functionList('DPT0402').subscribe((fun) => {
-      var formMD = new FormModel();
-      formMD.funcID = fun.functionID;
-      formMD.entityName = fun.entityName;
-      formMD.formName = fun.formName;
-      formMD.gridViewName = fun.gridViewName;
-      var obj = {
-        stepName: this.getStepNameById(data.stepID)[0],
-        formModel: formMD,
-        instance: data,
-        listStep: this.listStepsCbx
-      };
+      this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+        this.cache
+          .gridViewSetup(fun.formName, fun.gridViewName)
+          .subscribe((grvSt) => {
+            var formMD = new FormModel();
+            formMD.funcID = fun.functionID;
+            formMD.entityName = fun.entityName;
+            formMD.formName = fun.formName;
+            formMD.gridViewName = fun.gridViewName;
+            debugger
+            var obj = {
+              stepName: this.getStepNameById(data.stepID),
+              formModel: formMD,
+              instance: data,
+              listStep: this.listStepsCbx,
+              instanceStep: instanceStep,
+              stepIdClick: this.stepIdClick,
+            };
+            var dialogMoveStage = this.callfc.openForm(
+              PopupMoveStageComponent,
+              '',
+              800,
+              600,
+              '',
+              obj
+            );
+            dialogMoveStage.closed.subscribe((e) => {
+              this.isClick = true;
+              if (!e || !e.event) {
+                data.stepID = this.crrStepID;
+                this.changeDetectorRef.detectChanges();
+              }
 
-      var dialogMoveStage = this.callfc.openForm(
-        PopupMoveStageComponent,
-        '',
-        800,
-        600,
-        '',
-        obj
-      );
-      dialogMoveStage.closed.subscribe((e) => {
-        if (e && e.event != null) {
-          //xu ly data đổ về
-          this.detectorRef.detectChanges();
-        }
+              if (e && e.event != null) {
+                //xu ly data đổ về
+                data = e.event.instance;
+                this.listStepInstances = e.event.listStep;
+                if (e.event.isReason != null) {
+                  this.moveReason(null, data, e.event.isReason);
+                }
+                this.dataSelected = data;
+                this.detailViewInstance.dataSelect = this.dataSelected;
+                this.detailViewInstance.instance = this.dataSelected;
+                this.detailViewInstance.listSteps = this.listStepInstances;
+                // debugger;
+                // this.detailViewInstance.GetStepsByInstanceIDAsync(
+                //   this.dataSelected.recID
+                // );
+                this.view.dataService.update(data).subscribe();
+                this.detectorRef.detectChanges();
+              }
+            });
+          });
       });
     });
   }
 
-  moveReason(dataMore, data: any, functionId, isMoveSuccess: Boolean) {
+  moveReason(dataMore, data: any, isMoveSuccess: Boolean) {
+    this.crrStepID = data.stepID;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
+    var functionID = isMoveSuccess ? 'DPT0403' : 'DPT0404';
+    this.cache.functionList(functionID).subscribe((fun) => {
+      this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+        this.cache
+          .gridViewSetup(fun.formName, fun.gridViewName)
+          .subscribe((grvSt) => {
+            var formMD = new FormModel();
+            formMD.funcID = fun.functionID;
+            formMD.entityName = fun.entityName;
+            formMD.formName = fun.formName;
+            formMD.gridViewName = fun.gridViewName;
+            let reason = isMoveSuccess
+              ? this.listSteps[this.listSteps.length - 2]
+              : this.listSteps[this.listSteps.length - 1];
+            var obj = {
+              dataMore: dataMore,
+              headerTitle: fun.defaultName,
+              stepName: this.getStepNameById(data.stepID),
+              formModel: formMD,
+              isReason: isMoveSuccess,
+              instance: data,
+              objReason: reason,
+              listProccessCbx: this.listProccessCbx,
+            };
 
-    var formMD = new FormModel();
-    formMD.funcID = functionId;
-    formMD.entityName = data.entityName;
-    formMD.formName = data.formName;
-    formMD.gridViewName = data.gridViewName;
-    var obj = {
-      dataMore: dataMore,
-      stepName: this.process.processName,
-      funcIdMain: this.funcID,
-      formModel: formMD,
-      isReason: isMoveSuccess,
-    };
-
-    var dialogRevision = this.callfc.openForm(
-      PopupMoveReasonComponent,
-      '',
-      800,
-      600,
-      '',
-      obj
-    );
-    dialogRevision.closed.subscribe((e) => {
-      if (e?.event && e?.event != null) {
-        this.view.dataService.clear();
-        this.view.dataService.update(e?.event).subscribe();
-        this.detectorRef.detectChanges();
-      }
+            var dialogRevision = this.callfc.openForm(
+              PopupMoveReasonComponent,
+              '',
+              800,
+              600,
+              '',
+              obj
+            );
+            dialogRevision.closed.subscribe((e) => {
+              if (!e || !e.event) {
+                data.stepID = this.crrStepID;
+                this.changeDetectorRef.detectChanges();
+              }
+              if (e && e.event != null) {
+                //xu ly data đổ về
+                data = e.event.instance;
+                this.listStepInstances = e.event.listStep;
+                if (e.event.isReason != null) {
+                  this.moveReason(null, data, e.event.isReason);
+                }
+                this.dataSelected = data;
+                this.detailViewInstance.dataSelect = this.dataSelected;
+                // this.detailViewInstance.GetStepsByInstanceIDAsync(
+                //   this.dataSelected.recID
+                // );
+                this.view.dataService.update(data).subscribe();
+                this.detectorRef.detectChanges();
+              }
+            });
+          });
+      });
     });
   }
 
@@ -458,7 +667,6 @@ export class InstancesComponent
     this.changeDetectorRef.detectChanges();
   }
   beforeDel(opt: RequestOption) {
-    debugger;
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedInstanceAsync';
     opt.data = [itemSelected.recID];
@@ -466,13 +674,39 @@ export class InstancesComponent
   }
 
   deleteListReason(listStep: any): void {
-    delete listStep[listStep.length - 1];
-    delete listStep[listStep.length - 2];
+    listStep.pop();
+    listStep.pop();
   }
 
-  getStepNameById(stepId:string){
-    let listStep = JSON.parse(JSON.stringify(this.listStepsCbx));
-    return listStep.filter(x=>x.stepID === stepId).map(x=> x.stepName);
+  getStepNameById(stepId: string): string {
+    // let listStep = JSON.parse(JSON.stringify(this.listStepsCbx))
+    return this.listSteps
+      .filter((x) => x.stepID === stepId)
+      .map((x) => x.stepName)[0];
+  }
+  clickMoreFunc(e) {
+    this.lstStepInstances = e.lstStepInstance;
+    this.clickMF(e.e, e.data);
+  }
+  changeMF(e) {
+    this.changeDataMF(e.e, e.data);
+  }
+  getListCbxProccess(applyFor: any) {
+    this.cache.valueList('DP031').subscribe((data) => {
+      this.codxDpService.getlistCbxProccess(applyFor).subscribe((res) => {
+        this.listProccessCbx = res[0];
+        var obj = {
+          recID: this.guidEmpty,
+          processName: data.datas[0].default,
+        };
+        this.listProccessCbx.unshift(obj);
+      });
+    });
+  }
+
+  getSumDurationDayOfSteps(listStepCbx:any){
+    let total = listStepCbx.reduce((sum, f) => sum + f.durationDay, 0);
+    return total;
   }
   #endregion;
 }

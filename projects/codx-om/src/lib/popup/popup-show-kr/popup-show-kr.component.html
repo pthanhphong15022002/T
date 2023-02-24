@@ -87,11 +87,11 @@
                       <codx-label name="lbl" default="Thực hiện và kế hoạch" class="ps-2 fs-5 fw-bolder">
                       </codx-label>
                     </div>
-                    <span type="button" (click)="checkIn($event, dataKR)"
+                    <!-- <span type="button" (click)="checkIn($event, dataKR)"
                       class="w-110px d-flex py-2 px-4 bg-color rounded justify-content-center">
                       <span class="icon-edit_fill btn-text-primary text-light me-1"></span>
                       <codx-label  class="text-light"  fiedName="lbl" default="Chỉnh sửa"></codx-label>
-                    </span>
+                    </span> -->
                   </div>
                   <div class="container w-50">
                     <codx-chart [title]="" [enableCrossHair]="true" [legendSettings]="{ visible: false }"
@@ -117,7 +117,7 @@
 
                   <div class="px-10">
                     <div class="d-flex flex-column flex-grow-1 justify-content-between w-100" *ngFor="
-                        let item of dataKR.checkIns;
+                        let item of dataKR?.checkIns;
                         let index = index;
                         let count = count
                       ">

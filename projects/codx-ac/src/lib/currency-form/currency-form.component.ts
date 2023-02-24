@@ -8,25 +8,14 @@ import { PopAddCurrencyComponent } from './pop-add-currency/pop-add-currency.com
   styleUrls: ['./currency-form.component.css']
 })
 export class CurrencyFormComponent extends UIComponent {
+  //#region Contructor
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
   @ViewChild("morefunc") morefunc: TemplateRef<any>;
   gridViewSetup:any;
-  
-  constructor(
-    private inject: Injector,
-    private dt: ChangeDetectorRef, 
-    private callfunc: CallFuncService
-    ) {
-    super(inject);
-    this.cache.gridViewSetup('Currencies', 'grvCurrencies').subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
-  }
+  moreFuncName:any;
+  funcName:any;
   views: Array<ViewModel> = [];
-  columnsGrid = [];
   itemSelected: any;
   dialog: DialogRef;
   button?: ButtonModel;
@@ -45,19 +34,44 @@ export class CurrencyFormComponent extends UIComponent {
       textColor: '#F54E60',
     },
   ];
+  constructor(
+    private inject: Injector,
+    private dt: ChangeDetectorRef, 
+    private callfunc: CallFuncService
+    ) {
+    super(inject);
+    this.dialog = this.dialog;
+    this.cache.gridViewSetup('Currencies', 'grvCurrencies').subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS01');
+        if (m) this.moreFuncName = m.defaultName;
+      }
+    });
+  }
+ 
+  //#endregion
+
+  //#region Init
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
   }
   ngAfterViewInit(): void {
+    this.cache.functionList(this.view.funcID).subscribe((res) => {
+      if (res) this.funcName = res.defaultName;
+    });
     this.views = [
       {
       type: ViewType.grid,
       sameData: true,
       active: true,
       model : {
-        resources: this.columnsGrid,
         template2: this.itemTemplate,  
         frozenColumns:1
       }
@@ -66,11 +80,14 @@ export class CurrencyFormComponent extends UIComponent {
   ];
     this.dt.detectChanges();
   }
+  //#endregion
+
+  //#region Function
   clickMF(e: any, data?: any) {
     console.log(e.functionID);
     switch (e.functionID) {
       case 'SYS03':
-        this.update(data);
+        this.update(e,data);
         break;
       case 'SYS02':
         this.delete(data);
@@ -88,7 +105,7 @@ export class CurrencyFormComponent extends UIComponent {
     }
   }
   add() {
-    this.headerText = "Thêm tiền tệ";
+    this.headerText = this.moreFuncName + ' ' + this.funcName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',
@@ -101,14 +118,14 @@ export class CurrencyFormComponent extends UIComponent {
       this.dialog = this.callfunc.openSide(PopAddCurrencyComponent, obj, option,this.view.funcID);
     });
   }
-  update(data){
+  update(e,data){
     if (data) {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       var obj = {
         formType: 'edit',
-        headerText: data.currencyID,
+        headerText: e.text + ' ' + this.funcName
       };
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
@@ -131,7 +148,18 @@ export class CurrencyFormComponent extends UIComponent {
     }
     this.view.dataService.delete([data], true, (option: RequestOption) =>
     this.beforeDelete(option,data)
-  ).subscribe(() => {});
+  ).subscribe((res:any) => {
+    if (res) {
+      this.api.exec(
+        'ERM.Business.BS',
+        'ExchangeRatesBusiness',
+        'DeleteAsync',
+        [data.currencyID]
+      ).subscribe((res: any) => {
+
+      });
+    }
+  });
   }
   beforeDelete(opt: RequestOption,data) {
     opt.methodName = 'DeleteAsync';
@@ -141,4 +169,5 @@ export class CurrencyFormComponent extends UIComponent {
     opt.data = data;
     return true;
   }
+  //#endregion
 }

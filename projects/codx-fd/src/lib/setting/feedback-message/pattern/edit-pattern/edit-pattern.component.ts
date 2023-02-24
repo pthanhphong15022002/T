@@ -47,7 +47,8 @@ export class EditPatternComponent implements OnInit {
   user: any;
   checkFileUpload = false;
   checkGetFile = false;
-
+  environment= environment;
+  typeView = false;
   @ViewChild('uploadImage') uploadImage: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   // @Input() cardType: string;
@@ -69,14 +70,6 @@ export class EditPatternComponent implements OnInit {
     if (this.formType == 'edit') {
       this.header = 'Cập nhật thiệp';
       this.pattern = JSON.parse(JSON.stringify(data.data?.dataUpdate));
-      this.patternSV
-        .getFileByObjectID(this.pattern.recID)
-        .subscribe((res: any[]) => {
-          if (res.length > 0) {
-            this.listFile = res;
-            this.checkGetFile = !this.checkGetFile;
-          }
-        });
     } else {
       this.pattern.backgroundColor = '#caf7e3';
       this.pattern.textColor = '#a4aca4';
@@ -136,7 +129,10 @@ export class EditPatternComponent implements OnInit {
           dt['referType'] = this.REFER_TYPE.APPLICATION;
         }
       });
+      this.typeView = true;
       this.listFile = files;
+      this.pattern.imageSrc = e.data[0].avatar
+      this.pattern.backgroundColor = null;
       this.checkFileUpload = !this.checkFileUpload;
     }
   }
@@ -163,7 +159,8 @@ export class EditPatternComponent implements OnInit {
   }
 
   uploadFile() {
-    // this.attachment.uploadFile();
+    this.removeSelectColor();
+    //this.attachment.uploadFile();
   }
 
   async handleFileInput(event) {}
@@ -193,14 +190,25 @@ export class EditPatternComponent implements OnInit {
             this.listFile[0].objectId = dt.recID;
             this.attachment.objectId = dt.recID;
             this.attachment.fileUploadList = this.listFile;
-            (await this.attachment.saveFilesObservable()).subscribe(
-              (result: any) => {
-                var obj = { data: res, listFile: this.listFile };
-                this.dialog.close(obj);
-                this.change.detectChanges();
-              }
-            );
+            this.patternSV.deleteFile(this.pattern.recID).subscribe(item=>{
+              this.attachment.saveFilesMulObservable().subscribe(
+                (result: any) => {
+                  if(this.formType == 'edit') res.update.imageSrc = result?.data?.pathDisk;
+                  else res.save.imageSrc = result?.data?.pathDisk;
+                  var obj = { data: res, listFile: this.listFile };
+                  this.dialog.close(obj);
+                  this.change.detectChanges();
+                }
+              );
+            });
+            
           } else {
+            if(this.formType == 'edit') res.update.imageSrc = this.pattern?.imageSrc;
+            else res.save.imageSrc = this.pattern?.imageSrc;
+            if(!this.pattern?.imageSrc && this.pattern.backgroundColor)
+            {
+              this.patternSV.deleteFile(this.pattern.recID).subscribe();
+            }
             var obj = { data: res, listFile: null };
             this.dialog.close(obj);
           }
@@ -219,7 +227,6 @@ export class EditPatternComponent implements OnInit {
     op.data = data;
     return true;
   }
-
   checkDisable(pattern) {}
 
   checkActive() {
@@ -229,19 +236,23 @@ export class EditPatternComponent implements OnInit {
       if (htmlE) htmlE.classList.add('color-check');
     }
   }
-
+  
   colorClick(ele, item, index) {
     this.listFile = '';
-    var label = document.querySelectorAll('.symbol-label[data-color]');
-    if (label) {
-      label.forEach((ele) => {
-        if (ele.className == 'symbol-label pointer color-check')
-          ele.classList.remove('color-check');
-      });
-    }
+    this.removeSelectColor();
     var element = ele as HTMLElement;
     element.classList.add('color-check');
     this.pattern.backgroundColor = item.default;
+    this.pattern.imageSrc = null;
     this.change.detectChanges();
+  }
+  removeSelectColor()
+  {
+    var label = document.querySelectorAll('.color-check');
+    if (label) {
+      label.forEach((ele) => {
+          ele.classList.remove('color-check');
+      });
+    }
   }
 }

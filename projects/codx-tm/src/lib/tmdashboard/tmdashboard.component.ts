@@ -5,7 +5,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { UIComponent, ViewModel, ViewType, DataRequest } from 'codx-core';
 
 @Component({
   selector: 'app-tmdashboard',
@@ -14,22 +14,30 @@ import { UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 })
 export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChild('template') template: TemplateRef<any>;
-  funcID: string = '';
-  service = 'TM';
-  assemblyName = 'ERM.Business.TM';
-  className = 'ReportBusiness';
-  method = 'ListReportProjectAsync';
   viewType = ViewType;
   views: Array<ViewModel> = [];
   dashboard = [];
+  funcID: string = 'TMD';
+  reportID: string = 'TMD002';
 
-  constructor(private inject: Injector) {
+  constructor(inject: Injector) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
+    this.reportID = this.router.snapshot.queryParams['reportID'];
   }
 
   onInit(): void {
-    this.loadDashboard();
+    let request = new DataRequest();
+    request.funcID = this.funcID;
+    request.entityName = 'SYS_FunctionList';
+    request.entityPermission = 'TM_DashBoard';
+    request.formName = 'TMDashBoard';
+    request.predicate = 'ParentID=@0';
+    request.dataValue = 'TMD';
+    request.page = 1;
+    request.pageSize = 20;
+
+    this.loadDashboard(request);
   }
 
   ngAfterViewInit(): void {
@@ -46,23 +54,25 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
-  loadDashboard() {
+  loadDashboard(request: any) {
     this.api
-      .exec('SYS', 'FunctionListBusiness', 'GetFuncByPredicateAsync', [
-        'ParentID=@0',
-        this.funcID,
-        'VN',
-      ])
+      .execSv('SYS', 'Core', 'DataBusiness', 'LoadDataAsync', request)
       .subscribe((res: any) => {
         if (res) {
-          this.dashboard = res;
-          this.view.dataService.add(res).subscribe();
+          this.dashboard = res[0];
         }
+        this.detectorRef.detectChanges();
       });
   }
 
-  loadContent(evt: any, item: any) {
-    let url = item.url.substring(0, item.url.lastIndexOf('/'));
-    this.codxService.navigate(item.functionID, url);
+  loadContent(event: any, item: any) {
+    this.api
+      .exec('SYS', 'ReportListBusiness', 'GetByReportIDAsync', item.functionID)
+      .subscribe((res: any) => {
+        if (res) {
+          this.reportID = res.reportID;
+          this.codxService.navigate('', 'tm/tmdashboard/TMD/' + this.reportID);
+        }
+      });
   }
 }

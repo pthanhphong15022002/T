@@ -93,43 +93,75 @@ export class ApprovalStationeryComponent
       case 'EPT40301':
         {
           //alert('Duyệt');
-          this.approve(datas, '5');
+          this.approve(datas);
         }
         break;
       case 'EPT40302':
         {
           //alert('Từ chối');
-          this.approve(datas, '4');
+          this.reject(datas);
         }
         break;
-      default:
-        '';
-        break;
+        case 'EPT40306':
+          {
+            //alert('Thu hồi');
+            this.undo(datas);
+          }
+          break;
     }
   }
-  approve(data: any, status: string) {
+  undo(data: any) {
+    this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
+        if (res != null) {
+          
+          this.notificationsService.notifyCode('SYS034'); //đã thu hồi
+          data.approveStatus = '3';
+          data.status = '3';         
+          this.view.dataService.update(data).subscribe();
+        } else {
+          this.notificationsService.notifyCode(res?.msgCodeError);
+        }
+      });
+  }
+  reject(data: any) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((res: any) => {
         this.codxEpService
           .approve(
             data?.approvalTransRecID, //ApprovelTrans.RecID
-            status,
+            '4',
             '',
             ''
           )
           .subscribe((res: any) => {
-            if (res?.msgCodeError == null && res?.rowCount >= 0) {
-              if (status == '5') {
+            if (res?.msgCodeError == null && res?.rowCount >= 0) {              
+                this.notificationsService.notifyCode('SYS034'); //đã duyệt
+                data.approveStatus = '4';
+                data.status = '4';              
+              this.view.dataService.update(data).subscribe();
+            } else {
+              this.notificationsService.notifyCode(res?.msgCodeError);
+            }
+          });
+      });
+  }
+  approve(data: any) {
+    this.codxEpService
+      .getCategoryByEntityName(this.formModel.entityName)
+      .subscribe((res: any) => {
+        this.codxEpService
+          .approve(
+            data?.approvalTransRecID, //ApprovelTrans.RecID
+            '5',
+            '',
+            ''
+          )
+          .subscribe((res: any) => {
+            if (res?.msgCodeError == null && res?.rowCount >= 0) {              
                 this.notificationsService.notifyCode('SYS034'); //đã duyệt
                 data.approveStatus = '5';
-                data.status = '5';
-              }
-              if (status == '4') {
-                this.notificationsService.notifyCode('SYS034'); //bị hủy
-                data.approveStatus = '4';
-                data.status = '4';
-              }
+                data.status = '5';              
               this.view.dataService.update(data).subscribe();
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
@@ -156,6 +188,11 @@ export class ApprovalStationeryComponent
           ) {
             func.disabled = false;
           }
+          if (
+            func.functionID == 'EPT40306' /*MF Undo*/ 
+          ) {
+            func.disabled = true;
+          }
         });
       } else {
         event.forEach((func) => {
@@ -165,7 +202,13 @@ export class ApprovalStationeryComponent
           ) {
             func.disabled = true;
           }
+          if (
+            func.functionID == 'EPT40306' /*MF Undo*/ 
+          ) {
+            func.disabled = false;
+          }
         });
+        
       }
     }
   }

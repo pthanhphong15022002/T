@@ -24,7 +24,7 @@ import { PopAddAccountsComponent } from './pop-add-accounts/pop-add-accounts.com
   styleUrls: ['./chart-of-accounts.component.css'],
 })
 export class ChartOfAccountsComponent extends UIComponent {
-  //#region Constructor
+  //#region Contructor
   views: Array<ViewModel> = [];
   buttons: ButtonModel = { id: 'btnAdd' };
   funcName = '';
@@ -39,18 +39,23 @@ export class ChartOfAccountsComponent extends UIComponent {
     private callfunc: CallFuncService
   ) {
     super(inject);
+    this.dialog = this.dialog;
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS01');
+        if (m) this.moreFuncName = m.defaultName;
+      }
+    });
   }
-  //#region Constructor
+  //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void { }
 
   ngAfterViewInit() {
-    this.api.exec('PS', 'TestBusiness', 'Test').subscribe();
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) {
         this.funcName = res.defaultName;
-        console.log(this.funcName);
       }
     });
     this.views = [
@@ -70,11 +75,10 @@ export class ChartOfAccountsComponent extends UIComponent {
     this.view.dataService.methodDelete = 'DeleteAsync';
   }
 
-  //#region Init
+  //#endregion
 
   //#region Event
   toolBarClick(e) {
-    console.log(e);
     switch (e.id) {
       case 'btnAdd':
         this.add();
@@ -88,16 +92,15 @@ export class ChartOfAccountsComponent extends UIComponent {
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(data);
+        this.edit(e, data);
         break;
     }
   }
-
   //#endregion
 
   //#region Function
   add() {
-    this.headerText = 'Thêm tài khoản';
+    this.headerText = this.moreFuncName + ' ' + this.funcName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',
@@ -106,7 +109,7 @@ export class ChartOfAccountsComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      option.Width = '850px';
+      option.Width = '800px';
       this.dialog = this.callfunc.openSide(
         PopAddAccountsComponent,
         obj,
@@ -124,7 +127,7 @@ export class ChartOfAccountsComponent extends UIComponent {
     });
   }
 
-  edit(data) {
+  edit(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -133,12 +136,12 @@ export class ChartOfAccountsComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'edit',
-          headerText: data.accountID,
+          headerText: e.text + ' ' + this.funcName
         };
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '850px';
+        option.Width = '800px';
         this.dialog = this.callfunc.openSide(
           PopAddAccountsComponent,
           obj,
@@ -155,7 +158,7 @@ export class ChartOfAccountsComponent extends UIComponent {
       .delete([data], true, (option: RequestOption) =>
         this.beforeDelete(option, data)
       )
-      .subscribe(() => {});
+      .subscribe(() => { });
   }
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';

@@ -1,7 +1,8 @@
 declare var window: any;
-import { CO_Meetings } from './../../../../../codx-tm/src/lib/models/CO_Meetings.model';
 import { DataRequest } from './../../../../../../src/shared/models/data.request';
-import { EventEmitter, Output } from '@angular/core';
+import { Output } from '@angular/core';
+import { DatePipe } from '@angular/common';
+
 import {
   UIComponent,
   DialogRef,
@@ -9,9 +10,7 @@ import {
   AuthStore,
   CRUDService,
   CodxListviewComponent,
-  ResourceModel,
   Util,
-  CodxScheduleComponent,
 } from 'codx-core';
 import {
   Component,
@@ -23,16 +22,14 @@ import {
   Injector,
   TemplateRef,
   ChangeDetectorRef,
-  ComponentRef,
 } from '@angular/core';
-import { Notes } from '@shared/models/notes.model';
+import { Notes, tmpBookingCalendar } from '@shared/models/notes.model';
 import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
 import { UpdateNotePinComponent } from 'projects/codx-wp/src/lib/dashboard/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/save-note/save-note.component';
 import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
 import moment from 'moment';
 import { CodxShareService } from '../../codx-share.service';
-import console from 'console';
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
 @Component({
   selector: 'app-calendar-notes',
@@ -102,7 +99,8 @@ export class CalendarNotesComponent
     private change: ChangeDetectorRef,
     private auth: AuthStore,
     private noteService: NoteServices,
-    private codxShareSV: CodxShareService
+    private codxShareSV: CodxShareService,
+    private datePipe: DatePipe
   ) {
     super(injector);
     let dataSv = new CRUDService(injector);
@@ -142,7 +140,7 @@ export class CalendarNotesComponent
           var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
             ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
           let numbF = this.convertStrToDate(eleFromDate);
-          const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+          const fDayOfMonth = moment(numbF).add(1, 'day').toJSON();
           let length =
             htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
               .length;
@@ -153,7 +151,7 @@ export class CalendarNotesComponent
           let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
             ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
           let numbL = this.convertStrToDate(eleToDate);
-          const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
+          const lDayOfMonth = moment(numbL).add(1, 'day').toJSON();
           this.getParamCalendar(fDayOfMonth, lDayOfMonth, true);
         }
       }, 500);
@@ -282,6 +280,8 @@ export class CalendarNotesComponent
           } else this.setEventWeek();
         }
         this.WP_NotesTemp = JSON.parse(JSON.stringify(this.WP_Notes));
+        this.lstView.dataService.data.sort(this.orderByStartTime);
+
         this.change.detectChanges();
       }
     });
@@ -340,10 +340,9 @@ export class CalendarNotesComponent
       this.lstView.dataService.data = [];
     }
     if (args) {
-      this.getParamCalendar(
-        moment(args.fromDate).toISOString(),
-        moment(args.toDate).toISOString()
-      );
+      let startDate = moment(args.fromDate).toJSON();
+      let endDate = moment(args.toDate).toJSON();
+      this.getParamCalendar(startDate, endDate);
     }
     let myInterval = setInterval(() => {
       if (
@@ -366,14 +365,8 @@ export class CalendarNotesComponent
 
   changeDayOfMonth(args: any) {
     args['date'] = args.value;
-    let crrDate = moment(this.FDdate)
-      .startOf('month')
-      .add(1, 'day')
-      .toISOString();
-    let newDate = moment(args.value)
-      .startOf('month')
-      .add(1, 'day')
-      .toISOString();
+    let crrDate = moment(this.FDdate).startOf('month').add(1, 'day').toJSON();
+    let newDate = moment(args.value).startOf('month').add(1, 'day').toJSON();
     if (crrDate != newDate) this.changeNewMonth(args);
     else {
       this.FDdate = args.value;
@@ -393,7 +386,7 @@ export class CalendarNotesComponent
       var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
         ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
       let numbF = this.convertStrToDate(eleFromDate);
-      const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+      const fDayOfMonth = moment(numbF).add(1, 'day').toJSON();
       let length =
         htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes.length;
       let eleClass = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
@@ -403,7 +396,7 @@ export class CalendarNotesComponent
       let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
         ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
       let numbL = this.convertStrToDate(eleToDate);
-      const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
+      const lDayOfMonth = moment(numbL).add(1, 'day').toJSON();
       this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
       var data = args.date;
       this.setDate(data, this.lstView);
@@ -416,7 +409,7 @@ export class CalendarNotesComponent
       //let dateT = new Date(date).toLocaleDateString();
       var fromDate = date;
       this.dateSelected = date;
-      var toDate = moment(date).add(1, 'day').toDate(); //;.toISOString();
+      var toDate = moment(date).add(1, 'day').toDate(); //;.toJSON();
       if (lstView) {
         let myInterval = setInterval(() => {
           if (
@@ -438,6 +431,8 @@ export class CalendarNotesComponent
             this.dataListViewTemp = JSON.parse(
               JSON.stringify(lstView.dataService.data)
             );
+            this.lstView.dataService.data.sort(this.orderByStartTime);
+
             this.change.detectChanges();
           }
         });
@@ -471,7 +466,7 @@ export class CalendarNotesComponent
             var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
               ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
             let numbF = this.convertStrToDate(eleFromDate);
-            const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+            const fDayOfMonth = moment(numbF).add(1, 'day').toJSON();
             let length =
               htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
                 .length;
@@ -483,7 +478,7 @@ export class CalendarNotesComponent
               ?.childNodes[indexLast]?.childNodes[6]
               .childNodes[0] as HTMLElement;
             let numbL = this.convertStrToDate(eleToDate);
-            const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
+            const lDayOfMonth = moment(numbL).add(1, 'day').toJSON();
             this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
             this.setDate(this.FDdate, this.lstView);
             this.change.detectChanges();
@@ -532,9 +527,7 @@ export class CalendarNotesComponent
               this.EP_BookingRoomsParam?.ShowEvent;
             this.checkEP_BookingCarsParam = this.EP_BookingCarsParam?.ShowEvent;
           }
-          const lDayTimeOfMonth = moment(lDayOfMonth)
-            .endOf('date')
-            .toISOString();
+          const lDayTimeOfMonth = moment(lDayOfMonth).endOf('date').toJSON();
           const dataValueTM = fDayOfMonth + ';' + lDayTimeOfMonth;
           this.getRequestTM(
             dt[0]?.TM_Tasks[0],
@@ -586,7 +579,9 @@ export class CalendarNotesComponent
     requestDataTM.entityName = 'TM_Tasks';
     requestDataTM.entityPermission = 'TM_MyTasks';
     this.codxShareSV.getDataTM_Tasks(requestDataTM).subscribe((res) => {
-      this.getModelShare(res[0], param.Template, 'TM_Tasks');
+      if (res) {
+        this.getModelShare(res[0], param.Template, 'TM_Tasks');
+      }
     });
   }
 
@@ -606,7 +601,9 @@ export class CalendarNotesComponent
     requestDataCO.entityName = 'CO_Meetings';
     requestDataCO.entityPermission = 'CO_TMMeetings';
     this.codxShareSV.getDataCO_Meetings(requestDataCO).subscribe((res) => {
-      this.getModelShare(res[0], param.Template, 'CO_Meetings');
+      if (res) {
+        this.getModelShare(res[0], param.Template, 'CO_Meetings');
+      }
     });
   }
 
@@ -648,7 +645,9 @@ export class CalendarNotesComponent
     requestDataEP_Car.entityName = 'EP_Bookings';
     requestDataEP_Car.entityPermission = 'EP_BookingCars';
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Car).subscribe((res) => {
-      this.getModelShare(res[0], param.Template, 'EP_BookingCars');
+      if (res) {
+        this.getModelShare(res[0], param.Template, 'EP_BookingCars');
+      }
     });
   }
 
@@ -659,7 +658,9 @@ export class CalendarNotesComponent
     this.codxShareSV.getDataWP_Notes(predicate, dataValue).subscribe((res) => {
       this.countNotePin = 0;
       this.countNotePin = res[1];
-      this.getModelShare(res[0], param.Template, 'WP_Notes');
+      if (res) {
+        this.getModelShare(res[0], param.Template, 'WP_Notes');
+      }
     });
   }
 
@@ -733,6 +734,9 @@ export class CalendarNotesComponent
         );
       }
     }
+    console.log('co', this.CO_MeetingsTemp);
+    console.log('room', this.EP_BookingRoomsTemp);
+    console.log('car', this.EP_BookingCarsTemp);
   }
 
   onSwitchCountEven(transType) {
@@ -1083,8 +1087,11 @@ export class CalendarNotesComponent
       '',
       option
     );
+    dialog.closed.subscribe((e) => {
+      this.detectorRef.detectChanges();
+    });
     // dialog.closed.subscribe((e) => {
-    //   (this.lstView.dataService as CRUDService).add(e.event).subscribe();
+    //   (this.lstView.dataService as CRUDService).addd(e.event).subscribe();
     // });
   }
 
@@ -1175,7 +1182,7 @@ export class CalendarNotesComponent
                   ?.childNodes[1]?.childNodes[0]?.childNodes[0]
                   ?.childNodes[0] as HTMLElement;
                 let numbF = this.convertStrToDate(eleFromDate);
-                const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+                const fDayOfMonth = moment(numbF).add(1, 'day').toJSON();
                 let length =
                   htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
                     .length;
@@ -1188,7 +1195,7 @@ export class CalendarNotesComponent
                   ?.childNodes[1]?.childNodes[indexLast]?.childNodes[6]
                   .childNodes[0] as HTMLElement;
                 let numbL = this.convertStrToDate(eleToDate);
-                const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
+                const lDayOfMonth = moment(numbL).add(1, 'day').toJSON();
                 this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
               } else {
                 if (this.typeCalendar == 'week') {
@@ -1196,7 +1203,7 @@ export class CalendarNotesComponent
                     '.week-item[data-date]'
                   );
                   let htmlEleFD = eleWeek[0] as HTMLElement;
-                  // var fromDate = moment(htmlEleFD?.dataset?.date).toISOString();
+                  // var fromDate = moment(htmlEleFD?.dataset?.date).toJSON();
                   let fromDate = this.convertDMY_MDY(htmlEleFD?.dataset?.date);
                   let htmlEleTD = eleWeek[eleWeek.length - 1] as HTMLElement;
                   // var toDate = moment(htmlEleTD?.dataset?.date).toJSON();
@@ -1252,8 +1259,22 @@ export class CalendarNotesComponent
                 ...lstTemp,
               ];
           }
+          this.lstView.dataService.data.sort(this.orderByStartTime);
         }
       });
+  }
+
+  orderByStartTime(a, b) {
+    let aS = new Date(a.startTime);
+    let bS = new Date(b.startTime);
+
+    if (aS < bS) {
+      return -1;
+    }
+    if (aS > bS) {
+      return 1;
+    }
+    return 0;
   }
 
   onEditIsPin(data: Notes) {
@@ -1335,5 +1356,43 @@ export class CalendarNotesComponent
         note,
       ])
       .subscribe();
+  }
+
+  getStart_EndTime(sStart, sEnd) {
+    let startDate = new Date(sStart);
+    let endDate = new Date(sEnd);
+    let rHtml =
+      this.datePipe.transform(startDate, 'H:mm') +
+      ' - ' +
+      this.datePipe.transform(endDate, 'H:mm');
+    return rHtml;
+  }
+
+  getFieldValue(field: string, data): tmpBookingCalendar {
+    let arr = field.replace(/ /g, '').split('|');
+    let tmpType_RefID: tmpBookingCalendar = new tmpBookingCalendar();
+    if (arr.length >= 2) {
+      field = arr[0];
+      field = field[0].toLowerCase() + field.slice(1);
+      let type_codeValue = arr[1].split(':');
+
+      if (type_codeValue.length >= 2) {
+        tmpType_RefID.type = type_codeValue[0];
+        tmpType_RefID.refID = type_codeValue[1];
+        tmpType_RefID.value = data[field];
+      }
+    }
+
+    return tmpType_RefID;
+  }
+
+  redirectToFuncID(item) {
+    console.log('item', item);
+
+    let query = {
+      predicate: 'RecID=@0',
+      dataValue: item.transID,
+    };
+    this.codxService.openUrlNewTab(item.functionID, '', query);
   }
 }

@@ -32,6 +32,7 @@ export class DP_Processes {
   attachments: number;
   comments: number;
   permissions: DP_Processes_Permission[] = []; // string
+  ratings: DP_Processes_Ratings[] = [];
   owner: string;
   bUID: string;
   createdOn: Date;
@@ -42,24 +43,24 @@ export class DP_Processes {
 }
 
 export class DP_Processes_Permission {
-  recID: string;
+  recID:  string = Util.uid();
   transID: string;
   roleType: string;
   objectType: string;
   objectName: string;
   objectID: string;
-  full: boolean;
-  create: boolean;
-  read: boolean;
-  update: boolean;
-  assign: boolean;
-  delete: boolean;
-  share: boolean;
-  edit: boolean;
-  allowPermit: boolean;
-  publish: boolean;
-  upload: boolean;
-  download: boolean;
+  full: boolean = false;
+  create: boolean = false;
+  read: boolean = false;
+  update: boolean = false;
+  assign: boolean = false;
+  delete: boolean = false;
+  share: boolean = false;
+  edit: boolean = false;
+  allowPermit: boolean = false;
+  publish: boolean = false;
+  upload: boolean = false;
+  download: boolean = false;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
@@ -74,6 +75,19 @@ export class DP_Processes_Permission {
   approvedOn: Date;
 
 }
+
+export class DP_Processes_Ratings{
+  id: string;
+  recID: string;
+  objectID: string;
+  objectName: string;
+  positionName: string;
+  comment: string;
+  rating: number;
+  createdOn: Date;
+  createdBy: string;
+}
+
 export class DP_Steps {
   recID: string = Util.uid();
   processID: string;
@@ -84,6 +98,7 @@ export class DP_Steps {
   durationHour: number = 0;
   numbererval: string;
   excludeDayoff: string;
+  owner: string;
   note: string;
   assignControl: string = '1';
   transferControl: string = '0';
@@ -110,7 +125,7 @@ export class DP_Steps {
   newProcessID: string;
 }
 export class DP_Steps_Roles {
-  recID: string;
+  recID: string = Util.uid();
   instanceID: string;
   stepID: string;
   roleType: string;
@@ -312,6 +327,7 @@ export class DP_Instances_Steps {
   actualStart: Date;
   actualEnd: Date;
   actualHours: number;
+  assignControl: string;
   roles: DP_Instances_Steps_Roles[] = []; // objects;
   taskGroups: DP_Instances_Steps_TaskGroups[] = []; // objects;
   tasks: DP_Instances_Steps_Tasks[] = []; // objects;
@@ -324,6 +340,11 @@ export class DP_Instances_Steps {
   modifiedBy: string;
   reasons: DP_Instances_Steps_Reasons[] = []; // objects
   stepStatus: string;
+  memo: string;
+  newProcessID:string;
+  reasonControl: boolean = false;
+  isSuccessStep: boolean =  false;
+  isFailStep: boolean = false;
 }
 
 export class DP_Instances_Steps_Roles {
@@ -466,13 +487,13 @@ export class DP_Instance_Steps_Fields {
 }
 
 export class DP_Instances_Steps_Reasons {
-  recID: string;
+  recID: string = Util.uid();;
   processID: string;
   instanceID: string;
   stepID: string;
   reasonName: string;
   reasonType: string;
-  createdOn: Date;
+  createdOn: Date = new Date();
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;

@@ -54,7 +54,7 @@
         [objectType]="entityName"
         [objectId]="objectID"
         [hideFolder]="1"
-        [hideUploadBtn]="0"
+        [hideUploadBtn]="isEdit ? 0 : 1"
         [hideDes]="hideFolder"
         [type]="type"
         [allowExtensions]="allowExtensions"
@@ -63,10 +63,14 @@
         [functionID]="funcID"
         (fileAdded)="fileAdded($event)"
         (fileCount)="getfileCount($event)"
+        (fileSave)="fileSave($event)"
         [displayThumb]="displayThumb"
         [isSaveSelected]="1"
         [isTab]="true"
+        [hideDelete]="isEdit ? 0 : 1"
+        [hideMoreF]="isEdit ? 1 : 0"
         [referType]="referType"
+        [addPermissions]="addPermissions"
       >
       </codx-attachment>
     </ng-container>

@@ -1,129 +1,114 @@
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
-        <button class="btn btn-primary" (click)="onSaveForm()">
-            <i class="icon-save"></i>
-        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
-        </button>
-    </div>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveForm()">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+  </div>
 </ng-template>
 
 <codx-form
-    #form
-    [headerText] = "headerText"
-    [body] = "body"
-    [formModel]="formModel"
-    [footer]="footer"
-    [dialog]="dialog"
-    [data]="data"
-    *ngIf="isAfterRender"
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [formModel]="formModel"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="data"
+  *ngIf="isAfterRender"
 >
-    <ng-template #body>
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label
-                    fiedName="TimeCardNo"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field = "timeCardNo"
-                    [formModel]="form.formModel"
-                    [Group] = "form.formGroup"
-                ></codx-input>
-            </div>
-            <div class="col-6">
-                <codx-label
-                    fiedName="ShiftCalendarID"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                field = "shiftCalendarID"
-                [formModel]="form.formModel"
-                [Group] = "form.formGroup"
-                ></codx-input>
-            </div>
+  <ng-template #body>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="TimeCardNo" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="timeCardNo"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label
+          fiedName="ShiftCalendarID"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+          field="shiftCalendarID"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <codx-label fiedName="ALObjectID" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="alObjectID"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-6">
+        <div class="d-flex flex-column">
+          <codx-label fiedName="IsNotScan" [formModel]="formModel"></codx-label>
+
+          <codx-input
+            field="isNotScan"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
         </div>
-
-        <div class="form-group row">
-            <codx-label
-                fiedName="ALObjectID"
-                [formModel]="formModel"
-            ></codx-label>
-            <codx-input
-                field="alObjectID"
-                [formModel]="form.formModel"
-                [Group] = "form.formGroup"
-            ></codx-input>
+      </div>
+      <div class="col-6">
+        <div class="d-flex flex-column">
+          <codx-label
+            fiedName="IsNotLateEarly"
+            [formModel]="formModel"
+          ></codx-label>
+          <codx-input
+            field="isNotLateEarly"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
         </div>
+      </div>
+    </div>
 
-        <div class="form-group row">
-            <div class="col-6">
-                <div class="d-flex flex-column">
-                    <codx-label
-                    fiedName="IsNotScan"
-                    [formModel]="formModel"
-                ></codx-label>
+    <div class="form-group row">
+      <div class="col-6">
+        <div class="d-flex flex-column">
+          <codx-label
+            fiedName="IsNotOTKow"
+            [formModel]="formModel"
+          ></codx-label>
 
-                <codx-input
-                field = "isNotScan"
-                [formModel]="form.formModel"
-                [Group] = "form.formGroup"
-            ></codx-input>
-                </div>
-               
-               
-            </div>
-            <div class="col-6">
-                <div class="d-flex flex-column">
-                    <codx-label
-                    fiedName="IsNotLateEarly"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                field = "isNotLateEarly"
-                [formModel]="form.formModel"
-                [Group] = "form.formGroup"
-                ></codx-input>
-
-                </div>
-                
-               
-            </div>
+          <codx-input
+            field="isNotOTKow"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
         </div>
+      </div>
+      <div class="col-6">
+        <div class="d-flex flex-column">
+          <codx-label
+            fiedName="IsNotCLeaveKow"
+            [formModel]="formModel"
+          ></codx-label>
 
-        <div class="form-group row">
-            <div class="col-6">
-                <div class="d-flex flex-column">
-                    <codx-label
-                    fiedName="IsNotOTKow"
-                    [formModel]="formModel"
-                ></codx-label>
-
-                <codx-input
-                field = "isNotOTKow"
-                [formModel]="form.formModel"
-                [Group] = "form.formGroup"
-            ></codx-input>
-                </div>
-                
-               
-            </div>
-            <div class="col-6">
-                <div class="d-flex flex-column">
-                    <codx-label
-                    fiedName="IsNotCLeaveKow"
-                    [formModel]="formModel"
-                ></codx-label>
-
-                <codx-input
-                field = "isNotCLeaveKow"
-                [formModel]="form.formModel"
-                [Group] = "form.formGroup"
-                ></codx-input>
-
-                </div>
-                
-                
-            </div>
+          <codx-input
+            field="isNotCLeaveKow"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
         </div>
-    </ng-template>
+      </div>
+    </div>
+  </ng-template>
 </codx-form>

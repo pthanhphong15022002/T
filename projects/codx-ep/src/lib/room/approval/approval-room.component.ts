@@ -234,69 +234,6 @@ export class ApprovalRoomsComponent extends UIComponent {
       }
     });
   }
-  clickMF(value, datas: any = null) {
-    let funcID = value?.functionID;
-    // if (!datas) datas = this.data;
-    // else {
-    //   var index = this.view.dataService.data.findIndex((object) => {
-    //     return object.recID === datas.recID;
-    //   });
-    //   datas = this.view.dataService.data[index];
-    // }
-    switch (funcID) {
-      case 'EPT40101':
-        {
-          //alert('Duyệt');
-          this.approve(datas, '5');
-        }
-        break;
-      case 'EPT40105':
-        {
-          //alert('Từ chối');
-          this.approve(datas, '4');
-        }
-        break;
-
-      default:
-        '';
-        break;
-    }
-  }
-  approve(data: any, status: string) {
-    this.codxEpService
-      .approve(
-        data?.approvalTransRecID, //ApprovelTrans.RecID
-        status,
-        '',
-        ''
-      )
-      .subscribe((res: any) => {
-        if (res?.msgCodeError == null && res?.rowCount >= 0) {
-          if (status == '5') {
-            this.notificationsService.notifyCode('SYS034'); //đã duyệt
-            data.approveStatus = '5';
-            data.status = '5';
-          }
-          if (status == '4') {
-            this.notificationsService.notifyCode('SYS034'); //bị hủy
-            data.approveStatus = '4';
-            data.status = '4';
-          }
-          this.view.dataService.update(data).subscribe();
-        } else {
-          this.notificationsService.notifyCode(res?.msgCodeError);
-        }
-      });
-  }
-
-  showHour(date: any) {
-    let temp = new Date(date);
-    let time =
-      ('0' + temp.getHours()).toString().slice(-2) +
-      ':' +
-      ('0' + temp.getMinutes()).toString().slice(-2);
-    return time;
-  }
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
       event.forEach((func) => {
@@ -312,6 +249,9 @@ export class ApprovalRoomsComponent extends UIComponent {
           ) {
             func.disabled = false;
           }
+          if (func.functionID == 'EPT40106' /*MF Thu Hồi*/) {
+            func.disabled = true;
+          }
         });
       } else {
         event.forEach((func) => {
@@ -321,10 +261,97 @@ export class ApprovalRoomsComponent extends UIComponent {
           ) {
             func.disabled = true;
           }
+          if (func.functionID == 'EPT40106' /*MF Thu Hồi*/) {
+            func.disabled = false;
+          }
         });
       }
     }
   }
+  clickMF(value, datas: any = null) {
+    let funcID = value?.functionID;
+    switch (funcID) {
+      case 'EPT40101':
+        {
+          //alert('Duyệt');
+          this.approve(datas);
+        }
+        break;
+      case 'EPT40105':
+        {
+          //alert('Từ chối');
+          this.reject(datas);
+        }
+        break;
+      case 'EPT40106':
+        {
+          //alert('Thu hồi');
+          this.undo(datas);
+        }
+        break;
+    }
+  }
+  undo(data: any) {
+    this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
+        if (res != null) {          
+          this.notificationsService.notifyCode('SYS034'); //đã thu hồi
+          data.approveStatus = '3';     
+          data.status = '3';   
+          this.view.dataService.update(data).subscribe();
+        } else {
+          this.notificationsService.notifyCode(res?.msgCodeError);
+        }
+      });
+  }
+  approve(data: any) {
+    this.codxEpService
+      .approve(
+        data?.approvalTransRecID, //ApprovelTrans.RecID
+        '5',
+        '',
+        ''
+      )
+      .subscribe((res: any) => {
+        if (res?.msgCodeError == null && res?.rowCount >= 0) {
+          
+            this.notificationsService.notifyCode('SYS034'); //đã duyệt
+            data.approveStatus = '5';
+            data.status = '5';
+          this.view.dataService.update(data).subscribe();
+        } else {
+          this.notificationsService.notifyCode(res?.msgCodeError);
+        }
+      });
+  }
+  reject(data: any) {
+    this.codxEpService
+      .approve(
+        data?.approvalTransRecID, //ApprovelTrans.RecID
+        '4',
+        '',
+        ''
+      )
+      .subscribe((res: any) => {
+        if (res?.msgCodeError == null && res?.rowCount >= 0) {          
+            this.notificationsService.notifyCode('SYS034'); //đã duyệt
+            data.approveStatus = '4';
+            data.status = '4';
+          this.view.dataService.update(data).subscribe();
+        } else {
+          this.notificationsService.notifyCode(res?.msgCodeError);
+        }
+      });
+  }
+
+  showHour(date: any) {
+    let temp = new Date(date);
+    let time =
+      ('0' + temp.getHours()).toString().slice(-2) +
+      ':' +
+      ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
+  
   updateStatus(data: any) {
     this.view.dataService.update(data).subscribe();
   }

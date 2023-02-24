@@ -1,77 +1,44 @@
-<codx-form
-  #form
-  [body]="body"
-  [headerText]="headerText"
-  [formModel]="dialog.formModel"
-  [dialog]="dialog"
-  [data]="currencies"
-  subToolbarCss="text-end"
-  [footer]="footer"
->
+<codx-form #form [body]="body" [headerText]="headerText" [formModel]="dialog.formModel" [dialog]="dialog"
+  [data]="currencies" subToolbarCss="text-end" [footer]="footer">
 </codx-form>
 <ng-template popup adde #body>
-    <div class="form-group">
-        <label>Ngày xác định tỷ giá</label> 
-      </div>
- 
-      <div class="row mx-0 mt-3">
-        <div class="col-6 ps-0">
-          <div class="form-group">
-      <codx-input
-        type="switch"
-        field="Calculation"
-        [checked]="calculation"
-        (valueChange)="valueChangelb($event)"
-      >
-      </codx-input>
-        <div  *ngIf="calculation">
-          <codx-label
-            [formModel]="form.formModel"
-            fiedName="Calculation"
-            default="Ngày chính xác"
-          ></codx-label> 
-        </div>
-        <div  *ngIf="!calculation">
-          <codx-label
-            [formModel]="form.formModel"
-            fiedName="Calculation"
-            default="Ngày gần nhất"
-          ></codx-label> 
-        </div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <codx-label
-          [formModel]="form.formModel"
-          fiedName="Multiply"
-          default="Công thức tính tỷ giá so với tiền hạch toán"      
-        ></codx-label>
-      </div>
-<div class="col-6 pe-0" id="boxexchange">
-    <codx-input
-    *ngIf="currencies.multiply"   
-    type="switch"
-    field="Multiply"
-    [checked]="true"
-    (valueChange)="valueChange($event)"
-  >
-  </codx-input>
-  <codx-input
-    *ngIf="!currencies.multiply"  
-    type="switch"
-    field="Multiply"
-    [checked]="false"
-    (valueChange)="valueChange($event)"
-  >
-  </codx-input>
+
+  <div class="mt-5 mb-3">
+    <label class="text-primary fw-bold fs-6">Ngày xác định tỷ giá</label>
   </div>
+  <div class="d-flex align-items-start mb-3">
+    <div class="me-2">
+      <codx-input type="switch" field="calculation" [checked]="calculation" (valueChange)="valueChangelb($event)">
+      </codx-input>
+    </div>
+    <div class="text-dark">
+      <div *ngIf="calculation">
+        <codx-label [formModel]="form.formModel" fiedName="Calculation" default="Ngày chính xác"></codx-label>
+      </div>
+      <div *ngIf="!calculation">
+        <codx-label [formModel]="form.formModel" fiedName="Calculation" default="Ngày gần nhất"></codx-label>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5 mb-3">
+    <codx-label class="text-primary fw-bold fs-6" [formModel]="form.formModel" fiedName="Multiply"
+      default="Công thức tính tỷ giá so với tiền hạch toán"></codx-label>
+  </div>
+  <div class="d-flex align-items-start">
+    <div class="me-2" id="boxexchange">
+      <codx-input type="switch" field="multiply" [checked]="form.data.multiply" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="text-dark">Nhân tỷ giá</div>
+  </div>
+
 </ng-template>
 <ng-template #footer>
-    <div class="boxbtn">
-    <button class="btnsave" (click)="onSave()">
-      <codx-label name="btnSave" formName="System" default="Lưu"></codx-label>
-    </button>
+  <div class="d-flex justify-content-end mt-1 me-3">
+    <div class="ms-2">
+      <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
+        <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+      </button>
+    </div>
   </div>
-  </ng-template>
-  
+</ng-template>

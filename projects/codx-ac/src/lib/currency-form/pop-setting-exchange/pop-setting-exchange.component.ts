@@ -9,11 +9,13 @@ import { PopAddCurrencyComponent } from '../pop-add-currency/pop-add-currency.co
   styleUrls: ['./pop-setting-exchange.component.css']
 })
 export class PopSettingExchangeComponent implements OnInit {
+  //#region Contructor
   headerText:string;
   dialog!: DialogRef;
   currencies: Currency;
   calculation : any;
   data:any;
+  calculationName:any;
   constructor(
     @Optional() dialogsetting?: DialogRef,
     @Optional() dialogData?: DialogData,
@@ -26,35 +28,33 @@ export class PopSettingExchangeComponent implements OnInit {
     }else{
       this.calculation = true;
     }
-    
   }
-  
+  //#endregion
+
+  //#region Init
   ngOnInit(): void {
   }
+  //#endregion
+
+  //#region Function
   valueChangelb(e: any) {
-    
     if (e.data) {
       this.currencies[e.field] = '1';
-      
+      this.calculation = true;
     }else{
       this.currencies[e.field] = '0';
-      
+      this.calculation = false;
     }
   }
   valueChange(e: any) {
-    if (e) {
       this.currencies[e.field] = e.data;
-    }
   }
+  //#endregion
+  
+  //#region CRUD
   onSave(){
     window.localStorage.setItem("dataexchange",JSON.stringify(this.currencies));
-    var dataexchange = JSON.parse(localStorage.getItem('dataexchange'));
-    if (dataexchange.Multiply !=null) {
-      this.currencies.multiply = dataexchange.Multiply;
-    }
-    if (dataexchange.Calculation !=null) {
-      this.currencies.calculation = dataexchange.Calculation;
-    }
     this.dialog.close();
   }
+  //#endregion
 }

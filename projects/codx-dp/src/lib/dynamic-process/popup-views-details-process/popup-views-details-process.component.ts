@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
 import { TabModel } from '../../models/models';
 import { DomSanitizer } from '@angular/platform-browser';
+import { CodxDpService } from '../../codx-dp.service';
 
 @Component({
   selector: 'lib-popup-views-details-process',
@@ -12,22 +13,27 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class PopupViewsDetailsProcessComponent implements OnInit {
   dialog: DialogRef;
   name = 'Mission';
-
+  isCreate = false;
   process = new DP_Processes();
   tabControl: TabModel[] = [
     { name: 'Mission', textDefault: 'Nhiệm vụ', isActive: true },
     { name: 'Dashboard', textDefault: 'Dashboard', isActive: false },
   ];
   // value
-  vllApplyFor ='DP002' ;
+  vllApplyFor = 'DP002';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     public sanitizer: DomSanitizer,
+    private dpService: CodxDpService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
     this.process = dt?.data?.data;
+    this.isCreate = dt.data.isCreate;
+    this.dpService
+      .updateHistoryViewProcessesAsync(this.process.recID)
+      .subscribe();
   }
 
   ngOnInit(): void {}

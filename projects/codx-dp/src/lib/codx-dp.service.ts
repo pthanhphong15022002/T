@@ -167,10 +167,6 @@ export class CodxDpService {
     );
   }
 
-  GetAutoNumberNo(formName: string , funcID: any ,entityName: string , key: any){
-      return this.api.execSv<any>('SYS','AD','AutoNumbersBusiness','GenAutoNumberAsync', [formName , funcID , entityName , key])
-
-  }
   getStep(data) {
     return this.api.exec<any>(
       'DP',
@@ -180,11 +176,14 @@ export class CodxDpService {
     );
   }
 
-  getlistCbxProccess(){
-    return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetListCbxProcessesAsync');
+  getlistCbxProccess(applyFor: string){
+    return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetListCbxProcessesAsync',applyFor);
   }
 
+  updatePermissionProcess(process){
+    return this.api.exec<any>('DP', 'ProcessesBusiness', 'UpdatePermissionsProcessAsync',process);
 
+  }
 
   createListInstancesStepsByProcess(processID) {
     return this.api.exec<any>(
@@ -243,14 +242,6 @@ export class CodxDpService {
       data
     );
   }
-  copyTask(data){
-    return this.api.exec<any>(
-      'DP',
-      'InstanceStepsBusiness',
-      'CopyTaskAsync',
-      data
-    );
-  }
   deleteTask(data){
     return this.api.exec<any>(
       'DP',
@@ -265,6 +256,157 @@ export class CodxDpService {
       'InstanceStepsBusiness',
       'updateStepDrapDropAsync',
       data
+    );
+  }
+
+  moveStageByIdInstance(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'MoveStageByIdInstnaceAsync',
+      data
+    );
+  }
+  moveReasonByIdInstance(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'MoveReasonByIdInstnaceAsync',
+      data
+    );
+  }
+  updateListReason(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateReasonStepAsync',
+      data
+    );
+  }
+  DeleteListReason(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'DeleteReasonStepAsync',
+      data
+    );
+  }
+  updateHistoryViewProcessesAsync(recID: string) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'UpdateHistoryViewAsync',
+      recID
+    );
+  }
+
+  setViewRatings(
+    recID: string,
+    ratting: string,
+    comment: string,
+    funcID: string,
+    entityName: string
+  ) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'SetViewRatingAsync',
+      [recID, ratting, comment, funcID, entityName]
+    );
+  }
+
+  //process
+  renameProcess(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'RenameProcessAsync',
+      data
+    );
+  }
+  restoreBinById(recID){
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'RestoreProcessAsync',
+      recID
+    );
+  }
+
+  GetListUserIDByListTmpEmpIDAsync(id) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListTmpEmpIDAsync',
+      id
+    );
+  }
+
+  getListUserIDByListPositionsID(listPositionID) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListPositionsIDAsync',
+      listPositionID
+    );
+  }
+
+  getUserByID(e){
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetAsync',
+      e
+    );
+  }
+
+  getListUserByRoleID(id){
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetListUserByRoleIDAsync',
+      id
+    );
+  }
+
+  getPositionByID(id) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetPositionByUserIDAsync',
+      id
+    );
+  }
+
+  getStepByStepIDAndInID(insID, stepID){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetStepByStepIDAndInIDAsync',
+      [insID, stepID]
+    );
+  }
+
+  getFirstIntance(processID){
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetFirstIntanceAsync',
+      processID
+    );
+  }
+
+  getProcess(id){
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetAsync',
+      id
     );
   }
 }

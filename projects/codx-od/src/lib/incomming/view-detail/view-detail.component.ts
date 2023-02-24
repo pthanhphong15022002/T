@@ -1,15 +1,12 @@
 import {
-  AfterViewChecked,
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ContentChild,
   ElementRef,
   EventEmitter,
   Input,
   OnChanges,
   OnInit,
-  Optional,
   Output,
   SimpleChanges,
   TemplateRef,
@@ -23,10 +20,8 @@ import {
   CacheService,
   CallFuncService,
   DataRequest,
-  DialogData,
   DialogModel,
   DialogRef,
-  FormModel,
   NotificationsService,
   RequestOption,
   SidebarModel,
@@ -35,12 +30,10 @@ import {
 } from 'codx-core';
 import { ES_SignFile, File } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
-import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { CodxOdService } from '../../codx-od.service';
 import {
   convertHtmlAgency2,
@@ -167,7 +160,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     )
       this.gridViewSetup = changes?.gridViewSetup?.currentValue;
     this.active = 1;
-   
+    this.setHeight();
   }
 
   ngOnInit(): void {
@@ -176,11 +169,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
     this.getGridViewSetup(this.pfuncID);
-    this.setHeight();
-  
   }
   setHeight() {
-    let main = 0, header = 0;
+    let main = 0,
+      header = 0;
     let ele = document.getElementsByClassName(
       'codx-detail-main'
     ) as HTMLCollectionOf<HTMLElement>;
@@ -200,12 +192,12 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     ) as HTMLCollectionOf<HTMLElement>;
     if (nodes.length > 0) {
       var a = 0;
-      if(this.view.formModel.funcID.includes("ODT8")) a = 70
+      if (this.view.formModel.funcID.includes('ODT8')) a = 70;
       Array.from(
         document.getElementsByClassName(
           'codx-detail-body'
         ) as HTMLCollectionOf<HTMLElement>
-      )[0].style.height = main - header - 27 - a + 'px';
+      )[0].style.height = main - header - 115 - a + 'px';
     }
   }
   getGridViewSetup(funcID: any) {
@@ -852,18 +844,61 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           )
           .closed.subscribe((x) => {
             if (x.event.status == 'Y') {
-              if (isData) {
                 this.odService
                   .getDetailDispatch(datas.recID, this.formModel.entityName)
                   .subscribe((item) => {
                     //this.getChildTask(id);
-                    if (item) {
-                      this.cancelAproval(item);
-                    }
-                  });
-              } else this.cancelAproval(datas);
-            }
-          });
+                     //Có thiết lập bước duyệt
+                      if (item.bsCategory.approval) {
+                        this.api
+                          .execSv(
+                            'ES',
+                            'ES',
+                            'CategoriesBusiness',
+                            'GetByCategoryIDAsync',
+                            item.bsCategory.categoryID
+                          )
+                          .subscribe((item2: any) => {
+                            if (item2) {
+                              this.api.execSv(
+                                        'ES',
+                                        'ES',
+                                        'ApprovalTransBusiness',
+                                        'GetCategoryByProcessIDAsync',
+                                        item2?.processID
+                                      )
+                                      .subscribe((res2: any) => {
+                                        //trình ký
+                                        if (res2?.eSign == true) {
+                                          this.cancelAproval(item);
+                                          //this.callfunc.openForm();
+                                        } 
+                                        else if (res2?.eSign == false)
+                                          {
+                                            this.api
+                                            .execSv(
+                                              'OD',
+                                              'ERM.Business.Core',
+                                              'DataBusiness',
+                                              'CancelAsync',
+                                              [item?.recID,
+                                              "",
+                                              this.formModel.entityName]
+                                            ).subscribe(res3=>{
+                                              if(res3) {
+                                                this.data.approveStatus = '0';
+                                                this.view.dataService.update(this.data).subscribe();
+                                                this.notifySvr.notify('Hủy yêu cầu xét duyệt thành công.');
+                                              }
+                                              else this.notifySvr.notify('Hủy yêu cầu xét duyệt không thành công.');
+                                            })
+                                          }
+                                      });
+                                    }});
+                            } 
+                     
+                });
+            }});
         break;
       }
       //Hoàn tất
@@ -993,6 +1028,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
   //Hủy yêu cầu xét duyệt
   cancelAproval(data: any) {
+    debugger
     //Có thiết lập duyệt
     if (data.bsCategory) {
       this.api
@@ -1006,13 +1042,14 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         .subscribe((item) => {
           if (item) {
             data.approveStatus = '0';
-            this.odService.updateDispatch(data, false).subscribe((item) => {
+            this.odService.updateDispatch(data , "", false).subscribe((item) => {
               if (item.status == 0) {
                 this.view.dataService.update(item?.data).subscribe();
               } else this.notifySvr.notify(item.message);
             });
             this.notifySvr.notify('Hủy yêu cầu duyệt thành công');
           }
+          else this.notifySvr.notify('Hủy yêu cầu duyệt không thành công');
         });
     }
   }
@@ -1072,14 +1109,14 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     // }
     switch (e?.funcID) {
       //Giao việc
-      case 'SYS005': {
+      case 'ODT1013': {
         if (e?.result && e?.result[0]) {
           e.data.status = '3';
           // debugger;
           // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
           //   if(item) that.data.tasks= item;
           // })
-          that.odService.updateDispatch(e.data, false).subscribe((item) => {
+          that.odService.updateDispatch(e.data , "", false).subscribe((item) => {
             if (item.status == 0) {
               that.view.dataService.update(e.data).subscribe();
             } else that.notifySvr.notify(item.message);
@@ -1251,7 +1288,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           data.status = '3';
           data.approveStatus = '3';
           this.notifySvr.notifyCode('ES007');
-          this.odService.updateDispatch(data, false).subscribe((item) => {
+          this.odService.updateDispatch(data , "", false).subscribe((item) => {
             if (item.status == 0) {
               this.view.dataService.update(item?.data).subscribe();
             } else this.notifySvr.notify(item.message);
@@ -1315,7 +1352,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             if (res.event && res.event?.approved == true) {
               datas.status = '3';
               datas.approveStatus = '3';
-              this.odService.updateDispatch(datas, false).subscribe((item) => {
+              this.odService.updateDispatch(datas , "", false).subscribe((item) => {
                 if (item.status == 0) {
                   this.view.dataService.update(item?.data).subscribe();
                 } else this.notifySvr.notify(item.message);

@@ -11,13 +11,14 @@ import { ExchangeRates } from '../../models/ExchangeRates.model';
   styleUrls: ['./pop-add-exchangerate.component.css']
 })
 export class PopAddExchangerateComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('form') public form: CodxFormComponent;
   @Input() headerText: string;
   dialog!: DialogRef;
   exchangerate:ExchangeRates;
   gridViewSetup:any;
   exchangeRate:any;
-  SourceType:any;
+  sourceType:any;
   formtype:any;
   toDate:any;
   note:any;
@@ -31,39 +32,56 @@ export class PopAddExchangerateComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialogadd;
     this.headerText = dialogData.data?.headerText;
-    this.exchangeRate ='';
-    this.formtype = dialogData.data?.formtype;
+    this.exchangeRate = '';
     this.cache.gridViewSetup('ExchangeRates', 'grvExchangeRates').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
       }
     });
-    if (dialogData.data?.dataex != null) {
-      this.exchangerate = dialogData.data?.dataex;
-      this.exchangeRate = dialogData.data?.dataex.exchangeRate;
-      this.SourceType = dialogData.data?.dataex.sourceType;
-      this.note = dialogData.data?.dataex.note;   
+    if (dialogData.data?.data != null) {
+      this.exchangerate = dialogData.data?.data;
+      this.toDate = dialogData.data?.data.toDate;
+      this.exchangeRate = dialogData.data?.data.exchangeRate;
+      this.sourceType = dialogData.data?.data.sourceType;
+      this.note = dialogData.data?.data.note;   
     }
   }
+//#endregion
 
+  //#region Init
   onInit(): void {
     
   }
   ngAfterViewInit() {
-    this.exchangerate = this.form.formGroup.value;
+    if (this.exchangerate == null) {
+      this.exchangerate = this.form.formGroup.value;
+      this.toDate = new Date();
+      this.exchangerate.recID = Guid.newGuid();
+      this.exchangerate.toTime = new Date();
+    }
   }
-  valueChange(e:any){
+  //#endregion
+
+  //#region Function
+  valueChangeexchangeRate(e:any){
     this.exchangeRate = e.data;
-    this.exchangerate[e.field] = this.exchangeRate;
+    this.exchangerate[e.field] = e.data;
+  }
+  valueChangeToDate(e:any){
+    this.toDate = e.data.fromDate;
+    this.exchangerate[e.field] = e.data.fromDate;
   }
   valueChangeSourceType(e:any){
-    this.SourceType = e.data;
-    this.exchangerate[e.field] = this.SourceType;
+    this.sourceType = e.data;
+    this.exchangerate[e.field] = e.data;
   }
   valueChangeNote(e:any){
     this.note = e.data;
-    this.exchangerate[e.field] = this.note;
+    this.exchangerate[e.field] = e.data;
   }
+  //#endregion
+
+  //#region CRUD
   onSave(){    
       if (this.exchangeRate.trim() == '' || this.exchangeRate == null) {
         this.notification.notifyCode(
@@ -77,11 +95,20 @@ export class PopAddExchangerateComponent extends UIComponent implements OnInit {
         this.notification.notify("Tỷ giá phải là số","2");
         return;
       }
-      if (this.formtype == 'addexrate') {
-        this.exchangerate.toDate = this.form.formGroup.value.toDate;
-      }
       window.localStorage.setItem("dataexchangeRate",JSON.stringify(this.exchangerate));
-    
-    this.dialog.close();  
+      this.dialog.close();  
+  }
+  //#endregion
+}
+class Guid {
+  static newGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
 }

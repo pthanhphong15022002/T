@@ -11,8 +11,6 @@ import {
 } from 'codx-core';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
-import { TM_TaskGroups } from './models/TM_TaskGroups.model';
-import { TM_Parameter } from './models/TM_Tasks.model';
 
 @Injectable({
   providedIn: 'root',
@@ -361,6 +359,15 @@ export class CodxTMService {
       [meetingID, data, startDate, endDate]
     );
   }
+  getListUserIDByListEmployeeID(listEmployeeID) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDbyListEmployeeIDAsync',
+      listEmployeeID
+    );
+  }
 
   convertListToObject(
     list: Array<object>,
@@ -418,6 +425,15 @@ export class CodxTMService {
       'MeetingsBusiness',
       'SendAlertMailAsync',
       [recID, valueRuleNo, funcID]
+    );
+  }
+
+  RPASendMailAlert() {
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'RPASendAlertMeetingMailAsync'
     );
   }
 

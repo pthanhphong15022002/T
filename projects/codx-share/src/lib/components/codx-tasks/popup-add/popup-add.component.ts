@@ -79,7 +79,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   popover: any;
   vllShare = 'TM003';
   planholderTaskGoal = 'Add to do list…';
-  planholderTaskChild ="Ghi chú phân công..."
+  planholderTaskChild = 'Ghi chú phân công...';
   listRoles: any;
   vllRole = 'TM001';
   vllRefType = 'TM018';
@@ -97,6 +97,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   changTimeCount = 2;
   dataReferences = [];
   disabledProject = false;
+  isClickSave = false;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -196,7 +197,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           .subscribe((res) => {
             if (res) {
               this.gridViewSetup = res;
-              this.planholderTaskChild= res['Memo']?.description;
+              this.planholderTaskChild = res['Memo']?.description;
             }
           });
       }
@@ -536,6 +537,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   async actionSave(id) {
     if (this.taskType) this.task.taskType = this.taskType;
     else this.task.taskType = '1';
+    if (this.isClickSave) return;
+    this.isClickSave = true;
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -593,6 +596,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         return true;
       })
       .subscribe((res) => {
+        this.isClickSave = false;
         this.dialog.close(res);
         this.attachment?.clearData();
         if (res && res.save) {
@@ -668,6 +672,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var listDepartmentID = '';
     var listUserID = '';
     var listPositionID = '';
+    var listEmployeeID = '';
 
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -679,8 +684,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           case 'D':
             listDepartmentID += obj.id + ';';
             break;
+          case 'RP':
           case 'P':
             listPositionID += obj.id + ';';
+            break;
+          case 'RE':
+            listEmployeeID += obj.id + ';';
             break;
         }
       }
@@ -704,6 +713,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.valueSelectUser(res);
         } else this.notiService.notifyCode('TM065');
       });
+    }
+    if (listEmployeeID != '') {
+      listEmployeeID = listEmployeeID.substring(0, listEmployeeID.length - 1);
+      this.tmSv
+        .getListUserIDByListEmployeeID(listEmployeeID)
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            this.valueSelectUser(res);
+          }
+        });
     }
     if (listPositionID != '') {
       listPositionID = listPositionID.substring(0, listPositionID.length - 1);
@@ -729,12 +748,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           }
         });
         if (arrNew.length > 0) {
-          assignTo = arrNew.join(';');
-          this.task.assignTo += ';' + assignTo;
+          // assignTo = arrNew.join(';');
+          // this.task.assignTo += ';' + assignTo;
           this.getListUser(assignTo);
         }
       } else {
-        this.task.assignTo = assignTo;
+        // this.task.assignTo = assignTo;
         this.getListUser(assignTo);
       }
     }
@@ -824,7 +843,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.taskGroup = res
+          this.taskGroup = res;
           this.convertParameterByTaskGroup(res);
         }
       });
@@ -873,7 +892,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       listUser = listUser.replace(' ', '');
     }
     var arrUser = listUser.split(';');
-    this.listUser = this.listUser.concat(arrUser);
+   
     this.api
       .execSv<any>(
         'HR',
@@ -883,8 +902,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         JSON.stringify(listUser.split(';'))
       )
       .subscribe((res) => {
-        this.listUserDetail = this.listUserDetail.concat(res);
         if (res && res.length > 0) {
+          this.listUserDetail = this.listUserDetail.concat(res);
+
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
             var taskResource = new tmpTaskResource();
@@ -895,6 +915,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             taskResource.roleType = 'R';
             this.listTaskResources.push(taskResource);
           }
+          if(arrUser.length!= res.length){
+              arrUser = res.map(x=>x.userID) ;
+          } 
+          this.listUser = this.listUser.concat(arrUser);
+          this.task.assignTo = this.listUser.join(";");
         }
       });
   }
@@ -909,28 +934,40 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       return;
     }
     var userID = item.resourceID;
-    var listUser = [];
-    var listTaskResources = [];
-    var listUserDetail = [];
-    var totalUser = this.listUser.length;
-    for (var i = 0; i < totalUser; i++) {
-      if (this.listUser[i] != userID) {
-        listUser.push(this.listUser[i]);
-      }
-      if (this.listUserDetail[i].userID != userID) {
-        listUserDetail.push(this.listUserDetail[i]);
-      }
-      if (this.listTaskResources[i]?.resourceID != userID) {
-        listTaskResources.push(this.listTaskResources[i]);
-      }
-    }
-    this.listUser = listUser;
-    this.listUserDetail = listUserDetail;
-    this.listTaskResources = listTaskResources;
+
+    // var listUser = [];
+    // var listTaskResources = [];
+    // var listUserDetail = [];
+    // var totalUser = this.listUser.length;
+    // for (var i = 0; i < totalUser; i++) {
+    //   if (this.listUser[i] != userID) {
+    //     listUser.push(this.listUser[i]);
+    //   }
+    //   if (this.listUserDetail[i].userID != userID) {
+    //     listUserDetail.push(this.listUserDetail[i]);
+    //   }
+    //   if (this.listTaskResources[i]?.resourceID != userID) {
+    //     listTaskResources.push(this.listTaskResources[i]);
+    //   }
+    // }
+    // this.listUser = listUser;
+    // this.listUserDetail = listUserDetail;
+    // this.listTaskResources = listTaskResources;
+
+    var idxUser = this.listUser.findIndex((x) => x == userID);
+    if (idxUser != -1) this.listUser.splice(idxUser, 1);
+
+    var idxUserDt = this.listUserDetail.findIndex((x) => x.userID == userID);
+    if (idxUserDt != -1) this.listUserDetail.splice(idxUserDt, 1);
+
+    var idxUserRs = this.listTaskResources.findIndex(
+      (x) => x.resourceID == userID
+    );
+    if (idxUserRs != -1) this.listTaskResources.splice(idxUserRs, 1);
 
     var assignTo = '';
-    if (listUser.length > 0) {
-      listUser.forEach((idUser) => {
+    if (this.listUser.length > 0) {
+      this.listUser.forEach((idUser) => {
         assignTo += idUser + ';';
       });
       assignTo = assignTo.slice(0, -1);
@@ -948,14 +985,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var message = e?.data;
     var index = this.listTaskResources.findIndex((obj) => obj.resourceID == id);
     if (index != -1) {
-      this.listTaskResources.forEach((obj) => {
-        if (obj.resourceID == id) {
-          obj.memo = message;
-          this.changeDetectorRef.detectChanges();
-          return;
-        }
-      });
+      this.listTaskResources[index].memo = message;
+      // this.listTaskResources.forEach((obj) => {
+      //   if (obj.resourceID == id) {
+      //     obj.memo = message;
+      //   }
+      // });
     }
+    this.changeDetectorRef.detectChanges();
   }
   addFile(evt: any) {
     this.attachment.uploadFile();
@@ -980,21 +1017,21 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     console.log(e);
   }
 
-  searchName(e) {
-    var listUserDetailSearch = [];
-    var searchField = e;
-    if (searchField.trim() == '') {
-      this.listUserDetailSearch = this.listUserDetail;
-      return;
-    }
-    this.listUserDetail.forEach((res) => {
-      var name = res.userName;
-      if (name.toLowerCase().includes(searchField.toLowerCase())) {
-        listUserDetailSearch.push(res);
-      }
-    });
-    this.listUserDetailSearch = listUserDetailSearch;
-  }
+  // searchName(e) {
+  //   var listUserDetailSearch = [];
+  //   var searchField = e;
+  //   if (searchField.trim() == '') {
+  //     this.listUserDetailSearch = this.listUserDetail;
+  //     return;
+  //   }
+  //   this.listUserDetail.forEach((res) => {
+  //     var name = res.userName;
+  //     if (name.toLowerCase().includes(searchField.toLowerCase())) {
+  //       listUserDetailSearch.push(res);
+  //     }
+  //   });
+  //   this.listUserDetailSearch = listUserDetailSearch;
+  // }
 
   //#region popver select RolType
   showPopover(p, userID) {

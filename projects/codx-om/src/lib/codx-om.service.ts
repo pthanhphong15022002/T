@@ -358,34 +358,34 @@ export class CodxOmService {
       [recID, checkIn]
     );
   }
-  addOB(ob:any) {
+  addOB(ob:any,listShares:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR,
-      'SaveOMAsync',
-      [ob]
+      OMCONST.BUSINESS.OB,
+      'AddOBAsync',
+      [ob,listShares]
     );
   }
-  editOB(ob:any) {
+  editOB(ob:any,listShares:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR,
-      'UpdateOKRAsync',
-      [ob]
+      OMCONST.BUSINESS.OB,
+      'EditOBAsync',
+      [ob,listShares]
     );
   }
-  addKR(kr:any) {
+  deleteOB(kr:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.KR,
-      'AddKRAsync',
+      OMCONST.BUSINESS.OB,
+      'DeleteOBAsync',
       [kr]
     );
   }
-  copyKR(kr:any) {
+  addKR(kr:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
@@ -424,13 +424,13 @@ export class CodxOmService {
       [recID,distributeToType,listDistribute,isAdd]
     );
   }
-  editOKRWeight(recID:string, type:string, listOKRWeight:any) {
+  editOKRWeight(recID:string, type:string, child:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'EditOKRWeightAsync',
-      [recID,type,listOKRWeight]
+      [recID,type,child]
     );
   }
   //-------------------------Get Data OKR---------------------------------//
@@ -492,28 +492,7 @@ export class CodxOmService {
       'GetListAlignAssignAsync',
       [recID,refType]
     );
-  }
-  //Thêm một mục tiêu
-  addOKR(okr:any) {
-    return this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR,
-      'SaveOMAsync',
-      okr
-    );
-  }
-
-  //Chỉnh sửa mục tiêu
-  updateOKR(okr:any) {
-    return this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR,
-      'UpdateOKRAsync',
-      okr
-    );
-  }
+  }  
   //Lấy OB và tất cả KR con theo ID của OB
   getObjectAndKRChild(recID:string) {
     return this.api.execSv(
@@ -565,7 +544,16 @@ export class CodxOmService {
     );
   }
   //endregion
-
+  //Get param
+  getOMParameter(category: any) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleWithCategoryAsync',
+      ['OMParameters', category]
+    );
+  }
   //region get Data from HR
   getlistOrgUnit(orgID:any) {
     return this.api.execSv(

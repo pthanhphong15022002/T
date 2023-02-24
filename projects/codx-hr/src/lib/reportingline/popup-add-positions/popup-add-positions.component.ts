@@ -49,12 +49,16 @@ export class PopupAddPositionsComponent implements OnInit {
     this.dialogRef = dialog;
     this.functionID = dt.data.function;
     this.formModel = this.dialogRef.formModel;
-    this.isCorporation = dt.data.isCorporation; // check disable field DivisionID
+    // this.isCorporation = dt.data.isCorporation; // check disable field DivisionID
     this.user = this.auth.userValue;
 
   }
   ngOnInit(): void {
     this.getFucnName(this.functionID);
+    if(this.isAdd)
+      this.blocked = this.dialogRef.dataService.keyField ? true : false;
+    else
+      this.blocked = true;
   }
   // get function name
   getFucnName(funcID:string){
@@ -63,10 +67,10 @@ export class PopupAddPositionsComponent implements OnInit {
         if(func)
         {
           this.title = `${this.title} ${func.description}`;
-          this.cacheService
-          .gridViewSetup(func.formName,func.gridViewName).subscribe((gv: any) => {
-            console.log('form', gv);
-          });
+          // this.cacheService
+          // .gridViewSetup(func.formName,func.gridViewName).subscribe((gv: any) => {
+          //   console.log('form', gv);
+          // });
         }
       });
     }
@@ -79,6 +83,26 @@ export class PopupAddPositionsComponent implements OnInit {
         this.data[field] = e?.data;
       } else {
         this.data[field] = e[0];
+        // if(field == "positionID"){
+        //   let itemSelected = e.component?.itemsSelected[0];
+        //   if(itemSelected){
+        //     if(itemSelected.hasOwnProperty("DepartmentID"))
+        //     {
+        //       let departmentID = itemSelected["DepartmentID"];
+        //       this.data["departmentID"] = departmentID;
+        //     }
+        //     if(itemSelected.hasOwnProperty("DivisionID"))
+        //     {
+        //       let departmentID = itemSelected["DivisionID"];
+        //       this.data["divisionID"] = departmentID;
+        //     }
+        //     if(itemSelected.hasOwnProperty("CompanyID"))
+        //     {
+        //       let departmentID = itemSelected["CompanyID"];
+        //       this.data["companyID"] = departmentID;
+        //     }
+        //   }
+        // }
       }
     }
   }
@@ -92,12 +116,10 @@ export class PopupAddPositionsComponent implements OnInit {
       _method, 
       [this.data])
       .subscribe((res) => {
-        if(this.isAdd){
+        if(this.isAdd)
           this.dialogRef.dataService.add(res,0).subscribe();
-        }
-        else{
+        else
           this.dialogRef.dataService.update(res).subscribe();
-        }
         this.dialogRef.close(res);
     });
   }

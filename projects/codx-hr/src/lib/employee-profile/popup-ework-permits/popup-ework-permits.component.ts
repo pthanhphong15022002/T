@@ -21,21 +21,21 @@ import {
 export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   dialog: DialogRef;
-  lstWorkPermit: any;
-  data;
-  actionType;
+  // lstWorkPermit: any;
+  data: any;
+  actionType: string;
   formGroup: FormGroup;
   idField = 'RecID';
-  funcID;
-  employId;
+  funcID: string;
+  employId: string;
   isAfterRender = false;
-  headerText: '';
+  headerText: string = '';
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('listView') listView: CodxListviewComponent;
-  indexSelected: any;
+  // @ViewChild('listView') listView: CodxListviewComponent;
+  // indexSelected: any;
 
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private notify: NotificationsService,
     private cr: ChangeDetectorRef,
     private hrService: CodxHrService,
@@ -43,30 +43,21 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    // if(!this.formModel){
-    //   this.formModel = new FormModel();
-    //   this.formModel.formName = 'EWorkPermits'
-    //   this.formModel.entityName = 'HR_EWorkPermits'
-    //   this.formModel.gridViewName = 'grvEWorkPermits'
-    // }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.employId = data?.data?.employeeId;
-    this.lstWorkPermit = data?.data?.lstWorkPermit;
-    this.indexSelected =
-      data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.data = JSON.parse(
-        JSON.stringify(this.lstWorkPermit[this.indexSelected])
-      );
-      // console.log('dataselected ', this.data);
-
-      // this.formModel.currentData = this.data
-    }
-    // console.log('employeeId', this.employId);
-    // console.log('formModel', this.formModel);
+    this.formModel = dialog.formModel;
+    this.data = JSON.stringify(data?.data?.workPermitObj);
+    // this.lstWorkPermit = data?.data?.lstWorkPermit;
+    // this.indexSelected =
+    //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
+    // if (this.actionType === 'edit' || this.actionType === 'copy') {
+    //   this.data = JSON.parse(
+    //     JSON.stringify(this.lstWorkPermit[this.indexSelected])
+    //   );
+    // }
   }
 
   initForm() {
@@ -86,55 +77,70 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
     //   this.formGroup.patchValue(this.data)
     //   this.isAfterRender = true
     // })
+    this.hrService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((item) => {
+        if (item) {
+          this.formGroup = item;
+          if (this.actionType == 'add') {
+            this.hrService
+              .getDataDefault(
+                this.formModel.funcID,
+                this.formModel.entityName,
+                this.idField
+              )
+              .subscribe((res: any) => {
+                if (res) {
+                  this.data = res?.data;
 
-    if (this.actionType == 'add') {
-      this.hrService
-        .getDataDefault(
-          this.formModel.funcID,
-          this.formModel.entityName,
-          this.idField
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.data = res?.data;
-            this.data.employeeID = this.employId;
-            this.formModel.currentData = this.data;
-            this.formGroup.patchValue(this.data);
-            this.cr.detectChanges();
-            this.isAfterRender = true;
+                  this.data.employeeID = this.employId;
+                  this.data.fromDate = null;
+                  this.data.toDate = null;
+
+                  this.formModel.currentData = this.data;
+                  this.formGroup.patchValue(this.data);
+                  this.cr.detectChanges();
+                  this.isAfterRender = true;
+                }
+              });
+          } else {
+            if (this.actionType === 'edit' || this.actionType === 'copy') {
+              this.formGroup.patchValue(this.data);
+              this.formModel.currentData = this.data;
+              this.cr.detectChanges();
+              this.isAfterRender = true;
+            }
           }
-        });
-    } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
-        this.formGroup.patchValue(this.data);
-        this.formModel.currentData = this.data;
-        this.cr.detectChanges();
-        this.isAfterRender = true;
-      }
-    }
+        }
+        else{
+          this.notify.notifyCode('ABCDE');
+        }
+      });
   }
 
   onInit(): void {
-    this.hrService.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
-      }
-    });
+    if (!this.formModel)
+      this.hrService.getFormModel(this.funcID).then((formModel) => {
+        if (formModel) {
+          this.formModel = formModel;
+          this.hrService
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .then((fg) => {
+              if (fg) {
+                this.formGroup = fg;
+                this.initForm();
+              }
+            });
+        }
+      });
+    else this.initForm();
   }
 
   onSaveForm() {
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
 
     if (this.actionType == 'copy' || this.actionType === 'add') {
       delete this.data.recID;
@@ -145,14 +151,14 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
         if (p != null) {
           this.data.recID = p.recID;
           this.notify.notifyCode('SYS006');
-          this.lstWorkPermit.push(JSON.parse(JSON.stringify(this.data)));
+          // this.lstWorkPermit.push(JSON.parse(JSON.stringify(this.data)));
 
-          if (this.listView) {
-            (this.listView.dataService as CRUDService)
-              .add(this.data)
-              .subscribe();
-          }
-          // this.dialog.close(p);
+          // if (this.listView) {
+          //   (this.listView.dataService as CRUDService)
+          //     .add(this.data)
+          //     .subscribe();
+          // }
+          this.dialog && this.dialog.close(p);
         } else this.notify.notifyCode('SYS023');
       });
     } else {
@@ -161,32 +167,32 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            this.lstWorkPermit[this.indexSelected] = p;
-            if (this.listView) {
-              (this.listView.dataService as CRUDService)
-                .update(this.lstWorkPermit[this.indexSelected])
-                .subscribe();
-            }
-            // this.dialog.close(this.data)
+            // this.lstWorkPermit[this.indexSelected] = p;
+            // if (this.listView) {
+            //   (this.listView.dataService as CRUDService)
+            //     .update(this.lstWorkPermit[this.indexSelected])
+            //     .subscribe();
+            // }
+            this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS021');
         });
     }
   }
 
-  afterRenderListView(evt) {
-    this.listView = evt;
-    console.log(this.listView);
-  }
+  // afterRenderListView(evt) {
+  //   this.listView = evt;
+  //   console.log(this.listView);
+  // }
 
-  click(data) {
-    console.log('formdata', data);
-    this.data = data;
-    this.formModel.currentData = JSON.parse(JSON.stringify(this.data));
-    this.indexSelected = this.lstWorkPermit.findIndex(
-      (p) => p.recID == this.data.recID
-    );
-    this.actionType = 'edit';
-    this.formGroup?.patchValue(this.data);
-    this.cr.detectChanges();
-  }
+  // click(data) {
+  //   console.log('formdata', data);
+  //   this.data = data;
+  //   this.formModel.currentData = JSON.parse(JSON.stringify(this.data));
+  //   this.indexSelected = this.lstWorkPermit.findIndex(
+  //     (p) => p.recID == this.data.recID
+  //   );
+  //   this.actionType = 'edit';
+  //   this.formGroup?.patchValue(this.data);
+  //   this.cr.detectChanges();
+  // }
 }

@@ -148,8 +148,6 @@ export class AddEditComponent implements OnInit {
     this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
   }
 
-  valueChanged(e) {}
-
   mstChange(e) {
     if (e && e.data) {
       let mst = this.dicMST.has(e.data);

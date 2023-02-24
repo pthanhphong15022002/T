@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { ViewModel, ButtonModel, UIComponent, CallFuncService, ViewType, DialogRef, SidebarModel, RequestOption } from 'codx-core';
 import { PopAddCustomersComponent } from './pop-add-customers/pop-add-customers.component';
 
@@ -8,38 +8,56 @@ import { PopAddCustomersComponent } from './pop-add-customers/pop-add-customers.
   styleUrls: ['./customers.component.css']
 })
 export class CustomersComponent extends UIComponent {
+  //#region Contructor
   views: Array<ViewModel> = [];
   buttons: ButtonModel = { id: 'btnAdd' };
-  headerText :any;
+  headerText: any;
   columnsGrid = [];
   dialog: DialogRef;
+  moreFuncName: any;
+  funcName: any;
+  objecttype: string = '1';
+  gridViewSetup: any;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   constructor(
     private inject: Injector,
-    private dt: ChangeDetectorRef, 
-    private callfunc: CallFuncService
+    private dt: ChangeDetectorRef,
+    private callfunc: CallFuncService,
+    @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.dialog = dialog;
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS01');
+        if (m) this.moreFuncName = m.defaultName;
+      }
+    });
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {
-
   }
-  
   ngAfterViewInit() {
+    this.cache.functionList(this.view.funcID).subscribe((res) => {
+      if (res) this.funcName = res.defaultName;
+    });
     this.views = [
       {
         type: ViewType.grid,
         active: true,
         sameData: true,
         model: {
-          resources:this.columnsGrid,
           template2: this.templateMore,
-          frozenColumns: 1,
+          frozenColumns: 1
         },
       },
     ];
   }
+  //#endregion
+
+  //#region Function
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
@@ -53,13 +71,13 @@ export class CustomersComponent extends UIComponent {
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(data);
+        this.edit(e, data);
         break;
     }
-    
+
   }
   add() {
-    this.headerText = "Thêm khách hàng";
+    this.headerText = this.moreFuncName + ' ' + this.funcName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',
@@ -68,73 +86,74 @@ export class CustomersComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      option.Width = '850px';
-      this.dialog = this.callfunc.openSide(PopAddCustomersComponent, obj, option,this.view.funcID);
+      option.Width = '800px';
+      this.dialog = this.callfunc.openSide(PopAddCustomersComponent, obj, option, this.view.funcID);
       this.dialog.closed.subscribe((x) => {
         if (x.event == null)
-        this.view.dataService.clear();
+          this.view.dataService.clear();
       });
     });
   }
-  edit(data) {
+  edit(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       var obj = {
         formType: 'edit',
-        headerText: data.customerID,
+        headerText: e.text + ' ' + this.funcName
       };
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '850px';
+      option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopAddCustomersComponent, obj, option);
     });
   }
-  delete(data){
+  delete(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService.delete([data], true, (option: RequestOption) =>
-    this.beforeDelete(option,data)
-  ).subscribe((res:any) => {
-    if (res) {
-      this.api.exec(
-        'ERM.Business.BS',
-        'BankAccountsBusiness',
-        'DeleteAsync',
-        [data.customerID]
-      ).subscribe((res:any)=>{
-        if (res) {
-          this.api.exec(
-            'ERM.Business.BS',
-            'AddressBookBusiness',
-            'DeleteAsync',
-            [data.customerID]
-          ).subscribe((res:any)=>{
-            if (res) {
-              this.api.exec(
-                'ERM.Business.BS',
-                'ContactBookBusiness',
-                'DeleteAsync',
-                [data.customerID]
-              ).subscribe((res:any)=>{
-                
-              }); 
-            }
-          }); 
-        }
-      });   
-    }
-  });
+      this.beforeDelete(option, data)
+    ).subscribe((res: any) => {
+      if (res) {
+        this.api.exec(
+          'ERM.Business.BS',
+          'BankAccountsBusiness',
+          'DeleteAsync',
+          [this.objecttype, data.customerID]
+        ).subscribe((res: any) => {
+          if (res) {
+            this.api.exec(
+              'ERM.Business.BS',
+              'AddressBookBusiness',
+              'DeleteAsync',
+              [this.objecttype, data.customerID]
+            ).subscribe((res: any) => {
+              if (res) {
+                this.api.exec(
+                  'ERM.Business.BS',
+                  'ContactBookBusiness',
+                  'DeleteAsync',
+                  [this.objecttype, data.customerID]
+                ).subscribe((res: any) => {
+
+                });
+              }
+            });
+          }
+        });
+      }
+    });
   }
-  beforeDelete(opt: RequestOption,data) {
+  beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'CustomersBusiness';
     opt.assemblyName = 'SM';
     opt.service = 'SM';
-    opt.data = data;
+    opt.data = data.customerID;
     return true;
   }
+  //#endregion
 }

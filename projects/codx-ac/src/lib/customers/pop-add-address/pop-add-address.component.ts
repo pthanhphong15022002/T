@@ -11,6 +11,7 @@ import { PopAddContactComponent } from '../pop-add-contact/pop-add-contact.compo
   styleUrls: ['./pop-add-address.component.css']
 })
 export class PopAddAddressComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('form',{ static:true})  form: CodxFormComponent;
   dialog!: DialogRef;
   headerText:string;
@@ -21,9 +22,16 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   provinceID:any;
   districtID:any;
   postalCode:any;
+  objectype:any;
+  note:any;
+  isDefault:any;
+  type:any;
   gridViewSetup:any;
   address: Address;
+  objectAddress:Array<Address> = [];
   objectContactAddress:Array<Contact> = [];
+  objectContactAddressAfter:Array<Contact> = [];
+  objectContactAddressDelete:Array<Contact> = [];
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -38,12 +46,18 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
-    this.adressType = '';
+    this.type = dialogData.data?.type;
+    this.objectype = dialogData.data?.objectype;
+    this.objectAddress = dialogData.data?.dataAddress;
+    this.objectContactAddressAfter = dialogData.data?.dataContactAddress;  
+    this.adressType = null;
     this.adressName = '';
     this.countryID = '';
     this.provinceID = '';
     this.districtID = '';
     this.postalCode = '';
+    this.note = '';
+    this.isDefault = false;
     this.cache.gridViewSetup('AddressBook', 'grvAddressBook').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -57,12 +71,16 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
       this.provinceID = dialogData.data?.data.provinceID;
       this.districtID = dialogData.data?.data.districtID;
       this.postalCode = dialogData.data?.data.postalCode;
+      this.note = dialogData.data?.data.note;
+      this.isDefault = dialogData.data?.data.isDefault;
     }
     if (dialogData.data?.datacontactaddress != null) {
       this.objectContactAddress = dialogData.data?.datacontactaddress;
     }
   }
+//#endregion
 
+//#region Init
   onInit(): void {
   }
   ngAfterViewInit() {
@@ -76,30 +94,49 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
       this.address.recID = Guid.newGuid();
     }
   }
-  valueChange(e:any,type:any){
-    if (type == 'adressType') {
-      this.adressType = e.data;
+  //#endregion
+
+  //#region Function
+  valueChange(e:any){
+    switch(e.field){
+      case 'note':
+        this.note = e.data;
+      break;
+      case 'isDefault':
+        this.isDefault = e.data;
+      break;
     }
-    if (type == 'adressName') {
-      this.adressName = e.data;
-    }
-    if (type == 'countryID') {
-      this.countryID = e.data;
-    }
-    if (type == 'provinceID') {
-      this.provinceID = e.data;
-    }
-    if (type == 'districtID') {
-      this.districtID = e.data;
-    }
-    if (type == 'postalCode') {
-      this.postalCode = e.data;
-    }
+    this.address[e.field] = e.data;
+  }
+  valueChangeAdressType(e: any) {
+    this.adressType = e.data;
+    this.address[e.field] = e.data;
+  }
+  valueChangeAdressName(e: any) {
+    this.adressName = e.data;
+    this.address[e.field] = e.data;
+  }
+  valueChangeCountryID(e: any) {
+    this.countryID = e.data;
+    this.address[e.field] = e.data;
+  }
+  valueChangeProvinceID(e: any) {
+    this.provinceID = e.data;
+    this.address[e.field] = e.data;
+  }
+  valueChangeDistrictID(e: any) {
+    this.districtID = e.data;
+    this.address[e.field] = e.data;
+  }
+  valueChangePostalCode(e: any) {
+    this.postalCode = e.data;
     this.address[e.field] = e.data;
   }
   openPopupContact(){
     var obj = {
       headerText: 'Thêm người liên hệ',
+      datacontact: this.objectContactAddress,
+      recIdAddress: this.address.recID
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -134,6 +171,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     let index = this.objectContactAddress.findIndex(x => x.contactID == data.contactID);
     var ob = {
       headerText: 'Chỉnh sửa liên hệ',
+      type:'editContact',
       data:{...data}
     };
     let opt = new DialogModel();
@@ -165,20 +203,25 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     });
   }
   deleteobject(data:any,type:any){
-      let index = this.objectContactAddress.findIndex(x => x.reference == data.reference && x.contactID == data.contactID);
+      let index = this.objectContactAddress.findIndex(x => x.reference == data.reference && x.recID == data.recID);
       this.objectContactAddress.splice(index, 1);
-      this.api.exec(
-        'ERM.Business.BS',
-        'ContactBookBusiness',
-        'DeleteContactAddressAsync',
-        [data]
-      ).subscribe((res:any)=>{
-        if (res) {
-          this.notification
-          .notify("Xóa thành công");
-        }
-      }); 
+      this.objectContactAddressDelete.push(data);
   }
+  clearAddress(){
+    this.adressType = null;
+    this.adressName = '';
+    this.countryID = null;
+    this.provinceID = null;
+    this.districtID = null;
+    this.postalCode = null;
+    this.note = '';
+    this.isDefault = false;
+    this.address.recID = Guid.newGuid();
+    this.objectContactAddress = [];
+  }
+  //#endregion
+
+  //#region CRUD
   onSave(){
     if (this.adressType.trim() == '' || this.adressType == null) {
       this.notification.notifyCode(
@@ -230,9 +273,45 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     // }
     window.localStorage.setItem("dataaddress",JSON.stringify(this.address));
     window.localStorage.setItem("datacontactaddress",JSON.stringify(this.objectContactAddress));
+    window.localStorage.setItem("datacontactaddressdelete",JSON.stringify(this.objectContactAddressDelete));
+    this.notification.notifyCode(
+      'SYS006',
+      0,
+      ''
+    );
     this.dialog.close();
   } 
+  onSaveAdd(){
+    if (this.adressType.trim() == '' || this.adressType == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['AdressType'].headerText + '"'
+      );
+      return;
+    }
+    if (this.adressName.trim() == '' || this.adressName == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['AdressName'].headerText + '"'
+      );
+      return;
+    }
+    this.objectAddress.push({...this.address});
+    this.objectContactAddress.forEach((element) => {
+    this.objectContactAddressAfter.push({...element});
+    });
+    this.notification.notifyCode(
+      'SYS006',
+      0,
+      ''
+    );
+    this.clearAddress();
+  }
+  //#endregion
 }
+//#region Guid
 class Guid {
   static newGuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
@@ -245,3 +324,4 @@ class Guid {
     );
   }
 }
+//#endregion

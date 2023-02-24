@@ -13,6 +13,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 @Component({
   selector: 'lib-popup-eskills',
@@ -50,14 +51,15 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.lstSkills = data?.data?.lstESkill;
+    this.skillObj = data?.data.dataInput;
     this.indexSelected =
       data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
 
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.skillObj = JSON.parse(
-        JSON.stringify(this.lstSkills[this.indexSelected])
-      );
-    }
+    // if (this.actionType === 'edit' || this.actionType === 'copy') {
+    //   this.skillObj = JSON.parse(
+    //     JSON.stringify(this.lstSkills[this.indexSelected])
+    //   );
+    // }
   }
 
   initForm() {
@@ -107,27 +109,33 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
+    this.formGroup.patchValue({
+      trainFromDate: new Date(),
+      trainToDate: new Date(),
+    });
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
 
-    if (this.actionType === 'copy' || this.actionType === 'add') {
+    if (this.actionType === 'copy') {
       delete this.skillObj.recID;
     }
     this.skillObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.addESlkillInfo(this.skillObj).subscribe((p) => {
+        console.log('save eSkill', p);
         if (p != null) {
           this.skillObj.recID = p.recID;
+          this.skillObj = p[0];
+          this.lstSkills = p[1];
           this.notify.notifyCode('SYS006');
-          this.lstSkills.push(JSON.parse(JSON.stringify(this.skillObj)));
-          if (this.listView) {
-            (this.listView.dataService as CRUDService)
-              .add(this.skillObj)
-              .subscribe();
-          }
-          // this.dialog.close(p)
+          console.log('skil OBJjjjjjjjjj', this.skillObj);
+          console.log('lst e skilllllllllll', this.lstSkills);
+          this.dialog && this.dialog.close(
+            [this.skillObj, this.lstSkills]
+          );
+
         } else this.notify.notifyCode('SYS023');
       });
     } else {
@@ -137,11 +145,12 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
           if (p != null) {
             this.notify.notifyCode('SYS007');
             this.skillObj[this.indexSelected] = p;
-            if (this.listView) {
-              (this.listView.dataService as CRUDService)
-                .update(this.lstSkills[this.indexSelected])
-                .subscribe();
-            }
+            // if (this.listView) {
+            //   (this.listView.dataService as CRUDService)
+            //     .update(this.lstSkills[this.indexSelected])
+            //     .subscribe();
+            // }
+            this.dialog && this.dialog.close(this.skillObj);
             // this.dialog.close(this.data)
           } else this.notify.notifyCode('SYS021');
         });

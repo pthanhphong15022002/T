@@ -220,11 +220,13 @@ export class IncommingComponent
           formModel: this.view.formModel,
           service: this.view.service,
           dispatchType: this.funcList?.dataValue,
+          data: res
         },
         option
       );
       this.dialog.closed.subscribe((x) => {
         if (x.event) {
+          
           delete x.event._uuid;
           this.view.dataService.add(x.event, 0).subscribe((item) => {
             this.view.dataService.onAction.next({

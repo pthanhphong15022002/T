@@ -1,0 +1,150 @@
+<codx-form headerText="{{title}}" [body]="body" [footer]="footer" [dialog]="dialog">
+</codx-form>
+<ng-template #body>
+  <div class="row" style="height: 100% !important;">
+    <ng-container [ngTemplateOutlet]="parLeft">
+    </ng-container>
+    <ng-container [ngTemplateOutlet]="parRight"></ng-container>
+    <ng-container [ngTemplateOutlet]="parUser"></ng-container>
+
+  </div>
+</ng-template>
+<ng-template #footer>
+  <button type="button" [disabled]="isDisable" class="btn btn-primary" (click)="onSave()">
+    <codx-label [name]="'lblSave'" [default]="'Lưu'"></codx-label>
+  </button>
+</ng-template>
+
+<ng-template #parLeft>
+  <div class="col-lg-4 col-md-4 role-group px-3 pr-6 border-right" style="position: relative;">
+    <div class="user-role user-role-item">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center">
+          <div class="input-icon mb-4 w-200px">
+            <codx-searchbar (searchEvent)="searchName($event)"></codx-searchbar>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="lstParticipants.length > 0; then loadData else dataEmtry"></div>
+      <ng-template #loadData>
+        <div *ngFor="let item of lstParticipants; index as i">
+          <div [ngClass]="i == this.currentLeft.toString()?'user-nav-active':null"
+            class="d-flex align-items-center justify-content-between mb-1 user-nav-item p-2 pr-3"
+            (click)="valueChangeLeft(i, item)">
+            <div class="d-flex align-items-center" style="margin-right: 5px;">
+              <div class="symbol symbol-30 symbol-circle mr-3">
+                <codx-img [objectId]="item.objectID" objectType="AD_Users"></codx-img>
+              </div>
+              <div class="d-flex flex-column">
+                <div class="text-dark font-size-lg">{{item.objectName}}</div>
+              </div>
+            </div>
+            <label class="checkbox">
+              <codx-input type="radio" [checked]="i == this.currentLeft.toString()? true : false" field="checkLeft">
+              </codx-input><span></span>
+            </label>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #dataEmtry>
+        <div class="w-100 h-100 bg-body rounded-3 p-9 scroll-y">
+          <div class="container w-100 h-100">
+            <div class="list-empty card card-flush h-100">
+              <div class="d-flex flex-column flex-center justify-content-center">
+                <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-250px" />
+                <div class="fs-5 text-dark fw-bold mt-2 text-center">
+                  {{ "SYS011" | mssg | async }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</ng-template>
+<ng-template #parRight>
+  <div class="col-lg-4 col-md-4 role-group px-3 pr-6 border-right">
+    <div class="user-role user-role-item">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center">
+          <div class="input-icon mb-4 w-200px">
+            <codx-searchbar (searchEvent)="searchName($event)"></codx-searchbar>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!isLoading">
+        <div *ngIf="lstOrg.length > 0; then loadData else dataEmtry"></div>
+        <ng-template #loadData>
+          <div *ngFor="let item of lstOrg; index as i">
+            <div [ngClass]="i == this.currentRight.toString()?'user-nav-active':null"
+              class="d-flex align-items-center justify-content-between mb-1 user-nav-item p-2 pr-3"
+              (click)="valueChangeRight(i, item)">
+              <div class="d-flex align-items-center" style="margin-right: 5px;">
+                <div class="symbol symbol-30 symbol-circle mr-3">
+                  <codx-img [objectId]="item.userID" objectType="AD_Users"></codx-img>
+                </div>
+                <div class="d-flex flex-column">
+                  <div class="text-dark font-size-lg">{{item.userName}}</div>
+                </div>
+              </div>
+              <label class="checkbox">
+                <codx-input type="radio" [checked]="i == this.currentRight.toString()? true : false" field="checkLeft">
+                </codx-input><span></span>
+              </label>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #dataEmtry>
+          <div class="w-100 h-100 bg-body rounded-3 p-9 scroll-y">
+            <div class="container w-100 h-100">
+              <div class="list-empty card card-flush h-100">
+                <div class="d-flex flex-column flex-center justify-content-center">
+                  <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-250px" />
+                  <div class="fs-5 text-dark fw-bold mt-2 text-center">
+                    {{ "SYS011" | mssg | async }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+      <div *ngIf="isLoading" class="loader"></div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #parUser>
+  <div class="col-lg-4 col-md-4 col-sm-12 pl-6">
+    <div *ngIf="!isLoading && lstOrg.length > 0">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="my-3 font-size-lg text-dark font-weight-bold">Đã chọn</div>
+      </div>
+      <div class="d-flex align-items-center justify-content-between user-nav-item mb-1 p-2">
+        <div class="d-flex align-items-center">
+          <div class="symbol symbol-30 symbol-circle mr-3">
+            <codx-img [objectId]="data?.id" objectType="AD_Users"></codx-img>
+          </div>
+          <div class="d-flex flex-column">
+            <div class="text-dark font-size-lg">{{data.name}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading || lstOrg.length == 0">
+      <div class="w-100 h-100 bg-body rounded-3 p-9 scroll-y">
+        <div class="container w-100 h-100">
+          <div class="list-empty card card-flush h-100">
+            <div class="d-flex flex-column flex-center justify-content-center">
+              <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-250px" />
+              <div class="fs-5 text-dark fw-bold mt-2 text-center">
+                {{ "SYS011" | mssg | async }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

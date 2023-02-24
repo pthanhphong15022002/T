@@ -14,7 +14,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { OkrPlansComponent } from './okr/okr-plans/okr-plans.component';
-import { OkrToolbarComponent } from './okr/okr-toolbar/okr-toolbar.component';
 import { PopupAddKRComponent } from './popup/popup-add-kr/popup-add-kr.component';
 import { OkrTargetsComponent } from './okr/okr-targets/okr-targets.component';
 import { OkrAddComponent } from './okr/okr-add/okr-add.component';
@@ -28,9 +27,9 @@ import { PopupShowOBComponent } from './popup/popup-show-ob/popup-show-ob.compon
 import { PopupDistributeOKRComponent } from './popup/popup-distribute-okr/popup-distribute-okr.component';
 import { PopupAssignmentOKRComponent } from './popup/popup-assignment-okr/popup-assignment-okr.component';
 import { OkrPlanShareComponent } from './okr/okr-plans/okr-plans-share/okr-plans-share.component';
-import { PopupAssignmentOKRCComponent } from './popup/popup-assigment-okr-c/popup-assignment-okr-c.component';
 import { OkrTreesComponent } from './okr/okr-trees/okr-trees.component';
 import { PopupAddOBComponent } from './popup/popup-add-ob/popup-add-ob.component';
+import { PopupAddOKRPlanComponent } from './popup/popup-add-okr-plan/popup-add-okr-plan.component';
 
 const routes: Routes = [
   {
@@ -75,14 +74,12 @@ const routes: Routes = [
     ReportsComponent,
     ReviewsComponent,
     OkrPlansComponent,
-    OkrToolbarComponent,
     PopupAddKRComponent,
     PopupAddOBComponent,
     PopupShowKRComponent,
     PopupShowOBComponent,
     PopupDistributeOKRComponent,
     PopupAssignmentOKRComponent,
-    PopupAssignmentOKRCComponent,
     OkrTargetsComponent,
     OkrAddComponent,
     OkrReviewsComponent,
@@ -92,7 +89,7 @@ const routes: Routes = [
     PopupOKRWeightComponent,
     OkrPlanShareComponent,
     OkrTreesComponent,
-
+    PopupAddOKRPlanComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

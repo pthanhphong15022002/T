@@ -11,6 +11,7 @@ import {
 } from '@syncfusion/ej2-angular-inputs';
 import {
   CacheService,
+  CodxFormComponent,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -24,6 +25,7 @@ import { DP_Steps_Fields } from '../../../models/models';
   styleUrls: ['./popup-add-custom-field.component.css'],
 })
 export class PopupAddCustomFieldComponent implements OnInit {
+  @ViewChild('form') form : CodxFormComponent ;
   title = 'Thêm trường tùy chỉnh';
   dialog: DialogRef;
   field: DP_Steps_Fields;
@@ -80,29 +82,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
   valueChangeCbx(e) {}
 
   valueChange(e) {
-    // if (e?.field == 'dataType') {
-    //   if(this.field.dataType != e.data) this.field.dataFormat =null ;
-    //   switch (e?.data) {
-    //     case 'N':
-    //       this.vllDynamic = 'DP0271';
-    //       break;
-    //     case 'L':
-    //       this.vllDynamic = 'DP0272';
-    //       break;
-    //     case 'T':
-    //       this.vllDynamic = 'DP0273';
-    //       break;
-    //     case 'D':
-    //       this.vllDynamic = 'DP0274';
-    //       break;
-    //     case 'P':
-    //       this.vllDynamic = 'DP0275';
-    //       break;
-    //   }
-    // }
     if (e && e.data && e.field) this.field[e.field] = e.data;
+    if (e.field == 'title') this.removeAccents(e.data);
     this.changdef.detectChanges();
   }
+
   changeRequired(e) {
     this.field.isRequired = e.data;
   }
@@ -149,7 +133,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
-    if (!this.field.dataFormat) {
+    if (
+      !this.field.dataFormat &&
+      this.field.dataType != 'R' &&
+      this.field.dataType != 'A'
+    ) {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -168,5 +156,15 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
 
     this.dialog.close(this.field);
+  }
+
+  removeAccents(str) {
+    var format = str.trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/đ/g, 'd')
+      .replace(/Đ/g, 'D');
+    format = format.replaceAll(' ', '_');
+    this.field.fieldName = format;
   }
 }

@@ -189,7 +189,7 @@ ejs-listview .e-ul>li {
     position: absolute;
     background-color: #fff;
     right: 20px;
-    bottom: -14px;
+    bottom: -18px;
     padding: 6px 10px;
     border-radius: 18px;
     box-shadow: 0px 0px 6px 0px rgb(76 87 125 / 12%);
@@ -331,6 +331,11 @@ ejs-listview .e-ul>li {
     border-radius: 0px 0px 4px 4px;
     background: rgb(240, 248, 255);
 }
-.WP_News-images > codx-img > div > img{
+
+.WP_News-images>codx-img>div>img {
     width: 100% !important;
+}
+
+.wp-share-contents {
+    margin-top: 8px;
 }

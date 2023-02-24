@@ -1,3 +1,5 @@
+import { environment } from './../environments/environment.prod';
+import { LayoutTenantComponent } from './modules/auth/tenants/layout/layout.component';
 import { DynamicFormComponent } from './../../projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -7,8 +9,8 @@ import { SosComponent } from '@pages/sos/sos.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
-import { ExternalSigningComponent } from 'projects/codx-es/src/lib/external-signing/external-signing.component';
 import { TenantsComponent } from '@modules/auth/tenants/tenants.component';
+import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 
 var childRoutes = [
   {
@@ -53,7 +55,7 @@ var childRoutes = [
       ),
   },
   {
-    path: 'news',
+    path: 'wp2',
     canActivate: [AuthGuard],
     data: { noReuse: true },
     loadChildren: () =>
@@ -215,17 +217,26 @@ var childRoutes = [
     ],
   },
   {
+    path: 'viewfile',
+    component: ViewFileDialogComponent,
+  },
+  {
     path: 'sos',
     component: SosComponent,
   },
-  {
-    path: 'signature/:id',
-    component: ExternalSigningComponent,
-  },
+
   {
     path: '',
     redirectTo: 'wp',
     pathMatch: 'full',
+  },
+  {
+    path: 'tn',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-tn/src/lib/codx-tn.module').then(
+        (m) => m.CodxTnModule
+      ),
   },
   { path: '**', redirectTo: 'error/404' },
 ];
@@ -233,8 +244,10 @@ var childRoutes = [
 export const routes: Routes = [
   {
     path: 'tenants',
-    component: TenantsComponent,
+    component: LayoutTenantComponent,
+    children: [{ path: '', component: TenantsComponent }],
   },
+
   {
     path: 'auth',
     loadChildren: () =>
@@ -244,8 +257,13 @@ export const routes: Routes = [
     path: ':tenant',
     children: childRoutes,
   },
+  {
+    path: '',
+    redirectTo: 'auth',
+    pathMatch: 'full',
+  },
 ];
-export const routes1: Routes = childRoutes;
+export const routes1: Routes = environment.saas == 1 ? routes : childRoutes;
 
 @NgModule({
   imports: [

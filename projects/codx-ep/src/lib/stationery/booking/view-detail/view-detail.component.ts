@@ -29,6 +29,8 @@ export class BookingStationeryViewDetailComponent
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();
   @Output('release') release: EventEmitter<any> = new EventEmitter();
+  @Output('allocate') allocate: EventEmitter<any> = new EventEmitter();
+  @Output('cancel') cancel: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
     new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
@@ -110,6 +112,12 @@ export class BookingStationeryViewDetailComponent
       case 'EP8T1101': //Copy.
         this.lviewRelease(data);
         break;
+      case 'EPT40303': //Cấp phát
+        this.lviewAllocate(data);
+        break;
+        case 'EP8T1102': //Hủy gửi duyệt
+        this.lviewCancel(data);
+        break;
     }
   }
 
@@ -139,33 +147,110 @@ export class BookingStationeryViewDetailComponent
     }
   }
 
+  lviewAllocate(data?) {
+    if (data) {
+      this.allocate.emit(data);
+    }
+  }
+  lviewCancel(data?) {
+    if (data) {      
+      this.cancel.emit(data);
+    }
+  }
   changeDataMF(event, data: any) {
     if (event != null && data != null && this.funcID == 'EP8T11') {
-      event.forEach((func) => {
-        if (data.approveStatus == '1') {
-          event.forEach((func) => {
-            if (
-              func.functionID == 'SYS02' /*MF sửa*/ ||
-              func.functionID == 'SYS03' /*MF xóa*/ ||
-              func.functionID == 'SYS04' /*MF chép*/ ||
-              func.functionID == 'EP8T1101' /*MF gửi duyệt*/
-            ) {
-              func.disabled = false;
-            }
-          });
-        } else {
-          event.forEach((func) => {
-            if (
-              func.functionID == 'SYS02' /*MF sửa*/ ||
-              func.functionID == 'SYS03' /*MF xóa*/ ||
-              func.functionID == 'SYS04' /*MF chép*/ ||
-              func.functionID == 'EP8T1101' /*MF gửi duyệt*/
-            ) {
-              func.disabled = true;
-            }
-          });
-        }
-      });
+      if (data.approveStatus == '1') {
+        event.forEach((func) => {
+          //Mới tạo
+          if (
+            // Hiện: sửa - xóa - chép - gửi duyệt -
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'SYS04' /*MF chép*/ ||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/
+          ) {
+            func.disabled = false;
+          }
+          if (
+            //Ẩn: hủy 
+            func.functionID == 'EP8T1102' /*MF hủy*/ 
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else if (data.approveStatus == '5') {
+        event.forEach((func) => {
+          //Đã duyệt
+          if (
+            // Hiện: Chép 
+            func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (//Ẩn: sửa - xóa - duyệt - hủy 
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/||
+            func.functionID == 'EP8T1102' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if ( //Hiện: chép - hủy
+          func.functionID == 'SYS04' /*MF chép*/||
+          func.functionID == 'EP8T1102' /*MF hủy*/
+          ) {
+            func.disabled = false;
+          }
+          if (//Ẩn: sửa - xóa - gửi duyệt
+            
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
+      else if (data.approveStatus == '4') {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if ( //Hiện: chép 
+          func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (//Ẩn: sửa - xóa - gửi duyệt - hủy          
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/||
+            func.functionID == 'EP8T1102' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
+      else {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if ( //Hiện: chép 
+          func.functionID == 'EP8T1101' /*MF gửi duyệt*/||      
+          func.functionID == 'SYS02' /*MF sửa*/ ||
+          func.functionID == 'SYS03' /*MF xóa*/ ||
+          func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (//Ẩn: sửa - xóa - gửi duyệt - hủy    
+            func.functionID == 'EP8T1102' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
     }
     if (event != null && data != null && this.funcID == 'EP8T12') {
       event.forEach((func) => {

@@ -21,6 +21,7 @@ import {
   NotificationsService,
   RequestOption,
   UIComponent,
+  Util,
 } from 'codx-core';
 import { CodxOmService } from '../../codx-om.service';
 import { Targets } from '../../model/okr.model';
@@ -66,33 +67,38 @@ export class PopupAddOBComponent extends UIComponent {
   funcType:any;
   isSubKR: boolean;
   ob:any;
-  okrPlan: any;//Chờ c thương thiết lập vll
+  oldOB:any;
+  okrPlan: any;
+  listShares=[];
+  //Chờ c thương thiết lập vll
   //Giả lập vll
   //OM003
-  vll={
-    datas : [
-      {
-        value: "9",
-        text: "Tất cả",
-        icon: "All.svg"
-      },
-      {
-        value: "4;P",
-        text: "Phòng & Quản lý của tôi",
-        icon: "MyDeptManagement.svg"
-      },
-      {
-        value: "4",
-        text: "Phòng của tôi",
-        icon: "MyDept.svg"
-      },
-      {
-        value: "P",
-        text: "Quản lý của tôi",
-        icon: "MyManagement.svg"
-      }
-    ]
-  }
+  // vll={
+  //   datas : [
+  //     {
+  //       value: "9",
+  //       text: "Tất cả",
+  //       icon: "All.svg"
+  //     },
+  //     {
+  //       value: "4;P",
+  //       text: "Phòng & Quản lý của tôi",
+  //       icon: "MyDeptManagement.svg"
+  //     },
+  //     {
+  //       value: "4",
+  //       text: "Phòng của tôi",
+  //       icon: "MyDept.svg"
+  //     },
+  //     {
+  //       value: "P",
+  //       text: "Quản lý của tôi",
+  //       icon: "MyManagement.svg"
+  //     }
+  //   ]
+  // }
+  okrRecID: any;
+  shareModel: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -105,7 +111,7 @@ export class PopupAddOBComponent extends UIComponent {
     this.funcID= dialogData.data[0]
     this.funcType = dialogData?.data[1];  
     this.headerText = dialogData?.data[2];
-    this.ob = dialogData.data[3];
+    this.oldOB = dialogData.data[3];
     this.okrPlan = dialogData.data[4];
     this.dialogRef= dialogRef;
     this.formModel= dialogRef.formModel;
@@ -115,30 +121,59 @@ export class PopupAddOBComponent extends UIComponent {
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {}
 
+  
   onInit(): void {
     
-    this.initForm();
-  }
-
-  initForm() {
-    this.codxOmService
-      .getFormGroup(this.formModel?.formName, this.formModel?.gridViewName)
-      .then((item) => {
-        this.fGroupAddOB = item;
+    if (this.funcType == OMCONST.MFUNCID.Edit) {
+      this.okrRecID=this.oldOB.recID;
+    }
+    else{
+      this.okrRecID=null;
+    }
+    this.codxOmService.getOKRByID(this.okrRecID).subscribe((krModel:any) => {
+      if (krModel) {
+        if(this.funcType == OMCONST.MFUNCID.Add || this.funcType == OMCONST.MFUNCID.Copy){
+          krModel.periodID= this.okrPlan.periodID;          
+          krModel.year= this.okrPlan.year;
+          krModel.interval= this.okrPlan.interval;
+          krModel.transID = this.okrPlan.recID;
+        }
         if (this.funcType == OMCONST.MFUNCID.Add) {
           
-          this.ob = this.fGroupAddOB.value;
-        }
-        if (this.funcType == OMCONST.MFUNCID.Copy) {
-          let tmpKR = this.fGroupAddOB.value;
-          this.allowCopyField.forEach(field=>{
-            tmpKR[field]=this.ob[field];
-          });
-          this.ob=null;
-          this.ob=tmpKR;
+          this.ob = krModel;          
+          if (this.ob.shares && this.ob.shares.length > 0) {
+            this.shareModel = this.ob.shares[0];
+            this.ob.shares=[];
+            this.createShares(this.shareModel)
+          }
+        } else if (this.funcType == OMCONST.MFUNCID.Edit) {
+          this.ob = krModel;
+        } else {
+          this.cache
+            .gridViewSetup(
+              this.formModel?.formName,
+              this.formModel?.gridViewName
+            )
+            .subscribe((gv: any) => {
+              if (gv) {
+                let gridView = Util.camelizekeyObj(gv);
+                for (const key in gridView) {
+                  const element = gridView[key];
+                  if (element?.allowCopy) {
+                    this.allowCopyField.push(key);
+                  }
+                }
+                debugger
+                for (const fieldName of this.allowCopyField) {
+                  krModel[fieldName] = this.oldOB[fieldName];
+                }                
+                this.ob = krModel;
+              }
+            });
         }
         this.isAfterRender = true;
-      });
+      }
+    });
   }
 
   //-----------------------End-------------------------------//
@@ -173,58 +208,48 @@ export class PopupAddOBComponent extends UIComponent {
   }
 
   onSaveForm() {
-    //xóa khi đã lấy được model chuẩn từ setting 
-    if(this.funcType==OMCONST.MFUNCID.Add){
-
-    this.ob.status='1';
-    this.ob.approveStatus='1';
-    this.ob.approveControl='1';
-    this.ob.okrType=OMCONST.VLL.OKRType.Obj;
-    this.ob.recID= this.okrPlan.recID;
-    this.ob.transID= this.okrPlan.recID;
-    this.ob.parentID= this.okrPlan.recID;
-    this.ob.year=this.okrPlan.year;
-    this.ob.interval=this.okrPlan.interval;    
-    this.ob.periodID=this.okrPlan.periodID;
-    this.OKRLevel();
+    if (
+      this.funcType == OMCONST.MFUNCID.Add ||
+      this.funcType == OMCONST.MFUNCID.Copy
+    ) {
+      this.ob.okrType = OMCONST.VLL.OKRType.Obj;        
+        this.OKRLevel();
     }
+    else{
+      this.ob.edited=true;
+    }
+    
     //---------------------------------------
     this.fGroupAddOB=this.form?.formGroup;
     this.fGroupAddOB.patchValue(this.ob);
     
-    if (this.funcType == OMCONST.MFUNCID.Add) {
-      this.methodAdd(this.ob);
+    if (this.funcType == OMCONST.MFUNCID.Add || this.funcType == OMCONST.MFUNCID.Copy) {
+      this.methodAdd(this.ob,this.listShares);
     } else if(this.funcType == OMCONST.MFUNCID.Edit) {
-      this.methodEdit(this.ob);
-    } else if(this.funcType == OMCONST.MFUNCID.Copy) {
-      this.methodCopy(this.ob);
+      this.methodEdit(this.ob,this.listShares);
     }
   }
-  methodAdd(ob:any) {
-    this.codxOmService.addOB(this.ob).subscribe((res: any) => {
+  methodAdd(ob:any,listShares:any) {
+    this.codxOmService.addOB(ob,listShares).subscribe((res: any) => {
       if (res) {
+        res.write = true;
+        res.delete = true;
         this.afterSave(res);
       }
     });
   }
 
-  methodCopy(ob:any) {
-    this.codxOmService.copyKR(this.ob).subscribe((res: any) => {
+  methodEdit(ob:any,listShares:any) {
+    this.codxOmService.editOB(ob,listShares).subscribe((res: any) => {
       if (res) {
-        this.afterSave(res);
-      }
-    });
-  }
-
-  methodEdit(ob:any) {
-    this.codxOmService.editOB(this.ob).subscribe((res: any) => {
-      if (res) {
+        res.write = true;
+        res.delete = true;
         this.afterSave(res);
       }
     });
   }
   afterSave(ob:any) {
-    if (this.funcType == OMCONST.MFUNCID.Add) {
+    if (this.funcType == OMCONST.MFUNCID.Add || this.funcType == OMCONST.MFUNCID.Copy) {
       this.notificationsService.notifyCode('SYS006');
     } else {
       this.notificationsService.notifyCode('SYS007');
@@ -239,6 +264,25 @@ export class PopupAddOBComponent extends UIComponent {
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Func-----------------------//
+  createShares(shareModel){
+    if(shareModel!=null){
+      let tmpShare = {...shareModel};
+      tmpShare.objectType='U';
+      tmpShare.permission='1'
+      tmpShare.read=1;
+      tmpShare.view=1;
+      tmpShare.write=1;
+      tmpShare.delete=1;
+      tmpShare.download=1;
+      tmpShare.upload=1;
+      tmpShare.share=1;
+      tmpShare.autoCreated=1;
+      tmpShare.objectID=this.authService.userValue.userID;
+      this.listShares.push(tmpShare);      
+      tmpShare.objectID=this.okrPlan?.owner;
+      this.listShares.push(tmpShare);
+    }
+  }
   //Thiết lập OKRLevel theo funcID
   OKRLevel() {
     switch (this.funcID) {
@@ -256,16 +300,7 @@ export class PopupAddOBComponent extends UIComponent {
         break;
     }
     this.detectorRef.detectChanges();
-  }
-  formatInterval(val:any)
-  {
-    if(val) return val.toLowerCase();
-    return ""
-  }
-  changeCalendar(e:any)
-  {
-    this.ob.periodID = e?.text;
-  }
+  }    
   //-----------------------End-------------------------------//
 
   //-----------------------Popup-----------------------------//

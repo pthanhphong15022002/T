@@ -1,0 +1,14 @@
+.process-views-detail .toolbar,
+.process-views-detail .container-toolbar .container-fluid {
+    padding: 0;
+}
+
+.process-views-detail .codx-detail-main {
+    bottom: 0 !important;
+}
+
+.card-job codx-attachment codx-thumbnail .d-flex.mb-2 {
+    float: left;
+    width: auto;
+    margin-right: 20px;
+}

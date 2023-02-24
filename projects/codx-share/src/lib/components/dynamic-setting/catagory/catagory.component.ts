@@ -191,6 +191,7 @@ export class CatagoryComponent implements OnInit {
               .subscribe((res: any) => {
                 if (res) {
                   data['autoNoCode'] = res.autoNumber;
+                  data['functionID'] = res.functionID;
                   width = (screen.width * 40) / 100;
                   height = 550;
                   this.callfc.openForm(
@@ -540,7 +541,7 @@ export class CatagoryComponent implements OnInit {
         if (!value === schedule[field]) return;
         schedule[field] = !value;
         this.api
-          .execAction('AD_ScheduledTasks', [schedule], 'UpdateAsync')
+          .execAction('BG_ScheduleTasks', [schedule], 'UpdateAsync')
           .subscribe((res) => {
             if (res) {
             }

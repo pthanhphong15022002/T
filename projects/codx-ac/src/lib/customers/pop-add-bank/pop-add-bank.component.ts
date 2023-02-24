@@ -9,16 +9,20 @@ import { BankAccount } from '../../models/BankAccount.model';
   styleUrls: ['./pop-add-bank.component.css']
 })
 export class PopAddBankComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('form') public form: CodxFormComponent;
   dialog!: DialogRef;
   headerText:string;
   formModel: FormModel;
   bankaccount: BankAccount;
+  objectBankaccount: Array<BankAccount> = [];
   gridViewSetup:any;
   bankAcctID:any;
   bankID:any;
-  formType:any;
   owner:any;
+  description:any;
+  isDefault:any;
+  type:any;
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -33,10 +37,13 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
-    this.formType = dialogData.data?.formType;
+    this.type = dialogData.data?.type;
+    this.objectBankaccount = dialogData.data?.dataBank;
     this.bankAcctID ='';
-    this.bankID = '';
+    this.bankID = null;
     this.owner = '';
+    this.description = '';
+    this.isDefault = false;
     this.cache.gridViewSetup('BankAccounts', 'grvBankAccounts').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -47,11 +54,15 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
       this.bankAcctID =  dialogData.data?.data.bankAcctID;
       this.bankID = dialogData.data?.data.bankID;
       this.owner = dialogData.data?.data.owner;
-      console.log(this.bankaccount);
+      this.description = dialogData.data?.data.description;
+      this.isDefault = dialogData.data?.data.isDefault;
     }
   }
+//#endregion
 
-  onInit(): void {
+  //#region Init
+onInit(): void {
+  
   }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
@@ -60,19 +71,44 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
       this.bankaccount.objectType= "1";
     } 
   }
-  valueChange(e:any,type:any){
-    if (type == 'bankAcctID') {
-      this.bankAcctID = e.data;
-      this.bankaccount.bankAcctNo = e.data;
+  //#endregion
+  
+  //#region Function
+  valueChange(e:any){
+    switch(e.field){
+      case 'description':
+        this.description = e.data;
+      break;
+      case 'isDefault':
+        this.isDefault = e.data;
+      break;
     }
-    if (type == 'bankID') {
-      this.bankID = e.data;
-    }
-    if (type == 'owner') {
-      this.owner = e.data;
-    }
+    this.bankaccount[e.field] = e.data; 
+  }
+  valueChangeBankAcctID(e: any) {
+    this.bankAcctID = e.data;
+    this.bankaccount.bankAcctNo = e.data;
     this.bankaccount[e.field] = e.data;   
   }
+  valueChangeBankID(e: any) {
+    this.bankID = e.data;
+    this.bankaccount[e.field] = e.data;   
+  }
+  valueChangeOwner(e: any) {
+    this.owner = e.data;
+    this.bankaccount[e.field] = e.data;   
+  }
+  clearBankAccount(){
+    this.bankAcctID = '';
+    this.bankID = null;
+    this.owner = '';
+    this.description = '';
+    this.isDefault = false;
+    this.bankaccount.bankAcctNo = '';
+  }
+  //#endregion
+
+  //#region CRUD
   onSave(){
     if (this.bankAcctID.trim() == '' || this.bankAcctID == null) {
       this.notification.notifyCode(
@@ -98,7 +134,46 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
       );
       return;
     }
-      window.localStorage.setItem("databankaccount",JSON.stringify(this.bankaccount));
+    this.notification.notifyCode(
+      'SYS006',
+      0,
+      ''
+    );
+    window.localStorage.setItem("databankaccount",JSON.stringify(this.bankaccount));
     this.dialog.close();
   }
+  onSaveAdd(){
+    if (this.bankAcctID.trim() == '' || this.bankAcctID == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['BankAcctID'].headerText + '"'
+      );
+      return;
+    }
+    // if (this.bankID.trim() == '' || this.bankID == null) {
+    //   this.notification.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.gridViewSetup['BankID'].headerText + '"'
+    //   );
+    //   return;
+    // }
+    if (this.owner.trim() == '' || this.owner == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Owner'].headerText + '"'
+      );
+      return;
+    }
+    this.notification.notifyCode(
+      'SYS006',
+      0,
+      ''
+    );
+    this.objectBankaccount.push({...this.bankaccount});
+    this.clearBankAccount();
+  }
+  //#endregion
 }

@@ -52,15 +52,16 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.lstCertificates = data?.data?.lstCertificates;
+    this.certificateObj = data.data.dataInput; // <<<<<<
     this.indexSelected =
       data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
 
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.certificateObj = JSON.parse(
-        JSON.stringify(this.lstCertificates[this.indexSelected])
-      );
-      // this.formModel.currentData = this.certificateObj
-    }
+    // if (this.actionType === 'edit' || this.actionType === 'copy') {
+    //   this.certificateObj = JSON.parse(
+    //     JSON.stringify(this.lstCertificates[this.indexSelected])
+    //   );
+    //   // this.formModel.currentData = this.certificateObj
+    // }
     // console.log('employid', this.employId)
     // console.log('formmdel', this.formModel);
   }
@@ -132,59 +133,87 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
-
-    // if(this.certificateObj.trainFrom > this.certificateObj.trainTo){
-    //   this.hrService.notifyInvalidFromTo('TrainFrom','TrainTo', this.formModel)
-    //   return;
-    // }
-    if (this.certificateObj.effectedDate || this.certificateObj.expiredDate) {
-      if (this.certificateObj.effectedDate > this.certificateObj.expiredDate) {
-        this.hrService.notifyInvalidFromTo(
-          'EffectedDate',
-          'ExpiredDate',
-          this.formModel
-        );
-        return;
-      }
-    }
-
-    if (this.actionType === 'copy' || this.actionType === 'add') {
+    if(this.actionType === 'add' ||  this.actionType === 'copy'){
       delete this.certificateObj.recID;
     }
-    this.certificateObj.employeeID = this.employId;
-    if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrService.AddECertificateInfo(this.certificateObj).subscribe((p) => {
-        if (p != null) {
-          this.certificateObj.recID = p.recID;
-          this.notify.notifyCode('SYS006');
-          this.lstCertificates.push(
-            JSON.parse(JSON.stringify(this.certificateObj))
-          );
-          if (this.listView) {
-            (this.listView.dataService as CRUDService)
-              .add(this.certificateObj)
-              .subscribe();
-          }
-          // this.dialog.close(p)
-        } else this.notify.notifyCode('SYS023');
-      });
-    } else {
-      this.hrService
-        .UpdateEmployeeCertificateInfo(this.formModel.currentData)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS007');
-            this.lstCertificates[this.indexSelected] = p;
-            if (this.listView) {
-              (this.listView.dataService as CRUDService)
-                .update(this.lstCertificates[this.indexSelected])
-                .subscribe();
-            }
-            // this.dialog.close(this.data)
-          } else this.notify.notifyCode('SYS021');
+      this.certificateObj.employeeID = this.employId;
+      if(this.actionType === 'add' ||  this.actionType === 'copy'){
+        this.hrService.AddECertificateInfo(this.certificateObj).subscribe((p) => {
+          if(p != null){
+            this.certificateObj = p;
+            this.notify.notifyCode('SYS006');
+            this.dialog && this.dialog.close(this.certificateObj);
+          } else this.notify.notifyCode('SYS023');
         });
-    }
+      }else {
+        this.hrService.UpdateEmployeeCertificateInfo(this.certificateObj).subscribe((p) => {
+          if(p != null){
+            this.certificateObj = p;
+            this.notify.notifyCode('SYS007');
+            this.dialog && this.dialog.close(this.certificateObj);
+          } else this.notify.notifyCode('SYS021');
+        })
+      }
+
   }
+  // onSaveForm() {
+  //   if (this.formGroup.invalid) {
+  //     this.hrService.notifyInvalid(this.formGroup, this.formModel);
+  //     return;
+  //   }
+
+  //   // if(this.certificateObj.trainFrom > this.certificateObj.trainTo){
+  //   //   this.hrService.notifyInvalidFromTo('TrainFrom','TrainTo', this.formModel)
+  //   //   return;
+  //   // }
+  //   if (this.certificateObj.effectedDate || this.certificateObj.expiredDate) {
+  //     if (this.certificateObj.effectedDate > this.certificateObj.expiredDate) {
+  //       this.hrService.notifyInvalidFromTo(
+  //         'EffectedDate',
+  //         'ExpiredDate',
+  //         this.formModel
+  //       );
+  //       return;
+  //     }
+  //   }
+
+  //   if (this.actionType === 'copy' || this.actionType === 'add') {
+  //     delete this.certificateObj.recID;
+  //   }
+  //   this.certificateObj.employeeID = this.employId;
+  //   if (this.actionType === 'add' || this.actionType === 'copy') {
+  //     this.hrService.AddECertificateInfo(this.certificateObj).subscribe((p) => {
+  //       if (p != null) {
+  //         this.certificateObj.recID = p.recID;
+  //         this.notify.notifyCode('SYS006');
+  //         this.lstCertificates.push(
+  //           JSON.parse(JSON.stringify(this.certificateObj))
+  //         );
+  //         if (this.listView) {
+  //           (this.listView.dataService as CRUDService)
+  //             .add(this.certificateObj)
+  //             .subscribe();
+  //         }
+  //         // this.dialog.close(p)
+  //       } else this.notify.notifyCode('SYS023');
+  //     });
+  //   } else {
+  //     this.hrService
+  //       .UpdateEmployeeCertificateInfo(this.formModel.currentData)
+  //       .subscribe((p) => {
+  //         if (p != null) {
+  //           this.notify.notifyCode('SYS007');
+  //           this.lstCertificates[this.indexSelected] = p;
+  //           if (this.listView) {
+  //             (this.listView.dataService as CRUDService)
+  //               .update(this.lstCertificates[this.indexSelected])
+  //               .subscribe();
+  //           }
+  //           // this.dialog.close(this.data)
+  //         } else this.notify.notifyCode('SYS021');
+  //       });
+  //   }
+  // }
 
   click(data) {
     this.certificateObj = data;

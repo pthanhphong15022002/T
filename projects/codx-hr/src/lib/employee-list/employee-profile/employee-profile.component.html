@@ -3172,7 +3172,7 @@
                     <ng-container *ngFor="let benefit of listCrrBenefit">
                       <div
                         class="border rounded min-w-250px mw-250px me-4 mb-2"
-                        *ngIf="benefit != null"
+                        *ngIf="benefit.isCurrent == true"
                       >
                         <codx-temp-full
                           (clickMF)="clickMF($event, benefit, 'benefit')"
@@ -3468,7 +3468,7 @@
                       *ngFor="let asset of lstAsset"
                     >
                       <div class="has-action-menu">
-                        {{ asset.assetCategory }} gan cung
+                        {{ asset.assetCategory }} 
                         <codx-mfunc
                           [formModel]="formModel"
                           (clickMF)="clickMF($event, asset, 'Assets')"
@@ -3751,6 +3751,8 @@
                       default="Nghỉ phép"
                     >
                     </codx-label>
+                    <span class="text-gray-500 ms-2"> | </span>
+                    <span>({{dayoffRowCount}})</span>
                   </div>
                 </div>
                 <div class="d-flex align-items-center ms-5">
@@ -3791,27 +3793,45 @@
                 [(ngbCollapse)]="objCollapes['4.3']"
               >
                 <div class="mb-1">
+                  <div class="d-flex me-3">
+                    <codx-dropdown-select
+                    [cssClass]="'rounded-pill border-1'"
+                    cssPopup="h-350px w-300px"
+                    [isMulti]="true"
+                    type="combobox"
+                    field="KowID"
+                    [refValue]="'HRKowsOff'"
+                    (valueChange)="valueChangeFilterDayOff($event)"
+                  ></codx-dropdown-select>
+                  <codx-dropdown-calendar
+                  [cssPopup]="'w-600px h-400px'"
+                    emptyText="Chọn năm..."
+                    [firstChange]="false"
+                    [displayOption]="ops"
+                    [selectedType]="'y'"
+                    [cssClass]="'rounded-pill'"
+                    (change)="valueChangeYearFilterDayOff($event)"
+                  ></codx-dropdown-calendar>
+                  </div>
+                  
                   <div
-                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                    class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3"
                   >
-                    <!-- <codx-gridview-v2
-                      idField="recID"
-                      [columnsGrid]="rewardColumnsGrid"
+                    <codx-gridview *ngIf="dayoffColumnGrid"
+                      #dayoffGridView
+                      [formModel]="dayofFormModel"
+                      [columnsGrid]="dayoffColumnGrid"
                       [service]="'HR'"
-                      [gridViewName]="'grvEDayOffs'"
-                      [formName]="'EDayOffs'"
                       [assemblyName]="'Core'"
                       [className]="'DataBusiness'"
                       [method]="'LoadDataAsync'"
                       [predicates]="'EmployeeID=@0'"
-                      [autoLoad]="true"
-                      [height]="200"
                       [dataValues]="data.employeeID"
+                      [pageSize]="numPageSizeGridView"
                       [entityName]="'HR_EDayOffs'"
-                      [contentEditable]="false"
-                      [allowResizing]="true"
-                      (clickMF)="clickMF($event, null, 'eDayOffs')"
-                    ></codx-gridview-v2> -->
+                      [rowHeight]="50"
+                      height="240px"
+                    ></codx-gridview>
                   </div>
                 </div>
               </div>
@@ -3833,12 +3853,26 @@
                       default="Nhật kí công tác"
                     >
                     </codx-label>
+                    <span class="text-gray-500 ms-2"> | </span>
+                    <span>({{eBusinessTravelRowCount}})</span>
                   </div>
                 </div>
                 <div class="d-flex align-items-center ms-5">
+                  <codx-dropdown-calendar
+                  [cssPopup]="'w-600px h-400px'"
+                    emptyText="Chọn năm..."
+                    [firstChange]="false"
+                    [displayOption]="ops"
+                    [selectedType]="'y'"
+                    [cssClass]="'rounded-pill'"
+                    (change)="valueChangeYearFilterBusinessTravel($event)"
+                  ></codx-dropdown-calendar>
+
+                  <span class="text-gray-500 ms-2">|</span>
+
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEBusinessTravel()"
+                    (click)="HandleEBusinessTravel('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -3876,24 +3910,21 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                    <!-- <codx-gridview-v2
-                      idField="recID"
-                      [columnsGrid]="workDiaryColumnGrid"
-                      [service]="'HR'"
-                      [gridViewName]="'grvEBusinessTravels'"
-                      [formName]="'EBusinessTravels'"
-                      [assemblyName]="'Core'"
-                      [className]="'DataBusiness'"
-                      [method]="'LoadDataAsync'"
-                      [predicates]="'EmployeeID=@0'"
-                      [autoLoad]="true"
-                      [height]="200"
-                      [dataValues]="data.employeeID"
-                      [entityName]="'HR_EBusinessTravels'"
-                      [contentEditable]="false"
-                      [allowResizing]="true"
-                      (clickMF)="clickMF($event, null, 'eBusinessTravels')"
-                    ></codx-gridview-v2> -->
+                  <codx-gridview *ngIf="businessTravelColumnGrid"
+                  #businessTravelGrid
+                  [formModel]="EBusinessTravelFormodel"
+                  [columnsGrid]="businessTravelColumnGrid"
+                  [service]="'HR'"
+                  [assemblyName]="'Core'"
+                  [className]="'DataBusiness'"
+                  [method]="'LoadDataAsync'"
+                  [predicates]="'EmployeeID=@0'"
+                  [dataValues]="data.employeeID"
+                  [pageSize]="numPageSizeGridView"
+                  [entityName]="'HR_EBusinessTravels'"
+                  [rowHeight]="50"
+                  height="240px"
+                ></codx-gridview>
                   </div>
                 </div>
               </div>
@@ -4047,11 +4078,14 @@
                   </div>
                   <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
+
                       name="lblEmployeeDegree"
                       [formModel]="view.formModel"
                       default="Bằng cấp"
                     >
                     </codx-label>
+                    <span class="text-gray-500 ms-2"> | </span>
+                    <span>({{degreeRowCount}})</span>
                   </div>
                 </div>
                 <div class="d-flex align-items-center ms-5">
@@ -4093,11 +4127,14 @@
               >
                 <div class="mb-1">
                   <div>
-                    <div class="d-flex flex-wrap py-3 px-4">
+                    <!-- <div class="d-flex flex-wrap py-3 px-4">
+
                       <ng-container *ngFor="let item of lstEDegrees">
                         <div
                           class="border rounded min-w-250px mw-250px me-4 mb-2"
                         >
+
+                        
                           <codx-temp-full
                             (clickMF)="clickMF($event, item, 'eDegrees')"
                             [formModel]="formModel"
@@ -4153,7 +4190,24 @@
                           </ng-template>
                         </div>
                       </ng-container>
-                    </div>
+                    </div> -->
+                    <div>
+                    <codx-gridview *ngIf="degreeColumnGrid"
+                    #degreeGridView
+                    [formModel]="degreeFormodel"
+                    [columnsGrid]="degreeColumnGrid"
+                    [service]="'HR'"
+                    [assemblyName]="'Core'"
+                    [className]="'DataBusiness'"
+                    [method]="'LoadDataAsync'"
+                    [predicates]="'EmployeeID=@0'"
+                    [dataValues]="data.employeeID"
+                    [pageSize]="numPageSizeGridView"
+                    [entityName]="'HR_EDegrees'"
+                    [rowHeight]="50"
+                    height="240px"
+                  ></codx-gridview>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -5217,13 +5271,13 @@
 </ng-template>
 
 <ng-template #templateBenefitID let-data>
-  {{data?.benefitID}}
+  {{data?.benefitID | formatvalue: benefitFormodel:"benefitID" | async }}
 </ng-template>
 
 <ng-template #templateBenefitAmt let-data>
 
   <div #benefitNorm>
-    {{data?.benefitAmt }} / 
+    {{data?.benefitAmt }}  / 
     {{
       data?.benefitNorm | formatvalue: benefitFormodel:"benefitNorm" | async
     }}
@@ -5286,6 +5340,128 @@
   <codx-mfunc
     [formModel]="appointionFormodel"
     (clickMF)="clickMF($event, data, 'eAppointions')"
+    [dataItem]="data"
+    type="hover"
+  >
+  </codx-mfunc>
+</ng-template>
+
+<ng-template #templateDayOffGridCol1 let-data>
+  <div>
+    <i class="icon-calendar_today"></i>
+    {{data?.kowID | formatvalue: dayofFormModel:"kowID" | async}}
+  </div>
+  <div>
+    {{data?.registeredDate | fmDT}}
+  </div>
+</ng-template>
+
+<ng-template #templateDayOffGridCol2 let-data>
+  <div>
+    <i class="icon-calendar_today"></i>
+    {{data?.beginDate | fmDT}} - {{ data?.endDate| fmDT }}
+  </div>
+  <div>
+    <i class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></i>
+    {{data?.totalDaysOff}}
+  </div>
+</ng-template>
+
+<ng-template #templateDayOffGridCol3 let-data>
+  <div>
+    {{data?.reason}}
+  </div>
+</ng-template>
+
+<ng-template #templateDayOffGridMoreFunc let-data>
+  <codx-mfunc
+    [formModel]="dayofFormModel"
+    (clickMF)="clickMF($event, data, 'eDayoff')"
+    [dataItem]="data"
+    type="hover"
+  >
+  </codx-mfunc>
+</ng-template>
+
+
+<ng-template #templateBusinessTravelGridCol1 let-data>
+  <div>
+    <i class="icon-home_work"></i>
+    {{data?.businessPlace }}
+  </div>
+  <div>
+    <i class="icon-connection-point icon-18 text-gray-600 me-1 text-primary"></i>
+    {{data?.kowID | formatvalue: EBusinessTravelFormodel:"kowID" | async}}
+  </div>
+</ng-template>
+
+<ng-template #templateBusinessTravelGridCol2 let-data>
+  <div>
+    <i class="icon-calendar_today"></i>
+    {{data?.beginDate | fmDT}} - {{ data?.endDate| fmDT }}
+  </div>
+  <div>
+    <i class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></i>
+    {{data?.days}}
+  </div>
+</ng-template>
+
+<ng-template #templateBusinessTravelGridCol3 let-data>
+  <div class="has-action-menu">
+    {{data?.businessPurpose}}
+    <codx-mfunc
+    [formModel]="EBusinessTravelFormodel"
+    (clickMF)="clickMF($event, data, 'eBusinessTravels')">
+  </codx-mfunc>
+  </div>
+</ng-template>
+
+<ng-template #templateBusinessTravelMoreFunc let-data>
+  <codx-mfunc
+    [formModel]="EBusinessTravelFormodel"
+    (clickMF)="clickMF($event, data, 'eBusinessTravels')">
+  </codx-mfunc>
+</ng-template>
+
+<ng-template #templateDegreeGridCol1 let-data>
+  <div>
+    <i class="icon-school"></i>
+    {{data?.degreeName}}
+  </div>
+  <div>
+    {{data?.trainFieldDetail}}
+  </div>
+
+</ng-template>
+<ng-template #templateDegreeGridCol2 let-data>
+  <div>
+    {{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}
+  </div>
+  <div>
+    <i class="icon-school"></i>
+    {{data?.ranking}}
+    <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
+    {{data?.totalScore}}
+  </div>
+  
+</ng-template>
+<ng-template #templateDegreeGridCol3 let-data>
+  <span>
+    <i class="icon-calendar_today"></i>
+    {{data?.yearGraduated}}
+  </span>
+  <span>
+    <i class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"></i>
+    {{data?.issuedDate | fmDT}}
+  </span>
+  <div *ngIf="data.isMain">
+    <label>Là bằng cấp chính</label>
+  </div>
+</ng-template>
+<ng-template #templateDegreeGridMoreFunc let-data>
+  <codx-mfunc
+    [formModel]="degreeFormodel"
+    (clickMF)="clickMF($event, data, 'eDegrees')"
     [dataItem]="data"
     type="hover"
   >

@@ -37,23 +37,19 @@
                         <span *ngIf="data.departmentName">| {{data.departmentName}}</span>
                         <span *ngIf="data.divisionName">| {{data.divisionName}}</span>
                     </div>
-                    <div class="me-5 float-left mt-1">
-                        <div class="me-2">
-                            <codx-label name="lblReportTo" formName="Positions" default="Báo cáo trực tiếp:">
+                    <div class="me-5 mt-1">
+                        <span class="me-2">
+                            <codx-label [formModel]="view.formModel" fiedName="ReportTo" default="Báo cáo trực tiếp:">
                             </codx-label>
-                        </div>
-                        <div *ngIf="data.reportToName">
-                            <span>{{data.reportToName}}</span>
-                        </div>
+                        </span>
+                        <span *ngIf="data.reportToName">{{data.reportToName}}</span>
                     </div>
-                    <div class="me-5 float-left mt-1">
-                        <div class="me-2">
-                            <codx-label name="lblReportTo2" formName="Positions" default="Báo cáo gián tiếp:">
+                    <div class="me-5 mt-1">
+                        <span class="me-2">
+                            <codx-label [formModel]="view.formModel" fiedName="ReportTo2" default="Báo cáo gián tiếp:">
                             </codx-label>
-                        </div>
-                        <div class="me-2" *ngIf="data.reportTo2Name">
-                            <span>{{ data.reportTo2Name}}</span>
-                        </div>
+                        </span>
+                        <span *ngIf="data.reportTo2Name">{{data.reportTo2Name}}</span>
                     </div>
                 </div>
             </div>
@@ -63,20 +59,17 @@
             <div class="text-start w-100">
                 <div class="text-gray-700">
                     <span class="me-1">
-                        <codx-label [formModel]="view.formModel" name="lblJobName" default="Nhóm chức danh:">
+                        <codx-label [formModel]="view.formModel" fiedName="JobID" default="Nhóm chức danh:">
                         </codx-label>
                     </span>
-                    <span class="text-dark" *ngIf="data.jobName">
-                        <span>{{data.jobName}}</span>
-                    </span>
+                    <span class="text-dark" *ngIf="data.jobName">{{data.jobName}}</span>
                 </div>
                 <div class="text-gray-700 mt-1">
                     <span class="me-1">
-                        <codx-label [formModel]="view.formModel" name="lbljobGroup" default="Chức vụ:">
+                        <codx-label [formModel]="view.formModel" fiedName="JobGroup" default="Chức vụ:">
                         </codx-label>
                     </span>
-                    <span class="text-dark" *ngIf="data.JobGroupName">
-                        <span>{{data.JobGroupName}}</span>
+                    <span class="text-dark" *ngIf="data.jobGroup">{{data.jobGroup}}
                     </span>
                 </div>
             </div>
@@ -87,7 +80,7 @@
                 <div class="d-flex flex-column align-items-center pos-item" (click)="loadEmployByCountStatus()">
                     <div class="pos-number text-gray-500 fs-2 fw-bold">{{data.headcounts}}</div>
                     <div class="text-gray-600 mt-1 mb-2">
-                        <codx-label [formModel]="view.formModel" name="lblHeadcounts" default="Định biên">
+                        <codx-label [formModel]="view.formModel" fiedName="Headcounts" default="Định biên">
                         </codx-label>
                     </div>
                 </div>
@@ -116,7 +109,7 @@
                         <span>{{data.onBoard ? data.onBoard : 0}}</span>
                     </div>
                     <div class="text-gray-600 mt-1 mb-2">
-                        <codx-label [formModel]="view.formModel" name="lblOnboard" default="Onboard">
+                        <codx-label [formModel]="view.formModel" fiedName="Onboard" default="Onboard">
                         </codx-label>
                     </div>
                     <ng-container *ngIf="data.onBoardEmp">
@@ -132,7 +125,7 @@
                         <span>{{data.offBoard ? data.offBoard : 0}}</span>
                     </div>
                     <div class="text-gray-600 mt-1 mb-2">
-                        <codx-label [formModel]="view.formModel" name="lblOffboard" default="Offboard">
+                        <codx-label [formModel]="view.formModel" fiedName="Offboard" default="Offboard">
                         </codx-label>
                     </div>
                     <ng-container *ngIf="data.offBoardEmp">

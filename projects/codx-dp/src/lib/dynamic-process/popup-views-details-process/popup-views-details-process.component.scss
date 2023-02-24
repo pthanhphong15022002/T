@@ -29,6 +29,7 @@
         // margin: 0 auto;
         margin: 0 20px;
     }
+
     .toolbar {
         margin-bottom: 0 !important;
     }
@@ -50,6 +51,7 @@
         padding-right: 0;
     }
 }
+
 /***/
 .popup-process-detail {
     codx-views>.container-fluid {
@@ -66,12 +68,22 @@
     }
 
     .process-views-detail {
-        height: calc(100vh - 186px) !important;
+        height: calc(100vh - 120px) !important;
         overflow: hidden;
+
+
 
         .card-body.fillter-card-body.scroll-y {
             height: calc(100vh - 342px) !important;
         }
 
+        .view-details-content {
+            height: calc(100% - 42px) !important;
+        }
+
+    }
+
+    .view-details-main {
+        height: calc(100vh - 54px);
     }
 }

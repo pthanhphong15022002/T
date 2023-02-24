@@ -65,8 +65,6 @@ export class HomeComponent extends UIComponent implements OnInit {
     this.view.dataService.addNew().subscribe((res) => {
       this.codxService.navigate('', 'sv/add-survey', {
         funcID: this.funcID,
-        title: 'Không có tiêu đề',
-        recID: res.recID,
       });
     });
   }
@@ -74,7 +72,6 @@ export class HomeComponent extends UIComponent implements OnInit {
   update(item) {
     this.codxService.navigate('', 'sv/add-survey', {
       funcID: this.funcID,
-      title: item.title,
       recID: item.recID,
     });
   }

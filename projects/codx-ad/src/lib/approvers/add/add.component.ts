@@ -1,11 +1,20 @@
 import { GroupMembers, UserGroup } from '../../models/UserGroups.model';
 import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
-import { ApiHttpService, CallFuncService, CodxService, DialogData, DialogRef, FormModel, NotificationsService, RequestOption } from 'codx-core';
+import {
+  ApiHttpService,
+  CallFuncService,
+  CodxService,
+  DialogData,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+  RequestOption,
+} from 'codx-core';
 
 @Component({
   selector: 'lib-add',
   templateUrl: './add.component.html',
-  styleUrls: ['./add.component.css']
+  styleUrls: ['./add.component.css'],
 })
 export class AddApproversComponent implements OnInit {
   //#region Constructor
@@ -14,8 +23,8 @@ export class AddApproversComponent implements OnInit {
   details: Array<any> = [];
   detailIDs: string;
   dialog: DialogRef;
-  title: string = "";
-  action: string = "add";
+  title: string = '';
+  action: string = 'add';
   constructor(
     private api: ApiHttpService,
     private notiService: NotificationsService,
@@ -23,7 +32,7 @@ export class AddApproversComponent implements OnInit {
     private callfc: CallFuncService,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dialog?: DialogRef,
-    @Optional() dialogData?: DialogData,
+    @Optional() dialogData?: DialogData
   ) {
     this.dialog = dialog;
     this.title = dialogData.data[0];
@@ -40,33 +49,35 @@ export class AddApproversComponent implements OnInit {
       this.detailIDs = this.master.memberIDs;
     }
 
-    this.dialog.beforeClose.subscribe(res => {
+    this.dialog.beforeClose.subscribe((res) => {
       if (!res.event && this.action == 'edit') {
         if (this.master.updateColumn) {
           let updateColumn = this.master.updateColumn.split(';');
-          updateColumn.forEach(e => {
+          updateColumn.forEach((e) => {
             let key = this.codxService.capitalize(e);
             this.master[key] = this.orgData[key];
           });
         }
       }
       this.dialog.dataService.clear();
-    })
+    });
   }
   //#endregion
 
   //#region event
   eventApply(e) {
     if (!e.data || e.data.length == 0) return;
-    if (!this.dialog.dataService.hasSaved && this.action == "add") {
-      this.dialog.dataService.save((opt: RequestOption) => this.beforeSave(opt), 0, "", "", false).subscribe(res => {
-        if (res && !res.error) {
-          this.dialog.dataService.hasSaved = true;
-          this.saveMember(e.data);
-        }
-      })
-    } else
-      this.saveMember(e.data);
+    if (!this.dialog.dataService.hasSaved && this.action == 'add') {
+      this.dialog.dataService
+        .save((opt: RequestOption) => this.beforeSave(opt), 0, '', '', false)
+        .subscribe((res) => {
+          if (res && !res.error) {
+            this.master.groupID = this.dialog.dataService.dataSelected.groupID;
+            this.dialog.dataService.hasSaved = true;
+            this.saveMember(e.data);
+          }
+        });
+    } else this.saveMember(e.data);
   }
 
   onSave() {
@@ -75,68 +86,76 @@ export class AddApproversComponent implements OnInit {
       if (this.details.length)
         this.dialog.dataService.update(this.master).subscribe();
       this.dialog.close(true);
-    }
-    else {
-      this.dialog.dataService.save((opt: RequestOption) => this.beforeSave(opt), 0).subscribe(res => {
-        if (res && !res.error) {
-          this.dialog.dataService.hasSaved = false;
-          this.dialog.close(true);
-        }
-      })
+    } else {
+      this.dialog.dataService
+        .save((opt: RequestOption) => this.beforeSave(opt), 0)
+        .subscribe((res) => {
+          if (res && !res.error) {
+            this.master.groupID = this.dialog.dataService.dataSelected.groupID;
+            this.dialog.dataService.hasSaved = false;
+            this.dialog.close(true);
+          }
+        });
     }
   }
 
   removeDetail(id) {
     if (!id) return null;
-    this.api.execSv<any>("SYS", "AD", "GroupMembersBusiness", "DeleteAsync", [id]).subscribe(res => {
-      if (res) {
-        let idx = this.details.findIndex(x => x.recID == id);
-        if (idx > -1) {
-          this.details.splice(idx, 1);
-          let ids = "";
-          this.details.forEach((v) => {
-            ids += v.memberID + ";";
-          })
-          this.master['memberIDs'] = ids;
-          this.master["members"] = this.details;
-          this.dialog.dataService.update(this.master);
+    this.api
+      .execSv<any>('SYS', 'AD', 'GroupMembersBusiness', 'DeleteAsync', [id])
+      .subscribe((res) => {
+        if (res) {
+          let idx = this.details.findIndex((x) => x.recID == id);
+          if (idx > -1) {
+            this.details.splice(idx, 1);
+            let ids = '';
+            this.details.forEach((v) => {
+              ids += v.memberID + ';';
+            });
+            this.master['memberIDs'] = ids;
+            this.master['members'] = this.details;
+            this.dialog.dataService.update(this.master);
+          }
         }
-      }
-    })
+      });
   }
   //#endregion
 
   //#region Method
   saveMember(data: Array<any>) {
     let groupMembers = new Array<GroupMembers>();
-    data.forEach(e => {
+    data.forEach((e) => {
       let member = new GroupMembers();
       member.groupID = this.master.groupID;
       member.memberID = e.id;
       member.memberType = e.objectType;
-      member.memberName = e.text
+      member.memberName = e.text || e.objectName;
       groupMembers.push(member);
     });
-    this.api.execSv<any>("SYS", "AD", "GroupMembersBusiness", "AddAsync", [groupMembers]).subscribe(res => {
-      if (res && res.length == 3) {
-        this.master.memberType = res[0];
-        this.master.memberIDs = this.detailIDs ? this.detailIDs + ';' + res[1] : res[1];
-        this.details = [...this.details, ...res[2]];
-        this.master.members = this.details;
-        this.dialog.dataService.update(this.master).subscribe();
-      }
-    })
+    this.api
+      .execSv<any>('SYS', 'AD', 'GroupMembersBusiness', 'AddAsync', [
+        groupMembers,
+      ])
+      .subscribe((res) => {
+        if (res && res.length == 3) {
+          this.master.memberType = res[0];
+          this.master.memberIDs = this.detailIDs
+            ? this.detailIDs + ';' + res[1]
+            : res[1];
+          this.details = [...this.details, ...res[2]];
+          this.master.members = this.details;
+          //  this.dialog.dataService.update(this.master).subscribe();
+        }
+      });
   }
 
   beforeSave(opt: RequestOption) {
-    opt.service = "SYS";
-    opt.assemblyName = "AD";
-    opt.className = "UserGroupsBusiness";
+    opt.service = 'SYS';
+    opt.assemblyName = 'AD';
+    opt.className = 'UserGroupsBusiness';
 
-    if (this.action == "add")
-      opt.methodName = "AddAsync";
-    else
-      opt.methodName = "UpdateAsync";
+    if (this.action == 'add') opt.methodName = 'AddAsync';
+    else opt.methodName = 'UpdateAsync';
 
     opt.data = this.master;
     return true;

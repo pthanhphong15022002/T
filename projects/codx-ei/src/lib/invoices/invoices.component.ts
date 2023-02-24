@@ -16,11 +16,12 @@ import { AddEditComponent } from './popups/add-edit/add-edit.component';
 export class InvoicesComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = [];
+  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   buttons: ButtonModel = { id: 'btnAdd' };
   funcName = '';
   moreFuncName = '';
-  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
-  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  
   constructor(private injector: Injector) {
     super(injector);
   }

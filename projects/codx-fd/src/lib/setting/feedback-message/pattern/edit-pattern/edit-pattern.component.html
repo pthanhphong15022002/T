@@ -2,27 +2,12 @@
   <ng-template #body>
     <div class="flex-grow-1">
       <div class="d-flex align-items-start ph-card">
-        <div class="pic-edit mt-2">
-          <div class="row justify-content-between" *ngIf="listFile">
-            <ng-container *ngFor="let dt of listFile">
-              <div class="col-5">
-                <div class="w-150 position-relative">
-                  <ng-container *ngIf="dt.referType == REFER_TYPE.IMAGE">
-                    <ng-container *ngIf="dt.recID; else imageSrc">
-                      <codx-img #uploadImage class="img-pat" [objectId]="pattern?.recID"
-                        [objectType]="formModel?.entityName" [objectName]="pattern?.patternName" [width]="164"
-                        cssClass="pic" imageType="square" [imgOn]="pattern?.modifiedOn">
-                      </codx-img>
-                    </ng-container>
-                    <ng-template #imageSrc>
-                      <img [src]="dt.data || dt.avatar" alt="" class="image" />
-                    </ng-template>
-                  </ng-container>
-                </div>
-              </div>
-            </ng-container>
+        <div class="pic-edit  mt-2">
+          <div class="row justify-content-between h-100" *ngIf="pattern?.imageSrc">
+            <div class="w-100 position-relative card-img img-pat-edit div-bg-img" [style.background-image]="'url('+(!typeView?(environment.urlUpload + '/' + pattern?.imageSrc):pattern?.imageSrc)+')'">
+            </div>
           </div>
-          <span class="fs-3 fw-bold img-pat-edit noimage symbol-label text-white"
+          <span class="fs-3 fw-bold img-pat-edit noimage symbol-label text-white card-img "
             [style.background-color]="pattern?.backgroundColor" [hidden]="!pattern?.backgroundColor"
             style="background-image: none"></span>
           <div class="ph-card-header fs-5 fw-bold header-pattern" [style.color]="pattern?.headerColor">
@@ -86,8 +71,8 @@
         </div>
       </div>
       <div class="form-group mt-5" #name>
-        <codx-label name="lblDescription" [formModel]="" default="Mô tả:"></codx-label>
-        <codx-input type="text" placeholder="Sunset Flower" [crrValue]="pattern?.patternName" field="patternName"
+        <codx-label name="lblDescription" [formModel]="" default="Mô tả"></codx-label>
+        <codx-input type="text" placeholder="Mô tả" [crrValue]="pattern?.patternName" field="patternName"
           [ele]="name" (valueChange)="valueChange($event)">
         </codx-input>
       </div>

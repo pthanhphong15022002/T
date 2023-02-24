@@ -11,11 +11,12 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { CallFuncService, DataRequest, DialogRef, SidebarModel, UIComponent, ViewsComponent } from 'codx-core';
+import { AuthService, CallFuncService, DataRequest, DialogRef, SidebarModel, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
 import { BookingRoomComponent } from '../booking-room.component';
 import { PopupAddBookingRoomComponent } from '../popup-add-booking-room/popup-add-booking-room.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { Permission } from '@shared/models/file.model';
 @Component({
   selector: 'booking-room-view-detail',
   templateUrl: 'booking-room-view-detail.component.html',
@@ -25,13 +26,15 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 export class BookingRoomViewDetailComponent extends UIComponent implements OnChanges {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('subTitleHeader') subTitleHeader;
-  @ViewChild('attachment') attachment;
+  @ViewChild('attachment') attachment;  
+  @ViewChild('attachment') tabModel;
   @ViewChild('bookingRoom') bookingRoom: BookingRoomComponent;
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('copy') copy: EventEmitter<any> = new EventEmitter();
   @Output('release') release: EventEmitter<any> = new EventEmitter();
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
-  @Output('invite') invite: EventEmitter<any> = new EventEmitter();
+  @Output('invite') invite: EventEmitter<any> = new EventEmitter(); 
+  @Output('cancel') cancel: EventEmitter<any> = new EventEmitter();
   @Output('reschedule') reschedule: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
   
@@ -53,11 +56,14 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   files = [];
   dialog!: DialogRef;
   routerRecID: any;
-
+  listFilePermission= [];
+  isEdit= false;
+renderFooter=false;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
     private callFuncService: CallFuncService,
+    private authService: AuthService,
   ) {
     super(injector);
     this.routerRecID = this.router.snapshot.params['id'];
@@ -92,6 +98,7 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
       changes.itemDetail?.previousValue?.recID !=
       changes.itemDetail?.currentValue?.recID
     ) {
+      this.renderFooter=false;
       this.api
         .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
           changes.itemDetail?.currentValue?.recID,
@@ -99,21 +106,47 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            this.listFilePermission=[];
+            if(res.bookingAttendees!=null && res.bookingAttendees!=''){
+              let listAttendees = res.bookingAttendees.split(";");
+              listAttendees.forEach((item) => {
+                if(item!=''){
+                  let tmpPer= new Permission()
+                  tmpPer.objectID= item;//
+                  tmpPer.objectType= 'U';
+                  tmpPer.read= true;
+                  tmpPer.share=  true;
+                  tmpPer.download=  true;
+                  tmpPer.isActive=  true;
+                  this.listFilePermission.push(tmpPer);
+                }
+                
+              });
+              //this.tabModel.addPermissions=this.listFilePermission;
+              this.renderFooter=true;
+              this.detectorRef.detectChanges();
+
+            }
+            if(this.itemDetail?.createdBy==this.authService.userValue.userID){
+
+              this.isEdit = true;
+            }
             this.detectorRef.detectChanges();
+
           }
         });
-      this.files = [];
-      this.api.execSv(
-        'DM',
-        'ERM.Business.DM',
-        'FileBussiness',
-        'GetFilesForOutsideAsync',
-        [this.funcID, this.itemDetail.recID, 'EP_BookingRooms']
-      ).subscribe((res: []) => {
-        if (res) {
-          this.files = res;
-        }
-      });
+      // this.files = [];
+      // this.api.execSv(
+      //   'DM',
+      //   'ERM.Business.DM',
+      //   'FileBussiness',
+      //   'GetFilesForOutsideAsync',
+      //   [this.funcID, this.itemDetail.recID, 'EP_BookingRooms']
+      // ).subscribe((res: []) => {
+      //   if (res) {
+      //     this.files = res;
+      //   }
+      // });
       //this.itemDetail = changes.itemDetail.currentValue;
       this.detectorRef.detectChanges();
     }
@@ -150,6 +183,9 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
       case 'EP4T1103': //Gửi duyệt
         this.lviewRelease(data);
         break;
+        case 'EP4T1104': //Hủy gửi duyệt
+        this.lviewCancel(data);
+        break;
     }
   }
   lviewRelease(data?) {
@@ -171,13 +207,19 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
       this.invite.emit(data);
     }
   }
+
+  lviewCancel(data?) {
+    if (data) {      
+      this.cancel.emit(data);
+    }
+  }
+
   lviewEdit(data?, mfuncName?) {
     if (data) {
       this.setPopupTitle.emit(mfuncName);
       this.edit.emit(data);
     }
   }
-
   
   lviewDelete(data?) {
     if (data) {
@@ -192,56 +234,103 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   }
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
-      // event.forEach((func) => {
-      //   func.disabled = true;
-      // });
       if (data.approveStatus == '1') {
         event.forEach((func) => {
+          //Mới tạo
           if (
+            // Hiện: sửa - xóa - chép - gửi duyệt -
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'SYS04' /*MF chép*/||            
+            func.functionID == 'SYS04' /*MF chép*/ ||
             func.functionID == 'EP4T1103' /*MF gửi duyệt*/
           ) {
             func.disabled = false;
-          } 
-
-          if (            
-            func.functionID == 'EP4T1102' /*MF sửa*/ ||
-            func.functionID == 'EP4T1101' /*MF xóa*/ 
-          ) {
-            func.disabled = true;
           }
-
-        });
-      } else if(data.approveStatus == '5' || data.approveStatus == '3'){
-        event.forEach((func) => {
           if (
-            func.functionID == 'SYS02' /*MF sửa*/ ||
-            func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP4T1103' /*MF gửi duyệt*/
+            //Ẩn: dời - mời - hủy 
+            func.functionID == 'EP4T1102' /*MF sửa*/ ||
+            func.functionID == 'EP4T1101' /*MF xóa*/ ||
+            func.functionID == 'EP4T1104' /*MF hủy*/ 
           ) {
             func.disabled = true;
           }
-          if (            
+        });
+      } else if (data.approveStatus == '5') {
+        event.forEach((func) => {
+          //Đã duyệt
+          if (
+            // Hiện: Mời - dời - Chép 
             func.functionID == 'EP4T1102' /*MF mời*/ ||
             func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-        });
-      } else{
-        event.forEach((func) => {
-          if (func.functionID == 'SYS04' /*MF chép*/) {
-            func.disabled = false;
-          }
-          if (                
-            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+          if (//Ẩn: sửa - xóa - duyệt - hủy 
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+            func.functionID == 'EP4T1104' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if ( //Hiện: dời - mời - chép - hủy
+          func.functionID == 'EP4T1102' /*MF mời*/ ||
+          func.functionID == 'EP4T1101' /*MF dời*/ ||
+          func.functionID == 'SYS04' /*MF chép*/||
+          func.functionID == 'EP4T1104' /*MF hủy*/
+          ) {
+            func.disabled = false;
+          }
+          if (//Ẩn: sửa - xóa - gửi duyệt
+            
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
+      else if (data.approveStatus == '4') {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if ( //Hiện: chép
+          func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (//Ẩn: còn lại            
             func.functionID == 'EP4T1102' /*MF mời*/ ||
-            func.functionID == 'EP4T1101' /*MF dời*/ 
+            func.functionID == 'EP4T1101' /*MF dời*/ ||
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+            func.functionID == 'EP4T1104' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
+      else  {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if ( //Hiện: chép
+          func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+          func.functionID == 'SYS02' /*MF sửa*/ ||
+          func.functionID == 'SYS03' /*MF xóa*/ ||
+          func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (//Ẩn: còn lại            
+            func.functionID == 'EP4T1102' /*MF mời*/ ||
+            func.functionID == 'EP4T1101' /*MF dời*/ ||
+            func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = true;
           }

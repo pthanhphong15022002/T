@@ -7,7 +7,7 @@ import { ApiHttpService, CacheService, LayoutBaseComponent } from 'codx-core';
   styleUrls: ['./layout-news.component.scss'],
 })
 export class LayoutNewsComponent extends LayoutBaseComponent {
-  module = 'WP';
+  module = 'WP2';
   override toolbar = false;
   override aside = false;
   override asideFixed = false;
@@ -24,14 +24,16 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
     private api: ApiHttpService,
 
     inject: Injector
-  ) {
+  ) 
+  {
     super(inject);
   }
 
   onInit(): void {
     this.getUserPermission('WPT022');
-    this.cache.valueList('WP002').subscribe((value) => {
-      this.valueList = value.datas;
+    this.cache.valueList('WP002').subscribe((vll:any) => {
+      if(vll)
+      this.valueList = vll.datas;
     });
   }
 
@@ -45,9 +47,8 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
           'ERM.Business.SYS',
           'CommonBusiness',
           'GetUserPermissionsAsync',
-          [funcID]
-        )
-        .subscribe((res: any) => {
+          [funcID])
+          .subscribe((res: any) => {
           if (res) {
             this.userPermission = res;
             this.dt.detectChanges();
@@ -62,12 +63,12 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
         this.codxService.navigate(funcID);
         break;
       case 'settings':
-        this.codxService.navigate('', 'wp/news/settings/' + funcID);
+        this.codxService.navigate('', 'wp2/news/settings/' + funcID);
         break;
       default:
         this.codxService.navigate(
           '',
-          'wp/news/' + funcID + '/' + this.category
+          `wp2/news/${funcID}/${this.category}`
         );
         break;
     }

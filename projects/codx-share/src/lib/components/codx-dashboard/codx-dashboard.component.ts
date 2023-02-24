@@ -53,9 +53,9 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     //   }
     // }, 200);
   }
-  @Input() columns: number = 24;
+  @Input() columns: number = 48;
   @Input() cellSpacing: number[] = [0, 0];
-  @Input() cellAspectRatio: number = 100 / 100;
+  @Input() cellAspectRatio: number = 1 / 1;
   @Input() name!: string;
   @Input() templates!: any;
 
@@ -103,7 +103,6 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @Input() dataValue!: string;
   @Input() panels: any = [];
   @Input() datas: any = [];
-  @Input() enableEditing: boolean = false;
   isChart: boolean = false;
 
   annotations: ChartAnnotationSettingsModel[] = [];
@@ -607,6 +606,10 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
         }
       }, 100);
     }
+  }
+
+  onChange(evt: any) {
+    console.log('Change event triggered');
   }
 
   addPanelAuto() {

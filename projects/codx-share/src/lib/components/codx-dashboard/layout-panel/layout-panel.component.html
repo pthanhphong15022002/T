@@ -4,7 +4,12 @@
       <div class="card-title">
         <div class="d-flex flex-column">
           <div class="dialog-title line-clamp line-clamp-1">
-            <button class="btn btn-sm btn-light-primary icon-addchart" style="margin-top: -5px;" (click)="add($event)" title="Add"></button>
+            <button
+              class="btn btn-sm btn-light-primary icon-addchart"
+              style="margin-top: -5px"
+              (click)="add($event)"
+              title="Add"
+            ></button>
           </div>
         </div>
         <!-- <ng-container *ngIf="header; else headerDefault">
@@ -28,7 +33,6 @@
           <ng-container *ngTemplateOutlet="subHeader"></ng-container>
         </ng-container> -->
       </div>
-
     </div>
   </div>
   <div class="card-body scroll-y" (scroll)="scroll($event)">
@@ -36,5 +40,4 @@
       <ng-container *ngTemplateOutlet="selectedTemplate"></ng-container>
     </ng-container>
   </div>
-
 </div>

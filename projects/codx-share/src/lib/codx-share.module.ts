@@ -143,6 +143,11 @@ import { TextValuePipe } from './pipe/textValue.pipe';
 import { CodxTreeCommentComponent } from './components/codx-tree-comment/codx-tree-comment.component';
 import { CodxCommentHistoryComponent } from './components/codx-tree-comment/codx-comment-history/codx-comment-history.component';
 import { ImageViewerComponent2 } from './components/ImageViewer2/imageViewer2.component';
+import { CodxHistoryTempComponent } from './components/codx-history-temp/codx-history-temp.component';
+import { NotifyDrawerPopupComponent } from './layout/drawers/notify-drawer/notify-drawer-popup/notify-drawer-popup.component';
+import { NotifyBodyComponent } from './layout/drawers/notify-drawer/notify-body/notify-body.component';
+import { CodxBookingCarScheduleContentComponent } from './components/codx-booking-car-schedule-content/codx-booking-car-schedule-content.component';
+import { CodxBookingRoomScheduleContentComponent } from './components/codx-booking-room-schedule-content/codx-booking-room-schedule-content.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -240,7 +245,13 @@ const T_Component: Type<any>[] = [
   CodxViewCardComponent,
   CodxViewFilesComponent,
   PopupAddEducationsComponent,
-  ImageViewerComponent2
+  ImageViewerComponent2,
+  CodxHistoryTempComponent,
+  NotifyDrawerPopupComponent,
+  NotifyBodyComponent,
+  //booking
+  CodxBookingCarScheduleContentComponent,
+  CodxBookingRoomScheduleContentComponent,
 ];
 
 const T_Pipe: Type<any>[] = [

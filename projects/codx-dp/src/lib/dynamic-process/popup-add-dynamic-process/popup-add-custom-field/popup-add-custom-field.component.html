@@ -52,11 +52,20 @@
           </codx-label>
           <codx-input
             field="fieldName"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
+            [type]="'text'"
+            [crrValue]="field.fieldName"
+            [formName]="'DPStepsFields'"
+            [gridViewName]="'grvDPStepsField'"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
+          <!-- <codx-input
+          field="fieldName"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input> -->
         </div>
       </div>
       <div class="form-group">
@@ -140,14 +149,7 @@
         >
         </codx-input>
       </div>
-      <ng-container
-        *ngIf="
-          field.dataType == 'C' ||
-          field.dataType == 'V' ||
-          field.dataType == 'M' ||
-          field.dataType == '1'
-        "
-      >
+      <ng-container *ngIf="field.dataType == 'L'">
         <div class="form-group">
           <codx-label
             fiedName="RefType"
@@ -183,6 +185,7 @@
       <div class="form-group" *ngIf="field.dataType == 'A'">
         <codx-input
           type="checkbox"
+          field="multiselect"
           (valueChange)="valueChange($event)"
           labelPosition="After"
           label="Cho phép chọn nhiều giá trị"
@@ -234,7 +237,7 @@
         <codx-label
           name="Note"
           [formModel]="form.formModel"
-          default="Mô tả"
+          default="Mô tả nhập liệu"
         ></codx-label>
 
         <div class="d-flex justify-content-between align-items-center">

@@ -4,11 +4,10 @@
     <ng-container *ngIf="form && form.formGroup">
       <div class="row">
         <div class="col-4 form-group">
-          <codx-label [formModel]="form.formModel" fiedName="periodID"></codx-label>
-          <codx-dropdown-calendar cssPopup="h-500px w-800px" [value]="okrPlan?.toDate"
-            [selectedType]="formatInterval(okrPlan?.interval)" [displayOption]="ops" 
-            cssClass="w-100" class="me-4"
-            (change)="changeCalendar($event)" [disabled]="true"></codx-dropdown-calendar>
+          <codx-label [formModel]="form.formModel" fiedName="PeriodID"></codx-label>
+          <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="periodID" disabled="true">
+          </codx-input>
+          
         </div>
         <div class="col-4 form-group">
           <codx-label [formModel]="formModel" fiedName="Category"></codx-label>
@@ -26,17 +25,22 @@
         <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="okrName">
         </codx-input>
       </div>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
         <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="note">
         </codx-input>
-      </div>
+      </div> -->
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Owner"></codx-label>
         <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="owner">
         </codx-input>
       </div>
       <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="note">
+        </codx-input>
+      </div>
+      <!-- <div class="form-group">
         <codx-label [formModel]="formModel" fiedName="Visibility"></codx-label>
         <div class="d-flex align-items-center justify-content-between om-add-share">
           <ng-container *ngIf="vll.datas">
@@ -53,7 +57,7 @@
       </div>
       <div class="form-group">
         <codx-label [formModel]="form.formModel" default="Liên kết mục tiêu"></codx-label>
-      </div>
+      </div> -->
     </ng-container>
   </ng-template>
 

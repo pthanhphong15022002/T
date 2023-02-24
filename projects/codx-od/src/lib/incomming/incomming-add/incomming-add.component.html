@@ -12,7 +12,7 @@
       </span>
     </div>
     <ng-template #elseSelected>
-      <span class="btn btn-sm btn-primary btn-pill">
+      <span class="btn btn-sm btn-light btn-pill">
         <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
       </span>
     </ng-template>
@@ -25,7 +25,7 @@
       hideDes="1" (fileAdded)="fileAdded($event)" (fileDelete)="handleDelete($event)" (fileCount)="getfileCount($event)"
       (fileGet)="getfileCount($event)" isDeleteTemp="1" [allowMultiFile]="0" [idBrowse]="'add'" [hideDelete]="
         this.dispatch?.status == '1' || this.dispatch?.status == '2' || this.dispatch?.status == '4' ? '0' : '1'
-      " hideMoreF="0" [permissions]="dispatch?.relations" [formModel]="formModel" [dataSelected]="dispatch"
+      " hideMoreF="0" [permissions]="dispatch?.relations" [addPermissions]="listPermission" [formModel]="formModel" [dataSelected]="dispatch"
       [idField]="'RecID'">
     </codx-attachment>
   </div>
@@ -67,6 +67,14 @@
     </div>
   </div>
   <div class="row form-group">
+    <div class="col-12">
+      <codx-label [formModel]="form.formModel" fiedName="ContactName" class="fw-bold"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="contactName"
+        >
+      </codx-input>
+    </div>
+  </div>
+  <div class="row form-group">
     <div class="col-6">
       <codx-label [formModel]="form.formModel" fiedName="CategoryID" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="categoryID"
@@ -79,6 +87,7 @@
       </codx-input>
     </div>
   </div>
+ 
   <div class="row form-group">
     <div class="col-6">
       <codx-label [formModel]="form.formModel" fiedName="DispatchNo" class="fw-bold"></codx-label>
@@ -154,6 +163,18 @@
       </codx-input> -->
     <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="owner" [ngClass]="'w-100'"
       (valueChange)="changeValueOwner($event)">
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" field="lblodshare"
+      [default]="'Người được chia sẻ'"></codx-label>
+    <!-- <codx-input type="Combobox" name="combobox" [refValue]="
+          gridViewSetup != null ? gridViewSetup['Owner']['referedValue'] : null
+        " [multiple]="false" [crrValue]="this.dispatch.owner" [showInput]="true" refType="P" 
+        [ngClass]="'w-100'" (valueChange)="changeValueOwner($event)">
+      </codx-input> -->
+    <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="true"
+        refType="P" field="popup" [ngClass]="'w-100 od-ip-share'" [crrValue]="lrelations" (valueChange)="changeDataShare($event)">
     </codx-input>
   </div>
   <div class="row form-group">

@@ -101,7 +101,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.dataCopy = dt?.data?.dataCopy;
     this.adUser = JSON.parse(JSON.stringify(this.data));
     if (this.formType == 'edit') {
-      this.adUser.userID = this.data._uuid;
+      // this.adUser.userID = this.data._uuid;
       this.viewChooseRole = this.data?.chooseRoles;
       if (this.data?.chooseRoles)
         this.viewChooseRoleTemp = JSON.parse(
@@ -285,7 +285,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       formGroup.email.status == 'VALID'
     ) {
       this.dialog.dataService
-        .save((opt: any) => this.beforeSaveTemp(opt), 0)
+        .save((opt: any) => this.beforeSaveTemp(opt), 0, '', '', false)
         .subscribe((res) => {
           if (res.save) {
             this.adUser.userID = res.save.userID;

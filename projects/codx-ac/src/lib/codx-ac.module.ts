@@ -40,6 +40,17 @@ import { PopupAddItemSizeComponent } from './items/popup-add-item-size/popup-add
 import { PopupAddItemStyleComponent } from './items/popup-add-item-style/popup-add-item-style.component';
 import { PopupAddItemColorComponent } from './items/popup-add-item-color/popup-add-item-color.component';
 import { PopupAddItemConversionComponent } from './items/popup-add-item-conversion/popup-add-item-conversion.component';
+import { WarehousesComponent } from './warehouses/warehouses.component';
+import { PopAddWarehousesComponent } from './warehouses/pop-add-warehouses/pop-add-warehouses.component';
+import { UnitsofmearsureComponent } from './unitsofmearsure/unitsofmearsure.component';
+import { PopAddMearsureComponent } from './unitsofmearsure/pop-add-mearsure/pop-add-mearsure.component';
+import { PopAddConversionComponent } from './unitsofmearsure/pop-add-conversion/pop-add-conversion.component';
+import { InventoryComponent } from './inventory/inventory.component';
+import { PopAddInventoryComponent } from './inventory/pop-add-inventory/pop-add-inventory.component';
+import { ItempostingaccountsComponent } from './item-posting-accounts/item-posting-accounts.component';
+import { DimensionGroupsComponent } from './dimension-groups/dimension-groups.component';
+import { PopAddDimensionGroupsComponent } from './dimension-groups/pop-add-dimension-groups/pop-add-dimension-groups.component';
+import { PopAddDimensionSetupComponent } from './dimension-groups/pop-add-dimension-setup/pop-add-dimension-setup.component';
 
 export const routes: Routes = [
   {
@@ -78,7 +89,27 @@ export const routes: Routes = [
       },
       {
         path: 'items/:funcID',
-        component: ItemsComponent,
+        component: ItemsComponent,        
+      },
+      {
+        path: 'warehouses/:funcID',
+        component: WarehousesComponent,
+      },
+      {
+        path: 'unitsofmearsure/:funcID',
+        component: UnitsofmearsureComponent,
+      },
+      {
+        path: 'inventorymodels/:funcID',
+        component: InventoryComponent,
+      },
+      {
+        path: 'itempostingaccounts/:funcID',
+        component: ItempostingaccountsComponent,
+      },
+      {
+        path: 'dimensiongroups/:funcID',
+        component: DimensionGroupsComponent,
       },
     ],
   },
@@ -104,13 +135,21 @@ export const routes: Routes = [
     NosubAsideComponent,
     CashPaymentsComponent,
     PopAddCashComponent,
-    JournalNamesComponent,
     ItemsComponent,
     PopupAddItemComponent,
     PopupAddItemSizeComponent,
     PopupAddItemStyleComponent,
     PopupAddItemColorComponent,
-    PopupAddItemConversionComponent,
+    WarehousesComponent,
+    PopAddWarehousesComponent,
+    UnitsofmearsureComponent,
+    PopAddMearsureComponent,
+    PopAddConversionComponent,
+    InventoryComponent,
+    PopAddInventoryComponent,
+    ItempostingaccountsComponent,
+    DimensionGroupsComponent,
+    PopAddDimensionGroupsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

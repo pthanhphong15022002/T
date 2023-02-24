@@ -24,8 +24,8 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
 export class PopupETraincourseComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
   formModel: FormModel;
-  formGroup2: FormGroup;
-  formModel2: FormModel;
+  // formGroup2: FormGroup;
+  // formModel2: FormModel;
   dialog: DialogRef;
   headerText: string = '';
   idField: string = 'recID';
@@ -36,12 +36,13 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   dataForm2;
   actionType: string;
   isSaved: boolean = false;
-
+  trainCourseObj;
   dataVllSupplier: any;
+  result;
 
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('listView') listView: CodxListviewComponent;
+  // @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
     private injector: Injector,
@@ -49,57 +50,75 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     private notify: NotificationsService,
     private hrService: CodxHrService,
     @Optional() dialog?: DialogRef,
-    @Optional() data?: DialogData
+    @Optional() dataDialog?: DialogData
   ) {
     super(injector);
     this.dialog = dialog;
-    this.headerText = data?.data?.headerText;
-    this.actionType = data?.data?.actionType;
-
-    this.funcID = data?.data?.funcID;
-    this.employId = data?.data?.employeeId;
+    this.headerText = dataDialog?.data?.headerText;
+    this.actionType = dataDialog?.data?.actionType;
+    this.formModel = dialog?.formModel;
+    this.funcID = dataDialog?.data?.funcID;
+    this.employId = dataDialog?.data?.employeeId;
+    this.trainCourseObj = JSON.parse(JSON.stringify(dataDialog?.data?.dataInput));
   }
 
   initForm() {
-    this.cache
-      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-      .subscribe((grvSetup) => {
-        if (grvSetup) {
-          console.log(grvSetup);
-          let dataRequest = new DataRequest();
-          dataRequest.comboboxName = grvSetup.TrainSupplierID.referedValue;
-          dataRequest.pageLoading = false;
-
-          this.hrService.loadDataCbx('HR', dataRequest).subscribe((data) => {
-            if (data) {
-              this.dataVllSupplier = JSON.parse(data[0]);
-            }
-            console.log(this.dataVllSupplier);
-          });
-        }
-      });
-    if (this.actionType == 'add') {
+    if (this.formModel) {
       this.hrService
-        .getDataDefault(
-          this.formModel.funcID,
-          this.formModel.entityName,
-          this.idField
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.data = res?.data;
-            this.data.employeeID = this.employId;
-            this.formModel.currentData = this.data;
-            this.formGroup.patchValue(this.data);
-            this.cr.detectChanges();
-            this.isAfterRender = true;
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .then((fg) => {
+          if (fg) {
+            this.formGroup = fg;
+            this.cache
+              .gridViewSetup(
+                this.formModel.formName,
+                this.formModel.gridViewName
+              )
+              .subscribe((grvSetup) => {
+                if (grvSetup) {
+                  console.log(grvSetup);
+                  let dataRequest = new DataRequest();
+                  dataRequest.comboboxName =
+                    grvSetup.TrainSupplierID.referedValue;
+                  dataRequest.pageLoading = false;
+
+                  this.hrService
+                    .loadDataCbx('HR', dataRequest)
+                    .subscribe((data) => {
+                      if (data) {
+                        this.dataVllSupplier = JSON.parse(data[0]);
+                      }
+                      console.log(this.dataVllSupplier);
+                    });
+                }
+              });
+            if (this.actionType == 'add') {
+              this.hrService
+                .getDataDefault(
+                  this.formModel.funcID,
+                  this.formModel.entityName,
+                  this.idField
+                )
+                .subscribe((res) => {
+                  if (res) {
+                    console.log('dataaaaaa', res);
+                    // this.data = res?.data;
+                    this.trainCourseObj = res?.data;
+                    this.trainCourseObj.employeeID = this.employId;
+                    this.formModel.currentData = this.trainCourseObj;
+                    this.formGroup.patchValue(this.trainCourseObj);
+                    this.cr.detectChanges();
+                    this.isAfterRender = true;
+                  }
+                });
+            } else {
+              this.formModel.currentData = this.trainCourseObj;
+              this.formGroup.patchValue(this.trainCourseObj);
+              this.cr.detectChanges();
+              this.isAfterRender = true;
+            }
           }
         });
-    } else {
-      this.formModel.currentData = this.data;
-      this.formGroup.patchValue(this.data);
-      this.cr.detectChanges();
-      this.isAfterRender = true;
     }
 
     // this.hrService
@@ -120,19 +139,14 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.hrService.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
+    if (!this.formModel) {
+      this.hrService.getFormModel(this.funcID).then((formModel) => {
         this.formModel = formModel;
-        this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
-      }
-    });
+        this.initForm();
+      });
+    } else {
+      this.initForm();
+    }
   }
 
   swipeToRightTab(e) {
@@ -141,7 +155,54 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     }
   }
 
+  save() {
+    //Validate Data
+    // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
+    this.formGroup.patchValue({
+      trainFromDate: new Date(),
+      trainToDate: new Date(),
+    });
+
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
+    // if(this.actionType === 'add' ||  this.actionType === 'copy'){
+    //   delete this.trainCourseObj.recID;
+    // }
+    this.employId = this.employId;
+    if (this.actionType === 'add' || this.actionType === 'copy') {
+      this.hrService
+        .addETraincourse(this.trainCourseObj, this.funcID)
+        .subscribe((p) => {
+          if (p != null) {
+            this.result = p;
+            this.notify.notifyCode('SYS006');
+            this.dialog && this.dialog.close(this.result);
+          } else this.notify.notifyCode('SYS023');
+        });
+    } else {
+      this.hrService
+        .updateEmployeeTrainCourseInfo(this.trainCourseObj, this.funcID)
+        .subscribe((p) => {
+          if (p != null) {
+            this.result = p;
+            this.notify.notifyCode('SYS007');
+            this.dialog && this.dialog.close(this.result);
+          } else this.notify.notifyCode('SYS021');
+        });
+    }
+  }
   onSaveForm(closeForm: boolean) {
+    this.formGroup.patchValue({
+      trainFromDate: new Date(),
+      trainToDate: new Date(),
+    });
+
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -158,32 +219,34 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
       //Code cung
-      this.data.trainCourseID = '123';
+      // this.data.trainCourseID = '123';
       this.data.employeeID = this.employId;
 
-      this.hrService.addETraincourse(this.data).subscribe((res) => {
-        if (res) {
-          this.notify.notifyCode('SYS006');
-          this.actionType = 'edit';
-          if (this.listView) {
-            (this.listView.dataService as CRUDService).add(res).subscribe();
+      this.hrService
+        .addETraincourse(this.data, this.funcID)
+        .subscribe((res) => {
+          if (res) {
+            this.notify.notifyCode('SYS006');
+            // this.actionType = 'edit';
+            // if (this.listView) {
+            //   (this.listView.dataService as CRUDService).add(res).subscribe();
+            // }
+            if (closeForm) {
+              this.dialog && this.dialog.close();
+            }
           }
-          if (closeForm) {
-            this.dialog && this.dialog.close();
-          }
-        }
-      });
+        });
     } else {
       this.hrService
-        .updateEmployeeTrainCourseInfo(this.data)
+        .updateEmployeeTrainCourseInfo(this.data, this.funcID)
         .subscribe((res) => {
           if (res) {
             this.notify.notifyCode('SYS007');
-            if (this.listView) {
-              (this.listView.dataService as CRUDService)
-                .update(res)
-                .subscribe();
-            }
+            // if (this.listView) {
+            //   (this.listView.dataService as CRUDService)
+            //     .update(res)
+            //     .subscribe();
+            // }
             if (closeForm) {
               this.dialog && this.dialog.close();
             }
@@ -201,10 +264,10 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     });
   }
 
-  afterRenderListView(event) {
-    this.listView = event;
-    console.log(this.listView);
-  }
+  // afterRenderListView(event) {
+  //   this.listView = event;
+  //   console.log(this.listView);
+  // }
 
   click(data) {
     this.data = JSON.parse(JSON.stringify(data));
@@ -225,7 +288,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
           this.data.isUpdateCertificate = true;
           this.formGroup.patchValue({ isUpdateCertificate: true });
           this.hrService
-            .updateEmployeeTrainCourseInfo(this.data)
+            .updateEmployeeTrainCourseInfo(this.data, this.funcID)
             .subscribe((res) => {});
           this.cr.detectChanges();
         }

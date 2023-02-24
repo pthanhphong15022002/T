@@ -1,7 +1,7 @@
 <codx-form [body]="body" [subToolbar]="toolbar" [dialog]="dialog"></codx-form>
 <ng-template #body>
   <div class="container-fluid h-100">
-    <div class="row h-100 w-100">
+    <div class="row h-100 w-100" style="margin: 0">
       <div
         [ngClass]="!isCollapsed ? 'col-3 p-0' : 'd-none'"
         class="h-100"
@@ -18,20 +18,23 @@
       <div
         [ngClass]="!isCollapsed ? 'col-9' : 'col-12'"
         class="h-100 overflow-auto"
+        style="padding: 0"
       >
         <ejs-dashboardlayout
           #dashboard
           id="defaultLayoutDashBoard"
-          style="height: 100%; width: 100%"
           [columns]="columns"
           [cellSpacing]="cellSpacing"
           [cellAspectRatio]="cellAspectRatio"
-          [showGridLines]="false"
+          [showGridLines]="true"
           [allowResizing]="true"
+          [allowFloating]="false"
+          [allowDragging]="true"
           (resizeStart)="onResizeStart($event)"
           (resize)="onResize($event)"
           (resizeStop)="onResizeStop($event)"
           (created)="onCreate($event)"
+          (change)="onChange($event)"
         >
         </ejs-dashboardlayout>
       </div>
@@ -1159,7 +1162,7 @@
 </ng-template>
 
 <ng-template #toolbar>
-  <div *ngIf="enableEditing" class="d-flex justify-content-between">
+  <div class="d-flex justify-content-between">
     <!-- <div class="float-start w-100">
 
     </div> -->

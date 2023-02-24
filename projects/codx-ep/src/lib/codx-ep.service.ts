@@ -556,7 +556,24 @@ export class CodxEpService {
       [recID, status, reasonID, comment, '']
     );
   }
-
+  undo(recID: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'UndoAsync',
+      [recID]
+    );
+  }
+  cancel(recID: string, comment: string, entityName: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.Core',
+      'DataBusiness',
+      'CancelAsync',
+      [recID, comment, entityName]
+    );
+  }
   getCategoryByEntityName(entityName: string) {
     return this.api.execSv(
       'ES',
@@ -667,7 +684,15 @@ export class CodxEpService {
     );
   }
   //#endregion
-
+  getResourceEquipments(resourceID: any) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'GetResourceEquipmentsAsync',
+      resourceID
+    );
+  }
   //#Setting SYS
   getSettingValue(para: any) {
     return this.api.execSv(

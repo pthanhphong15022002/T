@@ -1,0 +1,81 @@
+<div class="w-100 h-100 scroll-y" (scroll)="onScroll()">
+    <ng-container *ngIf="loaded;else noData">
+        <ng-container *ngIf="bookmark.length > 0">
+            <div *ngIf="notiFilter.mode==''" class="d-flex align-items-center justify-content-between mt-3">
+                <codx-label class="fw-bold fs-6 text-primary" 
+                    [formModel]="formModel" 
+                    name="lblBG_Notifilcation"
+                    default="Đã ghim">
+                </codx-label>
+            </div>
+            <ng-container *ngFor="let item of bookmark;index as index">
+                <div class="d-flex align-items-center p-3 my-2 bg-hover cursor-pointer has-action-menu"
+                    (click)="clickNotification(item,$event)">
+                    <div class="me-3">
+                        <codx-img [width]="35" 
+                            [objectId]="item.createdBy" 
+                            [objectName]="item.createdName"
+                            [objectType]="'AD_Users'">
+                        </codx-img>
+                    </div>
+                    <div class="w-100">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span class="me-1" [innerHTML]="item.textValue | fTextValue:item.text | async "></span>
+                            <span *ngIf="item.isBookmark" class="icon-16 icon-bookmark"
+                                style="color: rgb(255, 168, 0);"></span>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span class="text-gray-500 ms-1">{{item.createdOn | timefrom}}</span>
+                            <span *ngIf="!item.read" class="dots"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item,'bookmark',index)"
+                            (changeDataMF)="changeDataMF($event)" [dataItem]="item" [type]="'hover'">
+                        </codx-mfunc>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngIf="noti.length > 0 ;">
+            <div *ngIf="notiFilter.mode==''" class="d-flex align-items-center justify-content-between mt-3">
+                <span>
+                    <codx-label class="fw-bold fs-6 text-primary" [formModel]="formModel" name="lblBG_Notifilcation"
+                        default="Thông báo"></codx-label>
+                </span>
+            </div>
+            <ng-container *ngFor="let item of noti;index as index">
+                <div class="d-flex align-items-center p-3 my-2 bg-hover cursor-pointer has-action-menu"
+                    (click)="clickNotification(item,$event)">
+                    <div class="me-3">
+                        <codx-img [width]="35" [objectId]="item.createdBy" [objectName]="item.createdName"
+                            [objectType]="'AD_Users'">
+                        </codx-img>
+                    </div>
+                    <div class="w-100">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span class="me-1" [innerHTML]="item.textValue | fTextValue:item.text | async"></span>
+                            <span *ngIf="item.isBookmark" class="icon-16 icon-bookmark"
+                                style="color: rgb(255, 168, 0);"></span>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span class="text-gray-500 ms-1">{{item.createdOn | timefrom}}</span>
+                            <span *ngIf="!item.read" class="dots"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item,'noti',index)"
+                            (changeDataMF)="changeDataMF($event)" [dataItem]="item" [type]="'hover'">
+                        </codx-mfunc>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+</div>
+<ng-template #noData>
+    <div class="text-center">
+        <img style="max-width:300px" src="assets/themes/sys/default/img/DataEmpty.svg" />
+        <p>{{mssgNoData}}</p>
+    </div>
+</ng-template>

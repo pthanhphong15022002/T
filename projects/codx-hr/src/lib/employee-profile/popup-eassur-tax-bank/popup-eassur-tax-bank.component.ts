@@ -9,21 +9,23 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-popup-eassur-tax-bank',
   templateUrl: './popup-eassur-tax-bank.component.html',
-  styleUrls: ['./popup-eassur-tax-bank.component.css']
+  styleUrls: ['./popup-eassur-tax-bank.component.css'],
 })
 export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
   formModel: FormModel;
+  formGroup: FormGroup;
   dialog: DialogRef;
   data;
   isAfterRender = false;
-  headerText: ''
+  headerText: '';
   @ViewChild('form') form: CodxFormComponent;
 
-    constructor(
+  constructor(
     private injector: Injector,
     private notify: NotificationsService,
     private hrService: CodxHrService,
@@ -33,40 +35,43 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
     super(injector);
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
-    console.log('formModel', this.formModel);
-    
     this.headerText = data?.data?.headerText;
-    if(this.formModel){
-      this.isAfterRender = true
-    }
-    this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected))
+    // if(this.formModel){
+    //   this.isAfterRender = true
+    // }
+    this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
   }
 
   onInit(): void {
+    if (this.formModel) {
+      this.hrService
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .then((res) => {
+          if (res) {
+            this.formGroup = res;
+            this.formModel.currentData = this.data;
+            this.formGroup.patchValue(this.data);
+            this.isAfterRender = true;
+          }
+        });
+    }
   }
 
-  ngAfterViewInit() {
-    this.dialog.closed.subscribe(res => {
-      if(!res.event){
-        this.dialog && this.dialog.close(this.data);
-      }
-    })
-  }
+  ngAfterViewInit() {}
 
-  onSaveForm(){
-    console.log(this.data);
-    
-    if(this.form.formGroup.invalid){
+  onSaveForm() {
+    if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       return;
     }
 
-    this.hrService.updateEmployeeAssurTaxBankAccountInfo(this.data).subscribe(p => {
-      if(p =! null){
-        this.notify.notifyCode('SYS007')
-        this.dialog.close();
-      }
-      else this.notify.notifyCode('SYS021');
-    })
+    this.hrService
+      .saveEmployeeSelfInfo(this.data)
+      .subscribe((p) => {
+        if ((p = !null)) {
+          this.notify.notifyCode('SYS007');
+          this.dialog && this.dialog.close(p);
+        } else this.notify.notifyCode('SYS021');
+      });
   }
 }

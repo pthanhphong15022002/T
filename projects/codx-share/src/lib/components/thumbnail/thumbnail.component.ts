@@ -1,11 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FileService } from '@shared/services/file.service';
 import { AnimationSettingsModel, ButtonPropsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
-import { AlertConfirmInputConfig, AuthStore, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
+import { AlertConfirmInputConfig, AuthStore, CacheService, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { RolesComponent } from 'projects/codx-dm/src/lib/roles/roles.component';
 import { environment } from 'src/environments/environment';
+import { CodxShareService } from '../../codx-share.service';
 import { objectPara } from '../viewFileDialog/alertRule.model';
 import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
 import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
@@ -51,6 +53,9 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   userID: any;
   file:any
   constructor(
+    private router: Router,
+    private cache: CacheService,
+    private shareService : CodxShareService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
     private callfc: CallFuncService,
@@ -142,103 +147,126 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   deleteFile(file:any) {
-    if(file && file.delete)
-    {
-      var config = new AlertConfirmInputConfig();
-      config.type = "YesNo";
-      this.notificationsService.alert(this.title, this.titleDeleteConfirm, config)
-      .closed.subscribe(x => {
-        if (x.event.status == "Y") {
-          if (this.isDeleteTemp == '0') {
-            this.fileService.deleteFileToTrash(file.recID, "", true).subscribe(item => {
-              if (item) {
-                let list = this.files;
-                var index = -1;
-                if (list.length > 0) {
-                  if (list[0].data != null) {
-                    index = list.findIndex(d => d.data.recID.toString() === file.recID);
-                  }
-                  else {
-                    index = list.findIndex(d => d.recID.toString() === file.recID);
-                  }
-                  if (index > -1) {
-                    this.dataDelete.push(list[index]);
-                    this.fileDelete.emit(this.dataDelete);
-                    list.splice(index, 1);//remove element from array
-                    this.files = list;
-                    this.fileCount.emit(this.files);
-            
-                    this.changeDetectorRef.detectChanges();
+    this.fileService.getFile(file.recID).subscribe(item=>{
+      if(item && item.delete)
+      {
+        var config = new AlertConfirmInputConfig();
+        config.type = "YesNo";
+        this.notificationsService.alert(this.title, this.titleDeleteConfirm, config)
+        .closed.subscribe(x => {
+          if (x.event.status == "Y") {
+            if (this.isDeleteTemp == '0') {
+              this.fileService.deleteFileToTrash(file.recID, "", true).subscribe(item => {
+                if (item) {
+                  let list = this.files;
+                  var index = -1;
+                  if (list.length > 0) {
+                    if (list[0].data != null) {
+                      index = list.findIndex(d => d.data.recID.toString() === file.recID);
+                    }
+                    else {
+                      index = list.findIndex(d => d.recID.toString() === file.recID);
+                    }
+                    if (index > -1) {
+                      this.dataDelete.push(list[index]);
+                      this.fileDelete.emit(this.dataDelete);
+                      list.splice(index, 1);//remove element from array
+                      this.files = list;
+                      this.fileCount.emit(this.files);
+              
+                      this.changeDetectorRef.detectChanges();
+                    }
                   }
                 }
-              }
-            })
-          }
-          else {
-            let list = this.files;
-            var index = -1;
-            if (list.length > 0) {
-              if (list[0].data != null) {
-                index = list.findIndex(d => d.data.recID.toString() === file.recID);
-              }
-              else {
-                index = list.findIndex(d => d.recID.toString() === file.recID);
-              }
-              if (index > -1) {
-                this.dataDelete.push(list[index]);
-                list.splice(index, 1);//remove element from array
-                this.files = list;
-                this.fileCount.emit(this.files);
-                this.fileDelete.emit(this.dataDelete);
-                this.changeDetectorRef.detectChanges();
+              })
+            }
+            else {
+              let list = this.files;
+              var index = -1;
+              if (list.length > 0) {
+                if (list[0].data != null) {
+                  index = list.findIndex(d => d.data.recID.toString() === file.recID);
+                }
+                else {
+                  index = list.findIndex(d => d.recID.toString() === file.recID);
+                }
+                if (index > -1) {
+                  this.dataDelete.push(list[index]);
+                  list.splice(index, 1);//remove element from array
+                  this.files = list;
+                  this.fileCount.emit(this.files);
+                  this.fileDelete.emit(this.dataDelete);
+                  this.changeDetectorRef.detectChanges();
+                }
               }
             }
           }
-        }
-      })
-    }
-    else this.notificationsService.notifyCode("SYS032")
-   
+        })
+      }
+      else this.notificationsService.notifyCode("SYS032")
+    });
   }
 
   async download(file:any): Promise<void> {
-    if(file && file.download)
-    {
-      this.fileService.downloadFile(file.recID).subscribe(async res => {
-        if (res) {
-          fetch(res)
-            .then(response => response.blob())
-            .then(blob => {
-              const link = document.createElement("a");
-              link.href = URL.createObjectURL(blob);
-              link.download = file.fileName;
-              link.click();
-            })
-            .catch(console.error);
-        }
-      })
-    }
-    else this.notificationsService.notifyCode("DM060");
-   
+    this.fileService.getFile(file.recID).subscribe(item=>{
+      if(item && item.download)
+      {
+        this.fileService.downloadFile(file.recID).subscribe(async res => {
+          if (res) {
+            fetch(environment.urlUpload+ "/" + res)
+              .then(response => response.blob())
+              .then(blob => {
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = file.fileName;
+                link.click();
+              })
+              .catch(console.error);
+          }
+        })
+      }
+      else this.notificationsService.notifyCode("DM060");
+    });
   }
 
   openFile(file:any) {
-    if(file && file.read)
-    {
-      this.fileService.getFile(file.recID).subscribe(item=>{
-        if(item)
-        {
-          var option = new DialogModel();
-          option.IsFull = true;
-          this.fileName = item.fileName;
-          this.dataFile = item;
-          this.visible = true;
-          this.viewFile.emit(true);
-        }
-      })
-     
-    }
-    else this.notificationsService.notifyCode("SYS032")
+    this.fileService.getFile(file.recID).subscribe(item=>{
+      if(item && item.read)
+      {
+        this.cache.moreFunction("FileInfo","grvFileInfo").subscribe(item2=>{
+            if(item2 && item2.length > 0)
+            {
+              var c = item2.filter(x=>x.functionID == "DMT0210");
+              if(c && c[0])
+              {
+                if(c[0].displayMode == "2")
+                {
+                  const queryParams = {
+                    id: file.recID,
+                  };
+                  var l = this.router.url.split("/");
+                  const url = this.router.serializeUrl(
+                    this.router.createUrlTree([`/`+l[1]+`/viewfile`],{
+                      queryParams: queryParams
+                    })
+                  );
+                  window.open(url, '_blank');
+                }
+                else 
+                {
+                  var option = new DialogModel();
+                  option.IsFull = true;
+                  this.fileName = item.fileName;
+                  this.dataFile = item;
+                  this.visible = true;
+                  this.viewFile.emit(true);
+                }
+              }
+            }
+        })
+      }
+      else this.notificationsService.notifyCode("SYS032")
+    })
   }
 
  

@@ -147,6 +147,10 @@
 {
     height: 18px;
 }
+.h-7px
+{
+    height: 7px;
+}
 .w-90px
 {
     width: 90px;
@@ -163,3 +167,9 @@
 .bg-color{   
     background-color: var(--text-primary) !important;
 }
+::ng-deep {
+    #om-tab .e-content, #om-tab.e-lib, #om-tab.e-touch {
+      padding: 0px !important;
+      padding-left: 0px !important;
+    }
+  }

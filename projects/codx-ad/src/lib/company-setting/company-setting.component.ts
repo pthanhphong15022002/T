@@ -20,6 +20,7 @@ import {
   CodxService,
   DialogModel,
   DialogRef,
+  FormModel,
   ImageViewerComponent,
   NotificationsService,
   SidebarModel,
@@ -88,10 +89,16 @@ export class CompanySettingComponent
   tenant: any;
   vllL1449;
   setting;
+
   //bought modules
   lstModule: Array<TN_OrderModule> = [];
   lstInstalledModule: Array<TN_OrderModule> = [];
   lstNotInstallModule: Array<TN_OrderModule> = [];
+
+  //order
+  orderFormodel: FormModel;
+  userID = '';
+
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -105,6 +112,7 @@ export class CompanySettingComponent
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     var auth = authStore as any;
     this.tenant = auth.tenantStore?.activeTenant;
+    this.userID = this.authStore.get()?.userID;
     this.loadData();
   }
 

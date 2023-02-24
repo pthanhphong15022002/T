@@ -10,50 +10,61 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-popup-etime-card',
   templateUrl: './popup-etime-card.component.html',
-  styleUrls: ['./popup-etime-card.component.css']
+  styleUrls: ['./popup-etime-card.component.css'],
 })
 export class PopupETimeCardComponent extends UIComponent implements OnInit {
   formModel: FormModel;
+  formGroup: FormGroup;
   dialog: DialogRef;
   data;
   isAfterRender = false;
-  headerText: ''
+  headerText: '';
   @ViewChild('form') form: CodxFormComponent;
 
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private notify: NotificationsService,
     private hrService: CodxHrService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
-  ) {     
+  ) {
     super(injector);
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
-    console.log('formModel e time', this.formModel);
-    
-    this.headerText = data?.data?.headerText;
-    if(this.formModel){
-      this.isAfterRender = true
-    }
-    this.data = dialog?.dataService?.dataSelected
-}
 
-  onInit(): void {
-    
+    this.headerText = data?.data?.headerText;
+    // if (this.formModel) {
+    //   this.isAfterRender = true;
+    // }
+    this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
   }
 
-  onSaveForm(){
-    this.hrService.saveEmployeeSelfInfo(this.data).subscribe(p => {
-      if(p === "True"){
-        this.notify.notifyCode('SYS007')
-        this.dialog.close()
-      }
-      else this.notify.notifyCode('SYS021')
-    })
+  onInit(): void {
+    if (this.formModel) {
+      this.hrService
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .then((res) => {
+          if (res) {
+            this.formGroup = res;
+            this.formModel.currentData = this.data;
+            this.formGroup.patchValue(this.data);
+            this.isAfterRender = true;
+          }
+        });
+    }
+  }
+
+  onSaveForm() {
+    this.hrService.saveEmployeeSelfInfo(this.data).subscribe((p) => {
+      if (p != null) {
+        this.notify.notifyCode('SYS007');
+        this.dialog && this.dialog.close(p);
+      } else this.notify.notifyCode('SYS021');
+    });
   }
 }

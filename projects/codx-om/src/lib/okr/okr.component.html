@@ -1,42 +1,64 @@
-<codx-views
-  #view
-  [views]="views"
-  (viewChanged)="viewChanged($event)"
-  [autoLoad]="false"
-  [toolbarDisplay]="false"
->
+<codx-views #view [views]="views" (viewChanged)="viewChanged($event)" [autoLoad]="false" [toolbarDisplay]="false" *ngIf="isAfterRender" >
 </codx-views>
 <ng-template #panelRight>
-  <div class="w-100 h-100 bg-white px-5">
-    <lib-okr-toolbar (click)="click($event)" (hiddenChart)="hiddenChart($event)" [data]="dataOKRPlans" [dataChild]="dataOKR" [formModel]="view?.formModel"></lib-okr-toolbar>
-    <div class="pt-5 pb-2 text-center" *ngIf="funcID==compFuncID">
-      <codx-label
-        [default]="compName"
-        fiedName="titleRoom"
-        class="fw-bold fs-2"
-      ></codx-label>
+  <div class="w-100 h-100 bg-white">
+    <!-- <lib-okr-toolbar (click)="click($event)" (hiddenChart)="hiddenChartClick($event)" [data]="dataOKRPlans" [dataChild]="dataOKR" [formModel]="view?.formModel"></lib-okr-toolbar> -->
+    <div class="d-flex align-items-center justify-content-between pt-3 mx-5">
+      <div class="d-flex align-items-center col-3 text-white om-switch-room cursor-pointer">
+        <div class="w-100px text-center bgC5C7D0 active py-2 om-rounded-pill-left" *ngIf="funcID!=compFuncID">
+          Phòng tôi
+        </div>
+        <div class="w-100px text-center bgC5C7D0 py-2 om-rounded-pill-right" *ngIf="funcID!=compFuncID">
+          Share cho tôi
+        </div>
+      </div>
+
+      <div>
+        <div class="pt-5 pb-2 text-center" *ngIf="funcID==compFuncID">
+          <codx-label [default]="compName" fiedName="titleRoom" class="fw-bold fs-2"></codx-label>
+        </div>
+        <div class="pt-5 pb-2 text-center" *ngIf="funcID == deptFuncID">
+          <codx-label [default]="deptName" fiedName="titleRoom" class="fw-bold fs-2"></codx-label>
+        </div>
+        <div class="pt-5 pb-2 text-center" *ngIf="funcID == orgFuncID">
+          <codx-label [default]="orgName" fiedName="titleRoom" class="fw-bold fs-2"></codx-label>
+        </div>
+        <div class="pt-5 pb-2 text-center" *ngIf="funcID == persFuncID">
+          <codx-label [default]="persName" fiedName="titleRoom" class="fw-bold fs-2"></codx-label>
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4">
+          <span class="symbol-label bg-om-gray">
+            <i class="icon-create text-dark"></i>
+          </span>
+        </div>
+        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4 " (click)="editWeight(dataOKRPlans.recID)">
+          <span class="symbol-label bg-om-gray hover-bg-color ">
+            <i class="fas fa-balance-scale w-100 h-100 d-flex justify-content-center align-items-center text-dark"></i>
+          </span>
+        </div>
+        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="hiddenChartClick(!isHiddenChart)">
+          <span class="symbol-label " [ngClass]="isHiddenChart? 'bg-om-gray' :'bg-color'">
+            <i class="icon-bar_chart " [ngClass]="isHiddenChart? 'text-dark' :'text-light'"></i>
+          </span>
+        </div>
+        <codx-dropdown-calendar cssPopup="h-500px w-800px" [value]="date" [selectedType]="'y'" [displayOption]="ops"
+          cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event)"></codx-dropdown-calendar>
+        <!-- <div class="me-4">
+              <codx-toolbar-button [button]="button" (buttonClick)="buttonClick($event)">
+              </codx-toolbar-button>
+          </div>  -->
+        <div class="symbol symbol-30px symbol-circle cursor-pointer">
+          <span class="symbol-label bg-om-gray">
+            <codx-mfunc [formModel]="formModelPlan"></codx-mfunc>
+          </span>
+          <!-- <span (click)="sharePlan()">Chia sẻ</span> -->
+        </div>
+      </div>
+
     </div>
-    <div class="pt-5 pb-2 text-center" *ngIf="funcID == deptFuncID">
-      <codx-label
-        [default]="deptName"
-        fiedName="titleRoom"
-        class="fw-bold fs-2"
-      ></codx-label>
-    </div>
-    <div class="pt-5 pb-2 text-center" *ngIf="funcID == orgFuncID">
-      <codx-label
-        [default]="orgName"
-        fiedName="titleRoom"
-        class="fw-bold fs-2"
-      ></codx-label>
-    </div>
-    <div class="pt-5 pb-2 text-center" *ngIf="funcID == persFuncID">
-      <codx-label
-        [default]="persName"
-        fiedName="titleRoom"
-        class="fw-bold fs-2"
-      ></codx-label>
-    </div>
+
 
     <div class="p-om-okr d-flex justify-content-center">
       <ejs-tab id="om-tab">
@@ -45,62 +67,38 @@
             <ng-template #headerText>
               <div class="d-flex align-items-center">
                 <i class="fa-solid fa-bullseye me-2"></i>
-                <codx-label
-                  default="Mục tiêu"
-                  fiedName="lbltaget"
-                  class="fw-bold"
-                ></codx-label>
+                <codx-label default="Mục tiêu" fiedName="lbltaget" class="fw-bold"></codx-label>
               </div>
             </ng-template>
             <ng-template #content>
-              <ng-container *ngIf="dataOKRPlans != null; else elseOKR">
+              <ng-container *ngIf="!planNull ; else elseOKR">
                 <ng-container *ngIf="dataOKR != null">
-                <lib-okr-targets
-                  [dataOKRPlans]="dataOKRPlans"
-                  [dataOKR]="dataOKR"
-                  [formModel]="view?.formModel"
-                  [gridView]="gridView"
-                  [obFuncID]="obFuncID"
-                  [krFuncID]="krFuncID"
-                  [skrFuncID]="skrFuncID"
-
-                  [formModelKR]="formModelKR"
-                  [formModelOB]="formModelOB"                  
-                  [formModelSKR]="formModelSKR"
-                  [funcID]="funcID"
-                  [isHiddenChart]="isHiddenChart"
-                ></lib-okr-targets>
-              </ng-container>
+                  <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel"
+                    [gridView]="gridView" [obFuncID]="obFuncID" [krFuncID]="krFuncID" [skrFuncID]="skrFuncID"
+                    [formModelKR]="formModelKR" [formModelOB]="formModelOB" [formModelSKR]="formModelSKR"
+                    [funcID]="funcID" [isHiddenChart]="isHiddenChart"></lib-okr-targets>
+                </ng-container>
               </ng-container>
               <ng-template #elseOKR>
-                <div
-                  class="om-def text-center d-flex flex-column w-100 justify-content-center align-item-center"
-                >
-                  <div>
-                    <div class="my-2">
-                      <span
-                        >{{ funcID==compFuncID? compName : funcID==deptFuncID? deptName : funcID==orgFuncID? orgName :persName }} chưa thiết lập mục tiêu cho
-                        Q2/2022</span
-                      >
-                    </div>
-                    <div class="my-2">
-                      <span>Vui lòng chọn nút < </span
-                      ><span>Tạo bộ mục tiêu</span
-                      ><span> > để thiết lập bộ mục tiêu cho {{ funcID==compFuncID? compName : funcID==deptFuncID? deptName : funcID==orgFuncID? orgName :persName }}</span>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                      <div
-                        class="d-flex align-items-center cursor-pointer border rounded p-2"
-                        (click)="click({ id: 'btnAddPlan' })"
-                      >
-                        <i class="fa-solid fa-bullseye me-3 ms-1"></i>
-                        <codx-label
-                          default="Tạo bộ mục tiêu"
-                          fiedName="lblTargets"
-                        ></codx-label>
+                <div class="w-100 my-10  text-center d-flex flex-row justify-content-center align-item-center">
+                  <div class="col-2"></div>
+                  <div class=" col-7 pb-10 bg-primary-lighter my-5 text-center d-flex flex-column justify-content-center align-item-center  border border-2 border-primary">
+
+                      <span inlineSVG="./assets/themes/om/default/img/OKRs.svg"></span>
+                      <span *ngIf="funcID==compFuncID" [innerHTML]="compPlanNull"></span>
+                      <span *ngIf="funcID==deptFuncID" [innerHTML]="deptPlanNull"></span>
+                      <span *ngIf="funcID==orgFuncID" [innerHTML]="orgPlanNull"></span>
+                      <span *ngIf="funcID==persFuncID" [innerHTML]="persPlanNull"></span>
+                      <div class="d-flex justify-content-center">
+                        <span type="button" (click)="click({ id: 'btnAddPlan' })"
+                          class="w-110px d-flex mt-3 py-2 px-4 bg-color rounded justify-content-center align-items-center">
+                          <span class="fa-solid fa-bullseye btn-text-primary text-light me-1"></span>
+                          <codx-label class="text-light" fiedName="lbl" default="Tạo bộ mục tiêu"></codx-label>
+                        </span>
                       </div>
-                    </div>
+
                   </div>
+                  <div class="col-2"></div>
                 </div>
               </ng-template>
             </ng-template>
@@ -109,60 +107,39 @@
             <ng-template #headerText>
               <div class="d-flex align-items-center">
                 <i class="fa-solid fa-folder-tree me-2"></i>
-                <codx-label
-                  default="Cây mục tiêu"
-                  fiedName="lbltreetaget"
-                  class="fw-bold"
-                ></codx-label>
+                <codx-label default="Cây mục tiêu" fiedName="lbltreetaget" class="fw-bold"></codx-label>
               </div>
             </ng-template>
             <ng-template #content>
-            <lib-okr-trees [funcID]="funcID" [planRecID]="dataOKRPlans?.recID" ></lib-okr-trees>  
+              <lib-okr-trees [funcID]="funcID" [planRecID]="dataOKRPlans?.recID"></lib-okr-trees>
             </ng-template>
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-center">
                 <i class="fa-solid fa-list me-2"></i>
-                <codx-label
-                  default="Công việc"
-                  fiedName="lbljob"
-                  class="fw-bold"
-                ></codx-label>
+                <codx-label default="Công việc" fiedName="lbljob" class="fw-bold"></codx-label>
               </div>
             </ng-template>
             <ng-template #content>
-              <codx-tasks-share
-                [funcID]="'OMT013'"
-                [showButtonAdd]="true"
-                [showMoreFunc]="true"
-              ></codx-tasks-share>
+              <codx-tasks-share [funcID]="'OMT013'" [showButtonAdd]="true" [showMoreFunc]="true"></codx-tasks-share>
             </ng-template>
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-center">
                 <i class="fa-regular fa-calendar me-2"></i>
-                <codx-label
-                  default="Họp định kỳ"
-                  fiedName="lblmeeting"
-                  class="fw-bold"
-                ></codx-label>
+                <codx-label default="Họp định kỳ" fiedName="lblmeeting" class="fw-bold"></codx-label>
               </div>
             </ng-template>
-            <ng-template #content
-              ><lib-okr-reviews [formModel]="view?.formModel"></lib-okr-reviews>
+            <ng-template #content><lib-okr-reviews [formModel]="view?.formModel"></lib-okr-reviews>
             </ng-template>
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-center">
                 <i class="fa-regular fa-square-check me-2"></i>
-                <codx-label
-                  default="Đánh giá"
-                  fiedName="lblmeeting"
-                  class="fw-bold"
-                ></codx-label>
+                <codx-label default="Đánh giá" fiedName="lblmeeting" class="fw-bold"></codx-label>
               </div>
             </ng-template>
             <ng-template #content> Đánh giá </ng-template>
@@ -171,11 +148,7 @@
             <ng-template #headerText>
               <div class="d-flex align-items-center">
                 <i class="fa-solid fa-clock-rotate-left me-2"></i>
-                <codx-label
-                  default="Cập nhật"
-                  fiedName="lblmeeting"
-                  class="fw-bold"
-                ></codx-label>
+                <codx-label default="Cập nhật" fiedName="lblmeeting" class="fw-bold"></codx-label>
               </div>
             </ng-template>
             <ng-template #content> Cập nhật </ng-template>

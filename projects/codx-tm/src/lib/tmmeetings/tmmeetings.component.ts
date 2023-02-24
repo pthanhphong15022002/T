@@ -109,6 +109,7 @@ export class TMMeetingsComponent
   heightWin: any;
   widthWin: any;
   disabledProject = false;
+  queryParams: any;
 
   constructor(
     inject: Injector,
@@ -119,13 +120,16 @@ export class TMMeetingsComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
-    
+    this.tmService
+            .RPASendMailAlert()
+            .subscribe();
     this.cache.moreFunction('TMMeetings', 'grvTMMeetings').subscribe((res) => {
       if (res) this.listMoreFunc = res;
     });
 
     this.dataValue = this.user?.userID;
     this.getParams();
+    this.queryParams = this.router.snapshot.queryParams;
 
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
@@ -167,7 +171,12 @@ export class TMMeetingsComponent
     this.requestSchedule.assemblyName = 'CO';
     this.requestSchedule.className = 'MeetingsBusiness';
     this.requestSchedule.method = 'GetListMeetingsAsync';
+    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
+      this.requestSchedule.predicate = this.queryParams?.predicate;
+      this.requestSchedule.dataValue = this.queryParams?.dataValue;
+    }
     this.requestSchedule.idField = 'meetingID';
+
   }
 
   receiveMF(e: any) {
@@ -232,7 +241,7 @@ export class TMMeetingsComponent
   changeDataMF(e: any, data: any) {
     if (e) {
       e.forEach((x) => {
-        // an edit và delete 
+        // an edit và delete
         if ((x.functionID == 'SYS02' || x.functionID == 'SYS03') && data?.createdBy != this.user?.userID  && !this.user?.administrator) {
           x.disabled = true;
         }
@@ -480,11 +489,11 @@ export class TMMeetingsComponent
       );
       this.dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+        // if (e?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
         // if (e && e?.event != null) {
         //   this.getResourecesNew(e?.event?.resources);
         // }
@@ -512,11 +521,11 @@ export class TMMeetingsComponent
         );
         this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
+          // if (e?.event == null)
+          //   this.view.dataService.delete(
+          //     [this.view.dataService.dataSelected],
+          //     false
+          //   );
         });
       });
   }
@@ -537,11 +546,11 @@ export class TMMeetingsComponent
       );
       this.dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+        // if (e?.event == null)
+        //   this.view.dataService.delete(
+        //     [this.view.dataService.dataSelected],
+        //     false
+        //   );
         // if (e && e?.event != null) {
         //   this.getResourecesNew(e?.event?.resources);
         // }
@@ -756,7 +765,7 @@ export class TMMeetingsComponent
   openLinkMeeting(data) {
     window.open(data?.link);
   }
-  // getResourecesNew(arrayResource) { 
+  // getResourecesNew(arrayResource) {
   //   if (arrayResource?.length > 0) {
   //     var idResources = arrayResource.map((x) => {
   //       return x.resourceID;

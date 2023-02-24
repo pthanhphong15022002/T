@@ -243,10 +243,10 @@ export class ApprovalCarsComponent extends UIComponent {
         {
           // if(datas.allowToApprove == true){
 
-             this.approve(datas, '5');
+          this.approve(datas);
           // }
           // else{
-            
+
           //   this.notificationsService.notifyCode('EP020');
           //   return;
           // }
@@ -254,7 +254,7 @@ export class ApprovalCarsComponent extends UIComponent {
         break;
       case 'EPT40202': //Từ chối
         {
-          this.approve(datas, '4');
+          this.reject(datas);
         }
         break;
       case 'EPT40204': {
@@ -263,35 +263,125 @@ export class ApprovalCarsComponent extends UIComponent {
         this.assignDriver(datas);
         break;
       }
-      default:
-        '';
+      case 'EPT40206':
+        {
+          //alert('Thu hồi');
+          this.undo(datas);
+        }
         break;
     }
   }
-
-  approve(data: any, status: string) {
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
+      event.forEach((func) => {
+        if (
+          func.functionID == 'SYS04' /*Copy*/ ||
+          func.functionID == 'EPT40203'
+        ) {
+          func.disabled = true;
+        }
+      });
+      if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = false;
+          }
+          if (
+            func.functionID == 'EPT40204' /*MF phân công tài xế*/ ||
+            func.functionID == 'EPT40206' /*Thu hoi*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = true;
+          }
+          if (func.functionID == 'EPT40204') {
+            func.disabled = false;
+          }
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            
+            let havedDriver = false;
+            if(data?.resources){              
+              for (let i = 0; i < data?.resources.length; i++) {
+                if (data?.resources[i].roleType == '2') {
+                  havedDriver = true;                  
+                }
+              }
+            }            
+            if (!havedDriver) {
+              func.disabled = false;
+            } else {
+              func.disabled = true;
+            }
+          }
+        });
+      }
+    }
+  }
+  undo(data: any) {
+    this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
+      if (res != null) {
+        this.notificationsService.notifyCode('SYS034'); //đã thu hồi
+        data.approveStatus = '3';
+        data.status = '3';
+        this.view.dataService.update(data).subscribe();
+      } else {
+        this.notificationsService.notifyCode(res?.msgCodeError);
+      }
+    });
+  }
+  approve(data: any) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((res: any) => {
         this.codxEpService
           .approve(
             data?.approvalTransRecID, //ApprovelTrans.RecID
-            status,
+            '5',
             '',
             ''
           )
           .subscribe((res: any) => {
             if (res?.msgCodeError == null && res?.rowCount >= 0) {
-              if (status == '5') {
+              
                 this.notificationsService.notifyCode('SYS034'); //đã duyệt
                 data.approveStatus = '5';
-                data.status = '5';
-              }
-              if (status == '4') {
+                data.status = '5';             
+
+              this.view.dataService.update(data).subscribe();
+            } else {
+              this.notificationsService.notifyCode(res?.msgCodeError);
+            }
+          });
+      });
+  }
+  reject(data: any) {
+    this.codxEpService
+      .getCategoryByEntityName(this.formModel.entityName)
+      .subscribe((res: any) => {
+        this.codxEpService
+          .approve(
+            data?.approvalTransRecID, //ApprovelTrans.RecID
+            '4',
+            '',
+            ''
+          )
+          .subscribe((res: any) => {
+            if (res?.msgCodeError == null && res?.rowCount >= 0) {
+              
                 this.notificationsService.notifyCode('SYS034'); //bị hủy
                 data.approveStatus = '4';
                 data.status = '4';
-              }
+              
 
               this.view.dataService.update(data).subscribe();
             } else {
@@ -350,47 +440,7 @@ export class ApprovalCarsComponent extends UIComponent {
     this.itemDetail = event?.data;
   }
 
-  changeDataMF(event, data: any) {
-    if (event != null && data != null) {
-      event.forEach((func) => {
-        if (
-          func.functionID == 'SYS04' /*Copy*/ ||
-          func.functionID == 'EPT40203'
-        ) {
-          func.disabled = true;
-        }
-      });
-      if (data.approveStatus == '3') {
-        event.forEach((func) => {
-          if (
-            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
-            func.functionID == 'EPT40202' /*MF từ chối*/
-          ) {
-            func.disabled = false;
-          }
-          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
-            func.disabled = true;
-          }
-        });
-      } else {
-        event.forEach((func) => {
-          if (
-            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
-            func.functionID == 'EPT40202' /*MF từ chối*/
-          ) {
-            func.disabled = true;
-          }
-          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
-            if (data.approveStatus == 5 && data.driverName == null) {
-              func.disabled = false;
-            } else {
-              func.disabled = true;
-            }
-          }
-        });
-      }
-    }
-  }
+ 
   sameDayCheck(sDate: any, eDate: any) {
     if (sDate && eDate) {
       return moment(new Date(sDate)).isSame(new Date(eDate), 'day');

@@ -1,7 +1,7 @@
-import { Component, OnInit, Optional } from '@angular/core';
-import { CacheService, DialogData, DialogRef } from 'codx-core';
+import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { AuthStore, CacheService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxDpService } from '../../codx-dp.service';
-import { DP_Instances, DP_Instances_Steps, DP_Steps_Reasons } from '../../models/models';
+import { DP_Instances, DP_Instances_Steps, DP_Instances_Steps_Reasons, DP_Steps_Reasons } from '../../models/models';
 
 @Component({
   selector: 'lib-popup-move-reason',
@@ -14,26 +14,40 @@ export class PopupMoveReasonComponent implements OnInit {
   formModel:any;
   listCbxProccess:any;
   stepReason:any;
+  user:any;
+  userId:any;
 
   headerText: string = '';
   instancesName: string = '';
   viewKanban: string = 'kanban';
   viewClick: string = '';
   titleReasonClick: string = '';
+  applyFor: string = '';
+  stepName: string = '';
+  moveProccess: string = '';
+  memoStep:string = '';
 
-  listReason: DP_Steps_Reasons[]=[];
+  listReason: DP_Instances_Steps_Reasons[]=[];
 
-
+  listReasonClick: DP_Instances_Steps_Reasons[]=[];
+  reasonStep = new DP_Instances_Steps();
+  reason = new DP_Instances_Steps_Reasons();
+  instances = new DP_Instances();
+  listStep : DP_Instances_Steps_Reasons[]=[];
 
   instanceStep = new DP_Instances_Steps;
-  instance = new DP_Instances;
+
+  isReason: boolean = true;
 
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
   readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
 
   constructor(
     private cache: CacheService,
-    private dpService: CodxDpService,
+    private codxDpService: CodxDpService,
+    private notiService: NotificationsService,
+    private authStore: AuthStore,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
 
@@ -42,63 +56,93 @@ export class PopupMoveReasonComponent implements OnInit {
 
     this.dialog = dialog;
     this.formModel = dt?.data.formModel;
-    this.instancesName = dt?.data.instancesName;
-    this.headerText = dt?.data.dataMore.description;
+    this.instances = dt?.data.instance;
+    this.headerText = dt?.data.headerTitle;
     this.titleReasonClick = dt?.data.isReason? 'Chọn lý do thành công': 'Chọn lý do thất bại';
+    this.applyFor = dt?.data?.applyFor;
     this.viewClick = this.viewKanban;
+    this.stepName = dt?.data?.stepName;
+    this.reasonStep = dt?.data?.objReason
+    this.listReason = this.reasonStep.reasons;
+    this.user = this.authStore.get();
+    this.userId = this.user?.userID
+    this.isReason = dt?.data?.isReason;
 
+    this.listCbxProccess = dt?.data?.listProccessCbx;
+    this.moveProccess =  this.listCbxProccess[0].recID;
 
   }
 
   ngOnInit(): void {
-    let test = new DP_Steps_Reasons();
-    test.reasonName = 'Khách hàng thích sản phẩm mà công ty cung cấp';
-    this.listReason.push(test);
-    let test1 = new DP_Steps_Reasons();
-    test1.reasonName = 'Khách hàng không cobnf lựa chọn nào khác';
-    this.listReason.push(test1);
-    let test2 = new DP_Steps_Reasons();
-    test2.reasonName = 'Sản phẩm cônh ty cung cấp vượt mức mong đợi của khách hàng';
-    this.listReason.push(test2);
-    let test3 = new DP_Steps_Reasons();
-    test3.reasonName = 'Khác';
-    this.listReason.push(test3);
-    console.log(this.listReason);
-
-  }
-  loadCbxProccess() {
-    this.cache.valueList('DP031').subscribe((data) => {
-      this.dpService.getlistCbxProccess().subscribe((res) => {
-        if (res) {
-          this.listCbxProccess = res[0];
-          var obj = {
-            recID: this.guidEmpty,
-            processName: data.datas[0].default
-             // 'Không chuyển đến quy trình khác'
-          };
-          this.listCbxProccess.unshift(obj);
-        }
-      });
-    });
-
+    
   }
 
-  onSave(){
+  onSave() {
+    if(this.reasonStep.reasonControl === true && this.listReasonClick.length === 0) {
+      this.notiService.notifyCode('DP006');
+      return;
+    }
+    // else {
+    
+      this.beforeSave();
+    // }
 
   }
+  beforeSave() {
+    this.reasonStep.reasons = this.listReasonClick;
+    var data = [this.instances.recID, this.moveProccess, this.reasonStep, this.isReason];
+    this.codxDpService.moveReasonByIdInstance(data).subscribe((res)=> {
+      if(res){
+        this.instances = res[0];
+        this.listStep = res[1];
+        var obj ={
+          listStep: this.listStep,
+          instance: this.instances,
+        };
+        this.dialog.close(obj);
+        this.notiService.notifyCode('SYS007');
+    
 
+        this.changeDetectorRef.detectChanges();
+      }
+    })
+  }
+  checkValue($event,data){
+    if($event && $event.currentTarget.checked){
+        var reason = this.handleReason(data);
+        this.listReasonClick.push(reason);
+    }
+    else {
+      let idx = this.listReasonClick.findIndex(x=> x.reasonName  === data.reasonName);
+      if(idx>=0) this.listReasonClick.splice(idx, 1);
+    }
+  }
   valueChange($event){
-
+    if($event){
+      this.reasonStep.memo = $event.data;
+    }
   }
+
+  handleReason(
+    reason: DP_Instances_Steps_Reasons
+  ) {
+    reason.processID = this.instances.processID;
+    reason.stepID = this.reasonStep.stepID;
+    reason.instanceID = this.instances.recID;
+    reason.createdBy = this.userId;
+    reason.reasonType = this.isReason ? '1' : '2';
+    return reason;
+  }
+
 
   changeTime($event){
 
   }
 
   cbxChange($event) {
-    // if($event){
-    //   this.stepReason.newProcessID = $event;
-    // }
+    if($event){
+      this.moveProccess = $event;
+    }
 
   }
 }

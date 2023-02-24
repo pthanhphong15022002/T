@@ -25,6 +25,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { CodxBpService } from '../../codx-bp.service';
 import { environment } from 'src/environments/environment';
 import { tmpUser } from '../../models/BP_UserPermission.model';
+import moment from 'moment';
 @Component({
   selector: 'lib-popup-add-processes',
   templateUrl: './popup-add-processes.component.html',
@@ -81,7 +82,7 @@ export class PopupAddProcessesComponent implements OnInit {
   moreFunctionEdit: string = 'edit';
   listPermissionCopy: BP_ProcessPermissions[] = [];
   onwerOldCoppy: string = '';
-  msgCodeExistNameProcess='BP008';
+  msgCodeExistNameProcess = 'BP008';
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -195,7 +196,9 @@ export class PopupAddProcessesComponent implements OnInit {
           for (let i = 0; i < countArray; i++) {
             if (
               this.listPermissionCopy[i].autoCreate &&
-             (this.listPermissionCopy[i].objectID != this.onwerOldCoppy || (this.listPermissionCopy[i].objectID == this.onwerOldCoppy && this.listPermissionCopy[i].memberType == '1'))
+              (this.listPermissionCopy[i].objectID != this.onwerOldCoppy ||
+                (this.listPermissionCopy[i].objectID == this.onwerOldCoppy &&
+                  this.listPermissionCopy[i].memberType == '1'))
             ) {
               this.process.permissions.push(this.listPermissionCopy[i]);
             }
@@ -204,7 +207,7 @@ export class PopupAddProcessesComponent implements OnInit {
       }
       this.revisions.push(versions);
       this.process.versions = this.revisions;
-      if(this.action == 'add' || this.action == 'copy'){
+      if (this.action == 'add' || this.action == 'copy') {
         this.process.versions[0].recID = this.folderID;
       }
       data = [
@@ -217,9 +220,9 @@ export class PopupAddProcessesComponent implements OnInit {
     } else if (this.action == this.moreFunctionEdit) {
       op.method = 'UpdateProcessesAsync';
       op.className = 'ProcessesBusiness';
-      if(this.process.versions.length > 0 && this.process.versions !== null ) {
-        this.process.versions.forEach(x=> {
-          if(x.versionNo === this.process.versionNo) {
+      if (this.process.versions.length > 0 && this.process.versions !== null) {
+        this.process.versions.forEach((x) => {
+          if (x.versionNo === this.process.versionNo) {
             x.activedOn = this.process.activedOn;
           }
         });
@@ -236,7 +239,7 @@ export class PopupAddProcessesComponent implements OnInit {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         this.attachment?.clearData();
-        this.imageAvatar.clearData() ;
+        this.imageAvatar.clearData();
         if (res) {
           this.dialog.close([res.save]);
         } else this.dialog.close();
@@ -248,8 +251,8 @@ export class PopupAddProcessesComponent implements OnInit {
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.update) {
-        this.attachment?.clearData();
-        this.imageAvatar.clearData() ;
+          this.attachment?.clearData();
+          this.imageAvatar.clearData();
           this.dialog.close(res.update);
         }
       });
@@ -275,6 +278,8 @@ export class PopupAddProcessesComponent implements OnInit {
       return;
     }
     if (this.process?.activedOn && this.process?.expiredOn) {
+      // var dateActive = moment(this.process?.activedOn).format('YYYY-MM-DD HH:mm:ss');
+      // var dateExpiredOn = moment(this.process?.expiredOn).format('YYYY-MM-DD HH:mm:ss');
       if (this.process?.activedOn >= this.process?.expiredOn) {
         this.notiService.notifyCode('BP003');
         return;
@@ -396,45 +401,47 @@ export class PopupAddProcessesComponent implements OnInit {
   //#endregion event
 
   valueChangeUser(e) {
-    if(e.data){
+    if (e.data) {
       this.process.owner = e?.data;
       this.isAddPermission(this.process.owner);
     }
   }
   isAddPermission(id) {
-    if(id!=null){
+    if (id != null) {
       this.api
-      .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
-      .subscribe((res) => {
-        if (res) {
-          this.perms = [];
-          this.emp = res;
-          this.updatePermission(this.emp, this.tmpPermission, this.onwerRole);
-        }
-      });
+        .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
+        .subscribe((res) => {
+          if (res) {
+            this.perms = [];
+            this.emp = res;
+            this.updatePermission(this.emp, this.tmpPermission, this.onwerRole);
+          }
+        });
     }
-
   }
   updateOrCreatProccess(emp: tmpUser) {
-      if (
-        this.process?.permissions != null &&
-        this.process?.permissions.length > 0
-      ) {
-        // member type is zero for onwer of proccess
-        this.process.permissions
-          .filter((x) => x.objectID === this.tmpPermission.objectID && x.memberType =="0")
-          .forEach((element) => {
-            this.updatePermission(emp, element, this.onwerRole);
-            this.isExitUserPermiss = true;
-          });
-        if (!this.isExitUserPermiss) {
-          this.process.permissions.push(this.tmpPermission);
-        }
-      } else {
-        this.perms.push(this.tmpPermission);
-        this.process.permissions = this.perms;
+    if (
+      this.process?.permissions != null &&
+      this.process?.permissions.length > 0
+    ) {
+      // member type is zero for onwer of proccess
+      this.process.permissions
+        .filter(
+          (x) =>
+            x.objectID === this.tmpPermission.objectID && x.memberType == '0'
+        )
+        .forEach((element) => {
+          this.updatePermission(emp, element, this.onwerRole);
+          this.isExitUserPermiss = true;
+        });
+      if (!this.isExitUserPermiss) {
+        this.process.permissions.push(this.tmpPermission);
       }
-      this.callActionSave();
+    } else {
+      this.perms.push(this.tmpPermission);
+      this.process.permissions = this.perms;
+    }
+    this.callActionSave();
   }
 
   async updatePermission(
@@ -469,8 +476,7 @@ export class PopupAddProcessesComponent implements OnInit {
       this.action == this.moreFunctionEdit
     ) {
       this.actionSave();
-    }
-    else {
+    } else {
       this.CheckAllExistNameProccess(this.process.recID);
     }
   }

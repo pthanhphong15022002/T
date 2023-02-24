@@ -5,6 +5,7 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  UrlUtil,
   Util,
 } from 'codx-core';
 import {
@@ -70,8 +71,10 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   loadingAll = false;
   gridViewSetup: any;
   formModel: any;
-  planholderTaskChild=''
-
+  planholderTaskChild = '';
+  referedFunction: any;
+  referedData: any;
+  isClickSave = false;
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTasksService,
@@ -85,7 +88,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.getParam();
     this.task = {
       ...this.task,
-      ...dt?.data[0],
+      ...dt?.data?.task,
     };
     this.refID = this.task?.refID;
     this.refType = this.task?.refType || this.refType;
@@ -93,10 +96,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.dueDate = this.task?.dueDate;
     this.taskName = this.task?.taskName;
 
-    this.vllShare = dt?.data[1] ? dt?.data[1] : this.vllShare;
-    this.vllRole = dt?.data[2] ? dt?.data[2] : this.vllRole;
-    this.title = dt?.data[3] ? dt?.data[3] : this.title;
-    this.taskParent = dt?.data[4];
+    this.vllShare = dt?.data?.vllShare || this.vllShare;
+    this.vllRole = dt?.data?.vllRole || this.vllRole;
+    this.title = dt?.data?.title || this.title;
+    this.taskParent = dt?.data?.taskParent;
+    this.referedFunction = dt?.data?.referedFunction;
+    this.referedData = dt?.data?.referedData;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.formModel = this.dialog.formModel;
@@ -112,7 +117,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
-          this.planholderTaskChild= res['Memo']?.description;
+          this.planholderTaskChild = res['Memo']?.description;
         }
       });
   }
@@ -142,6 +147,22 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       });
   }
 
+  defaultField() {
+    if (
+      this.referedData &&
+      this.referedFunction &&
+      this.referedFunction.defaultField
+    ) {
+      let dataField = Util.camelize(this.referedFunction.defaultField);
+      let dataValue = UrlUtil.modifiedByObj(
+        this.referedFunction.defaultValue,
+        this.referedData
+      );
+      this.task[dataField] = dataValue;
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
   closePanel() {
     this.dialog.close();
   }
@@ -161,6 +182,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.task.refID = this.refID;
     this.task.refType = this.refType;
     this.task.taskName = this.taskName;
+    this.defaultField();
     if (this.taskParent) {
       this.task.parentID =
         this.taskParent.category == '1' ? null : this.taskParent.recID;
@@ -188,6 +210,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       if (this.taskParent?.taskGroupID)
         this.logicTaskGroup(this.taskParent?.taskGroupID);
     }
+
     this.loadDataReferences();
     this.changeDetectorRef.detectChanges();
   }
@@ -284,7 +307,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       return;
     }
     if (
+      this.param?.MaxHoursControl != null &&
       this.param?.MaxHoursControl != '0' &&
+      this.param?.MaxHours != null &&
       this.task.estimated > Number.parseFloat(this.param?.MaxHours)
     ) {
       this.notiService.notifyCode('TM058', 0, [this.param?.MaxHours]);
@@ -326,6 +351,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       // }
     }
     var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID : null;
+    if (this.isClickSave) return;
+    this.isClickSave = true;
     if (this.isHaveFile && this.attachment)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -344,12 +371,14 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         this.listTaskResources,
         this.listTodo,
         taskIDParent,
+        this.formModel.entityName,
+        this.formModel.funcID
       ])
       .subscribe((res) => {
-        if (res[0]) {
+        if (res && res[0]) {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
-          var taskParent = res[1][0];
+        
           //send mail FE
           // if (this.param?.ConfirmControl == '1')
           //   this.tmSv
@@ -360,85 +389,89 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           //     .sendAlertMail(taskParent?.recID, 'TM_0001', this.functionID)
           //     .subscribe();
 
-          //lưu his giao việc
-          var objectType = this.formModel.entityName;
-          var objectID = this.task.refID;
+          //lưu his giao việc da chuyen vao BE -Thao chuyen - 22/2/2023
+         // var taskParent = res[1][0];
+          // var objectType = this.formModel.entityName;
+          // var objectID = this.task.refID;
+          // this.api
+          //   .execSv<any>(
+          //     'SYS',
+          //     'AD',
+          //     'UsersBusiness',
+          //     'LoadUserListByIDAsync',
+          //     JSON.stringify(taskParent.assignTo.split(';'))
+          //   )
+          //   .subscribe((users) => {
+          //     if (users?.length > 0) {
+          //       var dataObj = [];
+          //       users.forEach((user) => {
+          //         dataObj.push({
+          //           objectType: objectType,
+          //           objectID: user.userID,
+          //           objectName: user.userName,
+          //         });
+          //       });
 
-          // var objectName = this.user.userName;
-          // var dataObj = {
-          //   objectType: objectType,
-          //   objectID: taskParent.assignTo,
-          //   objectName: objectName,
-          // };
+          //       var tmpHistorry = {
+          //         objectType: objectType,
+          //         objectID: objectID,
+          //         actionType: 'T',
+          //         functionID: this.formModel.funcID,
+          //         sendToObjects: dataObj,
+          //       };
 
-          this.api
-            .execSv<any>(
-              'SYS',
-              'AD',
-              'UsersBusiness',
-              'LoadUserListByIDAsync',
-              JSON.stringify(taskParent.assignTo.split(';'))
-            )
-            .subscribe((users) => {
-              if (users?.length > 0) {
-                var dataObj = [];
-                users.forEach((user) => {
-                  dataObj.push({
-                    objectType: objectType,
-                    objectID: user.userID,
-                    objectName: user.userName,
-                  });
-                });
-
-                var tmpHistorry = {
-                  objectType: objectType,
-                  objectID: objectID,
-                  actionType: 'T',
-                  functionID: this.formModel.funcID,
-                  sendToObjects: dataObj,
-                };
-
-                this.api
-                  .execSv<any>(
-                    'BG',
-                    'ERM.Business.BG',
-                    'TrackLogsBusiness',
-                    'InsertAsync',
-                    tmpHistorry
-                  )
-                  .subscribe();
-              }
-            });
+          //       this.api
+          //         .execSv<any>(
+          //           'BG',
+          //           'ERM.Business.BG',
+          //           'TrackLogsBusiness',
+          //           'InsertAsync',
+          //           tmpHistorry
+          //         )
+          //         .subscribe();
+          //     }
+          //   });
         } else {
           this.notiService.notifyCode('TM038');
-          return;
+          this.dialog.close();
         }
       });
   }
 
   onDeleteUser(item) {
     var userID = item.resourceID;
-    var listUser = [];
-    var listTaskResources = [];
-    var listUserDetail = [];
-    for (var i = 0; i < this.listUserDetail.length; i++) {
-      if (this.listUser[i] != userID) {
-        listUser.push(this.listUser[i]);
-      }
-      if (this.listUserDetail[i].userID != userID) {
-        listUserDetail.push(this.listUserDetail[i]);
-      }
-      if (this.listTaskResources[i]?.resourceID != userID) {
-        listTaskResources.push(this.listTaskResources[i]);
-      }
-    }
-    this.listUser = listUser;
-    this.listUserDetail = listUserDetail;
-    this.listTaskResources = listTaskResources;
+    // var listUser = [];
+    // var listTaskResources = [];
+    // var listUserDetail = [];
+    // for (var i = 0; i < this.listUserDetail.length; i++) {
+    //   if (this.listUser[i] != userID) {
+    //     listUser.push(this.listUser[i]);
+    //   }
+    //   if (this.listUserDetail[i].userID != userID) {
+    //     listUserDetail.push(this.listUserDetail[i]);
+    //   }
+    //   if (this.listTaskResources[i]?.resourceID != userID) {
+    //     listTaskResources.push(this.listTaskResources[i]);
+    //   }
+    // }
+    // this.listUser = listUser;
+    // this.listUserDetail = listUserDetail;
+    // this.listTaskResources = listTaskResources;
+
+    var idxUser = this.listUser.findIndex((x) => x == userID);
+    if (idxUser != -1) this.listUser.splice(idxUser, 1);
+
+    var idxUserDt = this.listUserDetail.findIndex((x) => x.userID == userID);
+    if (idxUserDt != -1) this.listUserDetail.splice(idxUserDt, 1);
+
+    var idxUserRs = this.listTaskResources.findIndex(
+      (x) => x.resourceID == userID
+    );
+    if (idxUserRs != -1) this.listTaskResources.splice(idxUserRs, 1);
 
     var assignTo = '';
-    if (listUser.length > 0) {
-      listUser.forEach((idUser) => {
+    if (this.listUser.length > 0) {
+      this.listUser.forEach((idUser) => {
         assignTo += idUser + ';';
       });
       assignTo = assignTo.slice(0, -1);
@@ -469,6 +502,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     var listDepartmentID = '';
     var listUserID = '';
     var listPositionID = '';
+    var listEmployeeID = '';
 
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -480,8 +514,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           case 'D':
             listDepartmentID += obj.id + ';';
             break;
+          case 'RP':
           case 'P':
             listPositionID += obj.id + ';';
+            break;
+          case 'RE':
+            listEmployeeID += obj.id + ';';
             break;
         }
       }
@@ -507,7 +545,16 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         } else this.notiService.notifyCode('TM065');
       });
     }
-
+    if (listEmployeeID != '') {
+      listEmployeeID = listEmployeeID.substring(0, listEmployeeID.length - 1);
+      this.tmSv
+        .getListUserIDByListEmployeeID(listEmployeeID)
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            this.valueSelectUser(res);
+          }
+        });
+    }
     if (listPositionID != '') {
       listPositionID = listPositionID.substring(0, listPositionID.length - 1);
       this.tmSv
@@ -533,12 +580,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           }
         });
         if (arrNew.length > 0) {
-          assignTo = arrNew.join(';');
-          this.task.assignTo += ';' + assignTo;
+          // assignTo = arrNew.join(';');
+          // this.task.assignTo += ';' + assignTo;
           this.getListUser(assignTo);
         }
       } else {
-        this.task.assignTo = assignTo;
+        // this.task.assignTo = assignTo;
         this.getListUser(assignTo);
       }
     }
@@ -551,7 +598,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     }
     var arrUser = listUser.split(';');
     if (!this.listUser) this.listUser = [];
-    this.listUser = this.listUser.concat(arrUser);
+
     this.api
       .execSv<any>(
         'HR',
@@ -561,8 +608,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         JSON.stringify(listUser.split(';'))
       )
       .subscribe((res) => {
-        this.listUserDetail = this.listUserDetail.concat(res);
         if (res && res.length > 0) {
+          this.listUserDetail = this.listUserDetail.concat(res);
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
             var taskResource = new tmpTaskResource();
@@ -573,6 +620,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
             taskResource.roleType = 'R';
             this.listTaskResources.push(taskResource);
           }
+
+          if (arrUser.length != res.length) {
+            arrUser = res.map((x) => x.userID);
+          }
+          this.listUser = this.listUser.concat(arrUser);
+          this.task.assignTo = this.listUser.join(';');
         }
       });
   }
@@ -600,17 +653,13 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     var message = e?.data;
     var index = this.listTaskResources.findIndex((obj) => obj.resourceID == id);
     if (index != -1) {
-      this.listTaskResources.forEach((obj) => {
-        if (obj.resourceID == id) {
-          obj.memo = message;
-          return;
-        }
-      });
+      this.listTaskResources[index].memo = message;
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   valueChangeEstimated(data) {
-    if (!data.data) return;
+    if (data.data == undefined) return;
     var num = data.data;
     if (num < 0) {
       this.notiService.notifyCode('TM033');

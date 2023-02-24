@@ -4,6 +4,7 @@ import {
   OnInit,
   Optional,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -24,11 +25,14 @@ import {
 } from '../../function/default.function';
 import { FileService } from '@shared/services/file.service';
 import { Observable } from 'rxjs';
+import { Permission } from '@shared/models/file.model';
+import { permissionDis } from '../../models/dispatch.model';
 
 @Component({
   selector: 'app-imcomming-add',
   templateUrl: './incomming-add.component.html',
   styleUrls: ['./incomming-add.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class IncommingAddComponent implements OnInit {
   getJSONString = getJSONString;
@@ -60,6 +64,10 @@ export class IncommingAddComponent implements OnInit {
   objRequied = [];
   fileDelete:any;
   service:any;
+  listPermission = [];
+  relations :any;
+  lrelations :any;
+  user:any;
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -79,8 +87,8 @@ export class IncommingAddComponent implements OnInit {
     if (this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
 
-    var user = this.auth.get();
-    if (user?.userID) this.dispatch.createdBy = user?.userID;
+    this.user = this.auth.get();
+    if (this.user?.userID) this.dispatch.createdBy = this.user?.userID;
 
     this.gridViewSetup = this.data?.gridViewSetup;
     this.headerText = this.data?.headerText;
@@ -95,16 +103,18 @@ export class IncommingAddComponent implements OnInit {
     if (this.type == 'add' || this.type == 'copy') 
     {
       this.dispatch.copies = 1;
+      this.dispatch.status = '1';
       this.dispatch.refDate = new Date();
       this.dispatch.dispatchOn = new Date();
       if (this.type == 'add') {
+    
         this.dispatch.dispatchType = this.data?.dispatchType;
         this.dispatch.agencyName = null;
         // this.dispatch.departmentID = "BGĐ"
         // this.getDispathOwner("BGĐ");
         if(this.formModel?.funcID == "ODT41") 
         {
-          this.dispatch.owner = user?.userID;
+          this.dispatch.owner = this.user?.userID;
           // this.getInforByUser(this.dispatch.owner).subscribe(item=>{
           //   if(item) this.dispatch.orgUnitID = item.orgUnitID
           // })
@@ -133,6 +143,12 @@ export class IncommingAddComponent implements OnInit {
     else if (this.type == 'edit') 
     {
       this.dispatch.agencyName = this.dispatch.agencyName.toString();
+      if(this.dispatch.relations && this.dispatch.relations.length>0)
+      {
+        this.lrelations = this.dispatch.relations.filter(x=>x.relationType == "6")
+        if(this.lrelations) this.lrelations = this.lrelations.map(u=>u.userID).join(";")
+
+      }
       if(this.dispatch.deptName) 
       {
         this.activeDiv = "dv"
@@ -195,6 +211,13 @@ export class IncommingAddComponent implements OnInit {
         }
       })
     }
+  }
+
+  //Người được chia sẻ
+  changeDataShare(event: any)
+  {
+    debugger
+    if(event?.data?.value) this.relations = event?.data?.value
   }
   //Nơi nhận
   changeValueBUID(event: any) {
@@ -296,14 +319,17 @@ export class IncommingAddComponent implements OnInit {
     if(this.dispatchForm.invalid || this.checkAgenciesErrors) return; */
     /////////////////////////////////////////////////////////
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
+    this.addRelations();
     if (this.type == 'add' || this.type == 'copy') {
-      if(this.dispatch.owner != this.dispatch.createdBy) this.dispatch.status = '3';
-      else this.dispatch.status = '1';
+      // if(this.dispatch.owner != this.dispatch.createdBy) this.dispatch.status = '3';
+      // else this.dispatch.status = '1';
+     
+      this.dispatch.status = '1';
       this.dispatch.approveStatus = '1';
       if (this.type == 'copy') 
       {
         delete this.dispatch.id;
-        this.dispatch.relations = null;
+        //this.dispatch.relations = null;
         this.dispatch.updates = null;
         this.dispatch.permissions = null;
         this.dispatch.links = null;
@@ -314,14 +340,16 @@ export class IncommingAddComponent implements OnInit {
       }
       if (this.type == 'add')
         this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
-      this.dispatch.approveStatus = '1';
       this.attachment.objectId = this.dispatch.recID;
+      this.addRelations();
+      this.addPermission();
       this.odService
       .saveDispatch(this.dataRq, this.dispatch)
       .subscribe(async (item) => {
         if (item.status == 0) {
           this.data = item;
           this.attachment.dataSelected = item.data;
+       
           (await this.attachment.saveFilesObservable()).subscribe(
             (item2: any) => {
               //Chưa xử lý Upload nhìu file
@@ -335,8 +363,35 @@ export class IncommingAddComponent implements OnInit {
                
               // }
               if (item2?.status == 0 || Array.isArray(item2)) {
-                this.dialog.close(item.data);
-                this.notifySvr.notify(item.message);
+                //Lưu thông tin người chia sẻ
+                if(this.dispatch.relations && this.dispatch.relations.length>0)
+                {
+                  var per = new permissionDis();
+                  per.to = [];
+                  for(var i =0 ; i < this.dispatch.relations.length ; i++)
+                  {
+                    per.to.push(this.dispatch.relations[i].userID);
+                  }
+                  per.recID = item?.data?.recID;
+                  per.funcID = this.formModel?.funcID;
+                  per.download = true;
+                  per.share = true;
+                  this.odService.shareDispatch(per).subscribe(item3=>{
+                    if(item3)
+                    {
+                      item.data.relations = item3?.data[0].relations
+                      this.notifySvr.notify(item.message);
+                      this.dialog.close(item.data);
+                    }
+                    
+                  });
+                 
+                }
+                else
+                {
+                  this.notifySvr.notify(item.message);
+                  this.dialog.close(item.data);
+                }
               } 
               else {
                 this.notifySvr.notify(item2.message);
@@ -346,13 +401,14 @@ export class IncommingAddComponent implements OnInit {
             }
           );
          
-        } else this.notifySvr.notify(item.message);
+        } 
+        else this.notifySvr.notify(item.message);
       });
      
       
     } else if (this.type == 'edit') {
       this.odService
-        .updateDispatch(this.dispatch, false)
+        .updateDispatch(this.dispatch,this.formModel?.funcID , false)
         .subscribe(async (item) => {
           if (item.status == 0) {
             if(this.fileDelete && this.fileDelete.length > 0)
@@ -378,6 +434,23 @@ export class IncommingAddComponent implements OnInit {
             }
           } else this.notifySvr.notify(item.message);
         });
+    }
+  }
+  addRelations()
+  {
+    if(this.relations && this.relations.length>0)
+    {
+      this.dispatch.relations = [];
+      for(var i = 0 ; i < this.relations.length ; i++)
+      {
+        var obj = {
+          relationType : "6",
+          userID : this.relations[i],
+          status : 1,
+          createdBy : this.user?.userID
+        }
+        this.dispatch.relations.push(obj);
+      }
     }
   }
   getfileCount(e: any) {
@@ -423,5 +496,19 @@ export class IncommingAddComponent implements OnInit {
   {
     var data = e?.component?.itemsSelected;
     if(data && data[0]) this.dispatch.category = data[0].CategoryName;
+  }
+  addPermission()
+  {
+    if(this.dispatch.owner)
+    {
+      var p = new Permission()
+      p.read = true;
+      p.share = true;
+      p.download = true;
+      p.objectID = this.dispatch.owner;
+      p.objectType = "U";
+      p.isActive = true
+      this.listPermission.push(p);
+    }
   }
 }

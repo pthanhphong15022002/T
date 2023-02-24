@@ -102,6 +102,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   fields: Object = { text: 'resourceName', value: 'resourceID' };
   disabledProject = false;
   listResources: string = '';
+  isClickSave =false;
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -303,11 +304,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       op.method = 'AddMeetingsAsync';
       op.className = 'MeetingsBusiness';
       this.meeting.meetingType = '1';
-      data = [this.meeting,this.functionID];
+      data = [this.meeting, this.functionID];
     } else if (this.action == 'edit') {
       op.method = 'UpdateMeetingsAsync';
       op.className = 'MeetingsBusiness';
-      data = [this.meeting,this.functionID];
+      data = [this.meeting, this.functionID];
     }
 
     op.data = data;
@@ -328,6 +329,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           this.tmSv
             .sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID)
             .subscribe();
+          // this.tmSv
+          //   .RPASendMailAlert('TM_0024', this.functionID)
+          //   .subscribe();
         } else this.dialog.close();
       });
   }
@@ -446,6 +450,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   async save() {
+    if(this.isClickSave) return;
+    this.isClickSave = true ;
     if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {

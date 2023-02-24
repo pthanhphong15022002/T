@@ -2,19 +2,18 @@
   [dialog]="dialog">
 </codx-form>
 <ng-template #subheader>
-  <div class="codx-approval-filter" ngbDropdown  ngbDropdownToggle #dropdown id="noti-dropdowTonggle">
-    <button class="btn" *ngIf="valueSelected">
-      <span class="pe-2 text-muted fs-5" [class]="valueSelected.icon">
-      </span>
+  <div class="codx-approval-filter" ngbDropdown ngbDropdownToggle #dropdown id="noti-dropdowTonggle">
+    <button class="btn btn-sm btn-light-primary" *ngIf="valueSelected">
+      <span class="w-20px" [class]="valueSelected.icon"></span>
       <span>
         {{valueSelected.text}}
       </span>
     </button>
     <div ngbDropdownMenu aria-labelledby="noti-dropdowTonggle" id="noti-dropdownPopup" class="dropdown-menu">
-      <div  ngbDropdownMenu>
+      <div ngbDropdownMenu>
         <ng-container *ngFor="let item of datas">
           <button (click)="valueChange(item)" ngbDropdownItem>
-            <span class="pe-2 text-muted fs-5" [class]="item.icon">
+            <span class="me-1 text-gray-600 w-20px" [class]="item.icon">
             </span>
             <span>
               {{item.text}}
@@ -28,7 +27,7 @@
 <ng-template #body>
   <div class="container p-0 h-100">
     <ng-container *ngIf="loaded; else templateEmpty">
-      <ng-container *ngFor="let item of lstApproval">
+      <ng-container *ngFor="let item of lstApproval;index as index">
         <div class="d-flex align-items-top border-top py-3 pe-2">
           <div [style]="setStyles(item.title | vll:'ES022':'color'|async)"
             class="w-35px h-35px fs-5 d-flex justify-content-center align-items-center rounded-circle me-3">
@@ -48,11 +47,11 @@
             <div class="d-flex align-items-center justify-content-between mt-1">
               <div class="">
                 <button [disabled]="item.blocked" type="button" class="btn btn-sm btn-outline-success me-3"
-                  (click)="approvalAsync(item,'5')">
+                  (click)="approvalAsync(item,'5',index)">
                   <codx-label [formModel]="dialog.formModel" name="" default="Duyệt"></codx-label>
                 </button>
                 <button [disabled]="item.blocked" type="button" class="btn btn-sm btn-outline-danger"
-                  (click)="approvalAsync(item,'4')">
+                  (click)="approvalAsync(item,'4',index)">
                   <codx-label class="text-danger" [formModel]="dialog.formModel" name="" default="Từ chối"></codx-label>
                 </button>
               </div>

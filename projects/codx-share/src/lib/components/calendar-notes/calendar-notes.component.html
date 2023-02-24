@@ -428,7 +428,10 @@
     </div>
     <!-- Chi Thuong ep buoc sua lai -->
     <!-- <div *ngIf="item?.transType == 'TM_Tasks'"> -->
-    <div *ngIf="item?.transType == 'TM_MyTasks'">
+    <div
+      *ngIf="item?.transType == 'TM_MyTasks'"
+      (click)="redirectToFuncID(item)"
+    >
       <div
         [ngStyle]="{
           'background-color': TM_TasksParam?.ShowBackground,
@@ -442,7 +445,10 @@
         </div>
       </div>
     </div>
-    <div *ngIf="item?.transType == 'CO_Meetings'">
+    <div
+      *ngIf="item?.transType == 'CO_Meetings'"
+      (click)="redirectToFuncID(item)"
+    >
       <div
         [ngStyle]="{
           'background-color': CO_MeetingsParam?.ShowBackground,
@@ -451,12 +457,31 @@
       >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
+            <span
+              [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"
+            ></span>
+          </div>
+          <div class="d-flex flex-column note-option">
+            {{ item?.data?.location }}
+
+            <!-- <ng-container
+              *ngTemplateOutlet="
+                fieldValue;
+                context: { data: getFieldValue(item?.memo, item?.data) }
+              "
+            >
+            </ng-container> -->
+          </div>
+          <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.title"></span>
           </div>
         </div>
       </div>
     </div>
-    <div *ngIf="item?.transType == 'EP_BookingRooms'">
+    <div
+      *ngIf="item?.transType == 'EP_BookingRooms'"
+      (click)="redirectToFuncID(item)"
+    >
       <div
         [ngStyle]="{
           'background-color': EP_BookingRoomsParam?.ShowBackground,
@@ -465,12 +490,32 @@
       >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
+            <span
+              [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"
+            ></span>
+          </div>
+          <div class="d-flex flex-column note-option">
+            <div class="d-flex flex-column note-option">
+              {{ item?.data?.location }}
+              <!-- <ng-container
+                *ngTemplateOutlet="
+                  fieldValue;
+                  context: { data: getFieldValue(item?.memo, item?.data) }
+                "
+              >
+              </ng-container> -->
+            </div>
+          </div>
+          <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.title"></span>
           </div>
         </div>
       </div>
     </div>
-    <div *ngIf="item?.transType == 'EP_BookingCars'">
+    <div
+      *ngIf="item?.transType == 'EP_BookingCars'"
+      (click)="redirectToFuncID(item)"
+    >
       <div
         [ngStyle]="{
           'background-color': EP_BookingCarsParam?.ShowBackground,
@@ -479,6 +524,23 @@
       >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
+            <span
+              [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"
+            ></span>
+          </div>
+
+          <div class="d-flex flex-column note-option">
+            {{ item?.data?.location }}
+
+            <!-- <ng-container
+              *ngTemplateOutlet="
+                fieldValue;
+                context: { data: getFieldValue(item?.memo, item?.data) }
+              "
+            >
+            </ng-container> -->
+          </div>
+          <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.title"></span>
           </div>
         </div>
@@ -486,3 +548,13 @@
     </div>
   </ng-template>
 </div>
+<ng-template #fieldValue let-data="data">
+  <codx-input
+    [type]="data?.type"
+    [refValue]="data?.refID"
+    [crrValue]="data.value"
+    [field]=""
+    [disabled]="true"
+  >
+  </codx-input>
+</ng-template>
