@@ -150,6 +150,10 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
     }
   }
 
+  selectAssetId(evt){
+    console.log('select tai san', evt);
+  }
+
   ngAfterViewInit(){
     this.dialog && this.dialog.closed.subscribe(res => {
       if(!res.event){
