@@ -1,0 +1,37 @@
+<codx-form
+  #form
+  [headerText]=""
+  [subHeaderText]=""
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="formModel"
+  [data]=""
+  *ngIf="isAfterRender"
+>
+  <ng-template #body>
+  
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex flex-row justify-content-between">
+      <button class="btn btn-outline-primary d-flex flex-row justify-content-center" >
+        <span class="icon-airplay btn-text-primary me-2"></span>
+        <codx-label
+          name="lbl"
+          class="fw-normal"
+          default="Phân bố chỉ tiêu"
+          [formModel]="form.formModel"
+        ></codx-label>
+      </button>
+      <button class="btn btn-primary" >
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="form.formModel"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+
+</codx-form>

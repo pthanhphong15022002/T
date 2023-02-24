@@ -343,6 +343,8 @@ export class DP_Instances_Steps {
   memo: string;
   newProcessID:string;
   reasonControl: boolean = false;
+  isSuccessStep: boolean =  false;
+  isFailStep: boolean = false;
 }
 
 export class DP_Instances_Steps_Roles {
@@ -485,7 +487,7 @@ export class DP_Instance_Steps_Fields {
 }
 
 export class DP_Instances_Steps_Reasons {
-  recID: string;
+  recID: string = Util.uid();;
   processID: string;
   instanceID: string;
   stepID: string;

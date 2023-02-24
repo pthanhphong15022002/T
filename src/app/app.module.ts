@@ -41,54 +41,61 @@ import { AppConfig } from '@core/services/config/app-config';
 import { RouteReuseStrategy } from '@angular/router';
 import { CodxEiModule } from 'projects/codx-ei/src/public-api';
 import { SosComponent } from '@pages/sos/sos.component';
-import { SocialLoginModule, SocialAuthServiceConfig, AmazonLoginProvider, FacebookLoginProvider, GoogleLoginProvider, MicrosoftLoginProvider } from '@abacritt/angularx-social-login';
+import {
+  SocialLoginModule,
+  SocialAuthServiceConfig,
+  AmazonLoginProvider,
+  FacebookLoginProvider,
+  GoogleLoginProvider,
+  MicrosoftLoginProvider,
+} from '@abacritt/angularx-social-login';
 import { LayoutTenantComponent } from '@modules/auth/tenants/layout/layout.component';
 
 const socialConfigFactory = () => {
   return new Promise((resolve, reject) => {
     try {
-      setTimeout(()=>{
+      setTimeout(() => {
         let providers = [];
-        
-        if(environment.saas == 1){
-          if(environment.externalLogin.amazonId){
+
+        if (environment.saas == 1) {
+          if (environment.externalLogin.amazonId) {
             providers.push({
-                id: AmazonLoginProvider.PROVIDER_ID,
-                provider: new AmazonLoginProvider(
-                  environment.externalLogin.amazonId
-                ),
+              id: AmazonLoginProvider.PROVIDER_ID,
+              provider: new AmazonLoginProvider(
+                environment.externalLogin.amazonId
+              ),
             });
           }
 
-          if(environment.externalLogin.googleId){
+          if (environment.externalLogin.googleId) {
             providers.push({
-                id: GoogleLoginProvider.PROVIDER_ID,
-                provider: new GoogleLoginProvider(
-                  environment.externalLogin.googleId
-                ),
+              id: GoogleLoginProvider.PROVIDER_ID,
+              provider: new GoogleLoginProvider(
+                environment.externalLogin.googleId
+              ),
             });
           }
 
-          if(environment.externalLogin.facebookId){
+          if (environment.externalLogin.facebookId) {
             providers.push({
-                id: FacebookLoginProvider.PROVIDER_ID,
-                provider: new FacebookLoginProvider(
-                  environment.externalLogin.facebookId
-                ),
+              id: FacebookLoginProvider.PROVIDER_ID,
+              provider: new FacebookLoginProvider(
+                environment.externalLogin.facebookId
+              ),
             });
           }
 
-          if(environment.externalLogin.microsoftId){
+          if (environment.externalLogin.microsoftId) {
             providers.push({
-                id: MicrosoftLoginProvider.PROVIDER_ID,
-                provider: new MicrosoftLoginProvider(
-                  environment.externalLogin.microsoftId
-                ),
+              id: MicrosoftLoginProvider.PROVIDER_ID,
+              provider: new MicrosoftLoginProvider(
+                environment.externalLogin.microsoftId
+              ),
             });
           }
         }
 
-        var config =  {
+        var config = {
           autoLogin: false,
           providers: providers,
         } as SocialAuthServiceConfig;
@@ -150,7 +157,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     AppComponent,
     FileComponent,
     SosComponent,
-    LayoutTenantComponent
+    LayoutTenantComponent,
   ],
   imports: [
     BrowserModule,
@@ -200,7 +207,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     },
     {
       provide: 'SocialAuthServiceConfig',
-      useFactory: socialConfigFactory
+      useFactory: socialConfigFactory,
     },
     { provide: LOCALE_ID, useValue: 'vi-VN' },
     { provide: RouteReuseStrategy, useClass: CacheRouteReuseStrategy },

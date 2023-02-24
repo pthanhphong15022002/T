@@ -23,6 +23,7 @@ import {
   FormModel,
   ResourceModel,
   RequestOption,
+  Util,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Instances } from '../models/models';
@@ -93,10 +94,11 @@ export class InstancesComponent
   dataDrop: any;
   isClick: boolean = true;
   stepIdClick = '';
-  listProccessCbx:any;
-  dataProccess:any;
+  listProccessCbx: any;
+  dataProccess: any;
+  sumDaySteps: number;
 
-  readonly guidEmpty: string ='00000000-0000-0000-0000-000000000000'; // for save BE
+  readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
@@ -118,9 +120,10 @@ export class InstancesComponent
 
     // em bảo gán tạm
     this.dataProccess = dt?.data?.data;
-    this.genAutoNumberNo(this.dataProccess?.applyFor === '1' ? 'DPT0406' : 'DPT0405');
+    this.genAutoNumberNo(
+      this.dataProccess?.applyFor === '1' ? 'DPT0406' : 'DPT0405'
+    );
     this.getListCbxProccess(this.dataProccess?.applyFor);
-    
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -142,7 +145,7 @@ export class InstancesComponent
         model: {
           template: this.cardKanban,
           template2: this.viewColumKaban,
-          setColorHeader : true,
+          setColorHeader: true,
         },
       },
     ];
@@ -161,11 +164,11 @@ export class InstancesComponent
     this.codxDpService
       .createListInstancesStepsByProcess(this.process?.recID)
       .subscribe((dt) => {
-        debugger
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
           this.deleteListReason(this.listStepsCbx);
+          this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
       });
     //kanban
@@ -219,13 +222,10 @@ export class InstancesComponent
               formMD.entityName = fun.entityName;
               formMD.formName = fun.formName;
               formMD.gridViewName = fun.gridViewName;
-             
               option.Width = '850px';
-              option.zIndex = 1010;
+              option.zIndex = 1001;
               this.view.dataService.dataSelected.processID = this.process.recID;
-              // const titleForm = res.defaultName;
-              // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
-              this.genAutoNumberNo(formMD.funcID); // gan tam thoi chư sai vỡ mỏ
+              this.genAutoNumberNo(formMD.funcID); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
               var dialogCustomField = this.callfc.openSide(
                 PopupAddInstanceComponent,
                 [
@@ -235,7 +235,8 @@ export class InstancesComponent
                   this.titleAction,
                   formMD,
                   this.listStepsCbx,
-                  this.instanceNo
+                  this.instanceNo,
+                  this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)
                 ],
                 option
               );
@@ -271,7 +272,6 @@ export class InstancesComponent
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-         
           this.cache.gridView(fun.gridViewName).subscribe((grv) => {
             this.cache
               .gridViewSetup(fun.formName, fun.gridViewName)
@@ -283,22 +283,24 @@ export class InstancesComponent
                 formMD.gridViewName = fun.gridViewName;
 
                 option.Width = '850px';
-                option.zIndex = 1010;
+                option.zIndex = 1001;
                 this.view.dataService.dataSelected.processID =
                   this.process.recID;
-                var dialogCustomField = this.callfc.openSide(
+                var dialogEditInstance= this.callfc.openSide(
                   PopupAddInstanceComponent,
                   [
                     'edit',
                     applyFor,
                     this.listSteps,
-                    titleAction,
+                    this.titleAction,
                     formMD,
                     this.listStepsCbx,
+                    this.instanceNo,
+                    this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)
                   ],
                   option
                 );
-                dialogCustomField.closed.subscribe((e) => {
+                dialogEditInstance.closed.subscribe((e) => {
                   if (e && e.event != null) {
                     //xu ly data đổ về
                     this.detectorRef.detectChanges();
@@ -312,12 +314,12 @@ export class InstancesComponent
 
   async genAutoNumberNo(funcID) {
     this.codxDpService
-    .genAutoNumber(funcID, 'DP_Instances', 'InstanceNo')
-    .subscribe((res) => {
-      if (res) {
-        this.instanceNo = res;
-      }
-    });
+      .genAutoNumber(funcID, 'DP_Instances', 'InstanceNo')
+      .subscribe((res) => {
+        if (res) {
+          this.instanceNo = res;
+        }
+      });
   }
   //End
 
@@ -357,6 +359,8 @@ export class InstancesComponent
         switch (res.functionID) {
           case 'SYS005':
           case 'SYS003':
+            if (data.status !== '1' && data.status !== '2' ) res.disabled = true;
+            break;
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':
@@ -370,19 +374,19 @@ export class InstancesComponent
           case 'DP09':
           case 'DP10':
             let isUpdate = data.write;
-            if (!isUpdate) res.disabled = true;
+            if (!isUpdate ||  ( data.status !== '1' && data.status !== '2' ) ) res.disabled = true;
             break;
           //Copy
           case 'SYS104':
           case 'SYS04':
             let isCopy = this.isCreate ? true : false;
-            if (!isCopy) res.disabled = true;
+            if (!isCopy || data.status =="3") res.disabled = true;
             break;
           //xóa
           case 'SYS102':
           case 'SYS02':
             let isDelete = data.delete;
-            if (!isDelete) res.disabled = true;
+            if (!isDelete || data.status =="3") res.disabled = true;
             break;
         }
       });
@@ -448,12 +452,13 @@ export class InstancesComponent
   viewDetail(recID) {
     //  this.detailViewInstance.GetStepsByInstanceIDAsync(recID)
     let option = new DialogModel();
-    option.zIndex = 1010;
+    option.IsFull = true;
+    option.zIndex = 999;
     let popup = this.callFunc.openForm(
       this.popDetail,
       '',
-      1000,
-      700,
+      Util.getViewPort().width ,
+      Util.getViewPort().height,
       '',
       null,
       '',
@@ -536,6 +541,7 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
+            debugger
             var obj = {
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
@@ -678,26 +684,29 @@ export class InstancesComponent
       .filter((x) => x.stepID === stepId)
       .map((x) => x.stepName)[0];
   }
-  clickMoreFunc(e){
+  clickMoreFunc(e) {
     this.lstStepInstances = e.lstStepInstance;
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {
     this.changeDataMF(e.e, e.data);
   }
-  getListCbxProccess(applyFor:any){
+  getListCbxProccess(applyFor: any) {
     this.cache.valueList('DP031').subscribe((data) => {
-      this.codxDpService.getlistCbxProccess(applyFor).subscribe((res)=>{
+      this.codxDpService.getlistCbxProccess(applyFor).subscribe((res) => {
         this.listProccessCbx = res[0];
         var obj = {
           recID: this.guidEmpty,
-          processName: data.datas[0].default
+          processName: data.datas[0].default,
         };
         this.listProccessCbx.unshift(obj);
       });
     });
-    
+  }
 
+  getSumDurationDayOfSteps(listStepCbx:any){
+    let total = listStepCbx.reduce((sum, f) => sum + f.durationDay, 0);
+    return total;
   }
   #endregion;
 }

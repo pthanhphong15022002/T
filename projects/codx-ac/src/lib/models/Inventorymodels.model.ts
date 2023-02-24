@@ -24,12 +24,12 @@ export class Inventorymodels {
   postPhysical: any;
   qualityControl: any;
   quarantineControl: any;
-  requirePick: any;
+  requirePick:any;
   requireRegister: any;
-  reserveExpired: any;
-  reserveMethod: any;
-  reserveOrdered: any;
-  reservePartial: any;
+  reserveExpired: boolean = false;
+  reserveMethod:boolean = false;
+  reserveOrdered: boolean = false;
+  reservePartial:boolean = false;
   reserveRule: any;
   reserveSameBatch: any;
   reserveUnavailable: any;

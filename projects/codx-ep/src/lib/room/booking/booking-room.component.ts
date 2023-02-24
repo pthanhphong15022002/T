@@ -138,8 +138,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.modelResource.className = 'BookingsBusiness';
     this.modelResource.service = 'EP';
     this.modelResource.method = 'GetResourceAsync';
-    this.modelResource.predicate = 'ResourceType=@0';
+    this.modelResource.predicate = 'ResourceType=@0 ';
     this.modelResource.dataValue = '1';
+    
 
     this.fields = {
       id: 'recID',
@@ -423,7 +424,8 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         event.forEach((func) => {
           //Gửi duyệt
           if ( //Hiện: chép
-          func.functionID == 'SYS04' /*MF chép*/
+          func.functionID == 'SYS04' /*MF chép*/||
+          func.functionID == 'EP4T1103' /*MF gửi duyệt*/
           ) {
             func.disabled = false;
           }
@@ -432,7 +434,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
             func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
             func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = true;

@@ -9,6 +9,7 @@ import {
 import {
   ApiHttpService,
   CacheService,
+  CallFuncService,
   DialogData,
   DialogRef,
   FormModel,
@@ -36,6 +37,7 @@ export class PopupAddInstanceComponent implements OnInit {
 
   gridViewSetup: any;
   action: any;
+  dateMessage: any;
   tabInfo: any[] = [];
   tabContent: any[] = [];
   listInstances: DP_Instances[] = [];
@@ -48,6 +50,8 @@ export class PopupAddInstanceComponent implements OnInit {
 
   isApplyFor: string = ''; // this is instance opportunity general
 
+  totalDaySteps: number;
+  dateOfDuration: any;
   menuGeneralInfo = {
     icon: 'icon-info',
     text: 'Thông tin chung',
@@ -76,13 +80,18 @@ export class PopupAddInstanceComponent implements OnInit {
   // step = new DP_Instances_Steps() ;
   listStep = [];
   recID: any;
+  lstParticipants = [];
+  userName = '';
+  positionName = '';
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
   acction: string = 'add';
+  oldEndDate: Date;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private cache: CacheService,
     private codxDpService: CodxDpService,
+    private callfc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -92,15 +101,34 @@ export class PopupAddInstanceComponent implements OnInit {
     this.action = dt?.data[0];
     this.isApplyFor = dt?.data[1];
     this.listStep = dt?.data[2];
+    this.getProcess(this.instance.processID);
     this.titleAction = dt?.data[3];
     this.formModelCrr = dt?.data[4];
     this.listStepCbx = dt?.data[5];
     this.instance.instanceNo = dt?.data[6];
+    this.totalDaySteps = dt?.data[7];
+    if (this.instance.owner != null) {
+      this.getNameAndPosition(this.instance.owner);
+    }
+    this.cache
+    .gridViewSetup(
+      this.dialog.formModel.formName,
+      this.dialog.formModel.gridViewName
+    )
+    .subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
+
   }
 
   ngOnInit(): void {
     if (this.action === 'add') {
       this.autoClickedSteps();
+      this.handleEndDayInstnace(this.totalDaySteps);
+    } else if (this.action === 'edit') {
+      this.oldEndDate = this.instance.endDate;
     }
   }
 
@@ -123,6 +151,18 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   buttonClick(e: any) {}
+
+  getProcess(id) {
+    this.codxDpService.getProcess(id).subscribe((res) => {
+      if (res) {
+        if (res.permissions != null && res.permissions.length > 0) {
+          this.lstParticipants = res.permissions.filter(
+            (x) => x.roleType === 'P'
+          );
+        }
+      }
+    });
+  }
 
   setTitle(e: any) {
     this.title =
@@ -186,7 +226,28 @@ export class PopupAddInstanceComponent implements OnInit {
   }
   saveInstances() {
     if (this.instance?.title === null || this.instance?.title.trim() === '') {
-      this.notificationsService.notifyCode('DP001');
+      // this.notificationsService.notifyCode('Vui lòng nhập tên nhiệm vụ');
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Title']?.headerText + '"'
+      );
+      return;
+    } 
+    // else if (
+    //   this.instance?.owner === null ||
+    //   this.instance?.owner.trim() === ''
+    // ) {
+    //   this.notificationsService.notifyCode('Vui lòng chọn người phụ trách');
+    //   return;
+    // } 
+    else if (
+      this.checkEndDayInstance(this.instance.endDate, this.totalDaySteps)
+    ) {
+      // thDateFormat = new Date(this.dateOfDuration).toLocaleDateString('en-AU');
+      this.notificationsService.notifyCode(
+        `Ngày đến hạn phải lớn hơn hoặc bằng ${this.dateMessage} `
+      );
       return;
     }
     if (this.listStep?.length > 0) {
@@ -196,7 +257,10 @@ export class PopupAddInstanceComponent implements OnInit {
         if (obj?.fields?.length > 0) {
           var arrField = obj.fields;
           arrField.forEach((f) => {
-            if (f.isRequired && (!f.dataValue || f.dataValue?.toString().trim() == '')) {
+            if (
+              f.isRequired &&
+              (!f.dataValue || f.dataValue?.toString().trim() == '')
+            ) {
               this.notificationsService.notifyCode(
                 'SYS009',
                 0,
@@ -210,14 +274,34 @@ export class PopupAddInstanceComponent implements OnInit {
       });
       if (!check || !checkFormat) return;
     }
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option), 0)
-      .subscribe((res) => {
-        if (res && res.save) {
-          this.dialog.close(res);
-        }
-      });
+    if(this.action === 'add'){
+      this.onAdd();
+    }
+    else if (this.action === 'edit'){
+      this.onUpdate();
+    }
+   
   }
+  onAdd(){
+    this.dialog.dataService
+    .save((option: any) => this.beforeSave(option), 0)
+    .subscribe((res) => {
+      debugger;
+      if (res && res.save) {
+        this.dialog.close(res);
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+  onUpdate(){
+    this.dialog.dataService
+    .save((option: any) => this.beforeSave(option))
+    .subscribe((res) => {
+      if (res.update) {
+        this.dialog.close(res.update);
+      }
+    });
+}
   deleteListReason(listStep: any): void {
     listStep.pop();
     listStep.pop();
@@ -271,5 +355,50 @@ export class PopupAddInstanceComponent implements OnInit {
       }
     }
     return true;
+  }
+  handleEndDayInstnace(durationDay: number) {
+    this.instance.endDate = new Date();
+    this.instance.endDate.setDate(
+      this.instance.endDate.getDate() + durationDay
+    );
+    this.dateOfDuration = JSON.parse(JSON.stringify(this.instance.endDate));
+  }
+  checkEndDayInstance(endDate, durationDay) {
+    if (this.action === 'edit') {
+      var timeEndDay =
+        moment(new Date(this.instance.createdOn)).toDate().getTime() +
+        durationDay * 24 * 3600000;
+      var dateFormatCreate = moment(new Date(timeEndDay)).toDate();
+    }
+    var dateFormatDuration = new Date(
+      this.action === 'edit' ? dateFormatCreate : this.dateOfDuration
+    );
+    var dateFormatEndDay = new Date(endDate);
+    var dateStr1 = dateFormatDuration.toISOString().slice(0, 10);
+    var dateStr2 = dateFormatEndDay.toISOString().slice(0, 10);
+    this.dateMessage = new Date(dateFormatDuration).toLocaleDateString('en-AU');
+    if (dateStr1 > dateStr2) {
+      return true;
+    }
+    return false;
+  }
+
+  openPopupParticipants(popupParticipants) {
+    this.callfc.openForm(popupParticipants, '', 950, 650);
+  }
+
+  eventUser(e) {
+    this.instance.owner = e.id;
+    this.userName = e.name;
+    if (this.instance.owner != null)
+      this.getNameAndPosition(this.instance.owner);
+  }
+  getNameAndPosition(id) {
+    this.codxDpService.getPositionByID(id).subscribe((res) => {
+      if (res) {
+        this.userName = res.userName;
+        this.positionName = res.positionName;
+      }
+    });
   }
 }
