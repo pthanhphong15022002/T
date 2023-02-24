@@ -1938,10 +1938,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   addReason() {
-    if(this.step.reasons.findIndex(x=>x.reasonName.trim().toLowerCase() === this.reasonName.trim().toLowerCase()) !== -1 ) {
-      this.notiService.notifyCode('Tên lý do đã tồn tại, vui lòng nhập tên khác.')
-      return;
-    }
+    // this.step.reasons = [...new Set(this.step.reasons.map((x) => x.recID))].map(
+    //   (recID) => this.step.reasons.find((x) => x.recID === recID  )
+    // );
+    // if(this.isCheckExisReason(this.reasonName)){
+    //   this.notiService.notifyCode('Tên lý do đã tồn tại, vui lòng nhập tên khác.');
+    //   return;
+    // }
+    this.isClick = true;
     if (this.reasonAction === this.formAdd) {
       
       this.reason = this.handleReason(
@@ -1959,21 +1963,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.reason.reasonName = this.reasonName;
     }
     this.popupAddReason.close();
-    this.isClick = true;
     this.changeDetectorRef.detectChanges();
   }
-  checkIsExisReason(reasonName:any){
-    var index = 0;
-    for(let i=0; i< this.step.reasons.length; i++) {
-      if(reasonName === this.step.reasons[i].reasonName ) {
-        if(index >= 1) {
-          this.step.reasons.splice(i, 1);
-        }
-  
-          index++;
-      }
-
+  isCheckExisReason(reasonName:any){
+    var isExist = this.step.reasons.findIndex(x=>x.reasonName.trim().toLowerCase() === reasonName.trim().toLowerCase());
+    if(isExist > -1 ) {
+      return true;
     }
+    return false;
   }
 
   changeValueReaName($event) {
@@ -2079,6 +2076,5 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepFail.newProcessID = $event;
     }
   }
-
   //#endregion
 }
