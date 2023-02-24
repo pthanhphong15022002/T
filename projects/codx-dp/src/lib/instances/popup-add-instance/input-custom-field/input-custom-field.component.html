@@ -6,6 +6,15 @@
     [default]="customField.title"
   >
   </codx-label>
+  <span *ngIf="customField.isRequired"
+    ><codx-label
+      class="text-danger"
+      name="attentionIsRequired"
+      formName="DPInstancesStepsFields"
+      gridViewName="grvDPInstancesStepsFields"
+      default="*"
+    ></codx-label
+  ></span>
   <span
     *ngIf="customField.dataType == 'A'"
     class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"
@@ -29,7 +38,8 @@
     [field]="customField.fieldName"
     type="text"
     [placeholder]="customField.note"
-    [crrValue]=""
+    [crrValue]="customField.dataValue ||''"
+    (keyUpEnter)="valueChange($event)"
     (valueChange)="valueChange($event)"
   >
   </codx-input>
@@ -39,7 +49,8 @@
     type="textarea"
     format="ed2"
     [placeholder]="customField.note"
-    [crrValue]=""
+    (keyUpEnter)="valueChange($event)"
+    [crrValue]="customField.dataValue||''"
     (valueChange)="valueChange($event)"
   >
   </codx-input>
@@ -52,6 +63,7 @@
       [showSpinButton]="false"
       [crrValue]="customField.dataValue"
       [placeholder]="customField.note"
+      (keyUpEnter)="valueChange($event)"
       (valueChange)="valueChange($event)"
     ></codx-input>
   </ng-container>
@@ -64,6 +76,7 @@
     [format]="formatDate"
     [placeholder]="customField.note"
     [crrValue]="customField.dataValue"
+    (keyUpEnter)="valueChange($event)"
     (valueChange)="valueChange($event)"
   >
   </codx-input>
@@ -76,6 +89,7 @@
     [refValue]="customField.refValue"
     [placeholder]="customField.note"
     [crrValue]="customField.dataValue"
+    (keyUpEnter)="valueChange($event)"
     (valueChange)="valueChange($event)"
   >
   </codx-input>

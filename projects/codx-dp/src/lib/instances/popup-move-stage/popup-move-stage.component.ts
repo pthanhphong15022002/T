@@ -99,12 +99,7 @@ export class PopupMoveStageComponent implements OnInit {
     this.IdSuccess = this.listStepsCbx[this.listStepsCbx.length - 2]?.stepID;
     this.stepIdClick = JSON.parse(JSON.stringify(dt?.data?.stepIdClick));
     this.getStepByStepIDAndInID(this.instance.recID, this.stepIdOld);
-    this.cache.valueList('DP019').subscribe((res) => {
-      if (res) {
-        this.assignControl = res.datas;
-      }
-    });
-    this.dpSv.getFirstIntance().subscribe(res=>{
+    this.dpSv.getFirstIntance(this.instance.processID).subscribe(res=>{
       if(res){
         this.firstInstance = res;
       }
@@ -202,7 +197,7 @@ export class PopupMoveStageComponent implements OnInit {
           isReason: this.isReason,
         };
         this.dialog.close(obj);
-        this.notiService.notifyCode('SYS007');
+      //  this.notiService.notifyCode('SYS007');
 
         this.changeDetectorRef.detectChanges();
       }

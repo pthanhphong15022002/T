@@ -164,7 +164,6 @@ export class InstancesComponent
     this.codxDpService
       .createListInstancesStepsByProcess(this.process?.recID)
       .subscribe((dt) => {
-        debugger;
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
@@ -226,9 +225,7 @@ export class InstancesComponent
               option.Width = '850px';
               option.zIndex = 1001;
               this.view.dataService.dataSelected.processID = this.process.recID;
-              // const titleForm = res.defaultName;
-              // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
-              this.genAutoNumberNo(formMD.funcID); // gan tam thoi chư sai vỡ mỏ
+             // this.genAutoNumberNo(formMD.funcID); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
               var dialogCustomField = this.callfc.openSide(
                 PopupAddInstanceComponent,
                 [
@@ -289,19 +286,21 @@ export class InstancesComponent
                 option.zIndex = 1001;
                 this.view.dataService.dataSelected.processID =
                   this.process.recID;
-                var dialogCustomField = this.callfc.openSide(
+                var dialogEditInstance= this.callfc.openSide(
                   PopupAddInstanceComponent,
                   [
                     'edit',
                     applyFor,
                     this.listSteps,
-                    titleAction,
+                    this.titleAction,
                     formMD,
                     this.listStepsCbx,
+                    this.instanceNo,
+                    this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)
                   ],
                   option
                 );
-                dialogCustomField.closed.subscribe((e) => {
+                dialogEditInstance.closed.subscribe((e) => {
                   if (e && e.event != null) {
                     //xu ly data đổ về
                     this.detectorRef.detectChanges();
@@ -381,13 +380,13 @@ export class InstancesComponent
           case 'SYS104':
           case 'SYS04':
             let isCopy = this.isCreate ? true : false;
-            if (!isCopy || data.status =="3") res.disabled = true;
+            if (!isCopy) res.disabled = true;
             break;
           //xóa
           case 'SYS102':
           case 'SYS02':
             let isDelete = data.delete;
-            if (!isDelete || data.status =="3") res.disabled = true;
+            if (!isDelete) res.disabled = true;
             break;
         }
       });
@@ -453,12 +452,13 @@ export class InstancesComponent
   viewDetail(recID) {
     //  this.detailViewInstance.GetStepsByInstanceIDAsync(recID)
     let option = new DialogModel();
-     option.zIndex = 1001;
+    option.IsFull = true;
+    option.zIndex = 999;
     let popup = this.callFunc.openForm(
       this.popDetail,
       '',
-      Util.getViewPort().width - 200,
-      Util.getViewPort().height - 200,
+      Util.getViewPort().width ,
+      Util.getViewPort().height,
       '',
       null,
       '',

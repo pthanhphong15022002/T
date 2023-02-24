@@ -49,18 +49,18 @@ export class DP_Processes_Permission {
   objectType: string;
   objectName: string;
   objectID: string;
-  full: boolean;
-  create: boolean;
-  read: boolean;
-  update: boolean;
-  assign: boolean;
-  delete: boolean;
-  share: boolean;
-  edit: boolean;
-  allowPermit: boolean;
-  publish: boolean;
-  upload: boolean;
-  download: boolean;
+  full: boolean = false;
+  create: boolean = false;
+  read: boolean = false;
+  update: boolean = false;
+  assign: boolean = false;
+  delete: boolean = false;
+  share: boolean = false;
+  edit: boolean = false;
+  allowPermit: boolean = false;
+  publish: boolean = false;
+  upload: boolean = false;
+  download: boolean = false;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
@@ -487,7 +487,7 @@ export class DP_Instance_Steps_Fields {
 }
 
 export class DP_Instances_Steps_Reasons {
-  recID: string;
+  recID: string = Util.uid();;
   processID: string;
   instanceID: string;
   stepID: string;
