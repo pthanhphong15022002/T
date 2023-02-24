@@ -63,12 +63,6 @@ export class PopupEBasicSalariesComponent
     @Optional() data?: DialogData
   ) {
     super(injector);
-    // if(!this.formModel){
-    //   this.formModel = new FormModel();
-    //   this.formModel.formName = 'EBasicSalaries'
-    //   this.formModel.entityName = 'HR_EBasicSalaries'
-    //   this.formModel.gridViewName = 'grvEBasicSalaries'
-    // }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
@@ -76,28 +70,9 @@ export class PopupEBasicSalariesComponent
     this.actionType = data?.data?.actionType;
     this.EBasicSalaryObj = JSON.parse(JSON.stringify(data?.data?.salaryObj));
     this.formModel = dialog?.formModel;
-    // this.lstEBSalary = data?.data?.lstEBSalary;
-    // this.indexSelected =
-    // data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
-    // if (this.actionType === 'edit' || this.actionType === 'copy') {
-    //   this.EBasicSalaryObj = JSON.parse(
-    //     JSON.stringify(this.lstEBSalary[this.indexSelected])
-    //   );
-    // }
   }
 
   ngAfterViewInit() {
-    // this.dialog.closed.subscribe((res) => {
-    //   if (!res.event) {
-    //     for (let i = 0; i < this.listView.dataService.data.length; i++) {
-    //       if (this.listView.dataService.data[i].isCurrent == true) {
-    //         this.EBasicSalaryObj = this.listView.dataService.data[i];
-    //         break;
-    //       }
-    //     }
-    //     this.dialog && this.dialog.close(this.EBasicSalaryObj);
-    //   }
-    // });
   }
 
   initForm() {
@@ -131,22 +106,6 @@ export class PopupEBasicSalariesComponent
     }
   }
 
-  // click(data) {
-  //   console.log(data);
-  //   this.EBasicSalaryObj = data;
-  //   this.formModel.currentData = JSON.parse(
-  //     JSON.stringify(this.EBasicSalaryObj)
-  //   );
-  //   this.actionType = 'edit';
-  //   this.formGroup?.patchValue(this.EBasicSalaryObj);
-  //   this.cr.detectChanges();
-  // }
-
-  // afterRenderListView(evt) {
-  //   this.listView = evt;
-  //   console.log('lst view data', this.listView);
-  // }
-
   onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
@@ -161,9 +120,6 @@ export class PopupEBasicSalariesComponent
       );
       return;
     }
-    // if (this.actionType === 'copy' || this.actionType === 'add') {
-    //   delete this.EBasicSalaryObj.recID;
-    // }
     this.EBasicSalaryObj.employeeID = this.employeeId;
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
@@ -172,22 +128,8 @@ export class PopupEBasicSalariesComponent
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS006');
-            if (this.EBasicSalaryObj) {
-              // if (this.EBasicSalaryObj.effectedDate < p.effectedDate) {
-              //   this.EBasicSalaryObj.isCurrent = 'false';
-              //   (this.listView.dataService as CRUDService)
-              //     .update(this.EBasicSalaryObj)
-              //     .subscribe();
-              //   this.EBasicSalaryObj = p;
-              // }
-            } else {
-              this.EBasicSalaryObj = p;
-            }
-
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService).add(p).subscribe();
-            // }
-
+            console.log(p);
+            debugger;
             this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS023');
         });
@@ -197,21 +139,8 @@ export class PopupEBasicSalariesComponent
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            if (p.isCurrent == true) {
-              // var tempCurrent = this.listView.dataService.data.find(
-              //   (p) => p.isCurrent == true
-              // );
-              // console.log('temp current', tempCurrent);
-              // if (tempCurrent.recID != p.recID) {
-              //   tempCurrent.isCurrent = false;
-              //   (this.listView.dataService as CRUDService)
-              //     .update(tempCurrent)
-              //     .subscribe();
-              // }
-            }
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService).update(p).subscribe();
-            // }
+            console.log(p);
+            debugger;
             this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS021');
         });
