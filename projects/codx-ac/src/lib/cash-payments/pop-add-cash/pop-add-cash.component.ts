@@ -77,8 +77,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
   tabItem: any = [
-    { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
-    { text: 'Chi tiết bút toán', iconCss: 'icon-playlist_add_check' },
+    { text: 'Thông tin chứng từ', iconCss: 'icon-info'},
+    { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
   ];
   constructor(
     private inject: Injector,
@@ -102,6 +102,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.cashBookID = '';
     this.currencyID = '';
     this.exchangeRate = null;
+    this.cbxObjectID = null;
     this.cashpayment = dialog.dataService!.dataSelected;
     this.cache
       .gridViewSetup('CashPayments', 'grvCashPayments')
@@ -191,6 +192,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.cbxObjectID = 'Warehouses';
         break;
     }
+    this.objectID = '';
     this.objectType = e.data;
     this.cashpayment[e.field] = e.data;
   }
@@ -223,7 +225,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.cashpaymentline[e.field] = e.value;
     this.data = JSON.stringify(this.cashpaymentline);
   }
-  valueChange(e: any, type: any) {
+  valueChange(e: any) {
     this.cashpayment[e.field] = e.data;
   }
   getvalueNameCashBook(data: any) {

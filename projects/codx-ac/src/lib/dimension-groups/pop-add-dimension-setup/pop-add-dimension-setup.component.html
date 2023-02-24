@@ -2,11 +2,8 @@
   [footer]="footer" [data]="dimensionSetup" subToolbarCss="text-end">
 </codx-form>
 <ng-container *ngIf="isPopupCbb">
-  <!-- <codx-combobox-popup [comboboxName]="'EntityName'" field="entityname" [multiple]="true" [width]="700" [height]="600"
-  (clickSave)="clickSave($event)" [value]="dataCbx" [formModel]="formModel">
-  </codx-combobox-popup> -->
-  <codx-combobox-popup [comboboxName]="'Users'" [multiple]="true" [width]="700" [height]="600" [value]="dataCbx"
-    [formModel]="formModel" (clickSave)="clickSave($event)">
+  <codx-combobox-popup [comboboxName]="'EntityName'" [multiple]="true" [width]="700" [height]="600"
+    (clickSave)="clickSave($event)" [value]="dataCbx" [formModel]="formModel">
   </codx-combobox-popup>
 </ng-container>
 <ng-template #body>
