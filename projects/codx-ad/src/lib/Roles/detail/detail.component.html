@@ -170,7 +170,8 @@
                                       ?.permissionControl
                                       ? dataRole[item.functionID]?.DataPer
                                           ?.permissionControl
-                                      : 0
+                                      : dataRole[item.functionID]?.Entity
+                                          ?.permissionControl || 0
                                   "
                                   (valueChange)="
                                     valueChange($event, item.functionID)
