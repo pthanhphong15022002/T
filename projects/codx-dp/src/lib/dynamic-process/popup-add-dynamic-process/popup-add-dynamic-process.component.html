@@ -351,9 +351,9 @@
           </div>
           <div class="col-6">
             <div class="position-relative">
-              <codx-input type="text" [crrValue]="process.instanceNoSetting"
-                [placeholder]="gridViewSetup['InstanceNoSetting']?.description" (valueChange)="valueChange($event)"
-                field="instanceNoSetting">
+              <codx-input type="text" [crrValue]="instanceNoSetting"
+                [placeholder]="gridViewSetup['InstanceNoSetting']?.description" (valueChange)="valueChangeAutoNoCode($event)"
+                field="instanceNoSetting" >
               </codx-input>
               <div class="position-absolute" style="top: 7px; right: 7px">
                 <i class="icon-settings form-control-feedback" (click)="openAutoNumPopup()"></i>

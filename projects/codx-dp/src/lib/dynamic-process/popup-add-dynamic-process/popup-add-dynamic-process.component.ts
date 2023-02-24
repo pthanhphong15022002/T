@@ -211,6 +211,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   titleAdd = 'Thêm';
   objectIDRoles: any;
   titleDefault = '';
+  instanceNoSetting = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -231,7 +232,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.userId = this.user?.userID;
 
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
-    if (this.action != 'add') {
+    if (this.action == 'edit') {
       // this.showID = true;
       this.permissions = this.process.permissions;
       if (this.permissions.length > 0) {
@@ -240,6 +241,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
       this.processTab = 2;
       this.getAvatar(this.process);
+      this.instanceNoSetting = this.process.instanceNoSetting;
     } else {
       this.process.instanceNoSetting = dt.data.instanceNo;
       // this.step.owner = this.user.userID;
@@ -458,6 +460,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     }
   }
+
+  valueChangeAutoNoCode(e) {
+    this.instanceNoSetting = e?.data;
+  }
   //#endregion
 
   //#region Change Tab
@@ -521,9 +527,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         ) {
           this.isContinues = true;
         }
-        this.updateNodeStatus(oldNode, newNode);
-        this.currentTab++;
-        this.processTab == 0 && this.processTab++;
+        if (!this.process.instanceNoSetting || (this.process.instanceNoSetting && this.process.instanceNoSetting!= this.instanceNoSetting)){
+          this.notiService.alertCode('DP009').subscribe((e) => {
+            if (e?.event?.status == 'Y') {
+              this.updateNodeStatus(oldNode, newNode);
+              this.currentTab++;
+              this.processTab == 0 && this.processTab++;
+            }else return ;
+          });
+        } else {
+          this.updateNodeStatus(oldNode, newNode);
+          this.currentTab++;
+          this.processTab == 0 && this.processTab++;
+        }
+
         break;
       case 1:
         this.newNode = newNode;
@@ -835,7 +852,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (index != -1) {
       listPerm.splice(index, 1);
       listPerm.push(Object.assign({}, perm));
-    }else{
+    } else {
       this.stepRoleOld = listPerm.filter((x) => x.roleType == 'S')[0];
     }
     return listPerm;
@@ -874,7 +891,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //Popup setiing autoNumber
   openAutoNumPopup() {
-    if (this.process.instanceNoSetting != this.process.processNo) {
+    if (this.action != 'edit') {
       //save new autoNumber
       let popupAutoNum = this.callfc.openForm(
         PopupAddAutoNumberComponent,
@@ -883,19 +900,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         (screen.width * 40) / 100,
         '',
         {
-          formModel: this.dialog.formModel,
-          autoNoCode: this.process.processNo,
-          description: this.entityName,
-          newAutoNoCode: this.process.processNo,
+          autoNoCode: this.instanceNoSetting,
+          description: 'DP_Instances',
+          newAutoNoCode: this.instanceNoSetting,
           isSaveNew: '1',
         }
       );
       popupAutoNum.closed.subscribe((res) => {
         if (res?.event) {
+          this.process.instanceNoSetting = res?.event?.autoNoCode;
         }
       });
     } else {
-      //cap
+      //cap nhật
       let popupAutoNum = this.callfc.openForm(
         PopupAddAutoNumberComponent,
         '',
@@ -903,14 +920,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         (screen.width * 40) / 100,
         '',
         {
-          formModel: this.dialog.formModel,
-          autoNoCode: this.process.processNo,
-
-          description: this.entityName,
+          autoNoCode: this.instanceNoSetting,
+          description: 'DP_Instances',
         }
       );
       popupAutoNum.closed.subscribe((res) => {
         if (res?.event) {
+          this.process.instanceNoSetting = res?.event?.autoNoCode;
         }
       });
     }
@@ -1181,7 +1197,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.step['stepNo'] = this.stepList.length + 1;
       this.stepName = '';
       this.headerText = 'Thêm Giai Đoạn';
-    }else if(type === 'copy'){
+    } else if (type === 'copy') {
       this.headerText = 'Copy Giai Đoạn';
       this.stepName = this.step['stepName'];
     } else {
@@ -1191,23 +1207,23 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
   }
 
-  copyStep(step){
+  copyStep(step) {
     this.step = JSON.parse(JSON.stringify(step));
     this.stepName = '';
     this.step['recID'] = Util.uid();
     this.step['stepNo'] = this.stepList.length + 1;
-    delete this.step['id']
+    delete this.step['id'];
     let taskCopy = [];
-    if(this.step['taskGroups']?.length > 0){
-      this.step['taskGroups'].forEach(groupTask =>{
+    if (this.step['taskGroups']?.length > 0) {
+      this.step['taskGroups'].forEach((groupTask) => {
         groupTask['recID'] = groupTask['recID'] ? Util.uid() : null;
         groupTask['stepID'] = this.step['recID'];
         groupTask['createdOn'] = new Date();
         groupTask['createdBy'] = this.userId;
         groupTask['modifiedOn'] = null;
         groupTask['modifiedBy'] = null;
-        if(groupTask['task']?.length > 0){
-          groupTask['task'].forEach(task =>{
+        if (groupTask['task']?.length > 0) {
+          groupTask['task'].forEach((task) => {
             task['recID'] = Util.uid();
             task['stepID'] = Util.uid();
             task['taskGroupID'] = groupTask['recID'];
@@ -1219,12 +1235,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             taskCopy.push(task);
           });
         }
-      } )
+      });
     }
     this.step['tasks'] = taskCopy;
-    this.openPopupStep('copy')
+    this.openPopupStep('copy');
     console.log(step);
-    
   }
 
   saveStep() {
@@ -2043,17 +2058,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.popupAddReason.close();
     this.changeDetectorRef.detectChanges();
   }
-  checkIsExisReason(reasonName:any){
+  checkIsExisReason(reasonName: any) {
     var index = 0;
-    for(let i=0; i< this.step.reasons.length; i++) {
-      if(reasonName === this.step.reasons[i].reasonName ) {
-        if(index >= 1) {
+    for (let i = 0; i < this.step.reasons.length; i++) {
+      if (reasonName === this.step.reasons[i].reasonName) {
+        if (index >= 1) {
           this.step.reasons.splice(i, 1);
         }
-  
-          index++;
-      }
 
+        index++;
+      }
     }
   }
 
