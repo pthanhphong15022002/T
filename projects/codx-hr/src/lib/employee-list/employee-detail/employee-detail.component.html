@@ -3507,7 +3507,7 @@
                 <codx-gridview
                   *ngIf="benefitColumnGrid"
                   #gridView
-                  [sort] = "[benefitSortModel]"
+                  [sort]="[benefitSortModel]"
                   [formModel]="benefitFormodel"
                   [columnsGrid]="benefitColumnGrid"
                   [service]="'HR'"
@@ -3623,7 +3623,7 @@
                 <codx-gridview
                   *ngIf="eAssetColumnGrid"
                   #eAssetGridView
-                  [sort] = "[assetSortModel]"
+                  [sort]="[assetSortModel]"
                   [formModel]="eAssetFormModel"
                   [columnsGrid]="eAssetColumnGrid"
                   [service]="'HR'"
@@ -4142,7 +4142,7 @@
                 <codx-gridview
                   *ngIf="businessTravelColumnGrid"
                   #businessTravelGrid
-                  [sort] = "[businessTravelSortModel]"
+                  [sort]="[businessTravelSortModel]"
                   [formModel]="EBusinessTravelFormodel"
                   [columnsGrid]="businessTravelColumnGrid"
                   [service]="'HR'"
@@ -4204,7 +4204,7 @@
                 <codx-gridview
                   *ngIf="eExperienceColumnGrid"
                   #eExperienceGridView
-                  [sort] = "[experienceSortModel]"
+                  [sort]="[experienceSortModel]"
                   [formModel]="eExperienceFormModel"
                   [columnsGrid]="eExperienceColumnGrid"
                   [service]="'HR'"
@@ -4611,13 +4611,13 @@
                         </div>
                       </ng-container>
                     </div>
-                    <!-- <codx-mfunc
+                    <codx-mfunc
                       [formModel]="formModel"
                       (clickMF)="clickMF($event, eSkill.listSkill[0], 'eSkill')"
                       type="hover"
                       [dataItem]="eSkill.listSkill[0]"
                     >
-                    </codx-mfunc> -->
+                    </codx-mfunc>
                   </div>
                 </div>
               </ng-container>
@@ -4666,6 +4666,7 @@
                       cssPopup="h-350px w-300px"
                       [isMulti]="true"
                       type="combobox"
+                      [emptyText]="'Kỹ năng'"
                       field="SkillID"
                       [refValue]="eSkillgrvSetup.SkillID.referedValue"
                       (valueChange)="valueChangeFilterSkillID($event)"
@@ -4679,6 +4680,7 @@
                     #eSkillGridViewID
                     [formModel]="eSkillFormmodel"
                     [columnsGrid]="eSkillColumnGrid"
+                    [sort]="[skillIDSortModel, skillGradeSortModel]"
                     [service]="'HR'"
                     [assemblyName]="'Core'"
                     [className]="'DataBusiness'"
@@ -4723,6 +4725,7 @@
               <div class="d-flex align-items-center ms-5">
                 <codx-dropdown-select
                   *ngIf="eTrainCourseGrvSetup"
+                  [emptyText]="'Đào tạo'"
                   [cssClass]="'rounded-pill border-1'"
                   cssPopup="h-350px w-300px"
                   [isMulti]="true"
@@ -4736,6 +4739,7 @@
                 <codx-dropdown-calendar
                   [cssPopup]="'w-600px h-400px'"
                   emptyText="Năm"
+                  [EmptyText]="'Năm'"
                   [firstChange]="false"
                   [displayOption]="ops"
                   [selectedType]="'y'"
@@ -5249,6 +5253,7 @@
                 <span>
                   <codx-dropdown-select
                     *ngIf="eDiseasesGrvSetup"
+                    [EmptyName]="'Bệnh nghề nghiệp'"
                     [cssClass]="'rounded-pill border-1'"
                     cssPopup="h-350px w-300px"
                     [isMulti]="true"
@@ -5500,16 +5505,31 @@
 
 <!--#region template Bằng cấp 123123-->
 <ng-template #templateEDegreeGridCol1 let-data>
-  <div>
+  <div class="d-flex align-items-center mb-4">
+    <span
+      class="bullet bullet-vertical d-flex align-items-center min-h-50px mh-100 me-4"
+      [class]="data.isMain ? 'bg-primary' : 'bg-transparent'"
+    ></span>
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-1">
+        <span class="icon-school text-primary icon-16 me-2"></span>
+        <div class="text-dark fw-bolder">{{ data?.degreeName }}</div>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="text-dark">{{ data?.trainFieldDetail }}</div>
+      </div>
+    </div>
+  </div>
+  <!-- <div>
     <i class="icon-school text-primary"></i>
     <span class="fw-bolder">{{ data?.degreeName }}</span>
   </div>
   <div>
     {{ data?.trainFieldDetail }}
-  </div>
+  </div> -->
 </ng-template>
 <ng-template #templateEDegreeGridCol2 let-data>
-  <div>
+  <div class="fw-bold">
     {{
       data?.trainSupplierID
         | formatvalue : eDegreeFormModel : "trainSupplierID"
@@ -5541,7 +5561,7 @@
 <ng-template #templateEDegreeGridCol3 let-data>
   <div class="has-action-menu">
     <div>
-      <i class="icon-calendar_today"></i>
+      <i class="icon-event icon-18 text-gray-600 me-2"></i>
       <span class="fw-bolder">
         {{ data?.yearGraduated }}
       </span>
@@ -5551,7 +5571,7 @@
       {{ data?.issuedDate | fmDT }}
     </div>
     <div *ngIf="data.isMain">
-      <span class="text-success">Là bằng cấp chính</span>
+      <span class="badge badge-success border-0">Là bằng cấp chính</span>
     </div>
 
     <codx-mfunc
@@ -5631,7 +5651,7 @@
 <ng-template #templateECertificateGridCol3 let-data>
   <div class="has-action-menu">
     <div>
-      <i class="icon-calendar_today"></i>
+      <i class="icon-event icon-18 text-gray-600 me-2"></i>
       {{ data?.issuedDate | fmDT }}
       <span *ngIf="data?.isExpire" class="text-primary"> Hết hạn </span>
       <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
@@ -5653,7 +5673,13 @@
     {{ data?.skillID | formatvalue : eSkillFormmodel : "skillID" | async }}
   </div>
   <div>
-    <span class="active sk-item">
+    <span
+      class="badge"
+      [ngClass]="
+        isMaxGrade(data) ? 'badge-primary border-0 ' : 'border-1 text-dark'
+      "
+      [style.border-color]="isMaxGrade(data) ? '' : 'black'"
+    >
       {{
         data?.skillGradeID
           | formatvalue : eSkillFormmodel : "skillGradeID"
@@ -5700,7 +5726,7 @@
   <div class="has-action-menu">
     <div>{{ data?.trainFrom | fmDT }} - {{ data?.trainTo | fmDT }}</div>
     <div class="text-primary">
-      <i></i>
+      <i class="icon-menu_book"></i>
       <div>
         {{
           data?.trainForm | formatvalue : eSkillFormmodel : "trainForm" | async
@@ -6136,6 +6162,7 @@
 <!-- #region Đào tạo -->
 <ng-template #templateTrainCourseGridCol1 let-data>
   <div class="fw-bold">
+    <i class="icon-menu_book"></i>
     {{
       data?.trainCourseID
         | formatvalue : eTrainCourseFormModel : "trainCourseID"
@@ -6154,7 +6181,7 @@
 
 <ng-template #templateTrainCourseGridCol2 let-data>
   <div>
-    <i class="icon-calendar_today"></i>
+    <i class="icon-event icon-18 text-gray-600 me-2"></i>
     {{ data?.trainFrom | fmDT }} - {{ data?.trainTo | fmDT }}
   </div>
   <div>
@@ -6464,7 +6491,7 @@
     <div class="d-flex align-items-center">
       <span class="me-1"></span>
       <span #ranking>
-        <i class="icon-calendar_today text-primary"></i>
+        <i class="icon-event icon-18 text-gray-600 me-2 text-primary"></i>
         {{ data?.awardDate | fmDT }}
         <i
           class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
@@ -6477,7 +6504,7 @@
     <div class="d-flex align-items-center">
       <span class="me-1"></span>
       <span>
-        <i class="icon-calendar_today"></i>
+        <i class="icon-library_books"></i>
         {{ data?.decisionNo }}
         <span class="text-secondary">
           <i
@@ -6534,14 +6561,16 @@
 </ng-template>
 <ng-template #templateDisciplineGridCol2 let-data>
   <div>
-    <i class="icon-calendar_today text-danger"></i>
+    <i
+      class="icon-event icon-18 text-gray-600 me-2 text-primary text-danger"
+    ></i>
     {{ data?.disciplineDate | fmDT }}
   </div>
   <div>
-    <i class="icon-calendar_today text-dark"></i>
+    <i class="icon-event icon-18 text-gray-600 me-2 text-primary text-dark"></i>
     {{ data?.fromDate | fmDT }}
     <i
-      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
+      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1e"
     ></i>
     <i class="icon-library_books"></i>
     {{
@@ -6572,7 +6601,9 @@
     }}
   </div>
   <div class="text-warning">
-    <span class="text-info" *ngIf="data.isInspect"> Có giám định Y khoa </span>
+    <span class="badge badge-success border-0" *ngIf="data.isInspect">
+      Có giám định Y khoa
+    </span>
     <i class="icon-calendar_today"></i>
     {{ data?.diseaseDate | fmDT }}
   </div>

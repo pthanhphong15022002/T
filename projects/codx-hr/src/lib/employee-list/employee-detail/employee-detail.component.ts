@@ -195,6 +195,8 @@ export class EmployeeDetailComponent extends UIComponent {
   listCrrBenefit: any;
 
   lstESkill: any = [];
+  IsMax = false;
+  Current_Grade_ESkill: any = [];
   //Awards
   lstAwards: any = [];
 
@@ -214,6 +216,8 @@ export class EmployeeDetailComponent extends UIComponent {
   experienceSortModel: SortModel;
   businessTravelSortModel: SortModel;
   benefitSortModel: SortModel;
+  skillIDSortModel: SortModel;
+  skillGradeSortModel: SortModel;
   //#endregion
 
   reRenderGrid = true;
@@ -558,7 +562,7 @@ export class EmployeeDetailComponent extends UIComponent {
     this.experienceSortModel = new SortModel();
     this.experienceSortModel.field = 'FromDate';
     this.experienceSortModel.dir = 'asc';
-    
+
     this.businessTravelSortModel = new SortModel();
     this.businessTravelSortModel.field = 'BeginDate';
     this.businessTravelSortModel.dir = 'desc';
@@ -566,6 +570,14 @@ export class EmployeeDetailComponent extends UIComponent {
     this.benefitSortModel = new SortModel();
     this.benefitSortModel.field = 'EffectedDate';
     this.benefitSortModel.dir = 'desc';
+
+    this.skillIDSortModel = new SortModel();
+    this.skillIDSortModel.field = 'SkillID';
+    this.skillIDSortModel.dir = 'asc';
+
+    this.skillGradeSortModel = new SortModel();
+    this.skillGradeSortModel.field = 'SkillGradeID';
+    this.skillGradeSortModel.dir = 'desc';
 
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       this.addHeaderText = res[0].customName;
@@ -791,7 +803,6 @@ export class EmployeeDetailComponent extends UIComponent {
                 this.dayoffHeaderTexts['RegisteredDate'],
               template: this.templateDayOffGridCol1,
               width: '150',
-              
             },
             {
               headerText: 'Thời gian nghỉ ' + '|' + 'Số ngày',
@@ -3031,26 +3042,34 @@ export class EmployeeDetailComponent extends UIComponent {
         if (actionType == 'add' || actionType == 'copy') {
           (this.dayoffGrid.dataService as CRUDService)
             .add(res.event)
-            .subscribe(res=>{
-              if(this.dayoffGrid){
-              //this.dayoffGrid.sort = [this.dayOffSortModel]
-              //this.dayoffGrid.gridRef.allowSorting =true;
-              this.dayoffGrid.gridRef.sortColumn("BeginDate", "Descending", false);
+            .subscribe((res) => {
+              if (this.dayoffGrid) {
+                //this.dayoffGrid.sort = [this.dayOffSortModel]
+                //this.dayoffGrid.gridRef.allowSorting =true;
+                this.dayoffGrid.gridRef.sortColumn(
+                  'BeginDate',
+                  'Descending',
+                  false
+                );
               }
             });
-            this.dayoffRowCount += 1;
-          } else if (actionType == 'edit') {
-            (this.dayoffGrid.dataService as CRUDService)
+          this.dayoffRowCount += 1;
+        } else if (actionType == 'edit') {
+          (this.dayoffGrid.dataService as CRUDService)
             .update(res.event)
-            .subscribe(res=>{
-              if(this.dayoffGrid){
-                debugger
-                this.dayoffGrid.gridRef.allowSorting =true;
-                this.dayoffGrid.gridRef.sortColumn("BeginDate", "Descending", false);
+            .subscribe((res) => {
+              if (this.dayoffGrid) {
+                debugger;
+                this.dayoffGrid.gridRef.allowSorting = true;
+                this.dayoffGrid.gridRef.sortColumn(
+                  'BeginDate',
+                  'Descending',
+                  false
+                );
               }
             });
-          }
         }
+      }
       this.df.detectChanges();
     });
   }
@@ -3299,8 +3318,8 @@ export class EmployeeDetailComponent extends UIComponent {
         this.df.detectChanges();
         this.reRenderGrid = true;
         this.df.detectChanges();
-        if (actionType == 'add' ) {
-          this.appointionRowCount+=1;
+        if (actionType == 'add') {
+          this.appointionRowCount += 1;
 
           // this.appointionRowCount+=1
           // this.appointionGridView.dataSource = [];
@@ -4643,8 +4662,7 @@ export class EmployeeDetailComponent extends UIComponent {
       for (let i = 0; i < lengthArr; i++) {
         if (i == first || i == last)
           this.Filter_EDiseases_Predicates += `DiseaseID==@${i}`;
-        else 
-          this.Filter_EDiseases_Predicates += `DiseaseID==@${i} or `;
+        else this.Filter_EDiseases_Predicates += `DiseaseID==@${i} or `;
       }
       this.Filter_EDiseases_Predicates += ') ';
       (this.eDiseasesGrid.dataService as CRUDService)
@@ -4810,5 +4828,16 @@ export class EmployeeDetailComponent extends UIComponent {
       this.endDateEDayoffFilterValue = evt.toDate.toJSON();
     }
     this.UpdateEDayOffsPredicate();
+  }
+
+  isMaxGrade(eSkill: any) {
+    let item = this.lstESkill.filter((p) => p.skillID == eSkill.skillID);
+    if (item) {
+      let lstSkill = item[0].listSkill;
+      if (lstSkill && eSkill.recID == lstSkill[0].recID) {
+        return true;
+      }
+    }
+    return false;
   }
 }
