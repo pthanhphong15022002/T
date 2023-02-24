@@ -3484,7 +3484,7 @@
                     *ngIf="eBenefitGrvSetup"
                     [cssClass]="'rounded-pill border-1'"
                     cssPopup="h-350px w-300px"
-                    emptyText="Loại phụ cấp"
+                    [emptyText]="benefitHeaderTexts['BenefitID']"
                     [isMulti]="true"
                     type="combobox"
                     field="BenefitID"
@@ -3602,7 +3602,7 @@
                     cssPopup="h-350px w-300px"
                     [isMulti]="true"
                     type="combobox"
-                    emptyText="Loại tài sản"
+                    [emptyText]="eAssetHeaderText['AssetCategory']"
                     field="AssetCategory"
                     [refValue]="eAssetGrvSetup?.AssetCategory?.referedValue"
                     (valueChange)="valueChangeFilterAssetCategory($event)"
@@ -4037,6 +4037,7 @@
                   *ngIf="eDayOffGrvSetup"
                   [cssClass]="'rounded-pill border-1'"
                   cssPopup="h-350px w-300px"
+                  [emptyText]="dayoffHeaderTexts['KowID']"
                   [isMulti]="true"
                   type="combobox"
                   field="KowID"
@@ -5481,8 +5482,8 @@
 </ng-template>
 
 <ng-template #templateBenefitIsCurrent let-data>
-  <div class="has-action-menu">
-    <div class="min-h-40px">
+  <div class="has-action-menu min-h-40px">
+    <div>
       <div *ngIf="data?.isCurrent == 1">Đang hiệu lực</div>
     </div>
     <codx-mfunc
@@ -5495,7 +5496,6 @@
   </div>
 </ng-template>
 
-<ng-template #templateBenefitMoreFunc let-data> </ng-template>
 <!--#endregion -->
 
 <!--#region template Bằng cấp 123123-->
@@ -5718,7 +5718,7 @@
 </ng-template>
 
 <ng-template #templateEExperienceGridCol4 let-data>
-  <div class="has-action-menu">
+  <div class="has-action-menu min-h-40px">
     {{ data?.position }}
     <codx-mfunc
       [formModel]="eExperienceFormModel"
@@ -5758,18 +5758,21 @@
 </ng-template>
 
 <ng-template #templateEAssetCol3 let-data>
-  <div *ngIf="data?.isReturned == true" class="has-action-menu">
-    {{ eAssetHeaderText["IsReturned"] }}
-    <i class="icon-calendar_today"></i>
-    {{ data?.returnedDate | fmDT }}
+  <div class="has-action-menu min-h-40px">
+    <div *ngIf="data?.isReturned == true" class="has-action-menu">
+      {{ eAssetHeaderText["IsReturned"] }}
+      <i class="icon-calendar_today"></i>
+      {{ data?.returnedDate | fmDT }}
+    </div>
     <codx-mfunc
-      [formModel]="eAssetFormModel"
-      (clickMF)="clickMF($event, data, 'Assets')"
-      [dataItem]="data"
-      type="hover"
-    >
-    </codx-mfunc>
+    [formModel]="eAssetFormModel"
+    (clickMF)="clickMF($event, data, 'Assets')"
+    [dataItem]="data"
+    type="hover"
+  >
+  </codx-mfunc>
   </div>
+
 </ng-template>
 
 <!-- #region Hộ chiếu columnGrid templates-->
@@ -6168,7 +6171,7 @@
 </ng-template>
 
 <ng-template #templateTrainCourseGridCol3 let-data>
-  <div class="has-action-menu">
+  <div class="has-action-menu " >
     <div>
       {{
         data?.trainSupplierID
@@ -6255,7 +6258,7 @@
 </ng-template>
 
 <ng-template #tempCol3EHealthGrid let-data>
-  <div class="has-action-menu">
+  <div class="has-action-menu min-h-40px">
     {{ data?.suggestion }}
     <codx-mfunc
       [formModel]="eHealthFormModel"
@@ -6298,7 +6301,7 @@
 </ng-template>
 
 <ng-template #tempEVaccineGridCol3 let-data>
-  <div class="has-action-menu">
+  <div class="has-action-menu min-h-40px">
     {{ data?.note }}
     <codx-mfunc
       [formModel]="eVaccineFormModel"
@@ -6431,7 +6434,7 @@
 </ng-template>
 
 <ng-template #templateBusinessTravelGridCol3 let-data>
-  <div class="has-action-menu">
+  <div class="has-action-menu min-h-40px">
     {{ data?.businessPurpose }}
     <codx-mfunc
       [formModel]="EBusinessTravelFormodel"
