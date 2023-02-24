@@ -1,3 +1,4 @@
+import { FormGroup } from '@angular/forms';
 declare var window: any;
 import { OMCONST } from './../codx-om.constant';
 import {
@@ -93,6 +94,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     krFM: null,
     skrFM: null,
   };
+  obFG: FormGroup;
+    krFG: FormGroup;
+    skrFG: FormGroup;
   funcID: any;
   obFuncID: any;
   krFuncID: any;
@@ -108,7 +112,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   planNull = true;
   addPlanTitle = '';
   modelOKR: any;
-  krFG: any;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -154,24 +157,41 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.codxOmService.getFormModel(this.funcID).then((planFM) => {
       if (planFM) {
         this.formModelPlan = planFM;
+        
       }
     });
     this.codxOmService.getFormModel(this.krFuncID).then((krFM) => {
       if (krFM) {
         this.formModelKR = krFM;
         this.listFormModel.krFM = this.formModelKR;
+
+        this.krFG = this.codxService.buildFormGroup(
+          this.formModelPlan?.formName,
+          this.formModelPlan?.gridViewName
+        );
+        
+        
       }
     });
     this.codxOmService.getFormModel(this.skrFuncID).then((skrFM) => {
       if (skrFM) {
         this.formModelSKR = skrFM;
         this.listFormModel.skrFM = this.formModelSKR;
+        this.skrFG = this.codxService.buildFormGroup(
+          this.formModelSKR?.formName,
+          this.formModelSKR?.gridViewName
+        );
       }
     });
     this.codxOmService.getFormModel(this.obFuncID).then((obFM) => {
       if (obFM) {
         this.formModelOB = obFM;
         this.listFormModel.obFM = this.formModelOB;
+        this.obFG = this.codxService.buildFormGroup(
+          this.formModelOB?.formName,
+          this.formModelOB?.gridViewName
+        );
+        
       }
     });
     //Lấy tiêu đề theo FuncID cho Popup
@@ -545,6 +565,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.addPlanTitle,
         this.curOrg,
         this.listFormModel,
+        this.obFG
       ],
       '',
       dialogModel
