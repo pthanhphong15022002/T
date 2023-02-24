@@ -226,7 +226,6 @@ export class PopupAddInstanceComponent implements OnInit {
   }
   saveInstances() {
     if (this.instance?.title === null || this.instance?.title.trim() === '') {
-      // this.notificationsService.notifyCode('Vui lòng nhập tên nhiệm vụ');
       this.notificationsService.notifyCode(
         'SYS009',
         0,

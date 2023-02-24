@@ -710,9 +710,10 @@
               <codx-input class="test-check" type="switch" style="width: 100%" field="read">
               </codx-input>
             </div>
+            <!-- more function step -->
             <div *ngIf="step" class="icon-more_vert has-action-menu more-funtion-step" style="cursor: pointer">
               <codx-mfunc *ngIf="viewStepCrr == viewStepCustom" [formModel]="dialog.formModel"
-                (clickMF)="clickMFStep($event, step)" [dataItem]="action != 'edit' ? moreDefaut : step" [type]="'hover'"
+                (clickMF)="clickMFStep($event, step)" [dataItem]="moreDefaut" [type]="'hover'"
                 (changeDataMF)="changeDataMF($event, 'step')">
               </codx-mfunc>
             </div>

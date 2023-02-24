@@ -392,11 +392,12 @@ export class CodxDpService {
     );
   }
 
-  getFirstIntance(){
+  getFirstIntance(processID){
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
       'GetFirstIntanceAsync',
+      processID
     );
   }
 
