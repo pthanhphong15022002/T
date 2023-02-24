@@ -33,11 +33,11 @@
 	color: #666;
 	cursor: default;
 	margin-right: 3px;
-	padding: 5px;
 	height: 44px;
 	text-indent: 10px;
 	width: 180px;
 	min-width: 180px;
+	max-width: 180px;
 	position: relative;
 	background-color: #d9e3f7;
 	-webkit-user-select: none;
@@ -55,7 +55,7 @@
 	content: " ";
 	position: absolute;
 	top: 0;
-	right: -22px;
+	right: -21px;
 	width: 0;
 	height: 0;
 	border-top: 22px solid transparent;
