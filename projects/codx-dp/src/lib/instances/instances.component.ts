@@ -225,7 +225,7 @@ export class InstancesComponent
               option.Width = '850px';
               option.zIndex = 1001;
               this.view.dataService.dataSelected.processID = this.process.recID;
-              this.genAutoNumberNo(formMD.funcID); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
+             // this.genAutoNumberNo(formMD.funcID); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
               var dialogCustomField = this.callfc.openSide(
                 PopupAddInstanceComponent,
                 [
