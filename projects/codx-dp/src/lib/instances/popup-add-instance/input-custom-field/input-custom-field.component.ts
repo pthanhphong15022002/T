@@ -17,7 +17,7 @@ import { DP_Steps_Fields } from '../../../models/models';
   styleUrls: ['./input-custom-field.component.css'],
 })
 export class InputCustomFieldComponent implements OnInit {
-  @Input() customField : any =null;
+  @Input() customField: any = null;
   @Output() valueChangeCustom = new EventEmitter<any>();
   //file - đặc thù cần hỏi lại sau
   @Input() objectId: any = '';
@@ -76,7 +76,10 @@ export class InputCustomFieldComponent implements OnInit {
   valueChange(e) {
     if (this.customField.isRequired) {
       if (!e || !e.data || e.data.toString().trim() == '') {
-        this.showErrMess = true;
+        this.cache.message('SYS028').subscribe((res) => {
+          if (res) this.errorMessage = res.customName || res.defaultName;
+          this.showErrMess = true;
+        });
         return;
       } else this.showErrMess = false;
     }
