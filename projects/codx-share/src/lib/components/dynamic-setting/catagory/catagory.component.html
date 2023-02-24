@@ -38,7 +38,7 @@
     </div>
   </div>
   <ng-template #template let-data let-collapse="collapse" let-isGroup="isGroup">
-    <div class="list-item" [ngClass]="collapse ? ' d-none' : ''" [attr.data-group]="data.refLineID">
+    <div class="list-item bg-hover py-3" [ngClass]="collapse ? ' d-none' : ''" [attr.data-group]="data.refLineID">
       <div class="d-flex justify-content-between">
         <div class="w-40px min-w-40px" *ngIf="!isGroup">
           <ng-container *ngIf="data.icon && data.icon.includes('.svg'); else icon">
@@ -239,8 +239,9 @@
           }}
         </span>
       </div>
-      <hr class="ms-12" *ngIf="!isGroup" />
+
     </div>
+    <hr class="ms-12 my-0" *ngIf="!isGroup" />
   </ng-template>
 </ng-template>
 
