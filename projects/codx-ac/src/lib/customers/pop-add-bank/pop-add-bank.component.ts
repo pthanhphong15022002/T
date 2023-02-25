@@ -134,10 +134,44 @@ onInit(): void {
       );
       return;
     }
-      window.localStorage.setItem("databankaccount",JSON.stringify(this.bankaccount));
+    this.notification.notifyCode(
+      'SYS006',
+      0,
+      ''
+    );
+    window.localStorage.setItem("databankaccount",JSON.stringify(this.bankaccount));
     this.dialog.close();
   }
   onSaveAdd(){
+    if (this.bankAcctID.trim() == '' || this.bankAcctID == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['BankAcctID'].headerText + '"'
+      );
+      return;
+    }
+    // if (this.bankID.trim() == '' || this.bankID == null) {
+    //   this.notification.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.gridViewSetup['BankID'].headerText + '"'
+    //   );
+    //   return;
+    // }
+    if (this.owner.trim() == '' || this.owner == null) {
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Owner'].headerText + '"'
+      );
+      return;
+    }
+    this.notification.notifyCode(
+      'SYS006',
+      0,
+      ''
+    );
     this.objectBankaccount.push({...this.bankaccount});
     this.clearBankAccount();
   }

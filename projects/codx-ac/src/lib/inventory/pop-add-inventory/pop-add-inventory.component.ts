@@ -34,7 +34,6 @@ export class PopAddInventoryComponent extends UIComponent {
   formModel: FormModel;
   dialog!: DialogRef;
   inventory: Inventorymodels;
-  inventorys: Inventorymodels;
   inventModelID: any;
   inventModelName: any;
   gridViewSetup: any;

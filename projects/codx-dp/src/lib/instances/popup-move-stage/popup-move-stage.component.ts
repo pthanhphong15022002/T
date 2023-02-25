@@ -99,12 +99,7 @@ export class PopupMoveStageComponent implements OnInit {
     this.IdSuccess = this.listStepsCbx[this.listStepsCbx.length - 2]?.stepID;
     this.stepIdClick = JSON.parse(JSON.stringify(dt?.data?.stepIdClick));
     this.getStepByStepIDAndInID(this.instance.recID, this.stepIdOld);
-    this.cache.valueList('DP019').subscribe((res) => {
-      if (res) {
-        this.assignControl = res.datas;
-      }
-    });
-    this.dpSv.getFirstIntance().subscribe(res=>{
+    this.dpSv.getFirstIntance(this.instance.processID).subscribe(res=>{
       if(res){
         this.firstInstance = res;
       }
@@ -130,38 +125,39 @@ export class PopupMoveStageComponent implements OnInit {
       if (res) {
         this.stepCurrent = res;
         var i = -1;
-        i = this.listStep.findIndex((x) => x.recID == this.stepCurrent.recID);
         this.assignControl = this.stepCurrent.assignControl;
-        if (i <= 0) {
-          this.assignControl = '0';
-        } else {
-          this.stepOld = this.listStep[i - 1].owner;
-        }
         switch (this.assignControl) {
           //Phụ trách giai đoạn hiện tại
           case '0':
             this.owner = this.stepCurrent.owner;
-            if (this.owner != '' || this.owner != null) this.getNameAndPosition(this.owner);
+            if (this.owner != null) this.getNameAndPosition(this.owner);
             break;
           //Phụ trách giai đoạn chuyển tiếp
           case '1':
-            this.owner = this.listStep[i + 1].owner;
-            if (this.owner != '' || this.owner != null) this.getNameAndPosition(this.owner);
+            var index = -1;
+            index = this.listStep.findIndex(x=>x.stepID == this.stepIdClick);
+            var check = this.listStep.findIndex(x=>x.stepID == this.IdFail || x.stepID == this.IdSuccess);
+            if(index > -1 && index != check){
+              this.owner = this.listStep[index].owner;
+              if (this.owner != null) this.getNameAndPosition(this.owner);
+            }
             break;
           //Giữ nguyên phụ trách trước
           case '2':
+            i = this.listStep.findIndex((x) => x.stepID == this.stepCurrent.stepID);
+            this.stepOld = this.listStep[i - 1].owner;
             this.owner = this.stepOld;
-            if (this.owner != '' || this.owner != null) this.getNameAndPosition(this.owner);
+            if (this.owner != null) this.getNameAndPosition(this.owner);
             break;
           //Người nhận nhiệm vụ đầu tiên
           case '3':
             this.owner = this.firstInstance.owner;
-            if (this.owner != '' || this.owner != null) this.getNameAndPosition(this.owner);
+            if (this.owner != null) this.getNameAndPosition(this.owner);
             break;
           //Người nhận nhiệm vụ hiện tại
           case '4':
             this.owner = this.instance.owner;
-            if (this.owner != '' || this.owner != null) this.getNameAndPosition(this.owner);
+            if (this.owner != null) this.getNameAndPosition(this.owner);
             break;
         }
       }
@@ -183,10 +179,10 @@ export class PopupMoveStageComponent implements OnInit {
     ) {
       this.instance.stepID = this.stepIdOld;
       this.instancesStepOld.stepID = this.stepIdOld;
-      this.instancesStepOld.owner = this.owner;
       this.stepIdOld = '';
       this.isReason = this.stepIdClick === this.IdFail ? false : true;
     } else {
+      this.instancesStepOld.owner = this.owner;
       this.instancesStepOld.stepID = this.stepIdClick;
     }
 
@@ -201,7 +197,7 @@ export class PopupMoveStageComponent implements OnInit {
           isReason: this.isReason,
         };
         this.dialog.close(obj);
-        this.notiService.notifyCode('Chuyển tiếp oke nha');
+      //  this.notiService.notifyCode('SYS007');
 
         this.changeDetectorRef.detectChanges();
       }
@@ -209,9 +205,9 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   valueChange($event) {
-    if ($event) {
-      this.instancesStepOld[$event.field] = $event.data;
-    }
+    // if ($event) {
+    //   this.instancesStepOld[$event.field] = $event.data;
+    // }
     this.changeDetectorRef.detectChanges();
   }
 
@@ -224,7 +220,7 @@ export class PopupMoveStageComponent implements OnInit {
   cbxChange($event) {
     if ($event) {
       this.stepIdClick = $event;
-
+      this.getStepByStepIDAndInID(this.instance.recID, this.stepIdClick);
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -236,6 +232,6 @@ export class PopupMoveStageComponent implements OnInit {
   eventUser(e) {
     this.owner = e.id;
     this.userName = e.name;
-    if (this.owner != '') this.getNameAndPosition(this.owner);
+    if (this.owner != null) this.getNameAndPosition(this.owner);
   }
 }

@@ -1,4 +1,3 @@
-import { format } from 'path';
 import { PopupJobGeneralInfoComponent } from './../../employee-profile/popup-job-general-info/popup-job-general-info.component';
 import { PopupEbenefitComponent } from './../../employee-profile/popup-ebenefit/popup-ebenefit.component';
 import { PopupEdayoffsComponent } from './../../employee-profile/popup-edayoffs/popup-edayoffs.component';
@@ -22,9 +21,7 @@ import { PopupEAwardsComponent } from './../../employee-profile/popup-eawards/po
 import { PopupEAssurTaxBankComponent } from './../../employee-profile/popup-eassur-tax-bank/popup-eassur-tax-bank.component';
 import { PopupEAssetsComponent } from './../../employee-profile/popup-eassets/popup-eassets.component';
 import { PopupEmployeePartyInfoComponent } from './../../employee-profile/popup-employee-party-info/popup-employee-party-info.component';
-import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 // import { EmployeeAssurTaxBankaccInfoComponent } from './../../employee-profile/employee-assur-tax-bankacc-info/employee-assur-tax-bankacc-info.component';
-import { CheckBox } from '@syncfusion/ej2-angular-buttons';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 import {
   Component,
@@ -48,6 +45,7 @@ import {
   FormModel,
   NotificationsService,
   SidebarModel,
+  SortModel,
   UIComponent,
   ViewModel,
   ViewType,
@@ -56,18 +54,12 @@ import { CodxHrService } from '../../codx-hr.service';
 // import { EmployeeSelfInfoComponent } from '../../employee-profile/employee-self-info/employee-self-info.component';
 import { ActivatedRoute, Router } from '@angular/router';
 // import { EmployeeFamilyRelationshipComponent } from '../../employee-profile/employee-family-relationship/employee-family-relationship.component';
-import { E, I } from '@angular/cdk/keycodes';
 import { PopupEPassportsComponent } from '../../employee-profile/popup-epassports/popup-epassports.component';
-import { NoopAnimationPlayer } from '@angular/animations';
 import { PopupEhealthsComponent } from '../../employee-profile/popup-ehealths/popup-ehealths.component';
 import { PopupEVaccineComponent } from '../../employee-profile/popup-evaccine/popup-evaccine.component';
 import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/popup-ediseases.component';
 import { PopupEContractComponent } from '../../employee-profile/popup-econtract/popup-econtract.component';
 import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
-import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
-import { Sidebar } from '@syncfusion/ej2-angular-navigations';
 
 @Component({
   selector: 'lib-employee-detail',
@@ -194,6 +186,8 @@ export class EmployeeDetailComponent extends UIComponent {
   listCrrBenefit: any;
 
   lstESkill: any = [];
+  IsMax = false;
+  Current_Grade_ESkill: any = [];
   //Awards
   lstAwards: any = [];
 
@@ -204,6 +198,17 @@ export class EmployeeDetailComponent extends UIComponent {
   eAssetGrvSetup;
   eDayOffGrvSetup;
   eTrainCourseGrvSetup;
+  eDiseasesGrvSetup;
+  //#endregion
+
+  //#region sortModels
+  dayOffSortModel: SortModel;
+  assetSortModel: SortModel;
+  experienceSortModel: SortModel;
+  businessTravelSortModel: SortModel;
+  benefitSortModel: SortModel;
+  skillIDSortModel: SortModel;
+  skillGradeSortModel: SortModel;
   //#endregion
 
   reRenderGrid = true;
@@ -237,6 +242,7 @@ export class EmployeeDetailComponent extends UIComponent {
   jobSalaryColumnGrid;
   eContractColumnGrid;
   eDisciplineColumnsGrid;
+  eDiseasesColumnsGrid;
   //#endregion
 
   filterByBenefitIDArr: any = [];
@@ -257,6 +263,12 @@ export class EmployeeDetailComponent extends UIComponent {
   startDateEAssetFilterValue;
   endDateEAssetFilterValue;
   filterEAssetPredicates: string;
+
+  //#endregion
+
+  //#region filter variables of form main eDiseases
+  Filter_By_EDiseases_IDArr: any = [];
+  Filter_EDiseases_Predicates: string;
 
   //#endregion
 
@@ -418,6 +430,7 @@ export class EmployeeDetailComponent extends UIComponent {
   awardRowCount;
   eContractRowCount;
   eDisciplineRowCount;
+  eDiseasesRowCount;
   //#endregion
 
   //#region var functionID
@@ -449,6 +462,7 @@ export class EmployeeDetailComponent extends UIComponent {
   awardFuncID = 'HRTEM0701';
   eContractFuncID = 'HRTEM0501';
   eDisciplineFuncID = 'HRTEM0702';
+  eDiseasesFuncID = 'HRTEM0803';
   //#endregion
 
   //#region var formModel
@@ -474,6 +488,7 @@ export class EmployeeDetailComponent extends UIComponent {
   awardFormModel: FormModel; // Khen thưởng
   eContractFormModel: FormModel; // Hợp đồng lao động
   eDisciplineFormModel: FormModel; // Kỷ luật
+  eDiseasesFormModel: FormModel; // Bệnh nghề nghiệp
   //#endregion
 
   //#region headerText
@@ -493,6 +508,7 @@ export class EmployeeDetailComponent extends UIComponent {
   awardHeaderText;
   eContractHeaderText;
   eDisciplineHeaderText;
+  eDiseasesHeaderText;
   //#endregion
 
   //#region headerTextString
@@ -519,13 +535,40 @@ export class EmployeeDetailComponent extends UIComponent {
   clickItem(evet) {}
 
   onSectionChange(data: any) {
-    debugger;
     console.log('change section', data);
     this.codxMwpService.currentSection = data.current;
     this.detectorRef.detectChanges();
   }
 
   onInit(): void {
+    this.dayOffSortModel = new SortModel();
+    this.dayOffSortModel.field = 'BeginDate';
+    this.dayOffSortModel.dir = 'desc';
+
+    this.assetSortModel = new SortModel();
+    this.assetSortModel.field = 'IssuedDate';
+    this.assetSortModel.dir = 'desc';
+
+    this.experienceSortModel = new SortModel();
+    this.experienceSortModel.field = 'FromDate';
+    this.experienceSortModel.dir = 'asc';
+
+    this.businessTravelSortModel = new SortModel();
+    this.businessTravelSortModel.field = 'BeginDate';
+    this.businessTravelSortModel.dir = 'desc';
+
+    this.benefitSortModel = new SortModel();
+    this.benefitSortModel.field = 'EffectedDate';
+    this.benefitSortModel.dir = 'desc';
+
+    this.skillIDSortModel = new SortModel();
+    this.skillIDSortModel.field = 'SkillID';
+    this.skillIDSortModel.dir = 'asc';
+
+    this.skillGradeSortModel = new SortModel();
+    this.skillGradeSortModel.field = 'SkillGradeID';
+    this.skillGradeSortModel.dir = 'desc';
+
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       this.addHeaderText = res[0].customName;
       this.editHeaderText = res[2].customName;
@@ -579,12 +622,13 @@ export class EmployeeDetailComponent extends UIComponent {
     this.hrService.getFormModel(this.eAssetFuncID).then((res) => {
       this.eAssetFormModel = res;
       this.cache
-      .gridViewSetup(
-        this.eAssetFormModel.formName,
-        this.eAssetFormModel.gridViewName)
+        .gridViewSetup(
+          this.eAssetFormModel.formName,
+          this.eAssetFormModel.gridViewName
+        )
         .subscribe((res) => {
           this.eAssetGrvSetup = res;
-        })
+        });
     });
 
     this.hrService.getFormModel(this.eBasicSalaryFuncID).then((res) => {
@@ -604,10 +648,14 @@ export class EmployeeDetailComponent extends UIComponent {
     });
     this.hrService.getFormModel(this.eHealthFuncID).then((res) => {
       this.eHealthFormModel = res;
+      console.log('ehealth form mo do` ne` ', res);
+
     });
 
     this.hrService.getFormModel(this.benefitFuncID).then((res) => {
       this.benefitFormodel = res;
+      console.log('benefit form mo do` ne` ', res);
+      
       this.cache
         .gridViewSetup(
           this.benefitFormodel.formName,
@@ -663,6 +711,18 @@ export class EmployeeDetailComponent extends UIComponent {
 
     this.hrService.getFormModel(this.eDisciplineFuncID).then((res) => {
       this.eDisciplineFormModel = res;
+    });
+
+    this.hrService.getFormModel(this.eDiseasesFuncID).then((res) => {
+      this.eDiseasesFormModel = res;
+      this.cache
+        .gridViewSetup(
+          this.eDiseasesFormModel.formName,
+          this.eDiseasesFormModel.gridViewName
+        )
+        .subscribe((res) => {
+          this.eDiseasesGrvSetup = res;
+        });
     });
     //#endregion
 
@@ -735,10 +795,10 @@ export class EmployeeDetailComponent extends UIComponent {
                 }
               }
             });
-            this.eBusinessTravelRowCount =
-              this.businessTravelGrid.dataService.rowCount;
+            this.eBusinessTravelRowCount = this.businessTravelGrid.dataService.rowCount;
           }
         }, 100);
+
         //#endregion
 
         //#region - Nghỉ phép
@@ -1390,15 +1450,12 @@ export class EmployeeDetailComponent extends UIComponent {
         clearInterval(ins);
         let t = this;
         this.appointionGridView.dataService.onAction.subscribe((res) => {
-          debugger
           if (res) {
-            debugger
             if (res.type != null && res.type == 'loaded') {
               t.appointionRowCount = res['data'].length;
             }
           }
         });
-        debugger
         this.appointionRowCount = this.appointionGridView.dataService.rowCount;
       }
     }, 100);
@@ -1496,6 +1553,50 @@ export class EmployeeDetailComponent extends UIComponent {
     });
 
     //#endregion
+
+    //#region EDiseases - bệnh nghề nghiệp
+
+    this.hrService.getHeaderText(this.eDiseasesFuncID).then((res) => {
+      this.eDiseasesHeaderText = res;
+      this.eDiseasesColumnsGrid = [
+        {
+          headerText: this.eDiseasesHeaderText['DiseaseID'],
+          template: this.templateDiseasesGridCol1,
+          width: '150',
+        },
+        {
+          headerText:
+            'Thời gian điều trị' +
+            ' | ' +
+            this.eDiseasesHeaderText['TreatHopitalID'],
+          template: this.templateDiseasesGridCol2,
+          width: '150',
+        },
+        {
+          headerText: this.eDiseasesHeaderText['Conclusion'],
+          template: this.templateDiseasesGridCol3,
+          width: '150',
+        },
+      ];
+    });
+
+    //#endregion
+
+    let insDiseases = setInterval(() => {
+      if (this.eDiseasesGrid) {
+        clearInterval(insDiseases);
+        let t = this;
+        this.eDiseasesGrid.dataService.onAction.subscribe((res) => {
+          if (res) {
+            if (res.type != null && res.type == 'loaded') {
+              t.eDiseasesRowCount = 0;
+              t.eDiseasesRowCount = res['data'].length;
+            }
+          }
+        });
+        this.eDiseasesRowCount = this.eDiseasesGrid.dataService.rowCount;
+      }
+    }, 100);
 
     let insJSalary = setInterval(() => {
       if (this.jobSalaryGridview) {
@@ -1845,7 +1946,7 @@ export class EmployeeDetailComponent extends UIComponent {
           this.handlEmployeeExperiences(event.text, 'edit', data);
           this.df.detectChanges();
         } else if (funcID == 'Diseases') {
-          this.HandleEmployeeDiseaseInfo(event.text, 'edit', data);
+          this.HandleEmployeeEDiseasesInfo(event.text, 'edit', data);
           this.df.detectChanges();
         } else if (funcID == 'eBenefit') {
           this.handlEmployeeBenefit(event.text, 'edit', data);
@@ -1871,6 +1972,9 @@ export class EmployeeDetailComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'eDisciplines') {
           this.HandleEmployeeEDisciplinesInfo(event.text, 'edit', data);
+          this.df.detectChanges();
+        } else if (funcID == 'eDiseases') {
+          this.HandleEmployeeEDiseasesInfo(event.text, 'edit', data);
           this.df.detectChanges();
         }
         break;
@@ -2030,13 +2134,17 @@ export class EmployeeDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.hrService
-                      .GetCurrentJobSalaryByEmployeeID(data.employeeID)
-                      .subscribe((p) => {
-                        console.log('current employee EJob', p);
-                        this.crrJobSalaries = p;
-                      });
-                    this.df.detectChanges();
+                    (this.jobSalaryGridview?.dataService as CRUDService)
+                      ?.remove(data)
+                      .subscribe();
+                    this.eJobSalaryRowCount--;
+                    // this.hrService
+                    //   .GetCurrentJobSalaryByEmployeeID(data.employeeID)
+                    //   .subscribe((p) => {
+                    //     console.log('current employee EJob', p);
+                    //     this.crrJobSalaries = p;
+                    //   });
+                    // this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -2052,27 +2160,15 @@ export class EmployeeDetailComponent extends UIComponent {
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
-                    this.hrService
-                      .GetCurrentEBasicSalariesByEmployeeID(data.employeeID)
-                      .subscribe((p) => {
-                        this.crrEBSalary = p;
-                      });
-                    this.df.detectChanges();
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
-                });
-            } else if (funcID == 'basicSalary') {
-              this.hrService
-                .DeleteEmployeeBasicsalaryInfo(data.recID)
-                .subscribe((p) => {
-                  if (p == true) {
-                    this.notify.notifyCode('SYS008');
-                    this.hrService
-                      .GetCurrentEBasicSalariesByEmployeeID(data.employeeID)
-                      .subscribe((p) => {
-                        this.crrEBSalary = p;
-                      });
+                    // this.hrService
+                    //   .GetCurrentEBasicSalariesByEmployeeID(data.employeeID)
+                    //   .subscribe((p) => {
+                    //     this.crrEBSalary = p;
+                    //   });
+                    (this.basicSalaryGridview?.dataService as CRUDService)
+                      ?.remove(data)
+                      .subscribe();
+                    this.eBasicSalaryRowCount--;
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
@@ -2088,8 +2184,8 @@ export class EmployeeDetailComponent extends UIComponent {
                     // if (i != -1) {
                     //   this.lstEDegrees.splice(i, 1);
                     // }
-                    (this.eDegreeGrid.dataService as CRUDService)
-                      .remove(data)
+                    (this.eDegreeGrid?.dataService as CRUDService)
+                      ?.remove(data)
                       .subscribe();
                     this.df.detectChanges();
                   } else {
@@ -2171,26 +2267,25 @@ export class EmployeeDetailComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            } else if (funcID == 'Diseases') {
+            } else if (funcID == 'eDiseases') {
               this.hrService
-                .DeleteEmployeeDiseasesInfo(data.recID)
+                .DeleteEmployeeEDiseasesInfo(data.recID)
                 .subscribe((p) => {
                   if (p == true) {
-                    this.notify.notifyCode('SYS008');
-                    let i = this.lstEdiseases.indexOf(data);
-                    if (i != -1) {
-                      this.lstEdiseases.splice(i, 1);
-                    }
-                    this.df.detectChanges();
+                    (this.eDiseasesGrid.dataService as CRUDService)
+                      .remove(data)
+                      .subscribe();
+                    this.eDiseasesRowCount--;
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
+                  this.df.detectChanges();
                 });
             } else if (funcID == 'eTrainCourses') {
               this.hrService
                 .deleteEmployeeTrainCourseInfo(data.recID)
                 .subscribe((p) => {
-                  if ((p != null)) {
+                  if (p != null) {
                     this.notify.notifyCode('SYS008');
                     // let i = this.lstEdiseases.indexOf(data);
                     // if (i != -1) {
@@ -2220,7 +2315,7 @@ export class EmployeeDetailComponent extends UIComponent {
               this.hrService
                 .DeleteEmployeeAwardInfo(data.recID)
                 .subscribe((p) => {
-                  if ((p != null)) {
+                  if (p != null) {
                     this.notify.notifyCode('SYS008');
                     // let i = this.lstEdiseases.indexOf(data);
                     // if (i != -1) {
@@ -2240,7 +2335,7 @@ export class EmployeeDetailComponent extends UIComponent {
               this.hrService
                 .DeleteEmployeeDisciplineInfo(data.recID)
                 .subscribe((p) => {
-                  if ((p != null)) {
+                  if (p != null) {
                     this.notify.notifyCode('SYS008');
                     (this.eDisciplineGrid.dataService as CRUDService)
                       .remove(data)
@@ -2273,10 +2368,10 @@ export class EmployeeDetailComponent extends UIComponent {
           this.handleEFamilyInfo(event.text, 'copy', data);
           this.df.detectChanges();
         } else if (funcID == 'jobSalary') {
-          this.HandleEmployeeJobSalariesInfo(event.text, 'copy', data);
+          this.copyValue(event.text, data, 'jobSalary');
           this.df.detectChanges();
         } else if (funcID == 'basicSalary') {
-          this.HandleEmployeeBasicSalariesInfo(event.text, 'copy', data);
+          this.copyValue(event.text, data, 'basicSalary');
           this.df.detectChanges();
         } else if (funcID == 'Assets') {
           this.copyValue(event.text, data, 'Assets');
@@ -2300,7 +2395,7 @@ export class EmployeeDetailComponent extends UIComponent {
           this.copyValue(event.text, data, 'eVaccine');
           this.df.detectChanges();
         } else if (funcID == 'Diseases') {
-          this.HandleEmployeeDiseaseInfo(event.text, 'copy', data);
+          this.HandleEmployeeEDiseasesInfo(event.text, 'copy', data);
           this.df.detectChanges();
         } else if (funcID == 'eSkill') {
           this.HandleEmployeeESkillsInfo(event.text, 'copy', data);
@@ -2318,6 +2413,9 @@ export class EmployeeDetailComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'eDisciplines') {
           this.HandleEmployeeEDisciplinesInfo(event.text, 'copy', data);
+          this.df.detectChanges();
+        } else if (funcID == 'eDiseases') {
+          this.HandleEmployeeEDiseasesInfo(event.text, 'copy', data);
           this.df.detectChanges();
         }
         break;
@@ -2798,17 +2896,20 @@ export class EmployeeDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (res) {
-        // this.hrService
-        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
-        //   .subscribe((p) => {
-        //     this.crrJobSalaries = p;
-        //   });
-        console.log('current val', res.event);
-        this.crrJobSalaries = res.event;
-        this.df.detectChanges();
+      if (!res?.event)
+        (this.jobSalaryGridview?.dataService as CRUDService)?.clear();
+      else {
+        if (actionType == 'add' || actionType == 'edit') {
+          (this.jobSalaryGridview?.dataService as CRUDService)
+            ?.add(res.event)
+            .subscribe();
+          this.eBasicSalaryRowCount++;
+        } else if (actionType == 'edit') {
+          (this.jobSalaryGridview?.dataService as CRUDService)
+            ?.update(res.event)
+            .subscribe();
+        }
       }
-      if (res?.event) this.view.dataService.clear();
       this.df.detectChanges();
     });
   }
@@ -2819,6 +2920,8 @@ export class EmployeeDetailComponent extends UIComponent {
     data: any
   ) {
     let option = new SidebarModel();
+    option.DataService =
+      this.basicSalaryGridview?.dataService ?? this.view?.dataService;
     option.FormModel = this.eBasicSalaryFormmodel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
@@ -2834,25 +2937,44 @@ export class EmployeeDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      // if (res?.event) {
-      //   // this.hrService
-      //   //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
-      //   //   .subscribe((p) => {
-      //   //     this.crrJobSalaries = p;
-      //   //   });
-      //   console.log('current val', res.event);
-      //   this.crrEBSalary = res.event;
-      //   this.df.detectChanges();
-      // }
-      if (!res?.event && this.basicSalaryGridview)
-        (this.basicSalaryGridview.dataService as CRUDService).clear();
+      if (!res?.event) {
+        (this.basicSalaryGridview?.dataService as CRUDService)?.clear();
+      } else {
+        if (actionType == 'add' || actionType == 'copy') {
+          (this.basicSalaryGridview?.dataService as CRUDService)
+            ?.add(res.event[0])
+            .subscribe();
+          (this.basicSalaryGridview?.dataService as CRUDService)
+            ?.update(res.event[1])
+            .subscribe();
+          res.event?.forEach(element => {
+            if(element.isCurrent){
+              this.crrEBSalary = element;
+            }
+          });
+          this.eJobSalaryRowCount++;
+        } else if (actionType == 'edit') {
+          (this.basicSalaryGridview?.dataService as CRUDService)
+            ?.update(res.event[0])
+            .subscribe();
+          if (res.event[1]?.length > 0) {
+            res.event[1].forEach((element) => {
+              (this.basicSalaryGridview?.dataService as CRUDService)
+                ?.update(element)
+                .subscribe();
+              if (element.isCurrent) {
+                this.crrEBSalary = element;
+              }
+            });
+          }
+        }
+      }
       this.df.detectChanges();
     });
   }
 
   handleEFamilyInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
-    // option.DataService = this.view.dataService;
     option.FormModel = this.eFamilyFormModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
@@ -2900,16 +3022,6 @@ export class EmployeeDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      // if (actionType != 'edit') {
-      //   this.lstPassport.push(res.event);
-      // } else {
-      //   let index = this.lstPassport.indexOf(data);
-      //   this.lstPassport[index] = res.event;
-      // }
-
-      // console.log('data tra ve', res.event);
-      // console.log('lst passport', this.lstPassport);
-
       if (!res?.event)
         (this.passportGridview.dataService as CRUDService).clear();
       else {
@@ -2942,12 +3054,32 @@ export class EmployeeDetailComponent extends UIComponent {
         if (actionType == 'add' || actionType == 'copy') {
           (this.dayoffGrid.dataService as CRUDService)
             .add(res.event)
-            .subscribe();
+            .subscribe((res) => {
+              if (this.dayoffGrid) {
+                //this.dayoffGrid.sort = [this.dayOffSortModel]
+                //this.dayoffGrid.gridRef.allowSorting =true;
+                this.dayoffGrid.gridRef.sortColumn(
+                  'BeginDate',
+                  'Descending',
+                  false
+                );
+              }
+            });
           this.dayoffRowCount += 1;
         } else if (actionType == 'edit') {
           (this.dayoffGrid.dataService as CRUDService)
             .update(res.event)
-            .subscribe();
+            .subscribe((res) => {
+              if (this.dayoffGrid) {
+                debugger;
+                this.dayoffGrid.gridRef.allowSorting = true;
+                this.dayoffGrid.gridRef.sortColumn(
+                  'BeginDate',
+                  'Descending',
+                  false
+                );
+              }
+            });
         }
       }
       this.df.detectChanges();
@@ -2967,9 +3099,6 @@ export class EmployeeDetailComponent extends UIComponent {
       PopupEWorkPermitsComponent,
       {
         actionType: actionType,
-        // indexSelected: this.lstWorkPermit.indexOf(data),
-        // lstWorkPermit: this.lstWorkPermit,
-        // selectedWorkPermit: data,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eWorkPermitFuncID),
         employeeId: this.employeeID,
@@ -2979,14 +3108,6 @@ export class EmployeeDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      // console.log('work permit', res?.event);
-      // if (actionType != 'edit') {
-      //   this.lstWorkPermit.push(res?.event);
-      // } else {
-      //   let index = this.lstWorkPermit.indexOf(data);
-      //   this.lstWorkPermit[index] = res.event;
-      // }
-      // console.log(this.lstWorkPermit);
       if (!res?.event)
         (this.workPermitGridview.dataService as CRUDService).clear();
       else this.updateGridView(this.workPermitGridview, actionType, data);
@@ -3003,8 +3124,6 @@ export class EmployeeDetailComponent extends UIComponent {
       PopupEVisasComponent,
       {
         actionType: actionType,
-        // indexSelected: this.lstVisa.indexOf(data),
-        // lstVisas: this.lstVisa,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eVisaFuncID),
         employeeId: this.employeeID,
@@ -3014,57 +3133,21 @@ export class EmployeeDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (res.event != null) {
-        // this.lstVisa = res?.event;
-        console.log('sau khi dong form', this.lstVisa);
-        if (!res?.event) (this.visaGridview.dataService as CRUDService).clear();
-        else this.updateGridView(this.visaGridview, actionType, res.event);
-        this.df.detectChanges();
-      }
+      if (!res?.event) (this.visaGridview.dataService as CRUDService).clear();
+      else this.updateGridView(this.visaGridview, actionType, res.event);
+      this.df.detectChanges();
     });
   }
-
-  // handleEmployeeVisaInfo(actionType: string, data: any) {
-  //   this.view.dataService.dataSelected = this.data;
-  //   let option = new SidebarModel();
-  //   option.DataService = this.view.dataService;
-  //   option.FormModel = this.view.formModel;
-  //   option.Width = '800px';
-  //   let dialogAdd = this.callfunc.openSide(
-  //     // EmployeeVisaFormComponent,
-  //     PopupEVisasComponent,
-  //     {
-  //       actionType: actionType,
-  //       visaSelected: data,
-  //       headerText: 'Thị thực',
-  //       employeeId: this.data.employeeID,
-  //     },
-  //     option
-  //   );
-  //   dialogAdd.closed.subscribe((res) => {
-  //     if(res.event != null){
-  //       if (actionType != 'edit') {
-  //         console.log('tra ve sau add', res);
-  //         this.lstVisa.push(res?.event);
-  //         console.log(this.lstVisa);
-
-  //       } else {
-  //         let index = this.lstVisa.indexOf(data);
-  //         if(index > -1)
-  //         this.lstVisa[index] = res.event;
-  //       }
-  //       console.log(this.lstVisa);
-  //       if (!res?.event) this.view.dataService.clear();
-  //       this.df.detectChanges()
-  //     }
-  //   });
-  // }
 
   valueChangeFilterSkill(e) {
     console.log('eeeeeee', e);
   }
 
-  HandleEmployeeEDisciplinesInfo(actionHeaderText, actionType: string, data: any) {
+  HandleEmployeeEDisciplinesInfo(
+    actionHeaderText,
+    actionType: string,
+    data: any
+  ) {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -3075,7 +3158,7 @@ export class EmployeeDetailComponent extends UIComponent {
       {
         actionType: actionType,
         headerText:
-        actionHeaderText + ' ' + this.getFormHeader(this.eDisciplineFuncID),
+          actionHeaderText + ' ' + this.getFormHeader(this.eDisciplineFuncID),
         employeeId: this.employeeID,
         funcID: this.eDisciplineFuncID,
         dataInput: data,
@@ -3083,9 +3166,12 @@ export class EmployeeDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) (this.eDisciplineGrid?.dataService as CRUDService).clear();
+      if (!res?.event)
+        (this.eDisciplineGrid?.dataService as CRUDService).clear();
       if (res && (actionType === 'add' || actionType === 'copy')) {
-        (this.eDisciplineGrid?.dataService as CRUDService).add(res.event).subscribe();
+        (this.eDisciplineGrid?.dataService as CRUDService)
+          .add(res.event)
+          .subscribe();
         this.eDisciplineRowCount++;
       } else {
         (this.eDisciplineGrid?.dataService as CRUDService)
@@ -3165,7 +3251,6 @@ export class EmployeeDetailComponent extends UIComponent {
     actionType: string,
     data: any
   ) {
-
     if (this.appointionGridView)
       this.appointionGridView.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
@@ -3187,13 +3272,13 @@ export class EmployeeDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      this.reRenderGrid = false;
-      this.df.detectChanges();
-      this.reRenderGrid = true;
-      this.df.detectChanges();
       if (res.event) {
-        if (actionType == 'add' ) {
-          this.appointionRowCount+=1;
+        this.reRenderGrid = false;
+        this.df.detectChanges();
+        this.reRenderGrid = true;
+        this.df.detectChanges();
+        if (actionType == 'add') {
+          this.appointionRowCount += 1;
 
           // this.appointionRowCount+=1
           // this.appointionGridView.dataSource = [];
@@ -3212,9 +3297,8 @@ export class EmployeeDetailComponent extends UIComponent {
           //   this.appointionGridView.gridRef?.refreshColumns();
           //   this.appointionRowCount =this.appointionGridView.dataSource.length ;
           // })
-
-        } else if(actionType == 'copy'){
-           this.appointionRowCount+=1;
+        } else if (actionType == 'copy') {
+          this.appointionRowCount += 1;
           (this.appointionGridView?.dataService as CRUDService)
             .add(res.event)
             .subscribe();
@@ -3312,7 +3396,9 @@ export class EmployeeDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (actionType == 'add' || actionType == 'copy') {
-        (this.eDegreeGrid.dataService as CRUDService).add(res.event).subscribe();
+        (this.eDegreeGrid.dataService as CRUDService)
+          .add(res.event)
+          .subscribe();
         this.eDegreeRowCount = this.eDegreeRowCount + 1;
       } else if (actionType == 'edit') {
         (this.eDegreeGrid.dataService as CRUDService)
@@ -3508,7 +3594,7 @@ export class EmployeeDetailComponent extends UIComponent {
       {
         actionType: actionType,
         headerText:
-        actionHeaderText + ' ' + this.getFormHeader(this.awardFuncID),
+          actionHeaderText + ' ' + this.getFormHeader(this.awardFuncID),
         employeeId: this.employeeID,
         funcID: this.awardFuncID,
         dataInput: data,
@@ -3555,35 +3641,62 @@ export class EmployeeDetailComponent extends UIComponent {
   //#endregion
 
   //#region HR_EDesisease
-  HandleEmployeeDiseaseInfo(actionHeaderText, actionType: string, data: any) {
-    this.view.dataService.dataSelected = this.infoPersonal;
+  HandleEmployeeEDiseasesInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
-    // option.FormModel = this.view.formModel
-    option.Width = '850px';
-    let dialogAdd = this.callfunc.openSide(
-      PopupEDiseasesComponent,
-      {
-        actionType: actionType,
-        indexSelected: this.lstEdiseases.indexOf(data),
-        lstEdiseases: this.lstEdiseases,
-        funcID: 'HRTEM0803',
-        headerText: actionHeaderText + ' ' + this.getFormHeader('HRTEM0803'),
-        employeeId: this.employeeID,
-      },
-      option
-    );
-    dialogAdd.closed.subscribe((res) => {
-      if (res) {
-        // this.hrService
-        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
-        //   .subscribe((p) => {
-        //     this.crrJobSalaries = p;
-        //   });
-        console.log('current val', res.event);
-        this.df.detectChanges();
-      }
-      if (res?.event) this.view.dataService.clear();
+    option.FormModel = this.view.formModel;
+    option.DataService = this.view.dataService;
+    option.Width = '550px';
+    let dialogAdd = this.callfc.openSide(PopupEDiseasesComponent, {
+      actionType: actionType,
+      funcID: this.eDiseasesFuncID,
+      employeeId: this.employeeID,
+      dataInput: data,
+      headerText:
+        actionHeaderText + ' ' + this.getFormHeader(this.eDiseasesFuncID),
     });
+    dialogAdd.closed.subscribe((res) => {
+      if (!res?.event)
+        (this.eDisciplineGrid?.dataService as CRUDService).clear();
+      if (res && (actionType === 'add' || actionType === 'copy')) {
+        (this.eDiseasesGrid?.dataService as CRUDService)
+          .add(res.event)
+          .subscribe();
+        this.eDiseasesRowCount++;
+      } else {
+        (this.eDiseasesGrid?.dataService as CRUDService)
+          .update(res.event)
+          .subscribe();
+      }
+      this.df.detectChanges();
+    });
+
+    // let option = new SidebarModel();
+    // // option.FormModel = this.view.formModel
+    // option.Width = '850px';
+    // let dialogAdd = this.callfunc.openSide(
+    //   PopupEDiseasesComponent,
+    //   {
+    //     actionType: actionType,
+    //     indexSelected: this.lstEdiseases.indexOf(data),
+    //     lstEdiseases: this.lstEdiseases,
+    //     funcID: 'HRTEM0803',
+    //     headerText: actionHeaderText + ' ' + this.getFormHeader('HRTEM0803'),
+    //     employeeId: this.employeeID,
+    //   },
+    //   option
+    // );
+    // dialogAdd.closed.subscribe((res) => {
+    //   if (res) {
+    //     // this.hrService
+    //     //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+    //     //   .subscribe((p) => {
+    //     //     this.crrJobSalaries = p;
+    //     //   });
+    //     console.log('current val', res.event);
+    //     this.df.detectChanges();
+    //   }
+    //   if (res?.event) this.view.dataService.clear();
+    // });
   }
   //#endregion
 
@@ -3591,7 +3704,6 @@ export class EmployeeDetailComponent extends UIComponent {
   addEContracts(actionHeaderText) {
     this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
-    // option.FormModel = this.view.formModel
     option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEContractComponent,
@@ -3783,6 +3895,7 @@ export class EmployeeDetailComponent extends UIComponent {
   //#region Phụ cấp
 
   numPageSizeGridView = 100;
+  @ViewChild('eDiseasesGridView') eDiseasesGrid: CodxGridviewComponent;
   @ViewChild('eAwardGridView') AwardGrid: CodxGridviewComponent;
   @ViewChild('eDisciplineGridView') eDisciplineGrid: CodxGridviewComponent;
   @ViewChild('businessTravelGrid') businessTravelGrid: CodxGridviewComponent;
@@ -3879,6 +3992,13 @@ export class EmployeeDetailComponent extends UIComponent {
   templateDisciplineGridCol2: TemplateRef<any>;
   @ViewChild('templateDisciplineGridCol3', { static: true })
   templateDisciplineGridCol3: TemplateRef<any>;
+
+  @ViewChild('templateDiseasesGridCol1', { static: true })
+  templateDiseasesGridCol1: TemplateRef<any>;
+  @ViewChild('templateDiseasesGridCol2', { static: true })
+  templateDiseasesGridCol2: TemplateRef<any>;
+  @ViewChild('templateDiseasesGridCol3', { static: true })
+  templateDiseasesGridCol3: TemplateRef<any>;
 
   valueChangeFilterBenefit(evt) {
     console.log('filter theo type', evt);
@@ -4490,6 +4610,37 @@ export class EmployeeDetailComponent extends UIComponent {
   //   this.UpdateInYearPredicate();
   // }
 
+  valueChangeFilterDiseasesTypeID(evt) {
+    this.Filter_By_EDiseases_IDArr = evt.data;
+    let lengthArr = this.Filter_By_EDiseases_IDArr.length;
+    let first = 0;
+    let last = lengthArr - 1;
+    if (this.Filter_By_EDiseases_IDArr > 0) {
+      this.Filter_EDiseases_Predicates = '(';
+      for (let i = 0; i < lengthArr; i++) {
+        if (i == first || i == last)
+          this.Filter_EDiseases_Predicates += `DiseaseID==@${i}`;
+        else this.Filter_EDiseases_Predicates += `DiseaseID==@${i} or `;
+      }
+      this.Filter_EDiseases_Predicates += ') ';
+      (this.eDiseasesGrid.dataService as CRUDService)
+        .setPredicates(
+          [this.Filter_EDiseases_Predicates],
+          [this.Filter_By_EDiseases_IDArr.join(';')]
+        )
+        .subscribe();
+    } else {
+      for (let i = 0; i < lengthArr; i++) {
+        if (i > 0) {
+          this.Filter_EDiseases_Predicates += ' or ';
+        }
+        this.Filter_EDiseases_Predicates += `DiseaseID==@${i}`;
+      }
+      (this.eDiseasesGrid.dataService as CRUDService)
+        .setPredicates([''], [''])
+        .subscribe();
+    }
+  }
   valueChangeFilterTrainCourse(evt) {
     this.filterByETrainCourseIDArr = evt.data;
     this.UpdateTrainCoursePredicate();
@@ -4635,5 +4786,16 @@ export class EmployeeDetailComponent extends UIComponent {
       this.endDateEDayoffFilterValue = evt.toDate.toJSON();
     }
     this.UpdateEDayOffsPredicate();
+  }
+
+  isMaxGrade(eSkill: any) {
+    let item = this.lstESkill.filter((p) => p.skillID == eSkill.skillID);
+    if (item) {
+      let lstSkill = item[0].listSkill;
+      if (lstSkill && eSkill.recID == lstSkill[0].recID) {
+        return true;
+      }
+    }
+    return false;
   }
 }

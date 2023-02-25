@@ -1,75 +1,83 @@
 <ng-container *ngIf="dataSelect?.recID">
   <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [dataItem]="dataSelect" [hideMF]="false"
-    (changeDataMF)="changeDataMF($event, dataSelect)" (clickMF)="clickMF($event, dataSelect)">
+    (changeDataMF)="changeDataMF($event, dataSelect)" (clickMF)="clickMF($event, dataSelect)" [footer]="tabs">
     <ng-template #header>
-      <div class="container_detail mt-3 mb-5">
-        <div class="d-flex justify-content-between mb-3">
-          <div class="d-flex flex-column w-100">
-            <h3 class="mb-2">
-              {{ dataSelect?.title }}
-            </h3>
-            <div class="mb-3">
-              <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
-                [value]="dataSelect.tags">
-              </codx-tag>
-            </div>
-            <div class="d-flex flex-column">
-              <div class="d-flex align-items-center mb-1">
-                <span class="me-2 text-gray-600">Tổ chức/Khách hàng:</span>
-                <span class="text-primary fw-bold fs-5">Tập đoàn PHÚC TÚ</span>
-              </div>
-              <div class="d-flex mb-1">
-                <span class="me-2 text-gray-600">Liên hệ:</span>
-                <ng-container>
-                  <div class="d-flex align-items-top">
-                    <span class="me-3">
-                      <codx-img [objectId]="'ADMIN'" objectType="AD_Users" [width]="35">
-                      </codx-img>
-                    </span>
-                    <div class="d-flex flex-column">
-                      <span class="text-primary fw-bold fs-5 mb-1">Trần Đoàn Tuyết Khanh</span>
-                      <div class="d-flex align-items-center fs-7">
-                        <div class="d-flex align-items-center me-6">
-                          <span class="icon-phone_iphone me-1 text-gray-500 icon-16"></span>
-                          <span class="text-gray-500">012344556</span>
-                        </div>
-                        <div class="d-flex align-items-center">
-                          <span class="icon-email me-1 text-gray-500 icon-16"></span>
-                          <span class="text-gray-500">lacviet@lacviet.com</span>
+      <div class="container_detail mt-3">
+        <div class="d-flex flex-grow-1 mb-4">
+          <div class="d-flex flex-column flex-grow-1">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-column">
+                <h3 class="mb-0 p-3">
+                  {{ dataSelect?.title }}
+                </h3>
+                <div class="mb-5">               
+                  <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
+                    [value]="dataSelect?.tags">
+                  </codx-tag>
+                </div>
+                <!-- <div class="mb-6">
+                  <div class="d-flex align-items-center mb-1">
+                    <span class="me-2 text-gray-600">Tổ chức/Khách hàng:</span>
+                    <span class="text-primary fw-bold fs-6">Tập đoàn PHÚC TÚ</span>
+                  </div>
+                  <div class="d-flex mb-3">
+                    <span class="me-2 text-gray-600">Liên hệ:</span>
+                    <ng-container>
+                      <div class="d-flex align-items-top">
+                        <span class="me-3">
+                          <codx-img [objectId]="'ADMIN'" objectType="AD_Users" [width]="35">
+                          </codx-img>
+                        </span>
+                        <div class="d-flex flex-column">
+                          <span class="text-primary fw-bold fs-6 mb-1">Trần Đoàn Tuyết Khanh</span>
+                          <div class="d-flex align-items-center fs-7">
+                            <div class="d-flex align-items-center me-6">
+                              <span class="icon-phone_iphone me-2 text-gray-600"></span>
+                              <span class="text-primary me-12">012344556</span>
+                            </div>
+                            <div class="d-flex align-items-center me-6">
+                              <span class="icon-email text-gray-600"></span>
+                              <span class="text-primary">lacviet@lacviet.com</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
+                    </ng-container>
+                  </div>
+                </div> -->
+              </div>
+              <div class="d-flex flex-column align-items-start">
+                <div class="progress">
+                  <div class="progress-done" role="progressbar" [style.width]="progress + '%'" aria-valuenow="50"
+                    aria-valuemin="0" aria-valuemax="100">
+                    {{ progress }}
+                  </div>
+                </div>
+                <div class="d-flex align-items-top w-100 mt-2">
+                  <div class="d-flex flex-column">
+                    <div class="badge badge-primary"> {{ stepName }}</div>
+                    <div class="text-gray-500 my-2">
+                      {{ dataSelect.createdOn | date : "HH:mm - dd/MM/yyyy"  }}
                     </div>
                   </div>
-                </ng-container>
-              </div>
-            </div>
-          </div>
-          <div class="d-flex flex-column align-items-start ms-6">
-            <div class="progress h-20px">
-              <div class="progress-done" role="progressbar" [style.width]="progress + '%'" aria-valuenow="50"
-                aria-valuemin="0" aria-valuemax="100">
-                {{ progress }}
-              </div>
-            </div>
-            <div class="d-flex align-items-top w-100 justify-content-end mt-2">
-              <div class="d-flex flex-column">
-                <div class="d-flex justify-content-end">
-                  <span class="badge badge-primary"> {{ stepName }}</span>
-                </div>
-                <div class="text-gray-500 my-2">
-                  {{ dataSelect.createdOn }}
+                  <div class="ms-3">
+                    <codx-imgs
+                    [isToolTip]="true"
+                    [width]="25"
+                    [objectId]="dataSelect.owner"
+                    ojectType="AD_Users"
+                    [numberImages]="1"
+                  >
+                  </codx-imgs>
+                  </div>
                 </div>
               </div>
-              <div class="ms-3">
-                <codx-img [objectId]="'ADMIN'" objectType="AD_Users" [width]="45">
-                </codx-img>
-              </div>
+            </div>
+            <div class="d-flex justify-content-end">
+              <codx-input type="valuelist" refValue="DP034" [crrValue]="'S'" (valueChange)="cbxChange($event)">
+              </codx-input>
             </div>
           </div>
-        </div>
-        <div class="d-flex justify-content-end">
-          <codx-input type="valuelist" refValue="DP034" [crrValue]="'S'" (valueChange)="cbxChange($event)">
-          </codx-input>
         </div>
       </div>
     </ng-template>
@@ -90,34 +98,64 @@
         <div class="group-steps" *ngIf="listSteps != null && listSteps.length > 0">
           <div class="d-flex arrow-steps flex-container">
             <ng-container *ngFor="let item of listStepUpdate; index as i">
-              <div id="step-click" style="flex-grow: 1" [ngClass]="getColorStepName(item?.stepStatus)"
-                (click)="click(i, item.stepID)">
-                <span> {{ item.stepName }}</span>
-              </div>
+              <div
+              id="step-click"
+              style="flex-grow: 1"
+
+              [ngClass]="getColorStepName(item?.stepStatus)"
+              (click)="click(i, item.stepID)"
+            >
+              <span> {{ item.stepName }}</span>
+            </div>
             </ng-container>
           </div>
           <div class="d-flex flex-container">
-            <div *ngFor="let item of listStepUpdate; index as i" class="process-wrap">
+            <div *ngFor="let item of listSteps; index as i" class="process-wrap">
               <div [ngClass]="
-              getColorStepName(item?.stepStatus)"></div>
+                  i == currentStep
+                    ? 'progress-current'
+                    : i < currentStep
+                    ? 'progress-bar'
+                    : ''
+                " style="flex-grow: 1" role="progressbar" [style.width]="item.progress + '%'" aria-valuenow="50"
+                aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </div>
         </div>
         <ng-container *ngIf="tmpTeps">
-          <codx-stages-detail [dataStep]="tmpTeps" [formModel]="formModel" [currentStep]="currentNameStep"
-            [stepID]="dataSelect.stepID" [isDelete]="dataSelect.delete" [isEdit]="dataSelect.edit"
-            [isUpdate]="dataSelect.write" [isCreate]="dataSelect.create" [titleDefault]="titleDefault"
-            [instance]="instance" [listStepReason]="getReasonByStepId(dataSelect.stepID)"
-            [stepNameEnd]="getStepNameIsComlepte()" [proccesNameMove]="proccesNameMove"></codx-stages-detail>
+          <codx-stages-detail
+          [dataStep]="tmpTeps"
+          [formModel]="formModel"
+          [currentStep]="currentNameStep"
+          [stepID]="dataSelect.stepID"
+          [isDelete]="dataSelect.delete"
+          [isEdit]="dataSelect.edit"
+          [isUpdate]="dataSelect.write"
+          [isCreate]="dataSelect.create"
+          [titleDefault]="titleDefault"
+          [instance]="instance"
+          [listStepReason]="getReasonByStepId(dataSelect.stepID)"
+          [stepNameEnd]="getStepNameIsComlepte()"
+          [proccesNameMove]="proccesNameMove"
+        ></codx-stages-detail>
         </ng-container>
 
       </ng-container>
       <ng-container *ngIf="idCbx == 'F'">
         <ng-container *ngFor="let item of listSteps">
-          <codx-field-detail *ngIf="!item?.isSuccessStep && !item?.isFailStep" [dataStep]="item"
-            [isUpdate]="dataSelect.write"></codx-field-detail>
+          <codx-field-detail *ngIf="!item?.isSuccessStep && !item?.isFailStep" [dataStep]="item" [isUpdate]="dataSelect.write"></codx-field-detail>
         </ng-container>
       </ng-container>
+    </ng-template>
+    
+    <ng-template #tabs>
+      <codx-tabs
+        [entityName]="formModel.entityName"
+        [formModel]="formModel"
+        [TabControl]="tabControl"
+        [objectID]="dataSelect.recID"
+        [funcID]="formModel.funcID"
+      ></codx-tabs>
     </ng-template>
   </codx-detail-tmp>
 </ng-container>

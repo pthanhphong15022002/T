@@ -31,7 +31,7 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   headerText: string;
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('listView') listView: CodxListviewComponent;
+  // @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
     private injector: Injector,
@@ -53,39 +53,9 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
     );
   }
 
-  // ngAfterViewInit() {
-  //   if(this.listView){
-  //   console.log('list salaries', this.listView.dataService.data);
-  //   }
-
-  //   this.dialog.closed.subscribe(res => {
-  //     console.log('res khi close', res);
-  //     if(!res.event){
-  //       for(let i = 0; i < this.listView.dataService.data.length; i++){
-  //         if(this.listView.dataService.data[i].isCurrent == true){
-  //           this.currentEJobSalaries = this.listView.dataService.data[i];
-  //           break;
-  //         }
-  //       }
-  //       this.dialog && this.dialog.close(this.currentEJobSalaries);
-  //     }
-  //   })
-  // }
+  ngAfterViewInit() {}
 
   initForm() {
-    // this.hrSevice
-    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    //   .then((item) => {
-    //     this.formGroup = item;
-    //     if (this.actionType == 'add') {
-    //       this.hrSevice.GetEmployeeJobSalariesModel().subscribe((p) => {
-    //         this.data = p;
-    //         this.formModel.currentData = this.data;
-    //       });
-    //     }
-    //     this.formGroup.patchValue(this.data);
-    //     this.isAfterRender = true;
-    //   });
     this.hrSevice
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {

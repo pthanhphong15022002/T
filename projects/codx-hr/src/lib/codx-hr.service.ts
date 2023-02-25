@@ -921,7 +921,7 @@ export class CodxHrService {
     );
   }
 
-  DeleteEmployeeDiseasesInfo(data) {
+  DeleteEmployeeEDiseasesInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
