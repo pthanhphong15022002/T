@@ -333,14 +333,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.notiService.notify('Lưu thất bại ');
       return;
     }
-    if (
-      (this.stepSuccess.reasons.length === 0 &&
-        this.stepSuccess.reasonControl) ||
-      (this.stepFail.reasons.length === 0 && this.stepFail.reasonControl)
-    ) {
-      this.notiService.notifyCode('DP005');
-      return;
-    }
+    // if (
+    //   (this.stepSuccess.reasons.length === 0 &&
+    //     this.stepSuccess.reasonControl) ||
+    //   (this.stepFail.reasons.length === 0 && this.stepFail.reasonControl)
+    // ) {
+    //   this.notiService.notifyCode('DP005');
+    //   return;
+    // }
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
         // save file
@@ -526,6 +526,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.processTab == 0 && this.processTab++;
         break;
       case 1:
+        // if (
+        //   (this.stepSuccess.reasons.length === 0 &&
+        //     this.stepSuccess.reasonControl) ||
+        //   (this.stepFail.reasons.length === 0 && this.stepFail.reasonControl)
+        // ) {
+        //   this.notiService.notifyCode('DP005');
+        //   return;
+        // }
         this.newNode = newNode;
         this.oldNode = oldNode;
         this.updateNodeStatus(oldNode, newNode);
