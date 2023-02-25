@@ -232,7 +232,7 @@ export class InstancesComponent
                   .subscribe((res) => {
                     if (res) {
                       this.instanceNo = res;
-                      this.openPopUpAdd(applyFor, formMD, option);
+                      this.openPopUpAdd(applyFor, formMD, option,'add');
                     }
                   });
               } else
@@ -242,26 +242,71 @@ export class InstancesComponent
                   )
                   .subscribe((isNo) => {
                     this.instanceNo = isNo;
-                    this.openPopUpAdd(applyFor, formMD, option);
+                    this.openPopUpAdd(applyFor, formMD, option,'add');
                   });
             });
         });
       });
     });
   }
-
-  openPopUpAdd(applyFor, formMD, option) {
+  copy(data, titleAction){
+    if (data) this.view.dataService.dataSelected = data;
+    this.view.dataService.copy().subscribe((res) => {
+      const funcIDApplyFor =
+        this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
+      const applyFor = this.process.applyFor;
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+        this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+          this.cache
+            .gridViewSetup(fun.formName, fun.gridViewName)
+            .subscribe((grvSt) => {
+              var formMD = new FormModel();
+              formMD.funcID = funcIDApplyFor;
+              formMD.entityName = fun.entityName;
+              formMD.formName = fun.formName;
+              formMD.gridViewName = fun.gridViewName;
+              option.Width = '850px';
+              option.zIndex = 1001;
+              if (!this.process.instanceNoSetting) {
+                //this.genAutoNumberNo(applyFor); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
+                this.codxDpService
+                  .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
+                  .subscribe((res) => {
+                    if (res) {
+                      this.instanceNo = res;
+                      this.openPopUpAdd(applyFor, formMD, option,titleAction);
+                    }
+                  });
+              } else {
+                this.codxDpService
+                  .getAutoNumberByInstanceNoSetting(
+                    this.process.instanceNoSetting
+                  )
+                  .subscribe((isNo) => {
+                    this.instanceNo = isNo;
+                    this.openPopUpAdd(applyFor, formMD, option,titleAction);
+                  });
+              }         
+            });
+        });
+      });
+    });
+  }
+  openPopUpAdd(applyFor, formMD, option,action) {
     var dialogCustomField = this.callfc.openSide(
       PopupAddInstanceComponent,
       [
-        'add',
+        action ==='add' ? 'add':'copy',
         applyFor,
         this.listSteps,
         this.titleAction,
         formMD,
         this.listStepsCbx,
         this.instanceNo,
-        (this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)),
+        this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx),
       ],
       option
     );
@@ -356,7 +401,7 @@ export class InstancesComponent
         this.edit(data, e.text);
         break;
       case 'SYS04':
-        //  this.copy(data);
+        this.copy(data,e.text);
         break;
       case 'SYS02':
         this.delete(data);

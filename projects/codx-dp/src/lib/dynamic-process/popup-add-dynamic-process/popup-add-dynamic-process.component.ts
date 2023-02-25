@@ -119,7 +119,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   valueCheckBoxSun: string = '';
   checkedSat: boolean = false;
   checkedSun: boolean = false;
-  isClick: boolean = true;
+  isClick: boolean = false;
   stepNameSuccess: string = 'Thành công';
   stepNameFail: string = 'Thất bại';
   reasonName: string = '';
@@ -1949,7 +1949,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (view == value && !$event.component.checked) {
           if (
             (!this.step?.excludeDayoff &&
-              this.step?.excludeDayoff.trim() == '') ||
+              this.step?.excludeDayoff?.trim() == '') ||
             !this.step?.excludeDayoff.split(';').includes(value)
           )
             return;
@@ -2040,45 +2040,45 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   addReason() {
-    // this.step.reasons = [...new Set(this.step.reasons.map((x) => x.recID))].map(
-    //   (recID) => this.step.reasons.find((x) => x.recID === recID  )
-    // );
-    // if(this.isCheckExisReason(this.reasonName)){
-    //   this.notiService.notifyCode('Tên lý do đã tồn tại, vui lòng nhập tên khác.');
-    //   return;
-    // }
-    this.isClick = true;
-    if (this.reasonAction === this.formAdd) {
-      this.reason = this.handleReason(
-        this.reason,
-        this.dataValueview === this.viewStepReasonSuccess ? '1' : '2',
-        this.step,
-        this.process?.recID
+    if (!this.isClick) {
+      this.isClick = true;
+      this.step.reasons = [...new Set(this.step.reasons.map((x) => x.recID))].map(
+        (recID) => this.step.reasons.find((x) => x.recID === recID  )
       );
-      this.reason.reasonName = this.reasonName;
-      this.step.reasons.push(this.reason);
-      this.step.reasons = [
-        ...new Set(this.step.reasons.map((x) => x.recID)),
-      ].map((recID) => this.step.reasons.find((x) => x.recID === recID));
-    } else if (this.reasonAction === this.formEdit) {
-      this.reason.reasonName = this.reasonName;
-    }
-    this.popupAddReason.close();
-    this.changeDetectorRef.detectChanges();
-  }
-  checkIsExisReason(reasonName: any) {
-    var index = 0;
-    for (let i = 0; i < this.step.reasons.length; i++) {
-      if (reasonName === this.step.reasons[i].reasonName) {
-        if (index >= 1) {
-          this.step.reasons.splice(i, 1);
-        }
-
-        index++;
+      setTimeout(() => {
+        this.isClick = false;
+      }, 500);
+      if(this.reasonName === null || this.reasonName === ''){
+        this.notiService.notifyCode('Vui lòng nhập tên lý do kìa');
+        return;
       }
-    }
-  }
+      var inxIsExist = this.step.reasons.findIndex(x=>x.reasonName.trim().toLowerCase() === this.reasonName.trim().toLowerCase());
+      if(inxIsExist !== -1){
+        this.notiService.notifyCode('Tên lý do đã tồn tại, vui lòng nhập tên khác.');
+        return;
+      }
 
+      if (this.reasonAction === this.formAdd) {
+        this.reason = this.handleReason(
+          this.reason,
+          this.dataValueview === this.viewStepReasonSuccess ? '1' : '2',
+          this.step,
+          this.process?.recID
+        );
+        this.reason.reasonName = this.reasonName;
+        this.step.reasons.push(this.reason);
+        this.step.reasons = [
+          ...new Set(this.step.reasons.map((x) => x.recID)),
+        ].map((recID) => this.step.reasons.find((x) => x.recID === recID));
+      } else if (this.reasonAction === this.formEdit) {
+        this.reason.reasonName = this.reasonName;
+      }
+      this.popupAddReason.close();
+      this.changeDetectorRef.detectChanges();
+
+    }
+
+  }
   changeValueReaName($event) {
     if ($event) {
       this.reasonName = $event?.data;
@@ -2101,10 +2101,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   // method for edit reason or copy reason
   openPopupReason(viewReason, reason, clickMore) {
-    if (!this.isClick) {
-      return;
-    }
-    this.isClick = false;
+    // if (!this.isClick) {
+    //   return;
+    // }
+    // this.isClick = false;
     this.headerText =
       viewReason === this.viewStepReasonSuccess
         ? clickMore?.customName ?? 'Thêm' + ' lý do thành công'
