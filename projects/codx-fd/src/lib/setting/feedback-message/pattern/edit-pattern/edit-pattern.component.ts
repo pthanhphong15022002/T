@@ -1,5 +1,5 @@
 import { environment } from 'src/environments/environment';
-import { ViewEncapsulation } from '@angular/core';
+import { ElementRef, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
 import {
   Component,
   OnInit,
@@ -49,9 +49,11 @@ export class EditPatternComponent implements OnInit {
   checkGetFile = false;
   environment= environment;
   typeView = false;
+  @ViewChildren('colordf')
+  public listItems!: QueryList<ElementRef<HTMLLIElement>>
   @ViewChild('uploadImage') uploadImage: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  // @Input() cardType: string;
+  // @Input() cardType: string;colordf
   cardType: string;
   constructor(
     private patternSV: PatternService,
@@ -78,16 +80,16 @@ export class EditPatternComponent implements OnInit {
     this.cache.valueList('L1447').subscribe((res) => {
       if (res) {
         this.vll = res.datas;
-        this.change.detectChanges();
       }
     });
     if (data.data.funcID) this.getCardType(data.data.funcID);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    
+  }
 
   ngAfterViewInit() {
-    this.checkActive();
   }
 
   getCardType(funcID) {
@@ -235,6 +237,7 @@ export class EditPatternComponent implements OnInit {
       var htmlE = label[0] as HTMLElement;
       if (htmlE) htmlE.classList.add('color-check');
     }
+  
   }
   
   colorClick(ele, item, index) {

@@ -34,6 +34,12 @@ import { CashPaymentsComponent } from './cash-payments/cash-payments.component';
 import { NoSubAsideComponent } from 'projects/codx-ad/src/lib/_noSubAside/_noSubAside.component';
 import { NosubAsideComponent } from './_noSubAside/nosub-aside.component';
 import { PopAddCashComponent } from './cash-payments/pop-add-cash/pop-add-cash.component';
+import { ItemsComponent } from './items/items.component';
+import { PopupAddItemComponent } from './items/popup-add-item/popup-add-item.component';
+import { PopupAddItemSizeComponent } from './items/popup-add-item-size/popup-add-item-size.component';
+import { PopupAddItemStyleComponent } from './items/popup-add-item-style/popup-add-item-style.component';
+import { PopupAddItemColorComponent } from './items/popup-add-item-color/popup-add-item-color.component';
+import { PopupAddItemConversionComponent } from './items/popup-add-item-conversion/popup-add-item-conversion.component';
 import { WarehousesComponent } from './warehouses/warehouses.component';
 import { PopAddWarehousesComponent } from './warehouses/pop-add-warehouses/pop-add-warehouses.component';
 import { UnitsofmearsureComponent } from './unitsofmearsure/unitsofmearsure.component';
@@ -82,6 +88,10 @@ export const routes: Routes = [
         component: VendorsComponent,
       },
       {
+        path: 'items/:funcID',
+        component: ItemsComponent,        
+      },
+      {
         path: 'warehouses/:funcID',
         component: WarehousesComponent,
       },
@@ -125,7 +135,11 @@ export const routes: Routes = [
     NosubAsideComponent,
     CashPaymentsComponent,
     PopAddCashComponent,
-    JournalNamesComponent,
+    ItemsComponent,
+    PopupAddItemComponent,
+    PopupAddItemSizeComponent,
+    PopupAddItemStyleComponent,
+    PopupAddItemColorComponent,
     WarehousesComponent,
     PopAddWarehousesComponent,
     UnitsofmearsureComponent,
@@ -136,7 +150,6 @@ export const routes: Routes = [
     ItempostingaccountsComponent,
     DimensionGroupsComponent,
     PopAddDimensionGroupsComponent,
-    PopAddDimensionSetupComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

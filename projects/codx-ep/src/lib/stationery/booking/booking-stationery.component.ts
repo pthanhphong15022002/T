@@ -263,15 +263,15 @@ export class BookingStationeryComponent
         else {
           event.forEach((func) => {
             //Gửi duyệt
-            if ( //Hiện: chép 
+            if ( //Hiện: chép       
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP8T1101' /*MF gửi duyệt*/||
             func.functionID == 'SYS04' /*MF chép*/
             ) {
               func.disabled = false;
             }
-            if (//Ẩn: sửa - xóa - gửi duyệt - hủy          
-              func.functionID == 'SYS02' /*MF sửa*/ ||
-              func.functionID == 'SYS03' /*MF xóa*/ ||
+            if (//Ẩn: sửa - xóa - gửi duyệt - hủy    
               func.functionID == 'EP8T1102' /*MF hủy*/
             ) {
               func.disabled = true;

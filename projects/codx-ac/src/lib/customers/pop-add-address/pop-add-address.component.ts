@@ -217,6 +217,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     this.note = '';
     this.isDefault = false;
     this.address.recID = Guid.newGuid();
+    this.objectContactAddress = [];
   }
   //#endregion
 
@@ -273,6 +274,11 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     window.localStorage.setItem("dataaddress",JSON.stringify(this.address));
     window.localStorage.setItem("datacontactaddress",JSON.stringify(this.objectContactAddress));
     window.localStorage.setItem("datacontactaddressdelete",JSON.stringify(this.objectContactAddressDelete));
+    this.notification.notifyCode(
+      'SYS006',
+      0,
+      ''
+    );
     this.dialog.close();
   } 
   onSaveAdd(){
@@ -296,7 +302,11 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     this.objectContactAddress.forEach((element) => {
     this.objectContactAddressAfter.push({...element});
     });
-    this.objectContactAddress = [];
+    this.notification.notifyCode(
+      'SYS006',
+      0,
+      ''
+    );
     this.clearAddress();
   }
   //#endregion

@@ -308,17 +308,6 @@ export class PopupAddInstanceComponent implements OnInit {
     this.instance.stepID = this.listStep[0].stepID;
   }
 
-  // Em bảo gắn tạm
-  // async genAutoNumberNo() {
-  //   this.codxDpService
-  //     .genAutoNumber(this.formModelCrr.funcID, 'DP_Instances', 'InstanceNo')
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.instance.instanceNo = res;
-  //       }
-  //     });
-  // }
-
   checkFormat(field) {
     if (field.dataType == 'T') {
       if (field.dataFormat == 'E') {
