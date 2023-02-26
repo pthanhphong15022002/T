@@ -52,7 +52,7 @@ import { PopupTypeTaskComponent } from './step-task/popup-type-task/popup-type-t
 import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-group.component';
 import { paste } from '@syncfusion/ej2-angular-richtexteditor';
 import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-dynamic.component';
-import { T } from '@angular/cdk/keycodes';
+import { lastValueFrom, firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -214,6 +214,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   instanceNoSetting = '';
   listClickedCoppy:any;
   titleAction:any;
+  MESSAGETIME =
+    'Thời hạn công việc lớn hơn nhóm công việc bạn có muốn lưu và thay đổi thời hạn nhóm công việc';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -1583,7 +1585,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   // drop
-  drop(event: CdkDragDrop<string[]>, data = null, isGroup = false) {
+  async drop(event: CdkDragDrop<string[]>, data = null, isGroup = false) {
     if (event.previousContainer === event.container) {
       if (event.previousIndex == event.currentIndex) return;
       if (data && isGroup) {
@@ -1599,12 +1601,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     } else {
       let groupTaskIdOld = '';
+      let dataDrop =  event.previousContainer.data[event.previousIndex];
+      if(this.getHour(data) < this.getHour(dataDrop)){
+        let check = await this.setTimeGroup(data,dataDrop);
+        if(!check){
+          return;
+        }
+      }
       if (event.previousContainer.data.length > 0) {
         groupTaskIdOld =
           event.previousContainer.data[event.previousIndex]['taskGroupID'];
-        event.previousContainer.data[event.previousIndex]['taskGroupID'] =
-          data?.recID;
+          dataDrop['taskGroupID'] = data?.recID;
       }
+
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -1621,6 +1630,45 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     moveItemInArray(this.stepList, event.previousIndex, event.currentIndex);
     this.setIndex(this.stepList, 'stepNo');
   }
+
+  async setTimeGroup(group, task) {
+      let x = await firstValueFrom(this.notiService.alertCode(this.MESSAGETIME));
+      if (x.event && x.event.status == 'Y') {
+        let time = this.getHour(task) || 0;
+        group['durationDay'] = Math.floor(time/24);
+        group['durationHour'] = time%24;
+        let hourStep = this.sumHourStep();
+        this.step['durationDay'] = Math.floor(hourStep/24);
+        this.step['durationHour'] = hourStep % 24;
+        let parentID = [];
+        if(group['task']?.length > 0 && task['parentID'].trim()){
+          group['task'].forEach(item => {
+            if(task['parentID']?.includes(item['recID'])){
+              parentID.push(item['recID']);
+            }
+          });
+        }
+        task['parentID'] = parentID.length > 0 ? parentID.join(';') : ''
+        return true;
+      }else{
+        return false;
+      }
+  }
+
+  sumHourStep(){
+    let sum = 0;
+    if(this.taskGroupList?.length > 0){
+      sum = this.taskGroupList.reduce((sumHour, group) =>{
+        return sumHour += this.getHour(group);
+      },0)
+    }
+    return sum;
+  }
+
+  maxHourTasksNoGroup(){
+
+  }
+
   // Common
   setIndex(data: any, value: string) {
     if (data.length > 0) {
@@ -1628,6 +1676,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         item[value] = index + 1;
       });
     }
+  }
+  
+  getHour(data){
+    let hour = Number(data['durationDay'] || 0)*24 + Number(data['durationHour'] || 0);
+    return hour;
   }
 
   viewStepSelect(step) {
