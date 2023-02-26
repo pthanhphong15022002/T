@@ -3,7 +3,9 @@
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
       <div class="d-flex align-items-center">
         <h2 class="h2-title">
-          <codx-label default="Tạo quy trình"> </codx-label>
+          <!-- xài code label truyền lên không load lại data, bật lần 2 thì load -->
+          <!-- <codx-label default="titleAction"> </codx-label> -->
+          <span>{{titleAction}}</span>
         </h2>
       </div>
       <div class="d-flex align-items-center">
@@ -974,14 +976,14 @@
             <div class="row">
               <div class="col-6">
                 <codx-input name="success-radio" type="radio" style="width: 100%" field="yes" [label]="titleRadioYes"
-                  [checked]="stepSuccess.reasonControl" [crrValue]="stepSuccess.reasonControl" (valueChange)="
+                  [checked]="stepSuccess.reasonControl" [crrValue]="stepSuccess?.reasonControl" (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   ">
                 </codx-input>
               </div>
               <div class="col-6">
                 <codx-input name="success-radio" type="radio" style="width: 100%" field="no" [label]="titleRadioNo"
-                  [checked]="!stepSuccess.reasonControl" [crrValue]="stepSuccess.reasonControl" (valueChange)="
+                  [checked]="!stepSuccess.reasonControl" [crrValue]="stepSuccess?.reasonControl" (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   ">
                 </codx-input>

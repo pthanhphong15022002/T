@@ -212,6 +212,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   objectIDRoles: any;
   titleDefault = '';
   instanceNoSetting = '';
+  listClickedCoppy:any;
+  titleAction:any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -230,6 +232,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.showID = dt.data.showID;
     this.user = this.authStore.get();
     this.userId = this.user?.userID;
+    this.titleAction = dt.data.titleAction;
+    debugger;
+    if(this.action === 'copy'){
+      this.listClickedCoppy = dt.data.conditionCopy;
+    }
 
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     if (this.action == 'edit') {
