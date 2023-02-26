@@ -150,6 +150,9 @@ export const routes: Routes = [
     ItempostingaccountsComponent,
     DimensionGroupsComponent,
     PopAddDimensionGroupsComponent,
+    PopAddDimensionSetupComponent,
+    PopupAddItemConversionComponent,
+    JournalNamesComponent
   ],
   imports: [
     RouterModule.forChild(routes),
