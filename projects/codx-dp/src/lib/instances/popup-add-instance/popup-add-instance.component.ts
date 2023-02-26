@@ -124,7 +124,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.action === 'add') {
+    if (this.action === 'add' || this.action === 'copy') {
       this.autoClickedSteps();
       this.handleEndDayInstnace(this.totalDaySteps);
     } else if (this.action === 'edit') {
@@ -215,7 +215,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   beforeSave(option: RequestOption) {
-    if (this.action === 'add') {
+    if (this.action === 'add' || this.action === 'copy') {
       option.methodName = 'AddInstanceAsync';
     } else if (this.action === 'edit') {
       option.methodName = 'EditInstanceAsync';
@@ -233,6 +233,7 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     } 
+    // COi LẠI DÙM CÁI CÁI CHỖ CÓ CHẠY KHÔNG
     // else if (
     //   this.instance?.owner === null ||
     //   this.instance?.owner.trim() === ''
@@ -273,7 +274,7 @@ export class PopupAddInstanceComponent implements OnInit {
       });
       if (!check || !checkFormat) return;
     }
-    if(this.action === 'add'){
+    if(this.action === 'add' || this.action === 'copy'){
       this.onAdd();
     }
     else if (this.action === 'edit'){
