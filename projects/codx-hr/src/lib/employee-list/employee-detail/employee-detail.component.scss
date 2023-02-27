@@ -2,13 +2,19 @@
   background-color: #f5f8fa;
 }
 
-
 .emp-check-add {
   position: fixed;
   z-index: 105;
   bottom: 20px;
   right: 20px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
+  width: 40px !important;
+  height: 40px !important;
+  box-shadow: 0px 2px 8px 2px rgb(0 0 0 / 40%) !important;
+}
+
+.emp-check-add .btn {
+  width: 40px !important;
+  height: 40px !important;
 }
 
 .h-employee {
@@ -19,11 +25,11 @@
 }
 
 .user-menu {
-  height: calc(100% - 330px) !important;
+  height: calc(100vh - 420px) !important;
 }
 
 .pw-content {
-  height: calc(100vh - 145px) !important;
+  height: calc(100vh - 120px) !important;
 
 }
 
@@ -56,6 +62,30 @@
 
   .icon-circle-group {
     font-size: 6px !important;
+  }
+
+  .h-od-tab {
+    padding-top: 7px;
+  }
+
+  .h-od-tab .nav-item {
+    .nav-link {
+      padding: 7px 0;
+      margin-right: 12px;
+      display: inline-block;
+      border: 0;
+      border-bottom: 2px transparent solid;
+
+      &.active {
+        border-color: var(--primary-dark);
+        color: var(--primary-dark);
+      }
+    }
+
+    .nav-link:hover {
+      border-color: var(--primary) !important;
+
+    }
   }
 
 }

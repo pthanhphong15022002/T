@@ -2,10 +2,10 @@
   [autoLoad]="false">
 </codx-views>
 <ng-template #panelContent>
-  <div class="page-pw h-employee p-5 bg-body rounded-2">
+  <div class="page-pw h-employee p-3 pb-0 bg-body rounded-2">
     <div class="page-profile">
       <div class="d-flex">
-        <div class="user-left me-5 border min-w-350px w-350px bg-white">
+        <div class="user-left me-6 border min-w-350px w-350px bg-white">
           <div class="bg-sidebar">
             <div class="profile-bg"></div>
             <div class="d-flex flex-column text-center mx-4 profile-info">
@@ -233,14 +233,14 @@
             </div>
 
             <div class="d-flex align-items-center mb-2">
-              <div class="d-flex align-items-center me-3">
-                <span class="icon-connection-point icon-16 text-primary me-1"></span>
+              <div class="d-flex align-items-center me-2">
+                <span class="icon-connection-point icon-16 me-1"></span>
                 <span #email>Đội BA</span>
               </div>
               <span class="text-dark d-flex align-items-center">
-                <span class="icon-i-dot text-gray-500 icon-20"></span>
+                <span class="icon-i-dot text-gray-500"></span>
                 <span #email>Nhóm Codx</span>
-                <span class="icon-i-dot text-gray-500 icon-20"></span>
+                <span class="icon-i-dot text-gray-500"></span>
                 <span #email>Trung tâm DXC</span>
               </span>
             </div>
@@ -481,7 +481,7 @@
       </div>
     </div>
     <div ngbDropdown class="emp-check-add rounded-circle">
-      <span ngbDropdownToggle class="btn btn-icon btn-primary rounded-circle fs-1 icon-add">
+      <span ngbDropdownToggle class="btn btn-icon btn-primary rounded-circle fs-1 icon-add icon-22">
       </span>
       <div ngbDropdownMenu class="" style="min-width: 200px">
         <div class="card card-flush">
@@ -666,24 +666,22 @@
 
 <!-- pane_0 Thông tin cá nhân-->
 <ng-template #info>
-  <div class="d-flex justify-content-between mb-2 mt-6">
-    <div class="tab-horizone h-od-tab">
-      <ul ngbNav #nav="ngbNav" [(activeId)]="active[0]" (navChange)="navChange($event)" class="nav nav-tabs">
-        <ng-container *ngFor="let item of lstFuncSelfInfo; let i = index">
-          <li [ngbNavItem]="item.functionID" class="nav-item">
-            <a ngbNavLink class="nav-link">
-              <div class="text-uppercase">{{ item.customName }}</div>
-            </a>
+  <div class="tab-horizone px-4 h-od-tab">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active[0]" (navChange)="navChange($event)" class="nav nav-tabs">
+      <ng-container *ngFor="let item of lstFuncSelfInfo; let i = index">
+        <li [ngbNavItem]="item.functionID" class="nav-item">
+          <a ngbNavLink class="nav-link">
+            <div class="text-uppercase fw-bold">{{ item.customName }}</div>
+          </a>
 
-            <ng-template ngbNavContent> </ng-template>
-          </li>
-        </ng-container>
-      </ul>
+          <ng-template ngbNavContent> </ng-template>
+        </li>
+      </ng-container>
+    </ul>
 
-      <div [ngbNavOutlet]="nav" class="pt-4"></div>
-    </div>
+    <div [ngbNavOutlet]="nav"></div>
   </div>
-  <hr />
+
   <div class="pw-content w-100 scroll-y" data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto"
     data-kt-scroll-dependencies=".pw-profile,.pw-menu" data-kt-scroll-wrappers=".employee-container"
     data-kt-scroll-offset="0px">
@@ -694,9 +692,7 @@
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
-                <div class="user-status d-flex align-items-center">
-                  <span class="icon-person icon-20 me-1 text-primary"></span>
-                </div>
+                <span class="icon-person icon-20 me-2 text-primary"></span>
                 <div class="fs-5 fw-bold text-uppercase text-primary">
                   <!-- <codx-label
                     [formModel]="view.formModel"
@@ -1181,24 +1177,21 @@
 
 <!-- pane_1 Thông tin pháp lí-->
 <ng-template #legal>
-  <div class="d-flex justify-content-between mb-2 mt-6">
-    <div class="tab-horizone h-od-tab">
-      <ul ngbNav #nav="ngbNav" [(activeId)]="active[1]" (navChange)="navChange($event)" class="nav nav-tabs">
-        <ng-container *ngFor="let item of lstFuncLegalInfo; let i = index">
-          <li [ngbNavItem]="item.functionID" class="nav-item">
-            <a ngbNavLink class="nav-link">
-              <div class="text-uppercase">{{ item.customName }}</div>
-            </a>
+  <div class="tab-horizone h-od-tab">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active[1]" (navChange)="navChange($event)" class="nav nav-tabs">
+      <ng-container *ngFor="let item of lstFuncLegalInfo; let i = index">
+        <li [ngbNavItem]="item.functionID" class="nav-item">
+          <a ngbNavLink class="nav-link">
+            <div class="text-uppercase">{{ item.customName }}</div>
+          </a>
 
-            <ng-template ngbNavContent> </ng-template>
-          </li>
-        </ng-container>
-      </ul>
+          <ng-template ngbNavContent> </ng-template>
+        </li>
+      </ng-container>
+    </ul>
 
-      <div [ngbNavOutlet]="nav" class="pt-4"></div>
-    </div>
+    <div [ngbNavOutlet]="nav" class="pt-4"></div>
   </div>
-  <hr />
   <div class="pw-content w-100 scroll-y" data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto"
     data-kt-scroll-dependencies=".pw-profile,.pw-menu" data-kt-scroll-wrappers=".employee-container"
     data-kt-scroll-offset="0px">
@@ -1535,22 +1528,19 @@
 
 <!-- pane_2 Thông tin công việc-->
 <ng-template #jobInfo>
-  <div class="d-flex justify-content-between mb-2 mt-6">
-    <div class="tab-horizone h-od-tab">
-      <ul ngbNav #nav="ngbNav" [(activeId)]="active[2]" (navChange)="navChange($event)" class="nav nav-tabs">
-        <ng-container *ngFor="let item of lstFuncTaskInfo; let i = index">
-          <li [ngbNavItem]="item.functionID" class="nav-item">
-            <a ngbNavLink class="nav-link">
-              <div class="text-uppercase">{{ item.customName }}</div>
-            </a>
+  <div class="tab-horizone h-od-tab">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active[2]" (navChange)="navChange($event)" class="nav nav-tabs">
+      <ng-container *ngFor="let item of lstFuncTaskInfo; let i = index">
+        <li [ngbNavItem]="item.functionID" class="nav-item">
+          <a ngbNavLink class="nav-link">
+            <div class="text-uppercase">{{ item.customName }}</div>
+          </a>
 
-            <ng-template ngbNavContent> </ng-template>
-          </li>
-        </ng-container>
-      </ul>
-    </div>
+          <ng-template ngbNavContent> </ng-template>
+        </li>
+      </ng-container>
+    </ul>
   </div>
-  <hr />
 
   <div class="pw-content w-100 scroll-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
     data-kt-scroll-max-height="auto" data-kt-scroll-dependencies=".pw-profile,.pw-menu"
@@ -2064,22 +2054,19 @@
 
 <!-- pane_3 Lương & Phúc lợi -->
 <ng-template #benefit>
-  <div class="d-flex justify-content-between mb-2 mt-6">
-    <div class="tab-horizone h-od-tab">
-      <ul ngbNav #nav="ngbNav" [(activeId)]="active[3]" (navChange)="navChange($event)" class="nav nav-tabs">
-        <ng-container *ngFor="let item of lstFuncSalary; let i = index">
-          <li [ngbNavItem]="item.functionID" class="nav-item">
-            <a ngbNavLink class="nav-link">
-              <div class="text-uppercase">{{ item.customName }}</div>
-            </a>
+  <div class="tab-horizone h-od-tab">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active[3]" (navChange)="navChange($event)" class="nav nav-tabs">
+      <ng-container *ngFor="let item of lstFuncSalary; let i = index">
+        <li [ngbNavItem]="item.functionID" class="nav-item">
+          <a ngbNavLink class="nav-link">
+            <div class="text-uppercase">{{ item.customName }}</div>
+          </a>
 
-            <ng-template ngbNavContent> </ng-template>
-          </li>
-        </ng-container>
-      </ul>
-    </div>
+          <ng-template ngbNavContent> </ng-template>
+        </li>
+      </ng-container>
+    </ul>
   </div>
-  <hr />
   <div class="pw-content w-100 scroll-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
     data-kt-scroll-max-height="auto" data-kt-scroll-dependencies=".pw-profile,.pw-menu"
     data-kt-scroll-wrappers=".employee-container" data-kt-scroll-offset="0px">
