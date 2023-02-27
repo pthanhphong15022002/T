@@ -2,7 +2,7 @@
     <ng-container *ngIf="new;else view">
         <div class="d-flex align-items-center mt-4">
             <div class="me-3">
-                <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="35"></codx-img>
+                <codx-img [objectId]="user.userID" [objectName]="user.userName" [referType]="'avt'" objectType="AD_Users" [width]="35"></codx-img>
             </div>
             <div class="position-relative cmt feed-box cmt-cmt c3 w-100" (keyup.enter)="sendComment()">
                 <codx-input type="text" placeholder="Trả lời" [crrValue]="message" (valueChange)="valueChange($event)">
@@ -73,11 +73,10 @@
         
     </ng-container>
 </div>
-
 <ng-template #view>
     <div class="d-flex align-items-top mt-4">
         <div class="me-3">
-            <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="35"></codx-img>
+            <codx-img [objectId]="data.createdBy" [objectName]="data.createdName" [referType]="'avt'" objectType="AD_Users" [width]="35"></codx-img>
         </div>
         <div class="comment-like">
             <div class="comments">
@@ -188,9 +187,8 @@
                         <codx-label formName="WP_Comments" name="lblReply" default="Trả lời"></codx-label>
                     </span>
                 </div>
-
+                
             </div>
-
         </div>
     </div>
 

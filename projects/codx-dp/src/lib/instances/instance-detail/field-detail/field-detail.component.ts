@@ -32,7 +32,6 @@ export class FieldDetailComponent implements OnInit {
     this.cache.valueList('DP0274').subscribe((res) => {
       if (res) this.dtFormatDate = res.datas;
     });
-   
   }
 
   ngOnInit(): void {
@@ -72,19 +71,8 @@ export class FieldDetailComponent implements OnInit {
     if (e != null) {
       e.forEach((res) => {
         switch (res.functionID) {
-          //       case 'SYS104':
-          //       case 'SYS04':
           case 'SYS102':
           case 'SYS02':
-            //       case 'SYS005':
-            //       case 'SYS003':
-            //       case 'SYS004':
-            //       case 'SYS001':
-            //       case 'SYS002':
-            //       case 'DP011':
-            //       case 'DP02':
-            //       case 'DP09':
-            //       case 'DP10':
             res.disabled = true;
             break;
           //edit
@@ -114,7 +102,20 @@ export class FieldDetailComponent implements OnInit {
     option.FormModel = formModel;
     option.Width = '550px';
     option.zIndex = 1000;
-    let field = this.callfc.openSide(PopupCustomFieldComponent, obj, option);
+    var dialogFields = this.callfc.openSide(
+      PopupCustomFieldComponent,
+      obj,
+      option
+    );
+    dialogFields.closed.subscribe((e) => {
+      if (e && e?.event) {
+        var fields = e?.event;
+        fields.forEach((obj) => {
+          var idx = this.dataStep.fields.findIndex((x) => x.recID == obj.recID);
+          if (idx != -1) this.dataStep.fields[idx].dataValue = obj.dataValue;
+        });
+      }
+    });
   }
 
   partNum(num): number {

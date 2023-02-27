@@ -1,4 +1,3 @@
-declare var window: any;
 import { DataRequest } from './../../../../../../src/shared/models/data.request';
 import { Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
@@ -31,6 +30,7 @@ import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
 import moment from 'moment';
 import { CodxShareService } from '../../codx-share.service';
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
+import { tmpTransType } from './model/tmpTransType.model';
 @Component({
   selector: 'app-calendar-notes',
   templateUrl: './calendar-notes.component.html',
@@ -87,6 +87,10 @@ export class CalendarNotesComponent
   dataListViewTemp: any;
   dtService: CRUDService;
 
+  //transtype list
+  lstTransType: tmpTransType[] = [];
+  //
+
   @Input() typeCalendar = 'week';
   @Output() dataResourceModel: any[] = [];
   @Output() settingValue: any;
@@ -95,7 +99,7 @@ export class CalendarNotesComponent
   @ViewChild('dataPara') dataPara: TemplateRef<any>;
   @ViewChild('calendar') calendar!: CalendarComponent;
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private change: ChangeDetectorRef,
     private auth: AuthStore,
     private noteService: NoteServices,
@@ -314,8 +318,8 @@ export class CalendarNotesComponent
   }
 
   setEventWeek() {
-    var ele = document.querySelectorAll('.week-item[data-date]');
     let myInterval = setInterval(() => {
+      let ele = document.querySelectorAll('.week-item[data-date]');
       if (ele && ele.length > 0) {
         clearInterval(myInterval);
         for (var i = 0; i < ele.length; i++) {
@@ -332,21 +336,35 @@ export class CalendarNotesComponent
 
   changeDayOfWeek(e) {
     this.dateSelected = e.daySelected;
+    console.log('changeDayOfWeek', this.dateSelected);
+    this.drawData();
     this.changeNewWeek(null, this.dateSelected);
   }
 
+  curStartDateOfWeek;
+  curEndDateOfWeek;
+  changeWeekQueue = new Map<string, any>();
+
+  clickChangeWeek(args) {
+    clearTimeout(this.changeWeekQueue.get('0'));
+    this.changeWeekQueue.set(
+      '0',
+      setTimeout(this.changeNewWeek.bind(this), 300, args)
+    );
+  }
+
   changeNewWeek(args: any, setDate = null) {
-    if (this.lstView) {
-      this.lstView.dataService.data = [];
-    }
     if (args) {
+      console.log('changeNewWeek', args);
       let startDate = moment(args.fromDate).toJSON();
       let endDate = moment(args.toDate).toJSON();
+      this.curStartDateOfWeek = startDate;
+      this.curEndDateOfWeek = endDate;
       this.getParamCalendar(startDate, endDate);
     }
     let myInterval = setInterval(() => {
       if (
-        this.dataResourceModel.length > 0 &&
+        this.lstView.dataService.data.length > 0 &&
         this.countDataOfE == this.countEvent
       ) {
         clearInterval(myInterval);
@@ -356,7 +374,7 @@ export class CalendarNotesComponent
             let date = setDate;
             clearInterval(myInterval);
             this.setDate(date, this.lstView);
-            this.change.detectChanges();
+            this.detectorRef.detectChanges();
           }
         }
       }
@@ -423,16 +441,15 @@ export class CalendarNotesComponent
             //x.calendarDate = this.dateSelected;
             //});
             //let dataTemp = dataTemp.filter((x) => x.calendarDate == fromDate);
-            lstView.dataService.data = this.dataResourceModel.filter(
-              (x) =>
-                new Date(x.calendarDate) >= fromDate &&
-                new Date(x.calendarDate) < toDate
-            );
+            this.lstView.dataService.data =
+              this.lstView.dataService.data.filter(
+                (x) =>
+                  new Date(x.calendarDate) >= fromDate &&
+                  new Date(x.calendarDate) < toDate
+              );
             this.dataListViewTemp = JSON.parse(
               JSON.stringify(lstView.dataService.data)
             );
-            this.lstView.dataService.data.sort(this.orderByStartTime);
-
             this.change.detectChanges();
           }
         });
@@ -518,6 +535,30 @@ export class CalendarNotesComponent
           this.EP_BookingCarsParam = dt[0]?.EP_BookingCars[1]
             ? JSON.parse(dt[0]?.EP_BookingCars[1])
             : null;
+
+          this.lstTransType = [
+            {
+              transType: 'TM_Tasks',
+              isActive: this.TM_TasksParam?.ShowEvent,
+            },
+            {
+              transType: 'WP_Notes',
+              isActive: this.WP_NotesParam?.ShowEvent,
+            },
+            {
+              transType: 'CO_Meetings',
+              isActive: this.CO_MeetingsParam?.ShowEvent,
+            },
+            {
+              transType: 'EP_BookingRooms',
+              isActive: this.EP_BookingRoomsParam?.ShowEvent,
+            },
+            {
+              transType: 'EP_BookingCars',
+              isActive: this.EP_BookingCarsParam?.ShowEvent,
+            },
+          ];
+
           this.settingValue = dt[0];
           if (updateCheck == true) {
             this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
@@ -715,14 +756,7 @@ export class CalendarNotesComponent
         }
       });
       if (this.countDataOfE == this.countEvent) {
-        this.dataResourceModel = [];
-        this.dataResourceModel = [
-          ...this.TM_Tasks,
-          ...this.WP_Notes,
-          ...this.CO_Meetings,
-          ...this.EP_BookingRooms,
-          ...this.EP_BookingCars,
-        ];
+        this.drawData();
         this.TM_TasksTemp = JSON.parse(JSON.stringify(this.TM_Tasks));
         this.WP_NotesTemp = JSON.parse(JSON.stringify(this.WP_Notes));
         this.CO_MeetingsTemp = JSON.parse(JSON.stringify(this.CO_Meetings));
@@ -734,11 +768,69 @@ export class CalendarNotesComponent
         );
       }
     }
-    console.log('co', this.CO_MeetingsTemp);
-    console.log('room', this.EP_BookingRoomsTemp);
-    console.log('car', this.EP_BookingCarsTemp);
   }
 
+  drawData() {
+    if (this.lstView) {
+      this.lstView.dataService.data = [];
+      let curDateSelected = new Date(this.dateSelected).toLocaleDateString();
+
+      this.lstTransType
+        .filter((x) => x.isActive == '1')
+        .forEach((tmpTrans) => {
+          switch (tmpTrans.transType) {
+            case 'TM_Tasks':
+              this.lstView.dataService.data = [
+                ...this.TM_Tasks.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            case 'WP_Notes':
+              this.lstView.dataService.data = [
+                ...this.WP_Notes.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            case 'CO_Meetings':
+              this.lstView.dataService.data = [
+                ...this.CO_Meetings.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            case 'EP_BookingRooms':
+              this.lstView.dataService.data = [
+                ...this.EP_BookingRooms.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            case 'EP_BookingCars':
+              this.lstView.dataService.data = [
+                ...this.EP_BookingCars.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            default:
+              break;
+          }
+        });
+      this.detectorRef.detectChanges();
+    }
+  }
   onSwitchCountEven(transType) {
     switch (transType) {
       case 'TM_Tasks':
@@ -771,7 +863,7 @@ export class CalendarNotesComponent
       if (typeof args.date !== 'string') date = date.toLocaleDateString();
       let myInterval = setInterval(() => {
         if (
-          this.dataResourceModel.length > 0 &&
+          this.lstView.dataService.data.length > 0 &&
           this.countDataOfE == this.countEvent
         ) {
           clearInterval(myInterval);
@@ -823,9 +915,14 @@ export class CalendarNotesComponent
               break;
             }
           }
-          var day = moment(date).date();
-          var month = moment(date).month();
-          var year = moment(date).year();
+          // let t = moment(date).toDate();
+          // let day = moment(date).date();
+          // let month = moment(date).month();
+          // let year = moment(date).year();
+          let dateArr = date.split('/');
+          let day = dateArr[0];
+          let month = dateArr[1];
+          let year = dateArr[2];
           var classDate = `${day}-${month}-${year}`;
 
           var spanWP: HTMLElement = document.createElement('span');
@@ -914,65 +1011,9 @@ export class CalendarNotesComponent
             }
             flex.append(spanEP_Car);
           }
-          // if (
-          //   calendarWP >= 1 &&
-          //   calendarTM >= 1 &&
-          //   calendarCO >= 1 &&
-          //   calendarEP_Room >= 1 &&
-          //   calendarEP_Car >= 1 &&
-          //   countShowCalendar < 1
-          // ) {
-          //   if (this.typeCalendar == 'week') {
-          //     spanWP.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
-          //     );
-          //     spanTM.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.TM_TasksParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-          //     );
-          //     spanCO.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-          //     );
-          //     spanEP_Room.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.EP_BookingRoomsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-          //     );
-          //     spanEP_Car.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.EP_BookingCarsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-          //     );
-          //   } else {
-          //     spanWP.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
-          //     );
-          //     spanTM.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.TM_TasksParam?.ShowColor};border-radius: 50%;margin-left: 2px`
-          //     );
-          //     spanCO.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-          //     );
-          //     spanEP_Room.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.EP_BookingRoomsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-          //     );
-          //     spanEP_Car.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.EP_BookingCarsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-          //     );
-          //   }
-          //   flex.append(spanWP);
-          //   flex.append(spanTM);
-          //   flex.append(spanCO);
-          //   flex.append(spanEP_Room);
-          //   flex.append(spanEP_Car);
-          // }
-          var eleTest = ele.querySelectorAll(`.note-pointed-${classDate}`);
+
           let interVal = setInterval(() => {
+            var eleTest = ele.querySelectorAll(`.note-pointed-${classDate}`);
             if (eleTest && eleTest.length > 0) {
               clearInterval(interVal);
               if (eleTest.length > 3) {
@@ -989,7 +1030,7 @@ export class CalendarNotesComponent
                         `font-size: 10px; margin-left: 2px; margin-top: -3px;`
                       );
                       flex.append(spanPlus);
-                      this.change.detectChanges();
+                      this.detectorRef.detectChanges();
                       return;
                     }
                   }
@@ -1087,7 +1128,7 @@ export class CalendarNotesComponent
       '',
       option
     );
-    dialog.closed.subscribe((e) => {
+    dialog.closed.subscribe(() => {
       this.detectorRef.detectChanges();
     });
     // dialog.closed.subscribe((e) => {
@@ -1108,8 +1149,16 @@ export class CalendarNotesComponent
 
   valueChangeSetting(e) {
     if (e) {
-      var field = e.field;
-      this.updateSettingValue(field, e.data);
+      let curTransType = this.lstTransType.find((x) => x.transType == e.field);
+      if (!curTransType) {
+        curTransType = new tmpTransType();
+        this.lstTransType.push(curTransType);
+      }
+
+      curTransType.transType = e.field;
+      curTransType.isActive = e.data ? '1' : '0';
+      // var field = e.field;
+      // this.updateSettingValue(field, e.data);
     }
   }
 
@@ -1264,6 +1313,23 @@ export class CalendarNotesComponent
       });
   }
 
+  updateSettingValueVer2() {
+    this.api
+      .exec<any>(
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'AddUpdateByUserIDVer2Async',
+        ['WPCalendars', this.lstTransType]
+      )
+      .subscribe((res) => {
+        this.getParamCalendar(
+          this.curStartDateOfWeek,
+          this.curEndDateOfWeek,
+          false
+        );
+      });
+  }
+
   orderByStartTime(a, b) {
     let aS = new Date(a.startTime);
     let bS = new Date(b.startTime);
@@ -1387,8 +1453,6 @@ export class CalendarNotesComponent
   }
 
   redirectToFuncID(item) {
-    console.log('item', item);
-
     let query = {
       predicate: 'RecID=@0',
       dataValue: item.transID,
