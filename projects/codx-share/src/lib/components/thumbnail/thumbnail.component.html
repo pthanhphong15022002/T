@@ -32,9 +32,9 @@
           </div>
           <div *ngIf="hideMoreF=='1'" ngbDropdown container="body" class="btn btn-sm btn-icon btn-white cursor-pointer"
             (mouseout)="hideMore()">
-            <i class="icon-more_vert  icon-16" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true"
+            <i class="icon-more_vert  icon-16" [id]="item.data.recID" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false"></i>
-            <div ngbDropdownMenu id="drop" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <div ngbDropdownMenu id="drop" class="dropdown-menu"  aria-labelledby="item.data.recID">
               <a ngbDropdownItem
                 [ngClass]="this.checkShareRight() ? 'dropdown-item  cursor-pointer':'dropdown-item  cursor-pointer disabled'"
                 (click)="editfile(item.data, true)">
@@ -112,9 +112,9 @@
           </div>
           <div *ngIf="hideMoreF=='1'" ngbDropdown container="body" class="btn btn-sm btn-icon btn-white cursor-pointer"
             (mouseout)="hideMore()">
-            <i class="icon-more_vert icon-16" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true"
+            <i class="icon-more_vert icon-16" [id]="item.recID" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false"></i>
-            <div ngbDropdownMenu id="drop" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <div ngbDropdownMenu  class="dropdown-menu" aria-labelledby="item.recID">
               <a ngbDropdownItem
                 [ngClass]="this.checkShareRight() ? 'dropdown-item  cursor-pointer':'dropdown-item  cursor-pointer disabled'"
                 (click)="editfile(item, true)">

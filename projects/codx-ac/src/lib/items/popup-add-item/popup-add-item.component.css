@@ -1,0 +1,3 @@
+div.hover-color:hover {
+  border-color: var(--primary) !important;
+}

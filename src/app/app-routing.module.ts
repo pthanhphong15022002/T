@@ -19,6 +19,14 @@ var childRoutes = [
       import('./modules/auth/auth.module').then((m) => m.AuthModule),
   },
   {
+    path: 'cm',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-cm/src/lib/codx-cm.module').then(
+        (m) => m.CodxCmModule
+      ),
+  },
+  {
     path: 'bp',
     canActivate: [AuthGuard],
     loadChildren: () =>

@@ -16,6 +16,10 @@ export class CashPaymentsComponent extends UIComponent {
   headerText:any;
   moreFuncName:any;
   funcName:any;
+  tabItem: any = [
+    { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
+    { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
+  ];
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -31,7 +35,6 @@ export class CashPaymentsComponent extends UIComponent {
       }
     });
   }
-
   onInit(): void {
     this.button = {
       id: 'btnAdd',

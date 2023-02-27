@@ -409,4 +409,20 @@ export class CodxDpService {
       id
     );
   }
+  getAutoNumberByInstanceNoSetting(instanceNoSetting): Observable<any> {
+    return this.api.exec(
+      'ERM.Business.AD',
+      'AutoNumbersBusiness',
+      'CreateAutoNumberAsync',
+      [instanceNoSetting, null, true, null]
+    );
+  }
+  updateFiels(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateInstanceStepFielsByStepIDAsync',
+      data
+    );
+  }
 }
