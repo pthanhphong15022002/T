@@ -323,26 +323,23 @@ export class PopupAddProcessesComponent implements OnInit {
   }
   selectedAction() {
     switch (this.action) {
-      case this.moreFunctionCopy: {
+      case this.moreFunctionCopy:
         this.notiService.alertCode('BP007').subscribe((x) => {
           if (x.event.status == 'N') {
             this.isCoppyFile = false;
           } else {
-            this.isCoppyFile = true; 
+            this.isCoppyFile = true;
           }
           this.isUpdateCreateProcess();
         });
         break;
-      }
-      case this.moreFunctionAdd:  
-      case this.moreFunctionEdit: {
+      case this.moreFunctionAdd:
+      case this.moreFunctionEdit:
         this.isUpdateCreateProcess();
         break;
-      }
-      default: {
+      default:
         this.isAction = false;
         break;
-      }
     }
   }
 
