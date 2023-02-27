@@ -281,6 +281,8 @@
         class="border mw-25 d-flex flex-column align-items-center p-1 position-relative hover-color"
         role="button"
         (click)="openFormAddItemSize(1, itemSize)"
+        (mouseenter)="hoveredItemSizeId1 = itemSize.id"
+        (mouseleave)="hoveredItemSizeId1 = null"
       >
         <codx-img
           [funcId]="form.formModel?.funcID"
@@ -294,6 +296,7 @@
         </codx-img>
 
         <div
+          *ngIf="hoveredItemSizeId1 === itemSize.id"
           class="btn btn-icon position-absolute"
           style="right: 0; top: 0"
           (click)="deleteItemSize($event, itemSize, 1)"
@@ -385,6 +388,8 @@
         class="border mw-25 d-flex flex-column align-items-center p-1 position-relative hover-color"
         role="button"
         (click)="openFormAddItemSize(0, itemSize)"
+        (mouseenter)="hoveredItemSizeId2 = itemSize.id"
+        (mouseleave)="hoveredItemSizeId2 = null"
       >
         <codx-img
           [funcId]="form.formModel?.funcID"
@@ -398,6 +403,7 @@
         </codx-img>
 
         <div
+          *ngIf="hoveredItemSizeId2 === itemSize.id"
           class="btn btn-icon position-absolute"
           style="right: 0; top: 0"
           (click)="deleteItemSize($event, itemSize, 0)"
