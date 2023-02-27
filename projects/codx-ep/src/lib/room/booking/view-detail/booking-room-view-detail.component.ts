@@ -11,7 +11,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { CallFuncService, DataRequest, DialogRef, SidebarModel, UIComponent, ViewsComponent } from 'codx-core';
+import { AuthService, CallFuncService, DataRequest, DialogRef, SidebarModel, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
 import { BookingRoomComponent } from '../booking-room.component';
 import { PopupAddBookingRoomComponent } from '../popup-add-booking-room/popup-add-booking-room.component';
@@ -26,7 +26,8 @@ import { Permission } from '@shared/models/file.model';
 export class BookingRoomViewDetailComponent extends UIComponent implements OnChanges {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('subTitleHeader') subTitleHeader;
-  @ViewChild('attachment') attachment;
+  @ViewChild('attachment') attachment;  
+  @ViewChild('attachment') tabModel;
   @ViewChild('bookingRoom') bookingRoom: BookingRoomComponent;
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('copy') copy: EventEmitter<any> = new EventEmitter();
@@ -56,11 +57,13 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   dialog!: DialogRef;
   routerRecID: any;
   listFilePermission= [];
-
+  isEdit= false;
+renderFooter=false;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
     private callFuncService: CallFuncService,
+    private authService: AuthService,
   ) {
     super(injector);
     this.routerRecID = this.router.snapshot.params['id'];
@@ -95,6 +98,7 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
       changes.itemDetail?.previousValue?.recID !=
       changes.itemDetail?.currentValue?.recID
     ) {
+      this.renderFooter=false;
       this.api
         .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
           changes.itemDetail?.currentValue?.recID,
@@ -102,12 +106,13 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            this.listFilePermission=[];
             if(res.bookingAttendees!=null && res.bookingAttendees!=''){
               let listAttendees = res.bookingAttendees.split(";");
               listAttendees.forEach((item) => {
                 if(item!=''){
                   let tmpPer= new Permission()
-                  tmpPer.objectID= item.userID;//
+                  tmpPer.objectID= item;//
                   tmpPer.objectType= 'U';
                   tmpPer.read= true;
                   tmpPer.share=  true;
@@ -117,8 +122,15 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
                 }
                 
               });
+              //this.tabModel.addPermissions=this.listFilePermission;
+              this.renderFooter=true;
+              this.detectorRef.detectChanges();
+
             }
-            
+            if(this.itemDetail?.createdBy==this.authService.userValue.userID){
+
+              this.isEdit = true;
+            }
             this.detectorRef.detectChanges();
 
           }
@@ -309,6 +321,8 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
           //Gửi duyệt
           if ( //Hiện: chép
           func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+          func.functionID == 'SYS02' /*MF sửa*/ ||
+          func.functionID == 'SYS03' /*MF xóa*/ ||
           func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
@@ -316,8 +330,6 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
           if (//Ẩn: còn lại            
             func.functionID == 'EP4T1102' /*MF mời*/ ||
             func.functionID == 'EP4T1101' /*MF dời*/ ||
-            func.functionID == 'SYS02' /*MF sửa*/ ||
-            func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = true;

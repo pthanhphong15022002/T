@@ -1,0 +1,116 @@
+<codx-form
+  #form
+  headerText="Thêm đơn vị quy đổi"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="dialogRef.formModel"
+  [data]="itemConversion"
+>
+</codx-form>
+
+<ng-template #body>
+  <ng-container *ngIf="form.formGroup">
+    <div class="row mt-3">
+      <div class="col-8">
+        <div class="row">
+          <div class="col-6 form-group">
+            <codx-label
+              fiedName="fromUMID"
+              [formModel]="dialogRef.formModel"
+            ></codx-label>
+            <codx-input
+              [formModel]="dialogRef.formModel"
+              field="fromUMID"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+
+          <div class="col-6 form-group">
+            <codx-label
+              fiedName="toUMID"
+              [formModel]="dialogRef.formModel"
+            ></codx-label>
+            <codx-input
+              [formModel]="dialogRef.formModel"
+              field="toUMID"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+        </div>
+
+        <div class="row d-flex align-items-center">
+          <div class="col-6 form-group">
+            <codx-label
+              fiedName="conversion"
+              [formModel]="dialogRef.formModel"
+            ></codx-label>
+            <codx-input
+              [formModel]="dialogRef.formModel"
+              field="conversion"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+
+          <div class="col-6 form-group d-flex gap-3">
+            <codx-input
+              [formModel]="dialogRef.formModel"
+              field="inverted"
+              [Group]="form.formGroup"
+            ></codx-input>
+            <codx-label
+              fiedName="inverted"
+              [formModel]="dialogRef.formModel"
+            ></codx-label>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <codx-img
+          #itemConversionImage
+          [funcId]="dialogData.data.funcId"
+          [objectId]="itemConversion.recID"
+          [objectType]="dialogRef.formModel.entityName"
+          [width]="125"
+          [isAllowEdit]="true"
+          [isDefaulImg]="true"
+          imageType="square"
+        >
+        </codx-img>
+      </div>
+    </div>
+
+    <div
+      class="fw-bold"
+      *ngIf="
+        itemConversion.fromUMID &&
+        itemConversion.conversion &&
+        itemConversion.toUMID
+      "
+    >
+      * 1 {{ itemConversion.fromUMID }} = {{ itemConversion.conversion }}
+      {{ itemConversion.toUMID }}
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #footer>
+  <ng-container *ngIf="!isEdit; else edit">
+    <button
+      type="button"
+      class="btn btn-outline-primary me-3"
+      (click)="save(false)"
+    >
+      Lưu & Thêm
+    </button>
+    <button type="button" class="btn btn-primary" (click)="save(true)">
+      Lưu
+    </button>
+  </ng-container>
+  <ng-template #edit>
+    <button type="button" class="btn btn-primary" (click)="update()">
+      Lưu
+    </button>
+  </ng-template>
+</ng-template>

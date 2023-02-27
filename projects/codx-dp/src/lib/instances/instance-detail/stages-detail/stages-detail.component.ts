@@ -65,7 +65,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() instance: any;
   @Input() stepNameEnd: any;
   @Input() proccesNameMove: any;
-  
+
 
   dateActual: any;
   startDate: any;
@@ -119,7 +119,8 @@ export class StagesDetailComponent implements OnInit {
 
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
-  
+  titleReason:any;
+
   constructor(
     private callfc: CallFuncService,
     private notiService: NotificationsService,
@@ -203,6 +204,7 @@ export class StagesDetailComponent implements OnInit {
       } else {
         this.dataStep = null;
       }
+      this.titleReason = changes['dataStep'].currentValue?.isSuccessStep ? 'Lý do thành công' :  changes['dataStep'].currentValue?.isFailStep ?  'Lý do thất bại' : ''
     }
   }
 
@@ -220,9 +222,8 @@ export class StagesDetailComponent implements OnInit {
       }
 
       this.progress = (
-        totalTask / tasks.length +
-        totalTaskGroup / taskGroups.length
-      ).toString();
+        totalTask / tasks.length
+      ).toFixed(1).toString();
     } else {
       this.progress = '0';
     }
@@ -601,6 +602,7 @@ export class StagesDetailComponent implements OnInit {
           if (res) {
             this.notiService.notifyCode('SYS006');
             this.taskGroupList.splice(index - 1, 0, value);
+            this.calculateProgressStep();
           }
         });
     } else {
@@ -610,6 +612,7 @@ export class StagesDetailComponent implements OnInit {
         if (res) {
           this.notiService.notifyCode('SYS007');
           await this.copyValue(value, dataOld);
+          this.calculateProgressStep();
         }
       });
     }
@@ -675,6 +678,7 @@ export class StagesDetailComponent implements OnInit {
       if (res) {
         this.notiService.notifyCode('SYS006');
         this.popupUpdateProgress.close();
+        this.calculateProgressStep();
       }
     });
   }
@@ -690,6 +694,7 @@ export class StagesDetailComponent implements OnInit {
         this.taskGroupList[value?.indexGroup]['progress'] = value?.average;
         this.notiService.notifyCode('SYS007');
         this.popupUpdateProgress.close();
+        this.calculateProgressStep();
       }else{
         this.popupUpdateProgress.close();
       }
@@ -729,7 +734,7 @@ export class StagesDetailComponent implements OnInit {
 
   calculateProgressStep(){
     const sum = this.taskGroupList.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue['progress'];
+      return accumulator + Number(currentValue['progress'] || 0);
     }, 0);
     let medium = (sum/this.taskGroupList.length).toFixed(2);
     this.step.progress = Number(medium);
@@ -939,7 +944,7 @@ export class StagesDetailComponent implements OnInit {
 
   openPopupReason(){
     this.listReasonsClick = [];
-    this.dialogPopupReason = this.callfc.openForm(this.viewReason, '', 500, 10);
+    this.dialogPopupReason = this.callfc.openForm(this.viewReason, '', 500, 500);
   }
   changeReasonMF(e) {
     console.table(e);
@@ -961,7 +966,7 @@ export class StagesDetailComponent implements OnInit {
     switch ($event.functionID) {
       case 'SYS02':
         this.deleteReason(data);
-        break; 
+        break;
       default:
         break;
     }

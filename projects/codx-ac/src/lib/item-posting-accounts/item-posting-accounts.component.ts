@@ -1,3 +1,4 @@
+import { F } from '@angular/cdk/keycodes';
 import {
   Component,
   OnInit,
@@ -7,7 +8,17 @@ import {
   Injector,
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
-import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  UIComponent,
+  ViewModel,
+  ViewType,
+  ButtonModel,
+  CodxGridviewComponent,
+  SidebarModel,
+  CallFuncService,
+  CRUDService,
+} from 'codx-core';
+import { PopAddAccountsComponent } from '../chart-of-accounts/pop-add-accounts/pop-add-accounts.component';
 
 @Component({
   selector: 'postingaccounts',
@@ -20,7 +31,11 @@ export class ItempostingaccountsComponent extends UIComponent {
   menu1: Array<any> = [];
   menu2: Array<any> = [];
   menuActive = 1;
-  linkActive = 1;
+  linkActive = '';
+  button = {
+    id: 'btnAdd',
+  };
+
   editSettings: EditSettingsModel = {
     allowEditing: false,
     allowAdding: false,
@@ -29,7 +44,8 @@ export class ItempostingaccountsComponent extends UIComponent {
   };
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
-  constructor(inject: Injector) {
+  @ViewChild('grid') grid: CodxGridviewComponent;
+  constructor(inject: Injector, private callfunc: CallFuncService) {
     super(inject);
   }
   //#endregion
@@ -59,4 +75,30 @@ export class ItempostingaccountsComponent extends UIComponent {
     ];
   }
   //#endregion;
+
+  //#region Method
+  add($event) {
+    (this.grid.dataService as CRUDService).addNew().subscribe((res: any) => {
+      var obj = {
+        formType: 'add',
+        headerText: 'test',
+      };
+      let option = new SidebarModel();
+      option.DataService = this.grid.dataService;
+      option.FormModel = this.grid.formModel;
+      option.Width = '800px';
+      let d = this.callfunc.openSide(
+        PopAddAccountsComponent,
+        obj,
+        option,
+        this.view.funcID
+      );
+    });
+  }
+
+  load(field: string, value: string) {
+    //this.grid.dataSelected
+    this.grid.dataService.setPredicates([field + '=@0'], [value]).subscribe();
+  }
+  //#endregion
 }

@@ -1,3 +1,4 @@
+import { environment } from './../environments/environment.prod';
 import { LayoutTenantComponent } from './modules/auth/tenants/layout/layout.component';
 import { DynamicFormComponent } from './../../projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { NgModule } from '@angular/core';
@@ -8,7 +9,6 @@ import { SosComponent } from '@pages/sos/sos.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
-import { ExternalSigningComponent } from 'projects/codx-es/src/lib/external-signing/external-signing.component';
 import { TenantsComponent } from '@modules/auth/tenants/tenants.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 
@@ -17,6 +17,14 @@ var childRoutes = [
     path: 'auth',
     loadChildren: () =>
       import('./modules/auth/auth.module').then((m) => m.AuthModule),
+  },
+  {
+    path: 'cm',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-cm/src/lib/codx-cm.module').then(
+        (m) => m.CodxCmModule
+      ),
   },
   {
     path: 'bp',
@@ -214,7 +222,6 @@ var childRoutes = [
         path: 'dynamic/:funcID',
         component: DynamicFormComponent,
       },
-      
     ],
   },
   {
@@ -225,7 +232,7 @@ var childRoutes = [
     path: 'sos',
     component: SosComponent,
   },
- 
+
   {
     path: '',
     redirectTo: 'wp',
@@ -248,7 +255,7 @@ export const routes: Routes = [
     component: LayoutTenantComponent,
     children: [{ path: '', component: TenantsComponent }],
   },
- 
+
   {
     path: 'auth',
     loadChildren: () =>
@@ -258,8 +265,13 @@ export const routes: Routes = [
     path: ':tenant',
     children: childRoutes,
   },
+  {
+    path: '',
+    redirectTo: 'auth',
+    pathMatch: 'full',
+  },
 ];
-export const routes1: Routes = childRoutes;
+export const routes1: Routes = environment.saas == 1 ? routes : childRoutes;
 
 @NgModule({
   imports: [

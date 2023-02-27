@@ -158,3 +158,39 @@
     </div>
   </ng-container>
 </ng-template>
+
+<ng-template #popUpQuestionCopy let-dialog="dialogQuestionCopy">
+  <codx-form [body]="bodyFormCopyName" [footer]="footerFormCopyName"
+    [dialog]="dialogQuestionCopy">
+  </codx-form>
+</ng-template>
+
+<ng-template #bodyFormCopyName>
+  <div class="container">
+    <div class="row">
+      <div class="col-2">
+        <span class="icon-reorder"></span>
+      </div>
+      <div class="col-10">
+        <codx-label default="Chọn các thông tin muốn sao chép:"></codx-label>
+        <div class="form-group mt-3">
+          <div *ngFor="let item of listSelectCoppy ">
+            <div class="form-check py-2">
+              <input class="form-check-input" type="checkbox" (change)="checkValueCopy($event, item)" />
+              <span class="form-check-label">
+                {{ item?.text }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #footerFormCopyName>
+  <button type="button" class="btn btn-primary" (click)="saveCopy()">
+    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
+  </button>
+</ng-template>

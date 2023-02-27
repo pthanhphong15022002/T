@@ -3,11 +3,9 @@
 // }
 
 
-.color-check::after {
-  position: fixed;
-  font-size: 35px;
-  content: "\2713" !important;
-  color: #fff !important;
+
+.color-check {
+  box-shadow: 0 0 0 2px rgba(#F4F7FF,.7) , 0 0 0 4px orange;
 }
 
 .pointer {

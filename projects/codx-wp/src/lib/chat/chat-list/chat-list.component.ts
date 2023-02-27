@@ -122,14 +122,19 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     if(this.codxListViewSerach.dataService)
       this.codxListViewSerach.dataService.search(event).subscribe();
   }
+
+  // check read all
+  clickCheckReadAll(){
+    
+  }
   // click group chat - chat box
   openChatBox(group: any) {
     debugger
     if(group["type"] === "U"){
       this.api.execSv("WP","ERM.Business.WP","GroupBusiness","GetGroupByUserIDAsync",[group.id,group.name])
       .subscribe((res:any)=>{
-        if(res){
-          this.addBoxChat(res.groupID);
+        if(res[0].groupID){
+          this.addBoxChat(res[0].groupID);
         }
       });
     }
@@ -139,8 +144,8 @@ export class ChatListComponent implements OnInit, AfterViewInit {
           "WP",
           "ERM.Business.WP",
           "ChatBusiness",
-          "UpdateMessageAsync",
-          [group.lastMssgID])
+          "SeenMessageByGroupAsync",
+          [group.groupID])
           .subscribe();
         group.isRead = true;
       }
@@ -148,10 +153,6 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // get group chat by userID
-  getGroupByUserID(userID:string){
-    return 
-  }
   // open popup add group chat
   openPopupAddGroup() {
     if (this.function) {
@@ -177,15 +178,10 @@ export class ChatListComponent implements OnInit, AfterViewInit {
       popup.closed.subscribe((res: any) => {
         this.isOpen = true;
         this.isOpenChange.emit(this.isOpen);
-        // if (res.event) 
-        // {
-        //   let group = res.event;
-        //   (this.codxListViewGroup.dataService as CRUDService).add(group).subscribe();
-        // }
       });
     }
   }
-
+  // add box chat
   addBoxChat(groupID:any){
     let _eleChatBoxs = document.getElementsByTagName("codx-chat-box");
     let _arrBoxChat = Array.from(_eleChatBoxs);
@@ -198,8 +194,8 @@ export class ChatListComponent implements OnInit, AfterViewInit {
       let elementContainer = document.querySelector(".container-chat");
       if(elementContainer){
         let length = elementContainer.children.length;
-        if(length < 3) // add box chat
-        {
+        // add box chat
+        if(length < 3){ 
           html.setAttribute('style',`
           position: fixed!important;
           bottom: 0px;
@@ -208,12 +204,11 @@ export class ChatListComponent implements OnInit, AfterViewInit {
           background-color: white;`);
           html.setAttribute('id',groupID);
           elementContainer.append(html);
+        }
+        else{
+          
+        }
       }
-      else // tạo bong bóng chat
-      {
-        
-      }
-    }
     }
   }
 }

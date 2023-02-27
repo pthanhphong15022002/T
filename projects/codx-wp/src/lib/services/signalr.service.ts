@@ -10,17 +10,10 @@ import { Post } from 'src/shared/models/post';
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
   connectionId: string;
-  signalData = new EventEmitter<Post>();
   userConnect = new EventEmitter<any>();
-  signalObject = new EventEmitter<any>();
   signalChat = new EventEmitter<any>();
   signalGroup = new EventEmitter<any>();
-  signaDataVote = new EventEmitter<any>();
-  signalVote = new EventEmitter<any>();
-  signalDelChat = new EventEmitter<any>();
-  signalVoteType = new EventEmitter<any>();
-  //signalR emit data
-
+  signalBoxChat = new EventEmitter<any>();
   constructor(private authStore: AuthStore) {
     this.createConnection();
     this.registerOnServerEvents();

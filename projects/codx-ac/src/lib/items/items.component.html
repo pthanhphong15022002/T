@@ -1,0 +1,102 @@
+<codx-views
+  #view
+  [views]="views"
+  service="IV"
+  assemblyName="ERM.Business.IV"
+  entityName="IV_Items"
+  className="ItemsBusiness"
+  method="GetItemsAsync"
+  [button]="btnAdd"
+  (buttonClick)="handleClickAdd($event)"
+>
+</codx-views>
+
+<ng-template #header1>
+  <codx-label default="Mặt hàng"></codx-label>
+</ng-template>
+
+<ng-template #header2>
+  <codx-label default="Thiết lập tồn kho"></codx-label>
+</ng-template>
+
+<ng-template #header3>
+  <codx-label default="Đơn vị tính quy đổi"></codx-label>
+</ng-template>
+
+<ng-template #header4>
+  <codx-label default="Tình trạng"></codx-label>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+  <tr>
+    <td>
+      <div class="fw-bold mb-1">{{ data?.itemName }}</div>
+      <div class="fs-8 mb-3">
+        <div class="mb-1">
+          Mã:
+          {{ data?.itemID }} &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp;
+          Nhóm:
+          <span class="text-primary">{{ data?.itemGroupID }}</span>
+          &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; Dòng sản phẩm:
+          <span class="text-primary">{{ data?.productLineID }}</span>
+        </div>
+        <div>
+          <codx-vll
+            [showText]="true"
+            [showBgColor]="true"
+            name="AC018"
+            [value]="data?.itemType"
+            class="badge badge-danger"
+          >
+          </codx-vll>
+          &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; Mô hình tồn kho:
+          {{ data?.inventModelID }}
+          &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; Yếu tố tồn kho:
+          {{ data?.dimGroupID }}
+        </div>
+      </div>
+    </td>
+    <td class="fs-8">
+      <div class="mb-1">
+        Dvt: <b>{{ data?.umid }}</b>
+      </div>
+      <div class="mb-3">
+        Kho mặc định:
+        <b>{{ data?.warehouseID }}</b>
+        &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; Vị trí kho mặc định:
+        <b>{{ data?.locationID }}</b>
+      </div>
+    </td>
+    <td class="d-flex justify-content-between mb-3">
+      <div>
+        <div *ngFor="let conversion of data?.umConversions" class="fw-bold">
+          1 {{ conversion?.fromUMID }} = {{ conversion?.conversion }}
+          {{ conversion?.toUMID }}
+        </div>
+      </div>
+      <div *ngIf="data?.cwItem" class="badge badge-info align-self-start">CW</div>
+    </td>
+    <td class="fs-8">
+      <div class="mb-3 text-center">
+        <div class="badge badge-warning mb-1">
+          {{ data?.stop ? "Ngưng sử dụng" : "Còn sử dụng " }}
+        </div>
+        <div class="mb-1">
+          {{ data?.createdOn | date : "dd/MM/yyyy, hh:mm a" }}
+        </div>
+        <div class="fw-bold">
+          {{ data?.createdBy }}
+        </div>
+      </div>
+    </td>
+    <td>
+      <codx-mfunc
+        [dataItem]="data"
+        [formModel]="view.formModel"
+        (clickMF)="handleClickMoreFuncs($event, data)"
+        [isBookMark]="true"
+        type="view"
+      ></codx-mfunc>
+    </td>
+  </tr>
+</ng-template>

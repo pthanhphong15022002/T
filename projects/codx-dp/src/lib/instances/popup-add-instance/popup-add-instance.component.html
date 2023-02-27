@@ -26,12 +26,6 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-between">
-    <button type="button" class="btn btn-light-primary me-3">
-      <i class="icon-cloud_upload fs-5"></i
-      ><span>
-        <codx-label default="Đính kèm"></codx-label>
-      </span>
-    </button>
     <button
       type="button"
       class="btn btn-primary ms-1"
@@ -52,7 +46,6 @@
       default="Mã nhiệm vụ"
     >
     </codx-label>
-    <!-- đang gán cứng -->
     <codx-input
       field="instanceNo"
       [formModel]="form.formModel"
@@ -68,13 +61,14 @@
     <codx-label
       [formModel]="form.formModel"
       field="Title"
+      [Group]="form.formGroup"
       default="Tên nhiệm vụ"
     >
     </codx-label>
     <codx-input
       field="title"
       [formModel]="form.formModel"
-    
+
       [Group]="form.formGroup"
       (valueChange)="valueChange($event)"
     >
@@ -82,23 +76,31 @@
   </div>
 
   <div class="form-group">
-    <codx-label
-      fiedName="Owner"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-      default="Người phụ trách"
-    >
-    </codx-label>
-    <codx-input
-      type="combobox"
-      [crrValue]="instance?.owner"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-      [refValue]="'Users'"
-      field="owner"
-      (valueChange)="valueChangeUser($event)"
-    >
-    </codx-input>
+    <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
+      <div class="d-flex align-items-center">
+        <codx-label fiedName="owner" [formModel]="form.formModel" default="Phân bổ lại cho">
+        </codx-label>
+      </div>
+      <i class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
+        (click)="openPopupParticipants(popupParticipants)"></i>
+    </div>
+    <div class="me-3 d-flex align-items-center">
+      <div>
+        <div class="d-flex align-items-center position-relative">
+          <codx-img class="" [width]="30" [objectId]="instance.owner" objectType="AD_Users">
+          </codx-img>
+          <div class="ms-3">
+            <div class="text-dark fw-bold">
+              {{userName}}
+            </div>
+            <div class="text-gray-700">
+              {{positionName}}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 
   <div class="form-group">
@@ -313,4 +315,9 @@
     >
     </codx-input>
   </div>
+</ng-template>
+
+<ng-template #popupParticipants let-dialog>
+  <codx-popup-participants [lstParticipants]="lstParticipants" [dialog]="dialog" [isType]="'I'"
+    (eventUser)="eventUser($event)"></codx-popup-participants>
 </ng-template>

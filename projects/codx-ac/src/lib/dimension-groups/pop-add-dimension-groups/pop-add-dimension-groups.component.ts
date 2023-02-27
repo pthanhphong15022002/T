@@ -1,24 +1,51 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
-import { UIComponent, CodxFormComponent, FormModel, DialogRef, CacheService, CallFuncService, NotificationsService, DialogData, RequestOption, DialogModel } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
+import {
+  UIComponent,
+  CodxFormComponent,
+  FormModel,
+  DialogRef,
+  CacheService,
+  CallFuncService,
+  NotificationsService,
+  DialogData,
+  RequestOption,
+  DialogModel,
+} from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
+import { DimensionControl } from '../../models/DimensionControl.model';
 import { DimensionGroups } from '../../models/DimensionGroups.model';
+import { DimensionSetup } from '../../models/DimensionSetup.model';
 import { PopAddDimensionSetupComponent } from '../pop-add-dimension-setup/pop-add-dimension-setup.component';
 
 @Component({
   selector: 'lib-pop-add-dimension-groups',
   templateUrl: './pop-add-dimension-groups.component.html',
-  styleUrls: ['./pop-add-dimension-groups.component.css']
+  styleUrls: ['./pop-add-dimension-groups.component.css'],
 })
-export class PopAddDimensionGroupsComponent extends UIComponent implements OnInit {
+export class PopAddDimensionGroupsComponent
+  extends UIComponent
+  implements OnInit
+{
+  //#region Contructor
   @ViewChild('form') form: CodxFormComponent;
   headerText: string;
   formModel: FormModel;
   dialog!: DialogRef;
   gridViewSetup: any;
   formType: any;
-  dimGroupID:any;
-  dimGroupName:any;
-  dimensionGroups:DimensionGroups;
+  dimGroupID: any;
+  dimGroupName: any;
+  dimensionGroups: DimensionGroups;
+  dimensionSetup: DimensionSetup;
+  objectDimensionSetup: Array<DimensionSetup> = [];
+  objectDimensionControl: Array<DimensionControl> = [];
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -28,7 +55,7 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
-  ) { 
+  ) {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
@@ -37,34 +64,70 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
     this.dimGroupID = '';
     this.dimGroupName = '';
     if (this.dimensionGroups.dimGroupID != null) {
-        this.dimGroupID = this.dimensionGroups.dimGroupID;
-        this.dimGroupName = this.dimensionGroups.dimGroupName;
+      this.dimGroupID = this.dimensionGroups.dimGroupID;
+      this.dimGroupName = this.dimensionGroups.dimGroupName;
+      this.acService
+        .loadData(
+          'ERM.Business.IV',
+          'DimensionSetupBusiness',
+          'LoadDataAsync',
+          [this.dimGroupID]
+        )
+        .subscribe((res: any) => {
+          this.objectDimensionSetup = res;
+        });
+      this.acService
+        .loadData(
+          'ERM.Business.IV',
+          'DimensionControlBusiness',
+          'LoadDataAsync',
+          [this.dimGroupID]
+        )
+        .subscribe((res: any) => {
+          this.objectDimensionControl = res;
+        });
     }
-    this.cache.gridViewSetup('DimensionGroups', 'grvDimensionGroups').subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
+    this.cache
+      .gridViewSetup('DimensionGroups', 'grvDimensionGroups')
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
   }
-  valueChange(e:any){
+  //#endregion
+
+  //#region Function
+  valueChange(e: any) {
     this.dimensionGroups[e.field] = e.data;
   }
-  valueChangeDimGroupID(e:any){
+  valueChangeDimGroupID(e: any) {
     this.dimGroupID = e.data;
     this.dimensionGroups[e.field] = e.data;
   }
-  valueChangeDimGroupName(e:any){
+  valueChangeDimGroupName(e: any) {
     this.dimGroupName = e.data;
     this.dimensionGroups[e.field] = e.data;
   }
-  openPopupSetup() {
+  openPopupSetup(hearder: any, type: any) {
+    let index = this.objectDimensionSetup.findIndex((x) => x.dimType == type);
+    if (index == -1) {
+      this.dimensionSetup = null;
+    } else {
+      this.dimensionSetup = this.objectDimensionSetup[index];
+    }
     var obj = {
-      headerText: 'Thiết lập kiểm soát',
+      headerText: 'Thiết lập kiểm soát ' + hearder,
+      type: type,
+      data: this.dimensionSetup,
+      dataControl: this.objectDimensionControl,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -80,19 +143,58 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
             PopAddDimensionSetupComponent,
             '',
             550,
-            1000,
+            900,
             '',
             obj,
             '',
             opt
           );
           dialog.closed.subscribe((x) => {
-           
+            var datadimensionSetup = JSON.parse(
+              localStorage.getItem('datadimensionSetup')
+            );
+            var datadimensionControl = JSON.parse(
+              localStorage.getItem('datadimensionControl')
+            );
+            var type = JSON.parse(localStorage.getItem('type'));
+            if (datadimensionSetup != null) {
+              let index = this.objectDimensionSetup.findIndex(
+                (x) => x.dimType == datadimensionSetup.dimType
+              );
+              if (index == -1) {
+                this.objectDimensionSetup.push(datadimensionSetup);
+              } else {
+                this.objectDimensionSetup[index] = datadimensionSetup;
+              }
+            }
+            if (datadimensionControl != null) {
+              if (this.objectDimensionControl.length > 0) {
+                for (
+                  let index = 0;
+                  index < this.objectDimensionControl.length;
+                  index++
+                ) {
+                  if (this.objectDimensionControl[index].dimType == type) {
+                    this.objectDimensionControl.splice(index, 1);
+                    index--;
+                  }
+                }
+                datadimensionControl.forEach((element) => {
+                  this.objectDimensionControl.push(element);
+                });
+              } else {
+                datadimensionControl.forEach((element) => {
+                  this.objectDimensionControl.push(element);
+                });
+              }
+            }
+            window.localStorage.removeItem('datadimensionSetup');
+            window.localStorage.removeItem('datadimensionControl');
           });
         }
       });
   }
-  clearDimensionGroups(){
+  clearDimensionGroups() {
     this.dimGroupID = '';
     this.dimGroupName = '';
     this.dimensionGroups.active0 = false;
@@ -105,8 +207,13 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
     this.dimensionGroups.active7 = false;
     this.dimensionGroups.active8 = false;
     this.dimensionGroups.active9 = false;
+    this.objectDimensionSetup = [];
+    this.objectDimensionControl = [];
   }
-  onSave(){
+  //#endregion
+
+  //#region CRUD
+  onSave() {
     if (this.dimGroupID.trim() == '' || this.dimGroupID == null) {
       this.notification.notifyCode(
         'SYS009',
@@ -135,9 +242,25 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
         })
         .subscribe((res) => {
           if (res.save) {
+            this.acService
+              .addData(
+                'ERM.Business.IV',
+                'DimensionSetupBusiness',
+                'AddAsync',
+                [this.dimGroupID, this.objectDimensionSetup]
+              )
+              .subscribe((res: []) => {});
+            this.acService
+              .addData(
+                'ERM.Business.IV',
+                'DimensionControlBusiness',
+                'AddAsync',
+                [this.dimGroupID, this.objectDimensionControl]
+              )
+              .subscribe((res: []) => {});
             this.dialog.close();
             this.dt.detectChanges();
-          }else {
+          } else {
             this.notification.notifyCode(
               'SYS031',
               0,
@@ -145,7 +268,7 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
             );
             return;
           }
-        })
+        });
     }
     if (this.formType == 'edit') {
       this.dialog.dataService
@@ -159,9 +282,25 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
         })
         .subscribe((res) => {
           if (res.save || res.update) {
+            this.acService
+              .addData(
+                'ERM.Business.IV',
+                'DimensionSetupBusiness',
+                'UpdateAsync',
+                [this.dimGroupID, this.objectDimensionSetup]
+              )
+              .subscribe((res: []) => {});
+            this.acService
+              .addData(
+                'ERM.Business.IV',
+                'DimensionControlBusiness',
+                'UpdateAsync',
+                [this.dimGroupID, this.objectDimensionControl]
+              )
+              .subscribe((res: []) => {});
             this.dialog.close();
             this.dt.detectChanges();
-          }else {
+          } else {
             this.notification.notifyCode(
               'SYS031',
               0,
@@ -169,10 +308,10 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
             );
             return;
           }
-        })
+        });
     }
   }
-  onSaveAdd(){
+  onSaveAdd() {
     if (this.dimGroupID.trim() == '' || this.dimGroupID == null) {
       this.notification.notifyCode(
         'SYS009',
@@ -190,22 +329,44 @@ export class PopAddDimensionGroupsComponent extends UIComponent implements OnIni
       return;
     }
     this.dialog.dataService
-        .save((opt: RequestOption) => {
-          opt.methodName = 'AddAsync';
-          opt.className = 'DimensionGroupsBusiness';
-          opt.assemblyName = 'IV';
-          opt.service = 'IV';
-          opt.data = [this.dimensionGroups];
-          return true;
-        })
-        .subscribe((res) => {
-          if (res.save) {
-            this.clearDimensionGroups();
-            this.dialog.dataService.clear();
-            this.dialog.dataService.addNew().subscribe((res)=>{
-              this.dimensionGroups = this.dialog.dataService!.dataSelected;
+      .save((opt: RequestOption) => {
+        opt.methodName = 'AddAsync';
+        opt.className = 'DimensionGroupsBusiness';
+        opt.assemblyName = 'IV';
+        opt.service = 'IV';
+        opt.data = [this.dimensionGroups];
+        return true;
+      })
+      .subscribe((res) => {
+        if (res.save) {
+          this.acService
+            .addData('ERM.Business.IV', 'DimensionSetupBusiness', 'AddAsync', [
+              this.dimGroupID,
+              this.objectDimensionSetup,
+            ])
+            .subscribe((res) => {
+              if (res) {
+                this.acService
+                  .addData(
+                    'ERM.Business.IV',
+                    'DimensionControlBusiness',
+                    'AddAsync',
+                    [this.dimGroupID, this.objectDimensionControl]
+                  )
+                  .subscribe((res) => {
+                    if (res) {
+                      this.clearDimensionGroups();
+                      this.dialog.dataService.clear();
+                      this.dialog.dataService.addNew().subscribe((res) => {
+                        this.dimensionGroups =
+                          this.dialog.dataService!.dataSelected;
+                      });
+                    }
+                  });
+              }
             });
-          }
-        })
+        }
+      });
   }
+  //#endregion
 }

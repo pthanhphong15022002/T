@@ -159,7 +159,6 @@ export class RoleDetailComponent
         [this.recid, item]
       )
       .subscribe((res: any) => {
-        debugger;
         if (res) {
           if (this.role && this.role.administrator) {
             this.active = false;
@@ -235,6 +234,7 @@ export class RoleDetailComponent
           this.dataRole[funcID].DataPer
         ) {
           per = this.dataRole[funcID].DataPer;
+        } else {
         }
         per[e.field] = e.data;
         per['functionID'] = funcID;
@@ -271,7 +271,21 @@ export class RoleDetailComponent
     var role = Object.values(this.dataRole) as any[];
     var pers = [];
     role.forEach((element) => {
-      pers.push(element.DataPer);
+      var dataper = element.DataPer;
+      var entity = element.Entity;
+      if (dataper) {
+        if (!dataper.permissionControl && entity && entity.permissionControl)
+          dataper.permissionControl = entity.permissionControl;
+        pers.push(dataper);
+      } else {
+        // dataper = {};
+        // dataper['functionID'] = funcID;
+        // dataper['roleID'] = this.recid;
+        // dataper['run'] = true;
+        // if (entity.permissionControl)
+        //   dataper.permissionControl = entity.permissionControl;
+        // pers.push(dataper);
+      }
     });
     var roleID = this.recid;
     var sys = this.activeSys;

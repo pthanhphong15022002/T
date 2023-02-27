@@ -19,10 +19,12 @@ export const routes: Routes = [
   {
     path: '',
     component: DynamicSettingComponent,
+    data: { noReuse: true },
     children: [
       {
         path: ':catagory',
         component: CatagoryComponent,
+        //data: { noReuse: true },
       },
       {
         path: ':catagory/detail',
