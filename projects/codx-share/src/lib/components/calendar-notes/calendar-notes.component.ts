@@ -1,4 +1,3 @@
-declare var window: any;
 import { DataRequest } from './../../../../../../src/shared/models/data.request';
 import { Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
@@ -31,6 +30,7 @@ import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
 import moment from 'moment';
 import { CodxShareService } from '../../codx-share.service';
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
+import { tmpTransType } from './model/tmpTransType.model';
 @Component({
   selector: 'app-calendar-notes',
   templateUrl: './calendar-notes.component.html',
@@ -87,6 +87,10 @@ export class CalendarNotesComponent
   dataListViewTemp: any;
   dtService: CRUDService;
 
+  //transtype list
+  lstTransType: tmpTransType[] = [];
+  //
+
   @Input() typeCalendar = 'week';
   @Output() dataResourceModel: any[] = [];
   @Output() settingValue: any;
@@ -95,7 +99,7 @@ export class CalendarNotesComponent
   @ViewChild('dataPara') dataPara: TemplateRef<any>;
   @ViewChild('calendar') calendar!: CalendarComponent;
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private change: ChangeDetectorRef,
     private auth: AuthStore,
     private noteService: NoteServices,
@@ -332,21 +336,26 @@ export class CalendarNotesComponent
 
   changeDayOfWeek(e) {
     this.dateSelected = e.daySelected;
+    this.drawData();
     this.changeNewWeek(null, this.dateSelected);
   }
 
+  curStartDateOfWeek;
+  curEndDateOfWeek;
   changeNewWeek(args: any, setDate = null) {
-    if (this.lstView) {
-      this.lstView.dataService.data = [];
-    }
+    // if (this.lstView) {
+    //   this.lstView.dataService.data = [];
+    // }
     if (args) {
       let startDate = moment(args.fromDate).toJSON();
       let endDate = moment(args.toDate).toJSON();
+      this.curStartDateOfWeek = startDate;
+      this.curEndDateOfWeek = endDate;
       this.getParamCalendar(startDate, endDate);
     }
     let myInterval = setInterval(() => {
       if (
-        this.dataResourceModel.length > 0 &&
+        this.lstView.dataService.data.length > 0 &&
         this.countDataOfE == this.countEvent
       ) {
         clearInterval(myInterval);
@@ -356,7 +365,7 @@ export class CalendarNotesComponent
             let date = setDate;
             clearInterval(myInterval);
             this.setDate(date, this.lstView);
-            this.change.detectChanges();
+            this.detectorRef.detectChanges();
           }
         }
       }
@@ -518,6 +527,30 @@ export class CalendarNotesComponent
           this.EP_BookingCarsParam = dt[0]?.EP_BookingCars[1]
             ? JSON.parse(dt[0]?.EP_BookingCars[1])
             : null;
+
+          this.lstTransType = [
+            {
+              transType: 'TM_Tasks',
+              isActive: this.TM_TasksParam?.ShowEvent,
+            },
+            {
+              transType: 'WP_Notes',
+              isActive: this.WP_NotesParam?.ShowEvent,
+            },
+            {
+              transType: 'CO_Meetings',
+              isActive: this.CO_MeetingsParam?.ShowEvent,
+            },
+            {
+              transType: 'EP_BookingRooms',
+              isActive: this.EP_BookingRoomsParam?.ShowEvent,
+            },
+            {
+              transType: 'EP_BookingCars',
+              isActive: this.EP_BookingCarsParam?.ShowEvent,
+            },
+          ];
+
           this.settingValue = dt[0];
           if (updateCheck == true) {
             this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
@@ -715,14 +748,7 @@ export class CalendarNotesComponent
         }
       });
       if (this.countDataOfE == this.countEvent) {
-        this.dataResourceModel = [];
-        this.dataResourceModel = [
-          ...this.TM_Tasks,
-          ...this.WP_Notes,
-          ...this.CO_Meetings,
-          ...this.EP_BookingRooms,
-          ...this.EP_BookingCars,
-        ];
+        this.drawData();
         this.TM_TasksTemp = JSON.parse(JSON.stringify(this.TM_Tasks));
         this.WP_NotesTemp = JSON.parse(JSON.stringify(this.WP_Notes));
         this.CO_MeetingsTemp = JSON.parse(JSON.stringify(this.CO_Meetings));
@@ -734,11 +760,69 @@ export class CalendarNotesComponent
         );
       }
     }
-    console.log('co', this.CO_MeetingsTemp);
-    console.log('room', this.EP_BookingRoomsTemp);
-    console.log('car', this.EP_BookingCarsTemp);
   }
 
+  drawData() {
+    if (this.lstView) {
+      this.lstView.dataService.data = [];
+      let curDateSelected = new Date(this.dateSelected).toLocaleDateString();
+
+      this.lstTransType
+        .filter((x) => x.isActive == '1')
+        .forEach((tmpTrans) => {
+          switch (tmpTrans.transType) {
+            case 'TM_Tasks':
+              this.lstView.dataService.data = [
+                ...this.TM_Tasks.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            case 'WP_Notes':
+              this.lstView.dataService.data = [
+                ...this.WP_Notes.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            case 'CO_Meetings':
+              this.lstView.dataService.data = [
+                ...this.CO_Meetings.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            case 'EP_BookingRooms':
+              this.lstView.dataService.data = [
+                ...this.EP_BookingRooms.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            case 'EP_BookingCars':
+              this.lstView.dataService.data = [
+                ...this.EP_BookingCars.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            default:
+              break;
+          }
+        });
+      this.detectorRef.detectChanges();
+    }
+  }
   onSwitchCountEven(transType) {
     switch (transType) {
       case 'TM_Tasks':
@@ -771,7 +855,7 @@ export class CalendarNotesComponent
       if (typeof args.date !== 'string') date = date.toLocaleDateString();
       let myInterval = setInterval(() => {
         if (
-          this.dataResourceModel.length > 0 &&
+          this.lstView.dataService.data.length > 0 &&
           this.countDataOfE == this.countEvent
         ) {
           clearInterval(myInterval);
@@ -823,9 +907,14 @@ export class CalendarNotesComponent
               break;
             }
           }
-          var day = moment(date).date();
-          var month = moment(date).month();
-          var year = moment(date).year();
+          // let t = moment(date).toDate();
+          // let day = moment(date).date();
+          // let month = moment(date).month();
+          // let year = moment(date).year();
+          let dateArr = date.split('/');
+          let day = dateArr[0];
+          let month = dateArr[1];
+          let year = dateArr[2];
           var classDate = `${day}-${month}-${year}`;
 
           var spanWP: HTMLElement = document.createElement('span');
@@ -1087,7 +1176,7 @@ export class CalendarNotesComponent
       '',
       option
     );
-    dialog.closed.subscribe((e) => {
+    dialog.closed.subscribe(() => {
       this.detectorRef.detectChanges();
     });
     // dialog.closed.subscribe((e) => {
@@ -1108,8 +1197,16 @@ export class CalendarNotesComponent
 
   valueChangeSetting(e) {
     if (e) {
-      var field = e.field;
-      this.updateSettingValue(field, e.data);
+      let curTransType = this.lstTransType.find((x) => x.transType == e.field);
+      if (!curTransType) {
+        curTransType = new tmpTransType();
+        this.lstTransType.push(curTransType);
+      }
+
+      curTransType.transType = e.field;
+      curTransType.isActive = e.data ? '1' : '0';
+      // var field = e.field;
+      // this.updateSettingValue(field, e.data);
     }
   }
 
@@ -1264,6 +1361,23 @@ export class CalendarNotesComponent
       });
   }
 
+  updateSettingValueVer2() {
+    this.api
+      .exec<any>(
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'AddUpdateByUserIDVer2Async',
+        ['WPCalendars', this.lstTransType]
+      )
+      .subscribe((res) => {
+        this.getParamCalendar(
+          this.curStartDateOfWeek,
+          this.curEndDateOfWeek,
+          false
+        );
+      });
+  }
+
   orderByStartTime(a, b) {
     let aS = new Date(a.startTime);
     let bS = new Date(b.startTime);
@@ -1387,8 +1501,6 @@ export class CalendarNotesComponent
   }
 
   redirectToFuncID(item) {
-    console.log('item', item);
-
     let query = {
       predicate: 'RecID=@0',
       dataValue: item.transID,

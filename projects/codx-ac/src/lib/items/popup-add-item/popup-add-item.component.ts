@@ -3,7 +3,7 @@ import {
   Component,
   Injector,
   Optional,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import {
   CodxFormComponent,
@@ -15,7 +15,7 @@ import {
   ImageViewerComponent,
   NotificationsService,
   RequestOption,
-  UIComponent,
+  UIComponent
 } from 'codx-core';
 import { Item } from '../interfaces/Item.interface';
 import { ItemColor } from '../interfaces/ItemColor.Interface';
@@ -60,6 +60,8 @@ export class PopupAddItemComponent
   itemConversions: UMConversion[] = [];
   hoveredStyleId: string;
   hoveredColorId: string;
+  hoveredItemSizeId1: string;
+  hoveredItemSizeId2: string;
   tabInfo = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Common information' },
     {
