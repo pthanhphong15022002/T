@@ -1177,7 +1177,7 @@
 
 <!-- pane_1 Thông tin pháp lí-->
 <ng-template #legal>
-  <div class="tab-horizone h-od-tab">
+  <div class="tab-horizone px-4 h-od-tab">
     <ul ngbNav #nav="ngbNav" [(activeId)]="active[1]" (navChange)="navChange($event)" class="nav nav-tabs">
       <ng-container *ngFor="let item of lstFuncLegalInfo; let i = index">
         <li [ngbNavItem]="item.functionID" class="nav-item">
@@ -1529,7 +1529,7 @@
 
 <!-- pane_2 Thông tin công việc-->
 <ng-template #jobInfo>
-  <div class="tab-horizone h-od-tab">
+  <div class="tab-horizone px-4 h-od-tab">
     <ul ngbNav #nav="ngbNav" [(activeId)]="active[2]" (navChange)="navChange($event)" class="nav nav-tabs">
       <ng-container *ngFor="let item of lstFuncTaskInfo; let i = index">
         <li [ngbNavItem]="item.functionID" class="nav-item">
@@ -2055,7 +2055,7 @@
 
 <!-- pane_3 Lương & Phúc lợi -->
 <ng-template #benefit>
-  <div class="tab-horizone h-od-tab">
+  <div class="tab-horizone px-4 h-od-tab">
     <ul ngbNav #nav="ngbNav" [(activeId)]="active[3]" (navChange)="navChange($event)" class="nav nav-tabs">
       <ng-container *ngFor="let item of lstFuncSalary; let i = index">
         <li [ngbNavItem]="item.functionID" class="nav-item">
@@ -2343,35 +2343,24 @@
             <div class="mb-1">
               <div class="d-flex flex-wrap py-3 px-4">
                 <ng-container *ngFor="let benefit of listCrrBenefit">
-                  <div
-                    class="border rounded min-w-250px mw-250px me-4 mb-2"
-                    *ngIf="benefit != null"
-                  >
-                    <codx-temp-full
-                      (clickMF)="clickMF($event, benefit, 'eBenefit')"
-                      [dataItem]="benefit"
-                      [formModel]="view.formModel"
-                      [footer]="footerBenefit"
-                      cardCss="card codx_cardcenter px-2 pt-4 pb-2"
-                      [typeMF]="'hover'"
-                    >
+                  <div class="border rounded min-w-250px mw-250px me-4 mb-2" *ngIf="benefit != null">
+                    <codx-temp-full (clickMF)="clickMF($event, benefit, 'eBenefit')" [dataItem]="benefit"
+                      [formModel]="view.formModel" [footer]="footerBenefit"
+                      cardCss="card codx_cardcenter px-2 pt-4 pb-2" [typeMF]="'hover'">
                     </codx-temp-full>
                     <ng-template #footerBenefit let-data>
                       <div class="d-flex align-items-center mt-1">
-                        <span
-                          class="icon-i-plus-circle text-success icon-12 text-gray-600 pe-2"
-                        ></span
-                        >{{ data.benefitID | formatvalue : benefitFormodel : "benefitID" | async  }}
+                        <span class="icon-i-plus-circle text-success icon-12 text-gray-600 pe-2"></span>{{
+                        data.benefitID | formatvalue : benefitFormodel : "benefitID" | async }}
                       </div>
                       <div class="d-flex align-items-center mt-1">
-                        <span
-                          class="icon-attach_money text-gray-600 pe-2 icon-14">
+                        <span class="icon-attach_money text-gray-600 pe-2 icon-14">
                         </span>
-                        {{ data.benefitAmt }} 
-                        / 
+                        {{ data.benefitAmt }}
+                        /
                         <span class="text-dark fw-bold">
                           {{
-                            data?.benefitNorm | formatvalue : benefitFormodel : "benefitNorm" | async
+                          data?.benefitNorm | formatvalue : benefitFormodel : "benefitNorm" | async
                           }}
                         </span>
                       </div>
@@ -2520,7 +2509,7 @@
 <!-- pane_4 Quá trình nhân sự-->
 <ng-template #processingInfo>
   <div class="d-flex justify-content-between mb-2 mt-6">
-    <div class="tab-horizone h-od-tab">
+    <div class="tab-horizone px-4 h-od-tab">
       <ul ngbNav #nav="ngbNav" [(activeId)]="active[4]" (navChange)="navChange($event)" class="nav nav-tabs">
         <ng-container *ngFor="let item of lstFuncHRProcess; let i = index">
           <li [ngbNavItem]="item.functionID" class="nav-item">
@@ -2913,7 +2902,7 @@
 <!-- pane_5 Kiến thức-->
 <ng-template #knowledge>
   <div class="d-flex justify-content-between mb-2 mt-6">
-    <div class="tab-horizone h-od-tab">
+    <div class="tab-horizone px-4 h-od-tab">
       <ul ngbNav #nav="ngbNav" [(activeId)]="active[5]" (navChange)="navChange($event)" class="nav nav-tabs">
         <ng-container *ngFor="let item of lstFuncKnowledge; let i = index">
           <li [ngbNavItem]="item.functionID" class="nav-item">
@@ -3347,7 +3336,7 @@
 <!-- pane_6 Khen thưởng - Kỷ luật-->
 <ng-template #rewardDiscipline>
   <div class="d-flex justify-content-between mb-2 mt-6">
-    <div class="tab-horizone h-od-tab">
+    <div class="tab-horizone px-4 h-od-tab">
       <ul ngbNav #nav="ngbNav" [(activeId)]="active[6]" (navChange)="navChange($event)" class="nav nav-tabs">
         <ng-container *ngFor="let item of lstFuncAward; let i = index">
           <li [ngbNavItem]="item.functionID" class="nav-item">
@@ -3482,7 +3471,7 @@
 <!-- pane_7 Sức khỏe-->
 <ng-template #healthInfo>
   <div class="d-flex justify-content-between mb-2 mt-6">
-    <div class="tab-horizone h-od-tab">
+    <div class="tab-horizone px-4 h-od-tab">
       <ul ngbNav #nav="ngbNav" [(activeId)]="active[7]" (navChange)="navChange($event)" class="nav nav-tabs">
         <ng-container *ngFor="let item of lstFuncHealth; let i = index">
           <li [ngbNavItem]="item.functionID" class="nav-item">
@@ -3837,8 +3826,8 @@
 <!--#region template Phụ cấp  -->
 <ng-template #templateBenefitID let-data>
   <div class="d-flex align-items-center">
-    <span *ngIf="data.isCurrent == true" 
-      class="bullet bullet-vertical d-flex align-items-center min-h-50px mh-100 me-4 bg-primary" >
+    <span *ngIf="data.isCurrent == true"
+      class="bullet bullet-vertical d-flex align-items-center min-h-50px mh-100 me-4 bg-primary">
     </span>
     {{ data?.benefitID | formatvalue : benefitFormodel : "benefitID" | async }}
   </div>
@@ -4926,12 +4915,8 @@
     {{
     data?.conclusion | formatvalue : eDiseasesFormModel : "Conclusion" | async
     }}
-    <codx-mfunc
-      [formModel]="eDiseasesFormModel"
-      (clickMF)="clickMF($event, data, 'eDiseases')"
-      [dataItem]="data"
-      type="hover"
-    >
+    <codx-mfunc [formModel]="eDiseasesFormModel" (clickMF)="clickMF($event, data, 'eDiseases')" [dataItem]="data"
+      type="hover">
     </codx-mfunc>
   </div>
 </ng-template>

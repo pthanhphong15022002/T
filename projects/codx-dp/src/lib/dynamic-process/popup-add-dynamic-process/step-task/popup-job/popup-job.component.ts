@@ -22,6 +22,7 @@ import {
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import {
+  DP_Steps,
   DP_Steps_Tasks,
   DP_Steps_Tasks_Roles,
 } from '../../../../models/models';
@@ -42,14 +43,14 @@ export class PopupJobComponent implements OnInit {
   formModelMenu: FormModel;
   taskType = '';
   vllShare = 'DP0331';
-  taskName = '';
+  stepName = '';
   taskGroupName = '';
   linkQuesiton = 'http://';
   listOwner: DP_Steps_Tasks_Roles[] = [];
   listChair = [];
   recIdEmail = '';
   isNewEmails = true;
-  groupTackList = [];
+  taskGroupList = [];
   stepsTasks: DP_Steps_Tasks;
   fieldsGroup = { text: 'taskGroupName', value: 'recID' };
   fieldsTask = { text: 'taskName', value: 'recID' };
@@ -68,6 +69,7 @@ export class PopupJobComponent implements OnInit {
   folderID = '';
   frmModel: FormModel;
   view = [];
+  step: DP_Steps;
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -78,14 +80,16 @@ export class PopupJobComponent implements OnInit {
   ) {
     this.status = dt?.data[0];
     this.taskType = dt?.data[1];
-    this.stepID = dt?.data[2];
-    this.groupTackList = dt?.data[3];
+    this.step = dt?.data[2];
+    this.taskGroupList = dt?.data[3];
+    this.stepID = this.step?.recID;
+    this.stepName = this.step?.stepName;
     this.dialog = dialog;
     if (this.status == 'add') {
       this.stepsTasks = new DP_Steps_Tasks();
       this.stepsTasks['taskType'] = this.taskType;
       this.stepsTasks['stepID'] = this.stepID;
-      this.stepsTasks['taskGroupID'] = dt?.data[7];
+      this.stepsTasks['taskGroupID'] = dt?.data[6];
     } else if (this.status == 'copy') {
       this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
       this.taskType = this.stepsTasks.taskType;
@@ -97,8 +101,7 @@ export class PopupJobComponent implements OnInit {
       this.showLabelAttachment = true;
     }
     this.taskList = dt?.data[5];
-    this.taskName = dt?.data[6];
-    this.taskGroupID = dt?.data[7];
+    this.taskGroupID = dt?.data[6];
   }
   async ngOnInit() {
     this.getTypeTask();
@@ -118,13 +121,13 @@ export class PopupJobComponent implements OnInit {
     let taskLinks = [];
     if (groupTaskID) {
       if (this.status == 'add' || this.status == 'copy') {
-        let groupTask = this.groupTackList.find((x) => x.recID === groupTaskID);
+        let groupTask = this.taskGroupList.find((x) => x.recID === groupTaskID);
         if (groupTask && groupTask['task']) {
           taskLinks = this.mapDataTask(groupTask['task']);
         }
       } else {
         let litsParentID = this.stepsTasks['parentID'].split(';');
-        let groupTask = this.groupTackList.find((x) => x.recID === groupTaskID);
+        let groupTask = this.taskGroupList.find((x) => x.recID === groupTaskID);
         if (groupTask && groupTask['task']) {
            //lấy những task mà không có liên kết với task đang edit
           let tasks = groupTask['task'].filter(
@@ -202,7 +205,7 @@ export class PopupJobComponent implements OnInit {
 
   async filterText(value, key) {
     this.stepsTasks[key] = value;
-    this.taskGroupName = this.groupTackList.find((x) => x.recID === value)[
+    this.taskGroupName = this.taskGroupList.find((x) => x.recID === value)[
       'taskGroupName'
     ];
     this.dataCombobox = await this.setTaskLink(value);
@@ -285,7 +288,7 @@ export class PopupJobComponent implements OnInit {
   }
 
   getMaxhour() {
-    let groupTask = this.groupTackList.find(
+    let groupTask = this.taskGroupList.find(
       (x) => x.recID == this.stepsTasks['taskGroupID']
     );
     let max = 0;
@@ -326,7 +329,7 @@ export class PopupJobComponent implements OnInit {
   }
 
   getTimeDependRule() {
-    let group = this.groupTackList.find(
+    let group = this.taskGroupList.find(
       (x) => x.recID === this.stepsTasks.taskGroupID
     );
     if (group || group['task']?.lenght > 0) {
@@ -336,7 +339,7 @@ export class PopupJobComponent implements OnInit {
   checkSave(groupTask, timeInput?: number) {
     let time = timeInput ? timeInput : this.getHour(this.stepsTasks);
     if (this.getHour(groupTask) >= time) {
-      // nếu thời gian ko vượt quá thời gian cho phép lưu
+      // nếu thời gian ko vượt quá thời gian cho phép lưu => không ảnh hưởng đến step
       this.dialog.close({ data: this.stepsTasks, status: this.status });
     } else {
       // nếu vượt quá thì hỏi ý kiến
@@ -349,7 +352,12 @@ export class PopupJobComponent implements OnInit {
             groupTask['durationDay'] = this.stepsTasks['durationDay'];
             groupTask['durationHour'] = this.stepsTasks['durationHour'];
           }
-
+          let sumGroup = this.sumHourGroupTask();
+          let timeStep = this.getHour(this.step);
+          if(sumGroup > timeStep){
+            this.step['durationDay'] =  Math.floor(sumGroup / 24);
+            this.step['durationHour'] =  sumGroup % 24;
+          }
           this.dialog.close({ data: this.stepsTasks, status: this.status });
         }
       });
@@ -417,6 +425,56 @@ export class PopupJobComponent implements OnInit {
     event.data.length;
   }
 
+  sumHourGroupTask(index?: number) {
+    let sum = 0;
+    if (this.taskGroupList?.length > 0) {
+      if (index >=0) {
+        for (let group of this.taskGroupList) {
+          if (Number(group['indexNo']) <= index) {
+            sum += this.getHour(group);
+          }
+        }
+      } else {
+        sum = this.taskGroupList.reduce((sumHour, group) => {
+          return (sumHour += this.getHour(group));
+        }, 0);
+      }
+    }
+    return sum;
+  }
+
+  sumHourStep(){
+    let listStaskNoGroup = this.taskList.filter(task => !task['taskGroupID']);
+    let maxTimeTask = 0;
+    listStaskNoGroup?.forEach(task => {
+      let time = this.calculateTimeTaskNoGroup(task['recID'])
+      maxTimeTask = time > maxTimeTask ? time : maxTimeTask;
+    })
+    let timeStep = this.sumHourGroupTask();
+    return maxTimeTask > timeStep ? maxTimeTask : timeStep;
+  }
+
+  calculateTimeTaskNoGroup( taskId, taskInput?) {
+    let task = taskInput
+      ? taskInput
+      : this.taskList.find((t) => t['recID'] === taskId);
+    if (!task) return 0;
+    if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
+      let groupFind =  this.taskGroupList.find(x => x['recID'] === task['taskGroupID']);
+      let hourGroup = this.sumHourGroupTask(groupFind['indexNo']-1);
+      return hourGroup + this.getHour(task);
+    } else {
+      const parentIds = task.parentID.split(';');
+      let maxTime = 0;
+      parentIds?.forEach((parentId) => {
+        const parentTime = this.calculateTimeTaskNoGroup(parentId);
+        maxTime = Math.max(maxTime, parentTime);
+      });
+      const completionTime = this.getHour(task) + maxTime;
+      return completionTime;
+    }
+  }
+
   async saveData() {
     this.stepsTasks['roles'] = this.listOwner;
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
@@ -443,7 +501,7 @@ export class PopupJobComponent implements OnInit {
 
   handelSave() {
     if (this.stepsTasks['taskGroupID']) {
-      let groupTask = this.groupTackList.find(
+      let groupTask = this.taskGroupList.find(
         (x) => x.recID == this.stepsTasks['taskGroupID']
       );
 
@@ -452,10 +510,7 @@ export class PopupJobComponent implements OnInit {
         this.checkSave(groupTask);
       } else {
         // nếu công việc thực hiện sau những công việc khác thì tính tổng thời gian những công việc liên quan
-        if (
-          !this.stepsTasks['parentID'].trim() ||
-          groupTask['task'].length === 0
-        ) {
+        if (!this.stepsTasks['parentID'].trim() || groupTask['task'].length === 0) {
           // nếu chưa có công việc liên quan
           this.checkSave(groupTask);
         } else {
@@ -463,7 +518,12 @@ export class PopupJobComponent implements OnInit {
           this.checkSave(groupTask, time);
         }
       }
-    } else {
+    } else { // kiểm tra xem task có time lớn hơn step hay không if lớn thì hỏi ý kiến  
+      if (!this.stepsTasks['parentID'].trim()){//if ko có parentID thì so sánh trực tiếp với step
+
+      }else{ // tính thời gian dựa vào công việc liên quan rồi mới so sánh
+
+      }
       this.dialog.close({ data: this.stepsTasks, status: this.status });
     }
   }
