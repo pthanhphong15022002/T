@@ -20,6 +20,7 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
   fromUMID:any;
   conversion:any;
   inverted:any;
+  validate:any = 0;
   umconversion:UMConversion;
   constructor(
     private inject: Injector,
@@ -97,36 +98,41 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
     this.conversion = e.data;
     this.umconversion[e.field] = e.data;
   }
+  checkValidate() {
+    var keygrid = Object.keys(this.gridViewSetup);
+    var keymodel = Object.keys(this.umconversion);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              this.umconversion[keymodel[i]] == null ||
+              this.umconversion[keymodel[i]] == ''
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
+              );
+              this.validate++;
+            }
+          }
+        }
+      }
+    }
+  }
   //#endregion
 
   //#region CRUD
   onSave(){
-    if (this.itemID.trim() == '' || this.itemID == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['ItemID'].headerText + '"'
-      );
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
       return;
+    }else{
+      window.localStorage.setItem("dataumconversion",JSON.stringify(this.umconversion));
+      this.dialog.close();
     }
-    if (this.toUMID.trim() == '' || this.toUMID == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['ToUMID'].headerText + '"'
-      );
-      return;
-    }
-    if (this.conversion.trim() == '' || this.conversion == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['Conversion'].headerText + '"'
-      );
-      return;
-    }
-    window.localStorage.setItem("dataumconversion",JSON.stringify(this.umconversion));
-    this.dialog.close();
   }
   //#endregion
 }
