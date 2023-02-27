@@ -907,9 +907,14 @@ export class CalendarNotesComponent
               break;
             }
           }
-          var day = moment(date).date();
-          var month = moment(date).month();
-          var year = moment(date).year();
+          // let t = moment(date).toDate();
+          // let day = moment(date).date();
+          // let month = moment(date).month();
+          // let year = moment(date).year();
+          let dateArr = date.split('/');
+          let day = dateArr[0];
+          let month = dateArr[1];
+          let year = dateArr[2];
           var classDate = `${day}-${month}-${year}`;
 
           var spanWP: HTMLElement = document.createElement('span');
