@@ -1734,6 +1734,11 @@ codx-view-list-detail .e-listview .e-list-parent {
 }
 
 
+
+.tooltip * {
+  color: var(--primary-dark) !important;
+}
+
 // fix dropdown
 // .dropdown[data-popper-placement="bottom-start"] {
 //   border: 1px aqua solid;
