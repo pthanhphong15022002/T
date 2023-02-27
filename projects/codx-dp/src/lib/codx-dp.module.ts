@@ -110,7 +110,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxReportModule,
     NgbModule,
     DragDropModule,
-    SliderModule
+    SliderModule,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
