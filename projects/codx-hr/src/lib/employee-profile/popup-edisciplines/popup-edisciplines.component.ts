@@ -33,6 +33,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   employId;
   isAfterRender = false;
   headerText: '';
+  defaultDisciplineDate : string = '0001-01-01T00:00:00';
 
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
@@ -81,7 +82,10 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.disciplineObj = res?.data;
-            this.disciplineObj.employeeID = this.employId;
+            if(this.disciplineObj.disciplineDate.toString() == this.defaultDisciplineDate){
+              this.disciplineObj.disciplineDate = null;
+            }
+              this.disciplineObj.employeeID = this.employId;
             this.formModel.currentData = this.disciplineObj;
             this.formGroup.patchValue(this.disciplineObj);
             this.cr.detectChanges();
@@ -89,12 +93,13 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
-        this.formGroup.patchValue(this.disciplineObj);
+      if (this.actionType === 'copy' && this.disciplineObj.disciplineDate.toString() == this.defaultDisciplineDate){
+        this.disciplineObj.disciplineDate = null;
+      } 
+      this.formGroup.patchValue(this.disciplineObj);
         this.formModel.currentData = this.disciplineObj;
         this.cr.detectChanges();
         this.isAfterRender = true;
-      }
     }
   }
 

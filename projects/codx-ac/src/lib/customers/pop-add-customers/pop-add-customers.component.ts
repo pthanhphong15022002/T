@@ -56,9 +56,9 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   objecttype: string = '1';
   gridViewSetup: any;
   valuelist: any;
-  gridViewSetupBank: any;
   customerID: any;
   formType: any;
+  validate: any = 0;
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     {
@@ -104,16 +104,11 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.customerID = '';
-    this.cache.gridViewSetup('Customers', 'grvCustomers').subscribe((res:[]) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
     this.cache
-      .gridViewSetup('BankAccounts', 'grvBankAccounts')
-      .subscribe((res) => {
+      .gridViewSetup('Customers', 'grvCustomers')
+      .subscribe((res: []) => {
         if (res) {
-          this.gridViewSetupBank = res;
+          this.gridViewSetup = res;
         }
       });
     this.cache.valueList('AC015').subscribe((res) => {
@@ -497,119 +492,138 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.objectContactDelete.push(data);
   }
   checkValidate() {
-    console.log(this.form);
-    // for (let index = 0; index < this.gridViewSetup.length; index++) {
-    //   const element = array[index];
-      
-    // }
+    var keygrid = Object.keys(this.gridViewSetup);
+    var keymodel = Object.keys(this.customers);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              this.customers[keymodel[i]] == null ||
+              this.customers[keymodel[i]] == ''
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
+              );
+              this.validate++;
+            }
+          }
+        }
+      }
+    }
   }
   //#endregion
 
   //#region CRUD
   onSave() {
     this.checkValidate();
-    // if (this.customerID.trim() == '' || this.customerID == null) {
-    //   this.notification.notifyCode(
-    //     'SYS009',
-    //     0,
-    //     '"' + this.gridViewSetup['CustomerID'].headerText + '"'
-    //   );
-    //   return;
-    // }
-    // if (this.customers.overDueControl == '0') {
-    //   this.customers.overDueControl = false;
-    // } else {
-    //   this.customers.overDueControl = true;
-    // }
-    // if (this.formType == 'add') {
-    //   this.dialog.dataService
-    //     .save((opt: RequestOption) => {
-    //       opt.methodName = 'AddAsync';
-    //       opt.className = 'CustomersBusiness';
-    //       opt.assemblyName = 'SM';
-    //       opt.service = 'SM';
-    //       opt.data = [this.customers];
-    //       return true;
-    //     })
-    //     .subscribe((res) => {
-    //       if (res.save) {
-    //         this.acService
-    //           .addData('ERM.Business.BS', 'BankAccountsBusiness', 'AddAsync', [
-    //             this.objecttype,
-    //             this.customerID,
-    //             this.objectBankaccount,
-    //           ])
-    //           .subscribe((res: []) => {});
-    //         this.acService
-    //           .addData('ERM.Business.BS', 'AddressBookBusiness', 'AddAsync', [
-    //             this.objecttype,
-    //             this.customerID,
-    //             this.objectAddress,
-    //           ])
-    //           .subscribe((res: []) => {});
-    //         this.acService
-    //           .addData('ERM.Business.BS', 'ContactBookBusiness', 'AddAsync', [
-    //             this.objecttype,
-    //             this.customerID,
-    //             this.objectContact,
-    //             this.objectContactAddress,
-    //           ])
-    //           .subscribe((res: []) => {});
-    //         this.dialog.close();
-    //         this.dt.detectChanges();
-    //       } else {
-    //         this.notification.notifyCode(
-    //           'SYS031',
-    //           0,
-    //           '"' + this.customerID + '"'
-    //         );
-    //         return;
-    //       }
-    //     });
-    // }
-    // if (this.formType == 'edit') {
-    //   this.dialog.dataService
-    //     .save((opt: RequestOption) => {
-    //       opt.methodName = 'UpdateAsync';
-    //       opt.className = 'CustomersBusiness';
-    //       opt.assemblyName = 'SM';
-    //       opt.service = 'SM';
-    //       opt.data = [this.customers];
-    //       return true;
-    //     })
-    //     .subscribe((res) => {
-    //       if (res.save || res.update) {
-    //         this.api
-    //           .exec('ERM.Business.BS', 'BankAccountsBusiness', 'UpdateAsync', [
-    //             this.objecttype,
-    //             this.customerID,
-    //             this.objectBankaccount,
-    //             this.objectBankaccountDelete,
-    //           ])
-    //           .subscribe((res: any) => {});
-    //         this.api
-    //           .exec('ERM.Business.BS', 'AddressBookBusiness', 'UpdateAsync', [
-    //             this.objecttype,
-    //             this.customerID,
-    //             this.objectAddress,
-    //             this.objectAddressDelete,
-    //           ])
-    //           .subscribe((res: any) => {});
-    //         this.api
-    //           .exec('ERM.Business.BS', 'ContactBookBusiness', 'UpdateAsync', [
-    //             this.objecttype,
-    //             this.customerID,
-    //             this.objectContact,
-    //             this.objectContactDelete,
-    //             this.objectContactAddress,
-    //             this.objectContactAddressDelete,
-    //           ])
-    //           .subscribe((res: any) => {});
-    //         this.dialog.close();
-    //         this.dt.detectChanges();
-    //       }
-    //     });
-    // }
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      if (this.customers.overDueControl == '0') {
+        this.customers.overDueControl = false;
+      } else {
+        this.customers.overDueControl = true;
+      }
+      if (this.formType == 'add') {
+        this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'AddAsync';
+            opt.className = 'CustomersBusiness';
+            opt.assemblyName = 'SM';
+            opt.service = 'SM';
+            opt.data = [this.customers];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res.save) {
+              this.acService
+                .addData(
+                  'ERM.Business.BS',
+                  'BankAccountsBusiness',
+                  'AddAsync',
+                  [this.objecttype, this.customerID, this.objectBankaccount]
+                )
+                .subscribe((res: []) => {});
+              this.acService
+                .addData('ERM.Business.BS', 'AddressBookBusiness', 'AddAsync', [
+                  this.objecttype,
+                  this.customerID,
+                  this.objectAddress,
+                ])
+                .subscribe((res: []) => {});
+              this.acService
+                .addData('ERM.Business.BS', 'ContactBookBusiness', 'AddAsync', [
+                  this.objecttype,
+                  this.customerID,
+                  this.objectContact,
+                  this.objectContactAddress,
+                ])
+                .subscribe((res: []) => {});
+              this.dialog.close();
+              this.dt.detectChanges();
+            } else {
+              this.notification.notifyCode(
+                'SYS031',
+                0,
+                '"' + this.customerID + '"'
+              );
+              return;
+            }
+          });
+      }
+      if (this.formType == 'edit') {
+        this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'UpdateAsync';
+            opt.className = 'CustomersBusiness';
+            opt.assemblyName = 'SM';
+            opt.service = 'SM';
+            opt.data = [this.customers];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res.save || res.update) {
+              this.api
+                .exec(
+                  'ERM.Business.BS',
+                  'BankAccountsBusiness',
+                  'UpdateAsync',
+                  [
+                    this.objecttype,
+                    this.customerID,
+                    this.objectBankaccount,
+                    this.objectBankaccountDelete,
+                  ]
+                )
+                .subscribe((res: any) => {});
+              this.api
+                .exec('ERM.Business.BS', 'AddressBookBusiness', 'UpdateAsync', [
+                  this.objecttype,
+                  this.customerID,
+                  this.objectAddress,
+                  this.objectAddressDelete,
+                ])
+                .subscribe((res: any) => {});
+              this.api
+                .exec('ERM.Business.BS', 'ContactBookBusiness', 'UpdateAsync', [
+                  this.objecttype,
+                  this.customerID,
+                  this.objectContact,
+                  this.objectContactDelete,
+                  this.objectContactAddress,
+                  this.objectContactAddressDelete,
+                ])
+                .subscribe((res: any) => {});
+              this.dialog.close();
+              this.dt.detectChanges();
+            }
+          });
+      }
+    }
   }
   //#endregion
 }

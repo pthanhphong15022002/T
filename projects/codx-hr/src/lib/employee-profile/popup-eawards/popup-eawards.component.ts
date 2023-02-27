@@ -34,6 +34,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   employId;
   valueYear;
   isAfterRender = false;
+  defaultAwardDate: string = '0001-01-01T00:00:00';
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
 
@@ -68,6 +69,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.awardObj = res?.data;
+            if(this.awardObj.awardDate.toString() == this.defaultAwardDate) this.awardObj.awardDate = null;
             this.awardObj.employeeID = this.employId;
             this.formModel.currentData = this.awardObj;
             this.formGroup.patchValue(this.awardObj);
@@ -76,12 +78,12 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
+      if (this.actionType === 'copy' && this.awardObj.awardDate == this.defaultAwardDate) this.awardObj.awardDate = null;
         this.formGroup.patchValue(this.awardObj);
         this.formModel.currentData = this.awardObj;
         this.cr.detectChanges();
         this.isAfterRender = true;
-      }
+      
     }
   }
 
