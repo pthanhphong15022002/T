@@ -417,4 +417,13 @@ export class CodxDpService {
       [instanceNoSetting, null, true, null]
     );
   }
+
+  getListStepByIdProccessCopy(data){
+    return this.api.exec<any>(
+      'DP',
+      'StepsBusiness',
+      'GetListStepCopyAsync',
+      data
+    );
+  }
 }

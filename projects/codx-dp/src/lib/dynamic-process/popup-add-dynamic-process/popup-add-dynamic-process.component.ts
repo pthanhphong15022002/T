@@ -214,6 +214,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   instanceNoSetting = '';
   listClickedCoppy:any;
   titleAction:any;
+  oldIdProccess:any;
+  newIdProccess:any;
+  listValueCopy:any;
   MESSAGETIME =
     'Thời hạn công việc lớn hơn nhóm công việc bạn có muốn lưu và thay đổi thời hạn nhóm công việc';
   constructor(
@@ -223,6 +226,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     private notiService: NotificationsService,
     private cache: CacheService,
     private dpService: CodxDpService,
+    private CodxDpService: CodxDpService,
     private authStore: AuthStore,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
@@ -235,12 +239,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.user = this.authStore.get();
     this.userId = this.user?.userID;
     this.titleAction = dt.data.titleAction;
-    debugger;
+    this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     if(this.action === 'copy'){
       this.listClickedCoppy = dt.data.conditionCopy;
+      this.oldIdProccess = dt.data.oldIdProccess,
+      this.newIdProccess = dt.data.newIdProccess,
+      this.listValueCopy = dt.data.listValueCopy
+      var valueListStr =  this.listValueCopy.join(';');
+      this.process.permissions = this.listValueCopy.findIndex(x=>x === '2') !== -1 ? this.process.permissions : [];
+      // copy file image
+      // this.process.recID = this.oldIdProccess;
+      this.listValueCopy.findIndex(x=>x === '3') !== -1 && this.getListStepByProcessIDCopy(this.oldIdProccess,this.newIdProccess,valueListStr);
     }
-
-    this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     if (this.action == 'edit') {
       // this.showID = true;
       this.permissions = this.process.permissions;
@@ -285,21 +295,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   ngAfterViewInit(): void {
     // if (this.action != 'edit') this.genAutoNumber();
-    this.api
-      .execSv<any>(
-        'SYS',
-        'AD',
-        'AutoNumberDefaultsBusiness',
-        'GetFieldAutoNoAsync',
-        [this.funcID, this.entityName]
-      )
-      .subscribe((res) => {
-        if (res && !res.stop && res.autoAssignRule == '1') {
-          this.showID = true;
-        } else {
-          this.showID = false;
-        }
-      });
+    // this.api
+    //   .execSv<any>(
+    //     'SYS',
+    //     'AD',
+    //     'AutoNumberDefaultsBusiness',
+    //     'GetFieldAutoNoAsync',
+    //     [this.funcID, this.entityName]
+    //   )
+    //   .subscribe((res) => {
+    //     if (res && !res.stop && res.autoAssignRule == '1') {
+    //       this.showID = true;
+    //     } else {
+    //       this.showID = false;
+    //     }
+    //   });
 
     this.grvStep = {
       entityName: 'DP_Steps',
@@ -317,7 +327,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getTitleStepViewSetup();
     this.initForm();
     this.checkedDayOff(this.step?.excludeDayoff);
-    if (this.action != 'add') {
+    if (this.action != 'add' && this.action != 'copy') {
       this.getStepByProcessID();
     }
   }
@@ -344,14 +354,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.notiService.notify('Lưu thất bại ');
       return;
     }
-    // if (
-    //   (this.stepSuccess.reasons.length === 0 &&
-    //     this.stepSuccess.reasonControl) ||
-    //   (this.stepFail.reasons.length === 0 && this.stepFail.reasonControl)
-    // ) {
-    //   this.notiService.notifyCode('DP005');
-    //   return;
-    // }
+    if (
+      (this.stepSuccess.reasons.length === 0 &&
+        this.stepSuccess.reasonControl) ||
+      (this.stepFail.reasons.length === 0 && this.stepFail.reasonControl)
+    ) {
+      this.notiService.notifyCode('DP005');
+      return;
+    }
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
         // save file
@@ -365,7 +375,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   handlerSave() {
-    if (this.action == 'add') {
+    if (this.action == 'add' || this.action == 'copy') {
       this.onAdd();
     } else if (this.action == 'edit') {
       this.onUpdate();
@@ -375,7 +385,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   beforeSave(op) {
     var data = [];
     op.className = 'ProcessesBusiness';
-    if (this.action == 'add') {
+    if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddProcessAsync';
     } else {
       op.methodName = 'UpdateProcessAsync';
@@ -463,7 +473,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   valueChange(e) {
     this.process[e.field] = e.data;
-    if (this.action === 'add') {
+    if (this.action === 'add' || this.action === 'copy') {
       if (this.process.applyFor) {
         this.loadCbxProccess();
       }
@@ -893,7 +903,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         950,
         650,
         '',
-        [this.process, title, 'add'],
+        [this.process, title, this.action === 'copy'?'copy': 'add'],
         '',
         this.dialog
       )
@@ -1208,7 +1218,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   openPopupStep(type) {
     this.actionStep = type;
-    if (type === 'add') {
+    if (type === 'add' ) {
       this.step = new DP_Steps();
       this.step['processID'] = this.process?.recID;
       this.step['stepNo'] = this.stepList.length + 1;
@@ -2046,7 +2056,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   autoHandleStepReason() {
-    if (this.action === 'add') {
+    if (this.action === 'add' || this.action === 'copy') {
       // create step reason fail with value is 1
       this.createStepReason(this.stepSuccess, '1');
 
@@ -2240,6 +2250,44 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     } else if (view === this.viewStepReasonFail) {
       this.stepFail.newProcessID = $event;
     }
+  }
+
+  getListStepByProcessIDCopy(oldProccesID,newProccessID, valueListStr) {
+    var data = [oldProccesID,newProccessID,valueListStr];
+    this.CodxDpService.getListStepByIdProccessCopy(data).subscribe((res) => {
+      if (res) {
+        this.editTest(res);
+        res.forEach((step) => {
+          if (!step.isSuccessStep && !step.isFailStep) {
+            const taskGroupList = step?.tasks.reduce((group, product) => {
+              const { taskGroupID } = product;
+              group[taskGroupID] = group[taskGroupID] ?? [];
+              group[taskGroupID].push(product);
+              return group;
+            }, {});
+            const taskGroupConvert = step.taskGroups.map((taskGroup) => {
+              return {
+                ...taskGroup,
+                task: taskGroupList[taskGroup.recID] ?? [],
+              };
+            });
+            step.taskGroups = taskGroupConvert;
+
+            var taskGroup = new DP_Steps_TaskGroups();
+            taskGroup['task'] = taskGroupList['null'] || [];
+            taskGroup['recID'] = null;
+            step['taskGroups'].push(taskGroup);
+
+            this.stepList.push(step);
+          }
+        });
+        this.stepList.sort((a, b) => a['stepNo'] - b['stepNo']);
+        this.viewStepSelect(this.stepList[0]);
+      }
+    });
+  }
+  formDataCopyProccess(listValue:any){
+
   }
   //#endregion
 }
