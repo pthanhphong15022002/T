@@ -99,6 +99,23 @@ export class CatagoryComponent implements OnInit {
             x.controlType && x.controlType.toLowerCase() === 'groupcontrol'
           );
         });
+        if (this.groupSetting.length > 0) {
+          var lstNoGroup = this.setting.filter((x) => {
+            return (
+              x.controlType &&
+              x.controlType.toLowerCase() !== 'groupcontrol' &&
+              !x.refLineID
+            );
+          });
+          if (lstNoGroup.length > 0) {
+            var objGroupTMP: any = {
+              recID: '',
+              refLineID: '',
+              controlType: 'GroupControl',
+            };
+            this.groupSetting.splice(0, 0, objGroupTMP);
+          }
+        }
       }
       if (this.valuelist && this.valuelist.datas && this.category) {
         const ds = (this.valuelist.datas as any[]).find(
@@ -336,6 +353,23 @@ export class CatagoryComponent implements OnInit {
     this.groupSetting = this.setting.filter((x) => {
       return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
     });
+    if (this.groupSetting.length > 0) {
+      var lstNoGroup = this.setting.filter((x) => {
+        return (
+          x.controlType &&
+          x.controlType.toLowerCase() !== 'groupcontrol' &&
+          !x.refLineID
+        );
+      });
+      if (lstNoGroup.length > 0) {
+        var objGroupTMP: any = {
+          recID: '',
+          refLineID: '',
+          controlType: 'GroupControl',
+        };
+        this.groupSetting.splice(0, 0, objGroupTMP);
+      }
+    }
     if (this.category === '2' || this.category === '7') this.getIDAutoNumber();
     else if (this.category === '5') this.getAlertRule();
     else if (this.category === '6') this.getSchedules();
@@ -352,6 +386,23 @@ export class CatagoryComponent implements OnInit {
     this.groupSetting = this.setting.filter((x) => {
       return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
     });
+    if (this.groupSetting.length > 0) {
+      var lstNoGroup = this.setting.filter((x) => {
+        return (
+          x.controlType &&
+          x.controlType.toLowerCase() !== 'groupcontrol' &&
+          !x.refLineID
+        );
+      });
+      if (lstNoGroup.length > 0) {
+        var objGroupTMP: any = {
+          recID: '',
+          refLineID: '',
+          controlType: 'GroupControl',
+        };
+        this.groupSetting.splice(0, 0, objGroupTMP);
+      }
+    }
     this.oldSettingFull = [];
     this.oldDataValue = {};
     if (this.category === '2' || this.category === '7') this.getIDAutoNumber();

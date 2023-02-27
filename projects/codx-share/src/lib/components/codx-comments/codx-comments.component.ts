@@ -107,7 +107,6 @@ export class CodxCommentsComponent implements OnInit {
   }
   // send comment
   sendComment(){
-    debugger
     if (!this.message.trim() && !this.files) {
       this.notifySvr.notifyCode('SYS009',0,this.grvWP['Comments']['headerText']);
       return;
@@ -197,7 +196,7 @@ export class CodxCommentsComponent implements OnInit {
         }
       });
   }
-
+  //edit comment
   editComment(){
     this.edit = true;
     this.new = true;
@@ -205,41 +204,36 @@ export class CodxCommentsComponent implements OnInit {
     this.data.isEditComment = true;
     this.dt.detectChanges();
   }
-
+  //delete comment
   deleteComment(){
-    this.notifySvr.alertCode('WP032').subscribe((res) => {
+    this.notifySvr.alertCode('WP032')
+    .subscribe((res) => {
       if (res.event.status == "Y") {
         this.api.execSv(
           "WP", 
           "ERM.Business.WP", 
           "CommentsBusiness", 
-          "DeletePostAsync", 
-          this.data).subscribe((res: number) => {
-            if(res) 
-            { 
-              let obj = {
-                data: this.data,
-                total: res
-              }
-              this.evtDeleteComment.emit(obj);
-            }
+          "DeleteCommentAsync", 
+          [this.data])
+          .subscribe((res:any[]) => {
+            if(res[0])
+              this.evtDeleteComment.emit(res[1]);
             else
-            {
               this.notifySvr.notifyCode("SYS022");
-            }
           });
       }
     });
   }
-
+  //load sub comment
   loadSubComment(){
     this.data.totalSubComment  = 0 ;
     this.evtLoadSubComment.emit(this.data);
   }
+  // click upload
   uploadFile(){
     this.codxATM.uploadFile();
   }
-
+  // attachement return file
   getFileCount(files:any){
     let _file = files.data[0];
     if(_file){
@@ -260,17 +254,17 @@ export class CodxCommentsComponent implements OnInit {
       this.dt.detectChanges();
     }
   }
-
+  //remove file
   removeFile(){
     this.fileDelete = JSON.parse(JSON.stringify(this.files));
     this.files = null;
     this.dt.detectChanges();
   }
-
+  //reply
   replyTo(data) {
     this.evtReplyTo.emit(data);
   }
-
+  //vote 
   votePost(data: any, voteType = null) {
     this.api.execSv(
       "WP",
@@ -298,6 +292,7 @@ export class CodxCommentsComponent implements OnInit {
 
       });
   }
+  // show vote
   showVotes(data: any) {
     let object = {
       data: data,
@@ -306,8 +301,7 @@ export class CodxCommentsComponent implements OnInit {
     }
     this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", object);
   }
-
-
+  //click view detail
   clickViewDetail(file:any){
     if(this.evtViewDetail)
     {

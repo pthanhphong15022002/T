@@ -1,20 +1,36 @@
 <codx-form #form [headerText]="header" [body]="body" [dialog]="dialog" [formModel]="dialog.formModel">
   <ng-template popup add #body>
-    <div class="pw-listcard">
+    <codx-views
+  [views]="views"
+  [funcID]="'MWP0094'" 
+  service="WP" 
+  entityName="WP_NoteBooks" 
+  [predicate]="predicate"
+  [dataValue]="dataValue" 
+  idField="transID">
+</codx-views>
+<ng-template #itemTemplate let-item>
+  <div class="pw-card card-save-note delay-500 h-200px" (click)="onEditNote(item)">
+    <codx-card-img cardCss="border card-img-mwp rounded-3 img-storage w-200px h-200px min-h-200px"
+      [imageId]="item.recID" [imageObjName]="item.title" imageReferType="image" imgCss="min-h-200px h-200px w-200px mb-2"
+      icoTitleCss="icon-assignment icon-16" [title]="item.title" cssTitle="line-clamp line-clamp-1"
+      [imgOn]="item?.modifiedOn" [desc2]="item.memo" cssDes2="line-clamp line-clamp-2" imageWidth="200"
+      [imageObjType]="'WP_NoteBooks'">
+    </codx-card-img>
+  </div>
+</ng-template>
+    <!-- <div class="pw-listcard">
       <div *ngFor="let item of view.dataService.data">
         <div class="pw-card card-save-note delay-500 h-200px" (click)="onEditNote(item)">
           <codx-card-img cardCss="border card-img-mwp rounded-3 img-storage w-200px h-200px min-h-200px"
-            [imageId]="item.recID" [imageObjName]="item.title" imgCss="min-h-200px h-200px w-200px mb-2"
+            [imageId]="item.recID" [imageObjName]="item.title" imageReferType="image" imgCss="min-h-200px h-200px w-200px mb-2"
             icoTitleCss="icon-assignment icon-16" [title]="item.title" cssTitle="line-clamp line-clamp-1"
             [imgOn]="item?.modifiedOn" [desc2]="item.memo" cssDes2="line-clamp line-clamp-2" imageWidth="200"
             [imageObjType]="'WP_NoteBooks'">
           </codx-card-img>
         </div>
       </div>
-    </div>
+    </div> -->
   </ng-template>
 </codx-form>
 
-<codx-views #view [funcID]="'MWP0094'" service="WP" entityName="WP_NoteBooks" [predicate]="predicate"
-  [dataValue]="dataValue" idField="transID">
-</codx-views>

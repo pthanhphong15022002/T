@@ -8,7 +8,7 @@
           </codx-img>
         </div>
         <div class="d-flex flex-column flex-grow-1 share">
-          <span class="text-gray-500 feed-box box-new share-input" (click)="openPopupAdd()">
+          <span class="text-gray-500 feed-box box-new share-input" (click)="addPost()">
             {{title}}
           </span>
         </div>
@@ -62,11 +62,10 @@
           </span>
         </div>
       </div>
-      <!-- bổ sung moreFC và moreFCtmp cho Nguyên dùng bên MWP -->
-      <ng-container *ngIf="moreFunc && moreFuncTmp; else defaultMoreFunc">
+      <!-- bổ sung moreFCtmp cho Nguyên dùng bên MWP -->
+      <ng-container *ngIf="moreFuncTmp; else defaultMoreFunc">
         <ng-container *ngTemplateOutlet="moreFuncTmp; context: { $implicit: item }"></ng-container>
       </ng-container>
-      <!--  -->
       <ng-template #defaultMoreFunc>
         <div class="more">
           <div ngbDropdown class="dropdown">
@@ -76,26 +75,26 @@
             </a>
             <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
               <li *ngIf="item.write">
-                <a (click)="openPopupEdit(item)" ngbDropdownItem href="javascript:void(0)">
+                <a (click)="editPost(item)" ngbDropdownItem href="javascript:void(0)">
                   <span class="icon-edit icon-16 me-2 icon-editPost"></span>
                   <codx-label [formModel]="formModel" name="lblEdit_comments" default="Chỉnh sửa">
                   </codx-label>
                 </a>
               </li>
               <li *ngIf="item.delete">
-                <a (click)="removePost(item)" ngbDropdownItem href="javascript:void(0)">
+                <a (click)="deletePost(item)" ngbDropdownItem href="javascript:void(0)">
                   <span class="icon-close icon-16 me-2 icon-removePost"></span>
                   <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
                 </a>
               </li>
               <li *ngIf="item.share">
-                <a (click)="openPopupShare(item)" ngbDropdownItem href="javascript:void(0)">
+                <a (click)="sharePost(item)" ngbDropdownItem href="javascript:void(0)">
                   <span class="icon-share icon-16 me-2"></span>
                   <codx-label [formModel]="formModel" name="lblShare_comments" default="Chia sẻ"></codx-label>
                 </a>
               </li>
               <li>
-                <a (click)="openPopupSave(item)" ngbDropdownItem href="javascript:void(0)">
+                <a (click)="savePost(item)" ngbDropdownItem href="javascript:void(0)">
                   <span class="icon-save icon-save_alt icon-16 me-2"></span>
                   <codx-label [formModel]="formModel" name="lblSave_comments" default="Thêm vào kho lưu trữ">
                   </codx-label>
@@ -110,7 +109,6 @@
     <div class="wp-contents">
       <div class="wp-contents-text">
         <ng-container *ngIf="item.content">
-
           <div [innerHTML]="item.isShowShortContent ? item.shortContent : item.content | safe: 'html'"></div>
           <ng-container *ngIf="item.isShowShortContent">
             <div>
@@ -123,8 +121,12 @@
       </div>
       <div class="wp-contents-files">
         <ng-container *ngIf="item.attachments">
-          <codx-view-files [objectID]="item.recID" [objectType]="'WP_Comments'" [formModel]="formModel"
-            [medias]="item.medias" (fileClicked)="clickViewDetail($event)">
+          <codx-view-files 
+            [objectID]="item.recID" 
+            [objectType]="'WP_Comments'" 
+            [formModel]="formModel"
+            [medias]="item.medias" 
+            (fileClicked)="clickViewDetail($event)">
           </codx-view-files>
         </ng-container>
       </div>
@@ -242,8 +244,14 @@
   <div class="WP_News" (click)="naviagteWPNew(news)">
     <div class="WP_News-images">
       <ng-container *ngIf="news.recID">
-        <codx-img [cssClass]="'w-100'" [objectId]="news.recID" [objectType]="'WP_News'" [referType]="'image'"
-          [width]="300" imageType="square"></codx-img>
+        <codx-img 
+          [cssClass]="'news-image w-100 h-100'" 
+          [objectId]="news.recID" 
+          [objectType]="'WP_News'" 
+          [referType]="'image'"
+          [width]="500" 
+          imageType="square">
+        </codx-img>
       </ng-container>
     </div>
     <div class="WP_News-contents">
