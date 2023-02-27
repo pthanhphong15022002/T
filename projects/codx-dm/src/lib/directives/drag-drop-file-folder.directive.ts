@@ -10,7 +10,7 @@ export class DragDropFileFolderDirective {
   @Input() dataDrapDrop:any;
   @Input() canDrop:true;
   @Input() toDelete:false;
-  @HostBinding('style.background-color') private background = '#ffffff';
+  //@HostBinding('style.background-color') private background = '#ffffff';
   @HostBinding('style.border-style') private borderstyle = 'none';
   @HostBinding('style.border-color') private bordercolor = '#7e8299';
   @HostBinding('style.border-width') private borderwidth = '1px';
@@ -33,7 +33,7 @@ export class DragDropFileFolderDirective {
     if(event.currentTarget.classList.contains("noDrop")) return;
     event.preventDefault();
     event.stopPropagation();
-    this.background = '#e2eefd';
+    //this.background = '#e2eefd';
     this.borderstyle = "dashed !important";
    
   }
@@ -44,7 +44,7 @@ export class DragDropFileFolderDirective {
     if(event.currentTarget.classList.contains("noDrop")) return;
     event.preventDefault();
     event.stopPropagation();
-    this.background = '#ffffff';
+    //this.background = '#ffffff';
     this.borderstyle = "none";
     
   }
@@ -55,7 +55,7 @@ export class DragDropFileFolderDirective {
     if(event.currentTarget.classList.contains("noDrop")) return;
     event.preventDefault();
     event.stopPropagation();
-    this.background = '#ffffff';
+   // this.background = '#ffffff';
     this.borderstyle = "none";
     var obj = JSON.parse(event.dataTransfer.getData("data"));
     
