@@ -33,6 +33,7 @@ import {
   FormModel,
   CacheService,
   AuthStore,
+  CRUDService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -406,9 +407,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
         if (res && res.update) {
+          (this.dialog.dataService as CRUDService).update(res.update).subscribe();
           this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
           this.handleUpdateStep(); 
-          this.process = res.update ;
+          res.update.modifiedOn = new Date() ;
           this.dialog.close(res.update);     
         }
       });
