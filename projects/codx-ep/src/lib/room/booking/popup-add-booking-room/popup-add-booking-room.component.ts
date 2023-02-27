@@ -757,12 +757,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       if (this.approvalRule == '0' && approval) {
         this.data.approveStatus = '5';
         this.data.status = '5';
-      } else {
-        this.data.approveStatus = '1';
-        this.data.status = '1';
-      }
+      } 
+        this.data.approveStatus = this.data.approveStatus?? '1';
+        this.data.status = this.data.status ?? '1';        
+      
+      
+      this.data.resourceType = this.data.resourceType??'1';
       this.data.approval = this.approvalRule;
-      this.data.resourceType = '1';
       this.data.requester = this.curUser.userName;
       this.data.attendees = this.tmpAttendeesList.length +this.guestNumber;
       this.data.attachments = this.attachment.fileUploadList.length;

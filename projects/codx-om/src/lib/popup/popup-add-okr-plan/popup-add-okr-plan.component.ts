@@ -47,6 +47,10 @@ export class PopupAddOKRPlanComponent extends UIComponent implements AfterViewIn
   headerText='';
   modelOKR: any;
   curOrg='';
+  listFM: any;
+  okrFG: FormGroup;
+  listFG: any;
+  dataOKR:any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -61,9 +65,10 @@ export class PopupAddOKRPlanComponent extends UIComponent implements AfterViewIn
     this.modelOKR = dialogData.data[2];
     this.headerText = dialogData.data[3];
     this.curOrg = dialogData.data[4];
+    this.listFM = dialogData.data[5];
+    this.okrFG = dialogData.data[6];
     this.dialogRef = dialogRef;
     this.formModel = dialogRef.formModel;
-    
   }
 
 
@@ -75,12 +80,16 @@ export class PopupAddOKRPlanComponent extends UIComponent implements AfterViewIn
   }
 
   onInit(): void {
-
+    
+    this.getCacheData();
+    
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
+  getCacheData(){
 
+  }
 
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Data Func---------------------------------//

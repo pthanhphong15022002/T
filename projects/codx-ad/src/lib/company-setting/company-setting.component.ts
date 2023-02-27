@@ -98,6 +98,7 @@ export class CompanySettingComponent
   //order
   orderFormodel: FormModel;
   userID = '';
+  grvTNOrders;
 
   constructor(
     private inject: Injector,
@@ -113,6 +114,12 @@ export class CompanySettingComponent
     var auth = authStore as any;
     this.tenant = auth.tenantStore?.activeTenant;
     this.userID = this.authStore.get()?.userID;
+    this.cache.gridViewSetup('TNOrders', 'grvTNOrders').subscribe((res) => {
+      if (res) {
+        this.grvTNOrders = res;
+        console.log(res);
+      }
+    });
     this.loadData();
   }
 

@@ -121,9 +121,9 @@ export class InstancesComponent
 
     // em bảo gán tạm
     this.dataProccess = dt?.data?.data;
-    this.genAutoNumberNo(
-      this.dataProccess?.applyFor === '1' ? 'DPT0406' : 'DPT0405'
-    );
+    // this.genAutoNumberNo(
+    //   this.dataProccess?.applyFor === '1' ? 'DPT0406' : 'DPT0405'
+    // );
     this.getListCbxProccess(this.dataProccess?.applyFor);
   }
   ngAfterViewInit(): void {
@@ -227,38 +227,101 @@ export class InstancesComponent
               option.Width = '850px';
               option.zIndex = 1001;
               this.view.dataService.dataSelected.processID = this.process.recID;
-              this.genAutoNumberNo(formMD.funcID); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
-              var dialogCustomField = this.callfc.openSide(
-                PopupAddInstanceComponent,
-                [
-                  'add',
-                  applyFor,
-                  this.listSteps,
-                  this.titleAction,
-                  formMD,
-                  this.listStepsCbx,
-                  this.instanceNo,
-                  (this.sumDaySteps = this.getSumDurationDayOfSteps(
-                    this.listStepsCbx
-                  )),
-                  this.lstParticipants
-                ],
-                option
-              );
-              dialogCustomField.closed.subscribe((e) => {
-                if (!e?.event) this.view.dataService.clear();
-                if (e && e.event != null) {
-                  if (this.kanban) {
-                    if (this.kanban?.dataSource?.length == 1) {
-                      this.kanban.refresh();
+              if (!this.process.instanceNoSetting) {
+                //this.genAutoNumberNo(applyFor); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
+                this.codxDpService
+                  .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
+                  .subscribe((res) => {
+                    if (res) {
+                      this.instanceNo = res;
+                      this.openPopUpAdd(applyFor, formMD, option,'add');
                     }
-                  }
-                  this.detectorRef.detectChanges();
-                }
-              });
+                  });
+              } else
+                this.codxDpService
+                  .getAutoNumberByInstanceNoSetting(
+                    this.process.instanceNoSetting
+                  )
+                  .subscribe((isNo) => {
+                    this.instanceNo = isNo;
+                    this.openPopUpAdd(applyFor, formMD, option,'add');
+                  });
             });
         });
       });
+    });
+  }
+  copy(data, titleAction){
+    if (data) this.view.dataService.dataSelected = data;
+    this.view.dataService.copy().subscribe((res) => {
+      const funcIDApplyFor =
+        this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
+      const applyFor = this.process.applyFor;
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+        this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+          this.cache
+            .gridViewSetup(fun.formName, fun.gridViewName)
+            .subscribe((grvSt) => {
+              var formMD = new FormModel();
+              formMD.funcID = funcIDApplyFor;
+              formMD.entityName = fun.entityName;
+              formMD.formName = fun.formName;
+              formMD.gridViewName = fun.gridViewName;
+              option.Width = '850px';
+              option.zIndex = 1001;
+              if (!this.process.instanceNoSetting) {
+                //this.genAutoNumberNo(applyFor); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
+                this.codxDpService
+                  .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
+                  .subscribe((res) => {
+                    if (res) {
+                      this.instanceNo = res;
+                      this.openPopUpAdd(applyFor, formMD, option,titleAction);
+                    }
+                  });
+              } else {
+                this.codxDpService
+                  .getAutoNumberByInstanceNoSetting(
+                    this.process.instanceNoSetting
+                  )
+                  .subscribe((isNo) => {
+                    this.instanceNo = isNo;
+                    this.openPopUpAdd(applyFor, formMD, option,titleAction);
+                  });
+              }
+            });
+        });
+      });
+    });
+  }
+  openPopUpAdd(applyFor, formMD, option,action) {
+    var dialogCustomField = this.callfc.openSide(
+      PopupAddInstanceComponent,
+      [
+        action ==='add' ? 'add':'copy',
+        applyFor,
+        this.listSteps,
+        this.titleAction,
+        formMD,
+        this.listStepsCbx,
+        this.instanceNo,
+        this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx),
+      ],
+      option
+    );
+    dialogCustomField.closed.subscribe((e) => {
+      if (!e?.event) this.view.dataService.clear();
+      if (e && e.event != null) {
+        if (this.kanban) {
+          if (this.kanban?.dataSource?.length == 1) {
+            this.kanban.refresh();
+          }
+        }
+        this.detectorRef.detectChanges();
+      }
     });
   }
 
@@ -340,7 +403,7 @@ export class InstancesComponent
         this.edit(data, e.text);
         break;
       case 'SYS04':
-        //  this.copy(data);
+        this.copy(data,e.text);
         break;
       case 'SYS02':
         this.delete(data);

@@ -1,0 +1,1225 @@
+<codx-layout-add
+  #form
+  [title]="title"
+  [tabInfo]="tabInfo"
+  [formModel]="dialogRef.formModel"
+  [subHeader]="subheader"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [tabContent]="[
+    tabGeneralInfo,
+    tabSettings,
+    tabInventory,
+    tabPurchase,
+    tabSales,
+    tabProduction,
+    tabOtherInfo
+  ]"
+  [data]="item"
+>
+</codx-layout-add>
+
+<ng-template #subheader>
+  <codx-tag
+    [entityName]="dialogRef.formModel.entityName"
+    [isEdit]="true"
+    [disabled]="false"
+    [value]="item?.industries"
+    field="industries"
+    (valueChange)="handleInputChange($event)"
+  ></codx-tag>
+</ng-template>
+
+<ng-template #footer>
+  <button type="button" class="btn btn-primary" (click)="save()">
+    <codx-label
+      name="Save"
+      [formName]="dialogRef.formModel?.formName"
+      [gridViewName]="dialogRef.formModel?.gridViewName"
+      default="Lưu"
+    ></codx-label>
+  </button>
+</ng-template>
+
+<ng-template #tabGeneralInfo>
+  <ng-container *ngIf="form.formGroup">
+    <div class="row">
+      <div class="col-5">
+        <div class="form-group">
+          <codx-label
+            fiedName="itemGroupID"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            field="itemGroupID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
+
+        <div class="form-group">
+          <codx-label
+            fiedName="itemID"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            field="itemID"
+            [disabled]="disabled"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="col-7">
+        <codx-img
+          #itemImage
+          [funcId]="form.formModel?.funcID"
+          [objectId]="form.data?.itemID"
+          [objectType]="form.formModel?.entityName"
+          [width]="125"
+          [imgOn]="form.data?.modifiedOn"
+          [isAllowEdit]="true"
+          [isDefaulImg]="true"
+          imageType="square"
+        >
+        </codx-img>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-9 form-group">
+        <codx-label
+          fiedName="itemName"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="itemName"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+
+      <div class="col-3 form-group">
+        <codx-label fiedName="umid" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          type="combobox"
+          refType="3"
+          refValue="UnitsOfMearsure"
+          field="umid"
+          [crrValue]="form.data?.umid"
+          (valueChange)="handleInputChange($event)"
+        ></codx-input>
+        <!-- <codx-input
+          field="uMID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input> -->
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="itemType"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="itemType"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="assetGroupID"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="assetGroupID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="inventModelID"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="inventModelID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="dimGroupID"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="dimGroupID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="productLineID"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="productLineID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="manufacturer"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="manufacturer"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <codx-label default="Phân hệ sử dụng" class="fw-bold"></codx-label>
+
+      <div class="d-flex py-5 gap-7">
+        <div class="d-flex gap-2">
+          <codx-input
+            type="switch"
+            field="sales"
+            [checked]="form.data?.sales"
+            (valueChange)="handleInputChange($event)"
+          ></codx-input>
+          <codx-label
+            fiedName="sales"
+            [formModel]="form.formModel"
+          ></codx-label>
+        </div>
+
+        <div class="d-flex gap-2">
+          <codx-input
+            type="switch"
+            field="purchase"
+            [checked]="form.data?.purchase"
+            (valueChange)="handleInputChange($event)"
+          ></codx-input>
+          <codx-label
+            fiedName="purchase"
+            [formModel]="form.formModel"
+          ></codx-label>
+        </div>
+
+        <div class="d-flex gap-2">
+          <codx-input
+            type="switch"
+            field="production"
+            [checked]="form.data?.production"
+            (valueChange)="handleInputChange($event)"
+          ></codx-input>
+          <codx-label
+            fiedName="production"
+            [formModel]="form.formModel"
+          ></codx-label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <codx-label fiedName="note" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        type="textarea"
+        field="note"
+        format="ed2"
+        [crrValue]="form.data?.note"
+        (valueChange)="handleInputChange($event)"
+      ></codx-input>
+    </div>
+
+    <div class="row">
+      <codx-input
+        field="stop"
+        label="Ngưng sử dụng"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #tabSettings>
+  <ng-container *ngIf="form.formGroup">
+    <div class="d-flex justify-content-between align-items-center">
+      <codx-label
+        default="Quy cách đóng gói"
+        class="fw-bold fs-5 text-primary"
+      ></codx-label>
+
+      <div class="btn btn-icon" (click)="openFormAddItemSize(1)">
+        <i class="bi bi-file-earmark-plus-fill text-primary fs-4"></i>
+      </div>
+    </div>
+
+    <div class="my-3 d-flex flex-wrap gap-3">
+      <div
+        *ngFor="let itemSize of itemSizes1"
+        class="border mw-25 d-flex flex-column align-items-center p-1 position-relative hover-color"
+        role="button"
+        (click)="openFormAddItemSize(1, itemSize)"
+        (mouseenter)="hoveredItemSizeId1 = itemSize.id"
+        (mouseleave)="hoveredItemSizeId1 = null"
+      >
+        <codx-img
+          [funcId]="form.formModel?.funcID"
+          [objectId]="itemSize.recID"
+          [objectType]="'IV_ItemSizes'"
+          [width]="100"
+          [imgOn]="itemSize.modifiedOn"
+          [isDefaulImg]="true"
+          imageType="square"
+        >
+        </codx-img>
+
+        <div
+          *ngIf="hoveredItemSizeId1 === itemSize.id"
+          class="btn btn-icon position-absolute"
+          style="right: 0; top: 0"
+          (click)="deleteItemSize($event, itemSize, 1)"
+        >
+          <i class="bi bi-x-lg"></i>
+        </div>
+
+        <div class="fw-bold">{{ itemSize.sizeID }}</div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <codx-label
+        default="Thuộc tính"
+        class="fw-bold fs-5 text-primary"
+      ></codx-label>
+
+      <div class="btn btn-icon" (click)="openFormAddItemStyle()">
+        <i class="bi bi-file-earmark-plus-fill text-primary fs-4"></i>
+      </div>
+    </div>
+
+    <div class="my-3 d-flex flex-wrap gap-3">
+      <div
+        *ngFor="let itemStyle of itemStyles"
+        class="badge badge badge-pill badge-secondary d-flex align-items-center gap-1"
+        role="button"
+        (click)="openFormAddItemStyle(itemStyle)"
+        (mouseenter)="hoveredStyleId = itemStyle.id"
+        (mouseleave)="hoveredStyleId = null"
+      >
+        <div>{{ itemStyle.styleID }}</div>
+        <button
+          *ngIf="hoveredStyleId === itemStyle.id"
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="deleteItemStyle($event, itemStyle)"
+        ></button>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <codx-label
+        default="Màu sắc"
+        class="fw-bold fs-5 text-primary"
+      ></codx-label>
+
+      <div class="btn btn-icon" (click)="openFormAddItemColor()">
+        <i class="bi bi-palette text-primary fs-4"></i>
+      </div>
+    </div>
+
+    <div class="my-3 d-flex flex-wrap gap-3">
+      <div
+        *ngFor="let itemColor of itemColors"
+        style="width: 30px; height: 30px"
+        class="position-relative"
+        [style.background-color]="itemColor.colorCode"
+        role="button"
+        (mouseenter)="hoveredColorId = itemColor.id"
+        (mouseleave)="hoveredColorId = null"
+        (click)="openFormAddItemColor(itemColor)"
+      >
+        <button
+          *ngIf="hoveredColorId === itemColor.id"
+          type="button"
+          class="btn-close btn-sm position-absolute"
+          style="top: -8px; right: -8px"
+          aria-label="Close"
+          (click)="deleteItemColor($event, itemColor)"
+        ></button>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <codx-label
+        default="Quy cách"
+        class="fw-bold fs-5 text-primary"
+      ></codx-label>
+      <div class="btn btn-icon" (click)="openFormAddItemSize(0)">
+        <i class="bi bi-file-earmark-plus-fill text-primary fs-4"></i>
+      </div>
+    </div>
+
+    <div class="my-3 d-flex flex-wrap gap-3">
+      <div
+        *ngFor="let itemSize of itemSizes2"
+        class="border mw-25 d-flex flex-column align-items-center p-1 position-relative hover-color"
+        role="button"
+        (click)="openFormAddItemSize(0, itemSize)"
+        (mouseenter)="hoveredItemSizeId2 = itemSize.id"
+        (mouseleave)="hoveredItemSizeId2 = null"
+      >
+        <codx-img
+          [funcId]="form.formModel?.funcID"
+          [objectId]="itemSize.recID"
+          [objectType]="'IV_ItemSizes'"
+          [width]="100"
+          [imgOn]="itemSize.modifiedOn"
+          [isDefaulImg]="true"
+          imageType="square"
+        >
+        </codx-img>
+
+        <div
+          *ngIf="hoveredItemSizeId2 === itemSize.id"
+          class="btn btn-icon position-absolute"
+          style="right: 0; top: 0"
+          (click)="deleteItemSize($event, itemSize, 0)"
+        >
+          <i class="bi bi-x-lg"></i>
+        </div>
+
+        <div class="fw-bold">{{ itemSize.sizeID }}</div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <codx-input
+        field="autoConversion"
+        label="Tính hệ số quy đổi theo quy cách"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="row">
+      <div class="col-6 form-group">
+        <codx-label
+          fiedName="conversionFormula"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="conversionFormula"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="pWeight"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="pWeight"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <codx-label
+        default="Quy đổi đơn vị tính"
+        class="fw-bold fs-5 text-primary"
+      ></codx-label>
+      <div class="btn btn-icon" (click)="openFormAddUMConversion()">
+        <i class="bi bi-file-earmark-plus-fill text-primary fs-4"></i>
+      </div>
+    </div>
+
+    <div class="my-3 d-flex flex-wrap gap-3">
+      <div
+        *ngFor="let itemConversion of itemConversions"
+        class="border mw-25 d-flex flex-column align-items-center p-1 position-relative hover-color"
+        role="button"
+        (click)="openFormAddUMConversion(itemConversion)"
+      >
+        <codx-img
+          [funcId]="form.formModel?.funcID"
+          [objectId]="itemConversion.recID"
+          [objectType]="'BS_UMConversion'"
+          [width]="100"
+          [imgOn]="itemConversion.modifiedOn"
+          [isDefaulImg]="true"
+          imageType="square"
+        >
+        </codx-img>
+
+        <div
+          class="btn btn-icon position-absolute"
+          style="right: 0; top: 0"
+          (click)="deleteItemConversion($event, itemConversion.recID)"
+        >
+          <i class="bi bi-x-lg"></i>
+        </div>
+
+        <div class="fw-bold">
+          1 {{ itemConversion.fromUMID }} = {{ itemConversion.conversion }}
+          {{ itemConversion.toUMID }}
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #tabInventory>
+  <ng-container *ngIf="form.formGroup">
+    <codx-label
+      default="Thông tin tồn kho"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="costPrice"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="costPrice"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="priceDeviation"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="priceDeviation"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="warehouseID"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="warehouseID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="locationID"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="locationID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <codx-input
+        field="cwItem"
+        label="Sử dụng song song 2 đơn vị tính"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="row">
+      <div class="col-3 form-group">
+        <codx-label fiedName="cwum" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          field="cwum"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="cwConversion"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="cwConversion"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="cwDeviation"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="cwDeviation"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <codx-label
+      default="Kiểm soát hạn sử dụng"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="shelfLife"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="shelfLife"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="bestBefore"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="bestBefore"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <codx-label
+      default="Kiểm soát đóng gói"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="packingUM"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="packingUM"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="packingQty"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="packingQty"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="nWeight"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="nWeight"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="gWeight"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="gWeight"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3 form-group">
+        <codx-label fiedName="length" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          field="length"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label fiedName="width" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          field="width"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label fiedName="height" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          field="height"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <codx-label
+      default="Đóng cuộn"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="coneType"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="coneType"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <codx-label
+      default="Quản lý pallet"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="palletType"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="palletType"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="palletQty"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="palletQty"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label fiedName="layers" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          field="layers"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #tabPurchase>
+  <ng-container *ngIf="gvsItemsPurchase">
+    <codx-label
+      default="Thông tin mua hàng"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-4 form-group">
+        <codx-label fiedName="umid" [formModel]="fmItemsPurchase"></codx-label>
+        <!-- <codx-input
+          field="umid"
+          [formModel]="fmItemsPurchase"
+          [crrValue]="itemsPurchase?.umid"
+          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+        ></codx-input> -->
+        <codx-input
+          type="combobox"
+          refType="3"
+          refValue="UnitsOfMearsure"
+          field="umid"
+          [crrValue]="itemsPurchase?.umid"
+          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-7 form-group">
+        <codx-label
+          fiedName="warehouseID"
+          [formModel]="fmItemsPurchase"
+        ></codx-label>
+        <codx-input
+          field="warehouseID"
+          [formModel]="fmItemsPurchase"
+          [crrValue]="itemsPurchase?.warehouseID"
+          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-7 form-group">
+        <codx-label
+          fiedName="vendorID"
+          [formModel]="fmItemsPurchase"
+        ></codx-label>
+        <codx-input
+          field="vendorID"
+          [formModel]="fmItemsPurchase"
+          [crrValue]="itemsPurchase?.vendorID"
+          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+        ></codx-input>
+      </div>
+      <div class="col-4 form-group">
+        <codx-label
+          fiedName="warrantyDays"
+          [formModel]="fmItemsPurchase"
+        ></codx-label>
+        <codx-input
+          field="warrantyDays"
+          [formModel]="fmItemsPurchase"
+          [crrValue]="itemsPurchase?.warrantyDays"
+          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+        ></codx-input>
+      </div>
+    </div>
+
+    <codx-label
+      default="Thuế đầu vào"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-3 form-group">
+        <codx-label fiedName="vatid" [formModel]="fmItemsPurchase"></codx-label>
+        <codx-input
+          field="vatid"
+          [formModel]="fmItemsPurchase"
+          [crrValue]="itemsPurchase?.vatid"
+          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="importDuty"
+          [formModel]="fmItemsPurchase"
+        ></codx-label>
+        <codx-input
+          field="importDuty"
+          [formModel]="fmItemsPurchase"
+          [crrValue]="itemsPurchase?.importDuty"
+          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="exciseTax"
+          [formModel]="fmItemsPurchase"
+        ></codx-label>
+        <codx-input
+          field="exciseTax"
+          [formModel]="fmItemsPurchase"
+          [crrValue]="itemsPurchase?.exciseTax"
+          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+        ></codx-input>
+      </div>
+    </div>
+
+    <codx-label
+      default="Kiểm soát nhận hàng"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="underDelivery"
+          [formModel]="fmItemsPurchase"
+        ></codx-label>
+        <codx-input
+          field="underDelivery"
+          [formModel]="fmItemsPurchase"
+          [crrValue]="itemsPurchase?.underDelivery"
+          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+        ></codx-input>
+      </div>
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="overDelivery"
+          [formModel]="fmItemsPurchase"
+        ></codx-label>
+        <codx-input
+          field="overDelivery"
+          [formModel]="fmItemsPurchase"
+          [crrValue]="itemsPurchase?.overDelivery"
+          (valueChange)="handleInputChange($event, 'itemsPurchase')"
+        ></codx-input>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #tabSales>
+  <ng-container *ngIf="gvsItemsSales">
+    <codx-label
+      default="Thông tin bán hàng"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-4 form-group">
+        <codx-label fiedName="umid" [formModel]="fmItemsSales"></codx-label>
+        <codx-input
+          field="umid"
+          [formModel]="fmItemsSales"
+          [crrValue]="itemsSales?.umid"
+          (valueChange)="handleInputChange($event, 'itemsSales')"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-7 form-group">
+        <codx-label
+          fiedName="warehouseID"
+          [formModel]="fmItemsSales"
+        ></codx-label>
+        <codx-input
+          field="warehouseID"
+          [formModel]="fmItemsSales"
+          [crrValue]="itemsSales?.warehouseID"
+          (valueChange)="handleInputChange($event, 'itemsSales')"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-4 form-group">
+        <codx-label
+          fiedName="warrantyDays"
+          [formModel]="fmItemsSales"
+        ></codx-label>
+        <codx-input
+          field="warrantyDays"
+          [formModel]="fmItemsSales"
+          [crrValue]="itemsSales?.warrantyDays"
+          (valueChange)="handleInputChange($event, 'itemsSales')"
+        ></codx-input>
+      </div>
+    </div>
+
+    <codx-label
+      default="Thuế đầu ra"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-3 form-group">
+        <codx-label fiedName="vatid" [formModel]="fmItemsSales"></codx-label>
+        <codx-input
+          field="vatid"
+          [formModel]="fmItemsSales"
+          [crrValue]="itemsSales?.vatid"
+          (valueChange)="handleInputChange($event, 'itemsSales')"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="exportDuty"
+          [formModel]="fmItemsSales"
+        ></codx-label>
+        <codx-input
+          field="exportDuty"
+          [formModel]="fmItemsSales"
+          [crrValue]="itemsSales?.exportDuty"
+          (valueChange)="handleInputChange($event, 'itemsSales')"
+        ></codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label
+          fiedName="exciseTax"
+          [formModel]="fmItemsSales"
+        ></codx-label>
+        <codx-input
+          field="exciseTax"
+          [formModel]="fmItemsSales"
+          [crrValue]="itemsSales?.exciseTax"
+          (valueChange)="handleInputChange($event, 'itemsSales')"
+        ></codx-input>
+      </div>
+    </div>
+
+    <codx-label
+      default="Kiểm soát giao hàng"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="underDelivery"
+          [formModel]="fmItemsSales"
+        ></codx-label>
+        <codx-input
+          field="underDelivery"
+          [formModel]="fmItemsSales"
+          [crrValue]="itemsSales?.underDelivery"
+          (valueChange)="handleInputChange($event, 'itemsSales')"
+        ></codx-input>
+      </div>
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="overDelivery"
+          [formModel]="fmItemsSales"
+        ></codx-label>
+        <codx-input
+          field="overDelivery"
+          [formModel]="fmItemsSales"
+          [crrValue]="itemsSales?.overDelivery"
+          (valueChange)="handleInputChange($event, 'itemsSales')"
+        ></codx-input>
+      </div>
+    </div>
+
+    <codx-label
+      default="Theo dõi bán bộ"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-5 form-group">
+        <codx-label fiedName="setItems" [formModel]="fmItemsSales"></codx-label>
+        <codx-input
+          field="setItems"
+          [formModel]="fmItemsSales"
+          [crrValue]="itemsSales?.setItems"
+          (valueChange)="handleInputChange($event, 'itemsSales')"
+        ></codx-input>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #tabProduction>
+  <ng-container *ngIf="gvsItemsProduction">
+    <codx-label
+      default="Thông tin sản xuất"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-4 form-group">
+        <codx-label
+          fiedName="leadtime"
+          [formModel]="fmItemsProduction"
+        ></codx-label>
+        <codx-input
+          field="leadtime"
+          [formModel]="fmItemsProduction"
+          [crrValue]="itemsProduction?.leadtime"
+          (valueChange)="handleInputChange($event, 'itemsProduction')"
+        ></codx-input>
+      </div>
+      <div class="col-4 form-group">
+        <codx-label
+          fiedName="batchSize"
+          [formModel]="fmItemsProduction"
+        ></codx-label>
+        <codx-input
+          field="batchSize"
+          [formModel]="fmItemsProduction"
+          [crrValue]="itemsProduction?.batchSize"
+          (valueChange)="handleInputChange($event, 'itemsProduction')"
+        ></codx-input>
+      </div>
+    </div>
+
+    <codx-label
+      default="Thiết lập định mức (BOM)"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-4 form-group">
+        <codx-label
+          fiedName="umid"
+          [formModel]="fmItemsProduction"
+        ></codx-label>
+        <codx-input
+          field="umid"
+          [formModel]="fmItemsProduction"
+          [crrValue]="itemsProduction?.umid"
+          (valueChange)="handleInputChange($event, 'itemsProduction')"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-4 form-group">
+        <codx-label
+          fiedName="yield"
+          [formModel]="fmItemsProduction"
+        ></codx-label>
+        <codx-input
+          field="yield"
+          [formModel]="fmItemsProduction"
+          [crrValue]="itemsProduction?.yield"
+          (valueChange)="handleInputChange($event, 'itemsProduction')"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <codx-input
+        field="autoIssue"
+        label="Xuất kèm hao hụt khi đề nghị xuất kho"
+        [formModel]="fmItemsProduction"
+        [crrValue]="itemsProduction?.autoIssue"
+        (valueChange)="handleInputChange($event, 'itemsProduction')"
+      ></codx-input>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #tabOtherInfo>
+  <ng-container *ngIf="form.formGroup">
+    <codx-label
+      default="Quản lý mã vạch"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="barcodeStyle"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="barcodeStyle"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="barcodeControl"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="barcodeControl"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <codx-label
+      default="Thiết lập mặc định"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="d-flex gap-2 mt-3">
+      <codx-input
+        type="switch"
+        field="userItemIDToCreateDIM2"
+        [checked]="form.data?.userItemIDToCreateDIM2"
+        (valueChange)="handleInputChange($event)"
+      ></codx-input>
+      <codx-label
+        fiedName="userItemIDToCreateDIM2"
+        [formModel]="form.formModel"
+      ></codx-label>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-5 form-group">
+        <codx-label fiedName="diM2" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          field="diM2"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+
+      <div class="col-5 form-group">
+        <codx-label fiedName="diM3" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          field="diM3"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <codx-label
+      default="Tính giá xuất kho"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+
+    <div class="row mt-3">
+      <div class="col-5 form-group">
+        <codx-label
+          fiedName="minSettledQty"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="minSettledQty"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+
+      <div class="text-secondary fs-7">
+        (*) Chỉ áp dụng cho phương pháp bình quân gia quyền
+      </div>
+    </div>
+  </ng-container>
+</ng-template>

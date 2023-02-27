@@ -31,6 +31,7 @@ export class PopAddDimensionSetupComponent
   extends UIComponent
   implements OnInit
 {
+  //#region Contructor
   @ViewChild('form') public form: CodxFormComponent;
   dialog!: DialogRef;
   headerText: string;
@@ -38,13 +39,13 @@ export class PopAddDimensionSetupComponent
   dimensionSetup: DimensionSetup;
   type: any;
   isPopupCbb: any;
-  dataCbx:any;
-  dimensionControl:DimensionControl = {
-    entityName : '',
-    dimGroupID : '',
-    recID : Guid.newGuid(),
-    dimType : ''
-  }
+  dataCbx: any;
+  dimensionControl: DimensionControl = {
+    entityName: '',
+    dimGroupID: '',
+    recID: Guid.newGuid(),
+    dimType: '',
+  };
   objectDimensionControl: Array<DimensionControl> = [];
   constructor(
     private inject: Injector,
@@ -63,16 +64,23 @@ export class PopAddDimensionSetupComponent
     this.type = dialogData.data?.type;
     this.isPopupCbb = false;
     this.dataCbx = '';
+    let value = '';
     if (dialogData.data?.data != null) {
       this.dimensionSetup = dialogData.data?.data;
     }
-    // if (this.objectDimensionControl != null) {
-    //   this.objectDimensionControl.forEach(element => {
-    //     this.dataCbx += this.dataCbx + element.entityName + ';';
-    //   });
-    // }
+    if (dialogData.data?.dataControl != null) {
+      dialogData.data?.dataControl.forEach((element) => {
+        if (element.dimType == this.type) {
+          this.objectDimensionControl.push(element);
+          value += element.entityName + ';';
+        }
+        this.dataCbx = value.substring(0, value.length - 1);
+      });
+    }
   }
+//#endregion
 
+//#region Init
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
@@ -82,10 +90,18 @@ export class PopAddDimensionSetupComponent
       this.dimensionSetup.recID = Guid.newGuid();
     }
   }
+  //#endregion
+
+  //#region Function
   valueChange(e: any) {
     this.dimensionSetup[e.field] = e.data;
   }
   clickSave(e: any) {
+    if (!e || !e?.dataSelected) {
+      this.isPopupCbb = false;
+      return;
+    }
+    this.objectDimensionControl = [];
     let data = e.dataSelected;
     let value = '';
     if (data && data.length > 0) {
@@ -98,22 +114,32 @@ export class PopAddDimensionSetupComponent
         });
       });
     }
-    this.objectDimensionControl.forEach(element => {
+    this.objectDimensionControl.forEach((element) => {
       value += element.entityName + ';';
     });
-    this.dataCbx = value.substring(0, value.length - 1)
+    this.dataCbx = value.substring(0, value.length - 1);
     this.isPopupCbb = false;
+    console.log(this.objectDimensionControl);
   }
   openPopup() {
     this.isPopupCbb = true;
   }
+  //#endregion
+
+  //#region CRUD
   onSave() {
     window.localStorage.setItem(
       'datadimensionSetup',
       JSON.stringify(this.dimensionSetup)
     );
+    window.localStorage.setItem(
+      'datadimensionControl',
+      JSON.stringify(this.objectDimensionControl)
+    );
+    window.localStorage.setItem('type', JSON.stringify(this.type));
     this.dialog.close();
   }
+  //#endregion
 }
 //#region Guid
 class Guid {

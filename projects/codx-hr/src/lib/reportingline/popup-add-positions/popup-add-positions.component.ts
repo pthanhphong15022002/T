@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   OnInit,
@@ -9,14 +8,11 @@ import {
 import {
   ApiHttpService,
   AuthService,
-  AuthStore,
   CacheService,
   DialogData,
   DialogRef,
-  NotificationsService,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
-import { HR_Positions } from '../../model/HR_Positions.module';
+
 
 @Component({
   selector: 'hr-popup-add-positions',
@@ -49,7 +45,7 @@ export class PopupAddPositionsComponent implements OnInit {
     this.dialogRef = dialog;
     this.functionID = dt.data.function;
     this.formModel = this.dialogRef.formModel;
-    this.isCorporation = dt.data.isCorporation; // check disable field DivisionID
+    // this.isCorporation = dt.data.isCorporation; // check disable field DivisionID
     this.user = this.auth.userValue;
 
   }
@@ -78,11 +74,32 @@ export class PopupAddPositionsComponent implements OnInit {
 
   // value change
   dataChange(e: any, field: string) {
+    debugger
     if (e) {
       if (e?.length == undefined) {
         this.data[field] = e?.data;
       } else {
         this.data[field] = e[0];
+        // if(field == "positionID"){
+        //   let itemSelected = e.component?.itemsSelected[0];
+        //   if(itemSelected){
+        //     if(itemSelected.hasOwnProperty("DepartmentID"))
+        //     {
+        //       let departmentID = itemSelected["DepartmentID"];
+        //       this.data["departmentID"] = departmentID;
+        //     }
+        //     if(itemSelected.hasOwnProperty("DivisionID"))
+        //     {
+        //       let departmentID = itemSelected["DivisionID"];
+        //       this.data["divisionID"] = departmentID;
+        //     }
+        //     if(itemSelected.hasOwnProperty("CompanyID"))
+        //     {
+        //       let departmentID = itemSelected["CompanyID"];
+        //       this.data["companyID"] = departmentID;
+        //     }
+        //   }
+        // }
       }
     }
   }
@@ -94,7 +111,7 @@ export class PopupAddPositionsComponent implements OnInit {
       'ERM.Business.HR',
       'PositionsBusiness', 
       _method, 
-      [this.data])
+      [this.data,this.functionID])
       .subscribe((res) => {
         if(this.isAdd)
           this.dialogRef.dataService.add(res,0).subscribe();

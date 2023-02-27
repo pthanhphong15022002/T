@@ -8,7 +8,7 @@ export class DragDropFileUploadDirective {
 
   @Output() fileDropped = new EventEmitter<any>();
 
-  @HostBinding('style.background-color') private background = '#ffffff';
+  //@HostBinding('style.background-color') private background = '#ffffff';
   @HostBinding('style.border-style') private borderstyle = 'none';
   @HostBinding('style.border-color') private bordercolor = '#7e8299';
   @HostBinding('style.border-width') private borderwidth = '1px';
@@ -19,7 +19,7 @@ export class DragDropFileUploadDirective {
     if(event.dataTransfer.effectAllowed == "move") return;
     event.preventDefault();
     event.stopPropagation();
-    this.background = '#e2eefd';
+    //this.background = '#e2eefd';
     this.borderstyle = "dashed !important";
   }
 
@@ -28,7 +28,7 @@ export class DragDropFileUploadDirective {
     if(event.dataTransfer.effectAllowed == "move") return;
     event.preventDefault();
     event.stopPropagation();
-    this.background = '#ffffff';
+    //this.background = '#ffffff';
     this.borderstyle = "none";
   }
 
@@ -39,7 +39,7 @@ export class DragDropFileUploadDirective {
       event.preventDefault();
       event.stopPropagation();
     }
-    this.background = '#ffffff';
+    //this.background = '#ffffff';
     this.borderstyle = "none";
     const files = event.dataTransfer.files;
     if (files.length > 0) {

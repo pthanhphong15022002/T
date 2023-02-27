@@ -9,12 +9,11 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-between">
-    <button type="button" class="btn btn-light-primary me-3">
-      <i class="icon-cloud_upload fs-5"></i><span>
-        <codx-label default="Đính kèm"></codx-label>
-      </span>
-    </button>
-    <button type="button" class="btn btn-primary ms-1" (click)="saveInstances()">
+    <button
+      type="button"
+      class="btn btn-primary ms-1"
+      (click)="saveInstances()"
+    >
       <codx-label default="Lưu"></codx-label>
     </button>
   </div>
@@ -25,16 +24,26 @@
   <div class="form-group">
     <codx-label fiedName="InstanceNo" [formModel]="form.formModel" [Group]="form.formGroup" default="Mã nhiệm vụ">
     </codx-label>
-    <!-- đang gán cứng -->
-    <codx-input field="instanceNo" [formModel]="form.formModel" [Group]="form.formGroup"
-      [crrValue]="instance?.instanceNo" (valueChange)="valueChange($event)" [disabled]="true">
+    <codx-input
+      field="instanceNo"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      [crrValue]="instance?.instanceNo"
+      (valueChange)="valueChange($event)"
+      [disabled]="true"
+    >
     </codx-input>
   </div>
 
   <div class="form-group">
     <codx-label [formModel]="form.formModel" field="Title" [Group]="form.formGroup" default="Tên nhiệm vụ">
     </codx-label>
-    <codx-input field="title" [formModel]="form.formModel" [Group]="form.formGroup" (valueChange)="valueChange($event)">
+    <codx-input
+      field="title"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+      (valueChange)="valueChange($event)"
+    >
     </codx-input>
   </div>
 
@@ -50,8 +59,13 @@
   <div class="form-group">
     <codx-label fiedName="StepID" [Group]="form.formGroup" [formModel]="form.formModel" default="Giai đoạn quy trình">
     </codx-label>
-    <ejs-combobox [dataSource]="listStepCbx" [fields]="fieldCbxStep" [value]="instance.stepID"
-      [readonly]=" action === 'edit' ?true : false" (valueChange)="cbxChange($event)"></ejs-combobox>
+    <ejs-combobox
+      [dataSource]="listStepCbx"
+      [fields]="fieldCbxStep"
+      [value]="instance.stepID"
+      [readonly]="action === 'edit' ? true : false"
+      (valueChange)="cbxChange($event)"
+    ></ejs-combobox>
   </div>
 
   <div class="form-group">
@@ -135,8 +149,13 @@
       <ng-container *ngIf="step?.fields?.length > 0">
         <ng-container *ngFor="let item of step.fields">
           <div class="form-group">
-            <codx-input-custom-field [customField]="item" [objectId]="item.recID" [objectType]="'DP_Instances'"
-              [formModel]="dialog.formModel" [customField]="item" (valueChangeCustom)="valueChangeCustom($event)">
+            <codx-input-custom-field
+              [customField]="item"
+              [objectId]="item.recID"
+              [objectType]="'DP_Instances'"
+              [formModel]="dialog.formModel"
+              (valueChangeCustom)="valueChangeCustom($event)"
+            >
             </codx-input-custom-field>
           </div>
         </ng-container>
@@ -163,6 +182,10 @@
 </ng-template>
 
 <ng-template #popupParticipants let-dialog>
-  <codx-popup-participants [lstParticipants]="lstParticipants" [dialog]="dialog" [isType]="'I'"
-    (eventUser)="eventUser($event)"></codx-popup-participants>
+  <codx-popup-participants
+    [lstParticipants]="lstParticipants"
+    [dialog]="dialog"
+    [isType]="'I'"
+    (eventUser)="eventUser($event)"
+  ></codx-popup-participants>
 </ng-template>
