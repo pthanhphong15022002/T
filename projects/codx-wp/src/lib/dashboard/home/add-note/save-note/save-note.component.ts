@@ -7,6 +7,8 @@ import {
   UIComponent,
   NotificationsService,
   CodxFormComponent,
+  ViewModel,
+  ViewType,
 } from 'codx-core';
 import {
   ChangeDetectorRef,
@@ -18,6 +20,7 @@ import {
 } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
+import { TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'app-save-note',
@@ -29,36 +32,45 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
   predicate = 'CreatedBy=@0';
   dataValue = '';
   data = new Notes();
-  header = '';
+  header = "";
   dialog: any;
-  dialogRef: any;
-
+  mssgNoData:string = "";
+  views:Array<ViewModel> = [];
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild("itemTemplate") content:TemplateRef<any>;
 
   constructor(
     private injector: Injector,
     private authStore: AuthStore,
-    private changeDetectorRef: ChangeDetectorRef,
-    private notificationsService: NotificationsService,
-    private noteService: NoteServices,
     @Optional() data?: DialogData,
     @Optional() dt?: DialogRef
-  ) {
+  ) 
+  {
+    debugger
     super(injector);
     this.dialog = dt;
     this.data = data?.data?.itemUpdate;
-
     this.user = this.authStore.get();
     this.dataValue = this.user?.userID;
-    this.dialogRef = data?.data?.dialogRef;
+    this.header = data.data?.headerText;
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.cache.message("SYS010").subscribe((mssg:any) => {
+      if(mssg){
+        this.mssgNoData = mssg.defaultName;
+      }
+    });
+  }
 
   ngAfterViewInit() {
-    if (this.form) {
-      this.header = this.form.headerText;
-    }
+    this.views = [{
+      type:ViewType.card,
+      sameData:true,
+      model:{
+        template:this.content
+      }
+    }]
   }
 
   // getData() {
@@ -75,8 +87,6 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
     };
     this.callfc
       .openForm(PopupTitleComponent, '', 400, 100, '', obj)
-      .closed.subscribe((res) => {
-        if (res) if (this.dialogRef) this.dialogRef.close(res);
-      });
+      .closed.subscribe((res) => this.dialog.close(res));
   }
 }
