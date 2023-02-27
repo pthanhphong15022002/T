@@ -6636,12 +6636,13 @@
     {{
       data?.conclusion | formatvalue : eDiseasesFormModel : "Conclusion" | async
     }}
+    <codx-mfunc
+      [formModel]="eDiseasesFormModel"
+      (clickMF)="clickMF($event, data, 'eDiseases')"
+      [dataItem]="data"
+      type="hover"
+    >
+    </codx-mfunc>
   </div>
-  <codx-mfunc
-    [formModel]="eDiseasesFormModel"
-    (clickMF)="clickMF($event, data, 'eDiseases')"
-    [dataItem]="data"
-    type="hover"
-  >
-  </codx-mfunc>
+  
 </ng-template>
