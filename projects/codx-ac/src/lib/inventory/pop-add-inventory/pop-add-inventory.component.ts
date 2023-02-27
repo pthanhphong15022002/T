@@ -34,7 +34,6 @@ export class PopAddInventoryComponent extends UIComponent {
   formModel: FormModel;
   dialog!: DialogRef;
   inventory: Inventorymodels;
-  inventorys: Inventorymodels;
   inventModelID: any;
   inventModelName: any;
   gridViewSetup: any;
@@ -92,7 +91,6 @@ export class PopAddInventoryComponent extends UIComponent {
   }
   valueChange(e: any) {
     this.inventory[e.field] = e.data;
-    console.log('sssssssss',e.data)
   }
   valueChangeInventModelID(e: any) {
     this.inventModelID = e.data;

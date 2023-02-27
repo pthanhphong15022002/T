@@ -107,7 +107,7 @@ export class PopAddDimensionSetupComponent
     if (data && data.length > 0) {
       data.map((element: any) => {
         this.objectDimensionControl.push({
-          entityName: element.UserID,
+          entityName: element.EntityName,
           dimGroupID: null,
           recID: Guid.newGuid(),
           dimType: this.type,
