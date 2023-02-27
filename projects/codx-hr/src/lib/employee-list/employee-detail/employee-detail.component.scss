@@ -12,7 +12,6 @@
 }
 
 .h-employee {
-  height: 100%;
   overflow: hidden;
   position: relative;
   max-width: 1280px;
@@ -36,10 +35,23 @@
 
 
   .bg-sidebar {
+    height: 230px;
+  }
+
+  .profile-bg {
     background-image: url(../../../../../../src/assets/themes/hr/default/img/EmpProfile_Background.jpg);
     background-repeat: no-repeat;
     background-size: 100% auto;
-    height: 160px;
+    height: 140px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .user-left {
+    border-radius: 10px 10px 0 0;
+  }
+
+  .profile-info {
+    margin-top: -90px;
   }
 
   .icon-circle-group {
