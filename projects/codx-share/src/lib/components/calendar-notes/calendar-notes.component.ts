@@ -318,8 +318,8 @@ export class CalendarNotesComponent
   }
 
   setEventWeek() {
-    var ele = document.querySelectorAll('.week-item[data-date]');
     let myInterval = setInterval(() => {
+      let ele = document.querySelectorAll('.week-item[data-date]');
       if (ele && ele.length > 0) {
         clearInterval(myInterval);
         for (var i = 0; i < ele.length; i++) {
@@ -336,17 +336,26 @@ export class CalendarNotesComponent
 
   changeDayOfWeek(e) {
     this.dateSelected = e.daySelected;
+    console.log('changeDayOfWeek', this.dateSelected);
     this.drawData();
     this.changeNewWeek(null, this.dateSelected);
   }
 
   curStartDateOfWeek;
   curEndDateOfWeek;
+  changeWeekQueue = new Map<string, any>();
+
+  clickChangeWeek(args) {
+    clearTimeout(this.changeWeekQueue.get('0'));
+    this.changeWeekQueue.set(
+      '0',
+      setTimeout(this.changeNewWeek.bind(this), 300, args)
+    );
+  }
+
   changeNewWeek(args: any, setDate = null) {
-    // if (this.lstView) {
-    //   this.lstView.dataService.data = [];
-    // }
     if (args) {
+      console.log('changeNewWeek', args);
       let startDate = moment(args.fromDate).toJSON();
       let endDate = moment(args.toDate).toJSON();
       this.curStartDateOfWeek = startDate;
@@ -432,16 +441,15 @@ export class CalendarNotesComponent
             //x.calendarDate = this.dateSelected;
             //});
             //let dataTemp = dataTemp.filter((x) => x.calendarDate == fromDate);
-            lstView.dataService.data = this.dataResourceModel.filter(
-              (x) =>
-                new Date(x.calendarDate) >= fromDate &&
-                new Date(x.calendarDate) < toDate
-            );
+            this.lstView.dataService.data =
+              this.lstView.dataService.data.filter(
+                (x) =>
+                  new Date(x.calendarDate) >= fromDate &&
+                  new Date(x.calendarDate) < toDate
+              );
             this.dataListViewTemp = JSON.parse(
               JSON.stringify(lstView.dataService.data)
             );
-            this.lstView.dataService.data.sort(this.orderByStartTime);
-
             this.change.detectChanges();
           }
         });
@@ -1003,65 +1011,9 @@ export class CalendarNotesComponent
             }
             flex.append(spanEP_Car);
           }
-          // if (
-          //   calendarWP >= 1 &&
-          //   calendarTM >= 1 &&
-          //   calendarCO >= 1 &&
-          //   calendarEP_Room >= 1 &&
-          //   calendarEP_Car >= 1 &&
-          //   countShowCalendar < 1
-          // ) {
-          //   if (this.typeCalendar == 'week') {
-          //     spanWP.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
-          //     );
-          //     spanTM.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.TM_TasksParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-          //     );
-          //     spanCO.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-          //     );
-          //     spanEP_Room.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.EP_BookingRoomsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-          //     );
-          //     spanEP_Car.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.EP_BookingCarsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-          //     );
-          //   } else {
-          //     spanWP.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
-          //     );
-          //     spanTM.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.TM_TasksParam?.ShowColor};border-radius: 50%;margin-left: 2px`
-          //     );
-          //     spanCO.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-          //     );
-          //     spanEP_Room.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.EP_BookingRoomsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-          //     );
-          //     spanEP_Car.setAttribute(
-          //       'style',
-          //       `width: 6px;height: 6px;background-color: ${this.EP_BookingCarsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-          //     );
-          //   }
-          //   flex.append(spanWP);
-          //   flex.append(spanTM);
-          //   flex.append(spanCO);
-          //   flex.append(spanEP_Room);
-          //   flex.append(spanEP_Car);
-          // }
-          var eleTest = ele.querySelectorAll(`.note-pointed-${classDate}`);
+
           let interVal = setInterval(() => {
+            var eleTest = ele.querySelectorAll(`.note-pointed-${classDate}`);
             if (eleTest && eleTest.length > 0) {
               clearInterval(interVal);
               if (eleTest.length > 3) {
@@ -1078,7 +1030,7 @@ export class CalendarNotesComponent
                         `font-size: 10px; margin-left: 2px; margin-top: -3px;`
                       );
                       flex.append(spanPlus);
-                      this.change.detectChanges();
+                      this.detectorRef.detectChanges();
                       return;
                     }
                   }
