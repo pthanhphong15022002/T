@@ -33,6 +33,7 @@ import {
   FormModel,
   CacheService,
   AuthStore,
+  CRUDService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -354,6 +355,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
         // save file
+        debugger
         if (res) {
           this.handlerSave();
         }
@@ -392,7 +394,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (res) {
           this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
           this.handleAddStep();
-          this.dialog.close([res.save]);
+          this.dialog.close(res.save);
         } else this.dialog.close();
       });
   }
@@ -403,10 +405,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       .subscribe((res) => {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
-        if (res.update) {
+        if (res && res.update) {
+          (this.dialog.dataService as CRUDService).update(res.update).subscribe();
           this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
-          this.handleUpdateStep();
-          this.dialog.close(res.update);
+          this.handleUpdateStep(); 
+          res.update.modifiedOn = new Date() ;
+          this.dialog.close(res.update);     
         }
       });
   }

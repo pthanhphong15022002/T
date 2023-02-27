@@ -1,4 +1,4 @@
-<codx-form headerText="{{title}}" [body]="body" [footer]="footer" [dialog]="dialog">
+<!-- <codx-form headerText="{{title}}" [body]="body" [footer]="footer" [dialog]="dialog">
 </codx-form>
 <ng-template #body>
   <div class="row" style="height: 100% !important;">
@@ -147,4 +147,8 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
+
+<ejs-dropdownlist [dataSource]='lstOrg' [query]='query' [fields]='fields'
+  [placeholder]="'Nhập tên...'" (valueChange)="cbxChange($event)" (filtering)='onFiltering($event)'
+  [allowFiltering]='true' [value]="owner"></ejs-dropdownlist>

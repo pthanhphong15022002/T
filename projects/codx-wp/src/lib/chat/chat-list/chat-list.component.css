@@ -22,11 +22,11 @@
 }
 
 .last-message{
-    display: inline-block;
-    width: 150px;
-    white-space: nowrap;
-    overflow: hidden !important;
-    text-overflow: ellipsis;
+    width: 50%;
+    display: -webkit-box;
+    -webkit-box-orient: horizontal ;
+    -webkit-line-clamp: 1;
+    text-align: left;
 }
 .dots {
     height: 6px;

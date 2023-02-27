@@ -97,6 +97,7 @@ export class InstancesComponent
   listProccessCbx: any;
   dataProccess: any;
   sumDaySteps: number;
+  lstParticipants = [];
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
@@ -171,6 +172,7 @@ export class InstancesComponent
           this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
       });
+      this.getPermissionProcess(this.process.recID);
     //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
@@ -289,7 +291,7 @@ export class InstancesComponent
                     this.instanceNo = isNo;
                     this.openPopUpAdd(applyFor, formMD, option,titleAction);
                   });
-              }         
+              }
             });
         });
       });
@@ -307,6 +309,7 @@ export class InstancesComponent
         this.listStepsCbx,
         this.instanceNo,
         this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx),
+        this.lstParticipants
       ],
       option
     );
@@ -462,6 +465,18 @@ export class InstancesComponent
     }
   }
   //End
+
+  getPermissionProcess(id){
+    this.codxDpService.getProcess(this.process?.recID).subscribe((res) => {
+      if (res) {
+        if (res.permissions != null && res.permissions.length > 0) {
+          this.lstParticipants = res.permissions.filter(
+            (x) => x.roleType === 'P'
+          );
+        }
+      }
+    });
+  }
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
     var desc = '<div class="d-flex">';

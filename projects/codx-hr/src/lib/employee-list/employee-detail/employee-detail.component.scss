@@ -2,17 +2,22 @@
   background-color: #f5f8fa;
 }
 
-
 .emp-check-add {
   position: fixed;
   z-index: 105;
   bottom: 20px;
   right: 20px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
+  width: 40px !important;
+  height: 40px !important;
+  box-shadow: 0px 2px 8px 2px rgb(0 0 0 / 40%) !important;
+}
+
+.emp-check-add .btn {
+  width: 40px !important;
+  height: 40px !important;
 }
 
 .h-employee {
-  height: 100%;
   overflow: hidden;
   position: relative;
   max-width: 1280px;
@@ -20,11 +25,11 @@
 }
 
 .user-menu {
-  height: calc(100% - 330px) !important;
+  height: calc(100vh - 420px) !important;
 }
 
 .pw-content {
-  height: calc(100vh - 145px) !important;
+  height: calc(100vh - 120px) !important;
 
 }
 
@@ -36,14 +41,51 @@
 
 
   .bg-sidebar {
+    height: 230px;
+  }
+
+  .profile-bg {
     background-image: url(../../../../../../src/assets/themes/hr/default/img/EmpProfile_Background.jpg);
     background-repeat: no-repeat;
     background-size: 100% auto;
-    height: 160px;
+    height: 140px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .user-left {
+    border-radius: 10px 10px 0 0;
+  }
+
+  .profile-info {
+    margin-top: -90px;
   }
 
   .icon-circle-group {
     font-size: 6px !important;
+  }
+
+  .h-od-tab {
+    padding-top: 7px;
+  }
+
+  .h-od-tab .nav-item {
+    .nav-link {
+      padding: 7px 0;
+      margin-right: 12px;
+      display: inline-block;
+      border: 0;
+      border-bottom: 2px transparent solid;
+
+      &.active {
+        border-color: var(--primary-dark);
+        color: var(--primary-dark);
+      }
+    }
+
+    .nav-link:hover {
+      border-color: var(--primary) !important;
+
+    }
   }
 
 }

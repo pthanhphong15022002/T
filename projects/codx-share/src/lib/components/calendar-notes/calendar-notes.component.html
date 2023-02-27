@@ -206,6 +206,13 @@
             </div>
           </div>
         </div>
+        <button
+          type="button"
+          class="btn btn-primary ms-2"
+          (click)="updateSettingValueVer2()"
+        >
+          <codx-label name="lblSaveSettingValue" default="Apply"></codx-label>
+        </button>
       </ul>
     </div>
   </div>
@@ -214,7 +221,7 @@
       <selectweek
         *ngIf="typeCalendar == 'week'"
         (onChangeValue)="changeDayOfWeek($event)"
-        (onChangeNewWeek)="changeNewWeek($event)"
+        (onChangeNewWeek)="clickChangeWeek($event)"
       >
       </selectweek>
       <ejs-calendar

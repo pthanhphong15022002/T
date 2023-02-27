@@ -193,29 +193,39 @@ export class PopupAddEmployeesComponent implements OnInit {
         debugger
         let itemSelected = e.component?.itemsSelected[0];
         if(itemSelected){
-          if(itemSelected.hasOwnProperty("OrgUnitID"))
+          if(itemSelected["OrgUnitID"])
           {
             let orgUnitID = itemSelected["OrgUnitID"];
-            this.form.formGroup.patchValue({"orgUnitID":orgUnitID});
-            this.employee["orgUnitID"] = orgUnitID;
+            if(orgUnitID != this.employee["orgUnitID"])
+            {
+              this.form.formGroup.patchValue({"orgUnitID":orgUnitID});
+              this.employee["orgUnitID"] = orgUnitID;
+            }
           }
-          if(itemSelected.hasOwnProperty("DepartmentID"))
+          if(itemSelected["DepartmentID"])
           {
             let departmentID = itemSelected["DepartmentID"];
-            this.form.formGroup.patchValue({"departmentID":departmentID});
-            this.employee["departmentID"] = departmentID;
+            if(departmentID != this.employee["departmentID"])
+            {
+              this.form.formGroup.patchValue({"departmentID":departmentID});
+              this.employee["departmentID"] = departmentID;
+            }
           }
-          if(itemSelected.hasOwnProperty("DivisionID"))
+          if(itemSelected["DivisionID"])
           {
-            let departmentID = itemSelected["DivisionID"];
-            this.form.formGroup.patchValue({"divisionID":departmentID});
-            this.employee["divisionID"] = departmentID;
+            let divisionID = itemSelected["DivisionID"];
+            if(divisionID !=  this.employee["divisionID"]){
+              this.form.formGroup.patchValue({"divisionID":divisionID});
+              this.employee["divisionID"] = divisionID;
+            }
           }
-          if(itemSelected.hasOwnProperty("CompanyID"))
+          if(itemSelected["CompanyID"])
           {
-            let departmentID = itemSelected["CompanyID"];
-            this.form.formGroup.patchValue({"companyID":departmentID});
-            this.employee["companyID"] = departmentID;
+            let companyID = itemSelected["CompanyID"];
+            if(companyID != this.employee["companyID"]){
+              this.form.formGroup.patchValue({"companyID":companyID});
+              this.employee["companyID"] = companyID;
+            }
           }
         }
       }

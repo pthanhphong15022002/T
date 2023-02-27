@@ -42,6 +42,7 @@ export class PopAddDimensionGroupsComponent
   formType: any;
   dimGroupID: any;
   dimGroupName: any;
+  validate: any = 0;
   dimensionGroups: DimensionGroups;
   dimensionSetup: DimensionSetup;
   objectDimensionSetup: Array<DimensionSetup> = [];
@@ -210,27 +211,126 @@ export class PopAddDimensionGroupsComponent
     this.objectDimensionSetup = [];
     this.objectDimensionControl = [];
   }
+  checkValidate() {
+    var keygrid = Object.keys(this.gridViewSetup);
+    var keymodel = Object.keys(this.dimensionGroups);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              this.dimensionGroups[keymodel[i]] == null ||
+              this.dimensionGroups[keymodel[i]] == ''
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
+              );
+              this.validate++;
+            }
+          }
+        }
+      }
+    }
+  }
   //#endregion
 
   //#region CRUD
   onSave() {
-    if (this.dimGroupID.trim() == '' || this.dimGroupID == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['DimGroupID'].headerText + '"'
-      );
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
       return;
+    } else {
+      if (this.formType == 'add') {
+        this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'AddAsync';
+            opt.className = 'DimensionGroupsBusiness';
+            opt.assemblyName = 'IV';
+            opt.service = 'IV';
+            opt.data = [this.dimensionGroups];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res.save) {
+              this.acService
+                .addData(
+                  'ERM.Business.IV',
+                  'DimensionSetupBusiness',
+                  'AddAsync',
+                  [this.dimGroupID, this.objectDimensionSetup]
+                )
+                .subscribe((res: []) => {});
+              this.acService
+                .addData(
+                  'ERM.Business.IV',
+                  'DimensionControlBusiness',
+                  'AddAsync',
+                  [this.dimGroupID, this.objectDimensionControl]
+                )
+                .subscribe((res: []) => {});
+              this.dialog.close();
+              this.dt.detectChanges();
+            } else {
+              this.notification.notifyCode(
+                'SYS031',
+                0,
+                '"' + this.dimGroupID + '"'
+              );
+              return;
+            }
+          });
+      }
+      if (this.formType == 'edit') {
+        this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'UpdateAsync';
+            opt.className = 'DimensionGroupsBusiness';
+            opt.assemblyName = 'IV';
+            opt.service = 'IV';
+            opt.data = [this.dimensionGroups];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res.save || res.update) {
+              this.acService
+                .addData(
+                  'ERM.Business.IV',
+                  'DimensionSetupBusiness',
+                  'UpdateAsync',
+                  [this.dimGroupID, this.objectDimensionSetup]
+                )
+                .subscribe((res: []) => {});
+              this.acService
+                .addData(
+                  'ERM.Business.IV',
+                  'DimensionControlBusiness',
+                  'UpdateAsync',
+                  [this.dimGroupID, this.objectDimensionControl]
+                )
+                .subscribe((res: []) => {});
+              this.dialog.close();
+              this.dt.detectChanges();
+            } else {
+              this.notification.notifyCode(
+                'SYS031',
+                0,
+                '"' + this.dimGroupID + '"'
+              );
+              return;
+            }
+          });
+      }
     }
-    if (this.dimGroupName.trim() == '' || this.dimGroupName == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['DimGroupName'].headerText + '"'
-      );
+  }
+  onSaveAdd() {
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
       return;
-    }
-    if (this.formType == 'add') {
+    } else {
       this.dialog.dataService
         .save((opt: RequestOption) => {
           opt.methodName = 'AddAsync';
@@ -249,124 +349,30 @@ export class PopAddDimensionGroupsComponent
                 'AddAsync',
                 [this.dimGroupID, this.objectDimensionSetup]
               )
-              .subscribe((res: []) => {});
-            this.acService
-              .addData(
-                'ERM.Business.IV',
-                'DimensionControlBusiness',
-                'AddAsync',
-                [this.dimGroupID, this.objectDimensionControl]
-              )
-              .subscribe((res: []) => {});
-            this.dialog.close();
-            this.dt.detectChanges();
-          } else {
-            this.notification.notifyCode(
-              'SYS031',
-              0,
-              '"' + this.dimGroupID + '"'
-            );
-            return;
+              .subscribe((res) => {
+                if (res) {
+                  this.acService
+                    .addData(
+                      'ERM.Business.IV',
+                      'DimensionControlBusiness',
+                      'AddAsync',
+                      [this.dimGroupID, this.objectDimensionControl]
+                    )
+                    .subscribe((res) => {
+                      if (res) {
+                        this.clearDimensionGroups();
+                        this.dialog.dataService.clear();
+                        this.dialog.dataService.addNew().subscribe((res) => {
+                          this.dimensionGroups =
+                            this.dialog.dataService!.dataSelected;
+                        });
+                      }
+                    });
+                }
+              });
           }
         });
     }
-    if (this.formType == 'edit') {
-      this.dialog.dataService
-        .save((opt: RequestOption) => {
-          opt.methodName = 'UpdateAsync';
-          opt.className = 'DimensionGroupsBusiness';
-          opt.assemblyName = 'IV';
-          opt.service = 'IV';
-          opt.data = [this.dimensionGroups];
-          return true;
-        })
-        .subscribe((res) => {
-          if (res.save || res.update) {
-            this.acService
-              .addData(
-                'ERM.Business.IV',
-                'DimensionSetupBusiness',
-                'UpdateAsync',
-                [this.dimGroupID, this.objectDimensionSetup]
-              )
-              .subscribe((res: []) => {});
-            this.acService
-              .addData(
-                'ERM.Business.IV',
-                'DimensionControlBusiness',
-                'UpdateAsync',
-                [this.dimGroupID, this.objectDimensionControl]
-              )
-              .subscribe((res: []) => {});
-            this.dialog.close();
-            this.dt.detectChanges();
-          } else {
-            this.notification.notifyCode(
-              'SYS031',
-              0,
-              '"' + this.dimGroupID + '"'
-            );
-            return;
-          }
-        });
-    }
-  }
-  onSaveAdd() {
-    if (this.dimGroupID.trim() == '' || this.dimGroupID == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['DimGroupID'].headerText + '"'
-      );
-      return;
-    }
-    if (this.dimGroupName.trim() == '' || this.dimGroupName == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['DimGroupName'].headerText + '"'
-      );
-      return;
-    }
-    this.dialog.dataService
-      .save((opt: RequestOption) => {
-        opt.methodName = 'AddAsync';
-        opt.className = 'DimensionGroupsBusiness';
-        opt.assemblyName = 'IV';
-        opt.service = 'IV';
-        opt.data = [this.dimensionGroups];
-        return true;
-      })
-      .subscribe((res) => {
-        if (res.save) {
-          this.acService
-            .addData('ERM.Business.IV', 'DimensionSetupBusiness', 'AddAsync', [
-              this.dimGroupID,
-              this.objectDimensionSetup,
-            ])
-            .subscribe((res) => {
-              if (res) {
-                this.acService
-                  .addData(
-                    'ERM.Business.IV',
-                    'DimensionControlBusiness',
-                    'AddAsync',
-                    [this.dimGroupID, this.objectDimensionControl]
-                  )
-                  .subscribe((res) => {
-                    if (res) {
-                      this.clearDimensionGroups();
-                      this.dialog.dataService.clear();
-                      this.dialog.dataService.addNew().subscribe((res) => {
-                        this.dimensionGroups =
-                          this.dialog.dataService!.dataSelected;
-                      });
-                    }
-                  });
-              }
-            });
-        }
-      });
   }
   //#endregion
 }

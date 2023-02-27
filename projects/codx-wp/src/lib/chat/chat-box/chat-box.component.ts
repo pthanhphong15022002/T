@@ -42,8 +42,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
 
   ngOnInit(): void 
   {
-    if(this.groupID)
-    {
+    if(this.groupID){
       this.message.userID = this.user.userID;
       this.message.groupID = this.groupID;
       this.getGroupInfo(this.groupID);
@@ -78,15 +77,14 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
         "WP",
         "ERM.Business.WP",
         "GroupBusiness",
-        "GetGoupChatByIDAsync",
+        "GetGroupByIDAsync",
         [groupID])
         .subscribe((res:any[]) =>{
-        if(res)
-        {
+        if(res){
           let _group = res[0];
           let _messages = res[1];
           this.group = JSON.parse(JSON.stringify(_group));
-          if(_messages)
+          if(_messages.length > 0)
           {
             this.arrMessages = JSON.parse(JSON.stringify(_messages[0]));
             this.page = _messages[1] / 20;
