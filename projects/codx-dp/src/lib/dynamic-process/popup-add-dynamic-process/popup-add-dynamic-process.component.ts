@@ -355,6 +355,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
         // save file
+        debugger
         if (res) {
           this.handlerSave();
         }
@@ -393,7 +394,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (res) {
           this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
           this.handleAddStep();
-          this.dialog.close([res.save]);
+          this.dialog.close(res.save);
         } else this.dialog.close();
       });
   }
@@ -404,10 +405,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       .subscribe((res) => {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
-        if (res.update) {
+        if (res && res.update) {
           this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
-          this.handleUpdateStep();
-          this.dialog.close(res.update);
+          this.handleUpdateStep(); 
+          this.process = res.update ;
+          this.dialog.close(res.update);     
         }
       });
   }
