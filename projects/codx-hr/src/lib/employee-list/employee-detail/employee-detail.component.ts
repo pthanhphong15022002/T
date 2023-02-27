@@ -649,13 +649,12 @@ export class EmployeeDetailComponent extends UIComponent {
     this.hrService.getFormModel(this.eHealthFuncID).then((res) => {
       this.eHealthFormModel = res;
       console.log('ehealth form mo do` ne` ', res);
-
     });
 
     this.hrService.getFormModel(this.benefitFuncID).then((res) => {
       this.benefitFormodel = res;
       console.log('benefit form mo do` ne` ', res);
-      
+
       this.cache
         .gridViewSetup(
           this.benefitFormodel.formName,
@@ -795,7 +794,8 @@ export class EmployeeDetailComponent extends UIComponent {
                 }
               }
             });
-            this.eBusinessTravelRowCount = this.businessTravelGrid.dataService.rowCount;
+            this.eBusinessTravelRowCount =
+              this.businessTravelGrid.dataService.rowCount;
           }
         }, 100);
 
@@ -2947,8 +2947,8 @@ export class EmployeeDetailComponent extends UIComponent {
           (this.basicSalaryGridview?.dataService as CRUDService)
             ?.update(res.event[1])
             .subscribe();
-          res.event?.forEach(element => {
-            if(element.isCurrent){
+          res.event?.forEach((element) => {
+            if (element.isCurrent) {
               this.crrEBSalary = element;
             }
           });
@@ -4791,6 +4791,7 @@ export class EmployeeDetailComponent extends UIComponent {
   isMaxGrade(eSkill: any) {
     let item = this.lstESkill.filter((p) => p.skillID == eSkill.skillID);
     if (item) {
+      console.log('listtttttttttttttttttttskillllllllllll', item);
       let lstSkill = item[0].listSkill;
       if (lstSkill && eSkill.recID == lstSkill[0].recID) {
         return true;
