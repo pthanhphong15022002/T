@@ -345,8 +345,8 @@ export class CatagoryComponent implements OnInit {
   backSub(evt: any) {
     this.isOpenSub = false;
     evt.preventDefault();
-    this.settingFull = JSON.parse(JSON.stringify(this.oldSettingFull));
     this.dataValue = JSON.parse(JSON.stringify(this.oldDataValue));
+    this.settingFull = JSON.parse(JSON.stringify(this.oldSettingFull));
     this.setting =
       this.settingFull.filter((res) => res.isVisible == true) || [];
     this.groupSetting = this.setting.filter((x) => {

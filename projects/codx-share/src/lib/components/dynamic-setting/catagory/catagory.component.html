@@ -127,7 +127,10 @@
                       : dataValue[data.fieldName] == '1'
                   "
                   [crrValue]="
-                    autoDefault && autoDefault[data.fieldName]
+                    data.controlType == 'Switch' ||
+                    data.controlType == 'Checkbox'
+                      ? ''
+                      : autoDefault && autoDefault[data.fieldName]
                       ? !autoDefault[data.fieldName].stop
                       : dataValue[data.fieldName] || ''
                   "
