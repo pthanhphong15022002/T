@@ -161,7 +161,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void { }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
   }
@@ -196,7 +196,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   openPopupBank() {
     var obj = {
       headerText: 'Thêm tài khoản ngân hàng',
-      dataBank : this.objectBankaccount
+      dataBank: this.objectBankaccount
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -211,8 +211,8 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
           var dialogbank = this.callfc.openForm(
             PopAddBankComponent,
             '',
-            650,
-            550,
+            500,
+            400,
             '',
             obj,
             '',
@@ -251,7 +251,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   openPopupContact() {
     var obj = {
       headerText: 'Thêm người liên hệ',
-      datacontact:this.objectContact
+      datacontact: this.objectContact
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -267,7 +267,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
             PopAddContactComponent,
             '',
             650,
-            570,
+            550,
             '',
             obj,
             '',
@@ -287,7 +287,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     var obj = {
       headerText: 'Thêm địa chỉ',
       dataAddress: this.objectAddress,
-      dataContactAddress : this.objectContactAddress,
+      dataContactAddress: this.objectContactAddress,
       objectype: this.objecttype,
     };
     let opt = new DialogModel();
@@ -303,8 +303,8 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
           var dialogaddress = this.callfc.openForm(
             PopAddAddressComponent,
             '',
-            550,
             650,
+            600,
             '',
             obj,
             '',
@@ -345,7 +345,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     var obj = {
       headerText: 'Chỉnh sửa',
       type: 'editbank',
-      data: {...data},
+      data: { ...data },
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -360,8 +360,8 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
           var dialogbank = this.callfc.openForm(
             PopAddBankComponent,
             '',
-            650,
-            550,
+            500,
+            400,
             '',
             obj,
             '',
@@ -383,7 +383,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     let index = this.objectAddress.findIndex((x) => x.recID == data.recID);
     var obs = {
       headerText: 'Chỉnh sửa địa chỉ',
-      type:'editaddress',
+      type: 'editaddress',
       data: { ...data },
       datacontactaddress: [...this.objectContactAddress],
     };
@@ -400,8 +400,8 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
           var dialogaddress = this.callfc.openForm(
             PopAddAddressComponent,
             '',
-            550,
             650,
+            600,
             '',
             obs,
             '',
@@ -447,7 +447,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     let index = this.objectContact.findIndex((x) => x.recID == data.recID);
     var ob = {
       headerText: 'Chỉnh sửa liên hệ',
-      type:'editContact',
+      type: 'editContact',
       data: { ...data },
     };
     let opt = new DialogModel();
@@ -522,14 +522,14 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
                 this.vendorID,
                 this.objectBankaccount,
               ])
-              .subscribe((res: []) => {});
+              .subscribe((res: []) => { });
             this.acService
               .addData('ERM.Business.BS', 'AddressBookBusiness', 'AddAsync', [
                 this.objecttype,
                 this.vendorID,
                 this.objectAddress,
               ])
-              .subscribe((res: []) => {});
+              .subscribe((res: []) => { });
             this.acService
               .addData('ERM.Business.BS', 'ContactBookBusiness', 'AddAsync', [
                 this.objecttype,
@@ -537,7 +537,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
                 this.objectContact,
                 this.objectContactAddress,
               ])
-              .subscribe((res: []) => {});
+              .subscribe((res: []) => { });
             this.dialog.close();
             this.dt.detectChanges();
           } else {
@@ -569,7 +569,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
                 this.objectBankaccount,
                 this.objectBankaccountDelete,
               ])
-              .subscribe((res: any) => {});
+              .subscribe((res: any) => { });
             this.api
               .exec('ERM.Business.BS', 'AddressBookBusiness', 'UpdateAsync', [
                 this.objecttype,
@@ -577,7 +577,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
                 this.objectAddress,
                 this.objectAddressDelete,
               ])
-              .subscribe((res: any) => {});
+              .subscribe((res: any) => { });
             this.api
               .exec('ERM.Business.BS', 'ContactBookBusiness', 'UpdateAsync', [
                 this.objecttype,
@@ -587,7 +587,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
                 this.objectContactAddress,
                 this.objectContactAddressDelete,
               ])
-              .subscribe((res: any) => {});
+              .subscribe((res: any) => { });
             this.dialog.close();
             this.dt.detectChanges();
           }

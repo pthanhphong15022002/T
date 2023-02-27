@@ -124,7 +124,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.action === 'add') {
+    if (this.action === 'add' || this.action === 'copy') {
       this.autoClickedSteps();
       this.handleEndDayInstnace(this.totalDaySteps);
     } else if (this.action === 'edit') {
@@ -215,7 +215,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   beforeSave(option: RequestOption) {
-    if (this.action === 'add') {
+    if (this.action === 'add' || this.action === 'copy') {
       option.methodName = 'AddInstanceAsync';
     } else if (this.action === 'edit') {
       option.methodName = 'EditInstanceAsync';
@@ -226,7 +226,6 @@ export class PopupAddInstanceComponent implements OnInit {
   }
   saveInstances() {
     if (this.instance?.title === null || this.instance?.title.trim() === '') {
-      // this.notificationsService.notifyCode('Vui lòng nhập tên nhiệm vụ');
       this.notificationsService.notifyCode(
         'SYS009',
         0,
@@ -234,6 +233,7 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     } 
+    // COi LẠI DÙM CÁI CÁI CHỖ CÓ CHẠY KHÔNG
     // else if (
     //   this.instance?.owner === null ||
     //   this.instance?.owner.trim() === ''
@@ -274,7 +274,7 @@ export class PopupAddInstanceComponent implements OnInit {
       });
       if (!check || !checkFormat) return;
     }
-    if(this.action === 'add'){
+    if(this.action === 'add' || this.action === 'copy'){
       this.onAdd();
     }
     else if (this.action === 'edit'){
@@ -286,7 +286,6 @@ export class PopupAddInstanceComponent implements OnInit {
     this.dialog.dataService
     .save((option: any) => this.beforeSave(option), 0)
     .subscribe((res) => {
-      debugger;
       if (res && res.save) {
         this.dialog.close(res);
         this.changeDetectorRef.detectChanges();
@@ -308,15 +307,6 @@ export class PopupAddInstanceComponent implements OnInit {
   }
   autoClickedSteps() {
     this.instance.stepID = this.listStep[0].stepID;
-  }
-  async genAutoNumberNo() {
-    this.codxDpService
-      .genAutoNumber(this.formModelCrr.funcID, 'DP_Instances', 'InstanceNo')
-      .subscribe((res) => {
-        if (res) {
-          this.instance.instanceNo = res;
-        }
-      });
   }
 
   checkFormat(field) {

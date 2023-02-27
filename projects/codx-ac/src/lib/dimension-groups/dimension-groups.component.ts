@@ -8,6 +8,7 @@ import { PopAddDimensionGroupsComponent } from './pop-add-dimension-groups/pop-a
   styleUrls: ['./dimension-groups.component.css']
 })
 export class DimensionGroupsComponent extends UIComponent {
+  //#region Contructor
   views: Array<ViewModel> = [];
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   buttons: ButtonModel = { id: 'btnAdd' };
@@ -30,6 +31,9 @@ export class DimensionGroupsComponent extends UIComponent {
       }
     });
   }
+  //#endregion
+  
+  //#region Init
   onInit(): void {
   }
   ngAfterViewInit() {
@@ -48,6 +52,9 @@ export class DimensionGroupsComponent extends UIComponent {
       },
     ];
   }
+  //#endregion
+
+  //#region Functione
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
@@ -112,7 +119,16 @@ export class DimensionGroupsComponent extends UIComponent {
           'DimensionSetupBusiness',
           'DeleteAsync',
           [data.dimGroupID]
-        ).subscribe((res: any) => {})
+        ).subscribe((res: any) => {
+          if (res) {
+            this.api.exec(
+              'ERM.Business.IV',
+              'DimensionControlBusiness',
+              'DeleteAsync',
+              [data.dimGroupID]
+            ).subscribe((res: any) => {})
+          }
+        })
       }
     });
   }
@@ -124,4 +140,5 @@ export class DimensionGroupsComponent extends UIComponent {
     opt.data = data.dimGroupID;
     return true;
   }
+  //#endregion
 }

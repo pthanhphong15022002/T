@@ -268,7 +268,7 @@ export class InstanceDetailComponent implements OnInit {
   
   var updatedArray = listStepNew.map(item => ({
     ...item,
-    stepStatus: mapList.get(item.stepID) || item.stepStatus || ''// Lấy giá trị từ Map, nếu không có thì giữ nguyên
+    stepStatus: mapList.get(item.stepID) || item.stepStatus || ''
   }));
     let list =  updatedArray.map(x=> {return {stepId: x.stepID, stepName: x.stepName, stepStatus: x.stepStatus}});
   return list;

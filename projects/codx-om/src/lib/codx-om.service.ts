@@ -544,7 +544,16 @@ export class CodxOmService {
     );
   }
   //endregion
-
+  //Get param
+  getOMParameter(category: any) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleWithCategoryAsync',
+      ['OMParameters', category]
+    );
+  }
   //region get Data from HR
   getlistOrgUnit(orgID:any) {
     return this.api.execSv(

@@ -392,11 +392,12 @@ export class CodxDpService {
     );
   }
 
-  getFirstIntance(){
+  getFirstIntance(processID){
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
       'GetFirstIntanceAsync',
+      processID
     );
   }
 
@@ -406,6 +407,14 @@ export class CodxDpService {
       'ProcessesBusiness',
       'GetAsync',
       id
+    );
+  }
+  getAutoNumberByInstanceNoSetting(instanceNoSetting): Observable<any> {
+    return this.api.exec(
+      'ERM.Business.AD',
+      'AutoNumbersBusiness',
+      'CreateAutoNumberAsync',
+      [instanceNoSetting, null, true, null]
     );
   }
 }

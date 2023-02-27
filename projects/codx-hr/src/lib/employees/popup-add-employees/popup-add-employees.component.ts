@@ -3,24 +3,20 @@ import {
   Component,
   OnInit,
   Optional,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import {
   ApiHttpService,
   AuthService,
-  AuthStore,
   CacheService,
   DialogData,
   DialogRef,
-  FormModel,
   LayoutAddComponent,
   NotificationsService,
   Util,
 } from 'codx-core';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
-import { Observable, Subject } from 'rxjs';
 import { HR_Employees } from '../../model/HR_Employees.model';
 
 @Component({
@@ -72,7 +68,6 @@ export class PopupAddEmployeesComponent implements OnInit {
     private auth: AuthService,
     private notifiSV: NotificationsService,
     private detectorRef: ChangeDetectorRef,
-    private fb: FormBuilder,
     private cache: CacheService,
     private api: ApiHttpService,
     private adService: CodxAdService,
@@ -92,12 +87,12 @@ export class PopupAddEmployeesComponent implements OnInit {
     this.funcID = this.dialogData.funcID;
     this.employee = JSON.parse(JSON.stringify(this.dialogData.employee));
     this.getFunction(this.funcID);
-    this.adService.getListCompanySettings()
-    .subscribe((res) => {
-      if (res) {
-        this.isCorporation = res.isCorporation; // check disable field DivisionID
-      }
-    });
+    // this.adService.getListCompanySettings()
+    // .subscribe((res) => {
+    //   if (res) {
+    //     this.isCorporation = res.isCorporation; // check disable field DivisionID
+    //   }
+    // });
   }
   //get function
   getFunction(functionID: string) {
@@ -190,16 +185,14 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
   //value change
   dataChange(e: any) {
-    if (e) 
-    {
+    if (e){
       let field = Util.camelize(e.field);
       let data = e.data;
       this.employee[field] = data;
-      if(field == "positionID")
-      {
+      if(field == "positionID"){
+        debugger
         let itemSelected = e.component?.itemsSelected[0];
-        if(itemSelected)
-        {
+        if(itemSelected){
           if(itemSelected.hasOwnProperty("OrgUnitID"))
           {
             let orgUnitID = itemSelected["OrgUnitID"];
@@ -211,6 +204,18 @@ export class PopupAddEmployeesComponent implements OnInit {
             let departmentID = itemSelected["DepartmentID"];
             this.form.formGroup.patchValue({"departmentID":departmentID});
             this.employee["departmentID"] = departmentID;
+          }
+          if(itemSelected.hasOwnProperty("DivisionID"))
+          {
+            let departmentID = itemSelected["DivisionID"];
+            this.form.formGroup.patchValue({"divisionID":departmentID});
+            this.employee["divisionID"] = departmentID;
+          }
+          if(itemSelected.hasOwnProperty("CompanyID"))
+          {
+            let departmentID = itemSelected["CompanyID"];
+            this.form.formGroup.patchValue({"companyID":departmentID});
+            this.employee["companyID"] = departmentID;
           }
         }
       }

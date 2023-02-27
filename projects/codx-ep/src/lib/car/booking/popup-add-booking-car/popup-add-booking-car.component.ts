@@ -640,7 +640,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
 
   onSaveForm(approval: boolean = false) {
     if (true) {
-      this.data.reminder = 15;
+      
       this.data.bookingOn = this.data.startDate;
       this.data.stopOn = this.data.endDate;
       let tempDate = new Date();
@@ -706,17 +706,14 @@ export class PopupAddBookingCarComponent extends UIComponent {
       }
       this.data.stopOn = this.data.endDate;
       this.data.bookingOn = this.data.startDate;
-      this.data.category = '2';
-      this.data.approveStatus = '1';
-      this.data.status = '1';
       this.data.resourceType = '2';
       if (this.approvalRule == '0' && approval) {
         this.data.approveStatus = '5';
         this.data.status = '5';
-      } else {
-        this.data.approveStatus = '1';
-        this.data.status = '1';
-      }
+      } 
+      this.data.approveStatus = this.data.approveStatus?? '1';
+      this.data.status = this.data.status ?? '1';    
+      
       this.data.approval = this.approvalRule;
       this.data.attendees = this.attendeesList.length;
       //check

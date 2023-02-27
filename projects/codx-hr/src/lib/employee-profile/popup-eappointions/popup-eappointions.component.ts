@@ -162,18 +162,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
             this.EAppointionObj = p;
             this.successFlag = true;
           this.dialog && this.dialog.close(this.EAppointionObj);
-
-            // this.lstEAppointions.push(
-            //   JSON.parse(JSON.stringify(this.EAppointionObj))
-            // );
-            // console.log('lit e appoint', this.lstEAppointions);
-
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService)
-            //     .add(this.EAppointionObj)
-            //     .subscribe();
-            // }
-            // this.dialog.close(p)
           } else this.notify.notifyCode('SYS023');
         });
     } else {
@@ -199,7 +187,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     valueChange(event) {
       if (event?.field && event?.component && event?.data != '') {
         switch (event.field) {
-          case 'SignerID': {
+          case 'signerID': {
             let employee = event?.component?.itemsSelected[0];
             if (employee) {
               if (employee?.PositionID) {
