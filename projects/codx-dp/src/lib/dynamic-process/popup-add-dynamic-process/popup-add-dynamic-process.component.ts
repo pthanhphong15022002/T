@@ -295,22 +295,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    // if (this.action != 'edit') this.genAutoNumber();
-    // this.api
-    //   .execSv<any>(
-    //     'SYS',
-    //     'AD',
-    //     'AutoNumberDefaultsBusiness',
-    //     'GetFieldAutoNoAsync',
-    //     [this.funcID, this.entityName]
-    //   )
-    //   .subscribe((res) => {
-    //     if (res && !res.stop && res.autoAssignRule == '1') {
-    //       this.showID = true;
-    //     } else {
-    //       this.showID = false;
-    //     }
-    //   });
+    if (this.action != 'edit') this.genAutoNumber();
+    this.api
+      .execSv<any>(
+        'SYS',
+        'AD',
+        'AutoNumberDefaultsBusiness',
+        'GetFieldAutoNoAsync',
+        [this.funcID, this.entityName]
+      )
+      .subscribe((res) => {
+        if (res && !res.stop && res.autoAssignRule == '1') {
+          this.showID = true;
+        } else {
+          this.showID = false;
+        }
+      });
 
     this.grvStep = {
       entityName: 'DP_Steps',
