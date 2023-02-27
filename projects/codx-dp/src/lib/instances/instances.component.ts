@@ -97,6 +97,7 @@ export class InstancesComponent
   listProccessCbx: any;
   dataProccess: any;
   sumDaySteps: number;
+  lstParticipants = [];
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
@@ -171,6 +172,7 @@ export class InstancesComponent
           this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
       });
+      this.getPermissionProcess(this.process.recID);
     //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
@@ -236,7 +238,10 @@ export class InstancesComponent
                   formMD,
                   this.listStepsCbx,
                   this.instanceNo,
-                  this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)
+                  (this.sumDaySteps = this.getSumDurationDayOfSteps(
+                    this.listStepsCbx
+                  )),
+                  this.lstParticipants
                 ],
                 option
               );
@@ -286,7 +291,7 @@ export class InstancesComponent
                 option.zIndex = 1001;
                 this.view.dataService.dataSelected.processID =
                   this.process.recID;
-                var dialogEditInstance= this.callfc.openSide(
+                var dialogEditInstance = this.callfc.openSide(
                   PopupAddInstanceComponent,
                   [
                     'edit',
@@ -296,7 +301,9 @@ export class InstancesComponent
                     formMD,
                     this.listStepsCbx,
                     this.instanceNo,
-                    this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)
+                    (this.sumDaySteps = this.getSumDurationDayOfSteps(
+                      this.listStepsCbx
+                    )),
                   ],
                   option
                 );
@@ -359,7 +366,7 @@ export class InstancesComponent
         switch (res.functionID) {
           case 'SYS005':
           case 'SYS003':
-            if (data.status !== '1' && data.status !== '2' ) res.disabled = true;
+            if (data.status !== '1' && data.status !== '2') res.disabled = true;
             break;
           case 'SYS004':
           case 'SYS001':
@@ -374,7 +381,8 @@ export class InstancesComponent
           case 'DP09':
           case 'DP10':
             let isUpdate = data.write;
-            if (!isUpdate ||  ( data.status !== '1' && data.status !== '2' ) ) res.disabled = true;
+            if (!isUpdate || (data.status !== '1' && data.status !== '2'))
+              res.disabled = true;
             break;
           //Copy
           case 'SYS104':
@@ -393,6 +401,18 @@ export class InstancesComponent
     }
   }
   //End
+
+  getPermissionProcess(id){
+    this.codxDpService.getProcess(this.process?.recID).subscribe((res) => {
+      if (res) {
+        if (res.permissions != null && res.permissions.length > 0) {
+          this.lstParticipants = res.permissions.filter(
+            (x) => x.roleType === 'P'
+          );
+        }
+      }
+    });
+  }
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
     var desc = '<div class="d-flex">';
@@ -457,7 +477,7 @@ export class InstancesComponent
     let popup = this.callFunc.openForm(
       this.popDetail,
       '',
-      Util.getViewPort().width ,
+      Util.getViewPort().width,
       Util.getViewPort().height,
       '',
       null,
@@ -541,7 +561,7 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            debugger
+            debugger;
             var obj = {
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
@@ -704,7 +724,7 @@ export class InstancesComponent
     });
   }
 
-  getSumDurationDayOfSteps(listStepCbx:any){
+  getSumDurationDayOfSteps(listStepCbx: any) {
     let total = listStepCbx.reduce((sum, f) => sum + f.durationDay, 0);
     return total;
   }
