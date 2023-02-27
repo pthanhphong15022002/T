@@ -64,7 +64,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   @Input() predicates: any;
   @Input() dataValues: any;
   @Input() isShowCreate = true;
-  @Input() moreFunc: any = null;
   @Input() moreFuncTmp: TemplateRef<any> = null;
   @ViewChild('listview') listview: CodxListviewComponent;
   constructor(
@@ -180,16 +179,16 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     if (event && post) {
       switch (event.functionID) {
         case 'WP001': // cập nhật
-          this.openPopupEdit(post);
+          this.editPost(post);
           break;
         case 'WP002': // xóa
-          this.removePost(post);
+          this.deletePost(post);
           break;
         case 'WP003': // chia sẻ
-          this.openPopupShare(post);
+          this.sharePost(post);
           break;
         case 'WP004': // lưu vào sổ tay
-          this.openPopupSave(post);
+          this.savePost(post);
           break;
         default:
           break;
@@ -207,40 +206,17 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     return true;
   }
   // xóa bài viết
-  removePost(data: any) {
+  deletePost(data: any) {
     // xóa bài viết
     if (data) {
       (this.listview.dataService as CRUDService)
-        .delete(
-          [data],
-          true,
-          (op: any) => this.beforDelete(op, data),
-          '',
-          'WP022',
-          '',
-          'WP023'
-        )
-        .subscribe((res) => {
-          if (res) {
-            if (data.files) {
-              //xóa files
-              this.api
-                .execSv(
-                  'DM',
-                  'ERM.Business.DM',
-                  'FileBussiness',
-                  'DeleteByObjectIDAsync',
-                  [data.recID, 'WP_Comments', true]
-                )
-                .subscribe();
-            }
-          }
-        });
+        .delete([data],true,(op: any) => this.beforDelete(op, data),'','WP022','','WP023')
+        .subscribe();
     }
   }
 
   //tạo bài viết
-  openPopupAdd() {
+  addPost() {
     let data = new Post();
     let headerText = 'Tạo bài viết';
     var obj = {
@@ -269,7 +245,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
 
   // edit bài viết
-  openPopupEdit(post: any) {
+  editPost(post: any) {
     let headerText = 'Chỉnh sửa bài viết';
     let data = JSON.parse(JSON.stringify(post));
     let obj = {
@@ -299,7 +275,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   
   // share bài viết
-  openPopupShare(post: any) {
+  sharePost(post: any) {
     if (post) 
     {
       let data = new WP_Comments();
@@ -334,7 +310,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
 
   // lưu trữ bài viết
-  openPopupSave(post: any) {
+  savePost(post: any) {
     if (post) {
       let data = JSON.parse(JSON.stringify(post));
       let headerText = 'Thêm vào kho lưu trữ';
