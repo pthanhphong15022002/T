@@ -107,14 +107,13 @@ export class PopupAddInstanceComponent implements OnInit {
     this.listStepCbx = dt?.data[5];
     this.instance.instanceNo = dt?.data[6];
     this.totalDaySteps = dt?.data[7];
-    this.owner = this.instance?.owner;
     if(this.action === 'edit'){
       if(this.instance.permissions != null && this.instance.permissions.length > 0){
         this.lstParticipants = this.instance.permissions.filter(
           (x) => x.roleType === 'P'
         );
       }
-    }else if(this.acction === 'add'){
+    }else if(this.action === 'add'){
       this.lstParticipants = dt?.data[8];
 
     }
@@ -135,6 +134,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.owner = this.instance?.owner;
     if (this.action === 'add' || this.action === 'copy') {
       this.autoClickedSteps();
       this.handleEndDayInstnace(this.totalDaySteps);

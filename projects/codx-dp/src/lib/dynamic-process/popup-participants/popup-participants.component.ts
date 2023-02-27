@@ -212,12 +212,11 @@ export class PopupParticipantsComponent implements OnInit {
           });
       }
 
-
       var userRoleID = list
         .filter((x) => x.objectType == 'R')
         .map((x) => x.objectID);
-      if(userRoleID != null && userRoleID.length > 0){
-        this.dpSv.getListUserByRoleID(userRoleID).subscribe(res =>{
+      if (userRoleID != null && userRoleID.length > 0) {
+        this.dpSv.getListUserByRoleID(userRoleID).subscribe((res) => {
           if (res != null && res.length > 0) {
             if (this.lstOrg != null && this.lstOrg.length > 0) {
               this.lstOrg = this.getUserArray(this.lstOrg, res);
@@ -225,24 +224,23 @@ export class PopupParticipantsComponent implements OnInit {
               this.lstOrg = res;
             }
           }
-        })
+        });
       }
-      var lstUser = list
-        .filter((x) => x.objectType == 'U');
-        if(lstUser != null && lstUser.length > 0){
-          var tmpList = [];
-          lstUser.forEach(element => {
-            var tmp = {};
-            if(element != null){
-              tmp['userID'] = element.objectID;
-              tmp['userName'] = element.objectName;
-              tmpList.push(tmp);
-            }
-          });
-          if(tmpList != null && tmpList.length > 0){
-            this.lstOrg = this.getUserArray(this.lstOrg, tmpList);
+      var lstUser = list.filter((x) => x.objectType == 'U');
+      if (lstUser != null && lstUser.length > 0) {
+        var tmpList = [];
+        lstUser.forEach((element) => {
+          var tmp = {};
+          if (element != null) {
+            tmp['userID'] = element.objectID;
+            tmp['userName'] = element.objectName;
+            tmpList.push(tmp);
           }
+        });
+        if (tmpList != null && tmpList.length > 0) {
+          this.lstOrg = this.getUserArray(this.lstOrg, tmpList);
         }
+      }
     }
   }
 
@@ -256,19 +254,15 @@ export class PopupParticipantsComponent implements OnInit {
       let query: Query = new Query().select(['userName', 'userID']);
       query =
         e.text !== ''
-          ? query.where('userName', 'contains',e.text, true)
+          ? query.where('userName', 'contains', e.text, true)
           : query;
       e.updateData(this.lstOrg, query);
     }
   };
 
   cbxChange(e) {
-    if(e != null){
-      this.eventUser.emit({id: e});
-    }
+    this.eventUser.emit({ id: e });
   }
-
-
 
   getUserArray(arr1, arr2) {
     let result = arr2.concat(
