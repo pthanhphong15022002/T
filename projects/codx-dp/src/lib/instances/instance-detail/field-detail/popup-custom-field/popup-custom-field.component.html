@@ -1,17 +1,23 @@
 <codx-form #form [headerText]="title" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog"
-  [formModel]="dialog.formModel" [data]="data" [openMore]="false"></codx-form>
+  [formModel]="dialog.formModel" [data]="fiels" [openMore]="false"></codx-form>
 <ng-template #body>
-  <ng-container *ngFor="let item of data">
+  <ng-container *ngFor="let item of fiels">
     <div class="form-group">
-      <codx-input-custom-field [customField]="item" ></codx-input-custom-field>
+      <codx-input-custom-field  [customField]="item"
+      [objectId]="item.recID"
+      [objectType]="'DP_Instances'"
+      [formModel]="dialog.formModel"
+      (valueChangeCustom)="valueChangeCustom($event)" ></codx-input-custom-field>
     </div>
   </ng-container>
 </ng-template>
 <ng-template #footer>
-  <button type="button" (click)="onSave()" class="btn btn-primary">Lưu</button>
+  <button type="button" (click)="onSave()" class="btn btn-primary">
+    <codx-label name="Save" formName="" default="Lưu"></codx-label>
+  </button>
 </ng-template>
 
-<ng-template #controlShare let-dialogControl>
+<!-- <ng-template #controlShare let-dialogControl>
   <codx-share [dialog]="dialogControl" [multiple]="true" (eventApply)="applyShare($event)" [listName]="vllShare">
   </codx-share>
-</ng-template>
+</ng-template> -->

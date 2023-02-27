@@ -15,17 +15,17 @@ import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'lib-popup-eself-info',
   templateUrl: './popup-eself-info.component.html',
-  styleUrls: ['./popup-eself-info.component.css']
+  styleUrls: ['./popup-eself-info.component.css'],
 })
 export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   funcID;
   idField = 'RecID';
-  formGroup: FormGroup
+  formGroup: FormGroup;
   formModel: FormModel;
   dialog: DialogRef;
   data;
   isAfterRender = false;
-  headerText: ''
+  headerText: '';
   @ViewChild('form') form: CodxFormComponent;
 
   constructor(
@@ -40,39 +40,50 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
-    this.data = JSON.parse(JSON.stringify(data?.data?.dataObj))
+    this.formModel = dialog.FormModel;
+    this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
   }
 
-  initForm(){
+  initForm() {
     this.formGroup.patchValue(this.data);
     this.formModel.currentData = this.data;
     this.cr.detectChanges();
     this.isAfterRender = true;
   }
 
-
   onInit(): void {
-    this.hrService.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
-      }
-    });
+    if (!this.formModel) {
+      this.hrService.getFormModel(this.funcID).then((formModel) => {
+        if (formModel) {
+          this.formModel = formModel;
+          this.hrService
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .then((fg) => {
+              if (fg) {
+                this.formGroup = fg;
+                this.initForm();
+              }
+            });
+        }
+      });
+    } else {
+      this.hrService
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .then((fg) => {
+          if (fg) {
+            this.formGroup = fg;
+            this.initForm();
+          }
+        });
+    }
   }
 
   ngAfterViewInit() {
-    this.dialog.closed.subscribe(res => {
-      if(!res.event){
+    this.dialog.closed.subscribe((res) => {
+      if (!res.event) {
         this.dialog && this.dialog.close(this.data);
       }
-    })
+    });
   }
 
   swipeToRightTab(e) {
@@ -81,57 +92,57 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     }
   }
 
-  updateDegreeName(){
-    let trainFieldId = this.data.trainFieldID
-    let trainLev = this.data.trainLevel 
-    if(trainFieldId!= null && trainLev != null){
-      this.data.degreeName = trainLev + " " + trainFieldId
+  updateDegreeName() {
+    let trainFieldId = this.data.trainFieldID;
+    let trainLev = this.data.trainLevel;
+    if (trainFieldId != null && trainLev != null) {
+      this.data.degreeName = trainLev + ' ' + trainFieldId;
+    } else if (trainFieldId) {
+      this.data.degreeName = trainFieldId;
+    } else if (trainLev) {
+      this.data.degreeName = trainLev;
     }
-    else if(trainFieldId){
-      this.data.degreeName = trainFieldId
-    }
-    else if(trainLev){
-      this.data.degreeName = trainLev
-    }
-    this.form?.formGroup.patchValue({degreeName: this.data.degreeName})
+    this.form?.formGroup.patchValue({ degreeName: this.data.degreeName });
   }
 
-  handleOnSaveEmployeeContactInfo(){
-    this.hrService.saveEmployeeContactInfo(this.data).subscribe(p => {
-      if(p != null){
-        this.notitfy.notifyCode('SYS006')
-        this.dialog.close()
-      }
-      else this.notitfy.notifyCode('SYS021')
-    })
+  handleOnSaveEmployeeContactInfo() {
+    this.hrService.saveEmployeeContactInfo(this.data).subscribe((p) => {
+      if (p != null) {
+        this.notitfy.notifyCode('SYS006');
+        this.dialog.close();
+      } else this.notitfy.notifyCode('SYS021');
+    });
   }
 
-  handleOnSaveEmployeeSelfInfo(e?: any){
+  handleOnSaveEmployeeSelfInfo(e?: any) {
     //Xu li validate thong tin ngay sinh nhan vien
-    if( new Date().getFullYear() - new Date(this.data.birthday).getFullYear() < 18){
-      this.notitfy.notifyCode('HR001')
-      return
+    if (
+      new Date().getFullYear() - new Date(this.data.birthday).getFullYear() <
+      18
+    ) {
+      this.notitfy.notifyCode('HR001');
+      return;
     }
 
     //Xu li validate thong tin CMND nhan vien
-    console.log(this.data.expiredOn)
-    console.log(this.data.issuedOn)
-    if(this.data.idExpiredOn < this.data.issuedOn){
-      this.hrService.notifyInvalidFromTo('ExpiredDate', 'EffectedDate', this.formModel)
-      return
+    console.log(this.data.expiredOn);
+    console.log(this.data.issuedOn);
+    if (this.data.idExpiredOn < this.data.issuedOn) {
+      this.hrService.notifyInvalidFromTo(
+        'ExpiredDate',
+        'EffectedDate',
+        this.formModel
+      );
+      return;
     }
 
-    this.hrService.saveEmployeeSelfInfo(this.data).subscribe(p => {
-      if(p != null){
-        this.notitfy.notifyCode('SYS006')
-        this.dialog && this.dialog.close(p)
-      }
-      else this.notitfy.notifyCode('SYS021')
-    })
+    this.hrService.saveEmployeeSelfInfo(this.data).subscribe((p) => {
+      if (p != null) {
+        this.notitfy.notifyCode('SYS006');
+        this.dialog && this.dialog.close(p);
+      } else this.notitfy.notifyCode('SYS021');
+    });
   }
 
-  handleProvinceChange(value){
-    
-  }
-
+  handleProvinceChange(value) {}
 }

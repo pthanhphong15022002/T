@@ -37,6 +37,7 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   employeeId: string;
   isAfterRender = false;
   headerText: string;
+  defaultFromDate: string = '0001-01-01T00:00:00';
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
 
@@ -93,6 +94,9 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.ediseasesObj = res?.data;
+            if(this.ediseasesObj.fromDate.toString() == this.defaultFromDate){
+              this.ediseasesObj.fromDate = null;
+            }
             this.ediseasesObj.employeeID = this.employeeId;
             this.formModel.currentData = this.ediseasesObj;
             this.formGroup.patchValue(this.ediseasesObj);
@@ -101,12 +105,13 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
-        this.formGroup.patchValue(this.ediseasesObj);
-        this.formModel.currentData = this.ediseasesObj;
-        this.cr.detectChanges();
-        this.isAfterRender = true;
+      if (this.actionType === 'copy' && this.ediseasesObj.fromDate.toString() == this.defaultFromDate) {
+        this.ediseasesObj.fromDate = null;
       }
+      this.formGroup.patchValue(this.ediseasesObj);
+      this.formModel.currentData = this.ediseasesObj;
+      this.cr.detectChanges();
+      this.isAfterRender = true;
     }
   }
 

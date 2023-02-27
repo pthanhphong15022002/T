@@ -653,14 +653,15 @@
               <div class="col">
                 <div class="text-gray-600">
                   <codx-label
-                    fiedName=""
+                    fiedName="lblOrderNo"
                     [formModel]="orderFormodel"
-                    [default]="'Đơn hàng: ' + order.orderNo"
+                    [default]="'Đơn hàng: '"
                   >
                   </codx-label>
+                  {{ order.orderNo }}
                   <span class="">
                     <codx-vll
-                      [name]="'L1466'"
+                      [name]="grvTNOrders['OrderType']?.referedValue"
                       [value]="order?.orderType"
                       [showText]="true"
                       [showBgColor]="true"
@@ -671,7 +672,7 @@
                 </div>
                 <div class="text-gray-600">
                   <codx-label
-                    fiedName=""
+                    fiedName="lblPaymentRefNo"
                     [formModel]="orderFormodel"
                     [default]="'Số giao dịch: ' + order.paymentRefNo ?? ''"
                   >
@@ -679,7 +680,7 @@
                 </div>
                 <div class="text-gray-600">
                   <codx-label
-                    fiedName=""
+                    fiedName="lblpaymentCreatedOn"
                     [formModel]="orderFormodel"
                     [default]="
                       'Ngày giao dịch: ' + order.paymentCreatedOn ?? ''
@@ -693,7 +694,7 @@
           <ng-template #oAmtStt let-order>
             <div>
               <codx-label
-                fiedName=""
+                [fiedName]="grvTNOrders['CurrentcyID']?.referedValue"
                 [formModel]="orderFormodel"
                 [default]="order.totalAmt + order.currencyID"
               >
@@ -701,7 +702,7 @@
             </div>
             <div class="">
               <codx-vll
-                [name]="'L1467'"
+                [name]="grvTNOrders['Status']?.referedValue"
                 [value]="order?.status"
                 [showText]="true"
                 [showBgColor]="true"

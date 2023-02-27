@@ -156,24 +156,15 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   }
 
   save() {
-    //Validate Data
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
     this.formGroup.patchValue({
       trainFromDate: new Date(),
       trainToDate: new Date(),
     });
-
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
-
-    // if(this.actionType === 'add' ||  this.actionType === 'copy'){
-    //   delete this.trainCourseObj.recID;
-    // }
+    if(this.actionType === 'copy') delete this.trainCourseObj.recID;
     this.employId = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
