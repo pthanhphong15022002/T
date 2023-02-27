@@ -1774,6 +1774,8 @@ export class EmployeeDetailComponent extends UIComponent {
           this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
             if (res?.length) {
               this.listCrrBenefit = res;
+              console.log('ds phuc loi hien tai', res);
+              
             }
           });
         });
@@ -2106,8 +2108,21 @@ export class EmployeeDetailComponent extends UIComponent {
               this.hrService.DeleteEBenefit(data).subscribe((p) => {
                 if (p != null) {
                   this.notify.notifyCode('SYS008');
-                  (this.grid.dataService as CRUDService)
-                    .remove(data)
+                  if(data.isCurrent == true){
+                    const index = this.listCrrBenefit.indexOf(data, 0);
+                    if (index > -1) {
+                      this.listCrrBenefit.splice(index, 1);
+                    }
+                        this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
+                          if (res?.length) {
+                            this.listCrrBenefit = res;
+                            console.log('ds phuc loi sau khi xoa ', this.listCrrBenefit);
+                            
+                            this.df.detectChanges();
+                          }
+                      }
+                  )}
+                  (this.grid?.dataService as CRUDService)?.remove(data)
                     .subscribe();
                   this.eBenefitRowCount = this.eBenefitRowCount - 1;
                   this.df.detectChanges();
@@ -2826,6 +2841,8 @@ export class EmployeeDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
+        console.log('res.event tra ve sau khi add', res.event);
+        
         if (actionType == 'add' || actionType == 'copy') {
           (this.grid?.dataService as CRUDService)?.add(res.event).subscribe();
           this.eBenefitRowCount += 1;
@@ -2833,7 +2850,19 @@ export class EmployeeDetailComponent extends UIComponent {
           (this.grid?.dataService as CRUDService)
             ?.update(res.event)
             .subscribe();
+
+          
         }
+
+        this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
+          if (res?.length) {
+            this.listCrrBenefit = res;
+            console.log('ds phuc loi sau khi xoa ', this.listCrrBenefit);
+            
+            this.df.detectChanges();
+          }
+      }
+  )
       }
     });
   }
@@ -3071,7 +3100,6 @@ export class EmployeeDetailComponent extends UIComponent {
             .update(res.event)
             .subscribe((res) => {
               if (this.dayoffGrid) {
-                debugger;
                 this.dayoffGrid.gridRef.allowSorting = true;
                 this.dayoffGrid.gridRef.sortColumn(
                   'BeginDate',

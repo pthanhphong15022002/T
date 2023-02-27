@@ -3433,7 +3433,7 @@
                     *ngIf="benefit != null"
                   >
                     <codx-temp-full
-                      (clickMF)="clickMF($event, benefit, 'benefit')"
+                      (clickMF)="clickMF($event, benefit, 'eBenefit')"
                       [dataItem]="benefit"
                       [formModel]="view.formModel"
                       [footer]="footerBenefit"
@@ -3446,13 +3446,19 @@
                         <span
                           class="icon-i-plus-circle text-success icon-12 text-gray-600 pe-2"
                         ></span
-                        >{{ data.benefitID }}
+                        >{{ data.benefitID | formatvalue : benefitFormodel : "benefitID" | async  }}
                       </div>
                       <div class="d-flex align-items-center mt-1">
                         <span
-                          class="icon-attach_money text-gray-600 pe-2 icon-14"
-                        ></span
-                        >{{ data.benefitAmt }}
+                          class="icon-attach_money text-gray-600 pe-2 icon-14">
+                        </span>
+                        {{ data.benefitAmt }} 
+                        / 
+                        <span class="text-dark fw-bold">
+                          {{
+                            data?.benefitNorm | formatvalue : benefitFormodel : "benefitNorm" | async
+                          }}
+                        </span>
                       </div>
 
                       <div class="d-flex align-items-center mt-1">
@@ -5461,12 +5467,18 @@
 
 <!--#region template Phụ cấp  -->
 <ng-template #templateBenefitID let-data>
-  {{ data?.benefitID | formatvalue : benefitFormodel : "benefitID" | async }}
+  <div class="d-flex align-items-center">
+    <span *ngIf="data.isCurrent == true" 
+      class="bullet bullet-vertical d-flex align-items-center min-h-50px mh-100 me-4 bg-primary" >
+    </span>
+    {{ data?.benefitID | formatvalue : benefitFormodel : "benefitID" | async }}
+  </div>
 </ng-template>
 
 <ng-template #templateBenefitAmt let-data>
   <div #benefitNorm>
     {{ data?.benefitAmt }}
+    /
     {{
       data?.benefitNorm | formatvalue : benefitFormodel : "benefitNorm" | async
     }}
@@ -5486,20 +5498,6 @@
   </div>
 </ng-template>
 
-<ng-template #templateBenefitIsCurrent let-data>
-  <div class="has-action-menu min-h-40px">
-    <div>
-      <div *ngIf="data?.isCurrent == 1">Đang hiệu lực</div>
-    </div>
-    <codx-mfunc
-      [formModel]="benefitFormodel"
-      (clickMF)="clickMF($event, data, 'eBenefit')"
-      [dataItem]="data"
-      type="hover"
-    >
-    </codx-mfunc>
-  </div>
-</ng-template>
 
 <!--#endregion -->
 
