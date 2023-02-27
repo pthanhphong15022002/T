@@ -98,6 +98,7 @@ export class DynamicProcessComponent
   user;
   isCopy:boolean = false;
   dataCopy:any;
+  oldIdProccess:any;
   // Call API Dynamic Proccess
   readonly service = 'DP';
   readonly assemblyName = 'ERM.Business.DP';
@@ -272,7 +273,10 @@ export class DynamicProcessComponent
   }
   copy(data: any) {
     if(this.isCopy) {
-      if (data) this.view.dataService.dataSelected = data;
+      if (data) {
+        this.view.dataService.dataSelected = data;
+        this.oldIdProccess = this.view.dataService.dataSelected.recID;
+      } 
       this.view.dataService.copy().subscribe((res) => {
         var obj = {
           action: 'copy',
@@ -280,7 +284,10 @@ export class DynamicProcessComponent
           showID: this.showID,
           instanceNo: this.instanceNo,
           conditionCopy: this.listClickedCoppy,
-          titleAction: this.titleAction
+          titleAction: this.titleAction,
+          oldIdProccess: this.oldIdProccess,
+          newIdProccess: this.view.dataService.dataSelected.recID,
+          listValueCopy: this.listClickedCoppy.map(x=> x.id)
         };
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
@@ -327,10 +334,8 @@ else {
 }
 getVauleFormCopy() {
   this.cache.valueList('DP037').subscribe((res) => {
-    debugger;
     if (res.datas) {
       this.listSelectCoppy =  res.datas.map(x=> {return {id: x.value, text: x.text}});
-      console.table(this.listSelectCoppy);
     }
   });
 }

@@ -15,6 +15,13 @@
                     [value]="dataSelect?.tags">
                   </codx-tag>
                 </div>
+                <div>
+                  <codx-label default="Mô tả">
+                
+                  </codx-label>
+                  <div *ngIf="dataSelect?.memo" [innerHTML]="sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)"></div>
+                </div>
+
                 <!-- <div class="mb-6">
                   <div class="d-flex align-items-center mb-1">
                     <span class="me-2 text-gray-600">Tổ chức/Khách hàng:</span>
