@@ -110,53 +110,12 @@ export class PopupJobComponent implements OnInit {
     if (this.stepsTasks['parentID']) {
       this.litsParentID = this.stepsTasks['parentID'].split(';');
     }
+
     this.dataCombobox = await this.setTaskLink(this.stepsTasks?.taskGroupID);
     this.valueInput = this.dataCombobox
       .filter((x) => x.checked)
       .map((y) => y.value)
       .join('; ');
-  }
-
-  async setTaskLink(groupTaskID?: string) {
-    let taskLinks = [];
-    if (groupTaskID) {
-      if (this.status == 'add' || this.status == 'copy') {
-        let groupTask = this.taskGroupList.find((x) => x.recID === groupTaskID);
-        if (groupTask && groupTask['task']) {
-          taskLinks = this.mapDataTask(groupTask['task']);
-        }
-      } else {
-        let litsParentID = this.stepsTasks['parentID'].split(';');
-        let groupTask = this.taskGroupList.find((x) => x.recID === groupTaskID);
-        if (groupTask && groupTask['task']) {
-           //lấy những task mà không có liên kết với task đang edit
-          let tasks = groupTask['task'].filter(
-            (task) => !task['parentID'].includes(this.stepsTasks?.recID)
-          );
-          taskLinks = this.mapDataTask(tasks, litsParentID);
-        }
-        let index = taskLinks.findIndex((x) => x.key === this.stepsTasks.recID);
-        taskLinks.splice(index, 1);
-      }
-    } else {
-      if (this.status == 'add' || this.status == 'copy') {
-        if (this.taskList?.length > 0) {
-          taskLinks = this.mapDataTask(this.taskList);
-        }
-      } else {
-        let litsParentID = this.stepsTasks['parentID'].split(';');
-        if (this.taskList?.length > 0) {
-          //lấy những task mà không có liên kết với task đang edit
-          let tasks = this.taskList.filter(
-            (task) => !task['parentID'].includes(this.stepsTasks?.recID)
-          );
-          taskLinks = this.mapDataTask(tasks, litsParentID);
-        }
-        let index = taskLinks.findIndex((x) => x.key === this.stepsTasks.recID);
-        taskLinks.splice(index, 1);
-      }
-    }
-    return taskLinks;
   }
 
   mapDataTask(liskTask, listID?) {
@@ -235,6 +194,93 @@ export class PopupJobComponent implements OnInit {
     if (index != -1) data.splice(index, 1);
   }
 
+  showCombobox() {
+    this.show = !this.show;
+  }
+  // xử lý công việc liên kêt
+  async setTaskLink(groupTaskID?: string) {
+    let taskLinks = [];
+    if (groupTaskID) {
+      if (this.status == 'add' || this.status == 'copy') {
+        let groupTask = this.taskGroupList.find((x) => x.recID === groupTaskID);
+        if (groupTask && groupTask['task']) {
+          taskLinks = this.mapDataTask(groupTask['task']);
+        }
+      } else {
+        let litsParentID = this.stepsTasks['parentID'].split(';');
+        let groupTask = this.taskGroupList.find((x) => x.recID === groupTaskID);
+        if (groupTask && groupTask['task']) {
+          //lấy những task mà không có liên kết với task đang edit
+          let tasks = groupTask['task'].filter(
+            (task) => !task['parentID'].includes(this.stepsTasks?.recID)
+          );
+          taskLinks = this.mapDataTask(tasks, litsParentID);
+        }
+        let index = taskLinks.findIndex((x) => x.key === this.stepsTasks.recID);
+        taskLinks.splice(index, 1);
+      }
+    } else {
+      if (this.status == 'add' || this.status == 'copy') {
+        if (this.taskList?.length > 0) {
+          taskLinks = this.mapDataTask(this.taskList);
+        }
+      } else {
+        let litsParentID = this.stepsTasks['parentID'].split(';');
+        if (this.taskList?.length > 0) {
+          //lấy những task mà không có liên kết với task đang edit
+          let tasks = this.taskList.filter(
+            (task) => !task['parentID'].includes(this.stepsTasks?.recID)
+          );
+          taskLinks = this.mapDataTask(tasks, litsParentID);
+        }
+        let index = taskLinks.findIndex((x) => x.key === this.stepsTasks.recID);
+        taskLinks.splice(index, 1);
+      }
+    }
+    return taskLinks;
+  }
+
+  // combobox chọn nhiều
+  handelCheck(data) {
+    data.checked = !data.checked;
+    let dataCheck = this.dataCombobox
+      .filter((x) => x.checked)
+      .map((y) => y.value);
+    this.litsParentID = this.dataCombobox
+      .filter((x) => x.checked)
+      .map((y) => y.key);
+    this.valueInput = dataCheck.join('; ');
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+    let a = this.inputContainer?.nativeElement.contains(event.target);
+    if (!a) {
+      this.show = false;
+    }
+  }
+
+  getFormModel() {
+    this.frmModel = {
+      entityName: 'DP_Steps_Tasks',
+      formName: 'DPStepsTasks',
+      gridViewName: 'grvDPStepsTasks',
+    };
+    this.cache.gridView('grvDPStepsTasks').subscribe((res) => {
+      this.cache
+        .gridViewSetup('DPStepsTasks', 'grvDPStepsTasks')
+        .subscribe((res) => {
+          for (let key in res) {
+            if (res[key]['isRequire']) {
+              let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
+              this.view[keyConvert] = res[key]['headerText'];
+            }
+          }
+          console.log(this.view);
+        });
+    });
+  }
+  //Email
   handelMail() {
     let data = {
       dialog: this.dialog,
@@ -262,136 +308,7 @@ export class PopupJobComponent implements OnInit {
       }
     });
   }
-
-  showCombobox() {
-    this.show = !this.show;
-  }
-
-  @HostListener('document:click', ['$event'])
-  clickout(event) {
-    let a = this.inputContainer?.nativeElement.contains(event.target);
-    if (!a) {
-      this.show = false;
-    }
-  }
-
-  handelCheck(data) {
-    data.checked = !data.checked;
-    let dataCheck = this.dataCombobox
-      .filter((x) => x.checked)
-      .map((y) => y.value);
-    this.litsParentID = this.dataCombobox
-      .filter((x) => x.checked)
-      .map((y) => y.key);
-    this.valueInput = dataCheck.join('; ');
-    console.log(this.litsParentID);
-  }
-
-  getMaxhour() {
-    let groupTask = this.taskGroupList.find(
-      (x) => x.recID == this.stepsTasks['taskGroupID']
-    );
-    let max = 0;
-    groupTask['task'].forEach((element) => {
-      let hour = +element['durationDay'] * 24 + +element['durationHour'];
-      if (max < hour) {
-        max = hour;
-      }
-    });
-    return max;
-  }
-
-  getFormModel() {
-    this.frmModel = {
-      entityName: 'DP_Steps_Tasks',
-      formName: 'DPStepsTasks',
-      gridViewName: 'grvDPStepsTasks',
-    };
-    this.cache.gridView('grvDPStepsTasks').subscribe((res) => {
-      this.cache
-        .gridViewSetup('DPStepsTasks', 'grvDPStepsTasks')
-        .subscribe((res) => {
-          for (let key in res) {
-            if (res[key]['isRequire']) {
-              let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
-              this.view[keyConvert] = res[key]['headerText'];
-            }
-          }
-          console.log(this.view);
-        });
-    });
-  }
-
-  getHour(data) {
-    let hour =
-      Number(data['durationDay'] || 0) * 24 + Number(data['durationHour'] || 0);
-    return hour || 0;
-  }
-
-  getTimeDependRule() {
-    let group = this.taskGroupList.find(
-      (x) => x.recID === this.stepsTasks.taskGroupID
-    );
-    if (group || group['task']?.lenght > 0) {
-    }
-  }
-
-  checkSave(groupTask, timeInput?: number) {
-    let time = timeInput ? timeInput : this.getHour(this.stepsTasks);
-    if (this.getHour(groupTask) >= time) {
-      // nếu thời gian ko vượt quá thời gian cho phép lưu => không ảnh hưởng đến step
-      this.dialog.close({ data: this.stepsTasks, status: this.status });
-    } else {
-      // nếu vượt quá thì hỏi ý kiến
-      this.notiService.alertCode(this.MESSAGETIME).subscribe((x) => {
-        if (x.event && x.event.status == 'Y') {
-          if (timeInput) {
-            groupTask['durationDay'] = Math.floor(time / 24);
-            groupTask['durationHour'] = time % 24;
-          } else {
-            groupTask['durationDay'] = this.stepsTasks['durationDay'];
-            groupTask['durationHour'] = this.stepsTasks['durationHour'];
-          }
-          let sumGroup = this.sumHourGroupTask();
-          let timeStep = this.getHour(this.step);
-          if(sumGroup > timeStep){
-            this.step['durationDay'] =  Math.floor(sumGroup / 24);
-            this.step['durationHour'] =  sumGroup % 24;
-          }
-          this.dialog.close({ data: this.stepsTasks, status: this.status });
-        }
-      });
-    }
-  }
-
-  checkSaveDependRule(groupTask, task) {
-    let idTask = task['parentID'].trim() ? task['parentID'].split(';') : [];
-    if (idTask.length > 0) {
-      let taskMax = 0;
-      let taskFindMax;
-      idTask?.forEach((element) => {
-        let taskFind = groupTask['task'].find((x) => x.recID == element);
-        if (taskFind && this.getHour(taskFind) >= taskMax) {
-          taskMax = this.getHour(taskFind) || 0;
-          taskFindMax = taskFind;
-        }
-      });
-      if (taskMax == 0) {
-        return this.getHour(task);
-      } else {
-        return (
-          this.getHour(task) + this.checkSaveDependRule(groupTask, taskFindMax)
-        );
-      }
-    } else {
-      return this.getHour(task);
-    }
-  }
-
-  viewDetailSurveys() {
-    if (this.linkQuesiton) window.open(this.linkQuesiton);
-  }
-
+  //  khảo sát
   changeQuestion(e) {
     if (e?.data) {
       this.stepsTasks['reference'] = e?.data;
@@ -410,6 +327,10 @@ export class PopupJobComponent implements OnInit {
     }
   }
 
+  viewDetailSurveys() {
+    if (this.linkQuesiton) window.open(this.linkQuesiton);
+  }
+  // file
   addFile(evt: any) {
     this.attachment.uploadFile();
   }
@@ -425,56 +346,7 @@ export class PopupJobComponent implements OnInit {
     event.data.length;
   }
 
-  sumHourGroupTask(index?: number) {
-    let sum = 0;
-    if (this.taskGroupList?.length > 0) {
-      if (index >=0) {
-        for (let group of this.taskGroupList) {
-          if (Number(group['indexNo']) <= index) {
-            sum += this.getHour(group);
-          }
-        }
-      } else {
-        sum = this.taskGroupList.reduce((sumHour, group) => {
-          return (sumHour += this.getHour(group));
-        }, 0);
-      }
-    }
-    return sum;
-  }
-
-  sumHourStep(){
-    let listStaskNoGroup = this.taskList.filter(task => !task['taskGroupID']);
-    let maxTimeTask = 0;
-    listStaskNoGroup?.forEach(task => {
-      let time = this.calculateTimeTaskNoGroup(task['recID'])
-      maxTimeTask = time > maxTimeTask ? time : maxTimeTask;
-    })
-    let timeStep = this.sumHourGroupTask();
-    return maxTimeTask > timeStep ? maxTimeTask : timeStep;
-  }
-
-  calculateTimeTaskNoGroup( taskId, taskInput?) {
-    let task = taskInput
-      ? taskInput
-      : this.taskList.find((t) => t['recID'] === taskId);
-    if (!task) return 0;
-    if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
-      let groupFind =  this.taskGroupList.find(x => x['recID'] === task['taskGroupID']);
-      let hourGroup = this.sumHourGroupTask(groupFind['indexNo']-1);
-      return hourGroup + this.getHour(task);
-    } else {
-      const parentIds = task.parentID.split(';');
-      let maxTime = 0;
-      parentIds?.forEach((parentId) => {
-        const parentTime = this.calculateTimeTaskNoGroup(parentId);
-        maxTime = Math.max(maxTime, parentTime);
-      });
-      const completionTime = this.getHour(task) + maxTime;
-      return completionTime;
-    }
-  }
-
+  // save
   async saveData() {
     this.stepsTasks['roles'] = this.listOwner;
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
@@ -510,7 +382,10 @@ export class PopupJobComponent implements OnInit {
         this.checkSave(groupTask);
       } else {
         // nếu công việc thực hiện sau những công việc khác thì tính tổng thời gian những công việc liên quan
-        if (!this.stepsTasks['parentID'].trim() || groupTask['task'].length === 0) {
+        if (
+          !this.stepsTasks['parentID'].trim() ||
+          groupTask['task'].length === 0
+        ) {
           // nếu chưa có công việc liên quan
           this.checkSave(groupTask);
         } else {
@@ -518,13 +393,144 @@ export class PopupJobComponent implements OnInit {
           this.checkSave(groupTask, time);
         }
       }
-    } else { // kiểm tra xem task có time lớn hơn step hay không if lớn thì hỏi ý kiến  
-      if (!this.stepsTasks['parentID'].trim()){//if ko có parentID thì so sánh trực tiếp với step
-
-      }else{ // tính thời gian dựa vào công việc liên quan rồi mới so sánh
-
+    } else {
+      // kiểm tra xem task có time lớn hơn step hay không if lớn thì hỏi ý kiến
+      if (!this.stepsTasks['parentID'].trim()) {
+        //if ko có parentID thì so sánh trực tiếp với step
+        if (this.getHour(this.stepsTasks) > this.getHour(this.step)) {
+          this.notiService.alertCode(this.MESSAGETIME).subscribe((x) => {
+            if (x.event && x.event.status == 'Y') {
+              this.step['durationDay'] = this.stepsTasks['durationDay'];
+              this.step['durationHour'] = this.stepsTasks['durationHour'];
+              this.dialog.close({ data: this.stepsTasks, status: this.status });
+            } else {
+              this.dialog.close({ data: this.stepsTasks, status: this.status });
+            }
+          });
+        } else {
+          this.dialog.close({ data: this.stepsTasks, status: this.status });
+        }
+      } else {
+        // tính thời gian dựa vào công việc liên quan rồi mới so sánh
+        let parentIDs = this.stepsTasks['parentID'].split(';');
+        let maxtime = 0;
+        parentIDs?.forEach((id) => {
+          let time = this.calculateTimeTaskNoGroup(id);
+          maxtime = Math.max(time, maxtime);
+        });
+        maxtime += this.getHour(this.stepsTasks);
+        if (maxtime > this.getHour(this.step)) {
+          this.notiService.alertCode(this.MESSAGETIME).subscribe((x) => {
+            if (x.event && x.event.status == 'Y') {
+              this.step['durationDay'] = Math.floor(maxtime / 24);
+              this.step['durationHour'] = maxtime % 24;
+              this.dialog.close({ data: this.stepsTasks, status: this.status });
+            } else {
+              this.dialog.close({ data: this.stepsTasks, status: this.status });
+            }
+          });
+        } else {
+          this.dialog.close({ data: this.stepsTasks, status: this.status });
+        }
       }
+    }
+  }
+
+  checkSave(groupTask, timeInput?: number) {
+    let time = timeInput ? timeInput : this.getHour(this.stepsTasks);
+    if (this.getHour(groupTask) >= time) {
+      // nếu thời gian ko vượt quá thời gian cho phép lưu => không ảnh hưởng đến step
       this.dialog.close({ data: this.stepsTasks, status: this.status });
+    } else {
+      // nếu vượt quá thì hỏi ý kiến
+      this.notiService.alertCode(this.MESSAGETIME).subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          if (timeInput) {
+            groupTask['durationDay'] = Math.floor(time / 24);
+            groupTask['durationHour'] = time % 24;
+          } else {
+            groupTask['durationDay'] = this.stepsTasks['durationDay'];
+            groupTask['durationHour'] = this.stepsTasks['durationHour'];
+          }
+          let sumGroup = this.sumHourGroupTask();
+          let timeStep = this.getHour(this.step);
+          if (sumGroup > timeStep) {
+            this.step['durationDay'] = Math.floor(sumGroup / 24);
+            this.step['durationHour'] = sumGroup % 24;
+          }
+          this.dialog.close({ data: this.stepsTasks, status: this.status });
+        }
+      });
+    }
+  }
+
+  // xử lý thời gian
+  getHour(data) {
+    let hour =
+      Number(data['durationDay'] || 0) * 24 + Number(data['durationHour'] || 0);
+    return hour || 0;
+  }
+
+  sumHourGroupTask(index?: number) {
+    let sum = 0;
+    if (this.taskGroupList?.length > 0) {
+      if (index >= 0) {
+        for (let group of this.taskGroupList) {
+          if (Number(group['indexNo']) <= index) {
+            sum += this.getHour(group);
+          }
+        }
+      } else {
+        sum = this.taskGroupList.reduce((sumHour, group) => {
+          return (sumHour += this.getHour(group));
+        }, 0);
+      }
+    }
+    return sum;
+  }
+
+  calculateTimeTaskNoGroup(taskId) {
+    let task = this.taskList.find((t) => t['recID'] === taskId);
+    if (!task) return 0;
+    if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
+      let groupFind = this.taskGroupList.find(
+        (x) => x['recID'] === task['taskGroupID']
+      );
+      let hourGroup = this.sumHourGroupTask(groupFind['indexNo'] - 1);
+      return hourGroup + this.getHour(task);
+    } else {
+      const parentIds = task.parentID.split(';');
+      let maxTime = 0;
+      parentIds?.forEach((parentId) => {
+        const parentTime = this.calculateTimeTaskNoGroup(parentId);
+        maxTime = Math.max(maxTime, parentTime);
+      });
+      const completionTime = this.getHour(task) + maxTime;
+      return completionTime;
+    }
+  }
+
+  checkSaveDependRule(groupTask, task) {
+    let idTask = task['parentID'].trim() ? task['parentID'].split(';') : [];
+    if (idTask.length > 0) {
+      let taskMax = 0;
+      let taskFindMax;
+      idTask?.forEach((element) => {
+        let taskFind = groupTask['task'].find((x) => x.recID == element);
+        if (taskFind && this.getHour(taskFind) >= taskMax) {
+          taskMax = this.getHour(taskFind) || 0;
+          taskFindMax = taskFind;
+        }
+      });
+      if (taskMax == 0) {
+        return this.getHour(task);
+      } else {
+        return (
+          this.getHour(task) + this.checkSaveDependRule(groupTask, taskFindMax)
+        );
+      }
+    } else {
+      return this.getHour(task);
     }
   }
 }

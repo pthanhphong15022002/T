@@ -63,14 +63,9 @@
       <div class="w-100 ms-2">
         <div class="d-flex justify-content-end">
           <codx-label
-            [default]="type == 'edit' &&  taskGroup?.createdOn ? 'Thời gian còn lại' : ''"
+            [default]="'Thời gian còn lại'"
           ></codx-label>
-          <span
-            *ngIf="type == 'edit' &&  taskGroup?.createdOn"
-            class="text-danger ms-3"
-            id="countdown"
-          >
-          </span>
+          <span>1 ngày 1 giờ</span>
         </div>
         <div class="position-relative">
           <codx-input
