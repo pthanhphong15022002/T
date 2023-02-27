@@ -26,10 +26,10 @@ export class Inventorymodels {
   quarantineControl: any;
   requirePick:any;
   requireRegister: any;
-  reserveExpired: boolean = false;
-  reserveMethod:boolean = false;
-  reserveOrdered: boolean = false;
-  reservePartial:boolean = false;
+  reserveExpired: any;
+  reserveMethod:any;
+  reserveOrdered: any;
+  reservePartial:any;
   reserveRule: any;
   reserveSameBatch: any;
   reserveUnavailable: any;

@@ -198,6 +198,11 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
       );
       return;
     }
+    this.notification.notifyCode(
+      'SYS006',
+      0,
+      ''
+    );
     window.localStorage.setItem("datacontact",JSON.stringify(this.contact));
     this.dialog.close();
   }
@@ -245,6 +250,11 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     if (this.recIdAddress != null) {
       this.contact.reference = this.recIdAddress;
     }
+    this.notification.notifyCode(
+      'SYS006',
+      0,
+      ''
+    );
     this.objectContact.push({...this.contact});
     this.clearContact();   
   }

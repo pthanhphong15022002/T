@@ -53,13 +53,14 @@ export class CatagoryComponent implements OnInit {
   valuelist: any = {};
   dataValue: any = {};
   catagoryName: any = '';
-  //urlOld = '';
   lstFuncID: any[] = [];
   autoDefault?: any;
   dialog?: DialogRef;
-
+  oldSettingFull = [];
+  oldDataValue: any = {};
   //labels
   labels = [];
+  isOpenSub: boolean = false;
 
   constructor(
     private api: ApiHttpService,
@@ -319,6 +320,44 @@ export class CatagoryComponent implements OnInit {
           break;
       }
     }
+  }
+
+  openSub(evt: any, recID: string, dataValue: any) {
+    this.isOpenSub = true;
+    this.oldSettingFull = JSON.parse(JSON.stringify(this.settingFull));
+    this.oldDataValue = JSON.parse(JSON.stringify(this.dataValue));
+    this.settingFull =
+      this.settingFull.filter(
+        (x) => x.refLineID === recID && x.lineType === '2'
+      ) || [];
+    this.setting =
+      this.settingFull.filter((res) => res.isVisible == true) || [];
+    this.dataValue = dataValue;
+    this.groupSetting = this.setting.filter((x) => {
+      return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
+    });
+    if (this.category === '2' || this.category === '7') this.getIDAutoNumber();
+    else if (this.category === '5') this.getAlertRule();
+    else if (this.category === '6') this.getSchedules();
+    this.changeDetectorRef.detectChanges;
+  }
+
+  backSub(evt: any) {
+    this.isOpenSub = false;
+    evt.preventDefault();
+    this.dataValue = JSON.parse(JSON.stringify(this.oldDataValue));
+    this.settingFull = JSON.parse(JSON.stringify(this.oldSettingFull));
+    this.setting =
+      this.settingFull.filter((res) => res.isVisible == true) || [];
+    this.groupSetting = this.setting.filter((x) => {
+      return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
+    });
+    this.oldSettingFull = [];
+    this.oldDataValue = {};
+    if (this.category === '2' || this.category === '7') this.getIDAutoNumber();
+    else if (this.category === '5') this.getAlertRule();
+    else if (this.category === '6') this.getSchedules();
+    this.changeDetectorRef.detectChanges;
   }
 
   collapseItem(evt: any, recID: string) {

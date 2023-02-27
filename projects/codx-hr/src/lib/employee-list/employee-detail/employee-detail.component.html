@@ -1042,7 +1042,7 @@
       <ul
         ngbNav
         #nav="ngbNav"
-        [(activeId)]="active"
+        [(activeId)]="active[0]"
         (navChange)="navChange($event)"
         class="nav nav-tabs"
       >
@@ -1139,7 +1139,7 @@
                   </codx-label>
 
                   <div class="fw-bolder">
-                    {{ infoPersonal?.maritalStatus }}
+                    {{ infoPersonal?.maritalStatus | formatvalue : eInfoFormModel : "maritalStatus" | async }}
                     <!-- <codx-vll
                         [showText]="true"
                         [showBgColor]="false"
@@ -1165,7 +1165,7 @@
                   <div class="d-flex">
                     <span class="icon-cake icon-18 text-gray-600 me-2"></span>
                     <span class="text-dark fw-bolder">
-                      {{ infoPersonal?.birthday | fmDT }}</span
+                      {{ infoPersonal?.birthday | formatvalue : eInfoFormModel : "birthday" | async }}</span
                     >
                   </div>
                 </div>
@@ -1216,8 +1216,8 @@
                     <span
                       class="icon-wysiwyg icon-18 text-gray-600 me-2"
                     ></span>
-                    <span #nationality class="fw-bolder">
-                      {{ infoPersonal?.nationalityName }}</span
+                    <span class="fw-bolder">
+                      {{ infoPersonal?.nationality | formatvalue : eInfoFormModel : "nationality" | async }}</span
                     >
                   </div>
                 </div>
@@ -1228,8 +1228,8 @@
                     [formModel]="eInfoFormModel"
                   >
                   </codx-label>
-                  <div #ethnicGroup class="fw-bolder">
-                    {{ infoPersonal?.ethnicGroupName }}
+                  <div class="fw-bolder">
+                    {{ infoPersonal?.ethnicGroup | formatvalue : eInfoFormModel : "ethnicGroup" | async }}
                   </div>
                 </div>
                 <div class="col">
@@ -1239,12 +1239,12 @@
                     [formModel]="eInfoFormModel"
                   >
                   </codx-label>
-                  <div #religion class="fw-bolder">
-                    {{ infoPersonal?.religionName }}
+                  <div class="fw-bolder">
+                    {{ infoPersonal?.religion | formatvalue : eInfoFormModel : "religion" | async }}
                   </div>
                 </div>
               </div>
-              <!-- CMND/Ngay cap/ Noi cap -->
+              <!-- Số CMND/ Ngày cấp/ Nơi cấp -->
               <div class="row form-group">
                 <div class="col">
                   <codx-label
@@ -1253,7 +1253,7 @@
                     [formModel]="eInfoFormModel"
                   >
                   </codx-label>
-                  <div #idCardNo class="fw-bolder">
+                  <div class="fw-bolder">
                     {{ infoPersonal?.idCardNo }}
                   </div>
                 </div>
@@ -1266,8 +1266,8 @@
                   </codx-label>
                   <div class="d-flex align-items-center">
                     <span class="icon-event icon-18 text-gray-600 me-2"></span>
-                    <span #issuedOn class="fw-bolder">
-                      {{ infoPersonal?.issuedOn | fmDT }}</span
+                    <span class="fw-bolder">
+                      {{ infoPersonal?.issuedOn | formatvalue : eInfoFormModel : "issuedOn" | async }}</span
                     >
                   </div>
                 </div>
@@ -1278,13 +1278,13 @@
                     [formModel]="eInfoFormModel"
                   >
                   </codx-label>
-                  <span #issuedBy class="fw-bolder"
-                    >{{ infoPersonal?.issuedByName }}
+                  <span class="fw-bolder"
+                    >{{ infoPersonal?.issuedByName | formatvalue : eInfoFormModel : "issuedByName" | async }}
                   </span>
                 </div>
               </div>
               <!-- Số hộ chiếu/ ngày cấp/ ngày hết hạn -->
-              <div class="row form-group" *ngIf="ePassportFormModel">
+              <div class="row form-group" *ngIf="ePassportFormModel && crrPassport">
                 <div class="col">
                   <codx-label
                     class="text-gray-600 me-2"
@@ -1292,8 +1292,8 @@
                     [formModel]="ePassportFormModel"
                   >
                   </codx-label>
-                  <div #education class="fw-bolder">
-                    {{ infoPersonal?.passportNo }}
+                  <div class="fw-bolder">
+                    {{ crrPassport?.passportNo }}
                   </div>
                 </div>
                 <div class="col">
@@ -1306,7 +1306,7 @@
                   <div class="d-flex align-items-center">
                     <span class="icon-event icon-18 text-gray-600 me-2"></span>
                     <div #education class="fw-bolder">
-                      {{ infoPersonal?.issuedDate | fmDT }}
+                      {{ crrPassport?.issuedDate | formatvalue : ePassportFormModel : "issuedDate" | async }}
                     </div>
                   </div>
                 </div>
@@ -1319,13 +1319,13 @@
                   </codx-label>
                   <div class="d-flex align-items-center">
                     <span class="icon-event icon-18 me-2 text-danger"></span>
-                    <span #degreeName class="fw-bolder">
-                      {{ infoPersonal?.expiredDate | fmDT }}</span
+                    <span class="fw-bolder">
+                      {{ crrPassport?.expiredDate | formatvalue : ePassportFormModel : "expiredDate" | async }}</span
                     >
                   </div>
                 </div>
               </div>
-              <!-- Trinh do van hoa/ Trinh do chuyen mon -->
+              <!-- Trình độ văn hóa/ Trình độ chuyên môn -->
               <div class="row form-group">
                 <div class="col-4">
                   <codx-label
@@ -1336,7 +1336,7 @@
                   </codx-label>
                   <div class="d-flex align-items-center">
                     <span class="icon-school icon-18 text-gray-600 me-2"></span>
-                    <span #education class="fw-bolder">
+                    <span class="fw-bolder">
                       <codx-vll
                         [showText]="true"
                         [showBgColor]="false"
@@ -1359,7 +1359,7 @@
                   </codx-label>
                   <div class="d-flex align-items-center">
                     <span class="icon-school icon-18 text-gray-600 me-2"></span>
-                    <span #degreeName class="fw-bold">
+                    <span class="fw-bold">
                       {{ infoPersonal?.degreeName }}</span
                     >
                   </div>
@@ -1769,7 +1769,7 @@
       <ul
         ngbNav
         #nav="ngbNav"
-        [(activeId)]="active"
+        [(activeId)]="active[1]"
         (navChange)="navChange($event)"
         class="nav nav-tabs"
       >
@@ -1801,10 +1801,10 @@
       scrollSpy
       (sectionChange)="onSectionChange($event)"
     >
-      <ng-container>
+      <!-- <ng-container> -->
         <!-- BẢO HIỂM - MS THUẾ - TÀI KHOẢN -->
 
-        <div class="user-profile overview d-block mb-3" id="HRTEM0201">
+        <div class="user-profile overview d-block mb-3" [id]="eAssurFunc">
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
@@ -2075,7 +2075,7 @@
           </div>
         </div>
         <!-- Hộ chiếu -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0202">
+        <div class="user-profile overview d-block mb-3" [id]="ePassportFuncID">
           <div class="rounded-2 p-4 bg-white mt-5">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
@@ -2123,6 +2123,7 @@
                   [dataService]="dataService"
                   [pageSize]="numPageSizeGridView"
                   [rowHeight]="50"
+                  [sort]="[passportSortModel]"
                   height="240px"
                 ></codx-gridview>
                 <!-- [height]="
@@ -2135,7 +2136,7 @@
           </div>
         </div>
         <!-- Thị thực -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0203">
+        <div class="user-profile overview d-block mb-3" [id]="eVisaFuncID">
           <div class="rounded-2 p-4 bg-white mt-5">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
@@ -2257,7 +2258,7 @@
             </div>
           </div>
         </div>
-      </ng-container>
+      <!-- </ng-container> -->
     </div>
   </div>
 </ng-template>
@@ -2269,7 +2270,7 @@
       <ul
         ngbNav
         #nav="ngbNav"
-        [(activeId)]="active"
+        [(activeId)]="active[2]"
         (navChange)="navChange($event)"
         class="nav nav-tabs"
       >
@@ -3003,7 +3004,7 @@
       <ul
         ngbNav
         #nav="ngbNav"
-        [(activeId)]="active"
+        [(activeId)]="active[3]"
         (navChange)="navChange($event)"
         class="nav nav-tabs"
       >
@@ -3672,7 +3673,7 @@
       <ul
         ngbNav
         #nav="ngbNav"
-        [(activeId)]="active"
+        [(activeId)]="active[4]"
         (navChange)="navChange($event)"
         class="nav nav-tabs"
       >
@@ -4235,7 +4236,7 @@
       <ul
         ngbNav
         #nav="ngbNav"
-        [(activeId)]="active"
+        [(activeId)]="active[5]"
         (navChange)="navChange($event)"
         class="nav nav-tabs"
       >
@@ -4802,7 +4803,7 @@
       <ul
         ngbNav
         #nav="ngbNav"
-        [(activeId)]="active"
+        [(activeId)]="active[6]"
         (navChange)="navChange($event)"
         class="nav nav-tabs"
       >
@@ -4993,7 +4994,7 @@
       <ul
         ngbNav
         #nav="ngbNav"
-        [(activeId)]="active"
+        [(activeId)]="active[7]"
         (navChange)="navChange($event)"
         class="nav nav-tabs"
       >
@@ -5786,26 +5787,25 @@
 
 <!-- #region Hộ chiếu columnGrid templates-->
 <ng-template #passportCol1 let-data>
-  <div class="d-flex flex-column">
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-email icon-16 text-gray-800 me-1"></span>
-      <span class="text-dark">
-        <span>{{
+  <div class="d-flex align-items-center mb-4">
+    <span class="bullet bullet-vertical d-flex align-items-center min-h-50px mh-100 me-4" [class]="data.recID == crrPassport?.recID ? ' bg-primary' : 'bg-transparent'"></span>
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-1">
+        <span class="icon-description icon-16 text-gray-500 me-2"></span>
+        <div class="text-dark fw-bold">{{
           data?.passportNo
             | formatvalue : ePassportFormModel : "passportNo"
             | async
-        }}</span>
-      </span>
-    </div>
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-email icon-16 text-gray-800 me-1"></span>
-      <span class="text-dark">
-        <span>{{
+        }}</div>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="icon-home_work icon-16 text-gray-500 me-2"></span>
+        <div class="text-dark">{{
           data?.issuedPlace
             | formatvalue : ePassportFormModel : "issuedPlace"
             | async
-        }}</span>
-      </span>
+        }}</div>
+      </div>
     </div>
   </div>
 </ng-template>

@@ -233,10 +233,11 @@
             <div class="col-6 position-relative">
               <codx-input
                 field="durationDay"
-                [formModel]="form?.formModel"
                 [crrValue]="stepsTasks?.durationDay"
-                type="text"
+                [min]="0"
+                type="number"
                 (valueChange)="valueChangeText($event)"
+                [showSpinButton]="false"
               >
               </codx-input>
               <div
@@ -255,10 +256,11 @@
             <div class="col-6 position-relative">
               <codx-input
                 field="durationHour"
-                [formModel]="form?.formModel"
-                type="text"
+                [min]="0"
+                type="number"
                 [crrValue]="stepsTasks?.durationHour"
                 (valueChange)="valueChangeText($event)"
+                [showSpinButton]="false"
               >
               </codx-input>
               <div

@@ -34,10 +34,8 @@
                             <div *ngIf="fileEditing">
                                 {{fileEditing.description}}
                             </div>
-                            <div *ngIf="fileEditing" class="mt-3 pic-file h-140px d-flex justify-content-center">
-                                <div *ngIf="fileEditing.thumbnail" class="w-100">
-                                    <img alt="" class="w-100" [src]="getThumbnail(fileEditing)">
-                                </div>
+                            <div *ngIf="fileEditing && fileEditing.thumbnail" class="mt-3 pic-file h-140px d-flex justify-content-center" [style.background-image]="'url('+(getThumbnail(fileEditing))+')'">
+                               
                                 <!-- <img alt="" class="w-100 me-2" src="../../../assets/demos/dms/demo1.png"> -->
                             </div>
                             <div class="dms-btn d-flex justify-content-between mt-4">

@@ -3,7 +3,9 @@
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
       <div class="d-flex align-items-center">
         <h2 class="h2-title">
-          <codx-label default="Tạo quy trình"> </codx-label>
+          <!-- xài code label truyền lên không load lại data, bật lần 2 thì load -->
+          <!-- <codx-label default="titleAction"> </codx-label> -->
+          <span>{{titleAction}}</span>
         </h2>
       </div>
       <div class="d-flex align-items-center">
@@ -351,9 +353,9 @@
           </div>
           <div class="col-6">
             <div class="position-relative">
-              <codx-input type="text" [crrValue]="process.instanceNoSetting"
-                [placeholder]="gridViewSetup['InstanceNoSetting']?.description" (valueChange)="valueChange($event)"
-                field="instanceNoSetting">
+              <codx-input type="text" [crrValue]="instanceNoSetting"
+                [placeholder]="gridViewSetup['InstanceNoSetting']?.description" (valueChange)="valueChangeAutoNoCode($event)"
+                field="instanceNoSetting" >
               </codx-input>
               <div class="position-absolute" style="top: 7px; right: 7px">
                 <i class="icon-settings form-control-feedback" (click)="openAutoNumPopup()"></i>
@@ -974,14 +976,14 @@
             <div class="row">
               <div class="col-6">
                 <codx-input name="success-radio" type="radio" style="width: 100%" field="yes" [label]="titleRadioYes"
-                  [checked]="stepSuccess.reasonControl" [crrValue]="stepSuccess.reasonControl" (valueChange)="
+                  [checked]="stepSuccess.reasonControl" [crrValue]="stepSuccess?.reasonControl" (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   ">
                 </codx-input>
               </div>
               <div class="col-6">
                 <codx-input name="success-radio" type="radio" style="width: 100%" field="no" [label]="titleRadioNo"
-                  [checked]="!stepSuccess.reasonControl" [crrValue]="stepSuccess.reasonControl" (valueChange)="
+                  [checked]="!stepSuccess.reasonControl" [crrValue]="stepSuccess?.reasonControl" (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   ">
                 </codx-input>
@@ -1596,7 +1598,7 @@
     <button type="button" class="btn btn-outline-primary me-5" (click)="popupAddReason.close()">
       <codx-label name="Save" formName="DPStepsReasons" default="Hủy"></codx-label>
     </button>
-    <button type="button" class="btn btn-primary" (click)="addReason()">
+    <button type="button" [disabled]="isClick" class="btn btn-primary" (click)="addReason()">
       <codx-label name="Save" formName="DPStepsReasons" default="Đồng ý"></codx-label>
     </button>
   </div>
