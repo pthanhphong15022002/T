@@ -417,4 +417,12 @@ export class CodxDpService {
       [instanceNoSetting, null, true, null]
     );
   }
+  updateFiels(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateInstanceStepFielsByStepIDAsync',
+      data
+    );
+  }
 }
