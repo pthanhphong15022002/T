@@ -182,7 +182,7 @@
                         <div class="col-6">
                             <codx-label [formModel]="dialog.formModel" name="lblFDQuantityGifts" default="Số lượng">
                             </codx-label>
-                            <codx-input type="number" [min]="0" class="form-control"
+                            <codx-input type="number" [min]="0" class="form-control" [max]="max"
                                 [crrValue]="form.controls['quantity'].value" field="quantity"
                                 (valueChange)="valueChange($event)">
                             </codx-input>
