@@ -1202,6 +1202,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         });
         this.stepList.sort((a, b) => a['stepNo'] - b['stepNo']);
+        this.viewStepSelect(this.stepList[0]);// gán listStep[0] cho step
+        
       }
     });
   }
