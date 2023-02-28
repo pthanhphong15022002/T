@@ -118,7 +118,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
       return;
     }
 
-    if (this.actionType === 'copy' || this.actionType === 'add') {
+    if (this.actionType === 'copy') {
       delete this.skillObj.recID;
     }
     this.skillObj.employeeID = this.employId;

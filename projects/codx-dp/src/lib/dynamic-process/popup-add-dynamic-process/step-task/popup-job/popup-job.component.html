@@ -38,7 +38,7 @@
         </codx-label>
       </div>
       <div>
-        <codx-label [default]="taskName"> </codx-label>
+        <codx-label [default]="stepName"> </codx-label>
         <span *ngIf="taskGroupName"> > </span>
         <span style="font-weight: 500">
           {{ taskGroupName }}
@@ -60,11 +60,11 @@
         </div>
         <div>
           <ejs-dropdownlist
-            [dataSource]="groupTackList"
+            [dataSource]="taskGroupList"
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
             (valueChange)="filterText($event, 'taskGroupID')"
-            [readonly]="taskGroupID"
+            [readonly]="taskGroupID !== guidEmpty"
           ></ejs-dropdownlist>
         </div>
       </div>
@@ -138,7 +138,6 @@
       </div>
       <!-- End cuoc hop -->
       <!-- Gui mail -->
-      <!-- TODO: mail chưa có tài liệu -->
       <div
         *ngIf="taskType === 'E' || taskType === 'Q'"
         class=""
@@ -234,10 +233,11 @@
             <div class="col-6 position-relative">
               <codx-input
                 field="durationDay"
-                [formModel]="form?.formModel"
                 [crrValue]="stepsTasks?.durationDay"
-                type="text"
+                [min]="0"
+                type="number"
                 (valueChange)="valueChangeText($event)"
+                [showSpinButton]="false"
               >
               </codx-input>
               <div
@@ -256,10 +256,11 @@
             <div class="col-6 position-relative">
               <codx-input
                 field="durationHour"
-                [formModel]="form?.formModel"
-                type="text"
+                [min]="0"
+                type="number"
                 [crrValue]="stepsTasks?.durationHour"
                 (valueChange)="valueChangeText($event)"
+                [showSpinButton]="false"
               >
               </codx-input>
               <div
@@ -297,36 +298,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <div class="form-group">
-      <div>
-        <codx-label
-          fiedName="parentID"
-          [formModel]="form?.formModel"
-          default="Công việc liên kết"
-        >
-        </codx-label>
-      </div>
-      <div>
-        <ejs-dropdownlist
-        [dataSource]="taskList"
-        [fields]="fieldsTask"
-        [value]="stepsTasks?.parentID"
-        (valueChange)="filterText($event,'parentID')"
-        [readonly]="false"
-      ></ejs-dropdownlist>
-      </div>
-      <div>
-        <codx-input
-        field="parentID"
-        refValue="DPStepTasks"
-        type="combobox"
-        [crrValue]="stepsTasks?.parentID"
-        [formModel]="form?.formModel"
-      >
-      </codx-input>
-      </div>
-    </div> -->
     <div class="form-group">
       <div>
         <codx-label

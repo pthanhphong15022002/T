@@ -1,6 +1,6 @@
 <codx-form #form [headerText]="header" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="formModel">
   <ng-template #body>
-    <div class="flex-grow-1">
+    <div class="flex-grow-1 mt-2">
       <div class="d-flex align-items-start ph-card">
         <div class="pic-edit  mt-2">
           <div class="row justify-content-between h-100" *ngIf="pattern?.imageSrc">
@@ -22,8 +22,8 @@
             <div class="symbol-list d-flex flex-wrap patternt">
               <div class="pattern-teams">
                 <div class="symbol symbol-50 symbol-circle me-3 mb-3" *ngFor="let item of vll; index as i">
-                  <div class="pattern-item">
-                    <span class="symbol-label cursor-pointer" #colordf (click)="colorClick(colordf, item, i)"
+                  <div class="pattern-item" (click)="colorClick(colordf, item, i)">
+                    <span class="symbol-label cursor-pointer" #colordf [class.color-check]="(i==0&&formType=='add')"
                       [attr.data-color]="item?.text" [style.background-color]="item?.text"></span>
                   </div>
                 </div>

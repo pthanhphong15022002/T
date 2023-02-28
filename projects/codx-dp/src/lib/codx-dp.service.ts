@@ -333,15 +333,16 @@ export class CodxDpService {
     );
   }
 
-  GetListUserIDByListTmpEmpIDAsync(id) {
+  getListUserByListOrgUnitIDAsync(lstId, type) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmployeesBusiness',
-      'GetListUserIDByListTmpEmpIDAsync',
-      id
+      'GetListUserByListOrgUnitIDAsync',
+      [lstId, type]
     );
   }
+
 
   getListUserIDByListPositionsID(listPositionID) {
     return this.api.execSv<any>(
@@ -369,7 +370,7 @@ export class CodxDpService {
       'ERM.Business.AD',
       'UsersBusiness',
       'GetListUserByRoleIDAsync',
-      id
+      [id]
     );
   }
 
@@ -392,11 +393,12 @@ export class CodxDpService {
     );
   }
 
-  getFirstIntance(){
+  getFirstIntance(processID){
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
       'GetFirstIntanceAsync',
+      processID
     );
   }
 
@@ -406,6 +408,31 @@ export class CodxDpService {
       'ProcessesBusiness',
       'GetAsync',
       id
+    );
+  }
+  getAutoNumberByInstanceNoSetting(instanceNoSetting): Observable<any> {
+    return this.api.exec(
+      'ERM.Business.AD',
+      'AutoNumbersBusiness',
+      'CreateAutoNumberAsync',
+      [instanceNoSetting, null, true, null]
+    );
+  }
+
+  getListStepByIdProccessCopy(data){
+    return this.api.exec<any>(
+      'DP',
+      'StepsBusiness',
+      'GetListStepCopyAsync',
+      data
+    );
+  }
+  updateFiels(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateInstanceStepFielsByStepIDAsync',
+      data
     );
   }
 }

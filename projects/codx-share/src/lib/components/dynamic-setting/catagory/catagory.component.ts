@@ -53,13 +53,14 @@ export class CatagoryComponent implements OnInit {
   valuelist: any = {};
   dataValue: any = {};
   catagoryName: any = '';
-  //urlOld = '';
   lstFuncID: any[] = [];
   autoDefault?: any;
   dialog?: DialogRef;
-
+  oldSettingFull = [];
+  oldDataValue: any = {};
   //labels
   labels = [];
+  isOpenSub: boolean = false;
 
   constructor(
     private api: ApiHttpService,
@@ -98,6 +99,23 @@ export class CatagoryComponent implements OnInit {
             x.controlType && x.controlType.toLowerCase() === 'groupcontrol'
           );
         });
+        if (this.groupSetting.length > 0) {
+          var lstNoGroup = this.setting.filter((x) => {
+            return (
+              x.controlType &&
+              x.controlType.toLowerCase() !== 'groupcontrol' &&
+              !x.refLineID
+            );
+          });
+          if (lstNoGroup.length > 0) {
+            var objGroupTMP: any = {
+              recID: '',
+              refLineID: '',
+              controlType: 'GroupControl',
+            };
+            this.groupSetting.splice(0, 0, objGroupTMP);
+          }
+        }
       }
       if (this.valuelist && this.valuelist.datas && this.category) {
         const ds = (this.valuelist.datas as any[]).find(
@@ -321,6 +339,78 @@ export class CatagoryComponent implements OnInit {
     }
   }
 
+  openSub(evt: any, recID: string, dataValue: any) {
+    this.isOpenSub = true;
+    this.oldSettingFull = JSON.parse(JSON.stringify(this.settingFull));
+    this.oldDataValue = JSON.parse(JSON.stringify(this.dataValue));
+    this.settingFull =
+      this.settingFull.filter(
+        (x) => x.refLineID === recID && x.lineType === '2'
+      ) || [];
+    this.setting =
+      this.settingFull.filter((res) => res.isVisible == true) || [];
+    this.dataValue = dataValue;
+    this.groupSetting = this.setting.filter((x) => {
+      return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
+    });
+    if (this.groupSetting.length > 0) {
+      var lstNoGroup = this.setting.filter((x) => {
+        return (
+          x.controlType &&
+          x.controlType.toLowerCase() !== 'groupcontrol' &&
+          !x.refLineID
+        );
+      });
+      if (lstNoGroup.length > 0) {
+        var objGroupTMP: any = {
+          recID: '',
+          refLineID: '',
+          controlType: 'GroupControl',
+        };
+        this.groupSetting.splice(0, 0, objGroupTMP);
+      }
+    }
+    if (this.category === '2' || this.category === '7') this.getIDAutoNumber();
+    else if (this.category === '5') this.getAlertRule();
+    else if (this.category === '6') this.getSchedules();
+    this.changeDetectorRef.detectChanges;
+  }
+
+  backSub(evt: any) {
+    this.isOpenSub = false;
+    evt.preventDefault();
+    this.dataValue = JSON.parse(JSON.stringify(this.oldDataValue));
+    this.settingFull = JSON.parse(JSON.stringify(this.oldSettingFull));
+    this.setting =
+      this.settingFull.filter((res) => res.isVisible == true) || [];
+    this.groupSetting = this.setting.filter((x) => {
+      return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
+    });
+    if (this.groupSetting.length > 0) {
+      var lstNoGroup = this.setting.filter((x) => {
+        return (
+          x.controlType &&
+          x.controlType.toLowerCase() !== 'groupcontrol' &&
+          !x.refLineID
+        );
+      });
+      if (lstNoGroup.length > 0) {
+        var objGroupTMP: any = {
+          recID: '',
+          refLineID: '',
+          controlType: 'GroupControl',
+        };
+        this.groupSetting.splice(0, 0, objGroupTMP);
+      }
+    }
+    this.oldSettingFull = [];
+    this.oldDataValue = {};
+    if (this.category === '2' || this.category === '7') this.getIDAutoNumber();
+    else if (this.category === '5') this.getAlertRule();
+    else if (this.category === '6') this.getSchedules();
+    this.changeDetectorRef.detectChanges;
+  }
+
   collapseItem(evt: any, recID: string) {
     var eleItem = document.querySelectorAll(
       '.list-item[data-group="' + recID + '"]'
@@ -541,7 +631,7 @@ export class CatagoryComponent implements OnInit {
         if (!value === schedule[field]) return;
         schedule[field] = !value;
         this.api
-          .execAction('AD_ScheduledTasks', [schedule], 'UpdateAsync')
+          .execAction('BG_ScheduleTasks', [schedule], 'UpdateAsync')
           .subscribe((res) => {
             if (res) {
             }

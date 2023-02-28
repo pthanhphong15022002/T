@@ -593,7 +593,12 @@ export class CodxEpService {
       [booking.recID]
     );
   }
-
+  checkRole(curUser:any, owner:string) {
+    return curUser?.userID == owner || 
+    curUser?.systemAdmin ||
+    curUser?.functionAdmin ||
+    curUser?.administrator
+  }
   checkDuplicateBooking(
     startDate: string,
     endDate: string,

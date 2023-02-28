@@ -32,11 +32,15 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   dialog!: DialogRef;
-  button?: ButtonModel;
+  button?: ButtonModel = { id: 'btnAdd' };
   headerText: any;
   moreFuncName: any;
   funcName: any;
   parentID: string;
+  tabItem: any = [
+    { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
+    { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
+  ];
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -59,12 +63,6 @@ export class CashPaymentsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.button = {
-      id: 'btnAdd',
-    };
-  }
-
-  ngAfterViewInit(): void {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) this.funcName = res.defaultName;
     });

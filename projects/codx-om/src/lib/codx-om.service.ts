@@ -1,7 +1,12 @@
 import { OMCONST } from './codx-om.constant';
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import {
   ApiHttpService,
   AuthStore,
@@ -69,7 +74,7 @@ export class CodxOmService {
   //         debugger;
   //         var gridview = Util.camelizekeyObj(gv);
   //         var arrgv = Object.values(gridview) as any[];
-          
+
   //         const group: any = {};
   //         for (const key in gridview) {
   //           const element = gridview[key];
@@ -85,12 +90,12 @@ export class CodxOmService {
   //             ? new FormControl(value, Validators.required)
   //             : new FormControl(value);
   //         };
-        
+
   //         group['updateColumn'] = new FormControl('');
   //        var formGroup = new FormGroup(group);
   //        resolve(formGroup);
   //       }
-       
+
   //     });
   //     // this.cache
   //     //   .gridViewSetup(formName, gridView)
@@ -123,9 +128,7 @@ export class CodxOmService {
   //     //       model['assign'].push(false);
   //     //       model['share'].push(false);
   //     //     }
-       
-      
-         
+
   //     //   });
   //   });
   // }
@@ -143,7 +146,7 @@ export class CodxOmService {
           const user = this.auth.get();
           for (const key in gridview) {
             const element = gridview[key];
-            element.fieldName =key;
+            element.fieldName = key;
             model[element.fieldName] = [];
             if (element.fieldName == 'owner') {
               model[element.fieldName].push(user.userID);
@@ -245,12 +248,9 @@ export class CodxOmService {
     }
   }
 
-  
-  
-  loadFunctionList(funcID:any): Observable<any>
-  {
-    let paras = ["FuncID",funcID];
-    let keyRoot = "FuncID" + funcID;
+  loadFunctionList(funcID: any): Observable<any> {
+    let paras = ['FuncID', funcID];
+    let keyRoot = 'FuncID' + funcID;
     let key = JSON.stringify(paras).toLowerCase();
     if (this.caches.has(keyRoot)) {
       var c = this.caches.get(keyRoot);
@@ -315,41 +315,85 @@ export class CodxOmService {
       para
     );
   }
-  //region OKR Plan
-  getOKRPlandAndOChild(recID:string) {
+  getOMParameter(category: any) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleWithCategoryAsync',
+      ['OMParameters', category]
+    );
+  }
+
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------OKR Plan--------------------------------------//
+  //---------------------------------------------------------------------------------//
+  //Thêm, sửa okr plan
+  addEditOKRPlans(okrPlan: any, listOKR =[],isAdd:boolean) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKRPlan,
-      'GetOKRPlandAndOChildAsync',
+      'AddEditOKRPlansAsync',
+      [okrPlan,listOKR,isAdd]
+    );
+  }
+  //đổi trạng thái okr plan
+  changePlanStatus(recID: any, status:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKRPlan,
+      'ChangePlanStatusAsync',
+      [recID,status]
+    );
+  }
+  //Xóa Plan
+  deleteOKRPlans(recID: any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKRPlan,
+      'DeleteOKRPlansAsync',
+      [recID]
+    );
+  }
+  getOKRPlanAndOChild(recID: string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKRPlan,
+      'GetOKRPlanAndOChildAsync',
       [recID]
     );
   }
   //Lấy danh sách Bộ mục tiêu
-  getOKRPlans(periodID: string, interval: string, year: any) {    
+  getOKRPlans(periodID: string, interval: string, year: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKRPlan,
-      'GetAsync', 
-      [periodID, interval, year,]);
+      'GetAsync',
+      [periodID, interval, year]
+    );
   }
-  
-  //Chia sẻ bộ mục tiêu
-  shareOKRPlans(recID: any , okrsShare: any) {
-    //periodID = '2023'; //Tạm để cứng chờ khi tạo được periodID
-    return this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKRPlan,
-      'ShareAsync', 
-      [recID, okrsShare]);
-  }
-  //endregion
 
-  //region: KR
-  
-  checkInKR(recID:string,checkIn:any) {
+  //Chia sẻ bộ mục tiêu
+  shareOKRPlans(recID: any, okrsShare: any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKRPlan,
+      'ShareAsync',
+      [recID, okrsShare]
+    );
+  }
+
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------KR--------------------------------------------//
+  //---------------------------------------------------------------------------------//
+
+  checkInKR(recID: string, checkIn: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
@@ -358,34 +402,7 @@ export class CodxOmService {
       [recID, checkIn]
     );
   }
-  addOB(ob:any,listShares:any) {
-    return this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OB,
-      'AddOBAsync',
-      [ob,listShares]
-    );
-  }
-  editOB(ob:any,listShares:any) {
-    return this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OB,
-      'EditOBAsync',
-      [ob,listShares]
-    );
-  }
-  deleteOB(kr:any) {
-    return this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OB,
-      'DeleteOBAsync',
-      [kr]
-    );
-  }
-  addKR(kr:any) {
+  addKR(kr: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
@@ -394,7 +411,7 @@ export class CodxOmService {
       [kr]
     );
   }
-  editKR(kr:any) {
+  editKR(kr: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
@@ -403,7 +420,7 @@ export class CodxOmService {
       [kr]
     );
   }
-  deleteKR(kr:any) {
+  deleteKR(kr: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
@@ -412,28 +429,67 @@ export class CodxOmService {
       [kr]
     );
   }
-  //endregion: KR
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------OB--------------------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //region: OKR
-  distributeOKR(recID:string,distributeToType:string, listDistribute:any,isAdd:boolean){
+  addOB(ob: any, listShares: any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OB,
+      'AddOBAsync',
+      [ob, listShares]
+    );
+  }
+  editOB(ob: any, listShares: any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OB,
+      'EditOBAsync',
+      [ob, listShares]
+    );
+  }
+  deleteOB(kr: any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OB,
+      'DeleteOBAsync',
+      [kr]
+    );
+  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Method--------------------------------------------//
+  //---------------------------------------------------------------------------------//
+
+  distributeOKR(
+    recID: string,
+    distributeToType: string,
+    listDistribute: any,
+    isAdd: boolean
+  ) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'DistributeOKRAsync',
-      [recID,distributeToType,listDistribute,isAdd]
+      [recID, distributeToType, listDistribute, isAdd]
     );
   }
-  editOKRWeight(recID:string, type:string, child:any) {
+  editOKRWeight(recID: string, type: string, child: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'EditOKRWeightAsync',
-      [recID,type,child]
+      [recID, type, child]
     );
   }
-  //-------------------------Get Data OKR---------------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get OKR---------------------------------------//
+  //---------------------------------------------------------------------------------//
   //Lấy okr mới
   genNewOKR() {
     return this.api.execSv(
@@ -445,13 +501,13 @@ export class CodxOmService {
     );
   }
   //Lấy ds OKR_Links theo OKR RecID
-  getOKRByORGUnit(recID:string,orgUnit:string,okrLevel:string) {
+  getOKRByORGUnit(recID: string, orgUnit: string, okrLevel: string) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'GetOKRByORGUnitAsync',
-      [recID,orgUnit,okrLevel]
+      [recID, orgUnit, okrLevel]
     );
   }
   //Lấy danh sách chi tiết KR từ recID OKR
@@ -469,8 +525,8 @@ export class CodxOmService {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR, 
-      'GetAsync', 
+      OMCONST.BUSINESS.OKR,
+      'GetAsync',
       dataRequest
     );
   }
@@ -478,23 +534,23 @@ export class CodxOmService {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR, 
-      'GetAllOKROfPlanAsync', 
+      OMCONST.BUSINESS.OKR,
+      'GetAllOKROfPlanAsync',
       recID
     );
   }
-  //Lấy danh sách liên kết/phụ thuộc OKR 
-  getListAlignAssign(recID:string,refType:string) {
+  //Lấy danh sách liên kết/phụ thuộc OKR
+  getListAlignAssign(recID: string, refType: string) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'GetListAlignAssignAsync',
-      [recID,refType]
+      [recID, refType]
     );
-  }  
+  }
   //Lấy OB và tất cả KR con theo ID của OB
-  getObjectAndKRChild(recID:string) {
+  getObjectAndKRChild(recID: string) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
@@ -504,7 +560,7 @@ export class CodxOmService {
     );
   }
   //Lấy một KR và OB cha của KR đó theo ID của KR (Lấy data cho việc phân bổ KR top-down)
-  getKRAndOBParent(recID:string) {
+  getKRAndOBParent(recID: string) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
@@ -514,7 +570,7 @@ export class CodxOmService {
     );
   }
   //Lấy một OKR theo ID
-  getOKRByID(recID:string) {
+  getOKRByID(recID: string) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
@@ -524,7 +580,7 @@ export class CodxOmService {
     );
   }
   //Lấy ds OKR_Links theo OKR RecID
-  getOKRLink(recID:string) {
+  getOKRLink(recID: string) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
@@ -534,19 +590,20 @@ export class CodxOmService {
     );
   }
   //Lấy sơ đồ cây OKR
-  getOrgTreeOKR(planRecID:any, orgUnitID:string,okrLevelChild:string) {
+  getOrgTreeOKR(planRecID: any, orgUnitID: string, okrLevelChild: string) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'GetOrgTreeOKRAsync',
-      [planRecID,orgUnitID,okrLevelChild]
+      [planRecID, orgUnitID, okrLevelChild]
     );
   }
-  //endregion
 
-  //region get Data from HR
-  getlistOrgUnit(orgID:any) {
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------HR Data--------------------------------------//
+  //---------------------------------------------------------------------------------//
+  getlistOrgUnit(orgID: any) {
     return this.api.execSv(
       'HR',
       'HR',
@@ -555,6 +612,13 @@ export class CodxOmService {
       [orgID]
     );
   }
-  
-  //endregion
+  getManagerByOrgUnitID(orgID: any) {
+    return this.api.execSv(
+      'HR',
+      'HR',
+      'OrganizationUnitsBusiness',
+      'GetManagerByOrgUnitIDAsync',
+      [orgID]
+    );
+  }
 }

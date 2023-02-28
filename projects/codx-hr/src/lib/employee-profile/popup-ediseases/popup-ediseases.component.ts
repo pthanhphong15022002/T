@@ -37,6 +37,7 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   employeeId: string;
   isAfterRender = false;
   headerText: string;
+  defaultFromDate: string = '0001-01-01T00:00:00';
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
 
@@ -61,12 +62,9 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.lstEdiseases = data?.data?.lstEdiseases;
-    this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
+    this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1;
+    this.ediseasesObj = data?.data?.dataInput;
 
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.ediseasesObj = JSON.parse(JSON.stringify(this.lstEdiseases[this.indexSelected]));
-      // this.formModel.currentData = this.ediseasesObj;
-    }
   }
 
   onInit(): void {
@@ -96,6 +94,9 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.ediseasesObj = res?.data;
+            if(this.ediseasesObj.fromDate.toString() == this.defaultFromDate){
+              this.ediseasesObj.fromDate = null;
+            }
             this.ediseasesObj.employeeID = this.employeeId;
             this.formModel.currentData = this.ediseasesObj;
             this.formGroup.patchValue(this.ediseasesObj);
@@ -104,17 +105,18 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy') {
-        this.formGroup.patchValue(this.ediseasesObj);
-        this.formModel.currentData = this.ediseasesObj;
-        this.cr.detectChanges();
-        this.isAfterRender = true;
+      if (this.actionType === 'copy' && this.ediseasesObj.fromDate.toString() == this.defaultFromDate) {
+        this.ediseasesObj.fromDate = null;
       }
+      this.formGroup.patchValue(this.ediseasesObj);
+      this.formModel.currentData = this.ediseasesObj;
+      this.cr.detectChanges();
+      this.isAfterRender = true;
     }
   }
 
   onSaveForm() {
-    if(this.actionType === 'copy' || this.actionType === 'add'){
+    if(this.actionType === 'copy'){
       delete this.ediseasesObj.recID
     }
     this.ediseasesObj.employeeID = this.employeeId 
@@ -122,12 +124,8 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
       this.hrSevice.AddEmployeeDiseasesInfo(this.ediseasesObj).subscribe(p => {
         if(p != null){
           this.ediseasesObj.recID = p.recID
-          this.notify.notifyCode('SYS006')
-          this.lstEdiseases.push(JSON.parse(JSON.stringify(this.ediseasesObj)));
-          if(this.listView){
-            (this.listView.dataService as CRUDService).add(this.ediseasesObj).subscribe();
-          }
-          // this.dialog.close(p)
+          this.notify.notifyCode('SYS006');
+          this.dialog && this.dialog.close(p);
         }
         else this.notify.notifyCode('SYS023')
       });
@@ -135,14 +133,9 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
     else{
       this.hrSevice.UpdateEmployeeDiseasesInfo(this.formModel.currentData).subscribe(p => {
         if(p != null){
-          this.notify.notifyCode('SYS007')
-        this.lstEdiseases[this.indexSelected] = p;
-        if(this.listView){
-          (this.listView.dataService as CRUDService).update(this.lstEdiseases[this.indexSelected]).subscribe()
-        }
-          // this.dialog.close(this.data)
-        }
-        else this.notify.notifyCode('SYS021')
+          this.notify.notifyCode('SYS007');
+          this.dialog && this.dialog.close(p);
+        } else this.notify.notifyCode('SYS021')
       });
     }
   }

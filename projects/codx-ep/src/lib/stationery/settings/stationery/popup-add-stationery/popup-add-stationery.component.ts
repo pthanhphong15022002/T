@@ -1,5 +1,4 @@
-import { Location } from '@angular/common';
-import { NotificationsService, CodxFormComponent, LayoutAddComponent } from 'codx-core';
+import { LayoutAddComponent } from 'codx-core';
 import {
   AfterViewInit,
   Component,
@@ -12,7 +11,6 @@ import {
 import { FormGroup } from '@angular/forms';
 
 import {
-  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
@@ -27,7 +25,10 @@ import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
   templateUrl: './popup-add-stationery.component.html',
   styleUrls: ['./popup-add-stationery.component.scss'],
 })
-export class PopupAddStationeryComponent extends UIComponent implements AfterViewInit {
+export class PopupAddStationeryComponent
+  extends UIComponent
+  implements AfterViewInit
+{
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @ViewChild('form') form: LayoutAddComponent;
   @Output() loadData = new EventEmitter();
@@ -74,9 +75,8 @@ export class PopupAddStationeryComponent extends UIComponent implements AfterVie
   defaultWarehouse: string = '';
 
   constructor(
-    private injector: Injector,
+    injector: Injector,
     private epService: CodxEpService,
-    private notificationsService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -120,7 +120,9 @@ export class PopupAddStationeryComponent extends UIComponent implements AfterVie
       // },
     ];
     this.epService.getQuota(this.data.resourceID).subscribe((res) => {
-      this.quota = res;
+      if (res) {
+        this.quota = res;
+      }
     });
   }
 
@@ -145,45 +147,6 @@ export class PopupAddStationeryComponent extends UIComponent implements AfterVie
     }
   }
 
-  initForm() {
-    this.epService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item: any) => {
-        this.dialogAddStationery = item;
-        if (this.isAdd) {
-          this.api
-            .exec('EP', 'WarehousesBusiness', 'GetDefaultWarehousesIDAsync', [])
-            .subscribe((res: string) => {
-              this.defaultWarehouse = res;
-              this.data.location = this.defaultWarehouse;
-              this.epService
-                .getWarehousesOwner(this.defaultWarehouse)
-                .subscribe((res: any) => {
-                  if (res) {
-                    this.warehouseOwner = res[0];
-                    this.data.owner = this.warehouseOwner;
-                    this.warehouseOwnerName = res[1];
-                    this.detectorRef.detectChanges();
-                  }
-                });
-              this.dialogAddStationery.patchValue({
-                reservedQty: 0,
-                currentQty: 0,
-                availableQty: 0,
-                location: res,
-              });
-            });
-        }
-        this.dialogAddStationery.patchValue({
-          reservedQty: 0,
-          currentQty: 0,
-          availableQty: 0,
-        });
-
-        this.isAfterRender = true;
-      });
-  }
-
   beforeSave(option: RequestOption) {
     let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
@@ -191,8 +154,8 @@ export class PopupAddStationeryComponent extends UIComponent implements AfterVie
     return true;
   }
 
-  onSaveForm() {   
-    this.dialogAddStationery= this.form.formGroup;
+  onSaveForm() {
+    this.dialogAddStationery = this.form.formGroup;
     this.dialogAddStationery.patchValue(this.data);
     if (this.dialogAddStationery.invalid == true) {
       this.epService.notifyInvalid(this.dialogAddStationery, this.formModel);
@@ -258,9 +221,9 @@ export class PopupAddStationeryComponent extends UIComponent implements AfterVie
     }
   }
 
-  buttonClick(e: any) {}
+  buttonClick(event) {}
 
-  setTitle(e: any) {
+  setTitle(event) {
     this.title = this.tmpTitle;
     this.detectorRef.detectChanges();
   }

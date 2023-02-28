@@ -165,20 +165,27 @@ export class BookingStationeryComponent
     this.detectorRef.detectChanges();
   }
   cancel(data: any) {
-    if (
-      this.authService.userValue.userID != data?.owner &&
-      !this.authService.userValue.administrator
-    ) {
+    if (!this.codxEpService.checkRole(this.authService.userValue,data?.owner)) {
       this.notificationsService.notifyCode('TM052');
       return;
     }
     this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
-      if (res != null) {
+      if (res != null && res?.msgCodeError==null) {
         this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
         data.approveStatus = '0';
         data.status = '0';
         this.view.dataService.update(data).subscribe();
       } else {
+        this.notificationsService.notifyCode(res?.msgCodeError);
+      }
+    });
+
+    this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
+      //kiểm tra code có trả về mã lỗi ko, nếu ko có tức là thành công
+      if (res != null && res?.msgCodeError==null) {
+        //...
+      } else {
+        //thông báo lỗi trả từ BE
         this.notificationsService.notifyCode(res?.msgCodeError);
       }
     });
@@ -263,15 +270,15 @@ export class BookingStationeryComponent
         else {
           event.forEach((func) => {
             //Gửi duyệt
-            if ( //Hiện: chép 
+            if ( //Hiện: chép       
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP8T1101' /*MF gửi duyệt*/||
             func.functionID == 'SYS04' /*MF chép*/
             ) {
               func.disabled = false;
             }
-            if (//Ẩn: sửa - xóa - gửi duyệt - hủy          
-              func.functionID == 'SYS02' /*MF sửa*/ ||
-              func.functionID == 'SYS03' /*MF xóa*/ ||
+            if (//Ẩn: sửa - xóa - gửi duyệt - hủy    
               func.functionID == 'EP8T1102' /*MF hủy*/
             ) {
               func.disabled = true;
@@ -335,9 +342,7 @@ export class BookingStationeryComponent
 
   edit(evt: any) {
     if (evt) {
-      if (
-        this.authService.userValue.userID != evt?.owner &&
-        !this.authService.userValue.administrator
+      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner)
       ) {
         this.notificationsService.notifyCode('TM052');
         return;
@@ -500,9 +505,7 @@ export class BookingStationeryComponent
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
-      if (
-        this.authService.userValue.userID != evt?.owner &&
-        !this.authService.userValue.administrator
+      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner)
       ) {
         this.notificationsService.notifyCode('TM052');
         return;

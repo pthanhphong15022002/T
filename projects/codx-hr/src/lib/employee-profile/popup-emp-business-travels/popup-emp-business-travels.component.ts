@@ -92,8 +92,6 @@ export class PopupEmpBusinessTravelsComponent
 
   changOverSeaFlag(event){
     console.log('di cong tac nc ngoai', event.checked);
-    
-    
     this.isNotOverseaFlag = !event.checked;
     console.log('co hieu ', this.isNotOverseaFlag);
     if(this.isNotOverseaFlag == true){
@@ -202,7 +200,6 @@ export class PopupEmpBusinessTravelsComponent
         }
       });
     }
-
     this.cr.detectChanges();
   }
 

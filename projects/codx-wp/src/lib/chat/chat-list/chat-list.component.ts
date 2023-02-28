@@ -35,6 +35,8 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   
   @Input() isOpen: boolean; // check open dropdown
   @Output() isOpenChange = new EventEmitter<boolean>();
+  @Output() checkSeenAll = new EventEmitter<boolean>();
+
   
   funcID: string = 'WPT11';
   function: any = null;
@@ -122,9 +124,37 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     if(this.codxListViewSerach.dataService)
       this.codxListViewSerach.dataService.search(event).subscribe();
   }
+
+  // check read all
+  clickCheckSeenAll(){
+    this.api.execSv("WP","ERM.Business.WP","ChatBusiness","SeenAllMessageAsync",[])
+      .subscribe((res:boolean)=>{
+        if(res){
+          this.codxListViewGroup.dataService.data.map(e => {
+            e.isRead = true;
+            e.mssgCount = 0;
+          });
+          this.dt.detectChanges();
+          this.checkSeenAll.emit();
+        }
+      });
+  }
+  //click goup chat
+  clickGroupChat(group: any){
+    debugger
+    if(!group.isRead){
+      this.api.execSv(
+        "WP",
+        "ERM.Business.WP",
+        "ChatBusiness",
+        "SeenMessageByGroupAsync",
+        [group.groupID])
+        .subscribe((res:boolean) => group.isRead = res);
+    }
+    this.addBoxChat(group.groupID);
+  }
   // click group chat - chat box
   openChatBox(group: any) {
-    debugger
     if(group["type"] === "U"){
       this.api.execSv("WP","ERM.Business.WP","GroupBusiness","GetGroupByUserIDAsync",[group.id,group.name])
       .subscribe((res:any)=>{
@@ -133,14 +163,14 @@ export class ChatListComponent implements OnInit, AfterViewInit {
         }
       });
     }
-    else{
+    else if(group["type"] === "G"){
       if(!group.isRead){
         this.api.execSv(
           "WP",
           "ERM.Business.WP",
           "ChatBusiness",
-          "UpdateMessageAsync",
-          [group.lastMssgID])
+          "SeenMessageByGroupAsync",
+          [group.groupID])
           .subscribe();
         group.isRead = true;
       }

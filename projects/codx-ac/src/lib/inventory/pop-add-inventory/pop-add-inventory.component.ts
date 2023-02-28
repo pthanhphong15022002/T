@@ -34,10 +34,10 @@ export class PopAddInventoryComponent extends UIComponent {
   formModel: FormModel;
   dialog!: DialogRef;
   inventory: Inventorymodels;
-  inventorys: Inventorymodels;
   inventModelID: any;
   inventModelName: any;
   gridViewSetup: any;
+  validate: any = 0;
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     {
@@ -93,6 +93,13 @@ export class PopAddInventoryComponent extends UIComponent {
   valueChange(e: any) {
     this.inventory[e.field] = e.data;
   }
+  valueChanges(e: any) {
+    if (e.data) {
+      this.inventory[e.field] = '1';
+    }else{
+      this.inventory[e.field] = '0';
+    }
+  }
   valueChangeInventModelID(e: any) {
     this.inventModelID = e.data;
     this.inventory[e.field] = e.data;
@@ -104,89 +111,91 @@ export class PopAddInventoryComponent extends UIComponent {
   clearInventory() {
     this.inventModelID = '';
     this.inventModelName = '';
-    this.inventory.inventCosting = null;
     this.inventory.accountControl = false;
-    this.inventory.postFinancial = false;
-    this.inventory.postPhysical = false;
-    this.inventory.checkOnhand = null;
-    this.inventory.nagetiveFinancial = false;
-    this.inventory.nagetivePhysical = false;
-    this.inventory.requireRegister = false;
     this.inventory.stdCostReceipt = false;
-    this.inventory.requirePick = false;
     this.inventory.stdCostIssue = false;
-    this.inventory.qualityControl = false;
-    this.inventory.reserveMethod = null;
-    this.inventory.reserveRule = null;
-    this.inventory.reservePartial = false;
-    this.inventory.reserveOrdered = false;
-    this.inventory.reserveSameBatch = false;
-    this.inventory.reserveExpired = false;
-    this.inventory.expiredDays = 0;
+  }
+  checkValidate() {
+    var keygrid = Object.keys(this.gridViewSetup);
+    var keymodel = Object.keys(this.inventory);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              this.inventory[keymodel[i]] == null ||
+              this.inventory[keymodel[i]] == ''
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
+              );
+              this.validate++;
+            }
+          }
+        }
+      }
+    }
   }
   //#endregion
 
   //#region CRUD
   onSave() {
-    if (this.inventModelID.trim() == '' || this.inventModelID == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['InventModelID'].headerText + '"'
-      );
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
       return;
-    }
-    if (this.inventModelName.trim() == '' || this.inventModelName == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['InventModelName'].headerText + '"'
-      );
-      return;
-    }
-    if (this.formType == 'add') {
-      this.dialog.dataService
-        .save((opt: RequestOption) => {
-          opt.methodName = 'AddAsync';
-          opt.className = 'InventoryModelsBusiness';
-          opt.assemblyName = 'IV';
-          opt.service = 'IV';
-          opt.data = [this.inventory];
-          return true;
-        })
-        .subscribe((res) => {
-          if (res.save) {
-            this.dialog.close();
-            this.dt.detectChanges();
-          } else {
-            this.notification.notifyCode(
-              'SYS031',
-              0,
-              '"' + this.inventModelID + '"'
-            );
-            return;
-          }
-        });
-    }
-    if (this.formType == 'edit') {
-      this.dialog.dataService
-        .save((opt: RequestOption) => {
-          opt.methodName = 'UpdateAsync';
-          opt.className = 'InventoryModelsBusiness';
-          opt.assemblyName = 'IV';
-          opt.service = 'IV';
-          opt.data = [this.inventory];
-          return true;
-        })
-        .subscribe((res) => {
-          if (res.save || res.update) {
-            this.dialog.close();
-            this.dt.detectChanges();
-          }
-        });
+    } else {
+      if (this.formType == 'add') {
+        this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'AddAsync';
+            opt.className = 'InventoryModelsBusiness';
+            opt.assemblyName = 'IV';
+            opt.service = 'IV';
+            opt.data = [this.inventory];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res.save) {
+              this.dialog.close();
+              this.dt.detectChanges();
+            } else {
+              this.notification.notifyCode(
+                'SYS031',
+                0,
+                '"' + this.inventModelID + '"'
+              );
+              return;
+            }
+          });
+      }
+      if (this.formType == 'edit') {
+        this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'UpdateAsync';
+            opt.className = 'InventoryModelsBusiness';
+            opt.assemblyName = 'IV';
+            opt.service = 'IV';
+            opt.data = [this.inventory];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res.save || res.update) {
+              this.dialog.close();
+              this.dt.detectChanges();
+            }
+          });
+      }
     }
   }
-  onSaveAdd() {  
+  onSaveAdd() {
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
       this.dialog.dataService
         .save((opt: RequestOption) => {
           opt.methodName = 'AddAsync';
@@ -200,7 +209,7 @@ export class PopAddInventoryComponent extends UIComponent {
           if (res.save) {
             this.clearInventory();
             this.dialog.dataService.clear();
-            this.dialog.dataService.addNew().subscribe((res)=>{
+            this.dialog.dataService.addNew().subscribe((res) => {
               this.inventory = this.dialog.dataService!.dataSelected;
             });
           } else {
@@ -212,7 +221,7 @@ export class PopAddInventoryComponent extends UIComponent {
             return;
           }
         });
+    }
   }
   //#endregion
 }
-

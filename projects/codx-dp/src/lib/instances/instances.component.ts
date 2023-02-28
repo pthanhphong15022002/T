@@ -97,6 +97,8 @@ export class InstancesComponent
   listProccessCbx: any;
   dataProccess: any;
   sumDaySteps: number;
+  lstParticipants = [];
+  oldIdInstance:any;
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
@@ -120,9 +122,9 @@ export class InstancesComponent
 
     // em bảo gán tạm
     this.dataProccess = dt?.data?.data;
-    this.genAutoNumberNo(
-      this.dataProccess?.applyFor === '1' ? 'DPT0406' : 'DPT0405'
-    );
+    // this.genAutoNumberNo(
+    //   this.dataProccess?.applyFor === '1' ? 'DPT0406' : 'DPT0405'
+    // );
     this.getListCbxProccess(this.dataProccess?.applyFor);
   }
   ngAfterViewInit(): void {
@@ -164,7 +166,6 @@ export class InstancesComponent
     this.codxDpService
       .createListInstancesStepsByProcess(this.process?.recID)
       .subscribe((dt) => {
-        debugger;
         if (dt && dt?.length > 0) {
           this.listSteps = dt;
           this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
@@ -172,6 +173,7 @@ export class InstancesComponent
           this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
       });
+      this.getPermissionProcess(this.process.recID);
     //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
@@ -226,37 +228,106 @@ export class InstancesComponent
               option.Width = '850px';
               option.zIndex = 1001;
               this.view.dataService.dataSelected.processID = this.process.recID;
-              // const titleForm = res.defaultName;
-              // let stepCrr = this.listSteps?.length > 0 ? this.listSteps[0] : undefined;
-              this.genAutoNumberNo(formMD.funcID); // gan tam thoi chư sai vỡ mỏ
-              var dialogCustomField = this.callfc.openSide(
-                PopupAddInstanceComponent,
-                [
-                  'add',
-                  applyFor,
-                  this.listSteps,
-                  this.titleAction,
-                  formMD,
-                  this.listStepsCbx,
-                  this.instanceNo,
-                  this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)
-                ],
-                option
-              );
-              dialogCustomField.closed.subscribe((e) => {
-                if (!e?.event) this.view.dataService.clear();
-                if (e && e.event != null) {
-                  if (this.kanban) {
-                    if (this.kanban?.dataSource?.length == 1) {
-                      this.kanban.refresh();
+              if (!this.process.instanceNoSetting) {
+                //this.genAutoNumberNo(applyFor); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
+                this.codxDpService
+                  .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
+                  .subscribe((res) => {
+                    if (res) {
+                      this.instanceNo = res;
+                      this.openPopUpAdd(applyFor, formMD, option,'add');
                     }
-                  }
-                  this.detectorRef.detectChanges();
-                }
-              });
+                  });
+              } else
+                this.codxDpService
+                  .getAutoNumberByInstanceNoSetting(
+                    this.process.instanceNoSetting
+                  )
+                  .subscribe((isNo) => {
+                    this.instanceNo = isNo;
+                    this.openPopUpAdd(applyFor, formMD, option,'add');
+                  });
             });
         });
       });
+    });
+  }
+  copy(data, titleAction){
+    if (data) {
+      this.view.dataService.dataSelected = data;
+      this.oldIdInstance = data.recID;
+    }
+    this.view.dataService.copy().subscribe((res) => {
+      const funcIDApplyFor =
+        this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
+      const applyFor = this.process.applyFor;
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+        this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+          this.cache
+            .gridViewSetup(fun.formName, fun.gridViewName)
+            .subscribe((grvSt) => {
+              var formMD = new FormModel();
+              formMD.funcID = funcIDApplyFor;
+              formMD.entityName = fun.entityName;
+              formMD.formName = fun.formName;
+              formMD.gridViewName = fun.gridViewName;
+              option.Width = '850px';
+              option.zIndex = 1001;
+              if (!this.process.instanceNoSetting) {
+                //this.genAutoNumberNo(applyFor); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
+                this.codxDpService
+                  .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
+                  .subscribe((res) => {
+                    if (res) {
+                      this.instanceNo = res;
+                      this.openPopUpAdd(applyFor, formMD, option,titleAction);
+                    }
+                  });
+              } else {
+                this.codxDpService
+                  .getAutoNumberByInstanceNoSetting(
+                    this.process.instanceNoSetting
+                  )
+                  .subscribe((isNo) => {
+                    this.instanceNo = isNo;
+                    this.openPopUpAdd(applyFor, formMD, option,titleAction);
+                  });
+              }
+            });
+        });
+      });
+    });
+  }
+  openPopUpAdd(applyFor, formMD, option,action) {
+    var dialogCustomField = this.callfc.openSide(
+      PopupAddInstanceComponent,
+      [
+        action ==='add' ? 'add':'copy',
+        applyFor,
+        this.listSteps,
+        this.titleAction,
+        formMD,
+        this.listStepsCbx,
+        this.instanceNo,
+        this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx),
+        this.lstParticipants,
+        this.oldIdInstance
+      ],
+      option
+    );
+    dialogCustomField.closed.subscribe((e) => {
+      if (!e?.event) this.view.dataService.clear();
+      if (e && e.event != null) {
+        if (this.kanban) {
+          if (this.kanban?.dataSource?.length == 1) {
+            this.kanban.refresh();
+          }
+        }
+        this.detectorRef.detectChanges();
+      }
     });
   }
 
@@ -289,19 +360,23 @@ export class InstancesComponent
                 option.zIndex = 1001;
                 this.view.dataService.dataSelected.processID =
                   this.process.recID;
-                var dialogCustomField = this.callfc.openSide(
+                var dialogEditInstance = this.callfc.openSide(
                   PopupAddInstanceComponent,
                   [
                     'edit',
                     applyFor,
                     this.listSteps,
-                    titleAction,
+                    this.titleAction,
                     formMD,
                     this.listStepsCbx,
+                    this.instanceNo,
+                    (this.sumDaySteps = this.getSumDurationDayOfSteps(
+                      this.listStepsCbx
+                    )),
                   ],
                   option
                 );
-                dialogCustomField.closed.subscribe((e) => {
+                dialogEditInstance.closed.subscribe((e) => {
                   if (e && e.event != null) {
                     //xu ly data đổ về
                     this.detectorRef.detectChanges();
@@ -334,7 +409,7 @@ export class InstancesComponent
         this.edit(data, e.text);
         break;
       case 'SYS04':
-        //  this.copy(data);
+        this.copy(data,e.text);
         break;
       case 'SYS02':
         this.delete(data);
@@ -360,7 +435,7 @@ export class InstancesComponent
         switch (res.functionID) {
           case 'SYS005':
           case 'SYS003':
-            if (data.status !== '1' && data.status !== '2' ) res.disabled = true;
+            if (data.status !== '1' && data.status !== '2') res.disabled = true;
             break;
           case 'SYS004':
           case 'SYS001':
@@ -375,25 +450,38 @@ export class InstancesComponent
           case 'DP09':
           case 'DP10':
             let isUpdate = data.write;
-            if (!isUpdate ||  ( data.status !== '1' && data.status !== '2' ) ) res.disabled = true;
+            if (!isUpdate || (data.status !== '1' && data.status !== '2'))
+              res.disabled = true;
             break;
           //Copy
           case 'SYS104':
           case 'SYS04':
             let isCopy = this.isCreate ? true : false;
-            if (!isCopy || data.status =="3") res.disabled = true;
+            if (!isCopy) res.disabled = true;
             break;
           //xóa
           case 'SYS102':
           case 'SYS02':
             let isDelete = data.delete;
-            if (!isDelete || data.status =="3") res.disabled = true;
+            if (!isDelete) res.disabled = true;
             break;
         }
       });
     }
   }
   //End
+
+  getPermissionProcess(id){
+    this.codxDpService.getProcess(this.process?.recID).subscribe((res) => {
+      if (res) {
+        if (res.permissions != null && res.permissions.length > 0) {
+          this.lstParticipants = res.permissions.filter(
+            (x) => x.roleType === 'P'
+          );
+        }
+      }
+    });
+  }
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
     var desc = '<div class="d-flex">';
@@ -453,12 +541,13 @@ export class InstancesComponent
   viewDetail(recID) {
     //  this.detailViewInstance.GetStepsByInstanceIDAsync(recID)
     let option = new DialogModel();
-     option.zIndex = 1001;
+    option.IsFull = true;
+    option.zIndex = 999;
     let popup = this.callFunc.openForm(
       this.popDetail,
       '',
-      Util.getViewPort().width - 200,
-      Util.getViewPort().height - 200,
+      Util.getViewPort().width,
+      Util.getViewPort().height,
       '',
       null,
       '',
@@ -541,7 +630,7 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            debugger
+            debugger;
             var obj = {
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
@@ -704,7 +793,7 @@ export class InstancesComponent
     });
   }
 
-  getSumDurationDayOfSteps(listStepCbx:any){
+  getSumDurationDayOfSteps(listStepCbx: any) {
     let total = listStepCbx.reduce((sum, f) => sum + f.durationDay, 0);
     return total;
   }

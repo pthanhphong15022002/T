@@ -1,0 +1,264 @@
+<ng-template>
+  <div
+    class="text-center"
+    style="
+      font-family: 'Segoe UI';
+      font-style: normal;
+      font-size: 15px;
+      font-weight: 500;
+      text-anchor: middle;
+    "
+  >
+    Tỷ lệ hoàn thành đúng hạn của nhân viên
+  </div>
+  <div>
+    <div class="my-5">
+      <div
+        class="d-flex justify-content-center align-items-center text-white switch-room cursor-pointer"
+      >
+        <div
+          class="w-100px text-center active py-2 rounded-pill-left"
+          style="background-color: '#C5C7D0'"
+        >
+          Số lượng
+        </div>
+        <div
+          class="w-100px text-center text-dark py-2 rounded-pill-right"
+          style="background-color: '#f0f2f5'"
+        >
+          Thời gian
+        </div>
+      </div>
+    </div>
+    <div class="my-5">
+      <div class="mx-2 my-5">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between align-items-center">
+            <codx-img objectType="AD_Users" [objectId]="'ADMIN'"></codx-img>
+            <div class="ms-2">
+              <div class="text-dark">Lê Phạm Hoài Thương</div>
+              <div>Phát triển sản phẩm</div>
+            </div>
+          </div>
+          <ejs-circulargauge
+            class="w-70px h-70px"
+            style="display: block"
+            id="range-container-1"
+            width="100%"
+          >
+            <e-axes>
+              <e-axis
+                minimum="0"
+                radius="100%"
+                maximum="100"
+                startAngle="0"
+                endAngle="360"
+                [majorTicks]="{
+                  height: 0
+                }"
+                [labelStyle]="{
+                  position: 'Inside',
+                  useRangeColor: true,
+                  font: {
+                    size: '0px',
+                    color: 'white',
+                    fontFamily: 'Roboto',
+                    fontStyle: 'Regular'
+                  }
+                }"
+                [lineStyle]="{
+                  width: 0
+                }"
+                [minorTicks]="{
+                  width: 0
+                }"
+              >
+                <e-ranges>
+                  <e-range
+                    start="0"
+                    end="100"
+                    radius="100%"
+                    color="#F0F0F0"
+                    startWidth="10"
+                    endWidth="10"
+                  >
+                  </e-range>
+                </e-ranges>
+                <e-pointers>
+                  <e-pointer
+                    [value]="70"
+                    pointerWidth="10"
+                    type="RangeBar"
+                    radius="100%"
+                    color="#357cd2"
+                  ></e-pointer>
+                </e-pointers>
+              </e-axis>
+            </e-axes>
+          </ejs-circulargauge>
+        </div>
+      </div>
+      <div class="mx-2 my-5">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between align-items-center">
+            <codx-img objectType="AD_Users" [objectId]="'ADMIN'"></codx-img>
+            <div class="ms-2">
+              <div class="text-dark">Lê Phạm Hoài Thương</div>
+              <div>Phát triển sản phẩm</div>
+            </div>
+          </div>
+          <ejs-circulargauge
+            class="w-70px h-70px"
+            style="display: block"
+            id="range-container-2"
+            width="100%"
+          >
+            <e-axes>
+              <e-axis
+                minimum="0"
+                radius="100%"
+                maximum="100"
+                startAngle="0"
+                endAngle="360"
+                [majorTicks]="{
+                  height: 0
+                }"
+                [labelStyle]="{
+                  position: 'Inside',
+                  useRangeColor: true,
+                  font: {
+                    size: '0px',
+                    color: 'white',
+                    fontFamily: 'Roboto',
+                    fontStyle: 'Regular'
+                  }
+                }"
+                [lineStyle]="{
+                  width: 0
+                }"
+                [minorTicks]="{
+                  width: 0
+                }"
+              >
+                <e-ranges>
+                  <e-range
+                    start="0"
+                    end="100"
+                    radius="100%"
+                    color="#F0F0F0"
+                    startWidth="10"
+                    endWidth="10"
+                  >
+                  </e-range>
+                </e-ranges>
+                <e-pointers>
+                  <e-pointer
+                    [value]="70"
+                    pointerWidth="10"
+                    type="RangeBar"
+                    radius="100%"
+                    color="#357cd2"
+                  ></e-pointer>
+                </e-pointers>
+              </e-axis>
+            </e-axes>
+          </ejs-circulargauge>
+        </div>
+      </div>
+      <div class="mx-2 my-5">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between align-items-center">
+            <codx-img objectType="AD_Users" [objectId]="'ADMIN'"></codx-img>
+            <div class="ms-2">
+              <div class="text-dark">Lê Phạm Hoài Thương</div>
+              <div>Phát triển sản phẩm</div>
+            </div>
+          </div>
+          <ejs-circulargauge
+            class="w-70px h-70px"
+            style="display: block"
+            id="range-container-3"
+            width="100%"
+          >
+            <e-axes>
+              <e-axis
+                minimum="0"
+                radius="100%"
+                maximum="100"
+                startAngle="0"
+                endAngle="360"
+                [majorTicks]="{
+                  height: 0
+                }"
+                [labelStyle]="{
+                  position: 'Inside',
+                  useRangeColor: true,
+                  font: {
+                    size: '0px',
+                    color: 'white',
+                    fontFamily: 'Roboto',
+                    fontStyle: 'Regular'
+                  }
+                }"
+                [lineStyle]="{
+                  width: 0
+                }"
+                [minorTicks]="{
+                  width: 0
+                }"
+              >
+                <e-ranges>
+                  <e-range
+                    start="0"
+                    end="100"
+                    radius="100%"
+                    color="#F0F0F0"
+                    startWidth="10"
+                    endWidth="10"
+                  >
+                  </e-range>
+                </e-ranges>
+                <e-pointers>
+                  <e-pointer
+                    [value]="70"
+                    pointerWidth="10"
+                    type="RangeBar"
+                    radius="100%"
+                    color="#357cd2"
+                  ></e-pointer>
+                </e-pointers>
+              </e-axis>
+            </e-axes>
+          </ejs-circulargauge>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template>
+  <div class="fw-bold text-center">
+    Top nhân viên hoàn thành nhiều công việc nhất
+  </div>
+  <div class="container">
+    <div class="bar-graph bar-graph-horizontal bar-graph-one">
+      <div class="bar-template" *ngFor="let emp of employees">
+        <div
+          class="bar"
+          [ngStyle]="{
+            width: (emp.value / 123) * 100 + '%',
+            'background-color': '#64b2d1'
+          }"
+          [title]="emp.employee?.employeeName"
+        >
+          <div class="bar-task-quantity">{{ emp.value }}</div>
+          <div class="bar-username">
+            {{
+              (emp.value / 123) * 100 >= 50 ? emp.employee?.employeeName : ""
+            }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

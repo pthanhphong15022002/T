@@ -19,6 +19,7 @@ import { CRUDService, ApiHttpService, CacheService } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
 import { log } from 'console';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -66,6 +67,15 @@ export class InstanceDetailComponent implements OnInit {
     type: 'type',
     color:'color'
   };
+
+  tabControl = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'References', textDefault: 'Liên kết', isActive: false },
+    { name: 'Tasks', textDefault: 'Công việc', isActive: false },
+    { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+  ];
   titleDefault ='';
   
   isHiddenReason: boolean = false;
@@ -81,7 +91,8 @@ export class InstanceDetailComponent implements OnInit {
     private api: ApiHttpService,
     private cache: CacheService,
     private changeDetec: ChangeDetectorRef,
-    private popupInstances: InstancesComponent
+    private popupInstances: InstancesComponent,
+    public sanitizer: DomSanitizer,
   ) {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefault = fun.customName || fun.description;
@@ -259,7 +270,7 @@ export class InstanceDetailComponent implements OnInit {
   
   var updatedArray = listStepNew.map(item => ({
     ...item,
-    stepStatus: mapList.get(item.stepID) || item.stepStatus || ''// Lấy giá trị từ Map, nếu không có thì giữ nguyên
+    stepStatus: mapList.get(item.stepID) || item.stepStatus || ''
   }));
     let list =  updatedArray.map(x=> {return {stepId: x.stepID, stepName: x.stepName, stepStatus: x.stepStatus}});
   return list;

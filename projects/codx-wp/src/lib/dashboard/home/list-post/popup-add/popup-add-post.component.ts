@@ -4,6 +4,8 @@ import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, 
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxViewFilesComponent } from 'projects/codx-share/src/lib/components/codx-view-files/codx-view-files.component';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
+import { Observable, Observer, of } from 'rxjs';
+import { json } from 'stream/consumers';
 
 
 @Component({
@@ -210,29 +212,45 @@ export class PopupAddPostComponent implements OnInit {
     this.codxViewFiles.uploadFiles();
   }
 
+  loaded:boolean = false;
   // submit
   submit(){
-    if(this.status){
-      switch(this.status){
-        case "create":
-          this.publishPost();
-          break;
-        case "edit":
-          this.editPost();
-          break;
-        case "share":
-          this.sharePost();
-          break;
-        default:
-          break
-      };
-    }
+    // if(!this.loaded){
+    //   this.loaded = true;
+    //   switch(this.status){
+    //     case "create":
+    //       this.publishPost();
+    //       break;
+    //     case "edit":
+    //       this.editPost();
+    //       break;
+    //     case "share":
+    //       this.sharePost();
+    //       break;
+    //     default:
+    //       break
+    //   };
+    // }
+    switch(this.status){
+      case "create":
+        this.publishPost();
+        break;
+      case "edit":
+        this.editPost();
+        break;
+      case "share":
+        this.sharePost();
+        break;
+      default:
+        break
+    };
   }
 
   // create Post 
   publishPost(){
     if (!this.data.content && this.codxViewFiles.files.length == 0) 
     {
+      this.loaded = false;
       return this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
     }
     this.data.category = "1";
@@ -245,6 +263,7 @@ export class PopupAddPostComponent implements OnInit {
       this.data.attachments = _files.length;
       this.data.medias = this.codxViewFiles.medias;
     }
+    //lưu bài viết
     this.api.execSv(
       "WP",
       "ERM.Business.WP",
@@ -254,24 +273,30 @@ export class PopupAddPostComponent implements OnInit {
       .subscribe((res1: any) => {
         if (res1)
         {
+          // lưu files
           this.codxViewFiles.objectID = res1.recID;
           this.codxViewFiles.save().subscribe((res2)=>{
+            this.loaded = false;
             this.notifySvr.notifyCode('WP024');
             this.dialogRef.close(res1);  
           });
         }
         else
         {
+          this.loaded = false;
           this.dialogRef.close(null);  
           this.notifySvr.notifyCode('WP013');
         }
       });
   }
+  
+
 
   // edit post
   editPost(){
     if (!this.data.content && this.codxViewFiles.files.length == 0 && this.data.category != "4") 
     {
+      this.loaded = false;
       return this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
     }
     let _files = this.codxViewFiles.files;
@@ -289,12 +314,14 @@ export class PopupAddPostComponent implements OnInit {
         if (res) 
         {
           this.codxViewFiles.save().subscribe((res2)=>{
+            this.loaded = false;
             this.notifySvr.notifyCode('WP021');
             this.dialogRef.close(this.data);
           });
         }
         else
         {
+          this.loaded = false;
           this.dialogRef.close(null);
           this.notifySvr.notifyCode('SYS021');
         }
@@ -324,12 +351,14 @@ export class PopupAddPostComponent implements OnInit {
         {
           this.codxViewFiles.objectID = res1.recID;
           this.codxViewFiles.save().subscribe((res2)=>{
+            this.loaded = false;
             this.notifySvr.notifyCode('WP020');
             this.dialogRef.close(res1);  
           });
         }
         else
         {
+          this.loaded = false;
           this.notifySvr.notifyCode('WP013');
         }
       });

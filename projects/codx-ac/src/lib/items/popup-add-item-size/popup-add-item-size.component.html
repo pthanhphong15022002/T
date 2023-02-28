@@ -1,0 +1,78 @@
+<codx-form
+  #form
+  [headerText]="formTitle"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="dialogRef.formModel"
+  [data]="itemSize"
+>
+</codx-form>
+
+<ng-template #body>
+  <ng-container *ngIf="form.formGroup">
+    <div class="row mt-3">
+      <div class="col-8">
+        <div class="row">
+          <div class="col-6 form-group">
+            <codx-label
+              fiedName="sizeID"
+              [formModel]="dialogRef.formModel"
+            ></codx-label>
+            <codx-input
+              [formModel]="dialogRef.formModel"
+              field="sizeID"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <codx-label
+            fiedName="sizeName"
+            [formModel]="dialogRef.formModel"
+          ></codx-label>
+          <codx-input
+            [formModel]="dialogRef.formModel"
+            field="sizeName"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <codx-img
+          #itemSizeImage
+          [funcId]="dialogData.data.funcId"
+          [objectId]="itemSize.recID"
+          [objectType]="dialogRef.formModel.entityName"
+          [width]="125"
+          [isAllowEdit]="true"
+          [isDefaulImg]="true"
+          imageType="square"
+        >
+        </codx-img>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #footer>
+  <ng-container *ngIf="!isEdit; else edit">
+    <button
+      type="button"
+      class="btn btn-outline-primary me-3"
+      (click)="save(false)"
+    >
+      Lưu & Thêm
+    </button>
+    <button type="button" class="btn btn-primary" (click)="save(true)">
+      Lưu
+    </button>
+  </ng-container>
+  <ng-template #edit>
+    <button type="button" class="btn btn-primary" (click)="update()">
+      Lưu
+    </button>
+  </ng-template>
+</ng-template>

@@ -138,7 +138,7 @@ export class OrgorganizationComponent extends UIComponent {
   // delete data
   deleteData(data: any) {
     if (data) {
-      this.view.dataService.delete(data,true).subscribe();
+      this.view.dataService.delete([data],true).subscribe();
       // (this.dataService as CRUDService).delete([data], true).subscribe();
     }
   }
@@ -151,9 +151,10 @@ export class OrgorganizationComponent extends UIComponent {
       option.FormModel = this.view.formModel;
       let object = {
         data: data,
-        action: event,
         funcID: this.view.formModel.funcID,
         isModeAdd: false,
+        titleMore: event.text,
+        action:event
       };
       let popup = this.callfc.openSide(
         PopupAddOrganizationComponent,
@@ -164,7 +165,7 @@ export class OrgorganizationComponent extends UIComponent {
       popup.closed.subscribe((res: any) => {
         if (res.event) {
           let org = res.event[0];
-          let tmpOrg = res.event[1];
+          // let tmpOrg = res.event[1];
           this.getOrgInfor(org);
           // this.view.dataService.update(tmpOrg).subscribe();
           // this.view.dataService.add(org).subscribe();
@@ -173,8 +174,8 @@ export class OrgorganizationComponent extends UIComponent {
     }
   }
   // copy data
-  copyData(data: any, text: string) {
-    if (data && text) {
+  copyData(data: any, event: any) {
+    if (data && event) {
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.view.dataService;
@@ -186,9 +187,10 @@ export class OrgorganizationComponent extends UIComponent {
             dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: result,
-            function: this.view.formModel.funcID,
+            funcID: this.view.formModel.funcID,
             isAddMode: true,
-            titleMore: text,
+            action:event,
+            titleMore: event.text,
           };
           let popup = this.callfc.openSide(
             CodxFormDynamicComponent,

@@ -53,10 +53,12 @@ export class DynamicProcessComponent
   templateViewCard: TemplateRef<any>;
   @ViewChild('editNameProcess') editNameProcess: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
+  @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   // Input
   @Input() dataObj?: any;
   @Input() showButtonAdd = false;
   dialog!: DialogRef;
+  dialogQuestionCopy: DialogRef;
   // create variables
   crrFunID: string = '';
   funcID: string = '';
@@ -79,7 +81,8 @@ export class DynamicProcessComponent
 
   // create variables is any;
   listAppyFor: any; // list Apply For
-
+  listSelectCoppy: any; // list value list for copy proccess
+  listClickedCoppy: any;
   // value
   nameAppyFor: string = '';
 
@@ -93,6 +96,9 @@ export class DynamicProcessComponent
   processRename: DP_Processes;
   processName = '';
   user;
+  isCopy:boolean = false;
+  dataCopy:any;
+  oldIdProccess:any;
   // Call API Dynamic Proccess
   readonly service = 'DP';
   readonly assemblyName = 'ERM.Business.DP';
@@ -121,6 +127,7 @@ export class DynamicProcessComponent
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     // this.genAutoNumber();
     this.getListAppyFor();
+    this.getVauleFormCopy();
     this.user = this.authStore.get();
   }
 
@@ -154,7 +161,6 @@ export class DynamicProcessComponent
   click(evt: ButtonModel) {
     switch (evt.id) {
       case this.btnAdd:
-        this.genAutoNumber();
         this.add();
         break;
     }
@@ -181,18 +187,6 @@ export class DynamicProcessComponent
     this.changeDetectorRef.detectChanges();
   }
 
-  async genAutoNumber() {
-    this.dpService
-      .genAutoNumber(this.funcID, 'DP_Processes', 'processNo')
-      .subscribe((res) => {
-        if (res) {
-          this.processNo = res;
-          this.showID = true;
-        } else {
-          this.showID = false;
-        }
-      });
-  }
   // CRUD methods
   add() {
     this.view.dataService.addNew().subscribe((res) => {
@@ -201,6 +195,7 @@ export class DynamicProcessComponent
         processNo: this.processNo,
         showID: this.showID,
         instanceNo: this.instanceNo,
+        titleAction: this.titleAction
       };
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
@@ -237,6 +232,7 @@ export class DynamicProcessComponent
       .subscribe((res) => {
         var obj = {
           action: 'edit',
+          titleAction: this.titleAction
         };
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
@@ -263,8 +259,74 @@ export class DynamicProcessComponent
       });
   }
   copy(data: any) {
-    this.changeDetectorRef.detectChanges();
+    if(this.isCopy) {
+      if (data) {
+        this.view.dataService.dataSelected = data;
+        this.oldIdProccess = this.view.dataService.dataSelected.recID;
+      }
+      this.view.dataService.copy().subscribe((res) => {
+        var obj = {
+          action: 'copy',
+          processNo: this.processNo,
+          showID: this.showID,
+          instanceNo: this.instanceNo,
+          conditionCopy: this.listClickedCoppy,
+          titleAction: this.titleAction,
+          oldIdProccess: this.oldIdProccess,
+          newIdProccess: this.view.dataService.dataSelected.recID,
+          listValueCopy: this.listClickedCoppy.map(x=> x.id)
+        };
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        dialogModel.zIndex = 999;
+        dialogModel.DataService = this.view?.dataService;
+        dialogModel.FormModel = this.view.formModel;
+        var dialogProcessCopy = this.callfc.openForm(
+          PopupAddDynamicProcessComponent,
+          '',
+          this.widthWin,
+          this.heightWin,
+          '',
+          obj,
+          '',
+          dialogModel
+        );
+        dialogProcessCopy.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
+        });
+      });
+    }
+    return;
   }
+  saveCopy(){
+    this.isCopy = true;
+    this.dialogQuestionCopy.close();
+    this.isCopy && this.copy(this.dataCopy);
+
+  }
+  OpenFormCopy(data){
+    this.isCopy = false;
+    this.listClickedCoppy = [];
+    this.dataCopy = data;
+    this.dialogQuestionCopy = this.callfc.openForm(this.popUpQuestionCopy, '', 500, 500);
+  }
+checkValueCopy($event,data){
+  if($event && $event.currentTarget.checked){
+    this.listClickedCoppy.push(data);
+}
+else {
+  let idx = this.listClickedCoppy.findIndex(x=> x.id  === data.id);
+  if(idx>=0) this.listClickedCoppy.splice(idx, 1);
+}
+}
+getVauleFormCopy() {
+  this.cache.valueList('DP037').subscribe((res) => {
+    if (res.datas) {
+      this.listSelectCoppy =  res.datas.map(x=> {return {id: x.value, text: x.text}});
+    }
+  });
+}
+
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
@@ -328,7 +390,8 @@ export class DynamicProcessComponent
         this.edit(data);
         break;
       case 'SYS04':
-        this.copy(data);
+        this.OpenFormCopy(data);
+      //  this.copy(data);
         break;
       case 'SYS02':
         this.delete(data);
@@ -565,12 +628,12 @@ export class DynamicProcessComponent
     this.processName = event?.data;
   }
 
-  editName(){ 
+  editName(){
     this.dpService.renameProcess([this.processName, this.processRename['recID']]).subscribe((res) => {
       if(res){
         this.processRename['processName'] = this.processName;
         this.processRename['modifiedOn'] = res || new Date();
-        this.processRename['modifiedBy'] = this.user?.userID; 
+        this.processRename['modifiedBy'] = this.user?.userID;
         this.processName = '';
         this.popupEditName.close();
         this.notificationsService.notifyCode('SYS007');
@@ -589,7 +652,7 @@ export class DynamicProcessComponent
       }else{
         this.notificationsService.notifyCode('SYS008');
       }
-       
+
     });
   }
 
