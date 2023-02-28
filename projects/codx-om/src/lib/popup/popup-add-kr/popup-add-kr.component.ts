@@ -98,7 +98,6 @@ export class PopupAddKRComponent extends UIComponent {
   onInit(): void {
     this.getCacheData();
     this.getParameter();
-    this.getCurrentKR();
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache & Param-----------------------------//
@@ -148,7 +147,8 @@ export class PopupAddKRComponent extends UIComponent {
         this.omSetting = JSON.parse(param.dataValue);
         this.defaultFequence=this.omSetting?.Frequency;
         this.defaultCheckInDay= this.omSetting?.CheckIn?.Day;
-        this.defaultCheckInTime= this.omSetting?.CheckIn?.Time;
+        this.defaultCheckInTime= this.omSetting?.CheckIn?.Time;        
+        this.getCurrentKR();
       }
     })
   }
@@ -170,6 +170,7 @@ export class PopupAddKRComponent extends UIComponent {
         } else {
           this.afterOpenCopyForm(krModel);
         }
+        
         this.isAfterRender = true;
       }
     });
@@ -324,17 +325,17 @@ export class PopupAddKRComponent extends UIComponent {
   }
   mapDefaultValueToData(kr:any){
     kr.frequence=this.defaultFequence;
-    kr.checkIn={day:this.defaultCheckInDay,time:this.defaultCheckInTime,}
+    kr.checkIn={day:this.defaultCheckInDay,time:this.defaultCheckInTime}
   }
   afterOpenAddForm(krModel: any) {
     this.kr = krModel;
-    if (this.kr.targets && this.kr.targets.length > 0) {
+    if (this.kr?.targets &&  this.kr?.targets !=null && this.kr?.targets.length > 0) {
       this.targetModel = { ...this.kr.targets[0] };
       this.kr.targets = [];
       this.kr.shares = [];
       this.kr.checkIns = [];
-      this.mapDefaultValueToData(krModel);
     }
+    this.mapDefaultValueToData(this.kr);
   }
   afterOpenEditForm(krModel: any) {
     this.kr = krModel;
@@ -342,6 +343,9 @@ export class PopupAddKRComponent extends UIComponent {
       this.planVLL = this.monthVLL?.datas;
     } else if (this.kr?.plan == OMCONST.VLL.Plan.Quarter) {
       this.planVLL = this.quarterVLL.datas;
+    }    
+    if(this.kr.checkIn==null){      
+      this.kr.checkIn={day:this.defaultCheckInDay,time:this.defaultCheckInTime}
     }
   }
   afterOpenCopyForm(krModel: any) {
@@ -361,8 +365,8 @@ export class PopupAddKRComponent extends UIComponent {
           }
           this.kr = krModel;
           this.kr.shares = [];
-          this.kr.checkIns = [];
-          this.mapDefaultValueToData(krModel);
+          this.kr.checkIns = [];          
+        this.mapDefaultValueToData(this.kr);
         }
       });
   }
@@ -375,6 +379,7 @@ export class PopupAddKRComponent extends UIComponent {
       this.notificationsService.notify('OM004');
       return;
     }
+
     this.dialogTargets = this.callfc.openForm(
       template,
       '',
@@ -392,7 +397,7 @@ export class PopupAddKRComponent extends UIComponent {
     ) {
       this.notificationsService.notify('OM003');
       return;
-    } else if (this.kr.targets.length == 0 || this.kr.targets == null) {
+    } else if (this.kr.targets == null || this.kr?.targets ==null || this.kr?.targets.length == 0 ) {
       this.calculatorTarget(this.kr?.plan);
     }
     let popUpHeight = this.kr?.plan == OMCONST.VLL.Plan.Month ? 780 : 420;

@@ -108,7 +108,70 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     VIDEO: 'video',
     APPLICATION: 'application',
   };
-
+  defaultMoreFunc: any
+  listMoreFunc = 
+  [
+    {
+      id: "T",
+      name: "Trả lời ngắn",
+      icon: "icon-short_text"
+    },
+    {
+      id: "T2",
+      name: "Trả lời đoạn",
+      icon: "icon-text_snippet",
+      group: true
+    },
+    {
+      id: "O",
+      name: "Trắc nghiệm",
+      icon: "icon-radio_button_checked"
+    },
+    {
+      id: "C",
+      name: "Hộp kiểm",
+      icon: "icon-check_box"
+    },
+    {
+      id: "L",
+      name: "Menu thả xuống",
+      icon: "icon-arrow_drop_down_circle",
+      group: true
+    },
+    {
+      id: "A",
+      name: "Tải lên tệp",
+      icon: "icon-cloud_upload",
+      group: true
+    },
+    {
+      id: "R",
+      name: "Phạm vi tuyến tính",
+      icon: "fa fa-ellipsis-h"
+    },
+    {
+      id: "O2",
+      name: "Lưới trắc nghiệm",
+      icon: "icon-grid_round"
+    }
+    ,
+    {
+      id: "C2",
+      name: "Lưới hộp kiểm",
+      icon: "icon-grid_on",
+      group: true
+    },
+    {
+      id: "D",
+      name: "Ngày",
+      icon: "icon-calendar_today"
+    },
+    {
+      id: "H",
+      name: "Giờ",
+      icon: "icon-access_time"
+    }
+  ]
   dataAnswer: any = new Array();
   active = false;
   MODE_IMAGE_VIDEO = 'EDIT';
@@ -118,7 +181,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   itemActive: any;
   indexSessionA = 0;
   indexQuestionA = 0;
-  @Input() title: any;
+  @Input() title: any = "Mẫu không có tiêu đề";
   @Input() changeModeQ: any;
   @Input() formModel: any;
   @Input() dataService: any;
@@ -143,7 +206,6 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       fontFormat: 'B',
     };
     this.router.queryParams.subscribe((queryParams) => {
-      debugger
       if (queryParams?.funcID) {
         this.funcID = queryParams.funcID;
         this.cache.functionList(this.funcID).subscribe((res) => {
@@ -162,7 +224,6 @@ export class QuestionsComponent extends UIComponent implements OnInit {
 
   createNewQ()
   {
-    debugger
     this.questions = [
       {
         seqNo: 0,
@@ -185,7 +246,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
                 hasPicture: false,
               },
             ],
-            other: true,
+            other: false,
             mandatory: false,
             answerType: 'O',
             category: 'Q',
@@ -195,6 +256,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     ];
     this.questions[0].children[0]['active'] = true;
     this.itemActive = this.questions[0].children[0];
+    this.defaultMoreFunc = this.listMoreFunc.filter(x=>x.id == "O")[0];
   }
   onInit(): void {}
 
@@ -302,11 +364,12 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   }
 
   dropAnswer(event: CdkDragDrop<string[]>, idParent) {
-    var index = this.questions.findIndex((x) => x.seqNo == idParent);
-    this.dataAnswer = this.questions[index].answers;
+    debugger
+    var index = this.questions[0].children.findIndex((x) => x.seqNo == idParent);
+    this.dataAnswer = this.questions[0].children[index].answers;
     moveItemInArray(this.dataAnswer, event.previousIndex, event.currentIndex);
     this.dataAnswer.forEach((x, index) => (x.seqNo = index));
-    this.questions[idParent].answers = this.dataAnswer;
+    this.questions[0].children[idParent].answers = this.dataAnswer;
   }
 
   dropAnswerRC(
@@ -1326,11 +1389,13 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.generateGuid();
     var recID = JSON.parse(JSON.stringify(this.GUID));
     if (answerType) {
+      this.defaultMoreFunc = this.listMoreFunc.filter(x=>x.id == answerType)[0];
       var data = JSON.parse(
         JSON.stringify(
           this.questions[seqNoSession].children[itemQuestion.seqNo]
         )
       );
+      debugger
       data.answerType = answerType;
       if (
         answerType == 'O' ||
@@ -1352,7 +1417,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
         //   };
         //   data.answers.push(dataAnswerTemp);
         // }
-        if (answerType != 'O' && answerType != 'C') {
+        if (answerType != 'O' && answerType != 'C' && answerType != 'L') {
           data.answers = new Array();
           let dataAnswerTemp = {
             recID: recID,
@@ -1673,6 +1738,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   }
 
   valueChangeSessionEJS(e, itemSession, field) {
+    debugger
     if (e && e != itemSession[field]) {
       let dataTemp = JSON.parse(JSON.stringify(this.questions));
       dataTemp[itemSession.seqNo][field] = e;
@@ -1682,6 +1748,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   }
 
   valueChangeQuestionEJS(e, itemSession, itemQuestion, field) {
+    debugger
     if (e && e != itemQuestion[field]) {
       let dataTemp = JSON.parse(JSON.stringify(this.questions));
       dataTemp[itemSession.seqNo].children[itemQuestion.seqNo][field] = e;
