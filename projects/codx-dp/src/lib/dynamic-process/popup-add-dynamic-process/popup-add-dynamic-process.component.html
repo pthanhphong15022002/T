@@ -808,7 +808,7 @@
               <div class="card-job-list" cdkDrag [cdkDragData]="taskList" [cdkDragStartDelay]="100"
                 [cdkDragDisabled]="taskList?.recID ? false : true">
                 <div class="card-job mx-5 p-3">
-                  <div *ngIf="taskList?.recID" class="d-flex justify-content-start align-items-center has-action-menu">
+                  <div *ngIf="taskList?.recID !== guidEmpty " class="d-flex justify-content-start align-items-center has-action-menu">
                     <div class="icon-container">
                       <span class="icon-add_circle icon-20 text-primary-600 py-2"></span>
                     </div>
@@ -838,7 +838,7 @@
                       [dataItem]="moreDefaut" [type]="'hover'" (changeDataMF)="changeDataMF($event, 'group')">
                     </codx-mfunc>
                   </div>
-                  <div *ngIf="!taskList?.recID" [ngStyle]="
+                  <div *ngIf="taskList?.recID === guidEmpty" [ngStyle]="
                       taskList?.task.length == 0 ? { height: '30px' } : {}
                     "></div>
                   <!-- kéo thả ở trong  -->
@@ -847,7 +847,7 @@
                     <ng-container *ngFor="let task of taskList?.task">
                       <div cdkDrag [cdkDragStartDelay]="200" [cdkDragData]="task" class="drap-drop">
                         <div [ngStyle]="
-                            taskList?.recID ? { 'margin-left': '50px' } : {}
+                            taskList?.recID !== guidEmpty ? { 'margin-left': '50px' } : {}
                           " class="has-action-menu">
                           <div class="d-flex justify-content-start align-items-center" style="font-size: 1rem">
                             <div class="icon-container" style="background-color: #3ef8e9">
