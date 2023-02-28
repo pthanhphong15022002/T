@@ -213,11 +213,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   objectIDRoles: any;
   titleDefault = '';
   instanceNoSetting = '';
-  listClickedCoppy:any;
-  titleAction:any;
-  oldIdProccess:any;
-  newIdProccess:any;
-  listValueCopy:any;
+  listClickedCoppy: any;
+  titleAction: any;
+  oldIdProccess: any;
+  newIdProccess: any;
+  listValueCopy: any;
   MESSAGETIME =
     'Thời hạn công việc lớn hơn nhóm công việc bạn có muốn lưu và thay đổi thời hạn nhóm công việc';
   constructor(
@@ -241,16 +241,24 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.userId = this.user?.userID;
     this.titleAction = dt.data.titleAction;
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
-    if(this.action === 'copy'){
+    if (this.action === 'copy') {
       this.listClickedCoppy = dt.data.conditionCopy;
-      this.oldIdProccess = dt.data.oldIdProccess,
-      this.newIdProccess = dt.data.newIdProccess,
-      this.listValueCopy = dt.data.listValueCopy
-      var valueListStr =  this.listValueCopy.join(';');
-      this.process.permissions = this.listValueCopy.findIndex(x=>x === '2') !== -1 ? this.process.permissions : [];
+      (this.oldIdProccess = dt.data.oldIdProccess),
+        (this.newIdProccess = dt.data.newIdProccess),
+        (this.listValueCopy = dt.data.listValueCopy);
+      var valueListStr = this.listValueCopy.join(';');
+      this.process.permissions =
+        this.listValueCopy.findIndex((x) => x === '2') !== -1
+          ? this.process.permissions
+          : [];
       // copy file image
       // this.process.recID = this.oldIdProccess;
-      this.listValueCopy.findIndex(x=>x === '3') !== -1 && this.getListStepByProcessIDCopy(this.oldIdProccess,this.newIdProccess,valueListStr);
+      this.listValueCopy.findIndex((x) => x === '3') !== -1 &&
+        this.getListStepByProcessIDCopy(
+          this.oldIdProccess,
+          this.newIdProccess,
+          valueListStr
+        );
     }
     if (this.action == 'edit') {
       // this.showID = true;
@@ -350,7 +358,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
         // save file
-        debugger
+        debugger;
         if (res) {
           this.handlerSave();
         }
@@ -401,10 +409,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
         if (res && res.update) {
-          (this.dialog.dataService as CRUDService).update(res.update).subscribe();
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
           this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
           this.handleUpdateStep();
-          res.update.modifiedOn = new Date() ;
+          res.update.modifiedOn = new Date();
           this.dialog.close(res.update);
         }
       });
@@ -788,8 +798,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.edit = false;
             // perm.publish = false;
             perm.delete = false;
-            this.permissions = this.checkUserPermission(this.permissions, perm);
-            var test = this.lstParticipants;
+            this.permissions = this.checkUserPermissionPar(
+              this.permissions,
+              perm
+            );
           }
           this.step.roles = tmpRole;
           this.process.permissions = this.permissions;
@@ -830,25 +842,51 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     } else {
       listPerm = [];
     }
-    var i = -1;
-    if (this.stepRoleOld != null) {
-      i = this.lstParticipants.findIndex(
-        (x) => x.objectID == this.stepRoleOld.objectID
-      );
-    }
+
     if (index == -1) {
-      if (i == -1) {
-        this.lstParticipants.push(Object.assign({}, perm));
-        listPerm = this.lstParticipants;
-      } else {
-        listPerm.push(Object.assign({}, perm));
+      listPerm.push(Object.assign({}, perm));
+    }
+
+    return listPerm;
+  }
+
+  checkUserPermissionPar(
+    listPerm: DP_Processes_Permission[],
+    perm: DP_Processes_Permission
+  ) {
+    var index = -1;
+    if (listPerm != null) {
+      if (perm != null && listPerm.length > 0) {
+        index = listPerm.findIndex(
+          (x) =>
+            (x.objectID != null &&
+              x.objectID === perm.objectID &&
+              x.roleType == perm.roleType) ||
+            (x.objectID == null &&
+              x.objectType == perm.objectType &&
+              x.roleType == perm.roleType)
+        );
       }
-      // }else{
-      //     listPerm.push(Object.assign({}, perm));
-      //   }
     } else {
-      if (i == -1) {
-        listPerm = this.lstParticipants;
+      listPerm = [];
+    }
+    var i = this.lstParticipants.filter(
+      (x) => x.objectID == this.stepRoleOld?.objectID
+    );
+    var check = -1;
+    check = listPerm.findIndex((x) => x.objectID == this.stepRoleOld?.objectID);
+    if (index == -1) {
+      if (i.length == 0) {
+        if (check > -1) {
+          listPerm.splice(check, 1);
+        }
+      }
+      listPerm.push(Object.assign({}, perm));
+    } else {
+      if (i.length == 0) {
+        if (check > -1) {
+          listPerm.splice(check, 1);
+        }
       }
     }
     return listPerm;
@@ -862,18 +900,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           (x) => x.objectID != perm.objectID && x.roleType == 'S'
         );
         this.stepRoleOld = listPerm.filter((x) => x.roleType == 'S')[0];
-      } else {
-        listPerm.push(Object.assign({}, perm));
       }
     } else {
       listPerm = [];
     }
     if (index != -1) {
       listPerm.splice(index, 1);
-      listPerm.push(Object.assign({}, perm));
-    } else {
-      this.stepRoleOld = listPerm.filter((x) => x.roleType == 'S')[0];
     }
+    listPerm.push(Object.assign({}, perm));
+
     return listPerm;
   }
 
@@ -895,7 +930,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         950,
         650,
         '',
-        [this.process, title, this.action === 'copy'?'copy': 'add'],
+        [this.process, title, this.action === 'copy' ? 'copy' : 'add'],
         '',
         this.dialog
       )
@@ -1210,7 +1245,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   openPopupStep(type) {
     this.actionStep = type;
-    if (type === 'add' ) {
+    if (type === 'add') {
       this.step = new DP_Steps();
       this.step['processID'] = this.process?.recID;
       this.step['stepNo'] = this.stepList.length + 1;
@@ -1603,7 +1638,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     } else {
       let groupTaskIdOld = '';
       let dataDrop = event.previousContainer.data[event.previousIndex];
-      if(data['recID']){
+      if (data['recID']) {
         let maxHour = this.calculateTimeTaskInGroup(
           event.container.data,
           dataDrop['recID'],
@@ -1699,7 +1734,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   sumHourGroupTask(index?: number) {
     let sum = 0;
     if (this.taskGroupList?.length > 0) {
-      if (index >=0) {
+      if (index >= 0) {
         for (let group of this.taskGroupList) {
           if (Number(group['indexNo']) <= index) {
             sum += this.getHour(group);
@@ -2303,8 +2338,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  getListStepByProcessIDCopy(oldProccesID,newProccessID, valueListStr) {
-    var data = [oldProccesID,newProccessID,valueListStr];
+  getListStepByProcessIDCopy(oldProccesID, newProccessID, valueListStr) {
+    var data = [oldProccesID, newProccessID, valueListStr];
     this.CodxDpService.getListStepByIdProccessCopy(data).subscribe((res) => {
       if (res) {
         this.editTest(res);
@@ -2337,8 +2372,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     });
   }
-  formDataCopyProccess(listValue:any){
-
-  }
+  formDataCopyProccess(listValue: any) {}
   //#endregion
 }
