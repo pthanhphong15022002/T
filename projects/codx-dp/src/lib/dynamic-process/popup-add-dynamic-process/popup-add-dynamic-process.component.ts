@@ -1195,15 +1195,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
             let taskGroup = new DP_Steps_TaskGroups();
             taskGroup['task'] = taskGroupList['null'] || [];
-            taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+            taskGroup['recID'] = this.guidEmpty; // group task rỗng để kéo ra ngoài
             step['taskGroups'].push(taskGroup);
 
             this.stepList.push(step);
           }
         });
         this.stepList.sort((a, b) => a['stepNo'] - b['stepNo']);
-        this.viewStepSelect(this.stepList[0]);
-        this.maxHourTaskNoGroup();
       }
     });
   }
@@ -1233,6 +1231,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.step['stepNo'] = this.stepList.length + 1;
     delete this.step['id'];
     let taskCopy = [];
+    // copy groups and tasks
     if (this.step['taskGroups']?.length > 0) {
       this.step['taskGroups'].forEach((groupTask) => {
         groupTask['recID'] = groupTask['recID'] ? Util.uid() : null;
@@ -1241,21 +1240,41 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         groupTask['createdBy'] = this.userId;
         groupTask['modifiedOn'] = null;
         groupTask['modifiedBy'] = null;
+        groupTask['roles']?.forEach(role => {
+          role['recID'] = Util.uid();
+          role['taskGroupID'] = groupTask['recID']
+        }); 
         if (groupTask['task']?.length > 0) {
           groupTask['task'].forEach((task) => {
             task['recID'] = Util.uid();
-            task['stepID'] = Util.uid();
+            task['stepID'] = this.step['recID'];
             task['taskGroupID'] = groupTask['recID'];
             task['createdOn'] = new Date();
             task['createdBy'] = this.userId;
             task['parentID'] = '';
             task['modifiedOn'] = null;
             task['modifiedBy'] = null;
+            task['roles']?.forEach(role => {
+              role['recID'] = Util.uid();
+              role['taskID'] = task['recID'];
+            }); 
             taskCopy.push(task);
           });
         }
       });
     }
+    // copy fields 
+    if(this.step['fields']?.length > 0){
+      this.step['fields'].forEach(fields => {
+        fields['recID'] = Util.uid();
+        fields['stepID'] = this.step['recID'];
+        fields['createdOn'] = new Date();
+        fields['createdBy'] = this.userId;
+        fields['modifiedOn'] = null;
+        fields['modifiedBy'] = null;
+      });
+    }
+
     this.step['tasks'] = taskCopy;
     this.openPopupStep('copy');
     console.log(step);
@@ -1345,14 +1364,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
     if (!this.taskGroup['recID']) {
       this.taskGroup['recID'] = Util.uid();
-      this.taskGroup['roles'].forEach(role => {
-        role['taskGroupID'] = this.taskGroup['recID'];
-      });
+      this.taskGroup['roles'].forEach(role => {role['taskGroupID'] = this.taskGroup['recID'];});
       let index = this.taskGroupList.length;
       if (index === 0) {
         let taskGroup = new DP_Steps_TaskGroups();
         taskGroup['task'] = [];
-        taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+        taskGroup['recID'] = this.guidEmpty; // group task rỗng để kéo ra ngoài
         this.taskGroupList.push(taskGroup);
       }
       this.taskGroupList.splice(index - 1, 0, this.taskGroup);
@@ -1364,6 +1381,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           task['createdOn'] = new Date();
           task['createdBy'] = this.userId;
           task['roles'].forEach(role => {
+            role['recID'] =  Util.uid();
             role['taskID'] = task['recID'];
           });
           this.taskList.push(task);
@@ -1438,7 +1456,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.taskGroupList,
       dataInput || {},
       this.taskList,
-      this.groupTaskID || null,
+      this.groupTaskID || this.guidEmpty,
     ];
 
     let option = new SidebarModel();
@@ -1450,11 +1468,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
     dialog.closed.subscribe((e) => {
       if (e?.event) {
-        this.groupTaskID = '';
+        this.groupTaskID = this.guidEmpty;
         let taskData = e?.event?.data;
         if (e.event?.status === 'add' || e.event?.status === 'copy') {
           let index = this.taskGroupList.findIndex(
-            (task) => task.recID == taskData.taskGroupID
+            (group) => group.recID == taskData.taskGroupID
           );
           this.taskGroupList[index]['task'].push(taskData);
           this.taskList.push(taskData);
@@ -1668,19 +1686,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     } else {
       return false;
     }
-  }
-
-  maxHourTaskNoGroup() {
-    let listTaskNoGroup = this.taskList.filter(
-      (task) =>
-        !task['taskGroupID'] &&
-        task['parentID']?.trim() &&
-        task['dependRule'] === '1'
-    );
-
-    listTaskNoGroup?.forEach((task) => {
-      let listID = task['parentID'].split(';');
-    });
   }
 
   calculateTimeTaskInGroup(taskList, taskId, taskInput?) {
