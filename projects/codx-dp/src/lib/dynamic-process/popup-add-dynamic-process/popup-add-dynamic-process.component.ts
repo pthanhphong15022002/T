@@ -1561,7 +1561,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.popupJob = this.callfc.openForm(PopupTypeTaskComponent, '', 400, 400);
     this.popupJob.closed.subscribe(async (value) => {
       if (value?.event) {
-        this.jobType = value?.event;
+        this.jobType = value?.event['value'];
         this.handleTask('add');
       }
     });

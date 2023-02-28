@@ -1,35 +1,24 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  Optional,
-  ViewChild,
-} from '@angular/core';
-import {
-  CacheService,
-  CallFuncService,
-  DialogData,
-  DialogRef,
-  FormModel,
-  NotificationsService,
-  Util,
-} from 'codx-core';
+import { Component, ElementRef, OnInit, Optional, ViewChild } from '@angular/core';
+import { CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, Util } from 'codx-core';
 import { DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from 'projects/codx-dp/src/lib/models/models';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
-
 @Component({
-  selector: 'lib-popup-add-stask',
-  templateUrl: './popup-add-stask.component.html',
-  styleUrls: ['./popup-add-stask.component.scss'],
+  selector: 'lib-popup-task',
+  templateUrl: './popup-task.component.html',
+  styleUrls: ['./popup-task.component.scss']
 })
-export class PopupAddStaskComponent implements OnInit {
+export class PopupTaskComponent implements OnInit {
+
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
   REQUIRE = ['taskName','endDate','startDate'];
   title = '';
+  typeTask = '';
   dialog!: DialogRef;
+  frmModel: FormModel;
+
   formModelMenu: FormModel;
   stepType = '';
   vllShare = 'BP021';
@@ -65,65 +54,71 @@ export class PopupAddStaskComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.status = dt?.data[0];
-    this.title = dt?.data[1]['text'];
-    this.stepType = dt?.data[1]['id'];
-    this.stepID = dt?.data[2];
-    this.groupTackList = dt?.data[3];
     this.dialog = dialog;
+    this.frmModel = dt?.data?.frmModel;
+    this.title = dt?.data?.typeTask?.text;
+    this.typeTask = dt?.data?.typeTask?.value;
+    console.log(this.typeTask);
+    
+    // this.status = dt?.data[0];
+    // this.title = dt?.data[1]['text'];
+    // this.stepType = dt?.data[1]['id'];
+    // this.stepID = dt?.data[2];
+    // this.groupTackList = dt?.data[3];
+    // this.dialog = dialog;
 
-    if (this.status == 'add') {
-      this.stepsTasks = new DP_Instances_Steps_Tasks();
-      this.stepsTasks['taskType'] = this.stepType;
-      this.stepsTasks['stepID'] = this.stepID;
-      this.stepsTasks['progress'] = 0;
-      this.stepsTasks['taskGroupID'] = dt?.data[7];
-    }else {
-      this.showLabelAttachment = true;
-      this.stepsTasks = dt?.data[4] || new DP_Instances_Steps_Tasks();
-      this.stepType = this.stepsTasks.taskType;
-    }
-    this.taskList = dt?.data[5];
-    this.taskName = dt?.data[6];
-    this.groupTaskID = dt?.data[7];
+    // if (this.status == 'add') {
+    //   this.stepsTasks = new DP_Instances_Steps_Tasks();
+    //   this.stepsTasks['taskType'] = this.stepType;
+    //   this.stepsTasks['stepID'] = this.stepID;
+    //   this.stepsTasks['progress'] = 0;
+    //   this.stepsTasks['taskGroupID'] = dt?.data[7];
+    // }else {
+    //   this.showLabelAttachment = true;
+    //   this.stepsTasks = dt?.data[4] || new DP_Instances_Steps_Tasks();
+    //   this.stepType = this.stepsTasks.taskType;
+    // }
+    // this.taskList = dt?.data[5];
+    // this.taskName = dt?.data[6];
+    // this.groupTaskID = dt?.data[7];
   }
 
   ngOnInit(): void {
-    this.listOwner = this.stepsTasks['roles'];
-    this.getFormModel();
-    if (this.stepsTasks['parentID']) {
-      this.litsParentID = this.stepsTasks['parentID'].split(';');
-    }
-    if (this.taskList.length > 0) {
-      this.dataCombobox = this.taskList.map((data) => {
-        if (this.litsParentID.some((x) => x == data.recID)) {
-          return {
-            key: data.recID,
-            value: data.taskName,
-            checked: true,
-          };
-        } else {
-          return {
-            key: data.recID,
-            value: data.taskName,
-            checked: false,
-          };
-        }
-      });
-      if (this.status == 'edit') {
-        let index = this.dataCombobox.findIndex(
-          (x) => x.key === this.stepsTasks.recID
-        );
-        this.dataCombobox.splice(index, 1);
-        this.taskGroupName = this.groupTackList.find(
-          (x) => x.recID === this.stepsTasks.taskGroupID
-        )['taskGroupName'];
-      }
-      this.valueInput = this.dataCombobox
-        .filter((x) => x.checked)
-        .map((y) => y.value)
-        .join('; ');
-    }
+    // this.listOwner = this.stepsTasks['roles'];
+    // this.getFormModel();
+    // if (this.stepsTasks['parentID']) {
+    //   this.litsParentID = this.stepsTasks['parentID'].split(';');
+    // }
+    // if (this.taskList?.length > 0) {
+    //   this.dataCombobox = this.taskList.map((data) => {
+    //     if (this.litsParentID.some((x) => x == data.recID)) {
+    //       return {
+    //         key: data.recID,
+    //         value: data.taskName,
+    //         checked: true,
+    //       };
+    //     } else {
+    //       return {
+    //         key: data.recID,
+    //         value: data.taskName,
+    //         checked: false,
+    //       };
+    //     }
+    //   });
+    //   if (this.status == 'edit') {
+    //     let index = this.dataCombobox.findIndex(
+    //       (x) => x.key === this.stepsTasks.recID
+    //     );
+    //     this.dataCombobox.splice(index, 1);
+    //     this.taskGroupName = this.groupTackList.find(
+    //       (x) => x.recID === this.stepsTasks.taskGroupID
+    //     )['taskGroupName'];
+    //   }
+    //   this.valueInput = this.dataCombobox
+    //     .filter((x) => x.checked)
+    //     .map((y) => y.value)
+    //     .join('; ');
+    // }
   }
 
   getFormModel() {
@@ -254,4 +249,5 @@ export class PopupAddStaskComponent implements OnInit {
   getfileDelete(event) {
     event.data.length;
   }
+
 }

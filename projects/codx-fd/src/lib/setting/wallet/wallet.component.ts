@@ -141,6 +141,7 @@ export class WalletComponent extends UIComponent implements OnInit {
         'GetDataForSettingWalletAsync'
       )
       .subscribe((res) => {
+        console.log(res);
         if (res && res.msgBodyData[0].length > 0) {
           this.data = res.msgBodyData[0][0];
           this.quantity = this.fdSV.convertListToObject(
