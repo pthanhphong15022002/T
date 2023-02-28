@@ -209,6 +209,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       if (queryParams?.funcID) {
         this.funcID = queryParams.funcID;
         this.cache.functionList(this.funcID).subscribe((res) => {
+          debugger
           if (res) {
             this.functionList = res;
             if (queryParams?.recID) {
@@ -330,9 +331,16 @@ export class QuestionsComponent extends UIComponent implements OnInit {
               ],
             },
           ];
+          this.api
+          .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
+            recID,
+            this.questions,
+            true,
+          ]).subscribe();
         }
         this.questions[0].children[0]['active'] = true;
         this.itemActive = this.questions[0].children[0];
+        this.defaultMoreFunc = this.listMoreFunc.filter(x=>x.id == "O")[0];
       });
   }
 
@@ -1450,6 +1458,14 @@ export class QuestionsComponent extends UIComponent implements OnInit {
           data.answers.push(dataAnswerC);
         }
       }
+
+      //Lọc câu hỏi "khác"
+      if(answerType == 'L' && data.answers && data.answers.length>0)
+      {
+        data.answers = data.answers.filter(x=>!x.other);
+        data.other = false;
+      }
+
       this.questions[seqNoSession].children[itemQuestion.seqNo] = data;
       this.change.detectChanges();
       this.SVServices.signalSave.next('saving');
