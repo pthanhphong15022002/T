@@ -1361,6 +1361,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
     if (!this.taskGroup['recID']) {
       this.taskGroup['recID'] = Util.uid();
+      this.taskGroup['roles'].forEach(role => {
+        role['taskGroupID'] = this.taskGroup['recID'];
+      });
       let index = this.taskGroupList.length;
       if (index === 0) {
         let taskGroup = new DP_Steps_TaskGroups();
@@ -1376,6 +1379,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           task['taskGroupID'] = this.taskGroup['recID'];
           task['createdOn'] = new Date();
           task['createdBy'] = this.userId;
+          task['roles'].forEach(role => {
+            role['taskID'] = task['recID'];
+          });
           this.taskList.push(task);
         }
       }
