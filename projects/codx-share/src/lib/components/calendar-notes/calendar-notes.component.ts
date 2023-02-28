@@ -792,7 +792,6 @@ export class CalendarNotesComponent
         ...this.EP_BookingRooms,
         ...this.EP_BookingCars,
       ];
-      console.log('weekEvents', this.lstWeekEvents);
 
       this.lstTransType.forEach((tmpTrans) => {
         switch (tmpTrans.transType) {
