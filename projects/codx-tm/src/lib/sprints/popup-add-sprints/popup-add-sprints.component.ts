@@ -54,7 +54,7 @@ export class PopupAddSprintsComponent implements OnInit {
   isHaveFile = false;
   titleAction = '';
   customName = '';
-  isClickSave =false ;
+  isClickSave = false;
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @Output() loadData = new EventEmitter();
@@ -72,12 +72,20 @@ export class PopupAddSprintsComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.master = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
+    
     this.action = dt?.data[1];
     this.titleAction = dt?.data[2];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
-
+    if (!this.master.iterationID) {
+      //khong co cai nay thi ko add file dc
+      this.tmSv
+        .genAutoNumber(this.dialog.formModel.funcID, dialog.formModel.entityName, 'IterationID')
+        .subscribe((res) => {
+          if (res) this.master.iterationID = res;
+        });
+    }
     //đã bổ sung nên có thể xóa
     // if (this.funcID == 'TMT0301') this.master.iterationType == '1';
     // else if (this.funcID == 'TMT0302') this.master.iterationType == '0';
@@ -141,8 +149,8 @@ export class PopupAddSprintsComponent implements OnInit {
     if (this.resources == '') this.master.resources = null;
     else this.master.resources = this.resources;
     var isAdd = this.action == 'edit' ? false : true;
-    if(this.isClickSave) return;
-    this.isClickSave = true ;
+    if (this.isClickSave) return;
+    this.isClickSave = true;
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {

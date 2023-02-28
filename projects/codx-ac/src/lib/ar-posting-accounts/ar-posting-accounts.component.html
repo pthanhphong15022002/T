@@ -2,17 +2,15 @@
   #view
   [views]="views"
   [button]="button"
-  [autoLoad]="true"
   entityName="AC_ARPostingAccounts"
+  service="AC"
   (buttonClick)="toolBarClick($event)"
 >
 </codx-views>
 <ng-template #templateLeft>
   <div class="aside-secondary d-flex flex-row-fluid bg-white">
-    <!--begin::Workspace-->
     <div class="aside-workspace px-4" id="kt_aside_wordspace">
       <div class="d-flex h-100 flex-column">
-        <!--begin::Wrapper-->
         <div
           class="flex-column-fluid hover-scroll-y"
           data-kt-scroll="true"
@@ -31,7 +29,7 @@
                 <div id="kt_aside_menu_wrapper" class="menu-fit">
                   <div
                     class="menu-item menu-accordion"
-                    (click)="menuActive = 1"
+                    (click)="clickMenu(1)"
                     [ngClass]="menuActive === 1 ? 'here show' : ''"
                   >
                     <span class="menu-link">
@@ -48,7 +46,7 @@
                     </span>
                     <div class="menu-sub menu-sub-accordion">
                       <div class="menu-item" *ngFor="let item of menuAccount">
-                        <a
+                        <span
                           class="menu-link without-sub active"
                           (click)="load('postType', item.value)"
                         >
@@ -56,13 +54,13 @@
                             <span class="bullet bullet-dot"></span>
                           </span>
                           <span class="menu-title">{{ item.text }}</span>
-                        </a>
+                        </span>
                       </div>
                     </div>
                   </div>
                   <div
                     class="menu-item menu-accordion"
-                    (click)="menuActive = 2"
+                    (click)="clickMenu(2)"
                     [ngClass]="menuActive === 2 ? 'here show' : ''"
                   >
                     <span class="menu-link">
@@ -96,13 +94,11 @@
             </div>
           </div>
         </div>
-        <!--end::Wrapper-->
       </div>
     </div>
-    <!--end::Workspace-->
   </div>
 </ng-template>
-<ng-template #templateRight>
+<ng-template #templateRight let-data>
   <div class="px-4">
     <codx-gridview
       #grid
@@ -111,6 +107,13 @@
       entityName="AC_ARPostingAccounts"
       height="300px"
       idField="recID"
+      [templateMore]="morefunction"
     ></codx-gridview>
     </div>
+</ng-template>
+<ng-template #morefunction let-data>
+  <div class="has-action-menu" style="height: 30px">
+    <codx-mfunc [dataItem]="data" [formModel]="view.formModel" type="hover"
+      (clickMF)="clickMF($event, data)"></codx-mfunc>
+  </div>
 </ng-template>

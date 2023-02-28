@@ -105,7 +105,7 @@ export class PopAddDimensionGroupsComponent
   }
   //#endregion
 
-  //#region Function
+  //#region Event
   valueChange(e: any) {
     this.dimensionGroups[e.field] = e.data;
   }
@@ -195,19 +195,12 @@ export class PopAddDimensionGroupsComponent
         }
       });
   }
+  //#endregion
+
+  //#region Function
   clearDimensionGroups() {
     this.dimGroupID = '';
     this.dimGroupName = '';
-    this.dimensionGroups.active0 = false;
-    this.dimensionGroups.active1 = false;
-    this.dimensionGroups.active2 = false;
-    this.dimensionGroups.active3 = false;
-    this.dimensionGroups.active4 = false;
-    this.dimensionGroups.active5 = false;
-    this.dimensionGroups.active6 = false;
-    this.dimensionGroups.active7 = false;
-    this.dimensionGroups.active8 = false;
-    this.dimensionGroups.active9 = false;
     this.objectDimensionSetup = [];
     this.objectDimensionControl = [];
   }
@@ -236,7 +229,7 @@ export class PopAddDimensionGroupsComponent
   }
   //#endregion
 
-  //#region CRUD
+  //#region Method
   onSave() {
     this.checkValidate();
     if (this.validate > 0) {
