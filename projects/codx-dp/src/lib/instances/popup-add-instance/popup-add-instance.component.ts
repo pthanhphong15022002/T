@@ -83,9 +83,11 @@ export class PopupAddInstanceComponent implements OnInit {
   lstParticipants = [];
   userName = '';
   positionName = '';
+  owner = '';
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
   acction: string = 'add';
   oldEndDate: Date;
+  oldIdInstance: string;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -101,15 +103,28 @@ export class PopupAddInstanceComponent implements OnInit {
     this.action = dt?.data[0];
     this.isApplyFor = dt?.data[1];
     this.listStep = dt?.data[2];
-    this.getProcess(this.instance.processID);
     this.titleAction = dt?.data[3];
     this.formModelCrr = dt?.data[4];
     this.listStepCbx = dt?.data[5];
     this.instance.instanceNo = dt?.data[6];
     this.totalDaySteps = dt?.data[7];
-    if (this.instance.owner != null) {
-      this.getNameAndPosition(this.instance.owner);
+    if(this.action === 'edit'){
+      if(this.instance.permissions != null && this.instance.permissions.length > 0){
+        this.lstParticipants = this.instance.permissions.filter(
+          (x) => x.roleType === 'P'
+        );
+      }
+    }else if(this.action === 'add'){
+      this.lstParticipants = dt?.data[8];
+
     }
+
+    if(this.action === 'copy') {
+      this.oldIdInstance = dt?.data[8];
+    }
+    // if (this.instance.owner != null) {
+    //   this.getNameAndPosition(this.instance.owner);
+    // }
     this.cache
     .gridViewSetup(
       this.dialog.formModel.formName,
@@ -124,6 +139,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.owner = this.instance?.owner;
     if (this.action === 'add' || this.action === 'copy') {
       this.autoClickedSteps();
       this.handleEndDayInstnace(this.totalDaySteps);
@@ -152,17 +168,7 @@ export class PopupAddInstanceComponent implements OnInit {
 
   buttonClick(e: any) {}
 
-  getProcess(id) {
-    this.codxDpService.getProcess(id).subscribe((res) => {
-      if (res) {
-        if (res.permissions != null && res.permissions.length > 0) {
-          this.lstParticipants = res.permissions.filter(
-            (x) => x.roleType === 'P'
-          );
-        }
-      }
-    });
-  }
+
 
   setTitle(e: any) {
     this.title =
@@ -215,12 +221,13 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   beforeSave(option: RequestOption) {
+    option.data = [this.instance, this.listStep];
     if (this.action === 'add' || this.action === 'copy') {
       option.methodName = 'AddInstanceAsync';
+      // option.data = [this.instance, this.listStep, this.oldIdInstance ?? null];
     } else if (this.action === 'edit') {
       option.methodName = 'EditInstanceAsync';
     }
-    option.data = [this.instance, this.listStep];
 
     return true;
   }
@@ -232,7 +239,7 @@ export class PopupAddInstanceComponent implements OnInit {
         '"' + this.gridViewSetup['Title']?.headerText + '"'
       );
       return;
-    } 
+    }
     // COi LẠI DÙM CÁI CÁI CHỖ CÓ CHẠY KHÔNG
     // else if (
     //   this.instance?.owner === null ||
@@ -240,7 +247,7 @@ export class PopupAddInstanceComponent implements OnInit {
     // ) {
     //   this.notificationsService.notifyCode('Vui lòng chọn người phụ trách');
     //   return;
-    // } 
+    // }
     else if (
       this.checkEndDayInstance(this.instance.endDate, this.totalDaySteps)
     ) {
@@ -280,7 +287,7 @@ export class PopupAddInstanceComponent implements OnInit {
     else if (this.action === 'edit'){
       this.onUpdate();
     }
-   
+
   }
   onAdd(){
     this.dialog.dataService
@@ -378,10 +385,10 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   eventUser(e) {
-    this.instance.owner = e.id;
-    this.userName = e.name;
-    if (this.instance.owner != null)
-      this.getNameAndPosition(this.instance.owner);
+    if(e != null && e.id != null){
+      this.owner = e.id;
+      this.instance.owner = this.owner;
+    }
   }
   getNameAndPosition(id) {
     this.codxDpService.getPositionByID(id).subscribe((res) => {

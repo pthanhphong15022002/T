@@ -1,9 +1,11 @@
+import { TemplateRef } from '@angular/core';
 import {
   Component,
   OnInit,
   ChangeDetectorRef,
   Output,
   EventEmitter,
+  Input,
 } from '@angular/core';
 import { AuthStore } from 'codx-core';
 import * as moment from 'moment';
@@ -20,7 +22,7 @@ export class SelectweekComponent implements OnInit {
   month: number;
   fullDateName: string;
   isChangeWeek: boolean = false;
-  isFinished: boolean = false;
+  //isFinished: boolean = false;
   fromDate: Date;
   toDate: Date;
   lstDateInWeek: Date[] = [];
@@ -33,7 +35,8 @@ export class SelectweekComponent implements OnInit {
   locale = 'en';
   @Output() onChangeValue = new EventEmitter();
   @Output() onChangeWeek = new EventEmitter();
-  @Output() onChangeNewWeek = new EventEmitter();
+  @Input() weekEventTmp: TemplateRef<any>;
+  @Input() weekEventsSrc;
   isGenerateWeek = false;
   constructor(private changdefect: ChangeDetectorRef, private auth: AuthStore) {
     this.user = this.auth.get();
@@ -42,6 +45,40 @@ export class SelectweekComponent implements OnInit {
       var lang = this.user.language;
       if (lang === 'VN') this.locale = 'vi';
     }
+    console.log('weekEventTmp', this.weekEventTmp);
+    console.log('weekEvents', this.weekEventsSrc);
+  }
+
+  ngOnInit(): void {
+    this.generateDateInWeek(this.today);
+  }
+
+  changeWeek(numberDay) {
+    this.isChangeWeek = true;
+    let day = moment(this.fromDate).add(numberDay, 'd').toDate();
+    this.generateDateInWeek(day, true);
+  }
+  generateDateInWeek(daySelected, changeWeek = false) {
+    this.fromDate = moment(daySelected).locale('en').startOf('week').toDate();
+    this.toDate = moment(daySelected).locale('en').endOf('week').toDate();
+    this.lstDateInWeek = [];
+    let fromDate = this.fromDate;
+    while (fromDate <= this.toDate) {
+      this.lstDateInWeek.push(fromDate);
+      fromDate = moment(fromDate).add(1, 'd').toDate();
+    }
+    let chooseDay: Date = daySelected;
+    if (this.today >= this.fromDate && this.today <= this.toDate) {
+      chooseDay = this.today;
+    } else {
+      chooseDay = daySelected;
+    }
+    this.changeDaySelected(chooseDay, changeWeek);
+    this.onChangeWeek.emit({
+      fromDate: this.fromDate,
+      toDate: this.toDate,
+    });
+    this.changdefect.detectChanges();
   }
 
   changeDaySelected(date: Date, changeWeek = false) {
@@ -72,52 +109,12 @@ export class SelectweekComponent implements OnInit {
       moment(date).locale(this.locale).format('YYYY');
   }
 
-  LoadFinished(i) {
-    // if (this.isChangeWeek == true && this.isFinished == false) {
-    this.isFinished = true;
-    // }
-    // this.isChangeWeek == false;
-  }
-
   changeTimeByControl(data) {
     if (this.isGenerateWeek)
       //console.log('data',data.data);
       // this.changeDaySelected(data.data);
       this.isGenerateWeek = false;
     else this.generateDateInWeek(data.data);
-  }
-  ngOnInit(): void {
-    this.generateDateInWeek(this.today);
-  }
-
-  changeWeek(numberDay) {
-    this.isFinished = false;
-    this.isChangeWeek = true;
-    let day = moment(this.fromDate).add(numberDay, 'd').toDate();
-    this.generateDateInWeek(day, true);
-  }
-  generateDateInWeek(daySelected, changeWeek = false) {
-    this.fromDate = moment(daySelected).locale('en').startOf('week').toDate();
-    this.toDate = moment(daySelected).locale('en').endOf('week').toDate();
-    this.lstDateInWeek = [];
-    let fromDate = this.fromDate;
-    while (fromDate <= this.toDate) {
-      this.lstDateInWeek.push(fromDate);
-      fromDate = moment(fromDate).add(1, 'd').toDate();
-    }
-    let chooseDay: Date = daySelected;
-    if (this.today >= this.fromDate && this.today <= this.toDate) {
-      chooseDay = this.today;
-    } else {
-      chooseDay = daySelected;
-    }
-    this.changeDaySelected(chooseDay, changeWeek);
-    this.onChangeNewWeek.emit({
-      fromDate: this.fromDate,
-      toDate: this.toDate,
-    });
-    this.changdefect.detectChanges();
-    this.onChangeWeek.emit();
   }
 
   renderEvent(date) {

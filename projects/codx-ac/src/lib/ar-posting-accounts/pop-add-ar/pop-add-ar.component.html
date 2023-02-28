@@ -1,0 +1,245 @@
+<codx-form #form [headerText]="headerText" [subHeader]="subHeader" [body]="body" [formModel]="dialog.formModel"
+    [dialog]="dialog" [footer]="footer" [data]="arposting" subToolbarCss="text-end">
+</codx-form>
+<ng-template #subHeader>
+    <div class="text-primary fw-bold fs-5">
+        {{subheaderText}}
+    </div>
+</ng-template>
+<ng-template #body>
+    <div *ngIf="arposting.moduleID == 1">
+        <div class="mt-2 mb-1 text-primary fw-bold fs-5">
+            <codx-label [formModel]="form.formModel" default="Căn cứ"></codx-label>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="CustLevel" default="Loại đối tượng"></codx-label>
+                    <codx-input *ngIf="arposting.custLevel != ''" type="valuelist" refValue="AC045" [crrValue]="arposting.custLevel" [formModel]="form.formModel"
+                        (valueChange)="valueChangeCustLevel($event)" field="custLevel">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.custLevel == ''" type="valuelist" refValue="AC045" [crrValue]="arposting.custLevel" [formModel]="form.formModel"
+                        (valueChange)="valueChangeCustLevel($event)" field="custLevel">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="CustSelection" default="Mã"></codx-label>
+                    <codx-input *ngIf="arposting.custLevel == '' || arposting.custLevel == null" type="valuelist" field="custSelection">
+                    </codx-input>
+                    <codx-input *ngIf="form.data.custLevel == '1'" type="combobox" refValue="Customers"
+                        [crrValue]="arposting.custSelection" (valueChange)="valueChange($event)" field="custSelection">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.custLevel == '2'" type="combobox" refValue="CustomerGroups"
+                        [crrValue]="arposting.custSelection" (valueChange)="valueChange($event)" field="custSelection">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.custLevel == '3'" (valueChange)="valueChange($event)" type="text" [disabled]="true">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="ItemLevel" default="Loại hàng"></codx-label>
+                    <codx-input *ngIf="arposting.itemLevel == ''" type="valuelist" refValue="AC046" [crrValue]="arposting.itemLevel" [formModel]="form.formModel"
+                        (valueChange)="valueChangeItemLevel($event)" field="itemLevel">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.itemLevel != ''" type="valuelist" refValue="AC046" [crrValue]="arposting.itemLevel" [formModel]="form.formModel"
+                        (valueChange)="valueChangeItemLevel($event)" field="itemLevel">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="ItemSelection" default="Mã"></codx-label>
+                    <codx-input *ngIf="arposting.itemLevel == ''" type="valuelist" field="itemSelection">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.itemLevel == '1'" type="combobox" refValue="Items" [crrValue]="form.data.itemSelection"
+                        (valueChange)="valueChange($event)" field="itemSelection">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.itemLevel == '2'" type="combobox" refValue="ItemGroups" [crrValue]="form.data.custSelection"
+                    (valueChange)="valueChange($event)"   field="itemSelection">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.itemLevel == '3'" type="combobox" refValue="ProductLines" [crrValue]="form.data.custSelection"
+                    (valueChange)="valueChange($event)"   field="itemSelection">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.itemLevel == '4'" type="text" [disabled]="true">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="PmtMethodID"
+                        default="Hình thức thanh toán"></codx-label>
+                    <codx-input type="combobox" refValue="PaymentMethodsAC" [crrValue]="arposting.pmtMethodID"
+                        (valueChange)="valueChange($event)" field="pmtMethodID">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="PmtTermID"
+                        default="Điều khoản thanh toán"></codx-label>
+                    <codx-input type="combobox" refValue="PaymentTermsAC" [crrValue]="arposting.pmtTermID"
+                        (valueChange)="valueChange($event)" field="pmtTermID">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="CurrencyID" default="Tiền tệ"></codx-label>
+                    <codx-input  type="combobox" refValue="Currencies" [crrValue]="arposting.currencyID"
+                        (valueChange)="valueChange($event)" field="currencyID">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="BUID" default="Bộ phận/chi nhánh"></codx-label>
+                    <codx-input type="combobox" refValue="BusinessUnits" [crrValue]="arposting.buid" field="buid"
+                        (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="mt-2 mb-1 text-primary fw-bold fs-5">
+            <codx-label [formModel]="form.formModel" default="Tài khoản"></codx-label>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="RecvAcctID"
+                        default="Tài khoản phải thu"></codx-label>
+                    <codx-input type="combobox" refValue="ParentAccounts" [crrValue]="arposting.recvAcctID"
+                        (valueChange)="valueChange($event)" field="recvAcctID">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="SettledAcctID"
+                        default="Tài khoản tiền"></codx-label>
+                    <codx-input type="combobox" refValue="ParentAccounts" [crrValue]="arposting.settledAcctID"
+                        (valueChange)="valueChange($event)" field="settledAcctID">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="Note" default="Ghi chú"></codx-label>
+            <codx-input [formModel]="form.formModel" [crrValue]="arposting.note" field="note"
+                (valueChange)="valueChange($event)">
+            </codx-input>
+        </div>
+    </div>
+    <div *ngIf="arposting.moduleID == 2">
+        <div class="mt-2 mb-1 text-primary fw-bold fs-5">
+            <codx-label [formModel]="form.formModel" default="Căn cứ"></codx-label>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="CustLevel" default="Loại đối tượng"></codx-label>
+                    <codx-input *ngIf="arposting.custLevel != ''" type="valuelist" refValue="AC045" [crrValue]="arposting.custLevel" [formModel]="form.formModel"
+                        (valueChange)="valueChangeCustLevel($event)" field="custLevel">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.custLevel == ''" type="valuelist" refValue="AC045" [crrValue]="arposting.custLevel" [formModel]="form.formModel"
+                        (valueChange)="valueChangeCustLevel($event)" field="custLevel">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="CustSelection" default="Mã"></codx-label>
+                    <codx-input *ngIf="arposting.custLevel == '' || arposting.custLevel == null" type="valuelist" field="custSelection">
+                    </codx-input>
+                    <codx-input *ngIf="form.data.custLevel == '1'" type="combobox" refValue="Customers"
+                        [crrValue]="arposting.custSelection" (valueChange)="valueChange($event)" field="custSelection">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.custLevel == '2'" type="combobox" refValue="CustomerGroups"
+                        [crrValue]="arposting.custSelection" (valueChange)="valueChange($event)" field="custSelection">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.custLevel == '3'" (valueChange)="valueChange($event)" type="text" [disabled]="true">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="ItemLevel" default="Loại hàng"></codx-label>
+                    <codx-input *ngIf="arposting.itemLevel == ''" type="valuelist" refValue="AC046" [crrValue]="arposting.itemLevel" [formModel]="form.formModel"
+                        (valueChange)="valueChangeItemLevel($event)" field="itemLevel">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.itemLevel != ''" type="valuelist" refValue="AC046" [crrValue]="arposting.itemLevel" [formModel]="form.formModel"
+                        (valueChange)="valueChangeItemLevel($event)" field="itemLevel">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="ItemSelection" default="Mã"></codx-label>
+                    <codx-input *ngIf="arposting.itemLevel == ''" type="valuelist" field="itemSelection">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.itemLevel == '1'" type="combobox" refValue="Items" [crrValue]="form.data.itemSelection"
+                        (valueChange)="valueChange($event)" field="itemSelection">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.itemLevel == '2'" type="combobox" refValue="ItemGroups" [crrValue]="form.data.custSelection"
+                    (valueChange)="valueChange($event)"   field="itemSelection">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.itemLevel == '3'" type="combobox" refValue="ProductLines" [crrValue]="form.data.custSelection"
+                    (valueChange)="valueChange($event)"   field="itemSelection">
+                    </codx-input>
+                    <codx-input *ngIf="arposting.itemLevel == '4'" type="text" [disabled]="true">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="BUID" default="Bộ phận/chi nhánh"></codx-label>
+                    <codx-input type="combobox" refValue="BusinessUnits" [crrValue]="arposting.buid" field="buid"
+                        (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="mt-2 mb-1 text-primary fw-bold fs-5">
+            <codx-label [formModel]="form.formModel" default="Thông tin"></codx-label>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="PmtTermID"
+                        default="Điều khoản thanh toán"></codx-label>
+                    <codx-input type="combobox" refValue="PaymentTermsAC" [crrValue]="arposting.pmtTermID"
+                        (valueChange)="valueChange($event)" field="pmtTermID">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end mt-1 me-3">
+        <div *ngIf="formType != 'edit'" class="ms-2">
+            <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
+                <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                    [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+            </button>
+        </div>
+        <div class="ms-2">
+            <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
+                <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                    [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </div>
+</ng-template>

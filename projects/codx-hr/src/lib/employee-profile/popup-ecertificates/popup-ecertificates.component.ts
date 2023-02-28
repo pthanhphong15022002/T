@@ -133,26 +133,32 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
-    if(this.actionType === 'add' ||  this.actionType === 'copy'){
-      delete this.certificateObj.recID;
-    }
+    if(this.actionType === 'copy') delete this.certificateObj.recID;
       this.certificateObj.employeeID = this.employId;
       if(this.actionType === 'add' ||  this.actionType === 'copy'){
         this.hrService.AddECertificateInfo(this.certificateObj).subscribe((p) => {
           if(p != null){
             this.certificateObj = p;
             this.notify.notifyCode('SYS006');
+            this.certificateObj.isSuccess = true;
             this.dialog && this.dialog.close(this.certificateObj);
-          } else this.notify.notifyCode('SYS023');
-        });
+          } else {
+            this.notify.notifyCode('SYS023');
+            this.certificateObj.isSuccess = false;
+      }
+    });
       }else {
         this.hrService.UpdateEmployeeCertificateInfo(this.certificateObj).subscribe((p) => {
           if(p != null){
             this.certificateObj = p;
             this.notify.notifyCode('SYS007');
+            this.certificateObj.isSuccess = true;
             this.dialog && this.dialog.close(this.certificateObj);
-          } else this.notify.notifyCode('SYS021');
-        })
+          } else {
+            this.notify.notifyCode('SYS021');
+            this.certificateObj.isSuccess = false;
+          }
+          })
       }
 
   }

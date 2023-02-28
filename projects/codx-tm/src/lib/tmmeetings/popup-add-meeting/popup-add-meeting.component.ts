@@ -779,6 +779,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     var listUserID = '';
     var listDepartmentID = '';
     var listUserIDByOrg = '';
+    var listPositionID = '';
+    var listEmployeeID = '';
     var type = 'U';
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -790,6 +792,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           case 'O':
           case 'D':
             listDepartmentID += obj.id + ';';
+            break;
+          case 'RP':
+          case 'P':
+            listPositionID += obj.id + ';';
+            break;
+          case 'RE':
+            listEmployeeID += obj.id + ';';
             break;
         }
       }
@@ -813,6 +822,27 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
             if (listUserID != '') listUserIDByOrg += ';' + listUserID;
             this.valueUser(listUserIDByOrg);
           }
+        });
+    }
+    if (listEmployeeID != '') {
+      listEmployeeID = listEmployeeID.substring(0, listEmployeeID.length - 1);
+      this.tmSv
+        .getListUserIDByListEmployeeID(listEmployeeID)
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            this.valueUser(res);
+          }
+        });
+    }
+    if (listPositionID != '') {
+      listPositionID = listPositionID.substring(0, listPositionID.length - 1);
+      this.tmSv
+        .getListUserIDByListPositionsID(listPositionID)
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            if (!res[1]) this.notiService.notifyCode('TM066');
+            this.valueUser(res[0]);
+          } else this.notiService.notifyCode('TM066');
         });
     }
   }

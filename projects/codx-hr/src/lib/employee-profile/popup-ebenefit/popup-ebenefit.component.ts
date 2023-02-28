@@ -125,7 +125,6 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
 
   onSaveForm() {
     this.benefitObj.employeeID = this.employId;
-    this.benefitObj.benefitID = '1'; // test combobox chua co
     this.formGroup.patchValue({ benefitID: this.benefitObj.benefitID }); // test combobox chua co
     if (this.benefitObj.expiredDate < this.benefitObj.effectedDate) {
       // this.notify.notifyCode('HR002');

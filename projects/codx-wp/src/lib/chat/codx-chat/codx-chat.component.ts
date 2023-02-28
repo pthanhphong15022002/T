@@ -15,7 +15,6 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   loaded = false;
   autoClose:boolean = true;
   totalMessage:number = 0;
-  @ViewChild("chatBox") chatBox:TemplateRef<any>;
 
   constructor(
     public codxService:CodxService,
@@ -31,8 +30,6 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.signalRSV.signalBoxChat.subscribe((res:any) => {
-    });
   }
   // get total message
   getTotalMessage(){
@@ -48,5 +45,9 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   // open chat box
   openChatList(){
     this.loaded = true;
+  }
+  // seen all message
+  seenAllMessage(){
+    this.totalMessage = 0;
   }
 }

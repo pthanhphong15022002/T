@@ -47,7 +47,6 @@ export class StepTaskGroupComponent implements OnInit {
   ngOnInit(): void {
     this.getFormModel();
     this.type = this.taskGroup['recID'] ? 'edit' : 'add'
-    this.setTime();
   }
 
   getFormModel() {
@@ -110,35 +109,8 @@ export class StepTaskGroupComponent implements OnInit {
     this.dialog.close();
     clearInterval(this.clear);
   }
-
   shareUser(share) {
     this.callfc.openForm(share, '', 500, 500);
   }
 
-  setTime() {
-    if (this.taskGroup?.createdOn && this.type === 'edit') {
-      let date = new Date(this.taskGroup?.createdOn);
-      date.setHours(date.getHours() + Number(this.taskGroup?.durationHour));
-      date.setDate(date.getDate() + Number(this.taskGroup?.durationDay));
-      let countDownDate = date.getTime();
-      this.clear = setInterval(function () {
-        var now = new Date().getTime();
-        var distance = countDownDate - now;
-        this.days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        this.hours = (
-          (distance % (1000 * 60 * 60 * 24)) /
-          (1000 * 60 * 60)
-        ).toFixed(2);
-        document.getElementById('countdown').innerHTML =
-          this.days + ' ngày ' + this.hours + ' giờ ';
-        if (distance < 0) {
-          clearInterval(this.clear);
-        }
-      }, 1000);
-    }
-  }
-
-  ngOnDestroy() {
-    clearInterval(this.clear);
-  }
 }

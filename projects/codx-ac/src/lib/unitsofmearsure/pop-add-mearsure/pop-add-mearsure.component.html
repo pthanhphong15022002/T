@@ -78,7 +78,7 @@
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end mt-1 me-3">
-    <div class="ms-2">
+    <div *ngIf="formType != 'edit'" class="ms-2">
       <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
         <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
           [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>

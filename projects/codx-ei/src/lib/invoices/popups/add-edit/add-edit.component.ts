@@ -148,22 +148,6 @@ export class AddEditComponent implements OnInit {
     this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
   }
 
-  mstChange(e) {
-    if (e && e.data) {
-      let mst = this.dicMST.has(e.data);
-      if (mst) this.bindingTaxInfor(this.dicMST.get(e.data));
-      else
-        this.api
-          .exec<any>('EI', 'CustomersBusiness', 'GetCustomerAsync', e.data)
-          .subscribe((res) => {
-            if (res) {
-              this.dicMST.set(e.data, res);
-              this.bindingTaxInfor(res);
-            }
-          });
-    }
-  }
-
   addRow() {
     let idx = this.grid.dataSource.length;
     let data = this.grid.formGroup.value;
@@ -232,7 +216,7 @@ export class AddEditComponent implements OnInit {
   }
   //#endregion
 
-  //#region CRUD
+  //#region Method
   save() {
     this.dialog.dataService
       .save((opt: RequestOption) => {
@@ -258,6 +242,22 @@ export class AddEditComponent implements OnInit {
       .subscribe((res) => {
         if (res) this.dialog.close();
       });
+  }
+
+  mstChange(e) {
+    if (e && e.data) {
+      let mst = this.dicMST.has(e.data);
+      if (mst) this.bindingTaxInfor(this.dicMST.get(e.data));
+      else
+        this.api
+          .exec<any>('EI', 'CustomersBusiness', 'GetCustomerAsync', e.data)
+          .subscribe((res) => {
+            if (res) {
+              this.dicMST.set(e.data, res);
+              this.bindingTaxInfor(res);
+            }
+          });
+    }
   }
   //#endregion
 
