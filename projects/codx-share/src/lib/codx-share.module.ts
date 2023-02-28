@@ -148,6 +148,9 @@ import { NotifyDrawerPopupComponent } from './layout/drawers/notify-drawer/notif
 import { NotifyBodyComponent } from './layout/drawers/notify-drawer/notify-body/notify-body.component';
 import { CodxBookingCarScheduleContentComponent } from './components/codx-booking-car-schedule-content/codx-booking-car-schedule-content.component';
 import { CodxBookingRoomScheduleContentComponent } from './components/codx-booking-room-schedule-content/codx-booking-room-schedule-content.component';
+import { CountChartComponent } from './components/codx-dashboard/count-chart/count-chart.component';
+import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
+import { TopChartComponent } from './components/codx-dashboard/top-chart/top-chart.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -252,13 +255,15 @@ const T_Component: Type<any>[] = [
   //booking
   CodxBookingCarScheduleContentComponent,
   CodxBookingRoomScheduleContentComponent,
+  CountChartComponent,
+  TopChartComponent,
 ];
 
 const T_Pipe: Type<any>[] = [
-  TruncatePipe, 
+  TruncatePipe,
   FileImage,
   DisplayValue,
-  TextValuePipe
+  TextValuePipe,
 ];
 
 @NgModule({
@@ -289,6 +294,7 @@ const T_Pipe: Type<any>[] = [
     UploaderModule,
     PickerModule,
     ChartAllModule,
+    CircularGaugeModule,
     // BoldReportsModule,
     // BoldReportDesignerModule,
     // BoldReportViewerModule,

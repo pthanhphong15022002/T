@@ -9,8 +9,7 @@ export class Panel {
   maxSizeX: number;
   maxSizeY: number;
 }
-
-export class PanelData {
+export class PanelOrder {
   panelId: string;
-  data: any;
+  data: string; //the order of panel
 }

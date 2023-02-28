@@ -1,0 +1,15 @@
+<div class="card m-2" style="min-width: 250px; min-height: 115px">
+  <div class="card-body">
+    <div class="d-flex align-items-center">
+      <img *ngIf="this.hasIcon" [src]="this.iconUrl" class="svg-icon" />
+      <div class="ms-2">
+        <div>
+          {{ this.statusName }}
+          <div class="fw-bold fs-3">
+            {{ +this.value }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

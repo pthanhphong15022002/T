@@ -243,8 +243,6 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
           });
         });
     }
-
-    
   }
 
   copy(data) {
@@ -277,8 +275,6 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
           });
       }
     }
-
-    
   }
 
   delete(data?) {
