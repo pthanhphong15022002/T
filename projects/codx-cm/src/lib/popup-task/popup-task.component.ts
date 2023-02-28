@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, Optional, ViewChild } from '@angular/core';
 import { CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, Util } from 'codx-core';
 import { DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from 'projects/codx-dp/src/lib/models/models';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -51,6 +51,7 @@ export class PopupTaskComponent implements OnInit {
     private cache: CacheService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
+    private changeDef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -169,6 +170,29 @@ export class PopupTaskComponent implements OnInit {
         });
       }
     });
+  }
+
+   //  khảo sát
+   changeQuestion(e) {
+    if (e?.data) {
+      this.stepsTasks['reference'] = e?.data;
+      let url = window.location.href;
+      let index = url.indexOf('/bp/');
+      if (index != -1)
+        this.linkQuesiton =
+          url.substring(0, index) +
+          Util.stringFormat(
+            '/sv/add-survey?funcID={0}&title={1}&recID={2}',
+            'SVT01',
+            '',
+            e?.data
+          );
+      this.changeDef.detectChanges();
+    }
+  }
+
+  viewDetailSurveys() {
+    if (this.linkQuesiton) window.open(this.linkQuesiton);
   }
 
   onDeleteOwner(objectID, data) {
