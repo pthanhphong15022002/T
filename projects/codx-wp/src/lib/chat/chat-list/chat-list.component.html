@@ -65,10 +65,9 @@
         <!-- image -->
         <div class="me-2">
             <codx-img 
-                [objectId]="item.groupType == '1'?item.groupID2:item.groupID" 
-                [objectName]="item.groupType == '1'?item.groupName2:item.groupName" 
-                [objectType]="item.groupType == '1'?'AD_Users':'WP_Groups'"
-                [referType]="'avt'"
+                [objectId]="item.groupType == '1'? item.groupID2:item.groupID" 
+                [objectName]="item.groupType == '1'? item.groupName2:item.groupName" 
+                [objectType]="item.groupType == '1'? 'AD_Users':'WP_Groups'"
                 [width]="30">
             </codx-img>
         </div>
@@ -94,7 +93,7 @@
         <ng-template #tmpItem>
             <codx-temp-full 
                 [dataItem]="item" 
-                [title]="item.name" 
+                [title]="item.id" 
                 [imageId]="item.id" 
                 [imageObjType]="item.type == 'U' ? 'AD_Users':'WP_Groups'" 
                 [imageObjName]="item.name">

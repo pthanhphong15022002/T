@@ -116,11 +116,6 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     });
     if (this.customers.customerID != null) {
       this.customerID = this.customers.customerID;
-      if (this.customers.overDueControl) {
-        this.customers.overDueControl = '1';
-      } else {
-        this.customers.overDueControl = '0';
-      }
       this.acService
         .loadData('ERM.Business.BS', 'BankAccountsBusiness', 'LoadDataAsync', [
           this.objecttype,

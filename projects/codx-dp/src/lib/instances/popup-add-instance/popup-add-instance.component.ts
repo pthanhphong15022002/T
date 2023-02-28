@@ -87,6 +87,7 @@ export class PopupAddInstanceComponent implements OnInit {
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
   acction: string = 'add';
   oldEndDate: Date;
+  oldIdInstance: string;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -116,6 +117,10 @@ export class PopupAddInstanceComponent implements OnInit {
     }else if(this.action === 'add'){
       this.lstParticipants = dt?.data[8];
 
+    }
+
+    if(this.action === 'copy') {
+      this.oldIdInstance = dt?.data[8];
     }
     // if (this.instance.owner != null) {
     //   this.getNameAndPosition(this.instance.owner);
@@ -216,12 +221,13 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   beforeSave(option: RequestOption) {
+    option.data = [this.instance, this.listStep];
     if (this.action === 'add' || this.action === 'copy') {
       option.methodName = 'AddInstanceAsync';
+      // option.data = [this.instance, this.listStep, this.oldIdInstance ?? null];
     } else if (this.action === 'edit') {
       option.methodName = 'EditInstanceAsync';
     }
-    option.data = [this.instance, this.listStep];
 
     return true;
   }

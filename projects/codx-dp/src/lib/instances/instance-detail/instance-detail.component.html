@@ -15,13 +15,6 @@
                     [value]="dataSelect?.tags">
                   </codx-tag>
                 </div>
-                <div>
-                  <codx-label default="Mô tả">
-                
-                  </codx-label>
-                  <div *ngIf="dataSelect?.memo" [innerHTML]="sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)"></div>
-                </div>
-
                 <!-- <div class="mb-6">
                   <div class="d-flex align-items-center mb-1">
                     <span class="me-2 text-gray-600">Tổ chức/Khách hàng:</span>
@@ -80,19 +73,23 @@
                 </div>
               </div>
             </div>
-            <div class="d-flex justify-content-end">
-              <codx-input type="valuelist" refValue="DP034" [crrValue]="'S'" (valueChange)="cbxChange($event)">
-              </codx-input>
-            </div>
           </div>
         </div>
+      </div>
+      <div class="d-flex align-items-start">
+        <div> <codx-label default="Mô tả"></codx-label>
+        </div>
+        <div *ngIf="dataSelect?.memo" [innerHTML]="sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)"></div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <codx-input type="valuelist" refValue="DP034" [crrValue]="'S'" (valueChange)="cbxChange($event)">
+        </codx-input>
       </div>
     </ng-template>
     <ng-template #body>
       <ng-container *ngIf="idCbx == 'G'">
         <codx-gantt-chart [dataSource]="ganttDs" [taskFields]="taskFields" [taskbarHeight]="60" [rowHeight]="60"
           [readOnly]="true" [templateTaskbar]="ganttItems" [toolbar]="[]"></codx-gantt-chart>
-
         <ng-template #ganttItems let-data>
           <div class="badge badge-light badge-square badge-md fs-7 p-2"
             [ngStyle]="{ 'background-color': getColor(data.recID) }">
