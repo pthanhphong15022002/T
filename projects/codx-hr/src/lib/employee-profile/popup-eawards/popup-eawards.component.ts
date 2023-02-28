@@ -125,17 +125,25 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
         if (p != null) {
           this.awardObj = p;
           this.notify.notifyCode('SYS006');
+          this.awardObj.isSuccess = true;
           this.dialog && this.dialog.close(this.awardObj);
-        } else this.notify.notifyCode('SYS023');
+        } else {
+          this.notify.notifyCode('SYS023'); this.awardObj.isSuccess = true;
+        } 
       });
     } else {
       this.hrService
         .UpdateEmployeeAwardInfo(this.formModel.currentData)
         .subscribe((p) => {
           if (p != null) {
+            this.awardObj = p;
+            this.awardObj.isSuccess = true;
             this.notify.notifyCode('SYS007');
-            this.dialog && this.dialog.close(p);
-          } else this.notify.notifyCode('SYS021');
+            this.dialog && this.dialog.close(this.awardObj);
+          } else {
+            this.notify.notifyCode('SYS021');
+            this.awardObj.isSuccess = false;
+          }
         });
     }
   }

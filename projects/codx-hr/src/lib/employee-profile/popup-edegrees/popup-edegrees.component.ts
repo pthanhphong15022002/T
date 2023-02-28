@@ -36,7 +36,6 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   headerText: '';
   dataVllSupplier: any;
   defaultIssueDate: string = '0001-01-01T00:00:00';
-  isSuccess = false;
 
   //default degreeName
   levelText: string;
@@ -63,23 +62,35 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     this.actionType = data?.data?.actionType;
     this.formModel = dialog?.formModel;
     console.log(this.formModel);
-    
-    //this.defaultIssueDate =
-
-    //this.lstDegrees = data?.data?.lstEDegrees;
-    //this.indexSelected = data?.data?.indexSelected ?? -1;
-
-    // if (this.actionType === 'edit' || this.actionType === 'copy') {
-    //   if (data?.data?.dataSelected)
-    //     this.degreeObj = JSON.parse(JSON.stringify(data?.data?.dataSelected));
-    // }
   }
 
   changeCalendar(event, changeType: string) {
-    console.log('datedateeeeeeeeeeeeeeeee', event);
-    console.log('fromdate', event.fromDate);
-    console.log('todate', event.toDate);
+    let yearFromDate = event.fromDate.getUTCFullYear();
+    let monthFromDate = event.fromDate.getUTCMonth() + 2;
+    let dayFromDate = event.fromDate.getUTCDate();
+    var strYear = `${yearFromDate}`;
+    var strMonth = `${yearFromDate}/${monthFromDate}`;
+    var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
 
+    if (changeType === 'FromDate') {
+      if (event.type === 'year') {
+        this.degreeObj.trainFrom = strYear;
+      } else if (event.type === 'month') {
+        this.degreeObj.trainFrom = strMonth;
+      } else {
+        this.degreeObj.trainFrom = strDay;
+      }
+      this.degreeObj.trainFromDate = event.fromDate;
+    } else if (changeType === 'ToDate') {
+      if (event.type === 'year') {
+        this.degreeObj.trainTo = strYear;
+      } else if (event.type === 'month') {
+        this.degreeObj.trainTo = strMonth;
+      } else {
+        this.degreeObj.trainTo = strDay;
+      }
+      this.degreeObj.trainToDate = event.fromDate;
+    }
   }
 
   ngAfterViewInit() {
@@ -160,6 +171,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    console.log('data obj', this.degreeObj);
     if (!this.formModel)
       this.hrService.getFormModel(this.funcID).then((formModel) => {
         if (formModel) this.formModel = formModel;
@@ -204,6 +216,18 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
           }
         });
     }
+  }
+
+  // getSelectedType(data: string) {
+  //   let arrStringDate = data?.split('/');
+  //   let result =
+  //     arrStringDate?.length == 1 ? 'y' : arrStringDate?.length == 2 ? 'm' : 'd';
+
+  //   return result;
+  // }
+
+  Date(date){
+    return new Date(date);
   }
 
   // click(data) {
