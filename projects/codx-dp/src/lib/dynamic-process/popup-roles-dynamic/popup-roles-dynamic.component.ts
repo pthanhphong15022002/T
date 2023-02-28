@@ -1,15 +1,19 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import {
+  CacheService,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+} from 'codx-core';
 import { CodxDpService } from '../../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../../models/models';
 
 @Component({
   selector: 'lib-popup-roles-dynamic',
   templateUrl: './popup-roles-dynamic.component.html',
-  styleUrls: ['./popup-roles-dynamic.component.css']
+  styleUrls: ['./popup-roles-dynamic.component.css'],
 })
 export class PopupRolesDynamicComponent implements OnInit {
-
   dialog: any;
   title = '';
   process = new DP_Processes();
@@ -29,7 +33,9 @@ export class PopupRolesDynamicComponent implements OnInit {
   startDate: Date;
   endDate: Date;
   isSetFull = false;
+  isCheck = false;
   listRoles = [];
+  lstPerm = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private noti: NotificationsService,
@@ -41,6 +47,10 @@ export class PopupRolesDynamicComponent implements OnInit {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(dt?.data[0]));
     this.process = this.data;
+    this.lstPerm = Object.values(
+      this.groupBy(this.process.permissions, 'roleType')
+    ).flat();
+    this.process.permissions = this.lstPerm;
     this.title = dt.data[1];
     this.type = dt.data[2];
     this.cache.valueList('DP010').subscribe((res) => {
@@ -53,6 +63,17 @@ export class PopupRolesDynamicComponent implements OnInit {
   ngOnInit(): void {
     if (this.process.permissions != null && this.process.permissions.length > 0)
       this.changePermission(0);
+  }
+
+  groupBy(arr, key) {
+    return arr.reduce((acc, obj) => {
+      const groupKey = obj[key];
+      if (!acc[groupKey]) {
+        acc[groupKey] = [];
+      }
+      acc[groupKey].push(obj);
+      return acc;
+    }, {});
   }
 
   //#region changePermissions click current
@@ -82,14 +103,15 @@ export class PopupRolesDynamicComponent implements OnInit {
         this.process.permissions[index].create &&
         this.process.permissions[index].edit &&
         this.process.permissions[index].delete &&
-        this.process.permissions[index].assign
-        // this.process.permissions[index].publish;
+        this.process.permissions[index].assign;
+      // this.process.permissions[index].publish;
       this.read = this.process.permissions[index].read;
       this.create = this.process.permissions[index].create;
       this.edit = this.process.permissions[index].edit;
       // this.publish = this.process.permissions[index].publish;
       this.delete = this.process.permissions[index].delete;
       this.assign = this.process.permissions[index].assign;
+
       this.currentPemission = index;
     } else {
       this.full = false;
@@ -149,6 +171,12 @@ export class PopupRolesDynamicComponent implements OnInit {
   }
 
   checkAdminUpdate() {
+    if (
+      this.process.permissions[this.currentPemission].roleType == 'P' ||
+      this.process.permissions[this.currentPemission].roleType == 'F' ||
+      this.process.permissions[this.currentPemission].objectType == '1'
+    )
+      return true;
     return false;
   }
 
@@ -178,5 +206,4 @@ export class PopupRolesDynamicComponent implements OnInit {
       });
     }
   }
-
 }

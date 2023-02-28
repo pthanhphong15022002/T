@@ -1018,7 +1018,7 @@
   </div>
 
   <div
-    class="pw-content w-100 scroll-y"
+    class="pw-content w-100 scroll-y mt-1"
     data-kt-scroll-activate="{default: true}"
     data-kt-scroll-max-height="auto"
     data-kt-scroll-dependencies=".pw-profile,.pw-menu"
@@ -1033,7 +1033,7 @@
       <ng-container>
         <!-- Thông tin bản thân -->
         <div class="user-profile overview d-block mb-3" [id]="eInfoFuncID">
-          <div class="rounded-2 p-4 bg-white">
+          <div class="rounded-2 p-4 bg-white mt-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
                 <span class="icon-i-person icon-18 me-2"></span>
@@ -1048,10 +1048,12 @@
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
-                <span
-                  class="icon-edit icon-18 text-primary"
-                  (click)="editEmployeeSelfInfo(editHeaderText)"
-                ></span>
+                <a class="btn btn-icon btn-white btn-hover-primary">
+                  <span
+                    class="icon-edit icon-18 text-primary"
+                    (click)="editEmployeeSelfInfo(editHeaderText)"
+                  ></span>
+                </a>
               </div>
             </div>
             <div #DangDoan class="mt-6" *ngIf="eInfoFormModel">
@@ -1285,19 +1287,22 @@
                   </div>
                 </div>
                 <div class="col">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    fiedName="IssuedDate"
-                    [formModel]="ePassportFormModel"
-                  >
-                  </codx-label>
-                  <span class="icon-event icon-16 text-gray-600 me-2"></span>
-                  <div #education class="fw-bold text-dark fs-6">
-                    {{
-                      crrPassport?.issuedDate
-                        | formatvalue : ePassportFormModel : "issuedDate"
-                        | async
-                    }}
+                  <div class="text-gray-600 pb-1">
+                    <codx-label
+                      fiedName="IssuedDate"
+                      [formModel]="ePassportFormModel"
+                    >
+                    </codx-label>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <span class="icon-event icon-16 text-gray-600 me-2"></span>
+                    <div #education class="fw-bold text-dark fs-6">
+                      {{
+                        crrPassport?.issuedDate
+                          | formatvalue : ePassportFormModel : "issuedDate"
+                          | async
+                      }}
+                    </div>
                   </div>
                 </div>
                 <div class="col">
@@ -1407,7 +1412,7 @@
               </div>
             </div>
 
-            <div class="mb-1">
+            <div class="mb-1" *ngIf="eInfoFormModel">
               <div class="d-flex align-items-center mt-9 mb-5">
                 <span class="icon-i-filter-right icon-20 me-2"></span>
                 <div class="fw-bold text-uppercase fs-5 text-gray-600">
@@ -1417,6 +1422,14 @@
                     default="Thông tin liên hệ"
                   >
                   </codx-label>
+                  <!-- <div class="d-flex align-items-center">
+                      <span
+                        class="icon-local_phone icon-16 text-gray-600 me-1"
+                      ></span>
+                      <span class="fw-bold text-dark fs-6">
+                        <span #phone>{{ infoPersonal?.phone }}</span>
+                      </span>
+                    </div> -->
                 </div>
               </div>
               <div>
@@ -1503,8 +1516,7 @@
                     >
                   </div>
                 </div>
-                <!-- Địa chỉ tạm chú -->
-                <div class="row mb-5">
+                <div class="col-8">
                   <div class="text-gray-600 pb-1">
                     <codx-label
                       fiedName="TAddress"
@@ -1520,12 +1532,39 @@
                   </div>
                 </div>
               </div>
+              <!-- Địa chỉ thường chú -->
+              <div class="row mb-5">
+                <div class="text-gray-600 pb-1">
+                  <codx-label fiedName="Street" [formModel]="eInfoFormModel">
+                  </codx-label>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class="icon-place icon-16 text-gray-600 me-2"></span>
+                  <span #street class="fw-bold text-dark fs-6">
+                    {{ infoPersonal?.street ?? infoPersonal?.address }}</span
+                  >
+                </div>
+              </div>
+              <!-- Địa chỉ tạm chú -->
+              <div class="row mb-5">
+                <div class="text-gray-600 pb-1">
+                  <codx-label fiedName="TAddress" [formModel]="eInfoFormModel">
+                  </codx-label>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class="icon-place icon-16 text-gray-600 me-2"></span>
+                  <span #pitNumber class="fw-bold">
+                    {{ infoPersonal?.tAddress }}</span
+                  >
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
         <!-- Thông tin Đảng - Đoàn -->
         <div class="user-profile overview d-block mb-3" [id]="ePartyFuncID">
-          <div class="rounded-2 p-4 bg-white mt-5">
+          <div class="rounded-2 p-4 bg-white mt-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
                 <span class="icon-folder_special icon-18 me-2"></span>
@@ -1615,7 +1654,7 @@
 
         <!-- Quan hệ gia đình -->
         <div class="user-profile overview d-block mb-3" [id]="eFamiliesFuncID">
-          <div class="rounded-2 p-4 bg-white mt-5">
+          <div class="rounded-2 p-4 bg-white mt-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
                 <span class="icon-family icon-18 me-2"></span>
@@ -1786,7 +1825,7 @@
       <!-- BẢO HIỂM - MS THUẾ - TÀI KHOẢN -->
 
       <div class="user-profile overview d-block mb-3" [id]="eAssurFunc">
-        <div class="rounded-2 p-4 bg-white">
+        <div class="rounded-2 p-4 bg-white mt-4">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <span class="icon-person icon-18 me-2"></span>
@@ -2055,7 +2094,7 @@
       </div>
       <!-- Hộ chiếu -->
       <div class="user-profile overview d-block mb-3" [id]="ePassportFuncID">
-        <div class="rounded-2 p-4 bg-white mt-5">
+        <div class="rounded-2 p-4 bg-white mt-4">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
               <div class="user-status d-flex align-items-center">
@@ -2115,7 +2154,7 @@
       </div>
       <!-- Thị thực -->
       <div class="user-profile overview d-block mb-3" [id]="eVisaFuncID">
-        <div class="rounded-2 p-4 bg-white mt-5">
+        <div class="rounded-2 p-4 bg-white mt-4">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <span class="icon-i-credit-card icon-18 me-2"></span>
@@ -2168,7 +2207,7 @@
       </div>
       <!-- Giấy phép lao động -->
       <div class="user-profile overview d-block mb-3" id="HRTEM0204">
-        <div class="rounded-2 p-4 bg-white mt-5">
+        <div class="rounded-2 p-4 bg-white mt-4">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <span class="icon-i-clipboard-check icon-18 me-2"></span>
@@ -2264,7 +2303,7 @@
       <ng-container>
         <!-- Thông tin chung -->
         <div class="user-profile overview d-block mb-3" [id]="jobGeneralFuncID">
-          <div class="rounded-2 p-4 bg-white mt-5">
+          <div class="rounded-2 p-4 bg-white mt-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
                 <div class="user-status d-flex align-items-center">
@@ -2732,14 +2771,15 @@
                   </div>
                 </div>
                 <div class="col">
-                  <codx-label
-                    class="text-gray-600 fw-normal"
-                    fiedName="ALObjectID"
-                    [formModel]="eInfoFormModel"
-                  >
-                  </codx-label>
+                  <div class="text-gray-600 pb-1">
+                    <codx-label
+                      fiedName="ALObjectID"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                  </div>
 
-                  <div class="fw-bold fs-6">
+                  <div class="fw-bold text-dark fs-6">
                     {{
                       infoPersonal?.alObjectID
                         | formatvalue : eInfoFormModel : "alObjectID"
@@ -2751,8 +2791,9 @@
               <!-- Không cần quét thẻ/ Không tính công ngoài giờ -->
               <div class="row mb-5">
                 <div class="col-4 d-flex align-items-center" id="isNotScan">
-                  <span class="me-2"
-                    ><codx-input
+                  <span class="me-2">
+                    <codx-input
+                      class="check-circle"
                       field="IsNotScan"
                       [formModel]="eInfoFormModel"
                       [crrValue]="infoPersonal?.isNotScan"
@@ -2770,6 +2811,7 @@
                 <div class="col-8 d-flex align-items-center" id="isNotOTKow">
                   <span class="me-2">
                     <codx-input
+                      class="check-circle"
                       field="IsExpertTrain"
                       [formModel]="eInfoFormModel"
                       [crrValue]="infoPersonal?.isNotOTKow"
@@ -2790,8 +2832,9 @@
                   class="col-4 d-flex align-items-center"
                   id="isNotLateEarly"
                 >
-                  <span class="me-2"
-                    ><codx-input
+                  <span class="me-2">
+                    <codx-input
+                      class="check-circle"
                       field="IsNotLateEarly"
                       [formModel]="eInfoFormModel"
                       [crrValue]="infoPersonal?.isNotLateEarly"
@@ -2810,8 +2853,9 @@
                   class="col-8 d-flex align-items-center"
                   id="isNotCLeaveKow"
                 >
-                  <span class="me-2"
-                    ><codx-input
+                  <span class="me-2">
+                    <codx-input
+                      class="check-circle"
                       field="IsNotCLeaveKow"
                       [formModel]="eInfoFormModel"
                       [crrValue]="infoPersonal?.isNotCLeaveKow"
@@ -2837,7 +2881,7 @@
               <div class="d-flex align-items-center">
                 <div class="user-status d-flex align-items-center">
                   <span
-                    class="icon-assignment_ind icon-20 me-1 text-primary"
+                    class="icon-assignment_ind icon-18 me-2 text-primary"
                   ></span>
                 </div>
                 <div class="fs-5 fw-bold text-primary text-uppercase">
@@ -2865,14 +2909,15 @@
               <!-- Nhóm tính lương/ Nguyên tệ tính lương/ Mức đóng thuế -->
               <div class="row mb-5">
                 <div class="col">
-                  <codx-label
-                    class="text-gray-600 me-2 pb-1"
-                    fiedName="PayrollGroupID"
-                    [formModel]="eInfoFormModel"
-                  >
-                  </codx-label>
+                  <div class="text-gray-600 pb-1">
+                    <codx-label
+                      fiedName="PayrollGroupID"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                  </div>
                   <div class="d-flex align-items-center">
-                    <span class="fw-bold fs-6">
+                    <span class="fw-bold text-dark fs-6">
                       {{
                         infoPersonal?.payrollGroupID
                           | formatvalue : eInfoFormModel : "payrollGroupID"
@@ -2882,14 +2927,15 @@
                   </div>
                 </div>
                 <div class="col">
-                  <codx-label
-                    class="text-gray-600 me-2 pb-1"
-                    fiedName="CurrencyID"
-                    [formModel]="eInfoFormModel"
-                  >
-                  </codx-label>
+                  <div class="text-gray-600 pb-1">
+                    <codx-label
+                      fiedName="CurrencyID"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                  </div>
                   <div class="d-flex align-items-center">
-                    <span class="fw-bold fs-6">
+                    <span class="fw-bold text-dark fs-6">
                       {{
                         infoPersonal?.currencyID
                           | formatvalue : eInfoFormModel : "currencyID"
@@ -2899,17 +2945,18 @@
                   </div>
                 </div>
                 <div class="col">
-                  <codx-label
-                    class="text-gray-600 fw-normal"
-                    fiedName="TaxTableID"
-                    [formModel]="eInfoFormModel"
-                  >
-                  </codx-label>
+                  <div class="text-gray-600 pb-1">
+                    <codx-label
+                      fiedName="TaxTableID"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                  </div>
                   <div class="d-flex align-items-center">
                     <span
-                      class="icon-local_atm icon-18 text-danger me-2"
+                      class="icon-local_atm icon-16 text-danger me-2"
                     ></span>
-                    <div class="fw-bold fs-6">
+                    <div class="fw-bold text-dark fs-6">
                       {{
                         infoPersonal?.taxTableID
                           | formatvalue : eInfoFormModel : "taxTableID"
@@ -2922,32 +2969,32 @@
               <!-- Cam kết quyết toàn thuế/ Tạm ứng lương theo số tiền quyết định -->
               <div class="row mb-5">
                 <div class="col-4">
-                  <codx-label
-                    class="text-gray-600 me-2 pb-1"
-                    fiedName="IsSettleTax"
-                    [formModel]="eInfoFormModel"
-                  >
-                  </codx-label>
+                  <div class="text-gray-600 pb-1">
+                    <codx-label
+                      fiedName="IsSettleTax"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                  </div>
                   <div class="d-flex align-items-center">
-                    <span class="fw-bold fs-6"
-                      ><codx-input
-                        field="IsSettleTax"
-                        [formModel]="eInfoFormModel"
-                        [crrValue]="infoPersonal?.isSettleTax"
-                        [disabled]="true"
-                      ></codx-input>
-                    </span>
+                    <codx-input
+                      field="IsSettleTax"
+                      [formModel]="eInfoFormModel"
+                      [crrValue]="infoPersonal?.isSettleTax"
+                      [disabled]="true"
+                    ></codx-input>
                   </div>
                 </div>
                 <div class="col-8">
-                  <codx-label
-                    class="text-gray-600 me-2 pb-1"
-                    fiedName="AdvanceAmount"
-                    [formModel]="eInfoFormModel"
-                  >
-                  </codx-label>
+                  <div class="text-gray-600 pb-1">
+                    <codx-label
+                      fiedName="AdvanceAmount"
+                      [formModel]="eInfoFormModel"
+                    >
+                    </codx-label>
+                  </div>
                   <div class="d-flex align-items-center">
-                    <span class="fw-bold fs-6">
+                    <span class="fw-bold text-dark fs-6">
                       {{
                         infoPersonal?.advanceAmount
                           | formatvalue : eInfoFormModel : "advanceAmount"
@@ -2958,7 +3005,6 @@
                 </div>
               </div>
             </div>
-            <hr />
           </div>
         </div>
       </ng-container>
@@ -4822,8 +4868,7 @@
                   [selectedType]="'y'"
                   [cssClass]="'rounded-pill'"
                   (change)="valueChangeYearFilterAward($event)"
-                >
-                </codx-dropdown-calendar>
+                ></codx-dropdown-calendar>
                 <span class="text-gray-500 ms-2">|</span>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
