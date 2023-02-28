@@ -98,6 +98,7 @@ export class InstancesComponent
   dataProccess: any;
   sumDaySteps: number;
   lstParticipants = [];
+  oldIdInstance:any;
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
@@ -252,7 +253,10 @@ export class InstancesComponent
     });
   }
   copy(data, titleAction){
-    if (data) this.view.dataService.dataSelected = data;
+    if (data) {
+      this.view.dataService.dataSelected = data;
+      this.oldIdInstance = data.recID;
+    }
     this.view.dataService.copy().subscribe((res) => {
       const funcIDApplyFor =
         this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
@@ -309,7 +313,8 @@ export class InstancesComponent
         this.listStepsCbx,
         this.instanceNo,
         this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx),
-        this.lstParticipants
+        this.lstParticipants,
+        this.oldIdInstance
       ],
       option
     );

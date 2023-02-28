@@ -19,6 +19,7 @@ import { CRUDService, ApiHttpService, CacheService } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
 import { log } from 'console';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -90,7 +91,8 @@ export class InstanceDetailComponent implements OnInit {
     private api: ApiHttpService,
     private cache: CacheService,
     private changeDetec: ChangeDetectorRef,
-    private popupInstances: InstancesComponent
+    private popupInstances: InstancesComponent,
+    public sanitizer: DomSanitizer,
   ) {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefault = fun.customName || fun.description;

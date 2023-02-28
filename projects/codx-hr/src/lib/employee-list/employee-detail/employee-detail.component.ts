@@ -219,6 +219,7 @@ export class EmployeeDetailComponent extends UIComponent {
   passportSortModel: SortModel;
   skillIDSortModel: SortModel;
   skillGradeSortModel: SortModel;
+  bSalarySortModel: SortModel;
   //#endregion
 
   reRenderGrid = true;
@@ -582,6 +583,10 @@ export class EmployeeDetailComponent extends UIComponent {
     this.skillGradeSortModel = new SortModel();
     this.skillGradeSortModel.field = 'SkillGradeID';
     this.skillGradeSortModel.dir = 'desc';
+
+    this.bSalarySortModel = new SortModel();
+    this.bSalarySortModel.field = 'BeginDate';
+    this.bSalarySortModel.dir = 'desc';
 
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       this.addHeaderText = res[0].customName;
@@ -2965,34 +2970,15 @@ export class EmployeeDetailComponent extends UIComponent {
       if (!res?.event) {
         (this.basicSalaryGridview?.dataService as CRUDService)?.clear();
       } else {
-        if (actionType == 'add' || actionType == 'copy') {
-          (this.basicSalaryGridview?.dataService as CRUDService)
-            ?.add(res.event[0])
-            .subscribe();
-          (this.basicSalaryGridview?.dataService as CRUDService)
-            ?.update(res.event[1])
-            .subscribe();
-          res.event?.forEach((element) => {
-            if (element.isCurrent) {
-              this.crrEBSalary = element;
-            }
-          });
-          this.eJobSalaryRowCount++;
-        } else if (actionType == 'edit') {
-          (this.basicSalaryGridview?.dataService as CRUDService)
-            ?.update(res.event[0])
-            .subscribe();
-          if (res.event[1]?.length > 0) {
-            res.event[1].forEach((element) => {
-              (this.basicSalaryGridview?.dataService as CRUDService)
-                ?.update(element)
-                .subscribe();
-              if (element.isCurrent) {
-                this.crrEBSalary = element;
-              }
-            });
+        this.eBasicSalaryRowCount = this.updateGridView(this.basicSalaryGridview, actionType, res.event[0])
+        res.event[1]?.forEach(element => {
+          if(element.isCurrent){
+            this.crrEBSalary = element;
           }
-        }
+          (this.basicSalaryGridview?.dataService as CRUDService)
+            ?.update(element)
+            .subscribe();
+        });
       }
       this.df.detectChanges();
     });
@@ -4274,16 +4260,16 @@ export class EmployeeDetailComponent extends UIComponent {
     actionType: string,
     dataItem: any
   ) {
-    if (!dataItem) (gridView.dataService as CRUDService).clear();
+    if (!dataItem) (gridView?.dataService as CRUDService)?.clear();
     else {
       if (actionType == 'add') {
-        (gridView.dataService as CRUDService).add(dataItem, 0).subscribe();
+        (gridView?.dataService as CRUDService)?.add(dataItem, 0).subscribe();
         return 1;
       } else if (actionType == 'edit') {
-        (gridView.dataService as CRUDService).update(dataItem).subscribe();
+        (gridView?.dataService as CRUDService)?.update(dataItem).subscribe();
       } else if ((actionType = 'delete')) {
-        (gridView.dataService as CRUDService).remove(dataItem).subscribe();
-        return -1;
+        (gridView?.dataService as CRUDService)?.remove(dataItem).subscribe();
+        return - 1;
       }
     }
     return 0;
@@ -4306,11 +4292,8 @@ export class EmployeeDetailComponent extends UIComponent {
         if (i > 0) {
           this.filterEAssetPredicates += ' or ';
         }
-        this.filterEAssetPredicates += `AssetCategory==@${i}`;
       }
       this.filterEAssetPredicates += ') ';
-      this.filterEAssetPredicates += `and (IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEAssetFilterValue}")`;
-
       (this.eAssetGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEAssetPredicates],

@@ -149,6 +149,6 @@
   </div>
 </ng-template> -->
 
-<ejs-dropdownlist [dataSource]='lstOrg' [query]='query' [fields]='fields'
+<ejs-combobox [dataSource]='lstOrg' [query]='query' [fields]='fields'
   [placeholder]="'Nhập tên...'" (valueChange)="cbxChange($event)" (filtering)='onFiltering($event)'
-  [allowFiltering]='true' [value]="owner"></ejs-dropdownlist>
+  [allowFiltering]='true' [value]="owner"></ejs-combobox>

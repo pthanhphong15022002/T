@@ -4,6 +4,7 @@ import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, 
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxViewFilesComponent } from 'projects/codx-share/src/lib/components/codx-view-files/codx-view-files.component';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
+import { json } from 'stream/consumers';
 
 
 @Component({
@@ -248,31 +249,67 @@ export class PopupAddPostComponent implements OnInit {
       this.data.attachments = _files.length;
       this.data.medias = this.codxViewFiles.medias;
     }
-    this.api.execSv(
-      "WP",
-      "ERM.Business.WP",
-      "CommentsBusiness",
-      "PublishPostAsync",
-      [this.data])
-      .subscribe((res1: any) => {
-        if (res1)
-        {
-          this.codxViewFiles.objectID = res1.recID;
-          this.codxViewFiles.save().subscribe((res2)=>{
-            this.loaded = false;
-            this.notifySvr.notifyCode('WP024');
-            this.dialogRef.close(res1);  
-          });
-        }
-        else
-        {
-          this.loaded = false;
-          this.dialogRef.close(null);  
-          this.notifySvr.notifyCode('WP013');
-        }
-      });
+    this.data.content = this.convertHTML(this.data.content);
+    // this.api.execSv(
+    //   "WP",
+    //   "ERM.Business.WP",
+    //   "CommentsBusiness",
+    //   "PublishPostAsync",
+    //   [this.data])
+    //   .subscribe((res1: any) => {
+    //     if (res1)
+    //     {
+    //       this.codxViewFiles.objectID = res1.recID;
+    //       this.codxViewFiles.save().subscribe((res2)=>{
+    //         this.loaded = false;
+    //         this.notifySvr.notifyCode('WP024');
+    //         this.dialogRef.close(res1);  
+    //       });
+    //     }
+    //     else
+    //     {
+    //       this.loaded = false;
+    //       this.dialogRef.close(null);  
+    //       this.notifySvr.notifyCode('WP013');
+    //     }
+    //   });
   }
 
+  convertHTML(strHTML:string){
+    if(strHTML){
+      let _eleDiv = document.createElement("div");
+      _eleDiv.innerHTML = strHTML;
+      let _imgs = _eleDiv.getElementsByTagName("img");
+      if(_imgs.length > 0){        
+        for (let index = 0; index < _imgs.length; index++) {
+          if(_imgs[index].src.startsWith("blob:"))
+          {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', _imgs[index].src, true);
+            xhr.responseType = 'blob';
+            xhr.onload = function(e) {
+              if (this.status == 200) {
+                let myBlob = this.response;
+                let reader = new FileReader();
+                reader.readAsDataURL(myBlob); 
+                reader.onloadend = function() {
+                  let base64data = reader.result;                
+                  let src = base64data + ""; //get url bên dm
+                  _imgs[index].src = src;
+                }
+              }
+            };
+            xhr.send();          
+          }
+        }
+      }
+      return _eleDiv.innerHTML; 
+    }
+    return strHTML;
+  }
+
+
+  
   // edit post
   editPost(){
     if (!this.data.content && this.codxViewFiles.files.length == 0 && this.data.category != "4") 
