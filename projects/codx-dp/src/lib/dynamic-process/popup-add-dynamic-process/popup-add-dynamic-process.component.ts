@@ -295,23 +295,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    // if (this.action != 'edit') this.genAutoNumber();
-    this.api
-      .execSv<any>(
-        'SYS',
-        'AD',
-        'AutoNumberDefaultsBusiness',
-        'GetFieldAutoNoAsync',
-        [this.funcID, this.entityName]
-      )
-      .subscribe((res) => {
-        if (res && !res.stop && res.autoAssignRule == '1') {
-          this.showID = true;
-        } else {
-          this.showID = false;
-        }
-      });
-
+    //tesst
     this.grvStep = {
       entityName: 'DP_Steps',
       formName: 'DPSteps',
@@ -419,9 +403,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (res && res.update) {
           (this.dialog.dataService as CRUDService).update(res.update).subscribe();
           this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
-          this.handleUpdateStep(); 
+          this.handleUpdateStep();
           res.update.modifiedOn = new Date() ;
-          this.dialog.close(res.update);     
+          this.dialog.close(res.update);
         }
       });
   }
@@ -1638,7 +1622,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         }
       }
-      
+
       if (event.previousContainer.data.length > 0) {
         groupTaskIdOld =
           event.previousContainer.data[event.previousIndex]['taskGroupID'];
