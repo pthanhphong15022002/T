@@ -1,14 +1,8 @@
-import { async } from '@angular/core/testing';
-
-import { update } from '@syncfusion/ej2-angular-inplace-editor';
-
 import {
   Component,
   Input,
   OnInit,
   SimpleChanges,
-  Output,
-  EventEmitter,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
