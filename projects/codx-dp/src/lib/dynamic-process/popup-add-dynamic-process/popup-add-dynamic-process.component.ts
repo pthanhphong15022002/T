@@ -947,39 +947,37 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             (x) => x.objectID === this.process.permissions[index].objectID
           );
           if (this.process.permissions[index].roleType === 'P') {
-              var check = this.countRoleSteps(this.process.permissions[index].objectID);
-              if (check > 0) {
-                this.notiService
-                  .alert(
-                    'Thông báo',
-                    'Đối tượng này đang có trong người giám sát giai đoạn',
-                    config
-                  )
-                  .closed.subscribe((res) => {
-                    if (res.event.status == 'Y') {
-                      for(let i = 0; i < this.stepList.length; i++ ){
-                        var roles = this.stepList[i].roles;
-                        for(let j = 0; j < roles.length; j++){
-                          if(roles[j].objectID == this.process.permissions[index].objectID && roles[j].roleType == 'S'){
-                            roles.splice(j, 1);
-                            j--;
-                          }
-                        }
-                      }
-                      this.process.permissions.splice(index, 1);
-                      if (i > -1) {
-                        this.lstParticipants.splice(i, 1);
+            var check = this.countRoleSteps(
+              this.process.permissions[index].objectID
+            );
+            if (check > 0) {
+              this.notiService.alertCode('DP011').subscribe((res) => {
+                if (res.event.status == 'Y') {
+                  for (let i = 0; i < this.stepList.length; i++) {
+                    var roles = this.stepList[i].roles;
+                    for (let j = 0; j < roles.length; j++) {
+                      if (
+                        roles[j].objectID ==
+                          this.process.permissions[index].objectID &&
+                        roles[j].roleType == 'S'
+                      ) {
+                        roles.splice(j, 1);
+                        j--;
                       }
                     }
-                  });
-              }else{
-                this.process.permissions.splice(index, 1);
-                if (i > -1) {
-                  this.lstParticipants.splice(i, 1);
+                  }
+                  this.process.permissions.splice(index, 1);
+                  if (i > -1) {
+                    this.lstParticipants.splice(i, 1);
+                  }
                 }
+              });
+            } else {
+              this.process.permissions.splice(index, 1);
+              if (i > -1) {
+                this.lstParticipants.splice(i, 1);
               }
-
-
+            }
           } else {
             this.process.permissions.splice(index, 1);
             if (i > -1) {
@@ -992,12 +990,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       });
   }
 
-  countRoleSteps(objectID){
+  countRoleSteps(objectID) {
     let count = 0;
-    for(let i = 0; i < this.stepList.length; i++ ){
+    for (let i = 0; i < this.stepList.length; i++) {
       var roles = this.stepList[i].roles;
-      for(let j = 0; j < roles.length; j++){
-        if(roles[j].objectID == objectID && roles[j].roleType == 'S'){
+      for (let j = 0; j < roles.length; j++) {
+        if (roles[j].objectID == objectID && roles[j].roleType == 'S') {
           count++;
         }
       }
