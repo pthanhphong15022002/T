@@ -1730,9 +1730,14 @@ codx-view-list-detail .e-listview .e-list-parent {
 
 
 .fs-6 {
-  font-size: 1.0375rem !important;
+  font-size: 13.45px !important;
 }
 
+
+
+.tooltip * {
+  color: var(--primary-dark) !important;
+}
 
 // fix dropdown
 // .dropdown[data-popper-placement="bottom-start"] {

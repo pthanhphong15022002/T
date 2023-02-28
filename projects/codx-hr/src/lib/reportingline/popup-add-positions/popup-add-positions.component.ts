@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   OnInit,
@@ -9,14 +8,11 @@ import {
 import {
   ApiHttpService,
   AuthService,
-  AuthStore,
   CacheService,
   DialogData,
   DialogRef,
-  NotificationsService,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
-import { HR_Positions } from '../../model/HR_Positions.module';
+
 
 @Component({
   selector: 'hr-popup-add-positions',
@@ -78,6 +74,7 @@ export class PopupAddPositionsComponent implements OnInit {
 
   // value change
   dataChange(e: any, field: string) {
+    debugger
     if (e) {
       if (e?.length == undefined) {
         this.data[field] = e?.data;
@@ -114,7 +111,7 @@ export class PopupAddPositionsComponent implements OnInit {
       'ERM.Business.HR',
       'PositionsBusiness', 
       _method, 
-      [this.data])
+      [this.data,this.functionID])
       .subscribe((res) => {
         if(this.isAdd)
           this.dialogRef.dataService.add(res,0).subscribe();

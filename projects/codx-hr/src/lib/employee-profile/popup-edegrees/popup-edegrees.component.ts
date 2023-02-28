@@ -14,6 +14,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { DateTime } from '@syncfusion/ej2-angular-charts';
 @Component({
   selector: 'lib-popup-edegrees',
   templateUrl: './popup-edegrees.component.html',
@@ -34,6 +35,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   headerText: '';
   dataVllSupplier: any;
+  defaultIssueDate: string = '0001-01-01T00:00:00';
+  isSuccess = false;
 
   //default degreeName
   levelText: string;
@@ -61,6 +64,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     this.formModel = dialog?.formModel;
     console.log(this.formModel);
     
+    //this.defaultIssueDate =
+
     //this.lstDegrees = data?.data?.lstEDegrees;
     //this.indexSelected = data?.data?.indexSelected ?? -1;
 
@@ -70,21 +75,25 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     // }
   }
 
-  changeCalendar(event){
-    console.log(event);
+  changeCalendar(event, changeType: string) {
+    console.log('datedateeeeeeeeeeeeeeeee', event);
+    console.log('fromdate', event.fromDate);
+    console.log('todate', event.toDate);
+
   }
 
-  ngAfterViewInit(){
-    this.dialog && this.dialog.closed.subscribe(res => {
-      if(!res.event){
-        if(this.successFlag){
-          this.dialog.close(this.degreeObj);
+  ngAfterViewInit() {
+    this.dialog &&
+      this.dialog.closed.subscribe((res) => {
+        if (!res.event) {
+          if (this.successFlag) {
+            this.dialog.close(this.degreeObj);
+          } else {
+            this.degreeObj.isSuccess = false;
+            this.dialog.close(null);
+          }
         }
-        else{
-          this.dialog.close(null);
-        }
-      }
-    })
+      });
   }
 
   initForm() {
@@ -119,6 +128,12 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
             .subscribe((res) => {
               if (res && res.data) {
                 this.degreeObj = res?.data;
+                if (
+                  this.degreeObj.issuedDate.toString() == this.defaultIssueDate
+                ) {
+                  this.degreeObj.issuedDate = null;
+                }
+
                 this.degreeObj.employeeID = this.employId;
                 this.formModel.currentData = this.degreeObj;
                 this.formGroup.patchValue(this.degreeObj);
@@ -129,6 +144,13 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
               }
             });
         } else {
+          if (
+            this.actionType == 'copy' &&
+            this.degreeObj.issuedDate.toString() == this.defaultIssueDate
+          ) {
+            this.degreeObj.issuedDate = null;
+          }
+
           this.formModel.currentData = this.degreeObj;
           this.formGroup.patchValue(this.degreeObj);
           this.cr.detectChanges();
@@ -152,25 +174,21 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     //   return;
     // }
 
-    if (this.actionType === 'copy' || this.actionType === 'add') {
+    if (this.actionType === 'copy') {
       delete this.degreeObj.recID;
     }
     this.degreeObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddEmployeeDegreeInfo(this.degreeObj).subscribe((p) => {
         if (p != null) {
-          this.successFlag = true;
           this.degreeObj = p;
+          this.degreeObj.isSuccess = true;
           this.notify.notifyCode('SYS006');
-          // this.lstDegrees.push(JSON.parse(JSON.stringify(this.degreeObj)));
-          // if (this.listView) {
-          //   (this.listView.dataService as CRUDService)
-          //     .add(this.degreeObj)
-          //     .subscribe();
-          // }
-          // this.dialog.close(p)
           this.dialog && this.dialog.close(this.degreeObj);
-        } else this.notify.notifyCode('SYS023');
+        } else {
+          this.notify.notifyCode('SYS023');
+          this.degreeObj.isSuccess = false;
+        }
       });
     } else {
       this.hrService
@@ -178,16 +196,12 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            this.successFlag = true; 
-            // this.lstDegrees[this.indexSelected] = p;
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService)
-            //     .update(this.lstDegrees[this.indexSelected])
-            //     .subscribe();
-            // }
-            // this.dialog.close(this.data)
+            this.degreeObj.isSuccess = true;
             this.dialog && this.dialog.close(this.degreeObj);
-          } else this.notify.notifyCode('SYS021');
+          } else {
+            this.notify.notifyCode('SYS021');
+            this.degreeObj.isSuccess = false;
+          }
         });
     }
   }

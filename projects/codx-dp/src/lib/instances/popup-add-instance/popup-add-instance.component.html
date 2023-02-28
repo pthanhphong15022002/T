@@ -1,37 +1,14 @@
-<codx-layout-add
-  #form
-  [title]="title"
-  [subHeader]="subHeader"
-  [tabInfo]="tabInfo"
-  [tabContent]="tabContent"
-  [openMore]="true"
-  (buttonClick)="buttonClick($event)"
-  [dialog]="dialog"
-  [formModel]="formModelCrr"
-  [footer]="footer"
-  [data]="instance"
-  (setTitle)="setTitle($event)"
-></codx-layout-add>
+<codx-layout-add #form [title]="title" [subHeader]="subHeader" [tabInfo]="tabInfo" [tabContent]="tabContent"
+  [openMore]="true" (buttonClick)="buttonClick($event)" [dialog]="dialog" [formModel]="formModelCrr" [footer]="footer"
+  [data]="instance" (setTitle)="setTitle($event)"></codx-layout-add>
 
 <ng-template #subHeader>
-  <codx-tag
-    field="tags"
-    [entityName]="dialog.formModel.entityName"
-    [isEdit]="true"
-    [disabled]="false"
-    [value]="instance?.tags"
-    (valueChange)="valueChange($event)"
-  ></codx-tag>
+  <codx-tag field="tags" [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false"
+    [value]="instance?.tags" (valueChange)="valueChange($event)"></codx-tag>
 </ng-template>
 
 <ng-template #footer>
   <div class="d-flex justify-content-between">
-    <button type="button" class="btn btn-light-primary me-3">
-      <i class="icon-cloud_upload fs-5"></i
-      ><span>
-        <codx-label default="Đính kèm"></codx-label>
-      </span>
-    </button>
     <button
       type="button"
       class="btn btn-primary ms-1"
@@ -45,12 +22,7 @@
 <!-- No object general  -->
 <ng-template #tabGeneralInfo>
   <div class="form-group">
-    <codx-label
-      fiedName="InstanceNo"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      default="Mã nhiệm vụ"
-    >
+    <codx-label fiedName="InstanceNo" [formModel]="form.formModel" [Group]="form.formGroup" default="Mã nhiệm vụ">
     </codx-label>
     <codx-input
       field="instanceNo"
@@ -64,17 +36,11 @@
   </div>
 
   <div class="form-group">
-    <codx-label
-      [formModel]="form.formModel"
-      field="Title"
-      [Group]="form.formGroup"
-      default="Tên nhiệm vụ"
-    >
+    <codx-label [formModel]="form.formModel" field="Title" [Group]="form.formGroup" default="Tên nhiệm vụ">
     </codx-label>
     <codx-input
       field="title"
       [formModel]="form.formModel"
-
       [Group]="form.formGroup"
       (valueChange)="valueChange($event)"
     >
@@ -82,82 +48,39 @@
   </div>
 
   <div class="form-group">
-    <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
-      <div class="d-flex align-items-center">
-        <codx-label fiedName="owner" [formModel]="form.formModel" default="Phân bổ lại cho">
-        </codx-label>
-      </div>
-      <i class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
-        (click)="openPopupParticipants(popupParticipants)"></i>
+    <div>
+      <codx-label fiedName="owner" [formModel]="form.formModel" default="Người giám sát">
+      </codx-label>
     </div>
-    <div class="me-3 d-flex align-items-center">
-      <div>
-        <div class="d-flex align-items-center position-relative">
-          <codx-img class="" [width]="30" [objectId]="instance.owner" objectType="AD_Users">
-          </codx-img>
-          <div class="ms-3">
-            <div class="text-dark fw-bold">
-              {{userName}}
-            </div>
-            <div class="text-gray-700">
-              {{positionName}}
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
+    <codx-popup-participants [lstParticipants]="lstParticipants" [dialog]="dialog" [isType]="'I'"
+    (eventUser)="eventUser($event)" [owner]="owner"></codx-popup-participants>
   </div>
 
   <div class="form-group">
-    <codx-label
-      fiedName="StepID"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-      default="Giai đoạn quy trình"
-    >
+    <codx-label fiedName="StepID" [Group]="form.formGroup" [formModel]="form.formModel" default="Giai đoạn quy trình">
     </codx-label>
     <ejs-combobox
       [dataSource]="listStepCbx"
       [fields]="fieldCbxStep"
       [value]="instance.stepID"
-      [readonly]=" action === 'edit' ?true : false"
+      [readonly]="action === 'edit' ? true : false"
       (valueChange)="cbxChange($event)"
     ></ejs-combobox>
   </div>
 
   <div class="form-group">
-    <codx-label
-      fiedName="EndDate"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      default="Ngày đến hạn"
-    >
+    <codx-label fiedName="EndDate" [formModel]="form.formModel" [Group]="form.formGroup" default="Ngày đến hạn">
     </codx-label>
-    <codx-input
-      field="endDate"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      (valueChange)="valueChange($event)"
-    >
+    <codx-input field="endDate" [formModel]="form.formModel" [Group]="form.formGroup"
+      (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 
   <div class="form-group">
-    <codx-label
-      fiedName="Memo"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      default="Mô tả"
-    >
+    <codx-label fiedName="Memo" [formModel]="form.formModel" [Group]="form.formGroup" default="Mô tả">
     </codx-label>
-    <codx-input
-      field="memo"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      type="text"
-      (valueChange)="valueChange($event)"
-    >
+    <codx-input field="memo" [formModel]="form.formModel" [Group]="form.formGroup" type="text"
+      (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 </ng-template>
@@ -166,100 +89,56 @@
   <div class="form-group">
     <codx-label fiedName="" [formModel]="form.formModel" default="Quốc gia">
     </codx-label>
-    <codx-input
-      field=""
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      type="valuelist"
-      (valueChange)="valueChange($event)"
-    >
+    <codx-input field="" [formModel]="form.formModel" [Group]="form.formGroup" type="valuelist"
+      (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 
   <div class="form-group">
-    <codx-label
-      fiedName=""
-      [formModel]="form.formModel"
-      default="Tỉnh/Thành phố"
-    >
+    <codx-label fiedName="" [formModel]="form.formModel" default="Tỉnh/Thành phố">
     </codx-label>
-    <codx-input
-      field=""
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      type="valuelist"
-      (valueChange)="valueChange($event)"
-    >
+    <codx-input field="" [formModel]="form.formModel" [Group]="form.formGroup" type="valuelist"
+      (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 
   <div class="form-group">
     <codx-label fiedName="" [formModel]="form.formModel" default="Quận/Huyện">
     </codx-label>
-    <codx-input
-      field=""
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      type="valuelist"
-      (valueChange)="valueChange($event)"
-    >
+    <codx-input field="" [formModel]="form.formModel" [Group]="form.formGroup" type="valuelist"
+      (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 
   <div class="form-group">
     <codx-label fiedName="" [formModel]="form.formModel" default="Phường/Xã">
     </codx-label>
-    <codx-input
-      field=""
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      type="valuelist"
-      (valueChange)="valueChange($event)"
-    >
+    <codx-input field="" [formModel]="form.formModel" [Group]="form.formGroup" type="valuelist"
+      (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 
   <div class="form-group">
-    <codx-label
-      fiedName=""
-      [formModel]="form.formModel"
-      default="Số nhà, tên đường"
-    >
+    <codx-label fiedName="" [formModel]="form.formModel" default="Số nhà, tên đường">
     </codx-label>
-    <codx-input
-      field=""
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      type="text"
-      placeholder="Nhập số nhà và tên đường"
-      (valueChange)="valueChange($event)"
-    >
+    <codx-input field="" [formModel]="form.formModel" [Group]="form.formGroup" type="text"
+      placeholder="Nhập số nhà và tên đường" (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 
   <div class="form-group">
     <codx-label fiedName="" [formModel]="form.formModel" default="Địa chỉ">
     </codx-label>
-    <codx-input
-      field=""
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      type="text"
-      (valueChange)="valueChange($event)"
-    >
+    <codx-input field="" [formModel]="form.formModel" [Group]="form.formGroup" type="text"
+      (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 
   <div class="form-group">
     <codx-label fiedName="" [formModel]="form.formModel" default="Mã vùng">
     </codx-label>
-    <codx-input
-      field=""
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      type="text"
-      (valueChange)="valueChange($event)"
-    >
+    <codx-input field="" [formModel]="form.formModel" [Group]="form.formGroup" type="text"
+      (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 </ng-template>
@@ -275,7 +154,6 @@
               [objectId]="item.recID"
               [objectType]="'DP_Instances'"
               [formModel]="dialog.formModel"
-              [customField]="item"
               (valueChangeCustom)="valueChangeCustom($event)"
             >
             </codx-input-custom-field>
@@ -289,41 +167,25 @@
 <!-- Opportunity general  -->
 <ng-template #tabOpporGeneralInfo>
   <div class="form-group">
-    <codx-label
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      field="Title"
-      default="Tên cơ hội"
-    >
+    <codx-label [formModel]="form.formModel" [Group]="form.formGroup" field="Title" default="Tên cơ hội">
     </codx-label>
-    <codx-input
-      field="Title"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      (valueChange)="valueChange($event)"
-    >
+    <codx-input field="Title" [formModel]="form.formModel" [Group]="form.formGroup" (valueChange)="valueChange($event)">
     </codx-input>
   </div>
   <div class="form-group">
-    <codx-label
-      fiedName="InstanceNo"
-      [formModel]="form.formModel"
-      default="Mã cơ hội"
-    >
+    <codx-label fiedName="InstanceNo" [formModel]="form.formModel" default="Mã cơ hội">
     </codx-label>
-    <codx-input
-      field="instanceNo"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      type="text"
-      [placeholder]="'Mã tự sinh'"
-      (valueChange)="valueChange($event)"
-    >
+    <codx-input field="instanceNo" [formModel]="form.formModel" [Group]="form.formGroup" type="text"
+      [placeholder]="'Mã tự sinh'" (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 </ng-template>
 
 <ng-template #popupParticipants let-dialog>
-  <codx-popup-participants [lstParticipants]="lstParticipants" [dialog]="dialog" [isType]="'I'"
-    (eventUser)="eventUser($event)"></codx-popup-participants>
+  <codx-popup-participants
+    [lstParticipants]="lstParticipants"
+    [dialog]="dialog"
+    [isType]="'I'"
+    (eventUser)="eventUser($event)"
+  ></codx-popup-participants>
 </ng-template>

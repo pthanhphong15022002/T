@@ -69,11 +69,11 @@ export class TreeviewCommentComponent implements OnInit {
     private callFuc: CallFuncService,
 
   ) {
+    this.user = this.auth.userValue;
     
   }
 
   ngOnInit(): void {
-    this.user = this.auth.userValue;
     this.getValueIcon();
     this.getDataComment();
   }
@@ -92,14 +92,14 @@ export class TreeviewCommentComponent implements OnInit {
     });
   }
   // get total comment
-  getDataComment()
-  {
+  getDataComment(){ 
     if(this.objectID){
       this.api.execSv
       ("WP",
       "ERM.Business.WP",
       "CommentsBusiness",
-      "GetCommentsByOjectIDAsync",[this.objectID, this.pageIndex])
+      "GetCommentsByOjectIDAsync",
+      [this.objectID, this.pageIndex])
       .subscribe((res:any[]) => {
         if(res){
           this.dataComment.listComment = res[0];
@@ -119,6 +119,7 @@ export class TreeviewCommentComponent implements OnInit {
     }
     this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", object);
   }
+  // get user votes
   getUserVotes(postID: string, voteType: String) {
     this.api.execSv("WP", "ERM.Business.WP", "VotesBusiness", "GetUserVotesAsync", [postID, voteType])
       .subscribe((res) => {
@@ -126,6 +127,7 @@ export class TreeviewCommentComponent implements OnInit {
         this.dt.detectChanges();
       })
   }
+  //reploy comment
   replyComment(post: any, value: any) {
     if (!value.trim()) {
       this.notifySvr.notifyCode('E0315');
@@ -168,6 +170,7 @@ export class TreeviewCommentComponent implements OnInit {
     this.setNodeTree(event);
     this.dt.detectChanges();
   }
+  // reply to
   replyTo(data) {
     data.showReply = !data.showReply;
     this.dt.detectChanges();
@@ -178,6 +181,7 @@ export class TreeviewCommentComponent implements OnInit {
       this.voteCommentEvt.emit();
     }
   }
+  // votes post
   votePost(data: any, voteType = null) {
     if(data && voteType){
       this.api.execSv(
@@ -207,6 +211,7 @@ export class TreeviewCommentComponent implements OnInit {
         });
     }
   }
+  //voet comment
   voteComment(data: any) {
     if (!data.recID) return;
     this.api
@@ -225,7 +230,7 @@ export class TreeviewCommentComponent implements OnInit {
         }
       });
   }
-
+  // load subcomment
   loadSubComment(data:any) {
     data.isShowComment = !data.isShowComment;
     data.totalSubComment  = 0 ;
@@ -242,14 +247,15 @@ export class TreeviewCommentComponent implements OnInit {
         }
       })
   }
-
+  // click show comment
   showComments(data: any) {
-    data.isShowComment = !data.isShowComment;
+    this.dataComment.isShowComment = !this.dataComment.isShowComment;
     this.dt.detectChanges();
-    if(data.isShowComment){
+    if(this.dataComment.isShowComment){
       this.getDataComment();
     }
   }
+  // value change
   valueChange(value: any, type) {
     var text = value.data.toString().trim();
     if (text) {
@@ -262,24 +268,24 @@ export class TreeviewCommentComponent implements OnInit {
       this.dt.detectChanges();
     }
   }
-
+  //set tree
   setDicData(data) {
     this.dicDatas[data["recID"]] = data;
   }
+  //check node
   setNodeTree(newNode: any) {
     if (!newNode) return;
     let id = newNode["recID"],
       parentId = newNode["refID"];
     this.dicDatas[id] = newNode;
     let parent = this.dicDatas[parentId];
-    if (parent) {
+    if (parent)
       this.addNode(parent, newNode, id);
-    } else {
+    else
       this.addNode(null, newNode, id);
-    }
     this.dt.detectChanges();
   }
-
+  // add tree
   addNode(dataNode: any, newNode: any, id: string) {
       let idx = -1;
       let node = null;
@@ -309,7 +315,7 @@ export class TreeviewCommentComponent implements OnInit {
       }
     this.dt.detectChanges();   
   }
-
+  //remove tree
   removeNodeTree(id: string) {
     if (!id) return;
     var data = this.dicDatas[id],
@@ -331,25 +337,26 @@ export class TreeviewCommentComponent implements OnInit {
     this.dt.detectChanges();
   }
 
-
+  // delete comment
   deleteComment(event: any) {
     this.removeNodeTree(event.data.recID);
-    this.dataComment.totalComment = this.dataComment.totalComment - event.total;
-    if(this.dataComment.totalComment < 0){
+    this.dataComment.totalComment -= event;
+    if(this.dataComment.totalComment < 0)
       this.dataComment.totalComment = 0;
-    }
-    this.dt.detectChanges();
     this.notifySvr.notifyCode('SYS008');
+    this.dt.detectChanges();
   }
+  //click edit comment
   clickEditComment(comment: any) {
     comment.isEditComment = true;
     this.dt.detectChanges();
   }
-
+  // value change
   valueChangeComment(event: any, comment: any) {
     comment.content = event.data
     this.dt.detectChanges();
   }
+  //edit comment
   editComment(value: string, comment: any) {
     comment.content = value;
     this.api.execSv(
@@ -369,10 +376,11 @@ export class TreeviewCommentComponent implements OnInit {
         }
       })
   }
-
+  //upload file
   upLoadFile(){
     this.codxATM.uploadFile();
   }
+  //attachment return
   fileUpload:any[] = [];
   fileCount(files:any){
     if(files && files.data.length > 0){
@@ -381,7 +389,7 @@ export class TreeviewCommentComponent implements OnInit {
       this.dt.detectChanges();
     }
   }
-
+  // add file
   addFile(files: any) {
     if (this.fileUpload.length == 0) {
       this.fileUpload = files;
@@ -391,17 +399,17 @@ export class TreeviewCommentComponent implements OnInit {
     }
     this.dt.detectChanges();
   }
+  // remove file
   removeFile(file: any) {
     this.fileUpload = this.fileUpload.filter((f: any) => { return f.fileName != file.fileName });
     this.dt.detectChanges();
   }
-
+  // view file
   clickViewDetailComment(file:any){
-    console.log(file);
-    // if(file){
-    //   let dialog = new DialogModel();
-    //   dialog.IsFull = true;
-    //   this.callFuc.openForm(ViewFileDialogComponent,"",0,0,"",file,"",dialog);
-    // }
+    if(file){
+      let dialog = new DialogModel();
+      dialog.IsFull = true;
+      this.callFuc.openForm(ViewFileDialogComponent,"",0,0,"",file,"",dialog);
+    }
   }
 }

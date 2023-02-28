@@ -362,12 +362,14 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   }
 
   openFormNoteBooks(item) {
+    // thiểu moreFC để dịch lang
     var obj = {
       itemUpdate: item,
+      headerText: 'Sổ tay'
     };
     this.callfc.openForm(
       SaveNoteComponent,
-      'Cập nhật ghi chú',
+      "",
       900,
       650,
       '',

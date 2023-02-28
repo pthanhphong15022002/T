@@ -38,7 +38,7 @@
         </codx-label>
       </div>
       <div>
-        <codx-label [default]="taskName"> </codx-label>
+        <codx-label [default]="stepName"> </codx-label>
         <span *ngIf="taskGroupName"> > </span>
         <span style="font-weight: 500">
           {{ taskGroupName }}
@@ -60,7 +60,7 @@
         </div>
         <div>
           <ejs-dropdownlist
-            [dataSource]="groupTackList"
+            [dataSource]="taskGroupList"
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
             (valueChange)="filterText($event, 'taskGroupID')"
@@ -233,10 +233,11 @@
             <div class="col-6 position-relative">
               <codx-input
                 field="durationDay"
-                [formModel]="form?.formModel"
                 [crrValue]="stepsTasks?.durationDay"
-                type="text"
+                [min]="0"
+                type="number"
                 (valueChange)="valueChangeText($event)"
+                [showSpinButton]="false"
               >
               </codx-input>
               <div
@@ -255,10 +256,11 @@
             <div class="col-6 position-relative">
               <codx-input
                 field="durationHour"
-                [formModel]="form?.formModel"
-                type="text"
+                [min]="0"
+                type="number"
                 [crrValue]="stepsTasks?.durationHour"
                 (valueChange)="valueChangeText($event)"
+                [showSpinButton]="false"
               >
               </codx-input>
               <div

@@ -3,7 +3,9 @@
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
       <div class="d-flex align-items-center">
         <h2 class="h2-title">
-          <codx-label default="Tạo quy trình"> </codx-label>
+          <!-- xài code label truyền lên không load lại data, bật lần 2 thì load -->
+          <!-- <codx-label default="titleAction"> </codx-label> -->
+          <span>{{titleAction}}</span>
         </h2>
       </div>
       <div class="d-flex align-items-center">
@@ -974,14 +976,14 @@
             <div class="row">
               <div class="col-6">
                 <codx-input name="success-radio" type="radio" style="width: 100%" field="yes" [label]="titleRadioYes"
-                  [checked]="stepSuccess.reasonControl" [crrValue]="stepSuccess.reasonControl" (valueChange)="
+                  [checked]="stepSuccess?.reasonControl ?? false" [crrValue]="stepSuccess?.reasonControl" (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   ">
                 </codx-input>
               </div>
               <div class="col-6">
                 <codx-input name="success-radio" type="radio" style="width: 100%" field="no" [label]="titleRadioNo"
-                  [checked]="!stepSuccess.reasonControl" [crrValue]="stepSuccess.reasonControl" (valueChange)="
+                  [checked]="!stepSuccess?.reasonControl ?? false" [crrValue]="stepSuccess?.reasonControl" (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   ">
                 </codx-input>
@@ -1037,20 +1039,8 @@
     </div>
     <div class="main-job has-actions-menu" id="reason-success" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
       #view>
-      <div class="main-body">
-        <div class="position-relative p-9" *ngIf="stepSuccess.reasons.length == 0">
-          <div class="position-absolute top-50 start-50 translate-middle">
-            <button type="button" class="btn btn-outline-primary btn-sm pb-5"
-              (click)="openPopupReason(viewStepReasonSuccess, null, null)">
-              <i class="icon-add icon-18"> </i>
-              <codx-label [name]="''" [default]="'Thêm lý do'"></codx-label>
-            </button>
-          </div>
-        </div>
-      </div>
-
       <div class="main-body pt-5 ps-5" *ngIf="stepSuccess.reasons.length > 0">
-        <div *ngFor="let item of stepSuccess.reasons" class="pb-2">
+        <div *ngFor="let item of stepSuccess?.reasons" class="pb-2">
           <ul class="text-left drap-drop me-5 py-2 has-action-menu">
             <li>
               {{ item.reasonName }}
@@ -1059,6 +1049,17 @@
               </codx-mfunc>
             </li>
           </ul>
+        </div>
+      </div>
+      <div class="main-body">
+        <div class="position-relative p-9">
+          <div class="position-absolute top-50 start-50 translate-middle">
+            <button type="button" class="btn btn-outline-primary btn-sm pb-5"
+              (click)="openPopupReason(viewStepReasonSuccess, null, null)">
+              <i class="icon-add icon-18"> </i>
+              <codx-label [name]="''" [default]="'Thêm lý do'"></codx-label>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -1095,13 +1096,13 @@
             <div class="row">
               <div class="col-6">
                 <codx-input name="fail-radio" type="radio" style="width: 100%" field="yes" [label]="titleRadioYes"
-                  [checked]="stepFail.reasonControl" [crrValue]="stepFail.reasonControl"
+                  [checked]="stepFail?.reasonControl ??  false" [crrValue]="stepFail?.reasonControl"
                   (valueChange)="valueChangeRadio($event, viewStepReasonFail)">
                 </codx-input>
               </div>
               <div class="col-6">
-                <codx-input type="radio" name="fail-radio" field="no" [checked]="!stepFail.reasonControl"
-                  [crrValue]="stepFail.reasonControl" [label]="titleRadioNo"
+                <codx-input type="radio" name="fail-radio" field="no" [checked]="!stepFail?.reasonControl"
+                  [crrValue]="stepFail?.reasonControl ?? false" [label]="titleRadioNo"
                   (valueChange)="valueChangeRadio($event, viewStepReasonFail)">
                 </codx-input>
               </div>
@@ -1155,19 +1156,7 @@
     </div>
     <div class="main-job has-actions-menu" id="reason-success" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
       #view>
-      <div class="main-body">
-        <div class="position-relative p-9" *ngIf="stepFail.reasons.length == 0">
-          <div class="position-absolute top-50 start-50 translate-middle">
-            <button type="button" class="btn btn-outline-primary btn-sm pb-5"
-              (click)="openPopupReason(viewStepReasonFail, null, null)">
-              <i class="icon-add icon-18"> </i>
-              <codx-label [name]="''" [default]="'Thêm lý do'"></codx-label>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="main-body pt-5 ps-5" *ngIf="stepFail.reasons.length > 0">
+      <div class="main-body pt-5 ps-5" >
         <div *ngFor="let item of stepFail.reasons" class="pb-2">
           <ul class="text-left drap-drop me-5 py-2 has-action-menu">
             <li>
@@ -1177,6 +1166,17 @@
               </codx-mfunc>
             </li>
           </ul>
+        </div>
+      </div>
+      <div class="main-body">
+        <div class="position-relative p-9" *ngIf="stepFail.reasons.length == 0">
+          <div class="position-absolute top-50 start-50 translate-middle">
+            <button type="button" class="btn btn-outline-primary btn-sm pb-5"
+              (click)="openPopupReason(viewStepReasonFail, null, null)">
+              <i class="icon-add icon-18"> </i>
+              <codx-label [name]="''" [default]="'Thêm lý do'"></codx-label>
+            </button>
+          </div>
         </div>
       </div>
     </div>
