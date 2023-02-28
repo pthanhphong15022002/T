@@ -161,7 +161,6 @@ export class DynamicProcessComponent
   click(evt: ButtonModel) {
     switch (evt.id) {
       case this.btnAdd:
-        this.genAutoNumber();
         this.add();
         break;
     }
@@ -188,18 +187,6 @@ export class DynamicProcessComponent
     this.changeDetectorRef.detectChanges();
   }
 
-  async genAutoNumber() {
-    this.dpService
-      .genAutoNumber(this.funcID, 'DP_Processes', 'processNo')
-      .subscribe((res) => {
-        if (res) {
-          this.processNo = res;
-          this.showID = true;
-        } else {
-          this.showID = false;
-        }
-      });
-  }
   // CRUD methods
   add() {
     this.view.dataService.addNew().subscribe((res) => {
@@ -276,7 +263,7 @@ export class DynamicProcessComponent
       if (data) {
         this.view.dataService.dataSelected = data;
         this.oldIdProccess = this.view.dataService.dataSelected.recID;
-      } 
+      }
       this.view.dataService.copy().subscribe((res) => {
         var obj = {
           action: 'copy',
@@ -315,7 +302,7 @@ export class DynamicProcessComponent
     this.isCopy = true;
     this.dialogQuestionCopy.close();
     this.isCopy && this.copy(this.dataCopy);
-    
+
   }
   OpenFormCopy(data){
     this.isCopy = false;
@@ -641,12 +628,12 @@ getVauleFormCopy() {
     this.processName = event?.data;
   }
 
-  editName(){ 
+  editName(){
     this.dpService.renameProcess([this.processName, this.processRename['recID']]).subscribe((res) => {
       if(res){
         this.processRename['processName'] = this.processName;
         this.processRename['modifiedOn'] = res || new Date();
-        this.processRename['modifiedBy'] = this.user?.userID; 
+        this.processRename['modifiedBy'] = this.user?.userID;
         this.processName = '';
         this.popupEditName.close();
         this.notificationsService.notifyCode('SYS007');
@@ -665,7 +652,7 @@ getVauleFormCopy() {
       }else{
         this.notificationsService.notifyCode('SYS008');
       }
-       
+
     });
   }
 

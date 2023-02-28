@@ -138,7 +138,7 @@ export class OrgorganizationComponent extends UIComponent {
   // delete data
   deleteData(data: any) {
     if (data) {
-      this.view.dataService.delete(data,true).subscribe();
+      this.view.dataService.delete([data],true).subscribe();
       // (this.dataService as CRUDService).delete([data], true).subscribe();
     }
   }
@@ -242,7 +242,6 @@ export class OrgorganizationComponent extends UIComponent {
       this.view.dataService.addNew()
       .subscribe((result: any) => {
         if (result) {
-          debugger
           let data = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,

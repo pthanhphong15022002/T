@@ -93,6 +93,13 @@ export class PopAddInventoryComponent extends UIComponent {
   valueChange(e: any) {
     this.inventory[e.field] = e.data;
   }
+  valueChanges(e: any) {
+    if (e.data) {
+      this.inventory[e.field] = '1';
+    }else{
+      this.inventory[e.field] = '0';
+    }
+  }
   valueChangeInventModelID(e: any) {
     this.inventModelID = e.data;
     this.inventory[e.field] = e.data;
@@ -104,25 +111,9 @@ export class PopAddInventoryComponent extends UIComponent {
   clearInventory() {
     this.inventModelID = '';
     this.inventModelName = '';
-    this.inventory.inventCosting = null;
     this.inventory.accountControl = false;
-    this.inventory.postFinancial = false;
-    this.inventory.postPhysical = false;
-    this.inventory.checkOnhand = null;
-    this.inventory.nagetiveFinancial = false;
-    this.inventory.nagetivePhysical = false;
-    this.inventory.requireRegister = false;
     this.inventory.stdCostReceipt = false;
-    this.inventory.requirePick = false;
     this.inventory.stdCostIssue = false;
-    this.inventory.qualityControl = false;
-    this.inventory.reserveMethod = null;
-    this.inventory.reserveRule = null;
-    this.inventory.reservePartial = false;
-    this.inventory.reserveOrdered = false;
-    this.inventory.reserveSameBatch = false;
-    this.inventory.reserveExpired = false;
-    this.inventory.expiredDays = 0;
   }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
