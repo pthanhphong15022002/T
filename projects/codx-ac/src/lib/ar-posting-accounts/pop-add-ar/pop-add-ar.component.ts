@@ -1,25 +1,43 @@
 import { L } from '@angular/cdk/keycodes';
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
-import { UIComponent, CodxFormComponent, FormModel, DialogRef, CacheService, CallFuncService, NotificationsService, DialogData } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
+import {
+  UIComponent,
+  CodxFormComponent,
+  FormModel,
+  DialogRef,
+  CacheService,
+  CallFuncService,
+  NotificationsService,
+  DialogData,
+  RequestOption,
+} from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { ARPostingAccounts } from '../../models/ARPostingAccounts.model';
 
 @Component({
   selector: 'lib-pop-add-ar',
   templateUrl: './pop-add-ar.component.html',
-  styleUrls: ['./pop-add-ar.component.css']
+  styleUrls: ['./pop-add-ar.component.css'],
 })
 export class PopAddArComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('form') form: CodxFormComponent;
   headerText: any;
   formModel: FormModel;
   dialog!: DialogRef;
   gridViewSetup: any;
   formType: any;
-  subheaderText:any;
-  moduleID:any;
-  postType:any;
-  arposting:ARPostingAccounts;
+  subheaderText: any;
+  arposting: ARPostingAccounts;
+  moduleID: any;
+  postType: any;
   validate: any = 0;
   constructor(
     private inject: Injector,
@@ -30,13 +48,20 @@ export class PopAddArComponent extends UIComponent implements OnInit {
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
-  ) { 
+  ) {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.arposting = dialog.dataService!.dataSelected;
-    this.moduleID = dialogData.data?.moduleID;
-    this.postType = dialogData.data?.postType;
+    if (
+      dialogData.data?.moduleID != null &&
+      dialogData.data?.postType != null
+    ) {
+      this.moduleID = dialogData.data?.moduleID;
+      this.postType = dialogData.data?.postType;
+      this.arposting.moduleID = this.moduleID;
+      this.arposting.postType = this.postType;
+    }
     this.formType = dialogData.data?.formType;
     this.subheaderText = dialogData.data?.subheaderText;
     this.cache
@@ -47,15 +72,40 @@ export class PopAddArComponent extends UIComponent implements OnInit {
         }
       });
   }
+//#endregion
 
+//#region Init
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
   }
+  //#endregion
+
+  //#region Event
   valueChange(e: any) {
     this.arposting[e.field] = e.data;
-    console.log(e.data);
   }
+  valueChangeCustLevel(e: any) {
+    this.arposting.custSelection = '';
+    switch (e.data) {
+      case '3':
+        this.arposting.custSelection = '0';
+        break;
+    }
+    this.arposting[e.field] = e.data;
+  }
+  valueChangeItemLevel(e: any) {
+    this.arposting.itemSelection = '';
+    switch (e.data) {
+      case '4':
+        this.arposting.itemSelection = '0';
+        break;
+    }
+    this.arposting[e.field] = e.data;
+  }
+  //#endregion
+
+  //#region Function
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.arposting);
@@ -79,16 +129,93 @@ export class PopAddArComponent extends UIComponent implements OnInit {
       }
     }
   }
-  onSave(){
+  validateRules() {
+    this.gridViewSetup['PmtMethodID'].isRequire = false;
+    this.gridViewSetup['CurrencyID'].isRequire = false;
+  }
+  //#endregion
+
+  //#region Method
+  onSave() {
+    if (this.arposting.moduleID == 2) {
+      this.validateRules();
+    }
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
       return;
-    }else{
-      console.log(this.arposting);
+    } else {
+      if (this.formType == 'add') {
+        this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'AddAsync';
+            opt.className = 'ARPostingAccountsBusiness';
+            opt.assemblyName = 'AC';
+            opt.service = 'AC';
+            opt.data = [this.arposting];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res.save) {
+              this.dialog.close();
+              this.dt.detectChanges();
+            } else {
+              this.notification.notify('Thiết lập đã tồn tại', '2');
+              return;
+            }
+          });
+      }
+      if (this.formType == 'edit') {
+        this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'UpdateAsync';
+            opt.className = 'ARPostingAccountsBusiness';
+            opt.assemblyName = 'AC';
+            opt.service = 'AC';
+            opt.data = [this.arposting];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res.save || res.update) {
+              this.dialog.close();
+              this.dt.detectChanges();
+            }
+          });
+      }
     }
   }
-  onSaveAdd(){
-
+  onSaveAdd() {
+    if (this.arposting.moduleID == 2) {
+      this.validateRules();
+    }
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      this.dialog.dataService
+        .save((opt: RequestOption) => {
+          opt.methodName = 'AddAsync';
+          opt.className = 'ARPostingAccountsBusiness';
+          opt.assemblyName = 'AC';
+          opt.service = 'AC';
+          opt.data = [this.arposting];
+          return true;
+        })
+        .subscribe((res) => {
+          if (res.save) {
+              this.dialog.dataService.clear();
+              this.dialog.dataService.addNew().subscribe((res) => {
+              this.arposting = this.dialog.dataService.dataSelected;
+              this.arposting.moduleID = this.moduleID;
+              this.arposting.postType = this.postType;
+            });
+          } else {
+            this.notification.notify('Thiết lập đã tồn tại', '2');
+            return;
+          }
+        });
+    }
   }
+  //#endregion
 }

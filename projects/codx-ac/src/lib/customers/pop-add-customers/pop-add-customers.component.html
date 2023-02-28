@@ -213,7 +213,7 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="OverDueControl" default="Kiểm soát quá hạn"></codx-label>
-        <codx-input [crrValue]="form.data.overDueControl" type="valuelist" refValue="AC011" field="overDueControl"
+        <codx-input [crrValue]="form.data.overDueControl == true ? '1' : '0'" type="valuelist" refValue="AC011" field="overDueControl"
           (valueChange)="valueChangeOverdueControl($event)">
         </codx-input>
       </div>

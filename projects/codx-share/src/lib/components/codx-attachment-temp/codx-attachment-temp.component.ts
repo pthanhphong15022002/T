@@ -27,7 +27,7 @@ export class CodxAttachmentTempComponent implements OnInit {
   @Input() referType: string = '';
   @Input() formModel: FormModel = null;
   @Input() viewType = '0';
-  @Input() count = 0;
+  @Input() count = 0;   
   @Input() zIndex: number = 0; // Thảo truyền z index
   @Input() openViewPopup = true ;// Thảo truyền ko cho click
   services: string = 'DM';
