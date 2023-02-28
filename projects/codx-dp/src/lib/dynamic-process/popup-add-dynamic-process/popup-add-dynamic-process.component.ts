@@ -219,8 +219,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   oldIdProccess: any;
   newIdProccess: any;
   listValueCopy: any;
-  MESSAGETIME =
-    'Thời hạn công việc lớn hơn nhóm công việc bạn có muốn lưu và thay đổi thời hạn nhóm công việc';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -1802,7 +1800,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   async setTimeGroup(group, task, maxHour) {
-    let x = await firstValueFrom(this.notiService.alertCode(this.MESSAGETIME));
+    let x = await firstValueFrom(this.notiService.alertCode("DP010"));
     if (x.event && x.event.status == 'Y') {
       let time = this.getHour(task) || 0;
       group['durationDay'] = Math.floor(maxHour / 24);

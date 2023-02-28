@@ -125,6 +125,40 @@
     </div>
     <!--End ten Cong Viec -->
 
+    <!-- Khảo sát -->
+    <div class="form-group" *ngIf="typeTask == 'S'">
+      <div class="d-flex justify-content-between align-items-center mail">
+        <codx-label
+          fiedName="Reference"
+          [formModel]="form?.formModel"
+          default="Bảng khảo sát"
+        ></codx-label>
+        <a
+          class="d-flex justify-content-end align-items-center cursor-pointer"
+          *ngIf="stepsTasks?.reference"
+          (click)="viewDetailSurveys()"
+        >
+          <span
+            class="icon-insert_link icon-20 text-primary-600 me-2 m-2"
+          ></span>
+        </a>
+      </div>
+      <codx-input
+        field="reference"
+        [formModel]="form?.formModel"
+        (valueChange)="changeQuestion($event)"
+      >
+      </codx-input>
+      <a
+        *ngIf="linkQuesiton"
+        class="cursor-pointer text-primary"
+        (click)="viewDetailSurveys()"
+      >
+        {{ linkQuesiton }}</a
+      >
+    </div>
+    <!-- Khảo sát -->
+
     <div class="form-group d-flex justify-content-between row">
       <div class="col-6">
         <codx-label
