@@ -1194,7 +1194,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             step['taskGroups'] = taskGroupConvert;
 
             let taskGroup = new DP_Steps_TaskGroups();
-            taskGroup['task'] = taskGroupList['null'] || [];
+            taskGroup['task'] = taskGroupList[this.guidEmpty] || [];
             taskGroup['recID'] = this.guidEmpty; // group task rỗng để kéo ra ngoài
             step['taskGroups'].push(taskGroup);
 
