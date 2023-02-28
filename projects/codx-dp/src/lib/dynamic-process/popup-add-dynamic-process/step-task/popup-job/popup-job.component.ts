@@ -185,6 +185,7 @@ export class PopupJobComponent implements OnInit {
           objectName: element.text,
           objectType: element.objectType,
           roleType: element.objectName,
+          taskID: this.stepsTasks['recID'],
         });
       }
     });
