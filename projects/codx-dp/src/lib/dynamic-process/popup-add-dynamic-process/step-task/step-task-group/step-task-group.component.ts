@@ -109,7 +109,6 @@ export class StepTaskGroupComponent implements OnInit {
     this.dialog.close();
     clearInterval(this.clear);
   }
-
   shareUser(share) {
     this.callfc.openForm(share, '', 500, 500);
   }
