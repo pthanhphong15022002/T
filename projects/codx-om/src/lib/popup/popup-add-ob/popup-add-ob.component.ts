@@ -278,9 +278,11 @@ export class PopupAddOBComponent extends UIComponent {
       tmpShare.share=1;
       tmpShare.autoCreated=1;
       tmpShare.objectID=this.authService.userValue.userID;
-      this.listShares.push(tmpShare);      
-      tmpShare.objectID=this.okrPlan?.owner;
-      this.listShares.push(tmpShare);
+      this.listShares.push(tmpShare);    
+      if(this.okrPlan?.owner !=this.authService.userValue.userID){
+        tmpShare.objectID=this.okrPlan?.owner;
+        this.listShares.push(tmpShare);
+      }
     }
   }
   //Thiết lập OKRLevel theo funcID

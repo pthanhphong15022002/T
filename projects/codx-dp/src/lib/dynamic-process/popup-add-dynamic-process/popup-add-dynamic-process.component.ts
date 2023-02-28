@@ -295,7 +295,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.action != 'edit') this.genAutoNumber();
+    //if (this.action != 'edit') this.genAutoNumber();
     this.api
       .execSv<any>(
         'SYS',
