@@ -282,7 +282,6 @@ export class PopupAddPostComponent implements OnInit {
       let _imgs = _eleDiv.getElementsByTagName("img");
       if(_imgs.length > 0){        
         for (let index = 0; index < _imgs.length; index++) {
-          debugger
           if(_imgs[index].src.startsWith("blob:"))
           {
             let xhr = new XMLHttpRequest();
