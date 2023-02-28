@@ -12,7 +12,7 @@ export class NotifyBodyComponent implements OnInit {
 
   @Input() mode:string = "";
   @Input() formModel:FormModel = null;
-
+  @Input() defaultStatus:string
   model:DataRequest;
   user:any;
   noti:any[] = [];
@@ -41,11 +41,14 @@ export class NotifyBodyComponent implements OnInit {
   ) 
   {
     this.model = new DataRequest("Notification","grvNotification","BG_Notification","","",1,20);
-    this.model.dataObj = JSON.stringify(this.notiFilter);
     this.user = auth.get();
   }
 
   ngOnInit(): void {
+    debugger
+    if(this.defaultStatus)
+      this.notiFilter.status = this.defaultStatus;
+    this.model.dataObj = JSON.stringify(this.notiFilter);
     this.notiFilter.mode = this.mode;
     this.getSetUp();
     this.getNotiAsync();

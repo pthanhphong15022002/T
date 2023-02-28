@@ -398,7 +398,13 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
-
+  changePlanStatus(status){
+    this.codxOmService.changePlanStatus(this.dataOKRPlans.recID,status).subscribe(res=>{
+      if(res){
+        this.dataOKRPlans.status= status;
+      }
+    })
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//
@@ -549,6 +555,13 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Popup-----------------------------------------//
   //---------------------------------------------------------------------------------//
+  deleteOKRPlans(){
+    this.codxOmService.deleteOKRPlans(this.dataOKRPlans.recID).subscribe(res=>{
+      if(res){
+        
+      }
+    })
+  }
   //Thêm mới bộ mục tiêu
   addOKRPlans() {
     let dialogModel = new DialogModel();

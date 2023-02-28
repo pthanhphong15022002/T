@@ -67,6 +67,7 @@ export const routes: Routes = [
         path: 'journalnames/:funcID',
         component: JournalNamesComponent,
       },
+      { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
     ],
   },
   {
