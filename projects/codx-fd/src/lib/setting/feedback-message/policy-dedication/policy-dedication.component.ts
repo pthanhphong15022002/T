@@ -37,7 +37,7 @@ export class PolicyDedicationComponent extends UIComponent implements OnInit {
     this.LoadData();
   }
   @Input() typeCard: string;
-  categoryID: string = '1';
+  categoryID: string = '2';
   policyDedicationList = [];
   addPolicy() {
     alert('Tính năng đang phát triển ở version kế tiếp');
@@ -52,6 +52,7 @@ export class PolicyDedicationComponent extends UIComponent implements OnInit {
         [this.typeCard, this.categoryID, applyFor]
       )
       .subscribe((res) => {
+        console.log(res);
         if (res && res.msgBodyData.length > 0) {
           this.policyDedicationList = res.msgBodyData[0];
         }

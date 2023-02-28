@@ -54,7 +54,6 @@ export class ItempostingaccountsComponent extends UIComponent {
   onInit() {
     this.cache.valueList('AC037').subscribe((res) => {
       if (res) {
-        console.log(res);
         this.menu1 = res.datas;
       }
     });

@@ -1,4 +1,5 @@
-import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import { Router } from '@angular/router';
+import { UIComponent, ViewModel, ViewType, UrlUtil } from 'codx-core';
 import {
   Component,
   OnInit,
@@ -23,7 +24,7 @@ export class JournalNamesComponent extends UIComponent {
     id: 'btnAdd',
   };
 
-  constructor(inject: Injector) {
+  constructor(inject: Injector, private route: Router) {
     super(inject);
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
@@ -57,7 +58,17 @@ export class JournalNamesComponent extends UIComponent {
   }
 
   dbClick(e, data) {
-    this.codxService.navigate(data.functionID);
+    console.log('data: ', data);
+    this.cache.functionList(data.functionID).subscribe((func) => {
+      if (func) {
+        let urlRedirect = '/' + UrlUtil.getTenant();
+        if (func && func.url && func.url.charAt(0) != '/') urlRedirect += '/';
+        urlRedirect += func.url;
+        this.route.navigate([urlRedirect], {
+          queryParams: { recID: data.recID },
+        });
+      }
+    });
   }
   //#region Events
 

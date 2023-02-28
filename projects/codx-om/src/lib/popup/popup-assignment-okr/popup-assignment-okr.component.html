@@ -42,13 +42,29 @@
                     ></codx-input>
                   </div>
                   <div class="d-flex justify-content-between align-items-center mt-5" *ngIf="assignmentOKR?.orgUnitID!=null">
-                    <div class="d-flex col-8 flex-row">
+                    <div class="d-flex col-8 flex-row " *ngIf="funcID==compFuncID">
+                      <span class="d-flex justify-content-center align-items-center badge-avatar badge-circle badge-light rounded-circle"> <span class="icon-i-building text-primary"></span></span>
+                      <div class="d-flex flex-column" >
+                        <span class="ms-4 fw-bold">{{assignmentOKR?.departmentName}}</span>
+                        <span class="ms-4 text-gray-600">{{assignmentOKR?.employeeName}}</span>
+                        <span class="ms-4 text-gray-600">{{assignmentOKR?.positionName}}</span>
+                      </div>                     
+                    </div>  
+                    <div class="d-flex col-8 flex-row" *ngIf="funcID==deptFuncID">
                       <span class="d-flex justify-content-center align-items-center badge-avatar badge-circle badge-light rounded-circle"> <span class="icon-i-building text-primary"></span></span>
                       <div class="d-flex flex-column">
-                        <span class="ms-4 fw-bold">{{assignmentOKR?.orgUnitName}}</span>
+                        <span class="ms-4 fw-bold">{{assignmentOKR?.positionName}}</span>
+                        <span class="ms-4 text-gray-600">{{assignmentOKR?.employeeName}}</span>
+                        <span class="ms-4 text-gray-600">{{assignmentOKR?.orgUnitName}}</span>
+                      </div>                     
+                    </div>  
+                    <div class="d-flex col-8 flex-row" *ngIf="funcID==orgFuncID">
+                      <span class="d-flex justify-content-center align-items-center badge-avatar badge-circle badge-light rounded-circle"> <span class="icon-i-building text-primary"></span></span>
+                      <div class="d-flex flex-column">
+                        <span class="ms-4 fw-bold">{{assignmentOKR?.deptFuncID}}</span>
                         <span class="ms-4 text-gray-600">{{assignmentOKR?.orgUnitName}}</span>
                         <span class="ms-4 text-gray-600">{{assignmentOKR?.orgUnitName}}</span>
-                      </div>
+                      </div>                     
                     </div>  
                     <span class="icon-close" role="button" (click)="deleteOrg()"></span>
                   </div>

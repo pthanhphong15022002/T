@@ -90,7 +90,6 @@ export class InventoryComponent extends UIComponent {
     }
   }
   add() {
-    console.log(this.view.dataService);
     this.headerText = this.moreFuncName + ' ' + this.funcName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
