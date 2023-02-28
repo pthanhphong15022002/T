@@ -309,6 +309,7 @@ export class InstancesComponent
         this.listStepsCbx,
         this.instanceNo,
         this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx),
+        this.lstParticipants
       ],
       option
     );

@@ -28,17 +28,19 @@ import { ChartOfAccounts } from '../../models/ChartOfAccounts.model';
   styleUrls: ['./pop-add-accounts.component.css'],
 })
 export class PopAddAccountsComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('form') form: CodxFormComponent;
   dialog!: DialogRef;
   chartOfAccounts: ChartOfAccounts;
-  headerText: string;
-  title: string;
+  headerText: any;
+  title: any;
   formType: any;
   gridViewSetup: any;
   formModel: FormModel;
-  accID: string;
-  parID: string;
-  subLGType: string;
+  accID: any;
+  parID: any;
+  subLGType: any;
+  validate: any = 0;
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     { icon: 'icon-playlist_add_check', text: 'Thiết lập', name: 'Establish' },
@@ -62,12 +64,14 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.chartOfAccounts = dialog.dataService!.dataSelected;
+    if (this.formType == 'add') {
+      this.chartOfAccounts.detail = true;
+    }
     this.cache
       .gridViewSetup('ChartOfAccounts', 'grvChartOfAccounts')
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
-          console.log(this.gridViewSetup);
         }
       });
     if (this.chartOfAccounts.accountID != null) {
@@ -81,11 +85,16 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
       }
     }
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
   }
+  //#endregion
+
+  //#region Functione
   valueChange(e: any) {
     this.chartOfAccounts[e.field] = e.data;
   }
@@ -112,61 +121,80 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
     this.title = this.headerText;
     this.dt.detectChanges();
   }
-  onSave() {
-    if (this.accID.trim() == '' || this.accID == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['AccountID'].headerText + '"'
-      );
-      return;
-    }
-    if (this.chartOfAccounts.subLGControl) {
-      if (this.subLGType == '' || this.subLGType == null) {
-        this.notification.notify('Hãy chọn loại công nợ', '2');
-        return;
-      }
-    }
-    if (this.formType == 'add') {
-      this.dialog.dataService
-        .save((opt: RequestOption) => {
-          opt.methodName = 'AddAsync';
-          opt.className = 'AccountsBusiness';
-          opt.assemblyName = 'AC';
-          opt.service = 'AC';
-          opt.data = [this.chartOfAccounts];
-          return true;
-        })
-        .subscribe((res) => {
-          if (res.save) {
-            this.dialog.close(res.save);
-          } else {
-            this.notification.notifyCode('SYS031', 0, '"' + this.accID + '"');
-            return;
+  checkValidate() {
+    var keygrid = Object.keys(this.gridViewSetup);
+    var keymodel = Object.keys(this.chartOfAccounts);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              this.chartOfAccounts[keymodel[i]] == null ||
+              this.chartOfAccounts[keymodel[i]] == ''
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
+              );
+              this.validate++;
+            }
           }
-        });
-    }
-    if (this.formType == 'edit') {
-      if (this.chartOfAccounts.loanControl == '0') {
-        this.chartOfAccounts.loanControl = false;
-      } else {
-        this.chartOfAccounts.loanControl = true;
+        }
       }
-      this.dialog.dataService
-        .save((opt: RequestOption) => {
-          opt.methodName = 'UpdateAsync';
-          opt.className = 'AccountsBusiness';
-          opt.assemblyName = 'AC';
-          opt.service = 'AC';
-          opt.data = [this.chartOfAccounts];
-          return true;
-        })
-        .subscribe((res) => {
-          if (res.save || res.update) {
-            this.dialog.close();
-            this.dt.detectChanges();
-          }
-        });
     }
   }
+  //#endregion
+
+  //#region CRUD
+  onSave() {
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
+      return;
+    } else {
+      if (this.formType == 'add') {
+        this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'AddAsync';
+            opt.className = 'AccountsBusiness';
+            opt.assemblyName = 'AC';
+            opt.service = 'AC';
+            opt.data = [this.chartOfAccounts];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res.save) {
+              this.dialog.close(res.save);
+            } else {
+              this.notification.notifyCode('SYS031', 0, '"' + this.accID + '"');
+              return;
+            }
+          });
+      }
+      if (this.formType == 'edit') {
+        if (this.chartOfAccounts.loanControl == '0') {
+          this.chartOfAccounts.loanControl = false;
+        } else {
+          this.chartOfAccounts.loanControl = true;
+        }
+        this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'UpdateAsync';
+            opt.className = 'AccountsBusiness';
+            opt.assemblyName = 'AC';
+            opt.service = 'AC';
+            opt.data = [this.chartOfAccounts];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res.save || res.update) {
+              this.dialog.close();
+              this.dt.detectChanges();
+            }
+          });
+      }
+    }
+  }
+  //#endregion
 }

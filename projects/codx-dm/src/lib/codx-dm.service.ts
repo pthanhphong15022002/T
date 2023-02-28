@@ -1234,13 +1234,10 @@ export class CodxDMService {
         //   req.send();
         // };
 
-        this.fileService.getFile(data.recID).subscribe((file) => {
+        this.fileService.getFile(data.recID).subscribe(async (file) => {
           var id = file.recID;
-          var that = this;
           if (this.checkDownloadRight(file)) {
-            this.fileService.downloadFile(id).subscribe(async (res) => {
-              if (res) {
-                let blob = await fetch(res).then((r) => r.blob());
+              let blob = await fetch(environment.urlUpload +"/"+ file.pathDisk).then((r) => r.blob());
                 let url = window.URL.createObjectURL(blob);
                 var link = document.createElement('a');
                 link.setAttribute('href', url);
@@ -1249,17 +1246,15 @@ export class CodxDMService {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-              }
-              var files = this.listFiles;
-              if (files != null) {
-                let index = files.findIndex((d) => d.recID.toString() === id);
-                if (index != -1) {
-                  files[index].countDownload = files[index].countDownload + 1;
+                var files = this.listFiles;
+                if (files != null) {
+                  let index = files.findIndex((d) => d.recID.toString() === id);
+                  if (index != -1) {
+                    files[index].countDownload = files[index].countDownload + 1;
+                  }
+                  this.listFiles = files;
+                  this.ChangeData.next(true);
                 }
-                this.listFiles = files;
-                this.ChangeData.next(true);
-              }
-            });
           } else {
             this.notificationsService.notify(this.titleNoRight);
           }

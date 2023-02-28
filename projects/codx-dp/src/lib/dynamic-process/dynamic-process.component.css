@@ -1,0 +1,8 @@
+.form-check-input:disabled {
+    background-color:#b9b9b9;
+    border-color: #b9b9b9;
+    opacity: 1 !important;
+}
+.form-check-label {
+    opacity: 1 !important;
+}

@@ -149,6 +149,6 @@
   </div>
 </ng-template> -->
 
-<ejs-dropdownlist id='locationCBB' #locationCBB [dataSource]='lstOrg' [query]='query' [fields]='fields'
+<ejs-dropdownlist [dataSource]='lstOrg' [query]='query' [fields]='fields'
   [placeholder]="'Nhập tên...'" (valueChange)="cbxChange($event)" (filtering)='onFiltering($event)'
   [allowFiltering]='true' [value]="owner"></ejs-dropdownlist>
