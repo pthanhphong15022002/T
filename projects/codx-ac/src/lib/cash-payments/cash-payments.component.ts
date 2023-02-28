@@ -1,27 +1,48 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, CallFuncService, DialogModel, DialogRef, RequestOption, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import {
+  ButtonModel,
+  CallFuncService,
+  DialogModel,
+  DialogRef,
+  RequestOption,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
+import { of } from 'rxjs';
 import { PopAddCashComponent } from './pop-add-cash/pop-add-cash.component';
 
 @Component({
   selector: 'lib-cash-payments',
   templateUrl: './cash-payments.component.html',
-  styleUrls: ['./cash-payments.component.css']
+  styleUrls: ['./cash-payments.component.css'],
 })
 export class CashPaymentsComponent extends UIComponent {
+  //#region Constructor
   views: Array<ViewModel> = [];
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   dialog!: DialogRef;
   button?: ButtonModel;
-  headerText:any;
-  moreFuncName:any;
-  funcName:any;
+  headerText: any;
+  moreFuncName: any;
+  funcName: any;
+  parentID: string;
   constructor(
     private inject: Injector,
-    private dt: ChangeDetectorRef,
     private callfunc: CallFuncService,
+    private routerActive: ActivatedRoute,
     @Optional() dialog?: DialogRef
-  ) { 
+  ) {
     super(inject);
     this.dialog = dialog;
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
@@ -30,31 +51,19 @@ export class CashPaymentsComponent extends UIComponent {
         if (m) this.moreFuncName = m.defaultName;
       }
     });
+    this.routerActive.queryParams.subscribe((res) => {
+      if (res && res?.recID) this.parentID = res.recID;
+    });
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
   }
-  toolBarClick(e) {
-    switch (e.id) {
-      case 'btnAdd':
-        this.add();
-        break;
-    }
-  }
-  clickMF(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(e,data);
-        break;
-    }
-    
-  }
+
   ngAfterViewInit(): void {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) this.funcName = res.defaultName;
@@ -68,58 +77,117 @@ export class CashPaymentsComponent extends UIComponent {
           template2: this.templateMore,
           frozenColumns: 1,
         },
-      } 
+      },
     ];
   }
+  //#endregion
+
+  //#region Event
+  toolBarClick(e) {
+    switch (e.id) {
+      case 'btnAdd':
+        this.add();
+        break;
+    }
+  }
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'SYS03':
+        this.edit(e, data);
+        break;
+    }
+  }
+  //#endregion
+
+  //#region Method
+  setDefault(o) {
+    return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+      this.parentID,
+    ]);
+  }
+
   add() {
     this.headerText = this.moreFuncName + ' ' + this.funcName;
-    this.view.dataService.addNew().subscribe((res: any) => {
-      var obj = {
-        formType: 'add',
-        headerText: this.headerText,
-      };
-      let option = new DialogModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.IsFull = true;
-      this.dialog = this.callfunc.openForm(PopAddCashComponent,'', null,null,this.view.funcID,obj,'',option,);
-    });
+    this.view.dataService
+      .addNew((o) => this.setDefault(o))
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'add',
+          headerText: this.headerText,
+        };
+        let option = new DialogModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.IsFull = true;
+        this.dialog = this.callfunc.openForm(
+          PopAddCashComponent,
+          '',
+          null,
+          null,
+          this.view.funcID,
+          obj,
+          '',
+          option
+        );
+      });
   }
-  edit(e,data) {
+
+  edit(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-      var obj = {
-        formType: 'edit',
-        headerText: e.text + ' ' + this.funcName,
-      };
-      let option = new DialogModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.IsFull = true;
-      this.dialog = this.callfunc.openForm(PopAddCashComponent,'', null,null,this.view.funcID,obj,'',option,);
-    });
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'edit',
+          headerText: e.text + ' ' + this.funcName,
+        };
+        let option = new DialogModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.IsFull = true;
+        this.dialog = this.callfunc.openForm(
+          PopAddCashComponent,
+          '',
+          null,
+          null,
+          this.view.funcID,
+          obj,
+          '',
+          option
+        );
+      });
   }
-  delete(data){
+
+  delete(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.delete([data], true, (option: RequestOption) =>
-    this.beforeDelete(option,data)
-  ).subscribe((res:any) => {
-    if (res) {
-      this.api.exec(
-        'ERM.Business.AC',
-        'CashPaymentsLinesBusiness',
-        'DeleteAsync',
-        [data.recID]
-      ).subscribe((res:any)=>{
-      })
-    }
-  });
+    this.view.dataService
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option, data)
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.api
+            .exec(
+              'ERM.Business.AC',
+              'CashPaymentsLinesBusiness',
+              'DeleteAsync',
+              [data.recID]
+            )
+            .subscribe((res: any) => {});
+        }
+      });
   }
-  beforeDelete(opt: RequestOption,data) {
+  //#endregion
+
+  //#region Function
+  beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'CashPaymentsBusiness';
     opt.assemblyName = 'AC';
@@ -127,4 +195,5 @@ export class CashPaymentsComponent extends UIComponent {
     opt.data = data;
     return true;
   }
+  //#endregion
 }
