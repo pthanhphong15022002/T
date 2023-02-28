@@ -15,10 +15,10 @@
             <div class="col-6">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="CustLevel" default="Loại đối tượng"></codx-label>
-                    <codx-input *ngIf="arposting.custLevel != ''" type="valuelist" refValue="AC045" [crrValue]="arposting.custLevel" [formModel]="form.formModel"
+                    <codx-input [Group]="form.formGroup" *ngIf="arposting.custLevel != ''" type="valuelist" refValue="AC045" [crrValue]="arposting.custLevel" [formModel]="form.formModel"
                         (valueChange)="valueChangeCustLevel($event)" field="custLevel">
                     </codx-input>
-                    <codx-input *ngIf="arposting.custLevel == ''" type="valuelist" refValue="AC045" [crrValue]="arposting.custLevel" [formModel]="form.formModel"
+                    <codx-input [Group]="form.formGroup" *ngIf="arposting.custLevel == ''" type="valuelist" refValue="AC045" [crrValue]="arposting.custLevel" [formModel]="form.formModel"
                         (valueChange)="valueChangeCustLevel($event)" field="custLevel">
                     </codx-input>
                 </div>
