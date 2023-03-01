@@ -132,12 +132,12 @@ export class CodxDpService {
     );
   }
 
-  GetStepsByInstanceIDAsync(recID){
+  GetStepsByInstanceIDAsync(data){
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
-      'GetStepsByInstanceIDAsync',
-      recID
+      'GetStepsNewByInstanceIDAsync',
+      data
     );
   }
 
