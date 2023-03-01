@@ -38,6 +38,14 @@
         fiedName="vendSelection"
         [formModel]="form.formModel"
       ></codx-label>
+      <ng-container *ngIf="!apPostingAccount.vendLevel">
+        <codx-input
+          field="vendSelection"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [disabled]="true"
+        ></codx-input>
+      </ng-container>
       <ng-container *ngIf="apPostingAccount.vendLevel === '1'">
         <codx-input
           field="vendSelection"
@@ -86,6 +94,14 @@
         fiedName="itemSelection"
         [formModel]="form.formModel"
       ></codx-label>
+      <ng-container *ngIf="!apPostingAccount.itemLevel">
+        <codx-input
+          field="itemSelection"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [disabled]="true"
+        ></codx-input>
+      </ng-container>
       <ng-container *ngIf="apPostingAccount.itemLevel === '1'">
         <codx-input
           field="itemSelection"

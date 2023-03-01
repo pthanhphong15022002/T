@@ -174,7 +174,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       e.forEach((x) => {
         if (
           (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
-          (data.confirmControl == '0' || data.confirmStatus != '1')
+          (data.confirmStatus != '1')
         ) {
           x.disabled = true;
         }
