@@ -7,10 +7,12 @@ import { Observable, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class CodxDpService {
-  constructor(private api: ApiHttpService,
+  constructor(
+    private api: ApiHttpService,
     private cache: CacheService,
     private auth: AuthStore,
-    private fb: FormBuilder,) {}
+    private fb: FormBuilder
+  ) {}
 
   // Gán tạm để show data test
   getUserByProcessId(data) {
@@ -122,7 +124,7 @@ export class CodxDpService {
     return subject.asObservable();
   }
 
-  GetInstanceByRecID(recID){
+  GetInstanceByRecID(recID) {
     return this.api.execSv<any>(
       'DP',
       'ERM.Business.DP',
@@ -132,7 +134,7 @@ export class CodxDpService {
     );
   }
 
-  GetStepsByInstanceIDAsync(recID){
+  GetStepsByInstanceIDAsync(recID) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -141,48 +143,37 @@ export class CodxDpService {
     );
   }
 
-  GetStepInstance(recID){
-    return this.api.exec<any>(
-      'DP',
-      'InstanceStepsBusiness',
-      'GetAsync',
-      recID
-    );
+  GetStepInstance(recID) {
+    return this.api.exec<any>('DP', 'InstanceStepsBusiness', 'GetAsync', recID);
   }
   // #step -- nvthuan
   addStep(data) {
-    return this.api.exec<any>(
-      'DP',
-      'StepsBusiness',
-      'AddStepAsync',
-      data
-    );
+    return this.api.exec<any>('DP', 'StepsBusiness', 'AddStepAsync', data);
   }
   editStep(data) {
-    return this.api.exec<any>(
-      'DP',
-      'StepsBusiness',
-      'EditStepAsync',
-      data
-    );
+    return this.api.exec<any>('DP', 'StepsBusiness', 'EditStepAsync', data);
   }
 
   getStep(data) {
+    return this.api.exec<any>('DP', 'StepsBusiness', 'GetStepAsync', data);
+  }
+
+  getlistCbxProccess(applyFor: string) {
     return this.api.exec<any>(
       'DP',
-      'StepsBusiness',
-      'GetStepAsync',
-      data
+      'ProcessesBusiness',
+      'GetListCbxProcessesAsync',
+      applyFor
     );
   }
 
-  getlistCbxProccess(applyFor: string){
-    return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetListCbxProcessesAsync',applyFor);
-  }
-
-  updatePermissionProcess(process){
-    return this.api.exec<any>('DP', 'ProcessesBusiness', 'UpdatePermissionsProcessAsync',process);
-
+  updatePermissionProcess(process) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'UpdatePermissionsProcessAsync',
+      process
+    );
   }
 
   createListInstancesStepsByProcess(processID) {
@@ -193,7 +184,7 @@ export class CodxDpService {
       processID
     );
   }
-  addInstances(data){
+  addInstances(data) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
@@ -202,7 +193,7 @@ export class CodxDpService {
     );
   }
   // Instances_Steps_TaskGroups
-  addTaskGroups(data){
+  addTaskGroups(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -210,7 +201,7 @@ export class CodxDpService {
       data
     );
   }
-  updateTaskGroups(data){
+  updateTaskGroups(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -218,7 +209,7 @@ export class CodxDpService {
       data
     );
   }
-  deleteTaskGroups(data){
+  deleteTaskGroups(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -226,7 +217,7 @@ export class CodxDpService {
       data
     );
   }
-  addTask(data){
+  addTask(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -234,7 +225,7 @@ export class CodxDpService {
       data
     );
   }
-  updateTask(data){
+  updateTask(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -242,7 +233,7 @@ export class CodxDpService {
       data
     );
   }
-  deleteTask(data){
+  deleteTask(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -250,7 +241,7 @@ export class CodxDpService {
       data
     );
   }
-  updateDataDrop(data){
+  updateDataDrop(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -259,7 +250,7 @@ export class CodxDpService {
     );
   }
 
-  moveStageByIdInstance(data){
+  moveStageByIdInstance(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -267,7 +258,7 @@ export class CodxDpService {
       data
     );
   }
-  moveReasonByIdInstance(data){
+  moveReasonByIdInstance(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -275,7 +266,7 @@ export class CodxDpService {
       data
     );
   }
-  updateListReason(data){
+  updateListReason(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -283,7 +274,7 @@ export class CodxDpService {
       data
     );
   }
-  DeleteListReason(data){
+  DeleteListReason(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -307,12 +298,13 @@ export class CodxDpService {
     funcID: string,
     entityName: string
   ) {
-    return this.api.exec<any>(
-      'DP',
-      'ProcessesBusiness',
-      'SetViewRatingAsync',
-      [recID, ratting, comment, funcID, entityName]
-    );
+    return this.api.exec<any>('DP', 'ProcessesBusiness', 'SetViewRatingAsync', [
+      recID,
+      ratting,
+      comment,
+      funcID,
+      entityName,
+    ]);
   }
 
   //process
@@ -324,7 +316,7 @@ export class CodxDpService {
       data
     );
   }
-  restoreBinById(recID){
+  restoreBinById(recID) {
     return this.api.exec<any>(
       'DP',
       'ProcessesBusiness',
@@ -343,7 +335,6 @@ export class CodxDpService {
     );
   }
 
-
   getListUserIDByListPositionsID(listPositionID) {
     return this.api.execSv<any>(
       'HR',
@@ -354,7 +345,7 @@ export class CodxDpService {
     );
   }
 
-  getUserByID(e){
+  getUserByID(e) {
     return this.api.execSv<any>(
       'SYS',
       'ERM.Business.AD',
@@ -364,7 +355,7 @@ export class CodxDpService {
     );
   }
 
-  getListUserByRoleID(id){
+  getListUserByRoleID(id) {
     return this.api.execSv<any>(
       'SYS',
       'ERM.Business.AD',
@@ -384,7 +375,7 @@ export class CodxDpService {
     );
   }
 
-  getStepByStepIDAndInID(insID, stepID){
+  getStepByStepIDAndInID(insID, stepID) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -393,7 +384,7 @@ export class CodxDpService {
     );
   }
 
-  getFirstIntance(processID){
+  getFirstIntance(processID) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
@@ -402,13 +393,8 @@ export class CodxDpService {
     );
   }
 
-  getProcess(id){
-    return this.api.exec<any>(
-      'DP',
-      'ProcessesBusiness',
-      'GetAsync',
-      id
-    );
+  getProcess(id) {
+    return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetAsync', id);
   }
   getAutoNumberByInstanceNoSetting(instanceNoSetting): Observable<any> {
     return this.api.exec(
@@ -419,7 +405,7 @@ export class CodxDpService {
     );
   }
 
-  getListStepByIdProccessCopy(data){
+  getListStepByIdProccessCopy(data) {
     return this.api.exec<any>(
       'DP',
       'StepsBusiness',
@@ -427,12 +413,20 @@ export class CodxDpService {
       data
     );
   }
-  updateFiels(data){
+  updateFiels(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
       'UpdateInstanceStepFielsByStepIDAsync',
       data
+    );
+  }
+  getGuide(processID) {
+    return this.api.exec<any>(
+      'DP',
+      'StepsBusiness',
+      'GetListStepsNameByProcessIDAsync',
+      processID
     );
   }
 }

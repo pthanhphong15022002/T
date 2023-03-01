@@ -1,6 +1,6 @@
 import { change } from '@syncfusion/ej2-grids';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CacheService,
   CallFuncService,
@@ -18,16 +18,18 @@ import { DP_Steps_TaskGroups } from 'projects/codx-dp/src/lib/models/models';
 })
 export class StepTaskGroupComponent implements OnInit {
   dialog!: DialogRef;
-  grvTaskGroupsForm: FormModel;
+  formModel: FormModel;
   taskGroup: DP_Steps_TaskGroups;
   view = {};
   REQUIRE = ['taskGroupName'];
   days = 0;
   hours = 0;
   minutes = 0;
-  seconds = 0;
-  clear: any;
   type: string;
+  timeOld = 0;
+  differenceTime = 0;
+  step;
+  maxTimeGroup = 0;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -36,55 +38,103 @@ export class StepTaskGroupComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.taskGroup = dt?.data;
-    this.grvTaskGroupsForm = {
-      entityName: 'DP_Steps_TaskGroups',
-      formName: 'DPStepsTaskGroups',
-      gridViewName: 'grvDPStepsTaskGroups',
-    };
+    this.taskGroup = dt?.data?.taskGroup;
+    this.differenceTime = dt?.data?.differenceTime;
+    this.step = dt?.data?.step;
+    this.formModel = dt?.data?.form;
   }
 
   ngOnInit(): void {
     this.getFormModel();
-    this.type = this.taskGroup['recID'] ? 'edit' : 'add'
+    this.type = this.taskGroup['recID'] ? 'edit' : 'add';
+    this.hours = Number(this.differenceTime) % 24;
+    this.days = Math.floor(this.differenceTime / 24);
+    this.timeOld = this.getHour(this.taskGroup);
+    if (this.type == 'edit' && this.taskGroup['task']?.length > 0) {
+      this.taskGroup['task'].forEach((element) => {
+        let time = this.calculateTimeTaskInGroup(
+          this.taskGroup['task'],
+          element['recID']
+        );
+        this.maxTimeGroup = Math.max(this.maxTimeGroup, time);
+      });
+    }
   }
 
   getFormModel() {
-    this.cache.gridView('grvDPStepsTaskGroups').subscribe((res) => {
-      this.cache
-        .gridViewSetup('DPStepsTaskGroups', 'grvDPStepsTaskGroups')
-        .subscribe((res) => {
-          this.grvTaskGroupsForm = {
-            entityName: 'DP_Steps_TaskGroups',
-            formName: 'DPStepsTaskGroups',
-            gridViewName: 'grvDPStepsTaskGroups',
-          };
-          for (let key in res) {
-            if (res[key]['isRequire']) {
-              let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
-              this.view[keyConvert] = res[key]['headerText'];
-            }
+    this.cache
+      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .subscribe((res) => {
+        for (let key in res) {
+          if (res[key]['isRequire']) {
+            let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
+            this.view[keyConvert] = res[key]['headerText'];
           }
-          console.log(res);
-        });
-    });
+        }
+      });
   }
 
   changeUser(e) {
     this.taskGroup['roles'] = e;
   }
-
-  changeValueInput(event, data) {
-    if (event?.field === 'durationHour' && event?.data >= 24) {
-      this.taskGroup['durationDay'] =
-        Number(this.taskGroup['durationDay']) + Math.floor(event?.data / 24);
-      this.taskGroup['durationHour'] = Math.floor(event?.data % 24);
+  
+  changeValueNumber(event) {
+    let time =
+      event?.field === 'durationDay'
+        ? Number(event?.data) * 24 + this.taskGroup['durationHour']
+        : Number(this.taskGroup['durationDay']) * 24 + Number(event?.data);
+    if (time < this.maxTimeGroup) {
+      this.notiService.notifyCode(
+        'Thời gian nhỏ hơn tống thời gian của các task'
+      );
     } else {
-      data[event?.field] = event?.data;
+      if (event?.field === 'durationHour' && event?.data >= 24) {
+        this.taskGroup['durationDay'] =
+          Number(this.taskGroup['durationDay']) + Math.floor(event?.data / 24);
+        this.taskGroup['durationHour'] = Math.floor(event?.data % 24);
+      } else {
+        this.taskGroup[event?.field] = event?.data || 0;
+      }
     }
   }
+
+  changeValueInput(event, data) {
+    data[event?.field] = event?.data;
+  }
+
   changeValueDate(event, data) {
     data[event?.field] = event?.data?.fromDate;
+  }
+
+  shareUser(share) {
+    this.callfc.openForm(share, '', 500, 500);
+  }
+
+  close() {
+    this.dialog.close();
+  }
+
+  getHour(data) {
+    let hour =
+      Number(data['durationDay'] || 0) * 24 + Number(data['durationHour'] || 0);
+    return hour;
+  }
+
+  calculateTimeTaskInGroup(taskList, taskId) {
+    let task = taskList.find((t) => t['recID'] === taskId);
+    if (!task) return 0;
+    if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
+      return this.getHour(task);
+    } else {
+      const parentIds = task.parentID.split(';');
+      let maxTime = 0;
+      parentIds?.forEach((parentId) => {
+        const parentTime = this.calculateTimeTaskInGroup(taskList, parentId);
+        maxTime = Math.max(maxTime, parentTime);
+      });
+      const completionTime = this.getHour(task) + maxTime;
+      return completionTime;
+    }
   }
 
   handleSave() {
@@ -100,17 +150,20 @@ export class StepTaskGroupComponent implements OnInit {
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
     } else {
-      this.dialog.close(this.taskGroup);
-      clearInterval(this.clear);
+      let difference = this.getHour(this.taskGroup) - this.timeOld;
+      if (difference > 0 && difference > this.differenceTime) {
+        this.notiService.alertCode('DP010').subscribe((x) => {
+          if (x.event && x.event.status == 'Y') {
+            let timeStep =
+              this.getHour(this.step) + (difference - this.differenceTime);
+            this.step['durationDay'] = Math.floor(timeStep / 24);
+            this.step['durationHour'] = timeStep % 24;
+            this.dialog.close(this.taskGroup);
+          }
+        });
+      } else {
+        this.dialog.close(this.taskGroup);
+      }
     }
   }
-
-  close() {
-    this.dialog.close();
-    clearInterval(this.clear);
-  }
-  shareUser(share) {
-    this.callfc.openForm(share, '', 500, 500);
-  }
-
 }

@@ -51,7 +51,7 @@ export class PopupAddCardsComponent implements OnInit {
   userReciver: string = "";
   userReciverName: string = "";
   lstShare: any[] = [];
-  gifts: any;
+  gifts: any[] = [];
   giftCount: number;
   shareControl: string = "9";
   objectType: string = "";
@@ -64,6 +64,7 @@ export class PopupAddCardsComponent implements OnInit {
   countCardSend: number = 0;
   countPointSend: number = 0;
   max: number = 0;
+  min: number = 0;
 
   MEMBERTYPE = {
     CREATED: "1",
@@ -240,12 +241,12 @@ export class PopupAddCardsComponent implements OnInit {
         this.getGiftInfor(data);
         break;
       case "quantity":
-        if (!this.gifts || !this.gifts?.availableQty || !this.gifts?.price) {
+        if (!this.gifts[0] || !this.gifts[0]?.availableQty || !this.gifts[0]?.price) {
           this.form.patchValue({ quantity: 0 });
           this.notifySV.notify("Vui lòng chọn quà tặng");
           return;
         }
-        else if (data > this.gifts.availableQty) {
+        else if (data > this.gifts[0].availableQty) {
 
           this.form.patchValue({ quantity: this.quantityOld });
           this.notifySV.notify("Vượt quá số dư quà tặng");
@@ -254,7 +255,7 @@ export class PopupAddCardsComponent implements OnInit {
         else {
           this.quantityOld = data - 1;
           this.quantity = data;
-          this.amount = this.quantity * this.gifts.price;
+          this.amount = this.quantity * this.gifts[0].price;
           this.form.patchValue({ quantity: data });
         }
         break;
@@ -518,7 +519,9 @@ export class PopupAddCardsComponent implements OnInit {
 
   // get gift infor
   getGiftInfor(giftID: string) {
+    this.min = 0;
     this.max = 0;
+
     if (giftID) {
       this.api.execSv(
         "FD",
@@ -532,14 +535,13 @@ export class PopupAddCardsComponent implements OnInit {
             this.notifySV.notify("Số dư quà tặng không đủ");
           }
           else {
-            // if (this.gifts.length == 0) {
-            //   this.gifts = [];
-            // }
-            // this.gifts.push(res);
-
-            this.gifts = res;
+            if (this.gifts.length == 0) {
+              this.gifts = [];
+            }
+            this.gifts.push(res);
             this.form.patchValue({ giftID: giftID });
             this.max = res.availableQty;
+            this.min = 1;
           }
         }
       });
