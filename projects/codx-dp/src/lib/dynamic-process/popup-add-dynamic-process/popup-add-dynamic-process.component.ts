@@ -495,10 +495,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let newNo = tabNo;
     let oldNo = this.currentTab;
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
-      if (
+      if (tabNo!=0 &&(
         !this.process.instanceNoSetting ||
         (this.process.instanceNoSetting &&
-          this.process.instanceNoSetting != this.instanceNoSetting)
+          this.process.instanceNoSetting != this.instanceNoSetting))
       ) {
         this.notiService.alertCode('DP009').subscribe((e) => {
           if (e?.event?.status == 'Y') {
@@ -510,7 +510,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.updateNodeStatus(oldNo, newNo);
         this.currentTab = tabNo;
       }
-
     }
   }
   //#region Open form
@@ -1594,42 +1593,41 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.taskList,
       this.groupTaskID || null,
     ];
-    var functionID = "DPT0206" //id tuy chojn menu ne
+    var functionID = 'DPT0206'; //id tuy chojn menu ne
     this.cache.functionList(functionID).subscribe((f) => {
-      this.cache
-        .gridViewSetup(f.formName, f.gridViewName)
-        .subscribe((grv) => {
-          let option = new SidebarModel();
-          let formModel = this.dialog?.formModel;
-          formModel.formName = f.formName;
-          formModel.gridViewName = f.gridViewName;
-          formModel.entityName = f.entityName;
-          formModel.funcID = functionID;
-          option.FormModel = formModel;
-          option.Width = '550px';
-          option.zIndex = 1010;
-          let dialog = this.callfc.openSide(PopupJobComponent, listData, option);
+      this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
+        let option = new SidebarModel();
+        let formModel = this.dialog?.formModel;
+        formModel.formName = f.formName;
+        formModel.gridViewName = f.gridViewName;
+        formModel.entityName = f.entityName;
+        formModel.funcID = functionID;
+        option.FormModel = formModel;
+        option.Width = '550px';
+        option.zIndex = 1010;
+        let dialog = this.callfc.openSide(PopupJobComponent, listData, option);
 
-          dialog.closed.subscribe((e) => {
-            if (e?.event) {
-              this.groupTaskID = null;
-              let taskData = e?.event?.data;
-              if (e.event?.status === 'add' || e.event?.status === 'copy') {
-                let index = this.taskGroupList.findIndex(
-                  (group) => group.recID == taskData.taskGroupID
-                );
-                this.taskGroupList[index]['task'].push(taskData);
-                this.taskList.push(taskData);
-                this.addRole(taskData['roles'][0]);
-              } else {
-                if (taskData?.taskGroupID != taskGroupIdOld) {
-                  this.changeGroupTaskOfTask(taskData, taskGroupIdOld);
-                }
-                this.addRole(taskData['roles'][0], roleOld[0]);
+        dialog.closed.subscribe((e) => {
+          if (e?.event) {
+            this.groupTaskID = null;
+            let taskData = e?.event?.data;
+            if (e.event?.status === 'add' || e.event?.status === 'copy') {
+              let index = this.taskGroupList.findIndex(
+                (group) => group.recID == taskData.taskGroupID
+              );
+              this.taskGroupList[index]['task'].push(taskData);
+              this.taskList.push(taskData);
+              this.addRole(taskData['roles'][0]);
+            } else {
+              if (taskData?.taskGroupID != taskGroupIdOld) {
+                this.changeGroupTaskOfTask(taskData, taskGroupIdOld);
               }
+              this.addRole(taskData['roles'][0], roleOld[0]);
             }
-          });
-        })})
+          }
+        });
+      });
+    });
 
     // let frmModel: FormModel = {
     //   entityName: 'DP_Steps_Tasks',
@@ -1924,7 +1922,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   async setTimeGroup(group, task, maxHour) {
-    let x = await firstValueFrom(this.notiService.alertCode("DP010"));
+    let x = await firstValueFrom(this.notiService.alertCode('DP010'));
     if (x.event && x.event.status == 'Y') {
       let time = this.getHour(task) || 0;
       group['durationDay'] = Math.floor(maxHour / 24);

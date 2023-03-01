@@ -127,7 +127,7 @@
                   aria-labelledby="dropdownMenuButton"
                 >
                   <container-element [ngSwitch]="submenu">
-                    <!-- the same view can be shown in more than one case 
+                    <!-- the same view can be shown in more than one case
                               *ngSwitchCase="'multi-choice' || 'singe-choice'"
                           -->
                     <some-element *ngSwitchCase="'DMT05'">
@@ -422,7 +422,10 @@
 
     <!-- Home -->
     <div class="align-items-center d-flex ms-1 ms-lg-3">
-      <a class="d-flex align-items-center" href="/">
+      <a
+        class="d-flex align-items-center"
+        (click)="codxService.navigate(null, '/')"
+      >
         <!-- begin::Menu wrapper -->
         <div
           class="btn btn-icon btn-active-light-primary position-relative"
