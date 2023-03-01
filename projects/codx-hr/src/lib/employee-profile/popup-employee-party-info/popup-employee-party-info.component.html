@@ -9,16 +9,16 @@
     *ngIf="isAfterRender"
 >
     <ng-template #body>
-        <div class="row">
-            <codx-label class="text-primary"
+        <div class="fw-bold mb-3 mt-6 text-primary">
+            <codx-label
                 default="THÔNG TIN ĐOÀN TNCS HCM"
                 [formModel]="formModel"
             >
             </codx-label>
         </div>
 
-        <div class="form-group">
-            <codx-input
+        <div class="form-group d-flex align-items-bottom">
+            <codx-input class="me-2"
                 field="isYUnion"
                 [formModel]="formModel"
                 [Group]="formGroup"
@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="fw-bold mb-3 mt-6 text-primary">
             <codx-label class="text-primary"
                 [name]="'lblTitleAddPartyInfo'"
                 default="THÔNG TIN ĐẢNG CSVN"
@@ -85,14 +85,14 @@
             </codx-label>
         </div>
 
-        <div class="form-group">
-            <codx-input
+        <div class="form-group d-flex align-items-bottom">
+            <codx-input class="me-2"
                 field="isParty"
                 [formModel]="formModel"
                 [Group]="formGroup"
             >
             </codx-input>
-            <codx-label class="ms-2" fiedName="IsParty" [formModel]="formModel">
+            <codx-label fiedName="IsParty" [formModel]="formModel">
             </codx-label>
         </div>
 
