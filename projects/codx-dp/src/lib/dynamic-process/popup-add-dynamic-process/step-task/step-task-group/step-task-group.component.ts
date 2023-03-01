@@ -112,8 +112,9 @@ export class StepTaskGroupComponent implements OnInit {
       if(difference > 0 && difference > this.differenceTime){
         this.notiService.alertCode("DP010").subscribe((x) => {
           if (x.event && x.event.status == 'Y') {
-            // this.step['durationDay'] = Math.floor(maxtime / 24);
-            // this.step['durationHour'] = maxtime % 24;
+            let timeStep = this.getHour(this.step) + (difference - this.differenceTime);
+            this.step['durationDay'] = Math.floor(timeStep / 24);
+            this.step['durationHour'] = timeStep % 24;
             this.dialog.close(this.taskGroup);
           }
         });
