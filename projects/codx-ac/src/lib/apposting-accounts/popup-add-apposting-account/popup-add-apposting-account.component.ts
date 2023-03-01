@@ -25,6 +25,7 @@ export class PopupAddAPPostingAccountComponent
   extends UIComponent
   implements AfterViewInit
 {
+  //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   apPostingAccount: IAPPostingAccount = {} as IAPPostingAccount;
   formTitle: string = '';
@@ -49,7 +50,9 @@ export class PopupAddAPPostingAccountComponent
 
     console.log('postType', this.apPostingAccount.postType);
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {
     this.cache
       .gridViewSetup(
@@ -62,7 +65,16 @@ export class PopupAddAPPostingAccountComponent
   }
 
   ngAfterViewInit(): void {}
+  //#endregion
 
+  //#region Event
+  handleInputChange(e) {
+    console.log(e);
+    this.apPostingAccount[e.field] = e.data;
+  }
+  //#endregion
+
+  //#region Method
   save(closeAfterSaving: boolean): void {
     console.log(this.apPostingAccount);
     console.log(this.form.formGroup);
@@ -122,12 +134,9 @@ export class PopupAddAPPostingAccountComponent
         }
       });
   }
+  //#endregion
 
-  handleInputChange(e) {
-    console.log(e);
-    this.apPostingAccount[e.field] = e.data;
-  }
-
+  //#region Function
   clearRightInput(prop) {
     this.form.formGroup.controls[prop].reset();
   }
@@ -135,4 +144,5 @@ export class PopupAddAPPostingAccountComponent
   toPascalCase(camelCase: string): string {
     return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
   }
+  //#endregion
 }

@@ -179,7 +179,7 @@ export class PopupDistributeOKRComponent
               if (listOrg) {
                 this.orgUnitTree = listOrg;
                 this.codxOmService
-                  .getOKRLink(this.okrRecID)
+                  .getOKRDistributed(this.okrRecID)
                   .subscribe((links: any) => {
                     //Tạo sơ đồ tổ chức có okr đã phân bổ
                     if (links && links.length > 0) {
