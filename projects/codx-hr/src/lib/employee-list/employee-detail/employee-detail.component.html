@@ -2437,12 +2437,11 @@
             </div>
 
             <div class="mb-1">
-              <div class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"></div>
               <div class="d-flex flex-wrap mt-6 mb-3">
-                <div [style.background]="'black'" class="badge border-0 me-2" *ngFor="let asset of lstAsset">
-                  <div class="has-action-menu">
+                <div  *ngFor="let asset of lstAsset">
+                  <div class="badge border-0 me-2 badge-primary" [style.background]="getAssetBackgroundColor(asset)" [style.color]="getAssetFontColor(asset)">
                     {{
-                    asset.assetCategory
+                    asset
                     | formatvalue : eAssetFormModel : "assetCategory"
                     | async
                     }}
@@ -2778,6 +2777,8 @@
                   >
                   </codx-label> -->
                   {{ getFormHeader("HRTEM0503") }}
+                  <span class="fs-5 text-gray-500 ms-2"> | </span>
+                  <span class="text-gray-500 ms-1">({{ dayoffRowCount }})</span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -2796,6 +2797,8 @@
                 </button>
               </div>
             </div>
+
+            <div>Tiêu chuẩn phép năm: 14 ngày/năm | Còn lại năm trước: 1.5 ngày - Còn năm nay: 12 ngày. String này đang gán cứng chờ module phát triển</div>
 
             <div class="mb-1">
               <div class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3">
@@ -4084,7 +4087,7 @@
 
 <ng-template #templateEAssetCol1 let-data>
   <div>
-    <div>
+    <div class="badge border-0 me-2 badge-primary" [style.background]="getAssetBackgroundColor(data.assetCategory)" [style.color]="getAssetFontColor(data.assetCategory)">
       {{
       data?.assetCategory
       | formatvalue : eAssetFormModel : "assetCategory"
@@ -4104,15 +4107,17 @@
     {{ data?.issuedDate | fmDT }}
     <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
   </div>
-  <div *ngIf="data?.isAllowReturn == true">
+  <div *ngIf="data?.isAllowReturn == true" class="badge border-0 me-2 badge-primary">
     {{ eAssetHeaderText["IsAllowReturn"] }}
   </div>
 </ng-template>
 
 <ng-template #templateEAssetCol3 let-data>
   <div class="has-action-menu min-h-40px">
-    <div *ngIf="data?.isReturned == true" class="has-action-menu">
-      {{ eAssetHeaderText["IsReturned"] }}
+    <div *ngIf="data?.isReturned == true" class="has-action-menu" >
+      <div class="badge border-0 me-2 badge-primary">
+        {{ eAssetHeaderText["IsReturned"] }}
+      </div>
       <i class="icon-calendar_today"></i>
       {{ data?.returnedDate | fmDT }}
     </div>

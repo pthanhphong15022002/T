@@ -765,6 +765,16 @@ export class CodxHrService {
       data
     );
   }
+
+  LoadDataEAsset(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'LoadDataEAssetAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region EAppointionsBusiness
