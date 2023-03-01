@@ -1,7 +1,7 @@
 <codx-views #view [views]="views" (viewChanged)="viewChanged($event)" [autoLoad]="false" [toolbarDisplay]="false" *ngIf="isAfterRender" >
 </codx-views>
 <ng-template #panelRight>
-  <div class="w-100 h-100 bg-white">
+  <div class="w-100 h-100 bg-white overflow-hidden d-flex flex-column">
     <!-- <lib-okr-toolbar (click)="click($event)" (hiddenChart)="hiddenChartClick($event)" [data]="dataOKRPlans" [dataChild]="dataOKR" [formModel]="view?.formModel"></lib-okr-toolbar> -->
     <div class="d-flex align-items-center justify-content-between pt-3 mx-5">
       <div class="d-flex align-items-center col-3 text-white om-switch-room cursor-pointer">
@@ -60,7 +60,7 @@
     </div>
 
 
-    <div class="p-om-okr d-flex justify-content-center">
+    <div class="p-om-okr flex-grow-1">
       <ejs-tab id="om-tab">
         <e-tabitems>
           <e-tabitem>
@@ -71,14 +71,16 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <ng-container *ngIf="!planNull ; else elseOKR">
-                <ng-container *ngIf="dataOKR != null">
-                  <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel"
+              <div class="h-100" *ngIf="!planNull ; else elseOKR">
+                <div class="h-100" *ngIf="dataOKR != null">
+                    <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel"
                     [gridView]="gridView" [obFuncID]="obFuncID" [krFuncID]="krFuncID" [skrFuncID]="skrFuncID"
                     [formModelKR]="formModelKR" [formModelOB]="formModelOB" [formModelSKR]="formModelSKR"
                     [funcID]="funcID" [isHiddenChart]="isHiddenChart"></lib-okr-targets>
-                </ng-container>
-              </ng-container>
+                  
+                  
+                </div>
+              </div>
               <ng-template #elseOKR>
                 <div class="w-100 my-10  text-center d-flex flex-row justify-content-center align-item-center">
                   <div class="col-2"></div>

@@ -346,7 +346,12 @@ renderFooter=false;
   clickChangeItemViewStatus(stt, recID) {
     this.itemDetailStt = stt;
   }
+  meetingNow(url:string){
+    if(url !=null){
 
+      window.open(url, '_blank');
+    }
+  }
   setHeight() {
     let main,
       header = 0;
