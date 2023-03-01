@@ -122,7 +122,7 @@ export class PopupAddItemStyleComponent extends UIComponent {
           }
 
           this.savedItemStyles = this.savedItemStyles.map((origin) =>
-            origin.id === this.itemStyle.id ? this.itemStyle : origin
+            origin.recID === this.itemStyle.recID ? this.itemStyle : origin
           );
 
           console.log(this.savedItemStyles);

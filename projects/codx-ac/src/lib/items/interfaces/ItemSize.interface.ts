@@ -1,5 +1,4 @@
 export interface ItemSize {
-  id: string;
   recID: string;
   itemID: string;
   sizeID: string;

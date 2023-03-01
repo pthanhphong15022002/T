@@ -99,7 +99,7 @@ export class InstancesComponent
   sumDaySteps: number;
   lstParticipants = [];
   oldIdInstance: any;
-  viewMode = 6;
+  viewMode:any;
   viewModeDetail = 'S';
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE

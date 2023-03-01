@@ -103,7 +103,7 @@ export class PopupAddItemColorComponent extends UIComponent {
           this.notiService.notifyCode('SYS007');
 
           this.savedItemColors = this.savedItemColors.map((origin) =>
-            origin.id === this.itemColor.id ? this.itemColor : origin
+            origin.recID === this.itemColor.recID ? this.itemColor : origin
           );
         }
       });

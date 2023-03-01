@@ -8,10 +8,10 @@
 >
 </codx-views>
 <ng-template #panelContent>
-  <div class="page-pw h-employee p-3 pb-0 bg-body rounded-2">
+  <div class="page-pw h-employee pb-0">
     <div class="page-profile">
       <div class="d-flex">
-        <div class="user-left me-6 border min-w-350px w-350px bg-white">
+        <div class="user-left me-4 border min-w-350px w-350px bg-white">
           <div class="bg-sidebar">
             <div class="profile-bg"></div>
             <div class="d-flex flex-column text-center mx-4 profile-info">
@@ -261,7 +261,7 @@
             </div>
           </div>
 
-          <div class="d-flex flex-column pt-3 px-3 border-top">
+          <div class="d-flex flex-column p-4 pb-1 border-top">
             <div class="d-flex flex-wrap mb-2">
               <div class="d-flex align-items-center text-danger me-4">
                 <span class="icon-qr_code_scanner icon-14 me-2"></span>
@@ -979,13 +979,13 @@
 
 <!-- pane_0 Thông tin cá nhân-->
 <ng-template #info>
-  <div class="tab-horizone px-4 h-od-tab">
+  <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul
       ngbNav
       #nav="ngbNav"
       [(activeId)]="active[0]"
       (navChange)="navChange($event)"
-      class="nav nav-tabs"
+      class="nav nav-tabs px-4"
     >
       <ng-container *ngFor="let item of lstFuncSelfInfo; let i = index">
         <li [ngbNavItem]="item.functionID" class="nav-item">
@@ -1002,7 +1002,7 @@
   </div>
 
   <div
-    class="pw-content w-100 scroll-y mt-1"
+    class="pw-content w-100 scroll-y"
     data-kt-scroll-activate="{default: true}"
     data-kt-scroll-max-height="auto"
     data-kt-scroll-dependencies=".pw-profile,.pw-menu"
@@ -1017,7 +1017,7 @@
       <ng-container>
         <!-- Thông tin bản thân -->
         <div class="user-profile overview d-block mb-3" [id]="eInfoFuncID">
-          <div class="rounded-2 p-4 bg-white mt-4">
+          <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
                 <span class="icon-i-person icon-18 me-2"></span>
@@ -1487,35 +1487,8 @@
                     </div>
                   </div>
                 </div>
-                <!-- Địa chỉ thường chú -->
-                <div class="row mb-5">
-                  <div class="text-gray-600 pb-1">
-                    <codx-label fiedName="Street" [formModel]="eInfoFormModel">
-                    </codx-label>
-                  </div>
-                  <div class="d-flex align-items-center">
-                    <span class="icon-place icon-16 text-gray-600 me-2"></span>
-                    <span #street class="fw-bold text-dark fs-6">
-                      {{ infoPersonal?.street ?? infoPersonal?.address }}</span
-                    >
-                  </div>
-                </div>
-                <div class="col-8">
-                  <div class="text-gray-600 pb-1">
-                    <codx-label
-                      fiedName="TAddress"
-                      [formModel]="eInfoFormModel"
-                    >
-                    </codx-label>
-                  </div>
-                  <div class="d-flex align-items-center">
-                    <span class="icon-place icon-16 text-gray-600 me-2"></span>
-                    <span #pitNumber class="fw-bold">
-                      {{ infoPersonal?.tAddress }}</span
-                    >
-                  </div>
-                </div>
-              </div>
+                
+              
               <!-- Địa chỉ thường chú -->
               <div class="row mb-5">
                 <div class="text-gray-600 pb-1">
@@ -1543,12 +1516,13 @@
                 </div>
               </div>
             </div>
+            </div>
           </div>
         </div>
 
         <!-- Thông tin Đảng - Đoàn -->
         <div class="user-profile overview d-block mb-3" [id]="ePartyFuncID">
-          <div class="rounded-2 p-4 bg-white mt-4">
+          <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
                 <span class="icon-folder_special icon-18 me-2"></span>
@@ -1638,7 +1612,7 @@
 
         <!-- Quan hệ gia đình -->
         <div class="user-profile overview d-block mb-3 user-family" [id]="eFamiliesFuncID">
-          <div class="rounded-2 p-4 bg-white mt-4">
+          <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
                 <span class="icon-family icon-18 me-2"></span>
@@ -1771,13 +1745,13 @@
 
 <!-- pane_1 Thông tin pháp lí-->
 <ng-template #legal>
-  <div class="tab-horizone px-4 h-od-tab">
+  <div class="tab-horizone bg-white h-od-tab">
     <ul
       ngbNav
       #nav="ngbNav"
       [(activeId)]="active[1]"
       (navChange)="navChange($event)"
-      class="nav nav-tabs"
+      class="nav nav-tabs px-4"
     >
       <ng-container *ngFor="let item of lstFuncLegalInfo; let i = index">
         <li [ngbNavItem]="item.functionID" class="nav-item">
@@ -2250,13 +2224,13 @@
 
 <!-- pane_2 Thông tin công việc-->
 <ng-template #jobInfo>
-  <div class="tab-horizone px-4 h-od-tab">
+  <div class="tab-horizone bg-white h-od-tab">
     <ul
       ngbNav
       #nav="ngbNav"
       [(activeId)]="active[2]"
       (navChange)="navChange($event)"
-      class="nav nav-tabs"
+      class="nav nav-tabs px-4"
     >
       <ng-container *ngFor="let item of lstFuncTaskInfo; let i = index">
         <li [ngbNavItem]="item.functionID" class="nav-item">
@@ -2998,13 +2972,13 @@
 
 <!-- pane_3 Lương & Phúc lợi -->
 <ng-template #benefit>
-  <div class="tab-horizone px-4 h-od-tab">
+  <div class="tab-horizone bg-white h-od-tab">
     <ul
       ngbNav
       #nav="ngbNav"
       [(activeId)]="active[3]"
       (navChange)="navChange($event)"
-      class="nav nav-tabs"
+      class="nav nav-tabs px-4"
     >
       <ng-container *ngFor="let item of lstFuncSalary; let i = index">
         <li [ngbNavItem]="item.functionID" class="nav-item">
