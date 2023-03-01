@@ -415,14 +415,16 @@ export class CodxTasksComponent
               if (x.isDefault && !this.viewMode) this.viewMode = x.view;
             }
           });
-          this.views = viewFunc.sort((a,b)=>{return  b.id -a.id }  );
+          this.views = viewFunc.sort((a, b) => {
+            return b.id - a.id;
+          });
         }
       });
 
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
     this.view.dataService.methodDelete = 'DeleteTaskAsync';
-    
+
     this.detectorRef.detectChanges();
   }
   //#endregion
@@ -703,6 +705,16 @@ export class CodxTasksComponent
   }
 
   changeStatusTask(moreFunc, taskAction) {
+    if (
+      (taskAction.createdBy != this.user.userID &&
+        taskAction.category == '3') ||
+      (taskAction.owner != this.user.userID &&
+        (taskAction.category == '2' || taskAction.category == '1'))
+    ) {
+      //dung chung ma voi ep
+      this.notiService.notifyCode('TM052');
+      return;
+    }
     if (taskAction.status == '05') {
       this.notiService.notifyCode('TM020');
       return;
@@ -1542,6 +1554,10 @@ export class CodxTasksComponent
       case 'TMT02012':
       case 'TMT02013':
       case 'TMT02014':
+      case 'TMT02021':
+      case 'TMT02022':
+      case 'TMT02023':
+      case 'TMT02024':
       case 'TMT02031':
       case 'TMT02032':
       case 'TMT02033':
@@ -1572,7 +1588,7 @@ export class CodxTasksComponent
         //tắt duyệt confirm
         if (
           (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
-          (data.confirmControl == '0' || data.confirmStatus != '1')
+          (data.confirmStatus != '1')
         ) {
           x.disabled = true;
         }

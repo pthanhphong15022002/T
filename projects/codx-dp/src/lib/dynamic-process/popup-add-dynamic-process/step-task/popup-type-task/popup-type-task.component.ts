@@ -35,6 +35,8 @@ export class PopupTypeTaskComponent implements OnInit {
             checked: false,
           };
         });
+        this.jobType = this.listJobType[0];
+        this.jobType['checked'] = true;
       }
     });
   }
@@ -46,7 +48,7 @@ export class PopupTypeTaskComponent implements OnInit {
     this.jobType['checked'] = true;
   }
   handlerContinue(){
-    this.dialog.close(this.jobType?.value);
+    this.dialog.close(this.jobType);
   }
 
 }

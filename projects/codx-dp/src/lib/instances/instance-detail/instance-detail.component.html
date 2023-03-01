@@ -10,7 +10,7 @@
                 <h3 class="mb-0 p-3">
                   {{ dataSelect?.title }}
                 </h3>
-                <div class="mb-5">               
+                <div class="mb-5">
                   <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false"
                     [value]="dataSelect?.tags">
                   </codx-tag>
@@ -82,12 +82,12 @@
         <div *ngIf="dataSelect?.memo" [innerHTML]="sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)"></div>
       </div>
       <div class="d-flex justify-content-end">
-        <codx-input type="valuelist" refValue="DP034" [crrValue]="'S'" (valueChange)="cbxChange($event)">
+        <codx-input type="valuelist" refValue="DP034" [crrValue]="viewModelDetail" (valueChange)="cbxChange($event)">
         </codx-input>
       </div>
     </ng-template>
     <ng-template #body>
-      <ng-container *ngIf="idCbx == 'G'">
+      <ng-container *ngIf="viewModelDetail == 'G'">
         <codx-gantt-chart [dataSource]="ganttDs" [taskFields]="taskFields" [taskbarHeight]="60" [rowHeight]="60"
           [readOnly]="true" [templateTaskbar]="ganttItems" [toolbar]="[]"></codx-gantt-chart>
         <ng-template #ganttItems let-data>
@@ -98,7 +98,7 @@
         </ng-template>
       </ng-container>
 
-      <ng-container *ngIf="idCbx == 'S'">
+      <ng-container *ngIf="viewModelDetail == 'S'">
         <div class="group-steps" *ngIf="listStepUpdate != null && listStepUpdate.length > 0">
           <div class="d-flex arrow-steps flex-container">
             <ng-container *ngFor="let item of listStepUpdate; index as i">
@@ -112,18 +112,6 @@
               <span> {{ item.stepName }}</span>
             </div>
             </ng-container>
-          </div>
-          <div class="d-flex flex-container">
-            <div *ngFor="let item of listSteps; index as i" class="process-wrap">
-              <div [ngClass]="
-                  i == currentStep
-                    ? 'progress-current'
-                    : i < currentStep
-                    ? 'progress-bar'
-                    : ''
-                " style="flex-grow: 1" role="progressbar" [style.width]="item.progress + '%'" aria-valuenow="50"
-                aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
           </div>
         </div>
         <ng-container *ngIf="tmpTeps">
@@ -145,13 +133,13 @@
         </ng-container>
 
       </ng-container>
-      <ng-container *ngIf="idCbx == 'F'">
+      <ng-container *ngIf="viewModelDetail == 'F'">
         <ng-container *ngFor="let item of listSteps">
           <codx-field-detail *ngIf="!item?.isSuccessStep && !item?.isFailStep" [dataStep]="item" [isUpdate]="dataSelect.write"></codx-field-detail>
         </ng-container>
       </ng-container>
     </ng-template>
-    
+
     <ng-template #tabs>
       <codx-tabs
         [entityName]="formModel.entityName"

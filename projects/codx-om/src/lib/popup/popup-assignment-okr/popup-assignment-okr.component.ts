@@ -42,31 +42,38 @@ import { link } from 'fs';
   templateUrl: './popup-assignment-okr.component.html',
   styleUrls: ['./popup-assignment-okr.component.scss'],
 })
-export class PopupAssignmentOKRComponent extends UIComponent implements AfterViewInit {
+export class PopupAssignmentOKRComponent
+  extends UIComponent
+  implements AfterViewInit
+{
   views: Array<ViewModel> | any = [];
   @ViewChild('body') body: TemplateRef<any>;
 
   dialogRef: DialogRef;
-  title='';
-  okrName='';
+  title = '';
+  okrName = '';
   okrRecID: any;
   curUser: any;
   userInfo: any;
   orgUnitTree: any;
-  isAfterRender=false;
+  isAfterRender = false;
   dataOKR: any;
-  funcID:'';
-  radioKRCheck=true;
-  radioOBCheck=false;
-  listDistribute=[];
-  isAdd:boolean;
-  typeKR= OMCONST.VLL.OKRType.KResult;
-  typeOB= OMCONST.VLL.OKRType.Obj;
-  cbbOrg=[];  
+  funcID: '';
+  radioKRCheck = true;
+  radioOBCheck = false;
+  listDistribute = [];
+  isAdd: boolean;
+  typeKR = OMCONST.VLL.OKRType.KResult;
+  typeOB = OMCONST.VLL.OKRType.Obj;
+  cbbOrg = [];
   //fields: Object = { text: 'orgUnitName', value: 'orgUnitID' };
-  assignmentOKR:any;
+  assignmentOKR: any;
   distributeToType: string;
   distributeType: any;
+  owner: any;
+  compFuncID = OMCONST.FUNCID.COMP;
+  deptFuncID = OMCONST.FUNCID.DEPT;
+  orgFuncID = OMCONST.FUNCID.ORG;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -78,25 +85,26 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.dialogRef = dialogRef;    
-    this.okrName=dialogData.data[0];    
-    this.okrRecID=dialogData.data[1];
-    this.distributeType=dialogData.data[2];
-    this.funcID=dialogData.data[3];
+    this.dialogRef = dialogRef;
+    this.okrName = dialogData.data[0];
+    this.okrRecID = dialogData.data[1];
+    this.distributeType = dialogData.data[2];
+    this.funcID = dialogData.data[3];
     this.title = dialogData?.data[4];
-    this.curUser= authStore.get();    
-    this.assignmentOKR=new DistributeOKR(); 
-    this.distributeToType=this.distributeType;
-    if(this.distributeToType==this.typeKR){      
-      this.radioKRCheck=true;
-      this.radioOBCheck=false;
-    }
-    else{
-      this.radioKRCheck=false;
-      this.radioOBCheck=true;
+    this.curUser = authStore.get();
+    this.assignmentOKR = new DistributeOKR();
+    this.distributeToType = this.distributeType;
+    if (this.distributeToType == this.typeKR) {
+      this.radioKRCheck = true;
+      this.radioOBCheck = false;
+    } else {
+      this.radioKRCheck = false;
+      this.radioOBCheck = true;
     }
   }
-  //-----------------------Base Func-------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -115,122 +123,161 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
   onInit(): void {
     this.getOKRAssign();
   }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Cache Data--------------------------------//
+  //---------------------------------------------------------------------------------//
+  // getCacheData(){
 
-  //-----------------------End-------------------------------//
+  // }
 
-  //-----------------------Base Event------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Data Func---------------------------------//
+  //---------------------------------------------------------------------------------//
+
+  getOKRAssign() {
+    this.codxOmService.getOKRByID(this.okrRecID).subscribe((res: any) => {
+      if (res) {
+        this.codxOmService.getOKRDistributed(this.okrRecID).subscribe((links: any) => {
+          if (links && links.length > 0) {
+            let oldLink = links[0];
+            this.assignmentOKR.okrName = oldLink?.okrName;
+            this.assignmentOKR.umid = oldLink?.umid;
+            this.assignmentOKR.isActive = true;
+            this.assignmentOKR.distributePct = oldLink?.distributePct;
+            this.assignmentOKR.distributeValue = oldLink?.distributeValue;
+            this.assignmentOKR.orgUnitID = oldLink?.orgUnitID;
+            this.assignmentOKR.orgUnitName = oldLink?.orgUnitName;
+            this.detectorRef.detectChanges();
+            this.isAdd = false;
+            this.codxOmService
+              .getManagerByOrgUnitID(this.assignmentOKR.orgUnitID)
+              .subscribe((ownerInfo) => {
+                if (ownerInfo) {
+                  this.owner = ownerInfo;
+                  this.assignmentOKR.owner = this.owner?.userID;
+                  this.assignmentOKR.employeeID = this.owner?.employeeID;
+                  this.assignmentOKR.orgUnitID = this.owner?.orgUnitID;
+                  this.assignmentOKR.departmentID = this.owner?.departmentID;
+                  this.assignmentOKR.companyID = this.owner?.companyID;
+                  this.assignmentOKR.positionID = this.owner?.positionID;
+                  this.assignmentOKR.employeeName = this.owner?.employeeName;
+                  this.assignmentOKR.orgUnitName = this.owner?.orgUnitName;
+                  this.assignmentOKR.departmentName = this.owner?.departmentName;
+                  this.assignmentOKR.companyName = this.owner?.companyName;
+                  this.assignmentOKR.positionName = this.owner?.positionName;
+                  
+                  this.isAfterRender = true;
+                }
+              });
+              
+              this.isAfterRender = true;
+          } else {
+            this.dataOKR = res;
+            this.assignmentOKR.okrName = this.dataOKR?.okrName;
+            this.assignmentOKR.umid = this.dataOKR?.umid;
+            this.assignmentOKR.isActive = false;
+            this.assignmentOKR.distributePct = 100;
+            this.assignmentOKR.distributeValue = this.dataOKR?.target;
+            this.isAdd = true;
+            this.detectorRef.detectChanges();
+            this.isAfterRender = true;
+          }
+        });
+      }
+    });
+  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Event------------------------------------//
+  //---------------------------------------------------------------------------------//
   click(event: any) {
     switch (event) {
     }
   }
   valueTypeChange(event) {
-    
-    if (event?.field==this.typeKR) {
-      this.distributeToType=OMCONST.VLL.OKRType.KResult;
-    } else if(event?.field==this.typeOB){
-      this.distributeToType=OMCONST.VLL.OKRType.Obj;
+    if (event?.field == this.typeKR) {
+      this.distributeToType = OMCONST.VLL.OKRType.KResult;
+    } else if (event?.field == this.typeOB) {
+      this.distributeToType = OMCONST.VLL.OKRType.Obj;
     }
-  this.detectorRef.detectChanges();
-}
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Get Data Func---------------------//
-  
-  getOKRAssign(){
-    this.codxOmService
-    .getOKRByID(this.okrRecID)
-    .subscribe((res: any) => {
-      if (res) {
-        this.codxOmService.getOKRLink(this.okrRecID).subscribe((links:any)=>{
-          if(links && links.length>0){
-            let oldLink = links[0];
-            this.assignmentOKR.okrName= oldLink?.okrName;
-            this.assignmentOKR.umid=oldLink?.umid;
-            this.assignmentOKR.isActive=true;
-            this.assignmentOKR.distributePct=oldLink?.distributePct;
-            this.assignmentOKR.distributeValue=oldLink?.distributeValue;
-            this.assignmentOKR.orgUnitID=oldLink?.orgUnitID;
-            this.assignmentOKR.orgUnitName=oldLink?.orgUnitName;            
-            this.detectorRef.detectChanges();
-            this.isAdd=false;
-            this.isAfterRender=true;
-          }
-          else{            
-            this.dataOKR = res;
-            this.assignmentOKR.okrName= this.dataOKR?.okrName;
-            this.assignmentOKR.umid=this.dataOKR?.umid;
-            this.assignmentOKR.isActive=false;
-            this.assignmentOKR.distributePct=100;
-            this.assignmentOKR.distributeValue=this.dataOKR?.target;
-            this.isAdd=true;
-            this.detectorRef.detectChanges();
-            this.isAfterRender=true;
-          }
-          
-        });
-      }      
-    });
+    this.detectorRef.detectChanges();
   }
-  //-----------------------End-------------------------------//
-
-  //-----------------------Validate Func---------------------//
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Logic Func------------------------//
-  
-  
-  onSaveForm(){
-    if(this.assignmentOKR.orgUnitID==null){
-      this.notificationsService.notify("OM",'2',null);
-      return;
-    }
-    this.codxOmService.distributeOKR(this.okrRecID,this.distributeToType,[this.assignmentOKR],this.isAdd)
-    .subscribe(res=>{
-      if(res){        
-        this.notificationsService.notifyCode('SYS034');
-      }
-      this.dialogRef && this.dialogRef.close();
-    })
-  }
-  //-----------------------End-------------------------------//
-
-  //-----------------------Logic Event-----------------------//
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Custom Func-----------------------//
-  cbxOrgChange(evt:any){
-    if(evt?.data!=null && evt?.data!=''){     
-      this.assignmentOKR.orgUnitID= evt.data;
-      this.assignmentOKR.orgUnitName= evt.component?.itemsSelected[0]?.OrgUnitName;
-      
-          let x= this.curUser;
-       
-      this.detectorRef.detectChanges();
-    }
-  }
-  //-----------------------End-------------------------------//
-
-  //-----------------------Custom Event-----------------------//
-  cancel(){
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Event----------------------------------//
+  //---------------------------------------------------------------------------------//
+  cancel() {
     this.dialogRef.close();
   }
-  nameChange(evt:any){
-    if(evt && evt?.data){
-      this.assignmentOKR.okrName= evt.data;
+  nameChange(evt: any) {
+    if (evt && evt?.data) {
+      this.assignmentOKR.okrName = evt.data;
       this.detectorRef.detectChanges();
     }
   }
-  deleteOrg(){
-    this.assignmentOKR.orgUnitID= null;
+  deleteOrg() {
+    this.assignmentOKR.orgUnitID = null;
     //this.assignmentOKR.orgUnitName= null;
     this.detectorRef.detectChanges();
   }
-  //-----------------------End-------------------------------//
+  cbxOrgChange(evt: any) {
+    if (evt?.data != null && evt?.data != '') {
+      this.assignmentOKR.orgUnitID = evt.data;
+      this.assignmentOKR.orgUnitName =
+        evt.component?.itemsSelected[0]?.OrgUnitName;
 
-  //-----------------------Popup-----------------------------//
+      this.codxOmService
+        .getManagerByOrgUnitID(this.assignmentOKR.orgUnitID)
+        .subscribe((ownerInfo) => {
+          if (ownerInfo) {
+            this.owner = ownerInfo;
+            this.assignmentOKR.owner = this.owner?.userID;
+            this.assignmentOKR.employeeID = this.owner?.employeeID;
+            this.assignmentOKR.orgUnitID = this.owner?.orgUnitID;
+            this.assignmentOKR.departmentID = this.owner?.departmentID;
+            this.assignmentOKR.companyID = this.owner?.companyID;
+            this.assignmentOKR.positionID = this.owner?.positionID;
+            this.assignmentOKR.employeeName = this.owner?.employeeName;
+            this.assignmentOKR.orgUnitName = this.owner?.orgUnitName;
+            this.assignmentOKR.departmentName = this.owner?.departmentName;
+            this.assignmentOKR.companyName = this.owner?.companyName;
+            this.assignmentOKR.positionName = this.owner?.positionName;
+          }
+        });
 
-  //-----------------------End-------------------------------//
+      this.detectorRef.detectChanges();
+    }
+  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Validate Func---------------------------------//
+  //---------------------------------------------------------------------------------//
+
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Logic Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
+
+  onSaveForm() {
+    if (this.assignmentOKR.orgUnitID == null) {
+      this.notificationsService.notify('OM', '2', null);
+      return;
+    }
+    this.codxOmService
+      .distributeOKR(
+        this.okrRecID,
+        this.distributeToType,
+        [this.assignmentOKR],
+        this.isAdd
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.notificationsService.notifyCode('SYS034');
+        }
+        this.dialogRef && this.dialogRef.close();
+      });
+  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Func-----------------------------------//
+  //---------------------------------------------------------------------------------//
+
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Popup-----------------------------------------//
+  //---------------------------------------------------------------------------------//
 }

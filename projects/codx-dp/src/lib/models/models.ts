@@ -40,6 +40,9 @@ export class DP_Processes {
   modifiedOn: Date;
   modifiedBy: string;
   instanceNoSetting: string;
+  viewMode: string;
+  viewModeDetail: string;
+  autoName: string;
 }
 
 export class DP_Processes_Permission {

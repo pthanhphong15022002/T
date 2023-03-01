@@ -397,15 +397,13 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     }
   }
   cancel(data: any) {
-    if (
-      this.authService.userValue.userID != data?.owner &&
-      !this.authService.userValue.administrator
+    if (!this.codxEpService.checkRole(this.authService.userValue,data?.owner)
     ) {
       this.notificationsService.notifyCode('TM052');
       return;
     }
     this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
-      if (res != null) {
+      if (res != null  && res?.msgCodeError==null) {
         this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
         data.approveStatus = '0';
         data.status = '0';
@@ -560,9 +558,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
 
   edit(evt?) {
     if (evt) {
-      if (
-        this.authService.userValue.userID != evt?.owner &&
-        !this.authService.userValue.administrator
+      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner)
       ) {
         this.notificationsService.notifyCode('TM052');
         return;
@@ -629,9 +625,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
-      if (
-        this.authService.userValue.userID != evt?.owner &&
-        !this.authService.userValue.administrator
+      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner)
       ) {
         this.notificationsService.notifyCode('TM052');
         return;

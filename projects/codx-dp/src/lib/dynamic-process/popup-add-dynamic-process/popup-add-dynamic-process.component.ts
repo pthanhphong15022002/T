@@ -34,6 +34,7 @@ import {
   CacheService,
   AuthStore,
   CRUDService,
+  AlertConfirmInputConfig,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -152,36 +153,26 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //stage-nvthuan
   user: any;
   userId: string;
-
   taskGroup: DP_Steps_TaskGroups;
-  taskGroupList: DP_Steps_TaskGroups[] = [];
-
-  taskList: DP_Steps_Tasks[] = [];
-
-  taskListSave: DP_Steps_Tasks[] = [];
-  taskGroupListSave: DP_Steps_TaskGroups[] = [];
-
   step: DP_Steps; //data step dc chọn
   stepList: DP_Steps[] = []; //danh sách step
-
   stepListAdd: DP_Steps[] = [];
-  stepListDelete = [];
-
+  taskList: DP_Steps_Tasks[] = [];
+  taskGroupList: DP_Steps_TaskGroups[] = [];
   roleGroupTaskOld: DP_Steps_Roles[] = [];
-
-  grvMoreFunction: FormModel;
-  grvTaskGroups: FormModel;
+  stepListDelete = [];
   grvStep: FormModel;
-
-  dayStep = 0;
-  hourStep = 0;
-
-  stepName = '';
-  isContinues = false;
+  grvTaskGroups: FormModel;
+  grvMoreFunction: FormModel;
+  formGroup: FormGroup;
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
-  formGroup: FormGroup;
+
+  dayStep = 0;
+  hourStep = 0;
+  stepName = '';
+  isContinues = false;
   refValue = 'DP018';
   gridViewSetup: any;
   userGroupJob = [];
@@ -218,8 +209,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   oldIdProccess: any;
   newIdProccess: any;
   listValueCopy: any;
-  MESSAGETIME =
-    'Thời hạn công việc lớn hơn nhóm công việc bạn có muốn lưu và thay đổi thời hạn nhóm công việc';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -270,8 +259,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.processTab = 2;
       this.getAvatar(this.process);
       this.instanceNoSetting = this.process.instanceNoSetting;
-    } else {
-      this.process.instanceNoSetting = dt.data.instanceNo;
+    } else if (this.action == 'add') {
+      this.setDefaultOwner();
       // this.step.owner = this.user.userID;
       // this.process.instanceNoSetting = this.process.processNo;
     }
@@ -302,27 +291,32 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.loadCbxProccess();
   }
 
-  ngAfterViewInit(): void {
-    //tesst
-    this.grvStep = {
-      entityName: 'DP_Steps',
-      formName: 'DPSteps',
-      gridViewName: 'grvDPSteps',
-    };
+  setDefaultOwner() {
+    var perm = new DP_Processes_Permission();
+    perm.objectID = this.user?.userID;
+    perm.objectName = this.user?.userName;
+    perm.objectType = '1';
+    perm.full = true;
+    perm.create = true;
+    perm.read = true;
+    perm.assign = true;
+    perm.edit = true;
+    perm.delete = true;
+    perm.roleType = 'O';
+    this.permissions.push(perm);
+    this.process.permissions = this.permissions;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     // this.updateNodeStatus(0,1);
-    this.grvMoreFunction = JSON.parse(JSON.stringify(this.dialog?.formModel));
-    this.grvMoreFunction.entityName = 'DP_InstancesSteps';
-    this.grvMoreFunction.formName = 'DPInstancesSteps';
-    this.grvMoreFunction.gridViewName = 'grvDPInstancesSteps';
     this.getTitleStepViewSetup();
     this.initForm();
     this.checkedDayOff(this.step?.excludeDayoff);
     if (this.action != 'add' && this.action != 'copy') {
       this.getStepByProcessID();
     }
+    this.grvMoreFunction = await this.getFormModel("DPT0402");
+    this.grvStep = await this.getFormModel("DPS0103")
   }
 
   //#region setup formModels and formGroup
@@ -490,8 +484,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let newNo = tabNo;
     let oldNo = this.currentTab;
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
-      this.updateNodeStatus(oldNo, newNo);
-      this.currentTab = tabNo;
+      if (tabNo!=0 &&(
+        !this.process.instanceNoSetting ||
+        (this.process.instanceNoSetting &&
+          this.process.instanceNoSetting != this.instanceNoSetting))
+      ) {
+        this.notiService.alertCode('DP009').subscribe((e) => {
+          if (e?.event?.status == 'Y') {
+            this.updateNodeStatus(oldNo, newNo);
+            this.currentTab = tabNo;
+          } else return;
+        });
+      } else {
+        this.updateNodeStatus(oldNo, newNo);
+        this.currentTab = tabNo;
+      }
     }
   }
   //#region Open form
@@ -874,7 +881,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       (x) => x.objectID == this.stepRoleOld?.objectID
     );
     var check = -1;
-    check = listPerm.findIndex((x) => x.objectID == this.stepRoleOld?.objectID);
+    if (this.stepRoleOld != null)
+      check = listPerm.findIndex(
+        (x) => x.objectID == this.stepRoleOld?.objectID
+      );
     if (index == -1) {
       if (i.length == 0) {
         if (check > -1) {
@@ -914,6 +924,85 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   checkRoleType(lst = []) {
     return lst.filter((x) => x.roleType == 'S').map((x) => x.objectID)[0];
+  }
+
+  removeUser(index) {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    var tmps = [];
+    this.notiService
+      .alertCode('SYS030')
+      .subscribe((x) => {
+        if (x.event.status == 'Y') {
+          var i = -1;
+          i = this.lstParticipants.findIndex(
+            (x) => x.objectID === this.process.permissions[index].objectID
+          );
+          if (this.process.permissions[index].roleType === 'P') {
+            var check = this.countRoleSteps(
+              this.process.permissions[index].objectID
+            );
+            if (check > 0) {
+              this.notiService.alertCode('DP011').subscribe((res) => {
+                if (res.event.status == 'Y') {
+                  for (let i = 0; i < this.stepList.length; i++) {
+                    var roles = this.stepList[i].roles;
+                    for (let j = 0; j < roles.length; j++) {
+                      if (
+                        roles[j].objectID ==
+                          this.process.permissions[index].objectID &&
+                        roles[j].roleType == 'S'
+                      ) {
+                        roles.splice(j, 1);
+                        j--;
+                      }
+                    }
+                  }
+                  this.process.permissions.splice(index, 1);
+                  if (i > -1) {
+                    this.lstParticipants.splice(i, 1);
+                  }
+                }
+              });
+            } else {
+              this.process.permissions.splice(index, 1);
+              if (i > -1) {
+                this.lstParticipants.splice(i, 1);
+              }
+            }
+          } else {
+            this.process.permissions.splice(index, 1);
+            if (i > -1) {
+              this.lstParticipants.splice(i, 1);
+            }
+          }
+
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+  }
+
+  countRoleSteps(objectID) {
+    let count = 0;
+    for (let i = 0; i < this.stepList.length; i++) {
+      var roles = this.stepList[i].roles;
+      for (let j = 0; j < roles.length; j++) {
+        if (roles[j].objectID == objectID && roles[j].roleType == 'S') {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
+
+  checkAssignRemove(i) {
+    if (
+      this.user.userID == this.process.permissions[i].objectID &&
+        this.process.permissions[i].roleType == 'O' &&
+      this.process.permissions[i].objectType == '1'
+    )
+      return false;
+    return true;
   }
 
   addFile(e) {
@@ -1229,16 +1318,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             step['taskGroups'] = taskGroupConvert;
 
             let taskGroup = new DP_Steps_TaskGroups();
-            taskGroup['task'] = taskGroupList[this.guidEmpty] || [];
-            taskGroup['recID'] = this.guidEmpty; // group task rỗng để kéo ra ngoài
+            taskGroup['task'] = taskGroupList['null'] || [];
+            taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
             step['taskGroups'].push(taskGroup);
 
             this.stepList.push(step);
           }
         });
         this.stepList.sort((a, b) => a['stepNo'] - b['stepNo']);
-        this.viewStepSelect(this.stepList[0]);// gán listStep[0] cho step
-        
+        this.viewStepSelect(this.stepList[0]); // gán listStep[0] cho step
       }
     });
   }
@@ -1277,10 +1365,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         groupTask['createdBy'] = this.userId;
         groupTask['modifiedOn'] = null;
         groupTask['modifiedBy'] = null;
-        groupTask['roles']?.forEach(role => {
+        groupTask['roles']?.forEach((role) => {
           role['recID'] = Util.uid();
-          role['taskGroupID'] = groupTask['recID']
-        }); 
+          role['taskGroupID'] = groupTask['recID'];
+        });
         if (groupTask['task']?.length > 0) {
           groupTask['task'].forEach((task) => {
             task['recID'] = Util.uid();
@@ -1291,18 +1379,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             task['parentID'] = '';
             task['modifiedOn'] = null;
             task['modifiedBy'] = null;
-            task['roles']?.forEach(role => {
+            task['roles']?.forEach((role) => {
               role['recID'] = Util.uid();
               role['taskID'] = task['recID'];
-            }); 
+            });
             taskCopy.push(task);
           });
         }
       });
     }
-    // copy fields 
-    if(this.step['fields']?.length > 0){
-      this.step['fields'].forEach(fields => {
+    // copy fields
+    if (this.step['fields']?.length > 0) {
+      this.step['fields'].forEach((fields) => {
         fields['recID'] = Util.uid();
         fields['stepID'] = this.step['recID'];
         fields['createdOn'] = new Date();
@@ -1359,8 +1447,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
   //taskGroup
-  openTaskGroup(data?: any, type?: string) {
+  async openTaskGroup(data?: any, type?: string) {
+    let form = await this.getFormModel("DPS0105")
     this.taskGroup = new DP_Steps_TaskGroups();
+    let timeStep = this.dayStep*24 + this.hourStep;
+    let differenceTime = this.getHour(this.step) - timeStep;
     if (data) {
       this.roleGroupTaskOld = JSON.parse(JSON.stringify(data?.roles)) || [];
       if (type === 'copy') {
@@ -1381,7 +1472,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       500,
       500,
       '',
-      this.taskGroup
+      {taskGroup: this.taskGroup, differenceTime, step: this.step, form}
     );
     this.popupGroupJob.closed.subscribe((res) => {
       if (res?.event) {
@@ -1401,12 +1492,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
     if (!this.taskGroup['recID']) {
       this.taskGroup['recID'] = Util.uid();
-      this.taskGroup['roles'].forEach(role => {role['taskGroupID'] = this.taskGroup['recID'];});
+      this.taskGroup['roles'].forEach((role) => {
+        role['taskGroupID'] = this.taskGroup['recID'];
+      });
       let index = this.taskGroupList.length;
       if (index === 0) {
         let taskGroup = new DP_Steps_TaskGroups();
         taskGroup['task'] = [];
-        taskGroup['recID'] = this.guidEmpty; // group task rỗng để kéo ra ngoài
+        taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
         this.taskGroupList.push(taskGroup);
       }
       this.taskGroupList.splice(index - 1, 0, this.taskGroup);
@@ -1417,8 +1510,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           task['taskGroupID'] = this.taskGroup['recID'];
           task['createdOn'] = new Date();
           task['createdBy'] = this.userId;
-          task['roles'].forEach(role => {
-            role['recID'] =  Util.uid();
+          task['roles'].forEach((role) => {
+            role['recID'] = Util.uid();
             role['taskID'] = task['recID'];
           });
           this.taskList.push(task);
@@ -1461,7 +1554,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.popupJob = this.callfc.openForm(PopupTypeTaskComponent, '', 400, 400);
     this.popupJob.closed.subscribe(async (value) => {
       if (value?.event) {
-        this.jobType = value?.event;
+        this.jobType = value?.event['value'];
         this.handleTask('add');
       }
     });
@@ -1471,11 +1564,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let roleOld;
     let taskGroupIdOld = '';
     let dataInput = {};
-    let frmModel: FormModel = {
-      entityName: 'DP_Steps_Tasks',
-      formName: 'DPStepsTasks',
-      gridViewName: 'grvDPStepsTasks',
-    };
     if (type === 'add') {
       this.popupJob.close();
     } else if (type === 'copy') {
@@ -1493,35 +1581,95 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.taskGroupList,
       dataInput || {},
       this.taskList,
-      this.groupTaskID || this.guidEmpty,
+      this.groupTaskID || null,
     ];
+    var functionID = 'DPT0206'; //id tuy chojn menu ne
+    this.cache.functionList(functionID).subscribe((f) => {
+      this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
+        let option = new SidebarModel();
+        let formModel = this.dialog?.formModel;
+        formModel.formName = f.formName;
+        formModel.gridViewName = f.gridViewName;
+        formModel.entityName = f.entityName;
+        formModel.funcID = functionID;
+        option.FormModel = formModel;
+        option.Width = '550px';
+        option.zIndex = 1010;
+        let dialog = this.callfc.openSide(PopupJobComponent, listData, option);
 
-    let option = new SidebarModel();
-    option.Width = '550px';
-    option.zIndex = 1001;
-    option.FormModel = frmModel;
-
-    let dialog = this.callfc.openSide(PopupJobComponent, listData, option);
-
-    dialog.closed.subscribe((e) => {
-      if (e?.event) {
-        this.groupTaskID = this.guidEmpty;
-        let taskData = e?.event?.data;
-        if (e.event?.status === 'add' || e.event?.status === 'copy') {
-          let index = this.taskGroupList.findIndex(
-            (group) => group.recID == taskData.taskGroupID
-          );
-          this.taskGroupList[index]['task'].push(taskData);
-          this.taskList.push(taskData);
-          this.addRole(taskData['roles'][0]);
-        } else {
-          if (taskData?.taskGroupID != taskGroupIdOld) {
-            this.changeGroupTaskOfTask(taskData, taskGroupIdOld);
+        dialog.closed.subscribe((e) => {
+          if (e?.event) {
+            this.groupTaskID = null;
+            let taskData = e?.event?.data;
+            if (e.event?.status === 'add' || e.event?.status === 'copy') {
+              let index = this.taskGroupList.findIndex(
+                (group) => group.recID == taskData.taskGroupID
+              );
+              this.taskGroupList[index]['task'].push(taskData);
+              this.taskList.push(taskData);
+              this.addRole(taskData['roles'][0]);
+            } else {
+              if (taskData?.taskGroupID != taskGroupIdOld) {
+                this.changeGroupTaskOfTask(taskData, taskGroupIdOld);
+              }
+              this.addRole(taskData['roles'][0], roleOld[0]);
+            }
           }
-          this.addRole(taskData['roles'][0], roleOld[0]);
-        }
-      }
+        });
+      });
     });
+
+    // let frmModel: FormModel = {
+    //   entityName: 'DP_Steps_Tasks',
+    //   formName: 'DPStepsTasks',
+    //   gridViewName: 'grvDPStepsTasks',
+    // };
+    // if (type === 'add') {
+    //   this.popupJob.close();
+    // } else if (type === 'copy') {
+    //   dataInput = JSON.parse(JSON.stringify(data));
+    // } else {
+    //   taskGroupIdOld = data['taskGroupID'];
+    //   roleOld = JSON.parse(JSON.stringify(data['roles']));
+    //   dataInput = data;
+    // }
+
+    // let listData = [
+    //   type,
+    //   this.jobType,
+    //   this.step,
+    //   this.taskGroupList,
+    //   dataInput || {},
+    //   this.taskList,
+    //   this.groupTaskID || this.guidEmpty,
+    // ];
+
+    // let option = new SidebarModel();
+    // option.Width = '550px';
+    // option.zIndex = 1001;
+    // option.FormModel = frmModel;
+
+    // let dialog = this.callfc.openSide(PopupJobComponent, listData, option);
+
+    // dialog.closed.subscribe((e) => {
+    //   if (e?.event) {
+    //     this.groupTaskID = this.guidEmpty;
+    //     let taskData = e?.event?.data;
+    //     if (e.event?.status === 'add' || e.event?.status === 'copy') {
+    //       let index = this.taskGroupList.findIndex(
+    //         (group) => group.recID == taskData.taskGroupID
+    //       );
+    //       this.taskGroupList[index]['task'].push(taskData);
+    //       this.taskList.push(taskData);
+    //       this.addRole(taskData['roles'][0]);
+    //     } else {
+    //       if (taskData?.taskGroupID != taskGroupIdOld) {
+    //         this.changeGroupTaskOfTask(taskData, taskGroupIdOld);
+    //       }
+    //       this.addRole(taskData['roles'][0], roleOld[0]);
+    //     }
+    //   }
+    // });
   }
 
   deleteTask(taskList, task) {
@@ -1701,78 +1849,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.setIndex(this.stepList, 'stepNo');
   }
 
-  async setTimeGroup(group, task, maxHour) {
-    let x = await firstValueFrom(this.notiService.alertCode(this.MESSAGETIME));
-    if (x.event && x.event.status == 'Y') {
-      let time = this.getHour(task) || 0;
-      group['durationDay'] = Math.floor(maxHour / 24);
-      group['durationHour'] = maxHour % 24;
-      let hourStep = this.sumHourGroupTask();
-      this.step['durationDay'] = Math.floor(hourStep / 24);
-      this.step['durationHour'] = hourStep % 24;
-      let parentID = [];
-      if (group['task']?.length > 0 && task['parentID'].trim()) {
-        group['task'].forEach((item) => {
-          if (task['parentID']?.includes(item['recID'])) {
-            parentID.push(item['recID']);
-          }
-        });
-      }
-      task['parentID'] = parentID.length > 0 ? parentID.join(';') : '';
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  calculateTimeTaskInGroup(taskList, taskId, taskInput?) {
-    let task = taskInput
-      ? taskInput
-      : taskList.find((t) => t['recID'] === taskId);
-    if (!task) return 0;
-    if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
-      return this.getHour(task);
-    } else {
-      const parentIds = task.parentID.split(';');
-      let maxTime = 0;
-      parentIds?.forEach((parentId) => {
-        const parentTime = this.calculateTimeTaskInGroup(taskList, parentId);
-        maxTime = Math.max(maxTime, parentTime);
-      });
-      const completionTime = this.getHour(task) + maxTime;
-      return completionTime;
-    }
-  }
-
-  sumHourGroupTask(index?: number) {
-    let sum = 0;
-    if (this.taskGroupList?.length > 0) {
-      if (index >= 0) {
-        for (let group of this.taskGroupList) {
-          if (Number(group['indexNo']) <= index) {
-            sum += this.getHour(group);
-          }
-        }
-      } else {
-        sum = this.taskGroupList.reduce((sumHour, group) => {
-          return (sumHour += this.getHour(group));
-        }, 0);
-      }
-    }
-    return sum;
-  }
-
-  // sumHourStep(){
-  //   let listStaskNoGroup = this.taskList.filter(task => !task['taskGroupID']);
-  //   let maxTimeTask = 0;
-  //   listStaskNoGroup?.forEach(task => {
-  //     let time = this.calculateTimeTaskNoGroup(task['recID'])
-  //     maxTimeTask = time > maxTimeTask ? time : maxTimeTask;
-  //   })
-  //   let timeStep = this.sumHourGroupTask();
-  //   return maxTimeTask > timeStep ? maxTimeTask : timeStep;
-  // }
-
   // Common
   setIndex(data: any, value: string) {
     if (data.length > 0) {
@@ -1823,15 +1899,98 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   sumTimeStep() {
-    let time = 0;
-    this.step?.taskGroups?.forEach((element) => {
-      time +=
-        Number(element['durationDay'] || 0) * 24 +
-        Number(element['durationHour'] || 0);
+    let timeGroup = this.sumHourGroupTask();
+    let timeTackNoGroup = 0
+    let taskNoGroup = this.taskList?.filter(task => !task['taskGroupID']);
+    taskNoGroup?.forEach(task => {
+      let time = this.calculateTimeTaskNoGroup(task['recID']);
+      timeTackNoGroup = Math.max(time,timeTackNoGroup);
     });
-    this.dayStep = Math.floor(time / 24);
-    this.hourStep = Math.floor(time % 24);
+    let timeMax = Math.max(timeGroup,timeTackNoGroup);
+    this.dayStep = Math.floor(timeMax / 24);
+    this.hourStep = Math.floor(timeMax % 24);
   }
+
+  async setTimeGroup(group, task, maxHour) {
+    let x = await firstValueFrom(this.notiService.alertCode('DP010'));
+    if (x.event && x.event.status == 'Y') {
+      let time = this.getHour(task) || 0;
+      group['durationDay'] = Math.floor(maxHour / 24);
+      group['durationHour'] = maxHour % 24;
+      let hourStep = this.sumHourGroupTask();
+      this.step['durationDay'] = Math.floor(hourStep / 24);
+      this.step['durationHour'] = hourStep % 24;
+      let parentID = [];
+      if (group['task']?.length > 0 && task['parentID'].trim()) {
+        group['task'].forEach((item) => {
+          if (task['parentID']?.includes(item['recID'])) {
+            parentID.push(item['recID']);
+          }
+        });
+      }
+      task['parentID'] = parentID.length > 0 ? parentID.join(';') : '';
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  calculateTimeTaskNoGroup(taskId) {
+    let task = this.taskList.find((t) => t['recID'] === taskId);
+    if (!task) return 0;
+    if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
+      let groupFind = task['taskGroupID'] ? this.taskGroupList.find((x) =>  x['recID'] === task['taskGroupID']) : -1;
+      let hourGroup = groupFind > 0 ? this.sumHourGroupTask(groupFind['indexNo'] - 1) : 0;
+      return hourGroup + this.getHour(task);
+    } else {
+      const parentIds = task.parentID.split(';');
+      let maxTime = 0;
+      parentIds?.forEach((parentId) => {
+        const parentTime = this.calculateTimeTaskNoGroup(parentId);
+        maxTime = Math.max(maxTime, parentTime);
+      });
+      const completionTime = this.getHour(task) + maxTime;
+      return completionTime;
+    }
+  }
+
+  calculateTimeTaskInGroup(taskList, taskId, taskInput?) {
+    let task = taskInput
+      ? taskInput
+      : taskList.find((t) => t['recID'] === taskId);
+    if (!task) return 0;
+    if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
+      return this.getHour(task);
+    } else {
+      const parentIds = task.parentID.split(';');
+      let maxTime = 0;
+      parentIds?.forEach((parentId) => {
+        const parentTime = this.calculateTimeTaskInGroup(taskList, parentId);
+        maxTime = Math.max(maxTime, parentTime);
+      });
+      const completionTime = this.getHour(task) + maxTime;
+      return completionTime;
+    }
+  }
+
+  sumHourGroupTask(index?: number) {//tính theo vị trí group và tính tất cả
+    let sum = 0;
+    if (this.taskGroupList?.length > 0) {
+      if (index >= 0) {
+        for (let group of this.taskGroupList) {
+          if (Number(group['indexNo']) <= index) {
+            sum += this.getHour(group);
+          }
+        }
+      } else {
+        sum = this.taskGroupList?.reduce((sumHour, group) => {
+          return (sumHour += this.getHour(group));
+        }, 0);
+      }
+    }
+    return sum;
+  }
+
   // add role to permissions process
   addRole(role: object, roleOld?: object) {
     if (role) {
@@ -1921,14 +2080,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     return false;
   }
+
+  async getFormModel(functionID){ 
+    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let formModel = JSON.parse(JSON.stringify(this.dialog?.formModel));
+    formModel.formName = f.formName;
+    formModel.gridViewName = f.gridViewName;
+    formModel.entityName = f.entityName;
+    formModel.funcID = functionID;
+    return formModel;
+  }
   //View task
-  openPopupViewJob(data?: any) {
+  async openPopupViewJob(data?: any) {
     let status = 'edit';
-    let frmModel: FormModel = {
-      entityName: 'DP_Steps_Tasks',
-      formName: 'DPStepsTasks',
-      gridViewName: 'grvDPStepsTasks',
-    };
+    let frmModel = await this.getFormModel("DPS0106")
     if (!data) {
       this.popupJob.close();
       status = 'add';
@@ -1937,7 +2102,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     option.Width = '550px';
     option.zIndex = 1001;
     option.FormModel = frmModel;
-    let dialog = this.callfc.openSide(
+    this.callfc.openSide(
       ViewJobComponent,
       [
         status,

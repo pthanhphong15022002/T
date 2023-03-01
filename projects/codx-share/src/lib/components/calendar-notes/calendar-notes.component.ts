@@ -355,7 +355,6 @@ export class CalendarNotesComponent
 
   changeNewWeek(args: any, setDate = null) {
     if (args) {
-      console.log('changeNewWeek', args);
       let startDate = moment(args.fromDate).toJSON();
       let endDate = moment(args.toDate).toJSON();
       this.curStartDateOfWeek = startDate;
@@ -794,54 +793,56 @@ export class CalendarNotesComponent
       ];
 
       this.lstTransType.forEach((tmpTrans) => {
-        switch (tmpTrans.transType) {
-          case 'TM_Tasks':
-            this.lstView.dataService.data = [
-              ...this.TM_Tasks.filter((x) => {
-                let xDate = new Date(x.calendarDate).toLocaleDateString();
-                return xDate == curDateSelected;
-              }).sort(this.orderByStartTime),
-              ...this.lstView.dataService.data,
-            ];
-            break;
-          case 'WP_Notes':
-            this.lstView.dataService.data = [
-              ...this.WP_Notes.filter((x) => {
-                let xDate = new Date(x.calendarDate).toLocaleDateString();
-                return xDate == curDateSelected;
-              }).sort(this.orderByStartTime),
-              ...this.lstView.dataService.data,
-            ];
-            break;
-          case 'CO_Meetings':
-            this.lstView.dataService.data = [
-              ...this.CO_Meetings.filter((x) => {
-                let xDate = new Date(x.calendarDate).toLocaleDateString();
-                return xDate == curDateSelected;
-              }).sort(this.orderByStartTime),
-              ...this.lstView.dataService.data,
-            ];
-            break;
-          case 'EP_BookingRooms':
-            this.lstView.dataService.data = [
-              ...this.EP_BookingRooms.filter((x) => {
-                let xDate = new Date(x.calendarDate).toLocaleDateString();
-                return xDate == curDateSelected;
-              }).sort(this.orderByStartTime),
-              ...this.lstView.dataService.data,
-            ];
-            break;
-          case 'EP_BookingCars':
-            this.lstView.dataService.data = [
-              ...this.EP_BookingCars.filter((x) => {
-                let xDate = new Date(x.calendarDate).toLocaleDateString();
-                return xDate == curDateSelected;
-              }).sort(this.orderByStartTime),
-              ...this.lstView.dataService.data,
-            ];
-            break;
-          default:
-            break;
+        if (tmpTrans.isActive == '1') {
+          switch (tmpTrans.transType) {
+            case 'TM_Tasks':
+              this.lstView.dataService.data = [
+                ...this.TM_Tasks.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            case 'WP_Notes':
+              this.lstView.dataService.data = [
+                ...this.WP_Notes.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            case 'CO_Meetings':
+              this.lstView.dataService.data = [
+                ...this.CO_Meetings.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            case 'EP_BookingRooms':
+              this.lstView.dataService.data = [
+                ...this.EP_BookingRooms.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            case 'EP_BookingCars':
+              this.lstView.dataService.data = [
+                ...this.EP_BookingCars.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
+                ...this.lstView.dataService.data,
+              ];
+              break;
+            default:
+              break;
+          }
         }
       });
       this.detectorRef.detectChanges();
@@ -1005,6 +1006,7 @@ export class CalendarNotesComponent
       // var field = e.field;
       // this.updateSettingValue(field, e.data);
     }
+    this.drawData();
   }
 
   convertDMY_MDY(dmyString: string) {

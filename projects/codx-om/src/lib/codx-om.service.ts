@@ -338,12 +338,32 @@ export class CodxOmService {
       [okrPlan,listOKR,isAdd]
     );
   }
-  getOKRPlandAndOChild(recID: string) {
+  //đổi trạng thái okr plan
+  changePlanStatus(recID: any, status:string) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKRPlan,
-      'GetOKRPlandAndOChildAsync',
+      'ChangePlanStatusAsync',
+      [recID,status]
+    );
+  }
+  //Xóa Plan
+  deleteOKRPlans(recID: any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKRPlan,
+      'DeleteOKRPlansAsync',
+      [recID]
+    );
+  }
+  getOKRPlanAndOChild(recID: string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKRPlan,
+      'GetOKRPlanAndOChildAsync',
       [recID]
     );
   }
@@ -560,12 +580,12 @@ export class CodxOmService {
     );
   }
   //Lấy ds OKR_Links theo OKR RecID
-  getOKRLink(recID: string) {
+  getOKRDistributed(recID: string) {    
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
-      'GetOKRLinkAsync',
+      'GetOKRDistributedAsync',
       [recID]
     );
   }

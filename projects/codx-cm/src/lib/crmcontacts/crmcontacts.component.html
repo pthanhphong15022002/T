@@ -1,0 +1,33 @@
+<codx-views #view [funcID]="funcID" service="BP" assemblyName="ERM.Business.BP" entityName="CRM_Contacts"
+  className="ProcessesBusiness" [method]="'GetListProcessesAsync'" [views]="views" [button]="showButtonAdd ? button : null"
+  (buttonClick)="click($event)" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="recID" [autoSearch]="true"
+  (searchChanged)="searchChange($event)">
+</codx-views>
+
+<!--grid view-->
+<ng-template #itemContactName></ng-template>
+<ng-template #itemPhoneNumber></ng-template>
+<ng-template #itemEmail></ng-template>
+<ng-template #itemAddress></ng-template>
+<ng-template #itemPriority></ng-template>
+<ng-template #itemCreatedBy></ng-template>
+<ng-template #itemCreatedOn></ng-template>
+<!--grid view-->
+
+
+<!--list details tempfull-->
+<ng-template #itemTemplate let-data>
+  <codx-temp-full cardCss="card-template border-bottom p-3 list-task" [moreFuncCss]="'me-15'" (clickMF)="clickMF($event, data)"
+    [moreFuncCss]="'me-15'" [typeMF]="'hover'" [imageId]="data.recID" [imageObjName]="data?.contactName" [imageWidth]="35" imgCss="me-3"
+    imageObjType="AD_Users" [title]="data.contactName" [titleCss]="'fs-6'" [descTmp]="descTmp" [formModel]="view.formModel"
+    [footer]="footer" [dataItem]="data">
+  </codx-temp-full>
+</ng-template>
+<ng-template #descTmp></ng-template>
+<ng-template #footer></ng-template>
+
+<!--list details tempfull-->
+
+<!--list detail right-->
+<ng-template #templateDetail></ng-template>
+<!--list detail right-->

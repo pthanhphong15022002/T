@@ -1,0 +1,271 @@
+<codx-form
+  #form
+  [headerText]="formTitle"
+  [subHeader]="subheader"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="dialogRef.formModel"
+  [data]="apPostingAccount"
+>
+</codx-form>
+
+<ng-template #body>
+  <div class="my-3">
+    <codx-label
+      fiedName="lblSetup"
+      [formModel]="form.formModel"
+      default="Thiết lập"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+  </div>
+
+  <div class="row">
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="vendLevel"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="vendLevel"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        (valueChange)="clearRightInput('vendSelection')"
+      ></codx-input>
+    </div>
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="vendSelection"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <ng-container *ngIf="!apPostingAccount.vendLevel">
+        <codx-input
+          field="vendSelection"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [disabled]="true"
+        ></codx-input>
+      </ng-container>
+      <ng-container *ngIf="apPostingAccount.vendLevel === '1'">
+        <codx-input
+          field="vendSelection"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </ng-container>
+      <ng-container *ngIf="apPostingAccount.vendLevel === '2'">
+        <codx-input
+          field="vendSelection"
+          type="combobox"
+          [Group]="form.formGroup"
+          refType="3"
+          refValue="VendorGroups"
+          [crrValue]="apPostingAccount.vendSelection"
+          (valueChange)="handleInputChange($event)"
+        ></codx-input>
+      </ng-container>
+      <ng-container *ngIf="apPostingAccount.vendLevel === '3'">
+        <codx-input
+          field="vendSelection"
+          type="text"
+          [Group]="form.formGroup"
+          [disabled]="true"
+          [crrValue]="apPostingAccount.vendSelection"
+        ></codx-input>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="itemLevel"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="itemLevel"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        (valueChange)="clearRightInput('itemSelection')"
+      ></codx-input>
+    </div>
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="itemSelection"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <ng-container *ngIf="!apPostingAccount.itemLevel">
+        <codx-input
+          field="itemSelection"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [disabled]="true"
+        ></codx-input>
+      </ng-container>
+      <ng-container *ngIf="apPostingAccount.itemLevel === '1'">
+        <codx-input
+          field="itemSelection"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </ng-container>
+      <ng-container *ngIf="apPostingAccount.itemLevel === '2'">
+        <codx-input
+          field="itemSelection"
+          type="combobox"
+          [Group]="form.formGroup"
+          refType="3"
+          refValue="ItemGroups"
+          [crrValue]="apPostingAccount.itemSelection"
+          (valueChange)="handleInputChange($event)"
+        ></codx-input>
+      </ng-container>
+      <ng-container *ngIf="apPostingAccount.itemLevel === '3'">
+        <codx-input
+          field="itemSelection"
+          type="combobox"
+          [Group]="form.formGroup"
+          refType="3"
+          refValue="ProductLines"
+          [crrValue]="apPostingAccount.itemSelection"
+          (valueChange)="handleInputChange($event)"
+        ></codx-input>
+      </ng-container>
+      <ng-container *ngIf="apPostingAccount.itemLevel === '4'">
+        <codx-input
+          field="itemSelection"
+          type="text"
+          [Group]="form.formGroup"
+          [disabled]="true"
+        ></codx-input>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="apPostingAccount.moduleID == '1'">
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="pmtMethodID"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="pmtMethodID"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="pmtTermID"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="pmtTermID"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6 form-group">
+      <codx-label fiedName="buid" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="buid"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+  </div>
+
+  <codx-label
+    fiedName="lblInfo"
+    [formModel]="form.formModel"
+    default="Thông tin"
+    class="fw-bold fs-5 text-primary"
+  ></codx-label>
+
+  <ng-container *ngIf="apPostingAccount.moduleID == '1'; else other">
+    <div class="row mt-3">
+      <div class="col-6 form-group">
+        <codx-label
+          fiedName="payableAcctID"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="payableAcctID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6 form-group">
+        <codx-label
+          fiedName="settledAcctID"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="settledAcctID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label fiedName="note" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        type="textarea"
+        format="ed2"
+        field="note"
+        [crrValue]="apPostingAccount?.note ?? ''"
+        (valueChange)="handleInputChange($event)"
+      ></codx-input>
+      <!-- <codx-input
+        field="note"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input> -->
+    </div>
+  </ng-container>
+  <ng-template #other>
+    <div class="row mt-3">
+      <div class="col-6 form-group">
+        <codx-label
+          fiedName="pmtTermID"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          field="pmtTermID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #footer>
+  <button
+    type="button"
+    class="btn btn-outline-primary me-3"
+    (click)="save(false)"
+    *ngIf="!isEdit"
+  >
+    <codx-label
+      fiedName="lblSaveAndClear"
+      [formModel]="dialogRef.formModel"
+      default="Lưu & Thêm"
+    ></codx-label>
+  </button>
+  <button type="button" class="btn btn-primary" (click)="save(true)">
+    <codx-label
+      fiedName="lblSave"
+      [formModel]="dialogRef.formModel"
+      default="Lưu"
+    ></codx-label>
+  </button>
+</ng-template>
+
+<ng-template #subheader>
+  <codx-label [default]="breadcrumb" class="text-primary"></codx-label>
+</ng-template>

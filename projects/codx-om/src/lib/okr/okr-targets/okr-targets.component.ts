@@ -41,6 +41,7 @@ const _notSubKR=false;
 })
 export class OkrTargetsComponent implements OnInit {
   @ViewChild('omTab') omTab: any;
+  @ViewChild('treeView') treeView: any;
   @Input() dataOKRPlans: any;
   @Input() dataOKR: any;
   @Input() formModel: any;
@@ -53,13 +54,12 @@ export class OkrTargetsComponent implements OnInit {
   @Input() obFuncID: any;
   @Input() funcID: any;
   @Input() isHiddenChart: boolean;
-
+  isCollapsed=false;
   dtStatus = [];
   openAccordion = [];
   openAccordionKR = [];
   krTitle = '';
   obTitle = '';
-  isCollaped = false;
   chartSettings: ChartSettings = {
     title: '',
     primaryXAxis: {
@@ -152,6 +152,7 @@ export class OkrTargetsComponent implements OnInit {
   tree:any;
   button: ButtonModel;
   isAfterRender: boolean;
+  skrTitle: any;
   constructor(
     private callfunc: CallFuncService,
     private cache: CacheService,
@@ -210,6 +211,12 @@ export class OkrTargetsComponent implements OnInit {
         
       }      
     }); 
+    this.cache.functionList(this.skrFuncID).subscribe((res) => {
+      if (res) {
+        this.skrTitle =
+          res.description.charAt(0).toLowerCase() + res.description.slice(1);
+      }
+    });
     this.cache.functionList(this.krFuncID).subscribe((res) => {
       if (res) {
         this.krTitle =
@@ -312,7 +319,8 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
   clickKRMF(e: any, kr: any, isSKR:boolean) {
-    let popupTitle = e.text + ' ' + this.krTitle;
+    let tempT=isSKR? this.skrTitle :this.krTitle;
+    let popupTitle = e.text + ' ' + tempT;
     var funcID = e?.functionID;
     switch (funcID) {
       
@@ -354,6 +362,7 @@ export class OkrTargetsComponent implements OnInit {
       }
     }
   }
+  
   //-----------------------End-------------------------------//
 
   //_______________________Get Data Func_____________________//
@@ -387,33 +396,48 @@ export class OkrTargetsComponent implements OnInit {
   getItemOB(i: any, recID: any) {
     this.openAccordion[i] = !this.openAccordion[i];
     if (this.openAccordion.every((item) => item === true)) {
-      this.isCollaped = true;
+      this.isCollapsed = true;
     } else if (this.openAccordion.every((item) => item === false)) {
-      this.isCollaped = false;
+      this.isCollapsed = false;
     }
     this.detec.detectChanges();
   }
   getItemKR(i: any, recID: any) {
     this.openAccordionKR[i] = !this.openAccordionKR[i];
     if (this.openAccordionKR.every((item) => item === true)) {
-      this.isCollaped = true;
+      this.isCollapsed = true;
     } else if (this.openAccordionKR.every((item) => item === false)) {
-      this.isCollaped = false;
+      this.isCollapsed = false;
     }
     this.detec.detectChanges();
   }
 
-  collapeKR(collape: boolean) {
-    if (this.dataOKR && this.openAccordion.length != this.dataOKR.length) {
-      this.openAccordion = new Array(this.dataOKR.length).fill(false);
-    }
-    this.isCollaped = collape;
-    let i = 0;
-    this.openAccordion.forEach((item) => {
-      this.openAccordion[i] = collape;
-      i++;
-      this.detec.detectChanges();
+  collapeKR(collapsed: boolean) {
+    // if (this.dataOKR && this.openAccordion.length != this.dataOKR.length) {
+    //   this.openAccordion = new Array(this.dataOKR.length).fill(false);
+    // }
+    // this.isCollapsed = collape;
+    // let i = 0;
+    // this.openAccordion.forEach((item) => {
+    //   this.openAccordion[i] = collape;
+    //   i++;
+    //   this.detec.detectChanges();
+    // });
+    
+    this.dataOKR.forEach(ob => {
+      ob.isCollapse=collapsed;      
     });
+    
+    this.detec.detectChanges();
+    
+    this.dataOKR.forEach(ob => {      
+      if(ob.items!=null && ob.items.length>0){
+        ob.items.forEach(kr => {
+          kr.isCollapse=collapsed;
+        });
+      }
+    });    
+    this.isCollapsed = collapsed;    
     this.detec.detectChanges();
   }
 

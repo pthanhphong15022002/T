@@ -44,17 +44,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   dialog!: DialogRef;
   cashpayment: CashPayment;
   formType: any;
-  cbxObjectID: any;
-  refValue: any;
-  voucherNo: any;
   objectType: any;
   voucherDate: any;
-  objectID: any;
-  cashBookID: any;
-  currencyID: any;
-  exchangeRate: any;
   gridViewSetup: any;
   cashbookName: any;
+  validate: any = 0;
   cashpaymentline: Array<CashPaymentLine> = [];
   cashpaymentlineDelete: Array<CashPaymentLine> = [];
   fmCashPaymentsLines: FormModel = {
@@ -77,7 +71,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
   tabItem: any = [
-    { text: 'Thông tin chứng từ', iconCss: 'icon-info'},
+    { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
   ];
   constructor(
@@ -95,14 +89,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.data = null;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
-    this.voucherNo = '';
-    this.objectType = '';
+    this.objectType = null;
     this.voucherDate = null;
-    this.objectID = '';
-    this.cashBookID = '';
-    this.currencyID = '';
-    this.exchangeRate = null;
-    this.cbxObjectID = null;
     this.cashpayment = dialog.dataService!.dataSelected;
     this.cache
       .gridViewSetup('CashPayments', 'grvCashPayments')
@@ -112,35 +100,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
       });
     if (this.cashpayment.voucherNo != null) {
-      this.voucherNo = this.cashpayment.voucherNo;
       this.objectType = this.cashpayment.objectType;
       this.voucherDate = this.cashpayment.voucherDate;
-      this.objectID = this.cashpayment.objectID;
-      this.cashBookID = this.cashpayment.cashBookID;
-      this.currencyID = this.cashpayment.currencyID;
-      this.exchangeRate = this.cashpayment.exchangeRate;
-      //#region load combobox đối tượng
-      switch (this.objectType) {
-        case '1':
-          this.cbxObjectID = 'Customers';
-          break;
-        case '2':
-          this.cbxObjectID = 'VendorsAC';
-          break;
-        case '3':
-          this.cbxObjectID = 'EmployeesAC';
-          break;
-        case '4':
-          this.cbxObjectID = 'BanksAC';
-          break;
-        case '5':
-          this.cbxObjectID = 'BusinessUnits';
-          break;
-        case '6':
-          this.cbxObjectID = 'Warehouses';
-          break;
-      }
-      //#endregion
       //#region  load cashpaymentline
       this.acService
         .loadData(
@@ -152,6 +113,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           this.cashpaymentline = res;
         });
+      this.acService
+        .loadData('ERM.Business.AC', 'CashBookBusiness', 'LoadDataAsync', [])
+        .subscribe((res: any) => {
+          res.forEach((element) => {
+            if (element.cashBookID == this.cashpayment.cashBookID) {
+              this.cashbookName = element.cashBookName;
+            }
+          });
+        });
       //#endregion
     }
   }
@@ -159,67 +129,34 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   //#region Init
 
-  onInit(): void {
-    if (this.voucherDate == null) {
-      this.voucherDate = new Date();
-    }
-  }
+  onInit(): void {}
+
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
   }
   //#endregion
 
   //#region Event
-
-  valueChangeObjectType(e: any) {
-    switch (e.data) {
-      case '1':
-        this.cbxObjectID = 'Customers';
-        break;
-      case '2':
-        this.cbxObjectID = 'VendorsAC';
-        break;
-      case '3':
-        this.cbxObjectID = 'EmployeesAC';
-        break;
-      case '4':
-        this.cbxObjectID = 'BanksAC';
-        break;
-      case '5':
-        this.cbxObjectID = 'BusinessUnits';
-        break;
-      case '6':
-        this.cbxObjectID = 'Warehouses';
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteRow(data);
         break;
     }
-    this.objectID = '';
+  }
+  valueChangeObjectType(e: any) {
+    this.cashpayment.objectID = '';
     this.objectType = e.data;
     this.cashpayment[e.field] = e.data;
+    this.cashpaymentline = [];
   }
   valueChangeDate(e: any) {
     this.cashpayment[e.field] = e.data.fromDate;
     this.voucherDate = e.data.fromDate;
   }
   valueChangeCashBookID(e: any) {
-    this.cashBookID = e.data;
     this.cashpayment[e.field] = e.data;
     this.getvalueNameCashBook(e.data);
-  }
-  valueChangeCurrency(e: any) {
-    this.currencyID = e.data;
-    this.cashpayment[e.field] = e.data;
-  }
-  valueChangeExchangeRate(e: any) {
-    this.exchangeRate = e.data;
-    this.cashpayment[e.field] = e.data;
-  }
-  valueChangeObjectID(e: any) {
-    this.objectID = e.data;
-    this.cashpayment[e.field] = e.data;
-  }
-  valueChangeVoucherNo(e: any) {
-    this.voucherNo = e.data;
-    this.cashpayment[e.field] = e.data;
   }
   cellChanged(e: any) {
     this.cashpaymentline[e.field] = e.value;
@@ -230,10 +167,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
   getvalueNameCashBook(data: any) {
     this.acService
-      .loadData('ERM.Business.AC', 'CashBookBusiness', 'LoadDataAsync', [ 
-      ])
-      .subscribe((res:any) => {
-        res.forEach(element => {
+      .loadData('ERM.Business.AC', 'CashBookBusiness', 'LoadDataAsync', [])
+      .subscribe((res: any) => {
+        res.forEach((element) => {
           if (element.cashBookID == data) {
             this.cashbookName = element.cashBookName;
           }
@@ -268,75 +204,107 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.cashpaymentlineDelete.push(data);
     this.grid.deleteRow();
   }
-  clickMF(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.deleteRow(data);
-        break;
+  checkValidate() {
+    var keygrid = Object.keys(this.gridViewSetup);
+    var keymodel = Object.keys(this.cashpayment);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              this.cashpayment[keymodel[i]] == null ||
+              this.cashpayment[keymodel[i]] == ''
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
+              );
+              this.validate++;
+            }
+          }
+        }
+      }
     }
+  }
+  clearCashpayment() {
+    this.cashbookName = '';
+    this.objectType = null;
+    this.data = null;
+    this.cashpaymentline = [];
+    this.voucherDate = new Date();
   }
   //#endregion
 
-  //#region CRUD
+  //#region Method
   onSave() {
-    if (this.cashBookID.trim() == '' || this.cashBookID == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['CashBookID'].headerText + '"'
-      );
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
       return;
+    } else {
+      this.cashpaymentline = this.data;
+      if (this.formType == 'add') {
+        this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'AddAsync';
+            opt.className = 'CashPaymentsBusiness';
+            opt.assemblyName = 'AC';
+            opt.service = 'AC';
+            opt.data = [this.cashpayment];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res.save) {
+              this.acService
+                .addData(
+                  'ERM.Business.AC',
+                  'CashPaymentsLinesBusiness',
+                  'AddAsync',
+                  this.cashpaymentline
+                )
+                .subscribe((res) => {});
+              this.dialog.close();
+              this.dt.detectChanges();
+            } else {
+            }
+          });
+      }
+      if (this.formType == 'edit') {
+        this.dialog.dataService
+          .save((opt: RequestOption) => {
+            opt.methodName = 'UpdateAsync';
+            opt.className = 'CashPaymentsBusiness';
+            opt.assemblyName = 'AC';
+            opt.service = 'AC';
+            opt.data = [this.cashpayment];
+            return true;
+          })
+          .subscribe((res) => {
+            if (res != null) {
+              this.acService
+                .addData(
+                  'ERM.Business.AC',
+                  'CashPaymentsLinesBusiness',
+                  'UpdateAsync',
+                  [this.cashpaymentline, this.cashpaymentlineDelete]
+                )
+                .subscribe((res) => {});
+              this.dialog.close();
+              this.dt.detectChanges();
+            } else {
+            }
+          });
+      }
     }
-    if (this.currencyID.trim() == '' || this.currencyID == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['CurrencyID'].headerText + '"'
-      );
+  }
+  onSaveAdd() {
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
       return;
-    }
-    if (this.exchangeRate == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['ExchangeRate'].headerText + '"'
-      );
-      return;
-    }
-    if (this.voucherNo.trim() == '' || this.voucherNo == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['VoucherNo'].headerText + '"'
-      );
-      return;
-    }
-    if (this.objectType.trim() == '' || this.objectType == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['ObjectType'].headerText + '"'
-      );
-      return;
-    }
-    if (this.objectID.trim() == '' || this.objectID == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['ObjectID'].headerText + '"'
-      );
-      return;
-    }
-    if (this.voucherDate == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['VoucherDate'].headerText + '"'
-      );
-      return;
-    }
-    this.cashpaymentline = this.data;
-    if (this.formType == 'add') {
+    } else {
+      this.cashpaymentline = this.data;
       this.dialog.dataService
         .save((opt: RequestOption) => {
           opt.methodName = 'AddAsync';
@@ -355,35 +323,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 'AddAsync',
                 this.cashpaymentline
               )
-              .subscribe((res) => {});
-            this.dialog.close();
-            this.dt.detectChanges();
-          } else {
-          }
-        });
-    }
-    if (this.formType == 'edit') {
-      this.dialog.dataService
-        .save((opt: RequestOption) => {
-          opt.methodName = 'UpdateAsync';
-          opt.className = 'CashPaymentsBusiness';
-          opt.assemblyName = 'AC';
-          opt.service = 'AC';
-          opt.data = [this.cashpayment];
-          return true;
-        })
-        .subscribe((res) => {
-          if (res != null) {
-            this.acService
-              .addData(
-                'ERM.Business.AC',
-                'CashPaymentsLinesBusiness',
-                'UpdateAsync',
-                [this.cashpaymentline, this.cashpaymentlineDelete]
-              )
-              .subscribe((res) => {});
-            this.dialog.close();
-            this.dt.detectChanges();
+              .subscribe((res) => {
+                if (res) {
+                  this.clearCashpayment();
+                  this.dialog.dataService.clear();
+                  this.dialog.dataService.addNew().subscribe((res) => {
+                    this.cashpayment = this.dialog.dataService!.dataSelected;
+                  });
+                }
+              });
           } else {
           }
         });

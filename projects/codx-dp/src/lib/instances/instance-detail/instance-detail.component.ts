@@ -38,6 +38,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() dataSelect: any;
   @Input() listStepNew: any;
   @Input() listCbxProccess: any;
+  @Input() viewModelDetail = 'S';
   id: any;
   totalInSteps: any;
   @Input() listSteps: DP_Instances_Steps[] = [];
@@ -77,7 +78,7 @@ export class InstanceDetailComponent implements OnInit {
     { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
   ];
   titleDefault ='';
-  
+
   isHiddenReason: boolean = false;
 
   instanceId:string;
@@ -100,7 +101,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   
+
   }
 
   ngAfterViewInit(): void {
@@ -165,7 +166,8 @@ export class InstanceDetailComponent implements OnInit {
         this.progress = '0';
         this.tmpTeps = null;
       }
-    }); 
+      this.getListStepsStatus();
+    });
   }
 
   getStepsByInstanceID(list) {
@@ -185,7 +187,7 @@ export class InstanceDetailComponent implements OnInit {
   // }
 
   cbxChange(e) {
-    this.idCbx = e?.data;
+    this.viewModelDetail = e?.data;
   }
 
   clickMF(e, data) {
@@ -265,10 +267,10 @@ export class InstanceDetailComponent implements OnInit {
     return  this.ganttDs[idx]?.color
   }
  //end ganttchar
- 
+
   handleListStep(listStepNew:any, listStep:any){
   const mapList = new Map(listStep.map(item => [item.stepID, item.stepStatus]));
-  
+
   var updatedArray = listStepNew.map(item => ({
     ...item,
     stepStatus: mapList.get(item.stepID) || item.stepStatus || ''
@@ -319,7 +321,7 @@ export class InstanceDetailComponent implements OnInit {
       var idxProccess =  this.listCbxProccess.findIndex(x=> x.recID === this.instance?.newProcessID);
       var proccesMove = this.listCbxProccess[idxProccess];
       this.proccesNameMove = proccesMove?.processName ?? ''
-      
+
     }
     return  reasonStep?.stepName?? '';
    }
