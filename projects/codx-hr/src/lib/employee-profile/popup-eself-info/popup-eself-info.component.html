@@ -628,6 +628,7 @@
   [dialog]="dialog"
   [data]="data"
   *ngIf="isAfterRender"
+  class="eself-popup"
 >
   <ng-template #tmpContent>
     <ejs-tab
@@ -638,9 +639,9 @@
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
-            <codx-label default="Thông tin bản thân"></codx-label>
+            <codx-label class="fw-bold fs-6" default="Thông tin bản thân"></codx-label>
           </ng-template>
-          <ng-template #content>
+          <ng-template #content class="pb-4 red">
             <div class="form-group pt-6">
               <codx-label
                 fiedName="EmployeeID"
@@ -996,7 +997,7 @@
 
         <e-tabitem>
           <ng-template #headerText>
-            <codx-label default="Liên hệ"></codx-label>
+            <codx-label class="fw-bold fs-6" default="Liên hệ"></codx-label>
           </ng-template>
 
           <ng-template #content>
