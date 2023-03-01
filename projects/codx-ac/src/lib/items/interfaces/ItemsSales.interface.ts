@@ -1,5 +1,4 @@
 export interface ItemsSales {
-  id: string;
   itemID: string;
   umid: string;
   warehouseID: string;

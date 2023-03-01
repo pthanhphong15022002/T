@@ -13,6 +13,8 @@
 <ng-template #body>
   <div class="my-3">
     <codx-label
+      fiedName="lblSetup"
+      [formModel]="form.formModel"
       default="Thiết lập"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
@@ -161,6 +163,8 @@
   </div>
 
   <codx-label
+    fiedName="lblInfo"
+    [formModel]="form.formModel"
     default="Thông tin"
     class="fw-bold fs-5 text-primary"
   ></codx-label>
@@ -231,10 +235,18 @@
     (click)="save(false)"
     *ngIf="!isEdit"
   >
-    Lưu & Thêm
+    <codx-label
+      fiedName="lblSaveAndClear"
+      [formModel]="dialogRef.formModel"
+      default="Lưu & Thêm"
+    ></codx-label>
   </button>
   <button type="button" class="btn btn-primary" (click)="save(true)">
-    Lưu
+    <codx-label
+      fiedName="lblSave"
+      [formModel]="dialogRef.formModel"
+      default="Lưu"
+    ></codx-label>
   </button>
 </ng-template>
 

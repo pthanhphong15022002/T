@@ -35,7 +35,6 @@ import {
 export class PopupJobComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000';
   REQUIRE = ['taskName', 'roles', 'dependRule'];
   title = '';
   dialog!: DialogRef;
@@ -62,7 +61,7 @@ export class PopupJobComponent implements OnInit {
   valueInput = '';
   litsParentID = [];
   listJobType = [];
-  taskGroupID = this.guidEmpty;
+  taskGroupID = '';
   isHaveFile = false;
   showLabelAttachment = false;
   folderID = '';
@@ -372,7 +371,7 @@ export class PopupJobComponent implements OnInit {
   }
 
   handelSave() {
-    if (this.stepsTasks['taskGroupID'] != this.guidEmpty) {
+    if (this.stepsTasks['taskGroupID']) {
       let groupTask = this.taskGroupList.find(
         (x) => x.recID == this.stepsTasks['taskGroupID']
       );

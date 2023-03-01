@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, Injector } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, Injector, HostBinding } from '@angular/core';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { CacheService, UIComponent } from 'codx-core';
 import { CodxFullTextSearch } from 'projects/codx-share/src/lib/components/codx-fulltextsearch/codx-fulltextsearch.component';
 import { CodxOdService } from '../../codx-od.service';
@@ -19,9 +20,13 @@ export class SearchingComponent extends UIComponent implements OnDestroy, AfterV
   service = "OD"
   entityName = "OD_Dispatches"
   formModel: any = {};
+  @HostBinding('style') get myStyle(): SafeStyle {
+    return this.sanitizer.bypassSecurityTrustStyle('margin-top: -30px; padding: 12px;');
+  }
   constructor(
     inject: Injector,
     // private cache: CacheService,
+    private sanitizer:DomSanitizer,
     private hideToolbar: CodxOdService
   ) {
     super(inject);

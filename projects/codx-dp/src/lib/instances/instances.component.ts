@@ -98,9 +98,10 @@ export class InstancesComponent
   dataProccess: any;
   sumDaySteps: number;
   lstParticipants = [];
-  oldIdInstance:any;
-  checkDetail = true;
-  checkKanban = false;
+  oldIdInstance: any;
+  viewMode:any;
+  viewModeDetail = 'S';
+
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private inject: Injector,
@@ -123,19 +124,16 @@ export class InstancesComponent
 
     // em bảo gán tạm
     this.dataProccess = dt?.data?.data;
-    // this.genAutoNumberNo(
-    //   this.dataProccess?.applyFor === '1' ? 'DPT0406' : 'DPT0405'
-    // );
     this.getListCbxProccess(this.dataProccess?.applyFor);
   }
   ngAfterViewInit(): void {
-    this.checkDetail = this.process.viewMode == '2' ? true : false;
-    this.checkKanban = this.process.viewMode == '6' ? true : false;
+    this.viewMode = this.dataProccess.viewMode??6;  //dang lỗi nên gán cứng
+    this.viewModeDetail = this.dataProccess.viewModeDetail??"S";
     this.views = [
       {
         type: ViewType.listdetail,
+        active: false,
         sameData: true,
-        active: this.checkDetail,
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
@@ -143,7 +141,7 @@ export class InstancesComponent
       },
       {
         type: ViewType.kanban,
-        active: this.checkKanban,
+        active: false,
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
@@ -176,7 +174,7 @@ export class InstancesComponent
           this.getSumDurationDayOfSteps(this.listStepsCbx);
         }
       });
-      this.getPermissionProcess(this.process.recID);
+    this.getPermissionProcess(this.process.recID);
     //kanban
     this.request = new ResourceModel();
     this.request.service = 'DP';
@@ -238,7 +236,7 @@ export class InstancesComponent
                   .subscribe((res) => {
                     if (res) {
                       this.instanceNo = res;
-                      this.openPopUpAdd(applyFor, formMD, option,'add');
+                      this.openPopUpAdd(applyFor, formMD, option, 'add');
                     }
                   });
               } else
@@ -248,14 +246,14 @@ export class InstancesComponent
                   )
                   .subscribe((isNo) => {
                     this.instanceNo = isNo;
-                    this.openPopUpAdd(applyFor, formMD, option,'add');
+                    this.openPopUpAdd(applyFor, formMD, option, 'add');
                   });
             });
         });
       });
     });
   }
-  copy(data, titleAction){
+  copy(data, titleAction) {
     if (data) {
       this.view.dataService.dataSelected = data;
       this.oldIdInstance = data.recID;
@@ -286,7 +284,7 @@ export class InstancesComponent
                   .subscribe((res) => {
                     if (res) {
                       this.instanceNo = res;
-                      this.openPopUpAdd(applyFor, formMD, option,titleAction);
+                      this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
               } else {
@@ -296,7 +294,7 @@ export class InstancesComponent
                   )
                   .subscribe((isNo) => {
                     this.instanceNo = isNo;
-                    this.openPopUpAdd(applyFor, formMD, option,titleAction);
+                    this.openPopUpAdd(applyFor, formMD, option, titleAction);
                   });
               }
             });
@@ -304,20 +302,20 @@ export class InstancesComponent
       });
     });
   }
-  openPopUpAdd(applyFor, formMD, option,action) {
+  openPopUpAdd(applyFor, formMD, option, action) {
     var dialogCustomField = this.callfc.openSide(
       PopupAddInstanceComponent,
       [
-        action ==='add' ? 'add':'copy',
+        action === 'add' ? 'add' : 'copy',
         applyFor,
         this.listSteps,
         this.titleAction,
         formMD,
         this.listStepsCbx,
         this.instanceNo,
-        this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx),
+        (this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)),
         this.lstParticipants,
-        this.oldIdInstance
+        this.oldIdInstance,
       ],
       option
     );
@@ -412,7 +410,7 @@ export class InstancesComponent
         this.edit(data, e.text);
         break;
       case 'SYS04':
-        this.copy(data,e.text);
+        this.copy(data, e.text);
         break;
       case 'SYS02':
         this.delete(data);
@@ -474,7 +472,7 @@ export class InstancesComponent
   }
   //End
 
-  getPermissionProcess(id){
+  getPermissionProcess(id) {
     this.codxDpService.getProcess(this.process?.recID).subscribe((res) => {
       if (res) {
         if (res.permissions != null && res.permissions.length > 0) {
