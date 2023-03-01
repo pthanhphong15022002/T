@@ -140,7 +140,7 @@ export class InstanceDetailComponent implements OnInit {
      this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res) {
         this.listSteps = res;
-        this.getListStepsStatus();
+        // this.getListStepsStatus();
         var total = 0;
         for (var i = 0; i < this.listSteps.length; i++) {
           var stepNo = i;
