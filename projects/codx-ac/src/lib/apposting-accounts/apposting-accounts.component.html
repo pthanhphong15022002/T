@@ -1,0 +1,133 @@
+<codx-views
+  #view
+  funcID="ACS247"
+  [views]="views"
+  [button]="btnAdd"
+  [autoLoad]="true"
+  predicates="PostType=@0"
+  [dataValues]="selectedValue"
+  entityName="AC_APPostingAccounts"
+  (buttonClick)="handleClickAdd()"
+>
+</codx-views>
+
+<ng-template #templateLeft>
+  <div class="aside-secondary d-flex flex-row-fluid bg-white">
+    <!--begin::Workspace-->
+    <div class="aside-workspace px-4" id="kt_aside_wordspace">
+      <div class="d-flex h-100 flex-column">
+        <!--begin::Wrapper-->
+        <div
+          class="flex-column-fluid hover-scroll-y"
+          data-kt-scroll="true"
+          data-kt-scroll-activate="true"
+          data-kt-scroll-height="auto"
+          data-kt-scroll-wrappers="#kt_aside_wordspace"
+          data-kt-scroll-dependencies="#kt_aside_secondary_header, #kt_aside_secondary_footer"
+          data-kt-scroll-offset="0px"
+        >
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active show">
+              <div
+                class="menu menu-column menu-fit menu-rounded menu-title-gray-700 menu-icon-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500 my-3"
+                data-kt-menu="true"
+              >
+                <div id="kt_aside_menu_wrapper" class="menu-fit">
+                  <div
+                    class="menu-item menu-accordion"
+                    (click)="menuActive = 1"
+                    [ngClass]="menuActive === 1 ? 'here show' : ''"
+                  >
+                    <span class="menu-link">
+                      <span class="menu-icon">
+                        <span class="icon-house"></span>
+                      </span>
+                      <span class="menu-title fw-bold">
+                        <codx-label default="Tài khoản"></codx-label>
+                      </span>
+                      <span class="menu-arrow"></span>
+                    </span>
+                    <div class="menu-sub menu-sub-accordion">
+                      <div class="menu-item" *ngFor="let m of menuItems1">
+                        <a
+                          class="menu-link without-sub"
+                          (click)="filter('PostType', m.value)"
+                          [class]="{ active: m.value === selectedValue }"
+                        >
+                          <span class="menu-bullet">
+                            <span class="bullet bullet-dot"></span>
+                          </span>
+                          <span class="menu-title">{{ m.text }}</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="menu-item menu-accordion"
+                    (click)="menuActive = 2"
+                    [ngClass]="menuActive === 2 ? 'here show' : ''"
+                  >
+                    <span class="menu-link">
+                      <span class="menu-icon">
+                        <span class="icon-store"></span>
+                      </span>
+                      <span class="menu-title fw-bold">
+                        <codx-label
+                          formName="APPostingAccounts"
+                          default="Điều khoản"
+                        ></codx-label>
+                      </span>
+                      <span class="menu-arrow"></span>
+                    </span>
+                    <div class="menu-sub menu-sub-accordion">
+                      <div class="menu-item" *ngFor="let m of menuItems2">
+                        <a
+                          class="menu-link without-sub"
+                          (click)="filter('PostType', m.value)"
+                          [class]="{ active: m.value === selectedValue }"
+                        >
+                          <span class="menu-bullet">
+                            <span class="bullet bullet-dot"></span>
+                          </span>
+                          <span class="menu-title">{{ m.text }}</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--end::Wrapper-->
+      </div>
+    </div>
+    <!--end::Workspace-->
+  </div>
+</ng-template>
+
+<ng-template #templateRight>
+  <div class="ps-4 pb-4 h-100">
+    <codx-gridview
+      #grid
+      funcID="ACS247"
+      [dataService]="view.dataService"
+      entityName="AC_APPostingAccounts"
+      idField="recID"
+      [templateMore]="templateMore"
+    ></codx-gridview>
+  </div>
+</ng-template>
+
+<ng-template #templateMore let-data>
+  <div class="has-action-menu" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="handleClickMoreFuncs($event, data)"
+      [isBookMark]="true"
+      type="hover"
+    ></codx-mfunc>
+  </div>
+</ng-template>
