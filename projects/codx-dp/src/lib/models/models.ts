@@ -42,6 +42,7 @@ export class DP_Processes {
   instanceNoSetting: string;
   viewMode: string;
   viewModeDetail: string;
+  autoName: string;
 }
 
 export class DP_Processes_Permission {

@@ -48,10 +48,10 @@
                       </span>
                       <div ngbDropdownMenu class="" style="min-width: 350px">
                         <div class="card card-flush">
-                          <div class="card-body pt-0">
+                          <div class="card-body py-3 px-4">
                             <div class="d-flex flex-column">
                               <div class="d-flex flex-wrap mb-2">
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-bottom me-2">
                                   <span
                                     class="icon-cake icon-16 text-gray-800 me-1"
                                   ></span>
@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="d-flex align-items-center">
                                   <span
-                                    class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+                                    class="icon-i-info-circle-fill fs-9 icon-6 me-2 text-gray-400"
                                   ></span>
                                   <span #maritalStatus class="fw-bold">
                                     {{ infoPersonal?.maritalStatus }}
@@ -94,7 +94,7 @@
                                   </span>
                                 </div>
                               </div>
-                              <div class="d-flex align-items-center mb-4">
+                              <div class="d-flex align-items-center mb-3">
                                 <span
                                   class="icon-portrait icon-16 text-gray-800 me-1"
                                 ></span>
@@ -102,21 +102,20 @@
                                   <span>{{ infoPersonal?.personalEmail }}</span>
                                 </span>
                               </div>
-                              <div class="form-group">
-                                <div class="d-flex justify-content-between">
-                                  <codx-label
-                                    fiedName="PITNumber"
-                                    [formModel]="view.formModel"
-                                  >
-                                  </codx-label>
-                                  <span>{{ infoPersonal?.pitNumber }}</span>
-                                </div>
-                              </div>
-                              <div class="form-group">
-                                <div
-                                  class="d-flex d-flex justify-content-between"
+                              
+                              <div class="d-flex justify-content-between mb-3">
+                                <codx-label class="text-gray-600"
+                                  fiedName="PITNumber"
+                                  [formModel]="view.formModel"
                                 >
-                                  <codx-label
+                                </codx-label>
+                                <span>{{ infoPersonal?.pitNumber }}</span>
+                              </div>
+                              
+                              <div
+                                  class="d-flex d-flex justify-content-between mb-3"
+                                >
+                                  <codx-label class="text-gray-600"
                                     fiedName="SIRegisterNo"
                                     [formModel]="view.formModel"
                                   >
@@ -125,10 +124,10 @@
                                     {{ infoPersonal?.siRegisterNo }}</span
                                   >
                                 </div>
-                              </div>
-                              <div class="form-group">
-                                <div class="d-flex justify-content-between">
-                                  <codx-label
+                              <hr class="mt-0" />
+                              <div class="info-dropdownlist">
+                                <div class="d-flex justify-content-between mb-3">
+                                  <codx-label class="text-gray-600"
                                     [formModel]="view.formModel"
                                     fiedName="joinedOn"
                                   >
@@ -139,120 +138,105 @@
                                     }}</span>
                                   </span>
                                 </div>
+                              <div class="d-flex justify-content-between mb-3">
+                                <codx-label class="text-gray-600"
+                                  [formModel]="view.formModel"
+                                  fiedName="hiredOn"
+                                >
+                                </codx-label>
+                                <span class="text-dark">
+                                  <span>{{
+                                    infoPersonal?.hiredOn | fmDT
+                                  }}</span>
+                                </span>
                               </div>
-                              <div class="form-group">
-                                <div class="d-flex justify-content-between">
-                                  <codx-label
-                                    [formModel]="view.formModel"
-                                    fiedName="hiredOn"
-                                  >
-                                  </codx-label>
-                                  <span class="text-dark fw-bold">
-                                    <span>{{
-                                      infoPersonal?.hiredOn | fmDT
-                                    }}</span>
+                              <div class="d-flex justify-content-between mb-3">
+                                <codx-label class="text-gray-600"
+                                  [formModel]="view.formModel"
+                                  fiedName="EmployeeTypeID"
+                                >
+                                </codx-label>
+                                <span class="text-primary">
+                                  <span>{{
+                                    infoPersonal?.employeeTypeID
+                                  }}</span>
+                                </span>
+                              </div>
+                              <div class="d-flex justify-content-between mb-3">
+                                <codx-label class="text-gray-600"
+                                  [formModel]="view.formModel"
+                                  fiedName="userID"
+                                >
+                                </codx-label>
+                                <span class="text-primary">
+                                  <span>
+                                    {{
+                                      infoPersonal?.userID
+                                        | formatvalue
+                                          : eInfoFormModel
+                                          : "userID"
+                                        | async
+                                    }}
                                   </span>
-                                </div>
+                                </span>
                               </div>
-                              <div class="form-group">
-                                <div class="d-flex justify-content-between">
-                                  <codx-label
-                                    [formModel]="view.formModel"
-                                    fiedName="EmployeeTypeID"
-                                  >
-                                  </codx-label>
-                                  <span class="text-dark fw-bold">
-                                    <span>{{
-                                      infoPersonal?.employeeTypeID
-                                    }}</span>
-                                  </span>
-                                </div>
+                              <div class="d-flex justify-content-between mb-3">
+                                <codx-label class="text-gray-600"
+                                  [formModel]="view.formModel"
+                                  fiedName="lineManager"
+                                >
+                                </codx-label>
+                                <span class="text-dark fw-bold">
+                                  <span>{{ infoPersonal?.lineManager }}</span>
+                                </span>
                               </div>
-                              <div class="form-group">
-                                <div class="d-flex justify-content-between">
-                                  <codx-label
-                                    [formModel]="view.formModel"
-                                    fiedName="userID"
-                                  >
-                                  </codx-label>
-                                  <span class="text-dark fw-bold">
-                                    <span>
-                                      {{
-                                        infoPersonal?.userID
-                                          | formatvalue
-                                            : eInfoFormModel
-                                            : "userID"
-                                          | async
-                                      }}
-                                    </span>
-                                  </span>
-                                </div>
-                              </div>
-                              <div class="form-group">
-                                <div class="d-flex justify-content-between">
-                                  <codx-label
-                                    [formModel]="view.formModel"
-                                    fiedName="lineManager"
-                                  >
-                                  </codx-label>
-                                  <span class="text-dark fw-bold">
-                                    <span>{{ infoPersonal?.lineManager }}</span>
-                                  </span>
-                                </div>
-                              </div>
-                              <div class="form-group">
-                                <div class="d-flex justify-content-between">
-                                  <codx-label
-                                    [formModel]="view.formModel"
-                                    fiedName="timeCardNo"
-                                  >
-                                  </codx-label>
+                              <hr class="mt-0" />
+                              <div class="d-flex justify-content-between mb-3">
+                                <codx-label class="text-gray-600"
+                                  [formModel]="view.formModel"
+                                  fiedName="timeCardNo"
+                                >
+                                </codx-label>
 
-                                  <span class="text-dark fw-bold">
-                                    <span>{{ infoPersonal?.timeCardNo }}</span>
-                                  </span>
-                                </div>
+                                <span class="text-dark fw-bold">
+                                  <span>{{ infoPersonal?.timeCardNo }}</span>
+                                </span>
                               </div>
-                              <div class="form-group">
-                                <div class="d-flex justify-content-between">
-                                  <codx-label
-                                    [formModel]="view.formModel"
-                                    fiedName="shiftCalendarID"
-                                  >
-                                  </codx-label>
-                                  <span class="text-dark fw-bold">
-                                    <span>{{
-                                      infoPersonal?.shiftCalendarID
-                                    }}</span>
-                                  </span>
-                                </div>
+                              <div class="d-flex justify-content-between mb-3">
+                                <codx-label class="text-gray-600"
+                                  [formModel]="view.formModel"
+                                  fiedName="shiftCalendarID"
+                                >
+                                </codx-label>
+                                <span class="text-dark fw-bold">
+                                  <span>{{
+                                    infoPersonal?.shiftCalendarID
+                                  }}</span>
+                                </span>
                               </div>
-                              <div class="form-group">
-                                <div class="d-flex justify-content-between">
-                                  <codx-label
-                                    [formModel]="view.formModel"
-                                    fiedName="aLObjectID"
-                                  >
-                                  </codx-label>
+                              <div class="d-flex justify-content-between mb-3">
+                                <codx-label class="text-gray-600"
+                                  [formModel]="view.formModel"
+                                  fiedName="aLObjectID"
+                                >
+                                </codx-label>
 
-                                  <span class="text-dark fw-bold">
-                                    <span>{{ infoPersonal?.aLObjectID }}</span>
-                                  </span>
-                                </div>
+                                <span class="text-dark fw-bold">
+                                  <span>{{ infoPersonal?.aLObjectID }}</span>
+                                </span>
                               </div>
-                              <div class="form-group">
-                                <div class="d-flex justify-content-between">
-                                  <codx-label
-                                    [formModel]="view.formModel"
-                                    fiedName="payrollGroupID"
-                                  >
-                                  </codx-label>
+                              <div class="d-flex justify-content-between">
+                                <codx-label class="text-gray-600"
+                                  [formModel]="view.formModel"
+                                  fiedName="payrollGroupID"
+                                >
+                                </codx-label>
 
-                                  <span class="text-dark fw-bold">
-                                    <span>{{ infoPersonal?.timeCardNo }}</span>
-                                  </span>
-                                </div>
+                                <span class="text-dark fw-bold">
+                                  <span>{{ infoPersonal?.timeCardNo }}</span>
+                                </span>
                               </div>
+                            </div>
                             </div>
                           </div>
                         </div>
@@ -1653,7 +1637,7 @@
         </div>
 
         <!-- Quan hệ gia đình -->
-        <div class="user-profile overview d-block mb-3" [id]="eFamiliesFuncID">
+        <div class="user-profile overview d-block mb-3 user-family" [id]="eFamiliesFuncID">
           <div class="rounded-2 p-4 bg-white mt-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
