@@ -316,7 +316,12 @@
           <div class="setting-btnright">
             <a
               *ngIf="data.displayMode === '1'"
-              (click)="openSub($event, data.recID, dataValue)"
+              [routerLink]="
+                data.reference ? '../../../' + data.reference : null
+              "
+              (click)="
+                !data.reference && openSub($event, data.recID, dataValue)
+              "
             >
               <span class="w-30px d-flex justify-content-center"
                 ><span class="icon-keyboard_arrow_right icon-22"></span></span

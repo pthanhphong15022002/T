@@ -4,6 +4,8 @@ import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, 
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxViewFilesComponent } from 'projects/codx-share/src/lib/components/codx-view-files/codx-view-files.component';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
+import { Observable, Observer, of } from 'rxjs';
+import { json } from 'stream/consumers';
 
 
 @Component({
@@ -213,22 +215,35 @@ export class PopupAddPostComponent implements OnInit {
   loaded:boolean = false;
   // submit
   submit(){
-    if(!this.loaded){
-      this.loaded = true;
-      switch(this.status){
-        case "create":
-          this.publishPost();
-          break;
-        case "edit":
-          this.editPost();
-          break;
-        case "share":
-          this.sharePost();
-          break;
-        default:
-          break
-      };
-    }
+    // if(!this.loaded){
+    //   this.loaded = true;
+    //   switch(this.status){
+    //     case "create":
+    //       this.publishPost();
+    //       break;
+    //     case "edit":
+    //       this.editPost();
+    //       break;
+    //     case "share":
+    //       this.sharePost();
+    //       break;
+    //     default:
+    //       break
+    //   };
+    // }
+    switch(this.status){
+      case "create":
+        this.publishPost();
+        break;
+      case "edit":
+        this.editPost();
+        break;
+      case "share":
+        this.sharePost();
+        break;
+      default:
+        break
+    };
   }
 
   // create Post 
@@ -248,6 +263,7 @@ export class PopupAddPostComponent implements OnInit {
       this.data.attachments = _files.length;
       this.data.medias = this.codxViewFiles.medias;
     }
+    //lưu bài viết
     this.api.execSv(
       "WP",
       "ERM.Business.WP",
@@ -257,6 +273,7 @@ export class PopupAddPostComponent implements OnInit {
       .subscribe((res1: any) => {
         if (res1)
         {
+          // lưu files
           this.codxViewFiles.objectID = res1.recID;
           this.codxViewFiles.save().subscribe((res2)=>{
             this.loaded = false;
@@ -272,6 +289,8 @@ export class PopupAddPostComponent implements OnInit {
         }
       });
   }
+  
+
 
   // edit post
   editPost(){

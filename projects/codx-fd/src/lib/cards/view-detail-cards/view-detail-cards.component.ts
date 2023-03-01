@@ -9,26 +9,26 @@ import { CardType, Valuelist } from '../../models/model';
   templateUrl: './view-detail-cards.component.html',
   styleUrls: ['./view-detail-cards.component.scss']
 })
-export class ViewDetailCardsComponent implements OnInit,OnChanges {
+export class ViewDetailCardsComponent implements OnInit, OnChanges {
 
   @Input() cardID: string = "";
-  @Input() cardType:string ="";
-  @Input() formModel:FormModel;
-  @Input() ratingVLL:string = "";   
-  data:any = null;
-  isShowCard:boolean = true;
+  @Input() cardType: string = "";
+  @Input() formModel: FormModel;
+  @Input() ratingVLL: string = "";
+  data: any = null;
+  isShowCard: boolean = true;
   constructor
-  (
-    private api:ApiHttpService,
-    private route:ActivatedRoute,
-    private cache:CacheService,
-    private dt:ChangeDetectorRef
-  ) 
-  { 
+    (
+      private api: ApiHttpService,
+      private route: ActivatedRoute,
+      private cache: CacheService,
+      private dt: ChangeDetectorRef
+    ) {
 
   }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.cardID.currentValue != changes.cardID.previousValue){
+    if (changes.cardID.currentValue != changes.cardID.previousValue) {
       this.getDataCard();
     }
   }
@@ -37,8 +37,8 @@ export class ViewDetailCardsComponent implements OnInit,OnChanges {
     this.getDataCard();
   }
 
-  getDataCard(){
-    if(!this.cardID){
+  getDataCard() {
+    if (!this.cardID) {
       this.data = null;
       this.dt.detectChanges();
       return;
@@ -50,7 +50,7 @@ export class ViewDetailCardsComponent implements OnInit,OnChanges {
           console.log(res);
           this.data = res;
           this.dt.detectChanges();
-        } 
-    });
+        }
+      });
   }
 }

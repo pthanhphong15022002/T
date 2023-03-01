@@ -67,6 +67,10 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
   assignmentOKR:any;
   distributeToType: string;
   distributeType: any;
+  owner: any;
+  compFuncID=OMCONST.FUNCID.COMP;
+  deptFuncID=OMCONST.FUNCID.DEPT;
+  orgFuncID=OMCONST.FUNCID.ORG;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -96,7 +100,9 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
       this.radioOBCheck=true;
     }
   }
-  //-----------------------Base Func-------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -115,28 +121,17 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
   onInit(): void {
     this.getOKRAssign();
   }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Cache Data--------------------------------//
+  //---------------------------------------------------------------------------------//
+  // getCacheData(){
 
-  //-----------------------End-------------------------------//
+  // }
 
-  //-----------------------Base Event------------------------//
-  click(event: any) {
-    switch (event) {
-    }
-  }
-  valueTypeChange(event) {
-    
-    if (event?.field==this.typeKR) {
-      this.distributeToType=OMCONST.VLL.OKRType.KResult;
-    } else if(event?.field==this.typeOB){
-      this.distributeToType=OMCONST.VLL.OKRType.Obj;
-    }
-  this.detectorRef.detectChanges();
-}
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Data Func---------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //-----------------------End-------------------------------//
-
-  //-----------------------Get Data Func---------------------//
-  
   getOKRAssign(){
     this.codxOmService
     .getOKRByID(this.okrRecID)
@@ -172,48 +167,25 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
       }      
     });
   }
-  //-----------------------End-------------------------------//
-
-  //-----------------------Validate Func---------------------//
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Logic Func------------------------//
-  
-  
-  onSaveForm(){
-    if(this.assignmentOKR.orgUnitID==null){
-      this.notificationsService.notify("OM",'2',null);
-      return;
-    }
-    this.codxOmService.distributeOKR(this.okrRecID,this.distributeToType,[this.assignmentOKR],this.isAdd)
-    .subscribe(res=>{
-      if(res){        
-        this.notificationsService.notifyCode('SYS034');
-      }
-      this.dialogRef && this.dialogRef.close();
-    })
-  }
-  //-----------------------End-------------------------------//
-
-  //-----------------------Logic Event-----------------------//
-
-  //-----------------------End-------------------------------//
-
-  //-----------------------Custom Func-----------------------//
-  cbxOrgChange(evt:any){
-    if(evt?.data!=null && evt?.data!=''){     
-      this.assignmentOKR.orgUnitID= evt.data;
-      this.assignmentOKR.orgUnitName= evt.component?.itemsSelected[0]?.OrgUnitName;
-      
-          let x= this.curUser;
-       
-      this.detectorRef.detectChanges();
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Event------------------------------------//
+  //---------------------------------------------------------------------------------//
+  click(event: any) {
+    switch (event) {
     }
   }
-  //-----------------------End-------------------------------//
-
-  //-----------------------Custom Event-----------------------//
+  valueTypeChange(event) {
+    
+    if (event?.field==this.typeKR) {
+      this.distributeToType=OMCONST.VLL.OKRType.KResult;
+    } else if(event?.field==this.typeOB){
+      this.distributeToType=OMCONST.VLL.OKRType.Obj;
+    }
+  this.detectorRef.detectChanges();
+}
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Event----------------------------------//
+  //---------------------------------------------------------------------------------//
   cancel(){
     this.dialogRef.close();
   }
@@ -228,9 +200,63 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
     //this.assignmentOKR.orgUnitName= null;
     this.detectorRef.detectChanges();
   }
-  //-----------------------End-------------------------------//
+  cbxOrgChange(evt:any){
+    if(evt?.data!=null && evt?.data!=''){     
+      this.assignmentOKR.orgUnitID= evt.data;
+      this.assignmentOKR.orgUnitName= evt.component?.itemsSelected[0]?.OrgUnitName;
+      
+      this.codxOmService
+      .getManagerByOrgUnitID(this.assignmentOKR.orgUnitID)
+      .subscribe((ownerInfo) => {
+        if (ownerInfo) {
+          this.owner = ownerInfo;
+          this.assignmentOKR.owner = this.owner?.userID;
+          this.assignmentOKR.employeeID = this.owner?.employeeID;
+          this.assignmentOKR.orgUnitID = this.owner?.orgUnitID;
+          this.assignmentOKR.departmentID = this.owner?.departmentID;
+          this.assignmentOKR.companyID = this.owner?.companyID;
+          this.assignmentOKR.positionID = this.owner?.positionID;
+          this.assignmentOKR.employeeName = this.owner?.employeeName;
+          this.assignmentOKR.orgUnitName = this.owner?.orgUnitName;
+          this.assignmentOKR.departmentName = this.owner?.departmentName;
+          this.assignmentOKR.companyName = this.owner?.companyName;
+          this.assignmentOKR.positionName = this.owner?.positionName;
 
-  //-----------------------Popup-----------------------------//
+        }
+      });
+       
+      this.detectorRef.detectChanges();
+    }
+  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Validate Func---------------------------------//
+  //---------------------------------------------------------------------------------//
 
-  //-----------------------End-------------------------------//
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Logic Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
+ 
+  onSaveForm(){
+    if(this.assignmentOKR.orgUnitID==null){
+      this.notificationsService.notify("OM",'2',null);
+      return;
+    }
+    this.codxOmService.distributeOKR(this.okrRecID,this.distributeToType,[this.assignmentOKR],this.isAdd)
+    .subscribe(res=>{
+      if(res){        
+        this.notificationsService.notifyCode('SYS034');
+      }
+      this.dialogRef && this.dialogRef.close();
+    })
+  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Func-----------------------------------//
+  //---------------------------------------------------------------------------------//
+
+
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Popup-----------------------------------------//
+  //---------------------------------------------------------------------------------//
+  
+
 }

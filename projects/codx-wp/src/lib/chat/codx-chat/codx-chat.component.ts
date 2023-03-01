@@ -30,8 +30,6 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.signalRSV.signalBoxChat.subscribe((res:any) => {
-    });
   }
   // get total message
   getTotalMessage(){

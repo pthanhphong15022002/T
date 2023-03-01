@@ -18,7 +18,7 @@ export class PolicyCoinComponent extends UIComponent implements OnInit {
   item: any = {};
   @Input() typeCard: string;
   @Input() isGroup: any;
-  categoryID: string = '2';
+  categoryID: string = '1';
   policyCoinList = [];
   tenant: string;
   funcID;
@@ -82,6 +82,8 @@ export class PolicyCoinComponent extends UIComponent implements OnInit {
         [this.typeCard, this.categoryID, applyFor]
       )
       .subscribe((res) => {
+        console.log(res);
+
         if (res && res.msgBodyData.length > 0) {
           this.policyCoinList = res.msgBodyData[0];
           this.changeDr.detectChanges();
