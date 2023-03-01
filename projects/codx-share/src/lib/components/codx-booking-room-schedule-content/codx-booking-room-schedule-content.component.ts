@@ -1,3 +1,4 @@
+declare var window: any;
 import {
   AfterViewInit,
   Component,
@@ -59,5 +60,11 @@ export class CodxBookingRoomScheduleContentComponent
       ':' +
       ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
+  }
+  meetingNow(url:string){
+    if(url !=null){
+
+      window.open(url, '_blank');
+    }
   }
 }

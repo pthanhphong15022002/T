@@ -19,6 +19,8 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { TestComponetComponent } from './test-componet/test-componet.component';
+import { PopupTaskComponent } from './popup-task/popup-task.component';
+import { ContactsComponent } from './crmcontacts/crmcontacts.component';
 
 const routes: Routes = [
   {
@@ -28,6 +30,10 @@ const routes: Routes = [
       {
         path: 'test/:funcID',
         component: TestComponetComponent,
+      },
+      {
+        path: 'customermanagement/:funcID',
+        component: ContactsComponent,
       },
       {
         path: '**',
@@ -40,7 +46,7 @@ const routes: Routes = [
 const T_Component: Type<any>[] = [LayoutComponent];
 
 @NgModule({
-  declarations: [CodxCmComponent, LayoutComponent, TestComponetComponent],
+  declarations: [CodxCmComponent, LayoutComponent, TestComponetComponent, PopupTaskComponent, ContactsComponent],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
