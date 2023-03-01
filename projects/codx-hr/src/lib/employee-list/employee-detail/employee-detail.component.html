@@ -3381,7 +3381,7 @@
           </div>
         </div>
         <!-- Phụ cấp -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0403">
+        <div class="user-profile overview d-block mb-3" [id]="benefitFuncID">
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
@@ -3392,10 +3392,10 @@
                   <!-- <codx-label
                     name="lblSalary&Benefit"
                     [formModel]="view.formModel"
-                    [default]="getFormHeader('HRTEM0403')"
+                    [default]="getFormHeader(benefitFuncID)"
                   >
                   </codx-label> -->
-                  {{ getFormHeader("HRTEM0403") }}
+                  {{ getFormHeader(benefitFuncID) }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -3570,20 +3570,13 @@
             </div>
 
             <div class="mb-1">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              ></div>
               <div class="d-flex flex-wrap mt-6 mb-3">
-                <div
-                  [style.background]="'black'"
-                  class="badge border-0 me-2"
-                  *ngFor="let asset of lstAsset"
-                >
-                  <div class="has-action-menu">
+                <div  *ngFor="let asset of lstAsset">
+                  <div class="badge border-0 me-2 badge-primary" [style.background]="getAssetBackgroundColor(asset)" [style.color]="getAssetFontColor(asset)">
                     {{
-                      asset.assetCategory
-                        | formatvalue : eAssetFormModel : "assetCategory"
-                        | async
+                    asset
+                    | formatvalue : eAssetFormModel : "assetCategory"
+                    | async
                     }}
                   </div>
                 </div>
@@ -4036,6 +4029,8 @@
                   >
                   </codx-label> -->
                   {{ getFormHeader("HRTEM0503") }}
+                  <span class="fs-5 text-gray-500 ms-2"> | </span>
+                  <span class="text-gray-500 ms-1">({{ dayoffRowCount }})</span>
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
@@ -4071,6 +4066,8 @@
                 </button>
               </div>
             </div>
+
+            <div>Tiêu chuẩn phép năm: 14 ngày/năm | Còn lại năm trước: 1.5 ngày - Còn năm nay: 12 ngày. String này đang gán cứng chờ module phát triển</div>
 
             <div class="mb-1">
               <div
@@ -5243,6 +5240,7 @@
                     <i class="icon-filter_alt"></i>
                   </codx-dropdown-select>
                 </span>
+                <span class="text-gray-500 ms-2">|</span>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="
@@ -5308,7 +5306,7 @@
           </div>
         </div>
         <!-- Tai nạn lao động -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0804">
+        <div class="user-profile overview d-block mb-3" [id]="eAccidentsFuncID">
           <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
@@ -5319,13 +5317,28 @@
                   <!-- <codx-label
                     name="lblLaborAccident"
                     [formModel]="view.formModel"
-                    [default]="getFormHeader('HRTEM0804')"
+                    [default]="getFormHeader(eAccidentsFuncID)"
                   >
                   </codx-label> -->
-                  {{ getFormHeader("HRTEM0804") }}
+                  {{ getFormHeader(eAccidentsFuncID) }}
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
+                <codx-dropdown-select
+                  *ngIf="eAccidentsGrvSetup"
+                  [emptyText]="eAccidentsGrvSetup.AccidentID.headerText"
+                  [cssClass]="'rounded-pill border-1'"
+                  cssPopup="h-350px w-300px"
+                  [isMulti]="true"
+                  type="combobox"
+                  field="AccidentID"
+                  [refValue]="eAccidentsGrvSetup.AccidentID.referedValue"
+                  (valueChange)="valueChangeFilterAccidentID($event)"
+                >
+                  <i class="icon-filter_alt"></i>
+                </codx-dropdown-select>
+
+                <span class="text-gray-500 ms-2">|</span>
                 <button
                   class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="
@@ -5338,27 +5351,25 @@
                 </button>
               </div>
             </div>
-            <div class="mb-1 overflow-scroll">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <!-- <codx-gridview-v2
-                  idField="recID"
+            <div class="mb-1">
+              <div>
+                <codx-gridview
+                  *ngIf="eAccidentsColumnsGrid && eAccidentsFormModel"
+                  #eAccidentGridView
+                  [formModel]="eAccidentsFormModel"
+                  [columnsGrid]="eAccidentsColumnsGrid"
                   [service]="'HR'"
-                  [gridViewName]="'grvEAccidents'"
-                  [formName]="'EAccidents'"
                   [assemblyName]="'Core'"
                   [className]="'DataBusiness'"
                   [method]="'LoadDataAsync'"
                   [predicates]="'EmployeeID=@0'"
-                  [autoLoad]="true"
-                  [height]="200"
-                  [dataValues]="data.employeeID"
-                  [entityName]="'HR_EAccidents'"
-                  [contentEditable]="false"
-                  [allowResizing]="true"
-                  (clickMF)="clickMF($event, null, 'eAccidents')"
-                ></codx-gridview-v2> -->
+                  [dataValues]="employeeID"
+                  [pageSize]="numPageSizeGridView"
+                  [entityName]="'HR_EDiseases'"
+                  [rowHeight]="50"
+                  height="240px"
+                >
+                </codx-gridview>
               </div>
             </div>
           </div>
@@ -5436,7 +5447,7 @@
   </codx-mfunc>
 </ng-template>
 
-<!--#region template Phụ cấp  -->
+<!-- #region template Phụ cấp  -->
 <ng-template #templateBenefitID let-data>
   <div class="d-flex align-items-center">
     <span
@@ -5732,7 +5743,7 @@
 
 <ng-template #templateEAssetCol1 let-data>
   <div>
-    <div>
+    <div class="badge border-0 me-2 badge-primary" [style.background]="getAssetBackgroundColor(data.assetCategory)" [style.color]="getAssetFontColor(data.assetCategory)">
       {{
         data?.assetCategory
           | formatvalue : eAssetFormModel : "assetCategory"
@@ -5752,15 +5763,17 @@
     {{ data?.issuedDate | fmDT }}
     <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
   </div>
-  <div *ngIf="data?.isAllowReturn == true">
+  <div *ngIf="data?.isAllowReturn == true" class="badge border-0 me-2 badge-primary">
     {{ eAssetHeaderText["IsAllowReturn"] }}
   </div>
 </ng-template>
 
 <ng-template #templateEAssetCol3 let-data>
   <div class="has-action-menu min-h-40px">
-    <div *ngIf="data?.isReturned == true" class="has-action-menu">
-      {{ eAssetHeaderText["IsReturned"] }}
+    <div *ngIf="data?.isReturned == true" class="has-action-menu" >
+      <div class="badge border-0 me-2 badge-primary">
+        {{ eAssetHeaderText["IsReturned"] }}
+      </div>
       <i class="icon-calendar_today"></i>
       {{ data?.returnedDate | fmDT }}
     </div>
@@ -6657,3 +6670,81 @@
     </codx-mfunc>
   </div>
 </ng-template>
+
+<!-- #region Tai nạn lao động column template  -->
+
+<ng-template #templateEAccidentCol1 let-data>
+  <div class="d-flex align-items-center mb-4">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-1">
+        <div class="text-dark fw-bold">
+          {{
+            data?.accidentID
+              | formatvalue : eAccidentsFormModel : "accidentID"
+              | async
+          }}
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="icon-event icon-16 text-danger icon-16 me-2"></span>
+        <div class="text-dark">
+          {{
+            data?.accidentDate
+              | formatvalue : eAccidentsFormModel : "accidentDate"
+              | async
+          }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #templateEAccidentCol2 let-data>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-place icon-16 text-gray-600 me-1"></span>
+      <span class="text-dark">
+        <span>{{
+          data?.accidentPlace
+            | formatvalue : eAccidentsFormModel : "accidentPlace"
+            | async
+        }}</span>
+      </span>
+    </div>
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-event icon-16 text-danger me-1"></span>
+      <span class="text-dark">
+        <span>{{
+          data?.accidentReasonID
+            | formatvalue : eAccidentsFormModel : "accidentReasonID"
+            | async
+        }}</span>
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #templateEAccidentCol3 let-data>
+  <div class="has-action-menu">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mb-2">
+        <span class="text-dark">
+          <span>{{
+            data?.accidentLevel
+              | formatvalue : eAccidentsFormModel : "accidentLevel"
+              | async
+          }}</span>
+        </span>
+      </div>
+      <codx-mfunc
+        [formModel]="eAccidentsFormModel"
+        (clickMF)="clickMF($event, data, 'eAccidents')"
+        type="hover"
+        [dataItem]="data"
+      >
+      </codx-mfunc>
+    </div>
+  </div>
+</ng-template>
+
+<!-- #endregion -->
