@@ -53,6 +53,8 @@ import { PopAddDimensionGroupsComponent } from './dimension-groups/pop-add-dimen
 import { PopAddDimensionSetupComponent } from './dimension-groups/pop-add-dimension-setup/pop-add-dimension-setup.component';
 import { ArPostingAccountsComponent } from './ar-posting-accounts/ar-posting-accounts.component';
 import { PopAddArComponent } from './ar-posting-accounts/pop-add-ar/pop-add-ar.component';
+import { APPostingAccountsComponent } from './apposting-accounts/apposting-accounts.component';
+import { PopupAddAPPostingAccountComponent } from './apposting-accounts/popup-add-apposting-account/popup-add-apposting-account.component';
 
 export const routes: Routes = [
   {
@@ -92,7 +94,7 @@ export const routes: Routes = [
       },
       {
         path: 'items/:funcID',
-        component: ItemsComponent,        
+        component: ItemsComponent,
       },
       {
         path: 'warehouses/:funcID',
@@ -117,6 +119,10 @@ export const routes: Routes = [
       {
         path: 'arpostingaccounts/:funcID',
         component: ArPostingAccountsComponent,
+      },
+      {
+        path: 'appostingaccounts/:funcID',
+        component: APPostingAccountsComponent,
       },
     ],
   },
@@ -161,7 +167,9 @@ export const routes: Routes = [
     JournalNamesComponent,
     PopAddDimensionSetupComponent,
     ArPostingAccountsComponent,
-    PopAddArComponent
+    PopAddArComponent,
+    APPostingAccountsComponent,
+    PopupAddAPPostingAccountComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
