@@ -942,8 +942,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     config.type = 'YesNo';
     var tmps = [];
     this.notiService
-      .alert('Thông báo', 'Bạn muốn xóa đối tượng này', config)
-      .closed.subscribe((x) => {
+      .alertCode('SYS030')
+      .subscribe((x) => {
         if (x.event.status == 'Y') {
           var i = -1;
           i = this.lstParticipants.findIndex(
@@ -1460,7 +1460,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //taskGroup
   openTaskGroup(data?: any, type?: string) {
     this.taskGroup = new DP_Steps_TaskGroups();
-    let timeStep = this.dayStep*24 + this.hourStep; 
+    let timeStep = this.dayStep*24 + this.hourStep;
     let differenceTime = this.getHour(this.step) - timeStep;
     if (data) {
       this.roleGroupTaskOld = JSON.parse(JSON.stringify(data?.roles)) || [];
