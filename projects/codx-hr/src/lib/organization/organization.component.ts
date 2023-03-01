@@ -229,7 +229,6 @@ export class OrgorganizationComponent extends UIComponent {
   }
   // button add toolbar
   btnClick(e) {
-    debugger
     if (this.view) {
       let option = new SidebarModel();
       option.Width = '550px';
@@ -242,6 +241,7 @@ export class OrgorganizationComponent extends UIComponent {
       this.view.dataService.addNew()
       .subscribe((result: any) => {
         if (result) {
+          result.parentID = this.orgUnitID;
           let data = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,
