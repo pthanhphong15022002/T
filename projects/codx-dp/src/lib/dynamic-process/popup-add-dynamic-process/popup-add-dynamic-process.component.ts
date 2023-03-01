@@ -153,36 +153,26 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //stage-nvthuan
   user: any;
   userId: string;
-
   taskGroup: DP_Steps_TaskGroups;
-  taskGroupList: DP_Steps_TaskGroups[] = [];
-
-  taskList: DP_Steps_Tasks[] = [];
-
-  taskListSave: DP_Steps_Tasks[] = [];
-  taskGroupListSave: DP_Steps_TaskGroups[] = [];
-
   step: DP_Steps; //data step dc chọn
   stepList: DP_Steps[] = []; //danh sách step
-
   stepListAdd: DP_Steps[] = [];
-  stepListDelete = [];
-
+  taskList: DP_Steps_Tasks[] = [];
+  taskGroupList: DP_Steps_TaskGroups[] = [];
   roleGroupTaskOld: DP_Steps_Roles[] = [];
-
-  grvMoreFunction: FormModel;
-  grvTaskGroups: FormModel;
+  stepListDelete = [];
   grvStep: FormModel;
-
-  dayStep = 0;
-  hourStep = 0;
-
-  stepName = '';
-  isContinues = false;
+  grvTaskGroups: FormModel;
+  grvMoreFunction: FormModel;
+  formGroup: FormGroup;
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
-  formGroup: FormGroup;
+
+  dayStep = 0;
+  hourStep = 0;
+  stepName = '';
+  isContinues = false;
   refValue = 'DP018';
   gridViewSetup: any;
   userGroupJob = [];
@@ -1340,8 +1330,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             step['taskGroups'] = taskGroupConvert;
 
             let taskGroup = new DP_Steps_TaskGroups();
-            taskGroup['task'] = taskGroupList[this.guidEmpty] || [];
-            taskGroup['recID'] = this.guidEmpty; // group task rỗng để kéo ra ngoài
+            taskGroup['task'] = taskGroupList['null'] || [];
+            taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
             step['taskGroups'].push(taskGroup);
 
             this.stepList.push(step);
@@ -1518,7 +1508,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (index === 0) {
         let taskGroup = new DP_Steps_TaskGroups();
         taskGroup['task'] = [];
-        taskGroup['recID'] = this.guidEmpty; // group task rỗng để kéo ra ngoài
+        taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
         this.taskGroupList.push(taskGroup);
       }
       this.taskGroupList.splice(index - 1, 0, this.taskGroup);
@@ -1600,7 +1590,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.taskGroupList,
       dataInput || {},
       this.taskList,
-      this.groupTaskID || this.guidEmpty,
+      this.groupTaskID || null,
     ];
     var functionID = "DPT0206" //id tuy chojn menu ne
     this.cache.functionList(functionID).subscribe((f) => {
@@ -1620,7 +1610,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
           dialog.closed.subscribe((e) => {
             if (e?.event) {
-              this.groupTaskID = this.guidEmpty;
+              this.groupTaskID = null;
               let taskData = e?.event?.data;
               if (e.event?.status === 'add' || e.event?.status === 'copy') {
                 let index = this.taskGroupList.findIndex(
@@ -1869,6 +1859,66 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.setIndex(this.stepList, 'stepNo');
   }
 
+  // Common
+  setIndex(data: any, value: string) {
+    if (data.length > 0) {
+      data.forEach((item, index) => {
+        item[value] = index + 1;
+      });
+    }
+  }
+
+  getHour(data) {
+    let hour =
+      Number(data['durationDay'] || 0) * 24 + Number(data['durationHour'] || 0);
+    return hour;
+  }
+
+  viewStepSelect(step) {
+    this.viewStepCrr = this.viewStepCustom;
+    if (step) {
+      this.titleViewStepCrr = step?.stepName || '';
+      this.isSwitchReason = false;
+      this.step = step;
+      this.checkedDayOff(this.step?.excludeDayoff);
+      this.taskGroupList = this.step['taskGroups'];
+      this.taskList = this.step['tasks'];
+      this.sumTimeStep();
+    }
+  }
+
+  changeValueInput(event, data) {
+    data[event?.field] = event?.data;
+  }
+
+  checkButtonContinue() {
+    if (this.currentTab == 0) {
+      return this.process.processName ? true : false;
+    } else {
+      return this.stepList?.length > 0 ? true : false;
+    }
+  }
+
+  setRole<T>(role: T) {
+    role['recID'] = Util.uid();
+    role['objectName'] = this.user['userName'];
+    role['objectID'] = this.user['userID'];
+    role['createdOn'] = new Date();
+    role['createdBy'] = this.user['userID'];
+    return role;
+  }
+
+  sumTimeStep() {
+    let time = 0;
+    this.step?.taskGroups?.forEach((element) => {
+      time +=
+        Number(element['durationDay'] || 0) * 24 +
+        Number(element['durationHour'] || 0);
+    });
+    this.dayStep = Math.floor(time / 24);
+    this.hourStep = Math.floor(time % 24);
+  }
+
   async setTimeGroup(group, task, maxHour) {
     let x = await firstValueFrom(this.notiService.alertCode("DP010"));
     if (x.event && x.event.status == 'Y') {
@@ -1930,76 +1980,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return sum;
   }
 
-  // sumHourStep(){
-  //   let listStaskNoGroup = this.taskList.filter(task => !task['taskGroupID']);
-  //   let maxTimeTask = 0;
-  //   listStaskNoGroup?.forEach(task => {
-  //     let time = this.calculateTimeTaskNoGroup(task['recID'])
-  //     maxTimeTask = time > maxTimeTask ? time : maxTimeTask;
-  //   })
-  //   let timeStep = this.sumHourGroupTask();
-  //   return maxTimeTask > timeStep ? maxTimeTask : timeStep;
-  // }
-
-  // Common
-  setIndex(data: any, value: string) {
-    if (data.length > 0) {
-      data.forEach((item, index) => {
-        item[value] = index + 1;
-      });
-    }
-  }
-
-  getHour(data) {
-    let hour =
-      Number(data['durationDay'] || 0) * 24 + Number(data['durationHour'] || 0);
-    return hour;
-  }
-
-  viewStepSelect(step) {
-    this.viewStepCrr = this.viewStepCustom;
-    if (step) {
-      this.titleViewStepCrr = step?.stepName || '';
-      this.isSwitchReason = false;
-      this.step = step;
-      this.checkedDayOff(this.step?.excludeDayoff);
-      this.taskGroupList = this.step['taskGroups'];
-      this.taskList = this.step['tasks'];
-      this.sumTimeStep();
-    }
-  }
-
-  changeValueInput(event, data) {
-    data[event?.field] = event?.data;
-  }
-
-  checkButtonContinue() {
-    if (this.currentTab == 0) {
-      return this.process.processName ? true : false;
-    } else {
-      return this.stepList?.length > 0 ? true : false;
-    }
-  }
-
-  setRole<T>(role: T) {
-    role['recID'] = Util.uid();
-    role['objectName'] = this.user['userName'];
-    role['objectID'] = this.user['userID'];
-    role['createdOn'] = new Date();
-    role['createdBy'] = this.user['userID'];
-    return role;
-  }
-
-  sumTimeStep() {
-    let time = 0;
-    this.step?.taskGroups?.forEach((element) => {
-      time +=
-        Number(element['durationDay'] || 0) * 24 +
-        Number(element['durationHour'] || 0);
-    });
-    this.dayStep = Math.floor(time / 24);
-    this.hourStep = Math.floor(time % 24);
-  }
   // add role to permissions process
   addRole(role: object, roleOld?: object) {
     if (role) {
