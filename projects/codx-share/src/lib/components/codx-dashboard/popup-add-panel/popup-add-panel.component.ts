@@ -1,5 +1,10 @@
-import { Component, Optional } from "@angular/core";
-import { NotificationsService, ApiHttpService, DialogData, DialogRef } from "codx-core";
+import { Component, Optional } from '@angular/core';
+import {
+  NotificationsService,
+  ApiHttpService,
+  DialogData,
+  DialogRef,
+} from 'codx-core';
 
 @Component({
   selector: 'popup-add-panel',
@@ -14,18 +19,16 @@ export class PopupAddPanelComponent {
     private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-    )
-  {
+  ) {
     //this.dataID = dt?.data[];
     this.data = dt?.data;
     this.dialog = dialog;
-
   }
 
-  valueChange(evt:any){
+  valueChange(evt: any) {
     this.data[evt.field] = evt.data;
   }
-  saveForm(){
+  saveForm() {
     this.dialog && this.dialog.close(this.data);
   }
 }
