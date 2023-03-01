@@ -180,12 +180,12 @@
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="chuaco" [formModel]="dialog.formModel" default="Tên đối tượng khi tạo mới">
+              <codx-label fiedName="AutoName" [formModel]="dialog.formModel" default="Tên đối tượng khi tạo mới">
               </codx-label>
             </div>
             <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
             </codx-input> -->
-            <codx-input field="chuaco" type="text" (valueChange)="valueChange($event)">
+            <codx-input field="autoName" type="text" [crrValue]="process.autoName" [placeholder]="gridViewSetup['AutoName']?.description" (valueChange)="valueChange($event)">
             </codx-input>
           </div>
           <div class="form-group margin-form">

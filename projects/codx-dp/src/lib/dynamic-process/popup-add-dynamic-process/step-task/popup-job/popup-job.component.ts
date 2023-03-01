@@ -200,7 +200,7 @@ export class PopupJobComponent implements OnInit {
   // xử lý công việc liên kêt
   async setTaskLink(groupTaskID?: string) {
     let taskLinks = [];
-    if (groupTaskID) {
+    if (groupTaskID != this.guidEmpty) {
       if (this.status == 'add' || this.status == 'copy') {
         let groupTask = this.taskGroupList.find((x) => x.recID === groupTaskID);
         if (groupTask && groupTask['task']) {

@@ -100,15 +100,19 @@
       <div
         *ngIf="typeTask === 'E' || typeTask === 'Q'"
         class=""
-        style="flex-basis: 10%"
+        style="flex-basis: 5%"
       >
         <div>
-          <codx-label></codx-label>
+          <codx-label
+          [formModel]="frmModel"
+          default=""
+        >
+        </codx-label>
         </div>
         <div
           *ngIf="typeTask === 'E'"
           class="d-flex justify-content-end"
-          style="margin-top: 2px"
+          style="margin-top: 3px"
         >
           <button
             class="button-mail"
@@ -130,7 +134,7 @@
       <div class="d-flex justify-content-between align-items-center mail">
         <codx-label
           fiedName="Reference"
-          [formModel]="form?.formModel"
+          [formModel]="frmModel"
           default="Bảng khảo sát"
         ></codx-label>
         <a
@@ -145,7 +149,7 @@
       </div>
       <codx-input
         field="reference"
-        [formModel]="form?.formModel"
+        [formModel]="frmModel"
         (valueChange)="changeQuestion($event)"
       >
       </codx-input>
