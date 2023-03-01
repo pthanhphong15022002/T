@@ -15,6 +15,7 @@ import { ItemsService } from '../items.service';
   styleUrls: ['./popup-add-item-color.component.css'],
 })
 export class PopupAddItemColorComponent extends UIComponent {
+  //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   itemColor: ItemColor = {} as ItemColor;
   savedItemColors: ItemColor[] = [];
@@ -41,7 +42,9 @@ export class PopupAddItemColorComponent extends UIComponent {
       (res) => (res.event = this.savedItemColors)
     );
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {
     if (this.dialogData.data.itemColor) {
       this.isEdit = true;
@@ -51,7 +54,17 @@ export class PopupAddItemColorComponent extends UIComponent {
       this.itemColor.colorCode = '#66ffcc';
     }
   }
+  //#endregion
 
+  //#region Event
+  handleInputChange(e) {
+    console.log(e);
+
+    this.itemColor[e.field] = e.data;
+  }
+  //#endregion
+
+  //#region Method
   save(closeAfterSaving: boolean): void {
     console.log(this.itemColor);
 
@@ -108,10 +121,8 @@ export class PopupAddItemColorComponent extends UIComponent {
         }
       });
   }
+  //#endregion
 
-  handleInputChange(e) {
-    console.log(e);
-
-    this.itemColor[e.field] = e.data;
-  }
+  //#region Function
+  //#endregion
 }
