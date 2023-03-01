@@ -1016,7 +1016,7 @@
     >
       <ng-container>
         <!-- Thông tin bản thân -->
-        <div class="user-profile overview d-block mb-3" [id]="eInfoFuncID">
+        <div class="user-profile overview d-block" [id]="eInfoFuncID">
           <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
@@ -1521,7 +1521,7 @@
         </div>
 
         <!-- Thông tin Đảng - Đoàn -->
-        <div class="user-profile overview d-block mb-3" [id]="ePartyFuncID">
+        <div class="user-profile overview d-block" [id]="ePartyFuncID">
           <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
@@ -1611,8 +1611,8 @@
         </div>
 
         <!-- Quan hệ gia đình -->
-        <div class="user-profile overview d-block mb-3 user-family" [id]="eFamiliesFuncID">
-          <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="user-profile overview d-block user-family" [id]="eFamiliesFuncID">
+          <div class="rounded-2 p-5 bg-white mb-1">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
                 <span class="icon-family icon-18 me-2"></span>
@@ -1639,7 +1639,7 @@
             <div #family class="mb-1" *ngIf="eFamilyFormModel">
               <div class="d-flex flex-wrap py-3">
                 <ng-container *ngFor="let item of lstFamily">
-                  <div class="border rounded min-w-250px mw-400px me-4 mb-4">
+                  <div class="border rounded border-gray-300 min-w-250px mw-400px me-4 mb-4">
                     <!-- <codx-temp-full
                       (clickMF)="clickMF($event, item, 'family')"
                       cardCss="card codx_cardcenter px-2 pt-4 pb-4"
@@ -1745,7 +1745,7 @@
 
 <!-- pane_1 Thông tin pháp lí-->
 <ng-template #legal>
-  <div class="tab-horizone bg-white h-od-tab">
+  <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul
       ngbNav
       #nav="ngbNav"
@@ -1764,7 +1764,7 @@
       </ng-container>
     </ul>
 
-    <div [ngbNavOutlet]="nav" class="pt-1"></div>
+    <div [ngbNavOutlet]="nav"></div>
   </div>
   <div
     class="pw-content w-100 scroll-y"
@@ -1782,8 +1782,8 @@
       <!-- <ng-container> -->
       <!-- BẢO HIỂM - MS THUẾ - TÀI KHOẢN -->
 
-      <div class="user-profile overview d-block mb-3" [id]="eAssurFunc">
-        <div class="rounded-2 p-4 bg-white mt-4">
+      <div class="user-profile overview d-block" [id]="eAssurFunc">
+        <div class="rounded-2 p-5 bg-white mb-4">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <span class="icon-person icon-18 me-2"></span>
@@ -2051,8 +2051,8 @@
         </div>
       </div>
       <!-- Hộ chiếu -->
-      <div class="user-profile overview d-block mb-3" [id]="ePassportFuncID">
-        <div class="rounded-2 p-4 bg-white mt-4">
+      <div class="user-profile overview d-block" [id]="ePassportFuncID">
+        <div class="rounded-2 p-5 bg-white mb-4">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
               <div class="user-status d-flex align-items-center">
@@ -2111,8 +2111,8 @@
         </div>
       </div>
       <!-- Thị thực -->
-      <div class="user-profile overview d-block mb-3" [id]="eVisaFuncID">
-        <div class="rounded-2 p-4 bg-white mt-4">
+      <div class="user-profile overview d-block" [id]="eVisaFuncID">
+        <div class="rounded-2 p-5 bg-white mb-4">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <span class="icon-i-credit-card icon-18 me-2"></span>
@@ -2164,8 +2164,8 @@
         </div>
       </div>
       <!-- Giấy phép lao động -->
-      <div class="user-profile overview d-block mb-3" id="HRTEM0204">
-        <div class="rounded-2 p-4 bg-white mt-4">
+      <div class="user-profile overview d-block" id="HRTEM0204">
+        <div class="rounded-2 p-5 bg-white mb-1">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <span class="icon-i-clipboard-check icon-18 me-2"></span>
@@ -2224,7 +2224,7 @@
 
 <!-- pane_2 Thông tin công việc-->
 <ng-template #jobInfo>
-  <div class="tab-horizone bg-white h-od-tab">
+  <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul
       ngbNav
       #nav="ngbNav"
@@ -2260,8 +2260,8 @@
     >
       <ng-container>
         <!-- Thông tin chung -->
-        <div class="user-profile overview d-block mb-3" [id]="jobGeneralFuncID">
-          <div class="rounded-2 p-4 bg-white mt-4">
+        <div class="user-profile overview d-block" [id]="jobGeneralFuncID">
+          <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
                 <div class="user-status d-flex align-items-center">
@@ -2656,8 +2656,8 @@
           </div>
         </div>
         <!-- Thông tin chấm công -->
-        <div class="user-profile overview d-block mb-3" [id]="eTimeCardFuncID">
-          <div class="rounded-2 p-4 bg-white">
+        <div class="user-profile overview d-block" [id]="eTimeCardFuncID">
+          <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
                 <div class="user-status d-flex align-items-center">
@@ -2833,8 +2833,8 @@
         </div>
 
         <!-- Thông tin tính lương -->
-        <div class="user-profile overview d-block mb-3" [id]="eCalSalaryFuncID">
-          <div class="rounded-2 p-4 bg-white">
+        <div class="user-profile overview d-block" [id]="eCalSalaryFuncID">
+          <div class="rounded-2 p-5 bg-white mb-1">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
                 <div class="user-status d-flex align-items-center">
