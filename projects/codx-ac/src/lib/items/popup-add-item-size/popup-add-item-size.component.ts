@@ -145,7 +145,7 @@ export class PopupAddItemSizeComponent
           }
 
           this.savedItemSizes = this.savedItemSizes.map((itemSize) =>
-            itemSize.id === this.itemSize.id ? this.itemSize : itemSize
+            itemSize.recID === this.itemSize.recID ? this.itemSize : itemSize
           );
 
           console.log(this.savedItemSizes);

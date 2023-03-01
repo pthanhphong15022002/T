@@ -61,36 +61,6 @@ export class ItemsComponent extends UIComponent {
     });
   }
 
-  loadComboboxData(name: string, pageSize: number = 100): Observable<any> {
-    const dataRequest = new DataRequest();
-    dataRequest.comboboxName = name;
-    dataRequest.page = 1;
-    dataRequest.pageSize = pageSize;
-    return this.api.execSv(
-      'IV',
-      'ERM.Business.Core',
-      'DataBusiness',
-      'LoadDataCbxAsync',
-      [dataRequest]
-    );
-  }
-
-  getWarehouseNameById(id: string): string {
-    return this.warehouses?.find((w) => w.WarehouseID === id)?.WarehouseName;
-  }
-
-  getLocationNameById(id: string): string {
-    return this.locations?.find((w) => w.LocationID === id)?.LocationName;
-  }
-
-  getInventoryModelById(id: string): string {
-    return this.inventoryModels?.find((w) => w.InventModelID === id)?.InventModelName;
-  }
-
-  getDimGroupNameById(id: string): string {
-    return this.dimGroups?.find((w) => w.DimGroupID === id)?.DimGroupName;
-  }
-
   ngAfterViewInit() {
     this.views = [
       {
@@ -209,5 +179,35 @@ export class ItemsComponent extends UIComponent {
         )
         .closed.subscribe((res) => console.log(res));
     });
+  }
+
+  loadComboboxData(name: string, pageSize: number = 100): Observable<any> {
+    const dataRequest = new DataRequest();
+    dataRequest.comboboxName = name;
+    dataRequest.page = 1;
+    dataRequest.pageSize = pageSize;
+    return this.api.execSv(
+      'IV',
+      'ERM.Business.Core',
+      'DataBusiness',
+      'LoadDataCbxAsync',
+      [dataRequest]
+    );
+  }
+
+  getWarehouseNameById(id: string): string {
+    return this.warehouses?.find((w) => w.WarehouseID === id)?.WarehouseName;
+  }
+
+  getLocationNameById(id: string): string {
+    return this.locations?.find((w) => w.LocationID === id)?.LocationName;
+  }
+
+  getInventoryModelById(id: string): string {
+    return this.inventoryModels?.find((w) => w.InventModelID === id)?.InventModelName;
+  }
+
+  getDimGroupNameById(id: string): string {
+    return this.dimGroups?.find((w) => w.DimGroupID === id)?.DimGroupName;
   }
 }

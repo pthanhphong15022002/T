@@ -3,7 +3,7 @@ import {
   Component,
   Injector,
   Optional,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {
   CodxFormComponent,
@@ -15,7 +15,7 @@ import {
   ImageViewerComponent,
   NotificationsService,
   RequestOption,
-  UIComponent
+  UIComponent,
 } from 'codx-core';
 import { Item } from '../interfaces/Item.interface';
 import { ItemColor } from '../interfaces/ItemColor.Interface';
@@ -157,7 +157,12 @@ export class PopupAddItemComponent
       // cancel
       for (const itemSize of this.itemSizes1.filter((i) => i.itemID === null)) {
         this.api
-          .exec('IV', 'ItemSizesBusiness', 'DeleteItemSizeAsync', itemSize.id)
+          .exec(
+            'IV',
+            'ItemSizesBusiness',
+            'DeleteItemSizeAsync',
+            itemSize.recID
+          )
           .subscribe((res) => {
             if (res) {
               this.itemsService.deleteImage(itemSize.recID, 'IV_ItemSizes');
@@ -167,7 +172,12 @@ export class PopupAddItemComponent
 
       for (const itemSize of this.itemSizes2.filter((i) => i.itemID === null)) {
         this.api
-          .exec('IV', 'ItemSizesBusiness', 'DeleteItemSizeAsync', itemSize.id)
+          .exec(
+            'IV',
+            'ItemSizesBusiness',
+            'DeleteItemSizeAsync',
+            itemSize.recID
+          )
           .subscribe((res) => {
             if (res) {
               this.itemsService.deleteImage(itemSize.recID, 'IV_ItemSizes');
@@ -183,7 +193,7 @@ export class PopupAddItemComponent
             'IV',
             'ItemStylesBusiness',
             'DeleteItemStyleAsync',
-            itemStyle.id
+            itemStyle.recID
           )
           .subscribe((res) => {
             if (res) {
@@ -200,7 +210,7 @@ export class PopupAddItemComponent
             'IV',
             'ItemColorsBusiness',
             'DeleteItemColorAsync',
-            itemColor.id
+            itemColor.recID
           )
           .subscribe();
       }
@@ -318,31 +328,6 @@ export class PopupAddItemComponent
     console.log(this.form);
 
     this.title = this.dialogData.data?.title;
-  }
-
-  loadData(
-    service: string,
-    entityName: string,
-    predicate: string,
-    dataValue: string,
-    prop: string,
-    first: boolean = true
-  ): void {
-    const option = new DataRequest();
-    option.entityName = entityName;
-    option.predicates = predicate;
-    option.dataValues = dataValue;
-    option.page = 1;
-    this.api
-      .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', option)
-      .subscribe((res: any) => {
-        if (first) {
-          this[prop] = res[0][0];
-        } else {
-          this[prop] = res[0];
-        }
-        console.log(prop, this[prop]);
-      });
   }
 
   save(): void {
@@ -641,7 +626,7 @@ export class PopupAddItemComponent
     event.stopPropagation();
 
     this.api
-      .exec('IV', 'ItemSizesBusiness', 'DeleteItemSizeAsync', itemSize.id)
+      .exec('IV', 'ItemSizesBusiness', 'DeleteItemSizeAsync', itemSize.recID)
       .subscribe((res) => {
         if (res) {
           this.notiService.notifyCode('SYS008');
@@ -650,11 +635,11 @@ export class PopupAddItemComponent
 
           if (sizeType === 1) {
             this.itemSizes1 = this.itemSizes1.filter(
-              (i) => i.id !== itemSize.id
+              (i) => i.recID !== itemSize.recID
             );
           } else if (sizeType === 0) {
             this.itemSizes2 = this.itemSizes2.filter(
-              (i) => i.id !== itemSize.id
+              (i) => i.recID !== itemSize.recID
             );
           }
         }
@@ -683,7 +668,7 @@ export class PopupAddItemComponent
     event.stopPropagation();
 
     this.api
-      .exec('IV', 'ItemStylesBusiness', 'DeleteItemStyleAsync', itemStyle.id)
+      .exec('IV', 'ItemStylesBusiness', 'DeleteItemStyleAsync', itemStyle.recID)
       .subscribe((res) => {
         if (res) {
           this.notiService.notifyCode('SYS008');
@@ -691,7 +676,7 @@ export class PopupAddItemComponent
           this.itemsService.deleteImage(itemStyle.recID, 'IV_ItemStyles');
 
           this.itemStyles = this.itemStyles.filter(
-            (i) => i.id !== itemStyle.id
+            (i) => i.recID !== itemStyle.recID
           );
         }
       });
@@ -701,15 +686,40 @@ export class PopupAddItemComponent
     event.stopPropagation();
 
     this.api
-      .exec('IV', 'ItemColorsBusiness', 'DeleteItemColorAsync', itemColor.id)
+      .exec('IV', 'ItemColorsBusiness', 'DeleteItemColorAsync', itemColor.recID)
       .subscribe((res) => {
         if (res) {
           this.notiService.notifyCode('SYS008');
 
           this.itemColors = this.itemColors.filter(
-            (i) => i.id !== itemColor.id
+            (i) => i.recID !== itemColor.recID
           );
         }
+      });
+  }
+
+  loadData(
+    service: string,
+    entityName: string,
+    predicate: string,
+    dataValue: string,
+    prop: string,
+    first: boolean = true
+  ): void {
+    const option = new DataRequest();
+    option.entityName = entityName;
+    option.predicates = predicate;
+    option.dataValues = dataValue;
+    option.page = 1;
+    this.api
+      .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', option)
+      .subscribe((res: any) => {
+        if (first) {
+          this[prop] = res[0][0];
+        } else {
+          this[prop] = res[0];
+        }
+        console.log(prop, this[prop]);
       });
   }
 }
