@@ -120,21 +120,18 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
       return;
     }
 
-    if (this.actionType === 'copy') {
-      delete this.skillObj.recID;
-    }
     this.skillObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.addESlkillInfo(this.skillObj).subscribe((p) => {
         console.log('save eSkill', p);
         if (p != null) {
-          this.skillObj.recID = p.recID;
           this.skillObj = p[0];
           this.lstSkills = p[1];
           this.notify.notifyCode('SYS006');
           this.skillObj.isSuccess = true;
           console.log('skil OBJjjjjjjjjj', this.skillObj);
           console.log('lst e skilllllllllll', this.lstSkills);
+          console.log('succcess', this.skillObj.isSuccess);
           this.dialog && this.dialog.close([this.skillObj, this.lstSkills]);
         } else {
           this.notify.notifyCode('SYS023');
@@ -154,7 +151,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
           } else {
             this.notify.notifyCode('SYS021');
             this.skillObj.isSuccess = false;
-          } 
+          }
         });
     }
   }
@@ -181,12 +178,13 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   }
 
   changeCalendar(event, changeType: string) {
-    let yearFromDate = event.fromDate.getUTCFullYear();
-    let monthFromDate = event.fromDate.getUTCMonth() + 2;
-    let dayFromDate = event.fromDate.getUTCDate();
+    let yearFromDate = event.fromDate.getFullYear();
+    let monthFromDate = event.fromDate.getMonth() + 1;
+    let dayFromDate = event.fromDate.getDate();
     var strYear = `${yearFromDate}`;
     var strMonth = `${yearFromDate}/${monthFromDate}`;
     var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
+    console.log('asdsadasdasdasdsad', strYear, strMonth, strDay);
 
     if (changeType === 'FromDate') {
       if (event.type === 'year') {
