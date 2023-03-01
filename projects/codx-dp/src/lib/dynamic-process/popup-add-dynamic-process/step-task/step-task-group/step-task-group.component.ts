@@ -1,6 +1,6 @@
 import { change } from '@syncfusion/ej2-grids';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CacheService,
   CallFuncService,
@@ -28,6 +28,9 @@ export class StepTaskGroupComponent implements OnInit {
   seconds = 0;
   clear: any;
   type: string;
+  timeOld = 0;
+  differenceTime = 0;
+  step;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -36,7 +39,9 @@ export class StepTaskGroupComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.taskGroup = dt?.data;
+    this.taskGroup = dt?.data?.taskGroup;
+    this.differenceTime = dt?.data?.differenceTime;
+    this.step = dt?.data?.step;
     this.grvTaskGroupsForm = {
       entityName: 'DP_Steps_TaskGroups',
       formName: 'DPStepsTaskGroups',
@@ -47,6 +52,9 @@ export class StepTaskGroupComponent implements OnInit {
   ngOnInit(): void {
     this.getFormModel();
     this.type = this.taskGroup['recID'] ? 'edit' : 'add'
+    this.hours = Number(this.differenceTime)%24;
+    this.days = Math.floor(this.differenceTime / 24);
+    this.timeOld = this.getHour(this.taskGroup);
   }
 
   getFormModel() {
@@ -100,17 +108,31 @@ export class StepTaskGroupComponent implements OnInit {
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
     } else {
-      this.dialog.close(this.taskGroup);
-      clearInterval(this.clear);
+      let difference = this.getHour(this.taskGroup) - this.timeOld;
+      if(difference > 0 && difference > this.differenceTime){
+        this.notiService.alertCode("DP010").subscribe((x) => {
+          if (x.event && x.event.status == 'Y') {
+            let timeStep = this.getHour(this.step) + (difference - this.differenceTime);
+            this.step['durationDay'] = Math.floor(timeStep / 24);
+            this.step['durationHour'] = timeStep % 24;
+            this.dialog.close(this.taskGroup);
+          }
+        });
+      }
     }
   }
 
   close() {
     this.dialog.close();
-    clearInterval(this.clear);
   }
   shareUser(share) {
     this.callfc.openForm(share, '', 500, 500);
+  }
+
+  getHour(data) {
+    let hour =
+      Number(data['durationDay'] || 0) * 24 + Number(data['durationHour'] || 0);
+    return hour;
   }
 
 }

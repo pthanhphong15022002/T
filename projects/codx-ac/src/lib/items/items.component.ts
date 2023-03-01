@@ -19,6 +19,7 @@ import { PopupAddItemComponent } from './popup-add-item/popup-add-item.component
   styleUrls: ['./items.component.css'],
 })
 export class ItemsComponent extends UIComponent {
+  //#region Constructor
   @ViewChild('moreTemplate') moreTemplate?: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
   @ViewChild('header1', { static: true }) header1: TemplateRef<any>;
@@ -38,7 +39,9 @@ export class ItemsComponent extends UIComponent {
   constructor(private inject: Injector, private itemsService: ItemsService) {
     super(inject);
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {
     this.loadComboboxData('Warehouses').subscribe((res) => {
       console.log(JSON.parse(res[0]));
@@ -59,36 +62,6 @@ export class ItemsComponent extends UIComponent {
       console.log(JSON.parse(res[0]));
       this.dimGroups = JSON.parse(res[0]);
     });
-  }
-
-  loadComboboxData(name: string, pageSize: number = 100): Observable<any> {
-    const dataRequest = new DataRequest();
-    dataRequest.comboboxName = name;
-    dataRequest.page = 1;
-    dataRequest.pageSize = pageSize;
-    return this.api.execSv(
-      'IV',
-      'ERM.Business.Core',
-      'DataBusiness',
-      'LoadDataCbxAsync',
-      [dataRequest]
-    );
-  }
-
-  getWarehouseNameById(id: string): string {
-    return this.warehouses?.find((w) => w.WarehouseID === id)?.WarehouseName;
-  }
-
-  getLocationNameById(id: string): string {
-    return this.locations?.find((w) => w.LocationID === id)?.LocationName;
-  }
-
-  getInventoryModelById(id: string): string {
-    return this.inventoryModels?.find((w) => w.InventModelID === id)?.InventModelName;
-  }
-
-  getDimGroupNameById(id: string): string {
-    return this.dimGroups?.find((w) => w.DimGroupID === id)?.DimGroupName;
   }
 
   ngAfterViewInit() {
@@ -120,7 +93,9 @@ export class ItemsComponent extends UIComponent {
       },
     ];
   }
+  //#endregion
 
+  //#region Event
   handleClickAdd(event) {
     // debug
     console.log({ event });
@@ -159,7 +134,9 @@ export class ItemsComponent extends UIComponent {
         break;
     }
   }
+  //#endregion
 
+  //#region Method
   delete(data): void {
     // debug
     console.log('delete', { data });
@@ -210,4 +187,37 @@ export class ItemsComponent extends UIComponent {
         .closed.subscribe((res) => console.log(res));
     });
   }
+
+  loadComboboxData(name: string, pageSize: number = 100): Observable<any> {
+    const dataRequest = new DataRequest();
+    dataRequest.comboboxName = name;
+    dataRequest.page = 1;
+    dataRequest.pageSize = pageSize;
+    return this.api.execSv(
+      'IV',
+      'ERM.Business.Core',
+      'DataBusiness',
+      'LoadDataCbxAsync',
+      [dataRequest]
+    );
+  }
+  //#endregion
+
+  //#region Function
+  getWarehouseNameById(id: string): string {
+    return this.warehouses?.find((w) => w.WarehouseID === id)?.WarehouseName;
+  }
+
+  getLocationNameById(id: string): string {
+    return this.locations?.find((w) => w.LocationID === id)?.LocationName;
+  }
+
+  getInventoryModelById(id: string): string {
+    return this.inventoryModels?.find((w) => w.InventModelID === id)?.InventModelName;
+  }
+
+  getDimGroupNameById(id: string): string {
+    return this.dimGroups?.find((w) => w.DimGroupID === id)?.DimGroupName;
+  }
+  //#endregion
 }

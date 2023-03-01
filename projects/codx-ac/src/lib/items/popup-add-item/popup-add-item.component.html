@@ -33,7 +33,7 @@
 <ng-template #footer>
   <button type="button" class="btn btn-primary" (click)="save()">
     <codx-label
-      name="Save"
+      fiedName="lblSave"
       [formName]="dialogRef.formModel?.formName"
       [gridViewName]="dialogRef.formModel?.gridViewName"
       default="Lưu"
@@ -266,6 +266,8 @@
   <ng-container *ngIf="form.formGroup">
     <div class="d-flex justify-content-between align-items-center">
       <codx-label
+        fiedName="lblPacking1"
+        [formModel]="form.formModel"
         default="Quy cách đóng gói"
         class="fw-bold fs-5 text-primary"
       ></codx-label>
@@ -281,7 +283,7 @@
         class="border mw-25 d-flex flex-column align-items-center p-1 position-relative hover-color"
         role="button"
         (click)="openFormAddItemSize(1, itemSize)"
-        (mouseenter)="hoveredItemSizeId1 = itemSize.id"
+        (mouseenter)="hoveredItemSizeId1 = itemSize.recID"
         (mouseleave)="hoveredItemSizeId1 = null"
       >
         <codx-img
@@ -296,7 +298,7 @@
         </codx-img>
 
         <div
-          *ngIf="hoveredItemSizeId1 === itemSize.id"
+          *ngIf="hoveredItemSizeId1 === itemSize.recID"
           class="btn btn-icon position-absolute"
           style="right: 0; top: 0"
           (click)="deleteItemSize($event, itemSize, 1)"
@@ -310,6 +312,8 @@
 
     <div class="d-flex justify-content-between align-items-center">
       <codx-label
+        fiedName="lblAttribute"
+        [formModel]="form.formModel"
         default="Thuộc tính"
         class="fw-bold fs-5 text-primary"
       ></codx-label>
@@ -325,12 +329,12 @@
         class="badge badge badge-pill badge-secondary d-flex align-items-center gap-1"
         role="button"
         (click)="openFormAddItemStyle(itemStyle)"
-        (mouseenter)="hoveredStyleId = itemStyle.id"
+        (mouseenter)="hoveredStyleId = itemStyle.recID"
         (mouseleave)="hoveredStyleId = null"
       >
         <div>{{ itemStyle.styleID }}</div>
         <button
-          *ngIf="hoveredStyleId === itemStyle.id"
+          *ngIf="hoveredStyleId === itemStyle.recID"
           type="button"
           class="btn-close"
           aria-label="Close"
@@ -342,6 +346,8 @@
     <div class="d-flex justify-content-between align-items-center">
       <codx-label
         default="Màu sắc"
+        fiedName="lblColor"
+        [formModel]="form.formModel"
         class="fw-bold fs-5 text-primary"
       ></codx-label>
 
@@ -357,12 +363,12 @@
         class="position-relative"
         [style.background-color]="itemColor.colorCode"
         role="button"
-        (mouseenter)="hoveredColorId = itemColor.id"
+        (mouseenter)="hoveredColorId = itemColor.recID"
         (mouseleave)="hoveredColorId = null"
         (click)="openFormAddItemColor(itemColor)"
       >
         <button
-          *ngIf="hoveredColorId === itemColor.id"
+          *ngIf="hoveredColorId === itemColor.recID"
           type="button"
           class="btn-close btn-sm position-absolute"
           style="top: -8px; right: -8px"
@@ -375,6 +381,8 @@
     <div class="d-flex justify-content-between align-items-center">
       <codx-label
         default="Quy cách"
+        fiedName="lblPacking2"
+        [formModel]="form.formModel"
         class="fw-bold fs-5 text-primary"
       ></codx-label>
       <div class="btn btn-icon" (click)="openFormAddItemSize(0)">
@@ -388,7 +396,7 @@
         class="border mw-25 d-flex flex-column align-items-center p-1 position-relative hover-color"
         role="button"
         (click)="openFormAddItemSize(0, itemSize)"
-        (mouseenter)="hoveredItemSizeId2 = itemSize.id"
+        (mouseenter)="hoveredItemSizeId2 = itemSize.recID"
         (mouseleave)="hoveredItemSizeId2 = null"
       >
         <codx-img
@@ -403,7 +411,7 @@
         </codx-img>
 
         <div
-          *ngIf="hoveredItemSizeId2 === itemSize.id"
+          *ngIf="hoveredItemSizeId2 === itemSize.recID"
           class="btn btn-icon position-absolute"
           style="right: 0; top: 0"
           (click)="deleteItemSize($event, itemSize, 0)"
@@ -453,6 +461,8 @@
     <div class="d-flex justify-content-between align-items-center">
       <codx-label
         default="Quy đổi đơn vị tính"
+        fiedName="lblUnitConversion"
+        [formModel]="form.formModel"
         class="fw-bold fs-5 text-primary"
       ></codx-label>
       <div class="btn btn-icon" (click)="openFormAddUMConversion()">
@@ -499,6 +509,8 @@
   <ng-container *ngIf="form.formGroup">
     <codx-label
       default="Thông tin tồn kho"
+      fiedName="lblInventoryInfo"
+      [formModel]="form.formModel"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -596,6 +608,8 @@
 
     <codx-label
       default="Kiểm soát hạn sử dụng"
+      fiedName="lblExpiryControl"
+      [formModel]="form.formModel"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -626,6 +640,8 @@
 
     <codx-label
       default="Kiểm soát đóng gói"
+      fiedName="lblPackingControl"
+      [formModel]="form.formModel"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -705,6 +721,8 @@
 
     <codx-label
       default="Đóng cuộn"
+      fiedName="lblRoll"
+      [formModel]="form.formModel"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -724,6 +742,8 @@
 
     <codx-label
       default="Quản lý pallet"
+      fiedName="lblPalletManagement"
+      [formModel]="form.formModel"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -765,6 +785,8 @@
 <ng-template #tabPurchase>
   <ng-container *ngIf="gvsItemsPurchase">
     <codx-label
+      fiedName="lblPurchaseInfo"
+      [formModel]="fmItemsPurchase"
       default="Thông tin mua hàng"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
@@ -833,6 +855,8 @@
 
     <codx-label
       default="Thuế đầu vào"
+      fiedName="lblImportTax"
+      [formModel]="fmItemsPurchase"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -874,6 +898,8 @@
 
     <codx-label
       default="Kiểm soát nhận hàng"
+      fiedName="lblReceiveControl"
+      [formModel]="fmItemsPurchase"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -910,6 +936,8 @@
   <ng-container *ngIf="gvsItemsSales">
     <codx-label
       default="Thông tin bán hàng"
+      fiedName="lblSalesInfo"
+      [formModel]="fmItemsSales"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -957,6 +985,8 @@
 
     <codx-label
       default="Thuế đầu ra"
+      fiedName="lblExportTax"
+      [formModel]="fmItemsSales"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -998,6 +1028,8 @@
 
     <codx-label
       default="Kiểm soát giao hàng"
+      fiedName="lblDeliveryControl"
+      [formModel]="fmItemsSales"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -1030,6 +1062,8 @@
 
     <codx-label
       default="Theo dõi bán bộ"
+      fiedName="lblSaleTracking"
+      [formModel]="fmItemsSales"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -1051,6 +1085,8 @@
   <ng-container *ngIf="gvsItemsProduction">
     <codx-label
       default="Thông tin sản xuất"
+      fiedName="lblProductionInfo"
+      [formModel]="fmItemsProduction"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -1083,6 +1119,8 @@
 
     <codx-label
       default="Thiết lập định mức (BOM)"
+      fiedName="lblNormsSetting"
+      [formModel]="fmItemsProduction"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -1132,6 +1170,8 @@
   <ng-container *ngIf="form.formGroup">
     <codx-label
       default="Quản lý mã vạch"
+      fiedName="lblBarcodeMangement"
+      [formModel]="form.formModel"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -1163,6 +1203,8 @@
 
     <codx-label
       default="Thiết lập mặc định"
+      fiedName="lblDefaultSettings"
+      [formModel]="form.formModel"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 
@@ -1201,6 +1243,8 @@
 
     <codx-label
       default="Tính giá xuất kho"
+      fiedName="lblExPrice"
+      [formModel]="form.formModel"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
 

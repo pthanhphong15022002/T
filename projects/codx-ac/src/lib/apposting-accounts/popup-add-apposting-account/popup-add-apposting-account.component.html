@@ -13,6 +13,8 @@
 <ng-template #body>
   <div class="my-3">
     <codx-label
+      fiedName="lblSetup"
+      [formModel]="form.formModel"
       default="Thiết lập"
       class="fw-bold fs-5 text-primary"
     ></codx-label>
@@ -36,6 +38,14 @@
         fiedName="vendSelection"
         [formModel]="form.formModel"
       ></codx-label>
+      <ng-container *ngIf="!apPostingAccount.vendLevel">
+        <codx-input
+          field="vendSelection"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [disabled]="true"
+        ></codx-input>
+      </ng-container>
       <ng-container *ngIf="apPostingAccount.vendLevel === '1'">
         <codx-input
           field="vendSelection"
@@ -84,6 +94,14 @@
         fiedName="itemSelection"
         [formModel]="form.formModel"
       ></codx-label>
+      <ng-container *ngIf="!apPostingAccount.itemLevel">
+        <codx-input
+          field="itemSelection"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [disabled]="true"
+        ></codx-input>
+      </ng-container>
       <ng-container *ngIf="apPostingAccount.itemLevel === '1'">
         <codx-input
           field="itemSelection"
@@ -161,6 +179,8 @@
   </div>
 
   <codx-label
+    fiedName="lblInfo"
+    [formModel]="form.formModel"
     default="Thông tin"
     class="fw-bold fs-5 text-primary"
   ></codx-label>
@@ -231,10 +251,18 @@
     (click)="save(false)"
     *ngIf="!isEdit"
   >
-    Lưu & Thêm
+    <codx-label
+      fiedName="lblSaveAndClear"
+      [formModel]="dialogRef.formModel"
+      default="Lưu & Thêm"
+    ></codx-label>
   </button>
   <button type="button" class="btn btn-primary" (click)="save(true)">
-    Lưu
+    <codx-label
+      fiedName="lblSave"
+      [formModel]="dialogRef.formModel"
+      default="Lưu"
+    ></codx-label>
   </button>
 </ng-template>
 

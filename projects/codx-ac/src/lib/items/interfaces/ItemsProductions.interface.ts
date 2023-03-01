@@ -1,5 +1,4 @@
 export interface ItemsProduction {
-  id: string;
   itemID: string;
   umid: string;
   leadtime: number;

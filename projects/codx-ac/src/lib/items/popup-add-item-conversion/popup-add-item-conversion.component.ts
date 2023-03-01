@@ -23,6 +23,7 @@ import { ItemsService } from '../items.service';
   styleUrls: ['./popup-add-item-conversion.component.css'],
 })
 export class PopupAddItemConversionComponent extends UIComponent {
+  //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('itemConversionImage') itemConversionImage?: ImageViewerComponent;
 
@@ -54,7 +55,9 @@ export class PopupAddItemConversionComponent extends UIComponent {
       (res) => (res.event = this.savedItemConversions)
     );
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {
     if (this.dialogData.data.itemConversion) {
       this.itemConversion = this.dialogData.data.itemConversion;
@@ -67,7 +70,12 @@ export class PopupAddItemConversionComponent extends UIComponent {
         this.itemConversion.conversion.toString();
     }
   }
+  //#endregion
 
+  //#region Event
+  //#endregion
+
+  //#region Method
   save(closeAfterSaving: boolean): void {
     console.log(this.itemConversion);
     this.itemConversion.inverted = this.itemConversion.inverted ? 1 : 0;
@@ -155,4 +163,8 @@ export class PopupAddItemConversionComponent extends UIComponent {
         }
       });
   }
+  //#endregion
+
+  //#region Function
+  //#endregion
 }
