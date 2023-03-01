@@ -65,9 +65,9 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   }
 
   changeCalendar(event, changeType: string) {
-    let yearFromDate = event.fromDate.getUTCFullYear();
-    let monthFromDate = event.fromDate.getUTCMonth() + 2;
-    let dayFromDate = event.fromDate.getUTCDate();
+    let yearFromDate = event.fromDate.getFullYear();
+    let monthFromDate = event.fromDate.getMonth() + 1;
+    let dayFromDate = event.fromDate.getDate();
     var strYear = `${yearFromDate}`;
     var strMonth = `${yearFromDate}/${monthFromDate}`;
     var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
@@ -226,7 +226,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   //   return result;
   // }
 
-  Date(date){
+  Date(date) {
     return new Date(date);
   }
 
