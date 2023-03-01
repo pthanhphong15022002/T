@@ -180,12 +180,12 @@
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="chuaco" [formModel]="dialog.formModel" default="Tên đối tượng khi tạo mới">
+              <codx-label fiedName="AutoName" [formModel]="dialog.formModel" default="Tên đối tượng khi tạo mới">
               </codx-label>
             </div>
             <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
             </codx-input> -->
-            <codx-input field="chuaco" type="text" (valueChange)="valueChange($event)">
+            <codx-input field="autoName" type="text" [crrValue]="process.autoName" [placeholder]="gridViewSetup['AutoName']?.description" (valueChange)="valueChange($event)">
             </codx-input>
           </div>
           <div class="form-group margin-form">
@@ -872,7 +872,7 @@
               <div class="card-job-list" cdkDrag [cdkDragData]="taskList" [cdkDragStartDelay]="100"
                 [cdkDragDisabled]="taskList?.recID ? false : true">
                 <div class="card-job mx-5 p-3">
-                  <div *ngIf="taskList?.recID !== guidEmpty "
+                  <div *ngIf="taskList?.recID"
                     class="d-flex justify-content-start align-items-center has-action-menu">
                     <div class="icon-container">
                       <span class="icon-add_circle icon-20 text-primary-600 py-2"></span>
@@ -903,7 +903,7 @@
                       [dataItem]="moreDefaut" [type]="'hover'" (changeDataMF)="changeDataMF($event, 'group')">
                     </codx-mfunc>
                   </div>
-                  <div *ngIf="taskList?.recID === guidEmpty" [ngStyle]="
+                  <div *ngIf="!taskList?.recID" [ngStyle]="
                       taskList?.task.length == 0 ? { height: '30px' } : {}
                     "></div>
                   <!-- kéo thả ở trong  -->
@@ -912,7 +912,7 @@
                     <ng-container *ngFor="let task of taskList?.task">
                       <div cdkDrag [cdkDragStartDelay]="200" [cdkDragData]="task" class="drap-drop">
                         <div [ngStyle]="
-                            taskList?.recID !== guidEmpty ? { 'margin-left': '50px' } : {}
+                            taskList?.recID? { 'margin-left': '50px' } : {}
                           " class="has-action-menu">
                           <div class="d-flex justify-content-start align-items-center" style="font-size: 1rem">
                             <div class="icon-container" style="background-color: #3ef8e9">

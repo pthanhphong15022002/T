@@ -3,7 +3,7 @@ import {
   Component,
   Injector,
   Optional,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {
   CodxFormComponent,
@@ -15,7 +15,7 @@ import {
   ImageViewerComponent,
   NotificationsService,
   RequestOption,
-  UIComponent
+  UIComponent,
 } from 'codx-core';
 import { Item } from '../interfaces/Item.interface';
 import { ItemColor } from '../interfaces/ItemColor.Interface';
@@ -40,6 +40,7 @@ export class PopupAddItemComponent
   extends UIComponent
   implements AfterViewInit
 {
+  //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('itemImage') itemImage?: ImageViewerComponent;
 
@@ -157,7 +158,12 @@ export class PopupAddItemComponent
       // cancel
       for (const itemSize of this.itemSizes1.filter((i) => i.itemID === null)) {
         this.api
-          .exec('IV', 'ItemSizesBusiness', 'DeleteItemSizeAsync', itemSize.id)
+          .exec(
+            'IV',
+            'ItemSizesBusiness',
+            'DeleteItemSizeAsync',
+            itemSize.recID
+          )
           .subscribe((res) => {
             if (res) {
               this.itemsService.deleteImage(itemSize.recID, 'IV_ItemSizes');
@@ -167,7 +173,12 @@ export class PopupAddItemComponent
 
       for (const itemSize of this.itemSizes2.filter((i) => i.itemID === null)) {
         this.api
-          .exec('IV', 'ItemSizesBusiness', 'DeleteItemSizeAsync', itemSize.id)
+          .exec(
+            'IV',
+            'ItemSizesBusiness',
+            'DeleteItemSizeAsync',
+            itemSize.recID
+          )
           .subscribe((res) => {
             if (res) {
               this.itemsService.deleteImage(itemSize.recID, 'IV_ItemSizes');
@@ -183,7 +194,7 @@ export class PopupAddItemComponent
             'IV',
             'ItemStylesBusiness',
             'DeleteItemStyleAsync',
-            itemStyle.id
+            itemStyle.recID
           )
           .subscribe((res) => {
             if (res) {
@@ -200,7 +211,7 @@ export class PopupAddItemComponent
             'IV',
             'ItemColorsBusiness',
             'DeleteItemColorAsync',
-            itemColor.id
+            itemColor.recID
           )
           .subscribe();
       }
@@ -226,7 +237,9 @@ export class PopupAddItemComponent
       }
     });
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {
     this.cache
       .gridViewSetup('ItemsPurchase', 'grvItemsPurchase')
@@ -319,32 +332,99 @@ export class PopupAddItemComponent
 
     this.title = this.dialogData.data?.title;
   }
+  //#endregion
 
-  loadData(
-    service: string,
-    entityName: string,
-    predicate: string,
-    dataValue: string,
-    prop: string,
-    first: boolean = true
+  //#region Event
+  handleInputChange(e: any, prop: string = 'item'): void {
+    // debug
+    console.log('handleInputChange', e);
+    console.log({ prop });
+
+    this[prop][e.field] = e.data;
+  }
+
+  deleteItemSize(
+    event: MouseEvent,
+    itemSize: ItemSize,
+    sizeType: number
   ): void {
-    const option = new DataRequest();
-    option.entityName = entityName;
-    option.predicates = predicate;
-    option.dataValues = dataValue;
-    option.page = 1;
+    event.stopPropagation();
+
     this.api
-      .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', option)
-      .subscribe((res: any) => {
-        if (first) {
-          this[prop] = res[0][0];
-        } else {
-          this[prop] = res[0];
+      .exec('IV', 'ItemSizesBusiness', 'DeleteItemSizeAsync', itemSize.recID)
+      .subscribe((res) => {
+        if (res) {
+          this.notiService.notifyCode('SYS008');
+
+          this.itemsService.deleteImage(itemSize.recID, 'IV_ItemSizes');
+
+          if (sizeType === 1) {
+            this.itemSizes1 = this.itemSizes1.filter(
+              (i) => i.recID !== itemSize.recID
+            );
+          } else if (sizeType === 0) {
+            this.itemSizes2 = this.itemSizes2.filter(
+              (i) => i.recID !== itemSize.recID
+            );
+          }
         }
-        console.log(prop, this[prop]);
       });
   }
 
+  deleteItemConversion(event: MouseEvent, recID: string): void {
+    event.stopPropagation();
+
+    this.api
+      .exec('BS', 'UMConversionBusiness', 'DeleteByRecIDAsync', recID)
+      .subscribe((res) => {
+        if (res) {
+          this.notiService.notifyCode('SYS008');
+
+          this.itemsService.deleteImage(recID, 'BS_UMConversion');
+
+          this.itemConversions = this.itemConversions.filter(
+            (i) => i.recID !== recID
+          );
+        }
+      });
+  }
+
+  deleteItemStyle(event: MouseEvent, itemStyle: ItemStyle): void {
+    event.stopPropagation();
+
+    this.api
+      .exec('IV', 'ItemStylesBusiness', 'DeleteItemStyleAsync', itemStyle.recID)
+      .subscribe((res) => {
+        if (res) {
+          this.notiService.notifyCode('SYS008');
+
+          this.itemsService.deleteImage(itemStyle.recID, 'IV_ItemStyles');
+
+          this.itemStyles = this.itemStyles.filter(
+            (i) => i.recID !== itemStyle.recID
+          );
+        }
+      });
+  }
+
+  deleteItemColor(event: MouseEvent, itemColor: ItemColor): void {
+    event.stopPropagation();
+
+    this.api
+      .exec('IV', 'ItemColorsBusiness', 'DeleteItemColorAsync', itemColor.recID)
+      .subscribe((res) => {
+        if (res) {
+          this.notiService.notifyCode('SYS008');
+
+          this.itemColors = this.itemColors.filter(
+            (i) => i.recID !== itemColor.recID
+          );
+        }
+      });
+  }
+  //#endregion
+
+  //#region Method
   save(): void {
     console.log(this.item);
     // console.log(this.itemsPurchase);
@@ -434,14 +514,6 @@ export class PopupAddItemComponent
           this.dialogRef.close(true);
         }
       });
-  }
-
-  handleInputChange(e: any, prop: string = 'item'): void {
-    // debug
-    console.log('handleInputChange', e);
-    console.log({ prop });
-
-    this[prop][e.field] = e.data;
   }
 
   openFormAddItemSize(sizeType: number, itemSize?: ItemSize) {
@@ -633,83 +705,32 @@ export class PopupAddItemComponent
       });
   }
 
-  deleteItemSize(
-    event: MouseEvent,
-    itemSize: ItemSize,
-    sizeType: number
+  loadData(
+    service: string,
+    entityName: string,
+    predicate: string,
+    dataValue: string,
+    prop: string,
+    first: boolean = true
   ): void {
-    event.stopPropagation();
-
+    const option = new DataRequest();
+    option.entityName = entityName;
+    option.predicates = predicate;
+    option.dataValues = dataValue;
+    option.page = 1;
     this.api
-      .exec('IV', 'ItemSizesBusiness', 'DeleteItemSizeAsync', itemSize.id)
-      .subscribe((res) => {
-        if (res) {
-          this.notiService.notifyCode('SYS008');
-
-          this.itemsService.deleteImage(itemSize.recID, 'IV_ItemSizes');
-
-          if (sizeType === 1) {
-            this.itemSizes1 = this.itemSizes1.filter(
-              (i) => i.id !== itemSize.id
-            );
-          } else if (sizeType === 0) {
-            this.itemSizes2 = this.itemSizes2.filter(
-              (i) => i.id !== itemSize.id
-            );
-          }
+      .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', option)
+      .subscribe((res: any) => {
+        if (first) {
+          this[prop] = res[0][0];
+        } else {
+          this[prop] = res[0];
         }
+        console.log(prop, this[prop]);
       });
   }
+  //#endregion
 
-  deleteItemConversion(event: MouseEvent, recID: string): void {
-    event.stopPropagation();
-
-    this.api
-      .exec('BS', 'UMConversionBusiness', 'DeleteByRecIDAsync', recID)
-      .subscribe((res) => {
-        if (res) {
-          this.notiService.notifyCode('SYS008');
-
-          this.itemsService.deleteImage(recID, 'BS_UMConversion');
-
-          this.itemConversions = this.itemConversions.filter(
-            (i) => i.recID !== recID
-          );
-        }
-      });
-  }
-
-  deleteItemStyle(event: MouseEvent, itemStyle: ItemStyle): void {
-    event.stopPropagation();
-
-    this.api
-      .exec('IV', 'ItemStylesBusiness', 'DeleteItemStyleAsync', itemStyle.id)
-      .subscribe((res) => {
-        if (res) {
-          this.notiService.notifyCode('SYS008');
-
-          this.itemsService.deleteImage(itemStyle.recID, 'IV_ItemStyles');
-
-          this.itemStyles = this.itemStyles.filter(
-            (i) => i.id !== itemStyle.id
-          );
-        }
-      });
-  }
-
-  deleteItemColor(event: MouseEvent, itemColor: ItemColor): void {
-    event.stopPropagation();
-
-    this.api
-      .exec('IV', 'ItemColorsBusiness', 'DeleteItemColorAsync', itemColor.id)
-      .subscribe((res) => {
-        if (res) {
-          this.notiService.notifyCode('SYS008');
-
-          this.itemColors = this.itemColors.filter(
-            (i) => i.id !== itemColor.id
-          );
-        }
-      });
-  }
+  //#region Function
+  //#endregion
 }

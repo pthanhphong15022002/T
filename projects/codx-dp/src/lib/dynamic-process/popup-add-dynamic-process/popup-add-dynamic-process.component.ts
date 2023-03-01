@@ -153,36 +153,26 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //stage-nvthuan
   user: any;
   userId: string;
-
   taskGroup: DP_Steps_TaskGroups;
-  taskGroupList: DP_Steps_TaskGroups[] = [];
-
-  taskList: DP_Steps_Tasks[] = [];
-
-  taskListSave: DP_Steps_Tasks[] = [];
-  taskGroupListSave: DP_Steps_TaskGroups[] = [];
-
   step: DP_Steps; //data step dc chọn
   stepList: DP_Steps[] = []; //danh sách step
-
   stepListAdd: DP_Steps[] = [];
-  stepListDelete = [];
-
+  taskList: DP_Steps_Tasks[] = [];
+  taskGroupList: DP_Steps_TaskGroups[] = [];
   roleGroupTaskOld: DP_Steps_Roles[] = [];
-
-  grvMoreFunction: FormModel;
-  grvTaskGroups: FormModel;
+  stepListDelete = [];
   grvStep: FormModel;
-
-  dayStep = 0;
-  hourStep = 0;
-
-  stepName = '';
-  isContinues = false;
+  grvTaskGroups: FormModel;
+  grvMoreFunction: FormModel;
+  formGroup: FormGroup;
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
-  formGroup: FormGroup;
+
+  dayStep = 0;
+  hourStep = 0;
+  stepName = '';
+  isContinues = false;
   refValue = 'DP018';
   gridViewSetup: any;
   userGroupJob = [];
@@ -520,7 +510,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.updateNodeStatus(oldNo, newNo);
         this.currentTab = tabNo;
       }
-    
+
     }
   }
   //#region Open form
@@ -1019,8 +1009,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   checkAssignRemove(i) {
     if (
-      (this.user.userID == this.process.permissions[i].objectID &&
-        this.process.permissions[i].roleType == 'O') ||
+      this.user.userID == this.process.permissions[i].objectID &&
+        this.process.permissions[i].roleType == 'O' &&
       this.process.permissions[i].objectType == '1'
     )
       return false;
@@ -1340,8 +1330,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             step['taskGroups'] = taskGroupConvert;
 
             let taskGroup = new DP_Steps_TaskGroups();
-            taskGroup['task'] = taskGroupList[this.guidEmpty] || [];
-            taskGroup['recID'] = this.guidEmpty; // group task rỗng để kéo ra ngoài
+            taskGroup['task'] = taskGroupList['null'] || [];
+            taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
             step['taskGroups'].push(taskGroup);
 
             this.stepList.push(step);
@@ -1471,6 +1461,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //taskGroup
   openTaskGroup(data?: any, type?: string) {
     this.taskGroup = new DP_Steps_TaskGroups();
+    let timeStep = this.dayStep*24 + this.hourStep; 
+    let differenceTime = this.getHour(this.step) - timeStep;
     if (data) {
       this.roleGroupTaskOld = JSON.parse(JSON.stringify(data?.roles)) || [];
       if (type === 'copy') {
@@ -1491,7 +1483,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       500,
       500,
       '',
-      this.taskGroup
+      {taskGroup: this.taskGroup, differenceTime, step: this.step}
     );
     this.popupGroupJob.closed.subscribe((res) => {
       if (res?.event) {
@@ -1518,7 +1510,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (index === 0) {
         let taskGroup = new DP_Steps_TaskGroups();
         taskGroup['task'] = [];
-        taskGroup['recID'] = this.guidEmpty; // group task rỗng để kéo ra ngoài
+        taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
         this.taskGroupList.push(taskGroup);
       }
       this.taskGroupList.splice(index - 1, 0, this.taskGroup);
@@ -1600,7 +1592,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.taskGroupList,
       dataInput || {},
       this.taskList,
-      this.groupTaskID || this.guidEmpty,
+      this.groupTaskID || null,
     ];
     var functionID = "DPT0206" //id tuy chojn menu ne
     this.cache.functionList(functionID).subscribe((f) => {
@@ -1620,7 +1612,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
           dialog.closed.subscribe((e) => {
             if (e?.event) {
-              this.groupTaskID = this.guidEmpty;
+              this.groupTaskID = null;
               let taskData = e?.event?.data;
               if (e.event?.status === 'add' || e.event?.status === 'copy') {
                 let index = this.taskGroupList.findIndex(
@@ -1869,78 +1861,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.setIndex(this.stepList, 'stepNo');
   }
 
-  async setTimeGroup(group, task, maxHour) {
-    let x = await firstValueFrom(this.notiService.alertCode("DP010"));
-    if (x.event && x.event.status == 'Y') {
-      let time = this.getHour(task) || 0;
-      group['durationDay'] = Math.floor(maxHour / 24);
-      group['durationHour'] = maxHour % 24;
-      let hourStep = this.sumHourGroupTask();
-      this.step['durationDay'] = Math.floor(hourStep / 24);
-      this.step['durationHour'] = hourStep % 24;
-      let parentID = [];
-      if (group['task']?.length > 0 && task['parentID'].trim()) {
-        group['task'].forEach((item) => {
-          if (task['parentID']?.includes(item['recID'])) {
-            parentID.push(item['recID']);
-          }
-        });
-      }
-      task['parentID'] = parentID.length > 0 ? parentID.join(';') : '';
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  calculateTimeTaskInGroup(taskList, taskId, taskInput?) {
-    let task = taskInput
-      ? taskInput
-      : taskList.find((t) => t['recID'] === taskId);
-    if (!task) return 0;
-    if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
-      return this.getHour(task);
-    } else {
-      const parentIds = task.parentID.split(';');
-      let maxTime = 0;
-      parentIds?.forEach((parentId) => {
-        const parentTime = this.calculateTimeTaskInGroup(taskList, parentId);
-        maxTime = Math.max(maxTime, parentTime);
-      });
-      const completionTime = this.getHour(task) + maxTime;
-      return completionTime;
-    }
-  }
-
-  sumHourGroupTask(index?: number) {
-    let sum = 0;
-    if (this.taskGroupList?.length > 0) {
-      if (index >= 0) {
-        for (let group of this.taskGroupList) {
-          if (Number(group['indexNo']) <= index) {
-            sum += this.getHour(group);
-          }
-        }
-      } else {
-        sum = this.taskGroupList.reduce((sumHour, group) => {
-          return (sumHour += this.getHour(group));
-        }, 0);
-      }
-    }
-    return sum;
-  }
-
-  // sumHourStep(){
-  //   let listStaskNoGroup = this.taskList.filter(task => !task['taskGroupID']);
-  //   let maxTimeTask = 0;
-  //   listStaskNoGroup?.forEach(task => {
-  //     let time = this.calculateTimeTaskNoGroup(task['recID'])
-  //     maxTimeTask = time > maxTimeTask ? time : maxTimeTask;
-  //   })
-  //   let timeStep = this.sumHourGroupTask();
-  //   return maxTimeTask > timeStep ? maxTimeTask : timeStep;
-  // }
-
   // Common
   setIndex(data: any, value: string) {
     if (data.length > 0) {
@@ -1991,15 +1911,98 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   sumTimeStep() {
-    let time = 0;
-    this.step?.taskGroups?.forEach((element) => {
-      time +=
-        Number(element['durationDay'] || 0) * 24 +
-        Number(element['durationHour'] || 0);
+    let timeGroup = this.sumHourGroupTask();
+    let timeTackNoGroup = 0
+    let taskNoGroup = this.taskList.filter(task => !task['taskGroupID']);
+    taskNoGroup?.forEach(task => {
+      let time = this.calculateTimeTaskNoGroup(task['recID']);
+      timeTackNoGroup = Math.max(time,timeTackNoGroup);
     });
-    this.dayStep = Math.floor(time / 24);
-    this.hourStep = Math.floor(time % 24);
+    let timeMax = Math.max(timeGroup,timeTackNoGroup);
+    this.dayStep = Math.floor(timeMax / 24);
+    this.hourStep = Math.floor(timeMax % 24);
   }
+
+  async setTimeGroup(group, task, maxHour) {
+    let x = await firstValueFrom(this.notiService.alertCode("DP010"));
+    if (x.event && x.event.status == 'Y') {
+      let time = this.getHour(task) || 0;
+      group['durationDay'] = Math.floor(maxHour / 24);
+      group['durationHour'] = maxHour % 24;
+      let hourStep = this.sumHourGroupTask();
+      this.step['durationDay'] = Math.floor(hourStep / 24);
+      this.step['durationHour'] = hourStep % 24;
+      let parentID = [];
+      if (group['task']?.length > 0 && task['parentID'].trim()) {
+        group['task'].forEach((item) => {
+          if (task['parentID']?.includes(item['recID'])) {
+            parentID.push(item['recID']);
+          }
+        });
+      }
+      task['parentID'] = parentID.length > 0 ? parentID.join(';') : '';
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  calculateTimeTaskNoGroup(taskId) {
+    let task = this.taskList.find((t) => t['recID'] === taskId);
+    if (!task) return 0;
+    if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
+      let groupFind = task['taskGroupID'] ? this.taskGroupList.find((x) =>  x['recID'] === task['taskGroupID']) : -1;
+      let hourGroup = groupFind > 0 ? this.sumHourGroupTask(groupFind['indexNo'] - 1) : 0;
+      return hourGroup + this.getHour(task);
+    } else {
+      const parentIds = task.parentID.split(';');
+      let maxTime = 0;
+      parentIds?.forEach((parentId) => {
+        const parentTime = this.calculateTimeTaskNoGroup(parentId);
+        maxTime = Math.max(maxTime, parentTime);
+      });
+      const completionTime = this.getHour(task) + maxTime;
+      return completionTime;
+    }
+  }
+
+  calculateTimeTaskInGroup(taskList, taskId, taskInput?) {
+    let task = taskInput
+      ? taskInput
+      : taskList.find((t) => t['recID'] === taskId);
+    if (!task) return 0;
+    if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
+      return this.getHour(task);
+    } else {
+      const parentIds = task.parentID.split(';');
+      let maxTime = 0;
+      parentIds?.forEach((parentId) => {
+        const parentTime = this.calculateTimeTaskInGroup(taskList, parentId);
+        maxTime = Math.max(maxTime, parentTime);
+      });
+      const completionTime = this.getHour(task) + maxTime;
+      return completionTime;
+    }
+  }
+
+  sumHourGroupTask(index?: number) {//tính theo vị trí group và tính tất cả
+    let sum = 0;
+    if (this.taskGroupList?.length > 0) {
+      if (index >= 0) {
+        for (let group of this.taskGroupList) {
+          if (Number(group['indexNo']) <= index) {
+            sum += this.getHour(group);
+          }
+        }
+      } else {
+        sum = this.taskGroupList.reduce((sumHour, group) => {
+          return (sumHour += this.getHour(group));
+        }, 0);
+      }
+    }
+    return sum;
+  }
+
   // add role to permissions process
   addRole(role: object, roleOld?: object) {
     if (role) {

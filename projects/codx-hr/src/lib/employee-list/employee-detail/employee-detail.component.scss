@@ -25,11 +25,11 @@
 }
 
 .user-menu {
-  height: calc(100vh - 420px) !important;
+  height: calc(100vh - 414px) !important;
 }
 
 .pw-content {
-  height: calc(100vh - 120px) !important;
+  height: calc(100vh - 124px) !important;
 
 }
 
@@ -65,12 +65,13 @@
   }
 
   .h-od-tab {
-    padding-top: 7px;
+    padding-top: 9px;
+    border-radius: 3px 3px 0 0!important;
   }
 
   .h-od-tab .nav-item {
     .nav-link {
-      padding: 7px 0;
+      padding: 7px 2px;
       margin-right: 16px;
       display: inline-block;
       border: 0;
@@ -94,3 +95,12 @@
   max-height: 200px;
   overflow: auto;
 }
+.info-dropdownlist{
+  max-height: calc(100vh - 380px);
+  overflow: auto;
+  margin-right: -10px;
+  padding-right: 10px;
+}
+// .user-family{
+//   min-height: calc(100vh - 160px);
+// }

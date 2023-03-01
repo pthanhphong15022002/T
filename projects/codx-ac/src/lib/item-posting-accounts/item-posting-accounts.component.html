@@ -3,7 +3,7 @@
   [views]="views"
   [button]="button"
   [autoLoad]="true"
-  entityName="AC_ChartOfAccounts"
+  entityName="AC_IVPostingAccounts"
   (buttonClick)="add($event)"
 >
 </codx-views>
@@ -108,9 +108,9 @@
   <div class="px-4">
     <codx-gridview
       #grid
-      funcID="TMT0201"
+      funcID="ACS248"
       [dataService]="view.dataService"
-      entityName="AC_ChartOfAccounts"
+      entityName="AC_IVPostingAccounts"
       height="300px"
       idField="recID"
     ></codx-gridview></div
