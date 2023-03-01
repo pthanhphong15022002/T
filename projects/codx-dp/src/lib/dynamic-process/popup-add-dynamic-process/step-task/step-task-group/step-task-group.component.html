@@ -42,7 +42,7 @@
           <codx-input
             field="durationDay"
             [crrValue]="taskGroup?.durationDay"
-            (valueChange)="changeValueInput($event, taskGroup)"
+            (valueChange)="changeValueNumber($event)"
             [height]="'100'"
             [type]="'number'"
             [min]="0"
@@ -71,7 +71,7 @@
           <codx-input
             field="durationHour"
             [crrValue]="taskGroup?.durationHour"
-            (valueChange)="changeValueInput($event, taskGroup)"
+            (valueChange)="changeValueNumber($event)"
             [showSpinButton]="false"
             [height]="'100'"
             type="number"

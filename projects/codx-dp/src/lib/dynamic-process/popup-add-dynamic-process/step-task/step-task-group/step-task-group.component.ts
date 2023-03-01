@@ -31,6 +31,7 @@ export class StepTaskGroupComponent implements OnInit {
   timeOld = 0;
   differenceTime = 0;
   step;
+  maxTimeGroup = 0;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -51,10 +52,19 @@ export class StepTaskGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.getFormModel();
-    this.type = this.taskGroup['recID'] ? 'edit' : 'add'
-    this.hours = Number(this.differenceTime)%24;
+    this.type = this.taskGroup['recID'] ? 'edit' : 'add';
+    this.hours = Number(this.differenceTime) % 24;
     this.days = Math.floor(this.differenceTime / 24);
     this.timeOld = this.getHour(this.taskGroup);
+    if (this.type == 'edit' && this.taskGroup['task']?.length > 0) {
+      this.taskGroup['task'].forEach((element) => {
+        let time = this.calculateTimeTaskInGroup(
+          this.taskGroup['task'],
+          element['recID']
+        );
+        this.maxTimeGroup = Math.max(this.maxTimeGroup, time);
+      });
+    }
   }
 
   getFormModel() {
@@ -81,18 +91,63 @@ export class StepTaskGroupComponent implements OnInit {
   changeUser(e) {
     this.taskGroup['roles'] = e;
   }
-
-  changeValueInput(event, data) {
-    if (event?.field === 'durationHour' && event?.data >= 24) {
-      this.taskGroup['durationDay'] =
-        Number(this.taskGroup['durationDay']) + Math.floor(event?.data / 24);
-      this.taskGroup['durationHour'] = Math.floor(event?.data % 24);
-    } else {
-      data[event?.field] = event?.data;
+  changeValueNumber(event) {
+    let time =
+      event?.field === 'durationDay'
+        ? Number(event?.data) * 24 + this.taskGroup['durationHour']
+        : Number(this.taskGroup['durationDay']) * 24 + Number(event?.data);
+    if (time < this.maxTimeGroup) {
+      this.notiService.notifyCode(
+        'Thời gian nhỏ hơn tống thời gian của các task'
+      );
+    }else{
+      if (event?.field === 'durationHour' && event?.data >= 24) {
+        this.taskGroup['durationDay'] =
+          Number(this.taskGroup['durationDay']) + Math.floor(event?.data / 24);
+        this.taskGroup['durationHour'] = Math.floor(event?.data % 24);
+      }else{
+        this.taskGroup[event?.field] = event?.data || 0;
+      }
     }
   }
+
+  changeValueInput(event, data) {
+    data[event?.field] = event?.data;
+  }
+
   changeValueDate(event, data) {
     data[event?.field] = event?.data?.fromDate;
+  }
+
+  shareUser(share) {
+    this.callfc.openForm(share, '', 500, 500);
+  }
+
+  close() {
+    this.dialog.close();
+  }
+
+  getHour(data) {
+    let hour =
+      Number(data['durationDay'] || 0) * 24 + Number(data['durationHour'] || 0);
+    return hour;
+  }
+
+  calculateTimeTaskInGroup(taskList, taskId) {
+    let task = taskList.find((t) => t['recID'] === taskId);
+    if (!task) return 0;
+    if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
+      return this.getHour(task);
+    } else {
+      const parentIds = task.parentID.split(';');
+      let maxTime = 0;
+      parentIds?.forEach((parentId) => {
+        const parentTime = this.calculateTimeTaskInGroup(taskList, parentId);
+        maxTime = Math.max(maxTime, parentTime);
+      });
+      const completionTime = this.getHour(task) + maxTime;
+      return completionTime;
+    }
   }
 
   handleSave() {
@@ -109,30 +164,19 @@ export class StepTaskGroupComponent implements OnInit {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
     } else {
       let difference = this.getHour(this.taskGroup) - this.timeOld;
-      if(difference > 0 && difference > this.differenceTime){
-        this.notiService.alertCode("DP010").subscribe((x) => {
+      if (difference > 0 && difference > this.differenceTime) {
+        this.notiService.alertCode('DP010').subscribe((x) => {
           if (x.event && x.event.status == 'Y') {
-            let timeStep = this.getHour(this.step) + (difference - this.differenceTime);
+            let timeStep =
+              this.getHour(this.step) + (difference - this.differenceTime);
             this.step['durationDay'] = Math.floor(timeStep / 24);
             this.step['durationHour'] = timeStep % 24;
             this.dialog.close(this.taskGroup);
           }
         });
+      } else {
+        this.dialog.close(this.taskGroup);
       }
     }
   }
-
-  close() {
-    this.dialog.close();
-  }
-  shareUser(share) {
-    this.callfc.openForm(share, '', 500, 500);
-  }
-
-  getHour(data) {
-    let hour =
-      Number(data['durationDay'] || 0) * 24 + Number(data['durationHour'] || 0);
-    return hour;
-  }
-
 }
