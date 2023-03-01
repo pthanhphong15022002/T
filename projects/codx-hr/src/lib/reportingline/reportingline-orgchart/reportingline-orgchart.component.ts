@@ -139,8 +139,9 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
 
   }
 
-  showEmploy(pemp, emp){
-
+  showEmploy(employes:any[]){
+    debugger
+    
   }
 
   onSearch($event){

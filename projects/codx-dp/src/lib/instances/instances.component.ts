@@ -99,7 +99,8 @@ export class InstancesComponent
   sumDaySteps: number;
   lstParticipants = [];
   oldIdInstance:any;
-
+  checkDetail = true;
+  checkKanban = false;
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private inject: Injector,
@@ -128,11 +129,13 @@ export class InstancesComponent
     this.getListCbxProccess(this.dataProccess?.applyFor);
   }
   ngAfterViewInit(): void {
+    this.checkDetail = this.process.viewMode == '2' ? true : false;
+    this.checkKanban = this.process.viewMode == '6' ? true : false;
     this.views = [
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: true,
+        active: this.checkDetail,
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
@@ -140,7 +143,7 @@ export class InstancesComponent
       },
       {
         type: ViewType.kanban,
-        active: false,
+        active: this.checkKanban,
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,

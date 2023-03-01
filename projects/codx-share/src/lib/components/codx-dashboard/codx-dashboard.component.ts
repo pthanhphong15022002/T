@@ -328,7 +328,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
         PopupAddPanelComponent,
         '',
         600,
-        400,
+        600,
         '',
         option
       );
@@ -341,6 +341,8 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
               sizeY: res.event.sizeY,
               row: res.event.row,
               col: res.event.col,
+              minSizeX: res.event.minSizeX,
+              minSizeY: res.event.minSizeY,
             },
           ];
           this.objDashboard.addPanel(panel[0]);

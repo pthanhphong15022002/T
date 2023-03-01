@@ -24,13 +24,11 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
   grvSetup;
   headerText: '';
-  indexSelected;
   dialog: DialogRef;
   accidentObj;
   employeeId: string;
   funcID: string;
   idField: string = 'recID';
-  lstAccident;
   actionType;
   data;
   isAfterRender = false;
@@ -47,37 +45,42 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.dialog = dialog;
+    this.formModel = dialog?.FormModel;
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
-    this.lstAccident = data?.data?.lstAccident;
     this.funcID = data?.data?.funcID;
-    this.indexSelected = data?.data?.indexSelected ?? -1;
 
-    if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.accidentObj = JSON.parse(
-        JSON.stringify(this.lstAccident[this.indexSelected])
-      );
-    }
+    this.accidentObj = JSON.parse(JSON.stringify(data?.data?.accidentObj));
   }
 
   onInit(): void {
-    this.hrSevice.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrSevice
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
-      }
-    });
+    if (!this.formModel) {
+      this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+        if (formModel) {
+          this.formModel = formModel;
+          this.hrSevice
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .then((fg) => {
+              if (fg) {
+                this.formGroup = fg;
+                this.initForm();
+              }
+            });
+        }
+      });
+    } else {
+      this.hrSevice
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .then((fg) => {
+          if (fg) {
+            this.formGroup = fg;
+            this.initForm();
+          }
+        });
+    }
   }
 
-  
   initForm() {
     if (this.actionType == 'add') {
       this.hrSevice
@@ -100,24 +103,18 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    if (this.actionType === 'copy' || this.actionType === 'add') {
-      delete this.accidentObj.recID;
-    }
     this.accidentObj.employeeID = this.employeeId;
-    console.log(this.accidentObj.employeeID);
+    if(this.formGroup.invalid){
+      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrSevice.AddEmployeeAccidentInfo(this.accidentObj).subscribe((p) => {
         if (p != null) {
-          this.accidentObj.recID = p.recID;
+          this.accidentObj = p;
           this.notitfy.notifyCode('SYS006');
-          this.lstAccident.push(JSON.parse(JSON.stringify(this.accidentObj)));
-          if (this.listView) {
-            (this.listView.dataService as CRUDService)
-              .add(this.accidentObj)
-              .subscribe();
-          }
-          // this.dialog.close(p)
+          this.dialog && this.dialog.close(p)
         } else this.notitfy.notifyCode('SYS023');
       });
     } else {
@@ -125,13 +122,9 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
         .UpdateEmployeeAccidentInfo(this.formModel.currentData)
         .subscribe((p) => {
           if (p != null) {
+            this.accidentObj = p;
             this.notitfy.notifyCode('SYS007');
-            this.lstAccident[this.indexSelected] = p;
-            if (this.listView) {
-              (this.listView.dataService as CRUDService)
-                .update(this.lstAccident[this.indexSelected])
-                .subscribe();
-            }
+            this.dialog && this.dialog.close(p);
           } else this.notitfy.notifyCode('SYS021');
         });
     }
@@ -143,20 +136,4 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
     }
   }
 
-  afterRenderListView(event: any) {
-    this.listView = event;
-    console.log(this.listView);
-  }
-
-  click(data) {
-    console.log('formdata', data);
-    this.accidentObj = data;
-    this.formModel.currentData = JSON.parse(JSON.stringify(this.accidentObj));
-    this.indexSelected = this.lstAccident.findIndex(
-      (p) => p.recID == this.accidentObj.recID
-    );
-    this.actionType = 'edit';
-    this.formGroup?.patchValue(this.accidentObj);
-    this.cr.detectChanges();
-  }
 }

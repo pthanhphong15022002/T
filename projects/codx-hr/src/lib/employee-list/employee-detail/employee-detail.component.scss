@@ -71,7 +71,7 @@
   .h-od-tab .nav-item {
     .nav-link {
       padding: 7px 0;
-      margin-right: 12px;
+      margin-right: 16px;
       display: inline-block;
       border: 0;
       border-bottom: 2px transparent solid;
@@ -88,4 +88,18 @@
     }
   }
 
+}
+
+.profile-grid .e-gridcontent {
+  max-height: 200px;
+  overflow: auto;
+}
+.info-dropdownlist{
+  max-height: calc(100vh - 380px);
+  overflow: auto;
+  margin-right: -10px;
+  padding-right: 10px;
+}
+.user-family{
+  min-height: calc(100vh - 160px);
 }

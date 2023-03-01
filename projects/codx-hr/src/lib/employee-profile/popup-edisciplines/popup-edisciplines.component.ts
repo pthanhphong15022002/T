@@ -139,35 +139,28 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
         .AddEmployeeDisciplineInfo(this.disciplineObj)
         .subscribe((p) => {
           if (p != null) {
-            this.disciplineObj.recID = p.recID;
+            this.disciplineObj = p;
             this.notify.notifyCode('SYS006');
-            this.dialog && this.dialog.close(p);
-            // this.lstDiscipline.push(
-            //   JSON.parse(JSON.stringify(this.disciplineObj))
-            // );
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService)
-            //     .add(this.disciplineObj)
-            //     .subscribe();
-            // }
-            // this.dialog.close(p)
-          } else this.notify.notifyCode('SYS023');
+            this.disciplineObj.isSuccess = true;
+            this.dialog && this.dialog.close(this.disciplineObj);
+          } else {
+            this.notify.notifyCode('SYS023');
+            this.disciplineObj.isSuccess = false;
+          }
         });
     } else {
       this.hrService
         .UpdateEmployeeDisciplineInfo(this.formModel.currentData)
         .subscribe((p) => {
           if (p != null) {
+            this.disciplineObj = p;
             this.notify.notifyCode('SYS007');
-            this.dialog && this.dialog.close(p);
-            // this.lstDiscipline[this.indexSelected] = p;
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService)
-            //     .update(this.lstDiscipline[this.indexSelected])
-            //     .subscribe();
-            // }
-            // this.dialog.close(this.data)
-          } else this.notify.notifyCode('SYS021');
+            this.disciplineObj.isSuccess = true;
+            this.dialog && this.dialog.close(this.disciplineObj);
+          } else {
+            this.notify.notifyCode('SYS021');
+            this.disciplineObj.isSuccess = false;
+          }
         });
     }
   }
