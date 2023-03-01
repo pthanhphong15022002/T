@@ -303,17 +303,15 @@ export class EmployeeDetailComponent extends UIComponent {
   //#endregion
 
   //#region filter variables of form main eTrainCourse
-  filterByETrainCourseIDArr: any = [];
-  startDateETrainCourseFilterValue;
-  endDateETrainCourseFilterValue;
-  filterETrainCoursePredicates: string;
+  Filter_By_ETrainCourse_IDArr: any = [];
+  Start_Date_ETrainCourse_Filter_Value;
+  End_Date_ETrainCourse_Filter_Value;
+  Filter_ETrainCourse_Predicates: string;
   //#endregion
 
   //#region filter variables of form main eAwards
-  filterByAwardIDArr: any = [];
-  startDateAwardFilterValue;
-  endDateAwardFilterValue;
-  filterAwardPredicates: string;
+  Start_Date_Award_Filter_Value;
+  End_Date_Award_Filter_Value;
   //#endregion
 
   //#region ViewChild template
@@ -3265,7 +3263,11 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.eDisciplineGrid?.dataService as CRUDService).clear();
-      if (res && (actionType === 'add' || actionType === 'copy')) {
+      if (
+        res &&
+        (actionType === 'add' || actionType === 'copy') &&
+        res.event.isSuccess == true
+      ) {
         (this.eDisciplineGrid?.dataService as CRUDService)
           .add(res.event)
           .subscribe();
@@ -3502,7 +3504,7 @@ export class EmployeeDetailComponent extends UIComponent {
           .subscribe();
         console.log('res dataaaaa', res);
         this.eDegreeRowCount++;
-      } else if (actionType == 'edit' && res.event.isSuccess === true) {
+      } else if (actionType == 'edit') {
         (this.eDegreeGrid.dataService as CRUDService)
           .update(res.event)
           .subscribe();
@@ -3532,7 +3534,7 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res?.event) {
         (this.skillGrid?.dataService as CRUDService).clear();
-        if (actionType === 'add' || actionType === 'copy') {
+        if ((actionType === 'add' || actionType === 'copy') && res.event[0].isSuccess == true) {
           (this.skillGrid?.dataService as CRUDService)
             .add(res.event[0])
             .subscribe();
@@ -3594,7 +3596,11 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.eTrainCourseGrid?.dataService as CRUDService).clear();
-      if (res && (actionType === 'add' || actionType === 'copy')) {
+      if (
+        res &&
+        (actionType === 'add' || actionType === 'copy') &&
+        res.event.isSuccess == true
+      ) {
         (this.eTrainCourseGrid?.dataService as CRUDService)
           .add(res.event)
           .subscribe();
@@ -3703,7 +3709,11 @@ export class EmployeeDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) (this.AwardGrid?.dataService as CRUDService).clear();
-      if (res && (actionType === 'add' || actionType === 'copy')) {
+      if (
+        res &&
+        (actionType === 'add' || actionType === 'copy') &&
+        res.event.isSuccess == true
+      ) {
         (this.AwardGrid?.dataService as CRUDService).add(res.event).subscribe();
         this.awardRowCount++;
       } else {
@@ -3756,7 +3766,11 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.eDisciplineGrid?.dataService as CRUDService).clear();
-      if (res && (actionType === 'add' || actionType === 'copy')) {
+      if (
+        res &&
+        (actionType === 'add' || actionType === 'copy') &&
+        res.event.isSuccess == true
+      ) {
         (this.eDiseasesGrid?.dataService as CRUDService)
           .add(res.event)
           .subscribe();
@@ -4445,32 +4459,20 @@ export class EmployeeDetailComponent extends UIComponent {
         });
     }
   }
-
   valueChangeYearFilterAward(evt) {
     if (evt.formatDate == undefined && evt.toDate == undefined) {
-      this.startDateAwardFilterValue = null;
-      this.endDateAwardFilterValue = null;
-      let i = 0;
-      for (i; i < this.filterByAwardIDArr.length; i++) {
-        if (i > 0) {
-          this.filterAwardPredicates += ' or ';
-        }
-        this.filterAwardPredicates += `AwardFormCategory==@${i}`;
-      }
-
+      this.Start_Date_Award_Filter_Value = null;
+      this.End_Date_Award_Filter_Value = null;
       (this.AwardGrid.dataService as CRUDService)
-        .setPredicates(
-          [this.filterAwardPredicates],
-          [this.filterByAwardIDArr.join(';')]
-        )
+        .setPredicates([''], [''])
         .subscribe();
     } else {
-      this.startDateAwardFilterValue = evt.fromDate.toJSON();
-      this.endDateAwardFilterValue = evt.toDate.toJSON();
+      this.Start_Date_Award_Filter_Value = evt.fromDate.toJSON();
+      this.End_Date_Award_Filter_Value = evt.toDate.toJSON();
       (this.AwardGrid.dataService as CRUDService)
         .setPredicates(
           [
-            `AwardDate>="${this.startDateAwardFilterValue}" and AwardDate<="${this.endDateAwardFilterValue}"`,
+            `AwardDate>="${this.Start_Date_Award_Filter_Value}" and AwardDate<="${this.End_Date_Award_Filter_Value}"`,
           ],
           []
         )
@@ -4597,61 +4599,54 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   UpdateTrainCoursePredicate() {
-    this.filterETrainCoursePredicates = '';
+    this.Filter_ETrainCourse_Predicates = '';
     if (
-      this.filterByETrainCourseIDArr.length > 0 &&
-      this.startDateETrainCourseFilterValue != null
+      this.Filter_By_ETrainCourse_IDArr.length > 0 &&
+      this.Start_Date_ETrainCourse_Filter_Value != null
     ) {
-      this.filterETrainCoursePredicates = '(';
+      this.Filter_ETrainCourse_Predicates = '(';
       let i = 0;
-      for (i; i < this.filterByETrainCourseIDArr.length; i++) {
+      for (i; i < this.Filter_By_ETrainCourse_IDArr.length; i++) {
         if (i > 0) {
-          this.filterETrainCoursePredicates += ' or ';
+          this.Filter_ETrainCourse_Predicates += ' or ';
         }
-        this.filterETrainCoursePredicates += `TrainForm==@${i}`;
+        this.Filter_ETrainCourse_Predicates += `TrainForm==@${i}`;
       }
-      this.filterETrainCoursePredicates += ') ';
-      this.filterETrainCoursePredicates += `and (TrainFromDate>="${this.startDateETrainCourseFilterValue}" and TrainFromDate<="${this.endDateETrainCourseFilterValue}")`;
+      this.Filter_ETrainCourse_Predicates += ') ';
+      this.Filter_ETrainCourse_Predicates += `and (TrainFromDate>="${this.Start_Date_ETrainCourse_Filter_Value}" and TrainFromDate<="${this.End_Date_ETrainCourse_Filter_Value}")`;
       (this.eTrainCourseGrid.dataService as CRUDService)
         .setPredicates(
-          [this.filterETrainCoursePredicates],
-          [this.filterByETrainCourseIDArr.join(';')]
+          [this.Filter_ETrainCourse_Predicates],
+          [this.Filter_By_ETrainCourse_IDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 1', item);
-        });
+        .subscribe();
     } else if (
-      (this.filterByETrainCourseIDArr.length > 0 &&
-        this.startDateETrainCourseFilterValue == undefined) ||
-      this.startDateETrainCourseFilterValue == null
+      (this.Filter_By_ETrainCourse_IDArr.length > 0 &&
+        this.Start_Date_ETrainCourse_Filter_Value == undefined) ||
+      this.Start_Date_ETrainCourse_Filter_Value == null
     ) {
       let i = 0;
-      for (i; i < this.filterByETrainCourseIDArr.length; i++) {
+      for (i; i < this.Filter_By_ETrainCourse_IDArr.length; i++) {
         if (i > 0) {
-          this.filterETrainCoursePredicates += ' or ';
+          this.Filter_ETrainCourse_Predicates += ' or ';
         }
-        this.filterETrainCoursePredicates += `TrainForm==@${i}`;
+        this.Filter_ETrainCourse_Predicates += `TrainForm==@${i}`;
       }
-
       (this.eTrainCourseGrid.dataService as CRUDService)
         .setPredicates(
-          [this.filterETrainCoursePredicates],
-          [this.filterByETrainCourseIDArr.join(';')]
+          [this.Filter_ETrainCourse_Predicates],
+          [this.Filter_By_ETrainCourse_IDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 2', item);
-        });
-    } else if (this.startDateETrainCourseFilterValue != null) {
+        .subscribe();
+    } else if (this.Start_Date_ETrainCourse_Filter_Value != null) {
       (this.eTrainCourseGrid.dataService as CRUDService)
         .setPredicates(
           [
-            `TrainFromDate>="${this.startDateETrainCourseFilterValue}" and TrainFromDate<="${this.endDateETrainCourseFilterValue}"`,
+            `TrainFromDate>="${this.Start_Date_ETrainCourse_Filter_Value}" and TrainFromDate<="${this.End_Date_ETrainCourse_Filter_Value}"`,
           ],
           []
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 3', item);
-        });
+        .subscribe();
     }
   }
   // UpdateInYearPredicate() {
@@ -4750,8 +4745,9 @@ export class EmployeeDetailComponent extends UIComponent {
         .subscribe();
     }
   }
+  // filter đào tạo
   valueChangeFilterTrainCourse(evt) {
-    this.filterByETrainCourseIDArr = evt.data;
+    this.Filter_By_ETrainCourse_IDArr = evt.data;
     this.UpdateTrainCoursePredicate();
   }
   valueChangeFilterSkillID(evt) {
@@ -4774,13 +4770,14 @@ export class EmployeeDetailComponent extends UIComponent {
     }
     this.UpdateEVaccinePredicate();
   }
+  // filter đào tạo 1
   valueChangeYearFilterETrainCourse(evt) {
     if (evt.formatDate == undefined && evt.toDate == undefined) {
-      this.startDateETrainCourseFilterValue = null;
-      this.endDateETrainCourseFilterValue = null;
+      this.Start_Date_ETrainCourse_Filter_Value = null;
+      this.End_Date_ETrainCourse_Filter_Value = null;
     } else {
-      this.startDateETrainCourseFilterValue = evt.fromDate.toJSON();
-      this.endDateETrainCourseFilterValue = evt.toDate.toJSON();
+      this.Start_Date_ETrainCourse_Filter_Value = evt.fromDate.toJSON();
+      this.End_Date_ETrainCourse_Filter_Value = evt.toDate.toJSON();
     }
     this.UpdateTrainCoursePredicate();
   }

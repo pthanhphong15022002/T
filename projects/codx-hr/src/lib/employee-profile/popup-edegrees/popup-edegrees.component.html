@@ -426,7 +426,7 @@
         [Group]="formGroup"
         [formModel]="formModel"
       ></codx-input> -->
-      <codx-dropdown-calendar cssPopup="h-500px w-500px" [value]="date" [selectedType]="'y'" [displayOption]="ops"
+      <codx-dropdown-calendar cssPopup="h-500px w-500px" [value]="Date(degreeObj.trainFromDate)" [selectedType]="'y'" [displayOption]="ops"
           cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event, 'FromDate')"></codx-dropdown-calendar>
     </div>
     <div class="col-6">
@@ -436,7 +436,7 @@
         [Group]="formGroup"
         [formModel]="formModel"
       ></codx-input> -->
-      <codx-dropdown-calendar cssPopup="h-500px w-500px" [value]="date" [selectedType]="'y'" [displayOption]="ops"
+      <codx-dropdown-calendar cssPopup="h-500px w-500px" [value]="Date(degreeObj.trainToDate)" [selectedType]="'y'" [displayOption]="ops"
       cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event, 'ToDate')"></codx-dropdown-calendar>
     </div>
   </div>

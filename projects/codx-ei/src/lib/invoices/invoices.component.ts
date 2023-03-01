@@ -21,7 +21,7 @@ export class InvoicesComponent extends UIComponent {
   buttons: ButtonModel = { id: 'btnAdd' };
   funcName = '';
   moreFuncName = '';
-  
+
   constructor(private injector: Injector) {
     super(injector);
   }
@@ -115,7 +115,7 @@ export class InvoicesComponent extends UIComponent {
   }
   //#endregion
 
-  //#region Function
+  //#region Method
   add() {
     this.view.dataService.addNew().subscribe((res) => {
       if (res) {

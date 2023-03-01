@@ -33,6 +33,8 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   employId;
   isAfterRender = false;
   headerText: '';
+  ops = ['m', 'y'];
+
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
 
@@ -130,29 +132,29 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
           this.skillObj = p[0];
           this.lstSkills = p[1];
           this.notify.notifyCode('SYS006');
+          this.skillObj.isSuccess = true;
           console.log('skil OBJjjjjjjjjj', this.skillObj);
           console.log('lst e skilllllllllll', this.lstSkills);
-          this.dialog && this.dialog.close(
-            [this.skillObj, this.lstSkills]
-          );
-
-        } else this.notify.notifyCode('SYS023');
+          this.dialog && this.dialog.close([this.skillObj, this.lstSkills]);
+        } else {
+          this.notify.notifyCode('SYS023');
+          this.skillObj.isSuccess = false;
+        }
       });
     } else {
       this.hrService
         .updateEskillInfo(this.formModel.currentData)
         .subscribe((p) => {
           if (p != null) {
+            this.skillObj = p[0];
+            this.lstSkills = p[1];
             this.notify.notifyCode('SYS007');
-            this.skillObj[this.indexSelected] = p;
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService)
-            //     .update(this.lstSkills[this.indexSelected])
-            //     .subscribe();
-            // }
+            this.skillObj.isSuccess = true;
             this.dialog && this.dialog.close(this.skillObj);
-            // this.dialog.close(this.data)
-          } else this.notify.notifyCode('SYS021');
+          } else {
+            this.notify.notifyCode('SYS021');
+            this.skillObj.isSuccess = false;
+          } 
         });
     }
   }
@@ -172,5 +174,38 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   afterRenderListView(evt) {
     this.listView = evt;
     console.log(this.listView);
+  }
+
+  Date(date) {
+    return new Date(date);
+  }
+
+  changeCalendar(event, changeType: string) {
+    let yearFromDate = event.fromDate.getUTCFullYear();
+    let monthFromDate = event.fromDate.getUTCMonth() + 2;
+    let dayFromDate = event.fromDate.getUTCDate();
+    var strYear = `${yearFromDate}`;
+    var strMonth = `${yearFromDate}/${monthFromDate}`;
+    var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
+
+    if (changeType === 'FromDate') {
+      if (event.type === 'year') {
+        this.skillObj.trainFrom = strYear;
+      } else if (event.type === 'month') {
+        this.skillObj.trainFrom = strMonth;
+      } else {
+        this.skillObj.trainFrom = strDay;
+      }
+      this.skillObj.trainFromDate = event.fromDate;
+    } else if (changeType === 'ToDate') {
+      if (event.type === 'year') {
+        this.skillObj.trainTo = strYear;
+      } else if (event.type === 'month') {
+        this.skillObj.trainTo = strMonth;
+      } else {
+        this.skillObj.trainTo = strDay;
+      }
+      this.skillObj.trainToDate = event.fromDate;
+    }
   }
 }

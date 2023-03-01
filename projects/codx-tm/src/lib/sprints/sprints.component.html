@@ -94,7 +94,7 @@
       </codx-imgs>
     </ng-container>
   </div>
-  <!-- <div
+  <div
     class="footer-att"
     *ngIf="data.attachments > 0"
     [ngbPopover]="popperAttachment"
@@ -108,7 +108,6 @@
       [objectID]="data?.iterationID"
       [formModel]="view.formModel"
       [viewType]="1"
-      [count]="data.attachments"
     ></codx-attachment-temp>
   </div>
 
@@ -120,7 +119,7 @@
         default="Tài liệu đính kèm"
       ></codx-label>
     </span>
-  </ng-template> -->
+  </ng-template>
 </ng-template>
 
 <ng-template #titleTemp let-data>

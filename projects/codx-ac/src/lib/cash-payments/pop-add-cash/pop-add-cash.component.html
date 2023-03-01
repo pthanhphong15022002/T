@@ -3,13 +3,13 @@
   [data]="cashpayment">
 </codx-form>
 <ng-template #subHeader>
-  <!-- <div class="border rounded min-w-250px mw-250px me-4 mb-4">
-    <div class="col-3">
-      <codx-input [crrValue]="" field="status" [formModel]="form.formModel" type="valuelist" refValue="AC040"
-      (valueChange)="valueChange($event)">
-    </codx-input>
+  <div class="row">
+    <div class="col-8">
+      <codx-input [crrValue]="cashpayment.status" field="status" [formModel]="form.formModel"
+        type="valuelist" (valueChange)="valueChange($event)" refValue="AC040">
+      </codx-input>
     </div>
-  </div> -->
+  </div>
 </ng-template>
 <ng-template #body>
   <div class="card-add" #cardbodyRef>
@@ -49,8 +49,8 @@
             <div class="form-group">
               <codx-label fiedName="CashBookID" [formModel]="form.formModel" default="Sổ quỹ tiền mặt">
               </codx-label>
-              <codx-input [crrValue]="cashBookID" field="cashBookID" [formModel]="form.formModel" type="combobox"
-                refValue="CashBookID" (valueChange)="valueChangeCashBookID($event)">
+              <codx-input [Group]="form.formGroup" [crrValue]="cashpayment.cashBookID" field="cashBookID" [formModel]="form.formModel"
+                type="combobox" refValue="CashBookID" (valueChange)="valueChangeCashBookID($event)">
               </codx-input>
             </div>
           </div>
@@ -59,7 +59,7 @@
           <div class="form-group">
             <!-- Tên số quỹ -->
             <div class="form-group">
-              <codx-label fiedName="CashBookID" [formModel]="form.formModel" default="Tên số quỹ">
+              <codx-label fiedName="CashBookName" default="Tên số quỹ">
               </codx-label>
               <codx-input [crrValue]="cashbookName" type="text" [disabled]="true">
               </codx-input>
@@ -72,7 +72,7 @@
             <div class="form-group">
               <codx-label field="PaymentAmt" [formModel]="form.formModel" default="Số tiền">
               </codx-label>
-              <codx-input [crrValue]="form.data.paymentAmt" [formModel]="form.formModel" field="paymentAmt"
+              <codx-input [crrValue]="cashpayment.paymentAmt" [formModel]="form.formModel" field="paymentAmt"
                 (valueChange)="valueChange($event)"></codx-input>
             </div>
           </div>
@@ -85,8 +85,11 @@
             <div class="form-group">
               <codx-label fiedName="ObjectType" [formModel]="form.formModel" default="Loại đối tượng">
               </codx-label>
-              <codx-input [crrValue]="objectType" field="objectType" type="valuelist" refValue="AC016"
-                (valueChange)="valueChangeObjectType($event)">
+              <codx-input *ngIf="objectType != null" [crrValue]="objectType" field="objectType" type="valuelist"
+                refValue="AC016" (valueChange)="valueChangeObjectType($event)">
+              </codx-input>
+              <codx-input *ngIf="objectType == null" [crrValue]="objectType" field="objectType" type="valuelist"
+                refValue="AC016" (valueChange)="valueChangeObjectType($event)">
               </codx-input>
             </div>
           </div>
@@ -97,25 +100,25 @@
             <div class="form-group">
               <codx-label fiedName="ObjectID" [formModel]="form.formModel" default="Tên đối tượng">
               </codx-label>
-              <codx-input *ngIf="cbxObjectID == 'Customers'" [crrValue]="objectID" field="objectID" type="combobox"
-                refValue="Customers" (valueChange)="valueChangeObjectID($event)">
+              <codx-input *ngIf="objectType == '1'" [crrValue]="cashpayment.objectID" field="objectID" type="combobox"
+                refValue="Customers" (valueChange)="valueChange($event)">
               </codx-input>
-              <codx-input *ngIf="cbxObjectID == 'VendorsAC'" [crrValue]="objectID" field="objectID" type="combobox"
-                refValue="VendorsAC" (valueChange)="valueChangeObjectID($event)">
+              <codx-input *ngIf="objectType == '2'" [crrValue]="cashpayment.objectID" field="objectID" type="combobox"
+                refValue="VendorsAC" (valueChange)="valueChange($event)">
               </codx-input>
-              <codx-input *ngIf="cbxObjectID == 'EmployeesAC'" [crrValue]="objectID" field="objectID" type="combobox"
-                refValue="EmployeesAC" (valueChange)="valueChangeObjectID($event)">
+              <codx-input *ngIf="objectType == '3'" [crrValue]="cashpayment.objectID" field="objectID" type="combobox"
+                refValue="EmployeesAC" (valueChange)="valueChange($event)">
               </codx-input>
-              <codx-input *ngIf="cbxObjectID == 'BanksAC'" [crrValue]="objectID" field="objectID" type="combobox"
-                refValue="BanksAC" (valueChange)="valueChangeObjectID($event)">
+              <codx-input *ngIf="objectType == '4'" [crrValue]="cashpayment.objectID" field="objectID" type="combobox"
+                refValue="BanksAC" (valueChange)="valueChange($event)">
               </codx-input>
-              <codx-input *ngIf="cbxObjectID == 'BusinessUnits'" [crrValue]="objectID" field="objectID" type="combobox"
-                refValue="BusinessUnits" (valueChange)="valueChangeObjectID($event)">
+              <codx-input *ngIf="objectType == '5'" [crrValue]="cashpayment.objectID" field="objectID" type="combobox"
+                refValue="BusinessUnits" (valueChange)="valueChange($event)">
               </codx-input>
-              <codx-input *ngIf="cbxObjectID == 'Warehouses'" [crrValue]="objectID" field="objectID" type="combobox"
-                refValue="Warehouses" (valueChange)="valueChangeObjectID($event)">
+              <codx-input *ngIf="objectType == '6'" [crrValue]="cashpayment.objectID" field="objectID" type="combobox"
+                refValue="Warehouses" (valueChange)="valueChange($event)">
               </codx-input>
-              <codx-input *ngIf="cbxObjectID == null" type="valuelist" [formModel]="form.formModel">
+              <codx-input *ngIf="objectType == null" type="valuelist" [formModel]="form.formModel">
               </codx-input>
             </div>
           </div>
@@ -126,7 +129,7 @@
             <div class="form-group">
               <codx-label fiedName="Payee" [formModel]="form.formModel" default="Người nhận tiền">
               </codx-label>
-              <codx-input [crrValue]="form.data.payee" [formModel]="form.formModel" type="combobox"
+              <codx-input [crrValue]="cashpayment.payee" [formModel]="form.formModel" type="combobox"
                 refValue="EmployeesAC" field="payee" (valueChange)="valueChange($event)"></codx-input>
             </div>
           </div>
@@ -139,7 +142,7 @@
             <div class="form-group">
               <codx-label fiedName="TransactionText" [formModel]="form.formModel" default="Lý do chi">
               </codx-label>
-              <codx-input [crrValue]="form.data.transactionText" field="transactionText" [formModel]="form.formModel"
+              <codx-input [crrValue]="cashpayment.transactionText" field="transactionText" [formModel]="form.formModel"
                 type="combobox" refValue="TransactionTexts" (valueChange)="valueChange($event)">
               </codx-input>
             </div>
@@ -150,7 +153,7 @@
           <div class="form-group">
             <codx-label fiedName="Memo" [formModel]="form.formModel" default="Diễn giải">
             </codx-label>
-            <codx-input [crrValue]="form.data.memo" field="memo" [formModel]="form.formModel"
+            <codx-input [crrValue]="cashpayment.memo" field="memo" [formModel]="form.formModel"
               (valueChange)="valueChange($event)">
             </codx-input>
           </div>
@@ -159,43 +162,51 @@
     </div>
     <div class="col-1"></div>
     <div class="col-3">
-      <div class="row">
+      <div class="form-group mb-0 row justify-content-end">
         <!-- Tiền tệ -->
-        <div class="col-6">
+        <div class="col-4">
           <div class="form-group">
             <codx-label fiedName="CurrencyID" [formModel]="form.formModel" default="Tiền tệ">
             </codx-label>
-            <codx-input [crrValue]="currencyID" field="currencyID" [formModel]="form.formModel" type="combobox"
-              refValue="Currencies" (valueChange)="valueChangeCurrency($event)">
+            <codx-input [crrValue]="cashpayment.currencyID" field="currencyID" [formModel]="form.formModel"
+              type="combobox" refValue="Currencies" (valueChange)="valueChange($event)">
             </codx-input>
           </div>
         </div>
         <!-- Tỷ giá -->
-        <div class="col-6">
+        <div class="col-4">
           <div class="form-group">
             <codx-label fiedName="ExchangeRate" [formModel]="form.formModel" default="Tỷ giá">
             </codx-label>
-            <codx-input [crrValue]="exchangeRate" field="exchangeRate" [formModel]="form.formModel"
-              (valueChange)="valueChangeExchangeRate($event)">
+            <codx-input [crrValue]="cashpayment.exchangeRate" field="exchangeRate" [formModel]="form.formModel"
+              (valueChange)="valueChange($event)">
             </codx-input>
           </div>
         </div>
       </div>
       <!-- Ngày chứng từ -->
-      <div class="form-group">
-        <codx-label fiedName="VoucherDate" [formModel]="form.formModel" default="Ngày chứng từ">
-        </codx-label>
-        <codx-input [crrValue]="voucherDate" field="voucherDate" type="datetime" format="d"
-          (valueChange)="valueChangeDate($event)">
-        </codx-input>
+      <div class="form-group mb-0 row justify-content-end">
+        <div class="col-8">
+          <div class="form-group">
+            <codx-label fiedName="VoucherDate" [formModel]="form.formModel" default="Ngày chứng từ">
+            </codx-label>
+            <codx-input [crrValue]="voucherDate" field="voucherDate" type="datetime" format="d"
+              (valueChange)="valueChangeDate($event)">
+            </codx-input>
+          </div>
+        </div>
       </div>
       <!-- Số chứng từ -->
-      <div class="form-group">
-        <codx-label fiedName="VoucherNo" [formModel]="form.formModel" default="Số chứng từ">
-        </codx-label>
-        <codx-input [crrValue]="voucherNo" field="voucherNo" [formModel]="form.formModel"
-          (valueChange)="valueChangeVoucherNo($event)">
-        </codx-input>
+      <div class="form-group mb-0 row justify-content-end">
+        <div class="col-8">
+          <div class="form-group">
+            <codx-label fiedName="VoucherNo" [formModel]="form.formModel" default="Số chứng từ">
+            </codx-label>
+            <codx-input [crrValue]="cashpayment.voucherNo" field="voucherNo" [formModel]="form.formModel"
+              (valueChange)="valueChange($event)">
+            </codx-input>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -238,8 +249,8 @@
 </ng-template>
 <ng-template #subToolbar>
   <div class="d-flex justify-content-end mt-1 me-3">
-    <div class="ms-2">
-      <button type="button" class="btn btn-light-primary">
+    <div *ngIf="formType != 'edit'" class="ms-2">
+      <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
         <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
           [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
       </button>

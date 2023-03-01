@@ -152,6 +152,7 @@ export class OkrTargetsComponent implements OnInit {
   tree:any;
   button: ButtonModel;
   isAfterRender: boolean;
+  skrTitle: any;
   constructor(
     private callfunc: CallFuncService,
     private cache: CacheService,
@@ -210,6 +211,12 @@ export class OkrTargetsComponent implements OnInit {
         
       }      
     }); 
+    this.cache.functionList(this.skrFuncID).subscribe((res) => {
+      if (res) {
+        this.skrTitle =
+          res.description.charAt(0).toLowerCase() + res.description.slice(1);
+      }
+    });
     this.cache.functionList(this.krFuncID).subscribe((res) => {
       if (res) {
         this.krTitle =
@@ -312,7 +319,8 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
   clickKRMF(e: any, kr: any, isSKR:boolean) {
-    let popupTitle = e.text + ' ' + this.krTitle;
+    let tempT=isSKR? this.skrTitle :this.krTitle;
+    let popupTitle = e.text + ' ' + tempT;
     var funcID = e?.functionID;
     switch (funcID) {
       
@@ -354,6 +362,7 @@ export class OkrTargetsComponent implements OnInit {
       }
     }
   }
+  
   //-----------------------End-------------------------------//
 
   //_______________________Get Data Func_____________________//

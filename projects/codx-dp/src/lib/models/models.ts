@@ -40,6 +40,8 @@ export class DP_Processes {
   modifiedOn: Date;
   modifiedBy: string;
   instanceNoSetting: string;
+  viewMode: string;
+  viewModeDetail: string;
 }
 
 export class DP_Processes_Permission {
@@ -169,7 +171,7 @@ export class DP_Steps_TaskGroups {
 }
 
 export class DP_Steps_TaskGroups_Roles {
-  recID: string;
+  recID: string = Util.uid();
   taskGroupID: string;
   roleType: string;
   objectType: string;
@@ -215,7 +217,7 @@ export class DP_Steps_Tasks {
 }
 
 export class DP_Steps_Tasks_Roles {
-  recID: string;
+  recID: string = Util.uid();
   taskID: string;
   roleType: string;
   objectType: string;

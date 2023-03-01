@@ -121,20 +121,18 @@
 
 <ng-template #addGroupJobFooter>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-outline-primary me-5">
+    <button type="button" class="btn btn-outline-primary me-5" (click)="close()">
       <codx-label
         name="Save"
         formName="Tasks"
         default="Hủy"
-        (click)="close()"
       ></codx-label>
     </button>
-    <button type="button" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" (click)="handleSave()">
       <codx-label
         name="Save"
         formName="Tasks"
         default="Đồng ý"
-        (click)="handleSave()"
       ></codx-label>
     </button>
   </div>

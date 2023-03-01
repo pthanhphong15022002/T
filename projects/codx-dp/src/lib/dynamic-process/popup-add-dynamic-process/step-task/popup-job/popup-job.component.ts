@@ -35,9 +35,8 @@ import {
 export class PopupJobComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000';
   REQUIRE = ['taskName', 'roles', 'dependRule'];
-  MESSAGETIME =
-    'Thời hạn công việc lớn hơn nhóm công việc bạn có muốn lưu và thay đổi thời hạn nhóm công việc';
   title = '';
   dialog!: DialogRef;
   formModelMenu: FormModel;
@@ -63,7 +62,7 @@ export class PopupJobComponent implements OnInit {
   valueInput = '';
   litsParentID = [];
   listJobType = [];
-  taskGroupID: any;
+  taskGroupID = this.guidEmpty;
   isHaveFile = false;
   showLabelAttachment = false;
   folderID = '';
@@ -184,6 +183,7 @@ export class PopupJobComponent implements OnInit {
           objectName: element.text,
           objectType: element.objectType,
           roleType: element.objectName,
+          taskID: this.stepsTasks['recID'],
         });
       }
     });
@@ -372,7 +372,7 @@ export class PopupJobComponent implements OnInit {
   }
 
   handelSave() {
-    if (this.stepsTasks['taskGroupID']) {
+    if (this.stepsTasks['taskGroupID'] != this.guidEmpty) {
       let groupTask = this.taskGroupList.find(
         (x) => x.recID == this.stepsTasks['taskGroupID']
       );
@@ -398,7 +398,7 @@ export class PopupJobComponent implements OnInit {
       if (!this.stepsTasks['parentID'].trim()) {
         //if ko có parentID thì so sánh trực tiếp với step
         if (this.getHour(this.stepsTasks) > this.getHour(this.step)) {
-          this.notiService.alertCode(this.MESSAGETIME).subscribe((x) => {
+          this.notiService.alertCode("DP010").subscribe((x) => {
             if (x.event && x.event.status == 'Y') {
               this.step['durationDay'] = this.stepsTasks['durationDay'];
               this.step['durationHour'] = this.stepsTasks['durationHour'];
@@ -420,7 +420,7 @@ export class PopupJobComponent implements OnInit {
         });
         maxtime += this.getHour(this.stepsTasks);
         if (maxtime > this.getHour(this.step)) {
-          this.notiService.alertCode(this.MESSAGETIME).subscribe((x) => {
+          this.notiService.alertCode("DP010").subscribe((x) => {
             if (x.event && x.event.status == 'Y') {
               this.step['durationDay'] = Math.floor(maxtime / 24);
               this.step['durationHour'] = maxtime % 24;
@@ -443,7 +443,7 @@ export class PopupJobComponent implements OnInit {
       this.dialog.close({ data: this.stepsTasks, status: this.status });
     } else {
       // nếu vượt quá thì hỏi ý kiến
-      this.notiService.alertCode(this.MESSAGETIME).subscribe((x) => {
+      this.notiService.alertCode("DP010").subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           if (timeInput) {
             groupTask['durationDay'] = Math.floor(time / 24);

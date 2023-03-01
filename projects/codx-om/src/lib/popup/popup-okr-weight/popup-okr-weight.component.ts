@@ -150,7 +150,7 @@ export class PopupOKRWeightComponent
   }
   getOKRPlanData(){
     this.codxOmService
-        .getOKRPlandAndOChild(this.recID)
+        .getOKRPlanAndOChild(this.recID)
         .subscribe((res: any) => {
           if (res) {
             this.okrPlan = res;

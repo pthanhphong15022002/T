@@ -55,7 +55,7 @@ export class AddSurveyComponent extends UIComponent {
   getSV()
   {
     this.SvService.getSV(this.recID).subscribe((item :any)=>{
-      if(item) this.title = item.title;
+      if(item) this.title = !item.title ?"Mẫu không có tiêu đề" : item.title;
       else this.title = this.titleNull;
     })
   }
