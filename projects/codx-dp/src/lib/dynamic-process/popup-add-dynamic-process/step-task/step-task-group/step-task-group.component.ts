@@ -18,15 +18,13 @@ import { DP_Steps_TaskGroups } from 'projects/codx-dp/src/lib/models/models';
 })
 export class StepTaskGroupComponent implements OnInit {
   dialog!: DialogRef;
-  grvTaskGroupsForm: FormModel;
+  formModel: FormModel;
   taskGroup: DP_Steps_TaskGroups;
   view = {};
   REQUIRE = ['taskGroupName'];
   days = 0;
   hours = 0;
   minutes = 0;
-  seconds = 0;
-  clear: any;
   type: string;
   timeOld = 0;
   differenceTime = 0;
@@ -43,11 +41,7 @@ export class StepTaskGroupComponent implements OnInit {
     this.taskGroup = dt?.data?.taskGroup;
     this.differenceTime = dt?.data?.differenceTime;
     this.step = dt?.data?.step;
-    this.grvTaskGroupsForm = {
-      entityName: 'DP_Steps_TaskGroups',
-      formName: 'DPStepsTaskGroups',
-      gridViewName: 'grvDPStepsTaskGroups',
-    };
+    this.formModel = dt?.data?.form;
   }
 
   ngOnInit(): void {
@@ -68,29 +62,22 @@ export class StepTaskGroupComponent implements OnInit {
   }
 
   getFormModel() {
-    this.cache.gridView('grvDPStepsTaskGroups').subscribe((res) => {
-      this.cache
-        .gridViewSetup('DPStepsTaskGroups', 'grvDPStepsTaskGroups')
-        .subscribe((res) => {
-          this.grvTaskGroupsForm = {
-            entityName: 'DP_Steps_TaskGroups',
-            formName: 'DPStepsTaskGroups',
-            gridViewName: 'grvDPStepsTaskGroups',
-          };
-          for (let key in res) {
-            if (res[key]['isRequire']) {
-              let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
-              this.view[keyConvert] = res[key]['headerText'];
-            }
+    this.cache
+      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .subscribe((res) => {
+        for (let key in res) {
+          if (res[key]['isRequire']) {
+            let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
+            this.view[keyConvert] = res[key]['headerText'];
           }
-          console.log(res);
-        });
-    });
+        }
+      });
   }
 
   changeUser(e) {
     this.taskGroup['roles'] = e;
   }
+  
   changeValueNumber(event) {
     let time =
       event?.field === 'durationDay'
@@ -100,12 +87,12 @@ export class StepTaskGroupComponent implements OnInit {
       this.notiService.notifyCode(
         'Thời gian nhỏ hơn tống thời gian của các task'
       );
-    }else{
+    } else {
       if (event?.field === 'durationHour' && event?.data >= 24) {
         this.taskGroup['durationDay'] =
           Number(this.taskGroup['durationDay']) + Math.floor(event?.data / 24);
         this.taskGroup['durationHour'] = Math.floor(event?.data % 24);
-      }else{
+      } else {
         this.taskGroup[event?.field] = event?.data || 0;
       }
     }

@@ -4,7 +4,7 @@
   [body]="addGroupJobBody"
   [footer]="addGroupJobFooter"
   [dialog]="dialog"
-  [formModel]="grvTaskGroupsForm"
+  [formModel]="formModel"
 ></codx-form>
 
 <ng-template #addGroupJobBody>
@@ -13,13 +13,13 @@
       <div>
         <codx-label
           fiedName="taskGroupName"
-          [formModel]="grvTaskGroupsForm"
+          [formModel]="formModel"
           default="Tên nhóm công việc"
         ></codx-label>
       </div>
       <codx-input
         field="taskGroupName"
-        [formModel]="grvTaskGroupsForm"
+        [formModel]="formModel"
         [Group]=""
         [crrValue]="taskGroup?.taskGroupName"
         type="text"
@@ -34,7 +34,7 @@
         <div>
           <codx-label
             fiedName="durationDay"
-            [formModel]="grvTaskGroupsForm"
+            [formModel]="formModel"
             default="Thời gian dự kiến"
           ></codx-label>
         </div>
@@ -54,7 +54,7 @@
           >
             <codx-label
               fiedName="StepName"
-              [formModel]="grvTaskGroupsForm"
+              [formModel]="formModel"
               default="Ngày"
             ></codx-label>
           </div>
@@ -83,7 +83,7 @@
           >
             <codx-label
               fiedName="StepName"
-              [formModel]="grvTaskGroupsForm"
+              [formModel]="formModel"
               default="Giờ"
             ></codx-label>
           </div>
@@ -100,13 +100,13 @@
       <div>
         <codx-label
           fiedName="memo"
-          [formModel]="grvTaskGroupsForm"
+          [formModel]="formModel"
           default="Ghi chú"
         ></codx-label>
       </div>
       <codx-input
         field="memo"
-        [formModel]="grvTaskGroupsForm"
+        [formModel]="formModel"
         type="textarea"
         headerposition="none"
         format="ed"
