@@ -510,7 +510,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.updateNodeStatus(oldNo, newNo);
         this.currentTab = tabNo;
       }
-    
+
     }
   }
   //#region Open form
@@ -1009,8 +1009,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   checkAssignRemove(i) {
     if (
-      (this.user.userID == this.process.permissions[i].objectID &&
-        this.process.permissions[i].roleType == 'O') ||
+      this.user.userID == this.process.permissions[i].objectID &&
+        this.process.permissions[i].roleType == 'O' &&
       this.process.permissions[i].objectType == '1'
     )
       return false;
