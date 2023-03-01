@@ -1901,7 +1901,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   sumTimeStep() {
     let timeGroup = this.sumHourGroupTask();
     let timeTackNoGroup = 0
-    let taskNoGroup = this.taskList.filter(task => !task['taskGroupID']);
+    let taskNoGroup = this.taskList?.filter(task => !task['taskGroupID']);
     taskNoGroup?.forEach(task => {
       let time = this.calculateTimeTaskNoGroup(task['recID']);
       timeTackNoGroup = Math.max(time,timeTackNoGroup);
@@ -1983,7 +1983,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         }
       } else {
-        sum = this.taskGroupList.reduce((sumHour, group) => {
+        sum = this.taskGroupList?.reduce((sumHour, group) => {
           return (sumHour += this.getHour(group));
         }, 0);
       }
