@@ -3436,8 +3436,8 @@
                     </codx-temp-full>
                     <ng-template #footerBenefit let-data>
                       <div class="d-flex align-items-center mt-1">
-                        <span
-                          class="icon-i-plus-circle text-success icon-12 text-gray-600 pe-2"
+                        <span [style.color]="getBenefitFontColor(data)"  
+                          class="icon-i-plus-circle icon-12 pe-2"
                         ></span
                         >{{
                           data.benefitID
@@ -5107,6 +5107,7 @@
                   [isMulti]="true"
                   type="combobox"
                   field="VaccineTypeID"
+                  [emptyText]="eVaccineHeaderText['VaccineTypeID']"
                   [refValue]="eVaccineGrvSetup.VaccineTypeID.referedValue"
                   (valueChange)="valueChangeFilterVaccineTypeID($event)"
                 ></codx-dropdown-select>
@@ -5455,6 +5456,12 @@
       class="bullet bullet-vertical d-flex align-items-center min-h-50px mh-100 me-3 bg-primary"
     >
     </span>
+
+    <span 
+      class="icon-i-plus-circle icon-12 pe-2" 
+      [style.color]="getBenefitFontColor(data)"
+    ></span>
+    
     {{ data?.benefitID | formatvalue : benefitFormodel : "benefitID" | async }}
   </div>
 </ng-template>
@@ -6329,6 +6336,9 @@
 
 <ng-template #tempEVaccineGridCol1 let-data>
   <div>
+    <span
+      class="icon-i-arrow-down-left-circle-fill me-2" [style.color] = "getVaccineBackgroundColor(data)"
+    ></span>
     {{
       data?.vaccineTypeID
         | formatvalue : eVaccineFormModel : "vaccineTypeID"
@@ -6359,6 +6369,7 @@
 
 <ng-template #tempEVaccineGridCol3 let-data>
   <div class="has-action-menu min-h-40px">
+    <i class="icon-edit"></i>
     {{ data?.note }}
     <codx-mfunc
       [formModel]="eVaccineFormModel"
