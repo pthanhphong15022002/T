@@ -1,7 +1,7 @@
 <codx-views #view [views]="views" (viewChanged)="viewChanged($event)" [autoLoad]="false" [toolbarDisplay]="false" *ngIf="isAfterRender" >
 </codx-views>
 <ng-template #panelRight>
-  <div class="w-100 h-100 bg-white overflow-hidden d-flex flex-column">
+  <div class="w-100 h-100 bg-white d-flex flex-column">
     <!-- <lib-okr-toolbar (click)="click($event)" (hiddenChart)="hiddenChartClick($event)" [data]="dataOKRPlans" [dataChild]="dataOKR" [formModel]="view?.formModel"></lib-okr-toolbar> -->
     <div class="d-flex align-items-center justify-content-between pt-3 mx-5">
       <div class="d-flex align-items-center col-3 text-white om-switch-room cursor-pointer">
