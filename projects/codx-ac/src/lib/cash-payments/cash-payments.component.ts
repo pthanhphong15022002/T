@@ -62,7 +62,8 @@ export class CashPaymentsComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void {
+  onInit(): void {}
+  ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) this.funcName = res.defaultName;
     });

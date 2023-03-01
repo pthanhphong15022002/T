@@ -27,9 +27,16 @@ import { PopAddAccountsComponent } from '../chart-of-accounts/pop-add-accounts/p
 })
 export class ItempostingaccountsComponent extends UIComponent {
   //#region Constructor
+  @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
+  @ViewChild('templateRight') templateRight: TemplateRef<any>;
+  @ViewChild('grid') grid: CodxGridviewComponent;
   views: Array<ViewModel> = [];
+  menuInventory: Array<any> = [];
+  menuPurchase: Array<any> = [];
   menu1: Array<any> = [];
-  menu2: Array<any> = [];
+  // menuPurchase: Array<any> = [];
+  // menuPurchase: Array<any> = [];
+  // menuPurchase: Array<any> = [];
   menuActive = 1;
   linkActive = '';
   button = {
@@ -42,9 +49,6 @@ export class ItempostingaccountsComponent extends UIComponent {
     allowDeleting: true,
     mode: 'Normal',
   };
-  @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
-  @ViewChild('templateRight') templateRight: TemplateRef<any>;
-  @ViewChild('grid') grid: CodxGridviewComponent;
   constructor(inject: Injector, private callfunc: CallFuncService) {
     super(inject);
   }
@@ -54,7 +58,7 @@ export class ItempostingaccountsComponent extends UIComponent {
   onInit() {
     this.cache.valueList('AC037').subscribe((res) => {
       if (res) {
-        this.menu1 = res.datas;
+        //this.menu1 = res.datas;
       }
     });
   }

@@ -29,7 +29,7 @@ import { ReportinglineDetailComponent } from './reportingline-detail/reportingli
   selector: 'lib-reportingline',
   templateUrl: './reportingline.component.html',
   styleUrls: ['./reportingline.component.css'],
-  encapsulation: ViewEncapsulation.None,
+  // encapsulation: ViewEncapsulation.None,
 })
 export class ReportinglineComponent extends UIComponent {
   @ViewChild('tmpTree') tmpTree: TemplateRef<any>;
