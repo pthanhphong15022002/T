@@ -180,6 +180,16 @@
           </div>
           <div class="form-group margin-form">
             <div>
+              <codx-label fiedName="AutoName" [formModel]="dialog.formModel" default="Tên đối tượng khi tạo mới">
+              </codx-label>
+            </div>
+            <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
+            </codx-input> -->
+            <codx-input field="autoName" type="text" [crrValue]="process.autoName" [placeholder]="gridViewSetup['AutoName']?.description" (valueChange)="valueChange($event)">
+            </codx-input>
+          </div>
+          <div class="form-group margin-form">
+            <div>
               <codx-label fiedName="ApplyFor" [formModel]="dialog.formModel"
                 default="Đối tượng nhiệm vụ áp dụng trong quy trình">
               </codx-label>
@@ -245,7 +255,7 @@
         <div class="col-6 group-permission witdh-permission scroll-user"
           *ngIf="process.permissions != null && process.permissions.length > 0">
           <ng-container *ngFor="let perm of process.permissions; index as i">
-            <div *ngIf="perm.roleType == 'O'" class="me-4 d-flex align-items-center margin-form mb-4">
+            <div *ngIf="perm.roleType == 'O'" class="cursor-pointer has-action-menu-od me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
                 <codx-img class="" [width]="25" [objectId]="perm.objectName" objectType="AD_Users">
                 </codx-img>
@@ -253,6 +263,12 @@
               <div class="ms-1">
                 <div class="text-dark fw-bold">{{ perm.objectName }}</div>
               </div>
+              <ng-container *ngIf="checkAssignRemove(i)">
+                <div class="action-menu-od ms-2 d-flex justify-content-center align-items-center cursor-pointer"
+                  (click)="removeUser(i)">
+                  <i class="icon-close text-danger icon-16"></i>
+                </div>
+              </ng-container>
             </div>
           </ng-container>
         </div>
@@ -277,7 +293,7 @@
         <div class="col-6 group-permission witdh-permission scroll-user"
           *ngIf="process.permissions != null && process.permissions.length > 0">
           <ng-container *ngFor="let perm of process.permissions; index as i">
-            <div *ngIf="perm.roleType == 'P'" class="me-4 d-flex align-items-center margin-form mb-4">
+            <div *ngIf="perm.roleType == 'P'" class="cursor-pointer has-action-menu-od me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
                 <codx-img class="" [width]="25" [objectId]="perm.objectName" objectType="AD_Users">
                 </codx-img>
@@ -285,6 +301,12 @@
               <div class="ms-1">
                 <div class="text-dark fw-bold">{{ perm.objectName }}</div>
               </div>
+              <ng-container *ngIf="checkAssignRemove(i)">
+                <div class="action-menu-od ms-2 d-flex justify-content-center align-items-center cursor-pointer"
+                  (click)="removeUser(i)">
+                  <i class="icon-close text-danger icon-16"></i>
+                </div>
+              </ng-container>
             </div>
           </ng-container>
         </div>
@@ -309,7 +331,7 @@
         <div class="col-6 group-permission witdh-permission scroll-user"
           *ngIf="process.permissions != null && process.permissions.length > 0">
           <ng-container *ngFor="let perm of process.permissions; index as i">
-            <div *ngIf="perm.roleType == 'F'" class="me-4 d-flex align-items-center margin-form mb-4">
+            <div *ngIf="perm.roleType == 'F'" class="cursor-pointer has-action-menu-od me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
                 <codx-img class="" [width]="25" [objectId]="perm.objectName" objectType="AD_Users">
                 </codx-img>
@@ -317,6 +339,12 @@
               <div class="ms-1">
                 <div class="text-dark fw-bold">{{ perm.objectName }}</div>
               </div>
+              <ng-container *ngIf="checkAssignRemove(i)">
+                <div class="action-menu-od ms-2 d-flex justify-content-center align-items-center cursor-pointer"
+                  (click)="removeUser(i)">
+                  <i class="icon-close text-danger icon-16"></i>
+                </div>
+              </ng-container>
             </div>
           </ng-container>
         </div>
@@ -352,14 +380,50 @@
             </codx-label>
           </div>
           <div class="col-6">
-            <div class="position-relative">
+            <div class="position-relative" style="width: 70%">
               <codx-input type="text" [crrValue]="instanceNoSetting"
-                [placeholder]="gridViewSetup['InstanceNoSetting']?.description" (valueChange)="valueChangeAutoNoCode($event)"
-                field="instanceNoSetting" >
+                [placeholder]="gridViewSetup['InstanceNoSetting']?.description"
+                (valueChange)="valueChangeAutoNoCode($event)" field="instanceNoSetting">
               </codx-input>
               <div class="position-absolute" style="top: 7px; right: 7px">
                 <i class="icon-settings form-control-feedback" (click)="openAutoNumPopup()"></i>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group margin-form mb-4">
+        <div class="row">
+          <div class="col-6">
+            <codx-label fiedName="ViewMode" [formModel]="dialog.formModel"
+              default="Mặc định giao diện xem danh sách nhiệm vụ">
+            </codx-label>
+          </div>
+          <div class="col-6">
+            <div style="width: 70%">
+              <codx-input field="viewMode" type="valuelist" [crrValue]="process.viewMode"
+                [refValue]="gridViewSetup?.ViewMode?.referedValue" (valueChange)="valueChange($event)"
+                [placeholder]="gridViewSetup['ViewMode']?.description">
+              </codx-input>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="form-group margin-form mb-4">
+        <div class="row">
+          <div class="col-6">
+            <codx-label fiedName="ViewModeDetail" [formModel]="dialog.formModel"
+              default="Mặc định giao diện xem đầu tiên khi xem chi tiết nhiệm vụ">
+            </codx-label>
+          </div>
+          <div class="col-6">
+            <div style="width: 70%">
+
+              <codx-input field="viewModeDetail" type="valuelist" [crrValue]="process.viewModeDetail"
+                [refValue]="gridViewSetup?.ViewModeDetail?.referedValue" (valueChange)="valueChange($event)"
+                [placeholder]="gridViewSetup['ViewModeDetail']?.description">
+              </codx-input>
             </div>
           </div>
         </div>
@@ -372,10 +436,14 @@
             </codx-label>
           </div>
           <div class="col-6">
-            <codx-input type="valuelist" [refValue]="gridViewSetup?.ShowInstanceControl?.referedValue"
-              [placeholder]="gridViewSetup['ShowInstanceControl']?.description" [crrValue]="process.showInstanceControl"
-              (valueChange)="valueChange($event)" field="showInstanceControl">
-            </codx-input>
+            <div style="width: 70%">
+
+              <codx-input type="valuelist" [refValue]="gridViewSetup?.ShowInstanceControl?.referedValue"
+                [placeholder]="gridViewSetup['ShowInstanceControl']?.description"
+                [crrValue]="process.showInstanceControl" (valueChange)="valueChange($event)"
+                field="showInstanceControl">
+              </codx-input>
+            </div>
             <!-- <codx-input [crrValue]="process.showInstanceControl" (valueChange)="valueChange($event)" field="showInstanceControl" [formModel]="formModel" [Group]="formGroup" >
             </codx-input> -->
           </div>
@@ -391,7 +459,7 @@
           <div class="col-6">
             <!-- <codx-input [crrValue]="process.closeInstanceControl" (valueChange)="valueChange($event)" field="closeInstanceControl" [formModel]="formModel" [Group]="formGroup" >
               </codx-input> -->
-            <div class="position-relative">
+            <div class="position-relative" style="width: 70%">
               <codx-input field="closeInstanceControl" type="text" [placeholder]="
                   gridViewSetup['CloseInstanceControl']?.description
                 " (valueChange)="valueChange($event)" [crrValue]="process.closeInstanceControl"
@@ -463,13 +531,8 @@
 
 <!--Control share-->
 <ng-template #controlShare let-dialogControl>
-  <codx-share
-    [dialog]="dialogControl"
-    [multiple]="multiple"
-    [listCombobox]="listCombobox"
-    (eventApply)="applyShare($event, typeShare)"
-    [listName]="vllShare"
-  >
+  <codx-share [dialog]="dialogControl" [multiple]="multiple" [listCombobox]="listCombobox"
+    (eventApply)="applyShare($event, typeShare)" [listName]="vllShare">
   </codx-share>
 </ng-template>
 
@@ -569,7 +632,8 @@
                           <codx-vll [name]="vllType" [value]="item1?.dataType" [showText]="true" [showBgColor]="true">
                           </codx-vll>
                         </div>
-                        <codx-label class="text-danger" fiedName="IsRequired" formName="DPStepsFields" gridViewName="grvDPStepsFields" default="Bắt buộc *"></codx-label>
+                        <codx-label class="text-danger" fiedName="IsRequired" formName="DPStepsFields"
+                          gridViewName="grvDPStepsFields" default="Bắt buộc *"></codx-label>
                         <codx-input type="switch" field="isRequired" [checked]="item1?.isRequired"
                           (valueChange)="changeRequired($event, item1)">
                         </codx-input>
@@ -808,7 +872,8 @@
               <div class="card-job-list" cdkDrag [cdkDragData]="taskList" [cdkDragStartDelay]="100"
                 [cdkDragDisabled]="taskList?.recID ? false : true">
                 <div class="card-job mx-5 p-3">
-                  <div *ngIf="taskList?.recID !== guidEmpty " class="d-flex justify-content-start align-items-center has-action-menu">
+                  <div *ngIf="taskList?.recID !== guidEmpty "
+                    class="d-flex justify-content-start align-items-center has-action-menu">
                     <div class="icon-container">
                       <span class="icon-add_circle icon-20 text-primary-600 py-2"></span>
                     </div>
@@ -983,7 +1048,8 @@
               </div>
               <div class="col-6">
                 <codx-input name="success-radio" type="radio" style="width: 100%" field="no" [label]="titleRadioNo"
-                  [checked]="!stepSuccess?.reasonControl ?? false" [crrValue]="stepSuccess?.reasonControl" (valueChange)="
+                  [checked]="!stepSuccess?.reasonControl ?? false" [crrValue]="stepSuccess?.reasonControl"
+                  (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   ">
                 </codx-input>
@@ -1156,7 +1222,7 @@
     </div>
     <div class="main-job has-actions-menu" id="reason-success" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
       #view>
-      <div class="main-body pt-5 ps-5" >
+      <div class="main-body pt-5 ps-5">
         <div *ngFor="let item of stepFail.reasons" class="pb-2">
           <ul class="text-left drap-drop me-5 py-2 has-action-menu">
             <li>
@@ -1203,60 +1269,38 @@
         </div>
       </div>
     </div>
-    <div
-      id="role-setup-step"
-      class="main-job"
-      [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
-    >
-    <div class="row">
-      <div class="col-6">
-        <div class="d-flex flex-column margin-form mb-4">
-          <div class="d-flex flex">
-            <codx-label
-              class="fw-bolder"
-              fiedName="Permission"
-              default="Người giám sát"
-            >
-            </codx-label>
-            <i
-              class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
-              (click)="sharePerm(controlShare, 'participants-2')"
-            ></i>
-          </div>
-          <div>
-            <codx-label
-              class="fw-normal text-gray-400"
-              fiedName="LocationControl"
-              default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
+    <div id="role-setup-step" class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
+      <div class="row">
+        <div class="col-6">
+          <div class="d-flex flex-column margin-form mb-4">
+            <div class="d-flex flex">
+              <codx-label class="fw-bolder" fiedName="Permission" default="Người giám sát">
+              </codx-label>
+              <i class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
+                (click)="sharePerm(controlShare, 'participants-2')"></i>
+            </div>
+            <div>
+              <codx-label class="fw-normal text-gray-400" fiedName="LocationControl" default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
               viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa
-              nhiệm vụ"
-            >
-            </codx-label>
+              nhiệm vụ">
+              </codx-label>
+            </div>
           </div>
         </div>
-      </div>
-      <div
-        class="col-6 group-permission witdh-roles scroll-user"
-        *ngIf="step.roles != null && step.roles.length > 0"
-      >
-        <ng-container *ngFor="let perm of step.roles; index as i">
-          <div *ngIf="perm.roleType == 'S'" class="me-4 d-flex align-items-center margin-form mb-4">
-            <div class="d-flex align-items-center position-relative">
-              <codx-img
-                class=""
-                [width]="25"
-                [objectId]="perm.objectName"
-                objectType="AD_Users"
-              >
-              </codx-img>
+        <div class="col-6 group-permission witdh-roles scroll-user" *ngIf="step.roles != null && step.roles.length > 0">
+          <ng-container *ngFor="let perm of step.roles; index as i">
+            <div *ngIf="perm.roleType == 'S'" class="me-4 d-flex align-items-center margin-form mb-4">
+              <div class="d-flex align-items-center position-relative">
+                <codx-img class="" [width]="25" [objectId]="perm.objectName" objectType="AD_Users">
+                </codx-img>
+              </div>
+              <div class="ms-1">
+                <div class="text-dark fw-bold">{{ perm.objectName }}</div>
+              </div>
             </div>
-            <div class="ms-1">
-              <div class="text-dark fw-bold">{{ perm.objectName }}</div>
-            </div>
-          </div>
-        </ng-container>
+          </ng-container>
+        </div>
       </div>
-    </div>
       <div class="row">
         <div class="col-6">
           <div class="d-flex flex-column margin-form mb-4">
@@ -1580,12 +1624,8 @@
       <div>
         <codx-label fiedName="ReasonName" [formModel]="dialog.formModel" default="Tên lý do"></codx-label>
       </div>
-      <codx-input
-        field="reasonName"
-        type="text"
-        [crrValue]="reason?.reasonName"
-        (valueChange)="changeValueReaName($event)"
-      >
+      <codx-input field="reasonName" type="text" [crrValue]="reason?.reasonName"
+        (valueChange)="changeValueReaName($event)">
       </codx-input>
     </div>
   </div>

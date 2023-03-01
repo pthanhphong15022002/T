@@ -3,13 +3,13 @@
   [data]="cashpayment">
 </codx-form>
 <ng-template #subHeader>
-  <!-- <div class="border rounded min-w-250px mw-250px me-4 mb-4">
-    <div class="col-3">
-      <codx-input [crrValue]="" field="status" [formModel]="form.formModel" type="valuelist" refValue="AC040"
-      (valueChange)="valueChange($event)">
-    </codx-input>
+  <div class="row">
+    <div class="col-8">
+      <codx-input [crrValue]="cashpayment.status" field="status" [formModel]="form.formModel"
+        type="valuelist" (valueChange)="valueChange($event)" refValue="AC040">
+      </codx-input>
     </div>
-  </div> -->
+  </div>
 </ng-template>
 <ng-template #body>
   <div class="card-add" #cardbodyRef>
@@ -49,8 +49,8 @@
             <div class="form-group">
               <codx-label fiedName="CashBookID" [formModel]="form.formModel" default="Sổ quỹ tiền mặt">
               </codx-label>
-              <codx-input [crrValue]="cashpayment.cashBookID" field="cashBookID" [formModel]="form.formModel" type="combobox"
-                refValue="CashBookID" (valueChange)="valueChangeCashBookID($event)">
+              <codx-input [Group]="form.formGroup" [crrValue]="cashpayment.cashBookID" field="cashBookID" [formModel]="form.formModel"
+                type="combobox" refValue="CashBookID" (valueChange)="valueChangeCashBookID($event)">
               </codx-input>
             </div>
           </div>
@@ -85,11 +85,11 @@
             <div class="form-group">
               <codx-label fiedName="ObjectType" [formModel]="form.formModel" default="Loại đối tượng">
               </codx-label>
-              <codx-input *ngIf="objectType != null" [crrValue]="objectType" field="objectType" type="valuelist" refValue="AC016"
-                (valueChange)="valueChangeObjectType($event)">
+              <codx-input *ngIf="objectType != null" [crrValue]="objectType" field="objectType" type="valuelist"
+                refValue="AC016" (valueChange)="valueChangeObjectType($event)">
               </codx-input>
-              <codx-input *ngIf="objectType == null" [crrValue]="objectType" field="objectType" type="valuelist" refValue="AC016"
-                (valueChange)="valueChangeObjectType($event)">
+              <codx-input *ngIf="objectType == null" [crrValue]="objectType" field="objectType" type="valuelist"
+                refValue="AC016" (valueChange)="valueChangeObjectType($event)">
               </codx-input>
             </div>
           </div>
@@ -168,8 +168,8 @@
           <div class="form-group">
             <codx-label fiedName="CurrencyID" [formModel]="form.formModel" default="Tiền tệ">
             </codx-label>
-            <codx-input [crrValue]="cashpayment.currencyID" field="currencyID" [formModel]="form.formModel" type="combobox"
-              refValue="Currencies" (valueChange)="valueChange($event)">
+            <codx-input [crrValue]="cashpayment.currencyID" field="currencyID" [formModel]="form.formModel"
+              type="combobox" refValue="Currencies" (valueChange)="valueChange($event)">
             </codx-input>
           </div>
         </div>
@@ -193,7 +193,7 @@
             <codx-input [crrValue]="voucherDate" field="voucherDate" type="datetime" format="d"
               (valueChange)="valueChangeDate($event)">
             </codx-input>
-          </div> 
+          </div>
         </div>
       </div>
       <!-- Số chứng từ -->

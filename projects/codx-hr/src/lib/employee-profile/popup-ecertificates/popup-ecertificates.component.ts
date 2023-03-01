@@ -33,6 +33,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   employId;
   isAfterRender = false;
   headerText: '';
+  ops = ['m', 'y'];
   dataVllSupplier: any;
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
@@ -271,6 +272,40 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
       }
     } else {
       this.notify.notifyCode('Nhap thong tin noi dao tao');
+    }
+  }
+
+  
+  Date(date){
+    return new Date(date);
+  }
+
+  changeCalendar(event, changeType: string) {
+    let yearFromDate = event.fromDate.getUTCFullYear();
+    let monthFromDate = event.fromDate.getUTCMonth() + 2;
+    let dayFromDate = event.fromDate.getUTCDate();
+    var strYear = `${yearFromDate}`;
+    var strMonth = `${yearFromDate}/${monthFromDate}`;
+    var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
+
+    if (changeType === 'FromDate') {
+      if (event.type === 'year') {
+        this.certificateObj.trainFrom = strYear;
+      } else if (event.type === 'month') {
+        this.certificateObj.trainFrom = strMonth;
+      } else {
+        this.certificateObj.trainFrom = strDay;
+      }
+      this.certificateObj.trainFromDate = event.fromDate;
+    } else if (changeType === 'ToDate') {
+      if (event.type === 'year') {
+        this.certificateObj.trainTo = strYear;
+      } else if (event.type === 'month') {
+        this.certificateObj.trainTo = strMonth;
+      } else {
+        this.certificateObj.trainTo = strDay;
+      }
+      this.certificateObj.trainToDate = event.fromDate;
     }
   }
 }
