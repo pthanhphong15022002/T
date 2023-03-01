@@ -10,6 +10,7 @@ import {
   ApiHttpService,
   AuthStore,
   CacheService,
+  CodxService,
   DataRequest,
   FormModel,
   NotificationsService,
@@ -39,6 +40,7 @@ export class CodxHrService {
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
+    private codxService: CodxService,
     private auth: AuthStore,
     private fb: FormBuilder,
     private notiService: NotificationsService
@@ -378,7 +380,7 @@ export class CodxHrService {
     );
   }
 
-  updateEmployeeTrainCourseInfo(data: any, functionID : string) {
+  updateEmployeeTrainCourseInfo(data: any, functionID: string) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -762,6 +764,16 @@ export class CodxHrService {
       'HR',
       'EAssetsBusiness',
       'GetListAssetsByDataRequestAsync',
+      data
+    );
+  }
+
+  LoadDataEAsset(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'LoadDataEAssetAsync',
       data
     );
   }
@@ -1438,7 +1450,7 @@ export class CodxHrService {
       recID
     );
   }
-  deleteESkill1(obj: any){
+  deleteESkill1(obj: any) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
@@ -1835,29 +1847,28 @@ export class CodxHrService {
     );
   }
 
-
   getHeaderText(functionID): Promise<object> {
     return new Promise<object>((resolve, reject) => {
       var obj: { [key: string]: any } = {};
-      this.cache.functionList(functionID).subscribe(func => {
-        if(func){
-          this.cache.gridViewSetup(func.formName, func.gridViewName).subscribe((gv) => {
-            if (gv) {
-              for (const key in gv) {
-                if (Object.prototype.hasOwnProperty.call(gv, key)) {
-                  const element = gv[key];
-                  // if (element.headerText != null) {
+      this.cache.functionList(functionID).subscribe((func) => {
+        if (func) {
+          this.cache
+            .gridViewSetup(func.formName, func.gridViewName)
+            .subscribe((gv) => {
+              if (gv) {
+                for (const key in gv) {
+                  if (Object.prototype.hasOwnProperty.call(gv, key)) {
+                    const element = gv[key];
+                    // if (element.headerText != null) {
                     obj[key] = element.headerText;
-                  // }
+                    // }
+                  }
                 }
+                resolve(obj as object);
               }
-              resolve(obj as object);
-            }
-          });
+            });
         }
-      })
-      
-      
+      });
     });
   }
 
@@ -1912,4 +1923,41 @@ export class CodxHrService {
   }
 
   //#endregion
+
+  addNew(funcID: string, entityName: string, idField: string) {
+    return this.api.execSv<number>(
+      'HR',
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName, idField]
+    );
+  }
+
+  copy(dataSelected, formModel: FormModel, idField: string) {
+    let dataItem = dataSelected;
+    return this.addNew(formModel?.funcID, formModel.entityName, idField).pipe(
+      mergeMap((res) => {
+        return this.cache
+          .gridViewSetup(formModel.formName!, formModel.gridViewName!)
+          .pipe(
+            map((grv: any[]) => {
+              if (grv) {
+                Object.values(grv).forEach((v, i) => {
+                  if (v.allowCopy) {
+                    let field = this.codxService.capitalize(v.fieldName);
+                    res[field] = dataItem[field];
+                  }
+                });
+              }
+              dataSelected = res;
+              return res;
+            })
+          );
+      })
+    );
+  }
 }
+
+import { Pipe, PipeTransform } from '@angular/core';
+import { mergeMap } from 'rxjs';

@@ -39,6 +39,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   trainCourseObj;
   dataVllSupplier: any;
   result;
+  ops = ['m', 'y'];
 
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
@@ -173,9 +174,13 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
           if (p != null) {
             this.result = p;
             this.notify.notifyCode('SYS006');
+            this.result.isSuccess = true;
             this.dialog && this.dialog.close(this.result);
-          } else this.notify.notifyCode('SYS023');
-        });
+          } else {
+            this.notify.notifyCode('SYS023');
+            this.result.isSuccess = false;
+      }
+    });
     } else {
       this.hrService
         .updateEmployeeTrainCourseInfo(this.trainCourseObj, this.funcID)
@@ -183,77 +188,81 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
           if (p != null) {
             this.result = p;
             this.notify.notifyCode('SYS007');
+            this.result.isSuccess = true;
             this.dialog && this.dialog.close(this.result);
-          } else this.notify.notifyCode('SYS021');
-        });
-    }
-  }
-  onSaveForm(closeForm: boolean) {
-    this.formGroup.patchValue({
-      trainFromDate: new Date(),
-      trainToDate: new Date(),
-    });
-
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
-      return;
-    }
-
-    if (this.data.contractFrom > this.data.contractTo) {
-      this.hrService.notifyInvalidFromTo(
-        'ContractFrom',
-        'ContractTo',
-        this.formModel
-      );
-      return;
-    }
-
-    if (this.actionType == 'add' || this.actionType == 'copy') {
-      //Code cung
-      // this.data.trainCourseID = '123';
-      this.data.employeeID = this.employId;
-
-      this.hrService
-        .addETraincourse(this.data, this.funcID)
-        .subscribe((res) => {
-          if (res) {
-            this.notify.notifyCode('SYS006');
-            // this.actionType = 'edit';
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService).add(res).subscribe();
-            // }
-            if (closeForm) {
-              this.dialog && this.dialog.close();
-            }
+          } else {
+            this.notify.notifyCode('SYS021');
+            this.result.isSuccess = false;
           }
         });
-    } else {
-      this.hrService
-        .updateEmployeeTrainCourseInfo(this.data, this.funcID)
-        .subscribe((res) => {
-          if (res) {
-            this.notify.notifyCode('SYS007');
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService)
-            //     .update(res)
-            //     .subscribe();
-            // }
-            if (closeForm) {
-              this.dialog && this.dialog.close();
-            }
-          } else this.notify.notifyCode('SYS021');
-        });
     }
   }
+  // onSaveForm(closeForm: boolean) {
+  //   this.formGroup.patchValue({
+  //     trainFromDate: new Date(),
+  //     trainToDate: new Date(),
+  //   });
 
-  onSaveForm2() {
-    this.hrService.AddECertificateInfo(this.dataForm2).subscribe((p) => {
-      if (p) {
-        this.notify.notifyCode('SYS006');
-        this.dialog.close();
-      } else this.notify.notifyCode('SYS023');
-    });
-  }
+  //   if (this.formGroup.invalid) {
+  //     this.hrService.notifyInvalid(this.formGroup, this.formModel);
+  //     return;
+  //   }
+
+  //   if (this.data.contractFrom > this.data.contractTo) {
+  //     this.hrService.notifyInvalidFromTo(
+  //       'ContractFrom',
+  //       'ContractTo',
+  //       this.formModel
+  //     );
+  //     return;
+  //   }
+
+  //   if (this.actionType == 'add' || this.actionType == 'copy') {
+  //     Code cung
+  //     this.data.trainCourseID = '123';
+  //     this.data.employeeID = this.employId;
+
+  //     this.hrService
+  //       .addETraincourse(this.data, this.funcID)
+  //       .subscribe((res) => {
+  //         if (res) {
+  //           this.notify.notifyCode('SYS006');
+  //           this.actionType = 'edit';
+  //           if (this.listView) {
+  //             (this.listView.dataService as CRUDService).add(res).subscribe();
+  //           }
+  //           if (closeForm) {
+  //             this.dialog && this.dialog.close();
+  //           }
+  //         }
+  //       });
+  //   } else {
+  //     this.hrService
+  //       .updateEmployeeTrainCourseInfo(this.data, this.funcID)
+  //       .subscribe((res) => {
+  //         if (res) {
+  //           this.notify.notifyCode('SYS007');
+  //           if (this.listView) {
+  //             (this.listView.dataService as CRUDService)
+  //               .update(res)
+  //               .subscribe();
+  //           }
+  //           if (closeForm) {
+  //             this.dialog && this.dialog.close();
+  //           }
+  //         } else this.notify.notifyCode('SYS021');
+  //       });
+  //   }
+  // }
+
+  // onSaveForm2() {
+  //   this.hrService.AddECertificateInfo(this.dataForm2).subscribe((p) => {
+  //     if (p) {
+  //       this.notify.notifyCode('SYS006');
+  //       this.dialog.close();
+  //     } else this.notify.notifyCode('SYS023');
+  //   });
+  // }
 
   // afterRenderListView(event) {
   //   this.listView = event;
@@ -309,4 +318,37 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       this.notify.notifyCode('Chưa chọn nơi đào tạo');
     }
   }
+  
+  Date(date){
+    return new Date(date);
+  }
+  changeCalendar(event, changeType: string) {
+    let yearFromDate = event.fromDate.getUTCFullYear();
+    let monthFromDate = event.fromDate.getUTCMonth() + 2;
+    let dayFromDate = event.fromDate.getUTCDate();
+    var strYear = `${yearFromDate}`;
+    var strMonth = `${yearFromDate}/${monthFromDate}`;
+    var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
+
+    if (changeType === 'FromDate') {
+      if (event.type === 'year') {
+        this.trainCourseObj.trainFrom = strYear;
+      } else if (event.type === 'month') {
+        this.trainCourseObj.trainFrom = strMonth;
+      } else {
+        this.trainCourseObj.trainFrom = strDay;
+      }
+      this.trainCourseObj.trainFromDate = event.fromDate;
+    } else if (changeType === 'ToDate') {
+      if (event.type === 'year') {
+        this.trainCourseObj.trainTo = strYear;
+      } else if (event.type === 'month') {
+        this.trainCourseObj.trainTo = strMonth;
+      } else {
+        this.trainCourseObj.trainTo = strDay;
+      }
+      this.trainCourseObj.trainToDate = event.fromDate;
+    }
+  }
+
 }
