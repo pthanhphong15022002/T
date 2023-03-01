@@ -1330,8 +1330,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             step['taskGroups'] = taskGroupConvert;
 
             let taskGroup = new DP_Steps_TaskGroups();
-            taskGroup['task'] = taskGroupList[this.guidEmpty] || [];
-            taskGroup['recID'] = this.guidEmpty; // group task rỗng để kéo ra ngoài
+            taskGroup['task'] = taskGroupList['null'] || [];
+            taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
             step['taskGroups'].push(taskGroup);
 
             this.stepList.push(step);
@@ -1508,7 +1508,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (index === 0) {
         let taskGroup = new DP_Steps_TaskGroups();
         taskGroup['task'] = [];
-        taskGroup['recID'] = this.guidEmpty; // group task rỗng để kéo ra ngoài
+        taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
         this.taskGroupList.push(taskGroup);
       }
       this.taskGroupList.splice(index - 1, 0, this.taskGroup);
@@ -1590,7 +1590,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.taskGroupList,
       dataInput || {},
       this.taskList,
-      this.groupTaskID || this.guidEmpty,
+      this.groupTaskID || null,
     ];
     var functionID = "DPT0206" //id tuy chojn menu ne
     this.cache.functionList(functionID).subscribe((f) => {
@@ -1610,7 +1610,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
           dialog.closed.subscribe((e) => {
             if (e?.event) {
-              this.groupTaskID = this.guidEmpty;
+              this.groupTaskID = null;
               let taskData = e?.event?.data;
               if (e.event?.status === 'add' || e.event?.status === 'copy') {
                 let index = this.taskGroupList.findIndex(
@@ -1822,7 +1822,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     } else {
       let groupTaskIdOld = '';
       let dataDrop = event.previousContainer.data[event.previousIndex];
-      if (data['recID'] != this.guidEmpty) {
+      if (data['recID']) {
         let maxHour = this.calculateTimeTaskInGroup(
           event.container.data,
           dataDrop['recID'],
