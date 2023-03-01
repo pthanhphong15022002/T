@@ -3571,12 +3571,16 @@
 
             <div class="mb-1">
               <div class="d-flex flex-wrap mt-6 mb-3">
-                <div  *ngFor="let asset of lstAsset">
-                  <div class="badge border-0 me-2 badge-primary" [style.background]="getAssetBackgroundColor(asset)" [style.color]="getAssetFontColor(asset)">
+                <div *ngFor="let asset of lstAsset">
+                  <div
+                    class="badge border-0 me-2 badge-primary"
+                    [style.background]="getAssetBackgroundColor(asset)"
+                    [style.color]="getAssetFontColor(asset)"
+                  >
                     {{
-                    asset
-                    | formatvalue : eAssetFormModel : "assetCategory"
-                    | async
+                      asset
+                        | formatvalue : eAssetFormModel : "assetCategory"
+                        | async
                     }}
                   </div>
                 </div>
@@ -4067,7 +4071,11 @@
               </div>
             </div>
 
-            <div>Tiêu chuẩn phép năm: 14 ngày/năm | Còn lại năm trước: 1.5 ngày - Còn năm nay: 12 ngày. String này đang gán cứng chờ module phát triển</div>
+            <div>
+              Tiêu chuẩn phép năm: 14 ngày/năm | Còn lại năm trước: 1.5 ngày -
+              Còn năm nay: 12 ngày. String này đang gán cứng chờ module phát
+              triển
+            </div>
 
             <div class="mb-1">
               <div
@@ -4381,6 +4389,7 @@
                   [pageSize]="numPageSizeGridView"
                   [entityName]="'HR_EDegrees'"
                   [rowHeight]="50"
+                  [sort]="[createOnSortModel]"
                   height="240px"
                 ></codx-gridview>
               </div>
@@ -4626,7 +4635,7 @@
                       <div class="sk-item">8</div>
                     </div>
                   </div> -->
-              <div *ngIf="ViewAllEskillFlag == true">
+              <div *ngIf="ViewAllEskillFlag">
                 <div
                   class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5"
                 >
@@ -5743,7 +5752,11 @@
 
 <ng-template #templateEAssetCol1 let-data>
   <div>
-    <div class="badge border-0 me-2 badge-primary" [style.background]="getAssetBackgroundColor(data.assetCategory)" [style.color]="getAssetFontColor(data.assetCategory)">
+    <div
+      class="badge border-0 me-2 badge-primary"
+      [style.background]="getAssetBackgroundColor(data.assetCategory)"
+      [style.color]="getAssetFontColor(data.assetCategory)"
+    >
       {{
         data?.assetCategory
           | formatvalue : eAssetFormModel : "assetCategory"
@@ -5763,14 +5776,17 @@
     {{ data?.issuedDate | fmDT }}
     <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
   </div>
-  <div *ngIf="data?.isAllowReturn == true" class="badge border-0 me-2 badge-primary">
+  <div
+    *ngIf="data?.isAllowReturn == true"
+    class="badge border-0 me-2 badge-primary"
+  >
     {{ eAssetHeaderText["IsAllowReturn"] }}
   </div>
 </ng-template>
 
 <ng-template #templateEAssetCol3 let-data>
   <div class="has-action-menu min-h-40px">
-    <div *ngIf="data?.isReturned == true" class="has-action-menu" >
+    <div *ngIf="data?.isReturned == true" class="has-action-menu">
       <div class="badge border-0 me-2 badge-primary">
         {{ eAssetHeaderText["IsReturned"] }}
       </div>
@@ -6224,7 +6240,7 @@
 </ng-template>
 
 <ng-template #templateTrainCourseGridCol3 let-data>
-  <div class="has-action-menu">
+  <div class="has-action-menu min-h-40px">
     <div>
       {{
         data?.trainSupplierID
@@ -6564,7 +6580,7 @@
 </ng-template>
 
 <ng-template #templateAwardGridCol3 let-data>
-  <div class="has-action-menu fw-bold">
+  <div class="has-action-menu fw-bold min-h-40px">
     {{ data?.reason | formatvalue : awardFormModel : "reason" | async }}
     <codx-mfunc
       [formModel]="awardFormModel"
@@ -6614,7 +6630,7 @@
   </div>
 </ng-template>
 <ng-template #templateDisciplineGridCol3 let-data>
-  <div class="has-action-menu">
+  <div class="has-action-menu min-h-40px">
     {{ data?.reason }}
     <codx-mfunc
       [formModel]="eDisciplineFormModel"
@@ -6657,7 +6673,7 @@
   </div>
 </ng-template>
 <ng-template #templateDiseasesGridCol3 let-data>
-  <div class="has-action-menu">
+  <div class="has-action-menu min-h-40px">
     {{
       data?.conclusion | formatvalue : eDiseasesFormModel : "Conclusion" | async
     }}
@@ -6725,7 +6741,7 @@
 </ng-template>
 
 <ng-template #templateEAccidentCol3 let-data>
-  <div class="has-action-menu">
+  <div class="has-action-menu min-h-40px">
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-2">
         <span class="text-dark">
