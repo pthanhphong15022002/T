@@ -1384,12 +1384,12 @@ export class EmployeeDetailComponent extends UIComponent {
         {
           headerText: basicSalaryHeaderText['BSalary'],
           template: this.basicSalaryCol1,
-          width: '150',
+          width: '100',
         },
         {
           headerText: basicSalaryHeaderText['SISalary'],
           template: this.basicSalaryCol2,
-          width: '150',
+          width: '100',
         },
         {
           headerText:
