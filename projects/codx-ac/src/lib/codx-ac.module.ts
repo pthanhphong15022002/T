@@ -55,6 +55,7 @@ import { ArPostingAccountsComponent } from './ar-posting-accounts/ar-posting-acc
 import { PopAddArComponent } from './ar-posting-accounts/pop-add-ar/pop-add-ar.component';
 import { APPostingAccountsComponent } from './apposting-accounts/apposting-accounts.component';
 import { PopupAddAPPostingAccountComponent } from './apposting-accounts/popup-add-apposting-account/popup-add-apposting-account.component';
+import { PopAddItemComponent } from './item-posting-accounts/pop-add-item/pop-add-item.component';
 
 export const routes: Routes = [
   {
@@ -170,6 +171,7 @@ export const routes: Routes = [
     PopAddArComponent,
     APPostingAccountsComponent,
     PopupAddAPPostingAccountComponent,
+    PopAddItemComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
