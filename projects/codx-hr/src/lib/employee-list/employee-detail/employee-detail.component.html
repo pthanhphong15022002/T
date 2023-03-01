@@ -4380,6 +4380,7 @@
                   [pageSize]="numPageSizeGridView"
                   [entityName]="'HR_EDegrees'"
                   [rowHeight]="50"
+                  [sort]="[createOnSortModel]"
                   height="240px"
                 ></codx-gridview>
               </div>
@@ -4625,7 +4626,7 @@
                       <div class="sk-item">8</div>
                     </div>
                   </div> -->
-              <div *ngIf="ViewAllEskillFlag == true">
+              <div *ngIf="ViewAllEskillFlag">
                 <div
                   class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5"
                 >
@@ -6230,7 +6231,7 @@
 </ng-template>
 
 <ng-template #templateTrainCourseGridCol3 let-data>
-  <div class="has-action-menu">
+  <div class="has-action-menu min-h-40px">
     <div>
       {{
         data?.trainSupplierID
@@ -6570,7 +6571,7 @@
 </ng-template>
 
 <ng-template #templateAwardGridCol3 let-data>
-  <div class="has-action-menu fw-bold">
+  <div class="has-action-menu fw-bold min-h-40px">
     {{ data?.reason | formatvalue : awardFormModel : "reason" | async }}
     <codx-mfunc
       [formModel]="awardFormModel"
@@ -6620,7 +6621,7 @@
   </div>
 </ng-template>
 <ng-template #templateDisciplineGridCol3 let-data>
-  <div class="has-action-menu">
+  <div class="has-action-menu min-h-40px">
     {{ data?.reason }}
     <codx-mfunc
       [formModel]="eDisciplineFormModel"
@@ -6663,7 +6664,7 @@
   </div>
 </ng-template>
 <ng-template #templateDiseasesGridCol3 let-data>
-  <div class="has-action-menu">
+  <div class="has-action-menu min-h-40px">
     {{
       data?.conclusion | formatvalue : eDiseasesFormModel : "Conclusion" | async
     }}
@@ -6731,7 +6732,7 @@
 </ng-template>
 
 <ng-template #templateEAccidentCol3 let-data>
-  <div class="has-action-menu">
+  <div class="has-action-menu min-h-40px">
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-2">
         <span class="text-dark">
