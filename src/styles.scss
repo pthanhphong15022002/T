@@ -81,7 +81,7 @@ textarea.e-input,
 
 .popover-body {
   padding: 1rem;
-  max-height: 340px;
+  max-height: 360px;
   overflow: auto;
 }
 
@@ -1683,20 +1683,20 @@ codx-share .role-group div.user-mini-nav {
   margin: 0 !important;
 }
 
-codx-toolbar codx-searchbar {
-  width: 280px !important;
-  display: flex;
-  justify-content: end;
-}
+// codx-toolbar codx-searchbar {
+//   width: 280px !important;
+//   display: flex;
+//   justify-content: end;
+// }
 
-codx-toolbar .codx-search.codx-search-slide {
-  width: 250px !important;
-}
+// codx-toolbar .codx-search.codx-search-slide {
+//   width: 250px !important;
+// }
 
-codx-toolbar .codx-search.codx-search-slide input {
-  width: 220px !important;
-  text-overflow: ellipsis;
-}
+// codx-toolbar .codx-search.codx-search-slide input {
+//   width: 220px !important;
+//   text-overflow: ellipsis;
+// }
 
 .assign-refer .container {
   padding: 0 !important;
