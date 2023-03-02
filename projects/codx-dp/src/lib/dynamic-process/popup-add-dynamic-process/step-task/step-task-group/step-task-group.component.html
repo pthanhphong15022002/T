@@ -4,7 +4,7 @@
   [body]="addGroupJobBody"
   [footer]="addGroupJobFooter"
   [dialog]="dialog"
-  [formModel]="grvTaskGroupsForm"
+  [formModel]="formModel"
 ></codx-form>
 
 <ng-template #addGroupJobBody>
@@ -13,13 +13,13 @@
       <div>
         <codx-label
           fiedName="taskGroupName"
-          [formModel]="grvTaskGroupsForm"
+          [formModel]="formModel"
           default="Tên nhóm công việc"
         ></codx-label>
       </div>
       <codx-input
         field="taskGroupName"
-        [formModel]="grvTaskGroupsForm"
+        [formModel]="formModel"
         [Group]=""
         [crrValue]="taskGroup?.taskGroupName"
         type="text"
@@ -34,7 +34,7 @@
         <div>
           <codx-label
             fiedName="durationDay"
-            [formModel]="grvTaskGroupsForm"
+            [formModel]="formModel"
             default="Thời gian dự kiến"
           ></codx-label>
         </div>
@@ -42,7 +42,7 @@
           <codx-input
             field="durationDay"
             [crrValue]="taskGroup?.durationDay"
-            (valueChange)="changeValueInput($event, taskGroup)"
+            (valueChange)="changeValueNumber($event)"
             [height]="'100'"
             [type]="'number'"
             [min]="0"
@@ -54,7 +54,7 @@
           >
             <codx-label
               fiedName="StepName"
-              [formModel]="grvTaskGroupsForm"
+              [formModel]="formModel"
               default="Ngày"
             ></codx-label>
           </div>
@@ -65,13 +65,13 @@
           <codx-label
             [default]="'Thời gian còn lại: '"
           ></codx-label>
-          <span style="color: rgb(255, 1, 1);"> 1 ngày 1 giờ</span>
+          <span style="color: rgb(255, 1, 1);"> {{days}} ngày {{hours}} giờ</span>
         </div>
         <div class="position-relative">
           <codx-input
             field="durationHour"
             [crrValue]="taskGroup?.durationHour"
-            (valueChange)="changeValueInput($event, taskGroup)"
+            (valueChange)="changeValueNumber($event)"
             [showSpinButton]="false"
             [height]="'100'"
             type="number"
@@ -83,7 +83,7 @@
           >
             <codx-label
               fiedName="StepName"
-              [formModel]="grvTaskGroupsForm"
+              [formModel]="formModel"
               default="Giờ"
             ></codx-label>
           </div>
@@ -100,13 +100,13 @@
       <div>
         <codx-label
           fiedName="memo"
-          [formModel]="grvTaskGroupsForm"
+          [formModel]="formModel"
           default="Ghi chú"
         ></codx-label>
       </div>
       <codx-input
         field="memo"
-        [formModel]="grvTaskGroupsForm"
+        [formModel]="formModel"
         type="textarea"
         headerposition="none"
         format="ed"

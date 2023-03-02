@@ -57,7 +57,7 @@ const socialConfigFactory = () => {
       setTimeout(() => {
         let providers = [];
 
-        if (environment.saas == 1) {
+        if (environment.saas == 1 && environment.externalLogin) {
           if (environment.externalLogin.amazonId) {
             providers.push({
               id: AmazonLoginProvider.PROVIDER_ID,

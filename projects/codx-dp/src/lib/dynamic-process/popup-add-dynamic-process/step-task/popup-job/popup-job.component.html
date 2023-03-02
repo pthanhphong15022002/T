@@ -6,7 +6,7 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
-  [formModel]="frmModel"
+  [formModel]="dialog.formModel"
   [data]="stepsTasks"
   [openMore]="false"
 ></codx-form>
@@ -64,7 +64,7 @@
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
             (valueChange)="filterText($event, 'taskGroupID')"
-            [readonly]="taskGroupID !== guidEmpty"
+            [readonly]="taskGroupID"
           ></ejs-dropdownlist>
         </div>
       </div>
@@ -172,7 +172,7 @@
         <codx-label
           fiedName="Reference"
           [formModel]="form?.formModel"
-          default="Bảng khảo sát"
+        
         ></codx-label>
         <a
           class="d-flex justify-content-end align-items-center cursor-pointer"
@@ -187,6 +187,7 @@
       <codx-input
         field="reference"
         [formModel]="form?.formModel"
+        [Group]="form?.formGroup"
         (valueChange)="changeQuestion($event)"
       >
       </codx-input>
