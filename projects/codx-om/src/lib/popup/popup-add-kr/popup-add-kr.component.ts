@@ -97,7 +97,8 @@ export class PopupAddKRComponent extends UIComponent {
 
   onInit(): void {
     this.getCacheData();
-    this.getParameter();
+    this.getParameter();          
+    this.getCurrentKR();
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache & Param-----------------------------//
@@ -147,8 +148,7 @@ export class PopupAddKRComponent extends UIComponent {
         this.omSetting = JSON.parse(param.dataValue);
         this.defaultFequence=this.omSetting?.Frequency;
         this.defaultCheckInDay= this.omSetting?.CheckIn?.Day;
-        this.defaultCheckInTime= this.omSetting?.CheckIn?.Time;        
-        this.getCurrentKR();
+        this.defaultCheckInTime= this.omSetting?.CheckIn?.Time;  
       }
     })
   }
@@ -323,10 +323,10 @@ export class PopupAddKRComponent extends UIComponent {
       }
     }
   }
-  mapDefaultValueToData(kr:any){
-    kr.frequence=this.defaultFequence;
-    kr.checkIn={day:this.defaultCheckInDay,time:this.defaultCheckInTime}
-  }
+  // mapDefaultValueToData(kr:any){
+  //   kr.frequence=this.defaultFequence;
+  //   kr.checkIn={day:this.defaultCheckInDay,time:this.defaultCheckInTime}
+  // }
   afterOpenAddForm(krModel: any) {
     this.kr = krModel;
     if (this.kr?.targets &&  this.kr?.targets !=null && this.kr?.targets.length > 0) {
@@ -335,7 +335,7 @@ export class PopupAddKRComponent extends UIComponent {
       this.kr.shares = [];
       this.kr.checkIns = [];
     }
-    this.mapDefaultValueToData(this.kr);
+    //this.mapDefaultValueToData(this.kr);
   }
   afterOpenEditForm(krModel: any) {
     this.kr = krModel;
@@ -343,10 +343,8 @@ export class PopupAddKRComponent extends UIComponent {
       this.planVLL = this.monthVLL?.datas;
     } else if (this.kr?.plan == OMCONST.VLL.Plan.Quarter) {
       this.planVLL = this.quarterVLL.datas;
-    }    
-    if(this.kr.checkIn==null){      
-      this.kr.checkIn={day:this.defaultCheckInDay,time:this.defaultCheckInTime}
-    }
+    }   
+    
   }
   afterOpenCopyForm(krModel: any) {
     this.cache
@@ -366,7 +364,7 @@ export class PopupAddKRComponent extends UIComponent {
           this.kr = krModel;
           this.kr.shares = [];
           this.kr.checkIns = [];          
-        this.mapDefaultValueToData(this.kr);
+        //this.mapDefaultValueToData(this.kr);
         }
       });
   }

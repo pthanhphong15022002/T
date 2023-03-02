@@ -169,7 +169,8 @@ export class OkrTargetsComponent implements OnInit {
     
     this.button = {
       id: 'btnAdd',
-      text:'Thêm mục tiêu',
+      separator:true,
+      hasSet:true,
       items:[
         {
           text:'Thêm mục tiêu',
@@ -186,26 +187,13 @@ export class OkrTargetsComponent implements OnInit {
       if (omSetting) {
         let settingVal = JSON.parse(omSetting?.dataValue);
         if(settingVal!=null && (settingVal?.UseSubKR=='1' || settingVal?.UseSubKR==true)){
-          this.button =
-          {
-            id: 'btnAdd',
-            text:'Thêm mục tiêu',
-            items:[
-              {
-                text:'Thêm mục tiêu',
-                id:'btnAddO',
-                
-              },
-              {
-                text:'Thêm kết quả then chốt',
-                id:'btnAddKR',
-              },
-              {
+          this.button.items.push(
+            {
                 text:'Thêm kết quả then chốt cấp con',
                 id:'btnAddSKR',
-              }
-            ]
-          };
+            }
+          )
+          
           
         }
         

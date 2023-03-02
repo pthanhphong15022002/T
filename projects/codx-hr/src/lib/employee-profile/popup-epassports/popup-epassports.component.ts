@@ -33,7 +33,6 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   employId;
   @ViewChild('form') form: CodxFormComponent;
-  // @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
     injector: Injector,
@@ -50,16 +49,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
-    this.passportObj = JSON.stringify(data?.data?.passportObj);
-    // this.lstPassports = data?.data?.lstPassports;
-    // this.indexSelected =
-    //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
-
-    // if (this.actionType === 'edit' || this.actionType === 'copy') {
-    //   this.passportObj = JSON.parse(
-    //     JSON.stringify(this.lstPassports[this.indexSelected])
-    //   );
-    // }
+    this.passportObj = JSON.parse(JSON.stringify(data?.data?.passportObj));
   }
 
   onInit(): void {
@@ -77,26 +67,18 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
             });
         }
       });
-    } else this.initForm();
+    } else {
+      this.hrService
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .then((fg) => {
+          if (fg) {
+            this.formGroup = fg;
+            this.initForm();
+          }
+        });
+    }
   }
   initForm() {
-    // this.hrService
-    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    //   .then((item) => {
-    //     this.formGroup = item;
-    //     if(this.actionType == 'add'){
-    //       this.hrService.getEmployeePassportModel().subscribe(p => {
-    //         console.log('thong tin ho chieu', p);
-    //         this.passportObj = p;
-    //         this.formModel.currentData = this.passportObj
-    //         // this.dialog.dataService.dataSelected = this.data
-    //         console.log('du lieu formmodel',this.formModel.currentData);
-    //       })
-    //     }
-    //     this.formGroup.patchValue(this.passportObj)
-    //     this.isAfterRender = true
-    //   });
-
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
@@ -120,6 +102,14 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
         });
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
+        if (this.actionType == 'copy') {
+          if (this.passportObj.issuedDate == '0001-01-01T00:00:00') {
+            this.passportObj.issuedDate = null;
+          }
+          if (this.passportObj.expiredDate == '0001-01-01T00:00:00') {
+            this.passportObj.expiredDate = null;
+          }
+        }
         this.formGroup.patchValue(this.passportObj);
         this.formModel.currentData = this.passportObj;
         this.cr.detectChanges();
@@ -129,9 +119,6 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    // if (this.actionType === 'copy' || this.actionType === 'add') {
-    //   delete this.passportObj.recID;
-    // }
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -144,12 +131,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
           if (p != null) {
             this.passportObj = p;
             this.notify.notifyCode('SYS006');
-            // this.lstPassports.push(JSON.parse(JSON.stringify(this.passportObj)));
-            // if(this.listView){
-            //   (this.listView.dataService as CRUDService).add(this.passportObj).subscribe();
-            // }
             this.dialog && this.dialog.close(this.passportObj);
-            // this.dialog.close(p)
           } else this.notify.notifyCode('SYS023');
         });
     } else {
@@ -158,33 +140,9 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            // this.lstPassports[this.indexSelected] = p;
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService)
-            //     .update(this.lstPassports[this.indexSelected])
-            //     .subscribe();
-            // }
             this.dialog && this.dialog.close(this.passportObj);
-
-            // this.dialog.close(this.data)
           } else this.notify.notifyCode('SYS021');
         });
     }
   }
-
-  // click(data) {
-  //   this.passportObj = data;
-  //   this.formModel.currentData = JSON.parse(JSON.stringify(this.passportObj));
-  //   this.indexSelected = this.lstPassports.findIndex(
-  //     (p) => p.recID == this.passportObj.recID
-  //   );
-  //   this.actionType = 'edit';
-  //   this.formGroup?.patchValue(this.passportObj);
-  //   this.cr.detectChanges();
-  // }
-
-  // afterRenderListView(evt) {
-  //   this.listView = evt;
-  //   console.log(this.listView);
-  // }
 }

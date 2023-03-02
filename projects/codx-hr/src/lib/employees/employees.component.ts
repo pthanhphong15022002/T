@@ -376,9 +376,9 @@ export class EmployeesComponent extends UIComponent {
     popup.closed.subscribe((e) => {
       if (e?.event) {
         var emp = e.event;
-        if (emp.status === '90') {
+        if (emp.status === '90')
           this.view.dataService.remove(emp).subscribe();
-        } else this.view.dataService.update(emp).subscribe();
+        else this.view.dataService.update(emp).subscribe();
       }
       this.detectorRef.detectChanges();
     });

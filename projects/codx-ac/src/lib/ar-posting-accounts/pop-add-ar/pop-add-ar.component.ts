@@ -87,19 +87,19 @@ export class PopAddArComponent extends UIComponent implements OnInit {
   }
   valueChangeCustLevel(e: any) {
     this.arposting.custSelection = '';
-    switch (e.data) {
-      case '3':
-        this.arposting.custSelection = '0';
-        break;
+    if (e.data == '3') {
+      this.gridViewSetup['CustSelection'].isRequire = false;
+    }else{
+      this.gridViewSetup['CustSelection'].isRequire = true;
     }
     this.arposting[e.field] = e.data;
   }
   valueChangeItemLevel(e: any) {
     this.arposting.itemSelection = '';
-    switch (e.data) {
-      case '4':
-        this.arposting.itemSelection = '0';
-        break;
+    if (e.data == '4') {
+      this.gridViewSetup['ItemSelection'].isRequire = false;
+    }else{
+      this.gridViewSetup['ItemSelection'].isRequire = true;
     }
     this.arposting[e.field] = e.data;
   }

@@ -312,11 +312,17 @@
             </div>
 
             <div class="d-flex align-items-center mb-2">
-              <span class="text-dark d-flex flex-wrap align-items-center" *ngIf="lstOrg">
+              <span
+                class="text-dark d-flex flex-wrap align-items-center"
+                *ngIf="lstOrg"
+              >
                 <ng-container *ngFor="let org of lstOrg; let i = index">
-                  <span class="icon-connection-point icon-16 me-1" *ngIf="i == 0"></span>
+                  <span
+                    class="icon-connection-point icon-16 me-1"
+                    *ngIf="i == 0"
+                  ></span>
                   <span class="icon-i-dot text-gray-500" *ngIf="i > 0"></span>
-                  <span>{{org.orgUnitName}}</span>
+                  <span>{{ org.orgUnitName }}</span>
                 </ng-container>
               </span>
             </div>
@@ -606,11 +612,14 @@
         <div class="card card-flush">
           <div class="d-flex flex-column" *ngIf="lstBtnAdd">
             <ng-container *ngFor="let item of lstBtnAdd">
-              <a class="nav-link w-100 btn btn-flex btn-active-light-primary" (click)="add(item.functionID)">
+              <a
+                class="nav-link w-100 btn btn-flex btn-active-light-primary"
+                (click)="add(item.functionID)"
+              >
                 <span class="me-2">
                   <span class="icon-person icon-18"></span>
                 </span>
-                <div class="fw-bold"> {{item.customName}} </div>
+                <div class="fw-bold">{{ item.customName }}</div>
               </a>
             </ng-container>
           </div>
@@ -1619,7 +1628,7 @@
               <div class="d-flex flex-wrap py-3">
                 <ng-container *ngFor="let item of lstFamily">
                   <div
-                    class="border rounded border-gray-300 min-w-250px mw-400px me-4 mb-4"
+                    class="border rounded border-gray-200 min-w-250px mw-400px me-4 mb-4"
                   >
                     <!-- <codx-temp-full
                       (clickMF)="clickMF($event, item, 'family')"
@@ -3007,17 +3016,17 @@
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
-                <button
-                  class="btn btn-icon btn-sm position-relative ms-2"
+                <button type="button"
+                  class="btn btn-icon btn-sm btn-white"
                   (click)="
                     HandleEmployeeBasicSalariesInfo(addHeaderText, 'add', null)
                   "
                 >
                   <span
-                    class="icon-add icon-18 text-gray-600 text-hover-primary"
+                    class="icon-add icon-18"
                   ></span>
                 </button>
-                <span class="text-gray-500 mx-2">|</span>
+                <span class="text-gray-400 me-3 ms-1">|</span>
                 <codx-label
                   class="me-3"
                   name="lblSeeAllEBenefit"
@@ -3026,7 +3035,6 @@
                 >
                 </codx-label>
                 <codx-input
-                  class="ms-1"
                   type="switch"
                   (valueChange)="valueChangeViewAllEBasicSalary($event)"
                   [checked]="ViewAllEBasicSalaryFlag"
@@ -3139,7 +3147,9 @@
                     >
                     </codx-label>
                     <span class="text-gray-500 mx-2"> | </span>
-                    <span class="text-gray-500">({{ eBasicSalaryRowCount }})</span>
+                    <span class="text-gray-500"
+                      >({{ eBasicSalaryRowCount }})</span
+                    >
                   </div>
                 </div>
                 <div class="profile-grid">
@@ -3186,26 +3196,25 @@
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
-                <button
-                  class="btn btn-icon btn-sm position-relative ms-2"
+                <button type="button"
+                  class="btn btn-icon btn-sm btn-white"
                   (click)="
                     HandleEmployeeJobSalariesInfo(addHeaderText, 'add', null)
                   "
                 >
-                  <span
-                    class="icon-add icon-20 text-gray-600 text-hover-primary"
-                  ></span>
+                  <i
+                    class="icon-add icon-18"
+                  ></i>
                 </button>
-                <span class="text-gray-500 mx-2">|</span>
+                <span class="text-gray-400 me-3 ms-1">|</span>
                 <codx-label
-                  class="me-2"
+                  class="me-3"
                   name="lblSeeAllEBenefit"
                   [formModel]="view.formModel"
                   default="Xem tất cả"
                 >
                 </codx-label>
                 <codx-input
-                  class="ms-1"
                   type="switch"
                   (valueChange)="valueChangeViewAllEJobSalary($event)"
                   [checked]="ViewAllEJobSalaryFlag"
@@ -3297,7 +3306,9 @@
                     >
                     </codx-label>
                     <span class="text-gray-500 mx-2"> | </span>
-                    <span class="text-gray-500">({{ eJobSalaryRowCount }})</span>
+                    <span class="text-gray-500"
+                      >({{ eJobSalaryRowCount }})</span
+                    >
                   </div>
                 </div>
                 <div class="profile-grid">
@@ -3340,16 +3351,14 @@
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
-                <button
-                  class="btn btn-icon btn-sm position-relative ms-2"
+                <button type="button"
+                  class="btn btn-icon btn-sm btn-white"
                   (click)="handlEmployeeBenefit(addHeaderText, 'add', null)"
                 >
-                  <span
-                    class="icon-add icon-20 text-gray-600 text-hover-primary"
-                  ></span>
+                  <i class="icon-add icon-18"></i>
                 </button>
-                <span class="text-gray-500 ms-2">|</span>
-                <codx-label name="lblSeeAllEBenefit" default="Xem tất cả">
+                <span class="text-gray-400 me-3 ms-1">|</span>
+                <codx-label class="me-3" name="lblSeeAllEBenefit" default="Xem tất cả">
                 </codx-label>
                 <codx-input
                   type="switch"
@@ -3362,7 +3371,7 @@
             <div class="d-flex flex-wrap py-3 px-4">
               <ng-container *ngFor="let benefit of listCrrBenefit">
                 <div
-                  class="border rounded min-w-250px mw-250px me-4 mb-2"
+                  class="border border-gray-200 rounded min-w-250px mw-250px me-4 mb-2"
                   *ngIf="benefit != null"
                 >
                   <codx-temp-full
@@ -3413,17 +3422,22 @@
               </ng-container>
             </div>
             <div *ngIf="ViewAllEBenefitFlag == true">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5"
-              >
-                <div class="d-flex me-3">
-                  <codx-label default="Chi tiết" class="text-uppercase">
-                  </codx-label>
-                  <span class="text-gray-500 ms-2"> | </span>
-                  <span>({{ eBenefitRowCount }})</span>
+              <div class="d-flex justify-content-between align-items-center mt-5 mb-3">
+                <div class="d-flex align-items-center">
+                  <span class="icon-i-filter-right icon-20 me-2"></span>
+                  <div class="d-flex align-items-center me-3">
+                    <codx-label
+                      default="Chi tiết"
+                      class="fw-bold text-uppercase fs-5 text-gray-600">
+                    </codx-label>
+                    <span class="text-gray-500 mx-2"> | </span>
+                    <span class="text-gray-500">({{ eBenefitRowCount }})</span>
+                  </div>
                 </div>
-                <div class="d-flex me-3">
-                  <codx-dropdown-select
+
+                <div class="d-flex align-items-center">
+                  <span class="ms-2">
+                    <codx-dropdown-select
                     *ngIf="eBenefitGrvSetup"
                     [cssClass]="'rounded-pill border-1'"
                     cssPopup="h-350px w-300px"
@@ -3434,7 +3448,9 @@
                     [refValue]="eBenefitGrvSetup?.BenefitID?.referedValue"
                     (valueChange)="valueChangeFilterBenefit($event)"
                   ></codx-dropdown-select>
-                  <codx-dropdown-calendar
+                  </span>
+                  <span class="ms-2">
+                    <codx-dropdown-calendar
                     [cssPopup]="'w-600px h-400px'"
                     emptyText="Chọn năm"
                     [firstChange]="false"
@@ -3443,6 +3459,7 @@
                     [cssClass]="'rounded-pill'"
                     (change)="valueChangeYearFilterBenefit($event)"
                   ></codx-dropdown-calendar>
+                  </span>
                 </div>
               </div>
 
@@ -3461,8 +3478,7 @@
                   [dataValues]="employeeID"
                   [pageSize]="numPageSizeGridView"
                   [entityName]="'HR_EBenefits'"
-                  [rowHeight]="50"
-                  height="240px"
+                  [rowHeight]="30"
                 ></codx-gridview>
               </div>
             </div>
@@ -3487,16 +3503,16 @@
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
-                <button
-                  class="btn btn-icon btn-sm position-relative ms-2"
+                <button type="button"
+                  class="btn btn-icon btn-sm btn-white"
                   (click)="HandlemployeeAssetInfo(addHeaderText, 'add', null)"
                 >
                   <span
-                    class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    class="icon-add icon-18"
                   ></span>
                 </button>
-                <span class="text-gray-500 mx-2">|</span>
-                <codx-label name="lblSeeAllEAsset" default="Xem tất cả">
+                <span class="text-gray-400 ms-1 me-3">|</span>
+                <codx-label class="me-3" name="lblSeeAllEAsset" default="Xem tất cả">
                 </codx-label>
                 <codx-input
                   type="switch"
@@ -3574,8 +3590,7 @@
                   [dataValues]="employeeID"
                   [pageSize]="numPageSizeGridView"
                   [entityName]="'HR_EAssets'"
-                  [rowHeight]="50"
-                  height="240px"
+                  [rowHeight]="30"
                 ></codx-gridview>
                 <!-- <div class="d-flex flex-wrap mt-6 mb-3">
                 <div
@@ -4325,7 +4340,7 @@
                   [pageSize]="numPageSizeGridView"
                   [entityName]="'HR_EDegrees'"
                   [rowHeight]="50"
-                  [sort]="[createOnSortModel]"
+                  [sort]="[issuedDateSortModel]"
                   height="240px"
                 ></codx-gridview>
               </div>
@@ -4435,6 +4450,7 @@
                   #eCertificateGridView
                   [formModel]="eCertificateFormModel"
                   [columnsGrid]="eCertificateColumnGrid"
+                  [sort]="[issuedDateSortModel]"
                   [service]="'HR'"
                   [assemblyName]="'Core'"
                   [className]="'DataBusiness'"
@@ -4488,16 +4504,6 @@
                   (valueChange)="valueChangeViewAllESkill($event)"
                   [checked]="ViewAllEskillFlag"
                 ></codx-input>
-
-                <!-- <span class="text-gray-500 ms-2">|</span>
-                <button
-                  class="btn btn-icon btn-sm position-relative ms-1"
-                  (click)="addSkill()"
-                >
-                  <span
-                    class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
-                  ></span>
-                </button> -->
               </div>
             </div>
             <div class="mb-1">
@@ -4705,6 +4711,7 @@
                     #eTrainCourseGridView
                     [formModel]="eTrainCourseFormModel"
                     [columnsGrid]="eTrainCourseColumnGrid"
+                    [sort]="[TrainFromDateSortModel]"
                     [service]="'HR'"
                     [assemblyName]="'Core'"
                     [className]="'DataBusiness'"
@@ -5402,11 +5409,11 @@
     >
     </span>
 
-    <span 
-      class="icon-i-plus-circle icon-12 pe-2" 
+    <span
+      class="icon-i-plus-circle icon-12 pe-2"
       [style.color]="getBenefitFontColor(data)"
     ></span>
-    
+
     {{ data?.benefitID | formatvalue : benefitFormodel : "benefitID" | async }}
   </div>
 </ng-template>
@@ -5963,7 +5970,9 @@
       <div
         class="d-flex align-items-center"
         [ngClass]="
-          data.isCurrent ? 'text-primary fs-6 fw-bold' : 'text-dark fs-6 fw-bold'
+          data.isCurrent
+            ? 'text-primary fs-6 fw-bold'
+            : 'text-dark fs-6 fw-bold'
         "
       >
         <span class="icon-attach_money icon-16 me-1"></span>
@@ -6073,7 +6082,9 @@
       <div
         class="d-flex align-items-center"
         [ngClass]="
-          data.isCurrent ? 'text-primary fs-6 fw-bold' : 'text-dark fs-6 fw-bold'
+          data.isCurrent
+            ? 'text-primary fs-6 fw-bold'
+            : 'text-dark fs-6 fw-bold'
         "
       >
         <span class="icon-attach_money icon-16 me-2"></span>
@@ -6289,7 +6300,8 @@
 <ng-template #tempEVaccineGridCol1 let-data>
   <div>
     <span
-      class="icon-i-arrow-down-left-circle-fill me-2" [style.color] = "getVaccineBackgroundColor(data)"
+      class="icon-i-arrow-down-left-circle-fill me-2"
+      [style.color]="getVaccineBackgroundColor(data)"
     ></span>
     {{
       data?.vaccineTypeID
