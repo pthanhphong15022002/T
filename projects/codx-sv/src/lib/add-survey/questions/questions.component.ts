@@ -47,7 +47,7 @@ import { SortSessionComponent } from './sort-session/sort-session.component';
   encapsulation: ViewEncapsulation.None,
   providers: [RteService, MultiSelectService],
 })
-export class QuestionsComponent extends UIComponent implements OnInit {
+export class QuestionsComponent extends UIComponent implements OnInit , OnChanges {
   surveys: SV_Surveys = new SV_Surveys();
   respondResults: any = new Array();
   formats: any = new Array();
@@ -55,7 +55,6 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   sessions: any = new Array();
   answers: any = new Array();
   isModeAdd = true;
-  funcID = '';
   functionList: any;
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
@@ -176,15 +175,17 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   active = false;
   MODE_IMAGE_VIDEO = 'EDIT';
   lstEditIV: any = [];
-  recID: any;
   children: any = new Array();
   itemActive: any;
   indexSessionA = 0;
   indexQuestionA = 0;
+  idSession = "";
   @Input() title: any = "Mẫu không có tiêu đề";
   @Input() changeModeQ: any;
   @Input() formModel: any;
   @Input() dataService: any;
+  @Input() recID = "";
+  @Input() funcID = "";
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
@@ -205,22 +206,44 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       fontColor: 'black',
       fontFormat: 'B',
     };
-    this.router.queryParams.subscribe((queryParams) => {
-      if (queryParams?.funcID) {
-        this.funcID = queryParams.funcID;
-        this.cache.functionList(this.funcID).subscribe((res) => {
-          debugger
-          if (res) {
-            this.functionList = res;
-            if (queryParams?.recID) {
-              this.recID = queryParams.recID;
-              this.loadData(this.recID);
-            }
-            else this.createNewQ();
-          }
-        });
-      } else this.createNewQ();
-    });
+    // this.router.queryParams.subscribe((queryParams) => {
+    //   if (queryParams?.funcID) {
+    //     this.funcID = queryParams.funcID;
+    //     this.cache.functionList(this.funcID).subscribe((res) => {
+    //       debugger
+    //       if (res) {
+    //         this.functionList = res;
+    //         if (queryParams?.recID) {
+    //           this.recID = queryParams.recID;
+    //           this.loadData(this.recID);
+    //         }
+    //         else this.createNewQ();
+    //       }
+    //     });
+    //   } else this.createNewQ();
+    // });
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes?.recID &&
+      changes.recID?.previousValue != changes.recID?.currentValue
+    )
+    {
+      this.loadData(this.recID);
+    }
+    if (
+      changes?.funcID &&
+      changes.funcID?.previousValue!= changes.funcID?.currentValue
+    )
+    {
+      this.funcID = changes.data?.currentValue?.funcID;
+      if(this.funcID) this.loadDataFunc();
+    }
+  }
+  //lấy answerType
+  setAnswerType(answerType:any , type:any)
+  {
+    return this.listMoreFunc.filter(x=>x.id == answerType)[0][type];
   }
 
   createNewQ()
@@ -259,8 +282,26 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.itemActive = this.questions[0].children[0];
     this.defaultMoreFunc = this.listMoreFunc.filter(x=>x.id == "O")[0];
   }
-  onInit(): void {}
 
+  onInit(): void {
+    if(this.funcID)
+    {
+      this.loadDataFunc();
+    }
+  }
+
+  loadDataFunc()
+  {
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) {
+        this.functionList = res;
+        if (this.recID) {
+          this.loadData(this.recID);
+        }
+        else this.createNewQ();
+      }
+    });
+  }
   ngAfterViewInit() {
     var html = document.querySelector('app-questions');
     let myInterVal = setInterval(() => {
@@ -310,6 +351,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
               mandatory: false,
               answerType: null,
               category: 'S',
+              transID:this.recID,
               children: [
                 {
                   seqNo: 0,
@@ -327,34 +369,44 @@ export class QuestionsComponent extends UIComponent implements OnInit {
                   mandatory: false,
                   answerType: 'O',
                   category: 'Q',
+                  parentID: '1',
                 },
               ],
             },
           ];
+          var list = [];
+          list.push(this.questions[0]);
+          list = list.concat(this.questions[0].children)
           this.api
           .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
             recID,
-            this.questions,
+            list,
             true,
-          ]).subscribe();
+          ]).subscribe((item:any)=>{
+            if(item)
+            {
+              this.idSession = item.idSession; 
+              this.questions[0].children = item.lst;
+              this.questions[0].children[0]['active'] = true;
+            }
+          });
         }
         this.questions[0].children[0]['active'] = true;
         this.itemActive = this.questions[0].children[0];
-        this.defaultMoreFunc = this.listMoreFunc.filter(x=>x.id == "O")[0];
       });
   }
 
-  getHierarchy(dataSession, dataQuestion) {
-    var dataTemp = JSON.parse(JSON.stringify(dataSession));
-    dataTemp.forEach((res) => {
-      res['children'] = [];
-      dataQuestion.forEach((x) => {
-        if (x.parentID == res.recID) {
-          res['children'].push(x);
-        }
-      });
-    });
-    return dataTemp;
+  getHierarchy(dtS :any , dtQ: any) {
+    if(dtS)
+    {
+      for(var i = 0 ; i < dtS.length ; i++)
+      {
+        dtS[i].children = dtQ.filter(x=>x.parentID == dtS[i].recID);
+        dtQ = dtQ.filter(x=>x.parentID != dtS[i].recID);
+      }
+      dtS[0].children[0]['active'] = true;
+      return dtS;
+    }
   }
 
   valueChangeMandatory(e, dataQuestion) {
@@ -1252,7 +1304,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     var dataAnswerTemp = {
       seqNo: 0,
       answer: 'Tùy chọn 1',
-      other: true,
+      other: false,
       isColumn: false,
       hasPicture: false,
     };
@@ -1282,7 +1334,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveData(
       [tempQuestion],
-      true,
+      false,
       this.questions[seqNoSession].children
     );
     if (itemActive.category == 'S') this.questions[seqNoSession].active = false;
