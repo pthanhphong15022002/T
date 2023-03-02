@@ -1911,6 +1911,17 @@ export class CodxHrService {
     );
   }
 
+  
+  getOrgTreeByOrgID(orgID: string, level: number) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'OrganizationUnitsBusiness',
+      'GetOrgTreeByOrgIDAsync',
+      [orgID, level]
+    );
+  }
+
   //#region HR_Positions
   getPositionByID(positionID: string) {
     return this.api.execSv<any>(
