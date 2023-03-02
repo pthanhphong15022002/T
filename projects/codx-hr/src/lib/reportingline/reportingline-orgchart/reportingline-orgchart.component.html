@@ -35,7 +35,7 @@
   <div class="w-250px position-relative p-4">
     <div class="position-relative">
       <ng-container *ngIf="data.employees?.length > 0;else tmpNoEmployee">
-        <ng-container *ngIf="data.employees.length == 1;else tmpMoreEmploye">
+        <!-- <ng-container *ngIf="data.employees.length == 1;else tmpMoreEmploye">
           <div class="d-flex flex-column flex-grow-1 align-items-center">
             <codx-img [isDefaulImg]="true" [objectId]="data.employees[0].employeeID" [objectType]="'HR_Employees'"
               [width]="60" [referType]="'avt'">
@@ -47,11 +47,16 @@
             <codx-img [isDefaulImg]="true" [objectId]="data.employees[0].employeeID" [objectType]="'HR_Employees'"
               [width]="60" [referType]="'avt'">
             </codx-img>
-            <div class="rounded-circle w-60px h-60px bg-secondary d-flex align-items-center justify-content-center">
+            <div ngbDropdown ngbDropdownToggle (click)="showEmploy(data.employees)" class="rounded-circle w-60px h-60px bg-secondary d-flex align-items-center justify-content-center">
               <span class="text-white-50 fs-3">+{{data.employees?.length - 1}}</span>
+              
+              
             </div>
           </div>
-        </ng-template>
+        </ng-template> -->
+        <ng-container
+            *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.employees }">
+        </ng-container>
         <div class="text-center mt-2">
           <p class="text-dark m-0 p-0 fw-bolder">{{data.employees[0].employeeName}}</p>
           <p class="text-dark m-0 p-0">{{data.employees[0].positionName}}</p>
@@ -72,5 +77,51 @@
       <span #icon class="icon-20 " [classList]="data.loadChildrent ? 'icon-do_disturb_on' : 'icon-add_circle_outline'"
         (click)="loadDataChild(data,icon)"></span>
     </div>
+  </div>
+</ng-template>
+<!-- template view employee -->
+<ng-template #templateListEmployee let-employees>
+  <div ngbDropdown class="d-flex align-items-center justify-content-center   symbol-more" [container]="'body'">
+      <div ngbDropdownToggle class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-50px"
+          type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+          style="padding: 0 !important ; margin-left: 0 !important; border:none">
+          <div class="d-flex align-items-center">
+              <codx-img 
+                [objectId]="employees[0].employeeID" 
+                [objectName]="employees[0].employeeName"
+                [objectType]="'HR_Employees'" 
+                [width]="50"
+                [referType]="'avt'">
+              </codx-img>
+              <span *ngIf="employees.length > 1" class="multiple-employee rounded-circle">
+                  <span class="text-white fs-3">+{{(employees.length - 1)}}</span>
+              </span>
+          </div>
+      </div>
+      <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+          <div class="py-2">
+              <codx-label default="Danh sách nhân viên" class="fw-bolder"></codx-label>
+              <span class="fw-bold">{{employees.length}}</span>
+          </div>
+          <!-- <codx-searchbar (searchEvent)="searchUser($event)"></codx-searchbar> -->
+          <div class="hr-list-employee">
+              <ng-container *ngFor="let emp of employees">
+                  <div class="d-flex align-items-center mt-3">
+                      <codx-img 
+                        [objectId]="emp.employeeID" 
+                        [objectType]="'HR_Employees'" 
+                        [cssClass]="'me-3'"
+                        [objectName]="emp.employeeName" 
+                        [width]="30"
+                        [referType]="'avt'">
+                      </codx-img>
+                      <div class="d-flex flex-column w-300px">
+                          <span class="fs-6">{{emp.employeeName}}</span>
+                          <span class="text-gray-600">{{emp.positionName}}</span>
+                      </div>
+                  </div>
+              </ng-container>
+          </div>
+      </div>
   </div>
 </ng-template>

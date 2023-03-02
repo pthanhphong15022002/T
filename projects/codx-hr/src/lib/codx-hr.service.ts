@@ -1936,7 +1936,7 @@ export class CodxHrService {
   //#endregion
 
   addNew(funcID: string, entityName: string, idField: string) {
-    return this.api.execSv<number>(
+    return this.api.execSv<any>(
       'HR',
       'Core',
       'DataBusiness',
@@ -1949,6 +1949,7 @@ export class CodxHrService {
     let dataItem = dataSelected;
     return this.addNew(formModel?.funcID, formModel.entityName, idField).pipe(
       mergeMap((res) => {
+        let result = res?.data;
         return this.cache
           .gridViewSetup(formModel.formName!, formModel.gridViewName!)
           .pipe(
@@ -1957,12 +1958,11 @@ export class CodxHrService {
                 Object.values(grv).forEach((v, i) => {
                   if (v.allowCopy) {
                     let field = this.codxService.capitalize(v.fieldName);
-                    res[field] = dataItem[field];
+                    result[field] = dataItem[field];
                   }
                 });
               }
-              dataSelected = res;
-              return res;
+              return result;
             })
           );
       })

@@ -24,6 +24,7 @@ export class APPostingAccountsComponent
   extends UIComponent
   implements AfterViewInit
 {
+  //#region Constructor
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('grid') grid: CodxGridviewComponent;
@@ -32,7 +33,7 @@ export class APPostingAccountsComponent
   menuActive = 1; // = ModuleID
   menuItems1: Array<any> = [];
   menuItems2: Array<any> = [];
-  selectedValue: string = '10';
+  selectedValue: string;
   btnAdd = {
     id: 'btnAdd',
   };
@@ -40,12 +41,13 @@ export class APPostingAccountsComponent
   constructor(inject: Injector) {
     super(inject);
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {
     this.cache.valueList('AC049').subscribe((res) => {
       console.log(res);
       this.menuItems1 = res?.datas;
-      this.selectedValue = this.menuItems1[0].value;
     });
 
     this.cache.valueList('AC050').subscribe((res) => {
@@ -68,7 +70,22 @@ export class APPostingAccountsComponent
       },
     ];
   }
+  //#endregion
 
+  //#region Event
+  handleClickMoreFuncs(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'SYS03':
+        this.edit(data);
+        break;
+    }
+  }
+  //#endregion
+
+  //#region Method
   handleClickAdd() {
     (this.grid.dataService as CRUDService).addNew().subscribe((res: any) => {
       let options = new SidebarModel();
@@ -89,22 +106,6 @@ export class APPostingAccountsComponent
         this.view.funcID
       );
     });
-  }
-
-  filter(field: string, value: string): void {
-    this.selectedValue = value;
-    this.grid.dataService.setPredicates([field + '=@0'], [value]).subscribe();
-  }
-
-  handleClickMoreFuncs(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(data);
-        break;
-    }
   }
 
   delete(data): void {
@@ -139,6 +140,13 @@ export class APPostingAccountsComponent
       );
     });
   }
+  //#endregion
+  
+  //#region Function
+  filter(field: string, value: string): void {
+    this.selectedValue = value;
+    this.grid.dataService.setPredicates([field + '=@0'], [value]).subscribe();
+  }
 
   getBreadcrumb(): string {
     let breadcrumb: string = '';
@@ -154,4 +162,5 @@ export class APPostingAccountsComponent
 
     return breadcrumb;
   }
+  //#endregion
 }

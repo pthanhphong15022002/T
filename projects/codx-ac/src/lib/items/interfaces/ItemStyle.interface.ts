@@ -1,5 +1,4 @@
 export interface ItemStyle {
-  id: string;
   recID: string;
   itemID: string;
   styleID: string;

@@ -74,6 +74,7 @@ textarea.e-input,
 .e-input-group,
 .e-input-group.e-control-wrapper {
   font-size: 13px;
+  color: var(--gray-600)!important;
 }
 
 .popover-body {
@@ -344,7 +345,7 @@ codx-views>.container-fluid.h-100 {
 }
 
 hr {
-  background-color: var(--gray-300);
+  background-color: var(--gray-400);
 }
 
 .is-invalid .ng-invalid,
@@ -1737,6 +1738,11 @@ codx-view-list-detail .e-listview .e-list-parent {
 
 .tooltip * {
   color: var(--primary-dark) !important;
+}
+
+.extend-function .extend-title {
+  margin-top: -26px;
+
 }
 
 // fix dropdown

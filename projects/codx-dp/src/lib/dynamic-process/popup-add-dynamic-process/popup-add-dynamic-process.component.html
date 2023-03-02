@@ -180,12 +180,12 @@
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="chuaco" [formModel]="dialog.formModel" default="Tên đối tượng khi tạo mới">
+              <codx-label fiedName="AutoName" [formModel]="dialog.formModel" default="Tên đối tượng khi tạo mới">
               </codx-label>
             </div>
             <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
             </codx-input> -->
-            <codx-input field="chuaco" type="text" (valueChange)="valueChange($event)">
+            <codx-input field="autoName" type="text" [crrValue]="process.autoName" [placeholder]="gridViewSetup['AutoName']?.description" (valueChange)="valueChange($event)">
             </codx-input>
           </div>
           <div class="form-group margin-form">
@@ -253,7 +253,7 @@
           </div>
         </div>
         <div class="col-6 group-permission witdh-permission scroll-user"
-          *ngIf="process.permissions != null && process.permissions.length > 0">
+          *ngIf="process.permissions != null && process.permissions?.length > 0">
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div *ngIf="perm.roleType == 'O'" class="cursor-pointer has-action-menu-od me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
@@ -291,7 +291,7 @@
           </div>
         </div>
         <div class="col-6 group-permission witdh-permission scroll-user"
-          *ngIf="process.permissions != null && process.permissions.length > 0">
+          *ngIf="process.permissions != null && process.permissions?.length > 0">
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div *ngIf="perm.roleType == 'P'" class="cursor-pointer has-action-menu-od me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
@@ -329,7 +329,7 @@
           </div>
         </div>
         <div class="col-6 group-permission witdh-permission scroll-user"
-          *ngIf="process.permissions != null && process.permissions.length > 0">
+          *ngIf="process.permissions != null && process.permissions?.length > 0">
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div *ngIf="perm.roleType == 'F'" class="cursor-pointer has-action-menu-od me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
@@ -733,7 +733,7 @@
                 {{ itemStep?.durationHour || 0 }} giờ
               </div>
               <div style="font-size: 1.1rem; font-weight: 500">
-                Công việc {{ itemStep?.taskGroups.length }}
+                Công việc {{ itemStep?.taskGroups?.length }}
               </div>
             </div>
           </div>
@@ -850,7 +850,7 @@
     </div>
 
     <div id="job-main" class="main-job" [ngClass]="'show-main'" style="margin-top: 10px">
-      <div class="d-flex justify-content-center" *ngIf="taskGroupList.length === 0">
+      <div class="d-flex justify-content-center" *ngIf="taskGroupList?.length === 0">
         <div>
           <button class="button-custom" (click)="openTaskGroup()">
             <span class="icon-add icon-20 text-primary-600 py-2"></span>
@@ -865,14 +865,14 @@
         </div>
       </div>
       <!-- drap drop công việc ngoài-->
-      <div class="main-body" *ngIf="taskGroupList.length > 0">
+      <div class="main-body" *ngIf="taskGroupList?.length > 0">
         <div cdkDropList class="list" (cdkDropListDropped)="drop($event, taskGroupList, true)">
           <div cdkDropListGroup>
             <ng-container *ngFor="let taskList of taskGroupList">
               <div class="card-job-list" cdkDrag [cdkDragData]="taskList" [cdkDragStartDelay]="100"
                 [cdkDragDisabled]="taskList?.recID ? false : true">
                 <div class="card-job mx-5 p-3">
-                  <div *ngIf="taskList?.recID !== guidEmpty "
+                  <div *ngIf="taskList?.recID"
                     class="d-flex justify-content-start align-items-center has-action-menu">
                     <div class="icon-container">
                       <span class="icon-add_circle icon-20 text-primary-600 py-2"></span>
@@ -903,8 +903,8 @@
                       [dataItem]="moreDefaut" [type]="'hover'" (changeDataMF)="changeDataMF($event, 'group')">
                     </codx-mfunc>
                   </div>
-                  <div *ngIf="taskList?.recID === guidEmpty" [ngStyle]="
-                      taskList?.task.length == 0 ? { height: '30px' } : {}
+                  <div *ngIf="!taskList?.recID" [ngStyle]="
+                      taskList?.task?.length == 0 ? { height: '30px' } : {}
                     "></div>
                   <!-- kéo thả ở trong  -->
                   <div cdkDropList [cdkDropListData]="taskList?.task || []"
@@ -912,7 +912,7 @@
                     <ng-container *ngFor="let task of taskList?.task">
                       <div cdkDrag [cdkDragStartDelay]="200" [cdkDragData]="task" class="drap-drop">
                         <div [ngStyle]="
-                            taskList?.recID !== guidEmpty ? { 'margin-left': '50px' } : {}
+                            taskList?.recID? { 'margin-left': '50px' } : {}
                           " class="has-action-menu">
                           <div class="d-flex justify-content-start align-items-center" style="font-size: 1rem">
                             <div class="icon-container" style="background-color: #3ef8e9">
@@ -962,7 +962,7 @@
                         </div>
                       </div>
                     </ng-container>
-                    <div *ngIf="taskList?.task.length === 0" style="height: 10px"></div>
+                    <div *ngIf="taskList?.task?.length === 0" style="height: 10px"></div>
                   </div>
                 </div>
               </div>
@@ -1105,7 +1105,7 @@
     </div>
     <div class="main-job has-actions-menu" id="reason-success" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
       #view>
-      <div class="main-body pt-5 ps-5" *ngIf="stepSuccess.reasons.length > 0">
+      <div class="main-body pt-5 ps-5" *ngIf="stepSuccess.reasons?.length > 0">
         <div *ngFor="let item of stepSuccess?.reasons" class="pb-2">
           <ul class="text-left drap-drop me-5 py-2 has-action-menu">
             <li>
@@ -1235,7 +1235,7 @@
         </div>
       </div>
       <div class="main-body">
-        <div class="position-relative p-9" *ngIf="stepFail.reasons.length == 0">
+        <div class="position-relative p-9" *ngIf="stepFail.reasons?.length == 0">
           <div class="position-absolute top-50 start-50 translate-middle">
             <button type="button" class="btn btn-outline-primary btn-sm pb-5"
               (click)="openPopupReason(viewStepReasonFail, null, null)">
@@ -1287,7 +1287,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6 group-permission witdh-roles scroll-user" *ngIf="step.roles != null && step.roles.length > 0">
+        <div class="col-6 group-permission witdh-roles scroll-user" *ngIf="step.roles != null && step.roles?.length > 0">
           <ng-container *ngFor="let perm of step.roles; index as i">
             <div *ngIf="perm.roleType == 'S'" class="me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
@@ -1315,7 +1315,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6 group-permission witdh-roles scroll-user" *ngIf="step.roles != null && step.roles.length > 0">
+        <div class="col-6 group-permission witdh-roles scroll-user" *ngIf="step.roles != null && step.roles?.length > 0">
           <ng-container *ngFor="let perm of step.roles; index as i">
             <div *ngIf="perm.roleType == 'R'" class="me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
