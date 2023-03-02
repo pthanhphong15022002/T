@@ -169,6 +169,7 @@ export class DynamicProcessComponent
   onDragDrop(e: any) {}
 
   click(evt: ButtonModel) {
+    this.titleAction = evt.text;
     switch (evt.id) {
       case this.btnAdd:
         this.add();
