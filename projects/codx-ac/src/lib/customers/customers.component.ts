@@ -138,7 +138,14 @@ export class CustomersComponent extends UIComponent {
                   'DeleteAsync',
                   [this.objecttype, data.customerID]
                 ).subscribe((res: any) => {
-
+                  if (res) {
+                    this.api.exec(
+                      'ERM.Business.AC',
+                      'ObjectsBusiness',
+                      'DeleteAsync',
+                      [data.customerID]
+                    ).subscribe((res: any) => {})
+                  }
                 });
               }
             });

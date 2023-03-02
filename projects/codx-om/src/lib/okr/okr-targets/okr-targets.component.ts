@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import { text } from 'stream/consumers';
 declare var window: any;
 import { CodxOmService } from './../../codx-om.service';
@@ -321,7 +322,7 @@ export class OkrTargetsComponent implements OnInit {
         break;
       }
       case OMCONST.MFUNCID.Delete: {
-        this.deleteKR(kr);
+        this.deleteKR(kr,isSKR);
         break;
       }
       
@@ -547,11 +548,12 @@ export class OkrTargetsComponent implements OnInit {
     });
   }
   deleteOB(ob: any) {
-    if (false) {
+    if (true) {
       //Cần thêm kịch bản khi xóa KR
-      this.codxOmService.deleteKR(ob).subscribe((res: any) => {
+      this.codxOmService.deleteOKR(ob).subscribe((res: any) => {
         if (res) {
           this.notificationsService.notifyCode('SYS008');
+          this.removeOB(ob)
         } else {
           this.notificationsService.notifyCode('SYS022');
         }
@@ -624,12 +626,18 @@ export class OkrTargetsComponent implements OnInit {
     });
   }
 
-  deleteKR(kr: any) {
-    if (false) {
+  deleteKR(kr: any,isSubKR:boolean) {
+    if (true) {
       //Cần thêm kịch bản khi xóa KR
-      this.codxOmService.deleteKR(kr).subscribe((res: any) => {
+      this.codxOmService.deleteOKR(kr).subscribe((res: any) => {
         if (res) {
           this.notificationsService.notifyCode('SYS008');
+          if(isSubKR){
+            this.removeSKR(kr)
+          }
+          else{
+            this.removeKR(kr);
+          }
         } else {
           this.notificationsService.notifyCode('SYS022');
         }
@@ -692,8 +700,6 @@ export class OkrTargetsComponent implements OnInit {
       }     
     }    
   }
-  
-
   renderSKR(skr:any,isAdd:boolean){
     if (skr!=null) {
       if(isAdd){
@@ -735,6 +741,34 @@ export class OkrTargetsComponent implements OnInit {
       }
       
     }
+  }
+  removeOB(ob:any){
+    if(ob!=null){
+      this.dataOKR=this.dataOKR.filter(res=>res.recID!=ob.recID);      
+    }
+  }
+  removeKR(kr:any){
+    if(kr!=null){
+      for (let ob of this.dataOKR) {
+        if(ob?.recID==kr?.parentID){
+          ob.items=ob?.items.filter(res=>res.recID!=kr.recID);
+        }
+      }      
+    }    
+  }
+  removeSKR(skr:any){
+    if(skr!=null){
+      for (let ob of this.dataOKR) {
+        for (let kr of ob?.items) {
+        for (let i=0;i<kr?.items.length;i++) {
+          if(skr?.recID == kr.items[i].recID){
+            kr.items=kr.items.filter(res=>res.recID!=skr.recID);
+            return;
+          }        
+        }
+      }
+      }   
+    }    
   }
   //Xem chi tiết OB
   showOB(obj: any) {

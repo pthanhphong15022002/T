@@ -1,4 +1,4 @@
-import { Util } from 'codx-core';
+import { AuthStore, Util } from 'codx-core';
 import { OMCONST } from './../../codx-om.constant';
 import {
   Component,
@@ -66,11 +66,13 @@ export class PopupAddKRComponent extends UIComponent {
   defaultCheckInDay: any;
   defaultCheckInTime: any;
   messMonthSub: any;
+  curUser: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
     private codxOmService: CodxOmService,
     private notificationsService: NotificationsService,
+    private authStore: AuthStore,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -88,6 +90,8 @@ export class PopupAddKRComponent extends UIComponent {
     ) {
       this.typePlan = this.oldKR.plan;
     }
+    this.curUser = authStore.get();
+
   }
 
   //---------------------------------------------------------------------------------//
@@ -231,7 +235,13 @@ export class PopupAddKRComponent extends UIComponent {
     //---------------------------------------
     this.fGroupAddKR = this.form?.formGroup;
     this.fGroupAddKR.patchValue(this.kr);
-
+      if (this.fGroupAddKR.invalid == true) {
+      this.codxOmService.notifyInvalid(
+        this.fGroupAddKR,
+        this.formModel
+      );
+      return;
+    }
     //tính lại Targets cho KR
     if (this.kr.targets?.length == 0 || this.kr.targets == null) {
       this.calculatorTarget(this.kr?.plan);
@@ -329,6 +339,9 @@ export class PopupAddKRComponent extends UIComponent {
   // }
   afterOpenAddForm(krModel: any) {
     this.kr = krModel;
+    if(this.kr.buid ==null){
+      this.kr.buid= this.curUser?.buid;
+    }
     if (this.kr?.targets &&  this.kr?.targets !=null && this.kr?.targets.length > 0) {
       this.targetModel = { ...this.kr.targets[0] };
       this.kr.targets = [];
