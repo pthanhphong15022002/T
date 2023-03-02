@@ -164,11 +164,11 @@
     <div class="fw-bold line-clamp line-clamp-1 text-start">
       {{ data?.resourceName }}
     </div>
-    <div class="text-start">
+    <div *ngIf="this.isPriceVisible" class="text-start">
       {{
         data?.costPrice == 0
-          ? (0 | currency: "VND")
-          : (data?.costPrice | currency: "VND":"symbol":"3.0")
+          ? (0 | currency : "VND")
+          : (data?.costPrice | currency : "VND" : "symbol" : "3.0")
       }}
     </div>
     <div class="d-flex justify-content-center">
