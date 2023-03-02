@@ -36,7 +36,6 @@ export class PopupEBasicSalariesComponent
   isAfterRender = false;
   headerText: ' ';
   @ViewChild('form') form: CodxFormComponent;
-  // @ViewChild('listView') listView: CodxListviewComponent;
 
   onInit(): void {
     this.hrService.getFormModel(this.funcID).then((formModel) => {
@@ -72,8 +71,7 @@ export class PopupEBasicSalariesComponent
     this.formModel = dialog?.formModel;
   }
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   initForm() {
     if (this.actionType == 'add') {
@@ -98,6 +96,11 @@ export class PopupEBasicSalariesComponent
         });
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
+        if (this.actionType == 'copy') {
+          if (this.EBasicSalaryObj.effectedDate == '0001-01-01T00:00:00') {
+            this.EBasicSalaryObj.effectedDate = null;
+          }
+        }
         this.formGroup.patchValue(this.EBasicSalaryObj);
         this.formModel.currentData = this.EBasicSalaryObj;
         this.cr.detectChanges();
