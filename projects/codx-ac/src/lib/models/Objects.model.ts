@@ -22,4 +22,9 @@ export class Objects {
   createdBy: any;
   modifiedOn: any;
   modifiedBy: any;
+  postDetail:any
+  postItems:any
+  settleInvoice:any;
+  settlePayment:any;
+  debtComparision:any;
 }
