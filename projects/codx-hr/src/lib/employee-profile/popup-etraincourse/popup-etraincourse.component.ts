@@ -39,6 +39,8 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   trainCourseObj;
   dataVllSupplier: any;
   result;
+  fromDateFormat;
+  toDateFormat;
   ops = ['m', 'y'];
 
   isAfterRender = false;
@@ -123,22 +125,8 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
           }
         });
     }
-
-    // this.hrService
-    //   .getFormGroup(this.formModel2.formName, this.formModel2.gridViewName)
-    //   .then((item) => {
-    //     this.formGroup2 = item;
-    //     console.log('form2 test', this.formGroup2);
-    //     this.hrService
-    //       .getEmployeeCertificatesInfoById(this.employId)
-    //       .subscribe((p) => {
-    //         console.log('thong tin chung chi nhan vien', p);
-    //         this.dataForm2 = p;
-    //         this.formModel2.currentData = this.dataForm2;
-    //         this.formGroup2.patchValue(this.dataForm2);
-    //         this.isAfterRender = true;
-    //       });
-    //   });
+    this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
+    this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);
   }
 
   onInit(): void {
@@ -351,5 +339,13 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       }
       this.trainCourseObj.trainToDate = event.fromDate;
     }
+  }
+  getFormatDate(trainFrom : string){
+    let resultDate = '';
+    if(trainFrom){
+      let arrDate = trainFrom.split('/');
+      resultDate = arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
+      return resultDate
+    } else return resultDate = 'y';
   }
 }
