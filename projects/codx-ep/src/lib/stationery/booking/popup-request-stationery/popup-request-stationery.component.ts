@@ -131,7 +131,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
       let dataValue = res.dataValue;
       let json = JSON.parse(dataValue);
       this.nagetivePhysical = json.NagetivePhysical;
-      this.isPriceVisible = true
+      this.isPriceVisible = json.ShowUnitPrice ?? false;
     });
 
     this.cache.functionList('EP8S21').subscribe((res) => {
