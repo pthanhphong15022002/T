@@ -67,13 +67,13 @@
             <thead>
               <tr>
                 <th scope="col">
-                  <codx-label [default]="'Chức năng'" [fiedName]="'titleFunction'"></codx-label>
+                  <codx-label [default]="'Chức năng'" [name]="'lblTitleFunction'"></codx-label>
                 </th>
                 <th scope="col">
-                  <codx-label [default]="'Mô tả'" [fiedName]="'titleDescription'"></codx-label>
+                  <codx-label [default]="'Mô tả'" [name]="'lblTitleDescription'"></codx-label>
                 </th>
                 <th scope="col">
-                  <codx-label [default]="'Cho phép'" [fiedName]="'titleAllow'"></codx-label>
+                  <codx-label [default]="'Cho phép'" [name]="'lblTitleAllow'"></codx-label>
                 </th>
               </tr>
             </thead>
@@ -84,7 +84,7 @@
                 </td>
                 <td>
                   <codx-label [default]="'Người dùng có tất cả quyền trên quy trình'" [formModel]="dialog.formModel"
-                    [fiedName]="'DescriptionFull'">
+                    [name]="'lblDescriptionFull'">
                   </codx-label>
                 </td>
                 <td class="text-center">
@@ -100,7 +100,7 @@
                 </td>
                 <td>
                   <codx-label [default]="'Cho phép xem chi tiết quy trình'" [formModel]="dialog.formModel"
-                    [fiedName]="'DescriptionRead'">
+                    [name]="'lblDescriptionRead'">
                   </codx-label>
                 </td>
                 <td class="text-center">
@@ -115,7 +115,7 @@
                 </td>
                 <td>
                   <codx-label [default]="'Cho phép tạo nhiệm vụ'" [formModel]="dialog.formModel"
-                    [fiedName]="'DescriptionRead'">
+                    [name]="'lblDescriptionCreate'">
                   </codx-label>
                 </td>
                 <td class="text-center">
@@ -130,7 +130,7 @@
                 </td>
                 <td>
                   <codx-label [default]="'Cho phép chỉnh sửa quy trình'" [formModel]="dialog.formModel"
-                    [fiedName]="'Edit'"></codx-label>
+                    [name]="'lblEdit'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="edit" field="edit"
@@ -144,7 +144,7 @@
                   <codx-label [default]="'Xóa'" [formModel]="dialog.formModel" [fiedName]="'Delete'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép xóa quy trình'" [fiedName]="'DescriptionDelete'"></codx-label>
+                  <codx-label [default]="'Cho phép xóa quy trình'" [name]="'lblDescriptionDelete'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="delete" field="delete"
@@ -174,7 +174,7 @@
                 </td>
                 <td>
                   <codx-label [default]="'Cho phép chia sẻ và chỉnh sửa quyền'" [formModel]="dialog.formModel"
-                    [fiedName]="'DescriptionAssign'">
+                    [name]="'lblDescriptionAssign'">
                   </codx-label>
                 </td>
                 <td class="text-center">

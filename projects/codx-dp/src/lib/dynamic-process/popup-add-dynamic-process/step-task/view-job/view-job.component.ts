@@ -22,6 +22,7 @@ export class ViewJobComponent implements OnInit {
   stepsTasks: DP_Steps_Tasks;
   status = '';
   stepType = '';
+  taskType = '';
   stepID = '';
   listOwner = [];
   taskList: DP_Steps_Tasks[] = [];
@@ -48,7 +49,7 @@ export class ViewJobComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.status = dt?.data[0];
-    this.title = dt?.data[1]['text'];
+    this.taskType = dt?.data[1];
     this.stepType = dt?.data[1]['id'];
     this.stepID = dt?.data[2];
     this.dialog = dialog;
@@ -66,6 +67,12 @@ export class ViewJobComponent implements OnInit {
         }
       });
     }
+    this.cache.valueList('DP035').subscribe((res) => {
+      if (res.datas) {
+        let type = res.datas.find((x) => x.value === this.taskType);
+        this.title = type['text'];
+      }
+    });
     this.getFileByObjectID('test');
   }
 

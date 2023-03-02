@@ -83,6 +83,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   totalStationery = 0;
   saveCheck = false;
   approvalRule: any;
+  isPriceVisible: boolean = false;
 
   constructor(
     private injector: Injector,
@@ -126,13 +127,12 @@ export class PopupRequestStationeryComponent extends UIComponent {
       this.totalStationery = res[1];
     });
 
-    this.epService
-      .getEPStationerySetting('1')
-      .subscribe((res: any) => {
-        let dataValue = res.dataValue;
-        let json = JSON.parse(dataValue);
-        this.nagetivePhysical = json.NagetivePhysical;
-      });
+    this.epService.getEPStationerySetting('1').subscribe((res: any) => {
+      let dataValue = res.dataValue;
+      let json = JSON.parse(dataValue);
+      this.nagetivePhysical = json.NagetivePhysical;
+      this.isPriceVisible = json.ShowUnitPrice ?? false;
+    });
 
     this.cache.functionList('EP8S21').subscribe((res) => {
       if (res) {
@@ -378,10 +378,10 @@ export class PopupRequestStationeryComponent extends UIComponent {
     if (this.approvalRule == '0' && approval) {
       this.data.approveStatus = '5';
       this.data.status = '5';
-    } 
-    this.data.approveStatus = this.data.approveStatus?? '1';
-    this.data.status = this.data.status ?? '1';    
-    
+    }
+    this.data.approveStatus = this.data.approveStatus ?? '1';
+    this.data.status = this.data.status ?? '1';
+
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
       .subscribe((res) => {

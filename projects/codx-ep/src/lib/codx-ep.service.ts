@@ -100,7 +100,7 @@ export class CodxEpService {
     });
   }
 
-  getFormGroup(formName, gridView): Promise<FormGroup> {    
+  getFormGroup(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
       this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
         var model = {};
@@ -108,7 +108,7 @@ export class CodxEpService {
         model['delete'] = [];
         model['assign'] = [];
         model['share'] = [];
-        if (gv) {          
+        if (gv) {
           const user = this.auth.get();
           for (const key in gv) {
             const element = gv[key];
@@ -162,8 +162,8 @@ export class CodxEpService {
       });
     });
   }
-  
-  getFormGroupBooking(formName, gridView): Promise<FormGroup> {    
+
+  getFormGroupBooking(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
       this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
         var model = {};
@@ -593,24 +593,26 @@ export class CodxEpService {
       [booking.recID]
     );
   }
-  checkRole(curUser:any, owner:string) {
-    return curUser?.userID == owner || 
-    curUser?.systemAdmin ||
-    curUser?.functionAdmin ||
-    curUser?.administrator
+  checkRole(curUser: any, owner: string) {
+    return (
+      curUser?.userID == owner ||
+      curUser?.systemAdmin ||
+      curUser?.functionAdmin ||
+      curUser?.administrator
+    );
   }
   checkDuplicateBooking(
     startDate: string,
     endDate: string,
     resourceID: string,
-    recID: string,
+    recID: string
   ) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'BookingsBusiness',
       'CheckDuplicateBookingAsync',
-      [ startDate, endDate, resourceID, recID ]
+      [startDate, endDate, resourceID, recID]
     );
   }
   getAvailableResources(
@@ -618,14 +620,14 @@ export class CodxEpService {
     startDate: string,
     endDate: string,
     recID: string,
-    getAll:boolean,
+    getAll: boolean
   ) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'ResourcesBusiness',
       'GetListAvailableResourceAsync',
-      [resourceType, startDate, endDate, recID ,getAll]
+      [resourceType, startDate, endDate, recID, getAll]
     );
   }
 

@@ -6,7 +6,7 @@
   <div class="header-job py-3 px-5">
     <div class="d-flex align-items-top mb-2">
       <span class="fw-bold fs-4 text-dark me-2">{{ currentStep + 1 }}. {{ dataStep?.stepName }}</span>
-      <i class="icon-work_outline text-gray-500 icon-20" (click)="openPopupSup(popupSup, dataStep)"></i>
+      <i class="icon-event_notes text-gray-500 icon-20" (click)="openPopupSup(popupSup, dataStep)"></i>
     </div>
     <div class="mb-3">
       <div class="d-flex align-items-center justify-content-between">
@@ -57,11 +57,12 @@
 </div>
 
 <ng-template #popupSup let-dialog>
-  <codx-form [headerText]="'Hướng dẫn bước nhiệm vụ'" [body]="body" [footer]="" [dialog]="dialog">
+  <codx-form [headerText]="titleMemo" [body]="body" [data]="dataStep" [footer]="" [dialog]="dialog">
     <ng-template #body>
-      <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150"
-        (valueChange)="valueChange($event)" [placeholder]="'Nhập.....'" [crrValue]="dataStep.memo" [disabled]="true">
-      </codx-input>
+      <div [innerHTML]="dataStep.memo"></div>
+      <!-- <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150"
+        [placeholder]="'Nhập.....'" [crrValue]="dataStep.memo" [disabled]="true">
+      </codx-input> -->
     </ng-template>
   </codx-form>
 </ng-template>
