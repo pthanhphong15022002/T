@@ -43,13 +43,16 @@
   text-overflow: ellipsis;
 }
 
+.nav-link {
+  color: #000;
+}
+
 ::ng-deep {
   .card-vpp {
     .codx-image {
       display: unset !important;
       max-height: 120px !important;
     }
-
   }
 
   .liststationery-request {

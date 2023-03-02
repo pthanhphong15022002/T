@@ -1643,7 +1643,7 @@
         [Group]=""
         type="text"
         [crrValue]="stepName"
-        (valueChange)="changeValueInput($event, step)"
+        (valueChange)="changeValueInput($event, stepNew)"
       >
       </codx-input>
     </div>
@@ -1666,7 +1666,7 @@
     >
       <codx-label name="Save" formName="Tasks" default="Hủy"></codx-label>
     </button>
-    <button type="button" class="btn btn-primary" (click)="saveStep()">
+    <button type="button" class="btn btn-primary" [disabled]="isSaveStep" (click)="saveStep()">
       <codx-label name="Save" formName="Tasks" default="Đồng ý"></codx-label>
     </button>
   </div>

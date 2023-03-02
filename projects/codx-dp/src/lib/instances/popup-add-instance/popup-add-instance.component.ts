@@ -108,38 +108,41 @@ export class PopupAddInstanceComponent implements OnInit {
     this.listStepCbx = dt?.data[5];
     this.instance.instanceNo = dt?.data[6];
     this.totalDaySteps = dt?.data[7];
-    if(this.action === 'edit'){
-      if(this.instance.permissions != null && this.instance.permissions.length > 0){
+    if (this.action === 'edit') {
+      this.owner = this.instance?.owner;
+      if (
+        this.instance.permissions != null &&
+        this.instance.permissions.length > 0
+      ) {
         this.lstParticipants = this.instance.permissions.filter(
           (x) => x.roleType === 'P'
         );
       }
-    }else if(this.action === 'add'){
+    } else if (this.action === 'add') {
       this.lstParticipants = dt?.data[8];
-
+      if(this.lstParticipants != null && this.lstParticipants.length > 0)
+        this.owner = this.lstParticipants.find(x=> x.objectType === 'U').objectID;
     }
 
-    if(this.action === 'copy') {
+    if (this.action === 'copy') {
       this.oldIdInstance = dt?.data[8];
     }
     // if (this.instance.owner != null) {
     //   this.getNameAndPosition(this.instance.owner);
     // }
     this.cache
-    .gridViewSetup(
-      this.dialog.formModel.formName,
-      this.dialog.formModel.gridViewName
-    )
-    .subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
-
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
   ngOnInit(): void {
-    this.owner = this.instance?.owner;
     if (this.action === 'add' || this.action === 'copy') {
       this.autoClickedSteps();
       this.handleEndDayInstnace(this.totalDaySteps);
@@ -167,8 +170,6 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   buttonClick(e: any) {}
-
-
 
   setTitle(e: any) {
     this.title =
@@ -240,14 +241,14 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     }
-    // COi LẠI DÙM CÁI CÁI CHỖ CÓ CHẠY KHÔNG
-    // else if (
-    //   this.instance?.owner === null ||
-    //   this.instance?.owner.trim() === ''
-    // ) {
-    //   this.notificationsService.notifyCode('Vui lòng chọn người phụ trách');
-    //   return;
-    // }
+    if(this.instance?.owner === null || this.instance?.owner.trim() === ''){
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Owner']?.headerText + '"'
+      );
+      return;
+    }
     else if (
       this.checkEndDayInstance(this.instance.endDate, this.totalDaySteps)
     ) {
@@ -281,33 +282,31 @@ export class PopupAddInstanceComponent implements OnInit {
       });
       if (!check || !checkFormat) return;
     }
-    if(this.action === 'add' || this.action === 'copy'){
+    if (this.action === 'add' || this.action === 'copy') {
       this.onAdd();
-    }
-    else if (this.action === 'edit'){
+    } else if (this.action === 'edit') {
       this.onUpdate();
     }
-
   }
-  onAdd(){
+  onAdd() {
     this.dialog.dataService
-    .save((option: any) => this.beforeSave(option), 0)
-    .subscribe((res) => {
-      if (res && res.save) {
-        this.dialog.close(res);
-        this.changeDetectorRef.detectChanges();
-      }
-    });
+      .save((option: any) => this.beforeSave(option), 0)
+      .subscribe((res) => {
+        if (res && res.save) {
+          this.dialog.close(res);
+          this.changeDetectorRef.detectChanges();
+        }
+      });
   }
-  onUpdate(){
+  onUpdate() {
     this.dialog.dataService
-    .save((option: any) => this.beforeSave(option))
-    .subscribe((res) => {
-      if (res.update) {
-        this.dialog.close(res.update);
-      }
-    });
-}
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res.update) {
+          this.dialog.close(res.update);
+        }
+      });
+  }
   deleteListReason(listStep: any): void {
     listStep.pop();
     listStep.pop();
@@ -385,10 +384,8 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   eventUser(e) {
-    if(e != null && e.id != null){
-      this.owner = e.id;
-      this.instance.owner = this.owner;
-    }
+    this.owner = e.id;
+    this.instance.owner = this.owner;
   }
   getNameAndPosition(id) {
     this.codxDpService.getPositionByID(id).subscribe((res) => {

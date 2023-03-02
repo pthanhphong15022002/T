@@ -1,8 +1,8 @@
-import { C } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Component,
   Injector,
+  OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -14,14 +14,14 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { PopupAddAPPostingAccountComponent } from './popup-add-apposting-account/popup-add-apposting-account.component';
+import { PopupAddFAPostingAccountComponent } from './popup-add-faposting-account/popup-add-faposting-account.component';
 
 @Component({
-  selector: 'lib-apposting-accounts',
-  templateUrl: './apposting-accounts.component.html',
-  styleUrls: ['./apposting-accounts.component.css'],
+  selector: 'lib-faposting-accounts',
+  templateUrl: './faposting-accounts.component.html',
+  styleUrls: ['./faposting-accounts.component.css'],
 })
-export class APPostingAccountsComponent
+export class FAPostingAccountsComponent
   extends UIComponent
   implements AfterViewInit
 {
@@ -32,11 +32,9 @@ export class APPostingAccountsComponent
 
   views: Array<ViewModel> = [];
   menuActive = 1; // = ModuleID
-  menuItems1: Array<any> = [];
-  menuItems2: Array<any> = [];
+  menuItems: Array<any> = [];
   selectedValue: string;
-  defaultPostType1: string;
-  defaultPostType2: string;
+  defaultPostType: string;
   btnAdd = {
     id: 'btnAdd',
   };
@@ -48,16 +46,10 @@ export class APPostingAccountsComponent
 
   //#region Init
   onInit(): void {
-    this.cache.valueList('AC049').subscribe((res) => {
+    this.cache.valueList('AC060').subscribe((res) => {
       console.log(res);
-      this.menuItems1 = res?.datas;
-      this.defaultPostType1 = res?.datas[0].value;
-    });
-
-    this.cache.valueList('AC050').subscribe((res) => {
-      console.log(res);
-      this.menuItems2 = res?.datas;
-      this.defaultPostType2 = res?.datas[0].value;
+      this.menuItems = res?.datas;
+      this.defaultPostType = res?.datas[0].value;
     });
   }
 
@@ -97,26 +89,16 @@ export class APPostingAccountsComponent
       options.DataService = this.grid.dataService;
       options.FormModel = this.grid.formModel;
       options.Width = '550px';
-
-      let postType = this.selectedValue;
-      if (this.menuActive == 1) {
-        if (!this.menuItems1.some((i) => i.value === this.selectedValue)) {
-          postType = this.defaultPostType1;
-        }
-      } else {
-        if (!this.menuItems2.some((i) => i.value === this.selectedValue)) {
-          postType = this.defaultPostType2;
-        }
-      }
-
       this.callfc.openSide(
-        PopupAddAPPostingAccountComponent,
+        PopupAddFAPostingAccountComponent,
         {
           formType: 'add',
-          formTitle: 'Thêm thiết lập phải trả',
+          formTitle: 'Thêm thiết lập tài khoản',
           moduleId: this.menuActive,
-          postType: postType,
-          breadcrumb: this.getBreadcrumb(this.menuActive, postType),
+          postType: this.selectedValue ?? this.defaultPostType,
+          breadcrumb: this.getBreadcrumb(
+            this.selectedValue ?? this.defaultPostType
+          ),
         },
         options,
         this.view.funcID
@@ -143,13 +125,13 @@ export class APPostingAccountsComponent
       options.Width = '550px';
 
       this.callfc.openSide(
-        PopupAddAPPostingAccountComponent,
+        PopupAddFAPostingAccountComponent,
         {
           formType: 'edit',
-          formTitle: 'Sửa thiết lập phải trả',
+          formTitle: 'Sửa thiết lập tài khoản',
           moduleId: data.moduleID,
           postType: data.postType,
-          breadcrumb: this.getBreadcrumb(data.moduleID, data.postType),
+          breadcrumb: this.getBreadcrumb(data.postType),
         },
         options,
         this.view.funcID
@@ -164,19 +146,13 @@ export class APPostingAccountsComponent
     this.grid.dataService.setPredicates([field + '=@0'], [value]).subscribe();
   }
 
-  getBreadcrumb(moduleId, postType): string {
+  getBreadcrumb(postType): string {
     let breadcrumb: string = '';
-    if (moduleId == 1) {
-      breadcrumb += 'Tài khoản';
+    if (this.menuActive == 1) {
+      breadcrumb += 'Tài sản cố định';
       if (postType) {
         breadcrumb +=
-          ' > ' + this.menuItems1.find((m) => m.value === postType)?.text;
-      }
-    } else {
-      breadcrumb += 'Điều khoản';
-      if (postType) {
-        breadcrumb +=
-          ' > ' + this.menuItems2.find((m) => m.value === postType)?.text;
+          ' > ' + this.menuItems.find((m) => m.value == postType)?.text;
       }
     }
 

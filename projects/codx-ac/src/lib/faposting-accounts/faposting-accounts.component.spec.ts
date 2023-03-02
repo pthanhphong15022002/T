@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopAddCashComponent } from './pop-add-cash.component';
+import { FAPostingAccountsComponent } from './faposting-accounts.component';
 
-describe('PopAddCashComponent', () => {
-  let component: PopAddCashComponent;
-  let fixture: ComponentFixture<PopAddCashComponent>;
+describe('FAPostingAccountsComponent', () => {
+  let component: FAPostingAccountsComponent;
+  let fixture: ComponentFixture<FAPostingAccountsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopAddCashComponent ]
+      declarations: [ FAPostingAccountsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopAddCashComponent);
+    fixture = TestBed.createComponent(FAPostingAccountsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

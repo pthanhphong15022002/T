@@ -98,6 +98,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // add group
     this.signalRSV.signalGroup.subscribe((res: any) => {
+      debugger
       if (res) 
       {
         (this.codxListViewGroup.dataService as CRUDService).add(res).subscribe();
@@ -141,7 +142,6 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
   //click goup chat
   clickGroupChat(group: any){
-    debugger
     if(!group.isRead){
       this.api.execSv(
         "WP",

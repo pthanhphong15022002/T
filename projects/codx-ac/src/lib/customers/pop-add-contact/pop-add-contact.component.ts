@@ -49,6 +49,7 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
   contactType: any;
   type: any;
   validate: any = 0;
+  validateEmail:any = 0;
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -197,11 +198,27 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
       }
     }
   }
+  checkValidEmail() {
+    const regex = new RegExp(
+      '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
+    );
+    var checkRegex = regex.test(this.email);
+    if (checkRegex == false) {
+      this.notification.notify("Trường 'Email' không hợp lệ","2");
+      this.validateEmail++;
+      return;
+    }
+  }
   //#endregion
 
   //#region CRUD
   onSave() {
+    this.checkValidEmail();
     this.checkValidate();
+    if (this.validateEmail > 0) {
+      this.validateEmail = 0;
+      return;
+    }
     if (this.validate > 0) {
       this.validate = 0;
       return;
