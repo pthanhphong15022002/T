@@ -16,6 +16,7 @@ import {
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
+import { ApiHttpService } from 'codx-core';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -38,7 +39,7 @@ export class LoginDefaultComponent implements OnInit, OnDestroy {
   @Input() returnUrl: string;
   @Input() alerttext: string;
   @Input() sessionID = null;
-  @Input() email = null;
+  @Input() email;
   @Input() mode: string;
   @Input() user: any;
   @Input() f: any;
@@ -53,9 +54,9 @@ export class LoginDefaultComponent implements OnInit, OnDestroy {
   externalLogin = false;
   externalLoginCol = '';
   externalLoginShowText = true;
-  
+
   // private fields
-  constructor(private dt: ChangeDetectorRef) {}
+  constructor(private dt: ChangeDetectorRef, private api: ApiHttpService) {}
 
   ngOnInit(): void {
     // if (
@@ -71,7 +72,6 @@ export class LoginDefaultComponent implements OnInit, OnDestroy {
     //   if (environment.externalLogin.facebookId) iCol += 1;
     //   if (environment.externalLogin.googleId) iCol += 1;
     //   if (environment.externalLogin.microsoftId) iCol += 1;
-
     //   this.externalLoginShowText = iCol <= 2;
     //   this.externalLoginCol = 'col-md-' + (12/iCol);
     // }
@@ -110,5 +110,22 @@ export class LoginDefaultComponent implements OnInit, OnDestroy {
 
   forgotPass() {
     this.forgotPassEven.emit();
+  }
+
+  activeTenantAccount() {
+    this.api
+      .execSv<boolean>(
+        'SYS',
+        'ERM.Business.AD',
+        'UsersBusiness',
+        'ActiveTenantAccountAsync',
+        [null, this.email]
+      )
+      .subscribe((success) => {
+        if (success) {
+          this.mode = 'login';
+          this.dt.detectChanges();
+        }
+      });
   }
 }
