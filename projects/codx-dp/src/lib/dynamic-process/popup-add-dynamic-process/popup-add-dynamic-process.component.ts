@@ -485,7 +485,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let newNo = tabNo;
     let oldNo = this.currentTab;
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
-      if (tabNo!=0 &&(
+      if (tabNo!=0 &&  this.currentTab==0 &&(
         !this.process.instanceNoSetting ||
         (this.process.instanceNoSetting &&
           this.process.instanceNoSetting != this.instanceNoSetting))
@@ -1922,7 +1922,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   async setTimeGroup(group, task, maxHour) {
     let x = await firstValueFrom(this.notiService.alertCode('DP010'));
-    if (x.event && x.event.status == 'Y') {
+    if (x['event'] && x['event']['status'] == 'Y') {
       let time = this.getHour(task) || 0;
       group['durationDay'] = Math.floor(maxHour / 24);
       group['durationHour'] = maxHour % 24;
@@ -1937,7 +1937,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         });
       }
-      task['parentID'] = parentID.length > 0 ? parentID.join(';') : '';
+      task['parentID'] = parentID?.length > 0 ? parentID.join(';') : '';
       return true;
     } else {
       return false;
@@ -2093,9 +2093,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   async getFormModel(functionID){
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = JSON.parse(JSON.stringify(this.dialog?.formModel));
-    formModel.formName = f.formName;
-    formModel.gridViewName = f.gridViewName;
-    formModel.entityName = f.entityName;
+    formModel.formName = f?.formName;
+    formModel.gridViewName = f?.gridViewName;
+    formModel.entityName = f?.entityName;
     formModel.funcID = functionID;
     return formModel;
   }

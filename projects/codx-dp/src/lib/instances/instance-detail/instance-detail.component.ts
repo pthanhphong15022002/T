@@ -124,8 +124,8 @@ export class InstanceDetailComponent implements OnInit {
       this.currentStep = this.dataSelect.currentStep;
       this.instanceStatus = this.dataSelect.status;
       this.instance = this.dataSelect;
-     this.GetStepsByInstanceIDAsync(this.id,this.dataSelect.processID);
-
+    // this.GetStepsByInstanceIDAsync(this.id,this.dataSelect.processID);
+  this.GetStepsByInstanceIDAsync(this.id);
       //cái này xóa luon di. chưa chạy xong api mà gọi ra la sai
       // if (this.listSteps == null && this.listSteps.length == 0) {
       //   this.tmpTeps = null;
@@ -135,8 +135,9 @@ export class InstanceDetailComponent implements OnInit {
     console.log(this.formModel);
   }
 
-  GetStepsByInstanceIDAsync(insID, proccessID){
-    var data = [insID,proccessID];
+  GetStepsByInstanceIDAsync(insID){
+    // var data = [insID,proccessID];
+       var data = [insID];
      this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res) {
         this.listSteps = res;

@@ -13,8 +13,11 @@
     </div>
     <div class="right">
       <div class="group-button">
-        <button class="button-custom"   *ngIf="dataStep?.stepStatus < 3 && isUpdate">
-          <span 
+        <button
+          class="button-custom"
+          *ngIf="dataStep?.stepStatus < 3 && isUpdate"
+        >
+          <span
             [ngClass]="'icon-edit icon-20 text-primary-600 py-2'"
             style="font-weight: 500"
             (click)="popupCustomField(dataStep.fields)"
@@ -63,7 +66,12 @@
   </span>
 
   <span class="text-dark margin-l" *ngIf="data.dataType == 'N'">
-    {{ data.dataValue }} <span *ngIf="data.dataFormat == 'P'">%</span>
+    {{
+      data.dataFormat == "I"
+        ? data.dataValue.toFixed(0)
+        : data.dataValue.toFixed(2)
+    }}
+    <span *ngIf="data.dataFormat == 'P'">%</span>
   </span>
   <span class="text-dark margin-l" *ngIf="data.dataType == 'D'">
     <span

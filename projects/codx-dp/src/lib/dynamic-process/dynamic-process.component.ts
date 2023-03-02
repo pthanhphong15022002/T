@@ -341,7 +341,6 @@ export class DynamicProcessComponent
       let idx = this.listClickedCoppy.findIndex((x) => x.id === data.id);
       if (idx >= 0) this.listClickedCoppy.splice(idx, 1);
     }
-    console.log(this.listClickedCoppy);
   }
   getVauleFormCopy() {
     this.cache.valueList('DP037').subscribe((res) => {
@@ -354,8 +353,6 @@ export class DynamicProcessComponent
           idxStep + 1,
           this.listSelectCoppy.length - 1
         );
-        console.log(this.listSelectStepCoppy);
-        console.log(this.listSelectCoppy);
       }
     });
   }
