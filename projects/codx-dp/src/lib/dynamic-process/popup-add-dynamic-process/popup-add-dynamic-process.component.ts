@@ -69,6 +69,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('addGroupJobPopup') addGroupJobPopup: TemplateRef<any>;
   @ViewChild('addStage') addStagePopup: TemplateRef<any>;
   @ViewChild('addReasonPopup') addReasonPopup: TemplateRef<any>;
+  @ViewChild('autoNumberSetting') autoNumberSetting: any;
   process = new DP_Processes();
   permissions = [];
   dialog: any;
@@ -201,6 +202,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isHover = '';
   vllType = 'DP022';
   dataChild = [];
+  instanceNoEx: string = '';
   //end data Test
   isShowstage = true;
   titleAdd = 'Thêm';
@@ -212,6 +214,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   oldIdProccess: any;
   newIdProccess: any;
   listValueCopy: any;
+  adAutoNumber: any;
+  vllDateFormat: any;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -292,6 +297,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getValListDayoff();
     this.autoHandleStepReason();
     this.loadCbxProccess();
+    this.getVllFormat();
   }
 
   setDefaultOwner() {
@@ -512,10 +518,29 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.process.instanceNoSetting != this.instanceNoSetting))
       ) {
         this.notiService.alertCode('DP009').subscribe((e) => {
+          var input: any;
+          if (this.autoNumberSetting.nativeElement) {
+            var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
+              'codx-input[type="text"]'
+            );
+            if (ele) {
+              let htmlE = ele[0] as HTMLElement;
+              input = htmlE.querySelector('input.codx-text') as HTMLElement;
+            }
+          }
           if (e?.event?.status == 'Y') {
             this.updateNodeStatus(oldNo, newNo);
             this.currentTab = tabNo;
-          } else return;
+            if (input) {
+              input.style.removeProperty('border-color', 'red', 'important');
+            }
+          } else {
+            if (input) {
+              input.focus();
+              input.style.setProperty('border-color', 'red', 'important');
+              return;
+            }
+          }
         });
       } else {
         this.updateNodeStatus(oldNo, newNo);
@@ -573,11 +598,30 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.process.instanceNoSetting != this.instanceNoSetting)
         ) {
           this.notiService.alertCode('DP009').subscribe((e) => {
+            var input: any;
+            if (this.autoNumberSetting.nativeElement) {
+              var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
+                'codx-input[type="text"]'
+              );
+              if (ele) {
+                let htmlE = ele[0] as HTMLElement;
+                input = htmlE.querySelector('input.codx-text') as HTMLElement;
+              }
+            }
             if (e?.event?.status == 'Y') {
               this.updateNodeStatus(oldNode, newNode);
               this.currentTab++;
               this.processTab == 0 && this.processTab++;
-            } else return;
+              if (input) {
+                input.style.removeProperty('border-color', 'red', 'important');
+              }
+            } else {
+              if (input) {
+                input.focus();
+                input.style.setProperty('border-color', 'red', 'important');
+              }
+              return;
+            }
           });
         } else {
           this.updateNodeStatus(oldNode, newNode);
@@ -1058,46 +1102,132 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //end
 
-  //Popup setiing autoNumber
+  //Popup setiing autoNumber - Thao lam dung sua Please
   openAutoNumPopup() {
+    if (!this.instanceNoSetting || this.instanceNoSetting.trim() == '') {
+      if (this.autoNumberSetting.nativeElement) {
+        var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
+          'codx-input[type="text"]'
+        );
+        if (ele) {
+          let htmlE = ele[0] as HTMLElement;
+          var input = htmlE.querySelector('input.codx-text') as HTMLElement;
+          if (input) input.focus();
+        }
+      }
+      return;
+    }
+    var obj = {};
     if (this.action != 'edit') {
       //save new autoNumber
-      let popupAutoNum = this.callfc.openForm(
-        PopupAddAutoNumberComponent,
-        '',
-        550,
-        (screen.width * 40) / 100,
-        '',
-        {
-          autoNoCode: this.instanceNoSetting,
-          description: 'DP_Instances',
-          newAutoNoCode: this.instanceNoSetting,
-          isSaveNew: '1',
-        }
-      );
-      popupAutoNum.closed.subscribe((res) => {
-        if (res?.event) {
-          this.process.instanceNoSetting = res?.event?.autoNoCode;
-        }
-      });
+      obj = {
+        autoNoCode: this.instanceNoSetting,
+        description: 'DP_Instances',
+        newAutoNoCode: this.instanceNoSetting,
+        isSaveNew: '1',
+      };
     } else {
       //cap nhật
-      let popupAutoNum = this.callfc.openForm(
-        PopupAddAutoNumberComponent,
-        '',
-        550,
-        (screen.width * 40) / 100,
-        '',
-        {
-          autoNoCode: this.instanceNoSetting,
-          description: 'DP_Instances',
+      obj = {
+        autoNoCode: this.instanceNoSetting,
+        description: 'DP_Instances',
+      };
+    }
+    let popupAutoNum = this.callfc.openForm(
+      PopupAddAutoNumberComponent,
+      '',
+      550,
+      (screen.width * 40) / 100,
+      '',
+      obj
+    );
+    popupAutoNum.closed.subscribe((res) => {
+      if (res?.event) {
+        this.process.instanceNoSetting = res?.event?.autoNoCode;
+        this.setViewAutoNumber(res?.event);
+      }
+    });
+  }
+
+  setViewAutoNumber(data) {
+    if (this.vllDateFormat?.datas.length > 0) {
+      let dateFormat = '';
+      if (data?.dateFormat != '0') {
+        dateFormat =
+          this.vllDateFormat.datas.filter((p) => p.value == data?.dateFormat)[0]
+            ?.text ?? '';
+      }
+
+      let lengthNumber;
+      let strNumber = '';
+      this.instanceNoEx = data?.fixedString + data?.separator + dateFormat;
+      lengthNumber = data?.maxLength - this.instanceNoEx.length;
+      strNumber = '#'.repeat(lengthNumber);
+      switch (data?.stringFormat) {
+        // {value: '0', text: 'Chuỗi & Ngày - Số', default: 'Chuỗi & Ngày - Số', color: null, textColor: null, …}
+        case '0': {
+          this.instanceNoEx =
+            data?.fixedString + dateFormat + data?.separator + strNumber;
+          break;
         }
-      );
-      popupAutoNum.closed.subscribe((res) => {
-        if (res?.event) {
-          this.process.instanceNoSetting = res?.event?.autoNoCode;
+        // {value: '1', text: 'Chuỗi & Số - Ngày', default: 'Chuỗi & Số - Ngày', color: null, textColor: null, …}
+        case '1': {
+          this.instanceNoEx =
+            data?.fixedString + strNumber + data?.separator + dateFormat;
+          break;
         }
-      });
+        // {value: '2', text: 'Số - Chuỗi & Ngày', default: 'Số - Chuỗi & Ngày', color: null, textColor: null, …}
+        case '2':
+          this.instanceNoEx =
+            strNumber + data?.separator + data?.fixedString + dateFormat;
+          break;
+        // {value: '3', text: 'Số - Ngày & Chuỗi', default: 'Số - Ngày & Chuỗi', color: null, textColor: null, …}
+        case '3':
+          this.instanceNoEx =
+            strNumber + data?.separator + dateFormat + data?.fixedString;
+          break;
+
+        // {value: '4', text: 'Ngày - Số & Chuỗi', default: 'Ngày - Số & Chuỗi', color: null, textColor: null, …}
+        case '4': {
+          this.instanceNoEx =
+            dateFormat + data?.separator + strNumber + data?.fixedString;
+          break;
+        }
+        // {value: '5', text: 'Ngày & Chuỗi & Số', default: 'Ngày & Chuỗi & Số', color: null, textColor: null, …}
+        case '5': {
+          this.instanceNoEx = data?.fixedString + dateFormat;
+          lengthNumber = data?.maxLength - this.instanceNoEx.length;
+          strNumber = '#'.repeat(lengthNumber);
+          this.instanceNoEx = dateFormat + data?.fixedString + strNumber;
+          break;
+        }
+        // {value: '6', text: 'Chuỗi - Ngày', default: 'Chuỗi - Ngày', color: null, textColor: null, …}
+        case '6': {
+          this.instanceNoEx = data?.fixedString + data?.separator + dateFormat;
+          break;
+        }
+        // {value: '7', text: 'Ngày - Chuỗi', default: 'Ngày - Chuỗi', color: null, textColor: null, …}
+        case '7': {
+          this.instanceNoEx = dateFormat + data?.separator + data?.fixedString;
+          break;
+        }
+      }
+
+      this.instanceNoEx = this.instanceNoEx.substring(0, data?.maxLength);
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+  async getVllFormat() {
+    this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
+    if (!this.adAutoNumber && this.action != 'add') {
+      if (this.process.instanceNoSetting) {
+        this.adAutoNumber = await firstValueFrom(
+          this.dpService.getADAutoNumberByAutoNoCode(
+            this.process.instanceNoSetting
+          )
+        );
+        if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
+      }
     }
   }
   //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>

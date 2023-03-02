@@ -429,4 +429,13 @@ export class CodxDpService {
       processID
     );
   }
+  getADAutoNumberByAutoNoCode(autoNoCode): Observable<any> {
+    return this.api.execSv(
+      'SYS',
+      'AD',
+      'AutoNumbersBusiness',
+      'GetAutoNumberAsync',
+      [autoNoCode]
+    );
+  }
 }
