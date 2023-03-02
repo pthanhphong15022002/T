@@ -674,6 +674,7 @@ export class EmployeeDetailComponent extends UIComponent {
         this.hrService.getViewSkillAsync(rqESkill).subscribe((res) => {
           if (res) {
             this.lstESkill = res;
+            console.log('ressssssssssssssssssssss', res);
           }
         });
       }
@@ -847,7 +848,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
     this.appointionSortModel = new SortModel();
     this.appointionSortModel.field = '(EffectedDate)';
-    this.appointionSortModel.dir = 'desc'
+    this.appointionSortModel.dir = 'desc';
 
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       this.addHeaderText = res[0].customName;
@@ -2374,7 +2375,7 @@ export class EmployeeDetailComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            } else if (funcID == 'eSkill') {
+            } else if (funcID == 'eSkill') { 
               this.hrService.deleteESkill1(data).subscribe((res) => {
                 if (res) {
                   if (!this.skillGrid && res[0] == true) {
@@ -2382,11 +2383,8 @@ export class EmployeeDetailComponent extends UIComponent {
                     this.eSkillRowCount--;
                   } else if (this.lstESkill && res[0] == true) {
                     this.notify.notifyCode('SYS008');
-                    (this.skillGrid?.dataService as CRUDService)
-                      .remove(data)
-                      .subscribe();
                     this.lstESkill = res[1];
-                    this.eSkillRowCount--;
+                    this.eSkillRowCount += this.updateGridView(this.skillGrid, 'delete', data);
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -3027,7 +3025,7 @@ export class EmployeeDetailComponent extends UIComponent {
       if (res.event) {
         if (actionType == 'add' || actionType == 'copy') {
           console.log('gia tri benefit moi them vao la', res.event);
-          
+
           (this.grid?.dataService as CRUDService)?.add(res.event).subscribe();
           this.eBenefitRowCount += 1;
         } else if (actionType == 'edit') {
@@ -3595,20 +3593,9 @@ export class EmployeeDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if (
-        (actionType == 'add' || actionType == 'copy') &&
-        res.event.isSuccess === true
-      ) {
-        (this.eDegreeGrid.dataService as CRUDService)
-          .add(res.event)
-          .subscribe();
-        console.log('res dataaaaa', res);
-        this.eDegreeRowCount++;
-      } else if (actionType == 'edit') {
-        (this.eDegreeGrid.dataService as CRUDService)
-          .update(res.event)
-          .subscribe();
-      }
+      if(res)
+       this.eDegreeRowCount += this.updateGridView(this.eDegreeGrid, actionType, res.event);
+
       this.df.detectChanges();
     });
   }
@@ -3632,30 +3619,19 @@ export class EmployeeDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      //if (!res?.event) (this.skillGrid?.dataService as CRUDService).clear();
-      if (res.event != null && !this.skillGrid) {
-        if (
-          (actionType === 'add' || actionType === 'copy') &&
-          res.event[0].isSuccess == true
-        ) {
-          this.lstESkill = res?.event[1];
-          this.eSkillRowCount++;
-        } else this.lstESkill = res?.event[1];
-      } else if (res.event != null && this.skillGrid) {
-        if (
-          (actionType === 'add' || actionType === 'copy') &&
-          res.event[0].isSuccess == true
-        ) {
-          (this.skillGrid?.dataService as CRUDService)
-            .add(res.event[0])
-            .subscribe();
-          this.eSkillRowCount++;
-          this.lstESkill = res?.event[1];
-        } else if (actionType === 'edit') {
-          (this.skillGrid?.dataService as CRUDService)
-            .update(res.event[0])
-            .subscribe();
-          this.lstESkill = res?.event[1];
+      if (!res?.event) (this.skillGrid?.dataService as CRUDService)?.clear();
+      else if (res.event != null) {
+        this.lstESkill = res?.event[1];
+        if (this.skillGrid) {
+          this.eSkillRowCount += this.updateGridView(
+            this.skillGrid,
+            actionType,
+            res.event[0]
+          );
+        } else {
+          if (actionType == 'add' || actionType == 'copy') {
+            this.eSkillRowCount++;
+          }
         }
       }
       this.df.detectChanges();
@@ -4433,7 +4409,7 @@ export class EmployeeDetailComponent extends UIComponent {
   ) {
     if (!dataItem) (gridView?.dataService as CRUDService)?.clear();
     else {
-      if (actionType == 'add') {
+      if (actionType == 'add' || actionType == 'copy') {
         (gridView?.dataService as CRUDService)?.add(dataItem, 0).subscribe();
         return 1;
       } else if (actionType == 'edit') {
