@@ -214,6 +214,7 @@ export class EmployeeDetailComponent extends UIComponent {
   passportSortModel: SortModel;
   skillIDSortModel: SortModel;
   skillGradeSortModel: SortModel;
+  appointionSortModel: SortModel;
   bSalarySortModel: SortModel;
   issuedDateSortModel: SortModel;
   TrainFromDateSortModel: SortModel;
@@ -693,6 +694,7 @@ export class EmployeeDetailComponent extends UIComponent {
           (p) => p.parentID == this.selfInfoFuncID
         );
         this.lstBtnAdd = this.lstFuncSelfInfo;
+        this.lstBtnAdd.splice(0, 2);
 
         this.lstFuncLegalInfo = res[0].filter(
           (p) => p.parentID == this.legalInfoFuncID
@@ -842,6 +844,10 @@ export class EmployeeDetailComponent extends UIComponent {
     this.TrainFromDateSortModel = new SortModel();
     this.TrainFromDateSortModel.field = 'TrainFromDate';
     this.TrainFromDateSortModel.dir = 'desc';
+
+    this.appointionSortModel = new SortModel();
+    this.appointionSortModel.field = '(EffectedDate)';
+    this.appointionSortModel.dir = 'desc'
 
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       this.addHeaderText = res[0].customName;
@@ -2001,8 +2007,75 @@ export class EmployeeDetailComponent extends UIComponent {
 
   add(functionID) {
     switch (functionID) {
-      case this.eInfoFuncID: {
+      case this.eFamiliesFuncID: {
+        this.handleEFamilyInfo(this.addHeaderText, 'add', null);
+        break;
       }
+      case this.ePassportFuncID:
+        this.handleEmployeePassportInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eVisaFuncID:
+        this.handleEmployeeVisaInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eWorkPermitFuncID:
+        this.handleEmployeeWorkingPermitInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eBasicSalaryFuncID:
+        this.HandleEmployeeBasicSalariesInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eJobSalFuncID:
+        this.HandleEmployeeJobSalariesInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.benefitFuncID:
+        this.handlEmployeeBenefit(this.addHeaderText, 'add', null);
+        break;
+      case this.eAssetFuncID:
+        this.HandlemployeeAssetInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eContractFuncID:
+        break;
+      case this.appointionFuncID:
+        this.HandleEmployeeAppointionInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.dayoffFuncID:
+        this.HandleEmployeeDayOffInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eBusinessTravelFuncID:
+        this.HandleEBusinessTravel(this.addHeaderText, 'add', null);
+        break;
+      case this.eExperienceFuncID:
+        this.handlEmployeeExperiences(this.addHeaderText, 'add', null);
+        break;
+      case this.eDegreeFuncID:
+        this.HandleEmployeeEDegreeInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eCertificateFuncID:
+        this.HandleEmployeeECertificateInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eSkillFuncID:
+        this.HandleEmployeeESkillsInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eTrainCourseFuncID:
+        this.HandleEmployeeTrainCourseInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.awardFuncID:
+        this.HandleEmployeeEAwardsInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eDisciplineFuncID:
+        this.HandleEmployeeEDisciplinesInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eHealthFuncID:
+        this.HandleEmployeeEHealths(this.addHeaderText, 'add', null);
+        break;
+      case this.eVaccinesFuncID:
+        this.HandleEVaccinesInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eDiseasesFuncID:
+        this.HandleEmployeeEDiseasesInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eAccidentsFuncID:
+        this.HandleEmployeeAccidentInfo(this.addHeaderText, 'add', null);
+        break;
     }
   }
 
@@ -2754,16 +2827,18 @@ export class EmployeeDetailComponent extends UIComponent {
   crrFuncTab: string;
   clickTab(funcList: any) {
     this.crrFuncTab = funcList.functionID;
-    debugger;
     switch (this.crrFuncTab) {
       case this.selfInfoFuncID:
-        this.lstBtnAdd = this.lstFuncSelfInfo;
+        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncSelfInfo));
+        this.lstBtnAdd.splice(0, 2);
         break;
       case this.legalInfoFuncID:
-        this.lstBtnAdd = this.lstFuncLegalInfo;
+        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncLegalInfo));
+        this.lstBtnAdd.splice(0, 1);
         break;
       case this.jobInfoFuncID:
-        this.lstBtnAdd = this.lstFuncTaskInfo;
+        // this.lstBtnAdd = this.lstFuncTaskInfo;
+        this.lstBtnAdd = null;
         break;
       case this.benefitInfoFuncID:
         this.lstBtnAdd = this.lstFuncSalary;
@@ -2951,6 +3026,8 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add' || actionType == 'copy') {
+          console.log('gia tri benefit moi them vao la', res.event);
+          
           (this.grid?.dataService as CRUDService)?.add(res.event).subscribe();
           this.eBenefitRowCount += 1;
         } else if (actionType == 'edit') {

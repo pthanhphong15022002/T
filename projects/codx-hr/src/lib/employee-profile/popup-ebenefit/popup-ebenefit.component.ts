@@ -144,7 +144,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
           this.benefitObj.recID = p.recID;
           this.notify.notifyCode('SYS006');
           this.successFlag = true;
-          this.dialog && this.dialog.close(this.benefitObj);
+          this.dialog && this.dialog.close(p);
 
           //this.benefitObj.push(JSON.parse(JSON.stringify(this.benefitObj)));
           // if(this.listView){
