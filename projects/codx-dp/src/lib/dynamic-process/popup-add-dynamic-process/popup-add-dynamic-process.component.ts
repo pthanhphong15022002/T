@@ -1354,7 +1354,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
-  openPopupStep(type) {
+  openPopupStep(type, step?) {
     this.actionStep = type;
     if (type === 'add') {
       this.stepNew = new DP_Steps();
@@ -1367,6 +1367,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepName = this.step['stepName'];
     } else {
       this.headerText = 'Sửa Giai Đoạn';
+      this.stepNew = JSON.parse(JSON.stringify(step));
       this.stepName = this.step['stepName'];
     }
     this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
@@ -1429,10 +1430,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   saveStep() {
-    // if (!this.stepNew['stepName'] || !this.stepNew['stepName'].trim()) {
-    //   this.notiService.notifyCode('SYS009', 0, 'Tên giai đoạn');
-    //   return;
-    // }
+    if (!this.stepNew['stepName'] || !this.stepNew['stepName'].trim()) {
+      this.notiService.notifyCode('SYS009', 0, 'Tên giai đoạn');
+      return;
+    }
     if (this.actionStep == 'add' || this.actionStep == 'copy') {
       this.stepList.push(this.stepNew);
       this.viewStepSelect(this.stepNew);
@@ -1442,6 +1443,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     } else {
       this.titleViewStepCrr = this.stepNew?.stepName;
+      this.step = JSON.parse(JSON.stringify(this.stepNew));
     }
     this.popupAddStage.close();
   }
@@ -1784,7 +1786,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.deleteStep(data);
         break;
       case 'SYS03':
-        this.openPopupStep('edit');
+        this.openPopupStep('edit',data);
         break;
       case 'SYS04':
         this.copyStep(data);
