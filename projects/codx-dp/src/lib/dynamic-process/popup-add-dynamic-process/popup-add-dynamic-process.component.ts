@@ -291,15 +291,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.loadCbxProccess();
   }
 
-  ngAfterViewInit(): void {
-    //tesst
-    this.grvStep = {
-      entityName: 'DP_Steps',
-      formName: 'DPSteps',
-      gridViewName: 'grvDPSteps',
-    };
-  }
-
   setDefaultOwner() {
     var perm = new DP_Processes_Permission();
     perm.objectID = this.user?.userID;
@@ -316,18 +307,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.process.permissions = this.permissions;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     // this.updateNodeStatus(0,1);
-    this.grvMoreFunction = JSON.parse(JSON.stringify(this.dialog?.formModel));
-    this.grvMoreFunction.entityName = 'DP_InstancesSteps';
-    this.grvMoreFunction.formName = 'DPInstancesSteps';
-    this.grvMoreFunction.gridViewName = 'grvDPInstancesSteps';
     this.getTitleStepViewSetup();
     this.initForm();
     this.checkedDayOff(this.step?.excludeDayoff);
     if (this.action != 'add' && this.action != 'copy') {
       this.getStepByProcessID();
     }
+    this.grvMoreFunction = await this.getFormModel("DPT0402");
+    this.grvStep = await this.getFormModel("DPS0103")
   }
 
   //#region setup formModels and formGroup
@@ -942,8 +931,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     config.type = 'YesNo';
     var tmps = [];
     this.notiService
-      .alert('Thông báo', 'Bạn muốn xóa đối tượng này', config)
-      .closed.subscribe((x) => {
+      .alertCode('SYS030')
+      .subscribe((x) => {
         if (x.event.status == 'Y') {
           var i = -1;
           i = this.lstParticipants.findIndex(
@@ -1458,9 +1447,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
   //taskGroup
-  openTaskGroup(data?: any, type?: string) {
+  async openTaskGroup(data?: any, type?: string) {
+    let form = await this.getFormModel("DPS0105")
     this.taskGroup = new DP_Steps_TaskGroups();
-    let timeStep = this.dayStep*24 + this.hourStep; 
+    let timeStep = this.dayStep*24 + this.hourStep;
     let differenceTime = this.getHour(this.step) - timeStep;
     if (data) {
       this.roleGroupTaskOld = JSON.parse(JSON.stringify(data?.roles)) || [];
@@ -1482,7 +1472,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       500,
       500,
       '',
-      {taskGroup: this.taskGroup, differenceTime, step: this.step}
+      {taskGroup: this.taskGroup, differenceTime, step: this.step, form}
     );
     this.popupGroupJob.closed.subscribe((res) => {
       if (res?.event) {
@@ -1911,7 +1901,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   sumTimeStep() {
     let timeGroup = this.sumHourGroupTask();
     let timeTackNoGroup = 0
-    let taskNoGroup = this.taskList.filter(task => !task['taskGroupID']);
+    let taskNoGroup = this.taskList?.filter(task => !task['taskGroupID']);
     taskNoGroup?.forEach(task => {
       let time = this.calculateTimeTaskNoGroup(task['recID']);
       timeTackNoGroup = Math.max(time,timeTackNoGroup);
@@ -1923,7 +1913,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   async setTimeGroup(group, task, maxHour) {
     let x = await firstValueFrom(this.notiService.alertCode('DP010'));
-    if (x.event && x.event.status == 'Y') {
+    if (x['event'] && x['event']['status'] == 'Y') {
       let time = this.getHour(task) || 0;
       group['durationDay'] = Math.floor(maxHour / 24);
       group['durationHour'] = maxHour % 24;
@@ -1938,7 +1928,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         });
       }
-      task['parentID'] = parentID.length > 0 ? parentID.join(';') : '';
+      task['parentID'] = parentID?.length > 0 ? parentID.join(';') : '';
       return true;
     } else {
       return false;
@@ -1993,7 +1983,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         }
       } else {
-        sum = this.taskGroupList.reduce((sumHour, group) => {
+        sum = this.taskGroupList?.reduce((sumHour, group) => {
           return (sumHour += this.getHour(group));
         }, 0);
       }
@@ -2090,14 +2080,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     return false;
   }
+
+  async getFormModel(functionID){ 
+    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let formModel = JSON.parse(JSON.stringify(this.dialog?.formModel));
+    formModel.formName = f?.formName;
+    formModel.gridViewName = f?.gridViewName;
+    formModel.entityName = f?.entityName;
+    formModel.funcID = functionID;
+    return formModel;
+  }
   //View task
-  openPopupViewJob(data?: any) {
+  async openPopupViewJob(data?: any) {
     let status = 'edit';
-    let frmModel: FormModel = {
-      entityName: 'DP_Steps_Tasks',
-      formName: 'DPStepsTasks',
-      gridViewName: 'grvDPStepsTasks',
-    };
+    let frmModel = await this.getFormModel("DPS0106")
     if (!data) {
       this.popupJob.close();
       status = 'add';
@@ -2106,7 +2102,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     option.Width = '550px';
     option.zIndex = 1001;
     option.FormModel = frmModel;
-    let dialog = this.callfc.openSide(
+    this.callfc.openSide(
       ViewJobComponent,
       [
         status,
