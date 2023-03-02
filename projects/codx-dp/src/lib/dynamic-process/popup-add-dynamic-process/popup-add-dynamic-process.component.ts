@@ -1460,7 +1460,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           // lay danh sach step xoa
           if (this.action == 'edit') {
             let indexDelete = this.stepListAdd.findIndex(
-              (step) => (step.recID = id)
+              (step) => (step.recID == id)
             );
             if (indexDelete >= 0) {
               this.stepListAdd.splice(indexDelete, 1);
