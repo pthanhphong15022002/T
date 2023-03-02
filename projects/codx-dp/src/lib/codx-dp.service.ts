@@ -138,7 +138,7 @@ export class CodxDpService {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
-      'GetStepsNewByInstanceIDAsync',
+      'GetStepsByInstanceIDAsync',
       data
     );
   }

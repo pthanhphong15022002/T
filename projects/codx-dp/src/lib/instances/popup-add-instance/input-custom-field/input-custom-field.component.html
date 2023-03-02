@@ -40,6 +40,7 @@
     [placeholder]="customField.note"
     [crrValue]="customField.dataValue ||''"
     (keyUpEnter)="valueChange($event)"
+    (controlBlur)="valueChange($event)"
     (valueChange)="valueChange($event)"
   >
   </codx-input>
@@ -51,6 +52,7 @@
     [placeholder]="customField.note"
     (keyUpEnter)="valueChange($event)"
     [crrValue]="customField.dataValue||''"
+    (controlBlur)="valueChange($event)"
     (valueChange)="valueChange($event)"
   >
   </codx-input>
@@ -64,6 +66,7 @@
       [crrValue]="customField.dataValue"
       [placeholder]="customField.note"
       (keyUpEnter)="valueChange($event)"
+      (controlBlur)="valueChange($event)"
       (valueChange)="valueChange($event)"
     ></codx-input>
   </ng-container>
@@ -76,6 +79,7 @@
     [format]="formatDate"
     [placeholder]="customField.note"
     [crrValue]="customField.dataValue"
+    (controlBlur)="valueChange($event)"
     (keyUpEnter)="valueChange($event)"
     (valueChange)="valueChange($event)"
   >
@@ -89,6 +93,7 @@
     [refValue]="customField.refValue"
     [placeholder]="customField.note"
     [crrValue]="customField.dataValue"
+    (controlBlur)="valueChange($event)"
     (keyUpEnter)="valueChange($event)"
     (valueChange)="valueChange($event)"
   >

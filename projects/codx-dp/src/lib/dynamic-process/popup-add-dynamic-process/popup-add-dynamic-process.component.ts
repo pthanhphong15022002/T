@@ -484,7 +484,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let newNo = tabNo;
     let oldNo = this.currentTab;
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
-      if (tabNo!=0 &&(
+      if (tabNo!=0 &&  this.currentTab==0 &&(
         !this.process.instanceNoSetting ||
         (this.process.instanceNoSetting &&
           this.process.instanceNoSetting != this.instanceNoSetting))
