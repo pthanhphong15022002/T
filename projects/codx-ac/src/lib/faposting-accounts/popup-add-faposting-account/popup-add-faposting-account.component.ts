@@ -1,10 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  Injector,
-  Optional,
-  ViewChild
-} from '@angular/core';
+import { Component, Injector, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
   CRUDService,
@@ -12,22 +6,19 @@ import {
   DialogRef,
   NotificationsService,
   RequestOption,
-  UIComponent
+  UIComponent,
 } from 'codx-core';
-import { IAPPostingAccount } from '../interfaces/IAPPostingAccount.interface';
+import { IFAPostingAccount } from '../interfaces/IFAPostingAccount.interface';
 
 @Component({
-  selector: 'lib-popup-add-apposting-account',
-  templateUrl: './popup-add-apposting-account.component.html',
-  styleUrls: ['./popup-add-apposting-account.component.css'],
+  selector: 'lib-popup-add-faposting-account',
+  templateUrl: './popup-add-faposting-account.component.html',
+  styleUrls: ['./popup-add-faposting-account.component.css'],
 })
-export class PopupAddAPPostingAccountComponent
-  extends UIComponent
-  implements AfterViewInit
-{
+export class PopupAddFAPostingAccountComponent extends UIComponent {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
-  apPostingAccount: IAPPostingAccount = {} as IAPPostingAccount;
+  faPostingAccount: IFAPostingAccount = {} as IFAPostingAccount;
   formTitle: string = '';
   breadcrumb: string = '';
   gridViewSetup: any;
@@ -44,11 +35,9 @@ export class PopupAddAPPostingAccountComponent
     this.formTitle = dialogData.data.formTitle;
     this.breadcrumb = dialogData.data.breadcrumb;
     this.isEdit = dialogData.data.formType === 'edit' ? true : false;
-    this.apPostingAccount = dialogRef.dataService?.dataSelected;
-    this.apPostingAccount.moduleID = dialogData.data.moduleId.toString();
-    this.apPostingAccount.postType = dialogData.data.postType;
-
-    console.log('postType', this.apPostingAccount.postType);
+    this.faPostingAccount = dialogRef.dataService?.dataSelected;
+    this.faPostingAccount.moduleID = dialogData.data.moduleId.toString();
+    this.faPostingAccount.postType = dialogData.data.postType;
   }
   //#endregion
 
@@ -63,35 +52,29 @@ export class PopupAddAPPostingAccountComponent
         this.gridViewSetup = res;
       });
   }
-
-  ngAfterViewInit(): void {}
   //#endregion
 
   //#region Event
   handleInputChange(e) {
     console.log(e);
-    this.apPostingAccount[e.field] = e.data;
+    this.faPostingAccount[e.field] = e.data;
   }
   //#endregion
 
   //#region Method
   save(closeAfterSaving: boolean): void {
-    console.log(this.apPostingAccount);
+    console.log(this.faPostingAccount);
     console.log(this.form.formGroup);
 
     // validate
     const controls = this.form.formGroup.controls;
     let isValid = true;
     for (const propName in this.form.formGroup.controls) {
-      if (controls[propName].invalid) {
-        // form Dieu khoan doens't have this input
-        if (
-          propName === 'payableAcctID' &&
-          this.apPostingAccount.postType === '20'
-        ) {
-          continue;
-        }
-
+      if (
+        propName != 'moduleID' &&
+        propName != 'postType' &&
+        controls[propName].invalid
+      ) {
         this.notiService.notifyCode(
           'SYS009',
           0,
@@ -110,12 +93,12 @@ export class PopupAddAPPostingAccountComponent
       .save((req: RequestOption) => {
         req.methodName =
           this.dialogData.data.formType === 'add'
-            ? 'AddAPPostingAccountAsync'
-            : 'UpdateAPPostingAccountAsync';
-        req.className = 'APPostingAccountsBusiness';
+            ? 'AddFAPostingAccountAsync'
+            : 'UpdateFAPostingAccountAsync';
+        req.className = 'FAPostingAccountsBusiness';
         req.assemblyName = 'ERM.Business.AC';
         req.service = 'AC';
-        req.data = this.apPostingAccount;
+        req.data = this.faPostingAccount;
 
         return true;
       })
@@ -127,8 +110,8 @@ export class PopupAddAPPostingAccountComponent
             this.dialogRef.close();
           } else {
             this.form.formGroup.reset();
-            this.apPostingAccount.note = '';
-            delete this.apPostingAccount.recID;
+            this.faPostingAccount.note = '';
+            delete this.faPostingAccount.recID;
 
             (this.dialogRef.dataService as CRUDService).addNew().subscribe();
           }
