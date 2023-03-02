@@ -27,6 +27,7 @@ import { Address } from '../../models/Address.model';
 import { BankAccount } from '../../models/BankAccount.model';
 import { Contact } from '../../models/Contact.model';
 import { Customers } from '../../models/Customers.model';
+import { Objects } from '../../models/Objects.model';
 import { PopAddAddressComponent } from '../pop-add-address/pop-add-address.component';
 import { PopAddBankComponent } from '../pop-add-bank/pop-add-bank.component';
 import { PopAddContactComponent } from '../pop-add-contact/pop-add-contact.component';
@@ -45,6 +46,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   dialog!: DialogRef;
   customers: Customers;
   contact: Contact;
+  objects: Objects = new Objects();
   objectBankaccount: Array<BankAccount> = [];
   objectBankaccountDelete: Array<BankAccount> = [];
   objectContact: Array<Contact> = [];
@@ -509,6 +511,31 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       }
     }
   }
+  addObjects() {
+    this.objects.transID = this.customers.recID;
+    this.objects.objectID = this.customers.customerID;
+    this.objects.objectName = this.customers.customerName;
+    this.objects.objectName2 = this.customers.customerName2;
+    this.objects.objectType = this.objecttype;
+    this.objects.objectGroupID = this.customers.custGroupID;
+    this.objects.address = this.customers.address;
+    this.objects.countryID = this.customers.countryID;
+    this.objects.provinceID = this.customers.provinceID;
+    this.objects.districtID = this.customers.districtID;
+    this.objects.phone = this.customers.phone;
+    this.objects.faxNo = this.customers.faxNo;
+    this.objects.email = this.customers.email;
+    this.objects.webPage = this.customers.webPage;
+    this.objects.status = '1';
+    this.objects.note = this.customers.note;
+    this.objects.currencyID = this.customers.currencyID;
+    this.objects.buid = this.customers.buid;
+    this.objects.stop = this.customers.stop;
+    this.objects.createdOn = this.customers.createdOn;
+    this.objects.createdBy = this.customers.createdBy;
+    this.objects.modifiedOn = this.customers.modifiedOn;
+    this.objects.modifiedBy = this.customers.modifiedBy;
+  }
   //#endregion
 
   //#region CRUD
@@ -535,6 +562,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
           })
           .subscribe((res) => {
             if (res.save) {
+              this.addObjects();
               this.acService
                 .addData(
                   'ERM.Business.BS',
@@ -556,6 +584,11 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                   this.customerID,
                   this.objectContact,
                   this.objectContactAddress,
+                ])
+                .subscribe((res: []) => {});
+              this.acService
+                .addData('ERM.Business.AC', 'ObjectsBusiness', 'AddAsync', [
+                  this.objects
                 ])
                 .subscribe((res: []) => {});
               this.dialog.close();
@@ -582,6 +615,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
           })
           .subscribe((res) => {
             if (res.save || res.update) {
+              this.addObjects();
               this.api
                 .exec(
                   'ERM.Business.BS',
@@ -613,6 +647,11 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                   this.objectContactAddressDelete,
                 ])
                 .subscribe((res: any) => {});
+              this.acService
+                .addData('ERM.Business.AC', 'ObjectsBusiness', 'UpdateAsync', [
+                  this.objects
+                ])
+                .subscribe((res: []) => {});
               this.dialog.close();
               this.dt.detectChanges();
             }

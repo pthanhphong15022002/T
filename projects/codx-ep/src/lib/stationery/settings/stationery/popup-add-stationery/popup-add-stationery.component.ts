@@ -36,7 +36,6 @@ export class PopupAddStationeryComponent
   dialogAddStationery: FormGroup;
   color: any;
   returnData;
-  columnsGrid;
   title: string = '';
   tabInfo: any[] = [
     {
@@ -73,6 +72,7 @@ export class PopupAddStationeryComponent
   warehouseOwner: string = '';
   warehouseOwnerName: string = '';
   defaultWarehouse: string = '';
+  isPriceVisible: boolean = false;
 
   constructor(
     injector: Injector,
@@ -96,6 +96,14 @@ export class PopupAddStationeryComponent
   }
 
   onInit(): void {
+    this.epService.getEPStationerySetting('1').subscribe((res: any) => {
+      if (res) {
+        let dataValue = res.dataValue;
+        let json = JSON.parse(dataValue);
+        this.isPriceVisible = json.ShowUnitPrice ?? false;
+      }
+    });
+
     this.epService
       .getAutoNumberDefault(this.formModel.funcID)
       .subscribe((autoN) => {
@@ -105,20 +113,7 @@ export class PopupAddStationeryComponent
           }
         }
       });
-    this.columnsGrid = [
-      // {
-      //   field: 'noName',
-      //   headerText: 'Phân loại',
-      //   template: this.itemCategory,
-      //   width: 200,
-      // },
-      // {
-      //   field: 'competenceID',
-      //   headerText: 'Người nhận/gửi',
-      //   template: this.itemSenderOrReceiver,
-      //   width: 200,
-      // },
-    ];
+
     this.epService.getQuota(this.data.resourceID).subscribe((res) => {
       if (res) {
         this.quota = res;
