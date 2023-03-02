@@ -68,8 +68,9 @@
       [attr.data-group]="data.refLineID"
     >
       <div class="d-flex justify-content-between">
+        <div class="w-40px min-w-40px">
         <div
-          class="w-40px min-w-40px"
+          
           *ngIf="!isGroup && (data.refLineID || data.icon)"
         >
           <ng-container
@@ -84,6 +85,7 @@
             <span [ngClass]="data.icon" class="icon-16"></span>
           </ng-template>
         </div>
+      </div>
         <div
           class="d-flex flex-column w-100"
           *ngIf="data.tilte || data.description"

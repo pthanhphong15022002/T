@@ -312,15 +312,12 @@
             </div>
 
             <div class="d-flex align-items-center mb-2">
-              <div class="d-flex align-items-center me-2">
-                <span class="icon-connection-point icon-16 me-1"></span>
-                <span #email>Đội BA</span>
-              </div>
-              <span class="text-dark d-flex align-items-center">
-                <span class="icon-i-dot text-gray-500"></span>
-                <span #email>Nhóm Codx</span>
-                <span class="icon-i-dot text-gray-500"></span>
-                <span #email>Trung tâm DXC</span>
+              <span class="text-dark d-flex flex-wrap align-items-center" *ngIf="lstOrg">
+                <ng-container *ngFor="let org of lstOrg; let i = index">
+                  <span class="icon-connection-point icon-16 me-1" *ngIf="i == 0"></span>
+                  <span class="icon-i-dot text-gray-500" *ngIf="i > 0"></span>
+                  <span>{{org.orgUnitName}}</span>
+                </ng-container>
               </span>
             </div>
             <div class="d-flex align-items-center mb-2">
@@ -605,67 +602,17 @@
         class="btn btn-icon btn-primary rounded-circle fs-1 icon-add icon-22"
       >
       </span>
-      <div ngbDropdownMenu class="" style="min-width: 200px">
+      <div ngbDropdownMenu class="min-w-200px">
         <div class="card card-flush">
-          <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030201'">
-            <div
-              class="d-flex btn btn-hover-primary"
-              (click)="handleEFamilyInfo(addHeaderText, 'add', null)"
-            >
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Quan hệ gia đình"
-                [formModel]="view.formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="d-flex btn btn-hover-primary"
-              (click)="handleEmployeePassportInfo(addHeaderText, 'add', null)"
-            >
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Hộ chiếu"
-                [formModel]="view.formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="d-flex btn btn-hover-primary"
-              (click)="handleEmployeeVisaInfo(addHeaderText, 'add', null)"
-            >
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Thị thực"
-                [formModel]="view.formModel"
-              >
-              </codx-label>
-            </div>
-            <div
-              class="d-flex btn btn-hover-primary"
-              (click)="
-                handleEmployeeWorkingPermitInfo(addHeaderText, 'add', null)
-              "
-            >
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Giấy phép lao động"
-                [formModel]="view.formModel"
-              >
-              </codx-label>
-            </div>
+          <div class="d-flex flex-column" *ngIf="lstBtnAdd">
+            <ng-container *ngFor="let item of lstBtnAdd">
+              <a class="nav-link w-100 btn btn-flex btn-active-light-primary" (click)="add(item.functionID)">
+                <span class="me-2">
+                  <span class="icon-person icon-18"></span>
+                </span>
+                <div class="fw-bold"> {{item.customName}} </div>
+              </a>
+            </ng-container>
           </div>
           <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030202'">
             <div class="d-flex btn btn-hover-primary">
@@ -2474,7 +2421,7 @@
                       >
                       </codx-label>
                     </div>
-                    <div #idCardNo class="fw-bold text-dark fs-6">
+                    <div class="fw-bold text-dark fs-6">
                       {{
                         infoPersonal?.orgUnitID
                           | formatvalue : eInfoFormModel : "orgUnitID"
@@ -3183,10 +3130,6 @@
               </div>
 
               <div class="" *ngIf="ViewAllEBasicSalaryFlag">
-                <div
-                  class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5"
-                ></div>
-
                 <div class="d-flex align-items-center mt-5 mb-3">
                   <span class="icon-i-filter-right icon-20 me-2"></span>
                   <div class="d-flex align-items-center me-3">
@@ -3345,17 +3288,19 @@
               </div>
 
               <div class="" *ngIf="ViewAllEJobSalaryFlag">
-                <div
-                  class="d-flex justify-content-between text-dark fw-bold mt-6 mb-3 ms-5"
-                >
-                  <div class="d-flex me-3">
-                    <codx-label default="Chi tiết" class="text-uppercase">
+                <div class="d-flex align-items-center mt-5 mb-3">
+                  <span class="icon-i-filter-right icon-20 me-2"></span>
+                  <div class="d-flex align-items-center me-3">
+                    <codx-label
+                      default="Chi tiết"
+                      class="fw-bold text-uppercase fs-5 text-gray-600"
+                    >
                     </codx-label>
-                    <span class="text-gray-500 ms-2"> | </span>
-                    <span>({{ eJobSalaryRowCount }})</span>
+                    <span class="text-gray-500 mx-2"> | </span>
+                    <span class="text-gray-500">({{ eJobSalaryRowCount }})</span>
                   </div>
                 </div>
-                <div class="">
+                <div class="profile-grid">
                   <codx-gridview
                     *ngIf="jobSalaryColumnGrid && eJobSalaryFormModel"
                     #jobSalaryGridview
