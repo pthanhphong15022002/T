@@ -1443,7 +1443,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     } else {
       this.titleViewStepCrr = this.stepNew?.stepName;
-      this.step = JSON.parse(JSON.stringify(this.stepNew));
+      this.step['stepName'] = this.stepNew['stepName'];
     }
     this.popupAddStage.close();
   }
