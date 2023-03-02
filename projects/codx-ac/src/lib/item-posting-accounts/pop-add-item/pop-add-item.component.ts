@@ -52,6 +52,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.itemposting = dialog.dataService!.dataSelected;
+    console.log(this.itemposting);
     if (
       dialogData.data?.moduleID != null &&
       dialogData.data?.postType != null
@@ -87,16 +88,18 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
   valueChangeCust(e: any) {
     this.itemposting.custSelection = '';
     if (e.field == 'custLevel' && e.data == '3') {
-      this.itemposting.custSelection = '0';
+      this.gridViewSetup['CustSelection'].isRequire = false;
+    }else{
+      this.gridViewSetup['CustSelection'].isRequire = true;
     }
     this.itemposting[e.field] = e.data;
   }
   valueChangeItemLevel(e: any) {
     this.itemposting.itemSelection = '';
-    switch (e.data) {
-      case '4':
-        this.itemposting.itemSelection = '0';
-        break;
+    if (e.data == '4') {
+      this.gridViewSetup['ItemSelection'].isRequire = false;
+    }else{
+      this.gridViewSetup['ItemSelection'].isRequire = true;
     }
     this.itemposting[e.field] = e.data;
   }
@@ -104,6 +107,12 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
 
   //#region Function
   checkValidate() {
+    if (this.itemposting.itemLevel == "4") {
+      this.gridViewSetup['ItemSelection'].isRequire = false;
+    }
+    if (this.itemposting.custLevel == "3") {
+      this.gridViewSetup['CustSelection'].isRequire = false;
+    }
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.itemposting);
     for (let index = 0; index < keygrid.length; index++) {
@@ -135,12 +144,6 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      if (this.itemposting.custLevel == '3') {
-        this.itemposting.custSelection = '0';
-      }
-      if (this.itemposting.itemLevel == '4') {
-        this.itemposting.itemSelection = '0';
-      }
       if (this.formType == 'add') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
@@ -186,12 +189,6 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      if (this.itemposting.custLevel == '3') {
-        this.itemposting.custSelection = '0';
-      }
-      if (this.itemposting.itemLevel == '4') {
-        this.itemposting.itemSelection = '0';
-      }
       this.dialog.dataService
         .save((opt: RequestOption) => {
           opt.methodName = 'AddAsync';
@@ -206,6 +203,8 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
             this.dialog.dataService.clear();
             this.dialog.dataService.addNew().subscribe((res) => {
               this.itemposting = this.dialog.dataService.dataSelected;
+              this.itemposting.moduleID = this.moduleID;
+              this.itemposting.postType = this.postType;
             });
           } else {
             this.notification.notify('Thiết lập đã tồn tại', '2');

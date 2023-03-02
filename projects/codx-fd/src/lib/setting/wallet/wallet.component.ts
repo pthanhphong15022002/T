@@ -133,6 +133,7 @@ export class WalletComponent extends UIComponent implements OnInit {
   title: any;
   description: any;
   field: any;
+
   LoadData() {
     this.api
       .call(
@@ -173,6 +174,7 @@ export class WalletComponent extends UIComponent implements OnInit {
         }
       });
   }
+
   open(content, typeContent) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -181,12 +183,14 @@ export class WalletComponent extends UIComponent implements OnInit {
     });
     this.changedr.detectChanges();
   }
+
   redirectPageDetailWallet(applyFor: string) {
     this.codxService.navigate('', 'fd/detail-policy-coin', {
       applyFor: applyFor,
       funcID: this.funcID,
     });
   }
+
   onSaveStatusPolicy(e, item) {
     this.api
       .execSv<any>(

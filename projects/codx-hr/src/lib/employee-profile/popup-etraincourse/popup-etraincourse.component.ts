@@ -39,6 +39,8 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   trainCourseObj;
   dataVllSupplier: any;
   result;
+  fromDateFormat;
+  toDateFormat;
   ops = ['m', 'y'];
 
   isAfterRender = false;
@@ -123,22 +125,13 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
           }
         });
     }
-
-    // this.hrService
-    //   .getFormGroup(this.formModel2.formName, this.formModel2.gridViewName)
-    //   .then((item) => {
-    //     this.formGroup2 = item;
-    //     console.log('form2 test', this.formGroup2);
-    //     this.hrService
-    //       .getEmployeeCertificatesInfoById(this.employId)
-    //       .subscribe((p) => {
-    //         console.log('thong tin chung chi nhan vien', p);
-    //         this.dataForm2 = p;
-    //         this.formModel2.currentData = this.dataForm2;
-    //         this.formGroup2.patchValue(this.dataForm2);
-    //         this.isAfterRender = true;
-    //       });
-    //   });
+    if(this.trainCourseObj){
+      this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
+      this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);
+    } else {
+      this.fromDateFormat = this.getFormatDate(null);
+      this.toDateFormat = this.getFormatDate(null);
+    }
   }
 
   onInit(): void {
@@ -199,77 +192,6 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
         });
     }
   }
-  // onSaveForm(closeForm: boolean) {
-  //   this.formGroup.patchValue({
-  //     trainFromDate: new Date(),
-  //     trainToDate: new Date(),
-  //   });
-
-  //   if (this.formGroup.invalid) {
-  //     this.hrService.notifyInvalid(this.formGroup, this.formModel);
-  //     return;
-  //   }
-
-  //   if (this.data.contractFrom > this.data.contractTo) {
-  //     this.hrService.notifyInvalidFromTo(
-  //       'ContractFrom',
-  //       'ContractTo',
-  //       this.formModel
-  //     );
-  //     return;
-  //   }
-
-  //   if (this.actionType == 'add' || this.actionType == 'copy') {
-  //     Code cung
-  //     this.data.trainCourseID = '123';
-  //     this.data.employeeID = this.employId;
-
-  //     this.hrService
-  //       .addETraincourse(this.data, this.funcID)
-  //       .subscribe((res) => {
-  //         if (res) {
-  //           this.notify.notifyCode('SYS006');
-  //           this.actionType = 'edit';
-  //           if (this.listView) {
-  //             (this.listView.dataService as CRUDService).add(res).subscribe();
-  //           }
-  //           if (closeForm) {
-  //             this.dialog && this.dialog.close();
-  //           }
-  //         }
-  //       });
-  //   } else {
-  //     this.hrService
-  //       .updateEmployeeTrainCourseInfo(this.data, this.funcID)
-  //       .subscribe((res) => {
-  //         if (res) {
-  //           this.notify.notifyCode('SYS007');
-  //           if (this.listView) {
-  //             (this.listView.dataService as CRUDService)
-  //               .update(res)
-  //               .subscribe();
-  //           }
-  //           if (closeForm) {
-  //             this.dialog && this.dialog.close();
-  //           }
-  //         } else this.notify.notifyCode('SYS021');
-  //       });
-  //   }
-  // }
-
-  // onSaveForm2() {
-  //   this.hrService.AddECertificateInfo(this.dataForm2).subscribe((p) => {
-  //     if (p) {
-  //       this.notify.notifyCode('SYS006');
-  //       this.dialog.close();
-  //     } else this.notify.notifyCode('SYS023');
-  //   });
-  // }
-
-  // afterRenderListView(event) {
-  //   this.listView = event;
-  //   console.log(this.listView);
-  // }
 
   click(data) {
     this.data = JSON.parse(JSON.stringify(data));
@@ -351,5 +273,13 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       }
       this.trainCourseObj.trainToDate = event.fromDate;
     }
+  }
+  getFormatDate(trainFrom : string){
+    let resultDate = '';
+    if(trainFrom){
+      let arrDate = trainFrom.split('/');
+      resultDate = arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
+      return resultDate
+    } else return resultDate = 'y';
   }
 }

@@ -32,10 +32,27 @@
                     <div class="fw-bold fs-6">
                         {{data.positionName}}
                     </div>
-                    <div class="text-gray-600 mt-2">
-                        <span *ngIf="data.orgUnitName">{{data.orgUnitName}}</span>
-                        <span *ngIf="data.departmentName">| {{data.departmentName}}</span>
-                        <span *ngIf="data.divisionName">| {{data.divisionName}}</span>
+                    <div class="d-flex align-items-center text-gray-600 mt-2">
+                        <ng-container *ngIf="data.orgUnitName;else noOrgUnitName">
+                            <span>{{data.orgUnitName}}</span>
+                        </ng-container>
+                        <ng-template #noOrgUnitName>
+                            <codx-label [formModel]="view.formModel" fiedName="OrgUnitID"></codx-label>
+                        </ng-template>
+                        <span class="mx-2">|</span>
+                        <ng-container *ngIf="data.departmentName;else noDepartmentName">
+                            <span>{{data.departmentName}}</span>
+                        </ng-container>
+                        <ng-template #noDepartmentName>
+                            <codx-label [formModel]="view.formModel" fiedName="DepartmentID"></codx-label>
+                        </ng-template>
+                        <span class="mx-2">|</span>
+                        <ng-container *ngIf="data.divisionName;else noDivisionName">
+                            <span>{{data.divisionName}}</span>
+                        </ng-container>
+                        <ng-template #noDivisionName>
+                            <codx-label [formModel]="view.formModel" fiedName="DivisionID"></codx-label>
+                        </ng-template>
                     </div>
                     <div class="me-5 mt-1">
                         <span class="me-2">
@@ -92,7 +109,7 @@
                         <span>{{data.staff > 0? data.staff : 0}}</span>
                     </div>
                     <div class="text-gray-600 mt-1 mb-2">
-                        <codx-label [formModel]="view.formModel" name="lblCurrentcounts" default="Chính thức">
+                        <codx-label [formModel]="view.formModel" default="Chính thức">
                         </codx-label>
                     </div>
                     <ng-container *ngIf="data.staffEmp">
@@ -166,7 +183,7 @@
             <!-- <codx-searchbar (searchEvent)="searchUser($event)"></codx-searchbar> -->
             <div class="hr-list-employee">
                 <ng-container *ngFor="let emp of employees">
-                    <div class="d-flex align-items-center mt-3">
+                    <div class="d-flex align-items-centerp py-1">
                         <codx-img [objectId]="emp.employeeID" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
                             [objectName]="emp.employeeName" [width]="30">
                         </codx-img>

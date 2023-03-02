@@ -36,6 +36,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   headerText: '';
   dataVllSupplier: any;
   defaultIssueDate: string = '0001-01-01T00:00:00';
+  fromDateFormat: string;
+  toDateFormat: string;
 
   //default degreeName
   levelText: string;
@@ -54,7 +56,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    this.degreeObj = data?.data?.degreeObj;
+    this.degreeObj = JSON.parse(JSON.stringify(data?.data?.degreeObj));
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
@@ -168,6 +170,13 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
           this.isAfterRender = true;
         }
       });
+      if(this.degreeObj){
+        this.fromDateFormat = this.getFormatDate(this.degreeObj.trainFrom);
+        this.toDateFormat = this.getFormatDate(this.degreeObj.trainTo);
+      } else {
+        this.fromDateFormat = this.getFormatDate(null);
+        this.toDateFormat = this.getFormatDate(null);
+      }
   }
 
   onInit(): void {
@@ -295,5 +304,14 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
       this.formGroup.patchValue({ degreeName: this.degreeObj.degreeName });
       this.cr.detectChanges();
     }
+  }
+
+  getFormatDate(trainFrom : string){
+    let resultDate = '';
+    if(trainFrom){
+      let arrDate = trainFrom.split('/');
+      resultDate = arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
+      return resultDate
+    } else return resultDate = 'y';
   }
 }

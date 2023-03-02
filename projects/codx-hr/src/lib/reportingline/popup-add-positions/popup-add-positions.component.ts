@@ -11,6 +11,7 @@ import {
   CacheService,
   DialogData,
   DialogRef,
+  NotificationsService,
 } from 'codx-core';
 
 
@@ -36,12 +37,13 @@ export class PopupAddPositionsComponent implements OnInit {
     private auth: AuthService,
     private api: ApiHttpService,
     private cacheService: CacheService,
+    private notifiSV:NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
     this.isAdd = dt.data.isAddMode;
     this.title = dt.data.titleMore;
-    this.data = dt.data.data;
+    this.data = JSON.parse(JSON.stringify(dt.data.data));
     this.dialogRef = dialog;
     this.functionID = dt.data.function;
     this.formModel = this.dialogRef.formModel;
@@ -116,7 +118,10 @@ export class PopupAddPositionsComponent implements OnInit {
         if(this.isAdd)
           this.dialogRef.dataService.add(res,0).subscribe();
         else
+        {
+          this.notifiSV.notifyCode("SYS007");
           this.dialogRef.dataService.update(res).subscribe();
+        }
         this.dialogRef.close(res);
     });
   }

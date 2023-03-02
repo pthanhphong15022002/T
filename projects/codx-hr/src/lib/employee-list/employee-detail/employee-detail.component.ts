@@ -216,7 +216,8 @@ export class EmployeeDetailComponent extends UIComponent {
   skillGradeSortModel: SortModel;
   appointionSortModel: SortModel;
   bSalarySortModel: SortModel;
-  createOnSortModel: SortModel;
+  issuedDateSortModel: SortModel;
+  TrainFromDateSortModel: SortModel;
   //#endregion
 
   reRenderGrid = true;
@@ -673,6 +674,7 @@ export class EmployeeDetailComponent extends UIComponent {
         this.hrService.getViewSkillAsync(rqESkill).subscribe((res) => {
           if (res) {
             this.lstESkill = res;
+            console.log('ressssssssssssssssssssss', res);
           }
         });
       }
@@ -693,6 +695,7 @@ export class EmployeeDetailComponent extends UIComponent {
           (p) => p.parentID == this.selfInfoFuncID
         );
         this.lstBtnAdd = this.lstFuncSelfInfo;
+        this.lstBtnAdd.splice(0, 2);
 
         this.lstFuncLegalInfo = res[0].filter(
           (p) => p.parentID == this.legalInfoFuncID
@@ -835,9 +838,13 @@ export class EmployeeDetailComponent extends UIComponent {
     this.bSalarySortModel.field = 'EffectedDate';
     this.bSalarySortModel.dir = 'desc';
 
-    this.createOnSortModel = new SortModel();
-    this.createOnSortModel.field = 'createdOn';
-    this.createOnSortModel.dir = 'desc';
+    this.issuedDateSortModel = new SortModel();
+    this.issuedDateSortModel.field = 'issuedDate';
+    this.issuedDateSortModel.dir = 'desc';
+
+    this.TrainFromDateSortModel = new SortModel();
+    this.TrainFromDateSortModel.field = 'TrainFromDate';
+    this.TrainFromDateSortModel.dir = 'desc';
 
     this.appointionSortModel = new SortModel();
     this.appointionSortModel.field = '(EffectedDate)';
@@ -2001,8 +2008,75 @@ export class EmployeeDetailComponent extends UIComponent {
 
   add(functionID) {
     switch (functionID) {
-      case this.eInfoFuncID: {
+      case this.eFamiliesFuncID: {
+        this.handleEFamilyInfo(this.addHeaderText, 'add', null);
+        break;
       }
+      case this.ePassportFuncID:
+        this.handleEmployeePassportInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eVisaFuncID:
+        this.handleEmployeeVisaInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eWorkPermitFuncID:
+        this.handleEmployeeWorkingPermitInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eBasicSalaryFuncID:
+        this.HandleEmployeeBasicSalariesInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eJobSalFuncID:
+        this.HandleEmployeeJobSalariesInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.benefitFuncID:
+        this.handlEmployeeBenefit(this.addHeaderText, 'add', null);
+        break;
+      case this.eAssetFuncID:
+        this.HandlemployeeAssetInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eContractFuncID:
+        break;
+      case this.appointionFuncID:
+        this.HandleEmployeeAppointionInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.dayoffFuncID:
+        this.HandleEmployeeDayOffInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eBusinessTravelFuncID:
+        this.HandleEBusinessTravel(this.addHeaderText, 'add', null);
+        break;
+      case this.eExperienceFuncID:
+        this.handlEmployeeExperiences(this.addHeaderText, 'add', null);
+        break;
+      case this.eDegreeFuncID:
+        this.HandleEmployeeEDegreeInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eCertificateFuncID:
+        this.HandleEmployeeECertificateInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eSkillFuncID:
+        this.HandleEmployeeESkillsInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eTrainCourseFuncID:
+        this.HandleEmployeeTrainCourseInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.awardFuncID:
+        this.HandleEmployeeEAwardsInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eDisciplineFuncID:
+        this.HandleEmployeeEDisciplinesInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eHealthFuncID:
+        this.HandleEmployeeEHealths(this.addHeaderText, 'add', null);
+        break;
+      case this.eVaccinesFuncID:
+        this.HandleEVaccinesInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eDiseasesFuncID:
+        this.HandleEmployeeEDiseasesInfo(this.addHeaderText, 'add', null);
+        break;
+      case this.eAccidentsFuncID:
+        this.HandleEmployeeAccidentInfo(this.addHeaderText, 'add', null);
+        break;
     }
   }
 
@@ -2301,24 +2375,18 @@ export class EmployeeDetailComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            } else if (funcID == 'eSkill') {
+            } else if (funcID == 'eSkill') { 
               this.hrService.deleteESkill1(data).subscribe((res) => {
                 if (res) {
-                  if (!this.skillGrid) {
+                  if (!this.skillGrid && res[0] == true) {
                     this.lstESkill = res[1];
                     this.eSkillRowCount--;
+                  } else if (this.lstESkill && res[0] == true) {
+                    this.notify.notifyCode('SYS008');
+                    this.lstESkill = res[1];
+                    this.eSkillRowCount += this.updateGridView(this.skillGrid, 'delete', data);
                   } else {
-                    if (res[0] == true) {
-                      this.notify.notifyCode('SYS008');
-
-                      (this.skillGrid?.dataService as CRUDService)
-                        .remove(data)
-                        .subscribe();
-                      this.lstESkill = res[1];
-                      this.eSkillRowCount--;
-                    } else {
-                      this.notify.notifyCode('SYS022');
-                    }
+                    this.notify.notifyCode('SYS022');
                   }
                   this.df.detectChanges();
                 }
@@ -2759,13 +2827,16 @@ export class EmployeeDetailComponent extends UIComponent {
     this.crrFuncTab = funcList.functionID;
     switch (this.crrFuncTab) {
       case this.selfInfoFuncID:
-        this.lstBtnAdd = this.lstFuncSelfInfo;
+        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncSelfInfo));
+        this.lstBtnAdd.splice(0, 2);
         break;
       case this.legalInfoFuncID:
-        this.lstBtnAdd = this.lstFuncLegalInfo;
+        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncLegalInfo));
+        this.lstBtnAdd.splice(0, 1);
         break;
       case this.jobInfoFuncID:
-        this.lstBtnAdd = this.lstFuncTaskInfo;
+        // this.lstBtnAdd = this.lstFuncTaskInfo;
+        this.lstBtnAdd = null;
         break;
       case this.benefitInfoFuncID:
         this.lstBtnAdd = this.lstFuncSalary;
@@ -3531,20 +3602,9 @@ export class EmployeeDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if (
-        (actionType == 'add' || actionType == 'copy') &&
-        res.event.isSuccess === true
-      ) {
-        (this.eDegreeGrid.dataService as CRUDService)
-          .add(res.event)
-          .subscribe();
-        console.log('res dataaaaa', res);
-        this.eDegreeRowCount++;
-      } else if (actionType == 'edit') {
-        (this.eDegreeGrid.dataService as CRUDService)
-          .update(res.event)
-          .subscribe();
-      }
+      if(res)
+       this.eDegreeRowCount += this.updateGridView(this.eDegreeGrid, actionType, res.event);
+
       this.df.detectChanges();
     });
   }
@@ -3568,29 +3628,19 @@ export class EmployeeDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      //if (!res?.event) (this.skillGrid?.dataService as CRUDService).clear();
-      if (res.event != null && !this.skillGrid) {
-        if (
-          (actionType === 'add' || actionType === 'copy') &&
-          res.event[0].isSuccess == true
-        ) {
-          this.lstESkill = res?.event[1];
-          this.eSkillRowCount++;
-        } else this.lstESkill = res?.event[1];
-      } else if (res.event != null && this.skillGrid) {
-        if (
-          (actionType === 'add' || actionType === 'copy') &&
-          res.event[0] == true
-        ) {
-          (this.skillGrid?.dataService as CRUDService)
-            .add(res.event[0])
-            .subscribe();
-          this.eSkillRowCount++;
-          this.lstESkill = res?.event[1];
-        } else if (actionType === 'edit') {
-          (this.skillGrid?.dataService as CRUDService)
-            .update(res.event)
-            .subscribe();
+      if (!res?.event) (this.skillGrid?.dataService as CRUDService)?.clear();
+      else if (res.event != null) {
+        this.lstESkill = res?.event[1];
+        if (this.skillGrid) {
+          this.eSkillRowCount += this.updateGridView(
+            this.skillGrid,
+            actionType,
+            res.event[0]
+          );
+        } else {
+          if (actionType == 'add' || actionType == 'copy') {
+            this.eSkillRowCount++;
+          }
         }
       }
       this.df.detectChanges();
@@ -4368,7 +4418,7 @@ export class EmployeeDetailComponent extends UIComponent {
   ) {
     if (!dataItem) (gridView?.dataService as CRUDService)?.clear();
     else {
-      if (actionType == 'add') {
+      if (actionType == 'add' || actionType == 'copy') {
         (gridView?.dataService as CRUDService)?.add(dataItem, 0).subscribe();
         return 1;
       } else if (actionType == 'edit') {
