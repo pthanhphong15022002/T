@@ -92,13 +92,7 @@
 </div>
 
 <ng-template #popupSup let-dialog>
-  <codx-form
-    [headerText]="'Hướng dẫn bước nhiệm vụ'"
-    [body]="body"
-    [data]="dataStep"
-    [footer]=""
-    [dialog]="dialog"
-  >
+  <codx-form [headerText]="titleMemo" [body]="body" [data]="dataStep" [footer]="" [dialog]="dialog">
     <ng-template #body>
       <div [innerHTML]="dataStep.memo"></div>
       <!-- <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150"

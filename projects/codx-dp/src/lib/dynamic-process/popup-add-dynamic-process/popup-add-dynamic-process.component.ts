@@ -35,6 +35,7 @@ import {
   AuthStore,
   CRUDService,
   AlertConfirmInputConfig,
+  DialogModel,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -478,6 +479,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#endregion
 
+  closePopup() {
+    //dung bat dong bi rjx
+    // let x = await firstValueFrom(this.notiService.alertCode('DP013'));
+    // if (x?.event?.status == 'Y') {
+    //       this.dialog.close();
+    // } else return;
+    this.notiService.alertCode('DP013').subscribe((e) => {
+      if (e?.event?.status == 'Y') {
+        this.dialog.close();
+      } else return;
+    });
+  }
+
   //#region Change Tab
   //Click từng tab - mặc định thêm mới = 0
   clickTab(tabNo) {
@@ -487,6 +501,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
       if (
         tabNo != 0 &&
+        this.currentTab == 0 &&
         (!this.process.instanceNoSetting ||
           (this.process.instanceNoSetting &&
             this.process.instanceNoSetting != this.instanceNoSetting))
@@ -730,7 +745,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.roleType = 'P';
             perm.full = false;
             perm.read = true;
-            perm.create = false;
+            perm.create = true;
             perm.assign = false;
             perm.edit = false;
             // perm.publish = false;
@@ -802,7 +817,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.roleType = 'P';
             perm.full = false;
             perm.read = true;
-            perm.create = false;
+            perm.create = true;
             perm.assign = false;
             perm.edit = false;
             // perm.publish = false;
@@ -1011,7 +1026,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //Popup roles process
   clickRoles() {
-    var title = 'Phân quyền';
+    var title = this.gridViewSetup?.Permissions?.headerText;
+    let formModel = new FormModel();
+    formModel.formName = 'DPProcessesPermissions';
+    formModel.gridViewName = 'grvDPProcessesPermissions';
+    formModel.entityName = 'DP_Processes_Permissions';
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+
     this.callfc
       .openForm(
         PopupRolesDynamicComponent,
@@ -1021,7 +1044,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         '',
         [this.process, title, this.action === 'copy' ? 'copy' : 'add'],
         '',
-        this.dialog
+        dialogModel
       )
       .closed.subscribe((e) => {
         if (e && e.event != null) {
@@ -2086,7 +2109,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return false;
   }
 
-  async getFormModel(functionID) {
+  async getFormModel(functionID){
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = JSON.parse(JSON.stringify(this.dialog?.formModel));
     formModel.formName = f?.formName;

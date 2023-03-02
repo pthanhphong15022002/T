@@ -88,29 +88,28 @@
                 <codx-label name="lblContinue" default="Tiếp theo"></codx-label
               ></a>
             </div>
-            <div class="mb-3">
-              <div class="d-flex flex-wrap">
-                <ul class="nav">
-                  <li class="nav-item">
-                    <span
-                      class="nav-link fw-bold cursor-pointer"
-                      [ngClass]="{ active: !groupID }"
-                      (click)="filterStationery()"
-                    >
-                      <codx-label name="lblAll" default="Tất cả"></codx-label>
-                      <span>({{ totalStationery }})</span>
-                    </span>
-                  </li>
-                  <li class="nav-item" *ngFor="let item of groupStationery">
-                    <span
-                      class="nav-link fw-bold cursor-pointer active"
-                      [ngClass]="{ active: item?.resourceID == groupID }"
-                      (click)="filterStationery(item?.resourceID)"
-                      >{{ item?.resourceName }} ({{ item?.qtyItems }})</span
-                    >
-                  </li>
-                </ul>
-              </div>
+            <div class="mb-3 codx-nav">
+              <ul class="nav">
+                <li class="nav-item">
+                  <span
+                    class="nav-link fw-bold cursor-pointer"
+                    [ngClass]="{ active: !groupID }"
+                    (click)="filterStationery()"
+                  >
+                    <codx-label name="lblAll" default="Tất cả"></codx-label>
+                    <!-- <span>({{ totalStationery }})</span> -->
+                  </span>
+                </li>
+                <li class="nav-item" *ngFor="let item of groupStationery">
+                  <span
+                    class="nav-link fw-bold cursor-pointer active"
+                    [ngClass]="{ active: item?.resourceID == groupID }"
+                    (click)="filterStationery(item?.resourceID)"
+                    >{{ item?.resourceName }}</span>
+                    <!-- <span> ({{ item?.qtyItems }})</span> -->
+                  
+                </li>
+              </ul>
             </div>
             <div class="list-stationery">
               <codx-listview
@@ -153,7 +152,7 @@
     <div class="fw-bold line-clamp line-clamp-1 text-start">
       {{ data?.resourceName }}
     </div>
-    <div class="text-start text-gray-600">
+    <div *ngIf="this.isPriceVisible" class="text-start text-gray-600">
       {{
         data?.costPrice == 0
           ? (0 | currency : "VND")

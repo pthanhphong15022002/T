@@ -106,7 +106,7 @@ export class StagesDetailComponent implements OnInit {
   taskList: DP_Instances_Steps_Tasks[] = [];
   userGroupJob = [];
   listJobType = [];
-
+  titleMemo = '';
   listReasonStep: DP_Instances_Steps_Reasons[] = [];
   listReasonsClick: DP_Instances_Steps_Reasons[] = [];
   dialogPopupReason: DialogRef;
@@ -149,6 +149,15 @@ export class StagesDetailComponent implements OnInit {
         });
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.cache.gridViewSetup('DPSteps','grvDPSteps').subscribe((res) => {
+      if(res){
+        this.titleMemo = res?.Memo?.headerText;
+      }
+    })
+
   }
 
   getFormModel() {
