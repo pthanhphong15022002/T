@@ -96,7 +96,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    if (!this.formModel)
+    if (!this.formModel) {
       this.hrService.getFormModel(this.funcID).then((formModel) => {
         if (formModel) {
           this.formModel = formModel;
@@ -110,7 +110,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
             });
         }
       });
-    else
+    } else {
       this.hrService
         .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
         .then((fg) => {
@@ -119,6 +119,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
             this.initForm();
           }
         });
+    }
   }
 
   onSaveForm() {
@@ -136,6 +137,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
         if (p != null) {
           this.result = p[0];
           this.lstSkills = p[1];
+          this.result.isSuccess = true;
           this.notify.notifyCode('SYS006');
           this.dialog && this.dialog.close([this.result, this.lstSkills]);
         } else {
@@ -148,9 +150,11 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
         if (p != null) {
           this.result = p[0];
           this.lstSkills = p[1];
+          this.result.isSuccess = true;
           this.notify.notifyCode('SYS007');
           this.dialog && this.dialog.close([this.result, this.lstSkills]);
         } else {
+          this.result.isSuccess = false;
           this.notify.notifyCode('SYS021');
         }
       });

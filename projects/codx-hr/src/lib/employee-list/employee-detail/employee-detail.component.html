@@ -312,11 +312,17 @@
             </div>
 
             <div class="d-flex align-items-center mb-2">
-              <span class="text-dark d-flex flex-wrap align-items-center" *ngIf="lstOrg">
+              <span
+                class="text-dark d-flex flex-wrap align-items-center"
+                *ngIf="lstOrg"
+              >
                 <ng-container *ngFor="let org of lstOrg; let i = index">
-                  <span class="icon-connection-point icon-16 me-1" *ngIf="i == 0"></span>
+                  <span
+                    class="icon-connection-point icon-16 me-1"
+                    *ngIf="i == 0"
+                  ></span>
                   <span class="icon-i-dot text-gray-500" *ngIf="i > 0"></span>
-                  <span>{{org.orgUnitName}}</span>
+                  <span>{{ org.orgUnitName }}</span>
                 </ng-container>
               </span>
             </div>
@@ -606,11 +612,14 @@
         <div class="card card-flush">
           <div class="d-flex flex-column" *ngIf="lstBtnAdd">
             <ng-container *ngFor="let item of lstBtnAdd">
-              <a class="nav-link w-100 btn btn-flex btn-active-light-primary" (click)="add(item.functionID)">
+              <a
+                class="nav-link w-100 btn btn-flex btn-active-light-primary"
+                (click)="add(item.functionID)"
+              >
                 <span class="me-2">
                   <span class="icon-person icon-18"></span>
                 </span>
-                <div class="fw-bold"> {{item.customName}} </div>
+                <div class="fw-bold">{{ item.customName }}</div>
               </a>
             </ng-container>
           </div>
@@ -3139,7 +3148,9 @@
                     >
                     </codx-label>
                     <span class="text-gray-500 mx-2"> | </span>
-                    <span class="text-gray-500">({{ eBasicSalaryRowCount }})</span>
+                    <span class="text-gray-500"
+                      >({{ eBasicSalaryRowCount }})</span
+                    >
                   </div>
                 </div>
                 <div class="profile-grid">
@@ -3297,7 +3308,9 @@
                     >
                     </codx-label>
                     <span class="text-gray-500 mx-2"> | </span>
-                    <span class="text-gray-500">({{ eJobSalaryRowCount }})</span>
+                    <span class="text-gray-500"
+                      >({{ eJobSalaryRowCount }})</span
+                    >
                   </div>
                 </div>
                 <div class="profile-grid">
@@ -4326,7 +4339,7 @@
                   [pageSize]="numPageSizeGridView"
                   [entityName]="'HR_EDegrees'"
                   [rowHeight]="50"
-                  [sort]="[createOnSortModel]"
+                  [sort]="[issuedDateSortModel]"
                   height="240px"
                 ></codx-gridview>
               </div>
@@ -4436,6 +4449,7 @@
                   #eCertificateGridView
                   [formModel]="eCertificateFormModel"
                   [columnsGrid]="eCertificateColumnGrid"
+                  [sort]="[issuedDateSortModel]"
                   [service]="'HR'"
                   [assemblyName]="'Core'"
                   [className]="'DataBusiness'"
@@ -4706,6 +4720,7 @@
                     #eTrainCourseGridView
                     [formModel]="eTrainCourseFormModel"
                     [columnsGrid]="eTrainCourseColumnGrid"
+                    [sort]="[TrainFromDateSortModel]"
                     [service]="'HR'"
                     [assemblyName]="'Core'"
                     [className]="'DataBusiness'"
@@ -5403,11 +5418,11 @@
     >
     </span>
 
-    <span 
-      class="icon-i-plus-circle icon-12 pe-2" 
+    <span
+      class="icon-i-plus-circle icon-12 pe-2"
       [style.color]="getBenefitFontColor(data)"
     ></span>
-    
+
     {{ data?.benefitID | formatvalue : benefitFormodel : "benefitID" | async }}
   </div>
 </ng-template>
@@ -5964,7 +5979,9 @@
       <div
         class="d-flex align-items-center"
         [ngClass]="
-          data.isCurrent ? 'text-primary fs-6 fw-bold' : 'text-dark fs-6 fw-bold'
+          data.isCurrent
+            ? 'text-primary fs-6 fw-bold'
+            : 'text-dark fs-6 fw-bold'
         "
       >
         <span class="icon-attach_money icon-16 me-1"></span>
@@ -6074,7 +6091,9 @@
       <div
         class="d-flex align-items-center"
         [ngClass]="
-          data.isCurrent ? 'text-primary fs-6 fw-bold' : 'text-dark fs-6 fw-bold'
+          data.isCurrent
+            ? 'text-primary fs-6 fw-bold'
+            : 'text-dark fs-6 fw-bold'
         "
       >
         <span class="icon-attach_money icon-16 me-2"></span>
@@ -6290,7 +6309,8 @@
 <ng-template #tempEVaccineGridCol1 let-data>
   <div>
     <span
-      class="icon-i-arrow-down-left-circle-fill me-2" [style.color] = "getVaccineBackgroundColor(data)"
+      class="icon-i-arrow-down-left-circle-fill me-2"
+      [style.color]="getVaccineBackgroundColor(data)"
     ></span>
     {{
       data?.vaccineTypeID

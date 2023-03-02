@@ -248,18 +248,10 @@
     <div class="header-job">
       <div class="left">
         <div>
-          <codx-label
-            class="title"
-            name="lblGeneral"
-            default="Thông tin chung"
-          ></codx-label>
+          <codx-label class="title" name="lblGeneral" [formName]="'GridViewSetup'" [gridViewName]="'grvGridViewSetup'" default="Thông tin chung"></codx-label>
         </div>
         <div>
-          <codx-label
-            name="lblGeneral"
-            default="Thông tin chung của quy trình"
-            style="color: #898989"
-          >
+          <codx-label name="lblGeneral" [formName]="'GridViewSetup'" [gridViewName]="'grvGridViewSetup'" default="Thông tin chung của quy trình" style="color: #898989">
           </codx-label>
         </div>
       </div>
@@ -415,11 +407,7 @@
         <div class="col-6">
           <div class="d-flex flex-column margin-form mb-4">
             <div class="d-flex flex">
-              <codx-label
-                class="fw-bolder"
-                fiedName="Permission"
-                default="Người giám sát"
-              >
+              <codx-label class="fw-bolder" name="lblSupervisor" default="Người giám sát">
               </codx-label>
               <i
                 class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
@@ -431,10 +419,7 @@
               ></i>
             </div>
             <div>
-              <codx-label
-                class="fw-normal text-gray-400"
-                fiedName="LocationControl"
-                default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
+              <codx-label class="fw-normal text-gray-400" name="lblLocationControl" default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
                 viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa
                 nhiệm vụ"
               >
@@ -479,11 +464,7 @@
         <div class="col-6">
           <div class="d-flex flex-column margin-form mb-4">
             <div class="d-flex flex">
-              <codx-label
-                class="fw-bolder"
-                fiedName="Permission"
-                default="Thành viên tham gia"
-              >
+              <codx-label class="fw-bolder" name="lblParticipants" default="Thành viên tham gia">
               </codx-label>
               <i
                 class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
@@ -495,11 +476,8 @@
               ></i>
             </div>
             <div>
-              <codx-label
-                class="fw-normal text-gray-400"
-                fiedName="LocationControl"
-                default="Có quyền tạo nhiệm vụ trong quy trình"
-              >
+              <codx-label class="fw-normal text-gray-400" name="lblParticipantControl"
+                default="Có quyền tạo nhiệm vụ trong quy trình">
               </codx-label>
             </div>
           </div>
@@ -541,11 +519,7 @@
         <div class="col-6">
           <div class="d-flex flex-column margin-form mb-4">
             <div class="d-flex flex">
-              <codx-label
-                class="fw-bolder"
-                fiedName="Permission"
-                default="Người theo dõi"
-              >
+              <codx-label class="fw-bolder" name="lblFollowers" default="Người theo dõi">
               </codx-label>
               <i
                 class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
@@ -557,11 +531,8 @@
               ></i>
             </div>
             <div>
-              <codx-label
-                class="fw-normal text-gray-400"
-                fiedName="LocationControl"
-                default="Có quyền xem các nhiệm vụ trong quy trình"
-              >
+              <codx-label class="fw-normal text-gray-400" name="lblFollowerControl"
+                default="Có quyền xem các nhiệm vụ trong quy trình">
               </codx-label>
             </div>
           </div>
@@ -2050,17 +2021,10 @@
     <div class="header-job p-3">
       <div class="left">
         <div>
-          <codx-label
-            class="title"
-            fieldName="Roles"
-            default="Các vai trò trong giai đoạn"
-          ></codx-label>
+          <codx-label class="title" name="lblRoles" default="Các vai trò trong giai đoạn"></codx-label>
         </div>
         <div>
-          <codx-label
-            class="text-muted"
-            default="Những người liên quan đến giai đoạn"
-          >
+          <codx-label class="text-muted" name="lblRoleControl" default="Những người liên quan đến giai đoạn">
           </codx-label>
         </div>
       </div>
@@ -2088,11 +2052,7 @@
         <div class="col-6">
           <div class="d-flex flex-column margin-form mb-4">
             <div class="d-flex flex">
-              <codx-label
-                class="fw-bolder"
-                fiedName="Permission"
-                default="Người giám sát"
-              >
+              <codx-label class="fw-bolder" name="lblParticipantRole" default="Người giám sát">
               </codx-label>
               <i
                 class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
@@ -2100,10 +2060,7 @@
               ></i>
             </div>
             <div>
-              <codx-label
-                class="fw-normal text-gray-400"
-                fiedName="LocationControl"
-                default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
+              <codx-label class="fw-normal text-gray-400" name="lblParticipantRoleControl" default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
               viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa
               nhiệm vụ"
               >
@@ -2140,20 +2097,12 @@
         <div class="col-6">
           <div class="d-flex flex-column margin-form mb-4">
             <div class="d-flex flex">
-              <codx-label
-                class="fw-bolder"
-                fiedName="Permission"
-                default="Người liên quan"
-              >
+              <codx-label class="fw-bolder" name="lblInvolved" default="Người liên quan">
               </codx-label>
             </div>
             <div>
-              <codx-label
-                class="fw-normal text-gray-400"
-                fiedName="LocationControl"
-                default="Người liên quan có thể cập nhật công việc mà họ đang
-                phụ trách"
-              >
+              <codx-label class="fw-normal text-gray-400" name="lblInvolvedControl" default="Người liên quan có thể cập nhật công việc mà họ đang
+                phụ trách">
               </codx-label>
             </div>
           </div>
