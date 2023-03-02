@@ -26,6 +26,7 @@ import {
   RequestOption,
   DialogRef,
   CodxCardImgComponent,
+  FormModel,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
@@ -33,6 +34,12 @@ import { PopupViewsDetailsProcessComponent } from './popup-views-details-process
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 import { environment } from 'src/environments/environment';
 import { PopupPropertiesComponent } from './popup-properties/popup-properties.component';
+import {
+  AccordionComponent,
+  ExpandEventArgs,
+} from '@syncfusion/ej2-angular-navigations';
+import { CheckBoxComponent } from '@syncfusion/ej2-angular-buttons';
+import { closest } from '@syncfusion/ej2-base';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -82,6 +89,7 @@ export class DynamicProcessComponent
   // create variables is any;
   listAppyFor: any; // list Apply For
   listSelectCoppy: any; // list value list for copy proccess
+  listSelectStepCoppy: any; // list value list for copy proccess
   listClickedCoppy: any;
   // value
   nameAppyFor: string = '';
@@ -91,14 +99,14 @@ export class DynamicProcessComponent
   popupOld: any;
   popoverList: any;
   linkAvt = '';
-  TITLENAME = "Thay đổi tên quy trình";
+  TITLENAME = 'Thay đổi tên quy trình';
   popupEditName: DialogRef;
   processRename: DP_Processes;
   processName = '';
   user;
-  isCopy:boolean = false;
-  dataCopy:any;
-  oldIdProccess:any;
+  isCopy: boolean = false;
+  dataCopy: any;
+  oldIdProccess: any;
   // Call API Dynamic Proccess
   readonly service = 'DP';
   readonly assemblyName = 'ERM.Business.DP';
@@ -111,6 +119,7 @@ export class DynamicProcessComponent
   // Get idField
   readonly idField = 'recID';
 
+  isChecked: boolean = false;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -119,7 +128,7 @@ export class DynamicProcessComponent
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
     private callFunc: CallFuncService,
-    private dpService: CodxDpService,
+    private dpService: CodxDpService
   ) {
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
@@ -145,6 +154,7 @@ export class DynamicProcessComponent
   afterLoad() {
     this.showButtonAdd = this.funcID == 'DP0101';
   }
+
   //chang data
   viewChanged(e) {
     var funcIDClick = this.activedRouter.snapshot.params['funcID'];
@@ -195,7 +205,7 @@ export class DynamicProcessComponent
         processNo: this.processNo,
         showID: this.showID,
         instanceNo: this.instanceNo,
-        titleAction: this.titleAction
+        titleAction: this.titleAction,
       };
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
@@ -232,7 +242,7 @@ export class DynamicProcessComponent
       .subscribe((res) => {
         var obj = {
           action: 'edit',
-          titleAction: this.titleAction
+          titleAction: this.titleAction,
         };
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
@@ -259,7 +269,7 @@ export class DynamicProcessComponent
       });
   }
   copy(data: any) {
-    if(this.isCopy) {
+    if (this.isCopy) {
       if (data) {
         this.view.dataService.dataSelected = data;
         this.oldIdProccess = this.view.dataService.dataSelected.recID;
@@ -274,7 +284,7 @@ export class DynamicProcessComponent
           titleAction: this.titleAction,
           oldIdProccess: this.oldIdProccess,
           newIdProccess: this.view.dataService.dataSelected.recID,
-          listValueCopy: this.listClickedCoppy.map(x=> x.id)
+          listValueCopy: this.listClickedCoppy.map((x) => x.id),
         };
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
@@ -298,35 +308,54 @@ export class DynamicProcessComponent
     }
     return;
   }
-  saveCopy(){
+  saveCopy() {
     this.isCopy = true;
     this.dialogQuestionCopy.close();
     this.isCopy && this.copy(this.dataCopy);
-
   }
-  OpenFormCopy(data){
+  OpenFormCopy(data) {
     this.isCopy = false;
     this.listClickedCoppy = [];
     this.dataCopy = data;
-    this.dialogQuestionCopy = this.callfc.openForm(this.popUpQuestionCopy, '', 500, 500);
+    this.dialogQuestionCopy = this.callfc.openForm(
+      this.popUpQuestionCopy,
+      '',
+      500,
+      500
+    );
   }
-checkValueCopy($event,data){
-  if($event && $event.currentTarget.checked){
-    this.listClickedCoppy.push(data);
-}
-else {
-  let idx = this.listClickedCoppy.findIndex(x=> x.id  === data.id);
-  if(idx>=0) this.listClickedCoppy.splice(idx, 1);
-}
-}
-getVauleFormCopy() {
-  this.cache.valueList('DP037').subscribe((res) => {
-    if (res.datas) {
-      this.listSelectCoppy =  res.datas.map(x=> {return {id: x.value, text: x.text}});
+  checkValueCopy($event, data) {
+    if ($event && $event.currentTarget.checked) {
+      this.listClickedCoppy.push(data);
+      if (data.id === '3') {
+        this.listClickedCoppy= this.listClickedCoppy.concat(this.listSelectStepCoppy);
+      }
+    } else {
+      if (data.id === '3') {
+        this.listClickedCoppy = this.listClickedCoppy.filter((item2) => {
+          return !this.listSelectStepCoppy.some(
+            (item1) => item1.id === item2.id
+          );
+        });
+      }
+      let idx = this.listClickedCoppy.findIndex((x) => x.id === data.id);
+      if (idx >= 0) this.listClickedCoppy.splice(idx, 1);
     }
-  });
-}
-
+  }
+  getVauleFormCopy() {
+    this.cache.valueList('DP037').subscribe((res) => {
+      if (res.datas) {
+        this.listSelectCoppy = res.datas.map((x) => {
+          return { id: x.value, text: x.text };
+        });
+        var idxStep = this.listSelectCoppy.findIndex((x) => x.id === '3');
+        this.listSelectStepCoppy = this.listSelectCoppy.splice(
+          idxStep + 1,
+          this.listSelectCoppy.length - 1
+        );
+      }
+    });
+  }
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
@@ -362,7 +391,7 @@ getVauleFormCopy() {
     ];
     this.api
       .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', avatar)
-      .subscribe(res => {
+      .subscribe((res) => {
         if (res && res?.url) {
           link = environment.urlUpload + '/' + res?.url;
           this.changeDetectorRef.detectChanges();
@@ -370,7 +399,6 @@ getVauleFormCopy() {
       });
     return link;
   }
-
 
   // More functions
   receiveMF(e: any) {
@@ -391,7 +419,7 @@ getVauleFormCopy() {
         break;
       case 'SYS04':
         this.OpenFormCopy(data);
-      //  this.copy(data);
+        //  this.copy(data);
         break;
       case 'SYS02':
         this.delete(data);
@@ -485,7 +513,12 @@ getVauleFormCopy() {
           //   break;
           case 'SYS02': // xoa
             let isDelete = data.delete;
-            if (!isDelete || data.deleted || this.funcID == 'DP0203' || this.funcID === 'DP04') {
+            if (
+              !isDelete ||
+              data.deleted ||
+              this.funcID == 'DP0203' ||
+              this.funcID === 'DP04'
+            ) {
               res.disabled = true;
             }
             break;
@@ -497,7 +530,12 @@ getVauleFormCopy() {
   //#popup roles
   roles(e: any) {
     let dialogModel = new DialogModel();
+    let formModel = new FormModel();
+    formModel.formName = 'DPProcessesPermissions';
+    formModel.gridViewName = 'grvDPProcessesPermissions';
+    formModel.entityName = 'DP_Processes_Permissions';
     dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
     this.callfc
       .openForm(
         PopupRolesDynamicComponent,
@@ -517,7 +555,7 @@ getVauleFormCopy() {
       });
   }
 
-  properties(data){
+  properties(data) {
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
@@ -564,9 +602,9 @@ getVauleFormCopy() {
       this.viewDetailProcess(data);
     }
   }
-  getNameUsersStr(data){
-    if(data.length > 0 && data !== null){
-      var ids = data.map(obj => obj.objectID);
+  getNameUsersStr(data) {
+    if (data.length > 0 && data !== null) {
+      var ids = data.map((obj) => obj.objectID);
       var listStr = ids.join(';');
     }
     return listStr || null || '';
@@ -616,44 +654,48 @@ getVauleFormCopy() {
     );
   }
 
-
-// nvthuan
+  // nvthuan
   renameProcess(process) {
     this.processRename = process;
     this.processName = process['processName'];
-    this.popupEditName = this.callfc.openForm(this.editNameProcess, '', 500, 280);
+    this.popupEditName = this.callfc.openForm(
+      this.editNameProcess,
+      '',
+      500,
+      280
+    );
   }
 
   changeValueInput(event) {
     this.processName = event?.data;
   }
 
-  editName(){
-    this.dpService.renameProcess([this.processName, this.processRename['recID']]).subscribe((res) => {
-      if(res){
-        this.processRename['processName'] = this.processName;
-        this.processRename['modifiedOn'] = res || new Date();
-        this.processRename['modifiedBy'] = this.user?.userID;
-        this.processName = '';
-        this.popupEditName.close();
-        this.notificationsService.notifyCode('SYS007');
-      }else{
-        this.notificationsService.notifyCode('SYS008');
-      }
-    })
+  editName() {
+    this.dpService
+      .renameProcess([this.processName, this.processRename['recID']])
+      .subscribe((res) => {
+        if (res) {
+          this.processRename['processName'] = this.processName;
+          this.processRename['modifiedOn'] = res || new Date();
+          this.processRename['modifiedBy'] = this.user?.userID;
+          this.processName = '';
+          this.popupEditName.close();
+          this.notificationsService.notifyCode('SYS007');
+        } else {
+          this.notificationsService.notifyCode('SYS008');
+        }
+      });
   }
-  restoreProcess(data){
+  restoreProcess(data) {
     console.log(data);
     this.dpService.restoreBinById(data.recID).subscribe((res) => {
-      if(res){
+      if (res) {
         this.view.dataService.remove(data).subscribe();
         this.detectorRef.detectChanges();
         this.notificationsService.notifyCode('SYS007');
-      }else{
+      } else {
         this.notificationsService.notifyCode('SYS008');
       }
-
     });
   }
-
 }

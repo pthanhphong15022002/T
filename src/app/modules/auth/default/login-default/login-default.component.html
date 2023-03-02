@@ -1,20 +1,33 @@
 ﻿<ng-container>
   <!--Begin Login-->
-  <div class="d-flex flex-column flex-root bg-linear-gradient-blue" style="display: none" *ngIf="mode == 'login'">
+  <div
+    class="d-flex flex-column flex-root bg-linear-gradient-blue"
+    style="display: none"
+    *ngIf="mode == 'login'"
+  >
     <!--begin::Login-->
     <div class="login login-signin-on d-flex flex-row-fluid">
-      <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid"
-        style="background-image: url(/assets/codx/bg/bg-login.png)">
+      <div
+        class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid"
+        style="background-image: url(/assets/codx/bg/bg-login.png)"
+      >
         <div class="login-container">
           <div class="d-flex flex-column flex-lg-row bg-white rounded-3 p-15">
             <div
-              class="login-aside order-2 order-lg-1 d-flex flex-column-fluid flex-lg-row-auto bgi-size-cover bgi-no-repeat">
-              <div class="d-flex flex-row-fluid flex-column justify-content-between">
+              class="login-aside order-2 order-lg-1 d-flex flex-column-fluid flex-lg-row-auto bgi-size-cover bgi-no-repeat"
+            >
+              <div
+                class="d-flex flex-row-fluid flex-column justify-content-between"
+              >
                 <div class="login-form position-relative overflow-hidden">
                   <!--begin::Login Header-->
                   <div class="d-flex">
                     <a href="#">
-                      <img src="/assets/logos/logo-1.svg" class="h-35px" alt="" />
+                      <img
+                        src="/assets/logos/logo-1.svg"
+                        class="h-35px"
+                        alt=""
+                      />
                     </a>
                   </div>
                   <!--end::Login Header-->
@@ -22,34 +35,67 @@
                   <div class="login-signin text-dark">
                     <div class="text-start mb-10 mt-10">
                       <h3 class="fw-bolder fs-1">
-                        <codx-label fiedName="Title" formModel="" default="Chào mừng bạn
-                                                đến với chúng tôi"></codx-label>
+                        <codx-label
+                          fiedName="Title"
+                          formModel=""
+                          default="Chào mừng bạn
+                                                đến với chúng tôi"
+                        ></codx-label>
                       </h3>
                     </div>
                     <!--begin::Form-->
-                    <form class="form fv-plugins-bootstrap fv-plugins-framework" method="post" (ngSubmit)="submit()"
-                      [formGroup]="loginForm" class="form fv-plugins-bootstrap fv-plugins-framework"
-                      novalidate="novalidate">
+                    <form
+                      class="form fv-plugins-bootstrap fv-plugins-framework"
+                      method="post"
+                      (ngSubmit)="submit()"
+                      [formGroup]="loginForm"
+                      class="form fv-plugins-bootstrap fv-plugins-framework"
+                      novalidate="novalidate"
+                    >
                       <div class="form-group mb-5 fv-plugins-icon-container">
                         <label class="fw-bold">
-                          <codx-label fiedName="Account" formModel="" default="Tài khoản"></codx-label>
+                          <codx-label
+                            fiedName="Account"
+                            formModel=""
+                            default="Tài khoản"
+                          ></codx-label>
                         </label>
-                        <div class="d-flex align-items-center form-control form-control-solid form-control-lg px-3">
+                        <div
+                          class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+                        >
                           <!--begin::Text-->
                           <div class="d-flex flex-column flex-grow-1">
-                            <input class="form-control border-0 p-0 ps-3" type="text" field="email"
-                              placeholder="Nhập tài khoản hoặc email" formControlName="email" />
+                            <input
+                              class="form-control border-0 p-0 ps-3"
+                              type="text"
+                              field="email"
+                              placeholder="Nhập tài khoản hoặc email"
+                              formControlName="email"
+                            />
                           </div>
                           <!--end::Text-->
                         </div>
                       </div>
                       <div class="form-group mb-5 fv-plugins-icon-container">
                         <label class="fw-bold">
-                          <codx-label fiedName="Password" formModel="" default="Mật khẩu"></codx-label></label>
-                        <div class="d-flex align-items-center form-control form-control-solid form-control-lg px-3">
+                          <codx-label
+                            fiedName="Password"
+                            formModel=""
+                            default="Mật khẩu"
+                          ></codx-label
+                        ></label>
+                        <div
+                          class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+                        >
                           <div class="d-flex flex-column flex-grow-1">
-                            <codx-input type="password" field="Password" placeholder="Mật khẩu"
-                              formControlName="password" [class]="'border-0'" (valueChange)="valueChange($event)">
+                            <codx-input
+                              type="password"
+                              field="Password"
+                              placeholder="Mật khẩu"
+                              formControlName="password"
+                              [class]="'border-0'"
+                              (valueChange)="valueChange($event)"
+                            >
                             </codx-input>
                             <!-- <input class="form-control border-0 p-0 ps-3" type="Password"
                                                             placeholder="Mật khẩu" formControlName="password"
@@ -58,41 +104,107 @@
                         </div>
                       </div>
                       <div class="form-group text-end mt-3 mb-3">
-                        <a (click)="forgotPass()" tabindex="-1" class="link-dark text-decoration-none">
-                          <codx-label fiedName="ForgotPassword" formModel="" default="Quên mật khẩu?"></codx-label></a>
+                        <a
+                          (click)="forgotPass()"
+                          tabindex="-1"
+                          class="link-dark text-decoration-none"
+                        >
+                          <codx-label
+                            fiedName="ForgotPassword"
+                            formModel=""
+                            default="Quên mật khẩu?"
+                          ></codx-label
+                        ></a>
                       </div>
                       <div class="form-group d-grid gap-2 mb-5">
-                        <button type="submit" class="btn btn-primary fw-bold px-6 py-3">
-                          {{ "Đăng nhập " | lang: "Login":"btnLogin" | async }}
+                        <button
+                          type="submit"
+                          class="btn btn-primary fw-bold px-6 py-3"
+                        >
+                          {{
+                            "Đăng nhập " | lang : "Login" : "btnLogin" | async
+                          }}
                         </button>
                       </div>
-                    </form>                    
+                    </form>
                     <div *ngIf="externalLogin">
-                      <div class="separator separator-content border-secondary my-10">
-                        <span class="w-125px text-gray-500 fw-semibold fs-7">{{ "Or with" | lang: "Login":"lblOrWith" | async }}</span>
+                      <div
+                        class="separator separator-content border-secondary my-10"
+                      >
+                        <span class="w-125px text-gray-500 fw-semibold fs-7">{{
+                          "Or with" | lang : "Login" : "lblOrWith" | async
+                        }}</span>
                       </div>
                       <div class="row g-3 mb-9">
-                        <div class="mt-0" [class]="this.externalLoginCol" *ngIf="environment.externalLogin.amazonId">
-                          <button class="btn btn-outline-warning w-100" (click)="submit('a')">
-                            <img alt="Logo" src="./assets/media/svg/brand-logos/amazon-icon.svg" class="h-15px" [class]="externalLoginShowText?'me-3':''">
+                        <div
+                          class="mt-0"
+                          [class]="this.externalLoginCol"
+                          *ngIf="environment.externalLogin.amazonId"
+                        >
+                          <button
+                            class="btn btn-outline-warning w-100"
+                            (click)="submit('a')"
+                          >
+                            <img
+                              alt="Logo"
+                              src="./assets/media/svg/brand-logos/amazon-icon.svg"
+                              class="h-15px"
+                              [class]="externalLoginShowText ? 'me-3' : ''"
+                            />
                             <span *ngIf="externalLoginShowText">Amazon</span>
                           </button>
                         </div>
-                        <div class="mt-0" [class]="this.externalLoginCol" *ngIf="environment.externalLogin.facebookId">
-                          <button class="btn btn-outline-primary w-100" (click)="submit('f')">
-                            <img alt="Logo" src="./assets/media/svg/brand-logos/facebook-icon.svg" class="h-15px" [class]="externalLoginShowText?'me-3':''">
+                        <div
+                          class="mt-0"
+                          [class]="this.externalLoginCol"
+                          *ngIf="environment.externalLogin.facebookId"
+                        >
+                          <button
+                            class="btn btn-outline-primary w-100"
+                            (click)="submit('f')"
+                          >
+                            <img
+                              alt="Logo"
+                              src="./assets/media/svg/brand-logos/facebook-icon.svg"
+                              class="h-15px"
+                              [class]="externalLoginShowText ? 'me-3' : ''"
+                            />
                             <span *ngIf="externalLoginShowText">Facebook</span>
                           </button>
                         </div>
-                        <div class="mt-0" [class]="this.externalLoginCol" *ngIf="environment.externalLogin.googleId">
-                          <button class="btn btn-outline-danger w-100" (click)="submit('g')">
-                            <img alt="Logo" src="./assets/media/svg/brand-logos/google-icon.svg" class="h-15px" [class]="externalLoginShowText?'me-3':''">
+                        <div
+                          class="mt-0"
+                          [class]="this.externalLoginCol"
+                          *ngIf="environment.externalLogin.googleId"
+                        >
+                          <button
+                            class="btn btn-outline-danger w-100"
+                            (click)="submit('g')"
+                          >
+                            <img
+                              alt="Logo"
+                              src="./assets/media/svg/brand-logos/google-icon.svg"
+                              class="h-15px"
+                              [class]="externalLoginShowText ? 'me-3' : ''"
+                            />
                             <span *ngIf="externalLoginShowText">Google</span>
                           </button>
                         </div>
-                        <div class="mt-0" [class]="this.externalLoginCol" *ngIf="environment.externalLogin.microsoftId">
-                          <button class="btn btn-outline-success w-100" (click)="submit('m')">
-                            <img alt="Logo" src="./assets/media/svg/brand-logos/microsoft-icon.svg" class="h-15px" [class]="externalLoginShowText?'me-3':''">
+                        <div
+                          class="mt-0"
+                          [class]="this.externalLoginCol"
+                          *ngIf="environment.externalLogin.microsoftId"
+                        >
+                          <button
+                            class="btn btn-outline-success w-100"
+                            (click)="submit('m')"
+                          >
+                            <img
+                              alt="Logo"
+                              src="./assets/media/svg/brand-logos/microsoft-icon.svg"
+                              class="h-15px"
+                              [class]="externalLoginShowText ? 'me-3' : ''"
+                            />
                             <span *ngIf="externalLoginShowText">Microsoft</span>
                           </button>
                         </div>
@@ -103,7 +215,10 @@
                   <!--end::Login Sign in form-->
                 </div>
                 <!--begin: Aside footer for desktop-->
-                <div class="d-flex flex-column-auto justify-content-between" [class]="externalLogin?'mt-5':'mt-15'">
+                <div
+                  class="d-flex flex-column-auto justify-content-between"
+                  [class]="externalLogin ? 'mt-5' : 'mt-15'"
+                >
                   <div class="text-gray-700 order-2 order-sm-1 my-2">
                     Khi đăng nhập, bạn đồng ý với các
                     <a href="#" class="link-dark"> điều kiện và điều khoản</a>
@@ -117,14 +232,22 @@
               </div>
             </div>
             <!--begin::Content-->
-            <div class="order-2 order-lg-2 flex-column-auto d-flex flex-column p-7">
+            <div
+              class="order-2 order-lg-2 flex-column-auto d-flex flex-column p-7"
+            >
               <img src="/assets/codx/bg/Line-login.png" class="h-100" alt="" />
             </div>
-            <div class="login-image order-1 order-lg-2 flex-column-auto flex-lg-row-fluid d-flex flex-column p-7">
+            <div
+              class="login-image order-1 order-lg-2 flex-column-auto flex-lg-row-fluid d-flex flex-column p-7"
+            >
               <!--begin::Content body-->
               <div class="d-flex flex-column-fluid flex-lg-center">
                 <div class="d-flex flex-column justify-content-center">
-                  <img src="/assets/codx/bg/login-right.svg" class="max-h-250px mb-7" alt="" />
+                  <img
+                    src="/assets/codx/bg/login-right.svg"
+                    class="max-h-250px mb-7"
+                    alt=""
+                  />
                   <p class="fw-bold fs-4 text-dark align-items-center">
                     Trải nghiệm quản lý doanh nghiệp <br />toàn diện cùng CoDX
                     với 1 tháng<br />
@@ -143,98 +266,200 @@
   </div>
   <!--end::Login-->
   <!--Begin Doi PW-->
-  <div class="d-flex flex-column flex-root bg-linear-gradient-blue" style="display: none" *ngIf="mode == 'changePass'">
+  <div
+    class="d-flex flex-column flex-root bg-linear-gradient-blue"
+    style="display: none"
+    *ngIf="mode == 'changePass'"
+  >
     <div class="login login-signin-on d-flex flex-row-fluid">
-      <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid"
-        style="background-image: url(/assets/codx/bg/bg-login.png)">
+      <div
+        class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid"
+        style="background-image: url(/assets/codx/bg/bg-login.png)"
+      >
         <div class="login-container">
           <div class="d-flex flex-column flex-lg-row bg-white rounded-3 p-15">
             <div
-              class="login-aside order-2 order-lg-1 d-flex flex-column-fluid flex-lg-row-auto bgi-size-cover bgi-no-repeat">
-              <div class="d-flex flex-row-fluid flex-column justify-content-between">
+              class="login-aside order-2 order-lg-1 d-flex flex-column-fluid flex-lg-row-auto bgi-size-cover bgi-no-repeat"
+            >
+              <div
+                class="d-flex flex-row-fluid flex-column justify-content-between"
+              >
                 <div class="login-form position-relative overflow-hidden">
                   <div class="d-flex">
                     <a href="#">
-                      <img src="/assets/logos/logo-1.svg" class="h-35px" alt="" />
+                      <img
+                        src="/assets/logos/logo-1.svg"
+                        class="h-35px"
+                        alt=""
+                      />
                     </a>
                   </div>
                   <div class="login-signin text-dark">
                     <div class="text-start mb-10 mt-10">
                       <h3 class="fw-bolder fs-1">
-                        <codx-label fiedName="ChangePassword" formModel="" default="Thay đổi mật khẩu"></codx-label>
+                        <codx-label
+                          fiedName="ChangePassword"
+                          formModel=""
+                          default="Thay đổi mật khẩu"
+                        ></codx-label>
                       </h3>
                     </div>
                     <span #Error></span>
-                    <form method="post" id="frm_erm_login" (ngSubmit)="submitChangePass()" [formGroup]="changePassForm"
-                      class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate">
-                      <div class="form-group mb-5 fv-plugins-icon-container" #groupemail>
+                    <form
+                      method="post"
+                      id="frm_erm_login"
+                      (ngSubmit)="submitChangePass()"
+                      [formGroup]="changePassForm"
+                      class="form fv-plugins-bootstrap fv-plugins-framework"
+                      novalidate="novalidate"
+                    >
+                      <div
+                        class="form-group mb-5 fv-plugins-icon-container"
+                        #groupemail
+                      >
                         <label class="fw-bold">
-                          <codx-label fiedName="Account" formModel="" default="Tài khoản"></codx-label></label>
-                        <div class="d-flex align-items-center form-control form-control-solid form-control-lg px-3">
+                          <codx-label
+                            fiedName="Account"
+                            formModel=""
+                            default="Tài khoản"
+                          ></codx-label
+                        ></label>
+                        <div
+                          class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+                        >
                           <div class="d-flex flex-column flex-grow-1">
-                            <input class="form-control border-0 p-0 ps-3" field="email"
-                              placeholder="Nhập tài khoản hoặc email" formControlName="email" />
+                            <input
+                              class="form-control border-0 p-0 ps-3"
+                              field="email"
+                              placeholder="Nhập tài khoản hoặc email"
+                              formControlName="email"
+                            />
                           </div>
                         </div>
                       </div>
-                      <div class="form-group mb-5 fv-plugins-icon-container" #groupoldpass>
+                      <div
+                        class="form-group mb-5 fv-plugins-icon-container"
+                        #groupoldpass
+                      >
                         <label class="fw-bold">
-                          <codx-label fiedName="PassOld" formModel="" default="Mật khẩu cũ"></codx-label></label>
-                        <div class="d-flex align-items-center form-control form-control-solid form-control-lg px-3">
+                          <codx-label
+                            fiedName="PassOld"
+                            formModel=""
+                            default="Mật khẩu cũ"
+                          ></codx-label
+                        ></label>
+                        <div
+                          class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+                        >
                           <div class="d-flex flex-column flex-grow-1">
-                            <input type="password" class="form-control border-0 p-0 ps-3" field="PasswordOld"
-                              placeholder="Mật khẩu cũ" formControlName="passwordOld" />
+                            <input
+                              type="password"
+                              class="form-control border-0 p-0 ps-3"
+                              field="PasswordOld"
+                              placeholder="Mật khẩu cũ"
+                              formControlName="passwordOld"
+                            />
                           </div>
                         </div>
                       </div>
-                      <div class="form-group mb-5 fv-plugins-icon-container" #groupnewpass>
+                      <div
+                        class="form-group mb-5 fv-plugins-icon-container"
+                        #groupnewpass
+                      >
                         <label class="fw-bold">
-                          <codx-label fiedName="PassNew" formModel="" default="Mật khẩu mới"></codx-label></label>
-                        <div class="d-flex align-items-center form-control form-control-solid form-control-lg px-3">
+                          <codx-label
+                            fiedName="PassNew"
+                            formModel=""
+                            default="Mật khẩu mới"
+                          ></codx-label
+                        ></label>
+                        <div
+                          class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+                        >
                           <div class="d-flex flex-column flex-grow-1">
-                            <input type="password" class="form-control border-0 p-0 ps-3" field="Password"
-                              placeholder="Mật khẩu mới" formControlName="password" />
+                            <input
+                              type="password"
+                              class="form-control border-0 p-0 ps-3"
+                              field="Password"
+                              placeholder="Mật khẩu mới"
+                              formControlName="password"
+                            />
                           </div>
                         </div>
                       </div>
-                      <div class="form-group mb-5 fv-plugins-icon-container" #confirmpass>
+                      <div
+                        class="form-group mb-5 fv-plugins-icon-container"
+                        #confirmpass
+                      >
                         <label class="fw-bold">
-                          <codx-label fiedName="PassNewAgain" formModel=""
-                            default="Xác nhận mật khẩu mới"></codx-label></label>
-                        <div class="d-flex align-items-center form-control form-control-solid form-control-lg px-3">
+                          <codx-label
+                            fiedName="PassNewAgain"
+                            formModel=""
+                            default="Xác nhận mật khẩu mới"
+                          ></codx-label
+                        ></label>
+                        <div
+                          class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+                        >
                           <div class="d-flex flex-column flex-grow-1">
-                            <input type="password" class="form-control border-0 p-0 ps-3" field="Password"
-                              placeholder="Xác nhận mật khẩu" formControlName="confirmPassword" />
+                            <input
+                              type="password"
+                              class="form-control border-0 p-0 ps-3"
+                              field="Password"
+                              placeholder="Xác nhận mật khẩu"
+                              formControlName="confirmPassword"
+                            />
                           </div>
                         </div>
                       </div>
                       <div class="form-group d-grid gap-2 mb-5">
-                        <button type="submit" id="btn-signin" class="btn btn-primary fw-bold px-6 py-3"
-                          [disabled]="changePassForm.invalid">
-                          {{ "Đăng nhập " | lang: "Login":"btnLogin" | async }}
+                        <button
+                          type="submit"
+                          id="btn-signin"
+                          class="btn btn-primary fw-bold px-6 py-3"
+                          [disabled]="changePassForm.invalid"
+                        >
+                          {{
+                            "Đăng nhập " | lang : "Login" : "btnLogin" | async
+                          }}
                         </button>
                       </div>
                     </form>
                   </div>
                 </div>
-                <div class="d-flex flex-column-auto justify-content-between mt-15">
+                <div
+                  class="d-flex flex-column-auto justify-content-between mt-15"
+                >
                   <div class="text-gray-700 order-2 order-sm-1 my-2">
-                    Khi đăng nhập, bạn đồng ý với các<a href="#" class="text-underline link-dark">
-                      điều kiện và điều khoản</a><br />
+                    Khi đăng nhập, bạn đồng ý với các<a
+                      href="#"
+                      class="text-underline link-dark"
+                    >
+                      điều kiện và điều khoản</a
+                    ><br />
                     cũng như<a href="#" class="text-underline link-dark">
-                      chính sách bảo mật</a>
+                      chính sách bảo mật</a
+                    >
                     của chúng tôi
                   </div>
                 </div>
               </div>
             </div>
-            <div class="order-2 order-lg-2 flex-column-auto d-flex flex-column p-7">
+            <div
+              class="order-2 order-lg-2 flex-column-auto d-flex flex-column p-7"
+            >
               <img src="/assets/codx/bg/Line-login.png" class="h-100" alt="" />
             </div>
-            <div class="login-image order-1 order-lg-2 flex-column-auto flex-lg-row-fluid d-flex flex-column p-7">
+            <div
+              class="login-image order-1 order-lg-2 flex-column-auto flex-lg-row-fluid d-flex flex-column p-7"
+            >
               <div class="d-flex flex-column-fluid flex-lg-center">
                 <div class="d-flex flex-column justify-content-center">
-                  <img src="/assets/codx/bg/login-right.svg" class="max-h-250px mb-7" alt="" />
+                  <img
+                    src="/assets/codx/bg/login-right.svg"
+                    class="max-h-250px mb-7"
+                    alt=""
+                  />
                   <p class="fw-bold fs-4 text-dark align-items-center">
                     Trải nghiệm quản lý doanh nghiệp <br />toàn diện cùng CoDX
                     với 1 tháng<br />
@@ -250,19 +475,32 @@
   </div>
   <!--end Doi PW-->
   <!--Begin first login-->
-  <div class="d-flex flex-column flex-root bg-linear-gradient-blue" style="display: none" *ngIf="mode == 'firstLogin'">
+  <div
+    class="d-flex flex-column flex-root bg-linear-gradient-blue"
+    style="display: none"
+    *ngIf="mode == 'firstLogin'"
+  >
     <div class="login login-signin-on d-flex flex-row-fluid">
-      <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid"
-        style="background-image: url(/assets/codx/bg/bg-login.png)">
+      <div
+        class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid"
+        style="background-image: url(/assets/codx/bg/bg-login.png)"
+      >
         <div class="login-container">
           <div class="d-flex flex-column flex-lg-row bg-white rounded-3 p-15">
             <div
-              class="login-aside order-2 order-lg-1 d-flex flex-column-fluid flex-lg-row-auto bgi-size-cover bgi-no-repeat">
-              <div class="d-flex flex-row-fluid flex-column justify-content-between">
+              class="login-aside order-2 order-lg-1 d-flex flex-column-fluid flex-lg-row-auto bgi-size-cover bgi-no-repeat"
+            >
+              <div
+                class="d-flex flex-row-fluid flex-column justify-content-between"
+              >
                 <div class="login-form position-relative overflow-hidden">
                   <div class="d-flex">
                     <a href="#">
-                      <img src="/assets/logos/logo-1.svg" class="h-35px" alt="" />
+                      <img
+                        src="/assets/logos/logo-1.svg"
+                        class="h-35px"
+                        alt=""
+                      />
                     </a>
                   </div>
                   <div class="login-signin text-dark">
@@ -270,43 +508,98 @@
                       <h3 class="fw-bolder fs-1">Tạo mật khẩu</h3>
                     </div>
                     <span #Error></span>
-                    <form method="post" id="frm_erm_login" (ngSubmit)="submitFirstLogin()" [formGroup]="firstLoginForm"
-                      class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate">
-                      <div class="form-group mb-5 fv-plugins-icon-container" #groupemail>
+                    <form
+                      method="post"
+                      id="frm_erm_login"
+                      (ngSubmit)="submitFirstLogin()"
+                      [formGroup]="firstLoginForm"
+                      class="form fv-plugins-bootstrap fv-plugins-framework"
+                      novalidate="novalidate"
+                    >
+                      <div
+                        class="form-group mb-5 fv-plugins-icon-container"
+                        #groupemail
+                      >
                         <label class="fw-bold">
-                          <codx-label fiedName="Account" formModel="" default="Tài khoản"></codx-label></label>
-                        <div class="d-flex align-items-center form-control form-control-solid form-control-lg px-3">
+                          <codx-label
+                            fiedName="Account"
+                            formModel=""
+                            default="Tài khoản"
+                          ></codx-label
+                        ></label>
+                        <div
+                          class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+                        >
                           <div class="d-flex flex-column flex-grow-1">
-                            <input class="form-control border-0 p-0 ps-3" field="email"
-                              placeholder="Nhập tài khoản hoặc email" formControlName="email" />
+                            <input
+                              class="form-control border-0 p-0 ps-3"
+                              field="email"
+                              placeholder="Nhập tài khoản hoặc email"
+                              formControlName="email"
+                            />
                           </div>
                         </div>
                       </div>
-                      <div class="form-group mb-5 fv-plugins-icon-container" #groupnewpass>
+                      <div
+                        class="form-group mb-5 fv-plugins-icon-container"
+                        #groupnewpass
+                      >
                         <label class="fw-bold">
-                          <codx-label fiedName="PassNew" formModel="" default="Mật khẩu mới"></codx-label></label>
-                        <div class="d-flex align-items-center form-control form-control-solid form-control-lg px-3">
+                          <codx-label
+                            fiedName="PassNew"
+                            formModel=""
+                            default="Mật khẩu mới"
+                          ></codx-label
+                        ></label>
+                        <div
+                          class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+                        >
                           <div class="d-flex flex-column flex-grow-1">
-                            <input type="password" class="form-control border-0 p-0 ps-3" field="Password"
-                              placeholder="Mật khẩu mới" formControlName="password" />
+                            <input
+                              type="password"
+                              class="form-control border-0 p-0 ps-3"
+                              field="Password"
+                              placeholder="Mật khẩu mới"
+                              formControlName="password"
+                            />
                           </div>
                         </div>
                       </div>
-                      <div class="form-group mb-5 fv-plugins-icon-container" #confirmpass>
+                      <div
+                        class="form-group mb-5 fv-plugins-icon-container"
+                        #confirmpass
+                      >
                         <label class="fw-bold">
-                          <codx-label fiedName="PassNewAgain" formModel=""
-                            default="Xác nhận mật khẩu mới"></codx-label></label>
-                        <div class="d-flex align-items-center form-control form-control-solid form-control-lg px-3">
+                          <codx-label
+                            fiedName="PassNewAgain"
+                            formModel=""
+                            default="Xác nhận mật khẩu mới"
+                          ></codx-label
+                        ></label>
+                        <div
+                          class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+                        >
                           <div class="d-flex flex-column flex-grow-1">
-                            <input type="password" class="form-control border-0 p-0 ps-3" field="Password"
-                              placeholder="Xác nhận mật khẩu" formControlName="confirmPassword" />
+                            <input
+                              type="password"
+                              class="form-control border-0 p-0 ps-3"
+                              field="Password"
+                              placeholder="Xác nhận mật khẩu"
+                              formControlName="confirmPassword"
+                            />
                           </div>
                         </div>
                       </div>
                       <div class="form-group d-grid gap-2 mb-5">
-                        <button type="submit" id="btn-signin" class="btn btn-primary fw-bold px-6 py-3"
-                          [disabled]="firstLoginForm.invalid">
-                          {{ "Đăng nhập " | lang: "Login":"btnLogin" | async }}
+                        <button
+                          type="submit"
+                          id="btn-signin"
+                          class="btn btn-primary fw-bold px-6 py-3"
+                          [disabled]="firstLoginForm.invalid"
+                        >
+                          {{
+                            "Đăng nhập " | lang : "Login" : "btnLogin" | async
+                          }}
                         </button>
                       </div>
                       <input type="hidden" />
@@ -314,24 +607,39 @@
                     </form>
                   </div>
                 </div>
-                <div class="d-flex flex-column-auto justify-content-between mt-15">
+                <div
+                  class="d-flex flex-column-auto justify-content-between mt-15"
+                >
                   <div class="text-gray-700 order-2 order-sm-1 my-2">
-                    Khi đăng nhập, bạn đồng ý với các<a href="#" class="text-underline link-dark">
-                      điều kiện và điều khoản</a><br />
+                    Khi đăng nhập, bạn đồng ý với các<a
+                      href="#"
+                      class="text-underline link-dark"
+                    >
+                      điều kiện và điều khoản</a
+                    ><br />
                     cũng như<a href="#" class="text-underline link-dark">
-                      chính sách bảo mật</a>
+                      chính sách bảo mật</a
+                    >
                     của chúng tôi
                   </div>
                 </div>
               </div>
             </div>
-            <div class="order-2 order-lg-2 flex-column-auto d-flex flex-column p-7">
+            <div
+              class="order-2 order-lg-2 flex-column-auto d-flex flex-column p-7"
+            >
               <img src="/assets/codx/bg/Line-login.png" class="h-100" alt="" />
             </div>
-            <div class="login-image order-1 order-lg-2 flex-column-auto flex-lg-row-fluid d-flex flex-column p-7">
+            <div
+              class="login-image order-1 order-lg-2 flex-column-auto flex-lg-row-fluid d-flex flex-column p-7"
+            >
               <div class="d-flex flex-column-fluid flex-lg-center">
                 <div class="d-flex flex-column justify-content-center">
-                  <img src="/assets/codx/bg/login-right.svg" class="max-h-250px mb-7" alt="" />
+                  <img
+                    src="/assets/codx/bg/login-right.svg"
+                    class="max-h-250px mb-7"
+                    alt=""
+                  />
                   <p class="fw-bold fs-4 text-dark align-items-center">
                     Trải nghiệm quản lý doanh nghiệp <br />toàn diện cùng CoDX
                     với 1 tháng<br />
@@ -346,4 +654,140 @@
     </div>
   </div>
   <!--end first login-->
+  <!-- Begin active Tenant -->
+  <div
+    class="d-flex flex-column flex-root bg-linear-gradient-blue"
+    style="display: none"
+    *ngIf="mode == 'activeTenant'"
+  >
+    <div class="login login-signin-on d-flex flex-row-fluid">
+      <div
+        class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid"
+        style="background-image: url(/assets/codx/bg/bg-login.png)"
+      >
+        <div class="login-container">
+          <div class="d-flex flex-column flex-lg-row bg-white rounded-3 p-15">
+            <div
+              class="login-aside order-2 order-lg-1 d-flex flex-column-fluid flex-lg-row-auto bgi-size-cover bgi-no-repeat"
+            >
+              <div
+                class="d-flex flex-row-fluid flex-column justify-content-between"
+              >
+                <div class="login-form position-relative overflow-hidden">
+                  <div class="d-flex">
+                    <a href="#">
+                      <img
+                        src="/assets/logos/logo-1.svg"
+                        class="h-35px"
+                        alt=""
+                      />
+                    </a>
+                  </div>
+                  <div class="login-signin text-dark">
+                    <div class="text-start mb-10 mt-10">
+                      <h3 class="fw-bold">
+                        <codx-label
+                          fiedName="activeTenantLabel"
+                          formModel=""
+                          default="Kích hoạt tài khoản"
+                        ></codx-label>
+                      </h3>
+                    </div>
+                    <span #Error></span>
+                    <div class="form-group mb-5 fv-plugins-icon-container">
+                      <label class="fw-bold">
+                        <codx-label
+                          fiedName="Account"
+                          formModel=""
+                          default="Tài khoản"
+                        ></codx-label
+                      ></label>
+                      <div
+                        class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+                      >
+                        <div class="d-flex flex-column flex-grow-1">
+                          <input
+                            class="form-control border-0 p-0 ps-3"
+                            field="email"
+                            formControlName="email"
+                            [disabled]="true"
+                            [defaultValue]="email"
+                            [value]="email"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group d-grid gap-2 mb-5">
+                      <button
+                        (click)="activeTenantAccount()"
+                        class="btn btn-primary fw-bold px-6 py-3"
+                      >
+                        <codx-label
+                          fiedName="activeTenant"
+                          formModel=""
+                          default="Kích hoạt ngay"
+                        ></codx-label>
+                      </button>
+                    </div>
+                    <input type="hidden" />
+                    <div></div>
+                    <!-- <form
+                      method="post"
+                      id="frm_erm_login"
+                      (ngSubmit)="submitFirstLogin()"
+                      [formGroup]="firstLoginForm"
+                      class="form fv-plugins-bootstrap fv-plugins-framework"
+                      novalidate="novalidate"
+                    >
+                      
+                    </form> -->
+                  </div>
+                </div>
+                <div
+                  class="d-flex flex-column-auto justify-content-between mt-15"
+                >
+                  <div class="text-gray-700 order-2 order-sm-1 my-2">
+                    Khi đăng nhập, bạn đồng ý với các<a
+                      href="#"
+                      class="text-underline link-dark"
+                    >
+                      điều kiện và điều khoản</a
+                    ><br />
+                    cũng như<a href="#" class="text-underline link-dark">
+                      chính sách bảo mật</a
+                    >
+                    của chúng tôi
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="order-2 order-lg-2 flex-column-auto d-flex flex-column p-7"
+            >
+              <img src="/assets/codx/bg/Line-login.png" class="h-100" alt="" />
+            </div>
+            <div
+              class="login-image order-1 order-lg-2 flex-column-auto flex-lg-row-fluid d-flex flex-column p-7"
+            >
+              <div class="d-flex flex-column-fluid flex-lg-center">
+                <div class="d-flex flex-column justify-content-center">
+                  <img
+                    src="/assets/codx/bg/login-right.svg"
+                    class="max-h-250px mb-7"
+                    alt=""
+                  />
+                  <p class="fw-bold fs-4 text-dark align-items-center">
+                    Trải nghiệm quản lý doanh nghiệp <br />toàn diện cùng CoDX
+                    với 1 tháng<br />
+                    dùng thử miễn phí
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End active Tenant -->
 </ng-container>

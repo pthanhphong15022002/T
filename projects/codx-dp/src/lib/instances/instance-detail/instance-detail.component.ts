@@ -124,8 +124,8 @@ export class InstanceDetailComponent implements OnInit {
       this.currentStep = this.dataSelect.currentStep;
       this.instanceStatus = this.dataSelect.status;
       this.instance = this.dataSelect;
-     this.GetStepsByInstanceIDAsync(this.id);
-
+    // this.GetStepsByInstanceIDAsync(this.id,this.dataSelect.processID);
+  this.GetStepsByInstanceIDAsync(this.id);
       //cái này xóa luon di. chưa chạy xong api mà gọi ra la sai
       // if (this.listSteps == null && this.listSteps.length == 0) {
       //   this.tmpTeps = null;
@@ -136,9 +136,12 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   GetStepsByInstanceIDAsync(insID){
-     this.dpSv.GetStepsByInstanceIDAsync(insID).subscribe((res) => {
+    // var data = [insID,proccessID];
+       var data = [insID];
+     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res) {
         this.listSteps = res;
+        // this.getListStepsStatus();
         var total = 0;
         for (var i = 0; i < this.listSteps.length; i++) {
           var stepNo = i;
@@ -223,8 +226,8 @@ export class InstanceDetailComponent implements OnInit {
   click(indexNo, data) {
     if (this.currentStep < indexNo) return;
     this.currentNameStep = indexNo;
-
-    this.tmpTeps =  this.listSteps[indexNo];
+    var indx = this.listSteps.findIndex(x=>x.stepID == data);
+    this.tmpTeps =  this.listSteps[indx];
     this.onwer = this.tmpTeps.owner;
   }
 
@@ -273,7 +276,7 @@ export class InstanceDetailComponent implements OnInit {
     ...item,
     stepStatus: mapList.get(item.stepID) || item.stepStatus || ''
   }));
-    let list =  updatedArray.map(x=> {return {stepId: x.stepID, stepName: x.stepName, stepStatus: x.stepStatus}});
+    let list =  updatedArray.map(x=> {return {stepID: x.stepID, stepName: x.stepName, stepStatus: x.stepStatus}});
   return list;
   }
   deleteListReason(listStep: any): void {

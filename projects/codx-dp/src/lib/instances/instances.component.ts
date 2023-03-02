@@ -99,7 +99,7 @@ export class InstancesComponent
   sumDaySteps: number;
   lstParticipants = [];
   oldIdInstance: any;
-  viewMode = 6;
+  viewMode:any;
   viewModeDetail = 'S';
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
@@ -534,13 +534,13 @@ export class InstancesComponent
         break;
       case 'dbClick':
         //xư lý dbClick
-        this.viewDetail(e.data.recID);
+        this.viewDetail(e.data);
         break;
     }
   }
 
-  viewDetail(recID) {
-    //  this.detailViewInstance.GetStepsByInstanceIDAsync(recID)
+  viewDetail(data) {
+    this.dataSelected =data;
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;

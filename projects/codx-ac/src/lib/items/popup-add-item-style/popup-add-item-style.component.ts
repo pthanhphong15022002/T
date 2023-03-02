@@ -23,6 +23,7 @@ import { ItemsService } from '../items.service';
   styleUrls: ['./popup-add-item-style.component.css'],
 })
 export class PopupAddItemStyleComponent extends UIComponent {
+  //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('itemStyleImage') itemStyleImage?: ImageViewerComponent;
 
@@ -51,7 +52,9 @@ export class PopupAddItemStyleComponent extends UIComponent {
       (res) => (res.event = this.savedItemStyles)
     );
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {
     if (this.dialogData.data.itemStyle) {
       this.isEdit = true;
@@ -59,7 +62,12 @@ export class PopupAddItemStyleComponent extends UIComponent {
       this.savedItemStyles = this.dialogData.data.savedItemStyles;
     }
   }
+  //#endregion
 
+  //#region Event
+  //#endregion
+
+  //#region Method
   save(closeAfterSaving: boolean) {
     console.log(this.itemStyle);
 
@@ -122,11 +130,15 @@ export class PopupAddItemStyleComponent extends UIComponent {
           }
 
           this.savedItemStyles = this.savedItemStyles.map((origin) =>
-            origin.id === this.itemStyle.id ? this.itemStyle : origin
+            origin.recID === this.itemStyle.recID ? this.itemStyle : origin
           );
 
           console.log(this.savedItemStyles);
         }
       });
   }
+  //#endregion
+
+  //#region Function
+  //#endregion 
 }

@@ -1,5 +1,4 @@
 export interface ItemColor {
-  id: string;
   recID: string;
   itemID: string;
   colorID: string;
