@@ -4,8 +4,6 @@
   [views]="views"
   [button]="btnAdd"
   [autoLoad]="true"
-  predicates="PostType=@0"
-  [dataValues]="selectedValue"
   entityName="AC_APPostingAccounts"
   (buttonClick)="handleClickAdd()"
 >
@@ -43,7 +41,11 @@
                         <span class="icon-house"></span>
                       </span>
                       <span class="menu-title fw-bold">
-                        <codx-label default="Tài khoản"></codx-label>
+                        <codx-label
+                          fiedName="lblAccount"
+                          formName="APPostingAccounts"
+                          default="Tài khoản"
+                        ></codx-label>
                       </span>
                       <span class="menu-arrow"></span>
                     </span>
@@ -74,6 +76,7 @@
                       </span>
                       <span class="menu-title fw-bold">
                         <codx-label
+                          fiedName="lblTerm"
                           formName="APPostingAccounts"
                           default="Điều khoản"
                         ></codx-label>

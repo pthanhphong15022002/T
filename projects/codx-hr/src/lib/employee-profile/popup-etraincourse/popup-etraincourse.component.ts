@@ -39,6 +39,8 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   trainCourseObj;
   dataVllSupplier: any;
   result;
+  fromDateFormat;
+  toDateFormat;
   ops = ['m', 'y'];
 
   isAfterRender = false;
@@ -60,7 +62,9 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     this.formModel = dialog?.formModel;
     this.funcID = dataDialog?.data?.funcID;
     this.employId = dataDialog?.data?.employeeId;
-    this.trainCourseObj = JSON.parse(JSON.stringify(dataDialog?.data?.dataInput));
+    this.trainCourseObj = JSON.parse(
+      JSON.stringify(dataDialog?.data?.dataInput)
+    );
   }
 
   initForm() {
@@ -121,22 +125,8 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
           }
         });
     }
-
-    // this.hrService
-    //   .getFormGroup(this.formModel2.formName, this.formModel2.gridViewName)
-    //   .then((item) => {
-    //     this.formGroup2 = item;
-    //     console.log('form2 test', this.formGroup2);
-    //     this.hrService
-    //       .getEmployeeCertificatesInfoById(this.employId)
-    //       .subscribe((p) => {
-    //         console.log('thong tin chung chi nhan vien', p);
-    //         this.dataForm2 = p;
-    //         this.formModel2.currentData = this.dataForm2;
-    //         this.formGroup2.patchValue(this.dataForm2);
-    //         this.isAfterRender = true;
-    //       });
-    //   });
+    this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
+    this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);
   }
 
   onInit(): void {
@@ -165,7 +155,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
-    if(this.actionType === 'copy') delete this.trainCourseObj.recID;
+    if (this.actionType === 'copy') delete this.trainCourseObj.recID;
     this.employId = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
@@ -179,8 +169,8 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
           } else {
             this.notify.notifyCode('SYS023');
             this.result.isSuccess = false;
-      }
-    });
+          }
+        });
     } else {
       this.hrService
         .updateEmployeeTrainCourseInfo(this.trainCourseObj, this.funcID)
@@ -318,14 +308,14 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       this.notify.notifyCode('Chưa chọn nơi đào tạo');
     }
   }
-  
-  Date(date){
+
+  Date(date) {
     return new Date(date);
   }
   changeCalendar(event, changeType: string) {
-    let yearFromDate = event.fromDate.getUTCFullYear();
-    let monthFromDate = event.fromDate.getUTCMonth() + 2;
-    let dayFromDate = event.fromDate.getUTCDate();
+    let yearFromDate = event.fromDate.getFullYear();
+    let monthFromDate = event.fromDate.getMonth() + 1;
+    let dayFromDate = event.fromDate.getDate();
     var strYear = `${yearFromDate}`;
     var strMonth = `${yearFromDate}/${monthFromDate}`;
     var strDay = `${yearFromDate}/${monthFromDate}/${dayFromDate}`;
@@ -350,5 +340,12 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       this.trainCourseObj.trainToDate = event.fromDate;
     }
   }
-
+  getFormatDate(trainFrom : string){
+    let resultDate = '';
+    if(trainFrom){
+      let arrDate = trainFrom.split('/');
+      resultDate = arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
+      return resultDate
+    } else return resultDate = 'y';
+  }
 }

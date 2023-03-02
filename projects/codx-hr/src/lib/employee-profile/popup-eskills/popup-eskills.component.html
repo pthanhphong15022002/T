@@ -256,15 +256,10 @@
     <div class="form-group row">
       <div class="col-6">
         <codx-label fiedName="TrainFrom" [formModel]="formModel"></codx-label>
-        <!-- <codx-input
-        field="trainFrom"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input> -->
         <codx-dropdown-calendar
-          cssPopup="h-500px w-500px"
+          cssPopup="h-400px w-500px"
           [value]="Date(skillObj.trainFromDate)"
-          [selectedType]="'y'"
+          [selectedType]="fromDateFormat"
           [displayOption]="ops"
           cssClass="w-100 om-calendar"
           class="me-4"
@@ -274,15 +269,10 @@
       </div>
       <div class="col-6">
         <codx-label fiedName="TrainTo" [formModel]="formModel"></codx-label>
-        <!-- <codx-input
-        field="trainTo"
-        [Group]="formGroup"
-        [formModel]="formModel"
-      ></codx-input> -->
         <codx-dropdown-calendar
-          cssPopup="h-500px w-500px"
+          cssPopup="h-400px w-500px"
           [value]="Date(skillObj.trainToDate)"
-          [selectedType]="'y'"
+          [selectedType]="toDateFormat"
           [displayOption]="ops"
           cssClass="w-100 om-calendar"
           class="me-4"

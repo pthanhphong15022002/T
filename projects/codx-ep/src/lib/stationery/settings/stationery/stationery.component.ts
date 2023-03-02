@@ -61,7 +61,8 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
 
   popupTitle: string = '';
   funcIDName: string = '';
-  popupClosed = true;
+  popupClosed: boolean = true;
+  isPriceVisible: boolean = false;
 
   constructor(
     private injector: Injector,
@@ -73,6 +74,14 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
+    this.epService.getEPStationerySetting('1').subscribe((res: any) => {
+      if (res) {
+        let dataValue = res.dataValue;
+        let json = JSON.parse(dataValue);
+        this.isPriceVisible = json.ShowUnitPrice ?? false;
+      }
+    });
+
     this.epService.getFormModel(this.funcID).then((res) => {
       this.formModel = res;
     });

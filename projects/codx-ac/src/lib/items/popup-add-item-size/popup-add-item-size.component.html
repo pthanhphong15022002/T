@@ -64,15 +64,27 @@
       class="btn btn-outline-primary me-3"
       (click)="save(false)"
     >
-      Lưu & Thêm
+      <codx-label
+        fiedName="lblSaveAndClear"
+        [formModel]="dialogRef.formModel"
+        default="Lưu & Thêm"
+      ></codx-label>
     </button>
     <button type="button" class="btn btn-primary" (click)="save(true)">
-      Lưu
+      <codx-label
+        fiedName="lblSave"
+        [formModel]="dialogRef.formModel"
+        default="Lưu"
+      ></codx-label>
     </button>
   </ng-container>
   <ng-template #edit>
     <button type="button" class="btn btn-primary" (click)="update()">
-      Lưu
+      <codx-label
+        fiedName="lblUpdate"
+        [formModel]="dialogRef.formModel"
+        default="Lưu"
+      ></codx-label>
     </button>
   </ng-template>
 </ng-template>

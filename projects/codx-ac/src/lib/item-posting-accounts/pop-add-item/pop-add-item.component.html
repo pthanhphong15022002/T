@@ -1,0 +1,203 @@
+<codx-form #form [headerText]="headerText" [subHeader]="subHeader" [body]="body" [formModel]="dialog.formModel"
+    [dialog]="dialog" [footer]="footer" [data]="" subToolbarCss="text-end">
+</codx-form>
+<ng-template #subHeader>
+    <div class="text-primary fw-bold fs-5">
+        {{subheaderText}}
+    </div>
+</ng-template>
+<ng-template #body>
+    <div class="mt-2 mb-1 text-primary fw-bold fs-5">
+        <codx-label [formModel]="form.formModel" default="Căn cứ"></codx-label>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="ItemLevel"></codx-label>
+                <codx-input *ngIf="itemposting.itemLevel == ''" type="valuelist" refValue="AC046"
+                    [crrValue]="itemposting.itemLevel" [formModel]="form.formModel"
+                    (valueChange)="valueChangeItemLevel($event)" field="itemLevel">
+                </codx-input>
+                <codx-input *ngIf="itemposting.itemLevel != ''" type="valuelist" refValue="AC046"
+                    [crrValue]="itemposting.itemLevel" [formModel]="form.formModel"
+                    (valueChange)="valueChangeItemLevel($event)" field="itemLevel">
+                </codx-input>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="ItemSelection"></codx-label>
+                <codx-input *ngIf="itemposting.itemLevel == ''" type="valuelist" field="itemSelection">
+                </codx-input>
+                <codx-input *ngIf="itemposting.itemLevel == '1'" type="combobox" refValue="Items"
+                    (valueChange)="valueChange($event)" [crrValue]="form.data.itemSelection" field="itemSelection">
+                </codx-input>
+                <codx-input *ngIf="itemposting.itemLevel == '2'" type="combobox" refValue="ItemGroups"
+                    (valueChange)="valueChange($event)" [crrValue]="form.data.custSelection" field="itemSelection">
+                </codx-input>
+                <codx-input *ngIf="itemposting.itemLevel == '3'" type="combobox" refValue="ProductLines"
+                    (valueChange)="valueChange($event)" [crrValue]="form.data.custSelection" field="itemSelection">
+                </codx-input>
+                <codx-input *ngIf="itemposting.itemLevel == '4'" type="text" [disabled]="true">
+                </codx-input>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="CustType"></codx-label>
+                <codx-input *ngIf="itemposting.custType == ''" type="valuelist" refValue="AC056"
+                    [crrValue]="itemposting.custType" [formModel]="form.formModel"
+                    (valueChange)="valueChangeCust($event)" field="custType">
+                </codx-input>
+                <codx-input *ngIf="itemposting.custType != ''" type="valuelist" refValue="AC056"
+                    [crrValue]="itemposting.custType" [formModel]="form.formModel"
+                    (valueChange)="valueChangeCust($event)" field="custType">
+                </codx-input>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="CustLevel"></codx-label>
+                <codx-input *ngIf="itemposting.custType == ''" type="valuelist" field="custLevel">
+                </codx-input>
+                <codx-input *ngIf="itemposting.custType == '1' || itemposting.custType == '2'" type="valuelist"
+                    refValue="AC054" [crrValue]="itemposting.custLevel" (valueChange)="valueChangeCust($event)"
+                    field="custLevel">
+                </codx-input>
+                <codx-input *ngIf="itemposting.custType == '6' || itemposting.custType == '3'" type="valuelist"
+                    refValue="AC055" [crrValue]="itemposting.custLevel" (valueChange)="valueChangeCust($event)"
+                    field="custLevel">
+                </codx-input>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="CustSelection"></codx-label>
+                <codx-input *ngIf="itemposting.custType == '' && itemposting.custLevel == '3'" type="valuelist"
+                    field="custSelection">
+                </codx-input>
+                <codx-input *ngIf="itemposting.custType == '1' && itemposting.custLevel == '1'"
+                    (valueChange)="valueChange($event)" type="combobox" refValue="Customers"
+                    [crrValue]="itemposting.custSelection" field="custSelection">
+                </codx-input>
+                <codx-input *ngIf="itemposting.custType == '1' && itemposting.custLevel == '2'"
+                    (valueChange)="valueChange($event)" type="combobox" refValue="CustomerGroups"
+                    [crrValue]="itemposting.custSelection" field="custSelection">
+                </codx-input>
+                <codx-input *ngIf="itemposting.custType == '2' && itemposting.custLevel == '1'"
+                    (valueChange)="valueChange($event)" type="combobox" refValue="VendorsAC"
+                    [crrValue]="itemposting.custSelection" field="custSelection">
+                </codx-input>
+                <codx-input *ngIf="itemposting.custType == '2' && itemposting.custLevel == '2'"
+                    (valueChange)="valueChange($event)" type="combobox" refValue="VendorGroups"
+                    [crrValue]="itemposting.custSelection" field="custSelection">
+                </codx-input>
+                <codx-input *ngIf="itemposting.custType == '3' && itemposting.custLevel == '1'"
+                    (valueChange)="valueChange($event)" type="combobox" refValue="EmployeesAC"
+                    [crrValue]="itemposting.custSelection" field="custSelection">
+                </codx-input>
+                <codx-input *ngIf="itemposting.custType == '6' && itemposting.custLevel == '1'"
+                    (valueChange)="valueChange($event)" type="combobox" refValue="Warehouses"
+                    [crrValue]="itemposting.custSelection" field="custSelection">
+                </codx-input>
+                <codx-input *ngIf="itemposting.custLevel == '3' && (itemposting.custType == '1' || itemposting.custType == '2' || itemposting.custType == '3' 
+                || itemposting.custType == '6')" type="text" [disabled]="true">
+                </codx-input>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="OrderPoolID"></codx-label>
+                <codx-input type="combobox" refValue="OrderPools" [crrValue]="itemposting.orderPoolID"
+                    (valueChange)="valueChange($event)" field="orderPoolID">
+                </codx-input>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="WarehouseID"></codx-label>
+                <codx-input type="combobox" refValue="Warehouses" [crrValue]="itemposting.warehouseID"
+                    (valueChange)="valueChange($event)" field="warehouseID">
+                </codx-input>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="BUID"></codx-label>
+                <codx-input  *ngIf="itemposting.custLevel == 'ERP'" type="combobox" refValue="BusinessUnits" [crrValue]="itemposting.buid" field="buid"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+                <codx-input  *ngIf="itemposting.custLevel != 'ERP'" type="combobox" refValue="BusinessUnits" [crrValue]="itemposting.buid" field="buid"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+            </div>
+        </div>
+    </div>
+    <div class="mt-2 mb-1 text-primary fw-bold fs-5">
+        <codx-label [formModel]="form.formModel" default="Tài khoản"></codx-label>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="AccountID"></codx-label>
+                <codx-input type="combobox" refValue="ParentAccounts" [crrValue]="itemposting.accountID"
+                    (valueChange)="valueChange($event)" field="accountID">
+                </codx-input>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="DIM3"></codx-label>
+                <codx-input type="combobox" refValue="CostItems" [crrValue]="itemposting.diM3" field="diM3"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="DIM1"></codx-label>
+                <codx-input type="combobox" refValue="Departments" [crrValue]="itemposting.diM1" field="diM1"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-group">
+                <codx-label [formModel]="form.formModel" fiedName="DIM2"></codx-label>
+                <codx-input type="combobox" refValue="CostCenters" [crrValue]="itemposting.diM2" field="diM2"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
+        <codx-input [formModel]="form.formModel" [crrValue]="itemposting.note" field="note"
+            (valueChange)="valueChange($event)">
+        </codx-input>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end mt-1 me-3">
+        <div *ngIf="formType != 'edit'" class="ms-2">
+            <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
+                <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                    [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+            </button>
+        </div>
+        <div class="ms-2">
+            <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
+                <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                    [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </div>
+</ng-template>

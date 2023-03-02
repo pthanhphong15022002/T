@@ -221,13 +221,13 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   beforeSave(option: RequestOption) {
-    option.data = [this.instance, this.listStep];
     if (this.action === 'add' || this.action === 'copy') {
       option.methodName = 'AddInstanceAsync';
       // option.data = [this.instance, this.listStep, this.oldIdInstance ?? null];
     } else if (this.action === 'edit') {
       option.methodName = 'EditInstanceAsync';
     }
+    option.data = [this.instance, this.listStep];
 
     return true;
   }

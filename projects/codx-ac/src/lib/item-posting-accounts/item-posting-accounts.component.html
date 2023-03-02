@@ -4,7 +4,7 @@
   [button]="button"
   [autoLoad]="true"
   entityName="AC_IVPostingAccounts"
-  (buttonClick)="add($event)"
+  (buttonClick)="toolBarClick($event)"
 >
 </codx-views>
 <ng-template #templateLeft>
@@ -29,70 +29,166 @@
                 data-kt-menu="true"
               >
                 <div id="kt_aside_menu_wrapper" class="menu-fit">
-                  <div
+                  <div        
                     class="menu-item menu-accordion"
-                    (click)="menuActive = 1"
+                    (click)="clickMenu(1)"
                     [ngClass]="menuActive === 1 ? 'here show' : ''"
                   >
                     <span class="menu-link">
                       <span class="menu-icon">
-                        <span class="icon-house"></span>
+                        <span [class]="menuIcon[0].icon"></span>
                       </span>
                       <span class="menu-title fw-bold">
                         <codx-label
                           name="lblText1"
-                          formName="ItemPostingAccounts"
-                          default="Tồn kho"
+                          formName="IVPostingAccounts"
+                          default="Hàng tồn kho"
                         ></codx-label>
                       </span>
                       <span class="menu-arrow"></span>
                     </span>
                     <div class="menu-sub menu-sub-accordion">
-                      <div class="menu-item" *ngFor="let m of menu1">
+                      <div class="menu-item" *ngFor="let item of menuInventory">
                         <a
                           class="menu-link without-sub active"
-                          (click)="load('Detail', m.value)"
+                          (click)="load('postType', item.value)"
                         >
                           <span class="menu-bullet">
                             <span class="bullet bullet-dot"></span>
                           </span>
-                          <span class="menu-title">{{ m.text }}</span>
+                          <span class="menu-title">{{ item.text }}</span>
                         </a>
                       </div>
                     </div>
                   </div>
                   <div
                     class="menu-item menu-accordion"
-                    (click)="menuActive = 2"
+                    (click)="clickMenu(2)"
                     [ngClass]="menuActive === 2 ? 'here show' : ''"
                   >
                     <span class="menu-link">
                       <span class="menu-icon">
-                        <span class="icon-store"></span>
+                        <span [class]="menuIcon[1].icon"></span>
                       </span>
                       <span class="menu-title fw-bold">
                         <codx-label
                           name="lblText1"
-                          formName="ItemPostingAccounts"
+                          formName="IVPostingAccounts"
+                          default="Mua hàng"
+                        ></codx-label>
+                      </span>
+                      <span class="menu-arrow"></span>
+                    </span>
+                    <div class="menu-sub menu-sub-accordion">
+                      <div class="menu-item" *ngFor="let item of menuPurchase">
+                        <a
+                          class="menu-link without-sub active"
+                          (click)="load('postType', item.value)"
+                        >
+                          <span class="menu-bullet">
+                            <span class="bullet bullet-dot"></span>
+                          </span>
+                          <span class="menu-title">{{ item.text }}</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="menu-item menu-accordion"
+                    (click)="clickMenu(3)"
+                    [ngClass]="menuActive === 3 ? 'here show' : ''"
+                  >
+                    <span class="menu-link">
+                      <span class="menu-icon">
+                        <span [class]="menuIcon[2].icon"></span>
+                      </span>
+                      <span class="menu-title fw-bold">
+                        <codx-label
+                          name="lblText1"
+                          formName="IVPostingAccounts"
                           default="Bán hàng"
                         ></codx-label>
                       </span>
                       <span class="menu-arrow"></span>
                     </span>
                     <div class="menu-sub menu-sub-accordion">
-                      <div class="menu-item" *ngFor="let m of menu1">
+                      <div class="menu-item" *ngFor="let item of menuSell">
                         <a
                           class="menu-link without-sub active"
-                          (click)="load('', m.value)"
+                          (click)="load('postType', item.value)"
                         >
                           <span class="menu-bullet">
                             <span class="bullet bullet-dot"></span>
                           </span>
-                          <span class="menu-title">{{ m.text }}</span>
+                          <span class="menu-title">{{ item.text }}</span>
                         </a>
                       </div>
                     </div>
                   </div>
+                  <div
+                  class="menu-item menu-accordion"
+                  (click)="clickMenu(4)"
+                  [ngClass]="menuActive === 4 ? 'here show' : ''"
+                >
+                  <span class="menu-link">
+                    <span class="menu-icon">
+                      <span [class]="menuIcon[3].icon"></span>
+                    </span>
+                    <span class="menu-title fw-bold">
+                      <codx-label
+                        name="lblText1"
+                        formName="IVPostingAccounts"
+                        default="Sản xuất"
+                      ></codx-label>
+                    </span>
+                    <span class="menu-arrow"></span>
+                  </span>
+                  <div class="menu-sub menu-sub-accordion">
+                    <div class="menu-item" *ngFor="let item of menuManufacture">
+                      <a
+                        class="menu-link without-sub active"
+                        (click)="load('postType', item.value)"
+                      >
+                        <span class="menu-bullet">
+                          <span class="bullet bullet-dot"></span>
+                        </span>
+                        <span class="menu-title">{{ item.text }}</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div
+                class="menu-item menu-accordion"
+                (click)="clickMenu(5)"
+                [ngClass]="menuActive === 5 ? 'here show' : ''"
+              >
+                <span class="menu-link">
+                  <span class="menu-icon">
+                    <span [class]="menuIcon[4].icon"></span>
+                  </span>
+                  <span class="menu-title fw-bold">
+                    <codx-label
+                      name="lblText1"
+                      formName="IVPostingAccounts"
+                      default="Dự án"
+                    ></codx-label>
+                  </span>
+                  <span class="menu-arrow"></span>
+                </span>
+                <div class="menu-sub menu-sub-accordion">
+                  <div class="menu-item" *ngFor="let item of menuProject">
+                    <a
+                      class="menu-link without-sub active"
+                      (click)="load('postType', item.value)"
+                    >
+                      <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                      </span>
+                      <span class="menu-title">{{ item.text }}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
                 </div>
               </div>
             </div>
@@ -113,5 +209,13 @@
       entityName="AC_IVPostingAccounts"
       height="300px"
       idField="recID"
-    ></codx-gridview></div
-></ng-template>
+      [templateMore]="morefunction"
+    ></codx-gridview>
+  </div>
+</ng-template>
+<ng-template #morefunction let-data>
+  <div class="has-action-menu" style="height: 30px">
+    <codx-mfunc [dataItem]="data" [formModel]="view.formModel" type="hover"
+      (clickMF)="clickMF($event, data)"></codx-mfunc>
+  </div>
+</ng-template>
