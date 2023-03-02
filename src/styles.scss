@@ -38,7 +38,6 @@ erm-quick-links-inner .dropdown-menu {
 .text-primary {
   color: var(--text-primary) !important;
 }
-
 .h-16px {
   height: 16px;
 }
@@ -1759,5 +1758,9 @@ a.nav-link {
   }
 }
 
+
+.codx-form .card-footer, .e-dialog .card-footer {
+  padding-top: 8px;
+}
 
 /// 14/2/2023 

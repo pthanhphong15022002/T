@@ -291,13 +291,13 @@
           <div class="d-flex flex-column p-4 pb-1 border-top">
             <div class="d-flex flex-wrap mb-2">
               <div class="d-flex align-items-center text-danger me-4">
-                <span class="icon-qr_code_scanner icon-14 me-2"></span>
+                <span class="icon-qr_code_scanner icon-14 me-1"></span>
                 <span class="fw-bold">
                   <span #id>{{ infoPersonal?.employeeID }}</span>
                 </span>
               </div>
               <div class="d-flex align-items-center text-gray-700 me-4">
-                <span class="icon-date_range icon-16"></span>
+                <span class="icon-date_range icon-14 me-1"></span>
                 <span #joinedOn>{{ infoPersonal?.joinedOn | fmDT }}</span>
               </div>
               <div class="d-flex align-items-center">
@@ -613,13 +613,13 @@
           <div class="d-flex flex-column" *ngIf="lstBtnAdd">
             <ng-container *ngFor="let item of lstBtnAdd">
               <a
-                class="nav-link w-100 btn btn-flex btn-active-light-primary"
+                class="w-100 btn btn-flex btn-active-light-primary"
                 (click)="add(item.functionID)"
               >
-                <span class="me-2">
-                  <span class="icon-person icon-18"></span>
-                </span>
-                <div class="fw-bold">{{ item.customName }}</div>
+                <div class="d-flex align-items-bottom">
+                  <span class="icon-person icon-18 me-2"></span>
+                  <div class="fw-bold">{{ item.customName }}</div>
+                </div>
               </a>
             </ng-container>
           </div>
@@ -1003,7 +1003,7 @@
           <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
-                <span class="icon-i-person icon-18 me-2"></span>
+                <span class="icon-person_outline icon-18 me-2"></span>
                 <div class="fs-5 fw-bold text-uppercase">
                   <!-- <codx-label
                     [formModel]="view.formModel"
@@ -1776,7 +1776,7 @@
         <div class="rounded-2 p-5 bg-white mb-4">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
-              <span class="icon-person icon-18 me-2"></span>
+              <span class="icon-person_outline icon-18 me-2"></span>
               <div class="fs-5 fw-bold text-uppercase">
                 <!-- <codx-label
                     [formModel]="eInfoFormModel"
