@@ -642,9 +642,7 @@ export class StagesDetailComponent implements OnInit {
     if (progress >= 0 && progress < 50) return { background: '#FE0000' };
     else if (progress >= 50 && progress < 75) return { background: '#E1BE27' };
     else {
-      return progress > 90
-        ? { background: '#34CDEF', 'border-radius': '10px' }
-        : { background: '#34CDEF' };
+      return { background: '#34CDEF' };
     }
   }
   openUpdateProgress(data?: any) {

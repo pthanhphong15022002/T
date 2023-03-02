@@ -1,0 +1,180 @@
+<codx-form
+  #form
+  [headerText]="formTitle"
+  [subHeader]="subheader"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="dialogRef.formModel"
+  [data]="faPostingAccount"
+>
+</codx-form>
+
+<ng-template #body>
+  <div class="my-3">
+    <codx-label
+      fiedName="lblSetup"
+      [formModel]="form.formModel"
+      default="Thiết lập"
+      class="fw-bold fs-5 text-primary"
+    ></codx-label>
+  </div>
+
+  <div class="row">
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="assetLevel"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="assetLevel"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        (valueChange)="clearRightInput('assetSelection')"
+      ></codx-input>
+    </div>
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="assetSelection"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <ng-container *ngIf="!faPostingAccount.assetLevel">
+        <codx-input
+          field="assetSelection"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [disabled]="true"
+        ></codx-input>
+      </ng-container>
+      <ng-container *ngIf="faPostingAccount.assetLevel === '1'">
+        <codx-input
+          type="combobox"
+          field="assetSelection"
+          refType="3"
+          refValue="AssetsAC"
+          [Group]="form.formGroup"
+          [crrValue]="faPostingAccount.assetSelection"
+          (valueChange)="handleInputChange($event)"
+        ></codx-input>
+      </ng-container>
+      <ng-container *ngIf="faPostingAccount.assetLevel === '2'">
+        <codx-input
+          field="assetSelection"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </ng-container>
+      <ng-container *ngIf="faPostingAccount.assetLevel === '3'">
+        <codx-input
+          field="assetSelection"
+          type="text"
+          [Group]="form.formGroup"
+          [disabled]="true"
+        ></codx-input>
+      </ng-container>
+    </div>
+
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="deprModelID"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="deprModelID"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6 form-group">
+      <codx-label fiedName="buid" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="buid"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+  </div>
+
+  <codx-label
+    fiedName="lblAccount"
+    [formModel]="form.formModel"
+    default="Tài khoản"
+    class="fw-bold fs-5 text-primary"
+  ></codx-label>
+
+  <div class="row mt-3">
+    <div class="col-6 form-group">
+      <codx-label
+        fiedName="accountID"
+        [formModel]="form.formModel"
+      ></codx-label>
+      <codx-input
+        field="accountID"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6 form-group">
+      <codx-label fiedName="diM3" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="diM3"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="col-6 form-group">
+      <codx-label fiedName="diM1" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="diM1"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="col-6 form-group">
+      <codx-label fiedName="diM2" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        field="diM2"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label fiedName="note" [formModel]="form.formModel"></codx-label>
+      <codx-input
+        type="textarea"
+        format="ed2"
+        field="note"
+        [crrValue]="faPostingAccount?.note ?? ''"
+        (valueChange)="handleInputChange($event)"
+      ></codx-input>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <button
+    type="button"
+    class="btn btn-outline-primary me-3"
+    (click)="save(false)"
+    *ngIf="!isEdit"
+  >
+    <codx-label
+      fiedName="lblSaveAndClear"
+      [formModel]="dialogRef.formModel"
+      default="Lưu & Thêm"
+    ></codx-label>
+  </button>
+  <button type="button" class="btn btn-primary" (click)="save(true)">
+    <codx-label
+      fiedName="lblSave"
+      [formModel]="dialogRef.formModel"
+      default="Lưu"
+    ></codx-label>
+  </button>
+</ng-template>
+
+<ng-template #subheader>
+  <codx-label [default]="breadcrumb" class="text-primary"></codx-label>
+</ng-template>

@@ -81,13 +81,11 @@
           </div>
 
           <div class="text-gray-700">
-            <span *ngIf="data.departmentName">{{
-              data.departmentName
-              }}</span>
-            <span class="text-gray-300 mx-2">|</span>
-            <span *ngIf="data.divisionName">{{
-              data.divisionName
-              }}</span>
+            <span *ngIf="data.departmentName">{{data.departmentName}}</span>
+              <ng-container *ngIf="data.divisionName">
+                <span class="text-gray-300 mx-2">|</span>
+                <span >{{data.divisionName}}</span>
+              </ng-container>
           </div>
         </div>
       </div>
