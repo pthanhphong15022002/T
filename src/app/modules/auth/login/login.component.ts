@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   alerttext: string;
   sessionID = null;
   email = null;
-  mode: string = 'login';
+  mode: string = 'login'; // 'login' | 'firstLogin' | 'activeTenant' | 'changePass';
   user: any;
   layoutCZ: any;
 
@@ -83,20 +83,28 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.routeActive.queryParams.subscribe((params) => {
       if (params.sk) {
         this.api
-          .call('ERM.Business.AD', 'UsersBusiness', 'GetUserBySessionAsync', [
-            params.sk,
-          ])
+          .execSv<string[]>(
+            'SYS',
+            'ERM.Business.AD',
+            'UsersBusiness',
+            'GetUserBySessionAsync',
+            [params.sk]
+          )
           .subscribe((res) => {
-            if (res && res.msgBodyData[0]) {
+            console.log('em', res);
+            //[email, mode]
+            if (res) {
               this.sessionID = params.sk;
-              this.email = res.msgBodyData[0].email;
-              if (
-                res.msgBodyData[0].lastLogin == null ||
-                (params.id && params.id == 'forget')
-              ) {
-                this.mode = 'firstLogin';
-                dt.detectChanges();
-              }
+              this.email = res[0];
+              this.mode = res[1];
+              dt.detectChanges();
+              // if (
+              //   res.msgBodyData[0].lastLogin == null ||
+              //   (params.id && params.id == 'forget')
+              // ) {
+              //   this.mode = 'firstLogin';
+              //   dt.detectChanges();
+              // }
             }
           });
       }
@@ -155,7 +163,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     //       extendUser.authToken = sus.authToken;
     //       extendUser.authorizationCode = sus.authorizationCode;
     //       extendUser.response = sus.response;
-            
+
     //       const loginSubscr = this.authService
     //         .extendLogin(extendUser)
     //         .pipe()

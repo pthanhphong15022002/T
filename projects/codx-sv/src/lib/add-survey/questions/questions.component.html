@@ -368,10 +368,10 @@
       class="btn btn-light btn-sm dropdown1 border bg-white"
       ngbDropdownToggle
     >
-      <ng-container *ngIf="defaultMoreFunc">
+      <ng-container *ngIf="itemQuestion.answerType">
         <div class="d-flex">
-          <span class="icon-22 me-2" [ngClass]="defaultMoreFunc.icon" ></span>
-          <codx-label fiedName="" [default]="defaultMoreFunc.name"></codx-label>
+          <span class="icon-22 me-2" [ngClass]="setAnswerType(itemQuestion.answerType,'icon')"></span>
+          <codx-label fiedName="" [default]="setAnswerType(itemQuestion.answerType,'name')"></codx-label>
         </div>
       </ng-container>
     </button>

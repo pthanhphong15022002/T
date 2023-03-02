@@ -241,7 +241,6 @@ export class OrgorganizationComponent extends UIComponent {
       this.view.dataService.addNew()
       .subscribe((result: any) => {
         if (result) {
-          debugger
           result.parentID = this.orgUnitID;
           let data = {
             dataService: this.view.dataService,
