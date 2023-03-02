@@ -35,6 +35,7 @@ import {
   AuthStore,
   CRUDService,
   AlertConfirmInputConfig,
+  DialogModel,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -1011,7 +1012,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //Popup roles process
   clickRoles() {
-    var title = 'Phân quyền';
+    var title = this.gridViewSetup?.Permissions?.headerText;
+    let formModel = new FormModel();
+    formModel.formName = 'DPProcessesPermissions';
+    formModel.gridViewName = 'grvDPProcessesPermissions';
+    formModel.entityName = 'DP_Processes_Permissions';
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+
     this.callfc
       .openForm(
         PopupRolesDynamicComponent,
@@ -1021,7 +1030,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         '',
         [this.process, title, this.action === 'copy' ? 'copy' : 'add'],
         '',
-        this.dialog
+        dialogModel
       )
       .closed.subscribe((e) => {
         if (e && e.event != null) {
@@ -2081,7 +2090,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return false;
   }
 
-  async getFormModel(functionID){ 
+  async getFormModel(functionID){
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = JSON.parse(JSON.stringify(this.dialog?.formModel));
     formModel.formName = f.formName;
