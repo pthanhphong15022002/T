@@ -6,3 +6,11 @@
 .form-check-label {
     opacity: 1 !important;
 }
+
+#menu {
+    display: none;
+  }
+  
+  #toggle:checked ~ #menu {
+    display: block;
+  }

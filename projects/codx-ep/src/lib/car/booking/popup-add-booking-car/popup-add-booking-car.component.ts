@@ -762,8 +762,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
   attendeesValidateStep(approval) {
     this.api
-      .callSv(
-        'EP',
+      .exec(
         'ERM.Business.EP',
         'BookingsBusiness',
         'BookingAttendeesValidatorAsync',
@@ -774,10 +773,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
           this.data.recID,
         ]
       )
-      .subscribe((res) => {
-        if (res != null && res.msgBodyData[0].length > 0) {
+      .subscribe((res:any) => {
+        if (res != null && res.length > 0) {
           this.busyAttendees = '';
-          res.msgBodyData[0].forEach((item) => {
+          res.forEach((item) => {
             this.busyAttendees += item.objectName + ', ';
           });
           this.notificationsService
