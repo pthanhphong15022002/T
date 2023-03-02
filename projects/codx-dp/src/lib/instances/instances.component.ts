@@ -283,7 +283,7 @@ export class InstancesComponent
                   .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
                   .subscribe((res) => {
                     if (res) {
-                      this.instanceNo = res;
+                      this.view.dataService.dataSelected = res;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -294,7 +294,7 @@ export class InstancesComponent
                   )
                   .subscribe((isNo) => {
                     if (isNo) {
-                      this.instanceNo = isNo;
+                      this.view.dataService.dataSelected = isNo;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -314,7 +314,6 @@ export class InstancesComponent
         this.titleAction,
         formMD,
         this.listStepsCbx,
-        this.instanceNo,
         (this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)),
         this.lstParticipants,
         this.oldIdInstance,
@@ -372,7 +371,6 @@ export class InstancesComponent
                     this.titleAction,
                     formMD,
                     this.listStepsCbx,
-                    this.instanceNo,
                     (this.sumDaySteps = this.getSumDurationDayOfSteps(
                       this.listStepsCbx
                     )),
