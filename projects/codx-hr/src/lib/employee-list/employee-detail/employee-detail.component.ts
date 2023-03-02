@@ -1118,7 +1118,7 @@ export class EmployeeDetailComponent extends UIComponent {
         this.lstFuncSelfInfo = res[0].filter(
           (p) => p.parentID == this.selfInfoFuncID
         );
-        this.lstBtnAdd = this.lstFuncSelfInfo;
+        this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncSelfInfo));
         this.lstBtnAdd.splice(0, 2);
 
         this.lstFuncLegalInfo = res[0].filter(
