@@ -214,6 +214,7 @@ export class EmployeeDetailComponent extends UIComponent {
   passportSortModel: SortModel;
   skillIDSortModel: SortModel;
   skillGradeSortModel: SortModel;
+  appointionSortModel: SortModel;
   bSalarySortModel: SortModel;
   createOnSortModel: SortModel;
   //#endregion
@@ -838,6 +839,10 @@ export class EmployeeDetailComponent extends UIComponent {
     this.createOnSortModel = new SortModel();
     this.createOnSortModel.field = 'createdOn';
     this.createOnSortModel.dir = 'desc';
+
+    this.appointionSortModel = new SortModel();
+    this.appointionSortModel.field = '(EffectedDate)';
+    this.appointionSortModel.dir = 'desc'
 
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       this.addHeaderText = res[0].customName;
@@ -3019,6 +3024,8 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add' || actionType == 'copy') {
+          console.log('gia tri benefit moi them vao la', res.event);
+          
           (this.grid?.dataService as CRUDService)?.add(res.event).subscribe();
           this.eBenefitRowCount += 1;
         } else if (actionType == 'edit') {
