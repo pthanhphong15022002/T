@@ -106,8 +106,14 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
         this.isAfterRender = true;
       }
     }
-    this.fromDateFormat = this.getFormatDate(this.certificateObj.trainFrom);
-    this.toDateFormat = this.getFormatDate(this.certificateObj.trainTo);
+    if(this.certificateObj){
+      this.fromDateFormat = this.getFormatDate(this.certificateObj.trainFrom);
+      this.toDateFormat = this.getFormatDate(this.certificateObj.trainTo);
+    } else {
+      this.fromDateFormat = this.getFormatDate(null);
+      this.toDateFormat = this.getFormatDate(null);
+    }
+
   }
 
   onInit(): void {
@@ -252,6 +258,6 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
       let arrDate = trainFrom.split('/');
       resultDate = arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
       return resultDate
-    } else return resultDate = 'y';
+    } else return 'y';
   }
 }

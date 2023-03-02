@@ -56,6 +56,8 @@ import { PopAddArComponent } from './ar-posting-accounts/pop-add-ar/pop-add-ar.c
 import { APPostingAccountsComponent } from './apposting-accounts/apposting-accounts.component';
 import { PopupAddAPPostingAccountComponent } from './apposting-accounts/popup-add-apposting-account/popup-add-apposting-account.component';
 import { PopAddItemComponent } from './item-posting-accounts/pop-add-item/pop-add-item.component';
+import { FAPostingAccountsComponent } from './faposting-accounts/faposting-accounts.component';
+import { PopupAddFAPostingAccountComponent } from './faposting-accounts/popup-add-faposting-account/popup-add-faposting-account.component';
 
 export const routes: Routes = [
   {
@@ -125,6 +127,10 @@ export const routes: Routes = [
         path: 'appostingaccounts/:funcID',
         component: APPostingAccountsComponent,
       },
+      {
+        path: 'fapostingaccounts/:funcID',
+        component: FAPostingAccountsComponent,
+      },
     ],
   },
 ];
@@ -172,6 +178,8 @@ export const routes: Routes = [
     APPostingAccountsComponent,
     PopupAddAPPostingAccountComponent,
     PopAddItemComponent,
+    FAPostingAccountsComponent,
+    PopupAddFAPostingAccountComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
