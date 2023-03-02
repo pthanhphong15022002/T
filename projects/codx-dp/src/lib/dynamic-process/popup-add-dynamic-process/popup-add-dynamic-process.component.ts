@@ -334,12 +334,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
   //#region onSave
   async onSave() {
-    if (
-      !this.process.processName ||
-      !this.process.processName.trim() ||
-      this.stepList?.length === 0
-    ) {
-      this.notiService.notify('Lưu thất bại ');
+    var check = this.process.permissions.some(x=> x.roleType === 'P');
+    if(!check){
+      this.notiService.notifyCode('DP014');
       return;
     }
     if (
@@ -494,6 +491,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let oldNo = this.currentTab;
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
       if (
+        (this.process?.processName == null ||
+        this.process?.processName.trim() == '') || (this.process?.groupID == null || this.process?.groupID.trim() == '')
+      )
+        return;
+      if (
         tabNo != 0 &&
         this.currentTab == 0 &&
         (!this.process.instanceNoSetting ||
@@ -556,12 +558,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let newNode = oldNode + 1;
     switch (currentTab) {
       case 0:
-        if (
-          this.process.processName == null ||
-          this.process.processName == ''
-        ) {
-          this.isContinues = true;
-        }
         if (
           !this.process.instanceNoSetting ||
           (this.process.instanceNoSetting &&
@@ -1900,7 +1896,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   checkButtonContinue() {
     if (this.currentTab == 0) {
-      return this.process.processName ? true : false;
+      return this.process.processName && this.process.groupID ? true : false;
     } else {
       return this.stepList?.length > 0 ? true : false;
     }
@@ -2102,7 +2098,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return false;
   }
 
-  async getFormModel(functionID){
+  async getFormModel(functionID) {
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = JSON.parse(JSON.stringify(this.dialog?.formModel));
     formModel.formName = f?.formName;
