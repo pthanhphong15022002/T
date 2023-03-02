@@ -129,11 +129,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   //#region Init
 
-  onInit(): void {
-    if (this.voucherDate == null) {
-      this.voucherDate = new Date();
-    }
-  }
+  onInit(): void {}
+
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
   }

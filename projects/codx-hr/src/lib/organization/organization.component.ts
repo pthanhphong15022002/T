@@ -229,7 +229,6 @@ export class OrgorganizationComponent extends UIComponent {
   }
   // button add toolbar
   btnClick(e) {
-    debugger
     if (this.view) {
       let option = new SidebarModel();
       option.Width = '550px';
@@ -242,6 +241,8 @@ export class OrgorganizationComponent extends UIComponent {
       this.view.dataService.addNew()
       .subscribe((result: any) => {
         if (result) {
+          debugger
+          result.parentID = this.orgUnitID;
           let data = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,
@@ -274,6 +275,7 @@ export class OrgorganizationComponent extends UIComponent {
     this.api.execSv("HR","ERM.Business.HR","OrganizationUnitsBusiness","GetOrgInforAsync",[data.orgUnitID])
     .subscribe((res:any) => {
       if(res){
+        debugger
         data.parentName = res.parentName;
         data.employeeManager = res.employeeManager;
         data.positionName = res.positionName;

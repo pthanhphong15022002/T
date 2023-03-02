@@ -12,19 +12,35 @@
 </codx-views>
 
 <ng-template #header1>
-  <codx-label default="Mặt hàng"></codx-label>
+  <codx-label
+    fiedName="lblItemHeader"
+    [formModel]="view.formModel"
+    default="Mặt hàng"
+  ></codx-label>
 </ng-template>
 
 <ng-template #header2>
-  <codx-label default="Thiết lập tồn kho"></codx-label>
+  <codx-label
+    fiedName="lblInventoryHeader"
+    [formModel]="view.formModel"
+    default="Thiết lập tồn kho"
+  ></codx-label>
 </ng-template>
 
 <ng-template #header3>
-  <codx-label default="Đơn vị tính quy đổi"></codx-label>
+  <codx-label
+    fiedName="lblUnitConversionHeader"
+    [formModel]="view.formModel"
+    default="Đơn vị tính quy đổi"
+  ></codx-label>
 </ng-template>
 
 <ng-template #header4>
-  <codx-label default="Tình trạng"></codx-label>
+  <codx-label
+    fiedName="lblStatusHeader"
+    [formModel]="view.formModel"
+    default="Tình trạng"
+  ></codx-label>
 </ng-template>
 
 <ng-template #itemTemplate let-data>

@@ -4,29 +4,50 @@
       <div class="d-flex align-items-center">
         <span class="text-dark fw-bold fs-3 me-6" #processName>{{
           process.processName
-          | formatvalue
-          : dialog.formModel
-          : "processName"
-          : processName
-          : "DPProcesses"
-          : "grvDPProcesses"
-          | async
-          }}</span><span *ngIf="process.memo" class="icon-event_notes text-hover-primary cursor-pointer"
-          [ngbPopover]="popperMemo" #p="ngbPopover" (mouseenter)="p.open()" (mouseleave)="p.close()"
-          placement="right bottom left" container="body"></span>
+            | formatvalue
+              : dialog.formModel
+              : "processName"
+              : processName
+              : "DPProcesses"
+              : "grvDPProcesses"
+            | async
+        }}</span>
+        <span (click)="showGuide(p)">
+          <span
+            class="icon-event_notes text-hover-primary cursor-pointer"       
+            [ngbPopover]="popperMemo"
+            #p="ngbPopover"
+            (mouseenter)="process.memo ? p.open() : ''"
+            (mouseleave)="p.close()"
+            placement="right bottom left"
+            container="body"
+          ></span
+        ></span>
       </div>
       <div>
         <span class="me-5">
           <span>
-            <codx-label name="lblApplicable" [formName]="'DPProcesses'" [gridViewName]="'grvDPProcesses'"
-              default="Đối tượng áp dụng cho quy trình"></codx-label>
+            <codx-label
+              name="lblApplicable"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
+              default="Đối tượng áp dụng cho quy trình"
+            ></codx-label>
           </span>
           <span class="ms-2">
-            <codx-vll [name]="vllApplyFor" [value]="process?.applyFor" [showText]="true" [showBgColor]="true"
-              class="badge badge-light badge-square badge-md fs-7 p-2"></codx-vll>
+            <codx-vll
+              [name]="vllApplyFor"
+              [value]="process?.applyFor"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-square badge-md fs-7 p-2"
+            ></codx-vll>
           </span>
         </span>
-        <button class="btn text-dark-75 text-hover-danger cursor-pointer px-0" (click)="dialog.close()">
+        <button
+          class="btn text-dark-75 text-hover-danger cursor-pointer px-0"
+          (click)="dialog.close()"
+        >
           <span class="icon-close icon-18"></span>
         </button>
       </div>
@@ -41,24 +62,39 @@
         </div> -->
         <div class="d-flex tab-header">
           <ng-container *ngFor="let item of tabControl; let i = index">
-            <a [class]="
+            <a
+              [class]="
                 'tab-item text-dark fw-bold' +
                 ' ' +
                 (item.isActive ? 'tab-active' : '')
-              ">
-              <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
-                (click)="clickMenu(item)">
+              "
+            >
+              <codx-label
+                [name]="'lbl' + item.name"
+                [formName]="'SYS'"
+                [default]="item.textDefault"
+                (click)="clickMenu(item)"
+              >
               </codx-label>
             </a>
           </ng-container>
         </div>
       </div>
       <div class="view-details-content m-0 mt-1">
-        <div class="process-views-detail" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
-          data-kt-scroll-height="auto" data-kt-scroll-dependencies=".popup-process-header"
-          data-kt-scroll-wrappers=".process-body .no-header" [attr.data-kt-scroll-offset]="'0px'">
+        <div
+          class="process-views-detail"
+          data-kt-scroll="true"
+          data-kt-scroll-activate="{default: true}"
+          data-kt-scroll-height="auto"
+          data-kt-scroll-dependencies=".popup-process-header"
+          data-kt-scroll-wrappers=".process-body .no-header"
+          [attr.data-kt-scroll-offset]="'0px'"
+        >
           <ng-container *ngIf="name == 'Mission' && process">
-            <codx-instances [process]="process" [isCreate]="isCreate"></codx-instances>
+            <codx-instances
+              [process]="process"
+              [isCreate]="isCreate"
+            ></codx-instances>
           </ng-container>
           <ng-container *ngIf="name == 'Dashboard'">
             <ng-container>Dashboard - Tháng 3 mới làm control </ng-container>
@@ -70,4 +106,43 @@
 </div>
 <ng-template #popperMemo>
   <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(process?.memo)"></div>
+</ng-template>
+
+<ng-template #popupGuide>
+  <div class="d-flex justify-content-between m-5">
+    <div>
+      <span>
+        <span class="text-dark fw-bold fs-3 me-6">
+          <codx-label
+            name="lblGuide"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Các bước hướng dẫn thực hiện quy trình"
+          ></codx-label>
+        </span>
+      </span>
+    </div>
+    <div>
+      <button
+        class="btn text-dark-75 text-hover-danger cursor-pointer px-0"
+        (click)="dialogGuide.close()"
+      >
+        <span class="icon-close icon-18"></span>
+      </button>
+    </div>
+  </div>
+  <ng-container *ngFor="let item of stepNames; let i = index">
+    <div class="d-flex text-dark fw-bold m-3">
+      <span>
+        <codx-label
+          name="lblPhase"
+          [formName]="'DPProcesses'"
+          [gridViewName]="'grvDPProcesses'"
+          default="Bước"
+        ></codx-label>
+        {{ i + 1 + ":" }}
+      </span>
+      <span class="me-3">{{ item }}</span>
+    </div>
+  </ng-container>
 </ng-template>

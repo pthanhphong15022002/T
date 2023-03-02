@@ -26,6 +26,7 @@ export class PopupAddItemSizeComponent
   extends UIComponent
   implements AfterViewInit
 {
+  //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('itemSizeImage') itemSizeImage?: ImageViewerComponent;
   itemSize: ItemSize = {} as ItemSize;
@@ -56,13 +57,9 @@ export class PopupAddItemSizeComponent
       (res) => (res.event = this.savedItemSizes)
     );
   }
+  //#endregion
 
-  ngAfterViewInit(): void {
-    console.log(this.form);
-    console.log(this.dialogRef);
-    console.log(this.itemSize);
-  }
-
+  //#region Init
   onInit(): void {
     if (this.dialogData.data.itemSize) {
       this.itemSize = this.dialogData.data.itemSize;
@@ -79,6 +76,17 @@ export class PopupAddItemSizeComponent
     }
   }
 
+  ngAfterViewInit(): void {
+    console.log(this.form);
+    console.log(this.dialogRef);
+    console.log(this.itemSize);
+  }
+  //#endregion
+
+  //#region Event
+  //#endregion
+
+  //#region Method
   save(closeAfterSaving: boolean): void {
     console.log(this.itemSize);
 
@@ -145,7 +153,7 @@ export class PopupAddItemSizeComponent
           }
 
           this.savedItemSizes = this.savedItemSizes.map((itemSize) =>
-            itemSize.id === this.itemSize.id ? this.itemSize : itemSize
+            itemSize.recID === this.itemSize.recID ? this.itemSize : itemSize
           );
 
           console.log(this.savedItemSizes);
@@ -153,4 +161,8 @@ export class PopupAddItemSizeComponent
         }
       });
   }
+  //#endregion
+
+  //#region Function
+  //#endregion
 }

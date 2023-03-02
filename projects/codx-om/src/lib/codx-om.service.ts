@@ -580,12 +580,12 @@ export class CodxOmService {
     );
   }
   //Lấy ds OKR_Links theo OKR RecID
-  getOKRLink(recID: string) {
+  getOKRDistributed(recID: string) {    
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
-      'GetOKRLinkAsync',
+      'GetOKRDistributedAsync',
       [recID]
     );
   }
