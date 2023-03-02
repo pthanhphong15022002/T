@@ -186,6 +186,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listJobType = [];
   jobType: any;
   actionStep = '';
+  isSaveStep = false;
   //end stage-nvthuan
   moreDefaut = {
     share: true,
@@ -1352,6 +1353,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   openPopupStep(type, step?) {
     this.actionStep = type;
+    this.isSaveStep = false;
     if (type === 'add') {
       this.stepNew = new DP_Steps();
       this.stepNew['processID'] = this.process?.recID;
@@ -1422,12 +1424,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
     this.stepNew['tasks'] = taskCopy;
     this.openPopupStep('copy');
-    console.log(step);
   }
 
   saveStep() {
+    this.isSaveStep = true;
     if (!this.stepNew['stepName'] || !this.stepNew['stepName'].trim()) {
       this.notiService.notifyCode('SYS009', 0, 'Tên giai đoạn');
+      this.isSaveStep = false;
       return;
     }
     if (this.actionStep == 'add' || this.actionStep == 'copy') {
@@ -1442,6 +1445,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.step['stepName'] = this.stepNew['stepName'];
     }
     this.popupAddStage.close();
+    // this.isSaveStep = false;
   }
 
   deleteStep(data) {
@@ -1471,22 +1475,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //taskGroup
   async openTaskGroup(data?: any, type?: string) {
     let form = await this.getFormModel('DPS0105');
-    this.taskGroup = new DP_Steps_TaskGroups();
+    let taskGroup = new DP_Steps_TaskGroups();
     let timeStep = this.dayStep * 24 + this.hourStep;
     let differenceTime = this.getHour(this.step) - timeStep;
     if (data) {
       this.roleGroupTaskOld = JSON.parse(JSON.stringify(data?.roles)) || [];
+      taskGroup = JSON.parse(JSON.stringify(data));
       if (type === 'copy') {
-        this.taskGroup = JSON.parse(JSON.stringify(data));
-        this.taskGroup['recID'] = null;
-      } else {
-        this.taskGroup = data;
-      }
+        taskGroup['recID'] = null;
+      } 
     } else {
       this.roleGroupTaskOld = [];
-      this.taskGroup['createdBy'] = this.userId;
-      this.taskGroup['stepID'] = this.step['recID'];
-      this.taskGroup['task'] = [];
+      taskGroup['createdBy'] = this.userId;
+      taskGroup['stepID'] = this.step['recID'];
+      taskGroup['task'] = [];
     }
     this.popupGroupJob = this.callfc.openForm(
       StepTaskGroupComponent,
@@ -1494,42 +1496,41 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       500,
       500,
       '',
-      { taskGroup: this.taskGroup, differenceTime, step: this.step, form }
+      { taskGroup: taskGroup, differenceTime, step: this.step, form }
     );
     this.popupGroupJob.closed.subscribe((res) => {
       if (res?.event) {
-        this.saveGroupTask(type);
+        this.saveGroupTask(type, taskGroup, data);
         this.sumTimeStep();
       }
     });
   }
 
-  async saveGroupTask(type: string) {
+  async saveGroupTask(type: string , taskGroup, taskGroupOld) {
     this.popupGroupJob.close();
-    if (this.taskGroup['roles']?.length == 0) {
+    if (taskGroup['roles']?.length == 0) {
       let role = new DP_Steps_TaskGroups_Roles();
       await this.setRole(role);
-      this.taskGroup['roles'] = [role];
+      taskGroup['roles'] = [role];
     }
-
-    if (!this.taskGroup['recID']) {
-      this.taskGroup['recID'] = Util.uid();
-      this.taskGroup['roles'].forEach((role) => {
-        role['taskGroupID'] = this.taskGroup['recID'];
+    // thêm mới
+    if (!taskGroup['recID']) {
+      taskGroup['recID'] = Util.uid();
+      taskGroup['roles'].forEach((role) => {
+        role['taskGroupID'] = taskGroup['recID'];
       });
       let index = this.taskGroupList.length;
       if (index === 0) {
-        let taskGroup = new DP_Steps_TaskGroups();
-        taskGroup['task'] = [];
-        taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
-        this.taskGroupList.push(taskGroup);
+        let taskGroupNull = new DP_Steps_TaskGroups();
+        taskGroupNull['task'] = [];
+        taskGroupNull['recID'] = null; // group task rỗng để kéo ra ngoài
+        this.taskGroupList.push(taskGroupNull);
       }
-      this.taskGroupList.splice(index - 1, 0, this.taskGroup);
 
-      if (type === 'copy' && this.taskGroup['task'].length > 0) {
-        for (let task of this.taskGroup['task']) {
+      if (type === 'copy' && taskGroup['task'].length > 0) {
+        for (let task of taskGroup['task']) {
           task['recID'] = Util.uid();
-          task['taskGroupID'] = this.taskGroup['recID'];
+          task['taskGroupID'] = taskGroup['recID'];
           task['createdOn'] = new Date();
           task['createdBy'] = this.userId;
           task['roles'].forEach((role) => {
@@ -1539,14 +1540,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.taskList.push(task);
         }
       }
+      this.taskGroupList.splice(index - 1, 0, taskGroup);
       // add role vào step
       this.addRole(this.taskGroup['roles'][0]);
     } else {
+      let index = this.taskGroupList?.findIndex(x => x.recID === taskGroup.recID);
+      if(index >= 0){
+        this.taskGroupList.splice(index, 1, taskGroup);
+      }
       if (
-        this.taskGroup?.roles[0]['objectID'] !=
+        taskGroup?.roles[0]['objectID'] !=
         this.roleGroupTaskOld[0]['objectID']
       ) {
-        this.addRole(this.taskGroup['roles'][0], this.roleGroupTaskOld[0]);
+        this.addRole(taskGroup['roles'][0], this.roleGroupTaskOld[0]);
       }
     }
   }
@@ -1616,7 +1622,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         formModel.funcID = functionID;
         option.FormModel = formModel;
         option.Width = '550px';
-        option.zIndex = 1010;
+        option.zIndex = 1001;
         let dialog = this.callfc.openSide(PopupJobComponent, listData, option);
 
         dialog.closed.subscribe((e) => {
@@ -1872,6 +1878,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   // Common
+  deepCopy(obj) {
+    if (obj === null || typeof obj !== 'object') {
+      return obj;
+    }
+    let newObj = Array.isArray(obj) ? [] : {};
+    for (let key in obj) {
+      newObj[key] = this.deepCopy(obj[key]);
+    }
+    return newObj;
+  }
   setIndex(data: any, value: string) {
     if (data.length > 0) {
       data.forEach((item, index) => {

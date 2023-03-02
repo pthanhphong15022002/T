@@ -115,7 +115,7 @@ export class CodxAdService {
               );
               var checkRegex = regex.test(controls?.email.value);
               if (checkRegex == false) {
-                this.notificationsService.notify("Trường 'Email' không hợp lệ");
+                this.notificationsService.notifyCode('SYS037');
                 return;
               }
             } else {
