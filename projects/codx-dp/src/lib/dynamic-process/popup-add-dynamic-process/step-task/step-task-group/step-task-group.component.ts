@@ -84,9 +84,7 @@ export class StepTaskGroupComponent implements OnInit {
         ? Number(event?.data) * 24 + this.taskGroup['durationHour']
         : Number(this.taskGroup['durationDay']) * 24 + Number(event?.data);
     if (time < this.maxTimeGroup) {
-      this.notiService.notifyCode(
-        'Thời gian nhỏ hơn tống thời gian của các task'
-      );
+      this.notiService.notifyCode('DP012');
     } else {
       if (event?.field === 'durationHour' && event?.data >= 24) {
         this.taskGroup['durationDay'] =
