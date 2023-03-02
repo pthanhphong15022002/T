@@ -479,6 +479,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
 
   closePopup() {
+    //dung bat dong bi rjx
+    // let x = await firstValueFrom(this.notiService.alertCode('DP013'));
+    // if (x?.event?.status == 'Y') {
+    //       this.dialog.close();
+    // } else return;
     this.notiService.alertCode('DP013').subscribe((e) => {
       if (e?.event?.status == 'Y') {
         this.dialog.close();
@@ -739,7 +744,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.roleType = 'P';
             perm.full = false;
             perm.read = true;
-            perm.create = false;
+            perm.create = true;
             perm.assign = false;
             perm.edit = false;
             // perm.publish = false;
@@ -811,7 +816,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.roleType = 'P';
             perm.full = false;
             perm.read = true;
-            perm.create = false;
+            perm.create = true;
             perm.assign = false;
             perm.edit = false;
             // perm.publish = false;
