@@ -102,8 +102,9 @@ export class CatagoryComponent implements OnInit {
         if (this.groupSetting.length > 0) {
           var lstNoGroup = this.setting.filter((x) => {
             return (
-              x.controlType &&
-              x.controlType.toLowerCase() !== 'groupcontrol' &&
+              ((x.controlType &&
+                x.controlType.toLowerCase() !== 'groupcontrol') ||
+                !x.controlType) &&
               !x.refLineID
             );
           });
@@ -356,8 +357,8 @@ export class CatagoryComponent implements OnInit {
     if (this.groupSetting.length > 0) {
       var lstNoGroup = this.setting.filter((x) => {
         return (
-          x.controlType &&
-          x.controlType.toLowerCase() !== 'groupcontrol' &&
+          ((x.controlType && x.controlType.toLowerCase() !== 'groupcontrol') ||
+            !x.controlType) &&
           !x.refLineID
         );
       });
@@ -389,8 +390,8 @@ export class CatagoryComponent implements OnInit {
     if (this.groupSetting.length > 0) {
       var lstNoGroup = this.setting.filter((x) => {
         return (
-          x.controlType &&
-          x.controlType.toLowerCase() !== 'groupcontrol' &&
+          ((x.controlType && x.controlType.toLowerCase() !== 'groupcontrol') ||
+            !x.controlType) &&
           !x.refLineID
         );
       });
