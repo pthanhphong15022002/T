@@ -655,19 +655,22 @@
   <ng-template #popperHandelSetting>
     <div class="d-flex m-3 text-hover-primary cursor-pointer" (click)="selectView(1)">
       <span class="icon-view_column icon-20"></span><span>
-        <codx-label name="lblSelectFirst" default="1 cột"></codx-label>
+        <codx-label name="lblSelectFirst"  formName="DPStepsFields"
+        gridViewName="grvDPStepsFields"  default="1 cột"></codx-label>
       </span>
     </div>
     <div class="d-flex m-3 text-hover-primary cursor-pointer" (click)="selectView(2)">
       <span class="icon-view_column icon-20"></span>
       <span>
-        <codx-label name="lblSelectSecond" default="2 cột"></codx-label>
+        <codx-label name="lblSelectSecond"  formName="DPStepsFields"
+        gridViewName="grvDPStepsFields"  default="2 cột"></codx-label>
       </span>
     </div>
     <div class="d-flex m-3 text-hover-primary cursor-pointer" (click)="selectView(3)">
       <span class="icon-view_column icon-20"></span>
       <span>
-        <codx-label name="lblSelectThree" default="3 cột"></codx-label>
+        <codx-label name="lblSelectThree" formName="DPStepsFields"
+        gridViewName="grvDPStepsFields"  default="3 cột"></codx-label>
       </span>
     </div>
   </ng-template>
