@@ -342,8 +342,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
   //#region onSave
   async onSave() {
-    var check = this.process.permissions.some(x=> x.roleType === 'P');
-    if(!check){
+    var check = this.process.permissions.some((x) => x.roleType === 'P');
+    if (!check) {
       this.notiService.notifyCode('DP014');
       return;
     }
@@ -504,8 +504,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let oldNo = this.currentTab;
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
       if (
-        (this.process?.processName == null ||
-        this.process?.processName.trim() == '') || (this.process?.groupID == null || this.process?.groupID.trim() == '')
+        this.process?.processName == null ||
+        this.process?.processName.trim() == '' ||
+        this.process?.groupID == null ||
+        this.process?.groupID.trim() == ''
       )
         return;
       if (
@@ -727,8 +729,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           U: 'Share_Users_Sgl',
           P: 'Share_Positions_Sgl',
           R: 'Share_UserRoles_Sgl',
-          D: 'Departments',
-          O: 'Share_OrgUnits',
+          D: 'Share_Departments_Sgl',
+          O: 'Share_OrgUnits_Sgl',
         };
         break;
     }
@@ -962,21 +964,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   checkRolesStep(listPerm: DP_Steps_Roles[], perm: DP_Steps_Roles) {
     var index = -1;
+    var indexOld = -1;
     if (listPerm != null) {
       if (perm != null && listPerm.length > 0) {
         index = listPerm.findIndex(
-          (x) => x.objectID != perm.objectID && x.roleType == 'S'
+          (x) => x.objectID == perm.objectID && x.roleType == 'S'
         );
+
         this.stepRoleOld = listPerm.filter((x) => x.roleType == 'S')[0];
+        indexOld = listPerm.findIndex((x) => x.objectID == this.stepRoleOld.objectID);
       }
     } else {
       listPerm = [];
     }
-    if (index != -1) {
-      listPerm.splice(index, 1);
+    if (this.stepRoleOld != null || this.stepRoleOld == '') {
     }
-    listPerm.push(Object.assign({}, perm));
-
+    if (index == -1) {
+      if (indexOld > -1) listPerm.splice(indexOld, 1);
+      listPerm.push(Object.assign({}, perm));
+    }
     return listPerm;
   }
 
@@ -1566,7 +1572,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.actionStep == 'add' || this.actionStep == 'copy') {
       this.stepList.push(this.stepNew);
       this.viewStepSelect(this.stepNew);
-       // if edit process
+      // if edit process
       if (this.action == 'edit') {
         this.stepListAdd.push(this.stepNew);
       }
