@@ -137,23 +137,28 @@ export const routes: Routes = [
           // },
           {
             path: 'orgchart/:funcID',
+            data: { noReuse: true },
             component: OrgorganizationComponent,
           },
           {
             path: 'employee/:funcID',
+            data: { noReuse: true },
             component: EmployeesComponent,
           },
           {
             path: 'employeelist/:funcID',
+            data: { noReuse: true },
             component: EmployeeListComponent,
           },
 
           {
             path: 'employeeleave/:funcID',
+            data: { noReuse: true },
             component: EmployeesLeaveComponent,
           },
           {
             path: 'reportingline/:funcID',
+            data: { noReuse: true },
             component: ReportinglineComponent,
           },
           // {

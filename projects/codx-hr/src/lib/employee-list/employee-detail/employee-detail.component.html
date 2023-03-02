@@ -3338,7 +3338,7 @@
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
                 <div class="user-status d-flex align-items-center">
-                  <span class="icon-attach_money icon-18 me-2"></span>
+                  <span class="icon-attach_money icon-20 me-1"></span>
                 </div>
                 <div class="fs-5 fw-bold text-uppercase text-primary">
                   <!-- <codx-label
@@ -3463,7 +3463,7 @@
                 </div>
               </div>
 
-              <div class="profile-grid">
+              <div>
                 <codx-gridview
                   *ngIf="benefitColumnGrid"
                   #gridView
@@ -3959,7 +3959,6 @@
                   [method]="'LoadDataAsync'"
                   [predicates]="'EmployeeID=@0'"
                   [dataValues]="employeeID"
-                  [sort]="[appointionSortModel]"
                   [pageSize]="numPageSizeGridView"
                   [entityName]="'HR_EAppointions'"
                   [rowHeight]="50"
@@ -4505,16 +4504,6 @@
                   (valueChange)="valueChangeViewAllESkill($event)"
                   [checked]="ViewAllEskillFlag"
                 ></codx-input>
-
-                <!-- <span class="text-gray-500 ms-2">|</span>
-                <button
-                  class="btn btn-icon btn-sm position-relative ms-1"
-                  (click)="addSkill()"
-                >
-                  <span
-                    class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
-                  ></span>
-                </button> -->
               </div>
             </div>
             <div class="mb-1">

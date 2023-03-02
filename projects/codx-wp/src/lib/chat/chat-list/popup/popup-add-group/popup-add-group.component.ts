@@ -53,17 +53,17 @@ export class PopupAddGroupComponent implements OnInit,AfterViewInit {
       if(res)
       {
         this.codxImg.updateFileDirectReload(res.groupID).subscribe();
-        this.notifiSV.notifyCode("Thêm thành công");
-        this.signalRSV.sendData(res,"CreateGroup");
-        this.dialogRef.close(res);
+        this.notifiSV.notifyCode("Tạo nhóm chat thành công");
       }
       else
       {
-        this.dialogRef.close();
-        this.notifiSV.notify("Thêm không thành công");
+        this.notifiSV.notify("Tạo nhóm chat không thành công");
       }
+      this.dialogRef.close(res);
+
     });
   }
+  // set data
   setData(){
     if(this.dialogData)
     {
@@ -147,7 +147,6 @@ export class PopupAddGroupComponent implements OnInit,AfterViewInit {
   }
   // insert group
   insertGroup(){
-    debugger
     if(this.group)
     {
       if(this.group.members?.length == 0){
@@ -155,7 +154,7 @@ export class PopupAddGroupComponent implements OnInit,AfterViewInit {
         return;
       }
       this.group.groupType = "2";
-      this.signalRSV.sendData(this.group,"CreateGroup");
+      this.signalRSV.sendData(JSON.stringify(this.group),"CreateGroup");
       // this.api.execSv("WP","ERM.Business.WP","GroupBusiness","InsertGroupAsync",[this.group])
       // .subscribe((res:any[]) =>{
       //   if(Array.isArray(res) && res[0])
