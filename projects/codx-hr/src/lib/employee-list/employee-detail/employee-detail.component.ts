@@ -841,7 +841,7 @@ export class EmployeeDetailComponent extends UIComponent {
 
     this.appointionSortModel = new SortModel();
     this.appointionSortModel.field = '(EffectedDate)';
-    this.appointionSortModel.dir = 'desc'
+    this.appointionSortModel.dir = 'desc';
 
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       this.addHeaderText = res[0].customName;
@@ -2757,7 +2757,6 @@ export class EmployeeDetailComponent extends UIComponent {
   crrFuncTab: string;
   clickTab(funcList: any) {
     this.crrFuncTab = funcList.functionID;
-    debugger;
     switch (this.crrFuncTab) {
       case this.selfInfoFuncID:
         this.lstBtnAdd = this.lstFuncSelfInfo;
@@ -2954,9 +2953,18 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add' || actionType == 'copy') {
-          console.log('gia tri benefit moi them vao la', res.event);
-          
-          (this.grid?.dataService as CRUDService)?.add(res.event).subscribe();
+          if (res.event.length > 1) {
+            (this.grid?.dataService as CRUDService)
+              ?.update(res.event[0])
+              .subscribe();
+            (this.grid?.dataService as CRUDService)
+              ?.add(res.event[1])
+              .subscribe();
+          } else {
+            (this.grid?.dataService as CRUDService)
+              ?.add(res.event[0])
+              .subscribe();
+          }
           this.eBenefitRowCount += 1;
         } else if (actionType == 'edit') {
           (this.grid?.dataService as CRUDService)
@@ -3561,27 +3569,30 @@ export class EmployeeDetailComponent extends UIComponent {
 
     dialogAdd.closed.subscribe((res) => {
       //if (!res?.event) (this.skillGrid?.dataService as CRUDService).clear();
-        if ((res.event != null) && (!this.skillGrid)) {
-          if((actionType === 'add' || actionType === 'copy') && res.event[0].isSuccess == true ){
-            this.lstESkill = res?.event[1];
-            this.eSkillRowCount++;
-          } else this.lstESkill = res?.event[1];
-        } else if((res.event != null) && this.skillGrid) {
-          if (
-            (actionType === 'add' || actionType === 'copy') &&
-            res.event[0] == true
-          ) {
-            (this.skillGrid?.dataService as CRUDService)
-              .add(res.event[0])
-              .subscribe();
-            this.eSkillRowCount++;
-            this.lstESkill = res?.event[1];
-          } else if (actionType === 'edit') {
-            (this.skillGrid?.dataService as CRUDService)
-              .update(res.event)
-              .subscribe();
-          }
+      if (res.event != null && !this.skillGrid) {
+        if (
+          (actionType === 'add' || actionType === 'copy') &&
+          res.event[0].isSuccess == true
+        ) {
+          this.lstESkill = res?.event[1];
+          this.eSkillRowCount++;
+        } else this.lstESkill = res?.event[1];
+      } else if (res.event != null && this.skillGrid) {
+        if (
+          (actionType === 'add' || actionType === 'copy') &&
+          res.event[0] == true
+        ) {
+          (this.skillGrid?.dataService as CRUDService)
+            .add(res.event[0])
+            .subscribe();
+          this.eSkillRowCount++;
+          this.lstESkill = res?.event[1];
+        } else if (actionType === 'edit') {
+          (this.skillGrid?.dataService as CRUDService)
+            .update(res.event)
+            .subscribe();
         }
+      }
       this.df.detectChanges();
     });
   }
@@ -4505,9 +4516,7 @@ export class EmployeeDetailComponent extends UIComponent {
           [this.filterEVaccinePredicates],
           [this.filterByVaccineTypeIDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 2', item);
-        });
+        .subscribe((item) => {});
     } else if (this.startDateEVaccineFilterValue != null) {
       (this.eVaccinesGrid.dataService as CRUDService)
         .setPredicates(
@@ -4757,9 +4766,7 @@ export class EmployeeDetailComponent extends UIComponent {
     if (this.startDateBusinessTravelFilterValue == null) {
       (this.businessTravelGrid.dataService as CRUDService)
         .setPredicates([`EmployeeID=@0`], [this.employeeID])
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 3', item);
-        });
+        .subscribe((item) => {});
     } else {
       (this.businessTravelGrid.dataService as CRUDService)
         .setPredicates(
@@ -4768,9 +4775,7 @@ export class EmployeeDetailComponent extends UIComponent {
           ],
           []
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 3', item);
-        });
+        .subscribe((item) => {});
     }
   }
 
@@ -4832,7 +4837,7 @@ export class EmployeeDetailComponent extends UIComponent {
         .subscribe((item) => {
           console.log('item tra ve sau khi loc 2', item);
         });
-    } else if (this.startDateEDayoffFilterValue != null) {
+    } else if (this.startDateEDayoffFilterValue) {
       (this.dayoffGrid.dataService as CRUDService)
         .setPredicates(
           [
@@ -4841,12 +4846,16 @@ export class EmployeeDetailComponent extends UIComponent {
           []
         )
         .subscribe((item) => {});
+    } else {
+      (this.dayoffGrid.dataService as CRUDService)
+        .setPredicates([`EmployeeID=@0`], [this.employeeID])
+        .subscribe((item) => {});
     }
   }
 
   valueChangeFilterDayOff(evt) {
     this.filterByKowIDArr = evt.data;
-
+    debugger;
     this.UpdateEDayOffsPredicate();
   }
 

@@ -65,22 +65,22 @@ export class PopupEmpBusinessTravelsComponent
     this.funcID = data?.data?.funcID;
     this.data = data?.data?.businessTravelObj;
     console.log('data khi copy truyen vao', this.data);
-    
-    if(this.data){
-      if(this.data.beginDate == '0001-01-01T00:00:00'){
+
+    if (this.data) {
+      if (this.data.beginDate == '0001-01-01T00:00:00') {
         this.data.beginDate = null;
       }
-      if(this.data.endDate == '0001-01-01T00:00:00'){
+      if (this.data.endDate == '0001-01-01T00:00:00') {
         this.data.endDate = null;
       }
     }
-    
+
     // this.cache.functionList(this.funcID).subscribe((funcList) => {
     //   if (funcList) {
     //     console.log(funcList);
     //     this.headerText = this.headerText + ' 1 ' + funcList.description;
     //     console.log('headerText sau khi goi funcID', this.headerText);
-        
+
     //   }
     // });
 
@@ -90,38 +90,38 @@ export class PopupEmpBusinessTravelsComponent
     this.dataValues = this.employId;
   }
 
-  changOverSeaFlag(event){
+  changOverSeaFlag(event) {
     console.log('di cong tac nc ngoai', event.checked);
     this.isNotOverseaFlag = !event.checked;
     console.log('co hieu ', this.isNotOverseaFlag);
-    if(this.isNotOverseaFlag == true){
+    if (this.isNotOverseaFlag == true) {
       this.data.country = null;
       this.formGroup.patchValue(this.data.country);
     }
   }
 
-  ngAfterViewInit(){
-    this.dialog && this.dialog.closed.subscribe(res => {
-      if(!res.event){
-        if(this.successFlag == true){
-          this.dialog.close(this.data);
+  ngAfterViewInit() {
+    this.dialog &&
+      this.dialog.closed.subscribe((res) => {
+        if (!res.event) {
+          if (this.successFlag == true) {
+            this.dialog.close(this.data);
+          } else {
+            this.dialog.close(null);
+          }
         }
-        else{
-          this.dialog.close(null);
-        }
-      }
-    })
+      });
   }
 
   onInit(): void {
     this.hrService
-    .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    .then((fg) => {
-      if (fg) {
-        this.formGroup = fg;
-        this.initForm();
-      }
-    });
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((fg) => {
+        if (fg) {
+          this.formGroup = fg;
+          this.initForm();
+        }
+      });
 
     // this.hrService.getFormModel(this.funcID).then((formModel) => {
     //   if (formModel) {
@@ -150,7 +150,7 @@ export class PopupEmpBusinessTravelsComponent
           if (res) {
             this.data = res?.data;
             this.data.beginDate = null;
-            this.data.isOversea = null;
+            this.data.isOversea = false;
             this.data.country = null;
             this.data.endDate = null;
             this.data.employeeID = this.employId;
@@ -173,7 +173,7 @@ export class PopupEmpBusinessTravelsComponent
     //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
     //   return;
     // }
-    if(this.data.isOversea == true && this.data.country == null){
+    if (this.data.isOversea == true && this.data.country == null) {
       this.notitfy.notifyCode('HR011');
       return;
     }
@@ -196,11 +196,9 @@ export class PopupEmpBusinessTravelsComponent
         if (res) {
           this.notitfy.notifyCode('SYS007');
           this.dialog && this.dialog.close(this.data);
-
         }
       });
     }
     this.cr.detectChanges();
   }
-
 }
