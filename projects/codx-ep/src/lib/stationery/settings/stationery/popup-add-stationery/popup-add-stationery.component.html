@@ -199,10 +199,10 @@
         <tr *ngFor="let item of quota">
           <td>
             {{ item?.quantity }}{{ " / "
-            }}{{ item?.ruleType | vll: "EP013":"text" | async }}
+            }}{{ item?.ruleType | vll : "EP013" : "text" | async }}
           </td>
           <td class="text-center">
-            {{ item?.objectType | vll: "EP015":"text" | async }}
+            {{ item?.objectType | vll : "EP015" : "text" | async }}
           </td>
         </tr>
       </tbody>
