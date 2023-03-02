@@ -1370,15 +1370,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   copyStep(step) {
-    this.step = JSON.parse(JSON.stringify(step));
+    this.stepNew = JSON.parse(JSON.stringify(step));
     this.stepName = '';
-    this.step['recID'] = Util.uid();
-    this.step['stepNo'] = this.stepList.length + 1;
-    delete this.step['id'];
+    this.stepNew['recID'] = Util.uid();
+    this.stepNew['stepNo'] = this.stepList.length + 1;
+    delete this.stepNew['id'];
     let taskCopy = [];
     // copy groups and tasks
-    if (this.step['taskGroups']?.length > 0) {
-      this.step['taskGroups'].forEach((groupTask) => {
+    if (this.stepNew['taskGroups']?.length > 0) {
+      this.stepNew['taskGroups'].forEach((groupTask) => {
         groupTask['recID'] = groupTask['recID'] ? Util.uid() : null;
         groupTask['stepID'] = this.step['recID'];
         groupTask['createdOn'] = new Date();
@@ -1409,8 +1409,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       });
     }
     // copy fields
-    if (this.step['fields']?.length > 0) {
-      this.step['fields'].forEach((fields) => {
+    if (this.stepNew['fields']?.length > 0) {
+      this.stepNew['fields'].forEach((fields) => {
         fields['recID'] = Util.uid();
         fields['stepID'] = this.step['recID'];
         fields['createdOn'] = new Date();
@@ -1420,7 +1420,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       });
     }
 
-    this.step['tasks'] = taskCopy;
+    this.stepNew['tasks'] = taskCopy;
     this.openPopupStep('copy');
     console.log(step);
   }
@@ -1433,8 +1433,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.actionStep == 'add' || this.actionStep == 'copy') {
       this.stepList.push(this.stepNew);
       this.viewStepSelect(this.stepNew);
+       // if edit process
       if (this.action == 'edit') {
-        // if edit process
         this.stepListAdd.push(this.stepNew);
       }
     } else {
@@ -1456,7 +1456,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           // lay danh sach step xoa
           if (this.action == 'edit') {
             let indexDelete = this.stepListAdd.findIndex(
-              (step) => (step.recID == id)
+              (step) => step.recID == id
             );
             if (indexDelete >= 0) {
               this.stepListAdd.splice(indexDelete, 1);
@@ -1782,7 +1782,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.deleteStep(data);
         break;
       case 'SYS03':
-        this.openPopupStep('edit',data);
+        this.openPopupStep('edit', data);
         break;
       case 'SYS04':
         this.copyStep(data);
