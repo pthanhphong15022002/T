@@ -199,10 +199,10 @@
         <tr *ngFor="let item of quota">
           <td>
             {{ item?.quantity }}{{ " / "
-            }}{{ item?.ruleType | vll: "EP013":"text" | async }}
+            }}{{ item?.ruleType | vll : "EP013" : "text" | async }}
           </td>
           <td class="text-center">
-            {{ item?.objectType | vll: "EP015":"text" | async }}
+            {{ item?.objectType | vll : "EP015" : "text" | async }}
           </td>
         </tr>
       </tbody>
@@ -269,7 +269,7 @@
           </div>
         </div>
 
-        <div class="d-flex flex-stack mb-4">
+        <div *ngIf="this.isPriceVisible" class="d-flex flex-stack mb-4">
           <div class="col-6">
             <codx-label
               class="fw-bold"

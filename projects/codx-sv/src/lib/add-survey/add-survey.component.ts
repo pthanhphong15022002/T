@@ -4,6 +4,7 @@ import {
   TemplateRef,
   ViewChild,
   ComponentRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxSvService } from '../codx-sv.service';
@@ -37,7 +38,11 @@ export class AddSurveyComponent extends UIComponent {
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
 
-  constructor(private injector: Injector, private SvService: CodxSvService) {
+  constructor(
+    private injector: Injector, 
+    private SvService: CodxSvService,
+    private change: ChangeDetectorRef
+  ) {
     super(injector);
     this.router.queryParams.subscribe((queryParams) => {
       this.title = this.titleNull;
@@ -45,6 +50,7 @@ export class AddSurveyComponent extends UIComponent {
       if (queryParams?.recID) {
         this.recID = queryParams.recID;
         this.getSV();
+        this.change.detectChanges();
       }
       this.url = queryParams;
     });

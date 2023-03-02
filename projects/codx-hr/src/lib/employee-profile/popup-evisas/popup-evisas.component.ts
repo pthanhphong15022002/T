@@ -36,7 +36,7 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   // @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
-    injector: Injector,
+    private injector: Injector,
     private notify: NotificationsService,
     private cr: ChangeDetectorRef,
     private hrService: CodxHrService,
@@ -50,49 +50,12 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.employId = data?.data?.employeeId;
-    this.visaObj = JSON.stringify(data?.data?.visaObj);
-    // this.lstVisas = data?.data?.lstVisas;
-    console.log('lst visa constructor', this.lstVisas);
-
-    // this.indexSelected =
-    //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
-
-    // if (this.actionType === 'edit' || this.actionType === 'copy') {
-    //   this.visaObj = JSON.parse(
-    //     JSON.stringify(this.lstVisas[this.indexSelected])
-    //   );
-    //   // this.formGroup.patchValue(this.visaObj);
-    //   // this.formModel.currentData = this.visaObj
-    //   // this.cr.detectChanges();
-    //   // this.isAfterRender = true;
-    // }
+    this.visaObj = JSON.parse(JSON.stringify(data?.data?.visaObj));
   }
 
-  // ngAfterViewInit(){
-  //   this.dialog && this.dialog.closed.subscribe(res => {
-  //     if(!res.event){
-  //       this.dialog.close(this.lstVisas);
-  //     }
-  //   })
-  // }
+  ngAfterViewInit() {}
+
   initForm() {
-    //   this.hrService
-    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    //   .then((item) => {
-    //     console.log('form group vua lay ra', item);
-
-    //     this.formGroup = item;
-    //     if(this.actionType === 'add'){
-    //       this.hrService.getEmployeeVisaModel().subscribe(p => {
-    //         this.visaObj = p;
-    //         this.formModel.currentData = this.visaObj
-    //         // this.dialog.dataService.dataSelected = this.data
-    //     })
-    //     }
-    //     this.formGroup.patchValue(this.visaObj)
-    //     this.isAfterRender = true
-    // });
-
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
@@ -116,6 +79,14 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
         });
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
+        if (this.actionType == 'copy') {
+          if (this.visaObj.effectedDate == '0001-01-01T00:00:00') {
+            this.visaObj.effectedDate = null;
+          }
+          if (this.visaObj.expiredDate == '0001-01-01T00:00:00') {
+            this.visaObj.expiredDate = null;
+          }
+        }
         this.formGroup.patchValue(this.visaObj);
         this.formModel.currentData = this.visaObj;
         this.cr.detectChanges();
@@ -139,7 +110,15 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
             });
         }
       });
-    else this.initForm();
+    else
+      this.hrService
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .then((fg) => {
+          if (fg) {
+            this.formGroup = fg;
+            this.initForm();
+          }
+        });
   }
 
   onSaveForm() {
@@ -148,22 +127,11 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
       return;
     }
 
-    // if (this.actionType === 'copy' || this.actionType === 'add') {
-    //   delete this.visaObj.recID;
-    // }
-    // this.visaObj.employeeID = this.employId;
-
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddEmployeeVisaInfo(this.visaObj).subscribe((p) => {
         if (p != null) {
           this.visaObj.recID = p.recID;
           this.notify.notifyCode('SYS007');
-          // this.lstVisas.push(JSON.parse(JSON.stringify(this.visaObj)));
-          // if (this.listView) {
-          //   (this.listView.dataService as CRUDService)
-          //     .add(this.visaObj)
-          //     .subscribe();
-          // }
           this.dialog && this.dialog.close(p);
         } else this.notify.notifyCode('SYS023');
       });
@@ -173,12 +141,6 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            // this.lstVisas[this.indexSelected] = p;
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService)
-            //     .update(this.lstVisas[this.indexSelected])
-            //     .subscribe();
-            // }
             this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS021');
         });
@@ -195,9 +157,4 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
     this.formGroup?.patchValue(this.visaObj);
     this.cr.detectChanges();
   }
-
-  // afterRenderListView(evt) {
-  //   this.listView = evt;
-  //   console.log(this.listView);
-  // }
 }

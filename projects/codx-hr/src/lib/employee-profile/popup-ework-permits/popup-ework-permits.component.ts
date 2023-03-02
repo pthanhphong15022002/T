@@ -31,8 +31,6 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   headerText: string = '';
   @ViewChild('form') form: CodxFormComponent;
-  // @ViewChild('listView') listView: CodxListviewComponent;
-  // indexSelected: any;
 
   constructor(
     injector: Injector,
@@ -49,34 +47,10 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
     this.actionType = data?.data?.actionType;
     this.employId = data?.data?.employeeId;
     this.formModel = dialog.formModel;
-    this.data = JSON.stringify(data?.data?.workPermitObj);
-    // this.lstWorkPermit = data?.data?.lstWorkPermit;
-    // this.indexSelected =
-    //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
-    // if (this.actionType === 'edit' || this.actionType === 'copy') {
-    //   this.data = JSON.parse(
-    //     JSON.stringify(this.lstWorkPermit[this.indexSelected])
-    //   );
-    // }
+    this.data = JSON.parse(JSON.stringify(data?.data?.workPermitObj));
   }
 
   initForm() {
-    // this.hrService
-    // .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    // .then((item) => {
-    //   this.formGroup = item;
-    //   console.log('formGroup', this.formGroup);
-    //   if(this.actionType === 'add'){
-    //     this.hrService.getEmployeeWorkingLisenceModel().subscribe(p => {
-    //       console.log('thong tin giay phep lao dong', p);
-    //       this.data = p;
-    //       this.formModel.currentData = this.data
-    //       console.log('du lieu formmodel', this.formModel.currentData);
-    //     })
-    //   }
-    //   this.formGroup.patchValue(this.data)
-    //   this.isAfterRender = true
-    // })
     this.hrService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
@@ -105,14 +79,22 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
               });
           } else {
             if (this.actionType === 'edit' || this.actionType === 'copy') {
+              if (this.actionType == 'copy') {
+                if (this.data.fromDate == '0001-01-01T00:00:00') {
+                  this.data.fromDate = null;
+                }
+                if (this.data.toDate == '0001-01-01T00:00:00') {
+                  this.data.toDate = null;
+                }
+              }
+
               this.formGroup.patchValue(this.data);
               this.formModel.currentData = this.data;
               this.cr.detectChanges();
               this.isAfterRender = true;
             }
           }
-        }
-        else{
+        } else {
           this.notify.notifyCode('ABCDE');
         }
       });
@@ -142,22 +124,12 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
       return;
     }
 
-    if (this.actionType == 'copy' || this.actionType === 'add') {
-      delete this.data.recID;
-    }
     this.data.employeeID = this.employId;
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.hrService.addEmployeeWorkPermitDetail(this.data).subscribe((p) => {
         if (p != null) {
           this.data.recID = p.recID;
           this.notify.notifyCode('SYS006');
-          // this.lstWorkPermit.push(JSON.parse(JSON.stringify(this.data)));
-
-          // if (this.listView) {
-          //   (this.listView.dataService as CRUDService)
-          //     .add(this.data)
-          //     .subscribe();
-          // }
           this.dialog && this.dialog.close(p);
         } else this.notify.notifyCode('SYS023');
       });
@@ -167,12 +139,6 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            // this.lstWorkPermit[this.indexSelected] = p;
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService)
-            //     .update(this.lstWorkPermit[this.indexSelected])
-            //     .subscribe();
-            // }
             this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS021');
         });

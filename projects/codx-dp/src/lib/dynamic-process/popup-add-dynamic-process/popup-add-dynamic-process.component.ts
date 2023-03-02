@@ -35,6 +35,7 @@ import {
   AuthStore,
   CRUDService,
   AlertConfirmInputConfig,
+  DialogModel,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -315,8 +316,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.action != 'add' && this.action != 'copy') {
       this.getStepByProcessID();
     }
-    this.grvMoreFunction = await this.getFormModel("DPT0402");
-    this.grvStep = await this.getFormModel("DPS0103")
+    this.grvMoreFunction = await this.getFormModel('DPT0402');
+    this.grvStep = await this.getFormModel('DPS0103');
   }
 
   //#region setup formModels and formGroup
@@ -477,6 +478,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#endregion
 
+  closePopup() {
+    //dung bat dong bi rjx
+    // let x = await firstValueFrom(this.notiService.alertCode('DP013'));
+    // if (x?.event?.status == 'Y') {
+    //       this.dialog.close();
+    // } else return;
+    this.notiService.alertCode('DP013').subscribe((e) => {
+      if (e?.event?.status == 'Y') {
+        this.dialog.close();
+      } else return;
+    });
+  }
+
   //#region Change Tab
   //Click từng tab - mặc định thêm mới = 0
   clickTab(tabNo) {
@@ -484,10 +498,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let newNo = tabNo;
     let oldNo = this.currentTab;
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
-      if (tabNo!=0 &&(
-        !this.process.instanceNoSetting ||
-        (this.process.instanceNoSetting &&
-          this.process.instanceNoSetting != this.instanceNoSetting))
+      if (
+        tabNo != 0 &&
+        this.currentTab == 0 &&
+        (!this.process.instanceNoSetting ||
+          (this.process.instanceNoSetting &&
+            this.process.instanceNoSetting != this.instanceNoSetting))
       ) {
         this.notiService.alertCode('DP009').subscribe((e) => {
           if (e?.event?.status == 'Y') {
@@ -728,7 +744,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.roleType = 'P';
             perm.full = false;
             perm.read = true;
-            perm.create = false;
+            perm.create = true;
             perm.assign = false;
             perm.edit = false;
             // perm.publish = false;
@@ -800,7 +816,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.roleType = 'P';
             perm.full = false;
             perm.read = true;
-            perm.create = false;
+            perm.create = true;
             perm.assign = false;
             perm.edit = false;
             // perm.publish = false;
@@ -930,56 +946,54 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     var tmps = [];
-    this.notiService
-      .alert('Thông báo', 'Bạn muốn xóa đối tượng này', config)
-      .closed.subscribe((x) => {
-        if (x.event.status == 'Y') {
-          var i = -1;
-          i = this.lstParticipants.findIndex(
-            (x) => x.objectID === this.process.permissions[index].objectID
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        var i = -1;
+        i = this.lstParticipants.findIndex(
+          (x) => x.objectID === this.process.permissions[index].objectID
+        );
+        if (this.process.permissions[index].roleType === 'P') {
+          var check = this.countRoleSteps(
+            this.process.permissions[index].objectID
           );
-          if (this.process.permissions[index].roleType === 'P') {
-            var check = this.countRoleSteps(
-              this.process.permissions[index].objectID
-            );
-            if (check > 0) {
-              this.notiService.alertCode('DP011').subscribe((res) => {
-                if (res.event.status == 'Y') {
-                  for (let i = 0; i < this.stepList.length; i++) {
-                    var roles = this.stepList[i].roles;
-                    for (let j = 0; j < roles.length; j++) {
-                      if (
-                        roles[j].objectID ==
-                          this.process.permissions[index].objectID &&
-                        roles[j].roleType == 'S'
-                      ) {
-                        roles.splice(j, 1);
-                        j--;
-                      }
+          if (check > 0) {
+            this.notiService.alertCode('DP011').subscribe((res) => {
+              if (res.event.status == 'Y') {
+                for (let i = 0; i < this.stepList.length; i++) {
+                  var roles = this.stepList[i].roles;
+                  for (let j = 0; j < roles.length; j++) {
+                    if (
+                      roles[j].objectID ==
+                        this.process.permissions[index].objectID &&
+                      roles[j].roleType == 'S'
+                    ) {
+                      roles.splice(j, 1);
+                      j--;
                     }
                   }
-                  this.process.permissions.splice(index, 1);
-                  if (i > -1) {
-                    this.lstParticipants.splice(i, 1);
-                  }
                 }
-              });
-            } else {
-              this.process.permissions.splice(index, 1);
-              if (i > -1) {
-                this.lstParticipants.splice(i, 1);
+                this.process.permissions.splice(index, 1);
+                if (i > -1) {
+                  this.lstParticipants.splice(i, 1);
+                }
               }
-            }
+            });
           } else {
             this.process.permissions.splice(index, 1);
             if (i > -1) {
               this.lstParticipants.splice(i, 1);
             }
           }
-
-          this.changeDetectorRef.detectChanges();
+        } else {
+          this.process.permissions.splice(index, 1);
+          if (i > -1) {
+            this.lstParticipants.splice(i, 1);
+          }
         }
-      });
+
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
   countRoleSteps(objectID) {
@@ -998,7 +1012,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   checkAssignRemove(i) {
     if (
       this.user.userID == this.process.permissions[i].objectID &&
-        this.process.permissions[i].roleType == 'O' &&
+      this.process.permissions[i].roleType == 'O' &&
       this.process.permissions[i].objectType == '1'
     )
       return false;
@@ -1011,7 +1025,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //Popup roles process
   clickRoles() {
-    var title = 'Phân quyền';
+    var title = this.gridViewSetup?.Permissions?.headerText;
+    let formModel = new FormModel();
+    formModel.formName = 'DPProcessesPermissions';
+    formModel.gridViewName = 'grvDPProcessesPermissions';
+    formModel.entityName = 'DP_Processes_Permissions';
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+
     this.callfc
       .openForm(
         PopupRolesDynamicComponent,
@@ -1021,7 +1043,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         '',
         [this.process, title, this.action === 'copy' ? 'copy' : 'add'],
         '',
-        this.dialog
+        dialogModel
       )
       .closed.subscribe((e) => {
         if (e && e.event != null) {
@@ -1448,9 +1470,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //taskGroup
   async openTaskGroup(data?: any, type?: string) {
-    let form = await this.getFormModel("DPS0105")
+    let form = await this.getFormModel('DPS0105');
     this.taskGroup = new DP_Steps_TaskGroups();
-    let timeStep = this.dayStep*24 + this.hourStep; 
+    let timeStep = this.dayStep * 24 + this.hourStep;
     let differenceTime = this.getHour(this.step) - timeStep;
     if (data) {
       this.roleGroupTaskOld = JSON.parse(JSON.stringify(data?.roles)) || [];
@@ -1472,7 +1494,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       500,
       500,
       '',
-      {taskGroup: this.taskGroup, differenceTime, step: this.step, form}
+      { taskGroup: this.taskGroup, differenceTime, step: this.step, form }
     );
     this.popupGroupJob.closed.subscribe((res) => {
       if (res?.event) {
@@ -1900,20 +1922,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   sumTimeStep() {
     let timeGroup = this.sumHourGroupTask();
-    let timeTackNoGroup = 0
-    let taskNoGroup = this.taskList.filter(task => !task['taskGroupID']);
-    taskNoGroup?.forEach(task => {
+    let timeTackNoGroup = 0;
+    let taskNoGroup = this.taskList?.filter((task) => !task['taskGroupID']);
+    taskNoGroup?.forEach((task) => {
       let time = this.calculateTimeTaskNoGroup(task['recID']);
-      timeTackNoGroup = Math.max(time,timeTackNoGroup);
+      timeTackNoGroup = Math.max(time, timeTackNoGroup);
     });
-    let timeMax = Math.max(timeGroup,timeTackNoGroup);
+    let timeMax = Math.max(timeGroup, timeTackNoGroup);
     this.dayStep = Math.floor(timeMax / 24);
     this.hourStep = Math.floor(timeMax % 24);
   }
 
   async setTimeGroup(group, task, maxHour) {
     let x = await firstValueFrom(this.notiService.alertCode('DP010'));
-    if (x.event && x.event.status == 'Y') {
+    if (x['event'] && x['event']['status'] == 'Y') {
       let time = this.getHour(task) || 0;
       group['durationDay'] = Math.floor(maxHour / 24);
       group['durationHour'] = maxHour % 24;
@@ -1928,7 +1950,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         });
       }
-      task['parentID'] = parentID.length > 0 ? parentID.join(';') : '';
+      task['parentID'] = parentID?.length > 0 ? parentID.join(';') : '';
       return true;
     } else {
       return false;
@@ -1939,8 +1961,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let task = this.taskList.find((t) => t['recID'] === taskId);
     if (!task) return 0;
     if (task['dependRule'] != '1' || !task['parentID']?.trim()) {
-      let groupFind = task['taskGroupID'] ? this.taskGroupList.find((x) =>  x['recID'] === task['taskGroupID']) : -1;
-      let hourGroup = groupFind > 0 ? this.sumHourGroupTask(groupFind['indexNo'] - 1) : 0;
+      let groupFind = task['taskGroupID']
+        ? this.taskGroupList.find((x) => x['recID'] === task['taskGroupID'])
+        : -1;
+      let hourGroup =
+        groupFind > 0 ? this.sumHourGroupTask(groupFind['indexNo'] - 1) : 0;
       return hourGroup + this.getHour(task);
     } else {
       const parentIds = task.parentID.split(';');
@@ -1973,7 +1998,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  sumHourGroupTask(index?: number) {//tính theo vị trí group và tính tất cả
+  sumHourGroupTask(index?: number) {
+    //tính theo vị trí group và tính tất cả
     let sum = 0;
     if (this.taskGroupList?.length > 0) {
       if (index >= 0) {
@@ -1983,7 +2009,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         }
       } else {
-        sum = this.taskGroupList.reduce((sumHour, group) => {
+        sum = this.taskGroupList?.reduce((sumHour, group) => {
           return (sumHour += this.getHour(group));
         }, 0);
       }
@@ -2081,19 +2107,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return false;
   }
 
-  async getFormModel(functionID){ 
+  async getFormModel(functionID){
     let f = await firstValueFrom(this.cache.functionList(functionID));
     let formModel = JSON.parse(JSON.stringify(this.dialog?.formModel));
-    formModel.formName = f.formName;
-    formModel.gridViewName = f.gridViewName;
-    formModel.entityName = f.entityName;
+    formModel.formName = f?.formName;
+    formModel.gridViewName = f?.gridViewName;
+    formModel.entityName = f?.entityName;
     formModel.funcID = functionID;
     return formModel;
   }
   //View task
   async openPopupViewJob(data?: any) {
     let status = 'edit';
-    let frmModel = await this.getFormModel("DPS0106")
+    let frmModel = await this.getFormModel('DPS0106');
     if (!data) {
       this.popupJob.close();
       status = 'add';
