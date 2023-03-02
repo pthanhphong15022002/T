@@ -2365,21 +2365,25 @@ export class EmployeeDetailComponent extends UIComponent {
                   }
                 });
             } else if (funcID == 'eSkill') {
-              this.hrService.deleteESkill1(data).subscribe((p) => {
-                if (!this.skillGrid) {
-                  this.lstESkill = p[1];
-                  this.eSkillRowCount = this.lstESkill.length;
-                }
-                if (p[0] == true) {
-                  this.notify.notifyCode('SYS008');
+              this.hrService.deleteESkill1(data).subscribe((res) => {
+                if (res) {
+                  if (!this.skillGrid) {
+                    this.lstESkill = res[1];
+                    this.eSkillRowCount--;
+                  } else {
+                    if (res[0] == true) {
+                      this.notify.notifyCode('SYS008');
 
-                  (this.skillGrid?.dataService as CRUDService)
-                    .remove(data)
-                    .subscribe();
-                  this.lstESkill = p[1];
+                      (this.skillGrid?.dataService as CRUDService)
+                        .remove(data)
+                        .subscribe();
+                      this.lstESkill = res[1];
+                      this.eSkillRowCount--;
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  }
                   this.df.detectChanges();
-                } else {
-                  this.notify.notifyCode('SYS022');
                 }
               });
             } else if (funcID == 'eCertificate') {
@@ -3619,29 +3623,28 @@ export class EmployeeDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) (this.skillGrid?.dataService as CRUDService).clear();
-      if (res.event) {
-        if (!this.skillGrid) {
-          this.lstESkill = res?.event[1];
-          this.eSkillRowCount = this.lstESkill.length;
+      //if (!res?.event) (this.skillGrid?.dataService as CRUDService).clear();
+        if ((res.event != null) && (!this.skillGrid)) {
+          if((actionType === 'add' || actionType === 'copy') && res.event[0].isSuccess == true ){
+            this.lstESkill = res?.event[1];
+            this.eSkillRowCount++;
+          } else this.lstESkill = res?.event[1];
+        } else if((res.event != null) && this.skillGrid) {
+          if (
+            (actionType === 'add' || actionType === 'copy') &&
+            res.event[0] == true
+          ) {
+            (this.skillGrid?.dataService as CRUDService)
+              .add(res.event[0])
+              .subscribe();
+            this.eSkillRowCount++;
+            this.lstESkill = res?.event[1];
+          } else if (actionType === 'edit') {
+            (this.skillGrid?.dataService as CRUDService)
+              .update(res.event)
+              .subscribe();
+          }
         }
-        if (
-          (actionType === 'add' || actionType === 'copy') &&
-          res.event[0].isSuccess == true
-        ) {
-          (this.skillGrid?.dataService as CRUDService)
-            .add(res.event[0])
-            .subscribe();
-          //this.eSkillRowCount++;
-          this.lstESkill = null;
-          this.lstESkill = res?.event[1];
-          this.eSkillRowCount = this.lstESkill.length;
-        } else if (actionType === 'edit') {
-          (this.skillGrid?.dataService as CRUDService)
-            .update(res.event)
-            .subscribe();
-        }
-      }
       this.df.detectChanges();
     });
   }
