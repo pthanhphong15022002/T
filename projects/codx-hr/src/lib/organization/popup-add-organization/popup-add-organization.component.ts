@@ -51,7 +51,7 @@ export class PopupAddOrganizationComponent implements OnInit{
     {
       this.funcID = this.dialogData.funcID;
       this.action = this.dialogData.action;
-      this.data = this.dialogData.data;
+      this.data = JSON.parse(JSON.stringify(this.dialogData.data));
       this.isModeAdd = this.dialogData.isModeAdd;
       if(this.funcID)
       {
@@ -124,21 +124,18 @@ export class PopupAddOrganizationComponent implements OnInit{
   saveData(data:any){
     if(data){
       this.api
-        .execAction<boolean>(
-         "HR_OrganizationUnits",
-          [data],
-          'SaveAsyncLogic',
-          true)
+        .execSv(
+          "HR",
+          "ERM.Business.HR",
+          "OrganizationUnitsBusiness",
+          'SaveAsync',
+          [data,this.funcID])
           .subscribe((res:any) =>{
-            if(!res?.error){
+            if(res)
               this.notifiSV.notifyCode("SYS006");
-              this.dialogRef.close(data);
-            }
             else
-            {
               this.notifiSV.notifyCode("SYS023");
-              this.dialogRef.close(null);
-            }
+            this.dialogRef.close(res);
         });
     }
   }

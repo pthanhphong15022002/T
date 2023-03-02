@@ -15,8 +15,8 @@ export class SignalRService {
   signalGroup = new EventEmitter<any>();
   signalBoxChat = new EventEmitter<any>();
   constructor(private authStore: AuthStore) {
-    this.createConnection();
-    this.registerOnServerEvents();
+    //this.createConnection();
+    //this.registerOnServerEvents();
   }
 
   public createConnection() {
