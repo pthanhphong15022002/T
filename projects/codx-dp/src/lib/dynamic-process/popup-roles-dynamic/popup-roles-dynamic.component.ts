@@ -50,7 +50,7 @@ export class PopupRolesDynamicComponent implements OnInit {
     this.lstPerm = Object.values(
       this.groupBy(this.process.permissions, 'roleType')
     ).flat();
-    this.process.permissions = this.lstPerm;
+    this.process.permissions = this.lstPerm.filter(x=> x.roleType != 'R');
     this.title = dt.data[1];
     this.type = dt.data[2];
     this.cache.valueList('DP010').subscribe((res) => {
@@ -172,8 +172,6 @@ export class PopupRolesDynamicComponent implements OnInit {
 
   checkAdminUpdate() {
     if (
-      this.process.permissions[this.currentPemission].roleType == 'P' ||
-      this.process.permissions[this.currentPemission].roleType == 'F' ||
       this.process.permissions[this.currentPemission].objectType == '1'
     )
       return true;
