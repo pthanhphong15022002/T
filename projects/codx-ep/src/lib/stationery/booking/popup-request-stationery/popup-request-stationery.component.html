@@ -152,7 +152,7 @@
     <div class="fw-bold line-clamp line-clamp-1 text-start">
       {{ data?.resourceName }}
     </div>
-    <div class="text-start text-gray-600">
+    <div *ngIf="this.isPriceVisible" class="text-start text-gray-600">
       {{
         data?.costPrice == 0
           ? (0 | currency : "VND")

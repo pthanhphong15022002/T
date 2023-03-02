@@ -216,7 +216,8 @@ export class EmployeeDetailComponent extends UIComponent {
   skillGradeSortModel: SortModel;
   appointionSortModel: SortModel;
   bSalarySortModel: SortModel;
-  createOnSortModel: SortModel;
+  issuedDateSortModel: SortModel;
+  TrainFromDateSortModel: SortModel;
   //#endregion
 
   reRenderGrid = true;
@@ -836,9 +837,13 @@ export class EmployeeDetailComponent extends UIComponent {
     this.bSalarySortModel.field = 'EffectedDate';
     this.bSalarySortModel.dir = 'desc';
 
-    this.createOnSortModel = new SortModel();
-    this.createOnSortModel.field = 'createdOn';
-    this.createOnSortModel.dir = 'desc';
+    this.issuedDateSortModel = new SortModel();
+    this.issuedDateSortModel.field = 'issuedDate';
+    this.issuedDateSortModel.dir = 'desc';
+
+    this.TrainFromDateSortModel = new SortModel();
+    this.TrainFromDateSortModel.field = 'TrainFromDate';
+    this.TrainFromDateSortModel.dir = 'desc';
 
     this.appointionSortModel = new SortModel();
     this.appointionSortModel.field = '(EffectedDate)';
@@ -2372,21 +2377,18 @@ export class EmployeeDetailComponent extends UIComponent {
             } else if (funcID == 'eSkill') {
               this.hrService.deleteESkill1(data).subscribe((res) => {
                 if (res) {
-                  if (!this.skillGrid) {
+                  if (!this.skillGrid && res[0] == true) {
+                    this.lstESkill = res[1];
+                    this.eSkillRowCount--;
+                  } else if (this.lstESkill && res[0] == true) {
+                    this.notify.notifyCode('SYS008');
+                    (this.skillGrid?.dataService as CRUDService)
+                      .remove(data)
+                      .subscribe();
                     this.lstESkill = res[1];
                     this.eSkillRowCount--;
                   } else {
-                    if (res[0] == true) {
-                      this.notify.notifyCode('SYS008');
-
-                      (this.skillGrid?.dataService as CRUDService)
-                        .remove(data)
-                        .subscribe();
-                      this.lstESkill = res[1];
-                      this.eSkillRowCount--;
-                    } else {
-                      this.notify.notifyCode('SYS022');
-                    }
+                    this.notify.notifyCode('SYS022');
                   }
                   this.df.detectChanges();
                 }
@@ -3631,27 +3633,31 @@ export class EmployeeDetailComponent extends UIComponent {
 
     dialogAdd.closed.subscribe((res) => {
       //if (!res?.event) (this.skillGrid?.dataService as CRUDService).clear();
-        if ((res.event != null) && (!this.skillGrid)) {
-          if((actionType === 'add' || actionType === 'copy') && res.event[0].isSuccess == true ){
-            this.lstESkill = res?.event[1];
-            this.eSkillRowCount++;
-          } else this.lstESkill = res?.event[1];
-        } else if((res.event != null) && this.skillGrid) {
-          if (
-            (actionType === 'add' || actionType === 'copy') &&
-            res.event[0] == true
-          ) {
-            (this.skillGrid?.dataService as CRUDService)
-              .add(res.event[0])
-              .subscribe();
-            this.eSkillRowCount++;
-            this.lstESkill = res?.event[1];
-          } else if (actionType === 'edit') {
-            (this.skillGrid?.dataService as CRUDService)
-              .update(res.event)
-              .subscribe();
-          }
+      if (res.event != null && !this.skillGrid) {
+        if (
+          (actionType === 'add' || actionType === 'copy') &&
+          res.event[0].isSuccess == true
+        ) {
+          this.lstESkill = res?.event[1];
+          this.eSkillRowCount++;
+        } else this.lstESkill = res?.event[1];
+      } else if (res.event != null && this.skillGrid) {
+        if (
+          (actionType === 'add' || actionType === 'copy') &&
+          res.event[0].isSuccess == true
+        ) {
+          (this.skillGrid?.dataService as CRUDService)
+            .add(res.event[0])
+            .subscribe();
+          this.eSkillRowCount++;
+          this.lstESkill = res?.event[1];
+        } else if (actionType === 'edit') {
+          (this.skillGrid?.dataService as CRUDService)
+            .update(res.event[0])
+            .subscribe();
+          this.lstESkill = res?.event[1];
         }
+      }
       this.df.detectChanges();
     });
   }

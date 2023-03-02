@@ -121,6 +121,7 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
+    
     this.codxEpService.getListResource('1').subscribe((res: any) => {
       if (res) {
         this.listRoom = [];
