@@ -62,31 +62,10 @@ export class OrgorganizationComponent extends UIComponent {
         }
       }
     });
-    // this.dataService = new CRUDService(this.inject);
-    // this.dataService.service = 'HR';
-    // this.dataService.assemblyName = 'ERM.Business.HR';
-    // this.dataService.className = 'OrganizationUnitsBusiness';
-    // this.dataService.method = 'GetOrgAsync';
-    // this.dataService.idField = 'OrgUnitID';
-    // this.dataService.request.entityName = 'HR_OrganizationUnits';
-    this.detectorRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
     this.views = [
-      // {
-      //   id: '1',
-      //   type: ViewType.tree_orgchart,
-      //   sameData: true,
-      //   active: false,
-      //   model: {
-      //     resizable: true,
-      //     template: this.tempTree,
-      //     panelRightRef: this.panelRightLef,
-      //     template2: this.tmpOrgChart,
-      //     resourceModel: { parentIDField: 'ParentID' },
-      //   },
-      // },
       {
         id: '1',
         type: ViewType.list,
@@ -96,23 +75,9 @@ export class OrgorganizationComponent extends UIComponent {
           template: this.itemTemplate,
         },
       },
-      // {
-      //   id: '2',
-      //   type: ViewType.tree_masterdetail,
-      //   sameData: true,
-      //   active: false,
-      //   model: {
-      //     resizable: true,
-      //     template: this.tempTree,
-      //     panelRightRef: this.panelRightLef,
-      //     template2: this.tmpMasterDetail,
-      //   },
-      // },
     ];
-    // this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
-    // this.dataService.currentComponent =
-      // this.view?.dataService?.currentComponent;
+
   }
 
   //loadEmployList
@@ -164,11 +129,7 @@ export class OrgorganizationComponent extends UIComponent {
       );
       popup.closed.subscribe((res: any) => {
         if (res.event) {
-          let org = res.event[0];
-          // let tmpOrg = res.event[1];
-          this.getOrgInfor(org);
-          // this.view.dataService.update(tmpOrg).subscribe();
-          // this.view.dataService.add(org).subscribe();
+          this.view.dataService.update(res.event).subscribe();
         }
       });
     }
@@ -180,30 +141,25 @@ export class OrgorganizationComponent extends UIComponent {
       option.Width = '550px';
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
-      this.view.dataService.copy(data).subscribe((result: any) => {
+      this.view.dataService.addNew()
+      .subscribe((result: any) => {
         if (result) {
-          let data = {
-            dataService: this.view.dataService,
-            formModel: this.view.formModel,
+          let object = {
             data: result,
             funcID: this.view.formModel.funcID,
-            isAddMode: true,
-            action:event,
+            isModeAdd: true,
             titleMore: event.text,
+            action:event
           };
           let popup = this.callfc.openSide(
-            CodxFormDynamicComponent,
-            data,
+            PopupAddOrganizationComponent,
+            object,
             option,
             this.view.formModel.funcID
           );
           popup.closed.subscribe((res: any) => {
-            if (res.event.save.data) {
-              let org = res.event.save.data;
-              this.orgUnitID = org.orgUnitID;
-              this.getOrgInfor(org);
-              this.detectorRef.detectChanges();
+            if (res.event) {
+              this.view.dataService.add(res.event).subscribe();
             }
           });
         }
@@ -234,34 +190,25 @@ export class OrgorganizationComponent extends UIComponent {
       option.Width = '550px';
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      // let currentView: any = this.view.currentView;
-      // if (currentView) {
-      //   this.codxTreeView = currentView.currentComponent?.treeView;
-      // }
       this.view.dataService.addNew()
       .subscribe((result: any) => {
         if (result) {
-          result.parentID = this.orgUnitID;
-          let data = {
-            dataService: this.view.dataService,
-            formModel: this.view.formModel,
+          let object = {
             data: result,
-            function: this.funcID,
-            isAddMode: true,
+            funcID: this.view.formModel.funcID,
+            isModeAdd: true,
             titleMore: e.text,
+            action:e
           };
           let popup = this.callfc.openSide(
-            CodxFormDynamicComponent,
-            data,
+            PopupAddOrganizationComponent,
+            object,
             option,
-            this.funcID
+            this.view.formModel.funcID
           );
           popup.closed.subscribe((res: any) => {
-            if (res.event.save.data) {
-              let org = res.event.save.data;
-              this.orgUnitID = org.orgUnitID;
-              this.getOrgInfor(org);
-              this.detectorRef.detectChanges();
+            if (res.event) {
+              this.view.dataService.add(res.event).subscribe();
             }
           });
         }
@@ -274,7 +221,6 @@ export class OrgorganizationComponent extends UIComponent {
     this.api.execSv("HR","ERM.Business.HR","OrganizationUnitsBusiness","GetOrgInforAsync",[data.orgUnitID])
     .subscribe((res:any) => {
       if(res){
-        debugger
         data.parentName = res.parentName;
         data.employeeManager = res.employeeManager;
         data.positionName = res.positionName;

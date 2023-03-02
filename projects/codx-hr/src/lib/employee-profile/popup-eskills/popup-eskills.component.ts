@@ -35,6 +35,8 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   headerText: '';
   ops = ['m', 'y'];
   result;
+  fromDateFormat;
+  toDateFormat;
 
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
@@ -58,11 +60,6 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     this.indexSelected =
       data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
 
-    // if (this.actionType === 'edit' || this.actionType === 'copy') {
-    //   this.skillObj = JSON.parse(
-    //     JSON.stringify(this.lstSkills[this.indexSelected])
-    //   );
-    // }
   }
 
   initForm() {
@@ -93,6 +90,8 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
         this.isAfterRender = true;
       }
     }
+    this.fromDateFormat = this.getFormatDate(this.skillObj.trainFrom);
+    this.toDateFormat = this.getFormatDate(this.skillObj.trainTo);
   }
 
   onInit(): void {
@@ -210,5 +209,13 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
       }
       this.skillObj.trainToDate = event.fromDate;
     }
+  }
+  getFormatDate(trainFrom : string){
+    let resultDate = '';
+    if(trainFrom){
+      let arrDate = trainFrom.split('/');
+      resultDate = arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
+      return resultDate
+    } else return resultDate = 'y';
   }
 }

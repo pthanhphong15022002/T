@@ -100,7 +100,7 @@ export class PopupAddStationeryComponent
       if (res) {
         let dataValue = res.dataValue;
         let json = JSON.parse(dataValue);
-        this.isPriceVisible = true;
+        this.isPriceVisible = json.ShowUnitPrice ?? false;
       }
     });
 

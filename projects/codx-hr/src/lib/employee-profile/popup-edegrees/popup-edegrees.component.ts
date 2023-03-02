@@ -44,6 +44,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   //@ViewChild('listView') listView: CodxListviewComponent;
   ops = ['m', 'y'];
   date = new Date();
+  fromDateFormat;
+  toDateFormat;
 
   constructor(
     private injector: Injector,
@@ -168,6 +170,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
           this.isAfterRender = true;
         }
       });
+      this.fromDateFormat = this.getFormatDate(this.degreeObj.trainFrom);
+      this.toDateFormat = this.getFormatDate(this.degreeObj.trainTo);
   }
 
   onInit(): void {
@@ -295,5 +299,13 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
       this.formGroup.patchValue({ degreeName: this.degreeObj.degreeName });
       this.cr.detectChanges();
     }
+  }
+  getFormatDate(trainFrom : string){
+    let resultDate = '';
+    if(trainFrom){
+      let arrDate = trainFrom.split('/');
+      resultDate = arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
+      return resultDate
+    } else return resultDate = 'y';
   }
 }
