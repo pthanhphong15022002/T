@@ -125,8 +125,13 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
           }
         });
     }
-    this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
-    this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);
+    if(this.trainCourseObj){
+      this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
+      this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);
+    } else {
+      this.fromDateFormat = this.getFormatDate(null);
+      this.toDateFormat = this.getFormatDate(null);
+    }
   }
 
   onInit(): void {
@@ -187,77 +192,6 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
         });
     }
   }
-  // onSaveForm(closeForm: boolean) {
-  //   this.formGroup.patchValue({
-  //     trainFromDate: new Date(),
-  //     trainToDate: new Date(),
-  //   });
-
-  //   if (this.formGroup.invalid) {
-  //     this.hrService.notifyInvalid(this.formGroup, this.formModel);
-  //     return;
-  //   }
-
-  //   if (this.data.contractFrom > this.data.contractTo) {
-  //     this.hrService.notifyInvalidFromTo(
-  //       'ContractFrom',
-  //       'ContractTo',
-  //       this.formModel
-  //     );
-  //     return;
-  //   }
-
-  //   if (this.actionType == 'add' || this.actionType == 'copy') {
-  //     Code cung
-  //     this.data.trainCourseID = '123';
-  //     this.data.employeeID = this.employId;
-
-  //     this.hrService
-  //       .addETraincourse(this.data, this.funcID)
-  //       .subscribe((res) => {
-  //         if (res) {
-  //           this.notify.notifyCode('SYS006');
-  //           this.actionType = 'edit';
-  //           if (this.listView) {
-  //             (this.listView.dataService as CRUDService).add(res).subscribe();
-  //           }
-  //           if (closeForm) {
-  //             this.dialog && this.dialog.close();
-  //           }
-  //         }
-  //       });
-  //   } else {
-  //     this.hrService
-  //       .updateEmployeeTrainCourseInfo(this.data, this.funcID)
-  //       .subscribe((res) => {
-  //         if (res) {
-  //           this.notify.notifyCode('SYS007');
-  //           if (this.listView) {
-  //             (this.listView.dataService as CRUDService)
-  //               .update(res)
-  //               .subscribe();
-  //           }
-  //           if (closeForm) {
-  //             this.dialog && this.dialog.close();
-  //           }
-  //         } else this.notify.notifyCode('SYS021');
-  //       });
-  //   }
-  // }
-
-  // onSaveForm2() {
-  //   this.hrService.AddECertificateInfo(this.dataForm2).subscribe((p) => {
-  //     if (p) {
-  //       this.notify.notifyCode('SYS006');
-  //       this.dialog.close();
-  //     } else this.notify.notifyCode('SYS023');
-  //   });
-  // }
-
-  // afterRenderListView(event) {
-  //   this.listView = event;
-  //   console.log(this.listView);
-  // }
 
   click(data) {
     this.data = JSON.parse(JSON.stringify(data));

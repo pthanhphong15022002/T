@@ -74,4 +74,5 @@ export class Customers {
   workingDays: any;
   workingHour: any;
   write: any;
+  note:any;
 }
