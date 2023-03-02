@@ -106,7 +106,7 @@ export class StagesDetailComponent implements OnInit {
   taskList: DP_Instances_Steps_Tasks[] = [];
   userGroupJob = [];
   listJobType = [];
-
+  titleMemo = '';
   listReasonStep: DP_Instances_Steps_Reasons[] = [];
   listReasonsClick: DP_Instances_Steps_Reasons[] = [];
   dialogPopupReason: DialogRef;
@@ -149,6 +149,15 @@ export class StagesDetailComponent implements OnInit {
         });
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.cache.gridViewSetup('DPSteps','grvDPSteps').subscribe((res) => {
+      if(res){
+        this.titleMemo = res?.Memo?.headerText;
+      }
+    })
+
   }
 
   getFormModel() {
@@ -633,9 +642,7 @@ export class StagesDetailComponent implements OnInit {
     if (progress >= 0 && progress < 50) return { background: '#FE0000' };
     else if (progress >= 50 && progress < 75) return { background: '#E1BE27' };
     else {
-      return progress > 90
-        ? { background: '#34CDEF', 'border-radius': '10px' }
-        : { background: '#34CDEF' };
+      return { background: '#34CDEF' };
     }
   }
   openUpdateProgress(data?: any) {

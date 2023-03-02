@@ -1,6 +1,9 @@
 
 .eself-popup .e-content {
     padding-left: 0 !important;
+    margin-right: -10px;
+    padding-right: 15px;
+    overflow: auto;
 }
 .eself-popup .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
     padding: 0 2px !important;

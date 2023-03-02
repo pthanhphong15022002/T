@@ -26,6 +26,7 @@ import {
   RequestOption,
   DialogRef,
   CodxCardImgComponent,
+  FormModel,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
@@ -168,6 +169,7 @@ export class DynamicProcessComponent
   onDragDrop(e: any) {}
 
   click(evt: ButtonModel) {
+    this.titleAction = evt.text;
     switch (evt.id) {
       case this.btnAdd:
         this.add();
@@ -335,7 +337,7 @@ export class DynamicProcessComponent
           return !this.listSelectStepCoppy.some(
             (item1) => item1.id === item2.id
           );
-        });  
+        });
       }
       let idx = this.listClickedCoppy.findIndex((x) => x.id === data.id);
       if (idx >= 0) this.listClickedCoppy.splice(idx, 1);
@@ -529,7 +531,12 @@ export class DynamicProcessComponent
   //#popup roles
   roles(e: any) {
     let dialogModel = new DialogModel();
+    let formModel = new FormModel();
+    formModel.formName = 'DPProcessesPermissions';
+    formModel.gridViewName = 'grvDPProcessesPermissions';
+    formModel.entityName = 'DP_Processes_Permissions';
     dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
     this.callfc
       .openForm(
         PopupRolesDynamicComponent,
@@ -686,9 +693,9 @@ export class DynamicProcessComponent
       if (res) {
         this.view.dataService.remove(data).subscribe();
         this.detectorRef.detectChanges();
-        this.notificationsService.notifyCode('SYS007');
+        this.notificationsService.notifyCode('DP002');
       } else {
-        this.notificationsService.notifyCode('SYS008');
+        this.notificationsService.notifyCode('DP003');
       }
     });
   }

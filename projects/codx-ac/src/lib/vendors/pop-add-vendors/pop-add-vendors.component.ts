@@ -27,6 +27,7 @@ import { Address } from '../../models/Address.model';
 import { BankAccount } from '../../models/BankAccount.model';
 import { Contact } from '../../models/Contact.model';
 import { Customers } from '../../models/Customers.model';
+import { Objects } from '../../models/Objects.model';
 import { Vendors } from '../../models/Vendors.model';
 
 @Component({
@@ -43,6 +44,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   dialog!: DialogRef;
   vendors: Vendors;
   contact: Contact;
+  objects: Objects = new Objects();
   objectBankaccount: Array<BankAccount> = [];
   objectBankaccountDelete: Array<BankAccount> = [];
   objectContact: Array<Contact> = [];
@@ -515,6 +517,36 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
       }
     }
   }
+  addObjects() {
+    this.objects.transID = this.vendors.recID;
+    this.objects.objectID = this.vendors.vendorID;
+    this.objects.objectName = this.vendors.vendorName;
+    this.objects.objectName2 = this.vendors.vendorName2;
+    this.objects.objectType = this.objecttype;
+    this.objects.objectGroupID = this.vendors.vendorGroupID;
+    this.objects.address = this.vendors.address;
+    this.objects.countryID = this.vendors.countryID;
+    this.objects.provinceID = this.vendors.provinceID;
+    this.objects.districtID = this.vendors.districtID;
+    this.objects.phone = this.vendors.phone;
+    this.objects.faxNo = this.vendors.faxNo;
+    this.objects.email = this.vendors.email;
+    this.objects.webPage = this.vendors.webPage;
+    this.objects.status = '1';
+    this.objects.note = this.vendors.note;
+    this.objects.currencyID = this.vendors.currencyID;
+    this.objects.buid = this.vendors.buid;
+    this.objects.stop = this.vendors.stop;
+    this.objects.createdOn = this.vendors.createdOn;
+    this.objects.createdBy = this.vendors.createdBy;
+    this.objects.modifiedOn = this.vendors.modifiedOn;
+    this.objects.modifiedBy = this.vendors.modifiedBy;
+    this.objects.postDetail = this.vendors.postDetail;
+    this.objects.postItems = this.vendors.postItems;
+    this.objects.settleInvoice = this.vendors.settleInvoice;
+    this.objects.settlePayment = this.vendors.settlePayment;
+    this.objects.debtComparision = this.vendors.debtComparision;
+  }
   //#endregion
 
   //#region CRUD
@@ -541,6 +573,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
           })
           .subscribe((res) => {
             if (res.save) {
+              this.addObjects();
               this.acService
                 .addData(
                   'ERM.Business.BS',
@@ -562,6 +595,11 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
                   this.vendorID,
                   this.objectContact,
                   this.objectContactAddress,
+                ])
+                .subscribe((res: []) => {});
+                this.acService
+                .addData('ERM.Business.AC', 'ObjectsBusiness', 'AddAsync', [
+                  this.objects
                 ])
                 .subscribe((res: []) => {});
               this.dialog.close();
@@ -588,6 +626,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
           })
           .subscribe((res) => {
             if (res.save || res.update) {
+              this.addObjects();
               this.api
                 .exec(
                   'ERM.Business.BS',
@@ -619,6 +658,11 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
                   this.objectContactAddressDelete,
                 ])
                 .subscribe((res: any) => {});
+              this.acService
+                .addData('ERM.Business.AC', 'ObjectsBusiness', 'UpdateAsync', [
+                  this.objects
+                ])
+                .subscribe((res: []) => {});
               this.dialog.close();
               this.dt.detectChanges();
             }
