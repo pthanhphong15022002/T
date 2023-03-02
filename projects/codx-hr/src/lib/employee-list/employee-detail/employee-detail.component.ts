@@ -494,7 +494,7 @@ export class EmployeeDetailComponent extends UIComponent {
   //#endregion
 
   //#region Vll colors
-  AssetColorValArr : any = [];
+  AssetColorValArr: any = [];
   BeneFitColorValArr: any = [];
   VaccineColorValArr: any = [];
   //#endregion
@@ -902,11 +902,10 @@ export class EmployeeDetailComponent extends UIComponent {
           dataRequest.pageLoading = false;
 
           this.hrService.loadDataCbx('HR', dataRequest).subscribe((data) => {
-            this.AssetColorValArr = JSON.parse(data[0])
+            this.AssetColorValArr = JSON.parse(data[0]);
+          });
         });
     });
-
-  });
 
     this.hrService.getFormModel(this.eBasicSalaryFuncID).then((res) => {
       this.eBasicSalaryFormmodel = res;
@@ -940,15 +939,14 @@ export class EmployeeDetailComponent extends UIComponent {
           this.eBenefitGrvSetup = res;
           console.log('grid view set up benefit', res);
           let dataRequest = new DataRequest();
-          
+
           dataRequest.comboboxName = res.BenefitID.referedValue;
           dataRequest.pageLoading = false;
 
           this.hrService.loadDataCbx('HR', dataRequest).subscribe((data) => {
-              console.log('gia tri vll lay ra dc tu db benefit', data[0]);
-              this.BeneFitColorValArr = JSON.parse(data[0])
-
-        });
+            console.log('gia tri vll lay ra dc tu db benefit', data[0]);
+            this.BeneFitColorValArr = JSON.parse(data[0]);
+          });
         });
     });
 
@@ -966,9 +964,8 @@ export class EmployeeDetailComponent extends UIComponent {
           dataRequest.comboboxName = res.VaccineTypeID.referedValue;
           dataRequest.pageLoading = false;
 
-          this.hrService.loadDataCbx('HR', dataRequest).subscribe((data) => 
-          {
-            this.VaccineColorValArr = JSON.parse(data[0])
+          this.hrService.loadDataCbx('HR', dataRequest).subscribe((data) => {
+            this.VaccineColorValArr = JSON.parse(data[0]);
             console.log('ds mau vaccine la', this.VaccineColorValArr);
           });
         });
@@ -1967,8 +1964,6 @@ export class EmployeeDetailComponent extends UIComponent {
     }, 100);
   }
 
-
-
   initForm() {
     this.initPersonalInfo();
 
@@ -2302,21 +2297,25 @@ export class EmployeeDetailComponent extends UIComponent {
                   }
                 });
             } else if (funcID == 'eSkill') {
-              this.hrService.deleteESkill1(data).subscribe((p) => {
-                if (!this.skillGrid) {
-                  this.lstESkill = p[1];
-                  this.eSkillRowCount = this.lstESkill.length;
-                }
-                if (p[0] == true) {
-                  this.notify.notifyCode('SYS008');
+              this.hrService.deleteESkill1(data).subscribe((res) => {
+                if (res) {
+                  if (!this.skillGrid) {
+                    this.lstESkill = res[1];
+                    this.eSkillRowCount--;
+                  } else {
+                    if (res[0] == true) {
+                      this.notify.notifyCode('SYS008');
 
-                  (this.skillGrid?.dataService as CRUDService)
-                    .remove(data)
-                    .subscribe();
-                  this.lstESkill = p[1];
+                      (this.skillGrid?.dataService as CRUDService)
+                        .remove(data)
+                        .subscribe();
+                      this.lstESkill = res[1];
+                      this.eSkillRowCount--;
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  }
                   this.df.detectChanges();
-                } else {
-                  this.notify.notifyCode('SYS022');
                 }
               });
             } else if (funcID == 'eCertificate') {
@@ -3554,29 +3553,28 @@ export class EmployeeDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) (this.skillGrid?.dataService as CRUDService).clear();
-      if (res.event) {
-        if (!this.skillGrid) {
-          this.lstESkill = res?.event[1];
-          this.eSkillRowCount = this.lstESkill.length;
+      //if (!res?.event) (this.skillGrid?.dataService as CRUDService).clear();
+        if ((res.event != null) && (!this.skillGrid)) {
+          if((actionType === 'add' || actionType === 'copy') && res.event[0].isSuccess == true ){
+            this.lstESkill = res?.event[1];
+            this.eSkillRowCount++;
+          } else this.lstESkill = res?.event[1];
+        } else if((res.event != null) && this.skillGrid) {
+          if (
+            (actionType === 'add' || actionType === 'copy') &&
+            res.event[0] == true
+          ) {
+            (this.skillGrid?.dataService as CRUDService)
+              .add(res.event[0])
+              .subscribe();
+            this.eSkillRowCount++;
+            this.lstESkill = res?.event[1];
+          } else if (actionType === 'edit') {
+            (this.skillGrid?.dataService as CRUDService)
+              .update(res.event)
+              .subscribe();
+          }
         }
-        if (
-          (actionType === 'add' || actionType === 'copy') &&
-          res.event[0].isSuccess == true
-        ) {
-          (this.skillGrid?.dataService as CRUDService)
-            .add(res.event[0])
-            .subscribe();
-          //this.eSkillRowCount++;
-          this.lstESkill = null;
-          this.lstESkill = res?.event[1];
-          this.eSkillRowCount = this.lstESkill.length;
-        } else if (actionType === 'edit') {
-          (this.skillGrid?.dataService as CRUDService)
-            .update(res.event)
-            .subscribe();
-        }
-      }
       this.df.detectChanges();
     });
   }
@@ -4236,18 +4234,17 @@ export class EmployeeDetailComponent extends UIComponent {
 
   copyValue(actionHeaderText, data, flag) {
     if (flag == 'benefit') {
-      if(this.grid){
+      if (this.grid) {
         this.grid.dataService.dataSelected = data;
         (this.grid.dataService as CRUDService).copy().subscribe((res: any) => {
           this.handlEmployeeBenefit(actionHeaderText, 'copy', res);
         });
-      }
-      else{
+      } else {
         this.hrService
-        .copy(data, this.benefitFormodel, 'RecID')
-        .subscribe((res) => {
-          this.handlEmployeeBenefit(actionHeaderText, 'copy', res);
-        });
+          .copy(data, this.benefitFormodel, 'RecID')
+          .subscribe((res) => {
+            this.handlEmployeeBenefit(actionHeaderText, 'copy', res);
+          });
       }
     } else if (flag == 'eAppointions') {
       this.appointionGridView.dataService.dataSelected = data;
@@ -4902,10 +4899,9 @@ export class EmployeeDetailComponent extends UIComponent {
   }
 
   //#region AssetBackgroundColor
-  getAssetBackgroundColor(asset){
-    for(let i = 0; i < this.AssetColorValArr?.length; i++){
-      
-      if(this.AssetColorValArr[i].CategoryID == asset){
+  getAssetBackgroundColor(asset) {
+    for (let i = 0; i < this.AssetColorValArr?.length; i++) {
+      if (this.AssetColorValArr[i].CategoryID == asset) {
         return this.AssetColorValArr[i].Background;
       }
     }
@@ -4924,50 +4920,50 @@ export class EmployeeDetailComponent extends UIComponent {
   //#endregion
 
   //#region EBenefit color format
-  getBenefitBackgroundColor(benefit){
-    for(let i = 0; i < this.BeneFitColorValArr?.length; i++){
-      if(this.BeneFitColorValArr[i].CategoryID == benefit.benefitID){
+  getBenefitBackgroundColor(benefit) {
+    for (let i = 0; i < this.BeneFitColorValArr?.length; i++) {
+      if (this.BeneFitColorValArr[i].CategoryID == benefit.benefitID) {
         return this.BeneFitColorValArr[i].Background;
       }
     }
     // return 'badge-primary';
   }
 
-  getBenefitFontColor(benefit){
-    for(let i = 0; i < this.BeneFitColorValArr?.length; i++){
-      if(this.BeneFitColorValArr[i].AllowanceID == benefit.benefitID){
+  getBenefitFontColor(benefit) {
+    for (let i = 0; i < this.BeneFitColorValArr?.length; i++) {
+      if (this.BeneFitColorValArr[i].AllowanceID == benefit.benefitID) {
         return this.BeneFitColorValArr[i].FontColor;
       }
     }
-    return '#000205'
+    return '#000205';
   }
 
-    getBenefitIcon(benefit){
-      for(let i = 0; i < this.BeneFitColorValArr?.length; i++){
-        if(this.BeneFitColorValArr[i].AllowanceID == benefit.benefitID){
-          return this.BeneFitColorValArr[i].Icon;
-        }
+  getBenefitIcon(benefit) {
+    for (let i = 0; i < this.BeneFitColorValArr?.length; i++) {
+      if (this.BeneFitColorValArr[i].AllowanceID == benefit.benefitID) {
+        return this.BeneFitColorValArr[i].Icon;
       }
     }
+  }
   //#endregion
 
   //#region EVaccine color format
-  getVaccineBackgroundColor(vaccine){
-    for(let i = 0; i < this.VaccineColorValArr?.length; i++){
-      if(this.VaccineColorValArr[i].VaccineTypeID == vaccine.vaccineTypeID){
+  getVaccineBackgroundColor(vaccine) {
+    for (let i = 0; i < this.VaccineColorValArr?.length; i++) {
+      if (this.VaccineColorValArr[i].VaccineTypeID == vaccine.vaccineTypeID) {
         return this.VaccineColorValArr[i].Background;
       }
     }
     // return 'badge-primary';
   }
 
-  getVaccineFontColor(vaccine){
-    for(let i = 0; i < this.VaccineColorValArr?.length; i++){
-      if(this.VaccineColorValArr[i].VaccineTypeID == vaccine.vaccineTypeID){
+  getVaccineFontColor(vaccine) {
+    for (let i = 0; i < this.VaccineColorValArr?.length; i++) {
+      if (this.VaccineColorValArr[i].VaccineTypeID == vaccine.vaccineTypeID) {
         return this.VaccineColorValArr[i].FontColor;
       }
     }
-    return '#000205'
+    return '#000205';
   }
   //#endregion
 }
