@@ -1429,10 +1429,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   saveStep() {
-    if (!this.stepNew['stepName'] || !this.stepNew['stepName'].trim()) {
-      this.notiService.notifyCode('SYS009', 0, 'Tên giai đoạn');
-      return;
-    }
+    // if (!this.stepNew['stepName'] || !this.stepNew['stepName'].trim()) {
+    //   this.notiService.notifyCode('SYS009', 0, 'Tên giai đoạn');
+    //   return;
+    // }
     if (this.actionStep == 'add' || this.actionStep == 'copy') {
       this.stepList.push(this.stepNew);
       this.viewStepSelect(this.stepNew);
