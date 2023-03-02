@@ -169,6 +169,7 @@ export class DynamicProcessComponent
   onDragDrop(e: any) {}
 
   click(evt: ButtonModel) {
+    this.titleAction = evt.text;
     switch (evt.id) {
       case this.btnAdd:
         this.add();
@@ -692,9 +693,9 @@ export class DynamicProcessComponent
       if (res) {
         this.view.dataService.remove(data).subscribe();
         this.detectorRef.detectChanges();
-        this.notificationsService.notifyCode('SYS007');
+        this.notificationsService.notifyCode('DP002');
       } else {
-        this.notificationsService.notifyCode('SYS008');
+        this.notificationsService.notifyCode('DP003');
       }
     });
   }

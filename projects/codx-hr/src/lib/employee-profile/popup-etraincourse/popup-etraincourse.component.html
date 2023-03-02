@@ -702,7 +702,7 @@
                 <codx-dropdown-calendar
                   cssPopup="h-500px w-500px"
                   [value]="Date(trainCourseObj.trainFromDate)"
-                  [selectedType]="'y'"
+                  [selectedType]="fromDateFormat"
                   [displayOption]="ops"
                   cssClass="w-100 om-calendar"
                   class="me-4"
@@ -715,15 +715,10 @@
                   fiedName="TrainTo"
                   [formModel]="formModel"
                 ></codx-label>
-                <!-- <codx-input
-                  [Group]="formGroup"
-                  [formModel]="formModel"
-                  field="trainTo"
-                ></codx-input> -->
                 <codx-dropdown-calendar
                   cssPopup="h-500px w-500px"
                   [value]="Date(trainCourseObj.trainToDate)"
-                  [selectedType]="'y'"
+                  [selectedType]="toDateFormat"
                   [displayOption]="ops"
                   cssClass="w-100 om-calendar"
                   class="me-4"
