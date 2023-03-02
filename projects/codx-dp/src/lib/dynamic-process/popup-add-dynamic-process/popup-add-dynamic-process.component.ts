@@ -479,6 +479,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
 
   closePopup() {
+    //dung bat dong bi rjx
+    // let x = await firstValueFrom(this.notiService.alertCode('DP013'));
+    // if (x?.event?.status == 'Y') {
+    //       this.dialog.close();
+    // } else return;
     this.notiService.alertCode('DP013').subscribe((e) => {
       if (e?.event?.status == 'Y') {
         this.dialog.close();
