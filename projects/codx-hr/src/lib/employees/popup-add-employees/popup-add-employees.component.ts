@@ -78,14 +78,17 @@ export class PopupAddEmployeesComponent implements OnInit {
     this.user = this.auth.userValue;
     this.dialogData = dialogData.data;
     this.dialogRef = dialogRef;
+    if(this.dialogData.employee)
+    {
+      this.employee = JSON.parse(JSON.stringify(this.dialogData.employee));
+    }
+
   }
 
   ngOnInit(): void {
-    debugger
     this.isAdd = this.dialogData.isAdd;
     this.action = this.dialogData.action;
     this.funcID = this.dialogData.funcID;
-    this.employee = JSON.parse(JSON.stringify(this.dialogData.employee));
     this.getFunction(this.funcID);
     // this.adService.getListCompanySettings()
     // .subscribe((res) => {
@@ -144,7 +147,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     {
       if (this.isAdd) 
       {
-        this.addEmployeeAsync(this.employee);
+        this.addEmployeeAsync(this.employee,this.funcID);
       } 
       else {
         this.updateEmployeeAsync(this.employee);
@@ -157,31 +160,20 @@ export class PopupAddEmployeesComponent implements OnInit {
       this.api
         .execSv("HR","ERM.Business.HR","EmployeesBusiness","UpdateAsync",[employee,this.funcID])
         .subscribe((res: any) => {
-          if (res) 
-          {
-            this.notifiSV.notifyCode('SYS007');
-          } 
-          else 
-          {
-            this.notifiSV.notifyCode('SYS021');
-          }
+          let _mssgCode = res ? 'SYS007' : 'SYS021';
+          this.notifiSV.notifyCode(_mssgCode);
           this.dialogRef.close(res);
         });
     }
   }
   // add employee
-  addEmployeeAsync(employee: any) {
-    if (employee) {
-      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","SaveAsync",[employee])
+  addEmployeeAsync(employee: any,funcID:string) {
+    this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","SaveAsync",[employee,funcID])
       .subscribe((res:any) => {
-        debugger
-        if(res)
-          this.notifiSV.notifyCode("SYS006");
-        else
-          this.notifiSV.notifyCode('SYS023');
+        let _mssgCode = res ? 'SYS006' : 'SYS023';
+        this.notifiSV.notifyCode(_mssgCode);
         this.dialogRef.close(res);
       });
-    }
   }
   //value change
   dataChange(e: any) {

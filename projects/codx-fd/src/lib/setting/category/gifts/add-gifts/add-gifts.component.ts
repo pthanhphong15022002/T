@@ -51,7 +51,7 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
       JSON.stringify(this.dialog.dataService.dataSelected)
     );
     this.formModel = this.dialog?.formModel;
-    if(!this.dialog?.formModel.entityName) this.formModel.entityName = this.dialog?.formModel.entityPer;
+    if (!this.dialog?.formModel.entityName) this.formModel.entityName = this.dialog?.formModel.entityPer;
     this.formType = data.data?.formType;
     this.title = data.data?.headerText;
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
@@ -75,7 +75,7 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
     if (!this.dataUpdate.owner) this.dataUpdate.owner = null;
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   onSave() {
     var formGroup = this.form.formGroup.controls;
@@ -85,7 +85,7 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
       formGroup.memo.status == 'VALID' &&
       formGroup.price.status == 'VALID'
     ) {
-      this.dialog.dataService 
+      this.dialog.dataService
         .save((option: any) => this.beforeSave(option, this.isAddMode), 0)
         .subscribe((res) => {
           if (res.save) {
@@ -122,9 +122,9 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
     return true;
   }
 
-  changeHand(e) {}
+  changeHand(e) { }
 
-  onChangeOnHandOfGift() {}
+  onChangeOnHandOfGift() { }
 
   valueChange(event) {
     if (event) {

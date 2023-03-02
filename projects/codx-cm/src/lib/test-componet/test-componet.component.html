@@ -1,2 +1,31 @@
 <p>Test thôi xóa sau làm gì căng !! KHANH BẢO KÊ !!</p>
 <button type="button" class="btn btn-primary" (click)="openTypeJob('add')">Task</button>
+<div *ngFor="let i of [1,2,3,4,5]">
+   <h3>{{i}}</h3>
+   <ejs-progressbar
+   [id]="i"
+   type="Circular"
+   height="55"
+   width="55"
+   trackThickness="4"
+   progressThickness="4"
+   [value]="70"
+   progressColor="#E3165B"
+   trackColor="#F8C7D8"
+   progressValueColor="red"
+   [labelStyle]="{ color: '#005DC7', 'font-weight': '700', 'font-size': '12px!important' }"
+   [showProgressValue]="true"
+   [animation]="{ enable: true, duration: 1000, delay: 0 }"
+ >
+ </ejs-progressbar>
+</div>
+<div class="progress-pie-chart" data-percent="43">
+   <div class="ppc-progress">
+     <div class="ppc-progress-fill"></div>
+   </div>
+   <!-- <div class="ppc-percents">
+     <div class="pcc-percents-wrapper">
+       <span>50%</span>
+     </div>
+   </div> -->
+ </div>
