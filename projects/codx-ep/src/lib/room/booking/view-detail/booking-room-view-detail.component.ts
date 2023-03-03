@@ -123,13 +123,17 @@ renderFooter=false;
                 
               });
               //this.tabModel.addPermissions=this.listFilePermission;
-              this.renderFooter=true;
+              //this.renderFooter=true;
               this.detectorRef.detectChanges();
 
             }
             if(this.itemDetail?.createdBy==this.authService.userValue.userID){
 
               this.isEdit = true;
+            }
+            else{
+              
+              this.isEdit = false;
             }
             this.detectorRef.detectChanges();
 

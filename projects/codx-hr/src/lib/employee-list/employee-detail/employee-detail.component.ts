@@ -2375,16 +2375,16 @@ export class EmployeeDetailComponent extends UIComponent {
                 if (p != null) {
                   this.notify.notifyCode('SYS008');
                   if (data.isCurrent == true) {
-                    const index = this.listCrrBenefit.indexOf(data, 0);
-                    if (index > -1) {
-                      this.listCrrBenefit.splice(index, 1);
-                    }
+                    // const index = this.listCrrBenefit.indexOf(data);
+                    // if (index > -1) {
+                    //   this.listCrrBenefit.splice(index, 1);
+                    // }
                     this.hrService
                       .GetCurrentBenefit(this.employeeID)
                       .subscribe((res) => {
-                        if (res?.length) {
+                        if (res) {
+                          console.log('ds phu cap sau khi xoa', res);
                           this.listCrrBenefit = res;
-
                           this.df.detectChanges();
                         }
                       });
@@ -2392,6 +2392,11 @@ export class EmployeeDetailComponent extends UIComponent {
                   (this.grid?.dataService as CRUDService)
                     ?.remove(data)
                     .subscribe();
+                    this.hrService.GetIsCurrentBenefitWithBenefitID(this.employeeID, data.benefitID).subscribe((res)=>{
+                      (this.grid?.dataService as CRUDService)
+                    ?.update(res)
+                    .subscribe();
+                    })
                   this.eBenefitRowCount = this.eBenefitRowCount - 1;
                   this.df.detectChanges();
                 } else {
@@ -4984,7 +4989,6 @@ export class EmployeeDetailComponent extends UIComponent {
 
   valueChangeFilterDayOff(evt) {
     this.filterByKowIDArr = evt.data;
-    debugger;
     this.UpdateEDayOffsPredicate();
   }
 
