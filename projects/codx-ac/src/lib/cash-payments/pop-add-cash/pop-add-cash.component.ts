@@ -99,7 +99,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    if (this.cashpayment.voucherNo != null) {
+    if (this.cashpayment?.voucherNo != null) {
       this.objectType = this.cashpayment.objectType;
       this.voucherDate = this.cashpayment.voucherDate;
       //#region  load cashpaymentline
@@ -205,8 +205,16 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   cellChanged(e: any) {
+    console.log('res', e);
     this.cashpaymentline[e.field] = e.value;
     this.data = JSON.stringify(this.cashpaymentline);
+    this.api
+      .exec('AC', 'CashPaymentsLinesBusiness', 'ValueChangedAsync', this)
+      .subscribe((res) => {
+        if (res) {
+          console.log(e);
+        }
+      });
   }
 
   addRow() {
@@ -216,10 +224,18 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     data.write = true;
     data.delete = true;
     data.read = true;
-    data.dr = 0;
     data.rowNo = idx + 1;
     data.transID = this.cashpayment.recID;
-    this.grid.addRow(data, idx);
+    this.api
+      .exec<any>('AC', 'CashPaymentsLinesBusiness', 'SetDefaultAsync', [
+        this.cashpayment,
+        data,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.grid.addRow(data, idx);
+        }
+      });
   }
 
   deleteRow(data) {
@@ -243,7 +259,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             opt.className = 'CashPaymentsBusiness';
             opt.assemblyName = 'AC';
             opt.service = 'AC';
-            opt.data = [this.cashpayment];
+            opt.data = [this.cashpayment, this.cashpaymentline];
             return true;
           })
           .subscribe((res) => {
