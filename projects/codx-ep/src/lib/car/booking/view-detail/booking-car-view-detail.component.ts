@@ -11,9 +11,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { editAlert } from '@syncfusion/ej2-angular-spreadsheet';
-import { DataRequest, UIComponent, ViewsComponent } from 'codx-core';
+import { AuthService, DataRequest, UIComponent, ViewsComponent } from 'codx-core';
 import moment from 'moment';
 import { CodxEpService } from '../../../codx-ep.service';import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { Permission } from '@shared/models/file.model';
 
 @Component({
   selector: 'booking-car-view-detail',
@@ -47,8 +48,11 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   active = 1;  
   routerRecID:any;
   recID:any;
+  listFilePermission=[];
+  isEdit=false;
   constructor(
-    private injector: Injector,
+    private injector: Injector,    
+    private authService: AuthService,
     private codxEpService: CodxEpService
   ) {
     super(injector);    
@@ -92,6 +96,25 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            if(res.bookingAttendees!=null && res.bookingAttendees!=''){
+              let listAttendees = res.bookingAttendees.split(";");
+              listAttendees.forEach((item) => {
+                if(item!=''){
+                  let tmpPer= new Permission()
+                  tmpPer.objectID= item;//
+                  tmpPer.objectType= 'U';
+                  tmpPer.read= true;
+                  tmpPer.share=  true;
+                  tmpPer.download=  true;
+                  tmpPer.isActive=  true;
+                  this.listFilePermission.push(tmpPer);
+                }                
+              });
+            } 
+            if(this.itemDetail?.createdBy==this.authService.userValue.userID){
+
+              this.isEdit = true;
+            }
             this.detectorRef.detectChanges();
           }
         });
