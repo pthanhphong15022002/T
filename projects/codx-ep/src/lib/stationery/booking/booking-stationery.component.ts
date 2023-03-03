@@ -6,6 +6,7 @@ import {
   UIComponent,
   FormModel,
   AuthService,
+  ResourceModel,
 } from 'codx-core';
 import {
   AfterViewInit,
@@ -59,8 +60,7 @@ export class BookingStationeryComponent
   formModel: FormModel;
   itemDetail;
   popupClosed = true;
-  listReason: any[] = [];
-
+  
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -83,13 +83,6 @@ export class BookingStationeryComponent
   }
 
   onInit(): void {
-    this.codxEpService
-      .getListReason('EP_BookingStationery')
-      .subscribe((res: any) => {
-        if (res) {
-          this.listReason = res;
-        }
-      });
   }
 
   ngAfterViewInit(): void {
@@ -119,6 +112,7 @@ export class BookingStationeryComponent
         break;
     }
   }
+
   clickMF(event, data) {
     this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
@@ -137,7 +131,7 @@ export class BookingStationeryComponent
       case 'EP8T1101': //Gui duyet
         this.release(data);
         break;
-        case 'EP8T1102': //hủy
+      case 'EP8T1102': //hủy
         this.cancel(data);
         break;
     }
@@ -164,128 +158,139 @@ export class BookingStationeryComponent
     });
     this.detectorRef.detectChanges();
   }
+
   cancel(data: any) {
-    if (!this.codxEpService.checkRole(this.authService.userValue,data?.owner)) {
+    if (
+      !this.codxEpService.checkRole(this.authService.userValue, data?.owner)
+    ) {
       this.notificationsService.notifyCode('TM052');
       return;
     }
-    this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
-      if (res != null && res?.msgCodeError==null) {
-        this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
-        data.approveStatus = '0';
-        data.status = '0';
-        this.view.dataService.update(data).subscribe();
-      } else {
-        this.notificationsService.notifyCode(res?.msgCodeError);
-      }
-    });
+    this.codxEpService
+      .cancel(data?.recID, '', this.formModel.entityName)
+      .subscribe((res: any) => {
+        if (res != null && res?.msgCodeError == null) {
+          this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
+          data.approveStatus = '0';
+          data.status = '0';
+          this.view.dataService.update(data).subscribe();
+        } else {
+          this.notificationsService.notifyCode(res?.msgCodeError);
+        }
+      });
 
-    this.codxEpService.cancel(data?.recID, '', this.formModel.entityName).subscribe((res: any) => {
-      //kiểm tra code có trả về mã lỗi ko, nếu ko có tức là thành công
-      if (res != null && res?.msgCodeError==null) {
-        //...
-      } else {
-        //thông báo lỗi trả từ BE
-        this.notificationsService.notifyCode(res?.msgCodeError);
-      }
-    });
+    this.codxEpService
+      .cancel(data?.recID, '', this.formModel.entityName)
+      .subscribe((res: any) => {
+        //kiểm tra code có trả về mã lỗi ko, nếu ko có tức là thành công
+        if (res != null && res?.msgCodeError == null) {
+          //...
+        } else {
+          //thông báo lỗi trả từ BE
+          this.notificationsService.notifyCode(res?.msgCodeError);
+        }
+      });
   }
+
   changeDataMF(event, data: any) {
     if (event != null && data != null && this.funcID == 'EP8T11') {
-      
-        if (data.approveStatus == '1') {
-          event.forEach((func) => {
-            //Mới tạo
-            if (
-              // Hiện: sửa - xóa - chép - gửi duyệt -
-              func.functionID == 'SYS02' /*MF sửa*/ ||
-              func.functionID == 'SYS03' /*MF xóa*/ ||
-              func.functionID == 'SYS04' /*MF chép*/ ||
-              func.functionID == 'EP8T1101' /*MF gửi duyệt*/
-            ) {
-              func.disabled = false;
-            }
-            if (
-              //Ẩn: hủy 
-              func.functionID == 'EP8T1102' /*MF hủy*/ 
-            ) {
-              func.disabled = true;
-            }
-          });
-        } else if (data.approveStatus == '5') {
-          event.forEach((func) => {
-            //Đã duyệt
-            if (
-              // Hiện: Chép 
-              func.functionID == 'SYS04' /*MF chép*/
-            ) {
-              func.disabled = false;
-            }
-            if (//Ẩn: sửa - xóa - duyệt - hủy 
-              func.functionID == 'SYS02' /*MF sửa*/ ||
-              func.functionID == 'SYS03' /*MF xóa*/ ||
-              func.functionID == 'EP8T1101' /*MF gửi duyệt*/||
-              func.functionID == 'EP8T1102' /*MF hủy*/
-            ) {
-              func.disabled = true;
-            }
-          });
-        } else if (data.approveStatus == '3') {
-          event.forEach((func) => {
-            //Gửi duyệt
-            if ( //Hiện: chép - hủy
-            func.functionID == 'SYS04' /*MF chép*/||
-            func.functionID == 'EP8T1102' /*MF hủy*/
-            ) {
-              func.disabled = false;
-            }
-            if (//Ẩn: sửa - xóa - gửi duyệt
-              
-              func.functionID == 'SYS02' /*MF sửa*/ ||
-              func.functionID == 'SYS03' /*MF xóa*/ ||
-              func.functionID == 'EP8T1101' /*MF gửi duyệt*/
-            ) {
-              func.disabled = true;
-            }
-          });
-        }
-        else if (data.approveStatus == '4') {
-          event.forEach((func) => {
-            //Gửi duyệt
-            if ( //Hiện: chép 
-            func.functionID == 'SYS04' /*MF chép*/
-            ) {
-              func.disabled = false;
-            }
-            if (//Ẩn: sửa - xóa - gửi duyệt - hủy          
-              func.functionID == 'SYS02' /*MF sửa*/ ||
-              func.functionID == 'SYS03' /*MF xóa*/ ||
-              func.functionID == 'EP8T1101' /*MF gửi duyệt*/||
-              func.functionID == 'EP8T1102' /*MF hủy*/
-            ) {
-              func.disabled = true;
-            }
-          });
-        }
-        else {
-          event.forEach((func) => {
-            //Gửi duyệt
-            if ( //Hiện: chép       
+      if (data.approveStatus == '1') {
+        event.forEach((func) => {
+          //Mới tạo
+          if (
+            // Hiện: sửa - xóa - chép - gửi duyệt -
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP8T1101' /*MF gửi duyệt*/||
+            func.functionID == 'SYS04' /*MF chép*/ ||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/
+          ) {
+            func.disabled = false;
+          }
+          if (
+            //Ẩn: hủy
+            func.functionID == 'EP8T1102' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else if (data.approveStatus == '5') {
+        event.forEach((func) => {
+          //Đã duyệt
+          if (
+            // Hiện: Chép
             func.functionID == 'SYS04' /*MF chép*/
-            ) {
-              func.disabled = false;
-            }
-            if (//Ẩn: sửa - xóa - gửi duyệt - hủy    
-              func.functionID == 'EP8T1102' /*MF hủy*/
-            ) {
-              func.disabled = true;
-            }
-          });
-        }
-    
+          ) {
+            func.disabled = false;
+          }
+          if (
+            //Ẩn: sửa - xóa - duyệt - hủy
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/ ||
+            func.functionID == 'EP8T1102' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if (
+            //Hiện: chép - hủy
+            func.functionID == 'SYS04' /*MF chép*/ ||
+            func.functionID == 'EP8T1102' /*MF hủy*/
+          ) {
+            func.disabled = false;
+          }
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt
+
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else if (data.approveStatus == '4') {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if (
+            //Hiện: chép
+            func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt - hủy
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/ ||
+            func.functionID == 'EP8T1102' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      } else {
+        event.forEach((func) => {
+          //Gửi duyệt
+          if (
+            //Hiện: chép
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/ ||
+            func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt - hủy
+            func.functionID == 'EP8T1102' /*MF hủy*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
     }
     //Cấp phát
     if (event != null && data != null && this.funcID == 'EP8T12') {
@@ -342,7 +347,8 @@ export class BookingStationeryComponent
 
   edit(evt: any) {
     if (evt) {
-      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner)
+      if (
+        !this.codxEpService.checkRole(this.authService.userValue, evt?.owner)
       ) {
         this.notificationsService.notifyCode('TM052');
         return;
@@ -505,7 +511,8 @@ export class BookingStationeryComponent
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
-      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner)
+      if (
+        !this.codxEpService.checkRole(this.authService.userValue, evt?.owner)
       ) {
         this.notificationsService.notifyCode('TM052');
         return;
