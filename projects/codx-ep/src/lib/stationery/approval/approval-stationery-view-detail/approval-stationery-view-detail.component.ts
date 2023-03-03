@@ -13,6 +13,7 @@ import {
 import { NotificationsService, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { Permission } from '@shared/models/file.model';
 @Component({
   selector: 'approval-stationery-view-detail',
   templateUrl: 'approval-stationery-view-detail.component.html',
@@ -75,6 +76,14 @@ export class ApprovalStationeryViewDetailComponent
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            let tmpPer = new Permission();
+            tmpPer.objectID = this.itemDetail.createdBy; //
+            tmpPer.objectType = 'U';
+            tmpPer.read = true;
+            tmpPer.share = true;
+            tmpPer.download = true;
+            tmpPer.isActive = true;
+            this.listFilePermission.push(tmpPer);
             this.detectorRef.detectChanges();
           }
         });
