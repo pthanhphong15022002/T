@@ -1,0 +1,424 @@
+<codx-form
+  #form
+  [headerText]="formTitle"
+  [body]="body"
+  [footer]="footer"
+  [formModel]="dialogRef.formModel"
+  [dialog]="dialogRef"
+  subToolbarCss="text-end"
+  [subToolbar]="subToolbar"
+  [data]="cashTransfer"
+>
+</codx-form>
+
+<ng-template #body>
+  <ejs-tab #tabGeneralInfo>
+    <e-tabitems>
+      <e-tabitem [header]="{ text: 'Thông tin chung', iconCss: 'icon-info' }">
+        <ng-template #content>
+          <div class="row mt-3">
+            <div class="col-8">
+              <div class="row">
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="cashBookID"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="cashBookID"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+                <div class="col-6 form-group">
+                  <codx-label
+                    fiedName="cashBookName"
+                    [formModel]="form.formModel"
+                    default="Đối tượng chuyển"
+                  ></codx-label>
+                  <codx-input
+                    type="text"
+                    field="cashBookName"
+                    [disabled]="true"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+                <div class="col-3 form-group">
+                  <codx-label
+                    fiedName="transactionText"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="transactionText"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="cashBookID2"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="cashBookID2"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+                <div class="col-6 form-group">
+                  <codx-label
+                    fiedName="cashBookName2"
+                    [formModel]="form.formModel"
+                    default="Đối tượng nhận"
+                  ></codx-label>
+                  <codx-input
+                    type="text"
+                    field="cashBookName2"
+                    [disabled]="true"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-8 form-group">
+                  <codx-label
+                    fiedName="note"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="note"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="cashAcctID"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="cashAcctID"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="offsetAcctID"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="offsetAcctID"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="payAmount"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="payAmount"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="paymentFees"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="paymentFees"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+                <div class="col-2">
+                  <codx-input
+                    field="freeControl"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                  <codx-label
+                    fiedName="freeControl"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                </div>
+              </div>
+
+              <!-- #region Cập nhật hóa đơn -->
+              <div class="row">
+                <div class="d-flex gap-2">
+                  <codx-input
+                    type="switch"
+                    field="hasInvoice"
+                    [formModel]="form.formModel"
+                    [checked]="hasInvoice"
+                    (valueChange)="handleInputChange($event, 'hasInvoice')"
+                  ></codx-input>
+                  <codx-label
+                    fiedName="hasInvoice"
+                    [formModel]="form.formModel"
+                    default="Cập nhật hóa đơn"
+                  ></codx-label>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="invoiceForm"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-label>
+                  <codx-input
+                    field="invoiceForm"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-input>
+                </div>
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="invoiceSeri"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-label>
+                  <codx-input
+                    field="invoiceSeri"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-input>
+                </div>
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="invoiceNo"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-label>
+                  <codx-input
+                    field="invoiceNo"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-input>
+                </div>
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="invoiceDate"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-label>
+                  <codx-input
+                    field="invoiceDate"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-input>
+                </div>
+                <div class="col-4 form-group">
+                  <codx-label
+                    fiedName="objectID"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-label>
+                  <codx-input
+                    field="objectID"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-input>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-3 form-group">
+                  <codx-label
+                    fiedName="goods"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-label>
+                  <codx-input
+                    field="goods"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-input>
+                </div>
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="taxBase"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-label>
+                  <codx-input
+                    field="taxBase"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-input>
+                </div>
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="vatid"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-label>
+                  <codx-input
+                    field="vatid"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-input>
+                </div>
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="taxAmt"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-label>
+                  <codx-input
+                    field="taxAmt"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-input>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-3 form-group">
+                  <codx-label
+                    fiedName="taxNote"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-label>
+                  <codx-input
+                    field="taxNote"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-input>
+                </div>
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="diM3"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-label>
+                  <codx-input
+                    field="diM3"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-input>
+                </div>
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="diM1"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-label>
+                  <codx-input
+                    field="diM1"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-input>
+                </div>
+                <div class="col-2 form-group">
+                  <codx-label
+                    fiedName="diM2"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-label>
+                  <codx-input
+                    field="diM2"
+                    [formModel]="fmVoucherLineInvoice"
+                  ></codx-input>
+                </div>
+              </div>
+              <!-- #endregion -->
+            </div>
+
+            <div class="col-4">
+              <div class="row justify-content-end">
+                <div class="col-3 form-group">
+                  <codx-label
+                    fiedName="currencyID"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="currencyID"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+                <div class="col-3 form-group">
+                  <codx-label
+                    fiedName="exchangeRate"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="exchangeRate"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+              </div>
+
+              <div class="row justify-content-end">
+                <div class="col-6 form-group">
+                  <codx-label
+                    fiedName="voucherDate"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="voucherDate"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+              </div>
+              <div class="row justify-content-end">
+                <div class="col-6 form-group">
+                  <codx-label
+                    fiedName="voucherNo"
+                    [formModel]="form.formModel"
+                  ></codx-label>
+                  <codx-input
+                    field="voucherNo"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                  ></codx-input>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row justify-content-end">
+            <div class="col-3">
+              <codx-label
+                default="Tổng cộng"
+                fiedName="lblTotalAmount"
+                [formModel]="form.formModel"
+                class="fw-bold fs-5"
+              ></codx-label>
+              <codx-label
+                [default]="cashTransfer.totalAmount"
+                fiedName="lblTotalAmount"
+                [formModel]="form.formModel"
+                class="fw-bold fs-3 ms-3"
+              ></codx-label>
+            </div>
+          </div>
+        </ng-template>
+      </e-tabitem>
+    </e-tabitems>
+  </ejs-tab>
+</ng-template>
+
+<ng-template #footer>
+  <codx-tabs
+    [entityName]="form.formModel.entityName"
+    [formModel]="form.formModel"
+    [objectID]="cashTransfer.recID"
+    [funcID]="form.formModel.funcID"
+    [TabControl]="tabs"
+  ></codx-tabs>
+</ng-template>
+
+<ng-template #subToolbar>
+  <button type="button" class="btn btn-outline-primary">
+    <codx-label
+      class="fs-6 fw-normal"
+      fiedName="lblSaveAndClear"
+      [formModel]="form.formModel"
+      default="Lưu & thêm"
+    ></codx-label>
+  </button>
+
+  <button type="button" class="btn btn-primary ms-3 me-6">
+    <codx-label
+      class="fs-6 fw-normal"
+      fiedName="lblSave"
+      [formModel]="form.formModel"
+      default="Lưu"
+    ></codx-label>
+  </button>
+</ng-template>

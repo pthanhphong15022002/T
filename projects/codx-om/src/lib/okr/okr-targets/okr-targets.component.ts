@@ -18,6 +18,7 @@ import {
   ApiHttpService,
   NotificationsService,
   ButtonModel,
+  FormModel,
 } from 'codx-core';
 import { ChartSettings } from '../../model/chart.model';
 import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.component';
@@ -331,7 +332,7 @@ export class OkrTargetsComponent implements OnInit {
         break;
       }
       case OMCONST.MFUNCID.KRCheckIn: {
-        this.checkIn(kr,popupTitle);
+        this.checkIn(kr,e.text);
         break;
       }
       case OMCONST.MFUNCID.KREditSKRWeight: {
@@ -472,14 +473,15 @@ export class OkrTargetsComponent implements OnInit {
       dModel
     );
   }
-  checkIn(evt: any, kr: any) {
+  checkIn(kr: any, popupTitle: any) {
+    
     let dialogCheckIn = this.callfunc.openForm(
       PopupCheckInComponent,
       '',
       800,
       500,
       'OMT01',
-      [kr]
+      [kr,popupTitle]
     );
     dialogCheckIn.closed.subscribe((res) => {
       if (res && res.event) {

@@ -1,10 +1,8 @@
 import {
   AfterViewInit,
   Component,
-  Injector,
-  OnInit,
-  TemplateRef,
-  ViewChild,
+  Injector, TemplateRef,
+  ViewChild
 } from '@angular/core';
 import {
   CodxGridviewComponent,
@@ -12,7 +10,7 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType,
+  ViewType
 } from 'codx-core';
 import { PopupAddFAPostingAccountComponent } from './popup-add-faposting-account/popup-add-faposting-account.component';
 

@@ -95,6 +95,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   queryParams: any;
   navigated = false;
   columnGrids=[];
+  isAdmin=false;
   constructor(
     private injector: Injector,
     private callFuncService: CallFuncService,
@@ -116,10 +117,19 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         this.funcIDName = res.customName.toString().toLowerCase();
       }
     });
+    
   }
 
   onInit(): void {
     //lấy list booking để vẽ schedule
+    this.codxEpService.roleCheck().subscribe(res=>{
+      if(res==true){
+        this.isAdmin=true;
+      }
+      else{        
+        this.isAdmin=false;
+      }
+    })
     this.request = new ResourceModel();
     this.request.assemblyName = 'EP';
     this.request.className = 'BookingsBusiness';
@@ -514,7 +524,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
 
   cancel(data: any) {
-    if (!this.codxEpService.checkRole(this.authService.userValue,data?.owner)
+    if (!this.codxEpService.checkRole(this.authService.userValue,data?.owner,this.isAdmin)
     ) {
       this.notificationsService.notifyCode('TM052');
       return;
@@ -561,7 +571,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
   reschedule(data: any) {
     if (
-      !this.codxEpService.checkRole(this.authService.userValue,data?.owner)
+      !this.codxEpService.checkRole(this.authService.userValue,data?.owner,this.isAdmin)
     ) {
       this.notificationsService.notifyCode('TM052');
       return;
@@ -591,7 +601,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
   invite(data: any) {
     if (
-      !this.codxEpService.checkRole(this.authService.userValue,data?.owner)
+      !this.codxEpService.checkRole(this.authService.userValue,data?.owner,this.isAdmin)
     ) {
       this.notificationsService.notifyCode('TM052');
       return;
@@ -658,7 +668,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
   edit(evt?) {
     if (evt) {
-      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner)
+      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner,this.isAdmin)
       ) {
         this.notificationsService.notifyCode('TM052');
         return;
@@ -730,7 +740,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     if (evt) {
       deleteItem = evt;
       if (
-        !this.codxEpService.checkRole(this.authService.userValue,deleteItem?.owner)
+        !this.codxEpService.checkRole(this.authService.userValue,deleteItem?.owner,this.isAdmin)
       ) {
         this.notificationsService.notifyCode('TM052');
         return;

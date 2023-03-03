@@ -40,14 +40,6 @@ const routes: Route[] = [
         component: ApprovalRoomsComponent,
       },
       {
-        path: 'settings',
-        canActivate: [AuthGuard],
-        loadChildren: () =>
-          import('./settings/_layout/layout.modules').then(
-            (m) => m.LayoutModule
-          ),
-      },
-      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',

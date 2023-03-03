@@ -83,6 +83,7 @@ export class PopRolesComponent implements OnInit {
         let tmpMD: tmpTNMD = {
           isAddAction: true,
           isOriginal: true,
+          isError: false,
           moduleID: role.functionID,
           moduleSales: '',
         };
@@ -159,6 +160,7 @@ export class PopRolesComponent implements OnInit {
         let tmpMD: tmpTNMD = {
           isAddAction: true,
           isOriginal: false,
+          isError: false,
           moduleID: item.functionID,
           moduleSales: '',
         };
@@ -292,15 +294,8 @@ export class PopRolesComponent implements OnInit {
       this.adService
         .getListValidOrderForModules(this.lstChangeFunc)
         .subscribe((lstTNMDs: tmpTNMD[]) => {
-          if (
-            lstTNMDs == null ||
-            lstTNMDs?.length < this.lstChangeFunc.length
-          ) {
-            this.notiService.alertCode('AD017').subscribe((e) => {
-              if (e?.event?.status == 'Y') {
-                this.onSave(lstTNMDs);
-              }
-            });
+          if (lstTNMDs == null || lstTNMDs.find((x) => x.isError)) {
+            this.notiService.notifyCode('AD017');
           } else {
             this.onSave(lstTNMDs);
           }
