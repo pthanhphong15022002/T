@@ -413,7 +413,12 @@
     position: inherit !important;
     top: -44px;
     left: -10px;
-    border-radius: 30px;
+    border-radius: 50%;
+    font-size: 18px !important;
+    font-size: 10px;
+    background-color: #F5F5F5;
+    color: #B4B5B7;
+    box-shadow: 0 0 0 1px rgba(197,199,208,0.2);
   }
 
   .m-w-100 {
@@ -421,12 +426,14 @@
   }
 
   .count-session {
+    top: 5px ;
     width: 97px !important;
     height: 36px !important;
-    background-color: #3699ff !important;
+    background-color: #7248B9 !important;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     color: white !important;
+    position: relative;
   }
 
   .left-100 {
@@ -590,7 +597,7 @@
 
   .border-gray {
     border: 1px solid lightgray;
-    box-shadow: 0 2px 3px 0 rgb(0 0 0 / 36%);
+    box-shadow: 0 2px 3px 0 rgb(0 0 0 / 13%);
   }
 }
 
@@ -651,7 +658,8 @@
 .e-inplaceeditor .e-editable-value-wrapper:hover {
   background-color: #F1F3F4 !important;
 }
-.e-editable-value-wrapper
+
+.b-l .e-editable-value-wrapper
 {
   height: 60px;
   background-color: #F9F9F9 !important;

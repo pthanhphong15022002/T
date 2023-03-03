@@ -212,6 +212,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
             });
         });
     } else {
+      
     }
     this.form?.formGroup?.addControl(
       'countStep',
@@ -219,6 +220,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     );
 
     if (!this.isAdd) {
+      this.form?.formGroup.patchValue(this.data);
       this.esService.getFormModel('EST04').then((res) => {
         if (res && this.data.countStep > 0) {
           let fmApprovalStep = res;

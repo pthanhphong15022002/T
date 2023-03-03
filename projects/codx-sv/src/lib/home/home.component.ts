@@ -28,7 +28,13 @@ export class HomeComponent extends UIComponent implements OnInit {
   className = 'SurveysBusiness';
   method = 'GetAsync';
   functionList: any;
-
+  formats = {
+    item: 'Title',
+    fontStyle: 'Arial',
+    fontSize: '13',
+    fontColor: 'black',
+    fontFormat: 'B',
+  };
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('lstView') lstView: CodxListviewComponent;
 
@@ -63,10 +69,13 @@ export class HomeComponent extends UIComponent implements OnInit {
 
   createNewSurvey() {
     this.view.dataService.addNew().subscribe((res) => {
-      this.codxService.navigate('', 'sv/add-survey', {
-        funcID: this.funcID,
-        recID: res.recID,
-      });
+      res.title = "Mẫu không có tiêu đề"
+      this.api.execSv("SV","SV","SurveysBusiness","SaveAsync",[res,this.formats,true]).subscribe((item : any)=>{
+        this.codxService.navigate('', 'sv/add-survey', {
+          funcID: this.funcID,
+          recID: item?.result?.recID,
+        });
+      })
     });
   }
 

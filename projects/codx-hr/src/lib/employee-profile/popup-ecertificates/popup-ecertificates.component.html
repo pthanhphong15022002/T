@@ -497,7 +497,7 @@
         <codx-dropdown-calendar
           cssPopup="h-500px w-500px"
           [value]="Date(certificateObj.trainFromDate)"
-          [selectedType]="'y'"
+          [selectedType]="fromDateFormat"
           [displayOption]="ops"
           cssClass="w-100 om-calendar"
           class="me-4"
@@ -515,7 +515,7 @@
         <codx-dropdown-calendar
         cssPopup="h-500px w-500px"
         [value]="Date(certificateObj.trainToDate)"
-        [selectedType]="'y'"
+        [selectedType]="toDateFormat"
         [displayOption]="ops"
         cssClass="w-100 om-calendar"
         class="me-4"

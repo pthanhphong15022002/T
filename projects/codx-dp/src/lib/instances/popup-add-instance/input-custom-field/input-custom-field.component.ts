@@ -121,42 +121,42 @@ export class InputCustomFieldComponent implements OnInit {
           } else this.showErrMess = false;
         }
         break;
-      case 'N':
-        if (isNaN(e.data)) {
-          this.cache.message('RS006').subscribe((res) => {
-            if (res) {
-              this.showErrMess = true;
-              this.errorMessage = res.defaultName;
-            }
-            this.changeDef.detectChanges();
-            return;
-          });
-        } else {
-          this.showErrMess = false;
-        }
-        if (this.customField.dataFormat == 'I') {
-          if (!String(e.data).match(/^-?\d+$/)) {
-            this.showErrMess = true;
-            //Mssg chưa có
-            this.errorMessage = 'Vui lòng nhập số nguyên';
-            this.changeDef.detectChanges();
-            return;
-          }
-        } else {
-          this.showErrMess = false;
-        }
-        if (this.customField.dataFormat == 'D') {
-          if (!String(e.data).match(/^-?\d+\.\d+$/)) {
-            this.showErrMess = true;
-            //Mssg chưa có
-            this.errorMessage = 'Vui lòng nhập số thập phân';
-            this.changeDef.detectChanges();
-            return;
-          }
-        } else {
-          this.showErrMess = false;
-        }
-        break;
+      // case 'N':
+        // if (isNaN(e.data)) {
+        //   this.cache.message('RS006').subscribe((res) => {
+        //     if (res) {
+        //       this.showErrMess = true;
+        //       this.errorMessage = res.defaultName;
+        //     }
+        //     this.changeDef.detectChanges();
+        //     return;
+        //   });
+        // } else {
+        //   this.showErrMess = false;
+        // }
+        // if (this.customField.dataFormat == 'I') {
+        //   if (!String(e.data).match(/^-?\d+$/)) {
+        //     this.showErrMess = true;
+        //     //Mssg chưa có
+        //     this.errorMessage = 'Vui lòng nhập số nguyên';
+        //     this.changeDef.detectChanges();
+        //     return;
+        //   }
+        // } else {
+        //   this.showErrMess = false;
+        // }
+        // if (this.customField.dataFormat == 'D') {
+        //   if (!String(e.data).match(/^-?\d+\.\d+$/)) {
+        //     this.showErrMess = true;
+        //     //Mssg chưa có
+        //     this.errorMessage = 'Vui lòng nhập số thập phân';
+        //     this.changeDef.detectChanges();
+        //     return;
+        //   }
+        // } else {
+        //   this.showErrMess = false;
+        // }
+        // break;
     }
 
     this.valueChangeCustom.emit({ e: e, data: this.customField });

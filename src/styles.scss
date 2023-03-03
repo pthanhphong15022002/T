@@ -29,11 +29,15 @@ erm-quick-links-inner .dropdown-menu {
   width: 0.4rem;
   height: 0.4rem;
 }
-
+.fs-6 {
+  font-size: var(--fs-6)!important;
+}
+.border-gray-200 {
+  border-color: var(--gray-200)!important;
+}
 .text-primary {
   color: var(--text-primary) !important;
 }
-
 .h-16px {
   height: 16px;
 }
@@ -79,7 +83,7 @@ textarea.e-input,
 
 .popover-body {
   padding: 1rem;
-  max-height: 340px;
+  max-height: 360px;
   overflow: auto;
 }
 
@@ -506,15 +510,7 @@ codx-view-list-detail .codx-detail-footer {
   margin: 0;
 }
 
-.nav-link {
-  display: block;
-  padding: 0.45rem 0.75rem;
-  color: var(--gray-800);
-}
 
-.nav-tabs .nav-link:hover {
-  border-color: transparent !important;
-}
 
 .codx-tab .tab-content .e-toolbar-wrapper {
   height: 38px !important;
@@ -1689,20 +1685,20 @@ codx-share .role-group div.user-mini-nav {
   margin: 0 !important;
 }
 
-codx-toolbar codx-searchbar {
-  width: 280px !important;
-  display: flex;
-  justify-content: end;
-}
+// codx-toolbar codx-searchbar {
+//   width: 280px !important;
+//   display: flex;
+//   justify-content: end;
+// }
 
-codx-toolbar .codx-search.codx-search-slide {
-  width: 250px !important;
-}
+// codx-toolbar .codx-search.codx-search-slide {
+//   width: 250px !important;
+// }
 
-codx-toolbar .codx-search.codx-search-slide input {
-  width: 220px !important;
-  text-overflow: ellipsis;
-}
+// codx-toolbar .codx-search.codx-search-slide input {
+//   width: 220px !important;
+//   text-overflow: ellipsis;
+// }
 
 .assign-refer .container {
   padding: 0 !important;
@@ -1729,13 +1725,6 @@ codx-view-list-detail .e-listview .e-list-parent {
   border-top: 1px #fff solid;
 }
 
-
-.fs-6 {
-  font-size: 13.45px !important;
-}
-
-
-
 .tooltip * {
   color: var(--primary-dark) !important;
 }
@@ -1745,9 +1734,33 @@ codx-view-list-detail .e-listview .e-list-parent {
 
 }
 
-// fix dropdown
-// .dropdown[data-popper-placement="bottom-start"] {
-//   border: 1px aqua solid;
-// }
+a.nav-link {
+  color: var(--gray-800);
+  font-weight: bold;
+  font-size: var(--fs-6);
+
+}
+
+.codx-nav{
+  border-bottom: 1px var(--gray-150) solid;
+  .nav-link {
+    margin-right: 15px;
+    padding: 7px 3px;
+
+  }
+  .nav-link.active{
+    border-bottom: 2px var(--primary) solid !important;
+    color: var(--primary-dark);
+  }
+  
+  .nav-tabs .nav-link:hover {
+    border-color: transparent !important;
+  }
+}
+
+
+.codx-form .card-footer, .e-dialog .card-footer {
+  padding-top: 8px;
+}
 
 /// 14/2/2023 

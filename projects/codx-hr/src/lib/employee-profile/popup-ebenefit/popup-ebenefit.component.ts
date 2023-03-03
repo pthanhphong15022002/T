@@ -50,7 +50,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     // this.benefitObj = JSON.parse(JSON.stringify(this.benefitObj));
     this.benefitObj = data?.data?.benefitObj;
     console.log('benefit obj nhan dc la', this.benefitObj);
-    
+
     // this.indexSelected =
     //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
     this.actionType = data?.data?.actionType;
@@ -80,17 +80,17 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     });
   }
 
-    ngAfterViewInit(){
-    this.dialog && this.dialog.closed.subscribe(res => {
-      if(!res.event){
-        if(this.successFlag == true){
-          this.dialog.close(this.benefitObj);
+  ngAfterViewInit() {
+    this.dialog &&
+      this.dialog.closed.subscribe((res) => {
+        if (!res.event) {
+          if (this.successFlag == true) {
+            this.dialog.close(this.benefitObj);
+          } else {
+            this.dialog.close(null);
+          }
         }
-        else{
-          this.dialog.close(null);
-        }
-      }
-    })
+      });
   }
 
   initForm() {
@@ -137,14 +137,15 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     }
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
-      console.log('benefit obj them moi', this.benefitObj);
-      
       this.hrService.AddEBenefit(this.benefitObj).subscribe((p) => {
         if (p != null) {
-          this.benefitObj.recID = p.recID;
+          console.log('sau khi them moi benefit', p);
+          if (p.length > 1) {
+            this.benefitObj.recID = p[1].recID;
+          } else this.benefitObj.recID = p[0].recID;
           this.notify.notifyCode('SYS006');
           this.successFlag = true;
-          this.dialog && this.dialog.close(this.benefitObj);
+          this.dialog && this.dialog.close(p);
 
           //this.benefitObj.push(JSON.parse(JSON.stringify(this.benefitObj)));
           // if(this.listView){
@@ -156,7 +157,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
           //     //this.listBenefits = res;
           //     this.dialog && this.dialog.close(p);
           //   });
-        } 
+        }
       });
     } else {
       this.hrService.EditEBenefit(this.formModel.currentData).subscribe((p) => {
@@ -168,7 +169,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
           //   (this.listView.dataService as CRUDService).update(this.lstPassports[this.indexSelected]).subscribe()
           // }
           // this.dialog.close(this.data)
-        } 
+        }
       });
     }
   }

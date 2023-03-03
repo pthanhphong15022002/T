@@ -39,6 +39,7 @@ import { TemplateSurveyOtherComponent } from './template-survey-other.component/
 import { PopupQuestionOtherComponent } from './template-survey-other.component/popup-question-other/popup-question-other.component';
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { SortSessionComponent } from './sort-session/sort-session.component';
+import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-questions',
@@ -47,7 +48,7 @@ import { SortSessionComponent } from './sort-session/sort-session.component';
   encapsulation: ViewEncapsulation.None,
   providers: [RteService, MultiSelectService],
 })
-export class QuestionsComponent extends UIComponent implements OnInit {
+export class QuestionsComponent extends UIComponent implements OnInit , OnChanges {
   surveys: SV_Surveys = new SV_Surveys();
   respondResults: any = new Array();
   formats: any = new Array();
@@ -55,7 +56,6 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   sessions: any = new Array();
   answers: any = new Array();
   isModeAdd = true;
-  funcID = '';
   functionList: any;
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
@@ -176,15 +176,17 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   active = false;
   MODE_IMAGE_VIDEO = 'EDIT';
   lstEditIV: any = [];
-  recID: any;
   children: any = new Array();
   itemActive: any;
   indexSessionA = 0;
   indexQuestionA = 0;
+  idSession = "";
   @Input() title: any = "Mẫu không có tiêu đề";
   @Input() changeModeQ: any;
   @Input() formModel: any;
   @Input() dataService: any;
+  @Input() recID = "";
+  @Input() funcID = "";
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
@@ -205,22 +207,39 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       fontColor: 'black',
       fontFormat: 'B',
     };
-    this.router.queryParams.subscribe((queryParams) => {
-      if (queryParams?.funcID) {
-        this.funcID = queryParams.funcID;
-        this.cache.functionList(this.funcID).subscribe((res) => {
-          debugger
-          if (res) {
-            this.functionList = res;
-            if (queryParams?.recID) {
-              this.recID = queryParams.recID;
-              this.loadData(this.recID);
-            }
-            else this.createNewQ();
-          }
-        });
-      } else this.createNewQ();
-    });
+    // this.router.queryParams.subscribe((queryParams) => {
+    //   if (queryParams?.funcID) {
+    //     this.funcID = queryParams.funcID;
+    //     this.cache.functionList(this.funcID).subscribe((res) => {
+    //       debugger
+    //       if (res) {
+    //         this.functionList = res;
+    //         if (queryParams?.recID) {
+    //           this.recID = queryParams.recID;
+    //           this.loadData(this.recID);
+    //         }
+    //         else this.createNewQ();
+    //       }
+    //     });
+    //   } else this.createNewQ();
+    // });
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if ( changes?.funcID && changes.funcID?.previousValue != changes.funcID?.currentValue)
+    {
+      this.funcID = changes.funcID?.currentValue;
+      //if(this.funcID) this.loadDataFunc();
+    }
+    if(changes?.recID && changes.recID?.previousValue != changes.recID?.currentValue)
+    {
+      this.recID = changes.recID?.currentValue;
+      this.loadDataFunc();
+    }
+  }
+  //lấy answerType
+  setAnswerType(answerType:any , type:any)
+  {
+    return this.listMoreFunc.filter(x=>x.id == answerType)[0][type];
   }
 
   createNewQ()
@@ -259,8 +278,23 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.itemActive = this.questions[0].children[0];
     this.defaultMoreFunc = this.listMoreFunc.filter(x=>x.id == "O")[0];
   }
-  onInit(): void {}
 
+  onInit(): void {
+   
+  }
+
+  loadDataFunc()
+  {
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) {
+        this.functionList = res;
+        if (this.recID) {
+          this.loadData(this.recID);
+        }
+        else this.createNewQ();
+      }
+    });
+  }
   ngAfterViewInit() {
     var html = document.querySelector('app-questions');
     let myInterVal = setInterval(() => {
@@ -288,17 +322,17 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       .subscribe((res: any) => {
         if (res && res[0] && res[0].length > 0) {
           this.questions = this.getHierarchy(res[0], res[1]);
-          this.SVServices.getFilesByObjectType(
-            this.functionList.entityName
+          this.SVServices.getFilesByObjectTypeRefer(
+            this.functionList.entityName,
+            this.recID
           ).subscribe((res: any) => {
             if (res) {
               res.forEach((x) => {
-                if (x.referType == this.REFER_TYPE.VIDEO)
+                if (x.referType = this.recID +"_"+ this.REFER_TYPE.VIDEO)
                   x['srcVideo'] = `${environment.urlUpload}/${x.pathDisk}`;
               });
               this.lstEditIV = res;
             }
-            console.log('check lstFile', this.lstEditIV);
           });
         } else {
           this.questions = [
@@ -310,6 +344,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
               mandatory: false,
               answerType: null,
               category: 'S',
+              transID:this.recID,
               children: [
                 {
                   seqNo: 0,
@@ -327,34 +362,44 @@ export class QuestionsComponent extends UIComponent implements OnInit {
                   mandatory: false,
                   answerType: 'O',
                   category: 'Q',
+                  parentID: '1',
                 },
               ],
             },
           ];
+          var list = [];
+          list.push(this.questions[0]);
+          list = list.concat(this.questions[0].children)
           this.api
           .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
             recID,
-            this.questions,
+            list,
             true,
-          ]).subscribe();
+          ]).subscribe((item:any)=>{
+            if(item)
+            {
+              this.idSession = item.idSession; 
+              this.questions[0].children = item.lst;
+              this.questions[0].children[0]['active'] = true;
+            }
+          });
         }
         this.questions[0].children[0]['active'] = true;
         this.itemActive = this.questions[0].children[0];
-        this.defaultMoreFunc = this.listMoreFunc.filter(x=>x.id == "O")[0];
       });
   }
 
-  getHierarchy(dataSession, dataQuestion) {
-    var dataTemp = JSON.parse(JSON.stringify(dataSession));
-    dataTemp.forEach((res) => {
-      res['children'] = [];
-      dataQuestion.forEach((x) => {
-        if (x.parentID == res.recID) {
-          res['children'].push(x);
-        }
-      });
-    });
-    return dataTemp;
+  getHierarchy(dtS :any , dtQ: any) {
+    if(dtS)
+    {
+      for(var i = 0 ; i < dtS.length ; i++)
+      {
+        dtS[i].children = dtQ.filter(x=>x.parentID == dtS[i].recID);
+        dtQ = dtQ.filter(x=>x.parentID != dtS[i].recID);
+      }
+      dtS[0].children[0]['active'] = true;
+      return dtS;
+    }
   }
 
   valueChangeMandatory(e, dataQuestion) {
@@ -372,12 +417,12 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   }
 
   dropAnswer(event: CdkDragDrop<string[]>, idParent) {
-    debugger
     var index = this.questions[0].children.findIndex((x) => x.seqNo == idParent);
     this.dataAnswer = this.questions[0].children[index].answers;
     moveItemInArray(this.dataAnswer, event.previousIndex, event.currentIndex);
     this.dataAnswer.forEach((x, index) => (x.seqNo = index));
     this.questions[0].children[idParent].answers = this.dataAnswer;
+    this.setTimeoutSaveData(this.questions[0].children, false);
   }
 
   dropAnswerRC(
@@ -550,7 +595,6 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   deleteCard(seqNoSession, seqNoQuestion, recIDQuestion, category) {
     if (category == 'S') this.deleteSession(seqNoSession);
     else this.deleteNoSession(seqNoSession, seqNoQuestion, recIDQuestion);
-    console.log('check delete card', this.questions);
   }
 
   mergeSession(itemSession) {
@@ -990,6 +1034,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       data: this.itemActive,
       inline: inline,
       itemAnswer: itemAnswer,
+      referType: this.recID
     };
     var dialog = this.callfc.openForm(
       PopupUploadComponent,
@@ -997,7 +1042,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       900,
       600,
       '',
-      obj,
+      obj, 
       ''
     );
     dialog.closed.subscribe((res) => {
@@ -1138,6 +1183,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   }
 
   addCard(itemActive, seqNoSession = null, category) {
+    debugger
     if (itemActive) {
       if (category == 'S') this.addSession(itemActive, seqNoSession);
       else this.addNoSession(itemActive, seqNoSession, category);
@@ -1252,7 +1298,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     var dataAnswerTemp = {
       seqNo: 0,
       answer: 'Tùy chọn 1',
-      other: true,
+      other: false,
       isColumn: false,
       hasPicture: false,
     };
@@ -1270,6 +1316,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     tempQuestion.category = category;
     tempQuestion.recID = this.GUID;
     tempQuestion.parentID = this.questions[seqNoSession].recID;
+   
     delete tempQuestion.id;
     this.questions[seqNoSession].children.splice(
       itemActive.category == 'S' ? 0 : itemActive.seqNo + 1,
@@ -1279,6 +1326,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.questions[seqNoSession].children.forEach(
       (x, index) => (x.seqNo = index)
     );
+    this.questions[seqNoSession].transID = this.recID;
     this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveData(
       [tempQuestion],
@@ -1403,7 +1451,6 @@ export class QuestionsComponent extends UIComponent implements OnInit {
           this.questions[seqNoSession].children[itemQuestion.seqNo]
         )
       );
-      debugger
       data.answerType = answerType;
       if (
         answerType == 'O' ||
@@ -1425,39 +1472,45 @@ export class QuestionsComponent extends UIComponent implements OnInit {
         //   };
         //   data.answers.push(dataAnswerTemp);
         // }
-        if (answerType != 'O' && answerType != 'C' && answerType != 'L') {
-          data.answers = new Array();
-          let dataAnswerTemp = {
-            recID: recID,
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-          };
-          data.answers.push(dataAnswerTemp);
+        debugger
+          if (answerType != 'O' && answerType != 'C' && answerType != 'L') {
+            data.answers = new Array();
+            let dataAnswerTemp = {
+              recID: recID,
+              seqNo: 0,
+              answer: 'Tùy chọn 1',
+              other: false,
+            };
+            data.answers.push(dataAnswerTemp);
+          }
+
+          if(answerType != 'O' && answerType != 'C')
+          {
+            this.lstEditIV = [];
+            this.SVServices.deleteFilesByContainRefer(this.recID).subscribe();;
+          }
+        } 
+        else if (answerType == 'O2' || answerType == 'C2') 
+        {
+          if ( itemQuestion.answerType != 'O2' && itemQuestion.answerType != 'C2') {
+            data.answers = new Array();
+            let dataAnswerR = {
+              recID: recID,
+              seqNo: 0,
+              answer: 'Hàng 1',
+              isColumn: false,
+            };
+            data.answers.push(dataAnswerR);
+            this.generateGuid();
+            let dataAnswerC = {
+              recID: this.GUID,
+              seqNo: 0,
+              answer: 'Cột 1',
+              isColumn: true,
+            };
+            data.answers.push(dataAnswerC);
+          }
         }
-      } else if (answerType == 'O2' || answerType == 'C2') {
-        if (
-          itemQuestion.answerType != 'O2' &&
-          itemQuestion.answerType != 'C2'
-        ) {
-          data.answers = new Array();
-          let dataAnswerR = {
-            recID: recID,
-            seqNo: 0,
-            answer: 'Hàng 1',
-            isColumn: false,
-          };
-          data.answers.push(dataAnswerR);
-          this.generateGuid();
-          let dataAnswerC = {
-            recID: this.GUID,
-            seqNo: 0,
-            answer: 'Cột 1',
-            isColumn: true,
-          };
-          data.answers.push(dataAnswerC);
-        }
-      }
 
       //Lọc câu hỏi "khác"
       if(answerType == 'L' && data.answers && data.answers.length>0)

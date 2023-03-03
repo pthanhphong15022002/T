@@ -181,7 +181,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
     });
   }
   openPopup(item: any) {
-    debugger
     var formGroup = this.form.formGroup.controls;
     if (
       formGroup.userID.status == 'VALID' &&
@@ -276,7 +275,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   addUserTemp() {
-    debugger
+    debugger;
     this.checkBtnAdd = true;
     var formGroup = this.form.formGroup.controls;
     if (!this.adUser.buid) formGroup.buid.setValue(null);
@@ -359,7 +358,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   beforeSaveTemp(op: RequestOption) {
-    debugger
+    debugger;
     var data = [];
     this.isAddMode = true;
     op.methodName = 'AddUserAsync';

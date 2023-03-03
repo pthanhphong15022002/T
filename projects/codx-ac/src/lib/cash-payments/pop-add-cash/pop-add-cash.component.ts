@@ -128,11 +128,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Init
-
   onInit(): void {}
 
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    this.form.formGroup.patchValue(this.cashpayment);
   }
   //#endregion
 
@@ -144,41 +144,56 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         break;
     }
   }
-  valueChangeObjectType(e: any) {
+
+  objectTypeChanged(e: any) {
     this.cashpayment.objectID = '';
     this.objectType = e.data;
     this.cashpayment[e.field] = e.data;
     this.cashpaymentline = [];
   }
-  valueChangeDate(e: any) {
-    this.cashpayment[e.field] = e.data.fromDate;
-    this.voucherDate = e.data.fromDate;
-  }
-  valueChangeCashBookID(e: any) {
-    this.cashpayment[e.field] = e.data;
-    this.getvalueNameCashBook(e.data);
-  }
-  cellChanged(e: any) {
-    this.cashpaymentline[e.field] = e.value;
-    this.data = JSON.stringify(this.cashpaymentline);
-  }
+
   valueChange(e: any) {
     this.cashpayment[e.field] = e.data;
-  }
-  getvalueNameCashBook(data: any) {
-    this.acService
-      .loadData('ERM.Business.AC', 'CashBookBusiness', 'LoadDataAsync', [])
-      .subscribe((res: any) => {
-        res.forEach((element) => {
-          if (element.cashBookID == data) {
-            this.cashbookName = element.cashBookName;
+    let sArray = [
+      'currencyid',
+      'voucherdate',
+      'cashbookid',
+      'journalno',
+      'transactiontext',
+    ];
+
+    if (e.data && sArray.includes(e.field.toLowerCase())) {
+      this.api
+        .exec<any>('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
+          e.field,
+          this.cashpayment,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.cashpayment = res;
+            this.form.formGroup.patchValue(this.cashpayment);
           }
         });
-      });
-  }
-  //#endregion
+    }
 
-  //#region Function
+    if (e.data && e.field.toLowerCase() === 'bankaccount') {
+      this.api
+        .exec<any>(
+          'BS',
+          'BankAccountsBusiness',
+          'GetAsync',
+          this.cashpayment.bankAccount
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.cashpayment.bankAcctNo = res.bankAcctNo;
+            this.cashpayment.bankID = res.bankID;
+            this.form.formGroup.patchValue(this.cashpayment);
+          }
+        });
+    }
+  }
+
   gridCreated(e) {
     let hBody, hTab, hNote;
     if (this.cardbodyRef)
@@ -188,6 +203,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
     this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
   }
+
+  cellChanged(e: any) {
+    this.cashpaymentline[e.field] = e.value;
+    this.data = JSON.stringify(this.cashpaymentline);
+  }
+
   addRow() {
     let idx = this.grid.dataSource.length;
     let data = this.grid.formGroup.value;
@@ -200,39 +221,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     data.transID = this.cashpayment.recID;
     this.grid.addRow(data, idx);
   }
+
   deleteRow(data) {
     this.cashpaymentlineDelete.push(data);
     this.grid.deleteRow();
-  }
-  checkValidate() {
-    var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.cashpayment);
-    for (let index = 0; index < keygrid.length; index++) {
-      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
-        for (let i = 0; i < keymodel.length; i++) {
-          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
-            if (
-              this.cashpayment[keymodel[i]] == null ||
-              this.cashpayment[keymodel[i]] == ''
-            ) {
-              this.notification.notifyCode(
-                'SYS009',
-                0,
-                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
-              );
-              this.validate++;
-            }
-          }
-        }
-      }
-    }
-  }
-  clearCashpayment() {
-    this.cashbookName = '';
-    this.objectType = null;
-    this.data = null;
-    this.cashpaymentline = [];
-    this.voucherDate = new Date();
   }
   //#endregion
 
@@ -336,6 +328,53 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           }
         });
     }
+  }
+  //#endregion
+
+  //#region Function
+
+  getvalueNameCashBook(data: any) {
+    this.acService
+      .loadData('ERM.Business.AC', 'CashBookBusiness', 'LoadDataAsync', [])
+      .subscribe((res: any) => {
+        res.forEach((element) => {
+          if (element.cashBookID == data) {
+            this.cashbookName = element.cashBookName;
+          }
+        });
+      });
+  }
+
+  checkValidate() {
+    var keygrid = Object.keys(this.gridViewSetup);
+    var keymodel = Object.keys(this.cashpayment);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              this.cashpayment[keymodel[i]] == null ||
+              this.cashpayment[keymodel[i]] == ''
+            ) {
+              this.notification.notifyCode(
+                'SYS009',
+                0,
+                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
+              );
+              this.validate++;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  clearCashpayment() {
+    this.cashbookName = '';
+    this.objectType = null;
+    this.data = null;
+    this.cashpaymentline = [];
+    this.voucherDate = new Date();
   }
   //#endregion
 }
