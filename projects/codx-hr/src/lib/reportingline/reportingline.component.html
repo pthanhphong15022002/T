@@ -47,7 +47,7 @@
                             <codx-label [formModel]="view.formModel" fiedName="DepartmentID"></codx-label>
                         </ng-template>
                         <span class="mx-2">|</span>
-                        <ng-container *ngIf="data.divisionName;else noDivisionName">
+                        <ng-container *ngIf="isCorporation && data.divisionName;else noDivisionName">
                             <span>{{data.divisionName}}</span>
                         </ng-container>
                         <ng-template #noDivisionName>

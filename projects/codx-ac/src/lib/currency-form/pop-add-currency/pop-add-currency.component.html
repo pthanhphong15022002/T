@@ -3,101 +3,103 @@
 </codx-form>
 
 <ng-template popup adde #body let-data>
-  <div class="row mt-3">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="CurrencyID" default="Mã tiền tệ"></codx-label>
-        <codx-input [formModel]="form.formModel" field="currencyID" [crrValue]="curID"
-          (valueChange)="valueChangecurID($event)">
-        </codx-input>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="row mt-3">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="CurrencyID"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="currencyID"
+            [crrValue]="currencies.currencyID" [disabled]="formType == 'edit' ? true : false" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Symbol"></codx-label>
+          <codx-input [Group]="form.formGroup" field="symbol" [crrValue]="currencies.symbol" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Symbol" default="Ký hiệu"></codx-label>
-        <codx-input field="symbol" [crrValue]="symbol" [formModel]="form.formModel"
-          (valueChange)="valueChangesymbol($event)">
-        </codx-input>
-      </div>
-    </div>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="CurrencyName" default="Tên tiền tệ"></codx-label>
-    <codx-input field="currencyName" [formModel]="form.formModel" [crrValue]="curName"
-      (valueChange)="valueChangecurName($event)">
-    </codx-input>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="TranslateName" default="Phát âm"></codx-label>
-        <codx-input field="translateName" [crrValue]="form.data.translateName" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="PrecisionName" default="Đọc số nguyên"></codx-label>
-        <codx-input field="precisionName" [crrValue]="form.data.precisionName" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="PRoundOff" default="Số lẻ đơn giá"></codx-label>
-        <codx-input field="pRoundOff" [crrValue]="form.data.pRoundOff" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="ARoundOff" default="Số lẻ thành tiền"></codx-label>
-        <codx-input field="aRoundOff" [crrValue]="form.data.aRoundOff" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-  </div>
-  <div class="form-group d-flex">
-    <span class="me-2">
-      <codx-input [checked]="form.data.stop" field="stop" [formModel]="form.formModel"
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="CurrencyName"></codx-label>
+      <codx-input [Group]="form.formGroup" field="currencyName" [formModel]="form.formModel" [crrValue]="currencies.currencyName"
         (valueChange)="valueChange($event)">
       </codx-input>
-    </span>
-    <codx-label [formModel]="form.formModel" fiedName="Stop" default="Ngưng sử dụng"></codx-label>
-  </div>
-  <div class="d-flex align-items-center justify-content-between mb-4">
-    <codx-label class="text-primary fw-bold fs-6" [formModel]="form.formModel" default="Tỷ giá"></codx-label>
-    <div class="d-flex">
-      <span type="button" class="btn btn-icon btn-primary" (click)="openPopup()">
-        <i class="icon-addchart"></i>
-      </span>
-      <span type="button" class="btn btn-icon btn-primary ms-2" (click)="opensetting()">
-        <i class="icon-settings"></i>
-      </span>
     </div>
-  </div>
-  <div *ngFor="let item of objectExchange" class="row border-bottom pt-3 pb-2">
-    <div class="col-3 d-flex align-items-center">
-      <div class="text-gray-600" [innerHTML]="item.toDate | date:'dd/MM/yyyy'"></div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="TranslateName"></codx-label>
+          <codx-input field="translateName" [crrValue]="currencies.translateName" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="PrecisionName"></codx-label>
+          <codx-input field="precisionName" [crrValue]="currencies.precisionName" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-    <div class="col-7 d-flex align-items-center">
-      <div class="text-dark fw-bold" [innerHTML]="item.exchangeRate"></div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="PRoundOff"></codx-label>
+          <codx-input field="pRoundOff" [crrValue]="currencies.pRoundOff" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="ARoundOff"></codx-label>
+          <codx-input field="aRoundOff" [crrValue]="currencies.aRoundOff" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-    <div class="col-2 d-flex align-items-center justify-content-end">
-      <span type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="editExchangerate(item)">
-        <i class="icon-edit icon-16"></i>
+    <div class="form-group d-flex">
+      <span class="me-2">
+        <codx-input [checked]="currencies.stop" field="stop" [formModel]="form.formModel"
+          (valueChange)="valueChange($event)">
+        </codx-input>
       </span>
-      <span type="button" class="btn btn-icon btn-sm btn-light-danger ms-1" (click)="deleteExchangerate(item)">
-        <i class="icon-delete icon-16"></i>
-      </span>
+      <codx-label [formModel]="form.formModel" fiedName="Stop"></codx-label>
     </div>
-  </div>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <codx-label class="text-primary fw-bold fs-6" [formModel]="form.formModel" default="Tỷ giá"></codx-label>
+      <div class="d-flex">
+        <span type="button" class="btn btn-icon btn-primary" (click)="openPopup()">
+          <i class="icon-addchart"></i>
+        </span>
+        <span type="button" class="btn btn-icon btn-primary ms-2" (click)="opensetting()">
+          <i class="icon-settings"></i>
+        </span>
+      </div>
+    </div>
+    <div *ngFor="let item of objectExchange" class="row border-bottom pt-3 pb-2">
+      <div class="col-3 d-flex align-items-center">
+        <div class="text-gray-600" [innerHTML]="item.toDate | date:'dd/MM/yyyy'"></div>
+      </div>
+      <div class="col-7 d-flex align-items-center">
+        <div class="text-dark fw-bold" [innerHTML]="item.exchangeRate"></div>
+      </div>
+      <div class="col-2 d-flex align-items-center justify-content-end">
+        <span type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="editExchangerate(item)">
+          <i class="icon-edit icon-16"></i>
+        </span>
+        <span type="button" class="btn btn-icon btn-sm btn-light-danger ms-1" (click)="deleteExchangerate(item)">
+          <i class="icon-delete icon-16"></i>
+        </span>
+      </div>
+    </div>
+  </ng-container>
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end mt-1 me-3">

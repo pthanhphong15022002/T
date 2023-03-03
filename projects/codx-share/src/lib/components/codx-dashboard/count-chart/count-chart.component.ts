@@ -11,14 +11,15 @@ export class CountChartComponent extends UIComponent implements AfterViewInit {
   @Input() title: string;
   @Input() width: string;
   @Input() height: string;
+  @Input() type: string;
   @Input() dataSource: any;
   @Input() service: string;
   @Input() assemblyName: string;
   @Input() className: string;
   @Input() method: string;
   @Input() request: DataRequest;
-  @Input() statusName: string;
-  @Input() value: string = '20';
+  @Input() value: number = 0;
+  @Input() totalValue: number = 0;
   @Input() tooltip: string = '';
   @Input() hasIcon: boolean = false;
   @Input() iconUrl: string = 'assets/themes/tm/default/img/DB_Chuathuchien.svg';
