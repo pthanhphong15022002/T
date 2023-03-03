@@ -1735,7 +1735,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     } else {
       taskGroupIdOld = data['taskGroupID'];
       roleOld = JSON.parse(JSON.stringify(data['roles']));
-      dataInput = data;
+      dataInput = JSON.parse(JSON.stringify(data));
     }
 
     let listData = [
@@ -1773,10 +1773,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.taskList.push(taskData);
               this.addRole(taskData['roles'][0]);
             } else {
-              if (taskData?.taskGroupID != taskGroupIdOld) {
-                this.changeGroupTaskOfTask(taskData, taskGroupIdOld);
+              // data = {...taskData};
+              // data['taskName'] = taskData['taskData']
+              for (const key in taskData) {
+                data[key] = taskData[key];
               }
-              this.addRole(taskData['roles'][0], roleOld[0]);
+              if (data?.taskGroupID != taskGroupIdOld) {
+                this.changeGroupTaskOfTask(data, taskGroupIdOld);
+              }
+              this.addRole(data['roles'][0], roleOld[0]);
             }
           }
         });
