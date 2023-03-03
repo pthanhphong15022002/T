@@ -190,26 +190,17 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
-
-    if (this.actionType === 'copy') {
-      delete this.degreeObj.recID;
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
     }
     this.degreeObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddEmployeeDegreeInfo(this.degreeObj).subscribe((p) => {
         if (p != null) {
-          this.degreeObj = p;
-          this.degreeObj.isSuccess = true;
           this.notify.notifyCode('SYS006');
-          this.dialog && this.dialog.close(this.degreeObj);
-        } else {
-          this.notify.notifyCode('SYS023');
-          this.degreeObj.isSuccess = false;
-        }
+          this.dialog && this.dialog.close(p);
+        } else this.notify.notifyCode('SYS023');
       });
     } else {
       this.hrService
@@ -217,12 +208,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            this.degreeObj.isSuccess = true;
-            this.dialog && this.dialog.close(this.degreeObj);
-          } else {
-            this.notify.notifyCode('SYS021');
-            this.degreeObj.isSuccess = false;
-          }
+            this.dialog && this.dialog.close(p);
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }
