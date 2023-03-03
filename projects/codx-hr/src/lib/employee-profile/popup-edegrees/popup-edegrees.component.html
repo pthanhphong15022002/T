@@ -426,12 +426,12 @@
         [Group]="formGroup"
         [formModel]="formModel"
       ></codx-input> -->
-      <codx-dropdown-calendar cssPopup="h-500px w-500px" [value]="Date(degreeObj.trainFromDate)" [selectedType]="fromDateFormat" [displayOption]="ops"
+      <codx-dropdown-calendar [emptyText]="headerTextCalendar[0]" [firstChange]="isNullFrom" cssPopup="h-500px w-500px" [value]="Date(degreeObj.trainFromDate)" [selectedType]="fromDateFormat" [displayOption]="ops"
           cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event, 'FromDate')"></codx-dropdown-calendar>
     </div>
     <div class="col-6">
       <codx-label fiedName="TrainTo" [formModel]="formModel"></codx-label>
-      <codx-dropdown-calendar cssPopup="h-500px w-500px" [value]="Date(degreeObj.trainToDate)" [selectedType]="toDateFormat" [displayOption]="ops"
+      <codx-dropdown-calendar [emptyText]="headerTextCalendar[1]" [firstChange]="isNullTo" cssPopup="h-500px w-500px" [value]="Date(degreeObj.trainToDate)" [selectedType]="toDateFormat" [displayOption]="ops"
       cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event, 'ToDate')"></codx-dropdown-calendar>
     </div>
   </div>

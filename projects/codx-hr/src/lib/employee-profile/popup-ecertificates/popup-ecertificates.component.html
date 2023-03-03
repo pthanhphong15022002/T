@@ -495,6 +495,8 @@
       ></codx-input> -->
       <!--123123123-->
         <codx-dropdown-calendar
+          [emptyText]="headerTextCalendar[0]"
+          [firstChange]="isNullFrom"
           cssPopup="h-500px w-500px"
           [value]="Date(certificateObj.trainFromDate)"
           [selectedType]="fromDateFormat"
@@ -507,12 +509,10 @@
       </div>
       <div class="col-6">
         <codx-label fiedName="TrainTo" [formModel]="formModel"></codx-label>
-        <!-- <codx-input
-          field="trainTo"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input> -->
+
         <codx-dropdown-calendar
+        [emptyText]="headerTextCalendar[1]"
+        [firstChange]="isNullTo"
         cssPopup="h-500px w-500px"
         [value]="Date(certificateObj.trainToDate)"
         [selectedType]="toDateFormat"

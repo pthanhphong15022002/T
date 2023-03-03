@@ -3629,6 +3629,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfc.openSide(
       PopupECertificatesComponent,
       {
+        trainFromHeaderText : this.eSkillHeaderText['TrainFrom'],
+        trainToHeaderText : this.eSkillHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eCertificateFuncID),
@@ -3655,6 +3657,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupEDegreesComponent,
       {
+        trainFromHeaderText : this.eDegreeHeaderText['TrainFrom'],
+        trainToHeaderText : this.eDegreeHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eDegreeFuncID),
@@ -3680,6 +3684,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfc.openSide(
       PopupESkillsComponent,
       {
+        trainFromHeaderText : this.eSkillHeaderText['TrainFrom'],
+        trainToHeaderText : this.eSkillHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eSkillFuncID),
@@ -3722,6 +3728,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupETraincourseComponent,
       {
+        trainFromHeaderText : this.eSkillHeaderText['TrainFrom'],
+        trainToHeaderText : this.eSkillHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eTrainCourseFuncID),
@@ -5012,9 +5020,10 @@ export class EmployeeDetailComponent extends UIComponent {
     if (this.filterByAccidentIDArr?.length > 0) {
       this.filterAccidentIdPredicate = '(';
       for (let i = 0; i < lengthArr; i++) {
-        if (i == first || i == last)
-          this.filterAccidentIdPredicate += `AccidentID==@${i}`;
-        else this.filterAccidentIdPredicate += `AccidentID==@${i} or `;
+        if (i > 0) {
+          this.filterAccidentIdPredicate += ' or ';
+        }
+        this.filterAccidentIdPredicate += `AccidentID==@${i}`;
       }
       this.filterAccidentIdPredicate += ') ';
       (this.eAccidentGridView?.dataService as CRUDService)

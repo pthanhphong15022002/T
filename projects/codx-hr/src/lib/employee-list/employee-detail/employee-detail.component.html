@@ -4628,7 +4628,7 @@
               <div class="d-flex align-items-center ms-5">
                 <codx-dropdown-select
                   *ngIf="eTrainCourseGrvSetup"
-                  [emptyText]="'Hình thức đào tạo'"
+                  [emptyText]="eTrainCourseGrvSetup.TrainForm.headerText"
                   [cssClass]="'rounded-pill border-1'"
                   cssPopup="h-350px w-300px"
                   [isMulti]="true"
@@ -4641,7 +4641,7 @@
                 <codx-dropdown-calendar
                   [cssPopup]="'w-600px h-400px'"
                   emptyText="Năm"
-                  [EmptyText]="'Năm'"
+                  [EmptyText]="eTrainCourseGrvSetup.InYear.headerText"
                   [firstChange]="false"
                   [displayOption]="ops"
                   [selectedType]="'y'"
@@ -4778,7 +4778,7 @@
               <div class="d-flex align-items-center ms-5">
                 <codx-dropdown-calendar
                   [cssPopup]="'w-600px h-400px'"
-                  emptyText="Năm"
+                  [emptyText]="awardHeaderText['InYear']"
                   [firstChange]="false"
                   [displayOption]="ops"
                   [selectedType]="'y'"
@@ -5148,7 +5148,7 @@
                 <span>
                   <codx-dropdown-select
                     *ngIf="eDiseasesGrvSetup"
-                    [emptyText]="'Bệnh nghề nghiệp'"
+                    [emptyText]="eDiseasesHeaderText['DiseaseID']"
                     [cssClass]="'rounded-pill border-1'"
                     cssPopup="h-350px w-300px"
                     [isMulti]="true"
