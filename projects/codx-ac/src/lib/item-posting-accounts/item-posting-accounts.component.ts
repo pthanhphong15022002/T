@@ -109,11 +109,7 @@ export class ItempostingaccountsComponent extends UIComponent {
     });
     this.cache.valueList('AC058').subscribe((res) => {
       if (res) {
-        res.datas.forEach(element => {
-          var newicon = element.icon.replace(".svg", "");
-          element.icon = newicon
-        });
-        this.menuIcon = res.data;
+        this.menuIcon = res.datas;
       }
     });
   }

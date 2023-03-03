@@ -12,6 +12,7 @@ import {
   CodxFormComponent,
   CodxListviewComponent,
   CRUDService,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -19,8 +20,6 @@ import {
   SidebarModel,
   UIComponent,
 } from 'codx-core';
-import { max } from 'moment';
-import { CardType } from 'projects/codx-fd/src/lib/models/model';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxHrService } from '../../codx-hr.service';
 import { PopupSubEContractComponent } from '../popup-sub-econtract/popup-sub-econtract.component';
@@ -36,17 +35,15 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
-  currentEJobSalaries: any;
   funcID: string;
   actionType: string;
   employeeId: string;
   isAfterRender = false;
+  lstSubContract: any;
   headerText: string;
 
-  lstAllContract: any;
   dataCbxContractType: any;
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
     private injector: Injector,
@@ -65,9 +62,9 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
       this.formModelPL.formName = 'EContracts';
       this.formModelPL.gridViewName = 'grvEContracts';
     }
-    console.log('data', data);
 
     this.dialog = dialog;
+    this.formModel = dialog?.formModel;
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
@@ -76,19 +73,29 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.hrSevice.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrSevice
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
-      }
-    });
+    if (!this.formModel)
+      this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+        if (formModel) {
+          this.formModel = formModel;
+          this.hrSevice
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .then((fg) => {
+              if (fg) {
+                this.formGroup = fg;
+                this.initForm();
+              }
+            });
+        }
+      });
+    else
+      this.hrSevice
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+        .then((fg) => {
+          if (fg) {
+            this.formGroup = fg;
+            this.initForm();
+          }
+        });
   }
 
   initForm() {
@@ -97,14 +104,39 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
         if (res) {
           this.data = res;
           this.data.employeeID = this.employeeId;
+          this.data.signedDate = null;
+          this.data.effectedDate = null;
+
           this.formModel.currentData = this.data;
-          console.log('default contract data', this.data);
           this.formGroup.patchValue(this.data);
           this.cr.detectChanges();
           this.isAfterRender = true;
         }
       });
     } else if (this.actionType === 'edit' || this.actionType === 'copy') {
+      if (this.actionType == 'copy') {
+        if (this.data.signedDate == '0001-01-01T00:00:00') {
+          this.data.signedDate = null;
+        }
+        if (this.data.effectedDate == '0001-01-01T00:00:00') {
+          this.data.effectedDate = null;
+        }
+      }
+      if (this.actionType == 'edit' && this.data.isAppendix == false) {
+        let rqSubContract = new DataRequest();
+        rqSubContract.entityName = this.formModel.entityName;
+        rqSubContract.pageLoading = false;
+        rqSubContract.predicates =
+          'EmployeeID=@0 and RefContractNo=@1 and IsAppendix=@2';
+        rqSubContract.dataValues =
+          this.employeeId + ';' + this.data.contractNo + ';true';
+        this.hrSevice.loadData('HR', rqSubContract).subscribe((res) => {
+          if (res && res[1] > 0) {
+            this.lstSubContract = res[0];
+            console.log('aaaaaaaaaaaaaaaaaaaaaaa', res);
+          }
+        });
+      }
       this.formModel.currentData = this.data;
       this.formGroup.patchValue(this.data);
       this.cr.detectChanges();
@@ -112,7 +144,7 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     }
   }
 
-  onSaveForm(closeForm: boolean) {
+  onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
       return;
@@ -135,71 +167,16 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
           //code test
 
           this.data = res;
-          (this.listView.dataService as CRUDService).add(res).subscribe();
-          this.actionType = 'edit';
-          if (closeForm) {
-            this.dialog && this.dialog.close();
-          }
         }
       });
     } else if (this.actionType == 'edit') {
       this.hrSevice.editEContract(this.data).subscribe((res) => {
         if (res) {
-          (this.listView.dataService as CRUDService).update(res).subscribe();
-          if (closeForm) {
-            this.dialog && this.dialog.close();
-          }
         }
       });
     }
 
     this.cr.detectChanges();
-  }
-
-  validateBeforeSave(isAddNew: boolean) {
-    if (this.lstAllContract && this.lstAllContract?.length > 0) {
-      //khoảng thời gian ["Ngày hiệu lực", "Ngày hết hạn"] ko được lồng nhau với các HĐLĐ đã tồn tại trước đó
-      if (this.data?.isAppendix == false) {
-        let lstIsAppendix = this.lstAllContract.filter(
-          (x) => x.IsAppendix == false
-        );
-        if (lstIsAppendix?.length > 0) {
-          if (this.data?.effectedDate < lstIsAppendix[0].expiredDate) {
-            this.notify.notifyCode('HR007');
-            return;
-          }
-        }
-      }
-
-      if (isAddNew) {
-        //Cảnh báo nếu thêm mới HĐLĐ, mà trước đó có  HĐ đang hiệu lực là HĐ không xác định thời hạn (có phân loại = 1)
-        let crrValidContract = this.lstAllContract.filter(
-          (p) => p.isCurrent == true
-        );
-        if (crrValidContract) {
-          let cType = this.dataCbxContractType.filter(
-            (p) => p.contractTypeID == crrValidContract.contractTypeID
-          );
-          if (cType && cType?.contractGroup == 1) {
-            this.notify.alertCode('HR008').subscribe((x) => {
-              if (x.event?.status == 'Y') {
-                this.onSaveForm(false);
-              } else return;
-            });
-          }
-        }
-
-        //Cập nhật “Ngày hợp đồng chính thức” đối với Hợp đồng chính thức đầu tiên
-      }
-    }
-  }
-
-  afterRenderListView(event: any) {
-    this.listView = event;
-    if (this.lstAllContract) {
-      this.lstAllContract == this.listView?.dataService.data;
-    }
-    console.log(this.listView);
   }
 
   click(data) {
@@ -269,19 +246,8 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
 
   addSubContract() {
     let optionSub = new SidebarModel();
-    // option.FormModel = this.view.formModel
     optionSub.Width = '550px';
     optionSub.zIndex = 1001;
-    // let popupSubContract = this.callfunc.openSide(
-    //   PopupSubEContractComponent,
-    //   {
-    //     actionType: 'add',
-    //     salarySelected: null,
-    //     headerText: 'Hợp đồng lao động',
-    //     employeeId: this.data.employeeID,
-    //   },
-    //   optionSub
-    // );
     let popupSubContract = this.callfc.openForm(
       PopupSubEContractComponent,
       '',
@@ -291,8 +257,7 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
       {
         employeeId: this.data.employeeID,
         contractNo: this.data.contractNo,
-        formModel: this.formModel,
-        formGroup: this.formGroup,
+        actionType: 'add',
       }
     );
     popupSubContract.closed.subscribe((res) => {

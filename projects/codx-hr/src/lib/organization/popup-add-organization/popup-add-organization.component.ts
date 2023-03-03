@@ -45,19 +45,20 @@ export class PopupAddOrganizationComponent implements OnInit{
     this.user = this.auth.userValue;
     this.dialogData = dt.data;
     this.dialogRef = dialogRef;
-  }
-  ngOnInit(): void {
     if(this.dialogData)
     {
       this.funcID = this.dialogData.funcID;
       this.action = this.dialogData.action;
-      this.data = this.dialogData.data;
+      this.data = JSON.parse(JSON.stringify(this.dialogData.data));
       this.isModeAdd = this.dialogData.isModeAdd;
-      if(this.funcID)
-      {
-        this.getSetup(this.funcID);
-        this.getParamerAsync(this.funcID);
-      }
+      
+    }
+  }
+  ngOnInit(): void {
+    if(this.funcID)
+    {
+      this.getSetup(this.funcID);
+      this.getParamerAsync(this.funcID);
     }
   }
 
@@ -108,37 +109,29 @@ export class PopupAddOrganizationComponent implements OnInit{
     }
   }
   // btn save
-  onSave() 
-  {
+  onSave(){
     if(this.action.functionID === "SYS03")
-    {
       this.editData(this.data);
-    }
     else
-    {
       this.saveData(this.data);
-    }
   }
 
   // insert
   saveData(data:any){
     if(data){
       this.api
-        .execAction<boolean>(
-         "HR_OrganizationUnits",
-          [data],
-          'SaveAsyncLogic',
-          true)
+        .execSv(
+          "HR",
+          "ERM.Business.HR",
+          "OrganizationUnitsBusiness",
+          'SaveAsync',
+          [data,this.funcID])
           .subscribe((res:any) =>{
-            if(!res?.error){
+            if(res)
               this.notifiSV.notifyCode("SYS006");
-              this.dialogRef.close(data);
-            }
             else
-            {
               this.notifiSV.notifyCode("SYS023");
-              this.dialogRef.close(null);
-            }
+            this.dialogRef.close(res);
         });
     }
   }

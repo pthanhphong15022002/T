@@ -29,14 +29,14 @@
                 data-kt-menu="true"
               >
                 <div id="kt_aside_menu_wrapper" class="menu-fit">
-                  <div
+                  <div        
                     class="menu-item menu-accordion"
                     (click)="clickMenu(1)"
                     [ngClass]="menuActive === 1 ? 'here show' : ''"
                   >
                     <span class="menu-link">
-                      <span class="menu-icon" *ngFor="let item of menuIcon">
-                        <span *ngIf="item.value == '1'" [class]="item.icon"></span>
+                      <span class="menu-icon">
+                        <span [class]="menuIcon[0].icon"></span>
                       </span>
                       <span class="menu-title fw-bold">
                         <codx-label
@@ -68,7 +68,7 @@
                   >
                     <span class="menu-link">
                       <span class="menu-icon">
-                        <span class="icon-store"></span>
+                        <span [class]="menuIcon[1].icon"></span>
                       </span>
                       <span class="menu-title fw-bold">
                         <codx-label
@@ -100,7 +100,7 @@
                   >
                     <span class="menu-link">
                       <span class="menu-icon">
-                        <span class="icon-store"></span>
+                        <span [class]="menuIcon[2].icon"></span>
                       </span>
                       <span class="menu-title fw-bold">
                         <codx-label
@@ -132,7 +132,7 @@
                 >
                   <span class="menu-link">
                     <span class="menu-icon">
-                      <span class="icon-store"></span>
+                      <span [class]="menuIcon[3].icon"></span>
                     </span>
                     <span class="menu-title fw-bold">
                       <codx-label
@@ -164,7 +164,7 @@
               >
                 <span class="menu-link">
                   <span class="menu-icon">
-                    <span class="icon-store"></span>
+                    <span [class]="menuIcon[4].icon"></span>
                   </span>
                   <span class="menu-title fw-bold">
                     <codx-label
@@ -189,7 +189,6 @@
                   </div>
                 </div>
               </div>
-
                 </div>
               </div>
             </div>

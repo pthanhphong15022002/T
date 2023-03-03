@@ -1,3 +1,4 @@
+import { C } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Component,
@@ -34,6 +35,8 @@ export class APPostingAccountsComponent
   menuItems1: Array<any> = [];
   menuItems2: Array<any> = [];
   selectedValue: string;
+  defaultPostType1: string;
+  defaultPostType2: string;
   btnAdd = {
     id: 'btnAdd',
   };
@@ -48,11 +51,13 @@ export class APPostingAccountsComponent
     this.cache.valueList('AC049').subscribe((res) => {
       console.log(res);
       this.menuItems1 = res?.datas;
+      this.defaultPostType1 = res?.datas[0].value;
     });
 
     this.cache.valueList('AC050').subscribe((res) => {
       console.log(res);
       this.menuItems2 = res?.datas;
+      this.defaultPostType2 = res?.datas[0].value;
     });
   }
 
@@ -93,14 +98,25 @@ export class APPostingAccountsComponent
       options.FormModel = this.grid.formModel;
       options.Width = '550px';
 
+      let postType = this.selectedValue;
+      if (this.menuActive == 1) {
+        if (!this.menuItems1.some((i) => i.value === this.selectedValue)) {
+          postType = this.defaultPostType1;
+        }
+      } else {
+        if (!this.menuItems2.some((i) => i.value === this.selectedValue)) {
+          postType = this.defaultPostType2;
+        }
+      }
+
       this.callfc.openSide(
         PopupAddAPPostingAccountComponent,
         {
           formType: 'add',
           formTitle: 'Thêm thiết lập phải trả',
           moduleId: this.menuActive,
-          postType: this.selectedValue,
-          breadcrumb: this.getBreadcrumb(),
+          postType: postType,
+          breadcrumb: this.getBreadcrumb(this.menuActive, postType),
         },
         options,
         this.view.funcID
@@ -131,9 +147,9 @@ export class APPostingAccountsComponent
         {
           formType: 'edit',
           formTitle: 'Sửa thiết lập phải trả',
-          moduleId: this.menuActive,
-          postType: this.selectedValue,
-          breadcrumb: this.getBreadcrumb(),
+          moduleId: data.moduleID,
+          postType: data.postType,
+          breadcrumb: this.getBreadcrumb(data.moduleID, data.postType),
         },
         options,
         this.view.funcID
@@ -141,23 +157,27 @@ export class APPostingAccountsComponent
     });
   }
   //#endregion
-  
+
   //#region Function
   filter(field: string, value: string): void {
     this.selectedValue = value;
     this.grid.dataService.setPredicates([field + '=@0'], [value]).subscribe();
   }
 
-  getBreadcrumb(): string {
+  getBreadcrumb(moduleId, postType): string {
     let breadcrumb: string = '';
-    if (this.menuActive === 1) {
-      breadcrumb +=
-        'Tài khoản > ' +
-        this.menuItems1.find((m) => m.value === this.selectedValue)?.text;
+    if (moduleId == 1) {
+      breadcrumb += 'Tài khoản';
+      if (postType) {
+        breadcrumb +=
+          ' > ' + this.menuItems1.find((m) => m.value === postType)?.text;
+      }
     } else {
-      breadcrumb +=
-        'Điều khoản > ' +
-        this.menuItems2.find((m) => m.value === this.selectedValue)?.text;
+      breadcrumb += 'Điều khoản';
+      if (postType) {
+        breadcrumb +=
+          ' > ' + this.menuItems2.find((m) => m.value === postType)?.text;
+      }
     }
 
     return breadcrumb;

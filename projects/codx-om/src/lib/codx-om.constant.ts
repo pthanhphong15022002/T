@@ -5,8 +5,8 @@ export const OMCONST = {
   BUSINESS: {
     DashBoard: 'DashBoardBusiness',
     OKR: 'OKRBusiness',
-    KR: 'KRBusiness',
-    OB: 'OBBusiness',
+    //KR: 'KRBusiness',
+    //OB: 'OBBusiness',
     OKRPlan: 'OKRPlansBusiness',
     OM: 'OMBusiness',
     Reviews: 'ReviewsBusiness',

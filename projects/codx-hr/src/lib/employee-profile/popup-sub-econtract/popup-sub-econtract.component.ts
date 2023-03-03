@@ -18,6 +18,7 @@ export class PopupSubEContractComponent implements OnInit {
   fgSubContract: FormGroup;
   employeeID: string;
   contractNo: string;
+  actionType: string;
   constructor(
     private cr: ChangeDetectorRef,
     private hrService: CodxHrService,
@@ -25,11 +26,15 @@ export class PopupSubEContractComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    //this.fgSubContract = JSON.parse(JSON.stringify(data?.data?.formGroup));
-    this.fmSubContract = JSON.parse(JSON.stringify(data?.data?.formModel));
     this.employeeID = data?.data?.employeeId;
     this.contractNo = data?.data?.contractNo;
+    this.actionType = data?.data?.actionType;
     this.dialog = dialog;
+
+    this.fmSubContract = new FormModel();
+    this.fmSubContract.entityName = 'HR_EContracts';
+    this.fmSubContract.gridViewName = 'grvEContractsPL';
+    this.fmSubContract.formName = 'EContracts';
   }
 
   ngOnInit(): void {
@@ -47,18 +52,24 @@ export class PopupSubEContractComponent implements OnInit {
   }
 
   initForm() {
-    this.hrService.getEContractDefault().subscribe((res) => {
-      if (res) {
-        this.oSubContract = res;
-        this.oSubContract.employeeID = this.employeeID;
-        this.oSubContract.refContractNo = this.contractNo;
-        this.oSubContract.isAppendix = 1;
-        this.fmSubContract.currentData = this.oSubContract;
-        this.fgSubContract.patchValue(this.oSubContract);
-        this.cr.detectChanges();
-        this.isAfterRender = true;
+    if (this.actionType == 'add') {
+      this.hrService.getEContractDefault().subscribe((res) => {
+        if (res) {
+          this.oSubContract = res;
+          this.oSubContract.employeeID = this.employeeID;
+          this.oSubContract.refContractNo = this.contractNo;
+          this.oSubContract.isAppendix = 1;
+
+          this.fmSubContract.currentData = this.oSubContract;
+          this.fgSubContract.patchValue(this.oSubContract);
+          this.cr.detectChanges();
+          this.isAfterRender = true;
+        }
+      });
+    } else if (this.actionType == 'edit' || this.actionType == 'copy') {
+      if (this.actionType == 'copy') {
       }
-    });
+    }
   }
 
   onSaveForm(isCloseForm: boolean) {

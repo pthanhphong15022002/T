@@ -325,14 +325,16 @@
   <div class="mb-1">
     <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>
   </div>
-  <div class="d-flex justify-content-end me-2">
+  <div class="mt-1 w-100">
+  <div class="float-left justify-content-end me-2">
     <ng-container *ngFor="let item of listRoles">
-      <div class="d-flex align-items-center ms-4">
+      <div class="d-flex align-items-center me-2">
         <span class="me-1"><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt="" /></span>
-        <div class="fs-8 text-gray-500">{{ item.text }}</div>
+        <div class="fs-8 text-gray-500 text-nowrap mt-1">{{ item.text }}</div>
       </div>
     </ng-container>
   </div>
+</div>
   <div class="listuser-box">
     <div class="d-flex align-items-start user-card py-2" *ngFor="let item of listTaskResousceSearch">
       <div class="me-3">

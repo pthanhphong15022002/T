@@ -7,7 +7,7 @@ import { PopupTaskComponent } from '../popup-task/popup-task.component';
 @Component({
   selector: 'lib-test-componet',
   templateUrl: './test-componet.component.html',
-  styleUrls: ['./test-componet.component.css']
+  styleUrls: ['./test-componet.component.scss']
 })
 export class TestComponetComponent implements OnInit {
   popupJob: DialogRef;

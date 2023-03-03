@@ -121,6 +121,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
     this.auth = inject.get(AuthStore);
     this.okrService = inject.get(CodxOmService);
+    
+    this.curUser = this.auth.get();
   }
 
   //---------------------------------------------------------------------------------//
@@ -146,7 +148,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.formModelChanged();
     this.setTitle();
     this.getOKRPlans(this.periodID, this.interval, this.year);
-    this.curUser = this.auth.get();
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
@@ -249,6 +250,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
             //----------
             this.dataRequest.dataValue = item.recID;
             //----------
+            
+            this.isAfterRender = true;
             this.okrService
               .getAllOKROfPlan(this.dataOKRPlans.recID)
               .subscribe((item1: any) => {
@@ -256,11 +259,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
                   this.dataOKR = item1;
                 }
 
-                this.isAfterRender = true;
               });
           }
-
-          this.isAfterRender = true;
         });
     }
   }
@@ -433,18 +433,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       if (mess) {
         this.setNotifyPlan();
         this.notifyPlanNull = mess.defaultName;
-        this.compPlanNull = '';
-        this.deptPlanNull = '';
-        this.orgPlanNull = '';
-        this.persPlanNull = '';
+        this.compPlanNull = this.compName;
+        this.deptPlanNull = this.deptName;
+        this.orgPlanNull = this.orgName;
+        this.persPlanNull = this.persName;
         this.notifyPlanNull = this.notifyPlanNull.replace('{1}', this.periodID);
         this.compPlanNull = this.notifyPlanNull.replace('{0}', this.compName);
         this.deptPlanNull = this.notifyPlanNull.replace('{0}', this.deptName);
         this.orgPlanNull = this.notifyPlanNull.replace('{0}', this.orgPlanNull);
-        this.persPlanNull = this.notifyPlanNull.replace(
-          '{0}',
-          this.persPlanNull
-        );
+        this.persPlanNull = this.notifyPlanNull.replace('{0}',this.persPlanNull);
       }
     });
   }
