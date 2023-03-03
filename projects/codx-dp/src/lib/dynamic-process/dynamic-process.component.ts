@@ -120,6 +120,7 @@ export class DynamicProcessComponent
   readonly idField = 'recID';
 
   isChecked: boolean = false;
+  totalInstanceInProccess: number = 0;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -237,6 +238,7 @@ export class DynamicProcessComponent
   edit(data: any) {
     if (data) {
       this.view.dataService.dataSelected = data;
+      this.totalInstanceInProccess = data.totalInstance;
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -263,6 +265,7 @@ export class DynamicProcessComponent
         this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
+            // e.event.totalInstance =  this.totalInstanceInProccess
             this.view.dataService.update(e.event).subscribe();
             this.changeDetectorRef.detectChanges();
           }
@@ -274,6 +277,7 @@ export class DynamicProcessComponent
       if (data) {
         this.view.dataService.dataSelected = data;
         this.oldIdProccess = this.view.dataService.dataSelected.recID;
+        // this.totalInstanceInProccess = data.totalInstance;
       }
       this.view.dataService.copy().subscribe((res) => {
         var obj = {

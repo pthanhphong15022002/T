@@ -129,6 +129,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   reasonName: string = '';
   dataValueview: string = '';
   reasonAction: any;
+  totalStepsInProccess: number = 0;
 
   // const value string
   readonly strEmpty: string = '';
@@ -2463,7 +2464,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           if (
             (!this.step?.excludeDayoff &&
               this.step?.excludeDayoff?.trim() == '') ||
-            !this.step?.excludeDayoff.split(';').includes(value)
+            !this.step?.excludeDayoff?.split(';').includes(value)
           )
             return;
           let arr = this.step?.excludeDayoff

@@ -272,6 +272,16 @@ export class CodxEpService {
       )
       .subscribe();
   }
+  roleCheck() {    
+    return this.api
+      .execSv(
+        'EP',
+        'ERM.Business.EP',
+        'BookingsBusiness',
+        'AdminModuleCheckAsync',
+        []
+      )
+  }
 
   getListResource(resourceType: string) {
     return this.api.execSv(
@@ -593,12 +603,14 @@ export class CodxEpService {
       [booking.recID]
     );
   }
-  checkRole(curUser: any, owner: string) {
+  
+  checkRole(curUser: any, owner: string,isAdmin:boolean) {
     return (
       curUser?.userID == owner ||
       curUser?.systemAdmin ||
       curUser?.functionAdmin ||
-      curUser?.administrator
+      curUser?.administrator ||
+      isAdmin==true
     );
   }
   checkDuplicateBooking(
