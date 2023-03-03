@@ -30,6 +30,9 @@ export class NewsComponent extends UIComponent {
   mssgWP027:string = "";
   loaded:boolean = false;
   userPermission:any = null;
+  scrolled:boolean = false;
+  slides:any[] = [];
+  showNavigation:boolean = false;
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -52,7 +55,6 @@ export class NewsComponent extends UIComponent {
   ) 
   { 
     super(injector)
-    this.dataService = new CRUDService(this.injector);
   }
   onInit(): void {
     this.router.params.subscribe((param) => {
@@ -140,9 +142,7 @@ export class NewsComponent extends UIComponent {
           this.loaded = true;
         });
   }
-  scrolled:boolean = false;
-  slides:any[] = [];
-  showNavigation:boolean = false;
+  
   // get videos
   getVideoAsync(category:string,pageIndex = 0){
     this.api
@@ -223,11 +223,9 @@ export class NewsComponent extends UIComponent {
   }
 
 
-  // navigate
+  // navigate slider
   navigate($event){
-
+    debugger
   }
-
-  dataService: CRUDService = null;
 
 }
