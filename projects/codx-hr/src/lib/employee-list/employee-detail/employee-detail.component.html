@@ -4460,19 +4460,19 @@
                   default="Xem tất cả"
                 >
                 </codx-label>
-                
+                <span class="mt-1">
                 <codx-input
                   type="switch"
                   (valueChange)="valueChangeViewAllESkill($event)"
                   [checked]="ViewAllEskillFlag"
-                ></codx-input>
+                ></codx-input></span>
               </div>
             </div>
-            <div class="mb-1 mt-5">
+            <div class="mb-1 mt-7">
               <ng-container *ngFor="let eSkill of lstESkill">
                 <div class="has-action-menu">
                   <div class="pf-skill d-flex align-items-center ms-12 mb-4">
-                    <div class="sk-title w-150px fw-bold">
+                    <div class="sk-title w-250px fw-bold fs-6">
                       <!-- {{ eSkill?.skillName ?? eSkill?.skillID }} -->
                       {{
                         eSkill?.skillID
@@ -5498,8 +5498,9 @@
 <!--#endregion-->
 
 <ng-template #templateECertificateGridCol1 let-data>
-  <div class="fw-bold fs-6">
-    <i class="icon-class icon-20 me-1 text-primary"></i>
+  <div class=" mb-1">
+    <i class="icon-class icon-16 me-2 text-primary"></i>
+    <span class="fw-bold fs-6"></span>
     {{
       data?.certificateID
         | formatvalue : eCertificateFormModel : "certificateID"
