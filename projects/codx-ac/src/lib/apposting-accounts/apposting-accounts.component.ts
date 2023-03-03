@@ -1,10 +1,9 @@
-import { C } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Component,
   Injector,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import {
   CodxGridviewComponent,
@@ -12,7 +11,7 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType,
+  ViewType
 } from 'codx-core';
 import { PopupAddAPPostingAccountComponent } from './popup-add-apposting-account/popup-add-apposting-account.component';
 
