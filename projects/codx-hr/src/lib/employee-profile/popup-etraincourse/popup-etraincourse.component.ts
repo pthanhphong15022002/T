@@ -38,7 +38,6 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   isSaved: boolean = false;
   trainCourseObj;
   dataVllSupplier: any;
-  result;
   fromDateFormat;
   toDateFormat;
   ops = ['m', 'y'];
@@ -106,7 +105,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
                 )
                 .subscribe((res) => {
                   if (res) {
-                    console.log('dataaaaaa', res);
+                    console.log('dataaaaaa12313123213', res.data);
                     // this.data = res?.data;
                     this.trainCourseObj = res?.data;
                     this.trainCourseObj.employeeID = this.employId;
@@ -160,35 +159,23 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
-    if (this.actionType === 'copy') delete this.trainCourseObj.recID;
-    this.employId = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
         .addETraincourse(this.trainCourseObj, this.funcID)
         .subscribe((p) => {
           if (p != null) {
-            this.result = p;
             this.notify.notifyCode('SYS006');
-            this.result.isSuccess = true;
-            this.dialog && this.dialog.close(this.result);
-          } else {
-            this.notify.notifyCode('SYS023');
-            this.result.isSuccess = false;
-          }
+            this.dialog && this.dialog.close(p);
+          } else this.notify.notifyCode('SYS023');
         });
     } else {
       this.hrService
         .updateEmployeeTrainCourseInfo(this.trainCourseObj, this.funcID)
         .subscribe((p) => {
           if (p != null) {
-            this.result = p;
             this.notify.notifyCode('SYS007');
-            this.result.isSuccess = true;
-            this.dialog && this.dialog.close(this.result);
-          } else {
-            this.notify.notifyCode('SYS021');
-            this.result.isSuccess = false;
-          }
+            this.dialog && this.dialog.close(p);
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }

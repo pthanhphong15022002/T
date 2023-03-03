@@ -1586,6 +1586,16 @@ export class CodxHrService {
     );
   }
 
+  GetIsCurrentBenefitWithBenefitID(employeeID: string, benefitID: string){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBenefitsBusiness',
+      'GetIsCurrentValDueToBenefitIdAsync',
+      [employeeID, benefitID]
+    );
+  }
+
   AddEBenefit(data: any) {
     return this.api.execSv<any>(
       'HR',
