@@ -1,9 +1,10 @@
 <codx-form #form [body]="body" [footer]="footer" [dialog]="dialogRef" [dialog]="dialogRef" [formModel]="formModel"
-  [data]="data" 
-  [showHeader]="false" *ngIf="isAfterRender" >
+  [data]="dataKR" 
+  [showHeader]="false" *ngIf="isAfterRender">
   <ng-template #subHeader>
     <div class="d-flex justify-content-center">
-      <codx-label default="Check-in" name="lblCheckin"></codx-label>
+      <!-- <codx-label default="Check-in" name="lblCheckin"></codx-label> -->
+      
     </div>
   </ng-template>
   <ng-template #body>
@@ -31,11 +32,11 @@
         <div class="d-flex flex-column mt-5 w-100">
           <div class="d-flex flex-row">
             <div class="col-3">
-              <codx-label default="Kết quả thực hiện" fiedName="Value" [formModel]="form.formModel"></codx-label>
+              <codx-label class="fw-bold  mb-1" default="Kết quả thực hiện" fiedName="Value" [formModel]="form.formModel"></codx-label>
               <codx-input [max]="dataKR.checkInMode==1?100:100-dataKR.progress" [showSpinButton]="false" ControlName="value" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
             </div>
             <div class="col-5 ms-5">
-              <codx-label default="Tình trạng" fiedName="Status" [formModel]="form.formModel"></codx-label>
+              <codx-label class="fw-bold mb-1" default="Tình trạng" fiedName="Status" [formModel]="form.formModel"></codx-label>
               <codx-input ControlName="status" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
             </div>
 
@@ -48,7 +49,7 @@
               class="text-primary"></codx-label>
 
           </div>
-          <div>
+          <div class="form-group">
             <codx-label default="Ghi chú" fiedName="Comment" [formModel]="form.formModel"></codx-label>
             <codx-input ControlName="comment" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
           </div>
@@ -83,8 +84,8 @@
             <codx-label name="lblCancel" default="Hủy" class="fw-bold px-3" [formModel]="formModel"></codx-label>
           </span>
           <span type="button" (click)="checkinSave()"
-            class="d-flex py-2 px-4 btn-primary rounded justify-content-center ">
-            <codx-label name="lblSave" class=" px-3 fw-bold" default="Lưu" [formModel]="formModel"></codx-label>
+            class="d-flex py-2 px-4 bg-primary rounded justify-content-center ">
+            <codx-label name="lblSave" class=" text-light px-3 fw-bold" default="Lưu" [formModel]="formModel"></codx-label>
           </span>
         </div>
       </div>
