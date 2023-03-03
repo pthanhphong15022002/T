@@ -3,176 +3,171 @@
   [data]="chartOfAccounts">
 </codx-layout-add>
 <ng-template #tabDescription>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="AccountID" default="Tài khoản"></codx-label>
-        <codx-input [crrValue]="accID" [formModel]="form.formModel" field="accountID"
-          (valueChange)="valueChangeAccID($event)">
-        </codx-input>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="AccountID"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="chartOfAccounts.accountID" [formModel]="form.formModel"
+            field="accountID" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="ParentID"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="chartOfAccounts.parentID"
+            field="parentID" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="parentID" default="Tài khoản cha"></codx-label>
-        <codx-input type="combobox" refValue="ParentAccounts" [crrValue]="parID" field="parentID"
-          (valueChange)="valueChangeParID($event)" [dataSelected]="false" [multiple]="false" [disabled]="false"
-          loadFull="true">
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="AccountName"></codx-label>
+      <codx-input [Group]="form.formGroup" field="accountName" [crrValue]="chartOfAccounts.accountName"
+        [formModel]="form.formModel" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="AccountType"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="chartOfAccounts.accountType"
+        field="accountType" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="d-flex align-items-center mb-2">
+      <div class="me-2">
+        <codx-input type="switch" field="detail" (valueChange)="valueChange($event)" [checked]="chartOfAccounts.detail">
         </codx-input>
       </div>
+      <codx-label [formModel]="form.formModel" fiedName="Detail"></codx-label>
     </div>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="accountName" default="Tên tài khoản"></codx-label>
-    <codx-input field="accountName" [crrValue]="form.data.accountName" [formModel]="form.formModel"
-      (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="accountType" default="Loại tài khoản"></codx-label>
-    <codx-input [crrValue]="form.data.accountType" type="valuelist" refValue="AC001" field="accountType"
-      (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true">
-    </codx-input>
-  </div>
-  <div class="d-flex align-items-center mb-2">
-    <div class="me-2">
-      <codx-input type="switch" field="detail" (valueChange)="valueChange($event)" [checked]="form.data.detail">
-      </codx-input>
-    </div>
-    <codx-label [formModel]="form.formModel" fiedName="detail" default="Là tài khoản chi tiết"></codx-label>
-  </div>
-  <div class="d-flex align-items-center mb-2">
-    <div class="me-2">
-      <codx-input type="switch" field="multiCurrency" (valueChange)="valueChange($event)"
-        [checked]="form.data.multiCurrency">
-      </codx-input>
-    </div>
-    <codx-label [formModel]="form.formModel" fiedName="multiCurrency" default="Theo dõi ngoại tệ"></codx-label>
-  </div>
-  <div class="d-flex align-items-center mb-4">
-    <div class="me-2">
-      <codx-input type="switch" field="subLGControl" (valueChange)="valueChange($event)"
-        [checked]="form.data.subLGControl">
-      </codx-input>
-    </div>
-    <codx-label [formModel]="form.formModel" fiedName="subLGControl"
-      default="Tài khoản có theo dõi đối tượng công nợ?"></codx-label>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="subLGType" default="Loại công nợ"></codx-label>
-        <codx-input [crrValue]="subLGType" type="valuelist" field="subLGType" refValue="AC002"
-          (valueChange)="valueChangeSubtype($event)" [dataSelected]="false" [multiple]="false" [disabled]="false"
-          loadFull="true">
+    <div class="d-flex align-items-center mb-2">
+      <div class="me-2">
+        <codx-input type="switch" field="multiCurrency" (valueChange)="valueChange($event)"
+          [checked]="chartOfAccounts.multiCurrency">
         </codx-input>
       </div>
+      <codx-label [formModel]="form.formModel" fiedName="MultiCurrency"></codx-label>
     </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="objectID" default="Đối tượng mặc định"></codx-label>
-        <codx-input type="combobox" field="objectID" refValue="Customers" (valueChange)="valueChange($event)"
-          [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true">
+    <div class="d-flex align-items-center mb-4">
+      <div class="me-2">
+        <codx-input type="switch" field="subLGControl" (valueChange)="valueChange($event)"
+          [checked]="chartOfAccounts.subLGControl">
         </codx-input>
       </div>
+      <codx-label [formModel]="form.formModel" fiedName="SubLGControl"></codx-label>
     </div>
-  </div>
-  <div class="d-flex align-items-center mb-2">
-    <div class="me-2">
-      <codx-input type="switch" field="invoiceDetail" (valueChange)="valueChange($event)"
-        [checked]="form.data.invoiceDetail">
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="SubLGType"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="chartOfAccounts.subLGType"
+            field="subLGType" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="ObjectID"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="objectID"
+            [crrValue]="chartOfAccounts.objectID" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex align-items-center mb-2">
+      <div class="me-2">
+        <codx-input type="switch" field="invoiceDetail" (valueChange)="valueChange($event)"
+          [checked]="chartOfAccounts.invoiceDetail">
+        </codx-input>
+      </div>
+      <codx-label [formModel]="form.formModel" fiedName="InvoiceDetail"></codx-label>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
+      <codx-input [formModel]="form.formModel" [crrValue]="chartOfAccounts.note" field="note"
+        (valueChange)="valueChange($event)">
       </codx-input>
     </div>
-    <codx-label [formModel]="form.formModel" fiedName="invoiceDetail"
-      default="Theo dõi công nợ chi tiết đến hóa đơn/chứng từ"></codx-label>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="note" default="Diễn giải"></codx-label>
-    <codx-input [formModel]="form.formModel" [crrValue]="form.data.note" field="note"
-      (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
-  <div class="d-flex align-items-center">
-    <div class="me-2">
-      <codx-input [formModel]="form.formModel" field="stop" (valueChange)="valueChange($event)"
-        [checked]="form.data.stop">
-      </codx-input>
+    <div class="d-flex align-items-center">
+      <div class="me-2">
+        <codx-input [formModel]="form.formModel" field="stop" (valueChange)="valueChange($event)"
+          [checked]="form.data.stop">
+        </codx-input>
+      </div>
+      <codx-label [formModel]="form.formModel" fiedName="Stop"></codx-label>
     </div>
-    <codx-label [formModel]="form.formModel" fiedName="stop" default="Ngừng sử dụng"></codx-label>
-  </div>
+  </ng-container>
 </ng-template>
 <ng-template #tabestablish>
-  <div class="mb-3 text-primary fw-bold fs-6">
-    <codx-label [formModel]="form.formModel" default="Ràng buộc nhập liệu"></codx-label>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="diM1Control" default="Phòng ban"></codx-label>
-    <codx-input type="valuelist" [crrValue]="form.data.diM1Control" refValue="AC003" field="diM1Control"
-      (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true">
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="projectControl" default="Dự án"></codx-label>
-    <codx-input type="valuelist" refValue="AC003" [crrValue]="form.data.projectControl" field="projectControl"
-      (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true">
-    </codx-input>
-  </div>
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="diM2Control" default="Trung tâm chi phí"></codx-label>
-        <codx-input type="valuelist" [crrValue]="form.data.diM2Control" refValue="AC003" field="diM2Control"
-          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false" [disabled]="false"
-          loadFull="true">
-        </codx-input>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="mb-3 text-primary fw-bold fs-6">
+      <codx-label [formModel]="form.formModel" default="Ràng buộc dữ liệu"></codx-label>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="DiM1Control"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="chartOfAccounts.diM1Control"
+        field="diM1Control" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="ProjectControl"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="chartOfAccounts.projectControl"
+        field="projectControl" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="DiM2Control"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="chartOfAccounts.diM2Control"
+            field="diM2Control" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="DiM3Control"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="chartOfAccounts.diM3Control"
+            field="diM3Control" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-    <div class="col">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="diM3Control" default="Mục phí"></codx-label>
-        <codx-input type="valuelist" [crrValue]="form.data.diM3Control" refValue="AC003" field="diM3Control"
-          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false" [disabled]="false"
-          loadFull="true">
-        </codx-input>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="LoanControl"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="chartOfAccounts.loanControl"
+        field="loanControl" (valueChange)="valueChangeloan($event)">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="AssetControl"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="chartOfAccounts.assetControl"
+        field="assetControl" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="mb-3 text-primary fw-bold fs-6">
+      <codx-label [formModel]="form.formModel" default="Kiểm soát ghi số"></codx-label>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="BudgetControl"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="chartOfAccounts.budgetControl"
+            field="budgetControl" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="balControl"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="chartOfAccounts.balControl"
+            field="balControl" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="loanControl" default="Khế ước vay"></codx-label>
-    <codx-input type="valuelist" [crrValue]="form.data.loanControl" refValue="AC004" field="loanControl"
-      (valueChange)="valueChangeloan($event)" [dataSelected]="false" [multiple]="false" [disabled]="false"
-      loadFull="true">
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="assetControl" default="Kiểm soát tài sản/CCDC/CPTT"></codx-label>
-    <codx-input type="valuelist" [crrValue]="form.data.assetControl" refValue="AC004" field="assetControl"
-      (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false" [disabled]="false" loadFull="true">
-    </codx-input>
-  </div>
-  <div class="mb-3 text-primary fw-bold fs-6">
-    <codx-label [formModel]="form.formModel" default="Kiểm soát ghi số"></codx-label>
-  </div>
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="budgetControl" default="Kiểm soát ngân sách"></codx-label>
-        <codx-input type="valuelist" refValue="AC006" [crrValue]="form.data.budgetControl" field="budgetControl"
-          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false" [disabled]="false"
-          loadFull="true">
-        </codx-input>
-      </div>
-    </div>
-    <div class="col">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="balControl" default="Kiểm soát số dư"></codx-label>
-        <codx-input type="valuelist" [crrValue]="form.data.balControl" refValue="AC006" field="balControl"
-          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false" [disabled]="false"
-          loadFull="true">
-        </codx-input>
-      </div>
-    </div>
-  </div>
+  </ng-container>
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">

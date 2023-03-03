@@ -3,12 +3,12 @@ export class ExchangeRates {
   createdBy: any;
   createdOn: any;
   currencyID: any;
-  exchangeRate: any;
+  exchangeRate: any = '';
   modifiedBy: any;
   modifiedOn: any;
-  note: any;
+  note: any = '';
   recID: any;
-  sourceType: any;
-  toDate: any;
+  sourceType: any = '';
+  toDate: any = '';
   toTime: any;
 }
