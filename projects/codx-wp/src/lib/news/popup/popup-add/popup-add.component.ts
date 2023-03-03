@@ -117,8 +117,10 @@ export class PopupAddComponent implements OnInit {
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
+  loading:boolean = false;
   // insert post
   clickInsertNews(){
+    this.loading = true;
     if(this.arrFieldRequire.length > 0)
     {
       let arrFieldUnValid:string = "";
@@ -149,9 +151,10 @@ export class PopupAddComponent implements OnInit {
           if (this.fileUpload.length > 0) {
             this.codxATM.objectId = this.data.recID;
             this.codxATM.fileUploadList = this.fileUpload;
-            (await this.codxATM.saveFilesObservable()).subscribe((res2: any) => {
+            this.codxATM.saveFilesMulObservable().subscribe((res2: any) => {
                 if (res2) 
                 {
+                  this.loading = false;
                   this.dialogRef.close();
                 }
               }
@@ -159,13 +162,14 @@ export class PopupAddComponent implements OnInit {
           }
           else 
           {
+            this.loading = false;
             this.dialogRef.close();
           }
         }
         else
         {
+          this.loading = false;
           this.dialogRef.close();
-
         }
       });
   }
