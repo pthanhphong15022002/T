@@ -131,6 +131,10 @@ renderFooter=false;
 
               this.isEdit = true;
             }
+            else{
+              
+              this.isEdit = false;
+            }
             this.detectorRef.detectChanges();
 
           }
