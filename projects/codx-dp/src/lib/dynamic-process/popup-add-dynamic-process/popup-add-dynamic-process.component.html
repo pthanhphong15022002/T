@@ -248,10 +248,22 @@
     <div class="header-job">
       <div class="left">
         <div>
-          <codx-label class="title" name="lblGeneral" [formName]="'GridViewSetup'" [gridViewName]="'grvGridViewSetup'" default="Thông tin chung"></codx-label>
+          <codx-label
+            class="title"
+            name="lblGeneral"
+            [formName]="'GridViewSetup'"
+            [gridViewName]="'grvGridViewSetup'"
+            default="Thông tin chung"
+          ></codx-label>
         </div>
         <div>
-          <codx-label name="lblGeneral" [formName]="'GridViewSetup'" [gridViewName]="'grvGridViewSetup'" default="Thông tin chung của quy trình" style="color: #898989">
+          <codx-label
+            name="lblGeneral"
+            [formName]="'GridViewSetup'"
+            [gridViewName]="'grvGridViewSetup'"
+            default="Thông tin chung của quy trình"
+            style="color: #898989"
+          >
           </codx-label>
         </div>
       </div>
@@ -407,7 +419,11 @@
         <div class="col-6">
           <div class="d-flex flex-column margin-form mb-4">
             <div class="d-flex flex">
-              <codx-label class="fw-bolder" name="lblSupervisor" default="Người giám sát">
+              <codx-label
+                class="fw-bolder"
+                name="lblSupervisor"
+                default="Người giám sát"
+              >
               </codx-label>
               <i
                 class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
@@ -419,7 +435,10 @@
               ></i>
             </div>
             <div>
-              <codx-label class="fw-normal text-gray-400" name="lblLocationControl" default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
+              <codx-label
+                class="fw-normal text-gray-400"
+                name="lblLocationControl"
+                default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
                 viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa
                 nhiệm vụ"
               >
@@ -464,7 +483,11 @@
         <div class="col-6">
           <div class="d-flex flex-column margin-form mb-4">
             <div class="d-flex flex">
-              <codx-label class="fw-bolder" name="lblParticipants" default="Thành viên tham gia">
+              <codx-label
+                class="fw-bolder"
+                name="lblParticipants"
+                default="Thành viên tham gia"
+              >
               </codx-label>
               <i
                 class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
@@ -476,8 +499,11 @@
               ></i>
             </div>
             <div>
-              <codx-label class="fw-normal text-gray-400" name="lblParticipantControl"
-                default="Có quyền tạo nhiệm vụ trong quy trình">
+              <codx-label
+                class="fw-normal text-gray-400"
+                name="lblParticipantControl"
+                default="Có quyền tạo nhiệm vụ trong quy trình"
+              >
               </codx-label>
             </div>
           </div>
@@ -519,7 +545,11 @@
         <div class="col-6">
           <div class="d-flex flex-column margin-form mb-4">
             <div class="d-flex flex">
-              <codx-label class="fw-bolder" name="lblFollowers" default="Người theo dõi">
+              <codx-label
+                class="fw-bolder"
+                name="lblFollowers"
+                default="Người theo dõi"
+              >
               </codx-label>
               <i
                 class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
@@ -531,8 +561,11 @@
               ></i>
             </div>
             <div>
-              <codx-label class="fw-normal text-gray-400" name="lblFollowerControl"
-                default="Có quyền xem các nhiệm vụ trong quy trình">
+              <codx-label
+                class="fw-normal text-gray-400"
+                name="lblFollowerControl"
+                default="Có quyền xem các nhiệm vụ trong quy trình"
+              >
               </codx-label>
             </div>
           </div>
@@ -618,8 +651,8 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            <div class="position-relative" style="width: 70%">
+          <div class="col-6 row">
+            <div #autoNumberSetting class="position-relative col-6">
               <codx-input
                 type="text"
                 [crrValue]="instanceNoSetting"
@@ -628,12 +661,18 @@
                 field="instanceNoSetting"
               >
               </codx-input>
-              <div class="position-absolute" style="top: 7px; right: 7px">
+              <div
+                class="position-absolute cursor-pointer"
+                style="top: 7px; right: 13px"
+              >
                 <i
                   class="icon-settings form-control-feedback"
                   (click)="openAutoNumPopup()"
                 ></i>
               </div>
+            </div>
+            <div *ngIf="instanceNoEx" class="col-6">
+              {{ instanceNoEx }}
             </div>
           </div>
         </div>
@@ -648,8 +687,8 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            <div style="width: 70%">
+          <div class="col-6 row">
+            <div class="col-6">
               <codx-input
                 field="viewMode"
                 type="valuelist"
@@ -673,8 +712,8 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            <div style="width: 70%">
+          <div class="col-6 row">
+            <div class="col-6">
               <codx-input
                 field="viewModeDetail"
                 type="valuelist"
@@ -698,8 +737,8 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
-            <div style="width: 70%">
+          <div class="col-6 row">
+            <div class="col-6">
               <codx-input
                 type="valuelist"
                 [refValue]="gridViewSetup?.ShowInstanceControl?.referedValue"
@@ -727,10 +766,10 @@
             >
             </codx-label>
           </div>
-          <div class="col-6">
+          <div class="col-6 row">
             <!-- <codx-input [crrValue]="process.closeInstanceControl" (valueChange)="valueChange($event)" field="closeInstanceControl" [formModel]="formModel" [Group]="formGroup" >
               </codx-input> -->
-            <div class="position-relative" style="width: 70%">
+            <div class="position-relative col-6">
               <codx-input
                 field="closeInstanceControl"
                 type="text"
@@ -743,7 +782,7 @@
               ></codx-input>
               <div
                 class="position-absolute text-gray-400"
-                style="top: 7px; right: 7px"
+                style="top: 7px; right: 13px"
               >
                 <codx-label fiedName="lblDate" default="Ngày"></codx-label>
               </div>
@@ -1388,15 +1427,24 @@
                     *ngIf="taskList?.recID"
                     class="d-flex justify-content-start align-items-center has-action-menu"
                   >
-                    <div class="icon-container">
-                      <span
-                        class="icon-add_circle icon-20 text-primary-600 py-2"
-                      ></span>
+                    <!-- show hiden group task -->
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                      style="border: 1px solid #6C757D; width: 25px; height: 25px"
+                    >
+                      <!-- <span class="icon-maximize" style="font-size: 20px; color:#6C757D;"></span> icon-add_box -->
+                      <span class="icon-maximize" style="font-size: 20px; color:#6C757D;"></span>
+                      <span class="icon-add_circle icon-20 text-primary-600 py-2"></span>
                     </div>
-                    <div class="icon-container">
-                      <span
-                        class="icon-supervised_user_circle icon-20 text-primary-600 py-2"
-                      ></span>
+                    <div class="avata">
+                      <codx-img
+                      [width]="40"
+                      class="me-2"
+                      [objectId]="taskList?.roles[0]?.objectID"
+                      objectType="AD_Users"
+                      [objectName]="taskList?.roles[0]?.objectName"
+                    >
+                    </codx-img>
                     </div>
                     <div class="steplist-hearder ms-5">
                       <div>
@@ -1459,7 +1507,7 @@
                       >
                         <div
                           [ngStyle]="
-                            taskList?.recID ? { 'margin-left': '50px' } : {}
+                            taskList?.recID ? { 'margin-left': '45px' } : {}
                           "
                           class="has-action-menu"
                         >
@@ -1467,19 +1515,26 @@
                             class="d-flex justify-content-start align-items-center"
                             style="font-size: 1rem"
                           >
+                            <!-- icon task -->
                             <div
                               class="icon-container"
-                              style="background-color: #3ef8e9"
+                              [ngStyle]="getColor(task)"
                             >
                               <span
-                                class="icon-add_circle icon-20 text-primary-600 py-2"
-                                (click)="addFile($event)"
+                                class="icon-20 text-primary-600 py-2"
+                                [ngClass]="getIconTask(task)"
                               ></span>
                             </div>
-                            <div class="icon-container">
-                              <span
-                                class="icon-supervised_user_circle icon-20 text-primary-600 py-2"
-                              ></span>
+                            <!-- avata -->
+                            <div class="avata">
+                              <codx-img
+                              [width]="40"
+                              class="me-2"
+                              [objectId]="task?.roles[0]?.objectID"
+                              objectType="AD_Users"
+                              [objectName]="task?.roles[0]?.objectName"
+                            >
+                            </codx-img>
                             </div>
                             <div class="steplist-hearder ms-5">
                               <div>
@@ -1627,7 +1682,12 @@
     >
       <codx-label name="Save" formName="Tasks" default="Hủy"></codx-label>
     </button>
-    <button type="button" class="btn btn-primary" [disabled]="isSaveStep" (click)="saveStep()">
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="isSaveStep"
+      (click)="saveStep()"
+    >
       <codx-label name="Save" formName="Tasks" default="Đồng ý"></codx-label>
     </button>
   </div>
@@ -2021,10 +2081,18 @@
     <div class="header-job p-3">
       <div class="left">
         <div>
-          <codx-label class="title" name="lblRoles" default="Các vai trò trong giai đoạn"></codx-label>
+          <codx-label
+            class="title"
+            name="lblRoles"
+            default="Các vai trò trong giai đoạn"
+          ></codx-label>
         </div>
         <div>
-          <codx-label class="text-muted" name="lblRoleControl" default="Những người liên quan đến giai đoạn">
+          <codx-label
+            class="text-muted"
+            name="lblRoleControl"
+            default="Những người liên quan đến giai đoạn"
+          >
           </codx-label>
         </div>
       </div>
@@ -2052,7 +2120,11 @@
         <div class="col-6">
           <div class="d-flex flex-column margin-form mb-4">
             <div class="d-flex flex">
-              <codx-label class="fw-bolder" name="lblParticipantRole" default="Người giám sát">
+              <codx-label
+                class="fw-bolder"
+                name="lblParticipantRole"
+                default="Người giám sát"
+              >
               </codx-label>
               <i
                 class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
@@ -2060,7 +2132,10 @@
               ></i>
             </div>
             <div>
-              <codx-label class="fw-normal text-gray-400" name="lblParticipantRoleControl" default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
+              <codx-label
+                class="fw-normal text-gray-400"
+                name="lblParticipantRoleControl"
+                default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
               viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa
               nhiệm vụ"
               >
@@ -2097,12 +2172,20 @@
         <div class="col-6">
           <div class="d-flex flex-column margin-form mb-4">
             <div class="d-flex flex">
-              <codx-label class="fw-bolder" name="lblInvolved" default="Người liên quan">
+              <codx-label
+                class="fw-bolder"
+                name="lblInvolved"
+                default="Người liên quan"
+              >
               </codx-label>
             </div>
             <div>
-              <codx-label class="fw-normal text-gray-400" name="lblInvolvedControl" default="Người liên quan có thể cập nhật công việc mà họ đang
-                phụ trách">
+              <codx-label
+                class="fw-normal text-gray-400"
+                name="lblInvolvedControl"
+                default="Người liên quan có thể cập nhật công việc mà họ đang
+                phụ trách"
+              >
               </codx-label>
             </div>
           </div>

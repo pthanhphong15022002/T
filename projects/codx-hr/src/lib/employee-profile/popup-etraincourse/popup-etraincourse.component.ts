@@ -38,10 +38,12 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   isSaved: boolean = false;
   trainCourseObj;
   dataVllSupplier: any;
-  result;
   fromDateFormat;
   toDateFormat;
   ops = ['m', 'y'];
+  headerTextCalendar: any = [];
+  isNullFrom: boolean = true;
+  isNullTo: boolean = true;
 
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
@@ -65,6 +67,8 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     this.trainCourseObj = JSON.parse(
       JSON.stringify(dataDialog?.data?.dataInput)
     );
+    this.headerTextCalendar[0] = dataDialog?.data?.trainFromHeaderText;
+    this.headerTextCalendar[1] = dataDialog?.data?.trainToHeaderText;
   }
 
   initForm() {
@@ -106,7 +110,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
                 )
                 .subscribe((res) => {
                   if (res) {
-                    console.log('dataaaaaa', res);
+                    console.log('dataaaaaa12313123213', res.data);
                     // this.data = res?.data;
                     this.trainCourseObj = res?.data;
                     this.trainCourseObj.employeeID = this.employId;
@@ -114,9 +118,18 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
                     this.formGroup.patchValue(this.trainCourseObj);
                     this.cr.detectChanges();
                     this.isAfterRender = true;
+                    this.isNullFrom = false;
+                    this.isNullTo = false;
                   }
                 });
             } else {
+              this.isNullFrom = true;
+              this.isNullTo = true;
+
+              if (this.trainCourseObj.trainFromDate == null)
+                this.isNullFrom = false;
+              if (this.trainCourseObj.trainToDate == null)
+                this.isNullTo = false;
               this.formModel.currentData = this.trainCourseObj;
               this.formGroup.patchValue(this.trainCourseObj);
               this.cr.detectChanges();
@@ -125,7 +138,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
           }
         });
     }
-    if(this.trainCourseObj){
+    if (this.trainCourseObj) {
       this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
       this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);
     } else {
@@ -160,35 +173,23 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
-    if (this.actionType === 'copy') delete this.trainCourseObj.recID;
-    this.employId = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
         .addETraincourse(this.trainCourseObj, this.funcID)
         .subscribe((p) => {
           if (p != null) {
-            this.result = p;
             this.notify.notifyCode('SYS006');
-            this.result.isSuccess = true;
-            this.dialog && this.dialog.close(this.result);
-          } else {
-            this.notify.notifyCode('SYS023');
-            this.result.isSuccess = false;
-          }
+            this.dialog && this.dialog.close(p);
+          } else this.notify.notifyCode('SYS023');
         });
     } else {
       this.hrService
         .updateEmployeeTrainCourseInfo(this.trainCourseObj, this.funcID)
         .subscribe((p) => {
           if (p != null) {
-            this.result = p;
             this.notify.notifyCode('SYS007');
-            this.result.isSuccess = true;
-            this.dialog && this.dialog.close(this.result);
-          } else {
-            this.notify.notifyCode('SYS021');
-            this.result.isSuccess = false;
-          }
+            this.dialog && this.dialog.close(p);
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }
@@ -274,12 +275,13 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       this.trainCourseObj.trainToDate = event.fromDate;
     }
   }
-  getFormatDate(trainFrom : string){
+  getFormatDate(trainFrom: string) {
     let resultDate = '';
-    if(trainFrom){
+    if (trainFrom) {
       let arrDate = trainFrom.split('/');
-      resultDate = arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
-      return resultDate
-    } else return resultDate = 'y';
+      resultDate =
+        arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
+      return resultDate;
+    } else return (resultDate = 'y');
   }
 }

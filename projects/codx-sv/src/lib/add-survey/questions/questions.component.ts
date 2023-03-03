@@ -39,6 +39,7 @@ import { TemplateSurveyOtherComponent } from './template-survey-other.component/
 import { PopupQuestionOtherComponent } from './template-survey-other.component/popup-question-other/popup-question-other.component';
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { SortSessionComponent } from './sort-session/sort-session.component';
+import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-questions',
@@ -224,20 +225,15 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     // });
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes?.recID &&
-      changes.recID?.previousValue != changes.recID?.currentValue
-    )
+    if ( changes?.funcID && changes.funcID?.previousValue != changes.funcID?.currentValue)
     {
-      this.loadData(this.recID);
+      this.funcID = changes.funcID?.currentValue;
+      //if(this.funcID) this.loadDataFunc();
     }
-    if (
-      changes?.funcID &&
-      changes.funcID?.previousValue!= changes.funcID?.currentValue
-    )
+    if(changes?.recID && changes.recID?.previousValue != changes.recID?.currentValue)
     {
-      this.funcID = changes.data?.currentValue?.funcID;
-      if(this.funcID) this.loadDataFunc();
+      this.recID = changes.recID?.currentValue;
+      this.loadDataFunc();
     }
   }
   //lấy answerType
@@ -284,10 +280,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   onInit(): void {
-    if(this.funcID)
-    {
-      this.loadDataFunc();
-    }
+   
   }
 
   loadDataFunc()
@@ -329,17 +322,17 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       .subscribe((res: any) => {
         if (res && res[0] && res[0].length > 0) {
           this.questions = this.getHierarchy(res[0], res[1]);
-          this.SVServices.getFilesByObjectType(
-            this.functionList.entityName
+          this.SVServices.getFilesByObjectTypeRefer(
+            this.functionList.entityName,
+            this.recID
           ).subscribe((res: any) => {
             if (res) {
               res.forEach((x) => {
-                if (x.referType == this.REFER_TYPE.VIDEO)
+                if (x.referType = this.recID +"_"+ this.REFER_TYPE.VIDEO)
                   x['srcVideo'] = `${environment.urlUpload}/${x.pathDisk}`;
               });
               this.lstEditIV = res;
             }
-            console.log('check lstFile', this.lstEditIV);
           });
         } else {
           this.questions = [
@@ -424,12 +417,12 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   dropAnswer(event: CdkDragDrop<string[]>, idParent) {
-    debugger
     var index = this.questions[0].children.findIndex((x) => x.seqNo == idParent);
     this.dataAnswer = this.questions[0].children[index].answers;
     moveItemInArray(this.dataAnswer, event.previousIndex, event.currentIndex);
     this.dataAnswer.forEach((x, index) => (x.seqNo = index));
     this.questions[0].children[idParent].answers = this.dataAnswer;
+    this.setTimeoutSaveData(this.questions[0].children, false);
   }
 
   dropAnswerRC(
@@ -602,7 +595,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   deleteCard(seqNoSession, seqNoQuestion, recIDQuestion, category) {
     if (category == 'S') this.deleteSession(seqNoSession);
     else this.deleteNoSession(seqNoSession, seqNoQuestion, recIDQuestion);
-    console.log('check delete card', this.questions);
   }
 
   mergeSession(itemSession) {
@@ -1042,6 +1034,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       data: this.itemActive,
       inline: inline,
       itemAnswer: itemAnswer,
+      referType: this.recID
     };
     var dialog = this.callfc.openForm(
       PopupUploadComponent,
@@ -1049,7 +1042,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       900,
       600,
       '',
-      obj,
+      obj, 
       ''
     );
     dialog.closed.subscribe((res) => {
@@ -1190,6 +1183,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   addCard(itemActive, seqNoSession = null, category) {
+    debugger
     if (itemActive) {
       if (category == 'S') this.addSession(itemActive, seqNoSession);
       else this.addNoSession(itemActive, seqNoSession, category);
@@ -1322,6 +1316,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     tempQuestion.category = category;
     tempQuestion.recID = this.GUID;
     tempQuestion.parentID = this.questions[seqNoSession].recID;
+   
     delete tempQuestion.id;
     this.questions[seqNoSession].children.splice(
       itemActive.category == 'S' ? 0 : itemActive.seqNo + 1,
@@ -1331,10 +1326,11 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     this.questions[seqNoSession].children.forEach(
       (x, index) => (x.seqNo = index)
     );
+    this.questions[seqNoSession].transID = this.recID;
     this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveData(
       [tempQuestion],
-      false,
+      true,
       this.questions[seqNoSession].children
     );
     if (itemActive.category == 'S') this.questions[seqNoSession].active = false;
@@ -1455,7 +1451,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
           this.questions[seqNoSession].children[itemQuestion.seqNo]
         )
       );
-      debugger
       data.answerType = answerType;
       if (
         answerType == 'O' ||
@@ -1477,39 +1472,45 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         //   };
         //   data.answers.push(dataAnswerTemp);
         // }
-        if (answerType != 'O' && answerType != 'C' && answerType != 'L') {
-          data.answers = new Array();
-          let dataAnswerTemp = {
-            recID: recID,
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-          };
-          data.answers.push(dataAnswerTemp);
+        debugger
+          if (answerType != 'O' && answerType != 'C' && answerType != 'L') {
+            data.answers = new Array();
+            let dataAnswerTemp = {
+              recID: recID,
+              seqNo: 0,
+              answer: 'Tùy chọn 1',
+              other: false,
+            };
+            data.answers.push(dataAnswerTemp);
+          }
+
+          if(answerType != 'O' && answerType != 'C')
+          {
+            this.lstEditIV = [];
+            this.SVServices.deleteFilesByContainRefer(this.recID).subscribe();;
+          }
+        } 
+        else if (answerType == 'O2' || answerType == 'C2') 
+        {
+          if ( itemQuestion.answerType != 'O2' && itemQuestion.answerType != 'C2') {
+            data.answers = new Array();
+            let dataAnswerR = {
+              recID: recID,
+              seqNo: 0,
+              answer: 'Hàng 1',
+              isColumn: false,
+            };
+            data.answers.push(dataAnswerR);
+            this.generateGuid();
+            let dataAnswerC = {
+              recID: this.GUID,
+              seqNo: 0,
+              answer: 'Cột 1',
+              isColumn: true,
+            };
+            data.answers.push(dataAnswerC);
+          }
         }
-      } else if (answerType == 'O2' || answerType == 'C2') {
-        if (
-          itemQuestion.answerType != 'O2' &&
-          itemQuestion.answerType != 'C2'
-        ) {
-          data.answers = new Array();
-          let dataAnswerR = {
-            recID: recID,
-            seqNo: 0,
-            answer: 'Hàng 1',
-            isColumn: false,
-          };
-          data.answers.push(dataAnswerR);
-          this.generateGuid();
-          let dataAnswerC = {
-            recID: this.GUID,
-            seqNo: 0,
-            answer: 'Cột 1',
-            isColumn: true,
-          };
-          data.answers.push(dataAnswerC);
-        }
-      }
 
       //Lọc câu hỏi "khác"
       if(answerType == 'L' && data.answers && data.answers.length>0)

@@ -37,6 +37,9 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   dataVllSupplier: any;
   fromDateFormat;
   toDateFormat;
+  headerTextCalendar: any = [];
+  isNullFrom: boolean = true;
+  isNullTo: boolean = true;
 
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
@@ -56,10 +59,11 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.lstCertificates = data?.data?.lstCertificates;
-    this.certificateObj = data.data.dataInput; 
-    this.indexSelected =
-      data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
-
+    this.certificateObj = JSON.parse(JSON.stringify(data.data.dataInput));
+    // this.indexSelected =
+    //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
+    this.headerTextCalendar[0] = data?.data?.trainFromHeaderText;
+    this.headerTextCalendar[1] = data?.data?.trainToHeaderText;
   }
 
   initForm() {
@@ -96,24 +100,31 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
             this.formGroup.patchValue(this.certificateObj);
             this.cr.detectChanges();
             this.isAfterRender = true;
+            this.isNullFrom = false;
+            this.isNullTo = false;
           }
         });
     } else {
+      this.isNullFrom = true;
+      this.isNullTo = true;
       if (this.actionType === 'edit' || this.actionType === 'copy') {
         this.formGroup.patchValue(this.certificateObj);
         this.formModel.currentData = this.certificateObj;
         this.cr.detectChanges();
         this.isAfterRender = true;
+        if(this.certificateObj.trainFromDate == null)
+        this.isNullFrom = false;
+        if(this.certificateObj.trainToDate == null)
+        this.isNullTo = false;
       }
     }
-    if(this.certificateObj){
+    if (this.certificateObj) {
       this.fromDateFormat = this.getFormatDate(this.certificateObj.trainFrom);
       this.toDateFormat = this.getFormatDate(this.certificateObj.trainTo);
     } else {
       this.fromDateFormat = this.getFormatDate(null);
       this.toDateFormat = this.getFormatDate(null);
     }
-
   }
 
   onInit(): void {
@@ -133,37 +144,25 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
-      return;
-    }
-    if (this.actionType === 'copy') delete this.certificateObj.recID;
-    this.certificateObj.employeeID = this.employId;
+    // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddECertificateInfo(this.certificateObj).subscribe((p) => {
         if (p != null) {
-          this.certificateObj = p;
           this.notify.notifyCode('SYS006');
-          this.certificateObj.isSuccess = true;
-          this.dialog && this.dialog.close(this.certificateObj);
-        } else {
-          this.notify.notifyCode('SYS023');
-          this.certificateObj.isSuccess = false;
-        }
+          this.dialog && this.dialog.close(p);
+        } else this.notify.notifyCode('SYS023');
       });
     } else {
       this.hrService
         .UpdateEmployeeCertificateInfo(this.certificateObj)
         .subscribe((p) => {
           if (p != null) {
-            this.certificateObj = p;
             this.notify.notifyCode('SYS007');
-            this.certificateObj.isSuccess = true;
-            this.dialog && this.dialog.close(this.certificateObj);
-          } else {
-            this.notify.notifyCode('SYS021');
-            this.certificateObj.isSuccess = false;
-          }
+            this.dialog && this.dialog.close(p);
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }
@@ -252,12 +251,13 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
       this.certificateObj.trainToDate = event.fromDate;
     }
   }
-  getFormatDate(trainFrom : string){
+  getFormatDate(trainFrom: string) {
     let resultDate = '';
-    if(trainFrom){
+    if (trainFrom) {
       let arrDate = trainFrom.split('/');
-      resultDate = arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
-      return resultDate
+      resultDate =
+        arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
+      return resultDate;
     } else return 'y';
   }
 }

@@ -69,6 +69,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('addGroupJobPopup') addGroupJobPopup: TemplateRef<any>;
   @ViewChild('addStage') addStagePopup: TemplateRef<any>;
   @ViewChild('addReasonPopup') addReasonPopup: TemplateRef<any>;
+  @ViewChild('autoNumberSetting') autoNumberSetting: any;
   process = new DP_Processes();
   permissions = [];
   dialog: any;
@@ -128,6 +129,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   reasonName: string = '';
   dataValueview: string = '';
   reasonAction: any;
+  totalStepsInProccess: number = 0;
 
   // const value string
   readonly strEmpty: string = '';
@@ -178,12 +180,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   refValue = 'DP018';
   gridViewSetup: any;
   userGroupJob = [];
+  listTypeTask = [];
   nameStage = '';
   isAddStage = true;
   headerText = '';
   groupTaskID = '';
   stepRoleOld: any;
-  listJobType = [];
   jobType: any;
   actionStep = '';
   isSaveStep = false;
@@ -201,6 +203,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isHover = '';
   vllType = 'DP022';
   dataChild = [];
+  instanceNoEx: string = '';
   //end data Test
   isShowstage = true;
   titleAdd = 'Thêm';
@@ -212,6 +215,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   oldIdProccess: any;
   newIdProccess: any;
   listValueCopy: any;
+  adAutoNumber: any;
+  vllDateFormat: any;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -292,6 +298,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getValListDayoff();
     this.autoHandleStepReason();
     this.loadCbxProccess();
+    this.getVllFormat();
   }
 
   setDefaultOwner() {
@@ -320,6 +327,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     this.grvMoreFunction = await this.getFormModel('DPT0402');
     this.grvStep = await this.getFormModel('DPS0103');
+
+    this.cache.valueList('DP004').subscribe((res) => {
+      if (res.datas) {
+        this.listTypeTask = res?.datas;
+      }
+    });
   }
 
   //#region setup formModels and formGroup
@@ -336,8 +349,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
   //#region onSave
   async onSave() {
-    var check = this.process.permissions.some(x=> x.roleType === 'P');
-    if(!check){
+    var check = this.process.permissions.some((x) => x.roleType === 'P');
+    if (!check) {
       this.notiService.notifyCode('DP014');
       return;
     }
@@ -498,8 +511,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let oldNo = this.currentTab;
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
       if (
-        (this.process?.processName == null ||
-        this.process?.processName.trim() == '') || (this.process?.groupID == null || this.process?.groupID.trim() == '')
+        this.process?.processName == null ||
+        this.process?.processName.trim() == '' ||
+        this.process?.groupID == null ||
+        this.process?.groupID.trim() == ''
       )
         return;
       if (
@@ -510,10 +525,29 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.process.instanceNoSetting != this.instanceNoSetting))
       ) {
         this.notiService.alertCode('DP009').subscribe((e) => {
+          var input: any;
+          if (this.autoNumberSetting.nativeElement) {
+            var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
+              'codx-input[type="text"]'
+            );
+            if (ele) {
+              let htmlE = ele[0] as HTMLElement;
+              input = htmlE.querySelector('input.codx-text') as HTMLElement;
+            }
+          }
           if (e?.event?.status == 'Y') {
             this.updateNodeStatus(oldNo, newNo);
             this.currentTab = tabNo;
-          } else return;
+            if (input) {
+              input.style.removeProperty('border-color', 'red', 'important');
+            }
+          } else {
+            if (input) {
+              input.focus();
+              input.style.setProperty('border-color', 'red', 'important');
+              return;
+            }
+          }
         });
       } else {
         this.updateNodeStatus(oldNo, newNo);
@@ -571,11 +605,30 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.process.instanceNoSetting != this.instanceNoSetting)
         ) {
           this.notiService.alertCode('DP009').subscribe((e) => {
+            var input: any;
+            if (this.autoNumberSetting.nativeElement) {
+              var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
+                'codx-input[type="text"]'
+              );
+              if (ele) {
+                let htmlE = ele[0] as HTMLElement;
+                input = htmlE.querySelector('input.codx-text') as HTMLElement;
+              }
+            }
             if (e?.event?.status == 'Y') {
               this.updateNodeStatus(oldNode, newNode);
               this.currentTab++;
               this.processTab == 0 && this.processTab++;
-            } else return;
+              if (input) {
+                input.style.removeProperty('border-color', 'red', 'important');
+              }
+            } else {
+              if (input) {
+                input.focus();
+                input.style.setProperty('border-color', 'red', 'important');
+              }
+              return;
+            }
           });
         } else {
           this.updateNodeStatus(oldNode, newNode);
@@ -683,8 +736,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           U: 'Share_Users_Sgl',
           P: 'Share_Positions_Sgl',
           R: 'Share_UserRoles_Sgl',
-          D: 'Departments',
-          O: 'Share_OrgUnits',
+          D: 'Share_Departments_Sgl',
+          O: 'Share_OrgUnits_Sgl',
         };
         break;
     }
@@ -918,21 +971,27 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   checkRolesStep(listPerm: DP_Steps_Roles[], perm: DP_Steps_Roles) {
     var index = -1;
+    var indexOld = -1;
     if (listPerm != null) {
       if (perm != null && listPerm.length > 0) {
         index = listPerm.findIndex(
-          (x) => x.objectID != perm.objectID && x.roleType == 'S'
+          (x) => x.objectID == perm.objectID && x.roleType == 'S'
         );
+
         this.stepRoleOld = listPerm.filter((x) => x.roleType == 'S')[0];
+        indexOld = listPerm.findIndex(
+          (x) => x.objectID == this.stepRoleOld.objectID
+        );
       }
     } else {
       listPerm = [];
     }
-    if (index != -1) {
-      listPerm.splice(index, 1);
+    if (this.stepRoleOld != null || this.stepRoleOld == '') {
     }
-    listPerm.push(Object.assign({}, perm));
-
+    if (index == -1) {
+      if (indexOld > -1) listPerm.splice(indexOld, 1);
+      listPerm.push(Object.assign({}, perm));
+    }
     return listPerm;
   }
 
@@ -1052,46 +1111,132 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //end
 
-  //Popup setiing autoNumber
+  //Popup setiing autoNumber - Thao lam dung sua Please
   openAutoNumPopup() {
+    if (!this.instanceNoSetting || this.instanceNoSetting.trim() == '') {
+      if (this.autoNumberSetting.nativeElement) {
+        var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
+          'codx-input[type="text"]'
+        );
+        if (ele) {
+          let htmlE = ele[0] as HTMLElement;
+          var input = htmlE.querySelector('input.codx-text') as HTMLElement;
+          if (input) input.focus();
+        }
+      }
+      return;
+    }
+    var obj = {};
     if (this.action != 'edit') {
       //save new autoNumber
-      let popupAutoNum = this.callfc.openForm(
-        PopupAddAutoNumberComponent,
-        '',
-        550,
-        (screen.width * 40) / 100,
-        '',
-        {
-          autoNoCode: this.instanceNoSetting,
-          description: 'DP_Instances',
-          newAutoNoCode: this.instanceNoSetting,
-          isSaveNew: '1',
-        }
-      );
-      popupAutoNum.closed.subscribe((res) => {
-        if (res?.event) {
-          this.process.instanceNoSetting = res?.event?.autoNoCode;
-        }
-      });
+      obj = {
+        autoNoCode: this.instanceNoSetting,
+        description: 'DP_Instances',
+        newAutoNoCode: this.instanceNoSetting,
+        isSaveNew: '1',
+      };
     } else {
       //cap nhật
-      let popupAutoNum = this.callfc.openForm(
-        PopupAddAutoNumberComponent,
-        '',
-        550,
-        (screen.width * 40) / 100,
-        '',
-        {
-          autoNoCode: this.instanceNoSetting,
-          description: 'DP_Instances',
+      obj = {
+        autoNoCode: this.instanceNoSetting,
+        description: 'DP_Instances',
+      };
+    }
+    let popupAutoNum = this.callfc.openForm(
+      PopupAddAutoNumberComponent,
+      '',
+      550,
+      (screen.width * 40) / 100,
+      '',
+      obj
+    );
+    popupAutoNum.closed.subscribe((res) => {
+      if (res?.event) {
+        this.process.instanceNoSetting = res?.event?.autoNoCode;
+        this.setViewAutoNumber(res?.event);
+      }
+    });
+  }
+
+  setViewAutoNumber(data) {
+    if (this.vllDateFormat?.datas.length > 0) {
+      let dateFormat = '';
+      if (data?.dateFormat != '0') {
+        dateFormat =
+          this.vllDateFormat.datas.filter((p) => p.value == data?.dateFormat)[0]
+            ?.text ?? '';
+      }
+
+      let lengthNumber;
+      let strNumber = '';
+      this.instanceNoEx = data?.fixedString + data?.separator + dateFormat;
+      lengthNumber = data?.maxLength - this.instanceNoEx.length;
+      strNumber = '#'.repeat(lengthNumber);
+      switch (data?.stringFormat) {
+        // {value: '0', text: 'Chuỗi & Ngày - Số', default: 'Chuỗi & Ngày - Số', color: null, textColor: null, …}
+        case '0': {
+          this.instanceNoEx =
+            data?.fixedString + dateFormat + data?.separator + strNumber;
+          break;
         }
-      );
-      popupAutoNum.closed.subscribe((res) => {
-        if (res?.event) {
-          this.process.instanceNoSetting = res?.event?.autoNoCode;
+        // {value: '1', text: 'Chuỗi & Số - Ngày', default: 'Chuỗi & Số - Ngày', color: null, textColor: null, …}
+        case '1': {
+          this.instanceNoEx =
+            data?.fixedString + strNumber + data?.separator + dateFormat;
+          break;
         }
-      });
+        // {value: '2', text: 'Số - Chuỗi & Ngày', default: 'Số - Chuỗi & Ngày', color: null, textColor: null, …}
+        case '2':
+          this.instanceNoEx =
+            strNumber + data?.separator + data?.fixedString + dateFormat;
+          break;
+        // {value: '3', text: 'Số - Ngày & Chuỗi', default: 'Số - Ngày & Chuỗi', color: null, textColor: null, …}
+        case '3':
+          this.instanceNoEx =
+            strNumber + data?.separator + dateFormat + data?.fixedString;
+          break;
+
+        // {value: '4', text: 'Ngày - Số & Chuỗi', default: 'Ngày - Số & Chuỗi', color: null, textColor: null, …}
+        case '4': {
+          this.instanceNoEx =
+            dateFormat + data?.separator + strNumber + data?.fixedString;
+          break;
+        }
+        // {value: '5', text: 'Ngày & Chuỗi & Số', default: 'Ngày & Chuỗi & Số', color: null, textColor: null, …}
+        case '5': {
+          this.instanceNoEx = data?.fixedString + dateFormat;
+          lengthNumber = data?.maxLength - this.instanceNoEx.length;
+          strNumber = '#'.repeat(lengthNumber);
+          this.instanceNoEx = dateFormat + data?.fixedString + strNumber;
+          break;
+        }
+        // {value: '6', text: 'Chuỗi - Ngày', default: 'Chuỗi - Ngày', color: null, textColor: null, …}
+        case '6': {
+          this.instanceNoEx = data?.fixedString + data?.separator + dateFormat;
+          break;
+        }
+        // {value: '7', text: 'Ngày - Chuỗi', default: 'Ngày - Chuỗi', color: null, textColor: null, …}
+        case '7': {
+          this.instanceNoEx = dateFormat + data?.separator + data?.fixedString;
+          break;
+        }
+      }
+
+      this.instanceNoEx = this.instanceNoEx.substring(0, data?.maxLength);
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+  async getVllFormat() {
+    this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
+    if (!this.adAutoNumber && this.action != 'add') {
+      if (this.process.instanceNoSetting) {
+        this.adAutoNumber = await firstValueFrom(
+          this.dpService.getADAutoNumberByAutoNoCode(
+            this.process.instanceNoSetting
+          )
+        );
+        if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
+      }
     }
   }
   //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
@@ -1435,11 +1580,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     if (this.actionStep == 'add' || this.actionStep == 'copy') {
       this.stepList.push(this.stepNew);
-      this.viewStepSelect(this.stepNew);
-       // if edit process
+      // if edit process
       if (this.action == 'edit') {
-        this.stepListAdd.push(this.stepNew);
+        this.stepListAdd.push(JSON.parse(JSON.stringify(this.stepNew)));
       }
+      this.viewStepSelect(this.stepNew);
     } else {
       this.titleViewStepCrr = this.stepNew?.stepName;
       this.step['stepName'] = this.stepNew['stepName'];
@@ -1456,7 +1601,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (index >= 0) {
           this.stepList.splice(index, 1);
           this.setIndex(this.stepList, 'stepNo');
-          this.viewStepSelect(this.stepList.length > 0 ? this.stepList[0] : []);
+          this.viewStepSelect(
+            this.stepList.length > 0
+              ? this.stepList[this.stepList?.length || 0]
+              : []
+          );
           // lay danh sach step xoa
           if (this.action == 'edit') {
             let indexDelete = this.stepListAdd.findIndex(
@@ -1483,7 +1632,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       taskGroup = JSON.parse(JSON.stringify(data));
       if (type === 'copy') {
         taskGroup['recID'] = null;
-      } 
+      }
     } else {
       this.roleGroupTaskOld = [];
       taskGroup['createdBy'] = this.userId;
@@ -1506,7 +1655,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
-  async saveGroupTask(type: string , taskGroup, taskGroupOld) {
+  async saveGroupTask(type: string, taskGroup, taskGroupOld) {
     this.popupGroupJob.close();
     if (taskGroup['roles']?.length == 0) {
       let role = new DP_Steps_TaskGroups_Roles();
@@ -1542,15 +1691,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
       this.taskGroupList.splice(index - 1, 0, taskGroup);
       // add role vào step
-      this.addRole(this.taskGroup['roles'][0]);
+      this.addRole(taskGroup['roles'][0]);
     } else {
-      let index = this.taskGroupList?.findIndex(x => x.recID === taskGroup.recID);
-      if(index >= 0){
+      let index = this.taskGroupList?.findIndex(
+        (x) => x.recID === taskGroup.recID
+      );
+      if (index >= 0) {
         this.taskGroupList.splice(index, 1, taskGroup);
       }
       if (
-        taskGroup?.roles[0]['objectID'] !=
-        this.roleGroupTaskOld[0]['objectID']
+        taskGroup?.roles[0]['objectID'] != this.roleGroupTaskOld[0]['objectID']
       ) {
         this.addRole(taskGroup['roles'][0], this.roleGroupTaskOld[0]);
       }
@@ -1599,7 +1749,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     } else {
       taskGroupIdOld = data['taskGroupID'];
       roleOld = JSON.parse(JSON.stringify(data['roles']));
-      dataInput = data;
+      dataInput = JSON.parse(JSON.stringify(data));
     }
 
     let listData = [
@@ -1637,10 +1787,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.taskList.push(taskData);
               this.addRole(taskData['roles'][0]);
             } else {
-              if (taskData?.taskGroupID != taskGroupIdOld) {
-                this.changeGroupTaskOfTask(taskData, taskGroupIdOld);
+              // data = {...taskData};
+              // data['taskName'] = taskData['taskData']
+              for (const key in taskData) {
+                data[key] = taskData[key];
               }
-              this.addRole(taskData['roles'][0], roleOld[0]);
+              if (data?.taskGroupID != taskGroupIdOld) {
+                this.changeGroupTaskOfTask(data, taskGroupIdOld);
+              }
+              this.addRole(data['roles'][0], roleOld[0]);
             }
           }
         });
@@ -1907,7 +2062,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (step) {
       this.titleViewStepCrr = step?.stepName || '';
       this.isSwitchReason = false;
-      this.step = JSON.parse(JSON.stringify(step));
+      this.step = step;
       this.checkedDayOff(this.step?.excludeDayoff);
       this.taskGroupList = this.step['taskGroups'];
       this.taskList = this.step['tasks'];
@@ -2157,6 +2312,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       option
     );
   }
+
+  getIconTask(task) {
+    let color = this.listTypeTask?.find(x => x.value === task.taskType);
+    return color?.icon;
+  }
+  getColor(task){
+    let color = this.listTypeTask?.find(x => x.value === task.taskType);    
+    return {'background-color': color?.color}
+  }
   //#End stage -- nvthuan
 
   //#region for reason successful/failed
@@ -2322,7 +2486,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           if (
             (!this.step?.excludeDayoff &&
               this.step?.excludeDayoff?.trim() == '') ||
-            !this.step?.excludeDayoff.split(';').includes(value)
+            !this.step?.excludeDayoff?.split(';').includes(value)
           )
             return;
           let arr = this.step?.excludeDayoff

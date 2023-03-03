@@ -1,10 +1,74 @@
-<div class="card m-2" style="min-width: 250px; min-height: 115px">
+<div class="card m-2">
   <div class="card-body">
     <div class="d-flex align-items-center">
-      <img *ngIf="this.hasIcon" [src]="this.iconUrl" class="svg-icon" />
+      <img
+        *ngIf="this.hasIcon; else rateDone"
+        [src]="this.iconUrl"
+        class="svg-icon"
+      />
+
+      <ng-template #rateDone>
+        <ejs-circulargauge
+          class="w-70px h-70px"
+          style="display: block"
+          [id]="this.newGuid()"
+          width="100%"
+        >
+          <e-axes>
+            <e-axis
+              minimum="0"
+              radius="100%"
+              maximum="100"
+              startAngle="0"
+              endAngle="360"
+              [majorTicks]="{
+                height: 0
+              }"
+              [labelStyle]="{
+                position: 'Inside',
+                useRangeColor: true,
+                font: {
+                  size: '0px',
+                  color: 'white',
+                  fontFamily: 'Roboto',
+                  fontStyle: 'Regular'
+                }
+              }"
+              [lineStyle]="{
+                width: 0
+              }"
+              [minorTicks]="{
+                width: 0
+              }"
+            >
+              <e-ranges>
+                <e-range
+                  start="0"
+                  end="100"
+                  radius="100%"
+                  color="#F0F0F0"
+                  startWidth="10"
+                  endWidth="10"
+                >
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer
+                  [value]="(this.value / this.totalValue) * 100"
+                  pointerWidth="10"
+                  type="RangeBar"
+                  radius="100%"
+                  color="#357cd2"
+                ></e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+      </ng-template>
+
       <div class="ms-2">
         <div>
-          {{ this.statusName }}
+          {{ this.title }}
           <div class="fw-bold fs-3">
             {{ +this.value }}
           </div>

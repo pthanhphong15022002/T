@@ -49,6 +49,7 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
   urlVideo: any;
   inline: any;
   itemAnswer: any;
+  referType: any;
   @ViewChild('listViewImage') listViewImage: CodxListviewComponent;
   @ViewChild('listViewVideo') listViewVideo: CodxListviewComponent;
   @ViewChild('ATM_Choose_Image') ATM_Choose_Image: AttachmentComponent;
@@ -73,6 +74,7 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
     this.inline = dt.data?.inline;
     this.functionList = dt.data.functionList;
     this.itemAnswer = dt.data?.itemAnswer;
+    this.referType = dt.data?.referType;
     this.user = auth.get();
     this.dataValueImage = `WP_Comments;SV_Surveys;false;${this.user?.userID};image`;
     this.dataValueVideo = `WP_Comments;SV_Surveys;false;${this.user?.userID};video`;
@@ -181,11 +183,11 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
     if (files.length > 0) {
       files.map((dt: any) => {
         if (dt.mimeType.indexOf('image') >= 0) {
-          dt['referType'] = this.REFER_TYPE.IMAGE;
+          dt['referType'] = this.referType +"_"+ this.REFER_TYPE.IMAGE;
         } else if (dt.mimeType.indexOf('video/mp4') >= 0) {
-          dt['referType'] = this.REFER_TYPE.VIDEO;
+          dt['referType'] = this.referType +"_"+ this.REFER_TYPE.VIDEO;
         } else {
-          dt['referType'] = this.REFER_TYPE.APPLICATION;
+          dt['referType'] = this.referType +"_"+ this.REFER_TYPE.APPLICATION;
         }
       });
     }

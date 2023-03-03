@@ -7,7 +7,8 @@
 
 
       <div class="row mx-0">
-        <div class="col-4 form-group ps-0">
+        <div class="col-4 form-group ps-0" *ngIf="grView?.bookingOn?.allowPopup">
+        <!-- <div class="col-4 form-group ps-0">  -->
           <codx-label fiedName="BookingOn" [formModel]="form.formModel">
           </codx-label>
           <codx-input field="bookingOn" [crrValue]="data.bookingOn" format="d" type="datetime" class="test-datetime"
@@ -15,7 +16,8 @@
           </codx-input>
         </div>
 
-        <div class="col-3 form-group">
+        <div class="col-3 form-group" *ngIf="grView?.startDate?.allowPopup">
+        <!-- <div class="col-3 form-group"> -->
           <codx-label name="lblStatTime" default="Từ giờ" [formName]="formModel.formName"
             [gridViewName]="formModel.gridViewName">
           </codx-label>
@@ -23,7 +25,9 @@
             (valueChange)="valueStartTimeChange($event)" [disabled]="false">
           </codx-input>
         </div>
-        <div class="col-3 form-group">
+        
+        <div class="col-3 form-group" *ngIf="grView?.endDate?.allowPopup"> 
+        <!-- <div class="col-3 form-group" > -->
           <codx-label name="lblEndTime" default="Đến giờ" [formName]="formModel.formName"
             [gridViewName]="formModel.gridViewName"></codx-label>
           <codx-input type="datetime" class="test-datetime" field="endTime" [crrValue]="endTime" format="t"
@@ -37,7 +41,9 @@
           </codx-input>
         </div>
       </div>
-      <div class="form-group">
+      
+        <div class="form-group" *ngIf="grView?.resourceID?.allowPopup">
+      <!-- <div class="form-group"> -->
         <div class="d-flex justify-content-between align-items-center">
           <codx-label fiedName="ResourceID" [formModel]="form.formModel">
           </codx-label>
@@ -79,25 +85,29 @@
           </div>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group" *ngIf="grView?.reasonID?.allowPopup">
+        <!-- <div class="form-group" > -->
         <codx-label fiedName="ReasonID" [formModel]="form.formModel">
         </codx-label>
         <codx-input ControlName="reasonID" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" *ngIf="grView?.title?.allowPopup">
+      <!-- <div class="form-group"> -->
         <codx-label fiedName="Title" [formModel]="form.formModel"> </codx-label>
         <codx-input ControlName="title" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" *ngIf="grView?.memo?.allowPopup">
+      <!-- <div class="form-group"> -->
         <codx-label fiedName="Memo" [formModel]="form.formModel"> </codx-label>
         <codx-input ControlName="memo" [formModel]="form.formModel" [Group]="form.formGroup" class="h-105px">
         </codx-input>
       </div>
 
-      <div class="d-flex flex-column form-group">
+      <div class="d-flex flex-column form-group" *ngIf="grView?.online?.allowPopup">
+      <!-- <div class="d-flex flex-column form-group" > -->
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center">
             <codx-input #checkbox type="switch" field="online" [checked]="data?.online" [crrValue]="data?.online"
@@ -216,7 +226,7 @@
 
   <ng-template #tabPeopleInfo>
     <ng-container *ngIf="form && form.formGroup">
-      <div class="d-flex justify-content-start align-items-center">
+      <div class="d-flex justify-content-start align-items-center" *ngIf="grView?.attendees?.allowPopup">
         <div class="">
           <codx-label fiedName="Attendees" [formModel]="form.formModel">
           </codx-label>
@@ -438,19 +448,22 @@
 
   <ng-template #tabMoreInfo>
     <ng-container *ngIf="form && form.formGroup">
-      <div class="form-group">
+      
+      <div class="form-group" *ngIf="grView?.category?.allowPopup">
+      <!-- <div class="form-group"> -->
         <codx-label [formModel]="form.formModel" fiedName="Category"></codx-label>
         <codx-input ControlName="category" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" *ngIf="grView?.note?.allowPopup">
+      <!-- <div class="form-group"> -->
         <codx-label [formModel]="form.formModel" fiedName="Note"> </codx-label>
         <codx-input ControlName="note" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
 
-      <div class="d-flex justify-content-start align-items-center">
+      <!-- <div class="d-flex justify-content-start align-items-center">
         <div class="w-100">
           <codx-label class="fw-bold" fiedName="Repeat" [formModel]="form.formModel"></codx-label>
         </div>
@@ -459,7 +472,7 @@
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
-      </div>
+      </div> -->
       <!-- <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Reminder"> </codx-label>
         <codx-input
@@ -474,8 +487,10 @@
 
   <ng-template #tabReminder>
     <ng-container *ngIf="form && form.formGroup">
+      
+      <!-- <div class="form-group col-5" *ngIf="grView?.reminder?.allowPopup"> -->
       <div class="form-group col-5">
-        <codx-label default="Nhắc nhở trước giờ họp (phút)" name="lblReminder"></codx-label>
+        <codx-label [formModel]="form.formModel" fiedName="Reminder"></codx-label>
         <!-- <codx-input
           ControlName="reminder"
           [formModel]="form.formModel"

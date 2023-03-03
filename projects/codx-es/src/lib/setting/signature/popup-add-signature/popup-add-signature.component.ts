@@ -127,7 +127,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   valueChange(event: any) {
     if (event?.field && event?.component) {
       if (event?.field == 'email') {
-        let user = event?.data?.dataSelected[0]?.dataSelected;
+        let user = event?.data?.dataSelected[0]?.dataSelected[0];
         this.data.userID = user?.UserID;
         this.data.fullName = user?.UserName;
         this.data[event['field']] = event?.data.value[0];
