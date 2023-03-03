@@ -123,7 +123,7 @@ renderFooter=false;
                 
               });
               //this.tabModel.addPermissions=this.listFilePermission;
-              this.renderFooter=true;
+              //this.renderFooter=true;
               this.detectorRef.detectChanges();
 
             }

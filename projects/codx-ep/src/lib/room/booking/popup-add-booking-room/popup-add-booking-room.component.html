@@ -7,7 +7,7 @@
 
 
       <div class="row mx-0">
-        <!-- <div class="col-4 form-group ps-0" *ngIf="this.grView?.bookingOn.allowPopup"> -->
+        <!-- <div class="col-4 form-group ps-0" *ngIf="grView?.bookingOn.allowPopup"> -->
         <div class="col-4 form-group ps-0"> 
           <codx-label fiedName="BookingOn" [formModel]="form.formModel">
           </codx-label>
@@ -16,7 +16,7 @@
           </codx-input>
         </div>
 
-        <!-- <div class="col-3 form-group" *ngIf="this.grView?.startTime.allowPopup"> -->
+        <!-- <div class="col-3 form-group" *ngIf="grView?.startTime.allowPopup"> -->
         <div class="col-3 form-group">
           <codx-label name="lblStatTime" default="Từ giờ" [formName]="formModel.formName"
             [gridViewName]="formModel.gridViewName">
@@ -26,7 +26,7 @@
           </codx-input>
         </div>
         
-        <!-- <div class="col-3 form-group" *ngIf="this.grView?.endTime.allowPopup"> -->
+        <!-- <div class="col-3 form-group" *ngIf="grView?.endTime.allowPopup"> -->
         <div class="col-3 form-group" >
           <codx-label name="lblEndTime" default="Đến giờ" [formName]="formModel.formName"
             [gridViewName]="formModel.gridViewName"></codx-label>
@@ -42,7 +42,7 @@
         </div>
       </div>
       
-        <!-- <div class="form-group" *ngIf="this.grView?.resourceID.allowPopup"> -->
+        <!-- <div class="form-group" *ngIf="grView?.resourceID.allowPopup"> -->
       <div class="form-group">
         <div class="d-flex justify-content-between align-items-center">
           <codx-label fiedName="ResourceID" [formModel]="form.formModel">
@@ -85,7 +85,7 @@
           </div>
         </div>
       </div>
-      <!-- <div class="form-group" *ngIf="this.grView?.reasonID.allowPopup"> -->
+      <!-- <div class="form-group" *ngIf="grView?.reasonID.allowPopup"> -->
         <div class="form-group" >
         <codx-label fiedName="ReasonID" [formModel]="form.formModel">
         </codx-label>
@@ -93,13 +93,13 @@
         </codx-input>
       </div>
 
-      <!-- <div class="form-group" *ngIf="this.grView?.title.allowPopup"> -->
+      <!-- <div class="form-group" *ngIf="grView?.title.allowPopup"> -->
       <div class="form-group">
         <codx-label fiedName="Title" [formModel]="form.formModel"> </codx-label>
         <codx-input ControlName="title" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
       </div>
 
-      <!-- <div class="form-group" *ngIf="this.grView?.memo.allowPopup"> -->
+      <!-- <div class="form-group" *ngIf="grView?.memo.allowPopup"> -->
       <div class="form-group">
         <codx-label fiedName="Memo" [formModel]="form.formModel"> </codx-label>
         <codx-input ControlName="memo" [formModel]="form.formModel" [Group]="form.formGroup" class="h-105px">
@@ -448,14 +448,14 @@
   <ng-template #tabMoreInfo>
     <ng-container *ngIf="form && form.formGroup">
       
-      <!-- <div class="form-group" *ngIf="this.grView?.category.allowPopup"> -->
+      <!-- <div class="form-group" *ngIf="grView?.category.allowPopup"> -->
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Category"></codx-label>
         <codx-input ControlName="category" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
 
-      <!-- <div class="form-group" *ngIf="this.grView?.note.allowPopup"> -->
+      <!-- <div class="form-group" *ngIf="grView?.note.allowPopup"> -->
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Note"> </codx-label>
         <codx-input ControlName="note" [formModel]="form.formModel" [Group]="form.formGroup">
@@ -487,7 +487,7 @@
   <ng-template #tabReminder>
     <ng-container *ngIf="form && form.formGroup">
       
-      <!-- <div class="form-group col-5" *ngIf="this.grView?.reminder.allowPopup"> -->
+      <!-- <div class="form-group col-5" *ngIf="grView?.reminder.allowPopup"> -->
       <div class="form-group col-5">
         <codx-label default="Nhắc nhở trước giờ họp (phút)" name="lblReminder"></codx-label>
         <!-- <codx-input

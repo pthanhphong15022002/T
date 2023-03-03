@@ -61,6 +61,7 @@ import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/
 import { PopupEContractComponent } from '../../employee-profile/popup-econtract/popup-econtract.component';
 import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
 import { Sort } from '@syncfusion/ej2-angular-grids';
+import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 
 @Component({
   selector: 'lib-employee-detail',
@@ -3805,11 +3806,15 @@ export class EmployeeDetailComponent extends UIComponent {
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.eContractFormModel;
+    let isAppendix = false;
+    if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){
+      isAppendix = true;
+    }
     let dialogAdd = this.callfunc.openSide(
-      PopupEContractComponent,
+      isAppendix ? PopupSubEContractComponent : PopupEContractComponent,
       {
         actionType: actionType,
-        salarySelected: data,
+        dataObj: data,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eContractFuncID),
         employeeId: this.employeeID,
