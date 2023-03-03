@@ -91,7 +91,7 @@ export class BookingStationeryViewDetailComponent
           if (res) {
             this.itemDetail = res;
             let tmpPer = new Permission();
-            tmpPer.objectID = res.createdBy; //
+            tmpPer.objectID = this.itemDetail.createdBy;
             tmpPer.objectType = 'U';
             tmpPer.read = true;
             tmpPer.share = true;
@@ -99,9 +99,11 @@ export class BookingStationeryViewDetailComponent
             tmpPer.isActive = true;
             this.listFilePermission.push(tmpPer);
             if (
-              this.itemDetail?.createdBy === this.authService.userValue.userID
+              this.itemDetail?.createdBy == this.authService.userValue.userID
             ) {
               this.isEdit = true;
+            } else {
+              this.isEdit = false;
             }
             this.detectorRef.detectChanges();
           }
