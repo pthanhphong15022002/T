@@ -30,6 +30,7 @@ export class PopupSubEContractComponent implements OnInit {
     this.contractNo = data?.data?.contractNo;
     this.actionType = data?.data?.actionType;
     this.dialog = dialog;
+    this.oSubContract = JSON.parse(JSON.stringify(data?.data?.dataObj));
 
     this.fmSubContract = new FormModel();
     this.fmSubContract.entityName = 'HR_EContracts';
@@ -60,6 +61,9 @@ export class PopupSubEContractComponent implements OnInit {
           this.oSubContract.refContractNo = this.contractNo;
           this.oSubContract.isAppendix = 1;
 
+          this.oSubContract.signedDate = null;
+          this.oSubContract.effectedDate = null;
+
           this.fmSubContract.currentData = this.oSubContract;
           this.fgSubContract.patchValue(this.oSubContract);
           this.cr.detectChanges();
@@ -68,7 +72,18 @@ export class PopupSubEContractComponent implements OnInit {
       });
     } else if (this.actionType == 'edit' || this.actionType == 'copy') {
       if (this.actionType == 'copy') {
+        if (this.oSubContract.signedDate == '0001-01-01T00:00:00') {
+          this.oSubContract.signedDate = null;
+        }
+        if (this.oSubContract.effectedDate == '0001-01-01T00:00:00') {
+          this.oSubContract.effectedDate = null;
+        }
       }
+
+      this.fmSubContract.currentData = this.oSubContract;
+      this.fgSubContract.patchValue(this.oSubContract);
+      this.cr.detectChanges();
+      this.isAfterRender = true;
     }
   }
 

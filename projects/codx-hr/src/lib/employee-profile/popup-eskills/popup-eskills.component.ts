@@ -36,6 +36,9 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   result;
   fromDateFormat;
   toDateFormat;
+  headerTextCalendar: any = [];
+  isNullFrom : boolean = true;
+  isNullTo: boolean = true;
 
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
@@ -55,6 +58,8 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.skillObj = JSON.parse(JSON.stringify(data?.data.dataInput));
+    this.headerTextCalendar[0] = data?.data?.trainFromHeaderText;
+    this.headerTextCalendar[1] = data?.data?.trainToHeaderText;
   }
 
   initForm() {
@@ -71,23 +76,29 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
 
             this.skillObj = res?.data;
             this.skillObj.employeeID = this.employId;
-
             this.formModel.currentData = this.skillObj;
             this.formGroup.patchValue(this.skillObj);
             this.cr.detectChanges();
             this.isAfterRender = true;
+            this.isNullFrom = false;
+            this.isNullTo = false;
           }
         });
     } else {
+      this.isNullFrom = true;
+      this.isNullTo = true;
       if (this.actionType === 'edit' || this.actionType === 'copy') {
         this.formGroup.patchValue(this.skillObj);
-
         this.formModel.currentData = this.skillObj;
         this.cr.detectChanges();
         this.isAfterRender = true;
+        if(this.skillObj.trainFromDate == null)
+        this.isNullFrom = false;
+        if(this.skillObj.trainToDate == null)
+        this.isNullTo = false;
       }
     }
-    if(this.skillObj){
+    if (this.skillObj) {
       this.fromDateFormat = this.getFormatDate(this.skillObj.trainFrom);
       this.toDateFormat = this.getFormatDate(this.skillObj.trainTo);
     } else {
@@ -154,7 +165,6 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     }
   }
 
-
   afterRenderListView(evt) {
     this.listView = evt;
     console.log(this.listView);
@@ -193,12 +203,13 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
       this.skillObj.trainToDate = event.fromDate;
     }
   }
-  getFormatDate(trainFrom : string){
+  getFormatDate(trainFrom: string) {
     let resultDate = '';
-    if(trainFrom){
+    if (trainFrom) {
       let arrDate = trainFrom.split('/');
-      resultDate = arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
-      return resultDate
-    } else return resultDate = 'y';
+      resultDate =
+        arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
+      return resultDate;
+    } else return (resultDate = 'y');
   }
 }

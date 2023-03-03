@@ -40,13 +40,16 @@ export class NewsDetailComponent extends UIComponent {
     super(injector);
   }
   onInit(): void {
-    this.recID = this.router.snapshot.params["recID"];
-    this.category = this.router.snapshot.params["category"];
-    this.funcID = this.router.snapshot.params["funcID"];
-    this.loadData(this.recID);
-    this.getUserPermission(this.funcID);
-    this.getDataTagAsync("WP_News");
-    this.detectorRef.detectChanges();
+    this.router.params.subscribe((param) => {
+      this.recID = param["recID"];
+      this.category = param["category"];
+      this.funcID = param["funcID"];
+      this.loadData(this.recID);
+      this.getUserPermission(this.funcID);
+      this.getDataTagAsync("WP_News");
+    });
+    
+    
   }
   ngAfterViewInit(): void {
     this.views = [

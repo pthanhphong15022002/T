@@ -700,6 +700,8 @@
                 >
                 </codx-input> -->
                 <codx-dropdown-calendar
+                  [emptyText]="headerTextCalendar[0]"
+                  [firstChange]="isNullFrom"
                   cssPopup="h-500px w-500px"
                   [value]="Date(trainCourseObj.trainFromDate)"
                   [selectedType]="fromDateFormat"
@@ -716,6 +718,8 @@
                   [formModel]="formModel"
                 ></codx-label>
                 <codx-dropdown-calendar
+                  [emptyText]="headerTextCalendar[1]"
+                  [firstChange]="isNullTo"
                   cssPopup="h-500px w-500px"
                   [value]="Date(trainCourseObj.trainToDate)"
                   [selectedType]="toDateFormat"

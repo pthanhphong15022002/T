@@ -251,7 +251,7 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
-    <div class="form-group row">
+    <div class="form-group row mt-5">
       <div class="col-6">
         <codx-label fiedName="ContractNo" [formModel]="formModel"></codx-label>
         <codx-input
@@ -412,7 +412,7 @@
   <div class="d-flex justify-content-between">
     <button
       class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
-      (click)="addSubContract()"
+      (click)="handleSubContract('', 'add', null)"
     >
       <span class="icon-add btn-text-primary me-2"></span>
       <codx-label
