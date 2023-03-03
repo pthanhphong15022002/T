@@ -27,6 +27,7 @@ import {
   NotificationsService,
   RequestOption,
   UIComponent,
+  Util,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEpService, ModelPage } from '../../../codx-ep.service';
@@ -137,6 +138,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   dueDateControl: any;
   listFilePermission = [];
   attendeesNumber=0;
+  grView: any;
 
   constructor(
     private injector: Injector,
@@ -189,6 +191,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   onInit(): void {
+    this.cache.gridViewSetup(this.formModel?.formName,this.formModel?.gridViewName).subscribe(grv=>{
+      if(grv){
+        this.grView=Util.camelizekeyObj(grv);
+      }
+    })
     this.codxEpService.getSettingValue('System').subscribe((sys: any) => {
       if (sys) {
         this.ep8Avaiable = JSON.parse(sys.dataValue)?.EP8;

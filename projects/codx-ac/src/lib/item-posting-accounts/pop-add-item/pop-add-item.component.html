@@ -146,7 +146,7 @@
         <div class="col-6">
             <div class="form-group">
                 <codx-label [formModel]="form.formModel" fiedName="AccountID"></codx-label>
-                <codx-input type="combobox" refValue="ParentAccounts" [crrValue]="itemposting.accountID"
+                <codx-input placeholder="Tài khoản" type="combobox" refValue="ParentAccounts" [crrValue]="itemposting.accountID"
                     (valueChange)="valueChange($event)" field="accountID">
                 </codx-input>
             </div>
@@ -154,7 +154,7 @@
         <div class="col-6">
             <div class="form-group">
                 <codx-label [formModel]="form.formModel" fiedName="DIM3"></codx-label>
-                <codx-input type="combobox" refValue="CostItems" [crrValue]="itemposting.diM3" field="diM3"
+                <codx-input placeholder="Chọn mục phí" type="combobox" refValue="CostItems" [crrValue]="itemposting.diM3" field="diM3"
                     (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
@@ -164,7 +164,7 @@
         <div class="col-6">
             <div class="form-group">
                 <codx-label [formModel]="form.formModel" fiedName="DIM1"></codx-label>
-                <codx-input type="combobox" refValue="Departments" [crrValue]="itemposting.diM1" field="diM1"
+                <codx-input placeholder="Chọn phòng ban" type="combobox" refValue="Departments" [crrValue]="itemposting.diM1" field="diM1"
                     (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
@@ -172,7 +172,7 @@
         <div class="col-6">
             <div class="form-group">
                 <codx-label [formModel]="form.formModel" fiedName="DIM2"></codx-label>
-                <codx-input type="combobox" refValue="CostCenters" [crrValue]="itemposting.diM2" field="diM2"
+                <codx-input placeholder="Chọn trung tâm chi phí" type="combobox" refValue="CostCenters" [crrValue]="itemposting.diM2" field="diM2"
                     (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
@@ -180,7 +180,7 @@
     </div>
     <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
-        <codx-input [formModel]="form.formModel" [crrValue]="itemposting.note" field="note"
+        <codx-input placeholder="Nhập ghi chú"  type="textarea" format="ed2" [crrValue]="itemposting.note" field="note"
             (valueChange)="valueChange($event)">
         </codx-input>
     </div>

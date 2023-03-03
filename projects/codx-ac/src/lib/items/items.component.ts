@@ -29,7 +29,7 @@ export class ItemsComponent extends UIComponent {
 
   views: Array<ViewModel> = [];
   btnAdd: ButtonModel = { id: 'btnAdd' };
-  
+
   // combobox data
   warehouses: any[];
   locations: any[];
@@ -44,23 +44,31 @@ export class ItemsComponent extends UIComponent {
   //#region Init
   onInit(): void {
     this.loadComboboxData('Warehouses').subscribe((res) => {
-      console.log(JSON.parse(res[0]));
-      this.warehouses = JSON.parse(res[0]);
-    });
-    
-    this.loadComboboxData("WarehouseLocations").subscribe(res => {
-      console.log(JSON.parse(res[0]));
-      this.locations = JSON.parse(res[0]);
+      if (res) {
+        console.log(JSON.parse(res[0]));
+        this.warehouses = JSON.parse(res[0]);
+      }
     });
 
-    this.loadComboboxData("InventoryModels").subscribe(res => {
-      console.log(JSON.parse(res[0]));
-      this.inventoryModels = JSON.parse(res[0]);
+    this.loadComboboxData('WarehouseLocations').subscribe((res) => {
+      if (res) {
+        console.log(JSON.parse(res[0]));
+        this.locations = JSON.parse(res[0]);
+      }
     });
 
-    this.loadComboboxData("DimensionGroups").subscribe(res => {
-      console.log(JSON.parse(res[0]));
-      this.dimGroups = JSON.parse(res[0]);
+    this.loadComboboxData('InventoryModels').subscribe((res) => {
+      if (res) {
+        console.log(JSON.parse(res[0]));
+        this.inventoryModels = JSON.parse(res[0]);
+      }
+    });
+
+    this.loadComboboxData('DimensionGroups').subscribe((res) => {
+      if (res) {
+        console.log(JSON.parse(res[0]));
+        this.dimGroups = JSON.parse(res[0]);
+      }
     });
   }
 
@@ -77,7 +85,7 @@ export class ItemsComponent extends UIComponent {
       },
       {
         type: ViewType.grid,
-        text: "Chi tiết",
+        text: 'Chi tiết',
         active: true,
         sameData: true,
         model: {
@@ -213,7 +221,8 @@ export class ItemsComponent extends UIComponent {
   }
 
   getInventoryModelById(id: string): string {
-    return this.inventoryModels?.find((w) => w.InventModelID === id)?.InventModelName;
+    return this.inventoryModels?.find((w) => w.InventModelID === id)
+      ?.InventModelName;
   }
 
   getDimGroupNameById(id: string): string {

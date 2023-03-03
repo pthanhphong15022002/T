@@ -26,7 +26,6 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   skillObj;
   lstSkills;
-  indexSelected;
   actionType;
   funcID;
   idField = 'RecID';
@@ -55,11 +54,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     this.actionType = data?.data?.actionType;
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
-    this.lstSkills = data?.data?.lstESkill;
-    this.skillObj = data?.data.dataInput;
-    this.indexSelected =
-      data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
-
+    this.skillObj = JSON.parse(JSON.stringify(data?.data.dataInput));
   }
 
   initForm() {
@@ -76,7 +71,8 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
 
             this.skillObj = res?.data;
             this.skillObj.employeeID = this.employId;
-            //this.formModel.currentData = this.skillObj;
+
+            this.formModel.currentData = this.skillObj;
             this.formGroup.patchValue(this.skillObj);
             this.cr.detectChanges();
             this.isAfterRender = true;
@@ -85,13 +81,19 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
         this.formGroup.patchValue(this.skillObj);
-        //this.formModel.currentData = this.skillObj;
+
+        this.formModel.currentData = this.skillObj;
         this.cr.detectChanges();
         this.isAfterRender = true;
       }
     }
-    this.fromDateFormat = this.getFormatDate(this.skillObj.trainFrom);
-    this.toDateFormat = this.getFormatDate(this.skillObj.trainTo);
+    if(this.skillObj){
+      this.fromDateFormat = this.getFormatDate(this.skillObj.trainFrom);
+      this.toDateFormat = this.getFormatDate(this.skillObj.trainTo);
+    } else {
+      this.fromDateFormat = this.getFormatDate(null);
+      this.toDateFormat = this.getFormatDate(null);
+    }
   }
 
   onInit(): void {
@@ -134,43 +136,24 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.addESlkillInfo(this.skillObj).subscribe((p) => {
         if (p != null) {
-          this.result = p[0];
-          this.lstSkills = p[1];
-          this.result.isSuccess = true;
           this.notify.notifyCode('SYS006');
-          this.dialog && this.dialog.close([this.result, this.lstSkills]);
+          this.dialog && this.dialog.close(p);
         } else {
           this.notify.notifyCode('SYS023');
-          this.result.isSuccess = false;
         }
       });
     } else {
       this.hrService.updateEskillInfo(this.skillObj).subscribe((p) => {
         if (p != null) {
-          this.result = p[0];
-          this.lstSkills = p[1];
-          this.result.isSuccess = true;
           this.notify.notifyCode('SYS007');
-          this.dialog && this.dialog.close([this.result, this.lstSkills]);
+          this.dialog && this.dialog.close(p);
         } else {
-          this.result.isSuccess = false;
           this.notify.notifyCode('SYS021');
         }
       });
     }
   }
 
-  click(data) {
-    console.log('formdata', data);
-    this.skillObj = data;
-    //this.formModel.currentData = JSON.parse(JSON.stringify(this.skillObj));
-    this.indexSelected = this.lstSkills.findIndex(
-      (p) => (p.recID = this.skillObj.recID)
-    );
-    this.actionType = 'edit';
-    this.formGroup?.patchValue(this.skillObj);
-    this.cr.detectChanges();
-  }
 
   afterRenderListView(evt) {
     this.listView = evt;

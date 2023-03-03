@@ -32,10 +32,12 @@ erm-quick-links-inner .dropdown-menu {
 .fs-6 {
   font-size: var(--fs-6)!important;
 }
+.border-gray-200 {
+  border-color: var(--gray-200)!important;
+}
 .text-primary {
   color: var(--text-primary) !important;
 }
-
 .h-16px {
   height: 16px;
 }
@@ -1756,5 +1758,9 @@ a.nav-link {
   }
 }
 
+
+.codx-form .card-footer, .e-dialog .card-footer {
+  padding-top: 8px;
+}
 
 /// 14/2/2023 

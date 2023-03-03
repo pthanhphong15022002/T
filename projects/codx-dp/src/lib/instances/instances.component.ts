@@ -99,7 +99,7 @@ export class InstancesComponent
   sumDaySteps: number;
   lstParticipants = [];
   oldIdInstance: any;
-  viewMode:any;
+  viewMode: any;
   viewModeDetail = 'S';
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
@@ -127,8 +127,8 @@ export class InstancesComponent
     this.getListCbxProccess(this.dataProccess?.applyFor);
   }
   ngAfterViewInit(): void {
-    this.viewMode = this.dataProccess.viewMode??6;  //dang lỗi nên gán cứng
-    this.viewModeDetail = this.dataProccess.viewModeDetail??"S";
+    this.viewMode = this.dataProccess.viewMode ?? 6; //dang lỗi nên gán cứng
+    this.viewModeDetail = this.dataProccess.viewModeDetail ?? 'S';
     this.views = [
       {
         type: ViewType.listdetail,
@@ -230,7 +230,6 @@ export class InstancesComponent
               option.zIndex = 1001;
               this.view.dataService.dataSelected.processID = this.process.recID;
               if (!this.process.instanceNoSetting) {
-                //this.genAutoNumberNo(applyFor); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
                 this.codxDpService
                   .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
                   .subscribe((res) => {
@@ -245,8 +244,10 @@ export class InstancesComponent
                     this.process.instanceNoSetting
                   )
                   .subscribe((isNo) => {
-                    this.instanceNo = isNo;
-                    this.openPopUpAdd(applyFor, formMD, option, 'add');
+                    if (isNo) {
+                      this.instanceNo = isNo;
+                      this.openPopUpAdd(applyFor, formMD, option, 'add');
+                    }
                   });
             });
         });
@@ -278,12 +279,11 @@ export class InstancesComponent
               option.Width = '850px';
               option.zIndex = 1001;
               if (!this.process.instanceNoSetting) {
-                //this.genAutoNumberNo(applyFor); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
                 this.codxDpService
                   .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
                   .subscribe((res) => {
                     if (res) {
-                      this.instanceNo = res;
+                      this.view.dataService.dataSelected = res;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -293,8 +293,10 @@ export class InstancesComponent
                     this.process.instanceNoSetting
                   )
                   .subscribe((isNo) => {
-                    this.instanceNo = isNo;
-                    this.openPopUpAdd(applyFor, formMD, option, titleAction);
+                    if (isNo) {
+                      this.view.dataService.dataSelected = isNo;
+                      this.openPopUpAdd(applyFor, formMD, option, titleAction);
+                    }
                   });
               }
             });
@@ -312,7 +314,6 @@ export class InstancesComponent
         this.titleAction,
         formMD,
         this.listStepsCbx,
-        this.instanceNo,
         (this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)),
         this.lstParticipants,
         this.oldIdInstance,
@@ -370,7 +371,6 @@ export class InstancesComponent
                     this.titleAction,
                     formMD,
                     this.listStepsCbx,
-                    this.instanceNo,
                     (this.sumDaySteps = this.getSumDurationDayOfSteps(
                       this.listStepsCbx
                     )),
@@ -389,15 +389,6 @@ export class InstancesComponent
       });
   }
 
-  async genAutoNumberNo(funcID) {
-    this.codxDpService
-      .genAutoNumber(funcID, 'DP_Instances', 'InstanceNo')
-      .subscribe((res) => {
-        if (res) {
-          this.instanceNo = res;
-        }
-      });
-  }
   //End
 
   //Event
@@ -540,7 +531,7 @@ export class InstancesComponent
   }
 
   viewDetail(data) {
-    this.dataSelected =data;
+    this.dataSelected = data;
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
