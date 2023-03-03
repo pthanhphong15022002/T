@@ -25,9 +25,9 @@ export class ApprovalStationeryViewDetailComponent
   @Input() itemDetail: any;
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
-  
-  @Output('approve') approve: EventEmitter<any> = new EventEmitter();  
-  @Output('reject') reject: EventEmitter<any> = new EventEmitter(); 
+
+  @Output('approve') approve: EventEmitter<any> = new EventEmitter();
+  @Output('reject') reject: EventEmitter<any> = new EventEmitter();
   @Output('undo') undo: EventEmitter<any> = new EventEmitter();
   @Input() funcID;
   @Input() formModel;
@@ -37,8 +37,10 @@ export class ApprovalStationeryViewDetailComponent
   itemDetailDataStt: any;
   itemDetailStt: any;
   active = 1;
-
   tabControl: TabModel[] = [];
+  listFilePermission = [];
+  isEdit: boolean = true;
+
   constructor(
     private injector: Injector,
     private notificationsService: NotificationsService,
@@ -97,18 +99,18 @@ export class ApprovalStationeryViewDetailComponent
           this.approve.emit(datas);
         }
         break;
-        case 'EPT40306':
-          {
-            //alert('Thu hồi');
-            this.undo.emit(datas);
-          }
-          break;
+      case 'EPT40306':
+        {
+          //alert('Thu hồi');
+          this.undo.emit(datas);
+        }
+        break;
     }
   }
   // undo(data: any) {
   //   this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
   //       if (res != null) {
-          
+
   //         this.notificationsService.notifyCode('SYS034'); //đã thu hồi
   //         data.approveStatus = '3';
   //         data.status = '3';
@@ -128,11 +130,10 @@ export class ApprovalStationeryViewDetailComponent
   //     )
   //     .subscribe(async (res: any) => {
   //       if (res?.msgCodeError == null && res?.rowCount >= 0) {
-          
+
   //           this.notificationsService.notifyCode('SYS034'); //đã duyệt
   //           data.approveStatus = '5';
-          
-          
+
   //         this.updateStatus.emit(data);
   //       } else {
   //         this.notificationsService.notifyCode(res?.msgCodeError);
@@ -155,7 +156,6 @@ export class ApprovalStationeryViewDetailComponent
           if (
             func.functionID == 'EPT40301' /*MF Duyệt*/ ||
             func.functionID == 'EPT40302' /*MF từ chối*/
-            
           ) {
             func.disabled = false;
           }
@@ -173,13 +173,10 @@ export class ApprovalStationeryViewDetailComponent
           ) {
             func.disabled = true;
           }
-          if (
-            func.functionID == 'EPT40306' /*MF Undo*/ 
-          ) {
+          if (func.functionID == 'EPT40306' /*MF Undo*/) {
             func.disabled = false;
           }
         });
-        
       }
     }
   }
