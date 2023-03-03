@@ -259,7 +259,7 @@ export class InstancesComponent
       this.view.dataService.dataSelected = data;
       this.oldIdInstance = data.recID;
     }
-    this.view.dataService.copy().subscribe((res) => {
+    this.view.dataService.copy(this.view.dataService.dataSelected).subscribe((res) => {
       const funcIDApplyFor =
         this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
       const applyFor = this.process.applyFor;
@@ -283,7 +283,7 @@ export class InstancesComponent
                   .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
                   .subscribe((res) => {
                     if (res) {
-                      this.view.dataService.dataSelected = res;
+                      this.view.dataService.dataSelected = data;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -294,7 +294,7 @@ export class InstancesComponent
                   )
                   .subscribe((isNo) => {
                     if (isNo) {
-                      this.view.dataService.dataSelected = isNo;
+                      this.view.dataService.dataSelected = data;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -786,7 +786,7 @@ export class InstancesComponent
   }
 
   getSumDurationDayOfSteps(listStepCbx: any) {
-    let total = listStepCbx.reduce((sum, f) => sum + f.durationDay, 0);
+    let total = listStepCbx?.reduce((sum, f) => sum + f?.durationDay, 0);
     return total;
   }
   #endregion;

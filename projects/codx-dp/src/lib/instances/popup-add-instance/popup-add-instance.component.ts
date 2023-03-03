@@ -143,10 +143,10 @@ export class PopupAddInstanceComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.action === 'add' || this.action === 'copy') {
-      this.autoClickedSteps();
+      this.action === 'add' && this.autoClickedSteps();
       this.handleEndDayInstnace(this.totalDaySteps);
     } else if (this.action === 'edit') {
-      this.oldEndDate = this.instance.endDate;
+      this.oldEndDate = this.instance?.endDate;
     }
   }
 
@@ -240,16 +240,16 @@ export class PopupAddInstanceComponent implements OnInit {
       );
       return;
     }
-    if(this.instance?.owner === null || this.instance?.owner.trim() === ''){
-      this.notificationsService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['Owner']?.headerText + '"'
-      );
-      return;
-    }
+    // if(this.instance?.owner === null || this.instance?.owner.trim() === ''){
+    //   this.notificationsService.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.gridViewSetup['Owner']?.headerText + '"'
+    //   );
+    //   return;
+    // }
     else if (
-      this.checkEndDayInstance(this.instance.endDate, this.totalDaySteps)
+      this.checkEndDayInstance(this.instance?.endDate, this.totalDaySteps)
     ) {
       // thDateFormat = new Date(this.dateOfDuration).toLocaleDateString('en-AU');
       this.notificationsService.notifyCode(
@@ -311,7 +311,7 @@ export class PopupAddInstanceComponent implements OnInit {
     listStep.pop();
   }
   autoClickedSteps() {
-    this.instance.stepID = this.listStep[0].stepID;
+    this.instance.stepID = this.listStep[0]?.stepID;
   }
 
   checkFormat(field) {
@@ -356,7 +356,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.instance.endDate.setDate(
       this.instance.endDate.getDate() + durationDay
     );
-    this.dateOfDuration = JSON.parse(JSON.stringify(this.instance.endDate));
+    this.dateOfDuration = JSON.parse(JSON.stringify(this.instance?.endDate));
   }
   checkEndDayInstance(endDate, durationDay) {
     if (this.action === 'edit') {
@@ -383,8 +383,8 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   eventUser(e) {
-    this.owner = e.id;
-    this.instance.owner = this.owner;
+    // this.owner = e?.id; // thêm check null cái
+    // this.instance.owner = this.owner ;
   }
   getNameAndPosition(id) {
     this.codxDpService.getPositionByID(id).subscribe((res) => {
