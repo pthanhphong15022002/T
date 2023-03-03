@@ -636,7 +636,7 @@ export class InstancesComponent
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
               instance: data,
-              listStep: this.listStepsCbx,
+              listStepCbx: this.listStepsCbx,
               instanceStep: instanceStep,
               stepIdClick: this.stepIdClick,
             };
