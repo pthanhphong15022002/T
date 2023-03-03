@@ -541,6 +541,11 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     this.objects.createdBy = this.vendors.createdBy;
     this.objects.modifiedOn = this.vendors.modifiedOn;
     this.objects.modifiedBy = this.vendors.modifiedBy;
+    this.objects.postDetail = this.vendors.postDetail;
+    this.objects.postItems = this.vendors.postItems;
+    this.objects.settleInvoice = this.vendors.settleInvoice;
+    this.objects.settlePayment = this.vendors.settlePayment;
+    this.objects.debtComparision = this.vendors.debtComparision;
   }
   //#endregion
 

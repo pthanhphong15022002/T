@@ -43,7 +43,7 @@ export class PopupAddInstanceComponent implements OnInit {
   listInstances: DP_Instances[] = [];
   formModelCrr: FormModel;
 
-  instanceNo: string;
+  // instanceNo: string;
   listStepCbx: any;
 
   instance: DP_Instances;
@@ -106,8 +106,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.titleAction = dt?.data[3];
     this.formModelCrr = dt?.data[4];
     this.listStepCbx = dt?.data[5];
-    this.instance.instanceNo = dt?.data[6];
-    this.totalDaySteps = dt?.data[7];
+    this.totalDaySteps = dt?.data[6];
     if (this.action === 'edit') {
       this.owner = this.instance?.owner;
       if (

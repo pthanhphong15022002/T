@@ -535,6 +535,11 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.objects.createdBy = this.customers.createdBy;
     this.objects.modifiedOn = this.customers.modifiedOn;
     this.objects.modifiedBy = this.customers.modifiedBy;
+    this.objects.postDetail = this.customers.postDetail;
+    this.objects.postItems = this.customers.postItems;
+    this.objects.settleInvoice = this.customers.settleInvoice;
+    this.objects.settlePayment = this.customers.settlePayment;
+    this.objects.debtComparision = this.customers.debtComparision;
   }
   //#endregion
 
