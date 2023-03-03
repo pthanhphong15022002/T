@@ -76,8 +76,11 @@
     // }
     .carousel-control-prev,
     .carousel-control-next {
-        height: 200px !important;
-        width: 7%;
+        // height: 200px !important;
+        width: 5%;
+        &:hover{
+            background-color: var(--primary);
+        }
     }
 
     .carousel-inner .video .image-200 {
