@@ -88,11 +88,15 @@
 
     }
   }
+  .pic-emloyee label.badge{
+    left: 0!important;
+    margin-left: 12px!important;
+  }
 
 }
 
 .profile-grid .e-gridcontent {
-  max-height: 200px;
+  max-height: 320px;
   overflow: auto;
 }
 .info-dropdownlist{
@@ -101,6 +105,6 @@
   margin-right: -10px;
   padding-right: 10px;
 }
-.user-family{
+.user-family .bg-white{
   min-height: calc(100vh - 130px);
 }
