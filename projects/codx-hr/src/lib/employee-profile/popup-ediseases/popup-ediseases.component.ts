@@ -116,33 +116,22 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    if(this.actionType === 'copy') delete this.ediseasesObj.recID
-    this.ediseasesObj.employeeID = this.employeeId 
+    if(this.actionType === 'copy') delete this.ediseasesObj.recID;
     if(this.actionType === 'add' || this.actionType === 'copy'){
       this.hrSevice.AddEmployeeDiseasesInfo(this.ediseasesObj).subscribe(p => {
         if(p != null){
-          this.ediseasesObj = p;
           this.notify.notifyCode('SYS006');
-          this.ediseasesObj.isSuccess = true;
-          this.dialog && this.dialog.close(this.ediseasesObj);
+          this.dialog && this.dialog.close(p);
         }
-        else {
-          this.notify.notifyCode('SYS023');
-          this.ediseasesObj.isSuccess = false;
-        }
+        else this.notify.notifyCode('SYS023');
       });
     } 
     else{
       this.hrSevice.UpdateEmployeeDiseasesInfo(this.formModel.currentData).subscribe(p => {
         if(p != null){
-          this.ediseasesObj = p;
           this.notify.notifyCode('SYS007');
-          this.ediseasesObj.isSuccess = true;
           this.dialog && this.dialog.close(this.ediseasesObj);
-        } else {
-          this.notify.notifyCode('SYS021');
-          this.ediseasesObj.isSuccess = false;
-        }
+        } else this.notify.notifyCode('SYS021');
       });
     }
   }
