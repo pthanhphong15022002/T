@@ -115,6 +115,10 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
 
               this.isEdit = true;
             }
+            else{
+              
+              this.isEdit = false;
+            }
             this.detectorRef.detectChanges();
           }
         });
