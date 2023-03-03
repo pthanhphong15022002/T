@@ -16,13 +16,12 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ApprovalStationeryViewDetailComponent } from './approval/approval-stationery-view-detail/approval-stationery-view-detail.component';
 import { ApprovalStationeryComponent } from './approval/approval-stationery.component';
 import { BookingStationeryComponent } from './booking/booking-stationery.component';
-import { StationeryDashboardComponent } from './booking/dashboard/dashboard.component';
 import { PopupRequestStationeryComponent } from './booking/popup-request-stationery/popup-request-stationery.component';
 import { BookingStationeryViewDetailComponent } from './booking/view-detail/view-detail.component';
-import { PopupAddQuotaComponent } from './settings/stationery/popup-add-quota/popup-add-quota.component';
-import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
-import { PopupUpdateQuantityComponent } from './settings/stationery/popup-update-quantity/popup-update-quantity.component';
-import { StationeryComponent } from './settings/stationery/stationery.component';
+import { StationeryCategoryComponent } from './category/category.component';
+import { PopupAddQuotaComponent } from './category/popup-add-quota/popup-add-quota.component';
+import { PopupAddStationeryComponent } from './category/popup-add-stationery/popup-add-stationery.component';
+import { PopupUpdateQuantityComponent } from './category/popup-update-quantity/popup-update-quantity.component';
 import { Layout8Component } from './_layout8/layout8.component';
 
 const routes: Route[] = [
@@ -30,22 +29,6 @@ const routes: Route[] = [
     path: '',
     component: Layout8Component,
     children: [
-      {
-        path: 'bookingstationery/:funcID',
-        component: BookingStationeryComponent,
-      },
-      {
-        path: 'approvestationery/:funcID',
-        component: ApprovalStationeryComponent,
-      },
-      {
-        path: 'settings',
-        canActivate: [AuthGuard],
-        loadChildren: () =>
-          import('./settings/_layout/layout.modules').then(
-            (m) => m.LayoutModule
-          ),
-      },
       {
         path: '',
         redirectTo: 'home',
@@ -55,6 +38,14 @@ const routes: Route[] = [
         path: '**',
         redirectTo: 'error/404',
       },
+      {
+        path: 'bookingstationery/:funcID',
+        component: BookingStationeryComponent,
+      },
+      {
+        path: 'approvestationery/:funcID',
+        component: ApprovalStationeryComponent,
+      },
     ],
   },
   {
@@ -63,7 +54,7 @@ const routes: Route[] = [
     children: [
       {
         path: 'stationery/:funcID',
-        component: StationeryComponent,
+        component: StationeryCategoryComponent,
       },
     ],
   },
@@ -73,14 +64,13 @@ const Components: Type<any>[] = [
   Layout8Component,
   BookingStationeryComponent,
   ApprovalStationeryComponent,
-  StationeryComponent,
+  StationeryCategoryComponent,
   PopupAddStationeryComponent,
   PopupUpdateQuantityComponent,
   PopupAddQuotaComponent,
   PopupRequestStationeryComponent,
   BookingStationeryViewDetailComponent,
   ApprovalStationeryViewDetailComponent,
-  StationeryDashboardComponent,
 ];
 
 @NgModule({
