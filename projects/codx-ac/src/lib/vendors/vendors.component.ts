@@ -137,7 +137,14 @@ export class VendorsComponent extends UIComponent {
                   'DeleteAsync',
                   [data.vendorID]
                 ).subscribe((res: any) => {
-
+                  if (res) {
+                    this.api.exec(
+                      'ERM.Business.AC',
+                      'ObjectsBusiness',
+                      'DeleteAsync',
+                      [data.vendorID]
+                    ).subscribe((res: any) => {})
+                  }
                 });
               }
             });

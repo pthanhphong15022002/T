@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, HostBinding, Injector, OnDestroy, OnInit,
 import { ActivatedRoute } from '@angular/router';
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
 import { load } from '@syncfusion/ej2-angular-charts';
-import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, ViewType, DialogModel, UIComponent, NotificationsService } from 'codx-core';
+import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, ViewType, DialogModel, UIComponent, NotificationsService, CRUDService } from 'codx-core';
 import { PopupAddComponent } from './popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from './popup/popup-search/popup-search.component';
 
@@ -22,10 +22,8 @@ export class NewsComponent extends UIComponent {
   funcID: string = "";
   posts: any[] = [];
   videos: any[] = [];
-  lstGroup: any[] = [];
-  isAllowNavigationArrows = false;
   views: Array<ViewModel> = [];
-  category: string = "home";
+  category: string = "";
   mssgWP025:string = "";
   mssgWP026:string = "";
   mssgWP027:string = "";
@@ -52,18 +50,29 @@ export class NewsComponent extends UIComponent {
   ) 
   { 
     super(injector)
+    this.dataService = new CRUDService(this.injector);
   }
   onInit(): void {
     this.router.params.subscribe((param) => {
-      if (param) {
+      debugger
+      if (param["category"] !== "home")
+      {
         this.category = param["category"];
-        this.loadDataAsync(this.category);
+        this.dataService.dataValue = param["category"];
+      }
+      else
+      {
+        this.category = "";
+        this.dataService.dataValue = "";
+      }
+      this.loadDataAsync(this.category);
+      if(param["funcID"]){
+        this.funcID = param["funcID"];
+        if(this.userPermission){
+          this.getUserPermission(this.funcID);
+        }
       }
     });
-    this.funcID = this.router.snapshot.params["funcID"];
-    if(this.funcID){
-      this.getUserPermission(this.funcID);
-    }
     this.getMessageDefault();
   }
 
@@ -118,28 +127,31 @@ export class NewsComponent extends UIComponent {
   }
   // get data async
   loadDataAsync(category: string) {
-    this.loaded = false;
     this.getPostAsync(category);
     this.getVideoAsync(category);
+    this.dataService.setPredicate("",[this.category]).subscribe();
   }
   // get post
   getPostAsync(category:string){
+    this.loaded = false;
     this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
-        'GetPostAsync',
+        'GetTop4PostAsync',
         [category]).subscribe((res:any) => {
           if(res)
           {
-            this.posts = res[0];
-            this.lstGroup = res[1]
+            this.posts = res;
             this.detectorRef.detectChanges();
           }
           this.loaded = true;
         });
   }
+  scrolled:boolean = false;
+  slides:any[] = [];
+  showNavigation:boolean = false;
   // get videos
   getVideoAsync(category:string,pageIndex = 0){
     this.api
@@ -150,36 +162,19 @@ export class NewsComponent extends UIComponent {
         'GetVideoAsync',
         [category,pageIndex])
         .subscribe((res:any[]) => {
-          if(res[1] > 0)
-          {
-            let data = res[0];
-            let total = res[1]
+          let data = res[0];
+          if(this.scrolled)
             this.videos = this.videos.concat(data);
-            this.isAllowNavigationArrows = total > 3 ? true : false;
-          }
           else
-          {
-            this.videos = [];
+            this.videos = res[0];
+          let j = 0;
+          for (let index = 0; index < this.videos.length; index += 3) {
+            this.slides[j] = [];
+            this.slides[j] = this.videos.slice(index,index+3);
+            j ++;
           }
-          this.loaded = true;
+          this.showNavigation = j > 0 ? true : false; 
           this.detectorRef.detectChanges();
-        });
-  }
-  // get list post by category
-  getPostByCategory(category:string){
-    this.api
-      .execSv(
-        'WP',
-        'ERM.Business.WP',
-        'NewsBusiness',
-        'GetPostByCategoryAsync',
-        [])
-        .subscribe((res:any[]) => {
-          if(Array.isArray(res) && res.length > 0)
-          {
-            this.lstGroup = res;
-            this.detectorRef.detectChanges();
-          }
         });
   }
   // click view detail news
@@ -233,5 +228,12 @@ export class NewsComponent extends UIComponent {
     } 
   }
 
+
+  // navigate
+  navigate($event){
+
+  }
+
+  dataService: CRUDService = null;
 
 }

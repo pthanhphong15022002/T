@@ -30,6 +30,7 @@ export class StepTaskGroupComponent implements OnInit {
   differenceTime = 0;
   step;
   maxTimeGroup = 0;
+  isSave = false;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -77,24 +78,27 @@ export class StepTaskGroupComponent implements OnInit {
   changeUser(e) {
     this.taskGroup['roles'] = e;
   }
-  
+
   changeValueNumber(event) {
+    if (event?.field === 'durationHour' && event?.data >= 24) {
+      this.taskGroup['durationDay'] =
+        Number(this.taskGroup['durationDay']) + Math.floor(event?.data / 24);
+      this.taskGroup['durationHour'] = Math.floor(event?.data % 24);
+    } else {
+      this.taskGroup[event?.field] = event?.data || 0;
+    }
+
     let time =
       event?.field === 'durationDay'
         ? Number(event?.data) * 24 + this.taskGroup['durationHour']
         : Number(this.taskGroup['durationDay']) * 24 + Number(event?.data);
+    this[event?.field] = event?.data;
+
     if (time < this.maxTimeGroup) {
-      this.notiService.notifyCode(
-        'Thời gian nhỏ hơn tống thời gian của các task'
-      );
+      this.isSave = false;
+      this.notiService.notifyCode('DP012');
     } else {
-      if (event?.field === 'durationHour' && event?.data >= 24) {
-        this.taskGroup['durationDay'] =
-          Number(this.taskGroup['durationDay']) + Math.floor(event?.data / 24);
-        this.taskGroup['durationHour'] = Math.floor(event?.data % 24);
-      } else {
-        this.taskGroup[event?.field] = event?.data || 0;
-      }
+      this.isSave = true;
     }
   }
 
@@ -149,6 +153,8 @@ export class StepTaskGroupComponent implements OnInit {
     }
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
+    } else if (!this.isSave) {
+      this.notiService.notifyCode('DP012');
     } else {
       let difference = this.getHour(this.taskGroup) - this.timeOld;
       if (difference > 0 && difference > this.differenceTime) {

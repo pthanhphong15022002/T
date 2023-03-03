@@ -227,7 +227,7 @@
   box-shadow: 0 0px 5px 0 rgba(0, 174, 255, 0.2) inset;
   border-radius: 5px;
   background-color: #f0f8ff;
-  cursor: pointer;
+  cursor: default;
 }
 
 .drap-drop:active {
@@ -240,7 +240,7 @@
 
 .card-job {
   transition: all 0.5s ease-out;
-  cursor: pointer;
+  cursor: default;
 }
 
 .card-job:hover {
@@ -265,5 +265,9 @@
   text-align: center;
   border-radius: 50%;
 }
-
+:host ::ng-deep text {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  margin-bottom: 5px !important;
+}
 // End Drop drap -- nvthuan

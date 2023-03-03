@@ -68,6 +68,7 @@
               }}
             </div>
           </div>
+          <span *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
         </div>
         <div class="footerCard-item">
           <div class="d-flex justify-content-start mt-1">
@@ -88,10 +89,10 @@
         <div class="footerCard-item">
           <div class="d-flex justify-content-start mt-1">
             <div class="me-2 mt-1">
-              <span class="icon-server icon-14">10</span>
+              <!-- <span class="icon-server icon-14 ">&nbsp;{{data?.totalStep}}</span> -->
             </div>
             <div class="me-2 mt-1">
-              <span class="icon-format_list_bulleted icon-14">5</span>
+              <!-- <span class="icon-format_list_bulleted icon-14">&nbsp;{{data?.totalInstance}}</span> -->
             </div>
             <div class="ms-auto">
               <codx-imgs
@@ -105,6 +106,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </ng-template>
 </ng-template>
@@ -225,12 +227,12 @@
                     </div>
                   </div>
                 </div>
-        
+
               </ng-container>
 
             </div>
           </div>
-          
+
           <ng-template #other_content>
             <div class="form-check py-2">
               <input

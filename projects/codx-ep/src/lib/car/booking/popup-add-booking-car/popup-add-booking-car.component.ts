@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { APICONSTANT } from '@shared/constant/api-const';
-import { AuthService, AuthStore, CacheService, CRUDService } from 'codx-core';
+import { AuthService, AuthStore, CacheService, CRUDService, Util } from 'codx-core';
 import {
   DialogData,
   DialogRef,
@@ -132,6 +132,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   busyAttendees: string;
   approvalRule: any;
   dueDateControl: any;
+  grView: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -166,6 +167,11 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
   }
   onInit(): void {
+    this.cache.gridViewSetup(this.formModel?.formName,this.formModel?.gridViewName).subscribe(grv=>{
+      if(grv){
+        this.grView=Util.camelizekeyObj(grv);
+      }
+    })
     this.cacheService.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {

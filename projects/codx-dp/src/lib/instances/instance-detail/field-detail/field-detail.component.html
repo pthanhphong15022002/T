@@ -65,19 +65,18 @@
     {{ data.dataValue }}
   </span>
 
-  <span class="text-dark margin-l" *ngIf="data.dataType == 'N'">
-    {{
-      data.dataFormat == "I"
-        ? data.dataValue.toFixed(0)
-        : data.dataValue.toFixed(2)
-    }}
+  <span
+    class="text-dark margin-l"
+    *ngIf="data.dataType == 'N' && data.dataFormat && data.dataValue"
+    [innerHTML]="formatNumber(data)"
+  >
     <span *ngIf="data.dataFormat == 'P'">%</span>
   </span>
   <span class="text-dark margin-l" *ngIf="data.dataType == 'D'">
     <span
       *ngIf="
-        data.dataFormat == '1' ||
-        data.dataFormat == '2' ||
+        data?.dataFormat == '1' ||
+        data?.dataFormat == '2' ||
         data.dataFormat == '3'
       "
     >

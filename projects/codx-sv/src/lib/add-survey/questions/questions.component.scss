@@ -413,7 +413,12 @@
     position: inherit !important;
     top: -44px;
     left: -10px;
-    border-radius: 30px;
+    border-radius: 50%;
+    font-size: 18px !important;
+    font-size: 10px;
+    background-color: #F5F5F5;
+    color: #B4B5B7;
+    box-shadow: 0 0 0 1px rgba(197,199,208,0.2);
   }
 
   .m-w-100 {
@@ -592,7 +597,7 @@
 
   .border-gray {
     border: 1px solid lightgray;
-    box-shadow: 0 2px 3px 0 rgb(0 0 0 / 36%);
+    box-shadow: 0 2px 3px 0 rgb(0 0 0 / 13%);
   }
 }
 

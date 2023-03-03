@@ -36,6 +36,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   headerText: '';
   dataVllSupplier: any;
   defaultIssueDate: string = '0001-01-01T00:00:00';
+  fromDateFormat: string;
+  toDateFormat: string;
 
   //default degreeName
   levelText: string;
@@ -54,7 +56,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    this.degreeObj = data?.data?.degreeObj;
+    this.degreeObj = JSON.parse(JSON.stringify(data?.data?.degreeObj));
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
@@ -168,6 +170,13 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
           this.isAfterRender = true;
         }
       });
+      if(this.degreeObj){
+        this.fromDateFormat = this.getFormatDate(this.degreeObj.trainFrom);
+        this.toDateFormat = this.getFormatDate(this.degreeObj.trainTo);
+      } else {
+        this.fromDateFormat = this.getFormatDate(null);
+        this.toDateFormat = this.getFormatDate(null);
+      }
   }
 
   onInit(): void {
@@ -181,26 +190,17 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    // if (this.formGroup.invalid) {
-    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
-    //   return;
-    // }
-
-    if (this.actionType === 'copy') {
-      delete this.degreeObj.recID;
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
     }
     this.degreeObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService.AddEmployeeDegreeInfo(this.degreeObj).subscribe((p) => {
         if (p != null) {
-          this.degreeObj = p;
-          this.degreeObj.isSuccess = true;
           this.notify.notifyCode('SYS006');
-          this.dialog && this.dialog.close(this.degreeObj);
-        } else {
-          this.notify.notifyCode('SYS023');
-          this.degreeObj.isSuccess = false;
-        }
+          this.dialog && this.dialog.close(p);
+        } else this.notify.notifyCode('SYS023');
       });
     } else {
       this.hrService
@@ -208,12 +208,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            this.degreeObj.isSuccess = true;
-            this.dialog && this.dialog.close(this.degreeObj);
-          } else {
-            this.notify.notifyCode('SYS021');
-            this.degreeObj.isSuccess = false;
-          }
+            this.dialog && this.dialog.close(p);
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }
@@ -295,5 +291,14 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
       this.formGroup.patchValue({ degreeName: this.degreeObj.degreeName });
       this.cr.detectChanges();
     }
+  }
+
+  getFormatDate(trainFrom : string){
+    let resultDate = '';
+    if(trainFrom){
+      let arrDate = trainFrom.split('/');
+      resultDate = arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
+      return resultDate
+    } else return resultDate = 'y';
   }
 }
