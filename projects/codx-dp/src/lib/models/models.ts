@@ -43,6 +43,7 @@ export class DP_Processes {
   viewMode: string;
   viewModeDetail: string;
   autoName: string;
+  steps: DP_Steps[] = []
 }
 
 export class DP_Processes_Permission {
@@ -285,6 +286,7 @@ export class DP_Instances {
   tags: string;
   modifiedBy: string;
   permissions: DP_Instances_Permissions[] = [];
+  steps: DP_Instances_Steps[]=[]
 }
 
 export class DP_Instances_Permissions {

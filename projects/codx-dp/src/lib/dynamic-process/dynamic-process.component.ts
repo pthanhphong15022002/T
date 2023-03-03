@@ -608,9 +608,9 @@ export class DynamicProcessComponent
     }
   }
   getNameUsersStr(data) {
-    if (data.length > 0 && data !== null) {
+    if (data?.length > 0 && data !== null) {
       var ids = data.map((obj) => obj.objectID);
-      var listStr = ids.join(';');
+      var listStr = ids?.join(';');
     }
     return listStr || null || '';
   }
@@ -630,6 +630,11 @@ export class DynamicProcessComponent
       ? this.listAppyFor.find((x) => x.value === value)?.default ?? ''
       : '';
   }
+
+  totalSteps(listStep:any){
+    return listStep.steps?.filter(x=> !x.isSuccessStep && !x.isFailStep).length;
+  }
+
   //#endregion đang test
 
   viewDetailProcess(data) {
