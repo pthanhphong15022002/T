@@ -39,13 +39,15 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
   @ViewChild('attachment') attachment: AttachmentComponent;
   
   dialogRef: DialogRef;
-  formModel: FormModel;
   headerText: string;
 
-  data:any;
-  dataKR:any;
+  oldDataKR:any;
   fCheckinKR: FormGroup;
   isAfterRender: boolean;
+  dataKR: any;
+  formModel= new FormModel();
+  grView: any;
+    
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -55,44 +57,78 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.headerText= "Check-in"//dialogData?.data[2];
+    this.headerText= dialogData?.data[1];
     this.dialogRef = dialogRef;    
-    this.dataKR = dialogData.data[0];    
-    this.formModel = dialogData.data[1];    
+    this.oldDataKR = dialogData.data[0];    
+    //this.formModel = dialogData.data[1];    
   }
-
+//---------------------------------------------------------------------------------//
+  //-----------------------------------Base Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
   ngAfterViewInit(): void {
+
   }
 
   onInit(): void {
-    this.initForm();
+    this.getCacheData()
+    this.formModel.entityName = 'OM_OKRs.CheckIns';
+    this.formModel.entityPer = 'OM_OKRs.CheckIns';
+    this.formModel.gridViewName = 'grvOKRs.CheckIns';
+    this.formModel.formName = 'OKRs.CheckIns';
+    this.getCurrentKR();
+    
   }
-  click(event: any) {
-    switch (event) {
-      
-    }
-  }
-  initForm() {
-    this.codxOmService
-      .getFormGroup(this.formModel?.formName, this.formModel?.gridViewName)
-      .then((item) => {
-        this.fCheckinKR = item;  
-        this.data=this.fCheckinKR.value;             
-        this.isAfterRender = true;
-      });    
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Cache Data--------------------------------//
+  //---------------------------------------------------------------------------------//
+  getCacheData(){
+    this.cache.gridViewSetup(this.formModel.formName,this.formModel.gridViewName).subscribe(grv=>{
+      if(grv){
+        this.grView=grv;
+      }
+    });
   }
 
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Get Data Func---------------------------------//
+  //---------------------------------------------------------------------------------//
+  getCurrentKR() {
+    this.codxOmService.getOKRByID(this.oldDataKR.recID).subscribe((krModel) => {
+      if (krModel) {
+        this.dataKR= krModel;
+        this.isAfterRender=true;
+      }
+    });
+  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Event------------------------------------//
+  //---------------------------------------------------------------------------------//
+  // valueChange(evt: any) {
+  //   if (evt && evt?.data) {
+      
+  //   }
+  //   this.detectorRef.detectChanges();
+  // }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Event----------------------------------//
+  //---------------------------------------------------------------------------------//
+  checkinCancel(){
+    this.dialogRef.close();
+  }
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Validate Func---------------------------------//
+  //---------------------------------------------------------------------------------//
+
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Logic Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
   checkinSave(){
-    this.data.checkIn=new Date();
-    // this.data.modifiedOn=new Date();
-    this.data.oKRID=this.dataKR.recID;
-    // this.data.modifiedBy= this.authService.userValue.userID;
     // this.fCheckinKR.patchValue(this.data);
     // if (this.fCheckinKR.invalid == true) {
     //   this.codxOmService.notifyInvalid(this.fCheckinKR, this.formModel);
     //   return;
     // }
-    this.codxOmService.checkInKR(this.dataKR.recID, this.data).subscribe((res:any)=>{
+    this.codxOmService.checkInKR(this.dataKR.recID, this.dataKR).subscribe((res:any)=>{
       if(res){
         this.notificationsService.notifyCode('SYS034');
         res.checkIns=Array.from(res.checkIns).reverse();
@@ -100,9 +136,18 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
       }
     })
   }
-  checkinCancel(){
-    this.dialogRef.close();
-  }
+  
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Custom Func-----------------------------------//
+  //---------------------------------------------------------------------------------//
+
+
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Popup-----------------------------------------//
+  //---------------------------------------------------------------------------------//
+  
+  
+  
   
   popupUploadFile(evt: any) {
     this.attachment.uploadFile();

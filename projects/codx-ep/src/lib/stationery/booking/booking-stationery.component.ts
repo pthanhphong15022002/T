@@ -60,6 +60,7 @@ export class BookingStationeryComponent
   formModel: FormModel;
   itemDetail;
   popupClosed = true;
+  isAdmin: boolean;
   
   constructor(
     private injector: Injector,
@@ -83,6 +84,14 @@ export class BookingStationeryComponent
   }
 
   onInit(): void {
+    this.codxEpService.roleCheck().subscribe(res=>{
+      if(res==true){
+        this.isAdmin=true;
+      }
+      else{        
+        this.isAdmin=false;
+      }
+    })
   }
 
   ngAfterViewInit(): void {
@@ -161,7 +170,7 @@ export class BookingStationeryComponent
 
   cancel(data: any) {
     if (
-      !this.codxEpService.checkRole(this.authService.userValue, data?.owner)
+      !this.codxEpService.checkRole(this.authService.userValue, data?.owner,this.isAdmin)
     ) {
       this.notificationsService.notifyCode('TM052');
       return;
@@ -348,7 +357,7 @@ export class BookingStationeryComponent
   edit(evt: any) {
     if (evt) {
       if (
-        !this.codxEpService.checkRole(this.authService.userValue, evt?.owner)
+        !this.codxEpService.checkRole(this.authService.userValue, evt?.owner,this.isAdmin)
       ) {
         this.notificationsService.notifyCode('TM052');
         return;
@@ -512,7 +521,7 @@ export class BookingStationeryComponent
     if (evt) {
       deleteItem = evt;
       if (
-        !this.codxEpService.checkRole(this.authService.userValue, evt?.owner)
+        !this.codxEpService.checkRole(this.authService.userValue, evt?.owner,this.isAdmin)
       ) {
         this.notificationsService.notifyCode('TM052');
         return;

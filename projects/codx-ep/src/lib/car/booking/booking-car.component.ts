@@ -84,6 +84,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   queryParams: any;
   navigated=false;
   columnGrids: any;
+  isAdmin: boolean;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -113,6 +114,14 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
+    this.codxEpService.roleCheck().subscribe(res=>{
+    if(res==true){
+      this.isAdmin=true;
+    }
+    else{        
+      this.isAdmin=false;
+    }
+  })
     this.request = new ResourceModel();
     this.request.assemblyName = 'EP';
     this.request.className = 'BookingsBusiness';
@@ -397,7 +406,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     }
   }
   cancel(data: any) {
-    if (!this.codxEpService.checkRole(this.authService.userValue,data?.owner)
+    if (!this.codxEpService.checkRole(this.authService.userValue,data?.owner,this.isAdmin)
     ) {
       this.notificationsService.notifyCode('TM052');
       return;
@@ -558,7 +567,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
 
   edit(evt?) {
     if (evt) {
-      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner)
+      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner,this.isAdmin)
       ) {
         this.notificationsService.notifyCode('TM052');
         return;
@@ -625,7 +634,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
-      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner)
+      if (!this.codxEpService.checkRole(this.authService.userValue,evt?.owner,this.isAdmin)
       ) {
         this.notificationsService.notifyCode('TM052');
         return;
