@@ -91,12 +91,12 @@ export class PopupMoveStageComponent implements OnInit {
     }
     this.stepIdOld = this.instance.stepID;
     this.listStep = JSON.parse(JSON.stringify(dt?.data.instanceStep));
-    this.listStepsCbx = JSON.parse(JSON.stringify(this.listStep));
+    this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.listStepCbx));
     this.instancesStepOld = this.listStepsCbx.filter(
       (x) => x.stepID === this.stepIdOld
     )[0];
-    this.IdFail = this.listStepsCbx[this.listStepsCbx.length - 1]?.stepID;
-    this.IdSuccess = this.listStepsCbx[this.listStepsCbx.length - 2]?.stepID;
+    this.IdFail = this.listStep[this.listStep.findIndex(x=>x.isFailStep)].stepID ?? '';
+    this.IdSuccess = this.listStep[this.listStep.findIndex(x=>x.isSuccessStep)].stepID ?? '';
     this.stepIdClick = JSON.parse(JSON.stringify(dt?.data?.stepIdClick));
     this.getStepByStepIDAndInID(this.instance.recID, this.stepIdOld);
     this.dpSv.getFirstIntance(this.instance.processID).subscribe((res) => {

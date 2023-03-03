@@ -1571,11 +1571,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     if (this.actionStep == 'add' || this.actionStep == 'copy') {
       this.stepList.push(this.stepNew);
-      this.viewStepSelect(this.stepNew);
       // if edit process
       if (this.action == 'edit') {
-        this.stepListAdd.push(this.stepNew);
+        this.stepListAdd.push(JSON.parse(JSON.stringify(this.stepNew)));
       }
+      this.viewStepSelect(this.stepNew);
     } else {
       this.titleViewStepCrr = this.stepNew?.stepName;
       this.step['stepName'] = this.stepNew['stepName'];
@@ -1592,7 +1592,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (index >= 0) {
           this.stepList.splice(index, 1);
           this.setIndex(this.stepList, 'stepNo');
-          this.viewStepSelect(this.stepList.length > 0 ? this.stepList[0] : []);
+          this.viewStepSelect(this.stepList.length > 0 ? this.stepList[this.stepList?.length || 0] : []);
           // lay danh sach step xoa
           if (this.action == 'edit') {
             let indexDelete = this.stepListAdd.findIndex(
@@ -1678,7 +1678,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
       this.taskGroupList.splice(index - 1, 0, taskGroup);
       // add role vào step
-      this.addRole(this.taskGroup['roles'][0]);
+      this.addRole(taskGroup['roles'][0]);
     } else {
       let index = this.taskGroupList?.findIndex(x => x.recID === taskGroup.recID);
       if(index >= 0){
@@ -1735,7 +1735,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     } else {
       taskGroupIdOld = data['taskGroupID'];
       roleOld = JSON.parse(JSON.stringify(data['roles']));
-      dataInput = data;
+      dataInput = JSON.parse(JSON.stringify(data));
     }
 
     let listData = [
@@ -1773,10 +1773,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               this.taskList.push(taskData);
               this.addRole(taskData['roles'][0]);
             } else {
-              if (taskData?.taskGroupID != taskGroupIdOld) {
-                this.changeGroupTaskOfTask(taskData, taskGroupIdOld);
+              // data = {...taskData};
+              // data['taskName'] = taskData['taskData']
+              for (const key in taskData) {
+                data[key] = taskData[key];
               }
-              this.addRole(taskData['roles'][0], roleOld[0]);
+              if (data?.taskGroupID != taskGroupIdOld) {
+                this.changeGroupTaskOfTask(data, taskGroupIdOld);
+              }
+              this.addRole(data['roles'][0], roleOld[0]);
             }
           }
         });
@@ -2043,7 +2048,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (step) {
       this.titleViewStepCrr = step?.stepName || '';
       this.isSwitchReason = false;
-      this.step = JSON.parse(JSON.stringify(step));
+      this.step = step;
       this.checkedDayOff(this.step?.excludeDayoff);
       this.taskGroupList = this.step['taskGroups'];
       this.taskList = this.step['tasks'];

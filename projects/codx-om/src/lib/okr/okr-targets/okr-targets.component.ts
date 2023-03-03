@@ -473,31 +473,19 @@ export class OkrTargetsComponent implements OnInit {
     );
   }
   checkIn(evt: any, kr: any) {
-    // this.formModelCheckin.entityName = 'OM_OKRs.CheckIns';
-    // this.formModelCheckin.entityPer = 'OM_OKRs.CheckIns';
-    // this.formModelCheckin.gridViewName = 'grvOKRs.CheckIns';
-    // this.formModelCheckin.formName = 'OKRs.CheckIns';
-    // this.dialogCheckIn = this.callfc.openForm(
-    //   PopupCheckInComponent,
-    //   '',
-    //   800,
-    //   500,
-    //   'OMT01',
-    //   [kr, this.formModelCheckin]
-    // );
-    // this.dialogCheckIn.closed.subscribe((res) => {
-    //   if (res && res.event) {
-    //     this.dataKR = res.event;
-    //     this.totalProgress = this.dataKR.progress;
-    //     this.progressHistory.unshift(this.totalProgress);
-    //     this.dataKR.map((item: any) => {
-    //       if (item.recID == res.event.parentID) {
-    //         item = res.event;
-    //       }
-    //     });
-    //   }
-    //   this.detectorRef.detectChanges();
-    // });
+    let dialogCheckIn = this.callfunc.openForm(
+      PopupCheckInComponent,
+      '',
+      800,
+      500,
+      'OMT01',
+      [kr]
+    );
+    dialogCheckIn.closed.subscribe((res) => {
+      if (res && res.event) {
+        
+      }
+    });
   }
   //OBject  
   addOB(popupTitle:any) {
