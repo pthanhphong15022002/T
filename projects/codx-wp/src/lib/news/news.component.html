@@ -286,7 +286,7 @@
 <ng-template #itemTemplate let-item>
   <ng-container *ngIf="item.type=='Header';else content">
     <div>
-      <span class="fw-bolder fs-2">{{item.text}}</span>
+      <span class="fw-bolder fs-2">{{item.subject}}</span>
     </div>
   </ng-container>
   <ng-template #content>
