@@ -124,43 +124,27 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       return;
     }
-
     if (this.disciplineObj.fromDate > this.disciplineObj.toDate) {
       this.hrService.notifyInvalidFromTo('FromDate', 'ToDate', this.formModel);
       return;
     }
-
-    if (this.actionType === 'copy') {
-      delete this.disciplineObj.recID;
-    }
-    this.disciplineObj.employeeID = this.employId;
     if (this.actionType === 'add' || this.actionType === 'copy') {
       this.hrService
         .AddEmployeeDisciplineInfo(this.disciplineObj)
         .subscribe((p) => {
           if (p != null) {
-            this.disciplineObj = p;
             this.notify.notifyCode('SYS006');
-            this.disciplineObj.isSuccess = true;
-            this.dialog && this.dialog.close(this.disciplineObj);
-          } else {
-            this.notify.notifyCode('SYS023');
-            this.disciplineObj.isSuccess = false;
-          }
+            this.dialog && this.dialog.close(p);
+          } else this.notify.notifyCode('SYS023');
         });
     } else {
       this.hrService
         .UpdateEmployeeDisciplineInfo(this.formModel.currentData)
         .subscribe((p) => {
           if (p != null) {
-            this.disciplineObj = p;
             this.notify.notifyCode('SYS007');
-            this.disciplineObj.isSuccess = true;
-            this.dialog && this.dialog.close(this.disciplineObj);
-          } else {
-            this.notify.notifyCode('SYS021');
-            this.disciplineObj.isSuccess = false;
-          }
+            this.dialog && this.dialog.close(p);
+          } else this.notify.notifyCode('SYS021');
         });
     }
   }

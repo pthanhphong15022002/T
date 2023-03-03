@@ -2375,16 +2375,16 @@ export class EmployeeDetailComponent extends UIComponent {
                 if (p != null) {
                   this.notify.notifyCode('SYS008');
                   if (data.isCurrent == true) {
-                    const index = this.listCrrBenefit.indexOf(data, 0);
-                    if (index > -1) {
-                      this.listCrrBenefit.splice(index, 1);
-                    }
+                    // const index = this.listCrrBenefit.indexOf(data);
+                    // if (index > -1) {
+                    //   this.listCrrBenefit.splice(index, 1);
+                    // }
                     this.hrService
                       .GetCurrentBenefit(this.employeeID)
                       .subscribe((res) => {
-                        if (res?.length) {
+                        if (res) {
+                          console.log('ds phu cap sau khi xoa', res);
                           this.listCrrBenefit = res;
-
                           this.df.detectChanges();
                         }
                       });
@@ -2392,6 +2392,11 @@ export class EmployeeDetailComponent extends UIComponent {
                   (this.grid?.dataService as CRUDService)
                     ?.remove(data)
                     .subscribe();
+                    this.hrService.GetIsCurrentBenefitWithBenefitID(this.employeeID, data.benefitID).subscribe((res)=>{
+                      (this.grid?.dataService as CRUDService)
+                    ?.update(res)
+                    .subscribe();
+                    })
                   this.eBenefitRowCount = this.eBenefitRowCount - 1;
                   this.df.detectChanges();
                 } else {
@@ -2603,7 +2608,7 @@ export class EmployeeDetailComponent extends UIComponent {
               this.hrService
                 .DeleteEmployeeDisciplineInfo(data.recID)
                 .subscribe((p) => {
-                  if (p != null) {
+                  if (p == true) {
                     this.notify.notifyCode('SYS008');
                     (this.eDisciplineGrid.dataService as CRUDService)
                       .remove(data)
@@ -3475,20 +3480,8 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.eDisciplineGrid?.dataService as CRUDService).clear();
-      if (
-        res &&
-        (actionType === 'add' || actionType === 'copy') &&
-        res.event.isSuccess == true
-      ) {
-        (this.eDisciplineGrid?.dataService as CRUDService)
-          .add(res.event)
-          .subscribe();
-        this.eDisciplineRowCount++;
-      } else {
-        (this.eDisciplineGrid?.dataService as CRUDService)
-          .update(res.event)
-          .subscribe();
-      }
+      if(res.event)
+        this.eDisciplineRowCount += this.updateGridView(this.eDisciplineGrid, actionType, res.event);
       this.df.detectChanges();
     });
   }
@@ -3648,46 +3641,10 @@ export class EmployeeDetailComponent extends UIComponent {
     // RELOAD
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
-      if (res != null) {
-        if (
-          (actionType === 'add' || actionType === 'copy') &&
-          res.event.isSuccess === true
-        ) {
-          (this.eCertificateGrid.dataService as CRUDService)
-            .add(res.event)
-            .subscribe();
-          this.eCertificateRowCount++;
-          console.log('certiobj', res);
-        } else if (actionType === 'edit' && res.event.isSuccess === true) {
-          (this.eCertificateGrid.dataService as CRUDService)
-            .update(res.event)
-            .subscribe();
-        }
-        this.df.detectChanges();
-      }
+      else if (res.event)
+        this.eCertificateRowCount += this.updateGridView(this.eCertificateGrid, actionType, res.event);
+          this.df.detectChanges();
     });
-
-    // this.view.dataService.dataSelected = this.data;
-    // let option = new SidebarModel();
-    // option.DataService = this.view.dataService;
-    // option.FormModel = this.view.formModel;
-    // option.Width = '550px';
-    // let dialogAdd = this.callfunc.openSide(
-    //   PopupECertificatesComponent,
-    //   {
-    //     actionType: actionType,
-    //     indexSelected: this.lstCertificates.indexOf(data),
-    //     lstCertificates: this.lstCertificates,
-    //     headerText: 'Chứng chỉ',
-    //     funcID: 'HRT03020502',
-    //     employeeId: this.data.employeeID,
-    //   },
-    //   option
-    // );
-    // dialogAdd.closed.subscribe((res) => {
-    //   if (!res?.event) this.view.dataService.clear();
-    //   this.df.detectChanges();
-    // });
   }
 
   HandleEmployeeEDegreeInfo(actionHeaderText, actionType: string, data: any) {
@@ -3711,7 +3668,6 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if(res)
        this.eDegreeRowCount += this.updateGridView(this.eDegreeGrid, actionType, res.event);
-
       this.df.detectChanges();
     });
   }
@@ -3778,20 +3734,8 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.eTrainCourseGrid?.dataService as CRUDService).clear();
-      if (
-        res &&
-        (actionType === 'add' || actionType === 'copy') &&
-        res.event.isSuccess == true
-      ) {
-        (this.eTrainCourseGrid?.dataService as CRUDService)
-          .add(res.event)
-          .subscribe();
-        this.eTrainCourseRowCount++;
-      } else {
-        (this.eTrainCourseGrid?.dataService as CRUDService)
-          .update(res.event)
-          .subscribe();
-      }
+      else if(res.event)
+        this.eTrainCourseRowCount += this.updateGridView(this.eTrainCourseGrid, actionType, res.event);
       this.df.detectChanges();
     });
   }
@@ -3892,22 +3836,11 @@ export class EmployeeDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) (this.AwardGrid?.dataService as CRUDService).clear();
-      if (
-        res &&
-        (actionType === 'add' || actionType === 'copy') &&
-        res.event.isSuccess == true
-      ) {
-        (this.AwardGrid?.dataService as CRUDService).add(res.event).subscribe();
-        this.awardRowCount++;
-      } else {
-        (this.AwardGrid?.dataService as CRUDService)
-          .update(res.event)
-          .subscribe();
-      }
+      if(res.event)
+        this.awardRowCount += this.updateGridView(this.AwardGrid, actionType, res.event);
       this.df.detectChanges();
     });
   }
-
   //#endregion
 
   //#region HR_EDesisease
@@ -3916,7 +3849,8 @@ export class EmployeeDetailComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.DataService = this.view.dataService;
     option.Width = '550px';
-    let dialogAdd = this.callfc.openSide(PopupEDiseasesComponent, {
+    let dialogAdd = this.callfc.openSide(
+      PopupEDiseasesComponent, {
       actionType: actionType,
       funcID: this.eDiseasesFuncID,
       employeeId: this.employeeID,
@@ -3925,22 +3859,9 @@ export class EmployeeDetailComponent extends UIComponent {
         actionHeaderText + ' ' + this.getFormHeader(this.eDiseasesFuncID),
     });
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event)
-        (this.eDisciplineGrid?.dataService as CRUDService).clear();
-      if (
-        res &&
-        (actionType === 'add' || actionType === 'copy') &&
-        res.event.isSuccess == true
-      ) {
-        (this.eDiseasesGrid?.dataService as CRUDService)
-          .add(res.event)
-          .subscribe();
-        this.eDiseasesRowCount++;
-      } else {
-        (this.eDiseasesGrid?.dataService as CRUDService)
-          .update(res.event)
-          .subscribe();
-      }
+      console.log('ressssss diseasesssssssssssssssssssssssssssssssssssssssssssssssss', res);
+        if(res)
+        this.eDiseasesRowCount += this.updateGridView(this.eDiseasesGrid, actionType, res.event);
       this.df.detectChanges();
     });
 
@@ -4489,11 +4410,16 @@ export class EmployeeDetailComponent extends UIComponent {
         });
     } else if (flag == 'eTrainCourses') {
       this.eTrainCourseGrid.dataService.dataSelected = data;
-      (this.eTrainCourseGrid.dataService as CRUDService)
-        .copy()
-        .subscribe((res) => {
-          this.HandleEmployeeTrainCourseInfo(actionHeaderText, 'copy', res);
-        });
+      this.hrService.copy(data, this.eTrainCourseFormModel, 'RecID')
+      .subscribe((res) => {
+        this.HandleEmployeeTrainCourseInfo(actionHeaderText, 'copy', res);
+      })
+      // (this.eTrainCourseGrid.dataService as CRUDService)
+      //   .copy()
+      //   .subscribe((res) => {
+      //     console.log('data copyyyyy', res);
+      //     this.HandleEmployeeTrainCourseInfo(actionHeaderText, 'copy', res);
+      //   });
     } else if (flag == 'eVaccine') {
       this.eVaccinesGrid.dataService.dataSelected = data;
       (this.eVaccinesGrid.dataService as CRUDService)
@@ -5063,7 +4989,6 @@ export class EmployeeDetailComponent extends UIComponent {
 
   valueChangeFilterDayOff(evt) {
     this.filterByKowIDArr = evt.data;
-    debugger;
     this.UpdateEDayOffsPredicate();
   }
 
