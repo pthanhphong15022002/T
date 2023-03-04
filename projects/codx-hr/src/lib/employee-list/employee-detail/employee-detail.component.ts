@@ -135,6 +135,7 @@ export class EmployeeDetailComponent extends UIComponent {
   infoPersonal: any;
 
   crrEContract: any;
+  lstContractType: any; //phân loại HĐ không xác định 
 
   funcID = '';
   service = '';
@@ -1012,6 +1013,24 @@ export class EmployeeDetailComponent extends UIComponent {
         this.hrService.getCrrEContract(rqContract).subscribe((res) => {
           if (res && res[0]) {
             this.crrEContract = res[0][0];
+            this.df.detectChanges();
+          }
+        });
+      }
+
+      if(!this.lstContractType){
+        let rqContractType = new DataRequest();
+        rqContractType.entityName = 'HR_ContractTypes';
+        rqContractType.dataValues = '1';
+        rqContractType.predicates =
+          'ContractGroup =@0';
+          rqContractType.pageLoading = false;
+
+        this.hrService.getCrrEContract(rqContractType).subscribe((res) => {
+          if (res && res[0]) {
+            this.lstContractType = res[0];
+            console.log('aaaaaaaaaaaa', this.lstContractType);
+            
             this.df.detectChanges();
           }
         });
@@ -3754,11 +3773,30 @@ export class EmployeeDetailComponent extends UIComponent {
       .subscribe((res) => {});
   }
 
+  addEContractInfo(actionHeaderText, actionType: string, data: any){
+    //Cảnh báo nếu thêm mới HĐLĐ, mà trước đó có HĐ đang hiệu lực là HĐ không xác định thời hạn => Kiểm tra trước khi thêm 
+    if(actionType == 'add' && this.crrEContract && this.lstContractType ){
+      var item = this.lstContractType.filter(p => p.contractTypeID == this.crrEContract.contractTypeID && p.contractGroup == '1');
+      if(item && item[0]){
+        this.notify.alertCode('HR008').subscribe(res =>{
+          if(res?.event?.status == 'Y'){
+            this.HandleEContractInfo(actionHeaderText, actionType, data);
+          }
+        })
+      }
+    }
+    else{
+      this.HandleEContractInfo(actionHeaderText, actionType, data);
+    }
+  }
+
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.eContractFormModel;
     let isAppendix = false;
+    
+
     if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){
       isAppendix = true;
     }
