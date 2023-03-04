@@ -401,6 +401,14 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       {
         dtS[i].children = dtQ.filter(x=>x.parentID == dtS[i].recID);
         dtQ = dtQ.filter(x=>x.parentID != dtS[i].recID);
+        if(dtS[i].children && dtS[i].children.length>0)
+        {
+          for(var a = 0 ; a < dtS[i].children.length ; a++)
+          {
+            var check = dtS[i].children[a].answers.filter(x=>x.other);
+            if(check && check.length>0) dtS[i].children[a].other = true;
+          }
+        }
       }
       if(dtS[0].children && dtS[0].children.length>0)
         dtS[0].children[0]['active'] = true;
