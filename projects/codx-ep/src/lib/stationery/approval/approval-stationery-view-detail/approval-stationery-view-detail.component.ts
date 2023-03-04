@@ -13,6 +13,7 @@ import {
 import { NotificationsService, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { Permission } from '@shared/models/file.model';
 @Component({
   selector: 'approval-stationery-view-detail',
   templateUrl: 'approval-stationery-view-detail.component.html',
@@ -25,9 +26,9 @@ export class ApprovalStationeryViewDetailComponent
   @Input() itemDetail: any;
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
-  
-  @Output('approve') approve: EventEmitter<any> = new EventEmitter();  
-  @Output('reject') reject: EventEmitter<any> = new EventEmitter(); 
+
+  @Output('approve') approve: EventEmitter<any> = new EventEmitter();
+  @Output('reject') reject: EventEmitter<any> = new EventEmitter();
   @Output('undo') undo: EventEmitter<any> = new EventEmitter();
   @Input() funcID;
   @Input() formModel;
@@ -37,8 +38,10 @@ export class ApprovalStationeryViewDetailComponent
   itemDetailDataStt: any;
   itemDetailStt: any;
   active = 1;
-
   tabControl: TabModel[] = [];
+  listFilePermission = [];
+  isEdit: boolean = true;
+
   constructor(
     private injector: Injector,
     private notificationsService: NotificationsService,
@@ -73,6 +76,14 @@ export class ApprovalStationeryViewDetailComponent
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            let tmpPer = new Permission();
+            tmpPer.objectID = this.itemDetail.createdBy; //
+            tmpPer.objectType = 'U';
+            tmpPer.read = true;
+            tmpPer.share = true;
+            tmpPer.download = true;
+            tmpPer.isActive = true;
+            this.listFilePermission.push(tmpPer);
             this.detectorRef.detectChanges();
           }
         });
@@ -97,18 +108,18 @@ export class ApprovalStationeryViewDetailComponent
           this.approve.emit(datas);
         }
         break;
-        case 'EPT40306':
-          {
-            //alert('Thu hồi');
-            this.undo.emit(datas);
-          }
-          break;
+      case 'EPT40306':
+        {
+          //alert('Thu hồi');
+          this.undo.emit(datas);
+        }
+        break;
     }
   }
   // undo(data: any) {
   //   this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
   //       if (res != null) {
-          
+
   //         this.notificationsService.notifyCode('SYS034'); //đã thu hồi
   //         data.approveStatus = '3';
   //         data.status = '3';
@@ -128,11 +139,10 @@ export class ApprovalStationeryViewDetailComponent
   //     )
   //     .subscribe(async (res: any) => {
   //       if (res?.msgCodeError == null && res?.rowCount >= 0) {
-          
+
   //           this.notificationsService.notifyCode('SYS034'); //đã duyệt
   //           data.approveStatus = '5';
-          
-          
+
   //         this.updateStatus.emit(data);
   //       } else {
   //         this.notificationsService.notifyCode(res?.msgCodeError);
@@ -155,7 +165,6 @@ export class ApprovalStationeryViewDetailComponent
           if (
             func.functionID == 'EPT40301' /*MF Duyệt*/ ||
             func.functionID == 'EPT40302' /*MF từ chối*/
-            
           ) {
             func.disabled = false;
           }
@@ -173,13 +182,10 @@ export class ApprovalStationeryViewDetailComponent
           ) {
             func.disabled = true;
           }
-          if (
-            func.functionID == 'EPT40306' /*MF Undo*/ 
-          ) {
+          if (func.functionID == 'EPT40306' /*MF Undo*/) {
             func.disabled = false;
           }
         });
-        
       }
     }
   }

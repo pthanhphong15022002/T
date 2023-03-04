@@ -1,31 +1,149 @@
 <p>Test thôi xóa sau làm gì căng !! KHANH BẢO KÊ !!</p>
-<button type="button" class="btn btn-primary" (click)="openTypeJob('add')">Task</button>
-<div *ngFor="let i of [1,2,3,4,5]">
-   <h3>{{i}}</h3>
-   <ejs-progressbar
-   [id]="i"
-   type="Circular"
-   height="55"
-   width="55"
-   trackThickness="4"
-   progressThickness="4"
-   [value]="70"
-   progressColor="#E3165B"
-   trackColor="#F8C7D8"
-   progressValueColor="red"
-   [labelStyle]="{ color: '#005DC7', 'font-weight': '700', 'font-size': '12px!important' }"
-   [showProgressValue]="true"
-   [animation]="{ enable: true, duration: 1000, delay: 0 }"
- >
- </ejs-progressbar>
+<button type="button" class="btn btn-primary" (click)="openTypeJob('add')">
+  Task
+</button>
+<div *ngFor="let i of [1, 2, 3, 4, 5]">
+  <h3>{{ i }}</h3>
+  <ejs-progressbar
+    [id]="i"
+    type="Circular"
+    height="55"
+    width="55"
+    trackThickness="4"
+    progressThickness="4"
+    [value]="70"
+    progressColor="#E3165B"
+    trackColor="#F8C7D8"
+    progressValueColor="red"
+    [labelStyle]="{
+      color: '#005DC7',
+      'font-weight': '700',
+      'font-size': '12px!important'
+    }"
+    [showProgressValue]="false"
+    [animation]="{ enable: true, duration: 1000, delay: 0 }"
+  >
+    <e-progressbar-annotations>
+      <e-progressbar-annotation
+        content="<div style=&quot;font-size:10px;font-weight:bold;color:#b52123&quot;>{{
+          value1
+        }}%</div>"
+      >
+      </e-progressbar-annotation>
+    </e-progressbar-annotations>
+  </ejs-progressbar>
 </div>
-<div class="progress-pie-chart" data-percent="43">
-   <div class="ppc-progress">
-     <div class="ppc-progress-fill"></div>
-   </div>
-   <!-- <div class="ppc-percents">
-     <div class="pcc-percents-wrapper">
-       <span>50%</span>
-     </div>
-   </div> -->
- </div>
+<ejs-progressbar
+  #annotation1
+  id="label-container"
+  [type]="'Circular'"
+  [maximum]="100"
+  [minimum]="0"
+  [value]="value1"
+  [width]="'55'"
+  [height]="'55'"
+  trackThickness="4"
+  progressThickness="4"
+  [animation]="{ enable: true, duration: 1000, delay: 0 }"
+>
+  <e-progressbar-annotations>
+    <e-progressbar-annotation
+      content='<div style="font-size:10px;font-weight:bold;color:#b52123;fill:#b52123"><span>80%</span></div>'
+    >
+    </e-progressbar-annotation>
+  </e-progressbar-annotations>
+</ejs-progressbar>
+
+<ejs-progressbar
+  [id]="'11111'"
+  type="Circular"
+  height="55"
+  width="55"
+  trackThickness="4"
+  progressThickness="4"
+  [value]="value1"
+  [progressColor]="'#005DC7'"
+  trackColor="#d8d8d8"
+  [animation]="{ enable: true, duration: 1000, delay: 0 }"
+>
+  <e-progressbar-annotations>
+    <e-progressbar-annotation
+      content="<div style=&quot;font-size:10px;font-weight:bold;color:#005DC7&quot;>{{
+        value1
+      }}%</div>"
+    >
+    </e-progressbar-annotation>
+  </e-progressbar-annotations>
+</ejs-progressbar>
+
+<ejs-progressbar
+  [id]="'111'"
+  type="Circular"
+  height="55"
+  width="55"
+  trackThickness="4"
+  progressThickness="4"
+  [value]="70"
+  [progressColor]="'#005DC7'"
+  trackColor="#d8d8d8"
+  [animation]="{ enable: true, duration: 1000, delay: 0 }"
+>
+  <e-progressbar-annotations>
+    <e-progressbar-annotation
+      content='<div style="font-size:10px;font-weight:bold;color:#005DC7">70%</div>'
+    >
+    </e-progressbar-annotation>
+  </e-progressbar-annotations>
+</ejs-progressbar>
+
+<p>
+  <a
+    class="btn btn-primary"
+    data-toggle="collapse"
+    href="#multiCollapseExample1"
+    role="button"
+    aria-expanded="false"
+    aria-controls="multiCollapseExample1"
+    >Toggle first element</a
+  >
+  <button
+    class="btn btn-primary"
+    type="button"
+    data-toggle="collapse"
+    data-target="#multiCollapseExample2"
+    aria-expanded="false"
+    aria-controls="multiCollapseExample2"
+  >
+    Toggle second element
+  </button>
+  <button
+    class="btn btn-primary"
+    type="button"
+    data-toggle="collapse"
+    data-target=".multi-collapse"
+    aria-expanded="false"
+    aria-controls="multiCollapseExample1 multiCollapseExample2"
+  >
+    Toggle both elements
+  </button>
+</p>
+<div class="row">
+  <div class="col">
+    <div class="collapse multi-collapse" id="multiCollapseExample1">
+      <div class="card card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus
+        terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer
+        labore wes anderson cred nesciunt sapiente ea proident.
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="collapse multi-collapse" id="multiCollapseExample2">
+      <div class="card card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus
+        terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer
+        labore wes anderson cred nesciunt sapiente ea proident.
+      </div>
+    </div>
+  </div>
+</div>

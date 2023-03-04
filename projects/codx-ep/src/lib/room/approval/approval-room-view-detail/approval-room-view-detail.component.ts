@@ -11,6 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  AuthService,
   DataRequest,
   NotificationsService,
   UIComponent,
@@ -18,6 +19,7 @@ import {
 } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { Permission } from '@shared/models/file.model';
 @Component({
   selector: 'approval-room-view-detail',
   templateUrl: 'approval-room-view-detail.component.html',
@@ -50,9 +52,12 @@ export class ApprovalRoomViewDetailComponent
   files = [];
 
   tabControl: TabModel[] = [];
+  listFilePermission=[];
+  isEdit=true;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
+    private authService: AuthService,
     private notificationsService: NotificationsService
   ) {
     super(injector);
@@ -84,6 +89,23 @@ export class ApprovalRoomViewDetailComponent
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            if(res.bookingAttendees!=null && res.bookingAttendees!=''){
+              let listAttendees = res.bookingAttendees.split(";");
+              listAttendees.forEach((item) => {
+                if(item!=''){
+                  let tmpPer= new Permission()
+                  tmpPer.objectID= item;//
+                  tmpPer.objectType= 'U';
+                  tmpPer.read= true;
+                  tmpPer.share=  true;
+                  tmpPer.download=  true;
+                  tmpPer.isActive=  true;
+                  this.listFilePermission.push(tmpPer);
+                }                
+              });
+              this.detectorRef.detectChanges();
+
+            }            
             this.detectorRef.detectChanges();
           }
         });

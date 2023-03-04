@@ -1,4 +1,3 @@
-import { mergeMap } from 'rxjs';
 import {
   Component,
   ElementRef,
@@ -11,9 +10,10 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { UIComponent, ViewsComponent } from 'codx-core';
+import { AuthService, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { Permission } from '@shared/models/file.model';
 @Component({
   selector: 'booking-stationery-view-detail',
   templateUrl: './view-detail.component.html',
@@ -46,10 +46,12 @@ export class BookingStationeryViewDetailComponent
   itemDetailDataStt: any;
   itemDetailStt: any;
   active = 1;
-
   tabControl: TabModel[] = [];
   routerRecID: any;
-  constructor(private injector: Injector, private epService: CodxEpService) {
+  isEdit: boolean = false;
+  listFilePermission = [];
+
+  constructor(injector: Injector, private authService: AuthService) {
     super(injector);
     this.routerRecID = this.router.snapshot.params['id'];
     if (this.routerRecID != null) {
@@ -59,15 +61,13 @@ export class BookingStationeryViewDetailComponent
 
   onInit(): void {
     this.itemDetailStt = 1;
-    let tempRecID: any;
     if (this.routerRecID != null) {
-      tempRecID = this.routerRecID;
     } else {
-      tempRecID = this.itemDetail?.currentValue?.recID;
     }
     this.detectorRef.detectChanges();
     this.setHeight();
   }
+
   ngAfterViewInit(): void {
     this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -76,6 +76,7 @@ export class BookingStationeryViewDetailComponent
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
   }
+
   ngOnChanges(changes: SimpleChanges) {
     if (
       changes?.itemDetail &&
@@ -89,6 +90,21 @@ export class BookingStationeryViewDetailComponent
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            let tmpPer = new Permission();
+            tmpPer.objectID = this.itemDetail.createdBy;
+            tmpPer.objectType = 'U';
+            tmpPer.read = true;
+            tmpPer.share = true;
+            tmpPer.download = true;
+            tmpPer.isActive = true;
+            this.listFilePermission.push(tmpPer);
+            if (
+              this.itemDetail?.createdBy == this.authService.userValue.userID
+            ) {
+              this.isEdit = true;
+            } else {
+              this.isEdit = false;
+            }
             this.detectorRef.detectChanges();
           }
         });
@@ -115,7 +131,7 @@ export class BookingStationeryViewDetailComponent
       case 'EPT40303': //Cấp phát
         this.lviewAllocate(data);
         break;
-        case 'EP8T1102': //Hủy gửi duyệt
+      case 'EP8T1102': //Hủy gửi duyệt
         this.lviewCancel(data);
         break;
     }
@@ -152,11 +168,13 @@ export class BookingStationeryViewDetailComponent
       this.allocate.emit(data);
     }
   }
+
   lviewCancel(data?) {
-    if (data) {      
+    if (data) {
       this.cancel.emit(data);
     }
   }
+
   changeDataMF(event, data: any) {
     if (event != null && data != null && this.funcID == 'EP8T11') {
       if (data.approveStatus == '1') {
@@ -172,8 +190,8 @@ export class BookingStationeryViewDetailComponent
             func.disabled = false;
           }
           if (
-            //Ẩn: hủy 
-            func.functionID == 'EP8T1102' /*MF hủy*/ 
+            //Ẩn: hủy
+            func.functionID == 'EP8T1102' /*MF hủy*/
           ) {
             func.disabled = true;
           }
@@ -182,15 +200,16 @@ export class BookingStationeryViewDetailComponent
         event.forEach((func) => {
           //Đã duyệt
           if (
-            // Hiện: Chép 
+            // Hiện: Chép
             func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - duyệt - hủy 
+          if (
+            //Ẩn: sửa - xóa - duyệt - hủy
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP8T1101' /*MF gửi duyệt*/||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/ ||
             func.functionID == 'EP8T1102' /*MF hủy*/
           ) {
             func.disabled = true;
@@ -199,14 +218,16 @@ export class BookingStationeryViewDetailComponent
       } else if (data.approveStatus == '3') {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép - hủy
-          func.functionID == 'SYS04' /*MF chép*/||
-          func.functionID == 'EP8T1102' /*MF hủy*/
+          if (
+            //Hiện: chép - hủy
+            func.functionID == 'SYS04' /*MF chép*/ ||
+            func.functionID == 'EP8T1102' /*MF hủy*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - gửi duyệt
-            
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt
+
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP8T1101' /*MF gửi duyệt*/
@@ -214,37 +235,39 @@ export class BookingStationeryViewDetailComponent
             func.disabled = true;
           }
         });
-      }
-      else if (data.approveStatus == '4') {
+      } else if (data.approveStatus == '4') {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép 
-          func.functionID == 'SYS04' /*MF chép*/
+          if (
+            //Hiện: chép
+            func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - gửi duyệt - hủy          
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt - hủy
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP8T1101' /*MF gửi duyệt*/||
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/ ||
             func.functionID == 'EP8T1102' /*MF hủy*/
           ) {
             func.disabled = true;
           }
         });
-      }
-      else {
+      } else {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép 
-          func.functionID == 'EP8T1101' /*MF gửi duyệt*/||      
-          func.functionID == 'SYS02' /*MF sửa*/ ||
-          func.functionID == 'SYS03' /*MF xóa*/ ||
-          func.functionID == 'SYS04' /*MF chép*/
+          if (
+            //Hiện: chép
+            func.functionID == 'EP8T1101' /*MF gửi duyệt*/ ||
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - gửi duyệt - hủy    
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt - hủy
             func.functionID == 'EP8T1102' /*MF hủy*/
           ) {
             func.disabled = true;
@@ -277,7 +300,7 @@ export class BookingStationeryViewDetailComponent
     this.itemDetailDataStt = stt;
   }
 
-  clickChangeItemViewStatus(stt, recID) {
+  clickChangeItemViewStatus(stt) {
     this.itemDetailStt = stt;
   }
 

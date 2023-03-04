@@ -835,16 +835,18 @@
         *ngIf="item.objectID == itemQuestion.recID"
       >
         <div
-          [ngClass]="
-            itemQuestion?.alignCenterImg
-              ? 'position-relative w-100 d-flex justify-content-center'
-              : itemQuestion?.alignRightImg
-              ? 'position-relative w-100 d-flex justify-content-end'
-              : 'position-relative w-100 d-flex'
-          "
+          class="position-relative w-100 d-flex px-5 mt-5"
         >
-          <img [src]="getSrcImage(item)" />
-          <div class="d-flex align-items-center icon-MF-image-outside">
+        <!-- Chức năng căn giữa căn phải hình làm sau -->
+        <!-- [ngClass]="
+        itemQuestion?.alignCenterImg
+          ? 'justify-content-center'
+          : itemQuestion?.alignRightImg
+          ? 'position-relative w-100 d-flex justify-content-end'
+          : 'position-relative w-100 d-flex px-5 mt-5'
+      " -->
+          <div class="img-sv-bg-question w-100" [style.background-image]="'url(' + getSrcImage(item) + ')'"></div>
+          <div class="d-flex align-items-center icon-MF-image-outside justify-content-center">
             <div ngbDropdown class="dropdown" container="body">
               <a
                 href="javascript:void(0)"
@@ -856,7 +858,7 @@
                 <span class="icon-more_vert icon-22"> </span>
               </a>
               <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                <li>
+                <!-- <li>
                   <a
                     ngbDropdownItem
                     href="javascript:void(0)"
@@ -918,7 +920,7 @@
                       default="Căn giữa"
                     ></codx-label>
                   </a>
-                </li>
+                </li> -->
                 <li>
                   <a
                     (click)="

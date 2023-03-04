@@ -23,6 +23,7 @@ import { CodxEpService } from '../../../codx-ep.service';
 import { DriverModel } from '../../../models/bookingAttendees.model';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { PopupDriverAssignComponent } from '../popup-driver-assign/popup-driver-assign.component';
+import { Permission } from '@shared/models/file.model';
 @Component({
   selector: 'approval-car-view-detail',
   templateUrl: 'approval-car-view-detail.component.html',
@@ -64,6 +65,7 @@ export class ApprovalCarViewDetailComponent
   listDriverAssign = [];
   tabControl: TabModel[] = [];
   fields: Object = { text: 'driverName', value: 'driverID' };
+  listFilePermission=[];
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -97,6 +99,23 @@ export class ApprovalCarViewDetailComponent
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            if(res.bookingAttendees!=null && res.bookingAttendees!=''){
+              let listAttendees = res.bookingAttendees.split(";");
+              listAttendees.forEach((item) => {
+                if(item!=''){
+                  let tmpPer= new Permission()
+                  tmpPer.objectID= item;//
+                  tmpPer.objectType= 'U';
+                  tmpPer.read= true;
+                  tmpPer.share=  true;
+                  tmpPer.download=  true;
+                  tmpPer.isActive=  true;
+                  this.listFilePermission.push(tmpPer);
+                }                
+              });
+              this.detectorRef.detectChanges();
+
+            } 
             this.detectorRef.detectChanges();
           }
         });

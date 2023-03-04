@@ -58,6 +58,8 @@ import { PopupAddAPPostingAccountComponent } from './apposting-accounts/popup-ad
 import { PopAddItemComponent } from './item-posting-accounts/pop-add-item/pop-add-item.component';
 import { FAPostingAccountsComponent } from './faposting-accounts/faposting-accounts.component';
 import { PopupAddFAPostingAccountComponent } from './faposting-accounts/popup-add-faposting-account/popup-add-faposting-account.component';
+import { CashTransfersComponent } from './cash-transfers/cash-transfers.component';
+import { PopupAddCashTransferComponent } from './cash-transfers/popup-add-cash-transfer/popup-add-cash-transfer.component';
 
 export const routes: Routes = [
   {
@@ -73,6 +75,10 @@ export const routes: Routes = [
         component: JournalNamesComponent,
       },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
+      {
+        path: 'cashtranfers/:funcID',
+        component: CashTransfersComponent,
+      },
     ],
   },
   {
@@ -180,6 +186,8 @@ export const routes: Routes = [
     PopAddItemComponent,
     FAPostingAccountsComponent,
     PopupAddFAPostingAccountComponent,
+    CashTransfersComponent,
+    PopupAddCashTransferComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

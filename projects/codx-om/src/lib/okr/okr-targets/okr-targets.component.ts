@@ -18,6 +18,7 @@ import {
   ApiHttpService,
   NotificationsService,
   ButtonModel,
+  FormModel,
 } from 'codx-core';
 import { ChartSettings } from '../../model/chart.model';
 import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.component';
@@ -331,7 +332,7 @@ export class OkrTargetsComponent implements OnInit {
         break;
       }
       case OMCONST.MFUNCID.KRCheckIn: {
-        this.checkIn(kr,popupTitle);
+        this.checkIn(kr,e.text);
         break;
       }
       case OMCONST.MFUNCID.KREditSKRWeight: {
@@ -472,32 +473,21 @@ export class OkrTargetsComponent implements OnInit {
       dModel
     );
   }
-  checkIn(evt: any, kr: any) {
-    // this.formModelCheckin.entityName = 'OM_OKRs.CheckIns';
-    // this.formModelCheckin.entityPer = 'OM_OKRs.CheckIns';
-    // this.formModelCheckin.gridViewName = 'grvOKRs.CheckIns';
-    // this.formModelCheckin.formName = 'OKRs.CheckIns';
-    // this.dialogCheckIn = this.callfc.openForm(
-    //   PopupCheckInComponent,
-    //   '',
-    //   800,
-    //   500,
-    //   'OMT01',
-    //   [kr, this.formModelCheckin]
-    // );
-    // this.dialogCheckIn.closed.subscribe((res) => {
-    //   if (res && res.event) {
-    //     this.dataKR = res.event;
-    //     this.totalProgress = this.dataKR.progress;
-    //     this.progressHistory.unshift(this.totalProgress);
-    //     this.dataKR.map((item: any) => {
-    //       if (item.recID == res.event.parentID) {
-    //         item = res.event;
-    //       }
-    //     });
-    //   }
-    //   this.detectorRef.detectChanges();
-    // });
+  checkIn(kr: any, popupTitle: any) {
+    
+    let dialogCheckIn = this.callfunc.openForm(
+      PopupCheckInComponent,
+      '',
+      800,
+      500,
+      'OMT01',
+      [kr,popupTitle]
+    );
+    dialogCheckIn.closed.subscribe((res) => {
+      if (res && res.event) {
+        
+      }
+    });
   }
   //OBject  
   addOB(popupTitle:any) {

@@ -3,7 +3,7 @@ import {
   Component,
   Injector,
   Optional,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {
   CodxFormComponent,
@@ -12,7 +12,7 @@ import {
   DialogRef,
   NotificationsService,
   RequestOption,
-  UIComponent
+  UIComponent,
 } from 'codx-core';
 import { IAPPostingAccount } from '../interfaces/IAPPostingAccount.interface';
 

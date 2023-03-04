@@ -58,7 +58,6 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   objecttype: string = '1';
   gridViewSetup: any;
   valuelist: any;
-  customerID: any;
   formType: any;
   validate: any = 0;
   tabInfo: any[] = [
@@ -105,7 +104,6 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.customers = dialog.dataService!.dataSelected;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
-    this.customerID = '';
     this.cache
       .gridViewSetup('Customers', 'grvCustomers')
       .subscribe((res: []) => {
@@ -117,11 +115,10 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       this.valuelist = res.datas;
     });
     if (this.customers.customerID != null) {
-      this.customerID = this.customers.customerID;
       this.acService
         .loadData('ERM.Business.BS', 'BankAccountsBusiness', 'LoadDataAsync', [
           this.objecttype,
-          this.customerID,
+          this.customers.customerID,
         ])
         .subscribe((res: any) => {
           this.objectBankaccount = res;
@@ -129,7 +126,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       this.acService
         .loadData('ERM.Business.BS', 'ContactBookBusiness', 'LoadDataAsync', [
           this.objecttype,
-          this.customerID,
+          this.customers.customerID,
         ])
         .subscribe((res: any) => {
           this.objectContact = res;
@@ -137,7 +134,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       this.acService
         .loadData('ERM.Business.BS', 'AddressBookBusiness', 'LoadDataAsync', [
           this.objecttype,
-          this.customerID,
+          this.customers.customerID,
         ])
         .subscribe((res: any) => {
           this.objectAddress = res;
@@ -168,23 +165,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   }
   //#endregion
 
-  //#region Function
-  setTitle(e: any) {
-    this.title = this.headerText;
-    this.dt.detectChanges();
-  }
-  valueChangeTags(e: any) {
-    this.customers[e.field] = e.data;
-  }
+  //#region Event
   valueChange(e: any) {
-    this.customers[e.field] = e.data;
-  }
-  valueChangeCustomerID(e: any) {
-    this.customerID = e.data;
-    this.customers[e.field] = e.data;
-  }
-  valueChangeEstablishYear(e: any) {
-    e.data = e.data.fromDate;
     this.customers[e.field] = e.data;
   }
   valueChangeOverdueControl(e: any) {
@@ -488,6 +470,13 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.objectContact.splice(index, 1);
     this.objectContactDelete.push(data);
   }
+  //#endregion
+
+  //#region Function
+  setTitle(e: any) {
+    this.title = this.headerText;
+    this.dt.detectChanges();
+  }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.customers);
@@ -541,10 +530,24 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.objects.settlePayment = this.customers.settlePayment;
     this.objects.debtComparision = this.customers.debtComparision;
   }
+  checkValidEmail() {
+    const regex = new RegExp(
+      '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
+    );
+    var checkRegex = regex.test(this.customers.email);
+    if (checkRegex == false) {
+      this.notification.notify("Trường 'Email' không hợp lệ","2");
+      this.validate++;
+      return;
+    }
+  }
   //#endregion
 
   //#region CRUD
   onSave() {
+    if (this.customers.email != null) {
+      this.checkValidEmail();
+    }
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
@@ -573,20 +576,20 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                   'ERM.Business.BS',
                   'BankAccountsBusiness',
                   'AddAsync',
-                  [this.objecttype, this.customerID, this.objectBankaccount]
+                  [this.objecttype, this.customers.customerID, this.objectBankaccount]
                 )
                 .subscribe((res: []) => {});
               this.acService
                 .addData('ERM.Business.BS', 'AddressBookBusiness', 'AddAsync', [
                   this.objecttype,
-                  this.customerID,
+                  this.customers.customerID,
                   this.objectAddress,
                 ])
                 .subscribe((res: []) => {});
               this.acService
                 .addData('ERM.Business.BS', 'ContactBookBusiness', 'AddAsync', [
                   this.objecttype,
-                  this.customerID,
+                  this.customers.customerID,
                   this.objectContact,
                   this.objectContactAddress,
                 ])
@@ -602,7 +605,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
               this.notification.notifyCode(
                 'SYS031',
                 0,
-                '"' + this.customerID + '"'
+                '"' + this.customers.customerID + '"'
               );
               return;
             }
@@ -628,7 +631,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                   'UpdateAsync',
                   [
                     this.objecttype,
-                    this.customerID,
+                    this.customers.customerID,
                     this.objectBankaccount,
                     this.objectBankaccountDelete,
                   ]
@@ -637,7 +640,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
               this.api
                 .exec('ERM.Business.BS', 'AddressBookBusiness', 'UpdateAsync', [
                   this.objecttype,
-                  this.customerID,
+                  this.customers.customerID,
                   this.objectAddress,
                   this.objectAddressDelete,
                 ])
@@ -645,7 +648,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
               this.api
                 .exec('ERM.Business.BS', 'ContactBookBusiness', 'UpdateAsync', [
                   this.objecttype,
-                  this.customerID,
+                  this.customers.customerID,
                   this.objectContact,
                   this.objectContactDelete,
                   this.objectContactAddress,
