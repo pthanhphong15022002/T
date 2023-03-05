@@ -1,6 +1,5 @@
-<codx-form #form [body]="body" [footer]="footer" [dialog]="dialogRef" [dialog]="dialogRef" [formModel]="formModel"
-  [data]="dataKR" 
-  [showHeader]="false" *ngIf="isAfterRender">
+<codx-form #form [body]="body" [footer]="footer" [dialog]="dialogRef" [formModel]="formModel"
+  [data]="checkIns"  [showHeader]="false" *ngIf="fCheckinKR && isAfterRender">
   <ng-template #subHeader>
     <div class="d-flex justify-content-center">
       <!-- <codx-label default="Check-in" name="lblCheckin"></codx-label> -->
@@ -11,7 +10,7 @@
     <div class="d-flex flex-column px-5 py-5 justify-content-between align-items-center h-100">
       <!--Header-->
       <div class="d-flex flex-column justify-content-center align-items-center w-80">
-        <span><codx-label default="Check-in" name="lblCheckin" class="fs-2 fw-bold"></codx-label></span>
+        <span class="fs-2 fw-bold"> {{headerText}}</span>
         <codx-label [default]="'KR: '+ dataKR?.okrName" class="fs-5 fw-bold mt-2"></codx-label>
         <div class="d-flex align-items-center kr-process w-300px min-w-300px ms-3 mt-2 mb-5">
           <div class="h-15px w-100 bg-secondary rounded-4">
@@ -33,15 +32,15 @@
           <div class="d-flex flex-row">
             <div class="col-3">
               <codx-label class="fw-bold  mb-1" default="Kết quả thực hiện" fiedName="Value" [formModel]="form.formModel"></codx-label>
-              <codx-input [max]="dataKR.checkInMode==1?100:100-dataKR.progress" [showSpinButton]="false" ControlName="value" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+              <codx-input [min]="0" [max]="dataKR.checkInMode==1?100:100-dataKR.progress" [showSpinButton]="false" ControlName="value" [formModel]="formModel" [Group]="fCheckinKR"></codx-input>
             </div>
             <div class="col-5 ms-5">
               <codx-label class="fw-bold mb-1" default="Tình trạng" fiedName="Status" [formModel]="form.formModel"></codx-label>
-              <codx-input ControlName="status" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+              <codx-input ControlName="status" [formModel]="formModel" [Group]="fCheckinKR"></codx-input>
             </div>
 
           </div>
-          <div class="form-group mt-1">
+          <div class="mb-2 mt-1">
             <codx-label *ngIf="dataKR?.checkInMode=='1'" name="lbl"
               default="(*)Kết quả thực hiện là kết quả sau cùng" class="text-primary"></codx-label>
             <codx-label *ngIf="dataKR?.checkInMode=='2'" name="lbl"
@@ -51,7 +50,7 @@
           </div>
           <div class="form-group">
             <codx-label default="Ghi chú" fiedName="Comment" [formModel]="form.formModel"></codx-label>
-            <codx-input ControlName="comment" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+            <codx-input ControlName="comment" [formModel]="formModel" [Group]="fCheckinKR"></codx-input>
           </div>
           <div class="flex-nowrap overflow-auto h-100px">
             <!-- <codx-attachment #attachment [objectType]="'OM_OKRs'" hideBtnSave="1" hideFolder="1"
