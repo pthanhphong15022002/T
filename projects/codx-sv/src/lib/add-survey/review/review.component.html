@@ -5,7 +5,7 @@
         <div *ngIf="itemSession">
           <div class="card-survey" [id]="'card-survey-' + itemSession.seqNo">
             <div
-              class="col-lg-8 control-section inplace-editor-control-section form-lafyout"
+              class="control-section inplace-editor-control-section form-lafyout"
               id="inplace-editor-control"
             >
               <div
@@ -274,7 +274,7 @@
             <button
               *ngIf="itemSession.seqNo == questions.length - 1"
               type="button"
-              class="btn btn-primary"
+              class="btn btn-submit text-white"
               (click)="onSubmit()"
             >
               <codx-label fiedName="Sumbit" default="Gửi"></codx-label>
@@ -996,10 +996,9 @@
       <span *ngIf="!itemSession.comment">{{ "Mô tả biểu mẫu" }}</span>
     </div>
   </div>
-  <hr />
-  <div class="d-flex mt-3 form-group">
+  <div class="d-flex align-items-center mt-3 form-group border-top py-3">
     <span class="ms-6 icon-eye-off icon-24"></span>
-    <span class="ms-3 fw-700">{{ user.email }}</span>
+    <span class="ms-3">{{ user.email }}</span>
   </div>
 </ng-template>
 

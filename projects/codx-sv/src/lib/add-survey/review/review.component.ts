@@ -115,7 +115,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
           ).subscribe((res: any) => {
             if (res) {
               res.forEach((x) => {
-                if (x.referType == this.REFER_TYPE.VIDEO)
+                if (x.referType == this.recID +"_"+this.REFER_TYPE.VIDEO)
                   x['srcVideo'] = `${environment.urlUpload}/${x.pathDisk}`;
               });
               this.lstEditIV = res;
