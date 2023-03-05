@@ -326,7 +326,7 @@
       "
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     ></codx-input>
-    <div class="d-flex" *ngIf="itemAnswer.other">
+    <div class="d-flex align-items-center " *ngIf="itemAnswer.other">
       <codx-input
         type="radio"
         labelPosition="After"
@@ -339,15 +339,17 @@
         (valueChange)="
           valueChange($event, itemSession, itemQuestion, itemAnswer)
         "
+        [style.width]="'125px'"
       ></codx-input>
       <codx-input
         type="text"
-        class="border-0"
+        class="border-0 h-20px"
         [crrValue]="itemAnswer.answer"
         field="O"
         (valueChange)="
           valueChange($event, itemSession, itemQuestion, itemAnswer)
         "
+        [ngClass]="'w-100'"
       >
       </codx-input>
     </div>
@@ -664,7 +666,7 @@
     <div class="box" *ngFor="let itemAnswer of itemQuestion.answers">
       <div class="has-action-menu">
         <div class="d-flex">
-          <div class="d-flex size-input">
+          <div class="d-flex size-input py-2">
             <ng-container
               *ngTemplateOutlet="
                 tempIconAnswers;
