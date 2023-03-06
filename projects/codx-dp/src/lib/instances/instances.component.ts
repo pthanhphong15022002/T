@@ -101,6 +101,7 @@ export class InstancesComponent
   oldIdInstance: any;
   viewMode: any;
   viewModeDetail = 'S';
+  totalInstance: number = 0;
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
@@ -122,7 +123,6 @@ export class InstancesComponent
         });
     });
 
-    // em bảo gán tạm
     this.dataProccess = dt?.data?.data;
     this.getListCbxProccess(this.dataProccess?.applyFor);
   }
@@ -640,7 +640,7 @@ export class InstancesComponent
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
               instance: data,
-              listStepCbx: this.listStepsCbx,
+              listStepCbx: this.listSteps,
               instanceStep: instanceStep,
               stepIdClick: this.stepIdClick,
             };
@@ -775,7 +775,7 @@ export class InstancesComponent
       .map((x) => x.stepName)[0];
   }
   clickMoreFunc(e) {
-    this.lstStepInstances = e.lstStepInstance;
+ //   this.lstStepInstances = e.lstStepInstance;
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {

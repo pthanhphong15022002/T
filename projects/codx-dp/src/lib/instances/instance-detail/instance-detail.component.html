@@ -99,13 +99,12 @@
       </ng-container>
 
       <ng-container *ngIf="viewModelDetail == 'S'">
-        <div class="group-steps" *ngIf="listStepUpdate != null && listStepUpdate.length > 0">
+        <div class="group-steps" *ngIf="listSteps != null && listSteps.length > 0">
           <div class="d-flex arrow-steps flex-container">
-            <ng-container *ngFor="let item of listStepUpdate; index as i">
+            <ng-container *ngFor="let item of listSteps; index as i">
               <div
               id="step-click"
               style="flex-grow: 1"
-
               [ngClass]="getColorStepName(item?.stepStatus)"
               (click)="click(i,item.stepID)"
             >

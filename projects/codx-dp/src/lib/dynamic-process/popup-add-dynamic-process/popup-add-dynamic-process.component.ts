@@ -129,7 +129,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   reasonName: string = '';
   dataValueview: string = '';
   reasonAction: any;
-  totalStepsInProccess: number = 0;
+  totalInstance: number = 0;
 
   // const value string
   readonly strEmpty: string = '';
