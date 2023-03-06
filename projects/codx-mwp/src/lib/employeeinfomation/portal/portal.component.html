@@ -27,7 +27,7 @@
                   <div class="position-relative mt-6">
                     <codx-img
                       class="pic-emloyee"
-                      [funcId]="'HRT03a1'"
+                      [funcId]="'MWP002'"
                       [width]="100"
                       [objectId]="'ADMIN'"
                       [objectType]="'HR_Employees'"
@@ -4894,7 +4894,7 @@
 
 <!-- pane_7 Sức khỏe-->
 <ng-template #healthInfo>
-  <div class="tab-horizone bg-white h-od-tab mb-4">
+  <div class="tab-horizone h-od-tab mb-4">
     <ul
       ngbNav
       #nav="ngbNav"
@@ -4948,24 +4948,25 @@
                   
                 </div>
                 <span class="text-gray-400 mx-2">|</span>
-                <span class="text-dark">
+                <span class="text-dark fw-bold">
                   <span>({{ eHealthRowCount }})</span>
                 </span>
               </div>
               <div class="d-flex align-items-center ms-5">
-                <button type="button"
-                  class="btn btn-icon btn-sm btn-white"
+                <button
+                  class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="HandleEmployeeEHealths(addHeaderText, 'add', null)"
                 >
                   <span
-                    class="icon-add icon-18"
+                    class="icon-add icon-20 text-gray-600 text-hover-primary"
                   ></span>
                 </button>
+                <span class="text-gray-500 ms-2">|</span>
               </div>
             </div>
-            <div class="mb-1 mt-6">
+            <div class="mb-1">
               <div
-                class="profile-grid"
+                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
                 <codx-gridview
                   *ngIf="eHealthColumnGrid"
@@ -4980,22 +4981,22 @@
                   [dataValues]="employeeID"
                   [pageSize]="numPageSizeGridView"
                   [entityName]="'HR_EHealths'"
-                  [rowHeight]="40"
-                  height="auto"
+                  [rowHeight]="50"
+                  height="240px"
                 ></codx-gridview>
               </div>
             </div>
           </div>
         </div>
         <!-- Tiêm vaccine -->
-        <div class="user-profile overview d-block" id="HRTEM0802">
-          <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="user-profile overview d-block mb-3" id="HRTEM0802">
+          <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="user-status text-primary">
-                  <span class="icon-colorize icon-20 me-2"></span>
+              <div class="d-flex align-items-center text-primary">
+                <div class="user-status d-flex align-items-center">
+                  <span class="icon-colorize icon-20 me-1"></span>
                 </div>
-                <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
+                <div class="fs-5 fw-bold text-uppercase text-primary">
                   <!-- <codx-label
                     name="lblVaccination"
                     [formModel]="eInfoFormModel"
@@ -5003,12 +5004,11 @@
                   >
                   </codx-label> -->
                   {{ getFormHeader("HRTEM0802") }}
-                  
+                  <span class="text-gray-500 ms-2"> | </span>
+                  <span class="text-dark fw-bold">
+                    <span>({{ eVaccineRowCount }})</span>
+                  </span>
                 </div>
-                <span class="text-gray-500 mx-2"> | </span>
-                <span class="text-dark">
-                  <span>({{ eVaccineRowCount }})</span>
-                </span>
               </div>
               <div class="d-flex align-items-center ms-5">
                 <codx-dropdown-select
@@ -5023,7 +5023,7 @@
                   (valueChange)="valueChangeFilterVaccineTypeID($event)"
                 ></codx-dropdown-select>
 
-                <span class="text-gray-400 mx-2">|</span>
+                <span class="text-gray-500 ms-2">|</span>
 
                 <codx-dropdown-calendar
                   [cssPopup]="'w-600px h-400px'"
@@ -5034,25 +5034,25 @@
                   [cssClass]="'rounded-pill'"
                   (change)="valueChangeYearFilterEVaccine($event)"
                 ></codx-dropdown-calendar>
-                <span class="text-gray-400 mx-2">|</span>
-                <button type="button"
-                  class="btn btn-icon btn-sm btn-white"
+                <span class="text-gray-500 ms-2">|</span>
+                <button
+                  class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="HandleEVaccinesInfo(addHeaderText, 'add', null)"
                 >
                   <span
-                    class="icon-add icon-18"
+                    class="icon-add icon-20 text-gray-600 text-hover-primary"
                   ></span>
                 </button>
-                <span class="text-gray-400 mx-2">|</span>
-                <button type="button" class="btn btn-icon btn-sm btn-white">
+                <span class="text-gray-500 ms-2">|</span>
+                <button class="btn btn-icon btn-sm position-relative ms-1">
                   <span
-                    class="icon-more_vert icon-18"
+                    class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
                   ></span>
                 </button>
               </div>
             </div>
-            <div class="mt-7">
-              
+            <div class="mb-1">
+              <div class="d-flex flex-wrap mt-6 mb-3">
                 <!-- <ng-container *ngFor="let item of lstVaccine">
                   <div class="mw-300px min-w-300px me-5">
                     <div
@@ -5099,7 +5099,7 @@
                     </div>
                   </div>
                 </ng-container> -->
-                <div class="profile-grid">
+
                 <codx-gridview
                   *ngIf="eVaccineColumnGrid"
                   #eVaccinesGridView
@@ -5113,29 +5113,28 @@
                   [dataValues]="employeeID"
                   [pageSize]="numPageSizeGridView"
                   [entityName]="'HR_EVaccines'"
-                  [rowHeight]="40"
-                  height="auto"
+                  [rowHeight]="50"
+                  height="240px"
                 ></codx-gridview>
               </div>
             </div>
           </div>
         </div>
         <!-- Bệnh nghề nghiệp -->
-        <div class="user-profile overview d-block" id="HRTEM0803">
-          <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="user-profile overview d-block mb-3" id="HRTEM0803">
+          <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="user-status text-primary">
-                  <span class="icon-sick icon-20 me-2"></span>
+              <div class="d-flex align-items-center text-primary">
+                <div class="user-status d-flex align-items-center">
+                  <span class="icon-sick icon-20 me-1"></span>
                 </div>
-                <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
+                <div class="fs-5 fw-bold text-uppercase text-primary">
                   {{ getFormHeader("HRTEM0803") }}
-                  
+                  <span class="text-gray-500 ms-2"> | </span>
+                  <span class="text-dark fw-bold">
+                    <span>({{ eDiseasesRowCount }})</span>
+                  </span>
                 </div>
-                <span class="text-gray-500 mx-2"> | </span>
-                <span class="text-dark">
-                  <span>({{ eDiseasesRowCount }})</span>
-                </span>
               </div>
               <div class="d-flex align-items-center ms-5">
                 <span>
@@ -5153,29 +5152,29 @@
                     <i class="icon-filter_alt"></i>
                   </codx-dropdown-select>
                 </span>
-                <span class="text-gray-400 mx-2">|</span>
-                <button type="button"
-                  class="btn btn-icon btn-sm btn-white"
+                <span class="text-gray-500 ms-2">|</span>
+                <button
+                  class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="
                     HandleEmployeeEDiseasesInfo(addHeaderText, 'add', null)
                   "
                 >
                   <!--topdiseases-->
                   <span
-                    class="icon-add icon-18"
+                    class="icon-add icon-20 text-gray-600 text-hover-primary"
                   ></span>
                 </button>
-                <span class="text-gray-500 mx-2">|</span>
-                <button class="btn btn-icon btn-sm btn-white">
+                <span class="text-gray-500 ms-2">|</span>
+                <button class="btn btn-icon btn-sm position-relative ms-1">
                   <span
-                    class="icon-more_vert icon-18"
+                    class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
                   ></span>
                 </button>
               </div>
             </div>
 
             <!--Griddiseases-->
-            <div class="profile-grid mt-7">
+            <div class="mb-1">
               <codx-gridview
                 *ngIf="eDiseasesColumnsGrid && eDiseasesFormModel"
                 #eDiseasesGridView
@@ -5189,8 +5188,8 @@
                 [dataValues]="employeeID"
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_EDiseases'"
-                [rowHeight]="40"
-                height="auto"
+                [rowHeight]="50"
+                height="240px"
               >
               </codx-gridview>
               <!-- <div
@@ -5219,12 +5218,12 @@
           </div>
         </div>
         <!-- Tai nạn lao động -->
-        <div class="user-profile overview d-block" [id]="eAccidentsFuncID">
-          <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="user-profile overview d-block mb-3" [id]="eAccidentsFuncID">
+          <div class="rounded-2 p-4 bg-white">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
                 <div class="user-status d-flex align-items-center">
-                  <span class="icon-wheelchair_pickup icon-20 me-2"></span>
+                  <span class="icon-wheelchair_pickup icon-20 me-1"></span>
                 </div>
                 <div class="fs-5 fw-bold text-uppercase text-primary">
                   <!-- <codx-label
@@ -5251,15 +5250,15 @@
                   <i class="icon-filter_alt"></i>
                 </codx-dropdown-select>
 
-                <span class="text-gray-400 mx-2">|</span>
-                <button type="button"
-                  class="btn btn-icon btn-sm btn-white"
+                <span class="text-gray-500 ms-2">|</span>
+                <button
+                  class="btn btn-icon btn-sm position-relative ms-2"
                   (click)="
                     HandleEmployeeAccidentInfo(addHeaderText, 'add', null)
                   "
                 >
                   <span
-                    class="icon-add icon-18"
+                    class="icon-add icon-20 text-gray-600 text-hover-primary"
                   ></span>
                 </button>
               </div>
@@ -5279,8 +5278,8 @@
                   [dataValues]="employeeID"
                   [pageSize]="numPageSizeGridView"
                   [entityName]="'HR_EDiseases'"
-                  [rowHeight]="40"
-                  height="auto"
+                  [rowHeight]="50"
+                  height="240px"
                 >
                 </codx-gridview>
               </div>
@@ -6221,32 +6220,30 @@
 <!-- #endregion -->
 
 <ng-template #tempCol1EHealthGrid let-data>
-  <div class="d-flex align-items-center mb-5px">
-    <i class="icon-calendar_today icon-16 text-gray-500 me-2"></i>
-    <span class="text-dark">{{ data?.healthDate | fmDT }}</span>
+  <div>
+    <i class="icon-calendar_today"></i>
+    {{ data?.healthDate | fmDT }}
     <i
-      class="icon-i-circle-fill icon-circle-group mx-2"
+      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
     ></i>
-    <span>
-      {{
-        data?.healthPeriodID
-          | formatvalue : eHealthFormModel : "healthPeriodID"
-          | async
-      }}
-    </span>
+    {{
+      data?.healthPeriodID
+        | formatvalue : eHealthFormModel : "healthPeriodID"
+        | async
+    }}
   </div>
-  <div class="d-flex align-items-center">
-    <i class="icon-add_box icon-16 text-gray-500 me-2"></i>
-    <span class="text-dark">{{ data?.healthPlace }}</span>
+  <div>
+    <i class="icon-add_box"></i>
+    {{ data?.healthPlace }}
   </div>
 </ng-template>
 
 <ng-template #tempCol2EHealthGrid let-data>
-  <div class="text-gray-600 mb-5px">
+  <div>
     Loại
     {{ data?.healthType }}
   </div>
-  <div class="text-dark">
+  <div>
     {{ data?.finalConclusion }}
   </div>
 </ng-template>
@@ -6265,26 +6262,22 @@
 </ng-template>
 
 <ng-template #tempEVaccineGridCol1 let-data>
-  <div class="d-flex align-items-center mb-5px">
+  <div>
     <span
-      class="icon-i-arrow-down-left-circle-fill icon-12 me-2"
+      class="icon-i-arrow-down-left-circle-fill me-2"
       [style.color]="getVaccineBackgroundColor(data)"
     ></span>
-    <span>
     {{
       data?.vaccineTypeID
         | formatvalue : eVaccineFormModel : "vaccineTypeID"
         | async
     }}
-    </span>
     <i
-      class="icon-i-circle-fill icon-circle-group text-gray-400 mx-2"
+      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
     ></i>
-    <span>
-      {{ data?.vaccineName }}
-    </span>
+    {{ data?.vaccineName }}
   </div>
-  <div class="text-dark">
+  <div>
     {{
       data?.hopitalID | formatvalue : eVaccineFormModel : "hopitalID" | async
     }}
@@ -6292,19 +6285,19 @@
 </ng-template>
 
 <ng-template #tempEVaccineGridCol2 let-data>
-  <div class="d-flex align-items-center mb-5px">
-    <i class="icon-calendar_today text-gray-500 icon-16 me-2"></i>
-    <span>{{ data?.injectDate | fmDT }}</span>
+  <div>
+    <i class="icon-calendar_today"></i>
+    {{ data?.injectDate | fmDT }}
   </div>
   <div *ngIf="data?.nextInjectDate">
-    <i class="icon-calendar_today text-gray-500 icon-16 me-2"></i>
-    <span>{{ data?.nextInjectDate | fmDT }}</span>
+    <i class="icon-calendar_today"></i>
+    {{ data?.nextInjectDate | fmDT }}
   </div>
 </ng-template>
 
 <ng-template #tempEVaccineGridCol3 let-data>
   <div class="has-action-menu min-h-40px">
-    <i class="icon-edit text-gray-500 icon-16 me-2"></i>
+    <i class="icon-edit"></i>
     {{ data?.note }}
     <codx-mfunc
       [formModel]="eVaccineFormModel"
@@ -6349,7 +6342,7 @@
 
 <ng-template #templateAppointionGridCol3 let-data>
   <div class="has-action-menu">
-    <div class="mb-5px text-gray-600">
+    <div class="mb-1 text-gray-600">
       {{
         data?.orgUnitID
           | formatvalue : appointionFormModel : "orgUnitID"

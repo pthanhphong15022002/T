@@ -116,7 +116,9 @@
                             <codx-label formName="" name="lblBehavior" default="Quy tắc ứng xử"></codx-label>
                         </div>
                         <div class="mt-3 group-files">
-                            <span class="text-dark">{{data.behavior}}</span>
+                            <ng-container *ngFor="let item of behavior">
+                                <p class="text-dark">{{item}}</p>
+                            </ng-container>
                         </div>
                     </ng-container>
                     <div class="mt-3">

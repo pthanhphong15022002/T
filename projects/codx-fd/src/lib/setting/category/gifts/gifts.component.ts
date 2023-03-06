@@ -286,6 +286,7 @@ export class GiftsComponent extends UIComponent implements OnInit {
   }
 
   openFormWarehouse(data) {
+    console.log(data);
     var obj = {
       data: data,
     };

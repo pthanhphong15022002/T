@@ -33,6 +33,7 @@ import { AddUserComponent } from './add-user/add-user.component';
 import { CodxAdService } from '../codx-ad.service';
 import { environment } from 'src/environments/environment';
 import { PleaseUseComponent } from './please-use/please-use.component';
+import { PopActiveAccountComponent } from './pop-active-account/pop-active-account.component';
 
 @Component({
   selector: 'lib-user',
@@ -105,7 +106,25 @@ export class UserComponent extends UIComponent {
       case 'ADS0501':
         this.stop(data);
         break;
+      case 'ADS0502':
+        this.activeAccount(data);
+        break;
+
+      default:
+        break;
     }
+  }
+
+  activeAccount(data) {
+    console.log('data', data);
+    let dlog = this.callfc.openForm(
+      PopActiveAccountComponent,
+      '',
+      500,
+      300,
+      '',
+      data
+    );
   }
 
   openPopup(item: any) {
@@ -295,8 +314,14 @@ export class UserComponent extends UIComponent {
   }
   //#endregion
 
-  changeDataMF(e: any) {
-    var dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
+  changeDataMF(e: any, data) {
+    let dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
     dl[0].disabled = true;
+    if (data.status == '1') {
+      let activeMF = e.find((x) => x.functionID == 'ADS0502');
+      if (activeMF) {
+        activeMF.disabled = true;
+      }
+    }
   }
 }
