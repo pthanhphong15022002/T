@@ -41,6 +41,9 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   fromDateFormat;
   toDateFormat;
   ops = ['m', 'y'];
+  headerTextCalendar: any = [];
+  isNullFrom: boolean = true;
+  isNullTo: boolean = true;
 
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
@@ -64,6 +67,8 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     this.trainCourseObj = JSON.parse(
       JSON.stringify(dataDialog?.data?.dataInput)
     );
+    this.headerTextCalendar[0] = dataDialog?.data?.trainFromHeaderText;
+    this.headerTextCalendar[1] = dataDialog?.data?.trainToHeaderText;
   }
 
   initForm() {
@@ -113,9 +118,18 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
                     this.formGroup.patchValue(this.trainCourseObj);
                     this.cr.detectChanges();
                     this.isAfterRender = true;
+                    this.isNullFrom = false;
+                    this.isNullTo = false;
                   }
                 });
             } else {
+              this.isNullFrom = true;
+              this.isNullTo = true;
+
+              if (this.trainCourseObj.trainFromDate == null)
+                this.isNullFrom = false;
+              if (this.trainCourseObj.trainToDate == null)
+                this.isNullTo = false;
               this.formModel.currentData = this.trainCourseObj;
               this.formGroup.patchValue(this.trainCourseObj);
               this.cr.detectChanges();
@@ -124,7 +138,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
           }
         });
     }
-    if(this.trainCourseObj){
+    if (this.trainCourseObj) {
       this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
       this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);
     } else {
@@ -261,12 +275,13 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       this.trainCourseObj.trainToDate = event.fromDate;
     }
   }
-  getFormatDate(trainFrom : string){
+  getFormatDate(trainFrom: string) {
     let resultDate = '';
-    if(trainFrom){
+    if (trainFrom) {
       let arrDate = trainFrom.split('/');
-      resultDate = arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
-      return resultDate
-    } else return resultDate = 'y';
+      resultDate =
+        arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
+      return resultDate;
+    } else return (resultDate = 'y');
   }
 }

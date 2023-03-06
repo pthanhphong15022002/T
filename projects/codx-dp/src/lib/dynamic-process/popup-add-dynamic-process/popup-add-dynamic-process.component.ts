@@ -129,6 +129,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   reasonName: string = '';
   dataValueview: string = '';
   reasonAction: any;
+  totalStepsInProccess: number = 0;
 
   // const value string
   readonly strEmpty: string = '';
@@ -179,12 +180,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   refValue = 'DP018';
   gridViewSetup: any;
   userGroupJob = [];
+  listTypeTask = [];
   nameStage = '';
   isAddStage = true;
   headerText = '';
   groupTaskID = '';
   stepRoleOld: any;
-  listJobType = [];
   jobType: any;
   actionStep = '';
   isSaveStep = false;
@@ -326,6 +327,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     this.grvMoreFunction = await this.getFormModel('DPT0402');
     this.grvStep = await this.getFormModel('DPS0103');
+
+    this.cache.valueList('DP004').subscribe((res) => {
+      if (res.datas) {
+        this.listTypeTask = res?.datas;
+      }
+    });
   }
 
   //#region setup formModels and formGroup
@@ -972,7 +979,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         );
 
         this.stepRoleOld = listPerm.filter((x) => x.roleType == 'S')[0];
-        indexOld = listPerm.findIndex((x) => x.objectID == this.stepRoleOld.objectID);
+        indexOld = listPerm.findIndex(
+          (x) => x.objectID == this.stepRoleOld.objectID
+        );
       }
     } else {
       listPerm = [];
@@ -1592,7 +1601,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (index >= 0) {
           this.stepList.splice(index, 1);
           this.setIndex(this.stepList, 'stepNo');
-          this.viewStepSelect(this.stepList.length > 0 ? this.stepList[this.stepList?.length || 0] : []);
+          this.viewStepSelect(
+            this.stepList.length > 0
+              ? this.stepList[this.stepList?.length || 0]
+              : []
+          );
           // lay danh sach step xoa
           if (this.action == 'edit') {
             let indexDelete = this.stepListAdd.findIndex(
@@ -1619,7 +1632,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       taskGroup = JSON.parse(JSON.stringify(data));
       if (type === 'copy') {
         taskGroup['recID'] = null;
-      } 
+      }
     } else {
       this.roleGroupTaskOld = [];
       taskGroup['createdBy'] = this.userId;
@@ -1642,7 +1655,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
-  async saveGroupTask(type: string , taskGroup, taskGroupOld) {
+  async saveGroupTask(type: string, taskGroup, taskGroupOld) {
     this.popupGroupJob.close();
     if (taskGroup['roles']?.length == 0) {
       let role = new DP_Steps_TaskGroups_Roles();
@@ -1680,13 +1693,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       // add role vào step
       this.addRole(taskGroup['roles'][0]);
     } else {
-      let index = this.taskGroupList?.findIndex(x => x.recID === taskGroup.recID);
-      if(index >= 0){
+      let index = this.taskGroupList?.findIndex(
+        (x) => x.recID === taskGroup.recID
+      );
+      if (index >= 0) {
         this.taskGroupList.splice(index, 1, taskGroup);
       }
       if (
-        taskGroup?.roles[0]['objectID'] !=
-        this.roleGroupTaskOld[0]['objectID']
+        taskGroup?.roles[0]['objectID'] != this.roleGroupTaskOld[0]['objectID']
       ) {
         this.addRole(taskGroup['roles'][0], this.roleGroupTaskOld[0]);
       }
@@ -2298,6 +2312,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       option
     );
   }
+
+  getIconTask(task) {
+    let color = this.listTypeTask?.find(x => x.value === task.taskType);
+    return color?.icon;
+  }
+  getColor(task){
+    let color = this.listTypeTask?.find(x => x.value === task.taskType);    
+    return {'background-color': color?.color}
+  }
   //#End stage -- nvthuan
 
   //#region for reason successful/failed
@@ -2463,7 +2486,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           if (
             (!this.step?.excludeDayoff &&
               this.step?.excludeDayoff?.trim() == '') ||
-            !this.step?.excludeDayoff.split(';').includes(value)
+            !this.step?.excludeDayoff?.split(';').includes(value)
           )
             return;
           let arr = this.step?.excludeDayoff

@@ -35,6 +35,10 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
       if(vll)
       this.valueList = vll.datas;
     });
+    let params = window.location.href.split('/');
+    if(params?.length > 0){
+      this.category = params.pop();
+    }
   }
 
   onAfterViewInit(): void {}

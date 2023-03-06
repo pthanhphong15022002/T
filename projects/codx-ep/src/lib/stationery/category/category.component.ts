@@ -16,17 +16,20 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxEpService } from '../../../codx-ep.service';
+import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddQuotaComponent } from './popup-add-quota/popup-add-quota.component';
 import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-stationery.component';
 import { PopupUpdateQuantityComponent } from './popup-update-quantity/popup-update-quantity.component';
 
 @Component({
-  selector: 'setting-stationery',
-  templateUrl: './stationery.component.html',
-  styleUrls: ['./stationery.component.scss'],
+  selector: 'stationery-category',
+  templateUrl: './category.component.html',
+  styleUrls: ['./category.component.scss'],
 })
-export class StationeryComponent extends UIComponent implements AfterViewInit {
+export class StationeryCategoryComponent
+  extends UIComponent
+  implements AfterViewInit
+{
   @ViewChild('columnsList') columnsList: TemplateRef<any>;
   @ViewChild('templateListCard') templateListCard: TemplateRef<any>;
   viewType = ViewType;
@@ -64,11 +67,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   popupClosed: boolean = true;
   isPriceVisible: boolean = false;
 
-  constructor(
-    private injector: Injector,
-    private epService: CodxEpService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {
+  constructor(private injector: Injector, private epService: CodxEpService) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
   }
@@ -210,7 +209,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
             this.view.dataService
               .delete([this.view.dataService.dataSelected])
               .subscribe((x) => {
-                this.changeDetectorRef.detectChanges();
+                this.detectorRef.detectChanges();
               });
           if (x.event) {
             x.event.modifiedOn = new Date();
@@ -311,7 +310,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
           this.view.dataService
             .delete([this.view.dataService.dataSelected])
             .subscribe((x) => {
-              this.changeDetectorRef.detectChanges();
+              this.detectorRef.detectChanges();
             });
         else if (x.event) {
           x.event.modifiedOn = new Date();

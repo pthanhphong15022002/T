@@ -1,18 +1,20 @@
-<div class="codx-news">
+<div class="codx-news" *ngIf="loaded">
   <codx-views #view  idField="recID" [views]="views">
   </codx-views>
   <div class="more-function">
     <div class="d-flex flex-column">
       <a (click)="openPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
-      <span class="postnews mt-3" *ngIf="userPermission && userPermission.create">
-        <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
-        <div class="d-flex btn-postnews">
-          <a (click)="openPopupAdd(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
-              class="icon-video_call fs-1"></i></a>
-          <a (click)="openPopupAdd(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i
-              class="icon-post_add fs-1"></i></a>
-        </div>
-      </span>
+      <ng-container *ngIf="userPermission && userPermission.create">
+        <span class="postnews mt-3" >
+          <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
+          <div class="d-flex btn-postnews">
+            <a (click)="openPopupAdd(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
+                class="icon-video_call fs-1"></i></a>
+            <a (click)="openPopupAdd(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i
+                class="icon-post_add fs-1"></i></a>
+          </div>
+        </span>
+      </ng-container>
     </div>
   </div> 
 </div>
@@ -28,7 +30,7 @@
       <div class="col-6 hot-left">
         <ng-container *ngIf="loaded && posts[0];else tmpEmptyNews1">
           <div (click)="clickViewDetail(posts[0])">
-            <div class="cursor-pointer">
+            <div class="w-100 position-relative cursor-pointer">
               <codx-img 
                 imageType="square" 
                 [isDefaulImg]="true" 
@@ -38,6 +40,14 @@
                 [objectType]="'WP_News'"
                 [referType]="'image'">
               </codx-img>
+              <div *ngIf="posts[0].category" class="position-absolute bottom-0 end-0">
+                <codx-vll 
+                    [name]="'WP002'" 
+                    [classList]="'badge badge-danger p-2 px-4 text-center'"
+                    [value]="posts[0].category" 
+                    [showText]="true">
+                </codx-vll>
+              </div>
             </div>
             <div class="fs-4 fw-bolder mt-2 news-title cursor-pointer">
               {{ posts[0].subject | maxlenght:150}}
@@ -201,7 +211,8 @@
     </div>
     <div class="row my-8" style="height: 300px;">
       <ng-container *ngIf="videos.length > 0; else tmpEmptyListVideo">
-        <ngb-carousel (slide)="navigate($event)" *ngIf="slides.length > 0" carousel
+        <ngb-carousel (slide)="navigate($event)" *ngIf="slides.length > 0" 
+          carousel [wrap]="false" [keyboard]="false" 
           [showNavigationIndicators]="false" [showNavigationArrows]="showNavigation">
           <ng-template ngbSlide *ngFor="let slide of slides">
             <div class="d-flex align-items-center justify-content-between w-100">
@@ -224,59 +235,15 @@
       </ng-container>
     </div>
     <div class="news-group">
-      <!-- <ng-container *ngIf="category == CATEGORY.HOME;else groupCategory">
-        <ng-container *ngIf="lstGroup">
-          <ng-container *ngFor="let grItem of lstGroup | keyvalue">
-            <div class="mt-6">
-              <span class="fw-bold text-dark fs-2 mt-5 mb-5 border-bottom border-gray">{{grItem.key | vll:'WP002':'text'
-                | async}}</span>
-            </div>
-            <div *ngFor="let item of grItem.value" (click)="clickViewDetail(item)" class="news-item row my-5">
-              <div class="col-2">
-                <codx-img [width]="180" [isDefaulImg]="true" [cssClass]="'image-125 w-100 cursor-pointer'" imageType="square"
-                  [objectId]="item.recID" objectType="WP_News" [referType]="'image'"></codx-img>
-              </div>
-              <div class="col-10">
-                <codx-temp-full [resourceObjType]="'WP_News'" cardCss="" [title]="item.subject"
-                  [titleCss]="'cursor-pointer news-title'" [desc]="item.subContent" [date]="item.createdOn"
-                  [bookmark]="false">
-                </codx-temp-full>
-              </div>
-            </div>
-          </ng-container>
-        </ng-container>
-      </ng-container> -->
-      <!-- <ng-template #groupCategory>
-        <ng-container *ngIf="lstGroup.length > 0">
-          <div class="row">
-            <span class="fw-bolder fs-5">
-              <codx-label [formModel]="view.formModel" name="lblHeaderGroup" default="Tin cũ hơn"></codx-label>
-            </span>
-          </div>
-          <ng-container *ngFor="let item of lstGroup">
-            <div (click)="clickViewDetail(item)" class="row my-4">
-              <div class="col-2">
-                <codx-img [width]="180" [isDefaulImg]="true" [cssClass]="'image-150 w-100'" imageType="square" [objectId]="item.recID"
-                  objectType="WP_News" [referType]="'image'"></codx-img>
-              </div>
-              <div class="col-10">
-                <div class="fs-5 mt-2 fw-bolder">{{item.subject}}</div>
-                <div class="text-gray-700 mt-1">
-                  {{item.subContent | maxlenght:500}}
-                </div>
-                <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">{{ item.createdOn | fmDT }}</div>
-              </div>
-            </div>
-          </ng-container>
-        </ng-container>
-      </ng-template> -->
       <codx-listview #listview 
-        [dataService]="dataService" 
         [service]="'WP'"
         [assemblyName]="'ERM.Business.WP'" 
         [className]="'NewsBusiness'" 
         [method]="'GetPostByCategoryAsync'"
         entityName="WP_News" 
+        [selectFirst]="false"
+        [dataValue]="category"
+        [emptyTemplate]="emptyTemplate"
         [itemTemplate]="itemTemplate" 
         [formModel]="view.formModel">
     </codx-listview>
@@ -284,9 +251,14 @@
   </div>
 </ng-template>
 <ng-template #itemTemplate let-item>
-  <ng-container *ngIf="item.type=='Header';else content">
-    <div>
-      <span class="fw-bolder fs-2">{{item.subject}}</span>
+  <ng-container *ngIf="item.type;else content">
+    <div class="row">
+      <span *ngIf="item.type=='title';else oldValue" class="fw-bolder fs-2">{{item.subject}}</span>
+      <ng-template #oldValue>
+        <div class="">
+          <codx-label [classList]="'fw-bold text-dark fs-2'" [formModel]="view.formModel"  default="Tin cũ hơn"></codx-label>
+        </div>
+      </ng-template>
     </div>
   </ng-container>
   <ng-template #content>
@@ -360,5 +332,10 @@
         <div class="fw-bolder">{{mssgWP025}}</div>
       </div>
     </div>
+  </div>
+</ng-template>
+<ng-template #emptyTemplate>
+  <div>
+
   </div>
 </ng-template>
