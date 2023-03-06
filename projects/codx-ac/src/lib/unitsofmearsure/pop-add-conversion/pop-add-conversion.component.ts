@@ -55,7 +55,7 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
   }
   //#endregion
 
-  //#region Function
+  //#region Event
   valueChangeInverted(e:any){
     if (e.data) {
       this.umconversion[e.field] = 1;
@@ -66,6 +66,9 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
   valueChange(e:any){
     this.umconversion[e.field] = e.data;
   }
+  //#endregion
+
+  //#region Function
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.umconversion);
@@ -91,7 +94,7 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
   }
   //#endregion
 
-  //#region CRUD
+  //#region Method
   onSave(){
     this.checkValidate();
     if (this.validate > 0) {

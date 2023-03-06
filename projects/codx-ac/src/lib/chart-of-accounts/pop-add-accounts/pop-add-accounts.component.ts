@@ -66,7 +66,6 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
-          console.log(res);
         }
       });
     if (this.chartOfAccounts.accountID != null) {
@@ -127,6 +126,13 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
       }
     }
   }
+  checkLoancontrol(){
+    if (this.chartOfAccounts.loanControl == '0') {
+      this.chartOfAccounts.loanControl = false;
+    } else {
+      this.chartOfAccounts.loanControl = true;
+    }
+  }
   //#endregion
 
   //#region CRUD
@@ -136,7 +142,8 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      if (this.formType == 'add') {
+      if (this.formType == 'add' || this.formType == 'copy') {
+        this.checkLoancontrol();
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'AddAsync';
@@ -156,11 +163,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
           });
       }
       if (this.formType == 'edit') {
-        if (this.chartOfAccounts.loanControl == '0') {
-          this.chartOfAccounts.loanControl = false;
-        } else {
-          this.chartOfAccounts.loanControl = true;
-        }
+        this.checkLoancontrol();
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'UpdateAsync';
