@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  AuthStore,
   CacheService,
   CallFuncService,
   DialogData,
@@ -88,18 +89,19 @@ export class PopupAddInstanceComponent implements OnInit {
   acction: string = 'add';
   oldEndDate: Date;
   oldIdInstance: string;
+  user: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private cache: CacheService,
     private codxDpService: CodxDpService,
     private callfc: CallFuncService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dialog = dialog;
-
     this.action = dt?.data[0];
     this.isApplyFor = dt?.data[1];
     this.listStep = dt?.data[2];
@@ -107,6 +109,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.formModelCrr = dt?.data[4];
     this.listStepCbx = dt?.data[5];
     this.totalDaySteps = dt?.data[6];
+    this.user = this.authStore.get();
     if (this.action === 'edit') {
       this.owner = this.instance?.owner;
       if (
@@ -118,9 +121,18 @@ export class PopupAddInstanceComponent implements OnInit {
         );
       }
     } else if (this.action === 'add') {
-      this.lstParticipants = dt?.data[8];
-      if(this.lstParticipants != null && this.lstParticipants.length > 0)
-        this.owner = this.lstParticipants.find(x=> x.objectType === 'U').objectID;
+      this.lstParticipants = dt?.data[7];
+      if (this.lstParticipants != null && this.lstParticipants.length > 0)
+        var check = this.lstParticipants.some(
+          (x) => x.objectType === this.user.userID
+        );
+      if (!check) {
+        let tmp = {};
+        tmp['userID'] = this.user.userID;
+        tmp['userName'] = this.user.userName;
+        this.lstParticipants.push(tmp);
+      }
+      this.owner = this.user.userID;
     }
 
     if (this.action === 'copy') {
@@ -383,8 +395,10 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   eventUser(e) {
-    // this.owner = e?.id; // thêm check null cái
-    // this.instance.owner = this.owner ;
+    if (e != null) {
+      this.owner = e?.id; // thêm check null cái
+      this.instance.owner = this.owner;
+    }
   }
   getNameAndPosition(id) {
     this.codxDpService.getPositionByID(id).subscribe((res) => {
