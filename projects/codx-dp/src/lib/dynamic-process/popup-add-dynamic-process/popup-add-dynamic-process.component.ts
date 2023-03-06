@@ -1488,11 +1488,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew = new DP_Steps();
       this.stepNew['processID'] = this.process?.recID;
       this.stepNew['stepNo'] = this.stepList.length + 1;
+      this.stepNew['createdBy'] = this.userId;
       this.stepName = '';
       this.headerText = 'Thêm Giai Đoạn';
     } else if (type === 'copy') {
       this.headerText = 'Copy Giai Đoạn';
-      this.stepName = this.step['stepName'];
+      this.stepName = this.stepNew['stepName'];
     } else {
       this.headerText = 'Sửa Giai Đoạn';
       this.stepNew = JSON.parse(JSON.stringify(step));
@@ -1506,6 +1507,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.stepName = '';
     this.stepNew['recID'] = Util.uid();
     this.stepNew['stepNo'] = this.stepList.length + 1;
+    this.stepNew['createdOn'] = new Date();
+    this.stepNew['createdBy'] = this.userId;
+    this.stepNew['modifiedOn'] = null;
+    this.stepNew['modifiedBy'] = null;
     delete this.stepNew['id'];
     let taskCopy = [];
     // copy groups and tasks
@@ -1772,8 +1777,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               let index = this.taskGroupList.findIndex(
                 (group) => group.recID == taskData.taskGroupID
               );
-              this.taskGroupList[index]['task'].push(taskData);
-              this.taskList.push(taskData);
+              if(this.taskGroupList?.length == 0 && index < 0) {
+                let taskGroupNull = new DP_Steps_TaskGroups();
+                taskGroupNull['task'] = [];
+                taskGroupNull['recID'] = null; // group task rỗng để kéo ra ngoài
+                this.taskGroupList.push(taskGroupNull);
+                this.taskGroupList[0]['task']?.push(taskData);
+              }else{
+                this.taskGroupList[index]['task']?.push(taskData);
+              }
+              this.taskList?.push(taskData);
               this.addRole(taskData['roles'][0]);
             } else {
               for (const key in taskData) {
