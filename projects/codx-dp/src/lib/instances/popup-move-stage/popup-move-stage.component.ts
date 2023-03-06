@@ -95,8 +95,8 @@ export class PopupMoveStageComponent implements OnInit {
     this.instancesStepOld = this.listStepsCbx.filter(
       (x) => x.stepID === this.stepIdOld
     )[0];
-    this.IdFail = this.listStep[this.listStep.findIndex(x=>x.isFailStep)]?.stepID ?? '';
-    this.IdSuccess = this.listStep[this.listStep.findIndex(x=>x.isSuccessStep)]?.stepID ?? '';
+    this.IdFail = this.listStepsCbx[this.listStepsCbx.findIndex(x=>x.isFailStep)]?.stepID ?? '';
+    this.IdSuccess = this.listStepsCbx[this.listStepsCbx.findIndex(x=>x.isSuccessStep)]?.stepID ?? '';
     this.stepIdClick = JSON.parse(JSON.stringify(dt?.data?.stepIdClick));
     this.getStepByStepIDAndInID(this.instance?.recID, this.stepIdOld);
     this.dpSv.getFirstIntance(this.instance?.processID).subscribe((res) => {
@@ -138,7 +138,7 @@ export class PopupMoveStageComponent implements OnInit {
             index = this.listStep.findIndex(
               (x) => x.stepID == this.stepIdClick
             );
-            this.owner = this.listStep[index].owner;
+            this.owner = this.listStep[index]?.owner; // Thêm ? vô dùng cái
             // if (this.owner != null) this.getNameAndPosition(this.owner);
 
             break;

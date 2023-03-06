@@ -53,10 +53,10 @@ export class InstanceDetailComponent implements OnInit {
   value: Number = 30;
   cornerRadius: Number = 30;
   idCbx = 'S';
-  listStepUpdate:any;
+  listStepUpdate: any;
   instanceStatus: any;
   currentStep = 0;
-  instance:any;
+  instance: any;
   //gantchat
   ganttDs = [];
   dataColors = [];
@@ -66,7 +66,7 @@ export class InstanceDetailComponent implements OnInit {
     startDate: 'startDate',
     endDate: 'endDate',
     type: 'type',
-    color:'color'
+    color: 'color',
   };
 
   tabControl = [
@@ -77,13 +77,13 @@ export class InstanceDetailComponent implements OnInit {
     { name: 'Tasks', textDefault: 'Công việc', isActive: false },
     { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
   ];
-  titleDefault ='';
+  titleDefault = '';
 
   isHiddenReason: boolean = false;
 
-  instanceId:string;
+  instanceId: string;
   proccesNameMove: string;
-  onwer:string;
+  onwer: string;
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
 
@@ -93,16 +93,14 @@ export class InstanceDetailComponent implements OnInit {
     private cache: CacheService,
     private changeDetec: ChangeDetectorRef,
     private popupInstances: InstancesComponent,
-    public sanitizer: DomSanitizer,
+    public sanitizer: DomSanitizer
   ) {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefault = fun.customName || fun.description;
     });
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
@@ -121,24 +119,23 @@ export class InstanceDetailComponent implements OnInit {
     if (changes['dataSelect']) {
       this.id = changes['dataSelect'].currentValue.recID;
       this.dataSelect = changes['dataSelect'].currentValue;
-      // this.currentStep = this.dataSelect.currentStep; // curenSteps da xoa
-      // this.currentStep = 
+      // this.currentStep = this.dataSelect.currentStep; // instance.curenSteps da xoa
       this.instanceStatus = this.dataSelect.status;
       this.instance = this.dataSelect;
-     this.GetStepsByInstanceIDAsync(this.id);
-     // this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
+      // sort theo by step
+      this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
+      // this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
       this.getDataGanttChart(this.recID);
     }
     console.log(this.formModel);
   }
 
-  GetStepsByInstanceIDAsync(insID){
-    // var data = [insID,proccessID];
-       var data = [insID];
-     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
-       if (res) {
+  GetStepsByInstanceIDAsync(insID, proccessID) {
+    var data = [insID, proccessID];
+    //   var data = [insID];
+    this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
+      if (res) {
         this.listSteps = res;
-        this.getListStepsStatus();
         var total = 0;
         for (var i = 0; i < this.listSteps.length; i++) {
           var stepNo = i;
@@ -157,14 +154,17 @@ export class InstanceDetailComponent implements OnInit {
         } else {
           this.progress = '0';
         }
-
+        this.currentStep = this.listSteps.findIndex(
+          (x) => x.stepStatus === '1'
+        );
+        this.checkCompletedInstance(this.instanceStatus);
       } else {
         this.listSteps = [];
         this.stepName = '';
         this.progress = '0';
         this.tmpTeps = null;
-       }
-    //  this.getListStepsStatus();
+      }
+      //  this.getListStepsStatus();
     });
   }
 
@@ -189,7 +189,12 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   clickMF(e, data) {
-    this.moreFunctionEvent.emit({e: e, data: data, lstStepCbx: this.listStepNew, lstStepInstance: this.listSteps});
+    this.moreFunctionEvent.emit({
+      e: e,
+      data: data,
+      lstStepCbx: this.listStepNew,
+      lstStepInstance: this.listSteps,
+    });
     // console.log(e);
     // switch (e.functionID) {
     //   case 'DP09':
@@ -204,7 +209,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
-    this.changeMF.emit({e: e, data: data, listStepCbx: this.listStepNew})
+    this.changeMF.emit({ e: e, data: data, listStepCbx: this.listStepNew });
     // console.log(e);
     // if (e) {
     //   e.forEach((element) => {
@@ -221,10 +226,10 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   click(indexNo, data) {
-    // if (this.currentStep < indexNo) return;
-    // this.currentNameStep = indexNo;
-    var indx = this.listSteps.findIndex(x=>x.stepID == data);
-    this.tmpTeps =  this.listSteps[indx];
+    if (this.currentStep < indexNo) return;
+    this.currentNameStep = indexNo;
+    var indx = this.listSteps.findIndex((x) => x.stepID == data);
+    this.tmpTeps = this.listSteps[indx];
     this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái
   }
 
@@ -260,72 +265,64 @@ export class InstanceDetailComponent implements OnInit {
         }
       });
   }
-  getColor(recID){
-    var idx =  this.ganttDs.findIndex(x=>x.recID==recID) ;
-    return  this.ganttDs[idx]?.color
+  getColor(recID) {
+    var idx = this.ganttDs.findIndex((x) => x.recID == recID);
+    return this.ganttDs[idx]?.color;
   }
- //end ganttchar
+  //end ganttchar
 
-  handleListStep(listStepNew:any, listStep:any){
-  const mapList = new Map(listStep.map(item => [item.stepID, item.stepStatus]));
 
-  var updatedArray = listStepNew.map(item => ({
-    ...item,
-    stepStatus: mapList.get(item.stepID) || item.stepStatus || ''
-  }));
-    let list =  updatedArray.map(x=> {return {stepID: x.stepID, stepName: x.stepName, stepStatus: x.stepStatus}});
-  return list;
-  }
   deleteListReason(listStep: any): void {
     listStep.pop();
     listStep.pop();
   }
 
-  getListStepsStatus(){
-    let listStepHandle = JSON.parse(JSON.stringify(this.listStepNew));
-    this.listStepUpdate = this.handleListStep(listStepHandle,this.listSteps);
-    this.checkCompletedInstance(this.instanceStatus);
-   }
-   checkCompletedInstance(instanceStatus:any){
-    if(instanceStatus === '3' ||  instanceStatus === '4' ) {
-      this.listStepUpdate.pop();
+  checkCompletedInstance(instanceStatus: any) {
+    if (instanceStatus === '3' || instanceStatus === '4') {
+      this.listSteps.pop();
+    } else if (instanceStatus === '5' || instanceStatus === '6') {
+      this.listSteps.splice(this.listSteps.length - 2, 1);
+    } else {
+      this.deleteListReason(this.listSteps);
     }
-    else if (instanceStatus === '5' ||  instanceStatus === '6' ) {
-      this.listStepUpdate.splice(this.listStepUpdate.length -2 , 1);
-    }
-    else {
-      this.deleteListReason(this.listStepUpdate);
-    }
-   }
+  }
 
-   getColorStepName(status: string){
-    if(status === '1'){
+
+  getColorStepName(status: string) {
+    if (status === '1') {
       return 'step current';
-    }
-    else if(status === '3' || status === '4' || status === '5' ||  status === '' ||status === null) {
+    } else if (
+      status === '3' ||
+      status === '4' ||
+      status === '5' ||
+      status === '' ||
+      status === null
+    ) {
       return 'step old';
     }
     return 'step';
-   // item?.stepStatus === '1' ? 'step current':  item?.stepStatus === '3' || item?.stepStatus === '4' || item?.stepStatus === '5' ||  item?.stepStatus === '' ||item?.stepStatus === null ? 'step old': 'step' "
-   }
-   getReasonByStepId(stepId:string){
-    var idx =  this.listStepNew.findIndex(x=>x.stepID === stepId) ;
-    return  this.listStepNew[idx];
-   }
-   getStepNameIsComlepte(){
-    var idx =  this.listSteps.findIndex(x=> x.stepStatus === '4' || x.stepStatus === '5');
-    if(idx > -1) {
+    
+  }
+  getReasonByStepId(stepId: string) {
+    var idx = this.listStepNew.findIndex((x) => x.stepID === stepId);
+    return this.listStepNew[idx];
+  }
+  getStepNameIsComlepte() {
+    var idx = this.listSteps.findIndex(
+      (x) => x.stepStatus === '4' || x.stepStatus === '5'
+    );
+    if (idx > -1) {
       var reasonStep = this.listSteps[idx];
-      var idxProccess =  this.listCbxProccess.findIndex(x=> x.recID === this.instance?.newProcessID);
+      var idxProccess = this.listCbxProccess.findIndex(
+        (x) => x.recID === this.instance?.newProcessID
+      );
       var proccesMove = this.listCbxProccess[idxProccess];
-      this.proccesNameMove = proccesMove?.processName ?? ''
-
+      this.proccesNameMove = proccesMove?.processName ?? '';
     }
-    return  reasonStep?.stepName?? '';
-   }
+    return reasonStep?.stepName ?? '';
+  }
   //  getProccessNameIsMove(index:any){
 
   //   return  this.listSteps[idx]?.stepName ?? '';
   //  }
-
 }
