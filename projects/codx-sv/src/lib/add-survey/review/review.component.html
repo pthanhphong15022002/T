@@ -5,7 +5,7 @@
         <div *ngIf="itemSession">
           <div class="card-survey" [id]="'card-survey-' + itemSession.seqNo">
             <div
-              class="col-lg-8 control-section inplace-editor-control-section form-lafyout"
+              class="control-section inplace-editor-control-section form-lafyout"
               id="inplace-editor-control"
             >
               <div
@@ -274,7 +274,7 @@
             <button
               *ngIf="itemSession.seqNo == questions.length - 1"
               type="button"
-              class="btn btn-primary"
+              class="btn btn-submit text-white"
               (click)="onSubmit()"
             >
               <codx-label fiedName="Sumbit" default="Gửi"></codx-label>
@@ -326,7 +326,7 @@
       "
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     ></codx-input>
-    <div class="d-flex" *ngIf="itemAnswer.other">
+    <div class="d-flex align-items-center " *ngIf="itemAnswer.other">
       <codx-input
         type="radio"
         labelPosition="After"
@@ -339,15 +339,17 @@
         (valueChange)="
           valueChange($event, itemSession, itemQuestion, itemAnswer)
         "
+        [style.width]="'125px'"
       ></codx-input>
       <codx-input
         type="text"
-        class="border-0"
+        class="border-0 h-20px"
         [crrValue]="itemAnswer.answer"
         field="O"
         (valueChange)="
           valueChange($event, itemSession, itemQuestion, itemAnswer)
         "
+        [ngClass]="'w-100'"
       >
       </codx-input>
     </div>
@@ -664,7 +666,7 @@
     <div class="box" *ngFor="let itemAnswer of itemQuestion.answers">
       <div class="has-action-menu">
         <div class="d-flex">
-          <div class="d-flex size-input">
+          <div class="d-flex size-input py-2">
             <ng-container
               *ngTemplateOutlet="
                 tempIconAnswers;
@@ -996,10 +998,9 @@
       <span *ngIf="!itemSession.comment">{{ "Mô tả biểu mẫu" }}</span>
     </div>
   </div>
-  <hr />
-  <div class="d-flex mt-3 form-group">
+  <div class="d-flex align-items-center mt-3 form-group border-top py-3">
     <span class="ms-6 icon-eye-off icon-24"></span>
-    <span class="ms-3 fw-700">{{ user.email }}</span>
+    <span class="ms-3">{{ user.email }}</span>
   </div>
 </ng-template>
 

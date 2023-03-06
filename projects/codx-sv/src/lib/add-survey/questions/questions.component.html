@@ -371,7 +371,7 @@
       <ng-container *ngIf="itemQuestion.answerType">
         <div class="d-flex">
           <span class="icon-22 me-2" [ngClass]="setAnswerType(itemQuestion.answerType,'icon')"></span>
-          <codx-label fiedName="" [default]="setAnswerType(itemQuestion.answerType,'name')"></codx-label>
+          <span>{{setAnswerType(itemQuestion.answerType,'name')}}</span>
         </div>
       </ng-container>
     </button>

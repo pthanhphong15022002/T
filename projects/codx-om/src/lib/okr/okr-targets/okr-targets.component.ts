@@ -55,6 +55,7 @@ export class OkrTargetsComponent implements OnInit {
   @Input() krFuncID: any;
   @Input() obFuncID: any;
   @Input() funcID: any;
+  @Input() groupModel: any;
   @Input() isHiddenChart: boolean;
   isCollapsed=false;
   dtStatus = [];
@@ -294,7 +295,10 @@ export class OkrTargetsComponent implements OnInit {
         this.deleteOB(ob);
         break;
       }
-
+      case OMCONST.MFUNCID.OBEditKRWeight: {
+        this.editOKRWeight(ob,e?.text);
+        break;
+      }
       //phân bổ OB
       case OMCONST.MFUNCID.OBDistribute: {
         this.distributeOKR(ob, e?.text);
@@ -327,16 +331,18 @@ export class OkrTargetsComponent implements OnInit {
         break;
       }
       
+      case OMCONST.MFUNCID.SKRDetail:
       case OMCONST.MFUNCID.KRDetail: {
         this.showKR(kr,e?.text);
         break;
       }
-      case OMCONST.MFUNCID.KRCheckIn: {
+      case OMCONST.MFUNCID.KRCheckIn:
+      case OMCONST.MFUNCID.SKRCheckIn: {
         this.checkIn(kr,e.text);
         break;
       }
       case OMCONST.MFUNCID.KREditSKRWeight: {
-        this.editKRWeight(kr,e?.text);
+        this.editSKRWeight(kr,e?.text);
         break;
       }
       //phân bổ KR
@@ -441,7 +447,7 @@ export class OkrTargetsComponent implements OnInit {
   //-----------------------End-------------------------------//
 
   //_______________________Popup_____________________________//
-  editKRWeight(obRecID: any, popupTitle:any) {
+  editOKRWeight(ob: any, popupTitle:any) {
     //popupTitle='Thay đổi trọng số cho KRs';
     let subTitle='Tính kết quả thực hiện cho mục tiêu';
     let dModel = new DialogModel();
@@ -452,12 +458,12 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [obRecID, OMCONST.VLL.OKRType.KResult, popupTitle,subTitle],
+      [ob.recID, OMCONST.VLL.OKRType.KResult, popupTitle,subTitle],
       '',
       dModel
     );
   }
-  editSKRWeight(krRecID: any, popupTitle:any) {
+  editSKRWeight(kr: any, popupTitle:any) {
     //popupTitle='Thay đổi trọng số cho KRs';
     let subTitle='Tính kết quả thực hiện cho mục tiêu';
     let dModel = new DialogModel();
@@ -468,7 +474,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [krRecID, OMCONST.VLL.OKRType.SKResult, popupTitle,subTitle],
+      [kr.recID, OMCONST.VLL.OKRType.SKResult, popupTitle,subTitle],
       '',
       dModel
     );
@@ -481,7 +487,7 @@ export class OkrTargetsComponent implements OnInit {
       800,
       500,
       'OMT01',
-      [kr,popupTitle]
+      [kr,popupTitle,{...this.groupModel?.checkInsModel}]
     );
     dialogCheckIn.closed.subscribe((res) => {
       if (res && res.event) {
@@ -643,11 +649,8 @@ export class OkrTargetsComponent implements OnInit {
       else{
         for(let oldOB of this.dataOKR){
           if(oldOB.recID== ob.recID){
-           let tempChild=oldOB.child;
-                for(const field in oldOB){
-                  oldOB[field]=ob[field];
-                }
-                oldOB.child=tempChild;
+           
+            this.editRender(oldOB,ob);
               
             
           }
@@ -675,13 +678,8 @@ export class OkrTargetsComponent implements OnInit {
             }
             ob.child.forEach(oldKR => {
               if(oldKR.recID==kr.recID){
-
-                let tempChild=oldKR.child;
-                for(const field in oldKR){
-                  oldKR[field]=kr[field];
-                }
+                this.editRender(oldKR,kr);
                 
-                oldKR.child=tempChild;
               }
             });
                     
@@ -689,6 +687,14 @@ export class OkrTargetsComponent implements OnInit {
         }
       }     
     }    
+  }
+  editRender(oldOKR:any, newOKR:any){
+    oldOKR.okrName=newOKR?.okrName;
+    oldOKR.target=newOKR?.target;
+    oldOKR.owner=newOKR?.owner;
+    oldOKR.umid=newOKR?.umid;
+    oldOKR.confidence=newOKR?.confidence;
+    oldOKR.category=newOKR?.category;
   }
   renderSKR(skr:any,isAdd:boolean){
     if (skr!=null) {
@@ -718,9 +724,8 @@ export class OkrTargetsComponent implements OnInit {
                   for(let oldSKR of kr.child){
                     if(oldSKR.recID==skr.recID)
                     {
-                      for(const field in oldSKR){
-                        oldSKR[field]=skr[field];
-                      }
+                      
+            this.editRender(oldSKR,skr);
                     }
                   }
                 }

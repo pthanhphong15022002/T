@@ -65,6 +65,7 @@ export class PopupAddOKRPlanComponent
   owner: any;
   funcType: any;
   isAdd = false;
+  curOrgID: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -77,7 +78,7 @@ export class PopupAddOKRPlanComponent
     this.funcID = dialogData.data[0];
     this.okrPlan = dialogData.data[1];
     this.headerText = dialogData.data[3];
-    this.curOrg = dialogData.data[4];
+    this.curOrgID = dialogData.data[4];
     this.listFM = dialogData.data[5];
     this.okrFG = dialogData.data[6];
     this.funcType = dialogData.data[7];
@@ -149,8 +150,10 @@ export class PopupAddOKRPlanComponent
   //---------------------------------------------------------------------------------//
   //Lấy thông tin owner
   getData() {
-    this.getOwnerInfo();
-    if (!this.isAdd) {
+    if(this.isAdd){
+      this.getOwnerInfo();
+    }
+    else {
       this.afterOpenEditForm();
     }
   }
@@ -167,9 +170,9 @@ export class PopupAddOKRPlanComponent
   }
   getOwnerInfo() {
     this.codxOmService
-      .getManagerByOrgUnitID(this.okrPlan.orgUnitID)
+      .getManagerByOrgUnitID(this.curOrgID)
       .subscribe((ownerInfo) => {
-        if (ownerInfo && this.isAdd) {
+        if (ownerInfo ) {
           this.owner = ownerInfo;
           this.okrPlan.owner = this.owner?.userID;
           this.okrPlan.employeeID = this.owner?.employeeID;
@@ -177,6 +180,8 @@ export class PopupAddOKRPlanComponent
           this.okrPlan.departmentID = this.owner?.departmentID;
           this.okrPlan.companyID = this.owner?.companyID;
           this.okrPlan.positionID = this.owner?.positionID;
+          this.okrPlan.divisionID = this.owner?.divisionID;
+          this.okrPlan.buid = this.owner?.buid;
         }
       });
   }

@@ -239,6 +239,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   //lấy answerType
   setAnswerType(answerType:any , type:any)
   {
+    debugger
     return this.listMoreFunc.filter(x=>x.id == answerType)[0][type];
   }
 
@@ -1543,7 +1544,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         data.answers = data.answers.filter(x=>!x.other);
         data.other = false;
       }
-
+      debugger
       //this.questions[seqNoSession].children[itemQuestion.seqNo] = data;
       this.change.detectChanges();
       this.SVServices.signalSave.next('saving');

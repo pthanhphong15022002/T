@@ -47,7 +47,7 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
   dataKR: any;
   formModel= new FormModel();
   grView: any;
-    
+  checkIns: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -60,7 +60,7 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     this.headerText= dialogData?.data[1];
     this.dialogRef = dialogRef;    
     this.oldDataKR = dialogData.data[0];    
-    //this.formModel = dialogData.data[1];    
+    this.checkIns = dialogData.data[2];    
   }
 //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
@@ -70,13 +70,19 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
   }
 
   onInit(): void {
-    this.getCacheData()
     this.formModel.entityName = 'OM_OKRs.CheckIns';
     this.formModel.entityPer = 'OM_OKRs.CheckIns';
     this.formModel.gridViewName = 'grvOKRs.CheckIns';
     this.formModel.formName = 'OKRs.CheckIns';
-    this.getCurrentKR();
-    
+    this.fCheckinKR=this.codxService.buildFormGroup(this.formModel.formName,this.formModel.gridViewName);
+    this.fCheckinKR.patchValue(this.checkIns);
+    this.getCacheData();
+    // this.codxOmService.getCheckInModel().subscribe(check=>{
+    //   if(check){
+    //     this.checkInData=check;
+    //   }
+    // })
+
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
@@ -85,6 +91,7 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     this.cache.gridViewSetup(this.formModel.formName,this.formModel.gridViewName).subscribe(grv=>{
       if(grv){
         this.grView=grv;
+        this.getCurrentKR();
       }
     });
   }
@@ -95,7 +102,7 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
   getCurrentKR() {
     this.codxOmService.getOKRByID(this.oldDataKR.recID).subscribe((krModel) => {
       if (krModel) {
-        this.dataKR= krModel;
+        this.dataKR= krModel;        
         this.isAfterRender=true;
       }
     });
@@ -128,10 +135,10 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     //   this.codxOmService.notifyInvalid(this.fCheckinKR, this.formModel);
     //   return;
     // }
-    this.codxOmService.checkInKR(this.dataKR.recID, this.dataKR).subscribe((res:any)=>{
+    this.codxOmService.checkInKR(this.dataKR.recID, this.checkIns).subscribe((res:any)=>{
       if(res){
         this.notificationsService.notifyCode('SYS034');
-        res.checkIns=Array.from(res.checkIns).reverse();
+        //res.checkIns=Array.from(res.checkIns).reverse();
         this.dialogRef && this.dialogRef.close(res)
       }
     })
