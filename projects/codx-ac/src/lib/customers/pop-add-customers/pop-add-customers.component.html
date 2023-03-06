@@ -235,7 +235,7 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="DelTermID"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="form.data.delTermID"
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.delTermID"
             field="delTermID" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -243,7 +243,7 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="DelModeID"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="form.data.delModeID"
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.delModeID"
             field="delModeID" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -253,7 +253,7 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="WarehouseID"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="form.data.warehouseID"
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.warehouseID"
             field="warehouseID" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -261,7 +261,7 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="DelRouteID"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="form.data.delRouteID"
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.delRouteID"
             field="delRouteID" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -271,7 +271,7 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="Distance"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="form.data.distance" [min]="0"
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.distance" [min]="0"
             [formModel]="form.formModel" field="distance" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -279,7 +279,7 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="Leadtime"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="form.data.leadtime" [min]="0"
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.leadtime" [min]="0"
             [formModel]="form.formModel" field="leadtime" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -289,7 +289,7 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="WorkingDays"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="form.data.workingDays"
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.workingDays"
             field="workingDays" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -298,7 +298,7 @@
     <div class="d-flex align-items-center mb-2">
       <div class="me-2">
         <codx-input type="switch" field="workingHour" (valueChange)="valueChange($event)"
-          [checked]="form.data.workingHour">
+          [checked]="customers.workingHour">
         </codx-input>
       </div>
       <codx-label [formModel]="form.formModel" fiedName="WorkingHour"></codx-label>
@@ -306,17 +306,16 @@
     <div class="d-flex align-items-center mb-2">
       <div class="me-2">
         <codx-input type="switch" field="calendarControl" (valueChange)="valueChange($event)"
-          [checked]="form.data.calendarControl">
+          [checked]="customers.calendarControl">
         </codx-input>
       </div>
-      <codx-label [formModel]="form.formModel" fiedName="calendarControl"
-        default="Cảnh báo khi không đủ thời gian giao hàng"></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="calendarControl"></codx-label>
     </div>
   </ng-container>
 </ng-template>
 <ng-template #tabLocation>
   <div class="d-flex align-items-center justify-content-between mb-2">
-    <codx-label class="mt-2 text-primary fw-bold fs-6 mb-2" [formModel]="form.formModel"
+    <codx-label class="text-primary fw-bold fs-5" [formModel]="form.formModel"
       default="Danh sách địa chỉ"></codx-label>
     <span type="button" class="btn btn-icon btn-primary" (click)="openPopupAddress()">
       <i class="icon-add_location_alt"></i>
