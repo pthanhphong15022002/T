@@ -20,6 +20,7 @@
   [dialog]="dialog"
   [data]="ediseasesObj"
   *ngIf="isAfterRender"
+  class="tabhor-popup"
 >
 
 <ng-template #tmpContent>
@@ -38,7 +39,7 @@
           ></codx-label>
         </ng-template>
         <ng-template #content>
-          <div class="fs-6 fw-bold text-uppercase text-primary form-group mt-8">
+          <div class="fs-6 fw-bold text-uppercase text-primary form-group mt-6">
             <codx-label
               name="lblEDiseaseInfo"
               [formModel]="formModel"
@@ -190,8 +191,8 @@
           ></codx-label>
         </ng-template>
         <ng-template #content>
-          <div class="d-flex flex-stack fs-6 py-2 mt-4 align-items-center">
-            <div class="fs-6 fw-bold text-uppercase text-primary form-group mt-4">
+          <div class="d-flex flex-stack form-group mt-6">
+            <div class="fs-6 fw-bold text-uppercase text-primary">
               <codx-label
               fiedName="IsInspect"
               [formModel]="formModel"
@@ -203,7 +204,7 @@
               [Group]="formGroup"
             ></codx-input>
           </div>
-          <div class="form-group rpw">
+          <div class="form-group row">
             <codx-label
               fiedName="InspectionPlace"
               [formModel]="formModel"
