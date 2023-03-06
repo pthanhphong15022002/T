@@ -164,6 +164,13 @@ export class InstancesComponent
       processID: this.process?.recID ? this.process?.recID : '',
     };
 
+    // if(this.process.steps != null && this.process.steps.length > 0){
+    //   this.listSteps = this.process.steps;
+    //   this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
+    //   this.deleteListReason(this.listStepsCbx);
+    //   this.getSumDurationDayOfSteps(this.listStepsCbx);
+    // }
+
     this.codxDpService
       .createListInstancesStepsByProcess(this.process?.recID)
       .subscribe((dt) => {
