@@ -241,7 +241,7 @@ export class InstancesComponent
                   .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
                   .subscribe((res) => {
                     if (res) {
-                      this.instanceNo = res;
+                      this.view.dataService.dataSelected.instanceNo = res;
                       this.openPopUpAdd(applyFor, formMD, option, 'add');
                     }
                   });
@@ -252,7 +252,7 @@ export class InstancesComponent
                   )
                   .subscribe((isNo) => {
                     if (isNo) {
-                      this.instanceNo = isNo;
+                      this.view.dataService.dataSelected.instanceNo = isNo;
                       this.openPopUpAdd(applyFor, formMD, option, 'add');
                     }
                   });
@@ -291,6 +291,7 @@ export class InstancesComponent
                   .subscribe((res) => {
                     if (res) {
                       this.view.dataService.dataSelected = data;
+                      this.view.dataService.dataSelected.instanceNo = res;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -302,6 +303,7 @@ export class InstancesComponent
                   .subscribe((isNo) => {
                     if (isNo) {
                       this.view.dataService.dataSelected = data;
+                      this.view.dataService.dataSelected.instanceNo = isNo;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -337,6 +339,10 @@ export class InstancesComponent
         }
         this.detectorRef.detectChanges();
       }
+      // var ojb = {
+      //   totalInstance: 100
+      // };
+      // this.dialog.close(ojb);
     });
   }
 
@@ -664,10 +670,6 @@ export class InstancesComponent
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.detailViewInstance.instance = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
-                // debugger;
-                // this.detailViewInstance.GetStepsByInstanceIDAsync(
-                //   this.dataSelected.recID
-                // );
                 this.view.dataService.update(data).subscribe();
                 this.detectorRef.detectChanges();
               }

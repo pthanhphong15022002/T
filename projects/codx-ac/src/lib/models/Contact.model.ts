@@ -10,7 +10,7 @@ export class Contact {
   branchID: any;
   buid: any;
   city: any;
-  contactID: any;
+  contactID: any = Math.floor(Math.random() * 100000).toString();
   contactName: any = '';
   contactType: any = '';
   countryID: any;

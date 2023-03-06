@@ -10,9 +10,9 @@ export interface IFAPostingAccount {
   diM1: string;
   diM2: string;
   diM3: string;
-  dIM1Control: string;
-  dIM2Control: string;
-  dIM3Control: string;
+  diM1Control: string;
+  diM2Control: string;
+  diM3Control: string;
   buid: string;
   sorting: string;
   note: string;

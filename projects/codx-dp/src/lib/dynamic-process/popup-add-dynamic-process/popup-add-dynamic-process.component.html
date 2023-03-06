@@ -671,8 +671,9 @@
                 ></i>
               </div>
             </div>
-            <div *ngIf="instanceNoEx" class="col-6">
-              {{ instanceNoEx }}
+            <div *ngIf="instanceNoEx" class="col-6 fs-6 mt-2 mb-2">
+              <codx-label class="" name="lblPreview" [formModel]="dialog.formModel" default="Xem trước: "></codx-label> 
+              <span class="text-gray-600">{{ instanceNoEx }}</span>
             </div>
           </div>
         </div>
