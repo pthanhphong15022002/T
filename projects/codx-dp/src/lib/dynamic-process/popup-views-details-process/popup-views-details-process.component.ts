@@ -22,9 +22,9 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
   isCreate = false;
   process = new DP_Processes();
   dialogGuide: DialogRef;
-  headerText ='Hướng dẫn các bước thực hiện' ;
-  openPop =false ;
-  stepNames = []
+  headerText = 'Hướng dẫn các bước thực hiện';
+  // openPop =false ;
+  stepNames = [];
   @ViewChild('popupGuide') popupGuide;
   tabControl: TabModel[] = [
     { name: 'Mission', textDefault: 'Nhiệm vụ', isActive: true },
@@ -63,24 +63,18 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     p.close();
     let option = new DialogModel();
     option.zIndex = 1001;
-    if(this.openPop)return
-    this.openPop = true ;
-    this.dpService.getGuide(this.process.recID).subscribe(res=>{
-      this.openPop = false ;
-      if(res && res.length >0){
-        this.stepNames = res
-        this.dialogGuide = this.callFunc.openForm(
-          this.popupGuide,
-          '',
-          500,
-          150,
-          '',
-          null,
-          '',
-          option
-        );
-      }     
-    })
- 
+    if (this.process?.steps?.length > 0) {
+      this.stepNames = this.process.steps.map((x) => x.stepName);
+      this.dialogGuide = this.callFunc.openForm(
+        this.popupGuide,
+        '',
+        500,
+        150,
+        '',
+        null,
+        '',
+        option
+      );
+    }
   }
 }

@@ -217,7 +217,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   listValueCopy: any;
   adAutoNumber: any;
   vllDateFormat: any;
-
+  lstGroup = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -336,6 +336,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     
   }
 
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+    this.GetListProcessGroups();
+  }
+
+  GetListProcessGroups() {
+    this.dpService.getListProcessGroups().subscribe((res) => {
+      if (res && res.length > 0) {
+        this.lstGroup = res;
+      }
+    });
+  }
+
   //#region setup formModels and formGroup
   async initForm() {
     this.dpService
@@ -350,6 +364,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
   //#region onSave
   async onSave() {
+    var checkGroup = this.lstGroup.some(
+      (x) => x.groupID == this.process.groupID
+    );
+    if (!checkGroup) {
+      this.notiService.notifyCode('DP015');
+      return;
+    }
     var check = this.process.permissions.some((x) => x.roleType === 'P');
     if (!check) {
       this.notiService.notifyCode('DP014');
@@ -1428,36 +1449,36 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //#Step - taskGroup - task -- nvthuan
   getStepByProcessID() {
-      let data = this.process?.steps;
-      if (data) {
-        this.editTest(data);
-        data.forEach((step) => {
-          if (!step['isSuccessStep'] && !step['isFailStep']) {
-            const taskGroupList = step?.tasks.reduce((group, product) => {
-              const { taskGroupID } = product;
-              group[taskGroupID] = group[taskGroupID] ?? [];
-              group[taskGroupID].push(product);
-              return group;
-            }, {});
-            const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
-              return {
-                ...taskGroup,
-                task: taskGroupList[taskGroup['recID']] ?? [],
-              };
-            });
-            step['taskGroups'] = taskGroupConvert;
+    let data = this.process?.steps;
+    if (data) {
+      this.editTest(data);
+      data.forEach((step) => {
+        if (!step['isSuccessStep'] && !step['isFailStep']) {
+          const taskGroupList = step?.tasks.reduce((group, product) => {
+            const { taskGroupID } = product;
+            group[taskGroupID] = group[taskGroupID] ?? [];
+            group[taskGroupID].push(product);
+            return group;
+          }, {});
+          const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
+            return {
+              ...taskGroup,
+              task: taskGroupList[taskGroup['recID']] ?? [],
+            };
+          });
+          step['taskGroups'] = taskGroupConvert;
 
-            let taskGroup = new DP_Steps_TaskGroups();
-            taskGroup['task'] = taskGroupList['null'] || [];
-            taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
-            step['taskGroups'].push(taskGroup);
+          let taskGroup = new DP_Steps_TaskGroups();
+          taskGroup['task'] = taskGroupList['null'] || [];
+          taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+          step['taskGroups'].push(taskGroup);
 
-            this.stepList.push(step);
-          }
-        });
-        this.stepList.sort((a, b) => a['stepNo'] - b['stepNo']);
-        this.viewStepSelect(this.stepList[0]); // gán listStep[0] cho step
-      }
+          this.stepList.push(step);
+        }
+      });
+      this.stepList.sort((a, b) => a['stepNo'] - b['stepNo']);
+      this.viewStepSelect(this.stepList[0]); // gán listStep[0] cho step
+    }
   }
 
   openPopupStep(type, step?) {
@@ -2282,12 +2303,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   getIconTask(task) {
-    let color = this.listTypeTask?.find(x => x.value === task.taskType);
+    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
     return color?.icon;
   }
-  getColor(task){
-    let color = this.listTypeTask?.find(x => x.value === task.taskType);    
-    return {'background-color': color?.color}
+  getColor(task) {
+    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    return { 'background-color': color?.color };
   }
   //#End stage -- nvthuan
 
