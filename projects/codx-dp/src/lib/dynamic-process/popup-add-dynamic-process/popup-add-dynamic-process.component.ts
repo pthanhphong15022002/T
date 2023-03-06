@@ -2315,7 +2315,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return color?.icon;
   }
   getColor(task){
-    let color = this.listTypeTask?.find(x => x.value === task.taskType);    
+    let color = this.listTypeTask?.find(x => x.value === task.taskType);
     return {'background-color': color?.color}
   }
   //#End stage -- nvthuan
