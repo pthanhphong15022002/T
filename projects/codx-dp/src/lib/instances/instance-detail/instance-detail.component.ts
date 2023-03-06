@@ -103,19 +103,10 @@ export class InstanceDetailComponent implements OnInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
+   
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
-    // if (changes['recID']) {
-    //   if (changes['recID'].currentValue == this.id) return;
-    //   this.id = changes['recID'].currentValue;
-    //   this.getInstanceByRecID(this.id);
-    //   this.getStepsByInstanceID(this.id);
-    // }
     if (changes['dataSelect']) {
       this.id = changes['dataSelect'].currentValue.recID;
       this.dataSelect = changes['dataSelect'].currentValue;
