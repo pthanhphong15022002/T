@@ -20,10 +20,11 @@ export class AddWarehouseComponent extends UIComponent implements OnInit {
     super(injector);
     this.dialog = dialog;
     this.dataUpdate = JSON.parse(JSON.stringify(dt.data?.data));
+    this.dataUpdate["oldOnhand"] = this.dataUpdate.onhand;
     this.formModel = this.dialog.formModel;
   }
 
-  onInit(): void {}
+  onInit(): void { }
 
   changeHand(e) {
     if (e) this.dataUpdate[e.field] = e.data;

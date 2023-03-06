@@ -37,7 +37,7 @@ export class UserComponent implements OnInit {
     datas[0] = {
       objectID: event.id,
       objectName: event.text || '',
-      objectType: event.objectType || '',
+      objectType: event.objectType || 'U',
       roleType: event.objectName || '',
     };
     // listUser.forEach((element) => {
