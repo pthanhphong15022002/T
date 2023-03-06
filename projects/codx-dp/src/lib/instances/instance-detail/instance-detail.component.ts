@@ -84,6 +84,7 @@ export class InstanceDetailComponent implements OnInit {
   instanceId:string;
   proccesNameMove: string;
   onwer:string;
+  lstInv = '';
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
 
@@ -122,7 +123,7 @@ export class InstanceDetailComponent implements OnInit {
       this.id = changes['dataSelect'].currentValue.recID;
       this.dataSelect = changes['dataSelect'].currentValue;
       // this.currentStep = this.dataSelect.currentStep; // curenSteps da xoa
-      // this.currentStep = 
+      // this.currentStep =
       this.instanceStatus = this.dataSelect.status;
       this.instance = this.dataSelect;
      this.GetStepsByInstanceIDAsync(this.id);
@@ -144,6 +145,7 @@ export class InstanceDetailComponent implements OnInit {
           var stepNo = i;
           var data = this.listSteps[i];
           if (data.stepID == this.dataSelect.stepID) {
+            this.lstInv = this.getInvolved(data.roles);
             this.stepName = data.stepName;
             this.currentStep = stepNo;
             this.currentNameStep = this.currentStep;
@@ -166,6 +168,19 @@ export class InstanceDetailComponent implements OnInit {
        }
     //  this.getListStepsStatus();
     });
+  }
+
+  getInvolved(roles){
+    var id = '';
+    if(roles != null && roles.length > 0){
+      var lstRole = roles.filter(x=>x.roleType == 'R');
+      lstRole.forEach(element => {
+        if(!id.split(';').includes(element.objectID)){
+          id = id + ';' + element.objectID;
+        }
+      });
+    }
+    return id;
   }
 
   getStepsByInstanceID(list) {
@@ -225,6 +240,7 @@ export class InstanceDetailComponent implements OnInit {
     // this.currentNameStep = indexNo;
     var indx = this.listSteps.findIndex(x=>x.stepID == data);
     this.tmpTeps =  this.listSteps[indx];
+    this.lstInv = this.getInvolved(this.tmpTeps.roles);
     this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái
   }
 
