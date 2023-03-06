@@ -124,12 +124,14 @@ export class PopupAddInstanceComponent implements OnInit {
       this.lstParticipants = dt?.data[7];
       if (this.lstParticipants != null && this.lstParticipants.length > 0)
         var check = this.lstParticipants.some(
-          (x) => x.objectType === this.user.userID
+          (x) => x.objectID === this.user.userID
         );
       if (!check) {
         let tmp = {};
-        tmp['userID'] = this.user.userID;
-        tmp['userName'] = this.user.userName;
+        tmp['objectID'] = this.user.userID;
+        tmp['objectName'] = this.user.userName;
+        tmp['objectType'] = 'U';
+
         this.lstParticipants.push(tmp);
       }
       this.owner = this.user.userID;

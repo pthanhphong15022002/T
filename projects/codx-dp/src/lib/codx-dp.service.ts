@@ -438,4 +438,12 @@ export class CodxDpService {
       [autoNoCode]
     );
   }
+
+  getListProcessGroups() {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessGroupsBusiness',
+      'GetAsync',
+    );
+  }
 }
