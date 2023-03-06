@@ -48,7 +48,8 @@ export class CashTransfersComponent
     ];
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      this.functionName = res.defaultName;
+      this.functionName =
+        res.defaultName.charAt(0).toLowerCase() + res.defaultName.slice(1);
       console.log(res);
     });
   }

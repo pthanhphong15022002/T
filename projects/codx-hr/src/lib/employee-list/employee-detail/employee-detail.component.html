@@ -47,7 +47,7 @@
                         <i class="icon-keyboard_arrow_down"></i>
                       </span>
                       <div ngbDropdownMenu class="" style="min-width: 350px">
-                        <div class="card card-flush">
+                        <div class="card card-flush" *ngIf="eInfoFormModel">
                           <div class="card-body py-3 px-4">
                             <div class="d-flex flex-column">
                               <div class="d-flex flex-wrap mb-2">
@@ -56,9 +56,7 @@
                                     class="icon-cake icon-16 text-gray-800 me-1"
                                   ></span>
                                   <span class="text-dark fw-bold">
-                                    <span>{{
-                                      infoPersonal?.birthday | fmDT
-                                    }}</span>
+                                    <span>{{ infoPersonal?.birthday | formatvalue : eInfoFormModel : "birthday" | async }}</span>
                                   </span>
                                 </div>
                                 <div class="d-flex align-items-center">
@@ -67,7 +65,7 @@
                                       [showText]="true"
                                       [showBgColor]="true"
                                       [showIcon]="true"
-                                      [formModel]="view.formModel"
+                                      [formModel]="eInfoFormModel"
                                       [field]="'Gender'"
                                       [value]="infoPersonal?.gender"
                                       class="badge badge-light badge-square badge-md fs-7"
@@ -79,18 +77,8 @@
                                   <span
                                     class="icon-i-info-circle-fill fs-9 icon-6 me-2 text-gray-400"
                                   ></span>
-                                  <span #maritalStatus class="fw-bold">
-                                    {{ infoPersonal?.maritalStatus }}
-                                    <!-- <codx-vll
-                        [showText]="true"
-                        [showBgColor]="false"
-                        [showIcon]="false"
-                        [formModel]="view.formModel"
-                        [field]="'MaritalStatus'"
-                        [value]="data?.maritalStatus"
-                        class="text-dark"
-                      >
-                      </codx-vll> -->
+                                  <span class="fw-bold">
+                                    {{ infoPersonal?.maritalStatus | formatvalue : eInfoFormModel : "maritalStatus" | async }}
                                   </span>
                                 </div>
                               </div>
@@ -99,7 +87,7 @@
                                   class="icon-portrait icon-16 text-gray-800 me-1"
                                 ></span>
                                 <span class="text-dark">
-                                  <span>{{ infoPersonal?.personalEmail }}</span>
+                                  <span>{{ infoPersonal?.personalEmail | formatvalue : eInfoFormModel : "personalEmail" | async }}</span>
                                 </span>
                               </div>
 
@@ -107,10 +95,10 @@
                                 <codx-label
                                   class="text-gray-600"
                                   fiedName="PITNumber"
-                                  [formModel]="view.formModel"
+                                  [formModel]="eInfoFormModel"
                                 >
                                 </codx-label>
-                                <span>{{ infoPersonal?.pitNumber }}</span>
+                                <span>{{ infoPersonal?.pitNumber | formatvalue : eInfoFormModel : "pitNumber" | async }}</span>
                               </div>
 
                               <div
@@ -119,11 +107,11 @@
                                 <codx-label
                                   class="text-gray-600"
                                   fiedName="SIRegisterNo"
-                                  [formModel]="view.formModel"
+                                  [formModel]="eInfoFormModel"
                                 >
                                 </codx-label>
                                 <span class="text-dark">
-                                  {{ infoPersonal?.siRegisterNo }}</span
+                                  {{ infoPersonal?.siRegisterNo | formatvalue : eInfoFormModel : "siRegisterNo" | async }}</span
                                 >
                               </div>
                               <hr class="mt-0" />
@@ -133,14 +121,12 @@
                                 >
                                   <codx-label
                                     class="text-gray-600"
-                                    [formModel]="view.formModel"
+                                    [formModel]="eInfoFormModel"
                                     fiedName="joinedOn"
                                   >
                                   </codx-label>
                                   <span class="text-dark fw-bold">
-                                    <span>{{
-                                      infoPersonal?.joinedOn | fmDT
-                                    }}</span>
+                                    <span>{{ infoPersonal?.joinedOn | formatvalue : eInfoFormModel : "joinedOn" | async }}</span>
                                   </span>
                                 </div>
                                 <div
@@ -148,14 +134,12 @@
                                 >
                                   <codx-label
                                     class="text-gray-600"
-                                    [formModel]="view.formModel"
+                                    [formModel]="eInfoFormModel"
                                     fiedName="hiredOn"
                                   >
                                   </codx-label>
                                   <span class="text-dark">
-                                    <span>{{
-                                      infoPersonal?.hiredOn | fmDT
-                                    }}</span>
+                                    <span>{{ infoPersonal?.hiredOn | formatvalue : eInfoFormModel : "hiredOn" | async }}</span>
                                   </span>
                                 </div>
                                 <div
@@ -163,7 +147,7 @@
                                 >
                                   <codx-label
                                     class="text-gray-600"
-                                    [formModel]="view.formModel"
+                                    [formModel]="eInfoFormModel"
                                     fiedName="EmployeeTypeID"
                                   >
                                   </codx-label>
@@ -178,7 +162,7 @@
                                 >
                                   <codx-label
                                     class="text-gray-600"
-                                    [formModel]="view.formModel"
+                                    [formModel]="eInfoFormModel"
                                     fiedName="userID"
                                   >
                                   </codx-label>
@@ -199,7 +183,7 @@
                                 >
                                   <codx-label
                                     class="text-gray-600"
-                                    [formModel]="view.formModel"
+                                    [formModel]="eInfoFormModel"
                                     fiedName="lineManager"
                                   >
                                   </codx-label>
@@ -213,7 +197,7 @@
                                 >
                                   <codx-label
                                     class="text-gray-600"
-                                    [formModel]="view.formModel"
+                                    [formModel]="eInfoFormModel"
                                     fiedName="timeCardNo"
                                   >
                                   </codx-label>
@@ -227,7 +211,7 @@
                                 >
                                   <codx-label
                                     class="text-gray-600"
-                                    [formModel]="view.formModel"
+                                    [formModel]="eInfoFormModel"
                                     fiedName="shiftCalendarID"
                                   >
                                   </codx-label>
@@ -242,19 +226,19 @@
                                 >
                                   <codx-label
                                     class="text-gray-600"
-                                    [formModel]="view.formModel"
-                                    fiedName="aLObjectID"
+                                    [formModel]="eInfoFormModel"
+                                    fiedName="ALObjectID"
                                   >
                                   </codx-label>
 
                                   <span class="text-dark fw-bold">
-                                    <span>{{ infoPersonal?.aLObjectID }}</span>
+                                    <span>{{ infoPersonal?.alObjectID | formatvalue : eInfoFormModel : "alObjectID" | async }}</span>
                                   </span>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                   <codx-label
                                     class="text-gray-600"
-                                    [formModel]="view.formModel"
+                                    [formModel]="eInfoFormModel"
                                     fiedName="payrollGroupID"
                                   >
                                   </codx-label>
@@ -304,7 +288,7 @@
                 <codx-vll
                   [field]="'Status'"
                   [value]="infoPersonal?.status"
-                  [formModel]="view.formModel"
+                  [formModel]="eInfoFormModel"
                   [showText]="true"
                   [showBgColor]="true"
                 ></codx-vll>
@@ -379,7 +363,7 @@
                   <div class="fw-bold">
                     <codx-label
                       name="lblEmpInfo"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                       default="Thông tin cá nhân"
                     >
                     </codx-label>
@@ -400,7 +384,7 @@
                   <div class="fw-bold">
                     <codx-label
                       name="lblTaskInfo"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                       default="Thông tin công việc"
                     >
                     </codx-label>
@@ -421,7 +405,7 @@
                   <div class="fw-bold">
                     <codx-label
                       name="lblWelfare"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                       default="Phúc lợi"
                     >
                     </codx-label>
@@ -444,7 +428,7 @@
                   <div class="fw-bold">
                     <codx-label
                       name="lblHRProcess"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                       default="Quá trình nhân sự"
                     >
                     </codx-label>
@@ -465,7 +449,7 @@
                   <div class="fw-bold">
                     <codx-label
                       name="lblKnowledge"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                       default="Kiến thức"
                     >
                     </codx-label>
@@ -486,7 +470,7 @@
                   <div class="fw-bold">
                     <codx-label
                       name="lblRewardDiscipline"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                       default="Khen thưởng - Kỷ luật"
                     >
                     </codx-label>
@@ -507,7 +491,7 @@
                   <div class="fw-bold">
                     <codx-label
                       name="lblHealth"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                       default="Sức khỏe"
                     >
                     </codx-label>
@@ -528,7 +512,7 @@
                   <div class="fw-bold">
                     <codx-label
                       name="lblQuit"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                       default="Thôi việc"
                     >
                     </codx-label>
@@ -631,7 +615,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Hồ sơ lưu trữ"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -649,7 +633,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Lương cơ bản"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -665,7 +649,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Lương chức danh"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -679,7 +663,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Phụ cấp"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -690,7 +674,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Thu nhập khác"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -701,7 +685,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Khấu trừ khác"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -715,7 +699,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Tài sản cấp phát"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -728,7 +712,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Hợp đồng lao động"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -742,7 +726,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Bổ nhiệm - Điều chuyển"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -753,7 +737,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Nghỉ phép"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -764,7 +748,7 @@
               <codx-label
                 fiedName="lblBusinessTravel"
                 default="Công tác"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -778,7 +762,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Kinh nghiệm trước đây"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -794,7 +778,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Bằng cấp"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -810,7 +794,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Chứng chỉ"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -824,7 +808,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Kỹ năng"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -840,7 +824,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Đào tạo"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -856,7 +840,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Khen thưởng"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -872,7 +856,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Kỷ luật"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -888,7 +872,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Khám sức khỏe"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -905,7 +889,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Xóa khám sức khỏe"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -920,7 +904,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Tiêm vaccine"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -931,7 +915,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Bệnh nghề nghiệp"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -942,7 +926,7 @@
               <codx-label
                 fiedName="lbl"
                 default="Tai nạn lao động"
-                [formModel]="view.formModel"
+                [formModel]="eInfoFormModel"
               >
               </codx-label>
             </div>
@@ -999,14 +983,14 @@
     >
       <ng-container>
         <!-- Thông tin bản thân -->
-        <div class="user-profile overview d-block" [id]="eInfoFuncID">
-          <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="user-profile overview d-block" [id]="eInfoFuncID" >
+          <div class="rounded-2 p-5 bg-white mb-4" *ngIf="eInfoFormModel">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
                 <span class="icon-person_outline icon-20 me-2"></span>
                 <div class="fs-5 fw-bold text-uppercase mt-1">
                   <!-- <codx-label
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     name="lblPersonalInfo"
                     [default]="getFormHeader(eInfoFuncID)"
                   >
@@ -1023,7 +1007,7 @@
                 </a>
               </div>
             </div>
-            <div #DangDoan class="mt-6" *ngIf="eInfoFormModel">
+            <div #DangDoan class="mt-6">
               <div class="row mb-5">
                 <div class="col">
                   <div class="text-gray-600 me-2 pb-1">
@@ -1069,7 +1053,7 @@
                       [showText]="true"
                       [showBgColor]="false"
                       [showIcon]="false"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                       [field]="'MaritalStatus'"
                       [value]="data?.maritalStatus"
                       class="text-dark"
@@ -1105,12 +1089,13 @@
                   <div class="text-gray-600 mb-1">
                     <codx-label
                       fiedName="BirthPlace"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                     >
                     </codx-label>
                   </div>
                   <div class="text-dark fw-bold">
-                    {{ infoPersonal?.birthPlaceName }}
+                    {{ infoPersonal?.birthPlace | formatvalue : eInfoFormModel : "birthPlace"
+                    | async }}
                   </div>
                 </div>
                 <!-- Giới tính -->
@@ -1232,8 +1217,8 @@
                   </div>
                   <span class="fw-bold text-dark fs-6"
                     >{{
-                      infoPersonal?.issuedByName
-                        | formatvalue : eInfoFormModel : "issuedByName"
+                      infoPersonal?.issuedBy
+                        | formatvalue : eInfoFormModel : "issuedBy"
                         | async
                     }}
                   </span>
@@ -1507,7 +1492,7 @@
 
         <!-- Thông tin Đảng - Đoàn -->
         <div class="user-profile overview d-block" [id]="ePartyFuncID">
-          <div class="rounded-2 p-5 bg-white mb-4">
+          <div class="rounded-2 p-5 bg-white mb-4" *ngIf="eInfoFormModel">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
                 <span class="icon-folder_special icon-20 me-2"></span>
@@ -1530,7 +1515,7 @@
                 </a>
               </div>
             </div>
-            <div #DangDoan class="mt-6" *ngIf="eInfoFormModel">
+            <div #DangDoan class="mt-6">
               <div class="row mb-5">
                 <div class="col-4">
                   <div class="text-gray-600 pb-1">
@@ -1600,13 +1585,13 @@
           class="user-profile overview d-block user-family"
           [id]="eFamiliesFuncID"
         >
-          <div class="rounded-2 p-5 bg-white mb-1">
+          <div class="rounded-2 p-5 bg-white mb-1"  *ngIf="eFamilyFormModel">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
                 <span class="icon-family icon-20 me-2"></span>
                 <div class="fs-5 fw-bold text-uppercase mt-1">
                   <!-- <codx-label
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     name="lblLegalInfo"
                     [default]="getFormHeader(eFamiliesFuncID)"
                   >
@@ -1624,7 +1609,7 @@
               </div>
             </div>
 
-            <div #family class="mb-1" *ngIf="eFamilyFormModel">
+            <div #family class="mb-1">
               <div class="d-flex flex-wrap py-3">
                 <ng-container *ngFor="let item of lstFamily">
                   <div
@@ -1636,7 +1621,7 @@
                       [imageId]="item.recID"
                       [imageObjType]="'HR_EFamilies'"
                       [imageWidth]="40"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                       [title]="item?.relationName"
                       [dataItem]="item"
                       [desc]="
@@ -1673,7 +1658,7 @@
                       [imageId]="item.recID"
                       [imageObjType]="'HR_EFamilies'"
                       [imageWidth]="40"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                       [titleTmp]="titleTmp"
                       [dataItem]="item"
                       [typeMF]="'hover'"
@@ -2052,7 +2037,7 @@
               </div>
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                 <!-- <codx-label
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     name="lblLegalInfo"
                     default="getFormHeader('HRTEM0202')"
                   >
@@ -2109,7 +2094,7 @@
               <span class="icon-i-credit-card icon-20 me-2"></span>
               <div class="fs-5 fw-bold text-uppercase mt-1">
                 <!-- <codx-label
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     name="lblLegalInfo"
                     default="{{getFormHeader('HRTEM0202')}}"
                   >
@@ -2163,7 +2148,7 @@
               <span class="icon-receipt_long icon-20 me-2"></span>
               <div class="fs-5 fw-bold text-uppercase mt-1">
                 <!-- <codx-label
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     name="lblLegalInfo"
                     [default]="getFormHeader('HRTEM0204')"
                   >
@@ -2264,7 +2249,7 @@
                 </div>
                 <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                   <!-- <codx-label
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     name="lblEmployeeJobGeneralTitle"
                     [default]="getFormHeader(jobGeneralFuncID)"
                   >
@@ -2337,7 +2322,7 @@
                           [showText]="true"
                           [showBgColor]="false"
                           [showIcon]="false"
-                          [formModel]="view.formModel"
+                          [formModel]="eInfoFormModel"
                           [field]="'MaritalStatus'"
                           [value]="data?.maritalStatus"
                           class="text-dark"
@@ -2412,7 +2397,7 @@
                             [showText]="true"
                             [showBgColor]="false"
                             [showIcon]="false"
-                            [formModel]="view.formModel"
+                            [formModel]="eInfoFormModel"
                             [field]="'MaritalStatus'"
                             [value]="data?.maritalStatus"
                             class="text-dark"
@@ -2659,7 +2644,7 @@
                 </div>
                 <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                   <!-- <codx-label
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     name="lblEmployeeJobGeneralTitle"
                     [default]="getFormHeader(eTimeCardFuncID)"
                   >
@@ -2836,7 +2821,7 @@
                 </div>
                 <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                   <!-- <codx-label
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     name="lblEmployeeJobGeneralTitle"
                     [default]="getFormHeader(eCalSalaryFuncID)"
                   >
@@ -3009,7 +2994,7 @@
                 <div class="fs-5 fw-bold text-primary text-uppercase">
                   <!-- <codx-label
                     name="lblSalary&Benefit"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     [default]="getFormHeader(eBasicSalaryFuncID)"
                   >
                   </codx-label> -->
@@ -3032,7 +3017,7 @@
                 <codx-label
                   class="me-3"
                   name="lblSeeAllEBenefit"
-                  [formModel]="view.formModel"
+                  [formModel]="eInfoFormModel"
                   default="Xem tất cả"
                 >
                 </codx-label>
@@ -3141,7 +3126,7 @@
               </div>
 
               <div class="" *ngIf="ViewAllEBasicSalaryFlag">
-                <div class="d-flex align-items-center mt-5 mb-3">
+                <div class="d-flex align-items-center mt-7 mb-3">
                   <span class="icon-i-filter-right icon-20 me-2"></span>
                   <div class="d-flex align-items-center me-3">
                     <codx-label
@@ -3192,7 +3177,7 @@
                 <div class="fs-5 fw-bold text-primary text-uppercase">
                   <!-- <codx-label
                     name="lblSalary&Benefit"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     [default]="getFormHeader(eJobSalFuntionID)"
                   >
                   </codx-label> -->
@@ -3214,7 +3199,7 @@
                 <codx-label
                   class="me-3"
                   name="lblSeeAllEBenefit"
-                  [formModel]="view.formModel"
+                  [formModel]="eInfoFormModel"
                   default="Xem tất cả"
                 >
                 </codx-label>
@@ -3303,7 +3288,7 @@
               </div>
 
               <div class="" *ngIf="ViewAllEJobSalaryFlag">
-                <div class="d-flex align-items-center mt-5 mb-3">
+                <div class="d-flex align-items-center mt-7 mb-3">
                   <span class="icon-i-filter-right icon-20 me-2"></span>
                   <div class="d-flex align-items-center me-3">
                     <codx-label
@@ -3349,7 +3334,7 @@
                 <div class="fs-5 fw-bold text-uppercase mt-1">
                   <!-- <codx-label
                     name="lblSalary&Benefit"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     [default]="getFormHeader(benefitFuncID)"
                   >
                   </codx-label> -->
@@ -3375,16 +3360,16 @@
               </div>
             </div>
 
-            <div class="d-flex flex-wrap pt-3 px-4">
+            <div class="d-flex flex-wrap pt-5 ps-8">
               <ng-container *ngFor="let benefit of listCrrBenefit">
                 <div
-                  class="border border-gray-200 rounded min-w-250px mw-250px me-4 mb-4"
+                  class="border border-gray-200 rounded min-w-250px mw-250px me-3 mb-3"
                   *ngIf="benefit != null"
                 >
                   <codx-temp-full
                     (clickMF)="clickMF($event, benefit, 'eBenefit')"
                     [dataItem]="benefit"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     [footer]="footerBenefit"
                     cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                     [typeMF]="'hover'"
@@ -3429,7 +3414,7 @@
               </ng-container>
             </div>
             <div *ngIf="ViewAllEBenefitFlag == true">
-              <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+              <div class="d-flex justify-content-between align-items-center mt-6 mb-3">
                 <div class="d-flex align-items-center">
                   <span class="icon-i-filter-right icon-20 me-2"></span>
                   <div class="d-flex align-items-center me-3">
@@ -3503,7 +3488,7 @@
                 <div class="fs-5 fw-bold text-uppercase mt-1">
                   <!-- <codx-label
                     name="lblDistributedAssets"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     [default]="getFormHeader(eAssetFuncID)"
                   >
                   </codx-label> -->
@@ -3551,7 +3536,7 @@
 
             <div *ngIf="ViewAllEAssetFlag == true">
               <div
-                class="d-flex justify-content-between mt-3 mb-3"
+                class="d-flex justify-content-between mt-6 mb-3"
               >
              
 
@@ -3667,13 +3652,15 @@
     data-kt-scroll-dependencies=".pw-profile,.pw-menu"
     data-kt-scroll-wrappers=".employee-container"
     data-kt-scroll-offset="0px"
+    scrollSpy
+    (sectionChange)="onSectionChange($event)"
   >
     <div
       class="user-content flex-row-fluid"
       scrollSpy
       (sectionChange)="onSectionChange($event)"
     >
-      <ng-container>
+      <!-- <ng-container> -->
         <!-- Hợp đồng lao động -->
         <div class="user-profile overview d-block" [id]="eContractFuncID">
           <div class="rounded-2 p-5 bg-white mb-4">
@@ -3685,7 +3672,7 @@
                 <div class="fs-5 fw-bold text-uppercase mt-1">
                   <!-- <codx-label
                     name="lblEmployeeCurContract"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     [default]="getFormHeader(eContractFuncID)"
                   >
                   </codx-label> -->
@@ -3694,8 +3681,8 @@
               </div>
               <div class="d-flex align-items-center ms-5">
                 <button
-                  class="btn btn-icon btn-sm btn-white"
-                  (click)="HandleEContractInfo(addHeaderText, 'add', null)"
+                  class="btn btn-icon btn-sm position-relative ms-2"
+                  (click)="addEContractInfo(addHeaderText, 'add', null)"
                 >
                   <span
                     class="icon-add icon-18"
@@ -3705,7 +3692,7 @@
                 <codx-label
                   class="me-3"
                   name="lblSeeAllEBenefit"
-                  [formModel]="view.formModel"
+                  [formModel]="eInfoFormModel"
                   default="Xem tất cả"
                 >
                 </codx-label>
@@ -3832,7 +3819,7 @@
             </div>
 
             <div class="" *ngIf="ViewAllEContractFlag">
-              <div class="d-flex align-items-center mb-3">
+              <div class="d-flex align-items-center mb-3 mt-5">
                 <span class="icon-i-filter-right icon-20 me-2"></span>
                 <div class="d-flex align-items-center me-3">
                   <codx-label
@@ -3874,7 +3861,7 @@
                 <div class="fs-5 fw-bold text-primary text-uppercase mt-1">
                   <!-- <codx-label
                       name="lblEmployeePosition"
-                      [formModel]="view.formModel"
+                      [formModel]="eInfoFormModel"
                       [default]="getFormHeader('HRTEM0502')"
                     >
                     </codx-label> -->
@@ -3932,7 +3919,7 @@
                 <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                   <!-- <codx-label
                     name="lblEmployeeHolidays"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     [default]="getFormHeader('HRTEM0503')"
                   >
                   </codx-label> -->
@@ -3977,7 +3964,7 @@
               </div>
             </div>
 
-            <div class="mb-5">
+            <div class="mt-1">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex flex-wrap">
                   <span class="icon-date_range icon-16 me-2"></span>
@@ -3999,7 +3986,7 @@
             </div>
            
 
-            <div class=" mb-1">
+            <div class=" mb-1 mt-5">
               <div
                 class="profile-grid"
               >
@@ -4036,7 +4023,7 @@
                 <div class="fs-5 fw-bold text-primary mt-1">
                   <!-- <codx-label
                     name="lblWorkDiary"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     [default]="getFormHeader('HRTEM0504')"
                   >
                   </codx-label> -->
@@ -4109,7 +4096,7 @@
                 <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                   <!-- <codx-label
                     name="lblExperience"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     [default]="getFormHeader(eExperienceFuncID)"
                   >
                   </codx-label> -->
@@ -4157,7 +4144,7 @@
             </div>
           </div>
         </div>
-      </ng-container>
+      <!-- </ng-container> -->
     </div>
   </div>
 </ng-template>
@@ -4540,7 +4527,7 @@
                   </div> -->
               <div *ngIf="ViewAllEskillFlag">
                 <div
-                  class="d-flex justify-content-between mt-5 mb-3"
+                  class="d-flex justify-content-between mt-9 mb-3"
                 >
                   
                   <div class="d-flex align-items-center">
@@ -4850,7 +4837,7 @@
           <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
-                <div class="user-status  text-primary">
+                <div class="user-status text-primary">
                   <span class="icon-sentiment_dissatisfied icon-20 me-2"></span>
                 </div>
 
@@ -4907,30 +4894,28 @@
 
 <!-- pane_7 Sức khỏe-->
 <ng-template #healthInfo>
-  <div class="d-flex justify-content-between mb-2 mt-6">
-    <div class="tab-horizone px-4 h-od-tab">
-      <ul
-        ngbNav
-        #nav="ngbNav"
-        [(activeId)]="active[7]"
-        (navChange)="navChange($event)"
-        class="nav nav-tabs"
-      >
-        <ng-container *ngFor="let item of lstFuncHealth; let i = index">
-          <li [ngbNavItem]="item.functionID" class="nav-item">
-            <a ngbNavLink class="nav-link">
-              <div class="text-uppercase">{{ item.customName }}</div>
-            </a>
+  <div class="tab-horizone h-od-tab mb-4">
+    <ul
+      ngbNav
+      #nav="ngbNav"
+      [(activeId)]="active[7]"
+      (navChange)="navChange($event)"
+      class="nav nav-tabs px-4"
+    >
+      <ng-container *ngFor="let item of lstFuncHealth; let i = index">
+        <li [ngbNavItem]="item.functionID" class="nav-item">
+          <a ngbNavLink class="nav-link">
+            <div class="text-uppercase">{{ item.customName }}</div>
+          </a>
 
-            <ng-template ngbNavContent> </ng-template>
-          </li>
-        </ng-container>
-      </ul>
+          <ng-template ngbNavContent> </ng-template>
+        </li>
+      </ng-container>
+    </ul>
 
-      <div [ngbNavOutlet]="nav" class="pt-4"></div>
-    </div>
+    <div [ngbNavOutlet]="nav"></div>
   </div>
-  <hr />
+
   <div
     class="pw-content w-100 scroll-y"
     data-kt-scroll="true"
@@ -4943,28 +4928,29 @@
     <div class="user-content flex-row-fluid">
       <ng-container>
         <!-- Khám sức khỏe -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0801">
-          <div class="rounded-2 p-4 bg-white">
+        <div class="user-profile overview d-block" id="HRTEM0801">
+          <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center text-primary">
+              <div class="d-flex align-items-center">
                 <div class="user-status d-flex align-items-center">
                   <span
-                    class="icon-accessibility icon-20 me-1 text-primary"
+                    class="icon-accessibility icon-20 me-2 text-primary"
                   ></span>
                 </div>
-                <div class="fs-5 fw-bold text-uppercase text-primary">
+                <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                   <!-- <codx-label
                     name="lblPhysicalExamination"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     [default]="getFormHeader('HRTEM0801')"
                   >
                   </codx-label> -->
                   {{ getFormHeader("HRTEM0801") }}
-                  <span class="text-gray-500 ms-2"> | </span>
-                  <span class="text-dark fw-bold">
-                    <span>({{ eHealthRowCount }})</span>
-                  </span>
+                  
                 </div>
+                <span class="text-gray-400 mx-2">|</span>
+                <span class="text-dark fw-bold">
+                  <span>({{ eHealthRowCount }})</span>
+                </span>
               </div>
               <div class="d-flex align-items-center ms-5">
                 <button
@@ -5013,7 +4999,7 @@
                 <div class="fs-5 fw-bold text-uppercase text-primary">
                   <!-- <codx-label
                     name="lblVaccination"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     [default]="getFormHeader('HRTEM0802')"
                   >
                   </codx-label> -->
@@ -5242,7 +5228,7 @@
                 <div class="fs-5 fw-bold text-uppercase text-primary">
                   <!-- <codx-label
                     name="lblLaborAccident"
-                    [formModel]="view.formModel"
+                    [formModel]="eInfoFormModel"
                     [default]="getFormHeader(eAccidentsFuncID)"
                   >
                   </codx-label> -->
@@ -5366,7 +5352,7 @@
 
 <ng-template #itemAction let-data>
   <codx-mfunc
-    [formModel]="view.formModel"
+    [formModel]="eInfoFormModel"
     (clickMF)="clickMF($event, data)"
     [dataItem]="data"
   >
@@ -5473,15 +5459,15 @@
 
 <ng-template #templateEDegreeGridCol3 let-data>
   <div class="has-action-menu">
-    <div>
-      <i class="icon-event icon-16 text-gray-600 me-2 pb-1"></i>
-      <span class="fw-bold fs-6">
-        {{ data?.yearGraduated }}
-      </span>
+    <div class="d-flex align-items-center mb-5px">
+      <i class="icon-event icon-16 text-gray-600 me-2"></i>
+      <span class="text-dark">{{ data?.yearGraduated }}</span>
       <i
-        class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"
+        class="icon-i-info-circle-fill icon-circle-group icon-10 text-gray-400 mx-2"
       ></i>
+      <span>
       {{ data?.issuedDate | fmDT }}
+    </span>
     </div>
     <div *ngIf="data.isMain">
       <span class="badge badge-success border-0">Là bằng cấp chính</span>
@@ -5499,7 +5485,7 @@
 <!--#endregion-->
 
 <ng-template #templateECertificateGridCol1 let-data>
-  <div class="d-flex align-items-center mb-1">
+  <div class="d-flex align-items-center mb-5px">
     <i class="icon-class icon-16 text-primary me-2"></i>
     <span class="text-dark fs-6">
     {{
@@ -5528,46 +5514,46 @@
 </ng-template>
 
 <ng-template #templateECertificateGridCol2 let-data>
-  <div class="d-flex align-items-center mb-1">
+  <div class="d-flex align-items-center mb-5px">
     {{
       data?.trainSupplierID
         | formatvalue : eCertificateFormModel : "trainSupplierID"
         | async
     }}
   </div>
-    <div class="d-flex flex-wrap">
-      <div class="d-flex align-items-center">
-        <span class="icon-insights icon-14 text-warning me-1"></span>
-        <span class="text-warning" #ranking>
+  <div class="d-flex flex-wrap">
+    <div class="d-flex align-items-center">
+      <span class="icon-insights icon-14 text-warning me-1"></span>
+      <span class="text-warning" #ranking>
+        {{
+          data?.ranking
+            | formatvalue : eCertificateFormModel : "ranking"
+            | async
+        }}
+      </span>
+    </div>
+    <div class="d-flex align-items-center">
+      <span
+        class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+      ></span>
+      <span class="fw-bold text-primary">
+        <span class="text-danger">
           {{
-            data?.ranking
-              | formatvalue : eCertificateFormModel : "ranking"
+            data?.totalScore
+              | formatvalue : eCertificateFormModel : "totalScore"
               | async
           }}
         </span>
-      </div>
-      <div class="d-flex align-items-center">
-        <span
-          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
-        ></span>
-        <span class="fw-bold text-primary">
-          <span class="text-danger">
-            {{
-              data?.totalScore
-                | formatvalue : eCertificateFormModel : "totalScore"
-                | async
-            }}
-          </span>
-        </span>
-      </div>
+      </span>
     </div>
-    <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
+  </div>
+  <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
   
 </ng-template>
 
 <ng-template #templateECertificateGridCol3 let-data>
   <div class="has-action-menu">
-    <div class="d-flex align-items-center pb-1">
+    <div class="d-flex align-items-center mb-5px">
       <i class="icon-event icon-16 text-gray-600 me-2"></i>
       {{ data?.issuedDate | fmDT }}
       <span *ngIf="data?.isExpire" class="badge badge-danger border-0 ms-2">
@@ -5588,7 +5574,7 @@
 
 <!--Template ESkills-->
 <ng-template #templateESkillGridCol1 let-data>
-  <div class="fw-bold fs-6">
+  <div class="fw-bold text-dark mb-5px">
     {{ data?.skillID | formatvalue : eSkillFormmodel : "skillID" | async }}
   </div>
   <div>
@@ -5596,7 +5582,7 @@
       class="badge"
       [ngClass]="
         isMaxGrade(data)
-          ? 'badge-primary border-0 fw-bold'
+          ? 'badge-primary border-0'
           : 'border-1 text-dark badge-secondary fw-bold'
       "
       [style.border-color]="isMaxGrade(data) ? '' : 'black'"
@@ -5611,7 +5597,7 @@
 </ng-template>
 
 <ng-template #templateESkillGridCol2 let-data>
-  <div>
+  <div class="mb-5px">
     {{
       data?.trainSupplierID
         | formatvalue : eSkillFormmodel : "trainSupplierID"
@@ -5619,7 +5605,7 @@
     }}
   </div>
 
-  <div class="d-flex flex-wrap mb-1">
+  <div class="d-flex flex-wrap">
     <div class="d-flex align-items-center">
       <span class="icon-insights icon-14 text-warning me-1"></span>
       <span class="text-warning" #ranking>
@@ -5734,7 +5720,7 @@
 
 <!-- #region Hộ chiếu columnGrid templates-->
 <ng-template #passportCol1 let-data>
-  <div class="d-flex align-items-center mb-2">
+  <div class="d-flex align-items-center ">
     <span
       class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
       [class]="
@@ -5742,9 +5728,9 @@
       "
     ></span>
     <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-1">
+      <div class="d-flex align-items-center mb-5px">
         <span class="icon-description icon-16 text-gray-500 me-2"></span>
-        <div class="text-dark fw-bold">
+        <div class="text-dark">
           {{
             data?.passportNo
               | formatvalue : ePassportFormModel : "passportNo"
@@ -5769,8 +5755,8 @@
 <ng-template #passportCol2 let-data>
   <div class="has-action-menu">
     <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-2">
-        <span class="icon-event icon-16 text-primary me-1"></span>
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-event icon-16 text-primary me-2"></span>
         <span class="text-dark">
           <span>{{
             data?.issuedDate
@@ -5779,8 +5765,8 @@
           }}</span>
         </span>
       </div>
-      <div class="d-flex align-items-center mb-2">
-        <span class="icon-event icon-16 text-danger me-1"></span>
+      <div class="d-flex align-items-center">
+        <span class="icon-event icon-16 text-danger me-2"></span>
         <span class="text-dark">
           <span>{{
             data?.expiredDate
@@ -5805,16 +5791,16 @@
 <!-- #region Thị thực columnGrid templates-->
 <ng-template #visaCol1 let-data>
   <div class="d-flex flex-column">
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-email icon-16 text-gray-800 me-1"></span>
+    <div class="d-flex align-items-center mb-5px">
+      <span class="icon-email icon-16 text-gray-500 me-2"></span>
       <span class="text-dark">
         <span>{{
           data?.visaNo | formatvalue : eVisaFormModel : "visaNo" | async
         }}</span>
       </span>
     </div>
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-email icon-16 text-gray-800 me-1"></span>
+    <div class="d-flex align-items-center">
+      <span class="icon-email icon-16 text-gray-500 me-2"></span>
       <span class="text-dark">
         <span>{{
           data?.issuedPlace
@@ -5829,8 +5815,8 @@
 <ng-template #visaCol2 let-data>
   <div class="has-action-menu">
     <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-2">
-        <span class="icon-event icon-16 text-primary me-1"></span>
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-event icon-16 text-primary me-2"></span>
         <span class="text-dark">
           <span>{{
             data?.issuedDate
@@ -5839,8 +5825,8 @@
           }}</span>
         </span>
       </div>
-      <div class="d-flex align-items-center mb-2">
-        <span class="icon-event icon-16 text-danger me-1"></span>
+      <div class="d-flex align-items-center">
+        <span class="icon-event icon-16 text-danger me-2"></span>
         <span class="text-dark">
           <span>{{
             data?.effectedDate
@@ -5873,8 +5859,8 @@
 <!-- #region Giấy phép lao động columnGrid templates-->
 <ng-template #workPermitCol1 let-data>
   <div class="d-flex flex-column">
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-email icon-16 text-gray-800 me-1"></span>
+    <div class="d-flex align-items-center mb-5px">
+      <span class="icon-email icon-16 text-gray-500 me-2"></span>
       <span class="text-dark">
         <span>{{
           data?.workPermitNo
@@ -5883,8 +5869,8 @@
         }}</span>
       </span>
     </div>
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-email icon-16 text-gray-800 me-1"></span>
+    <div class="d-flex align-items-center">
+      <span class="icon-email icon-16 text-gray-500 me-2"></span>
       <span class="text-dark">
         <span>{{
           data?.issuedPlace
@@ -5899,8 +5885,8 @@
 <ng-template #workPermitCol2 let-data>
   <div class="has-action-menu">
     <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-2">
-        <span class="icon-event icon-16 text-primary me-1"></span>
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-event icon-16 text-primary me-2"></span>
         <span class="text-dark">
           <span>{{
             data?.issuedDate
@@ -5909,8 +5895,8 @@
           }}</span>
         </span>
       </div>
-      <div class="d-flex align-items-center mb-2">
-        <span class="icon-event icon-16 text-danger me-1"></span>
+      <div class="d-flex align-items-center">
+        <span class="icon-event icon-16 text-danger me-2"></span>
         <span class="text-dark">
           <span>{{
             data?.fromDate
@@ -5918,7 +5904,7 @@
               | async
           }}</span>
         </span>
-        <span class="me-1 ms-1">-</span>
+        <span class="mx-2">-</span>
         <span class="text-dark">
           <span>{{
             data?.toDate | formatvalue : eWorkPermitFormModel : "toDate" | async
@@ -5994,16 +5980,16 @@
 <ng-template #basicSalaryCol3 let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center">
-      <span class="icon-event icon-16 text-gray-600 me-2"></span>
-      <span class="text-dark fw-bold fs-6">
+      <span class="icon-event icon-16 text-gray-500 me-2"></span>
+      <span class="text-dark">
         <span>{{
           data?.effectedDate
             | formatvalue : eBasicSalaryFormmodel : "effectedDate"
             | async
         }}</span>
       </span>
-      <span class="mx-1">-</span>
-      <span class="text-dark fw-bold fs-6">
+      <span class="mx-2">-</span>
+      <span class="text-dark">
         <span>{{
           data?.expiredDate
             | formatvalue : eBasicSalaryFormmodel : "expiredDate"
@@ -6017,26 +6003,24 @@
 <ng-template #basicSalaryCol4 let-data>
   <div class="has-action-menu">
     <div class="d-flex flex-column">
-      <div class="d-flex flex-wrap mb-2">
-        <div class="d-flex align-items-center" *ngIf="data?.decisionNo">
-          <span class="icon-qr_code_scanner icon-16 me-1"></span>
-          <span class="fw-bold">
-            <span>{{ data?.decisionNo }}</span>
-          </span>
-        </div>
+      <div class="d-flex align-items-center mb-5px" *ngIf="data?.decisionNo">
+        <span class="icon-qr_code_scanner icon-16 me-2"></span>
+        <span class="text-dark">
+          <span>{{ data?.decisionNo }}</span>
+        </span>
+      </div>
 
-        <div class="d-flex align-items-center">
-          <span
-            class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
-          ></span>
-          <span class="text-gray-600 fw-bold">
-            <span>{{
-              data?.signedDate
-                | formatvalue : eBasicSalaryFormmodel : "signedDate"
-                | async
-            }}</span>
-          </span>
-        </div>
+      <div class="d-flex align-items-center">
+        <span
+          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 mx-2 text-gray-400"
+        ></span>
+        <span class="text-dark">
+          <span>{{
+            data?.signedDate
+              | formatvalue : eBasicSalaryFormmodel : "signedDate"
+              | async
+          }}</span>
+        </span>
       </div>
       <codx-mfunc
         [formModel]="eBasicSalaryFormmodel"
@@ -6062,8 +6046,8 @@
         class="d-flex align-items-center"
         [ngClass]="
           data.isCurrent
-            ? 'text-primary fs-6 fw-bold'
-            : 'text-dark fs-6 fw-bold'
+            ? 'text-primary'
+            : 'text-dark'
         "
       >
         <span class="icon-attach_money icon-16 me-2"></span>
@@ -6082,16 +6066,16 @@
 <ng-template #jobSalaryCol2 let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
-      <span class="icon-event icon-16 text-gray-800 me-1"></span>
-      <span class="text-dark fw-bolder">
+      <span class="icon-event icon-16 text-gray-500 me-2"></span>
+      <span class="text-dark">
         <span>{{
           data?.effectedDate
             | formatvalue : eJobSalaryFormModel : "effectedDate"
             | async
         }}</span>
       </span>
-      <span class="me-1 ms-1">-</span>
-      <span class="text-dark fw-bolder">
+      <span class="mx-2">-</span>
+      <span class="text-dark">
         <span>{{
           data?.expiredDate
             | formatvalue : eJobSalaryFormModel : "expiredDate"
@@ -6384,7 +6368,7 @@
 </ng-template>
 
 <ng-template #templateDayOffGridCol1 let-data>
-  <div class="d-flex align-items-center mb-1">
+  <div class="d-flex align-items-center mb-5px">
     <i class="icon-calendar_today icon-16 me-2"></i>
     <span class="text-dark">
     {{ data?.kowID | formatvalue : dayofFormModel : "kowID" | async }}</span>
@@ -6395,7 +6379,7 @@
 </ng-template>
 
 <ng-template #templateDayOffGridCol2 let-data>
-  <div class="d-flex align-items-center mb-1">
+  <div class="d-flex align-items-center mb-5px">
     <i class="icon-calendar_today icon-16 me-2"></i>
     <span class="text-dark">
     {{ data?.beginDate | fmDT }} - {{ data?.endDate | fmDT }}</span>
@@ -6426,7 +6410,7 @@
 </ng-template>
 
 <ng-template #templateBusinessTravelGridCol1 let-data>
-  <div class="d-flex flex-wrap mb-1">
+  <div class="d-flex flex-wrap mb-5px">
     <i class="icon-home_work icon-16 me-2"></i>
     <span class="text-dark">{{ data?.businessPlace }}</span>
   </div>
@@ -6440,7 +6424,7 @@
 </ng-template>
 
 <ng-template #templateBusinessTravelGridCol2 let-data>
-  <div class="d-flex flex-wrap mb-1">
+  <div class="d-flex flex-wrap mb-5px">
     <i class="icon-calendar_today icon-16 me-2"></i>
     <span class="text-dark">{{ data?.beginDate | fmDT }} - {{ data?.endDate | fmDT }}</span>
   </div>
@@ -6468,7 +6452,7 @@
 
 <!--region Award - Khen thưởng-->
 <ng-template #templateAwardGridCol1 let-data>
-  <div class="fw-bold fs-6">
+  <div class="mb-5px">
     {{ data?.awardID | formatvalue : awardFormModel : "awardID" | async }}
   </div>
   <div class="text-primary">
@@ -6482,35 +6466,32 @@
 </ng-template>
 
 <ng-template #templateAwardGridCol2 let-data>
-  <div class="d-flex flex-wrap mb-1">
-    <div class="d-flex align-items-center">
-      <span class="me-1"></span>
-      <span #ranking>
-        <i class="icon-event icon-16 text-gray-600 me-2 pb-1 text-primary"></i>
+  <div class="d-flex flex-wrap">
+    <div class="d-flex align-items-center mb-5px" #ranking>
+      <i class="icon-event icon-16 me-2"></i>
+      <span class="text-dark">
         {{ data?.awardDate | fmDT }}
-        <i
-          class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-        ></i>
-        <i class="icon-year fw-bolder"></i>
-        <span class="fw-bold fs-6">{{
-          data?.inYear | formatvalue : awardFormModel : "inYear" | async
-        }}</span>
       </span>
+      <i
+        class="icon-i-circle-fill icon-circle-group icon-10 text-gray-400 mx-2"
+      ></i>
+      <!-- <i class="icon-year icon-16 me-2"></i> -->
+      <span class="text-dark">{{
+        data?.inYear | formatvalue : awardFormModel : "inYear" | async
+      }}</span>
     </div>
-
     <div class="d-flex align-items-center">
-      <span class="me-1"></span>
-      <span>
-        <i class="icon-library_books"></i>
-        {{ data?.decisionNo }}
-        <span class="text-secondary">
-          <i
-            class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-          >
-          </i>
+      <i class="icon-library_books icon-16 me-2"></i>
+        <span class="text-dark">
+          {{ data?.decisionNo }}
+        </span>
+        <i
+          class="icon-i-circle-fill icon-circle-group icon-10 text-gray-400 mx-2"
+        ></i>
+       
+        <span class="text-dark">
           {{ data?.signedDate | fmDT }}
         </span>
-      </span>
     </div>
   </div>
   <!-- <div>
@@ -6526,7 +6507,7 @@
 </ng-template>
 
 <ng-template #templateAwardGridCol3 let-data>
-  <div class="has-action-menu fw-bold min-h-40px">
+  <div class="has-action-menu min-h-40px">
     {{ data?.reason | formatvalue : awardFormModel : "reason" | async }}
     <codx-mfunc
       [formModel]="awardFormModel"
@@ -6540,7 +6521,7 @@
 <!--#end region-->
 
 <ng-template #templateDisciplineGridCol1 let-data>
-  <div class="fw-bold fs-6">
+  <div class="mb-5px">
     {{
       data?.disciplineID
         | formatvalue : eDisciplineFormModel : "DisciplineID"
@@ -6557,22 +6538,24 @@
   </div>
 </ng-template>
 <ng-template #templateDisciplineGridCol2 let-data>
-  <div>
-    <i class="icon-event icon-18 me-2 text-danger"></i>
-    {{ data?.disciplineDate | fmDT }}
+  <div class="d-flex align-items-center mb-5px">
+    <i class="icon-event icon-16 me-2 text-danger"></i>
+    <div class="text-dark">
+      {{ data?.disciplineDate | fmDT }}
+    </div>
   </div>
-  <div>
-    <i class="icon-event icon-18 me-2 text-dark"></i>
-    {{ data?.fromDate | fmDT }}
-    <i
-      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1e"
-    ></i>
-    <i class="icon-library_books"></i>
+  <div class="d-flex align-items-center">
+    <i class="icon-event icon-16 me-2 text-gray-500"></i>
+    <span class="text-dark me-4">{{ data?.fromDate | fmDT }}</span>
+    
+    <i class="icon-library_books icon-16 text-gray-500 me-2"></i>
+    <span>
     {{
       data?.decisionNo
         | formatvalue : eDisciplineFormModel : "decisionNo"
         | async
     }}
+  </span>
   </div>
 </ng-template>
 <ng-template #templateDisciplineGridCol3 let-data>
@@ -6589,28 +6572,29 @@
 </ng-template>
 
 <ng-template #templateDiseasesGridCol1 let-data>
-  <i></i>
-  <div class="fw-bolder mb-1">
+  <div class="mb-5px">
     {{
       data?.diseaseID | formatvalue : eDiseasesFormModel : "diseaseID" | async
     }}
   </div>
-  <div>
-    <span class="badge badge-success fw-bold border-0" *ngIf="data.isInspect">
+  <div class="d-flex align-items-center">
+    <span class="badge badge-success fw-bold border-0 me-3" *ngIf="data.isInspect">
       Có giám định Y khoa
     </span>
-    <i class="icon-calendar_today"></i>
-    {{ data?.diseaseDate | fmDT }}
+    <i class="icon-calendar_today icon-16 me-2"></i>
+    <span class="text-dark">
+      {{ data?.diseaseDate | fmDT }}
+    </span>
   </div>
 </ng-template>
 <ng-template #templateDiseasesGridCol2 let-data>
-  <div class="fw-bold mb-1">
-    <i class="icon-calendar_today"></i>
-    <span class="fw-bold">
+  <div class="d-flex align-items-center mb-5px">
+    <i class="icon-calendar_today icon-16 me-2"></i>
+    <span class="text-dark">
       {{ data?.fromDate | fmDT }} - {{ data?.toDate | fmDT }}
     </span>
   </div>
-  <div class="text-uppercase">
+  <div class="text-dark">
     {{
       data?.treatHopitalID
         | formatvalue : eDiseasesFormModel : "treatHopitalID"
@@ -6636,26 +6620,22 @@
 <!-- #region Tai nạn lao động column template  -->
 
 <ng-template #templateEAccidentCol1 let-data>
-  <div class="d-flex align-items-center mb-4">
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-1">
-        <div class="text-dark fw-bold">
-          {{
-            data?.accidentID
-              | formatvalue : eAccidentsFormModel : "accidentID"
-              | async
-          }}
-        </div>
-      </div>
-      <div class="d-flex align-items-center">
-        <span class="icon-event icon-16 text-danger icon-16 me-2"></span>
-        <div class="text-dark">
-          {{
-            data?.accidentDate
-              | formatvalue : eAccidentsFormModel : "accidentDate"
-              | async
-          }}
-        </div>
+  <div class="d-flex flex-column">
+    <div class="mb-5px">
+      {{
+        data?.accidentID
+          | formatvalue : eAccidentsFormModel : "accidentID"
+          | async
+      }}
+    </div>
+    <div class="d-flex align-items-center">
+      <span class="icon-event icon-16 text-danger icon-16 me-2"></span>
+      <div class="text-dark">
+        {{
+          data?.accidentDate
+            | formatvalue : eAccidentsFormModel : "accidentDate"
+            | async
+        }}
       </div>
     </div>
   </div>
@@ -6663,8 +6643,8 @@
 
 <ng-template #templateEAccidentCol2 let-data>
   <div class="d-flex flex-column">
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-place icon-16 text-gray-600 me-1"></span>
+    <div class="d-flex align-items-center mb-5px">
+      <span class="icon-place icon-16 text-gray-500 me-2"></span>
       <span class="text-dark">
         <span>{{
           data?.accidentPlace
@@ -6673,8 +6653,8 @@
         }}</span>
       </span>
     </div>
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-event icon-16 text-danger me-1"></span>
+    <div class="d-flex align-items-top">
+      <span class="icon-event icon-16 text-danger me-2"></span>
       <span class="text-dark">
         <span>{{
           data?.accidentReasonID
@@ -6688,24 +6668,20 @@
 
 <ng-template #templateEAccidentCol3 let-data>
   <div class="has-action-menu min-h-40px">
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-2">
-        <span class="text-dark">
-          <span>{{
-            data?.accidentLevel
-              | formatvalue : eAccidentsFormModel : "accidentLevel"
-              | async
-          }}</span>
-        </span>
-      </div>
-      <codx-mfunc
-        [formModel]="eAccidentsFormModel"
-        (clickMF)="clickMF($event, data, 'eAccidents')"
-        type="hover"
-        [dataItem]="data"
-      >
-      </codx-mfunc>
-    </div>
+    <span class="text-dark">
+      <span>{{
+        data?.accidentLevel
+          | formatvalue : eAccidentsFormModel : "accidentLevel"
+          | async
+      }}</span>
+    </span>
+    <codx-mfunc
+      [formModel]="eAccidentsFormModel"
+      (clickMF)="clickMF($event, data, 'eAccidents')"
+      type="hover"
+      [dataItem]="data"
+    >
+    </codx-mfunc>
   </div>
 </ng-template>
 

@@ -328,6 +328,16 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
   //-----------------------------------OKR Plan--------------------------------------//
   //---------------------------------------------------------------------------------//
+  //Lấy model
+getOKRModel() {
+  return this.api.execSv(
+    OMCONST.SERVICES,
+    OMCONST.ASSEMBLY,
+    OMCONST.BUSINESS.OKR,
+    'GetModelAsync',
+    []
+  );
+}
   //Thêm, sửa okr plan
   addEditOKRPlans(okrPlan: any, listOKR =[],isAdd:boolean) {
     return this.api.execSv(
@@ -392,7 +402,15 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
   //-----------------------------------KR--------------------------------------------//
   //---------------------------------------------------------------------------------//
-
+  getCheckInModel() {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetCheckInModelAsync',
+      []
+    );
+  }
   checkInKR(recID: string, checkIn: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
