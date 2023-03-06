@@ -573,9 +573,9 @@
   let-itemSession="itemSession"
   let-itemQuestion="itemQuestion"
 >
-  <div class="d-flex">
-    <div #header>
-      <div class="form-group question">
+  <div class="d-flex w-100">
+    <div #header class="w-100">
+      <div class="form-group question w-100 mt-3">
         <div
           [ngClass]="
             itemQuestion?.active ? 'title-des title-des-hover' : 'title-des'
@@ -588,7 +588,7 @@
           <span *ngIf="!itemQuestion.question">{{ "Câu hỏi" }}</span>
         </div>
       </div>
-      <div class="form-group question" *ngIf="itemQuestion.hideComment">
+      <div class="form-group question w-100" *ngIf="itemQuestion.hideComment">
         <div class="title-des">
           <span
             *ngIf="itemQuestion.comment"
@@ -977,7 +977,7 @@
 
 <ng-template #template_card_session_index_0 let-itemSession="itemSession">
   <div class="d-flex">
-    <div class="form-group ms-6">
+    <div class="ms-6">
       <div
         [ngClass]="itemSession.seqNo == 0 ? 'title-des-index0' : 'title-des'"
       >
@@ -998,15 +998,15 @@
       <span *ngIf="!itemSession.comment">{{ "Mô tả biểu mẫu" }}</span>
     </div>
   </div>
-  <div class="d-flex align-items-center mt-3 form-group border-top py-3">
-    <span class="ms-6 icon-eye-off icon-24"></span>
+  <div class="d-flex align-items-center mt-3 border-top py-3">
+    <span class="ms-6 icon-i-eye-slash icon-24"></span>
     <span class="ms-3">{{ user.email }}</span>
   </div>
 </ng-template>
 
 <ng-template #template_card_session let-itemSession="itemSession">
-  <div class="ms-6">
-    <div class="d-flex">
+  <div class="ms-6 w-100">
+    <div class="d-flex w-100">
       <div class="form-group question w-100" style="margin-top: -50px">
         <div class="title-des d-flex">
           <span

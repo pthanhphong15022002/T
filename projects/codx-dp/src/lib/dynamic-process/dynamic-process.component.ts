@@ -610,8 +610,10 @@ export class DynamicProcessComponent
   getNameUsersStr(data) {
     if (data?.length > 0 && data !== null) {
       var ids = data.map((obj) => obj.objectID);
+      // ids = [...new Set(ids)];
       var listStr = ids?.join(';');
     }
+    // listStr = [...new Set(listStr)];
     return listStr || null || '';
   }
 
@@ -619,7 +621,7 @@ export class DynamicProcessComponent
   getListAppyFor() {
     this.cache.valueList('DP002').subscribe((res) => {
       if (res) {
-        this.listAppyFor = res.datas;
+        this.listAppyFor = res?.datas;
       }
     });
   }
@@ -662,6 +664,18 @@ export class DynamicProcessComponent
       '',
       dialogModel
     );
+
+    // dialog.closed.subscribe((e) => {
+    //   debugger;
+    //   if (e?.event && e?.event != null) {
+    //     this.view.dataService.clear();
+    //     data.totalInstance = e.event.totalInstance;
+    //     this.view.dataService.update(data).subscribe();
+    //     this.detectorRef.detectChanges();
+    //   }
+    // });
+
+
   }
 
   // nvthuan

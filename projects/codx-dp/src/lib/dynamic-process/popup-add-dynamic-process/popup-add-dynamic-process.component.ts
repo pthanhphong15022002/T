@@ -319,20 +319,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     // this.updateNodeStatus(0,1);
+    this.grvMoreFunction = await this.getFormModel('DPT0402');
+    this.grvStep = await this.getFormModel('DPS0103');
     this.getTitleStepViewSetup();
     this.initForm();
     this.checkedDayOff(this.step?.excludeDayoff);
     if (this.action != 'add' && this.action != 'copy') {
       this.getStepByProcessID();
     }
-    this.grvMoreFunction = await this.getFormModel('DPT0402');
-    this.grvStep = await this.getFormModel('DPS0103');
-
     this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;
       }
     });
+    console.log('thuận', this.grvMoreFunction);
+    
   }
 
   ngAfterViewInit(): void {
@@ -404,7 +405,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   beforeSave(op) {
-    this.handleAddStep();
+    this.addStepsBeforeSave();
     var data = [];
     op.className = 'ProcessesBusiness';
     if (this.action == 'add' || this.action == 'copy') {
@@ -414,7 +415,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     data = [this.process];
     op.data = data;
-    console.log(data);
   }
 
   onAdd() {
@@ -439,59 +439,27 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
-          this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
-          this.handleUpdateStep();
           res.update.modifiedOn = new Date();
           this.dialog.close(res.update);
         }
       });
   }
 
-  handleAddStep() {
+  addStepsBeforeSave() {
     this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0) {
       stepListSave.forEach((step) => {
-        if (step && step['taskGroups']) {
-          this.convertGroupSave(step['taskGroups']);
+        if (step && step['taskGroups']?.length > 0) {
+          let index = step['taskGroups']?.findIndex((x) => !x['recID']);
+          step['taskGroups']?.splice(index, 1);
+          step['taskGroups']?.forEach((element) => {
+            delete element['task'];
+          });
         }
       });
     }
     this.process['steps'] = stepListSave;
-  }
-
-  convertGroupSave(group) {
-    if (group && group.length > 0) {
-      let index = group?.findIndex((x) => !x['recID']);
-      group?.splice(index, 1);
-      group?.forEach((element) => {
-        delete element['task'];
-      });
-    }
-  }
-
-  handleUpdateStep() {
-    let stepListSave = JSON.parse(JSON.stringify(this.stepList));
-    if (stepListSave.length > 0) {
-      stepListSave.forEach((step) => {
-        if (step && step['taskGroups']) {
-          this.convertGroupSave(step['taskGroups']);
-        }
-      });
-      if (this.stepListAdd.length > 0) {
-        this.stepListAdd.forEach((step) => {
-          if (step && step['taskGroups']) {
-            this.convertGroupSave(step['taskGroups']);
-          }
-        });
-      }
-      this.dpService
-        .editStep([stepListSave, this.stepListAdd, this.stepListDelete])
-        .subscribe((data) => {
-          if (data) {
-          }
-        });
-    }
   }
 
   valueChange(e) {
@@ -1520,11 +1488,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.stepNew = new DP_Steps();
       this.stepNew['processID'] = this.process?.recID;
       this.stepNew['stepNo'] = this.stepList.length + 1;
+      this.stepNew['createdBy'] = this.userId;
       this.stepName = '';
       this.headerText = 'Thêm Giai Đoạn';
     } else if (type === 'copy') {
       this.headerText = 'Copy Giai Đoạn';
-      this.stepName = this.step['stepName'];
+      this.stepName = this.stepNew['stepName'];
     } else {
       this.headerText = 'Sửa Giai Đoạn';
       this.stepNew = JSON.parse(JSON.stringify(step));
@@ -1538,6 +1507,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.stepName = '';
     this.stepNew['recID'] = Util.uid();
     this.stepNew['stepNo'] = this.stepList.length + 1;
+    this.stepNew['createdOn'] = new Date();
+    this.stepNew['createdBy'] = this.userId;
+    this.stepNew['modifiedOn'] = null;
+    this.stepNew['modifiedBy'] = null;
     delete this.stepNew['id'];
     let taskCopy = [];
     // copy groups and tasks
@@ -1605,6 +1578,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     } else {
       this.titleViewStepCrr = this.stepNew?.stepName;
       this.step['stepName'] = this.stepNew['stepName'];
+      this.step['modifiedOn'] = new Date();
+      this.step['modifiedBy'] = this.userId;
     }
     this.popupAddStage.close();
     // this.isSaveStep = false;
@@ -1710,6 +1685,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       // add role vào step
       this.addRole(taskGroup['roles'][0]);
     } else {
+      taskGroup['modifiedOn'] = new Date();
+      taskGroup['modifiedBy'] = this.userId;
       let index = this.taskGroupList?.findIndex(
         (x) => x.recID === taskGroup.recID
       );
@@ -1800,15 +1777,23 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               let index = this.taskGroupList.findIndex(
                 (group) => group.recID == taskData.taskGroupID
               );
-              this.taskGroupList[index]['task'].push(taskData);
-              this.taskList.push(taskData);
+              if(this.taskGroupList?.length == 0 && index < 0) {
+                let taskGroupNull = new DP_Steps_TaskGroups();
+                taskGroupNull['task'] = [];
+                taskGroupNull['recID'] = null; // group task rỗng để kéo ra ngoài
+                this.taskGroupList.push(taskGroupNull);
+                this.taskGroupList[0]['task']?.push(taskData);
+              }else{
+                this.taskGroupList[index]['task']?.push(taskData);
+              }
+              this.taskList?.push(taskData);
               this.addRole(taskData['roles'][0]);
             } else {
-              // data = {...taskData};
-              // data['taskName'] = taskData['taskData']
               for (const key in taskData) {
                 data[key] = taskData[key];
               }
+              data['modifiedOn'] = new Date();
+              data['modifiedBy'] = this.userId;
               if (data?.taskGroupID != taskGroupIdOld) {
                 this.changeGroupTaskOfTask(data, taskGroupIdOld);
               }

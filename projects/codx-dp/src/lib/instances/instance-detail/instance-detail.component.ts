@@ -122,23 +122,23 @@ export class InstanceDetailComponent implements OnInit {
       this.id = changes['dataSelect'].currentValue.recID;
       this.dataSelect = changes['dataSelect'].currentValue;
       // this.currentStep = this.dataSelect.currentStep; // curenSteps da xoa
-      this.currentStep = 
+      // this.currentStep = 
       this.instanceStatus = this.dataSelect.status;
       this.instance = this.dataSelect;
-    // this.GetStepsByInstanceIDAsync(this.id,this.dataSelect.processID);
-      this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
-    //  this.getDataGanttChart(this.recID);
+     this.GetStepsByInstanceIDAsync(this.id);
+     // this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
+      this.getDataGanttChart(this.recID);
     }
     console.log(this.formModel);
   }
 
-  GetStepsByInstanceIDAsync(res){
+  GetStepsByInstanceIDAsync(insID){
     // var data = [insID,proccessID];
-    //   var data = [insID];
-    //  this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
+       var data = [insID];
+     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
        if (res) {
         this.listSteps = res;
-        // this.getListStepsStatus();
+        this.getListStepsStatus();
         var total = 0;
         for (var i = 0; i < this.listSteps.length; i++) {
           var stepNo = i;
@@ -164,8 +164,8 @@ export class InstanceDetailComponent implements OnInit {
         this.progress = '0';
         this.tmpTeps = null;
        }
-      this.getListStepsStatus();
-  //  });
+    //  this.getListStepsStatus();
+    });
   }
 
   getStepsByInstanceID(list) {

@@ -32,7 +32,7 @@ export class PopAddExchangerateComponent extends UIComponent implements OnInit {
   @Input() headerText: string;
   dialog!: DialogRef;
   formModel: FormModel;
-  exchangerate: ExchangeRates;
+  exchangerate: ExchangeRates = new ExchangeRates();
   objectExchange: Array<ExchangeRates> = [];
   gridViewSetup: any;
   validate: any = 0;
@@ -49,7 +49,6 @@ export class PopAddExchangerateComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.objectExchange = dialogData.data?.dataex;
     this.type = dialogData.data?.type;
-    this.exchangerate = dialog.formModel.currentData;
     this.cache
       .gridViewSetup('ExchangeRates', 'grvExchangeRates')
       .subscribe((res) => {
@@ -66,7 +65,6 @@ export class PopAddExchangerateComponent extends UIComponent implements OnInit {
   //#region Init
   onInit(): void {}
   ngAfterViewInit() {
-    this.exchangerate.recID = Guid.newGuid();
   }
   //#endregion
 
@@ -103,8 +101,6 @@ export class PopAddExchangerateComponent extends UIComponent implements OnInit {
   clearExchangerate() {
     this.form.formGroup.reset();
     this.exchangerate = new ExchangeRates();
-    this.exchangerate.recID = Guid.newGuid();
-    this.exchangerate.toTime = new Date();
   }
   //#endregion
 
@@ -144,17 +140,3 @@ export class PopAddExchangerateComponent extends UIComponent implements OnInit {
   }
   //#endregion
 }
-//#region Guid
-class Guid {
-  static newGuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
-  }
-}
-//#endregion

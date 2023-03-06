@@ -176,6 +176,9 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       this.customers[e.field] = true;
     }
   }
+  //#endregion
+
+  //#region Function
   openPopupBank() {
     var obj = {
       headerText: 'Thêm tài khoản ngân hàng',
@@ -194,8 +197,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
           var dialogbank = this.callfc.openForm(
             PopAddBankComponent,
             '',
-            650,
-            550,
+            500,
+            400,
             '',
             obj,
             '',
@@ -294,7 +297,6 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             opt
           );
           dialogaddress.closed.subscribe((x) => {
-            console.log(this.objectContactAddress);
             var dataaddress = JSON.parse(localStorage.getItem('dataaddress'));
             var datacontactaddress = JSON.parse(
               localStorage.getItem('datacontactaddress')
@@ -470,9 +472,6 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.objectContact.splice(index, 1);
     this.objectContactDelete.push(data);
   }
-  //#endregion
-
-  //#region Function
   setTitle(e: any) {
     this.title = this.headerText;
     this.dt.detectChanges();
