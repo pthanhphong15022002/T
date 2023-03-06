@@ -252,7 +252,7 @@ export class InstancesComponent
                   )
                   .subscribe((isNo) => {
                     if (isNo) {
-                      this.instanceNo = isNo;
+                      this.view.dataService.dataSelected.instanceNo = isNo;
                       this.openPopUpAdd(applyFor, formMD, option, 'add');
                     }
                   });
@@ -291,6 +291,7 @@ export class InstancesComponent
                   .subscribe((res) => {
                     if (res) {
                       this.view.dataService.dataSelected = data;
+                      this.view.dataService.dataSelected.instanceNo = res;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -302,6 +303,7 @@ export class InstancesComponent
                   .subscribe((isNo) => {
                     if (isNo) {
                       this.view.dataService.dataSelected = data;
+                      this.view.dataService.dataSelected.instanceNo = isNo;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
