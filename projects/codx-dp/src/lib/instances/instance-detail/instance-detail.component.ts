@@ -29,7 +29,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class InstanceDetailComponent implements OnInit {
   @Input() formModel: any;
   @Input() dataService: CRUDService;
-  @Input() recID: any;
   @Output() progressEvent = new EventEmitter<object>();
   @Output() moreFunctionEvent = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
@@ -128,7 +127,7 @@ export class InstanceDetailComponent implements OnInit {
       this.instance = this.dataSelect;
      this.GetStepsByInstanceIDAsync(this.id);
      // this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
-      this.getDataGanttChart(this.recID);
+      this.getDataGanttChart(this.dataSelect.recID,this.dataSelect.processID);
     }
     console.log(this.formModel);
   }
@@ -261,13 +260,13 @@ export class InstanceDetailComponent implements OnInit {
   setHTMLCssStages(oldStage, newStage) {}
 
   //ganttchar
-  getDataGanttChart(instanceID) {
+  getDataGanttChart(instanceID,processID) {
     this.api
       .exec<any>(
         'DP',
         'InstanceStepsBusiness',
         'GetDataGanntChartAsync',
-        instanceID
+        [instanceID,processID]
       )
       .subscribe((res) => {
         if (res && res?.length > 0) {
