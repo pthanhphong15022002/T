@@ -365,7 +365,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
         // save file
-        debugger;
         if (res) {
           this.handlerSave();
         }
@@ -384,6 +383,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   beforeSave(op) {
+    this.handleAddStep();
     var data = [];
     op.className = 'ProcessesBusiness';
     if (this.action == 'add' || this.action == 'copy') {
@@ -393,6 +393,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     data = [this.process];
     op.data = data;
+    console.log(data);
+    
   }
 
   onAdd() {
@@ -402,8 +404,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.attachment?.clearData();
         this.imageAvatar.clearData();
         if (res) {
-          this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
-          this.handleAddStep();
           this.dialog.close(res.save);
         } else this.dialog.close();
       });
@@ -428,6 +428,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   handleAddStep() {
+    this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0) {
       stepListSave.forEach((step) => {
@@ -435,11 +436,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.convertGroupSave(step['taskGroups']);
         }
       });
-      this.dpService.addStep([stepListSave]).subscribe((data) => {
-        if (data) {
-        }
-      });
     }
+    this.process['steps'] = stepListSave;
   }
 
   convertGroupSave(group) {
@@ -1463,7 +1461,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //#Step - taskGroup - task -- nvthuan
   getStepByProcessID() {
-    this.dpService.getStep([this.process?.recID]).subscribe((data) => {
+      let data = this.process?.steps;
       if (data) {
         this.editTest(data);
         data.forEach((step) => {
@@ -1493,7 +1491,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.stepList.sort((a, b) => a['stepNo'] - b['stepNo']);
         this.viewStepSelect(this.stepList[0]); // gán listStep[0] cho step
       }
-    });
   }
 
   openPopupStep(type, step?) {
