@@ -123,7 +123,7 @@ export class DP_Steps {
   isUsed: boolean;
   createdOn: Date = new Date();
   createdBy: string;
-  modifiedOn: Date = new Date();
+  modifiedOn: Date;
   modifiedBy: string;
   showColumnControl: number = 1;
   newProcessID: string;

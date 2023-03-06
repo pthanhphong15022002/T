@@ -337,6 +337,10 @@ export class InstancesComponent
         }
         this.detectorRef.detectChanges();
       }
+      // var ojb = {
+      //   totalInstance: 100
+      // };
+      // this.dialog.close(ojb);
     });
   }
 
@@ -664,10 +668,6 @@ export class InstancesComponent
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.detailViewInstance.instance = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
-                // debugger;
-                // this.detailViewInstance.GetStepsByInstanceIDAsync(
-                //   this.dataSelected.recID
-                // );
                 this.view.dataService.update(data).subscribe();
                 this.detectorRef.detectChanges();
               }

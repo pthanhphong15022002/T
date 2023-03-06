@@ -38,8 +38,6 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
   formType: any;
   unitsofmearsure: UnitsOfMearsure;
   gridViewSetup: any;
-  umid: any;
-  umName: any;
   validate: any = 0;
   objectUmconversion: Array<UMConversion> = [];
   objectUmconversionDelete: Array<UMConversion> = [];
@@ -70,14 +68,10 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.unitsofmearsure = dialog.dataService!.dataSelected;
-    this.umid = '';
-    this.umName = '';
     if (this.unitsofmearsure.umid != null) {
-      this.umid = this.unitsofmearsure.umid;
-      this.umName = this.unitsofmearsure.umName;
       this.acService
         .loadData('ERM.Business.BS', 'UMConversionBusiness', 'LoadDataAsync', [
-          this.umid,
+          this.unitsofmearsure.umid,
         ])
         .subscribe((res: any) => {
           this.objectUmconversion = res;
@@ -100,72 +94,66 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
   }
   //#endregion
 
-  //#region Functione
+  //#region Event
+  valueChange(e: any) {
+    this.unitsofmearsure[e.field] = e.data;
+  }
+  //#endregion
+
+  //#region Function
   setTitle(e: any) {
     this.title = this.headerText;
     this.dt.detectChanges();
   }
-  valueChange(e: any) {
-    this.unitsofmearsure[e.field] = e.data;
-  }
-  valueChangeUMID(e: any) {
-    this.umid = e.data;
-    this.unitsofmearsure[e.field] = e.data;
-  }
-  valueChangeUMName(e: any) {
-    this.umName = e.data;
-    this.unitsofmearsure[e.field] = e.data;
-  }
   openPopupConversion() {
-    if (this.umid.trim() == '' || this.umid == null) {
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['UMID'].headerText + '"'
-      );
+    this.checkValidate();
+    if (this.validate > 0) {
+      this.validate = 0;
       return;
-    }
-    var obj = {
-      headerText: 'Thêm mới thông tin quy đổi',
-      umid: this.umid,
-    };
-    let opt = new DialogModel();
-    let dataModel = new FormModel();
-    dataModel.formName = 'UMConversion';
-    dataModel.gridViewName = 'grvUMConversion';
-    dataModel.entityName = 'BS_UMConversion';
-    opt.FormModel = dataModel;
-    this.cache
-      .gridViewSetup('UMConversion', 'grvUMConversion')
-      .subscribe((res) => {
-        if (res) {
-          var dialogumconversion = this.callfc.openForm(
-            PopAddConversionComponent,
-            '',
-            500,
-            400,
-            '',
-            obj,
-            '',
-            opt
-          );
-          dialogumconversion.closed.subscribe((x) => {
-            var dataumconversiont = JSON.parse(
-              localStorage.getItem('dataumconversion')
+    } else {
+      var obj = {
+        headerText: 'Thêm mới thông tin quy đổi',
+        umid: this.unitsofmearsure.umid,
+      };
+      let opt = new DialogModel();
+      let dataModel = new FormModel();
+      dataModel.formName = 'UMConversion';
+      dataModel.gridViewName = 'grvUMConversion';
+      dataModel.entityName = 'BS_UMConversion';
+      opt.FormModel = dataModel;
+      this.cache
+        .gridViewSetup('UMConversion', 'grvUMConversion')
+        .subscribe((res) => {
+          if (res) {
+            var dialogumconversion = this.callfc.openForm(
+              PopAddConversionComponent,
+              '',
+              500,
+              400,
+              '',
+              obj,
+              '',
+              opt
             );
-            if (dataumconversiont != null) {
-              this.objectUmconversion.push(dataumconversiont);
-            }
-            window.localStorage.removeItem('dataumconversion');
-          });
-        }
-      });
+            dialogumconversion.closed.subscribe((x) => {
+              var dataumconversiont = JSON.parse(
+                localStorage.getItem('dataumconversion')
+              );
+              if (dataumconversiont != null) {
+                this.objectUmconversion.push(dataumconversiont);
+              }
+              window.localStorage.removeItem('dataumconversion');
+            });
+          }
+        });
+    }
   }
   editobjectConversion(data: any) {
     let index = this.objectUmconversion.findIndex((x) => x.recID == data.recID);
     var obj = {
       headerText: 'Thêm mới thông tin quy đổi',
       data: { ...data },
+      type:'edit'
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -203,14 +191,10 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
     let index = this.objectUmconversion.findIndex((x) => x.recID == data.recID);
     this.objectUmconversion.splice(index, 1);
     this.objectUmconversionDelete.push(data);
+    this.notification.notifyCode('SYS008', 0, '');
   }
   clearUnitsofmearsure() {
-    this.umid = '';
-    this.umName = '';
-    this.unitsofmearsure.roundOff = 0;
-    this.unitsofmearsure.roundType = null;
-    this.unitsofmearsure.stop = false;
-    this.unitsofmearsure.recID = Guid.newGuid();
+    this.form.formGroup.reset();
     this.objectUmconversion = [];
     this.objectUmconversionDelete = [];
   }
@@ -239,7 +223,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
   }
   //#endregion
 
-  //#region CRUD
+  //#region Method
   onSave() {
     this.checkValidate();
     if (this.validate > 0) {
@@ -300,7 +284,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
   }
   onSaveAdd() {
     this.checkValidate();
-    if ((this.validate > 0)) {
+    if (this.validate > 0) {
       this.validate = 0;
       return;
     } else {
@@ -322,7 +306,10 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
               .subscribe((res) => {
                 if (res) {
                   this.clearUnitsofmearsure();
-                  this.dialog.dataService.addNew().subscribe();
+                  this.dialog.dataService.addNew().subscribe((res) => {
+                    this.unitsofmearsure =
+                      this.dialog.dataService!.dataSelected;
+                  });
                 }
               });
           }
@@ -331,17 +318,3 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
   }
   //#endregion
 }
-//#region Guid
-class Guid {
-  static newGuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
-  }
-}
-//#endregion

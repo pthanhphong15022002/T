@@ -205,16 +205,34 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   cellChanged(e: any) {
-    console.log('res', e);
-    this.cashpaymentline[e.field] = e.value;
-    this.data = JSON.stringify(this.cashpaymentline);
-    this.api
-      .exec('AC', 'CashPaymentsLinesBusiness', 'ValueChangedAsync', this)
-      .subscribe((res) => {
-        if (res) {
-          console.log(e);
-        }
-      });
+    // this.cashpaymentline[e.field] = e.value;
+    //this.data = JSON.stringify(this.cashpaymentline);
+    const field = [
+      'accountid',
+      'offsetacctid',
+      'objecttype',
+      'objectid',
+      'dr',
+      'cr',
+      'dr2',
+      'cr2',
+      'transactiontext',
+      'referenceno',
+    ];
+    if (field.includes(e.field.toLowerCase())) {
+      this.api
+        .exec('AC', 'CashPaymentsLinesBusiness', 'ValueChangedAsync', [
+          this.cashpayment,
+          e.data,
+          e.field,
+          e.data?.isAddNew,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            console.log(e);
+          }
+        });
+    }
   }
 
   addRow() {
