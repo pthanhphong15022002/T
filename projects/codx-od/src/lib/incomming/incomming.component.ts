@@ -258,12 +258,12 @@ export class IncommingComponent
       if(bm[0]) bm[0].disabled = false;
     }
     if (
-      this.view.formModel.funcID == 'ODT41' &&
+      (this.view.formModel.funcID == 'ODT41' || this.view.formModel.funcID == 'ODT51') &&
       data?.status != '1' &&
       data?.status != '2' && data?.approveStatus != '2')
     {
       var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT201'
+        (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
       );
       if(approvel[0]) approvel[0].disabled = true;
     }
@@ -271,7 +271,7 @@ export class IncommingComponent
     //Hủy yêu cầu duyệt
     if (this.view.formModel.funcID == 'ODT41' || this.view.formModel.funcID == 'ODT51') {
       var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012"
+        (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012" || x.functionID == 'ODT5112'
       );
       for(var i = 0 ; i< approvel.length ; i++)
       {

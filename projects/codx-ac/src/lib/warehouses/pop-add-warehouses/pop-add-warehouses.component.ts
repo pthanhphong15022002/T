@@ -39,8 +39,6 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   objectContact: Array<Contact> = [];
   objectContactDelete: Array<Contact> = [];
   valuelist: any;
-  warehouseID: any;
-  warehouseName: any;
   gridViewSetup: any;
   formType: any;
   validate: any = 0;
@@ -82,15 +80,12 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.warehouses = dialog.dataService!.dataSelected;
     this.formType = dialogData.data?.formType;
-    this.warehouseID = '';
-    this.warehouseName = '';
     if (this.warehouses.warehouseID != null) {
-      this.warehouseID = this.warehouses.warehouseID;
-      this.warehouseName = this.warehouses.warehouseName;
+
       this.acService
         .loadData('ERM.Business.BS', 'ContactBookBusiness', 'LoadDataAsync', [
           this.objecttype,
-          this.warehouseID,
+          this.warehouses.warehouseID,
         ])
         .subscribe((res: any) => {
           this.objectContact = res;
@@ -114,18 +109,13 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   }
   //#endregion
 
-  //#region Functione
+  //#region Event
   valueChange(e: any) {
     this.warehouses[e.field] = e.data;
   }
-  valueChangeWarehouseID(e: any) {
-    this.warehouseID = e.data;
-    this.warehouses[e.field] = e.data;
-  }
-  valueChangeWarehouseName(e: any) {
-    this.warehouseName = e.data;
-    this.warehouses[e.field] = e.data;
-  }
+  //#endregion
+
+  //#region Function
   setTitle(e: any) {
     this.title = this.headerText;
     this.dt.detectChanges();
@@ -258,7 +248,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
               this.acService
                 .addData('ERM.Business.BS', 'ContactBookBusiness', 'AddAsync', [
                   this.objecttype,
-                  this.warehouseID,
+                  this.warehouses.warehouseID,
                   this.objectContact,
                 ])
                 .subscribe((res: []) => {});
@@ -268,7 +258,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
               this.notification.notifyCode(
                 'SYS031',
                 0,
-                '"' + this.warehouseID + '"'
+                '"' + this.warehouses.warehouseID + '"'
               );
               return;
             }
@@ -293,7 +283,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
                   'UpdateAsync',
                   [
                     this.objecttype,
-                    this.warehouseID,
+                    this.warehouses.warehouseID,
                     this.objectContact,
                     this.objectContactDelete,
                   ]
