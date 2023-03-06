@@ -47,6 +47,7 @@ import { ActiveTemplatePipe } from './Roles/detail/pipes/activeTemplate.pipe';
 import { PleaseUseComponent } from './users/please-use/please-use.component';
 import { PopupModuleDetailComponent } from './company-setting/popup-module-detail/popup-module-detail.component';
 import { PopupInfoComponent } from './company-setting/popup-info/popup-info.component';
+import { PopActiveAccountComponent } from './users/pop-active-account/pop-active-account.component';
 
 export const routes: Routes = [
   {
@@ -117,6 +118,7 @@ const T_Component: Type<any>[] = [
   PleaseUseComponent,
   PopupModuleDetailComponent,
   PopupInfoComponent,
+  PopActiveAccountComponent,
 ];
 @NgModule({
   imports: [
