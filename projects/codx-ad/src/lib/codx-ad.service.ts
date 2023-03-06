@@ -324,4 +324,13 @@ export class CodxAdService {
       ''
     );
   }
+  sendMail(userID, tenant, mailType) {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'SendEmailAsync',
+      [userID, tenant, mailType]
+    );
+  }
 }
