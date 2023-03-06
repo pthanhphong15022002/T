@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodxTnComponent } from './codx-tn.component';
+import { PortalComponent } from './portal.component';
 
-describe('CodxTnComponent', () => {
-  let component: CodxTnComponent;
-  let fixture: ComponentFixture<CodxTnComponent>;
+describe('PortalComponent', () => {
+  let component: PortalComponent;
+  let fixture: ComponentFixture<PortalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CodxTnComponent ]
+      declarations: [ PortalComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CodxTnComponent);
+    fixture = TestBed.createComponent(PortalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
