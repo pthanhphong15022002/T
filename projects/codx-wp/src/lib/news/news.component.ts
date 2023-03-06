@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, HostBinding, Injector, OnDestroy, OnInit,
 import { ActivatedRoute } from '@angular/router';
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
 import { load } from '@syncfusion/ej2-angular-charts';
+import { ListViewComponent } from '@syncfusion/ej2-angular-lists';
 import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, ViewType, DialogModel, UIComponent, NotificationsService, CRUDService } from 'codx-core';
 import { PopupAddComponent } from './popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from './popup/popup-search/popup-search.component';
@@ -29,6 +30,9 @@ export class NewsComponent extends UIComponent {
   mssgWP027:string = "";
   loaded:boolean = false;
   userPermission:any = null;
+  scrolled:boolean = false;
+  slides:any[] = [];
+  showNavigation:boolean = false;
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -43,32 +47,25 @@ export class NewsComponent extends UIComponent {
   }
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-
+  @ViewChild('listview') listview: CodxListviewComponent;
+  @ViewChild('carousel', { static: true }) carousel: NgbCarousel;
   constructor
   (
     private injector: Injector
   ) 
   { 
     super(injector)
-    this.dataService = new CRUDService(this.injector);
   }
   onInit(): void {
     this.router.params.subscribe((param) => {
-      debugger
       if (param["category"] !== "home")
-      {
         this.category = param["category"];
-        this.dataService.dataValue = param["category"];
-      }
       else
-      {
         this.category = "";
-        this.dataService.dataValue = "";
-      }
       this.loadDataAsync(this.category);
       if(param["funcID"]){
         this.funcID = param["funcID"];
-        if(this.userPermission){
+        if(!this.userPermission){
           this.getUserPermission(this.funcID);
         }
       }
@@ -91,8 +88,6 @@ export class NewsComponent extends UIComponent {
   
   // get user permission
   getUserPermission(funcID:string){
-    if(funcID)
-    {
       funcID  = funcID + "P";
       this.api.execSv(
         "SYS",
@@ -105,7 +100,6 @@ export class NewsComponent extends UIComponent {
           this.detectorRef.detectChanges();
         }
       });
-    }
   }
   // get message default
   getMessageDefault() {
@@ -129,7 +123,6 @@ export class NewsComponent extends UIComponent {
   loadDataAsync(category: string) {
     this.getPostAsync(category);
     this.getVideoAsync(category);
-    this.dataService.setPredicate("",[this.category]).subscribe();
   }
   // get post
   getPostAsync(category:string){
@@ -149,9 +142,7 @@ export class NewsComponent extends UIComponent {
           this.loaded = true;
         });
   }
-  scrolled:boolean = false;
-  slides:any[] = [];
-  showNavigation:boolean = false;
+  
   // get videos
   getVideoAsync(category:string,pageIndex = 0){
     this.api
@@ -173,7 +164,10 @@ export class NewsComponent extends UIComponent {
             this.slides[j] = this.videos.slice(index,index+3);
             j ++;
           }
-          this.showNavigation = j > 0 ? true : false; 
+          if(j>1){
+            this.showNavigation = j > 1 ? true : false; 
+            this.carousel.pause();
+          }
           this.detectorRef.detectChanges();
         });
   }
@@ -229,11 +223,9 @@ export class NewsComponent extends UIComponent {
   }
 
 
-  // navigate
+  // navigate slider
   navigate($event){
-
+    debugger
   }
-
-  dataService: CRUDService = null;
 
 }

@@ -62,7 +62,6 @@ export class PopupOKRWeightComponent
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.headerText = 'Thay đổi trọng số KR'; //dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.recID = dialogData.data[0];
     this.editWeight = dialogData.data[1];
@@ -87,7 +86,7 @@ export class PopupOKRWeightComponent
   }
 
   onInit(): void {
-    if (this.editWeight == OMCONST.VLL.OKRType.KResult) {
+    if (this.editWeight == OMCONST.VLL.OKRType.KResult ||this.editWeight == OMCONST.VLL.OKRType.SKResult) {
       this.getObjectData();
     }
     if (this.editWeight == OMCONST.VLL.OKRType.Obj) {
@@ -189,7 +188,8 @@ export class PopupOKRWeightComponent
       .editOKRWeight(this.okrPlan.recID, this.editWeight, this.okrChild)
       .subscribe((res: any) => {
         if (res) {
-          let x = res;
+          let x = res;          
+          this.notificationsService.notifyCode('SYS034'); 
           this.dialogRef && this.dialogRef.close();
         }
       });

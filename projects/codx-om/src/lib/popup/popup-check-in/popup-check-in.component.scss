@@ -18,6 +18,10 @@
 {
     border : solid 1px white !important;
 }
+.bg-primary
+{
+    background-color : var(--text-primary) !important;
+}
 .om-input:focus
 {
     border:solid 1px white;

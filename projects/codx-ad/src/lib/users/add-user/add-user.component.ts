@@ -554,7 +554,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .exec<any>('ERM.Business.HR', 'HRBusiness', 'GetModelEmp', [employeeID])
       .subscribe((employee) => {
         if (employee) {
-          this.adUser.employeeID = employeeID;
+          // this.adUser.employeeID = employeeID;
           this.adUser.userName = employee.employeeName;
           this.adUser.buid = employee.organizationID;
           this.adUser['positionName'] = employee.positionName;
@@ -562,7 +562,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
             this.adUser.phone = employee.phone;
           } else this.adUser['phone'] = this.adUser.mobile;
           this.form.formGroup.patchValue({
-            employeeID: this.adUser.employeeID,
+            // employeeID: this.adUser.employeeID,
             userName: this.adUser.userName,
             buid: this.adUser.buid,
             mobile: this.adUser.phone,

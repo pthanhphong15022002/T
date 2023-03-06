@@ -1,4 +1,3 @@
-import { C } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Component,
@@ -40,6 +39,7 @@ export class APPostingAccountsComponent
   btnAdd = {
     id: 'btnAdd',
   };
+  functionName: string;
 
   constructor(inject: Injector) {
     super(inject);
@@ -74,6 +74,12 @@ export class APPostingAccountsComponent
         },
       },
     ];
+
+    this.cache.functionList(this.view.funcID).subscribe((res) => {
+      console.log(res);
+      this.functionName =
+        res.defaultName.charAt(0).toLowerCase() + res.defaultName.slice(1);
+    });
   }
   //#endregion
 
@@ -84,14 +90,17 @@ export class APPostingAccountsComponent
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(data);
+        this.edit(e, data);
+        break;
+      case 'SYS04':
+        this.copy(e, data);
         break;
     }
   }
   //#endregion
 
   //#region Method
-  handleClickAdd() {
+  handleClickAdd(e) {
     (this.grid.dataService as CRUDService).addNew().subscribe((res: any) => {
       let options = new SidebarModel();
       options.DataService = this.grid.dataService;
@@ -113,7 +122,7 @@ export class APPostingAccountsComponent
         PopupAddAPPostingAccountComponent,
         {
           formType: 'add',
-          formTitle: 'Thêm thiết lập phải trả',
+          formTitle: `${e.text} ${this.functionName}`,
           moduleId: this.menuActive,
           postType: postType,
           breadcrumb: this.getBreadcrumb(this.menuActive, postType),
@@ -132,7 +141,7 @@ export class APPostingAccountsComponent
       .subscribe((res) => console.log(res));
   }
 
-  edit(data): void {
+  edit(e, data): void {
     console.log(data);
 
     this.grid.dataService.dataSelected = data;
@@ -146,7 +155,35 @@ export class APPostingAccountsComponent
         PopupAddAPPostingAccountComponent,
         {
           formType: 'edit',
-          formTitle: 'Sửa thiết lập phải trả',
+          formTitle: `${e.text} ${this.functionName}`,
+          moduleId: data.moduleID,
+          postType: data.postType,
+          breadcrumb: this.getBreadcrumb(data.moduleID, data.postType),
+        },
+        options,
+        this.view.funcID
+      );
+    });
+  }
+
+  copy(e, data): void {
+    console.log(e);
+    console.log(data);
+
+    this.grid.dataService.dataSelected = data;
+    (this.grid.dataService as CRUDService).copy().subscribe((res) => {
+      console.log(res);
+
+      let options = new SidebarModel();
+      options.DataService = this.grid.dataService;
+      options.FormModel = this.grid.formModel;
+      options.Width = '550px';
+
+      this.callfc.openSide(
+        PopupAddAPPostingAccountComponent,
+        {
+          formType: 'add',
+          formTitle: `${e.text} ${this.functionName}`,
           moduleId: data.moduleID,
           postType: data.postType,
           breadcrumb: this.getBreadcrumb(data.moduleID, data.postType),

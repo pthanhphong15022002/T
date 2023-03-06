@@ -1,0 +1,21 @@
+<codx-views
+  #view
+  idField="recID"
+  [views]="views"
+  [button]="btnAdd"
+  funcID="ACT0422"
+  service="AC"
+  entityName="AC_CashTranfers"
+  (buttonClick)="handleClickAdd($event)"
+>
+</codx-views>
+
+<ng-template #templateMore let-data>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    (clickMF)="handleClickMoreFuncs($event, data)"
+    [isBookMark]="true"
+    type="view"
+  ></codx-mfunc>
+</ng-template>
