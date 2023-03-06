@@ -1313,14 +1313,15 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   //new công văn nội bộ đến
   addInternalIncoming(datas:any)
   {
-    debugger
+    
     let dataSave = datas;
+    let departmentID = datas.agencyID;
     dataSave.dispatchType = '4'
     dataSave.status = "1";
     dataSave.approveStatus = "1";
     dataSave.agencyID = dataSave.departmentID;
     dataSave.agencyName = "";
-    dataSave.departmentID = datas.agencyID;
+    dataSave.departmentID = departmentID;
     this.odService.saveDispatch(this.dataRq,dataSave).subscribe();
   }
   //Xét duyệt
