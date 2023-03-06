@@ -43,7 +43,7 @@ export class DP_Processes {
   viewMode: string;
   viewModeDetail: string;
   autoName: string;
-  steps: DP_Steps[] = []
+  steps: DP_Steps[] = [];
 }
 
 export class DP_Processes_Permission {
