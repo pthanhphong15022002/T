@@ -1,26 +1,3 @@
-import { PopupJobGeneralInfoComponent } from './../../employee-profile/popup-job-general-info/popup-job-general-info.component';
-import { PopupEbenefitComponent } from './../../employee-profile/popup-ebenefit/popup-ebenefit.component';
-import { PopupEdayoffsComponent } from './../../employee-profile/popup-edayoffs/popup-edayoffs.component';
-import { PopupEaccidentsComponent } from './../../employee-profile/popup-eaccidents/popup-eaccidents.component';
-import { PopupEappointionsComponent } from './../../employee-profile/popup-eappointions/popup-eappointions.component';
-import { PopupEBasicSalariesComponent } from './../../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
-import { PopupETimeCardComponent } from './../../employee-profile/popup-etime-card/popup-etime-card.component';
-import { PopupECalculateSalaryComponent } from './../../employee-profile/popup-ecalculate-salary/popup-ecalculate-salary.component';
-import { PopupEexperiencesComponent } from './../../employee-profile/popup-eexperiences/popup-eexperiences.component';
-import { PopupEJobSalariesComponent } from './../../employee-profile/popup-ejob-salaries/popup-ejob-salaries.component';
-import { PopupEWorkPermitsComponent } from './../../employee-profile/popup-ework-permits/popup-ework-permits.component';
-import { PopupEVisasComponent } from './../../employee-profile/popup-evisas/popup-evisas.component';
-import { PopupETraincourseComponent } from './../../employee-profile/popup-etraincourse/popup-etraincourse.component';
-import { PopupESkillsComponent } from './../../employee-profile/popup-eskills/popup-eskills.component';
-import { PopupESelfInfoComponent } from './../../employee-profile/popup-eself-info/popup-eself-info.component';
-import { PopupEFamiliesComponent } from './../../employee-profile/popup-efamilies/popup-efamilies.component';
-import { PopupEDisciplinesComponent } from './../../employee-profile/popup-edisciplines/popup-edisciplines.component';
-import { PopupEDegreesComponent } from './../../employee-profile/popup-edegrees/popup-edegrees.component';
-import { PopupECertificatesComponent } from './../../employee-profile/popup-ecertificates/popup-ecertificates.component';
-import { PopupEAwardsComponent } from './../../employee-profile/popup-eawards/popup-eawards.component';
-import { PopupEAssurTaxBankComponent } from './../../employee-profile/popup-eassur-tax-bank/popup-eassur-tax-bank.component';
-import { PopupEAssetsComponent } from './../../employee-profile/popup-eassets/popup-eassets.component';
-import { PopupEmployeePartyInfoComponent } from './../../employee-profile/popup-employee-party-info/popup-employee-party-info.component';
 // import { EmployeeAssurTaxBankaccInfoComponent } from './../../employee-profile/employee-assur-tax-bankacc-info/employee-assur-tax-bankacc-info.component';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 import {
@@ -50,26 +27,50 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
 // import { EmployeeSelfInfoComponent } from '../../employee-profile/employee-self-info/employee-self-info.component';
 import { ActivatedRoute, Router } from '@angular/router';
 // import { EmployeeFamilyRelationshipComponent } from '../../employee-profile/employee-family-relationship/employee-family-relationship.component';
-import { PopupEPassportsComponent } from '../../employee-profile/popup-epassports/popup-epassports.component';
-import { PopupEhealthsComponent } from '../../employee-profile/popup-ehealths/popup-ehealths.component';
-import { PopupEVaccineComponent } from '../../employee-profile/popup-evaccine/popup-evaccine.component';
-import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/popup-ediseases.component';
-import { PopupEContractComponent } from '../../employee-profile/popup-econtract/popup-econtract.component';
-import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
+
 import { Sort } from '@syncfusion/ej2-angular-grids';
-import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
+import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
+import { PopupEmployeePartyInfoComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-employee-party-info/popup-employee-party-info.component';
+import { PopupEAssurTaxBankComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-eassur-tax-bank/popup-eassur-tax-bank.component';
+import { PopupESelfInfoComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-eself-info/popup-eself-info.component';
+import { PopupJobGeneralInfoComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-job-general-info/popup-job-general-info.component';
+import { PopupETimeCardComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-etime-card/popup-etime-card.component';
+import { PopupECalculateSalaryComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-ecalculate-salary/popup-ecalculate-salary.component';
+import { PopupEbenefitComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-ebenefit/popup-ebenefit.component';
+import { PopupEexperiencesComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-eexperiences/popup-eexperiences.component';
+import { PopupEJobSalariesComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-ejob-salaries/popup-ejob-salaries.component';
+import { PopupEBasicSalariesComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
+import { PopupEFamiliesComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-efamilies/popup-efamilies.component';
+import { PopupEPassportsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-epassports/popup-epassports.component';
+import { PopupEdayoffsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-edayoffs/popup-edayoffs.component';
+import { PopupEWorkPermitsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-ework-permits/popup-ework-permits.component';
+import { PopupEVisasComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-evisas/popup-evisas.component';
+import { PopupEDisciplinesComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-edisciplines/popup-edisciplines.component';
+import { PopupEaccidentsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-eaccidents/popup-eaccidents.component';
+import { PopupEAssetsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-eassets/popup-eassets.component';
+import { PopupEappointionsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-eappointions/popup-eappointions.component';
+import { PopupECertificatesComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-ecertificates/popup-ecertificates.component';
+import { PopupEDegreesComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-edegrees/popup-edegrees.component';
+import { PopupESkillsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-eskills/popup-eskills.component';
+import { PopupETraincourseComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-etraincourse/popup-etraincourse.component';
+import { PopupSubEContractComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-sub-econtract/popup-sub-econtract.component';
+import { PopupEContractComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-econtract/popup-econtract.component';
+import { PopupEhealthsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-ehealths/popup-ehealths.component';
+import { PopupEAwardsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-eawards/popup-eawards.component';
+import { PopupEDiseasesComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-ediseases/popup-ediseases.component';
+import { PopupEmpBusinessTravelsComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
+import { PopupEVaccineComponent } from 'projects/codx-hr/src/lib/employee-profile/popup-evaccine/popup-evaccine.component';
 
 @Component({
-  selector: 'lib-employee-detail',
-  templateUrl: './employee-detail.component.html',
-  styleUrls: ['./employee-detail.component.scss'],
+  selector: 'lib-portal',
+  templateUrl: './portal.component.html',
+  styleUrls: ['./portal.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class EmployeeDetailComponent extends UIComponent {
+export class PortalComponent extends UIComponent {
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   @ViewChild('button') button: TemplateRef<any>;
   @ViewChild('itemTemplate') template: TemplateRef<any>;
@@ -109,6 +110,8 @@ export class EmployeeDetailComponent extends UIComponent {
   ) {
     super(inject);
     this.user = this.auth.get();
+    console.log('userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', this.user);
+    
     this.funcID = this.routeActive.snapshot.params['funcID'];
     // this.infoPersonal =
   }
