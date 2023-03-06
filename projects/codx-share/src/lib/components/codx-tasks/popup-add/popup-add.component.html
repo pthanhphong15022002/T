@@ -592,7 +592,7 @@
     </ng-container>
     <div
       class="d-flex justify-content-between align-items-center checkbox-item"
-      *ngIf="!viewTask"
+      *ngIf="!viewTask && !(param?.EditControl == '0' && task.category=='2')"
     >
       <div class="checkbox-list w-100">
         <div class="d-flex flex-column flex-grow-1 w-100">
