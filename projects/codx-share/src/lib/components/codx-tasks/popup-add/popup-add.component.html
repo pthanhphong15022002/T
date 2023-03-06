@@ -540,14 +540,25 @@
                 </span>
                 <span
                   class="text-hover-primary"
-                  (click)="!viewTask ? editTodo(i, item.text) : ''"
+                  (click)="
+                    !viewTask &&
+                    !(param?.EditControl != '1' && task.category == '2')
+                      ? editTodo(i, item.text)
+                      : ''
+                  "
                   style="margin-top: 4px; margin-left: 12px"
                   popoverClass="userPopoverClass"
-                  [ngbPopover]="!viewTask ? deleteToDo : ''"
+                  [ngbPopover]="
+                    !viewTask &&
+                    !(param?.EditControl != '1' && task.category == '2')
+                      ? deleteToDo
+                      : ''
+                  "
                   placement="left"
                   #p="ngbPopover"
                   (mouseenter)="
-                    !viewTask
+                    !viewTask &&
+                    !(param?.EditControl != '1' && task.category == '2')
                       ? showPoppoverDelete(p, i)
                       : showPoppoverDelete(p, null)
                   "
@@ -592,7 +603,7 @@
     </ng-container>
     <div
       class="d-flex justify-content-between align-items-center checkbox-item"
-      *ngIf="!viewTask && !(param?.EditControl != '1' && task.category=='2')"
+      *ngIf="!viewTask && !(param?.EditControl != '1' && task.category == '2')"
     >
       <div class="checkbox-list w-100">
         <div class="d-flex flex-column flex-grow-1 w-100">
