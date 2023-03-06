@@ -130,7 +130,11 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     }else{
-      this.notification.notifyCode('SYS006', 0, '');
+      if (this.type == 'editbank') {
+        this.notification.notifyCode('SYS007', 0, '');
+      }else{
+        this.notification.notifyCode('SYS006', 0, '');
+      }
       this.objectBankaccount.push({ ...this.bankaccount });
       this.clearBankAccount();
     } 

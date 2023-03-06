@@ -51,25 +51,24 @@
       </div>
     </div>
     <div class="d-flex justify-content-between">
-      <div class="d-flex align-items-start">
-        <span class="me-2 fw-bold">Người liên quan:</span>
-        <codx-img
-          [objectId]="'ADMIN'"
+      <div class="d-flex align-items-start" *ngIf="(lstIDInvo != null && lstIDInvo != '')">
+        <codx-label class="me-2 fw-bold" name="lblInvolved" default="Người liên quan:"></codx-label>
+        <codx-imgs
+          [objectId]="(lstIDInvo != null || lstIDInvo != '') ? lstIDInvo : ''"
           [isToolTip]="true"
           [width]="30"
           objectType="AD_Users"
           [numberImages]="3"
         >
-        </codx-img>
+        </codx-imgs>
       </div>
-      <div class="d-flex align-items-start">
-        <span class="me-2 fw-bold">Người phụ trách:</span>
+      <div class="d-flex align-items-end">
+        <codx-label name="lblOwner" default="Người phụ trách:" class="me-2 fw-bold"></codx-label>
         <codx-img
-          [objectId]="'ADMIN'"
+          [objectId]="dataStep.owner"
           [isToolTip]="true"
           [width]="30"
           objectType="AD_Users"
-          [numberImages]="3"
         >
         </codx-img>
       </div>
@@ -364,7 +363,7 @@
         <codx-history-temp [objectID]="data.recID"></codx-history-temp
       ></span>
     </div> -->
-   
+
     <span class="date">
       {{ data?.startDate | date : "dd/MM/yyyy" }} -
       {{ data?.endDate | date : "dd/MM/yyyy" }}</span

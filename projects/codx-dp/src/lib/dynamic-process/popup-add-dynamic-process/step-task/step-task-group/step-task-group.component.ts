@@ -30,7 +30,7 @@ export class StepTaskGroupComponent implements OnInit {
   differenceTime = 0;
   step;
   maxTimeGroup = 0;
-  isSave = false;
+  isSave = true;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
