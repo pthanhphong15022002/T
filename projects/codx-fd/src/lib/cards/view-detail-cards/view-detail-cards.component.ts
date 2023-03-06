@@ -17,6 +17,7 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
   @Input() ratingVLL: string = "";
   data: any = null;
   isShowCard: boolean = true;
+  behavior: any[] = [];
   constructor
     (
       private api: ApiHttpService,
@@ -49,6 +50,18 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
         if (res) {
           console.log(res);
           this.data = res;
+          this.behavior = [];
+          if (this.data.behaviorName) {
+            if (this.data.behaviorName.includes(';')) {
+              let lstB = this.data.behaviorName.split(';');
+              for (let i = 0; i < lstB.length; i++) {
+                const element = lstB[i];
+                this.behavior.push(element);
+              }
+            } else {
+              this.behavior.push(this.data.behaviorName);
+            }
+          }
           this.dt.detectChanges();
         }
       });

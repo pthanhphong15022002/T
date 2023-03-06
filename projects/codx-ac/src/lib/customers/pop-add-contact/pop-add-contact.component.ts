@@ -136,7 +136,11 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      this.notification.notifyCode('SYS006', 0, '');
+      if (this.type == 'editContact') {
+        this.notification.notifyCode('SYS007', 0, '');
+      }else{
+        this.notification.notifyCode('SYS006', 0, '');
+      }
       window.localStorage.setItem('datacontact', JSON.stringify(this.contact));
       this.dialog.close();
     }

@@ -28,14 +28,14 @@
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="Conversion"></codx-label>
-      <codx-input [Group]="form.formGroup" [crrValue]="umconversion.conversion" [formModel]="form.formModel" field="conversion"
-        (valueChange)="valueChange($event)">
+      <codx-input [Group]="form.formGroup" [crrValue]="umconversion.conversion" [formModel]="form.formModel"
+        field="conversion" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
     <div class="d-flex align-items-center mb-2">
       <div class="me-2">
-        <codx-input class="check-circle" [checked]="umconversion.inverted == 0 ? false : true" field="inverted" [formModel]="form.formModel"
-          (valueChange)="valueChangeInverted($event)">
+        <codx-input class="check-circle" [checked]="umconversion.inverted == 0 ? false : true" field="inverted"
+          [formModel]="form.formModel" (valueChange)="valueChangeInverted($event)">
         </codx-input>
       </div>
       <codx-label [formModel]="form.formModel" fiedName="Inverted"></codx-label>

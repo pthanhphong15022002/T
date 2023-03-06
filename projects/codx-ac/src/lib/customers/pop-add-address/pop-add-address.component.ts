@@ -176,6 +176,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     );
     this.objectContactAddress.splice(index, 1);
     this.objectContactAddressDelete.push(data);
+    this.notification.notifyCode('SYS008', 0, '');
   }
   clearAddress() {
     this.form.formGroup.reset();
@@ -241,7 +242,11 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
       this.objectContactAddress.forEach((element) => {
         this.objectContactAddressAfter.push({ ...element });
       });
-      this.notification.notifyCode('SYS006', 0, '');
+      if (this.type == 'editaddress') {
+        this.notification.notifyCode('SYS007', 0, '');
+      }else{
+        this.notification.notifyCode('SYS006', 0, '');
+      }
       this.clearAddress();
     }
   }

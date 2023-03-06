@@ -18,8 +18,8 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="CustomerID"></codx-label>
-          <codx-input [Group]="form.formGroup" [crrValue]="customers.customerID" [formModel]="form.formModel" field="customerID"
-            (valueChange)="valueChange($event)">
+          <codx-input [Group]="form.formGroup" [crrValue]="customers.customerID" [formModel]="form.formModel"
+            field="customerID" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
@@ -217,9 +217,8 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="OverDueControl"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
-            [crrValue]="customers.overDueControl == true ? '1' : '0'" field="overDueControl"
-            (valueChange)="valueChangeOverdueControl($event)">
+          <codx-input [formModel]="form.formModel" [crrValue]="customers.overDueControl == true ? '1' : '0'"
+            field="overDueControl" (valueChange)="valueChangeOverdueControl($event)">
           </codx-input>
         </div>
       </div>
@@ -315,8 +314,7 @@
 </ng-template>
 <ng-template #tabLocation>
   <div class="d-flex align-items-center justify-content-between mb-2">
-    <codx-label class="text-primary fw-bold fs-5" [formModel]="form.formModel"
-      default="Danh sách địa chỉ"></codx-label>
+    <codx-label class="text-primary fw-bold fs-5" [formModel]="form.formModel" default="Danh sách địa chỉ"></codx-label>
     <span type="button" class="btn btn-icon btn-primary" (click)="openPopupAddress()">
       <i class="icon-add_location_alt"></i>
     </span>
@@ -471,14 +469,14 @@
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="ChannelID"></codx-label>
-      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.channelID" field="channelID"
-        (valueChange)="valueChange($event)">
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.channelID"
+        field="channelID" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="SalespersonID"></codx-label>
-      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.salespersonID" field="salespersonID"
-        (valueChange)="valueChange($event)">
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.salespersonID"
+        field="salespersonID" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
     <div class="form-group">

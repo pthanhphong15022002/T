@@ -34,8 +34,6 @@ export class PopAddInventoryComponent extends UIComponent {
   formModel: FormModel;
   dialog!: DialogRef;
   inventory: Inventorymodels;
-  inventModelID: any;
-  inventModelName: any;
   gridViewSetup: any;
   validate: any = 0;
   tabInfo: any[] = [
@@ -62,12 +60,6 @@ export class PopAddInventoryComponent extends UIComponent {
     this.inventory = dialog.dataService!.dataSelected;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
-    this.inventModelID = '';
-    this.inventModelName = '';
-    if (this.inventory.inventModelID != null) {
-      this.inventModelID = this.inventory.inventModelID;
-      this.inventModelName = this.inventory.inventModelName;
-    }
     this.cache
       .gridViewSetup('InventoryModels', 'grvInventoryModels')
       .subscribe((res) => {
@@ -85,11 +77,7 @@ export class PopAddInventoryComponent extends UIComponent {
   }
   //#endregion
 
-  //#region Function
-  setTitle(e: any) {
-    this.title = this.headerText;
-    this.dt.detectChanges();
-  }
+  //#region Event
   valueChange(e: any) {
     this.inventory[e.field] = e.data;
   }
@@ -100,20 +88,15 @@ export class PopAddInventoryComponent extends UIComponent {
       this.inventory[e.field] = '0';
     }
   }
-  valueChangeInventModelID(e: any) {
-    this.inventModelID = e.data;
-    this.inventory[e.field] = e.data;
-  }
-  valueChangeInventModelName(e: any) {
-    this.inventModelName = e.data;
-    this.inventory[e.field] = e.data;
+  //#endregion
+
+  //#region Function
+  setTitle(e: any) {
+    this.title = this.headerText;
+    this.dt.detectChanges();
   }
   clearInventory() {
-    this.inventModelID = '';
-    this.inventModelName = '';
-    this.inventory.accountControl = false;
-    this.inventory.stdCostReceipt = false;
-    this.inventory.stdCostIssue = false;
+    this.form.formGroup.reset();
   }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
@@ -147,7 +130,7 @@ export class PopAddInventoryComponent extends UIComponent {
       this.validate = 0;
       return;
     } else {
-      if (this.formType == 'add') {
+      if (this.formType == 'add' || this.formType == 'copy') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'AddAsync';
@@ -165,7 +148,7 @@ export class PopAddInventoryComponent extends UIComponent {
               this.notification.notifyCode(
                 'SYS031',
                 0,
-                '"' + this.inventModelID + '"'
+                '"' + this.inventory.inventModelID + '"'
               );
               return;
             }
@@ -216,7 +199,7 @@ export class PopAddInventoryComponent extends UIComponent {
             this.notification.notifyCode(
               'SYS031',
               0,
-              '"' + this.inventModelID + '"'
+              '"' + this.inventory.inventModelID + '"'
             );
             return;
           }

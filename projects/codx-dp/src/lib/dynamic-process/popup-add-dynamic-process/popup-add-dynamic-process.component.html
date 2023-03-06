@@ -43,6 +43,7 @@
               >
                 <codx-label
                   name="lblGeneral"
+                  [formModel]="dialog.formModel"
                   default="Thông tin quy trình"
                 ></codx-label>
               </div>
@@ -143,6 +144,7 @@
             <codx-label
               *ngIf="currentTab == 0"
               name="lblGeneral"
+              [formModel]="dialog.formModel"
               default="Thông tin quy trình"
             >
             </codx-label>
@@ -251,16 +253,14 @@
           <codx-label
             class="title"
             name="lblGeneral"
-            [formName]="'GridViewSetup'"
-            [gridViewName]="'grvGridViewSetup'"
+            [formModel]="dialog.formModel"
             default="Thông tin chung"
           ></codx-label>
         </div>
         <div>
           <codx-label
             name="lblGeneral"
-            [formName]="'GridViewSetup'"
-            [gridViewName]="'grvGridViewSetup'"
+            [formModel]="dialog.formModel"
             default="Thông tin chung của quy trình"
             style="color: #898989"
           >
@@ -385,13 +385,15 @@
         <div>
           <codx-label
             class="title"
-            name="lblGeneral"
+            name="lblPermissions"
+            [formModel]="dialog.formModel"
             default="Các vai trò trong quy trình"
           ></codx-label>
         </div>
         <div>
           <codx-label
-            name="lblGeneral"
+            name="lblPerm"
+            [formModel]="dialog.formModel"
             default="Những người liên quan và có thể thực hiện các chức năng
             trong quy trình"
             style="color: #898989"
@@ -422,6 +424,7 @@
               <codx-label
                 class="fw-bolder"
                 name="lblSupervisor"
+                [formModel]="dialog.formModel"
                 default="Người giám sát"
               >
               </codx-label>
@@ -486,6 +489,7 @@
               <codx-label
                 class="fw-bolder"
                 name="lblParticipants"
+                [formModel]="dialog.formModel"
                 default="Thành viên tham gia"
               >
               </codx-label>
@@ -502,6 +506,7 @@
               <codx-label
                 class="fw-normal text-gray-400"
                 name="lblParticipantControl"
+                [formModel]="dialog.formModel"
                 default="Có quyền tạo nhiệm vụ trong quy trình"
               >
               </codx-label>
@@ -548,6 +553,7 @@
               <codx-label
                 class="fw-bolder"
                 name="lblFollowers"
+                [formModel]="dialog.formModel"
                 default="Người theo dõi"
               >
               </codx-label>
@@ -564,6 +570,7 @@
               <codx-label
                 class="fw-normal text-gray-400"
                 name="lblFollowerControl"
+                [formModel]="dialog.formModel"
                 default="Có quyền xem các nhiệm vụ trong quy trình"
               >
               </codx-label>
@@ -612,13 +619,15 @@
         <div>
           <codx-label
             class="title"
-            name="lblGeneral"
+            name="lblSetting"
+            [formModel]="dialog.formModel"
             default="Tùy chỉnh quy trình"
           ></codx-label>
         </div>
         <div>
           <codx-label
-            name="lblGeneral"
+            name="lblActived"
+            [formModel]="dialog.formModel"
             default="Cách thức hoạt động của quy trình"
             style="color: #898989"
           >
@@ -809,6 +818,7 @@
         <div>
           <codx-label
             name="lblMemo"
+            [formModel]="dialog.formModel"
             default="Mô tả chi tiết quy trình"
             style="color: #898989"
           >
@@ -1336,19 +1346,24 @@
         <div>
           <span class="title">Công việc</span>
         </div>
-        <div>
-          <span style="color: #898989"
-            >Công việc mặc định người phụ trách phải thực hiện trong giai
-            đoạn</span
+        <div class="text-gray-400">
+          <codx-label
+            class="fw-normal text-gray-400"
+            fiedName="taskMemo"
+            default="Công việc mặc định người phụ trách phải thực hiện trong giai đoạn"
           >
+          </codx-label>
         </div>
       </div>
       <div class="right">
         <div class="time ml-2">
-          <div class="d-flex align-items-center">
-            <span style="font-weight: 400; color: #4e4e4e"
-              >Thời hạn công việc so với giai đoạn</span
+          <div class="d-flex align-items-center text-gray-400">
+            <codx-label
+              class="fw-normal text-gray-400"
+              fiedName="taskMemo"
+              default="Thời hạn công việc so với giai đoạn"
             >
+            </codx-label>
             <span
               class="icon-replay icon-22 text-primary-600 py-2"
               style="font-weight: 600; margin-left: 5px"
