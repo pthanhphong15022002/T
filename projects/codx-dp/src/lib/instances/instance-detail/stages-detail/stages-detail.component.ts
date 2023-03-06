@@ -59,7 +59,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() instance: any;
   @Input() stepNameEnd: any;
   @Input() proccesNameMove: any;
-
+  @Input() lstIDInvo: any;
 
   dateActual: any;
   startDate: any;
@@ -90,7 +90,7 @@ export class StagesDetailComponent implements OnInit {
   };
   moreReason = {
     delete: true,
-  }
+  };
   frmModel: FormModel = {
     entityName: 'DP_InstancesSteps',
     formName: 'DPInstancesSteps',
@@ -111,9 +111,8 @@ export class StagesDetailComponent implements OnInit {
   listReasonsClick: DP_Instances_Steps_Reasons[] = [];
   dialogPopupReason: DialogRef;
 
-
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
-  titleReason:any;
+  titleReason: any;
 
   constructor(
     private callfc: CallFuncService,
@@ -152,12 +151,11 @@ export class StagesDetailComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.cache.gridViewSetup('DPSteps','grvDPSteps').subscribe((res) => {
-      if(res){
+    this.cache.gridViewSetup('DPSteps', 'grvDPSteps').subscribe((res) => {
+      if (res) {
         this.titleMemo = res?.Memo?.headerText;
       }
-    })
-
+    });
   }
 
   getFormModel() {
@@ -207,7 +205,11 @@ export class StagesDetailComponent implements OnInit {
       } else {
         this.dataStep = null;
       }
-      this.titleReason = changes['dataStep'].currentValue?.isSuccessStep ? 'Lý do thành công' :  changes['dataStep'].currentValue?.isFailStep ?  'Lý do thất bại' : ''
+      this.titleReason = changes['dataStep'].currentValue?.isSuccessStep
+        ? 'Lý do thành công'
+        : changes['dataStep'].currentValue?.isFailStep
+        ? 'Lý do thất bại'
+        : '';
     }
   }
 
@@ -224,9 +226,7 @@ export class StagesDetailComponent implements OnInit {
         totalTaskGroup += value;
       }
 
-      this.progress = (
-        totalTask / tasks.length
-      ).toFixed(1).toString();
+      this.progress = (totalTask / tasks.length).toFixed(1).toString();
     } else {
       this.progress = '0';
     }
@@ -358,25 +358,29 @@ export class StagesDetailComponent implements OnInit {
       if (e?.event) {
         let taskData = e?.event?.data;
         if (e.event?.status === 'add' || e.event?.status === 'copy') {
-          let lengthTask = this.taskGroupList.find((x) => x.recID === taskData.taskGroupID);
+          let lengthTask = this.taskGroupList.find(
+            (x) => x.recID === taskData.taskGroupID
+          );
           let role = new DP_Instances_Steps_Tasks_Roles();
           this.setRole(role);
           taskData['roles'] = [role];
           taskData['createdOn'] = new Date();
           taskData['indexNo'] = lengthTask['task'].length;
-          let progress = await this.calculateProgressTaskGroup(taskData,'add');
-          this.dpService.addTask([taskData, progress?.average]).subscribe((res) => {
-            if (res) {
-              this.notiService.notifyCode('SYS006');
-              let index = this.taskGroupList.findIndex(
-                (task) => task.recID == taskData.taskGroupID
-              );
-              this.taskGroupList[index]['task'].push(taskData);
-              this.taskList.push(taskData);
-              this.taskGroupList[progress?.indexGroup]['progress'] =
-                progress?.average; // cập nhật tiến độ của cha
-            }
-          });
+          let progress = await this.calculateProgressTaskGroup(taskData, 'add');
+          this.dpService
+            .addTask([taskData, progress?.average])
+            .subscribe((res) => {
+              if (res) {
+                this.notiService.notifyCode('SYS006');
+                let index = this.taskGroupList.findIndex(
+                  (task) => task.recID == taskData.taskGroupID
+                );
+                this.taskGroupList[index]['task'].push(taskData);
+                this.taskList.push(taskData);
+                this.taskGroupList[progress?.indexGroup]['progress'] =
+                  progress?.average; // cập nhật tiến độ của cha
+              }
+            });
         } else {
           taskData['modifiedOn'] = new Date();
           this.dpService.updateTask(taskData).subscribe((res) => {
@@ -396,10 +400,7 @@ export class StagesDetailComponent implements OnInit {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
       }
-      let progress = this.calculateProgressTaskGroup(
-        taskData,
-        'delete'
-      );
+      let progress = this.calculateProgressTaskGroup(taskData, 'delete');
       let value = [
         taskData?.recID,
         taskData?.taskGroupID,
@@ -483,8 +484,12 @@ export class StagesDetailComponent implements OnInit {
 
   changeGroupTask(taskData, taskGroupIdOld) {
     let tastClone = JSON.parse(JSON.stringify(taskData));
-    let indexNew = this.taskGroupList.findIndex((task) => task.recID == taskData.taskGroupID);
-    let index = this.taskGroupList.findIndex((task) => task.recID == taskGroupIdOld);
+    let indexNew = this.taskGroupList.findIndex(
+      (task) => task.recID == taskData.taskGroupID
+    );
+    let index = this.taskGroupList.findIndex(
+      (task) => task.recID == taskGroupIdOld
+    );
     let listTaskOld = this.taskGroupList[indexNew]['task'] || [];
     let listTaskNew = this.taskGroupList[indexNew]['task'] || [];
     listTaskOld.push(tastClone);
@@ -685,10 +690,7 @@ export class StagesDetailComponent implements OnInit {
   }
 
   updateProgressTask() {
-    let value = this.calculateProgressTaskGroup(
-      this.dataProgress,
-      'update'
-    );
+    let value = this.calculateProgressTaskGroup(this.dataProgress, 'update');
     let dataSave = [this.dataProgress, value?.average];
     this.dpService.updateTask(dataSave).subscribe((res) => {
       if (res) {
@@ -696,12 +698,12 @@ export class StagesDetailComponent implements OnInit {
         this.notiService.notifyCode('SYS007');
         this.popupUpdateProgress.close();
         this.calculateProgressStep();
-      }else{
+      } else {
         this.popupUpdateProgress.close();
       }
     });
   }
-   // check checkbox 100%
+  // check checkbox 100%
   checkProgress(event, data) {
     if (event?.data) {
       data[event?.field] = 100;
@@ -733,11 +735,11 @@ export class StagesDetailComponent implements OnInit {
     return { average: average, indexGroup: indexGroup, indexTask: indexTask };
   }
 
-  calculateProgressStep(){
+  calculateProgressStep() {
     const sum = this.taskGroupList.reduce((accumulator, currentValue) => {
       return accumulator + Number(currentValue['progress'] || 0);
     }, 0);
-    let medium = (sum/this.taskGroupList.length).toFixed(2);
+    let medium = (sum / this.taskGroupList.length).toFixed(2);
     this.step.progress = Number(medium);
     this.progress = medium;
   }
@@ -943,9 +945,14 @@ export class StagesDetailComponent implements OnInit {
   }
   //End task -- nvthuan
 
-  openPopupReason(){
+  openPopupReason() {
     this.listReasonsClick = [];
-    this.dialogPopupReason = this.callfc.openForm(this.viewReason, '', 500, 500);
+    this.dialogPopupReason = this.callfc.openForm(
+      this.viewReason,
+      '',
+      500,
+      500
+    );
   }
   changeReasonMF(e) {
     console.table(e);
@@ -963,7 +970,7 @@ export class StagesDetailComponent implements OnInit {
       });
     }
   }
-  clickMFReason($event,data){
+  clickMFReason($event, data) {
     switch ($event.functionID) {
       case 'SYS02':
         this.deleteReason(data);
@@ -972,14 +979,13 @@ export class StagesDetailComponent implements OnInit {
         break;
     }
   }
-  checkValue($event,data){
-    if($event && $event.currentTarget.checked){
-        var reason = this.handleReason(data,this.dataStep);
-        this.listReasonsClick.push(reason);
-    }
-    else {
-      let idx = this.listReasonsClick.findIndex(x=> x.recID  === data.recID);
-      if(idx>=0) this.listReasonsClick.splice(idx, 1);
+  checkValue($event, data) {
+    if ($event && $event.currentTarget.checked) {
+      var reason = this.handleReason(data, this.dataStep);
+      this.listReasonsClick.push(reason);
+    } else {
+      let idx = this.listReasonsClick.findIndex((x) => x.recID === data.recID);
+      if (idx >= 0) this.listReasonsClick.splice(idx, 1);
     }
   }
   handleReason(
@@ -993,38 +999,42 @@ export class StagesDetailComponent implements OnInit {
     // reason.reasonType = this.isReason ? '1' : '2';
     return reason;
   }
-  onSaveReason(){
-
-    var data = [this.instance.recID,this.dataStep.stepID, this.listReasonsClick];
+  onSaveReason() {
+    var data = [
+      this.instance.recID,
+      this.dataStep.stepID,
+      this.listReasonsClick,
+    ];
     this.dpService.updateListReason(data).subscribe((res) => {
-      if(res){
+      if (res) {
         this.dataStep.reasons = this.listReasonsClick;
         this.dialogPopupReason.close();
         this.notiService.notifyCode('SYS007');
         return;
       }
-    })
+    });
   }
-  deleteReason(data){
+  deleteReason(data) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x?.event && x.event?.status == 'Y') {
-          this.onDeleteReason(data);
-      }
-      else {
-          return;
+        this.onDeleteReason(data);
+      } else {
+        return;
       }
     });
   }
 
-  onDeleteReason(dataReason){
-    var data = [this.instance.recID,this.dataStep.stepID, dataReason.recID];
+  onDeleteReason(dataReason) {
+    var data = [this.instance.recID, this.dataStep.stepID, dataReason.recID];
     this.dpService.DeleteListReason(data).subscribe((res) => {
-      if(res){
-        let idx = this.dataStep.reasons.findIndex(x=> x.recID  === dataReason.recID);
-        if(idx >= 0) this.dataStep.reasons.splice(idx, 1);
+      if (res) {
+        let idx = this.dataStep.reasons.findIndex(
+          (x) => x.recID === dataReason.recID
+        );
+        if (idx >= 0) this.dataStep.reasons.splice(idx, 1);
         this.notiService.notifyCode('SYS008');
         return;
       }
-    })
+    });
   }
 }

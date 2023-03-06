@@ -233,7 +233,7 @@ export class PopupParticipantsComponent implements OnInit {
           }
         });
       }
-      var lstUser = list.filter((x) => x.objectType == 'U');
+      var lstUser = list.filter((x) => x.objectType == 'U' || x.objectType == '1');
       if (lstUser != null && lstUser.length > 0) {
         var tmpList = [];
         lstUser.forEach((element) => {

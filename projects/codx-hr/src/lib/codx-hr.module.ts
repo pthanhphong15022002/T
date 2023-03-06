@@ -1,3 +1,4 @@
+import { EmployeeContractComponent } from './employee-contract/employee-contract.component';
 import { PopupEBasicSalariesComponent } from './employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
 import { PopupEJobSalariesComponent } from './employee-profile/popup-ejob-salaries/popup-ejob-salaries.component';
 import { PopupEWorkPermitsComponent } from './employee-profile/popup-ework-permits/popup-ework-permits.component';
@@ -87,7 +88,8 @@ import { PopupEmpBusinessTravelsComponent } from './employee-profile/popup-emp-b
 import { PopupEbenefitComponent } from './employee-profile/popup-ebenefit/popup-ebenefit.component';
 import { PopupJobGeneralInfoComponent } from './employee-profile/popup-job-general-info/popup-job-general-info.component';
 import { EmployeeDetailComponent } from './employee-list/employee-detail/employee-detail.component';
-
+// import { LayoutComponent } from './_layout/layout.component';
+import { LayoutComponent } from 'projects/codx-hr/src/lib/_layout/layout.component';
 export const routes: Routes = [
   {
     path: '',
@@ -116,6 +118,16 @@ export const routes: Routes = [
           },
         ],
       },
+      // {
+      //   path:'',
+      //   component: LayoutComponent,
+      //   children:[
+      //     {
+      //       path: 'econtracts/:funcID',
+      //       component: EmployeeContractComponent,
+      //     }
+      //   ]
+      // },
       {
         path: '',
         component: LayoutOnlyHeaderComponent,
@@ -129,7 +141,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        component: NoSubAsideComponent,
+        component: LayoutComponent,
         children: [
           // {
           //   path: 'contactbook/:funcID',
@@ -160,6 +172,10 @@ export const routes: Routes = [
             path: 'reportingline/:funcID',
             data: { noReuse: true },
             component: ReportinglineComponent,
+          },
+          {
+            path: 'econtracts/:funcID',
+            component: EmployeeContractComponent,
           },
           // {
           //   path: 'employeeinfomation/:funcID',
@@ -223,6 +239,7 @@ export const routes: Routes = [
 ];
 
 const T_Component: Type<any>[] = [
+  LayoutComponent,
   EmpContactsComponent,
   EmployeesComponent,
   PopupAddEmployeesComponent,
