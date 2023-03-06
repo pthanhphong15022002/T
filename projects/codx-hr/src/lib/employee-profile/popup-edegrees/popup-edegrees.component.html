@@ -341,7 +341,7 @@
 >
 
 <ng-template #body>
-  <div class="form-group row">
+  <div class="form-group row mt-5">
     <codx-label fiedName="DegreeName" [formModel]="formModel"></codx-label>
     <codx-input
       field="degreeName"
@@ -426,34 +426,13 @@
         [Group]="formGroup"
         [formModel]="formModel"
       ></codx-input> -->
-      <codx-dropdown-calendar 
-      cssPopup="h-500px w-500px" 
-      [value]="Date(degreeObj.trainFromDate)" 
-      [selectedType]="fromDateFormat" 
-      [displayOption]="ops"
-      cssClass="w-100 om-calendar" 
-      class="me-4" 
-      (change)="changeCalendar($event, 'FromDate')"
-      >
-    </codx-dropdown-calendar>
+      <codx-dropdown-calendar [emptyText]="headerTextCalendar[0]" [firstChange]="isNullFrom" cssPopup="h-500px w-500px" [value]="Date(degreeObj.trainFromDate)" [selectedType]="fromDateFormat" [displayOption]="ops"
+          cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event, 'FromDate')"></codx-dropdown-calendar>
     </div>
     <div class="col-6">
       <codx-label fiedName="TrainTo" [formModel]="formModel"></codx-label>
-      <!-- <codx-input
-        field="trainTo"
-        [Group]="formGroup"
-        [formModel]="formModel"
-      ></codx-input> -->
-      <codx-dropdown-calendar 
-      cssPopup="h-500px w-500px" 
-      [value]="Date(degreeObj.trainToDate)" 
-      [selectedType]="toDateFormat" 
-      [displayOption]="ops"
-      cssClass="w-100 om-calendar" 
-      class="me-4" 
-      (change)="changeCalendar($event, 'ToDate')"
-      >
-    </codx-dropdown-calendar>
+      <codx-dropdown-calendar [emptyText]="headerTextCalendar[1]" [firstChange]="isNullTo" cssPopup="h-500px w-500px" [value]="Date(degreeObj.trainToDate)" [selectedType]="toDateFormat" [displayOption]="ops"
+      cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event, 'ToDate')"></codx-dropdown-calendar>
     </div>
   </div>
 

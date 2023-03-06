@@ -121,15 +121,12 @@ export class InstanceDetailComponent implements OnInit {
     if (changes['dataSelect']) {
       this.id = changes['dataSelect'].currentValue.recID;
       this.dataSelect = changes['dataSelect'].currentValue;
-      this.currentStep = this.dataSelect.currentStep;
+      // this.currentStep = this.dataSelect.currentStep; // curenSteps da xoa
+      // this.currentStep = 
       this.instanceStatus = this.dataSelect.status;
       this.instance = this.dataSelect;
-    // this.GetStepsByInstanceIDAsync(this.id,this.dataSelect.processID);
-  this.GetStepsByInstanceIDAsync(this.id);
-      //cái này xóa luon di. chưa chạy xong api mà gọi ra la sai
-      // if (this.listSteps == null && this.listSteps.length == 0) {
-      //   this.tmpTeps = null;
-      // }
+     this.GetStepsByInstanceIDAsync(this.id);
+     // this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
       this.getDataGanttChart(this.recID);
     }
     console.log(this.formModel);
@@ -139,9 +136,9 @@ export class InstanceDetailComponent implements OnInit {
     // var data = [insID,proccessID];
        var data = [insID];
      this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
-      if (res) {
+       if (res) {
         this.listSteps = res;
-        // this.getListStepsStatus();
+        this.getListStepsStatus();
         var total = 0;
         for (var i = 0; i < this.listSteps.length; i++) {
           var stepNo = i;
@@ -166,8 +163,8 @@ export class InstanceDetailComponent implements OnInit {
         this.stepName = '';
         this.progress = '0';
         this.tmpTeps = null;
-      }
-      this.getListStepsStatus();
+       }
+    //  this.getListStepsStatus();
     });
   }
 
@@ -224,11 +221,11 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   click(indexNo, data) {
-    if (this.currentStep < indexNo) return;
-    this.currentNameStep = indexNo;
+    // if (this.currentStep < indexNo) return;
+    // this.currentNameStep = indexNo;
     var indx = this.listSteps.findIndex(x=>x.stepID == data);
     this.tmpTeps =  this.listSteps[indx];
-    this.onwer = this.tmpTeps.owner;
+    this.onwer = this.tmpTeps?.owner; // nhớ cho phép null cái
   }
 
   // continues(data) {

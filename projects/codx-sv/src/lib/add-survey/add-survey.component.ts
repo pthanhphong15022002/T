@@ -195,7 +195,6 @@ export class AddSurveyComponent extends UIComponent {
   review() {
     this.codxService.openUrlNewTab('', 'sv/review', {
       funcID: this.funcID,
-      title: this.title,
       recID: this.recID,
     });
   }

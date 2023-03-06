@@ -15,13 +15,9 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
   headerText:string;
   formModel: FormModel;
   gridViewSetup:any;
-  itemID:any;
-  toUMID:any;
-  fromUMID:any;
-  conversion:any;
-  inverted:any;
   validate:any = 0;
-  umconversion:UMConversion;
+  type:any;
+  umconversion:UMConversion = new UMConversion();
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -36,24 +32,12 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
-    this.itemID = '';
-    this.toUMID = '';
-    this.conversion = '';
-    this.inverted = false;
+    this.type = dialogData.data?.type;
     if (dialogData.data?.umid != null) {
-      this.fromUMID = dialogData.data?.umid;
+      this.umconversion.fromUMID = dialogData.data?.umid;
     }
     if (dialogData.data?.data != null) {
       this.umconversion = dialogData.data?.data;
-      this.itemID = this.umconversion.itemID;
-      this.toUMID = this.umconversion.toUMID;
-      this.conversion = this.umconversion.conversion;
-      this.fromUMID = this.umconversion.fromUMID;
-      if (this.umconversion.fromUMID == 1) {
-        this.inverted = true;
-      }else{
-        this.inverted = false;
-      }
     }
     this.cache.gridViewSetup('UMConversion', 'grvUMConversion').subscribe((res) => {
       if (res) {
@@ -68,34 +52,18 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
   }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    if (this.umconversion == null) {
-      this.umconversion = this.form.formGroup.value;
-      this.umconversion.fromUMID = this.fromUMID;
-      this.umconversion.recID = Guid.newGuid();
-      this.umconversion.inverted = 0;
-    }
   }
   //#endregion
 
   //#region Function
   valueChangeInverted(e:any){
-    this.inverted = e.data
     if (e.data) {
       this.umconversion[e.field] = 1;
     }else{
       this.umconversion[e.field] = 0;
     }  
   }
-  valueChangeItemID(e:any){
-    this.itemID = e.data;
-    this.umconversion[e.field] = e.data;
-  }
-  valueChangeToUMID(e:any){
-    this.toUMID = e.data;
-    this.umconversion[e.field] = e.data;
-  }
-  valueChangeConversion(e:any){
-    this.conversion = e.data;
+  valueChange(e:any){
     this.umconversion[e.field] = e.data;
   }
   checkValidate() {
@@ -130,23 +98,14 @@ export class PopAddConversionComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     }else{
+      if (this.type == 'edit') {
+        this.notification.notifyCode('SYS007', 0, '');
+      }else{
+        this.notification.notifyCode('SYS006', 0, '');
+      }
       window.localStorage.setItem("dataumconversion",JSON.stringify(this.umconversion));
       this.dialog.close();
     }
   }
   //#endregion
 }
-//#region Guid
-class Guid {
-  static newGuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
-  }
-}
-//#endregion

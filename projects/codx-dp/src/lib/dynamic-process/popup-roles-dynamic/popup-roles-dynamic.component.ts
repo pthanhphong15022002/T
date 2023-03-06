@@ -172,8 +172,6 @@ export class PopupRolesDynamicComponent implements OnInit {
 
   checkAdminUpdate() {
     if (
-      this.process.permissions[this.currentPemission].roleType == 'P' ||
-      this.process.permissions[this.currentPemission].roleType == 'F' ||
       this.process.permissions[this.currentPemission].objectType == '1'
     )
       return true;

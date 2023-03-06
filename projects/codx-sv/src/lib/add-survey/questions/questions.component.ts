@@ -39,6 +39,7 @@ import { TemplateSurveyOtherComponent } from './template-survey-other.component/
 import { PopupQuestionOtherComponent } from './template-survey-other.component/popup-question-other/popup-question-other.component';
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { SortSessionComponent } from './sort-session/sort-session.component';
+import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-questions',
@@ -224,25 +225,21 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     // });
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes?.recID &&
-      changes.recID?.previousValue != changes.recID?.currentValue
-    )
+    if ( changes?.funcID && changes.funcID?.previousValue != changes.funcID?.currentValue)
     {
-      this.loadData(this.recID);
+      this.funcID = changes.funcID?.currentValue;
+      //if(this.funcID) this.loadDataFunc();
     }
-    if (
-      changes?.funcID &&
-      changes.funcID?.previousValue!= changes.funcID?.currentValue
-    )
+    if(changes?.recID && changes.recID?.previousValue != changes.recID?.currentValue)
     {
-      this.funcID = changes.data?.currentValue?.funcID;
-      if(this.funcID) this.loadDataFunc();
+      this.recID = changes.recID?.currentValue;
+      this.loadDataFunc();
     }
   }
   //lấy answerType
   setAnswerType(answerType:any , type:any)
   {
+    debugger
     return this.listMoreFunc.filter(x=>x.id == answerType)[0][type];
   }
 
@@ -284,10 +281,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   onInit(): void {
-    if(this.funcID)
-    {
-      this.loadDataFunc();
-    }
+   
   }
 
   loadDataFunc()
@@ -328,18 +322,19 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       .execSv("SV",'SV', 'QuestionsBusiness', 'GetByRecIDAsync', recID)
       .subscribe((res: any) => {
         if (res && res[0] && res[0].length > 0) {
+          debugger
           this.questions = this.getHierarchy(res[0], res[1]);
-          this.SVServices.getFilesByObjectType(
-            this.functionList.entityName
+          this.SVServices.getFilesByObjectTypeRefer(
+            this.functionList.entityName,
+            this.recID
           ).subscribe((res: any) => {
             if (res) {
               res.forEach((x) => {
-                if (x.referType == this.REFER_TYPE.VIDEO)
+                if (x.referType = this.recID +"_"+ this.REFER_TYPE.VIDEO)
                   x['srcVideo'] = `${environment.urlUpload}/${x.pathDisk}`;
               });
               this.lstEditIV = res;
             }
-            console.log('check lstFile', this.lstEditIV);
           });
         } else {
           this.questions = [
@@ -369,7 +364,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
                   mandatory: false,
                   answerType: 'O',
                   category: 'Q',
-                  parentID: '1',
                 },
               ],
             },
@@ -377,25 +371,30 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
           var list = [];
           list.push(this.questions[0]);
           list = list.concat(this.questions[0].children)
-          this.api
-          .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
-            recID,
-            list,
-            true,
-          ]).subscribe((item:any)=>{
-            if(item)
-            {
-              this.idSession = item.idSession; 
-              this.questions[0].children = item.lst;
-              this.questions[0].children[0]['active'] = true;
-            }
-          });
+          this.addNewQ(list);
         }
         this.questions[0].children[0]['active'] = true;
         this.itemActive = this.questions[0].children[0];
       });
   }
-
+  addNewQ(listQ:any)
+  {
+ 
+    this.api
+    .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
+      this.recID,
+      listQ,
+      true,
+    ]).subscribe((item:any)=>{
+      if(item)
+      {
+        debugger
+        this.idSession = item.idSession; 
+        this.questions[0].children = item.lst;
+        this.questions[0].children[0]['active'] = true;
+      }
+    });
+  }
   getHierarchy(dtS :any , dtQ: any) {
     if(dtS)
     {
@@ -403,8 +402,17 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       {
         dtS[i].children = dtQ.filter(x=>x.parentID == dtS[i].recID);
         dtQ = dtQ.filter(x=>x.parentID != dtS[i].recID);
+        if(dtS[i].children && dtS[i].children.length>0)
+        {
+          for(var a = 0 ; a < dtS[i].children.length ; a++)
+          {
+            var check = dtS[i].children[a].answers.filter(x=>x.other);
+            if(check && check.length>0) dtS[i].children[a].other = true;
+          }
+        }
       }
-      dtS[0].children[0]['active'] = true;
+      if(dtS[0].children && dtS[0].children.length>0)
+        dtS[0].children[0]['active'] = true;
       return dtS;
     }
   }
@@ -424,12 +432,12 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   dropAnswer(event: CdkDragDrop<string[]>, idParent) {
-    debugger
     var index = this.questions[0].children.findIndex((x) => x.seqNo == idParent);
     this.dataAnswer = this.questions[0].children[index].answers;
     moveItemInArray(this.dataAnswer, event.previousIndex, event.currentIndex);
     this.dataAnswer.forEach((x, index) => (x.seqNo = index));
     this.questions[0].children[idParent].answers = this.dataAnswer;
+    this.setTimeoutSaveData(this.questions[0].children, false);
   }
 
   dropAnswerRC(
@@ -546,9 +554,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   addAnswer(indexSession, indexQuestion) {
-    var data = JSON.parse(
-      JSON.stringify(this.questions[indexSession].children[indexQuestion])
-    );
+    var data = this.questions[indexSession].children[indexQuestion];
     data?.answers.filter((x) => x.other == false);
     var seqNo = data?.answers.length;
     var dataAnswerTemp = {
@@ -572,22 +578,19 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       data.answers.splice(seqNo - 1, 0, dataOtherTemp);
       data.answers[index + 1].seqNo = seqNo;
     } else data.answers.push(dataAnswerTemp);
-    this.questions[indexSession].children[indexQuestion].answers = data.answers;
+    //this.questions[indexSession].children[indexQuestion].answers = data.answers;
     this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveDataAnswer([data], false);
   }
 
   deleteAnswer(indexSession, indexQuestion, dataAnswer) {
-    var data = JSON.parse(
-      JSON.stringify(
-        this.questions[indexSession].children[indexQuestion].answers
-      )
-    );
-    data = data.filter((x) => x.seqNo != dataAnswer.seqNo);
+    var data = this.questions[indexSession].children[indexQuestion].answers
+    var i = data.findIndex((x) => x.seqNo == dataAnswer.seqNo);
+    data.splice(i,1);
     data.forEach((x, index) => {
       x.seqNo = index;
     });
-    this.questions[indexSession].children[indexQuestion].answers = data;
+    //this.questions[indexSession].children[indexQuestion].answers = data;
     if (dataAnswer.other)
       this.questions[indexSession].children[indexQuestion].other = false;
     console.log('check questions', this.questions);
@@ -602,7 +605,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   deleteCard(seqNoSession, seqNoQuestion, recIDQuestion, category) {
     if (category == 'S') this.deleteSession(seqNoSession);
     else this.deleteNoSession(seqNoSession, seqNoQuestion, recIDQuestion);
-    console.log('check delete card', this.questions);
   }
 
   mergeSession(itemSession) {
@@ -685,13 +687,9 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       isColumn: false,
       hasPicture: false,
     };
-    var data = JSON.parse(
-      JSON.stringify(
-        this.questions[indexSession].children[indexQuestion].answers
-      )
-    );
+    var data = this.questions[indexSession].children[indexQuestion].answers
     data.push(dataAnswerTemp);
-    this.questions[indexSession].children[indexQuestion]!.answers = data;
+    //this.questions[indexSession].children[indexQuestion]!.answers = data;
     this.questions[indexSession].children[indexQuestion]['other'] = true;
     this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveData(
@@ -1042,6 +1040,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       data: this.itemActive,
       inline: inline,
       itemAnswer: itemAnswer,
+      referType: this.recID
     };
     var dialog = this.callfc.openForm(
       PopupUploadComponent,
@@ -1049,7 +1048,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       900,
       600,
       '',
-      obj,
+      obj, 
       ''
     );
     dialog.closed.subscribe((res) => {
@@ -1194,8 +1193,34 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       if (category == 'S') this.addSession(itemActive, seqNoSession);
       else this.addNoSession(itemActive, seqNoSession, category);
     }
+    else if(this.questions[0].children && this.questions[0].children.length < 1) {
+      this.addNewQuestion();
+    }
   }
-
+  addNewQuestion()
+  {
+    this.questions[0].children = [];
+    var newQ = {
+      seqNo: 0,
+      question: 'Câu hỏi 1',
+      answers: [
+        {
+          seqNo: 0,
+          answer: 'Tùy chọn 1',
+          other: false,
+          isColumn: false,
+          hasPicture: false,
+        },
+      ],
+      other: true,
+      mandatory: false,
+      answerType: 'O',
+      category: 'Q',
+      parentID: this.questions[0].recID
+    };
+    this.questions[0].children.push(newQ);
+    this.addNewQ(this.questions[0].children);
+  }
   addTemplateCard(itemActive, seqNoSession, data, category) {
     if (category == 'S') this.addTemplateSession(seqNoSession, data);
     else this.addTemplateQuestion(itemActive, seqNoSession, data);
@@ -1322,6 +1347,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     tempQuestion.category = category;
     tempQuestion.recID = this.GUID;
     tempQuestion.parentID = this.questions[seqNoSession].recID;
+   
     delete tempQuestion.id;
     this.questions[seqNoSession].children.splice(
       itemActive.category == 'S' ? 0 : itemActive.seqNo + 1,
@@ -1331,10 +1357,11 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     this.questions[seqNoSession].children.forEach(
       (x, index) => (x.seqNo = index)
     );
+    this.questions[seqNoSession].transID = this.recID;
     this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveData(
       [tempQuestion],
-      false,
+      true,
       this.questions[seqNoSession].children
     );
     if (itemActive.category == 'S') this.questions[seqNoSession].active = false;
@@ -1450,12 +1477,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     var recID = JSON.parse(JSON.stringify(this.GUID));
     if (answerType) {
       this.defaultMoreFunc = this.listMoreFunc.filter(x=>x.id == answerType)[0];
-      var data = JSON.parse(
-        JSON.stringify(
-          this.questions[seqNoSession].children[itemQuestion.seqNo]
-        )
-      );
-      debugger
+      var data = this.questions[seqNoSession].children[itemQuestion.seqNo];
       data.answerType = answerType;
       if (
         answerType == 'O' ||
@@ -1477,39 +1499,44 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         //   };
         //   data.answers.push(dataAnswerTemp);
         // }
-        if (answerType != 'O' && answerType != 'C' && answerType != 'L') {
-          data.answers = new Array();
-          let dataAnswerTemp = {
-            recID: recID,
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-          };
-          data.answers.push(dataAnswerTemp);
+          if (answerType != 'O' && answerType != 'C' && answerType != 'L') {
+            data.answers = new Array();
+            let dataAnswerTemp = {
+              recID: recID,
+              seqNo: 0,
+              answer: 'Tùy chọn 1',
+              other: false,
+            };
+            data.answers.push(dataAnswerTemp);
+          }
+
+          if(answerType != 'O' && answerType != 'C')
+          {
+            this.lstEditIV = [];
+            this.SVServices.deleteFilesByContainRefer(this.recID).subscribe();;
+          }
+        } 
+        else if (answerType == 'O2' || answerType == 'C2') 
+        {
+          if ( itemQuestion.answerType != 'O2' && itemQuestion.answerType != 'C2') {
+            data.answers = new Array();
+            let dataAnswerR = {
+              recID: recID,
+              seqNo: 0,
+              answer: 'Hàng 1',
+              isColumn: false,
+            };
+            data.answers.push(dataAnswerR);
+            this.generateGuid();
+            let dataAnswerC = {
+              recID: this.GUID,
+              seqNo: 0,
+              answer: 'Cột 1',
+              isColumn: true,
+            };
+            data.answers.push(dataAnswerC);
+          }
         }
-      } else if (answerType == 'O2' || answerType == 'C2') {
-        if (
-          itemQuestion.answerType != 'O2' &&
-          itemQuestion.answerType != 'C2'
-        ) {
-          data.answers = new Array();
-          let dataAnswerR = {
-            recID: recID,
-            seqNo: 0,
-            answer: 'Hàng 1',
-            isColumn: false,
-          };
-          data.answers.push(dataAnswerR);
-          this.generateGuid();
-          let dataAnswerC = {
-            recID: this.GUID,
-            seqNo: 0,
-            answer: 'Cột 1',
-            isColumn: true,
-          };
-          data.answers.push(dataAnswerC);
-        }
-      }
 
       //Lọc câu hỏi "khác"
       if(answerType == 'L' && data.answers && data.answers.length>0)
@@ -1517,8 +1544,8 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         data.answers = data.answers.filter(x=>!x.other);
         data.other = false;
       }
-
-      this.questions[seqNoSession].children[itemQuestion.seqNo] = data;
+      debugger
+      //this.questions[seqNoSession].children[itemQuestion.seqNo] = data;
       this.change.detectChanges();
       this.SVServices.signalSave.next('saving');
       this.setTimeoutSaveData(
@@ -1569,10 +1596,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     };
     dataTemp.push(dataAnswerTemp);
     this.questions[seqNoSession].children[seqNoQuestion].answers = dataTemp;
-    console.log(
-      'check addAnswerC',
-      this.questions[seqNoSession].children[seqNoQuestion].answers
-    );
   }
 
   deleteAnswerRC(seqNoSession, seqNoQuestion, itemAnswer, answerType) {

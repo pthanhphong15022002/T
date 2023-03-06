@@ -1,16 +1,16 @@
 export class ChartOfAccounts {
   accountID: any;
   accountName: any;
-  AccountName2: any;
-  AccountType: any;
+  accountName2: any;
+  accountType: any;
   parentID: any;
   Consolidate: any;
   detail: any;
   multiCurrency: any;
   subLGControl: any;
   subLGType: any;
-  ObjectType: any;
-  ObjectID: any;
+  objectType: any;
+  objectID: any;
   invoiceDetail: any;
   diM1Control: any;
   diM2Control: any;
@@ -20,17 +20,17 @@ export class ChartOfAccounts {
   PostControl: any;
   budgetControl: any;
   balControl: any;
-  VATControl: any;
-  DIM1: any;
-  DIM2: any;
-  DIM3: any;
+  vATControl: any;
+  dIM1: any;
+  dIM2: any;
+  dIM3: any;
   note: any;
   stop: any;
-  Owner: any;
-  BUID: any;
-  CreatedOn: any;
-  CreatedBy: any;
-  ModifiedOn: any;
-  ModifiedBy: any;
+  owner: any;
+  buid: any;
+  createdOn: any;
+  createdBy: any;
+  modifiedOn: any;
+  modifiedBy: any;
   projectControl: any;
 }

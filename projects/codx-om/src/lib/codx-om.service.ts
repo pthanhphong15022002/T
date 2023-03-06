@@ -328,6 +328,16 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
   //-----------------------------------OKR Plan--------------------------------------//
   //---------------------------------------------------------------------------------//
+  //Lấy model
+getOKRModel() {
+  return this.api.execSv(
+    OMCONST.SERVICES,
+    OMCONST.ASSEMBLY,
+    OMCONST.BUSINESS.OKR,
+    'GetModelAsync',
+    []
+  );
+}
   //Thêm, sửa okr plan
   addEditOKRPlans(okrPlan: any, listOKR =[],isAdd:boolean) {
     return this.api.execSv(
@@ -392,12 +402,20 @@ export class CodxOmService {
   //---------------------------------------------------------------------------------//
   //-----------------------------------KR--------------------------------------------//
   //---------------------------------------------------------------------------------//
-
+  getCheckInModel() {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetCheckInModelAsync',
+      []
+    );
+  }
   checkInKR(recID: string, checkIn: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.KR,
+      OMCONST.BUSINESS.OKR,
       'CheckInKRAsync',
       [recID, checkIn]
     );
@@ -406,7 +424,7 @@ export class CodxOmService {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.KR,
+      OMCONST.BUSINESS.OKR,
       'AddKRAsync',
       [kr]
     );
@@ -415,18 +433,18 @@ export class CodxOmService {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.KR,
+      OMCONST.BUSINESS.OKR,
       'EditKRAsync',
       [kr]
     );
   }
-  deleteKR(kr: any) {
+  deleteOKR(okr: any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.KR,
-      'DeleteKRAsync',
-      [kr]
+      OMCONST.BUSINESS.OKR,
+      'DeleteOKRAsync',
+      [okr]
     );
   }
   //---------------------------------------------------------------------------------//
@@ -437,7 +455,7 @@ export class CodxOmService {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OB,
+      OMCONST.BUSINESS.OKR,
       'AddOBAsync',
       [ob, listShares]
     );
@@ -446,22 +464,13 @@ export class CodxOmService {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OB,
+      OMCONST.BUSINESS.OKR,
       'EditOBAsync',
       [ob, listShares]
     );
-  }
-  deleteOB(kr: any) {
-    return this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OB,
-      'DeleteOBAsync',
-      [kr]
-    );
-  }
+  }  
   //---------------------------------------------------------------------------------//
-  //-----------------------------------Method--------------------------------------------//
+  //-----------------------------------Method----------------------------------------//
   //---------------------------------------------------------------------------------//
 
   distributeOKR(

@@ -31,12 +31,16 @@ export class APPostingAccountsComponent
 
   views: Array<ViewModel> = [];
   menuActive = 1; // = ModuleID
+  menuNavs: any[];
   menuItems1: Array<any> = [];
   menuItems2: Array<any> = [];
   selectedValue: string;
+  defaultPostType1: string;
+  defaultPostType2: string;
   btnAdd = {
     id: 'btnAdd',
   };
+  functionName: string;
 
   constructor(inject: Injector) {
     super(inject);
@@ -48,11 +52,18 @@ export class APPostingAccountsComponent
     this.cache.valueList('AC049').subscribe((res) => {
       console.log(res);
       this.menuItems1 = res?.datas;
+      this.defaultPostType1 = res?.datas[0].value;
     });
 
     this.cache.valueList('AC050').subscribe((res) => {
       console.log(res);
       this.menuItems2 = res?.datas;
+      this.defaultPostType2 = res?.datas[0].value;
+    });
+
+    this.cache.valueList('AC057').subscribe((res) => {
+      console.log(res);
+      this.menuNavs = res?.datas;
     });
   }
 
@@ -69,6 +80,12 @@ export class APPostingAccountsComponent
         },
       },
     ];
+
+    this.cache.functionList(this.view.funcID).subscribe((res) => {
+      console.log(res);
+      this.functionName =
+        res.defaultName.charAt(0).toLowerCase() + res.defaultName.slice(1);
+    });
   }
   //#endregion
 
@@ -79,28 +96,40 @@ export class APPostingAccountsComponent
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(data);
+        this.edit(e, data);
+        break;
+      case 'SYS04':
+        this.copy(e, data);
         break;
     }
   }
-  //#endregion
 
-  //#region Method
-  handleClickAdd() {
+  handleClickAdd(e) {
     (this.grid.dataService as CRUDService).addNew().subscribe((res: any) => {
       let options = new SidebarModel();
       options.DataService = this.grid.dataService;
       options.FormModel = this.grid.formModel;
       options.Width = '550px';
 
+      let postType = this.selectedValue;
+      if (this.menuActive == 1) {
+        if (!this.menuItems1.some((i) => i.value === this.selectedValue)) {
+          postType = this.defaultPostType1;
+        }
+      } else {
+        if (!this.menuItems2.some((i) => i.value === this.selectedValue)) {
+          postType = this.defaultPostType2;
+        }
+      }
+
       this.callfc.openSide(
         PopupAddAPPostingAccountComponent,
         {
           formType: 'add',
-          formTitle: 'Thêm thiết lập phải trả',
+          formTitle: `${e.text} ${this.functionName}`,
           moduleId: this.menuActive,
-          postType: this.selectedValue,
-          breadcrumb: this.getBreadcrumb(),
+          postType: postType,
+          breadcrumb: this.getBreadcrumb(this.menuActive, postType),
         },
         options,
         this.view.funcID
@@ -108,15 +137,7 @@ export class APPostingAccountsComponent
     });
   }
 
-  delete(data): void {
-    console.log(data);
-
-    (this.grid.dataService as CRUDService)
-      .delete([data], true)
-      .subscribe((res) => console.log(res));
-  }
-
-  edit(data): void {
+  edit(e, data): void {
     console.log(data);
 
     this.grid.dataService.dataSelected = data;
@@ -130,10 +151,38 @@ export class APPostingAccountsComponent
         PopupAddAPPostingAccountComponent,
         {
           formType: 'edit',
-          formTitle: 'Sửa thiết lập phải trả',
-          moduleId: this.menuActive,
-          postType: this.selectedValue,
-          breadcrumb: this.getBreadcrumb(),
+          formTitle: `${e.text} ${this.functionName}`,
+          moduleId: data.moduleID,
+          postType: data.postType,
+          breadcrumb: this.getBreadcrumb(data.moduleID, data.postType),
+        },
+        options,
+        this.view.funcID
+      );
+    });
+  }
+
+  copy(e, data): void {
+    console.log(e);
+    console.log(data);
+
+    this.grid.dataService.dataSelected = data;
+    (this.grid.dataService as CRUDService).copy().subscribe((res) => {
+      console.log(res);
+
+      let options = new SidebarModel();
+      options.DataService = this.grid.dataService;
+      options.FormModel = this.grid.formModel;
+      options.Width = '550px';
+
+      this.callfc.openSide(
+        PopupAddAPPostingAccountComponent,
+        {
+          formType: 'add',
+          formTitle: `${e.text} ${this.functionName}`,
+          moduleId: data.moduleID,
+          postType: data.postType,
+          breadcrumb: this.getBreadcrumb(data.moduleID, data.postType),
         },
         options,
         this.view.funcID
@@ -141,24 +190,31 @@ export class APPostingAccountsComponent
     });
   }
   //#endregion
-  
+
+  //#region Method
+  delete(data): void {
+    console.log(data);
+
+    (this.grid.dataService as CRUDService)
+      .delete([data], true)
+      .subscribe((res) => console.log(res));
+  }
+  //#endregion
+
   //#region Function
   filter(field: string, value: string): void {
     this.selectedValue = value;
     this.grid.dataService.setPredicates([field + '=@0'], [value]).subscribe();
   }
 
-  getBreadcrumb(): string {
-    let breadcrumb: string = '';
-    if (this.menuActive === 1) {
-      breadcrumb +=
-        'Tài khoản > ' +
-        this.menuItems1.find((m) => m.value === this.selectedValue)?.text;
-    } else {
-      breadcrumb +=
-        'Điều khoản > ' +
-        this.menuItems2.find((m) => m.value === this.selectedValue)?.text;
-    }
+  getBreadcrumb(moduleId, postType): string {
+    let breadcrumb: string = this.menuNavs.find(
+      (m) => m.value == moduleId
+    )?.text;
+    breadcrumb +=
+      moduleId == 1
+        ? ' > ' + this.menuItems1.find((m) => m.value === postType)?.text
+        : ' > ' + this.menuItems2.find((m) => m.value === postType)?.text;
 
     return breadcrumb;
   }

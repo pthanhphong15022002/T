@@ -5,14 +5,14 @@
 .emp-check-add {
   position: fixed;
   z-index: 105;
-  bottom: 20px;
-  right: 20px;
+  bottom: 12px;
+  right: 12px;
   width: 40px !important;
   height: 40px !important;
   box-shadow: 0px 2px 8px 2px rgb(0 0 0 / 40%) !important;
 }
 
-.emp-check-add .btn {
+.emp-check-add .btn.icon-add {
   width: 40px !important;
   height: 40px !important;
 }
@@ -61,7 +61,7 @@
   }
 
   .icon-circle-group {
-    font-size: 6px !important;
+    font-size: 5px !important;
   }
 
   .h-od-tab {
@@ -88,11 +88,15 @@
 
     }
   }
+  .pic-emloyee label.badge{
+    left: 0!important;
+    margin-left: 12px!important;
+  }
 
 }
 
 .profile-grid .e-gridcontent {
-  max-height: 200px;
+  max-height: 320px;
   overflow: auto;
 }
 .info-dropdownlist{
@@ -101,6 +105,10 @@
   margin-right: -10px;
   padding-right: 10px;
 }
-// .user-family{
-//   min-height: calc(100vh - 160px);
-// }
+.profile-info .position-absolute.dropdown.start-0 {
+  left: 100%!important;
+  margin-left: -30px;
+}
+.user-family .bg-white{
+  min-height: calc(100vh - 130px);
+}

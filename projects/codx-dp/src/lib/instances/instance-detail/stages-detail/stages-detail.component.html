@@ -150,7 +150,7 @@
                 cdkDrag
                 [cdkDragData]="taskList"
                 [cdkDragStartDelay]="200"
-                [cdkDragDisabled]="taskList?.recID ? false : true"
+                [cdkDragDisabled]="taskList?.recID && !taskList?.isTaskDefault ? false : true"
               >
                 <div class="card-job px-3 pt-3">
                   <div
@@ -228,6 +228,7 @@
                         cdkDrag
                         [cdkDragStartDelay]="100"
                         [cdkDragData]="task"
+                        [cdkDragDisabled]="task?.isTaskDefault"
                         class="drap-drop"
                       >
                         <div
@@ -358,36 +359,16 @@
 
 <ng-template #timeAndProgress let-data="value">
   <div class="d-flex align-items-center justify-content-end me-3 time-progress">
-    <div class="notify">
-      <!-- <span class="icon-library_books icon-20 text-primary-600 py-2"></span> -->
+    <!-- <div class="notify">
       <span class="me-3">
         <codx-history-temp [objectID]="data.recID"></codx-history-temp
       ></span>
-    </div>
-    <div class="notify">
-      <span class="me-3">
-        <codx-attachment-temp [objectID]="data.recID"></codx-attachment-temp>
-      </span>
-    </div>
-    <div class="notify">
-      <span class="me-3">
-        <codx-comment-temp [objectID]="data.recID"></codx-comment-temp>
-      </span>
-    </div>
+    </div> -->
+   
     <span class="date">
       {{ data?.startDate | date : "dd/MM/yyyy" }} -
       {{ data?.endDate | date : "dd/MM/yyyy" }}</span
     >
-    <span>
-      <codx-img
-        [width]="25"
-        class="me-2"
-        [objectId]="data?.roles[0]?.objectID"
-        objectType="AD_Users"
-        [objectName]="data?.roles[0]?.objectName"
-      ></codx-img>
-    </span>
-
     <div
       class="disabled-inline"
       (click)="checkEventProgress(data) ? openUpdateProgress(data) : ''"
@@ -410,19 +391,27 @@
       >
       </ejs-progressbar>
     </div>
-
-    <div class="progress-pie-chart" data-percent="43">
-      <div class="ppc-progress">
-        <div class="ppc-progress-fill"></div>
-      </div>
-      <div class="ppc-percents">
-        <div class="pcc-percents-wrapper">
-          <span>50%</span>
-        </div>
-      </div>
+    <span>
+      <codx-img
+        [width]="25"
+        class="me-2"
+        [objectId]="data?.roles[0]?.objectID"
+        objectType="AD_Users"
+        [objectName]="data?.roles[0]?.objectName"
+      ></codx-img>
+    </span>
+    <div class="notify">
+      <span class="me-3">
+        <codx-attachment-temp [objectID]="data.recID"></codx-attachment-temp>
+      </span>
+    </div>
+    <div class="notify">
+      <span class="me-3">
+        <codx-comment-temp [objectID]="data.recID"></codx-comment-temp>
+      </span>
     </div>
 
-    <div
+    <!-- <div
       class="progress-task"
       (click)="checkEventProgress(data) ? openUpdateProgress(data) : ''"
       [ngClass]="checkEventProgress(data) ? 'cursor-pointer' : ''"
@@ -445,7 +434,7 @@
           >{{ data?.progress }}%</span
         >
       </div>
-    </div>
+    </div> -->
   </div>
 </ng-template>
 <!-- template công việc -->

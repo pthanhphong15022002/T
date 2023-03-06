@@ -71,17 +71,17 @@
 
       </div>
 
-      <div class="row">
-        <div class="col-4">
-          <codx-label fiedName="CheckInMode" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input ControlName="checkInMode" [formModel]="form.formModel" [Group]="form.formGroup">
-          </codx-input>
-        </div>
+      <div class="row">        
         <div class="col-4">
           <codx-label fiedName="Frequence" [formModel]="form.formModel">
           </codx-label>
           <codx-input ControlName="frequence" [formModel]="form.formModel" [Group]="form.formGroup">
+          </codx-input>
+        </div>
+        <div class="col-4">
+          <codx-label fiedName="CheckInMode" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input ControlName="checkInMode" [formModel]="form.formModel" [Group]="form.formGroup">
           </codx-input>
         </div>
         <!-- <div class="col-1 position-relative">
@@ -91,10 +91,8 @@
 
 
       </div>
-      <div class="row form-group">
-        <div class="col-4">
-        </div>
-        <div class="row">
+      <div class="row mb-2">        
+        <div class="mt-1">
           <div class="d-flex flex-row justify-content-start align-items-center comment-text text-gray-600"
             (click)="openPopupFrequence(popupFrequence)" *ngIf="kr.frequence=='M'">
             <span class="comment-text">Ngày {{kr?.checkIn?.day}} trong tháng vào lúc {{kr?.checkIn?.time}} giờ</span>
@@ -104,9 +102,9 @@
 
           <div class="d-flex flex-row justify-content-start align-items-center comment-text text-gray-600"
             (click)="openPopupFrequence(popupFrequence)" *ngIf="kr.frequence=='W'">
-            <span class="comment-text">Ngày</span>
+            <span class="comment-text me-2">Ngày</span>
             <codx-vll [showText]="true" [name]="'L0012'" [value]="kr?.checkIn?.day"></codx-vll>
-            <span class="comment-text ms-1"> trong tuần vào lúc {{kr?.checkIn?.time}} giờ</span>
+            <span class="comment-text"> trong tuần vào lúc {{kr?.checkIn?.time}} giờ</span>
 
             <span class=" ms-2 icon-edit"> </span>
           </div>

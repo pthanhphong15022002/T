@@ -15,6 +15,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { PopupAddOrganizationComponent } from './popup-add-organization/popup-add-organization.component';
 @Component({
   selector: 'lib-organization',
@@ -39,6 +40,7 @@ export class OrgorganizationComponent extends UIComponent {
   codxTreeView: CodxTreeviewComponent = null;
   dataService: CRUDService = null;
   templateActive: number = 0;
+  isCorporation:boolean = false;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
@@ -47,7 +49,8 @@ export class OrgorganizationComponent extends UIComponent {
 
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
 
-  constructor(private inject: Injector) {
+  constructor(
+    private inject: Injector) {
     super(inject);
   }
 

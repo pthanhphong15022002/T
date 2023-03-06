@@ -37,9 +37,6 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
   formType: any;
   gridViewSetup: any;
   formModel: FormModel;
-  accID: any;
-  parID: any;
-  subLGType: any;
   validate: any = 0;
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
@@ -58,9 +55,6 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.accID = '';
-    this.parID = '';
-    this.subLGType = '';
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.chartOfAccounts = dialog.dataService!.dataSelected;
@@ -72,12 +66,10 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
+          console.log(res);
         }
       });
     if (this.chartOfAccounts.accountID != null) {
-      this.accID = this.chartOfAccounts.accountID;
-      this.parID = this.chartOfAccounts.parentID;
-      this.subLGType = this.chartOfAccounts.subLGType;
       if (this.chartOfAccounts.loanControl) {
         this.chartOfAccounts.loanControl = '1';
       } else {
@@ -94,13 +86,9 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
   }
   //#endregion
 
-  //#region Functione
+  //#region Event
   valueChange(e: any) {
     this.chartOfAccounts[e.field] = e.data;
-  }
-  valueChangeAccID(e: any) {
-    this.accID = e.data;
-    this.chartOfAccounts[e.field] = this.accID;
   }
   valueChangeloan(e: any) {
     if (e.data == '0') {
@@ -109,14 +97,9 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
       this.chartOfAccounts[e.field] = true;
     }
   }
-  valueChangeParID(e: any) {
-    this.parID = e.data;
-    this.chartOfAccounts[e.field] = this.parID;
-  }
-  valueChangeSubtype(e: any) {
-    this.subLGType = e.data;
-    this.chartOfAccounts[e.field] = this.subLGType;
-  }
+  //#endregion
+
+  //#region Function
   setTitle(e: any) {
     this.title = this.headerText;
     this.dt.detectChanges();
@@ -167,7 +150,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
             if (res.save) {
               this.dialog.close(res.save);
             } else {
-              this.notification.notifyCode('SYS031', 0, '"' + this.accID + '"');
+              this.notification.notifyCode('SYS031', 0, '"' + this.chartOfAccounts.accountID + '"');
               return;
             }
           });

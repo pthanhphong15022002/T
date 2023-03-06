@@ -88,14 +88,6 @@ var childRoutes = [
       ),
   },
   {
-    path: 'ep',
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('projects/codx-ep/src/lib/codx-ep.module').then(
-        (m) => m.CodxEpModule
-      ),
-  },
-  {
     path: 'ep4',
     canActivate: [AuthGuard],
     loadChildren: () =>

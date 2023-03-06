@@ -5,7 +5,7 @@
   [button]="btnAdd"
   [autoLoad]="true"
   entityName="AC_APPostingAccounts"
-  (buttonClick)="handleClickAdd()"
+  (buttonClick)="handleClickAdd($event)"
 >
 </codx-views>
 
@@ -38,13 +38,16 @@
                   >
                     <span class="menu-link">
                       <span class="menu-icon">
-                        <span class="icon-house"></span>
+                        <!-- <span class="icon-house"></span> -->
+                        <span
+                          [class]="'1' | vll : 'AC057' : 'icon' | async"
+                        ></span>
                       </span>
                       <span class="menu-title fw-bold">
                         <codx-label
                           fiedName="lblAccount"
                           formName="APPostingAccounts"
-                          default="Tài khoản"
+                          [default]="'1' | vll : 'AC057' : 'text' | async"
                         ></codx-label>
                       </span>
                       <span class="menu-arrow"></span>
@@ -72,13 +75,16 @@
                   >
                     <span class="menu-link">
                       <span class="menu-icon">
-                        <span class="icon-store"></span>
+                        <!-- <span class="icon-store"></span> -->
+                        <span
+                          [class]="'2' | vll : 'AC057' : 'icon' | async"
+                        ></span>
                       </span>
                       <span class="menu-title fw-bold">
                         <codx-label
                           fiedName="lblTerm"
                           formName="APPostingAccounts"
-                          default="Điều khoản"
+                          [default]="'2' | vll : 'AC057' : 'text' | async"
                         ></codx-label>
                       </span>
                       <span class="menu-arrow"></span>

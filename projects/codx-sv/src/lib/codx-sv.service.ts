@@ -210,6 +210,25 @@ export class CodxSvService {
     );
   }
 
+  getFilesByObjectTypeRefer(objectType: any,referType:any) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByObjectTypeReferAsync',
+      [objectType,referType]
+    );
+  }
+
+  deleteFilesByContainRefer(referType:any) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'DeleteFilesByContainReferAsync',
+      referType
+    );
+  }
   onSave(transID, data, isModeAdd) {
     return this.api.execSv(
       'SV',

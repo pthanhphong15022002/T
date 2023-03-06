@@ -38,11 +38,12 @@ erm-quick-links-inner .dropdown-menu {
 .text-primary {
   color: var(--text-primary) !important;
 }
-
 .h-16px {
   height: 16px;
 }
-
+.mb-5px{
+  margin-bottom: 5px;
+}
 /** custom bootstrap  **/
 .rounded-4 {
   border-radius: 1rem !important;
@@ -1560,7 +1561,13 @@ codx-header .btn .badge {
 .vll-tag i[class*="fa-"] {
   margin-right: 3px;
 }
-
+codx-tag .badge.badge-secondary{
+  display: flex!important;
+}
+codx-tag .badge.badge-secondary i[class*="icon-"]{
+  font-size: 12px!important;
+  margin-right: 3px;
+}
 codx-layout-add .codx-tab {
   min-width: 750px;
 }
@@ -1726,9 +1733,9 @@ codx-view-list-detail .e-listview .e-list-parent {
   border-top: 1px #fff solid;
 }
 
-.tooltip * {
-  color: var(--primary-dark) !important;
-}
+// .tooltip * {
+//   color: var(--primary-dark) !important;
+// }
 
 .extend-function .extend-title {
   margin-top: -26px;
@@ -1760,4 +1767,29 @@ a.nav-link {
 }
 
 
-/// 14/2/2023 
+.codx-form .card-footer, .e-dialog .card-footer {
+  padding-top: 8px;
+}
+
+
+.tabhor-popup .card-body.scroll-y{
+  overflow-y: hidden;
+}
+.tabhor-popup .e-content {
+  padding-left: 0 !important;
+  margin-right: -5px;
+  padding-right: 15px;
+  overflow: auto;
+}
+.tabhor-popup .e-content .e-item{
+  height: auto!important;
+}
+.tabhor-popup .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
+  padding: 0 2px !important;
+}
+.tabhor-popup .e-tab .e-tab-header .e-toolbar-item {
+  padding: 0 !important;
+  margin-right: 15px!important;
+}
+
+/// 14/2/2023 s

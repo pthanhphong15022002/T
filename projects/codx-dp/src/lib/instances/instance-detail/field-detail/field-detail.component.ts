@@ -135,4 +135,9 @@ export class FieldDetailComponent implements OnInit {
       .set({ hour: arrTime[0], minute: arrTime[1] })
       .toDate();
   }
+  formatNumber(dt){
+    if(!dt.dataValue) return ''
+    if(dt.dataFormat=='I') return Number.parseFloat(dt.dataValue).toFixed(0) ;
+    return Number.parseFloat(dt.dataValue).toFixed(2) ;
+  }
 }

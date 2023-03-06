@@ -64,7 +64,9 @@ export class PopupAddAPPostingAccountComponent
       });
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    console.log(this.form);
+  }
   //#endregion
 
   //#region Event
@@ -128,6 +130,7 @@ export class PopupAddAPPostingAccountComponent
           } else {
             this.form.formGroup.reset();
             this.apPostingAccount.note = '';
+            delete this.apPostingAccount.recID;
 
             (this.dialogRef.dataService as CRUDService).addNew().subscribe();
           }

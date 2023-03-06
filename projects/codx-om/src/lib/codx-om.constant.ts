@@ -5,8 +5,8 @@ export const OMCONST = {
   BUSINESS: {
     DashBoard: 'DashBoardBusiness',
     OKR: 'OKRBusiness',
-    KR: 'KRBusiness',
-    OB: 'OBBusiness',
+    //KR: 'KRBusiness',
+    //OB: 'OBBusiness',
     OKRPlan: 'OKRPlansBusiness',
     OM: 'OMBusiness',
     Reviews: 'ReviewsBusiness',
@@ -45,6 +45,8 @@ export const OMCONST = {
     Edit: 'SYS03',
     Copy: 'SYS04',
 
+    PlanWeight:'OMT013',
+
     //OB
     OBDetail: 'OMT101',
     OBAssign: 'OMT102',
@@ -57,6 +59,11 @@ export const OMCONST = {
     KRDistribute: 'OMT203',
     KREditSKRWeight: 'OMT204',
     KRCheckIn: 'OMT205',
+    //SKR
+    SKRDetail: 'OMT301',
+    SKRAssign: 'OMT302',
+    SKRDistribute: 'OMT303',
+    SKRCheckIn: 'OMT304',
   },
 
   VLL: {

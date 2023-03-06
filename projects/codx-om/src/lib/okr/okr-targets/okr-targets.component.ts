@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import { text } from 'stream/consumers';
 declare var window: any;
 import { CodxOmService } from './../../codx-om.service';
@@ -17,6 +18,7 @@ import {
   ApiHttpService,
   NotificationsService,
   ButtonModel,
+  FormModel,
 } from 'codx-core';
 import { ChartSettings } from '../../model/chart.model';
 import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.component';
@@ -53,6 +55,7 @@ export class OkrTargetsComponent implements OnInit {
   @Input() krFuncID: any;
   @Input() obFuncID: any;
   @Input() funcID: any;
+  @Input() groupModel: any;
   @Input() isHiddenChart: boolean;
   isCollapsed=false;
   dtStatus = [];
@@ -292,7 +295,10 @@ export class OkrTargetsComponent implements OnInit {
         this.deleteOB(ob);
         break;
       }
-
+      case OMCONST.MFUNCID.OBEditKRWeight: {
+        this.editOKRWeight(ob,e?.text);
+        break;
+      }
       //phân bổ OB
       case OMCONST.MFUNCID.OBDistribute: {
         this.distributeOKR(ob, e?.text);
@@ -321,20 +327,22 @@ export class OkrTargetsComponent implements OnInit {
         break;
       }
       case OMCONST.MFUNCID.Delete: {
-        this.deleteKR(kr);
+        this.deleteKR(kr,isSKR);
         break;
       }
       
+      case OMCONST.MFUNCID.SKRDetail:
       case OMCONST.MFUNCID.KRDetail: {
         this.showKR(kr,e?.text);
         break;
       }
-      case OMCONST.MFUNCID.KRCheckIn: {
-        this.checkIn(kr,popupTitle);
+      case OMCONST.MFUNCID.KRCheckIn:
+      case OMCONST.MFUNCID.SKRCheckIn: {
+        this.checkIn(kr,e.text);
         break;
       }
       case OMCONST.MFUNCID.KREditSKRWeight: {
-        this.editKRWeight(kr,e?.text);
+        this.editSKRWeight(kr,e?.text);
         break;
       }
       //phân bổ KR
@@ -439,7 +447,7 @@ export class OkrTargetsComponent implements OnInit {
   //-----------------------End-------------------------------//
 
   //_______________________Popup_____________________________//
-  editKRWeight(obRecID: any, popupTitle:any) {
+  editOKRWeight(ob: any, popupTitle:any) {
     //popupTitle='Thay đổi trọng số cho KRs';
     let subTitle='Tính kết quả thực hiện cho mục tiêu';
     let dModel = new DialogModel();
@@ -450,12 +458,12 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [obRecID, OMCONST.VLL.OKRType.KResult, popupTitle,subTitle],
+      [ob.recID, OMCONST.VLL.OKRType.KResult, popupTitle,subTitle],
       '',
       dModel
     );
   }
-  editSKRWeight(krRecID: any, popupTitle:any) {
+  editSKRWeight(kr: any, popupTitle:any) {
     //popupTitle='Thay đổi trọng số cho KRs';
     let subTitle='Tính kết quả thực hiện cho mục tiêu';
     let dModel = new DialogModel();
@@ -466,37 +474,26 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [krRecID, OMCONST.VLL.OKRType.SKResult, popupTitle,subTitle],
+      [kr.recID, OMCONST.VLL.OKRType.SKResult, popupTitle,subTitle],
       '',
       dModel
     );
   }
-  checkIn(evt: any, kr: any) {
-    // this.formModelCheckin.entityName = 'OM_OKRs.CheckIns';
-    // this.formModelCheckin.entityPer = 'OM_OKRs.CheckIns';
-    // this.formModelCheckin.gridViewName = 'grvOKRs.CheckIns';
-    // this.formModelCheckin.formName = 'OKRs.CheckIns';
-    // this.dialogCheckIn = this.callfc.openForm(
-    //   PopupCheckInComponent,
-    //   '',
-    //   800,
-    //   500,
-    //   'OMT01',
-    //   [kr, this.formModelCheckin]
-    // );
-    // this.dialogCheckIn.closed.subscribe((res) => {
-    //   if (res && res.event) {
-    //     this.dataKR = res.event;
-    //     this.totalProgress = this.dataKR.progress;
-    //     this.progressHistory.unshift(this.totalProgress);
-    //     this.dataKR.map((item: any) => {
-    //       if (item.recID == res.event.parentID) {
-    //         item = res.event;
-    //       }
-    //     });
-    //   }
-    //   this.detectorRef.detectChanges();
-    // });
+  checkIn(kr: any, popupTitle: any) {
+    
+    let dialogCheckIn = this.callfunc.openForm(
+      PopupCheckInComponent,
+      '',
+      800,
+      500,
+      'OMT01',
+      [kr,popupTitle,{...this.groupModel?.checkInsModel}]
+    );
+    dialogCheckIn.closed.subscribe((res) => {
+      if (res && res.event) {
+        
+      }
+    });
   }
   //OBject  
   addOB(popupTitle:any) {
@@ -547,11 +544,12 @@ export class OkrTargetsComponent implements OnInit {
     });
   }
   deleteOB(ob: any) {
-    if (false) {
+    if (true) {
       //Cần thêm kịch bản khi xóa KR
-      this.codxOmService.deleteKR(ob).subscribe((res: any) => {
+      this.codxOmService.deleteOKR(ob).subscribe((res: any) => {
         if (res) {
           this.notificationsService.notifyCode('SYS008');
+          this.removeOB(ob)
         } else {
           this.notificationsService.notifyCode('SYS022');
         }
@@ -624,12 +622,18 @@ export class OkrTargetsComponent implements OnInit {
     });
   }
 
-  deleteKR(kr: any) {
-    if (false) {
+  deleteKR(kr: any,isSubKR:boolean) {
+    if (true) {
       //Cần thêm kịch bản khi xóa KR
-      this.codxOmService.deleteKR(kr).subscribe((res: any) => {
+      this.codxOmService.deleteOKR(kr).subscribe((res: any) => {
         if (res) {
           this.notificationsService.notifyCode('SYS008');
+          if(isSubKR){
+            this.removeSKR(kr)
+          }
+          else{
+            this.removeKR(kr);
+          }
         } else {
           this.notificationsService.notifyCode('SYS022');
         }
@@ -645,11 +649,8 @@ export class OkrTargetsComponent implements OnInit {
       else{
         for(let oldOB of this.dataOKR){
           if(oldOB.recID== ob.recID){
-           let tempChild=oldOB.child;
-                for(const field in oldOB){
-                  oldOB[field]=ob[field];
-                }
-                oldOB.child=tempChild;
+           
+            this.editRender(oldOB,ob);
               
             
           }
@@ -677,13 +678,8 @@ export class OkrTargetsComponent implements OnInit {
             }
             ob.child.forEach(oldKR => {
               if(oldKR.recID==kr.recID){
-
-                let tempChild=oldKR.child;
-                for(const field in oldKR){
-                  oldKR[field]=kr[field];
-                }
+                this.editRender(oldKR,kr);
                 
-                oldKR.child=tempChild;
               }
             });
                     
@@ -692,8 +688,14 @@ export class OkrTargetsComponent implements OnInit {
       }     
     }    
   }
-  
-
+  editRender(oldOKR:any, newOKR:any){
+    oldOKR.okrName=newOKR?.okrName;
+    oldOKR.target=newOKR?.target;
+    oldOKR.owner=newOKR?.owner;
+    oldOKR.umid=newOKR?.umid;
+    oldOKR.confidence=newOKR?.confidence;
+    oldOKR.category=newOKR?.category;
+  }
   renderSKR(skr:any,isAdd:boolean){
     if (skr!=null) {
       if(isAdd){
@@ -722,9 +724,8 @@ export class OkrTargetsComponent implements OnInit {
                   for(let oldSKR of kr.child){
                     if(oldSKR.recID==skr.recID)
                     {
-                      for(const field in oldSKR){
-                        oldSKR[field]=skr[field];
-                      }
+                      
+            this.editRender(oldSKR,skr);
                     }
                   }
                 }
@@ -735,6 +736,34 @@ export class OkrTargetsComponent implements OnInit {
       }
       
     }
+  }
+  removeOB(ob:any){
+    if(ob!=null){
+      this.dataOKR=this.dataOKR.filter(res=>res.recID!=ob.recID);      
+    }
+  }
+  removeKR(kr:any){
+    if(kr!=null){
+      for (let ob of this.dataOKR) {
+        if(ob?.recID==kr?.parentID){
+          ob.items=ob?.items.filter(res=>res.recID!=kr.recID);
+        }
+      }      
+    }    
+  }
+  removeSKR(skr:any){
+    if(skr!=null){
+      for (let ob of this.dataOKR) {
+        for (let kr of ob?.items) {
+        for (let i=0;i<kr?.items.length;i++) {
+          if(skr?.recID == kr.items[i].recID){
+            kr.items=kr.items.filter(res=>res.recID!=skr.recID);
+            return;
+          }        
+        }
+      }
+      }   
+    }    
   }
   //Xem chi tiết OB
   showOB(obj: any) {

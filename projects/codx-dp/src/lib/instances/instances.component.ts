@@ -99,7 +99,7 @@ export class InstancesComponent
   sumDaySteps: number;
   lstParticipants = [];
   oldIdInstance: any;
-  viewMode:any;
+  viewMode: any;
   viewModeDetail = 'S';
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
@@ -127,8 +127,8 @@ export class InstancesComponent
     this.getListCbxProccess(this.dataProccess?.applyFor);
   }
   ngAfterViewInit(): void {
-    this.viewMode = this.dataProccess.viewMode??6;  //dang lỗi nên gán cứng
-    this.viewModeDetail = this.dataProccess.viewModeDetail??"S";
+    this.viewMode = this.dataProccess.viewMode ?? 6; //dang lỗi nên gán cứng
+    this.viewModeDetail = this.dataProccess.viewModeDetail ?? 'S';
     this.views = [
       {
         type: ViewType.listdetail,
@@ -164,6 +164,13 @@ export class InstancesComponent
       processID: this.process?.recID ? this.process?.recID : '',
     };
 
+    // if(this.process.steps != null && this.process.steps.length > 0){
+    //   this.listSteps = this.process.steps;
+    //   this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
+    //   this.deleteListReason(this.listStepsCbx);
+    //   this.getSumDurationDayOfSteps(this.listStepsCbx);
+    // }
+
     this.codxDpService
       .createListInstancesStepsByProcess(this.process?.recID)
       .subscribe((dt) => {
@@ -187,7 +194,7 @@ export class InstancesComponent
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'DP';
     this.resourceKanban.assemblyName = 'DP';
-    this.resourceKanban.className = 'StepsBusiness';
+    this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
   }
@@ -230,12 +237,11 @@ export class InstancesComponent
               option.zIndex = 1001;
               this.view.dataService.dataSelected.processID = this.process.recID;
               if (!this.process.instanceNoSetting) {
-                //this.genAutoNumberNo(applyFor); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
                 this.codxDpService
                   .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
                   .subscribe((res) => {
                     if (res) {
-                      this.instanceNo = res;
+                      this.view.dataService.dataSelected.instanceNo = res;
                       this.openPopUpAdd(applyFor, formMD, option, 'add');
                     }
                   });
@@ -245,8 +251,10 @@ export class InstancesComponent
                     this.process.instanceNoSetting
                   )
                   .subscribe((isNo) => {
-                    this.instanceNo = isNo;
-                    this.openPopUpAdd(applyFor, formMD, option, 'add');
+                    if (isNo) {
+                      this.view.dataService.dataSelected.instanceNo = isNo;
+                      this.openPopUpAdd(applyFor, formMD, option, 'add');
+                    }
                   });
             });
         });
@@ -258,7 +266,7 @@ export class InstancesComponent
       this.view.dataService.dataSelected = data;
       this.oldIdInstance = data.recID;
     }
-    this.view.dataService.copy().subscribe((res) => {
+    this.view.dataService.copy(this.view.dataService.dataSelected).subscribe((res) => {
       const funcIDApplyFor =
         this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
       const applyFor = this.process.applyFor;
@@ -278,12 +286,12 @@ export class InstancesComponent
               option.Width = '850px';
               option.zIndex = 1001;
               if (!this.process.instanceNoSetting) {
-                //this.genAutoNumberNo(applyFor); // gan tam thoi chư sai vỡ mỏ || em gán tạm thui a thảo ơi, em vẫn nhớ lời a dặn ><
                 this.codxDpService
                   .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
                   .subscribe((res) => {
                     if (res) {
-                      this.instanceNo = res;
+                      this.view.dataService.dataSelected = data;
+                      this.view.dataService.dataSelected.instanceNo = res;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -293,8 +301,11 @@ export class InstancesComponent
                     this.process.instanceNoSetting
                   )
                   .subscribe((isNo) => {
-                    this.instanceNo = isNo;
-                    this.openPopUpAdd(applyFor, formMD, option, titleAction);
+                    if (isNo) {
+                      this.view.dataService.dataSelected = data;
+                      this.view.dataService.dataSelected.instanceNo = isNo;
+                      this.openPopUpAdd(applyFor, formMD, option, titleAction);
+                    }
                   });
               }
             });
@@ -312,7 +323,6 @@ export class InstancesComponent
         this.titleAction,
         formMD,
         this.listStepsCbx,
-        this.instanceNo,
         (this.sumDaySteps = this.getSumDurationDayOfSteps(this.listStepsCbx)),
         this.lstParticipants,
         this.oldIdInstance,
@@ -329,6 +339,10 @@ export class InstancesComponent
         }
         this.detectorRef.detectChanges();
       }
+      // var ojb = {
+      //   totalInstance: 100
+      // };
+      // this.dialog.close(ojb);
     });
   }
 
@@ -370,7 +384,6 @@ export class InstancesComponent
                     this.titleAction,
                     formMD,
                     this.listStepsCbx,
-                    this.instanceNo,
                     (this.sumDaySteps = this.getSumDurationDayOfSteps(
                       this.listStepsCbx
                     )),
@@ -389,15 +402,6 @@ export class InstancesComponent
       });
   }
 
-  async genAutoNumberNo(funcID) {
-    this.codxDpService
-      .genAutoNumber(funcID, 'DP_Instances', 'InstanceNo')
-      .subscribe((res) => {
-        if (res) {
-          this.instanceNo = res;
-        }
-      });
-  }
   //End
 
   //Event
@@ -540,7 +544,7 @@ export class InstancesComponent
   }
 
   viewDetail(data) {
-    this.dataSelected =data;
+    this.dataSelected = data;
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
@@ -636,7 +640,7 @@ export class InstancesComponent
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
               instance: data,
-              listStep: this.listStepsCbx,
+              listStepCbx: this.listStepsCbx,
               instanceStep: instanceStep,
               stepIdClick: this.stepIdClick,
             };
@@ -666,10 +670,6 @@ export class InstancesComponent
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.detailViewInstance.instance = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
-                // debugger;
-                // this.detailViewInstance.GetStepsByInstanceIDAsync(
-                //   this.dataSelected.recID
-                // );
                 this.view.dataService.update(data).subscribe();
                 this.detectorRef.detectChanges();
               }
@@ -795,7 +795,7 @@ export class InstancesComponent
   }
 
   getSumDurationDayOfSteps(listStepCbx: any) {
-    let total = listStepCbx.reduce((sum, f) => sum + f.durationDay, 0);
+    let total = listStepCbx?.reduce((sum, f) => sum + f?.durationDay, 0);
     return total;
   }
   #endregion;

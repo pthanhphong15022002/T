@@ -2,33 +2,37 @@
   [footer]="footer" [data]="exchangerate" subToolbarCss="text-end">
 </codx-form>
 <ng-template popup adde #body>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="ToDate" default="Ngày"></codx-label>
-    <codx-input [crrValue]="toDate" field="toDate" type="datetime" format="d" (valueChange)="valueChangeToDate($event)">
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="exchangeRate" default="Tỷ giá"></codx-label>
-    <codx-input [formModel]="form.formModel" [crrValue]="exchangeRate" field="exchangeRate"
-      (valueChange)="valueChangeexchangeRate($event)">
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="SourceType" default="Nguồn tỷ giá"></codx-label>
-    <codx-input [crrValue]="sourceType" (valueChange)="valueChangeSourceType($event)" field="sourceType"
-      [formModel]="form.formModel">
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="note" default="Ghi chú"></codx-label>
-    <codx-input [crrValue]="note" (valueChange)="valueChangeNote($event)" field="note" [formModel]="form.formModel">
-    </codx-input>
-  </div>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="ToDate"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="exchangerate.toDate" field="toDate"
+      (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="exchangeRate"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="exchangerate.exchangeRate"
+        field="exchangeRate" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="SourceType"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="exchangerate.sourceType"
+        (valueChange)="valueChange($event)" field="sourceType" [formModel]="form.formModel">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="note"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="exchangerate.note"
+        (valueChange)="valueChange($event)" field="note" [formModel]="form.formModel">
+      </codx-input>
+    </div>
+  </ng-container>
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end mt-1 me-3">
-    <div class="ms-2">
-      <button type="button" class="btn btn-light-primary">
+    <div *ngIf="type != 'edit'" class="ms-2">
+      <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
         <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lưu & thêm"></codx-label>
       </button>
     </div>
