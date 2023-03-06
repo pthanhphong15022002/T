@@ -421,14 +421,14 @@ export class CodxDpService {
       data
     );
   }
-  getGuide(processID) {
-    return this.api.exec<any>(
-      'DP',
-      'StepsBusiness',
-      'GetListStepsNameByProcessIDAsync',
-      processID
-    );
-  }
+  // getGuide(processID) {
+  //   return this.api.exec<any>(
+  //     'DP',
+  //     'StepsBusiness',
+  //     'GetListStepsNameByProcessIDAsync',
+  //     processID
+  //   );
+  // }
   getADAutoNumberByAutoNoCode(autoNoCode): Observable<any> {
     return this.api.execSv(
       'SYS',
@@ -436,6 +436,14 @@ export class CodxDpService {
       'AutoNumbersBusiness',
       'GetAutoNumberAsync',
       [autoNoCode]
+    );
+  }
+
+  getListProcessGroups() {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessGroupsBusiness',
+      'GetAsync',
     );
   }
 }

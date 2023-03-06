@@ -43,7 +43,7 @@ export class DP_Processes {
   viewMode: string;
   viewModeDetail: string;
   autoName: string;
-  steps: DP_Steps[] = []
+  steps: DP_Steps[] = [];
 }
 
 export class DP_Processes_Permission {
@@ -123,7 +123,7 @@ export class DP_Steps {
   isUsed: boolean;
   createdOn: Date = new Date();
   createdBy: string;
-  modifiedOn: Date = new Date();
+  modifiedOn: Date;
   modifiedBy: string;
   showColumnControl: number = 1;
   newProcessID: string;

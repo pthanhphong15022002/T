@@ -150,7 +150,6 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     dataModel.formName = 'ExchangeRates';
     dataModel.gridViewName = 'grvExchangeRates';
     dataModel.entityName = 'BS_ExchangeRates';
-    dataModel.currentData = {...this.exchangerate};
     opt.FormModel = dataModel;
     this.cache
       .gridViewSetup('ExchangeRates', 'grvExchangeRates')

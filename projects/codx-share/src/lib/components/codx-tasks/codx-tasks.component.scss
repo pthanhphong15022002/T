@@ -51,8 +51,10 @@ ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
 .listuser-box {
   max-height: 220px;
     overflow: auto;
-    margin-top: 5px;
-    border-top: 1px var(--gray-200) solid;
+    margin-top: 8px;
+    border-top: 1px var(--gray-100) solid;
+    padding-top: 5px;
+    clear: both;
 }
 
 codx-tasks {
