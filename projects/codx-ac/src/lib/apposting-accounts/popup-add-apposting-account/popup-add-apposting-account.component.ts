@@ -64,7 +64,9 @@ export class PopupAddAPPostingAccountComponent
       });
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    console.log(this.form);
+  }
   //#endregion
 
   //#region Event

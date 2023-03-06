@@ -5,7 +5,8 @@
   [button]="btnAdd"
   [autoLoad]="true"
   entityName="AC_FAPostingAccounts"
-  (buttonClick)="handleClickAdd()"
+  service="AC"
+  (buttonClick)="handleClickAdd($event)"
 >
 </codx-views>
 
@@ -47,7 +48,7 @@
                         <codx-label
                           fiedName="lblFixedAsset"
                           formName="AC_FAPostingAccounts"
-                          default="Tài sản cố định"
+                          [default]="'1' | vll : 'AC059' : 'text' | async"
                         ></codx-label>
                       </span>
                       <span class="menu-arrow"></span>
