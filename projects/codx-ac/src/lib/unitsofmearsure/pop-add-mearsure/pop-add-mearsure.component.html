@@ -3,50 +3,50 @@
     ,tabConversioninformation]" [data]="unitsofmearsure">
 </codx-layout-add>
 <ng-template #tabDescription>
-  <div class="row">
-    <div class="col-12">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="UMID" default="Mã đơn vị tính"></codx-label>
-        <codx-input [crrValue]="umid" [formModel]="form.formModel" field="umid" (valueChange)="valueChangeUMID($event)">
-        </codx-input>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="UMID"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="unitsofmearsure.umid" [formModel]="form.formModel"
+            field="umid" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="UMName" default="Tên đơn vị tính"></codx-label>
-    <codx-input [crrValue]="umName" field="umName" [formModel]="form.formModel"
-      (valueChange)="valueChangeUMName($event)">
-    </codx-input>
-  </div>
-  <div class="row">
-    <div class="col-4">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="RoundOff" default="Làm tròn số"></codx-label>
-        <codx-input [crrValue]="form.data.roundOff" [formModel]="form.formModel" field="roundOff"
-          (valueChange)="valueChange($event)" [min]="0">
-        </codx-input>
-      </div>
-    </div>
-    <div class="col-8">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="RoundType" default="Cách thức làm tròn"></codx-label>
-        <codx-input *ngIf="form.data.roundType != null" [crrValue]="form.data.roundType" type="valuelist"
-          refValue="L0093" field="roundType" [formModel]="form.formModel" (valueChange)="valueChange($event)">
-        </codx-input>
-        <codx-input *ngIf="form.data.roundType == null" [crrValue]="form.data.roundType" type="valuelist"
-          refValue="L0093" field="roundType" [formModel]="form.formModel" (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-  </div>
-  <div class="d-flex">
-    <span class="me-2">
-      <codx-input [checked]="form.data.stop" field="stop" [formModel]="form.formModel"
-        (valueChange)="valueChange($event)">
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="UMName"></codx-label>
+      <codx-input [Group]="form.formGroup" [crrValue]="unitsofmearsure.umName" field="umName"
+        [formModel]="form.formModel" (valueChange)="valueChange($event)">
       </codx-input>
-    </span>
-    <codx-label [formModel]="form.formModel" fiedName="Stop" default="Ngừng sử dụng"></codx-label>
-  </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="RoundOff"></codx-label>
+          <codx-input [crrValue]="unitsofmearsure.roundOff" [formModel]="form.formModel" field="roundOff"
+            (valueChange)="valueChange($event)" [min]="0">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-8">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="RoundType"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="unitsofmearsure.roundType" field="roundType"
+            [formModel]="form.formModel" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex">
+      <span class="me-2">
+        <codx-input [checked]="unitsofmearsure.stop" field="stop" [formModel]="form.formModel"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </span>
+      <codx-label [formModel]="form.formModel" fiedName="Stop"></codx-label>
+    </div>
+  </ng-container>
 </ng-template>
 <ng-template #tabConversioninformation>
   <div class="d-flex align-items-center justify-content-between mb-3">
@@ -70,7 +70,7 @@
       <span type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="editobjectConversion(item)">
         <i class="icon-edit icon-16"></i>
       </span>
-      <span type="button" class="btn btn-icon btn-sm btn-light-danger ms-1" (click)="editobjectConversion(item)">
+      <span type="button" class="btn btn-icon btn-sm btn-light-danger ms-1" (click)="deleteobjectConversion(item)">
         <i class="icon-delete icon-16"></i>
       </span>
     </div>

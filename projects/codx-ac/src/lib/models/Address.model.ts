@@ -1,6 +1,6 @@
 export class Address {
-  adressName: any;
-  adressType: any;
+  adressName: any = '';
+  adressType: any = '';
   buid: any;
   calendarID: any;
   city: any;
@@ -16,7 +16,7 @@ export class Address {
   employeeID: any;
   faxNo: any;
   interval: any;
-  isDefault: any;
+  isDefault: any = false;
   lastUpdated: any;
   latitude: any;
   longitude: any;
@@ -34,7 +34,7 @@ export class Address {
   postalCode: any;
   primaryContact: any;
   provinceID: any;
-  recID: any;
+  recID: any = Guid.newGuid();;
   regionID: any;
   secondContact: any;
   sms: any;
@@ -43,4 +43,16 @@ export class Address {
   timeZone: any;
   updateColumn: any;
   webPage: any;
+}
+class Guid {
+  static newGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
+  }
 }

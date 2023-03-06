@@ -47,7 +47,7 @@
                         <codx-label
                           fiedName="lblAccount"
                           formName="APPostingAccounts"
-                          default="Tài khoản"
+                          [default]="'1' | vll : 'AC057' : 'text' | async"
                         ></codx-label>
                       </span>
                       <span class="menu-arrow"></span>
@@ -84,7 +84,7 @@
                         <codx-label
                           fiedName="lblTerm"
                           formName="APPostingAccounts"
-                          default="Điều khoản"
+                          [default]="'2' | vll : 'AC057' : 'text' | async"
                         ></codx-label>
                       </span>
                       <span class="menu-arrow"></span>

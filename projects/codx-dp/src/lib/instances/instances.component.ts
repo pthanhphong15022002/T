@@ -101,6 +101,7 @@ export class InstancesComponent
   oldIdInstance: any;
   viewMode: any;
   viewModeDetail = 'S';
+  totalInstance: number = 0;
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
@@ -122,7 +123,6 @@ export class InstancesComponent
         });
     });
 
-    // em bảo gán tạm
     this.dataProccess = dt?.data?.data;
     this.getListCbxProccess(this.dataProccess?.applyFor);
   }
@@ -164,6 +164,13 @@ export class InstancesComponent
       processID: this.process?.recID ? this.process?.recID : '',
     };
 
+    // if(this.process.steps != null && this.process.steps.length > 0){
+    //   this.listSteps = this.process.steps;
+    //   this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
+    //   this.deleteListReason(this.listStepsCbx);
+    //   this.getSumDurationDayOfSteps(this.listStepsCbx);
+    // }
+
     this.codxDpService
       .createListInstancesStepsByProcess(this.process?.recID)
       .subscribe((dt) => {
@@ -187,7 +194,7 @@ export class InstancesComponent
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'DP';
     this.resourceKanban.assemblyName = 'DP';
-    this.resourceKanban.className = 'StepsBusiness';
+    this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
   }
@@ -234,7 +241,7 @@ export class InstancesComponent
                   .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
                   .subscribe((res) => {
                     if (res) {
-                      this.instanceNo = res;
+                      this.view.dataService.dataSelected.instanceNo = res;
                       this.openPopUpAdd(applyFor, formMD, option, 'add');
                     }
                   });
@@ -245,7 +252,7 @@ export class InstancesComponent
                   )
                   .subscribe((isNo) => {
                     if (isNo) {
-                      this.instanceNo = isNo;
+                      this.view.dataService.dataSelected.instanceNo = isNo;
                       this.openPopUpAdd(applyFor, formMD, option, 'add');
                     }
                   });
@@ -284,6 +291,7 @@ export class InstancesComponent
                   .subscribe((res) => {
                     if (res) {
                       this.view.dataService.dataSelected = data;
+                      this.view.dataService.dataSelected.instanceNo = res;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -295,6 +303,7 @@ export class InstancesComponent
                   .subscribe((isNo) => {
                     if (isNo) {
                       this.view.dataService.dataSelected = data;
+                      this.view.dataService.dataSelected.instanceNo = isNo;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -330,6 +339,10 @@ export class InstancesComponent
         }
         this.detectorRef.detectChanges();
       }
+      // var ojb = {
+      //   totalInstance: 100
+      // };
+      // this.dialog.close(ojb);
     });
   }
 
@@ -627,7 +640,7 @@ export class InstancesComponent
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
               instance: data,
-              listStepCbx: this.listStepsCbx,
+              listStepCbx: this.listSteps,
               instanceStep: instanceStep,
               stepIdClick: this.stepIdClick,
             };
@@ -657,10 +670,6 @@ export class InstancesComponent
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.detailViewInstance.instance = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
-                // debugger;
-                // this.detailViewInstance.GetStepsByInstanceIDAsync(
-                //   this.dataSelected.recID
-                // );
                 this.view.dataService.update(data).subscribe();
                 this.detectorRef.detectChanges();
               }
@@ -766,7 +775,7 @@ export class InstancesComponent
       .map((x) => x.stepName)[0];
   }
   clickMoreFunc(e) {
-    this.lstStepInstances = e.lstStepInstance;
+ //   this.lstStepInstances = e.lstStepInstance;
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {

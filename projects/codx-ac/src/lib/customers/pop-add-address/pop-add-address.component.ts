@@ -37,18 +37,10 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   dialog!: DialogRef;
   headerText: string;
   formModel: FormModel;
-  adressType: any;
-  adressName: any;
-  countryID: any;
-  provinceID: any;
-  districtID: any;
-  postalCode: any;
   objectype: any;
-  note: any;
-  isDefault: any;
   type: any;
   gridViewSetup: any;
-  address: Address;
+  address: Address = new Address();
   validate: any = 0;
   objectAddress: Array<Address> = [];
   objectContactAddress: Array<Contact> = [];
@@ -72,14 +64,6 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     this.objectype = dialogData.data?.objectype;
     this.objectAddress = dialogData.data?.dataAddress;
     this.objectContactAddressAfter = dialogData.data?.dataContactAddress;
-    this.adressType = null;
-    this.adressName = '';
-    this.countryID = '';
-    this.provinceID = '';
-    this.districtID = '';
-    this.postalCode = '';
-    this.note = '';
-    this.isDefault = false;
     this.cache
       .gridViewSetup('AddressBook', 'grvAddressBook')
       .subscribe((res) => {
@@ -89,14 +73,6 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
       });
     if (dialogData.data?.data != null) {
       this.address = dialogData.data?.data;
-      this.adressType = dialogData.data?.data.adressType;
-      this.adressName = dialogData.data?.data.adressName;
-      this.countryID = dialogData.data?.data.countryID;
-      this.provinceID = dialogData.data?.data.provinceID;
-      this.districtID = dialogData.data?.data.districtID;
-      this.postalCode = dialogData.data?.data.postalCode;
-      this.note = dialogData.data?.data.note;
-      this.isDefault = dialogData.data?.data.isDefault;
     }
     if (dialogData.data?.datacontactaddress != null) {
       this.objectContactAddress = dialogData.data?.datacontactaddress;
@@ -108,54 +84,16 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    if (this.address == null) {
-      this.address = this.form.formGroup.value;
-      this.address.longitude = 0;
-      this.address.distance = 0;
-      this.address.latitude = 0;
-      this.address.duration = 0;
-      this.address.recID = Guid.newGuid();
-    }
+  }
+  //#endregion
+
+  //#region Event
+  valueChange(e: any) {
+    this.address[e.field] = e.data;
   }
   //#endregion
 
   //#region Function
-  valueChange(e: any) {
-    switch (e.field) {
-      case 'note':
-        this.note = e.data;
-        break;
-      case 'isDefault':
-        this.isDefault = e.data;
-        break;
-    }
-    this.address[e.field] = e.data;
-  }
-  valueChangeAdressType(e: any) {
-    this.adressType = e.data;
-    this.address[e.field] = e.data;
-    console.log(this.address);
-  }
-  valueChangeAdressName(e: any) {
-    this.adressName = e.data;
-    this.address[e.field] = e.data;
-  }
-  valueChangeCountryID(e: any) {
-    this.countryID = e.data;
-    this.address[e.field] = e.data;
-  }
-  valueChangeProvinceID(e: any) {
-    this.provinceID = e.data;
-    this.address[e.field] = e.data;
-  }
-  valueChangeDistrictID(e: any) {
-    this.districtID = e.data;
-    this.address[e.field] = e.data;
-  }
-  valueChangePostalCode(e: any) {
-    this.postalCode = e.data;
-    this.address[e.field] = e.data;
-  }
   openPopupContact() {
     var obj = {
       headerText: 'Thêm người liên hệ',
@@ -238,21 +176,11 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
     );
     this.objectContactAddress.splice(index, 1);
     this.objectContactAddressDelete.push(data);
+    this.notification.notifyCode('SYS008', 0, '');
   }
   clearAddress() {
-    this.adressType = null;
-    this.adressName = '';
-    this.countryID = null;
-    this.provinceID = null;
-    this.districtID = null;
-    this.postalCode = null;
-    this.note = '';
-    this.isDefault = false;
-    this.address.recID = Guid.newGuid();
-    this.address.adressType = null;
-    this.address.countryID = null;
-    this.address.provinceID = null;
-    this.address.postalCode = null;
+    this.form.formGroup.reset();
+    this.address = new Address();
     this.objectContactAddress = [];
   }
   checkValidate() {
@@ -280,7 +208,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   }
   //#endregion
 
-  //#region CRUD
+  //#region Method
   onSave() {
     this.checkValidate();
     if (this.validate > 0) {
@@ -296,7 +224,11 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
         'datacontactaddressdelete',
         JSON.stringify(this.objectContactAddressDelete)
       );
-      this.notification.notifyCode('SYS006', 0, '');
+      if (this.type == 'editaddress') {
+        this.notification.notifyCode('SYS007', 0, '');
+      }else{
+        this.notification.notifyCode('SYS006', 0, '');
+      }
       this.dialog.close();
     }
   }
@@ -310,23 +242,13 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
       this.objectContactAddress.forEach((element) => {
         this.objectContactAddressAfter.push({ ...element });
       });
-      this.notification.notifyCode('SYS006', 0, '');
+      if (this.type == 'editaddress') {
+        this.notification.notifyCode('SYS007', 0, '');
+      }else{
+        this.notification.notifyCode('SYS006', 0, '');
+      }
       this.clearAddress();
     }
   }
   //#endregion
 }
-//#region Guid
-class Guid {
-  static newGuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
-  }
-}
-//#endregion

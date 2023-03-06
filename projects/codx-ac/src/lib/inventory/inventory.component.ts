@@ -52,7 +52,7 @@ export class InventoryComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void { }
+  onInit(): void {}
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) this.funcName = res.defaultName;
@@ -87,6 +87,9 @@ export class InventoryComponent extends UIComponent {
       case 'SYS03':
         this.edit(e, data);
         break;
+      case 'SYS04':
+        this.copy(e, data);
+        break;
     }
   }
   add() {
@@ -120,6 +123,28 @@ export class InventoryComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'edit',
+          headerText: e.text + ' ' + this.funcName,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '800px';
+        this.dialog = this.callfunc.openSide(
+          PopAddInventoryComponent,
+          obj,
+          option
+        );
+      });
+  }
+  copy(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .copy(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'copy',
           headerText: e.text + ' ' + this.funcName,
         };
         let option = new SidebarModel();

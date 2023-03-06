@@ -31,14 +31,9 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
   dialog!: DialogRef;
   headerText: string;
   formModel: FormModel;
-  bankaccount: BankAccount;
+  bankaccount: BankAccount = new BankAccount();
   objectBankaccount: Array<BankAccount> = [];
   gridViewSetup: any;
-  bankAcctID: any;
-  bankID: any;
-  owner: any;
-  description: any;
-  isDefault: any;
   type: any;
   validate: any = 0;
   constructor(
@@ -57,11 +52,6 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.type = dialogData.data?.type;
     this.objectBankaccount = dialogData.data?.dataBank;
-    this.bankAcctID = '';
-    this.bankID = null;
-    this.owner = '';
-    this.description = '';
-    this.isDefault = false;
     this.cache
       .gridViewSetup('BankAccounts', 'grvBankAccounts')
       .subscribe((res) => {
@@ -71,11 +61,6 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
       });
     if (dialogData.data?.data != null) {
       this.bankaccount = dialogData.data?.data;
-      this.bankAcctID = dialogData.data?.data.bankAcctID;
-      this.bankID = dialogData.data?.data.bankID;
-      this.owner = dialogData.data?.data.owner;
-      this.description = dialogData.data?.data.description;
-      this.isDefault = dialogData.data?.data.isDefault;
     }
   }
   //#endregion
@@ -84,45 +69,16 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    if (this.bankaccount == null) {
-      this.bankaccount = this.form?.formGroup.value;
-      this.bankaccount.objectType = '1';
-    }
   }
   //#endregion
 
   //#region Function
   valueChange(e: any) {
-    switch (e.field) {
-      case 'description':
-        this.description = e.data;
-        break;
-      case 'isDefault':
-        this.isDefault = e.data;
-        break;
-    }
-    this.bankaccount[e.field] = e.data;
-  }
-  valueChangeBankAcctID(e: any) {
-    this.bankAcctID = e.data;
-    this.bankaccount.bankAcctNo = e.data;
-    this.bankaccount[e.field] = e.data;
-  }
-  valueChangeBankID(e: any) {
-    this.bankID = e.data;
-    this.bankaccount[e.field] = e.data;
-  }
-  valueChangeOwner(e: any) {
-    this.owner = e.data;
     this.bankaccount[e.field] = e.data;
   }
   clearBankAccount() {
-    this.bankAcctID = '';
-    this.bankID = null;
-    this.owner = '';
-    this.description = '';
-    this.isDefault = false;
-    this.bankaccount.bankAcctNo = '';
+    this.form.formGroup.reset();
+    this.bankaccount = new BankAccount();
   }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
@@ -156,7 +112,11 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      this.notification.notifyCode('SYS006', 0, '');
+      if (this.type == 'editbank') {
+        this.notification.notifyCode('SYS007', 0, '');
+      }else{
+        this.notification.notifyCode('SYS006', 0, '');
+      }
       window.localStorage.setItem(
         'databankaccount',
         JSON.stringify(this.bankaccount)
@@ -170,7 +130,11 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     }else{
-      this.notification.notifyCode('SYS006', 0, '');
+      if (this.type == 'editbank') {
+        this.notification.notifyCode('SYS007', 0, '');
+      }else{
+        this.notification.notifyCode('SYS006', 0, '');
+      }
       this.objectBankaccount.push({ ...this.bankaccount });
       this.clearBankAccount();
     } 
