@@ -50,7 +50,7 @@ export class PopupRolesDynamicComponent implements OnInit {
     this.lstPerm = Object.values(
       this.groupBy(this.process.permissions, 'roleType')
     ).flat();
-    this.process.permissions = this.lstPerm.filter(x=> x.roleType != 'R');
+    this.process.permissions = this.lstPerm;
     this.title = dt.data[1];
     this.type = dt.data[2];
     this.cache.valueList('DP010').subscribe((res) => {

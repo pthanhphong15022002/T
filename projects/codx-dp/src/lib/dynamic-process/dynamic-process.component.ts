@@ -120,6 +120,7 @@ export class DynamicProcessComponent
   readonly idField = 'recID';
 
   isChecked: boolean = false;
+  totalInstanceInProccess: number = 0;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -237,6 +238,7 @@ export class DynamicProcessComponent
   edit(data: any) {
     if (data) {
       this.view.dataService.dataSelected = data;
+      this.totalInstanceInProccess = data.totalInstance;
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -263,6 +265,7 @@ export class DynamicProcessComponent
         this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
+            // e.event.totalInstance =  this.totalInstanceInProccess
             this.view.dataService.update(e.event).subscribe();
             this.changeDetectorRef.detectChanges();
           }
@@ -274,6 +277,7 @@ export class DynamicProcessComponent
       if (data) {
         this.view.dataService.dataSelected = data;
         this.oldIdProccess = this.view.dataService.dataSelected.recID;
+        // this.totalInstanceInProccess = data.totalInstance;
       }
       this.view.dataService.copy().subscribe((res) => {
         var obj = {
@@ -604,10 +608,12 @@ export class DynamicProcessComponent
     }
   }
   getNameUsersStr(data) {
-    if (data.length > 0 && data !== null) {
+    if (data?.length > 0 && data !== null) {
       var ids = data.map((obj) => obj.objectID);
-      var listStr = ids.join(';');
+      // ids = [...new Set(ids)];
+      var listStr = ids?.join(';');
     }
+    // listStr = [...new Set(listStr)];
     return listStr || null || '';
   }
 
@@ -615,7 +621,7 @@ export class DynamicProcessComponent
   getListAppyFor() {
     this.cache.valueList('DP002').subscribe((res) => {
       if (res) {
-        this.listAppyFor = res.datas;
+        this.listAppyFor = res?.datas;
       }
     });
   }
@@ -626,6 +632,11 @@ export class DynamicProcessComponent
       ? this.listAppyFor.find((x) => x.value === value)?.default ?? ''
       : '';
   }
+
+  totalSteps(listStep:any){
+    return listStep.steps?.filter(x=> !x.isSuccessStep && !x.isFailStep).length;
+  }
+
   //#endregion đang test
 
   viewDetailProcess(data) {
@@ -653,6 +664,18 @@ export class DynamicProcessComponent
       '',
       dialogModel
     );
+
+    // dialog.closed.subscribe((e) => {
+    //   debugger;
+    //   if (e?.event && e?.event != null) {
+    //     this.view.dataService.clear();
+    //     data.totalInstance = e.event.totalInstance;
+    //     this.view.dataService.update(data).subscribe();
+    //     this.detectorRef.detectChanges();
+    //   }
+    // });
+
+
   }
 
   // nvthuan

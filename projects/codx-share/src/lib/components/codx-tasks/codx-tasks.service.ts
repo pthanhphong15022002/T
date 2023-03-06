@@ -131,4 +131,14 @@ export class CodxTasksService {
     );
   }
 
+  checkEdit(taskID) {
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'IsCanClickEditTaskByTaskIDAsync',
+      taskID
+    );
+  }
+
 }

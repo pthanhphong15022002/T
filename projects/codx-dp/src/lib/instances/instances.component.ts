@@ -164,6 +164,13 @@ export class InstancesComponent
       processID: this.process?.recID ? this.process?.recID : '',
     };
 
+    // if(this.process.steps != null && this.process.steps.length > 0){
+    //   this.listSteps = this.process.steps;
+    //   this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
+    //   this.deleteListReason(this.listStepsCbx);
+    //   this.getSumDurationDayOfSteps(this.listStepsCbx);
+    // }
+
     this.codxDpService
       .createListInstancesStepsByProcess(this.process?.recID)
       .subscribe((dt) => {
@@ -187,7 +194,7 @@ export class InstancesComponent
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'DP';
     this.resourceKanban.assemblyName = 'DP';
-    this.resourceKanban.className = 'StepsBusiness';
+    this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
   }
@@ -259,7 +266,7 @@ export class InstancesComponent
       this.view.dataService.dataSelected = data;
       this.oldIdInstance = data.recID;
     }
-    this.view.dataService.copy().subscribe((res) => {
+    this.view.dataService.copy(this.view.dataService.dataSelected).subscribe((res) => {
       const funcIDApplyFor =
         this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
       const applyFor = this.process.applyFor;
@@ -283,7 +290,7 @@ export class InstancesComponent
                   .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
                   .subscribe((res) => {
                     if (res) {
-                      this.view.dataService.dataSelected = res;
+                      this.view.dataService.dataSelected = data;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -294,7 +301,7 @@ export class InstancesComponent
                   )
                   .subscribe((isNo) => {
                     if (isNo) {
-                      this.view.dataService.dataSelected = isNo;
+                      this.view.dataService.dataSelected = data;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -330,6 +337,10 @@ export class InstancesComponent
         }
         this.detectorRef.detectChanges();
       }
+      // var ojb = {
+      //   totalInstance: 100
+      // };
+      // this.dialog.close(ojb);
     });
   }
 
@@ -657,10 +668,6 @@ export class InstancesComponent
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.detailViewInstance.instance = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
-                // debugger;
-                // this.detailViewInstance.GetStepsByInstanceIDAsync(
-                //   this.dataSelected.recID
-                // );
                 this.view.dataService.update(data).subscribe();
                 this.detectorRef.detectChanges();
               }
@@ -786,7 +793,7 @@ export class InstancesComponent
   }
 
   getSumDurationDayOfSteps(listStepCbx: any) {
-    let total = listStepCbx.reduce((sum, f) => sum + f.durationDay, 0);
+    let total = listStepCbx?.reduce((sum, f) => sum + f?.durationDay, 0);
     return total;
   }
   #endregion;

@@ -1427,15 +1427,25 @@
                     *ngIf="taskList?.recID"
                     class="d-flex justify-content-start align-items-center has-action-menu"
                   >
-                    <div class="icon-container">
-                      <span
-                        class="icon-add_circle icon-20 text-primary-600 py-2"
-                      ></span>
+                    <!-- show hiden group task -->
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                      style="border: 1px solid #6C757D; width: 25px; height: 25px"
+                    >
+                      <!-- <span class="icon-maximize" style="font-size: 20px; color:#6C757D;"></span> icon-add_box -->
+                      <!-- <span class="icon-maximize" style="font-size: 20px; color:#6C757D;">+</span> -->
+                      <!-- <span class="icon-add_circle icon-20 text-primary-600 py-2"></span> -->
+                      <span>+</span>
                     </div>
-                    <div class="icon-container">
-                      <span
-                        class="icon-supervised_user_circle icon-20 text-primary-600 py-2"
-                      ></span>
+                    <div class="avata">
+                      <codx-img
+                      [width]="40"
+                      class="me-2"
+                      [objectId]="taskList?.roles[0]?.objectID"
+                      objectType="AD_Users"
+                      [objectName]="taskList?.roles[0]?.objectName"
+                    >
+                    </codx-img>
                     </div>
                     <div class="steplist-hearder ms-5">
                       <div>
@@ -1498,7 +1508,7 @@
                       >
                         <div
                           [ngStyle]="
-                            taskList?.recID ? { 'margin-left': '50px' } : {}
+                            taskList?.recID ? { 'margin-left': '45px' } : {}
                           "
                           class="has-action-menu"
                         >
@@ -1506,19 +1516,26 @@
                             class="d-flex justify-content-start align-items-center"
                             style="font-size: 1rem"
                           >
+                            <!-- icon task -->
                             <div
                               class="icon-container"
-                              style="background-color: #3ef8e9"
+                              [ngStyle]="getColor(task)"
                             >
                               <span
-                                class="icon-add_circle icon-20 text-primary-600 py-2"
-                                (click)="addFile($event)"
+                                class="icon-20 text-primary-600 py-2"
+                                [ngClass]="getIconTask(task)"
                               ></span>
                             </div>
-                            <div class="icon-container">
-                              <span
-                                class="icon-supervised_user_circle icon-20 text-primary-600 py-2"
-                              ></span>
+                            <!-- avata -->
+                            <div class="avata">
+                              <codx-img
+                              [width]="40"
+                              class="me-2"
+                              [objectId]="task?.roles[0]?.objectID"
+                              objectType="AD_Users"
+                              [objectName]="task?.roles[0]?.objectName"
+                            >
+                            </codx-img>
                             </div>
                             <div class="steplist-hearder ms-5">
                               <div>
@@ -1666,7 +1683,12 @@
     >
       <codx-label name="Save" formName="Tasks" default="Hủy"></codx-label>
     </button>
-    <button type="button" class="btn btn-primary" [disabled]="isSaveStep" (click)="saveStep()">
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="isSaveStep"
+      (click)="saveStep()"
+    >
       <codx-label name="Save" formName="Tasks" default="Đồng ý"></codx-label>
     </button>
   </div>

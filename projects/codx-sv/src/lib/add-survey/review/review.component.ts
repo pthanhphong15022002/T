@@ -110,12 +110,13 @@ export class ReviewComponent extends UIComponent implements OnInit {
           }
           //hàm lấy safe url của các question là video youtube
           this.getURLEmbed(res[1]);
-          this.SVServices.getFilesByObjectType(
-            this.functionList.entityName
+          this.SVServices.getFilesByObjectTypeRefer(
+            this.functionList.entityName,
+            this.recID
           ).subscribe((res: any) => {
             if (res) {
               res.forEach((x) => {
-                if (x.referType == this.REFER_TYPE.VIDEO)
+                if (x.referType == this.recID +"_"+this.REFER_TYPE.VIDEO)
                   x['srcVideo'] = `${environment.urlUpload}/${x.pathDisk}`;
               });
               this.lstEditIV = res;

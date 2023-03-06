@@ -33,6 +33,7 @@ export class ChartOfAccountsComponent extends UIComponent {
   headerText: any;
   dialog: DialogRef;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  //#region Contructor
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,

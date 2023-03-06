@@ -4,311 +4,318 @@
 </codx-layout-add>
 <ng-template #subHeader>
   <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false" [value]="customers.industries"
-    field="industries" (valueChange)="valueChangeTags($event)"></codx-tag>
+    field="industries" (valueChange)="valueChange($event)"></codx-tag>
 </ng-template>
 <ng-template #tabDescription>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="CustGroupID" default="Nhóm khách hàng"></codx-label>
-    <codx-input [crrValue]="form.data.custGroupID" type="combobox" refValue="CustomerGroups" field="custGroupID"
-      (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="CustomerID" default="Mã khách hàng"></codx-label>
-        <codx-input [crrValue]="customerID" [formModel]="form.formModel" field="customerID"
-          (valueChange)="valueChangeCustomerID($event)">
-        </codx-input>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="CustGroupID"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.custGroupID"
+        field="custGroupID" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="CustomerID"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="customers.customerID" [formModel]="form.formModel" field="customerID"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="CustTaxCode"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="customers.custTaxCode" field="custTaxCode"
+            [formModel]="form.formModel" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="CustTaxCode" default="Mã số thuế"></codx-label>
-        <codx-input [crrValue]="form.data.custTaxCode" field="custTaxCode" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="CustomerName"></codx-label>
+      <codx-input [Group]="form.formGroup" [crrValue]="customers.customerName" field="customerName"
+        [formModel]="form.formModel" (valueChange)="valueChange($event)">
+      </codx-input>
     </div>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="CustomerName" default="Tên khách hàng"></codx-label>
-    <codx-input [crrValue]="form.data.customerName" field="customerName" [formModel]="form.formModel"
-      (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="Address" default="Địa chỉ công ty"></codx-label>
-    <codx-input [crrValue]="form.data.address" field="address" [formModel]="form.formModel"
-      (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Phone" default="Điện thoại"></codx-label>
-        <codx-input [crrValue]="form.data.phone" [formModel]="form.formModel" field="phone"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Email" default="Email"></codx-label>
-        <codx-input [crrValue]="form.data.email" field="email" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="WebPage" default="WebPage"></codx-label>
-    <codx-input field="webPage" [formModel]="form.formModel" (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="EstablishYear" default="Năm thành lập"></codx-label>
-        <codx-input [crrValue]="form.data.establishYear" [formModel]="form.formModel" field="establishYear"
-          (valueChange)="valueChangeEstablishYear($event)">
-        </codx-input>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="NoOfEmployees" default="Số lượng nhân viên"></codx-label>
-        <codx-input [crrValue]="form.data.noOfEmployees" field="noOfEmployees" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="Note" default="Diễn giải"></codx-label>
-    <codx-input [crrValue]="form.data.note" field="note" [formModel]="form.formModel"
-      (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
-  <div class="d-flex">
-    <span class="me-2">
-      <codx-input [checked]="form.data.stop" field="stop" [formModel]="form.formModel"
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="Address"></codx-label>
+      <codx-input [Group]="form.formGroup" [crrValue]="customers.address" field="address" [formModel]="form.formModel"
         (valueChange)="valueChange($event)">
       </codx-input>
-    </span>
-    <codx-label [formModel]="form.formModel" fiedName="Stop" default="Ngưng sử dụng"></codx-label>
-  </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Phone"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="customers.phone" [formModel]="form.formModel" field="phone"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Email"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="customers.email" field="email" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="WebPage"></codx-label>
+      <codx-input [Group]="form.formGroup" field="webPage" [crrValue]="customers.webPage" [formModel]="form.formModel"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="EstablishYear"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="customers.establishYear" [formModel]="form.formModel"
+            field="establishYear" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="NoOfEmployees"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="customers.noOfEmployees" field="noOfEmployees"
+            [formModel]="form.formModel" (valueChange)="valueChange($event)" [min]="0">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
+      <codx-input [Group]="form.formGroup" [crrValue]="customers.note" field="note" [formModel]="form.formModel"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="d-flex">
+      <span class="me-2">
+        <codx-input [checked]="customers.stop" field="stop" [formModel]="form.formModel"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </span>
+      <codx-label [formModel]="form.formModel" fiedName="Stop"></codx-label>
+    </div>
+  </ng-container>
 </ng-template>
 <ng-template #tabestablish>
-  <div class="mt-2 text-primary fw-bold fs-6 mb-2">
-    <codx-label [formModel]="form.formModel" default="Thanh toán"></codx-label>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="PmtMethodID" default="Hình thức thanh toán"></codx-label>
-        <codx-input [crrValue]="form.data.pmtMethodID" type="combobox" refValue="PaymentMethods" field="pmtMethodID"
-          (valueChange)="valueChange($event)">
-        </codx-input>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="mt-2 text-primary fw-bold fs-6 mb-2">
+      <codx-label [formModel]="form.formModel" default="Thanh toán"></codx-label>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="PmtMethodID"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.pmtMethodID"
+            field="pmtMethodID" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="PmtTermID"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.pmtTermID"
+            field="pmtTermID" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="PmtTermID" default="Điều khoản thanh toán"></codx-label>
-        <codx-input [crrValue]="form.data.pmtTermID" type="combobox" refValue="PaymentTerms" field="pmtTermID"
-          (valueChange)="valueChange($event)">
-        </codx-input>
+    <div class="mt-2 text-primary fw-bold fs-6 mb-2">
+      <codx-label [formModel]="form.formModel"></codx-label>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="PostDetail"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.postDetail"
+            field="postDetail" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="mt-2 text-primary fw-bold fs-6 mb-2">
-    <codx-label [formModel]="form.formModel" default="Kiểm soát công nợ"></codx-label>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="PostDetail" default="Loại công nợ"></codx-label>
-        <codx-input [crrValue]="form.data.postDetail" type="valuelist" refValue="AC007" field="postDetail"
-          (valueChange)="valueChange($event)">
-        </codx-input>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="SettleInvoice"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.settleInvoice"
+            field="settleInvoice" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="SettlePayment"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.settlePayment"
+            field="settlePayment" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="SettleInvoice" default="Cấn trừ thanh toán"></codx-label>
-        <codx-input [crrValue]="form.data.settleInvoice" type="valuelist" refValue="AC008" field="settleInvoice"
-          (valueChange)="valueChange($event)">
-        </codx-input>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="CreditLimit"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="customers.creditLimit" field="creditLimit"
+            [formModel]="form.formModel" (valueChange)="valueChange($event)" [min]="0">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="CreditBalance"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.creditBalance"
+            field="creditBalance" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="SettlePayment" default="Cấn trừ hóa đơn"></codx-label>
-        <codx-input [crrValue]="form.data.settlePayment" type="valuelist" refValue="AC009" field="settlePayment"
-          (valueChange)="valueChange($event)">
-        </codx-input>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="DebtComparision"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.debtComparision"
+            field="debtComparision" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="CreditLimit" default="Hạn mức công nợ"></codx-label>
-        <codx-input [crrValue]="form.data.creditLimit" field="creditLimit" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)" [min]="0">
-        </codx-input>
+    <div class="mt-2 text-primary fw-bold fs-6 mb-2">
+      <codx-label [formModel]="form.formModel"></codx-label>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="OverdueAmt"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="customers.overdueAmt" field="overdueAmt"
+            [formModel]="form.formModel" (valueChange)="valueChange($event)" [min]="0">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="OverDueDays"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="customers.overDueDays" field="overDueDays"
+            [formModel]="form.formModel" (valueChange)="valueChange($event)" [min]="0">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="OverDueInvoices"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="customers.overDueInvoices" field="overDueInvoices"
+            [formModel]="form.formModel" (valueChange)="valueChange($event)" [min]="0">
+          </codx-input>
+        </div>
       </div>
     </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="CreditBalance" default="Kiểm soát hạn mức"></codx-label>
-        <codx-input [crrValue]="form.data.creditBalance" type="valuelist" refValue="AC010" field="creditBalance"
-          (valueChange)="valueChange($event)">
-        </codx-input>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="OverDueControl"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+            [crrValue]="customers.overDueControl == true ? '1' : '0'" field="overDueControl"
+            (valueChange)="valueChangeOverdueControl($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="DebtComparision" default="Đối chiều công nợ"></codx-label>
-        <codx-input [crrValue]="form.data.debtComparision" type="valuelist" refValue="AC012" field="debtComparision"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-  </div>
-  <div class="mt-2 text-primary fw-bold fs-6 mb-2">
-    <codx-label [formModel]="form.formModel" default="Kiểm soát nợ quá hạn"></codx-label>
-  </div>
-  <div class="row">
-    <div class="col-4">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="OverdueAmt" default="Hạn mức quá hạn"></codx-label>
-        <codx-input [crrValue]="form.data.overdueAmt" field="overdueAmt" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)" [min]="0">
-        </codx-input>
-      </div>
-    </div>
-    <div class="col-4">
-      <div class="form-group">
-        <codx-label fiedName="OverDueDays" default="Số ngày quá hạn"></codx-label>
-        <codx-input [crrValue]="form.data.overDueDays" field="overDueDays" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)" [min]="0">
-        </codx-input>
-      </div>
-    </div>
-    <div class="col-4">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="OverDueInvoices" default="Số hóa đơn quá hạn"></codx-label>
-        <codx-input [crrValue]="form.data.overDueInvoices" field="overDueInvoices" [formModel]="form.formModel"
-          (valueChange)="valueChange($event)" [min]="0">
-        </codx-input>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="OverDueControl" default="Kiểm soát quá hạn"></codx-label>
-        <codx-input [crrValue]="form.data.overDueControl == true ? '1' : '0'" type="valuelist" refValue="AC011" field="overDueControl"
-          (valueChange)="valueChangeOverdueControl($event)">
-        </codx-input>
-      </div>
-    </div>
-  </div>
+  </ng-container>
 </ng-template>
 <ng-template #tabShipment>
-  <div class="mt-2 text-primary fw-bold fs-6 mb-2">
-    <codx-label [formModel]="form.formModel" default="Thông tin giao hàng"></codx-label>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="DelTermID" default="Điều khoản giao hàng"></codx-label>
-        <codx-input [crrValue]="form.data.delTermID" type="combobox" refValue="DeliveryTermsAC" field="delTermID"
-          (valueChange)="valueChange($event)">
-        </codx-input>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="mt-2 text-primary fw-bold fs-6 mb-2">
+      <codx-label [formModel]="form.formModel" default="Thông tin giao hàng"></codx-label>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="DelTermID"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.delTermID"
+            field="delTermID" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="DelModeID"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.delModeID"
+            field="delModeID" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="DelModeID" default="Hình thức giao hàng"></codx-label>
-        <codx-input [crrValue]="form.data.delModeID" type="combobox" refValue="DeliveryModesAC" field="delModeID"
-          (valueChange)="valueChange($event)">
-        </codx-input>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="WarehouseID"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.warehouseID"
+            field="warehouseID" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="DelRouteID"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.delRouteID"
+            field="delRouteID" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="WarehouseID" default="Kho xuất hàng mặc định"></codx-label>
-        <codx-input [crrValue]="form.data.warehouseID" type="combobox" refValue="Warehouses" field="warehouseID"
-          (valueChange)="valueChange($event)">
-        </codx-input>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Distance"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.distance" [min]="0"
+            [formModel]="form.formModel" field="distance" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Leadtime"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.leadtime" [min]="0"
+            [formModel]="form.formModel" field="leadtime" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="DelRouteID" default="Tuyến giao hàng"></codx-label>
-        <codx-input [crrValue]="form.data.delRouteID" type="combobox" refValue="Warehouses" field="delRouteID"
-          (valueChange)="valueChange($event)">
-        </codx-input>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="WorkingDays"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.workingDays"
+            field="workingDays" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Distance" default="Khoảng cách (km)"></codx-label>
-        <codx-input [crrValue]="form.data.distance" type="number" [min]="0" [formModel]="form.formModel"
-          field="distance" (valueChange)="valueChange($event)">
+    <div class="d-flex align-items-center mb-2">
+      <div class="me-2">
+        <codx-input type="switch" field="workingHour" (valueChange)="valueChange($event)"
+          [checked]="customers.workingHour">
         </codx-input>
       </div>
+      <codx-label [formModel]="form.formModel" fiedName="WorkingHour"></codx-label>
     </div>
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Leadtime" default="Thời gian (giờ)"></codx-label>
-        <codx-input [crrValue]="form.data.leadtime" type="number" [min]="0" [formModel]="form.formModel"
-          field="leadtime" (valueChange)="valueChange($event)">
+    <div class="d-flex align-items-center mb-2">
+      <div class="me-2">
+        <codx-input type="switch" field="calendarControl" (valueChange)="valueChange($event)"
+          [checked]="customers.calendarControl">
         </codx-input>
       </div>
+      <codx-label [formModel]="form.formModel" fiedName="calendarControl"></codx-label>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="WorkingDays" default="Thời gian giao hàng"></codx-label>
-        <codx-input [crrValue]="form.data.workingDays" type="combobox" refValue="CalendarsAC" field="workingDays"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-  </div>
-  <div class="d-flex align-items-center mb-2">
-    <div class="me-2">
-      <codx-input type="switch" field="workingHour" (valueChange)="valueChange($event)"
-        [checked]="form.data.workingHour">
-      </codx-input>
-    </div>
-    <codx-label [formModel]="form.formModel" fiedName="WorkingHour" default="Giao hàng giờ hành chính"></codx-label>
-  </div>
-  <div class="d-flex align-items-center mb-2">
-    <div class="me-2">
-      <codx-input type="switch" field="calendarControl" (valueChange)="valueChange($event)"
-        [checked]="form.data.calendarControl">
-      </codx-input>
-    </div>
-    <codx-label [formModel]="form.formModel" fiedName="calendarControl"
-      default="Cảnh báo khi không đủ thời gian giao hàng"></codx-label>
-  </div>
+  </ng-container>
 </ng-template>
 <ng-template #tabLocation>
   <div class="d-flex align-items-center justify-content-between mb-2">
-    <codx-label class="mt-2 text-primary fw-bold fs-6 mb-2" [formModel]="form.formModel"
+    <codx-label class="text-primary fw-bold fs-5" [formModel]="form.formModel"
       default="Danh sách địa chỉ"></codx-label>
     <span type="button" class="btn btn-icon btn-primary" (click)="openPopupAddress()">
       <i class="icon-add_location_alt"></i>
@@ -455,42 +462,44 @@
   </div>
 </ng-template>
 <ng-template #tabinfo>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="IndustryID" default="Ngành công nghiệp"></codx-label>
-    <codx-input [crrValue]="form.data.industryID" type="combobox" refValue="Industries" [formModel]="form.formModel"
-      field="industryID" (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="ChannelID" default="Kênh bán hàng"></codx-label>
-    <codx-input [crrValue]="form.data.channelID" type="combobox" refValue="SalesChannels" field="channelID"
-      (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="SalespersonID" default="Nhân viên bán hàng"></codx-label>
-    <codx-input [crrValue]="form.data.salespersonID" type="combobox" refValue="Salespersons" field="salespersonID"
-      (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="SalesConsultantID" default="Nhân viên tư vấn"></codx-label>
-    <codx-input [crrValue]="form.data.salesConsultantID" type="combobox" refValue="SalesConsultants"
-      field="salesConsultantID" (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="Owner" default="Người sở hữu"></codx-label>
-    <codx-input [crrValue]="form.data.owner" type="combobox" refValue="Users" field="owner"
-      (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="BUID" default="Đơn vị/bộ phần"></codx-label>
-    <codx-input [crrValue]="form.data.buid" type="combobox" refValue="BusinessUnits" field="buid"
-      (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="IndustryID"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.industryID"
+        field="industryID" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="ChannelID"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.channelID" field="channelID"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="SalespersonID"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.salespersonID" field="salespersonID"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="SalesConsultantID"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.salesConsultantID"
+        field="salesConsultantID" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="Owner"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.owner" field="owner"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="BUID"></codx-label>
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="customers.buid" field="buid"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+  </ng-container>
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">

@@ -55,21 +55,12 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @Input() headerText: string;
   currencies: Currency;
-  exchangerate: ExchangeRates;
+  exchangerate: ExchangeRates = new ExchangeRates();
   objectExchange: Array<ExchangeRates> = [];
   objectExchangeDelete: Array<ExchangeRates> = [];
-  toDate: any;
-  exchange: any;
   formType: any;
-  index: number;
   dialog!: DialogRef;
-  data: any;
   gridViewSetup: any;
-  curID: string;
-  symbol: string;
-  curName: string;
-  fiedName: boolean = false;
-  disabled: boolean = false;
   title: any;
   validate: any = 0;
   constructor(
@@ -88,25 +79,18 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.currencies = dialog.dataService!.dataSelected;
-    this.curID = '';
-    this.symbol = '';
-    this.curName = '';
     this.cache.gridViewSetup('Currencies', 'grvCurrencies').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
       }
     });
     if (this.currencies.currencyID != null) {
-      this.curID = this.currencies.currencyID;
-      this.symbol = this.currencies.symbol;
-      this.curName = this.currencies.currencyName;
-      this.disabled = true;
       this.api
         .exec(
           'ERM.Business.BS',
           'ExchangeRatesBusiness',
           'LoadDataExchangeRatesAsync',
-          [this.curID]
+          [this.currencies.currencyID]
         )
         .subscribe((res: []) => {
           this.objectExchange = res;
@@ -117,33 +101,17 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
 
   //#region Init
   onInit(): void {}
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+  }
+  //#endregion
+
+  //#region Event
+  valueChange(e: any) {
+      this.currencies[e.field] = e.data;
+  }
   //#endregion
 
   //#region Function
-  valueChange(e: any) {
-    if (e) {
-      this.currencies[e.field] = e.data;
-    }
-  }
-  valueChangecurID(e: any) {
-    if (e) {
-      this.curID = e.data;
-      this.currencies[e.field] = this.curID;
-    }
-  }
-  valueChangesymbol(e: any) {
-    if (e) {
-      this.symbol = e.data;
-      this.currencies[e.field] = this.symbol;
-    }
-  }
-  valueChangecurName(e: any) {
-    if (e) {
-      this.curName = e.data;
-      this.currencies[e.field] = this.curName;
-    }
-  }
   opensetting() {
     this.title = 'Thiết lập tỷ giá';
     var obj = {
@@ -175,6 +143,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     this.title = 'Thêm tỷ giá';
     var obj = {
       headerText: this.title,
+      dataex:this.objectExchange
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -240,6 +209,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     var obj = {
       headerText: this.title,
       data: { ...data },
+      type:'edit'
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -301,7 +271,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   }
   //#endregion
 
-  //#region CRUD
+  //#region Method
   onSave() {
     this.checkValidate();
     if (this.validate > 0) {
@@ -322,7 +292,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
             if (res.save) {
               this.api
                 .exec('ERM.Business.BS', 'ExchangeRatesBusiness', 'AddAsync', [
-                  this.curID,
+                  this.currencies.currencyID,
                   this.objectExchange,
                 ])
                 .subscribe((res: []) => {
@@ -332,7 +302,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
                   }
                 });
             } else {
-              this.notification.notifyCode('SYS031', 0, '"' + this.curID + '"');
+              this.notification.notifyCode('SYS031', 0, '"' + this.currencies.currencyID + '"');
               return;
             }
           });
@@ -355,7 +325,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
                   'ERM.Business.BS',
                   'ExchangeRatesBusiness',
                   'UpdateAsync',
-                  [this.curID, this.objectExchange, this.objectExchangeDelete]
+                  [this.currencies.currencyID, this.objectExchange, this.objectExchangeDelete]
                 )
                 .subscribe((res: []) => {
                   if (res) {

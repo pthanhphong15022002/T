@@ -68,6 +68,7 @@ export class IncommingAddComponent implements OnInit {
   relations :any;
   lrelations :any;
   user:any;
+  agencyName:any;
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -272,39 +273,52 @@ export class IncommingAddComponent implements OnInit {
     //ktra nếu giá trị trả vô = giá trị trả ra return null
     //if(this.dispatch.agencyName == event.data[0]) return;
     if (!event.data) return;
-
-    if (event.data.length == 0) {
-      this.hidepb = true;
-      this.dispatch.agencyID = null;
-      this.dispatch.agencyName = null;
-      this.activeDiv = null;
-    } else if (
-      event.component.itemsSelected != null &&
-      event.component.itemsSelected.length > 0
-    ) {
-      if (event.component.itemsSelected[0].AgencyID) {
-        var data = event.component.itemsSelected[0];
-        this.dispatch.agencyID = data.AgencyID;
-        this.dispatch.agencyName = data.AgencyName;
-        //this.dispatchForm.controls.agencyName.setValue(data.AgencyName)
-      } else if (event.component.itemsSelected[0][0].AgencyID) {
-        var data = event.component.itemsSelected[0][0];
-        this.dispatch.agencyID = data.AgencyID;
-        this.dispatch.agencyName = data.AgencyName;
-        //this.dispatchForm.controls.agencyID.setValue(data.AgencyID)
-        //this.dispatchForm.controls.agencyName.setValue(data.AgencyName)
-      }
-      if (
-        this.dispatch.agencyID != this.dispatch.agencyName &&
-        this.dispatch.agencyName.length > 0
+    if(this.dispatch.dispatchType == '1' || this.dispatch.dispatchType == '2')
+    {
+      if (event.data.length == 0) {
+        this.hidepb = true;
+        this.dispatch.agencyID = null;
+        this.dispatch.agencyName = null;
+        this.activeDiv = null;
+      } else if (
+        event.component.itemsSelected != null &&
+        event.component.itemsSelected.length > 0
       ) {
-        this.hidepb = false;
-        this.activeDiv = 'dv';
-        this.myForm?.formGroup.patchValue({deptName: null})
-        //this.ref.detectChanges()
-        //this.showAgency = true;
-        //this.checkAgenciesErrors = false;
+        if (event.component.itemsSelected[0].AgencyID) {
+          var data = event.component.itemsSelected[0];
+          this.dispatch.agencyID = data.AgencyID;
+          this.dispatch.agencyName = data.AgencyName;
+          //this.dispatchForm.controls.agencyName.setValue(data.AgencyName)
+        } else if (event.component.itemsSelected[0][0].AgencyID) {
+          var data = event.component.itemsSelected[0][0];
+          this.dispatch.agencyID = data.AgencyID;
+          this.dispatch.agencyName = data.AgencyName;
+          //this.dispatchForm.controls.agencyID.setValue(data.AgencyID)
+          //this.dispatchForm.controls.agencyName.setValue(data.AgencyName)
+        }
+        if (
+          this.dispatch.agencyID != this.dispatch.agencyName &&
+          this.dispatch.agencyName.length > 0
+        ) {
+          this.hidepb = false;
+          this.activeDiv = 'dv';
+          this.myForm?.formGroup.patchValue({deptName: null})
+          //this.ref.detectChanges()
+          //this.showAgency = true;
+          //this.checkAgenciesErrors = false;
+        }
       }
+    }
+    else
+    {
+      if( event.component.itemsSelected != null &&
+        event.component.itemsSelected.length > 0)
+        {
+          var data = event.component.itemsSelected[0];
+          this.dispatch.agencyID = data.OrgUnitID;
+          this.dispatch.agencyName = data.OrgUnitName;
+          this.agencyName = data.OrgUnitName;
+        }
     }
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
   }
@@ -319,6 +333,7 @@ export class IncommingAddComponent implements OnInit {
     if(this.dispatchForm.invalid || this.checkAgenciesErrors) return; */
     /////////////////////////////////////////////////////////
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
+    if(this.dispatch.dispatchType == "3" && this.agencyName)  this.dispatch.agencyName = this.agencyName
     this.addRelations();
     if (this.type == 'add' || this.type == 'copy') {
       // if(this.dispatch.owner != this.dispatch.createdBy) this.dispatch.status = '3';
