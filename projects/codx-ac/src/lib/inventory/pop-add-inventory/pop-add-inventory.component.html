@@ -3,255 +3,239 @@
     ,tabgoods]" [data]="inventory">
 </codx-layout-add>
 <ng-template #tabDescription>
-    <div class="row">
-        <div class="col-6">
-            <div class="form-group">
-                <codx-label [formModel]="form.formModel" fiedName="InventModelID"
-                    default="Mã mô hình tồn kho"></codx-label>
-                <codx-input [crrValue]="inventModelID" [formModel]="form.formModel" field="inventModelID"
-                    (valueChange)="valueChangeInventModelID($event)">
+    <ng-container *ngIf="form?.formGroup">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="InventModelID"></codx-label>
+                    <codx-input [Group]="form.formGroup" [crrValue]="inventory.inventModelID"
+                        [formModel]="form.formModel" field="inventModelID" (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="InventModelName"></codx-label>
+                    <codx-input [Group]="form.formGroup" [crrValue]="inventory.inventModelName" field="inventModelName"
+                        [formModel]="form.formModel" (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="InventCosting"></codx-label>
+                    <codx-input [Group]="form.formGroup" [crrValue]="inventory.inventCosting"
+                        [formModel]="form.formModel" field="inventCosting" (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-items-top pb-2">
+            <div class="me-2">
+                <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [checked]="inventory.accountControl"
+                    field="accountControl" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
+            <codx-label [formModel]="form.formModel" fiedName="AccountControl"></codx-label>
         </div>
-        <div class="col-6">
-            <div class="form-group">
-                <codx-label [formModel]="form.formModel" fiedName="InventModelName"
-                    default="Tên mô hình tồn kho"></codx-label>
-                <codx-input [crrValue]="inventModelName" field="inventModelName" [formModel]="form.formModel"
-                    (valueChange)="valueChangeInventModelName($event)">
-                </codx-input>
+        <div class="mt-2 mb-3 text-primary fw-bold fs-6">
+            <codx-label [formModel]="form.formModel" default="Thiết lập ghi sổ"></codx-label>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="d-flex align-items-top mb-2">
+                    <div class="me-2">
+                        <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                            [checked]="inventory.postFinancial" field="postFinancial"
+                            (valueChange)="valueChange($event)">
+                        </codx-input>
+                    </div>
+                    <codx-label [formModel]="form.formModel" fiedName="PostFinancial"></codx-label>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="d-flex align-items-top mb-2">
+                    <div class="me-2">
+                        <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                            [checked]="inventory.postPhysical" field="postPhysical" (valueChange)="valueChange($event)">
+                        </codx-input>
+                    </div>
+                    <codx-label [formModel]="form.formModel" fiedName="PostPhysical"></codx-label>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="form-group">
-                <codx-label [formModel]="form.formModel" fiedName="InventCosting"
-                    default="Phương pháp tính giá xuất kho"></codx-label>
-                <codx-input *ngIf="form.data.inventCosting != null" [crrValue]="form.data.inventCosting"
-                    type="valuelist" refValue="AC033" [formModel]="form.formModel" field="inventCosting"
-                    (valueChange)="valueChange($event)">
-                </codx-input>
-                <codx-input *ngIf="form.data.inventCosting == null" [crrValue]="form.data.inventCosting"
-                    type="valuelist" refValue="AC033" [formModel]="form.formModel" field="inventCosting"
-                    (valueChange)="valueChange($event)">
-                </codx-input>
-            </div>
+        <div class="mt-4 mb-3 text-primary fw-bold fs-6">
+            <codx-label [formModel]="form.formModel" default="Kiểm soát tồn kho"></codx-label>
         </div>
-    </div>
-    <div class="d-flex align-items-top pb-2">
-        <div class="me-2">
-            <codx-input [checked]="form.data.accountControl" type="switch" field="accountControl"
-                (valueChange)="valueChange($event)">
-            </codx-input>
-        </div>
-        <codx-label fiedName="AccountControl" default="Tính giá theo tài khoản tồn kho"></codx-label>
-    </div>
-    <div class="mt-2 mb-3 text-primary fw-bold fs-6">
-        <codx-label [formModel]="form.formModel" default="Thiết lập ghi sổ"></codx-label>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <div class="d-flex align-items-top mb-2">
-                <div class="me-2">
-                    <codx-input [checked]="form.data.postFinancial" type="switch" field="postFinancial"
-                        (valueChange)="valueChange($event)">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="CheckOnhand"></codx-label>
+                    <codx-input [Group]="form.formGroup" [crrValue]="inventory.checkOnhand" [formModel]="form.formModel"
+                        field="checkOnhand" (valueChange)="valueChange($event)">
                     </codx-input>
                 </div>
-                <codx-label fiedName="PostFinancial" default="Ghi sổ sổ sách"></codx-label>
             </div>
         </div>
-        <div class="col-6">
-            <div class="d-flex align-items-top mb-2">
-                <div class="me-2">
-                    <codx-input [checked]="form.data.postPhysical" type="switch" field="postPhysical"
-                        (valueChange)="valueChange($event)">
-                    </codx-input>
+        <div class="row">
+            <div class="col-6">
+                <div class="d-flex align-items-top mb-2">
+                    <div class="me-2">
+                        <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                            [checked]="inventory.nagetivePhysical" field="nagetivePhysical"
+                            (valueChange)="valueChange($event)">
+                        </codx-input>
+                    </div>
+                    <codx-label [formModel]="form.formModel" fiedName="NagetivePhysical"></codx-label>
                 </div>
-                <codx-label fiedName="PostPhysical" default="Ghi sổ vật lý"></codx-label>
             </div>
-        </div>
-    </div>
-    <div class="mt-4 mb-3 text-primary fw-bold fs-6">
-        <codx-label [formModel]="form.formModel" default="Kiểm soát tồn kho"></codx-label>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="form-group">
-                <codx-label [formModel]="form.formModel" fiedName="CheckOnhand" default="Số dư tồn kho"></codx-label>
-                <codx-input *ngIf="form.data.checkOnhand != null" [crrValue]="form.data.checkOnhand" type="valuelist"
-                    refValue="AC034" [formModel]="form.formModel" field="checkOnhand"
-                    (valueChange)="valueChange($event)">
-                </codx-input>
-                <codx-input *ngIf="form.data.checkOnhand == null" [crrValue]="form.data.checkOnhand" type="valuelist"
-                    refValue="AC034" [formModel]="form.formModel" field="checkOnhand"
-                    (valueChange)="valueChange($event)">
-                </codx-input>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <div class="d-flex align-items-top mb-2">
-                <div class="me-2">
-                    <codx-input [checked]="form.data.nagetivePhysical" type="switch" field="nagetivePhysical"
-                        (valueChange)="valueChange($event)">
-                    </codx-input>
+            <div class="col-6">
+                <div class="d-flex align-items-top mb-2">
+                    <div class="me-2">
+                        <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                            [checked]="inventory.nagetiveFinancial" field="nagetiveFinancial"
+                            (valueChange)="valueChange($event)">
+                        </codx-input>
+                    </div>
+                    <codx-label [formModel]="form.formModel" fiedName="NagetiveFinancial"></codx-label>
                 </div>
-                <codx-label fiedName="NagetivePhysical" default="Cho phép âm kho vật lý"></codx-label>
             </div>
         </div>
-        <div class="col-6">
-            <div class="d-flex align-items-top mb-2">
-                <div class="me-2">
-                    <codx-input [checked]="form.data.nagetiveFinancial" type="switch" field="nagetiveFinancial"
-                        (valueChange)="valueChange($event)">
-                    </codx-input>
+        <div class="mt-4 mb-3 text-primary fw-bold fs-6">
+            <codx-label [formModel]="form.formModel" default="Kiểm soát nhập/xuất kho"></codx-label>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="d-flex align-items-top mb-2">
+                    <div class="me-2">
+                        <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                            [checked]="inventory.requireRegister" field="requireRegister"
+                            (valueChange)="valueChange($event)">
+                        </codx-input>
+                    </div>
+                    <codx-label [formModel]="form.formModel" fiedName="RequireRegister"></codx-label>
                 </div>
-                <codx-label fiedName="NagetiveFinancial" default="Cho phép âm kho sổ sách"></codx-label>
             </div>
-        </div>
-    </div>
-    <div class="mt-4 mb-3 text-primary fw-bold fs-6">
-        <codx-label [formModel]="form.formModel" default="Kiểm soát nhập/xuất kho"></codx-label>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <div class="d-flex align-items-top mb-2">
-                <div class="me-2">
-                    <codx-input [checked]="form.data.requireRegister" type="switch" field="requireRegister"
-                        (valueChange)="valueChange($event)">
-                    </codx-input>
+            <div class="col-6">
+                <div class="d-flex align-items-top mb-2">
+                    <div class="me-2">
+                        <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                            [checked]="inventory.stdCostReceipt" field="stdCostReceipt"
+                            (valueChange)="valueChange($event)">
+                        </codx-input>
+                    </div>
+                    <codx-label [formModel]="form.formModel" fiedName="StdCostReceipt"></codx-label>
                 </div>
-                <codx-label fiedName="RequireRegister" default="Phải xác nhận thực nhận"></codx-label>
             </div>
         </div>
-        <div class="col-6">
-            <div class="d-flex align-items-top mb-2">
-                <div class="me-2">
-                    <codx-input [checked]="form.data.stdCostReceipt" type="switch" field="stdCostReceipt"
-                        (valueChange)="valueChange($event)">
-                    </codx-input>
+        <div class="row">
+            <div class="col-6">
+                <div class="d-flex align-items-top mb-2">
+                    <div class="me-2">
+                        <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                            [checked]="inventory.requirePick" field="requirePick" (valueChange)="valueChange($event)">
+                        </codx-input>
+                    </div>
+                    <codx-label [formModel]="form.formModel" fiedName="RequirePick"></codx-label>
                 </div>
-                <codx-label fiedName="StdCostReceipt" default="Sử dụng giá chuẩn khi nhập kho"></codx-label>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <div class="d-flex align-items-top mb-2">
-                <div class="me-2">
-                    <codx-input [checked]="form.data.requirePick" type="switch" field="requirePick"
-                        (valueChange)="valueChange($event)">
-                    </codx-input>
+            <div class="col-6">
+                <div class="d-flex align-items-top mb-2">
+                    <div class="me-2">
+                        <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                            [checked]="inventory.stdCostIssue" field="stdCostIssue" (valueChange)="valueChange($event)">
+                        </codx-input>
+                    </div>
+                    <codx-label [formModel]="form.formModel" fiedName="StdCostIssue"></codx-label>
                 </div>
-                <codx-label fiedName="RequirePick" default="Phải xác nhận thực xuất"></codx-label>
             </div>
         </div>
-        <div class="col-6">
-            <div class="d-flex align-items-top mb-2">
-                <div class="me-2">
-                    <codx-input [checked]="form.data.stdCostIssue" type="switch" field="stdCostIssue"
-                        (valueChange)="valueChange($event)">
-                    </codx-input>
+        <div class="mt-4 mb-3 text-primary fw-bold fs-6">
+            <codx-label [formModel]="form.formModel" default="Thiết lập khác"></codx-label>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="d-flex align-items-top mb-2">
+                    <div class="me-2">
+                        <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                            [checked]="inventory.qualityControl" field="qualityControl"
+                            (valueChange)="valueChange($event)">
+                        </codx-input>
+                    </div>
+                    <codx-label [formModel]="form.formModel" fiedName="QualityControl"></codx-label>
                 </div>
-                <codx-label fiedName="StdCostIssue" default="Sử dụng giá chuẩn khi xuất kho"></codx-label>
             </div>
         </div>
-    </div>
-    <div class="mt-4 mb-3 text-primary fw-bold fs-6">
-        <codx-label [formModel]="form.formModel" default="Thiết lập khác"></codx-label>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <div class="d-flex align-items-top mb-2">
-                <div class="me-2">
-                    <codx-input [checked]="form.data.qualityControl" type="switch" field="qualityControl"
-                        (valueChange)="valueChange($event)">
-                    </codx-input>
-                </div>
-                <codx-label fiedName="QualityControl" default="Kiểm soát chất lượng"></codx-label>
-            </div>
-        </div>
-    </div>
+    </ng-container>
 </ng-template>
 <ng-template #tabgoods>
-    <div class="mb-3 text-primary fw-bold fs-6">
-        <codx-label [formModel]="form.formModel" default="Kiểm soát dành hàng"></codx-label>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <div class="form-group">
-                <codx-label [formModel]="form.formModel" fiedName="ReserveMethod"
-                    default="Phương pháp dành hàng"></codx-label>
-                <codx-input *ngIf="form.data.reserveMethod !=null" type="combobox" refValue="AC035"
-                    [crrValue]="form.data.reserveMethod" [formModel]="form.formModel" field="reserveMethod"
-                    (valueChange)="valueChange($event)">
-                </codx-input>
-                <codx-input *ngIf="form.data.reserveMethod ==null" type="combobox" refValue="AC035"
-                    [crrValue]="form.data.reserveMethod" [formModel]="form.formModel" field="reserveMethod"
-                    (valueChange)="valueChange($event)">
-                </codx-input>
+    <ng-container *ngIf="form?.formGroup">
+        <div class="mb-3 text-primary fw-bold fs-6">
+            <codx-label [formModel]="form.formModel" default="Kiểm soát dành hàng"></codx-label>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="ReserveMethod"></codx-label>
+                    <codx-input [Group]="form.formGroup" [crrValue]="inventory.reserveMethod"
+                        [formModel]="form.formModel" field="reserveMethod" (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="ReserveRule"></codx-label>
+                    <codx-input [Group]="form.formGroup" [crrValue]="inventory.reserveRule" field="reserveRule"
+                        [formModel]="form.formModel" (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
             </div>
         </div>
-        <div class="col-6">
-            <div class="form-group">
-                <codx-label [formModel]="form.formModel" fiedName="ReserveRule"
-                    default="Dành hàng tự động"></codx-label>
-                <codx-input *ngIf="form.data.reserveRule !=null" type="combobox" refValue="AC036"
-                    [crrValue]="form.data.reserveRule" field="reserveRule" [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)">
-                </codx-input>
-                <codx-input *ngIf="form.data.reserveRule ==null" type="combobox" refValue="AC036"
-                    [crrValue]="form.data.reserveRule" field="reserveRule" [formModel]="form.formModel"
-                    (valueChange)="valueChange($event)">
+        <div class="d-flex align-items-top mb-2">
+            <div class="me-2">
+                <codx-input [checked]="inventory.reservePartial == '1' ? true : false" class="check-circle"
+                    field="reservePartial" [formModel]="form.formModel" (valueChange)="valueChanges($event)">
                 </codx-input>
             </div>
+            <codx-label [formModel]="form.formModel" fiedName="ReservePartial"></codx-label>
         </div>
-    </div>
-    <div class="d-flex align-items-top mb-2">
-        <div class="me-2">
-            <codx-input [checked]="form.data.reservePartial == '1' ? true : false" class="check-circle" field="reservePartial"
-                [formModel]="form.formModel" (valueChange)="valueChanges($event)">
-            </codx-input>
-        </div>
-        <codx-label [formModel]="form.formModel" fiedName="ReservePartial" default="Dành hàng 1 phần"></codx-label>
-    </div>
-    <div class="d-flex align-items-center mb-2">
-        <div class="me-2">
-            <codx-input class="check-circle" [checked]="form.data.reserveOrdered" field="reserveOrdered"
-                [formModel]="form.formModel" (valueChange)="valueChange($event)">
-            </codx-input>
-        </div>
-        <codx-label [formModel]="form.formModel" fiedName="ReserveOrdered"
-            default="Dành hàng đơn hàng mua"></codx-label>
-    </div>
-    <div class="d-flex align-items-center mb-2">
-        <div class="me-2">
-            <codx-input class="check-circle" [checked]="form.data.reserveSameBatch" field="reserveSameBatch"
-                [formModel]="form.formModel" (valueChange)="valueChange($event)">
-            </codx-input>
-        </div>
-        <codx-label [formModel]="form.formModel" fiedName="ReserveSameBatch" default="Dành hàng cùng lô"></codx-label>
-    </div>
-    <div class="d-flex align-items-center mb-5">
-        <div class="me-2">
-            <codx-input [checked]="form.data.reserveExpired == '1' ? true : false" class="check-circle" field="reserveExpired"
-                [formModel]="form.formModel" (valueChange)="valueChanges($event)">
-            </codx-input>
-        </div>
-        <codx-label [formModel]="form.formModel" fiedName="ReserveExpired" default="Dành hàng cận date"></codx-label>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <div class="form-group">
-                <codx-label [formModel]="form.formModel" fiedName="ExpiredDays" default="Số ngày cận date"></codx-label>
-                <codx-input [crrValue]="form.data.expiredDays" [formModel]="form.formModel" field="expiredDays"
-                    (valueChange)="valueChange($event)">
+        <div class="d-flex align-items-center mb-2">
+            <div class="me-2">
+                <codx-input [Group]="form.formGroup" class="check-circle" [checked]="inventory.reserveOrdered"
+                    field="reserveOrdered" [formModel]="form.formModel" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
+            <codx-label [formModel]="form.formModel" fiedName="ReserveOrdered"></codx-label>
         </div>
-    </div>
+        <div class="d-flex align-items-center mb-2">
+            <div class="me-2">
+                <codx-input [Group]="form.formGroup" class="check-circle" [checked]="inventory.reserveSameBatch"
+                    field="reserveSameBatch" [formModel]="form.formModel" (valueChange)="valueChange($event)">
+                </codx-input>
+            </div>
+            <codx-label [formModel]="form.formModel" fiedName="ReserveSameBatch"></codx-label>
+        </div>
+        <div class="d-flex align-items-center mb-5">
+            <div class="me-2">
+                <codx-input [checked]="inventory.reserveExpired == '1' ? true : false" class="check-circle"
+                    field="reserveExpired" [formModel]="form.formModel" (valueChange)="valueChanges($event)">
+                </codx-input>
+            </div>
+            <codx-label [formModel]="form.formModel" fiedName="ReserveExpired"></codx-label>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="ExpiredDays"></codx-label>
+                    <codx-input [crrValue]="form.data.expiredDays" [formModel]="form.formModel" field="expiredDays"
+                        (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+    </ng-container>
 </ng-template>
 <ng-template #footer>
     <div class="d-flex justify-content-end mt-1 me-3">

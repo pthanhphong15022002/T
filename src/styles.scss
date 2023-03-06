@@ -1733,9 +1733,9 @@ codx-view-list-detail .e-listview .e-list-parent {
   border-top: 1px #fff solid;
 }
 
-.tooltip * {
-  color: var(--primary-dark) !important;
-}
+// .tooltip * {
+//   color: var(--primary-dark) !important;
+// }
 
 .extend-function .extend-title {
   margin-top: -26px;
@@ -1772,7 +1772,24 @@ a.nav-link {
 }
 
 
-// .mb-5px{
-//    border: 1px aqua solid;
-//  }
+.tabhor-popup .card-body.scroll-y{
+  overflow-y: hidden;
+}
+.tabhor-popup .e-content {
+  padding-left: 0 !important;
+  margin-right: -5px;
+  padding-right: 15px;
+  overflow: auto;
+}
+.tabhor-popup .e-content .e-item{
+  height: auto!important;
+}
+.tabhor-popup .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
+  padding: 0 2px !important;
+}
+.tabhor-popup .e-tab .e-tab-header .e-toolbar-item {
+  padding: 0 !important;
+  margin-right: 15px!important;
+}
+
 /// 14/2/2023 s

@@ -132,6 +132,7 @@ export class PopAddArComponent extends UIComponent implements OnInit {
   validateRules() {
     this.gridViewSetup['PmtMethodID'].isRequire = false;
     this.gridViewSetup['CurrencyID'].isRequire = false;
+    this.gridViewSetup['RecvAcctID'].isRequire = false;
   }
   //#endregion
 
@@ -204,6 +205,7 @@ export class PopAddArComponent extends UIComponent implements OnInit {
         })
         .subscribe((res) => {
           if (res.save) {
+              this.form.formGroup.reset();
               this.dialog.dataService.clear();
               this.dialog.dataService.addNew().subscribe((res) => {
               this.arposting = this.dialog.dataService.dataSelected;

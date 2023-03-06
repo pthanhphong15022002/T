@@ -40,9 +40,8 @@ export class PopAddDimensionGroupsComponent
   dialog!: DialogRef;
   gridViewSetup: any;
   formType: any;
-  dimGroupID: any;
-  dimGroupName: any;
   validate: any = 0;
+  openPop:any = false;
   dimensionGroups: DimensionGroups;
   dimensionSetup: DimensionSetup;
   objectDimensionSetup: Array<DimensionSetup> = [];
@@ -62,31 +61,29 @@ export class PopAddDimensionGroupsComponent
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.dimensionGroups = dialog.dataService!.dataSelected;
-    this.dimGroupID = '';
-    this.dimGroupName = '';
-    if (this.dimensionGroups.dimGroupID != null) {
-      this.dimGroupID = this.dimensionGroups.dimGroupID;
-      this.dimGroupName = this.dimensionGroups.dimGroupName;
-      this.acService
-        .loadData(
-          'ERM.Business.IV',
-          'DimensionSetupBusiness',
-          'LoadDataAsync',
-          [this.dimGroupID]
-        )
-        .subscribe((res: any) => {
-          this.objectDimensionSetup = res;
-        });
-      this.acService
-        .loadData(
-          'ERM.Business.IV',
-          'DimensionControlBusiness',
-          'LoadDataAsync',
-          [this.dimGroupID]
-        )
-        .subscribe((res: any) => {
-          this.objectDimensionControl = res;
-        });
+    if (this.formType == 'edit') {
+      if (this.dimensionGroups.dimGroupID != null) {
+        this.acService
+          .loadData(
+            'ERM.Business.IV',
+            'DimensionSetupBusiness',
+            'LoadDataAsync',
+            [this.dimensionGroups.dimGroupID]
+          )
+          .subscribe((res: any) => {
+            this.objectDimensionSetup = res;
+          });
+        this.acService
+          .loadData(
+            'ERM.Business.IV',
+            'DimensionControlBusiness',
+            'LoadDataAsync',
+            [this.dimensionGroups.dimGroupID]
+          )
+          .subscribe((res: any) => {
+            this.objectDimensionControl = res;
+          });
+      }
     }
     this.cache
       .gridViewSetup('DimensionGroups', 'grvDimensionGroups')
@@ -109,14 +106,6 @@ export class PopAddDimensionGroupsComponent
   valueChange(e: any) {
     this.dimensionGroups[e.field] = e.data;
   }
-  valueChangeDimGroupID(e: any) {
-    this.dimGroupID = e.data;
-    this.dimensionGroups[e.field] = e.data;
-  }
-  valueChangeDimGroupName(e: any) {
-    this.dimGroupName = e.data;
-    this.dimensionGroups[e.field] = e.data;
-  }
   openPopupSetup(hearder: any, type: any) {
     let index = this.objectDimensionSetup.findIndex((x) => x.dimType == type);
     if (index == -1) {
@@ -125,7 +114,7 @@ export class PopAddDimensionGroupsComponent
       this.dimensionSetup = this.objectDimensionSetup[index];
     }
     var obj = {
-      headerText: 'Thiết lập kiểm soát ' + hearder,
+      headerText: 'Thiết lập kiểm soát ' + this.gridViewSetup[hearder].headerText,
       type: type,
       data: this.dimensionSetup,
       dataControl: this.objectDimensionControl,
@@ -199,8 +188,7 @@ export class PopAddDimensionGroupsComponent
 
   //#region Function
   clearDimensionGroups() {
-    this.dimGroupID = '';
-    this.dimGroupName = '';
+    this.form.formGroup.reset();
     this.objectDimensionSetup = [];
     this.objectDimensionControl = [];
   }
@@ -236,7 +224,7 @@ export class PopAddDimensionGroupsComponent
       this.validate = 0;
       return;
     } else {
-      if (this.formType == 'add') {
+      if (this.formType == 'add' || this.formType == 'copy') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'AddAsync';
@@ -253,7 +241,7 @@ export class PopAddDimensionGroupsComponent
                   'ERM.Business.IV',
                   'DimensionSetupBusiness',
                   'AddAsync',
-                  [this.dimGroupID, this.objectDimensionSetup]
+                  [this.dimensionGroups.dimGroupID, this.objectDimensionSetup]
                 )
                 .subscribe((res: []) => {});
               this.acService
@@ -261,7 +249,7 @@ export class PopAddDimensionGroupsComponent
                   'ERM.Business.IV',
                   'DimensionControlBusiness',
                   'AddAsync',
-                  [this.dimGroupID, this.objectDimensionControl]
+                  [this.dimensionGroups.dimGroupID, this.objectDimensionControl]
                 )
                 .subscribe((res: []) => {});
               this.dialog.close();
@@ -270,7 +258,7 @@ export class PopAddDimensionGroupsComponent
               this.notification.notifyCode(
                 'SYS031',
                 0,
-                '"' + this.dimGroupID + '"'
+                '"' + this.dimensionGroups.dimGroupID + '"'
               );
               return;
             }
@@ -293,7 +281,7 @@ export class PopAddDimensionGroupsComponent
                   'ERM.Business.IV',
                   'DimensionSetupBusiness',
                   'UpdateAsync',
-                  [this.dimGroupID, this.objectDimensionSetup]
+                  [this.dimensionGroups.dimGroupID, this.objectDimensionSetup]
                 )
                 .subscribe((res: []) => {});
               this.acService
@@ -301,7 +289,7 @@ export class PopAddDimensionGroupsComponent
                   'ERM.Business.IV',
                   'DimensionControlBusiness',
                   'UpdateAsync',
-                  [this.dimGroupID, this.objectDimensionControl]
+                  [this.dimensionGroups.dimGroupID, this.objectDimensionControl]
                 )
                 .subscribe((res: []) => {});
               this.dialog.close();
@@ -310,7 +298,7 @@ export class PopAddDimensionGroupsComponent
               this.notification.notifyCode(
                 'SYS031',
                 0,
-                '"' + this.dimGroupID + '"'
+                '"' + this.dimensionGroups.dimGroupID + '"'
               );
               return;
             }
@@ -340,7 +328,7 @@ export class PopAddDimensionGroupsComponent
                 'ERM.Business.IV',
                 'DimensionSetupBusiness',
                 'AddAsync',
-                [this.dimGroupID, this.objectDimensionSetup]
+                [this.dimensionGroups.dimGroupID, this.objectDimensionSetup]
               )
               .subscribe((res) => {
                 if (res) {
@@ -349,7 +337,7 @@ export class PopAddDimensionGroupsComponent
                       'ERM.Business.IV',
                       'DimensionControlBusiness',
                       'AddAsync',
-                      [this.dimGroupID, this.objectDimensionControl]
+                      [this.dimensionGroups.dimGroupID, this.objectDimensionControl]
                     )
                     .subscribe((res) => {
                       if (res) {

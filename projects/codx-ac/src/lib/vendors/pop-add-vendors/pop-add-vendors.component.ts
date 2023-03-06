@@ -119,46 +119,48 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     this.cache.valueList('AC015').subscribe((res) => {
       this.valuelist = res.datas;
     });
-    if (this.vendors.vendorID != null) {
-      this.acService
-        .loadData('ERM.Business.BS', 'BankAccountsBusiness', 'LoadDataAsync', [
-          this.objecttype,
-          this.vendors.vendorID,
-        ])
-        .subscribe((res: any) => {
-          this.objectBankaccount = res;
-        });
-      this.acService
-        .loadData('ERM.Business.BS', 'ContactBookBusiness', 'LoadDataAsync', [
-          this.objecttype,
-          this.vendors.vendorID,
-        ])
-        .subscribe((res: any) => {
-          this.objectContact = res;
-        });
-      this.acService
-        .loadData('ERM.Business.BS', 'AddressBookBusiness', 'LoadDataAsync', [
-          this.objecttype,
-          this.vendors.vendorID,
-        ])
-        .subscribe((res: any) => {
-          this.objectAddress = res;
-          for (var i = 0; i < this.objectAddress.length; i++) {
-            var recID = this.objectAddress[i].recID;
-            this.acService
-              .loadData(
-                'ERM.Business.BS',
-                'ContactBookBusiness',
-                'LoadDataAsync',
-                [this.objecttype, recID]
-              )
-              .subscribe((res: any) => {
-                res.forEach((element) => {
-                  this.objectContactAddress.push(element);
+    if (this.formType == 'edit') {
+      if (this.vendors.vendorID != null) {
+        this.acService
+          .loadData('ERM.Business.BS', 'BankAccountsBusiness', 'LoadDataAsync', [
+            this.objecttype,
+            this.vendors.vendorID,
+          ])
+          .subscribe((res: any) => {
+            this.objectBankaccount = res;
+          });
+        this.acService
+          .loadData('ERM.Business.BS', 'ContactBookBusiness', 'LoadDataAsync', [
+            this.objecttype,
+            this.vendors.vendorID,
+          ])
+          .subscribe((res: any) => {
+            this.objectContact = res;
+          });
+        this.acService
+          .loadData('ERM.Business.BS', 'AddressBookBusiness', 'LoadDataAsync', [
+            this.objecttype,
+            this.vendors.vendorID,
+          ])
+          .subscribe((res: any) => {
+            this.objectAddress = res;
+            for (var i = 0; i < this.objectAddress.length; i++) {
+              var recID = this.objectAddress[i].recID;
+              this.acService
+                .loadData(
+                  'ERM.Business.BS',
+                  'ContactBookBusiness',
+                  'LoadDataAsync',
+                  [this.objecttype, recID]
+                )
+                .subscribe((res: any) => {
+                  res.forEach((element) => {
+                    this.objectContactAddress.push(element);
+                  });
                 });
-              });
-          }
-        });
+            }
+          });
+      }
     }
   }
   //#endregion
@@ -333,6 +335,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     );
     this.objectBankaccount.splice(index, 1);
     this.objectBankaccountDelete.push(data);
+    this.notification.notifyCode('SYS008', 0, '');
   }
   editobjectBank(data: any) {
     let index = this.objectBankaccount.findIndex(
@@ -438,6 +441,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     });
     this.objectAddress.splice(index, 1);
     this.objectAddressDelete.push(data);
+    this.notification.notifyCode('SYS008', 0, '');
   }
   editobjectContact(data: any) {
     let index = this.objectContact.findIndex((x) => x.recID == data.recID);
@@ -482,6 +486,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     );
     this.objectContact.splice(index, 1);
     this.objectContactDelete.push(data);
+    this.notification.notifyCode('SYS008', 0, '');
   }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
@@ -564,7 +569,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
       } else {
         this.vendors.overDueControl = true;
       }
-      if (this.formType == 'add') {
+      if (this.formType == 'add' || this.formType == 'copy') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'AddAsync';

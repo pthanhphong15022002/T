@@ -52,7 +52,6 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.itemposting = dialog.dataService!.dataSelected;
-    console.log(this.itemposting);
     if (
       dialogData.data?.moduleID != null &&
       dialogData.data?.postType != null
@@ -200,6 +199,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
         })
         .subscribe((res) => {
           if (res.save) {
+            this.form.formGroup.reset();
             this.dialog.dataService.clear();
             this.dialog.dataService.addNew().subscribe((res) => {
               this.itemposting = this.dialog.dataService.dataSelected;
