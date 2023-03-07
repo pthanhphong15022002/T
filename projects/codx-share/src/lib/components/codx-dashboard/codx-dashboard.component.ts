@@ -245,7 +245,6 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
             item.attendees = Math.floor(Math.random() * 10);
           });
           this.dataSource = this.dataSource.slice();
-          console.log(this.dataSource);
           this.objDashboard &&
             (this.objDashboard as any).panelCollection.forEach((item: any) => {
               let component = item.getElementsByTagName('codx-chart')[0];
@@ -611,7 +610,6 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   }
 
   onChange(evt: any) {
-    console.log('Change event triggered');
   }
 
   addPanelAuto() {

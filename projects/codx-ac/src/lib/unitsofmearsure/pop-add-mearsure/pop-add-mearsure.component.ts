@@ -68,14 +68,19 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.unitsofmearsure = dialog.dataService!.dataSelected;
-    if (this.unitsofmearsure.umid != null) {
-      this.acService
-        .loadData('ERM.Business.BS', 'UMConversionBusiness', 'LoadDataAsync', [
-          this.unitsofmearsure.umid,
-        ])
-        .subscribe((res: any) => {
-          this.objectUmconversion = res;
-        });
+    if (this.formType == 'edit') {
+      if (this.unitsofmearsure.umid != null) {
+        this.acService
+          .loadData(
+            'ERM.Business.BS',
+            'UMConversionBusiness',
+            'LoadDataAsync',
+            [this.unitsofmearsure.umid]
+          )
+          .subscribe((res: any) => {
+            this.objectUmconversion = res;
+          });
+      }
     }
     this.cache
       .gridViewSetup('UnitsOfMearsure', 'grvUnitsOfMearsureAC')
@@ -153,7 +158,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
     var obj = {
       headerText: 'Thêm mới thông tin quy đổi',
       data: { ...data },
-      type:'edit'
+      type: 'edit',
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -230,7 +235,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      if (this.formType == 'add') {
+      if (this.formType == 'add' || this.formType == 'copy') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'AddAsync';
@@ -250,9 +255,16 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
                   [this.objectUmconversion]
                 )
                 .subscribe((res: []) => {});
+              this.dialog.close();
+              this.dt.detectChanges();
+            }else {
+              this.notification.notifyCode(
+                'SYS031',
+                0,
+                '"' + this.unitsofmearsure.umid + '"'
+              );
+              return;
             }
-            this.dialog.close();
-            this.dt.detectChanges();
           });
       }
       if (this.formType == 'edit') {
@@ -312,6 +324,13 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
                   });
                 }
               });
+          }else {
+            this.notification.notifyCode(
+              'SYS031',
+              0,
+              '"' + this.unitsofmearsure.umid + '"'
+            );
+            return;
           }
         });
     }

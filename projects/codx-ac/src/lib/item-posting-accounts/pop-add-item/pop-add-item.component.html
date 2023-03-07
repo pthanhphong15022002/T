@@ -1,5 +1,5 @@
 <codx-form #form [headerText]="headerText" [subHeader]="subHeader" [body]="body" [formModel]="dialog.formModel"
-    [dialog]="dialog" [footer]="footer" [data]="" subToolbarCss="text-end">
+    [dialog]="dialog" [footer]="footer" [data]="itemposting" subToolbarCss="text-end">
 </codx-form>
 <ng-template #subHeader>
     <div class="text-primary fw-bold fs-5">
@@ -15,11 +15,8 @@
             <div class="col-6">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="ItemLevel"></codx-label>
-                    <codx-input *ngIf="itemposting.itemLevel == ''" [crrValue]="itemposting.itemLevel"
-                        [formModel]="form.formModel" (valueChange)="valueChangeItemLevel($event)" field="itemLevel">
-                    </codx-input>
-                    <codx-input *ngIf="itemposting.itemLevel != ''" [crrValue]="itemposting.itemLevel"
-                        [formModel]="form.formModel" (valueChange)="valueChangeItemLevel($event)" field="itemLevel">
+                    <codx-input [Group]="form.formGroup" [crrValue]="itemposting.itemLevel" [formModel]="form.formModel"
+                        (valueChange)="valueChangeItemLevel($event)" field="itemLevel">
                     </codx-input>
                 </div>
             </div>
@@ -46,11 +43,8 @@
             <div class="col-4">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="CustType"></codx-label>
-                    <codx-input *ngIf="itemposting.custType == ''" [crrValue]="itemposting.custType"
-                        [formModel]="form.formModel" (valueChange)="valueChangeCust($event)" field="custType">
-                    </codx-input>
-                    <codx-input *ngIf="itemposting.custType != ''" [crrValue]="itemposting.custType"
-                        [formModel]="form.formModel" (valueChange)="valueChangeCust($event)" field="custType">
+                    <codx-input [Group]="form.formGroup" [crrValue]="itemposting.custType" [formModel]="form.formModel"
+                        (valueChange)="valueChangeCust($event)" field="custType">
                     </codx-input>
                 </div>
             </div>
@@ -109,16 +103,16 @@
             <div class="col-6">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="OrderPoolID"></codx-label>
-                    <codx-input [formModel]="form.formModel" [crrValue]="itemposting.orderPoolID"
-                        (valueChange)="valueChange($event)" field="orderPoolID">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                        [crrValue]="itemposting.orderPoolID" (valueChange)="valueChange($event)" field="orderPoolID">
                     </codx-input>
                 </div>
             </div>
             <div class="col-6">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="WarehouseID"></codx-label>
-                    <codx-input [formModel]="form.formModel" [crrValue]="itemposting.warehouseID"
-                        (valueChange)="valueChange($event)" field="warehouseID">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                        [crrValue]="itemposting.warehouseID" (valueChange)="valueChange($event)" field="warehouseID">
                     </codx-input>
                 </div>
             </div>
@@ -127,11 +121,8 @@
             <div class="col-6">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="BUID"></codx-label>
-                    <codx-input *ngIf="itemposting.custLevel == 'ERP'" type="combobox" refValue="BusinessUnits"
-                        [crrValue]="itemposting.buid" field="buid" (valueChange)="valueChange($event)">
-                    </codx-input>
-                    <codx-input *ngIf="itemposting.custLevel != 'ERP'" type="combobox" refValue="BusinessUnits"
-                        [crrValue]="itemposting.buid" field="buid" (valueChange)="valueChange($event)">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="itemposting.buid"
+                        field="buid" (valueChange)="valueChange($event)">
                     </codx-input>
                 </div>
             </div>
@@ -143,10 +134,7 @@
             <div class="col-6">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="AccountID"></codx-label>
-                    <codx-input *ngIf="itemposting.accountID == ''" [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="itemposting.accountID"
-                        (valueChange)="valueChange($event)" field="accountID">
-                    </codx-input>
-                    <codx-input *ngIf="itemposting.accountID != ''" [formModel]="form.formModel" [crrValue]="itemposting.accountID"
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="itemposting.accountID"
                         (valueChange)="valueChange($event)" field="accountID">
                     </codx-input>
                 </div>
@@ -154,8 +142,8 @@
             <div class="col-6">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="DIM3"></codx-label>
-                    <codx-input [formModel]="form.formModel" [crrValue]="itemposting.diM3"
-                        field="diM3" (valueChange)="valueChange($event)">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="itemposting.diM3" field="diM3"
+                        (valueChange)="valueChange($event)">
                     </codx-input>
                 </div>
             </div>
@@ -164,23 +152,23 @@
             <div class="col-6">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="DIM1"></codx-label>
-                    <codx-input [formModel]="form.formModel" [crrValue]="itemposting.diM1"
-                        field="diM1" (valueChange)="valueChange($event)">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="itemposting.diM1" field="diM1"
+                        (valueChange)="valueChange($event)">
                     </codx-input>
                 </div>
             </div>
             <div class="col-6">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="DIM2"></codx-label>
-                    <codx-input [formModel]="form.formModel" [crrValue]="itemposting.diM2"
-                        field="diM2" (valueChange)="valueChange($event)">
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="itemposting.diM2" field="diM2"
+                        (valueChange)="valueChange($event)">
                     </codx-input>
                 </div>
             </div>
         </div>
         <div class="form-group">
             <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
-            <codx-input [formModel]="form.formModel" [crrValue]="itemposting.note" field="note"
+            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="itemposting.note" field="note"
                 (valueChange)="valueChange($event)">
             </codx-input>
         </div>

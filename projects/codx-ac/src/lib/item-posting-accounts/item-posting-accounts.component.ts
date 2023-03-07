@@ -49,11 +49,10 @@ export class ItempostingaccountsComponent extends UIComponent {
   postTypeSell: any;
   postManufacture: any;
   postProject: any;
-  postType:any;
-  moreFuncName: any;
+  postType: any;
   funcName: any;
   subheaderText: any;
-  headerText:any;
+  headerText: any;
   button = {
     id: 'btnAdd',
   };
@@ -71,12 +70,6 @@ export class ItempostingaccountsComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'SYS01');
-        if (m) this.moreFuncName = m.defaultName;
-      }
-    });
   }
   //#endregion
 
@@ -189,7 +182,7 @@ export class ItempostingaccountsComponent extends UIComponent {
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
-        this.add();
+        this.add(e);
         break;
     }
   }
@@ -200,6 +193,9 @@ export class ItempostingaccountsComponent extends UIComponent {
         break;
       case 'SYS03':
         this.edit(e, data);
+        break;
+      case 'SYS04':
+        this.copy(e, data);
         break;
     }
   }
@@ -247,9 +243,9 @@ export class ItempostingaccountsComponent extends UIComponent {
         break;
     }
   }
-  add() {
+  add(e) {
     this.loadMenuActive(this.menuActive);
-    this.headerText = this.moreFuncName + ' ' + this.funcName;
+    this.headerText = e.text + ' ' + this.funcName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',
@@ -280,6 +276,26 @@ export class ItempostingaccountsComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'edit',
+          headerText: e.text + ' ' + this.funcName,
+          subheaderText: this.subheaderText,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfunc.openSide(PopAddItemComponent, obj, option);
+      });
+  }
+  copy(e, data) {
+    this.loadMenuActive(parseInt(data.moduleID));
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .copy(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'copy',
           headerText: e.text + ' ' + this.funcName,
           subheaderText: this.subheaderText,
         };

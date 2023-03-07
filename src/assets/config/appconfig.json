@@ -5,7 +5,7 @@
   "urlUpload": "http://172.16.7.34:8011/lvfile",
   "appName": "hps-file-test",
   "office365": "",
-  "saas": 1,
+  "saas": 0,
   "layoutCZ": "",
   "themeMode": "body",
   "externalLogin": {

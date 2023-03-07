@@ -83,6 +83,7 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
         data.totalInstance = res;
         this.dialog.close(data);
       }
+      this.dialog.close(data);
     })
   }
 }

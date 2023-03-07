@@ -1,34 +1,73 @@
 <div class="cal-notes">
   <div class="more-btn">
-    <span class="icon-edit-one icon-18 icon-gray btn btn-icon btn-active-light-primary position-relative"
-      (click)="openFormAddNote()"></span>
-    <div ngbDropdown class="dropdown" container="body" placement="top"
-      style="margin-top: -29px; margin-left: 30px; width: 30px">
-      <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
-        id="dropdownMenuButton1" aria-expanded="false">
-        <i class="icon-more_vert icon-20 icon-gray btn btn-icon btn-active-light-primary position-relative"></i>
+    <span
+      class="icon-edit-one icon-18 icon-gray btn btn-icon btn-active-light-primary position-relative"
+      (click)="openFormAddNote()"
+    ></span>
+    <div
+      ngbDropdown
+      class="dropdown"
+      container="body"
+      placement="top"
+      style="margin-top: -29px; margin-left: 30px; width: 30px"
+    >
+      <a
+        href="javascript:void(0)"
+        class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+        ngbDropdownToggle
+        id="dropdownMenuButton1"
+        aria-expanded="false"
+      >
+        <i
+          class="icon-more_vert icon-20 icon-gray btn btn-icon btn-active-light-primary position-relative"
+        ></i>
       </a>
       <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
         <div class="flex align-items-center">
-          <codx-label class="w-136px" name="lblDeleteNote" formName="Notes" default="Theo tuần"></codx-label>
-          <codx-input type="switch" field="onTypeCalendarByWeek" labelPosition="Before" class="test-check"
-            [checked]="checkWeek" (valueChange)="valueChangeTypeCalendar($event)">
+          <codx-label
+            class="w-136px"
+            name="lblDeleteNote"
+            formName="Notes"
+            default="Theo tuần"
+          ></codx-label>
+          <codx-input
+            type="switch"
+            field="onTypeCalendarByWeek"
+            labelPosition="Before"
+            class="test-check"
+            [checked]="checkWeek"
+            (valueChange)="valueChangeTypeCalendar($event)"
+          >
           </codx-input>
         </div>
         <div class="separator my-3"></div>
         <div *ngIf="WP_NotesParam != null">
           <div class="flex">
             <div class="w-5px">
-              <li [style.background-color]="WP_NotesParam?.ShowColor" [style.color]="WP_NotesParam?.ShowColor"></li>
+              <li
+                [style.background-color]="WP_NotesParam?.ShowColor"
+                [style.color]="WP_NotesParam?.ShowColor"
+              ></li>
             </div>
             <div class="show-event">
-              <codx-label name="lblNote" formName="WP_Notes" default="Ghi chú"></codx-label>
+              <codx-label
+                name="lblNote"
+                formName="WP_Notes"
+                default="Ghi chú"
+              ></codx-label>
             </div>
             <div class="show-event-check">
-              <codx-input type="checkbox" field="WP_Notes" [checked]="
+              <codx-input
+                type="checkbox"
+                field="WP_Notes"
+                [checked]="
                   checkWP_NotesParam == 'true' || checkWP_NotesParam == '1'
-                " labelPosition="Before" [disabled]="false" class="test-check"
-                (valueChange)="valueChangeSetting($event)">
+                "
+                labelPosition="Before"
+                [disabled]="false"
+                class="test-check"
+                (valueChange)="valueChangeSetting($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -37,16 +76,30 @@
         <div *ngIf="TM_TasksParam != null">
           <div class="flex">
             <div class="w-5px">
-              <li [style.background-color]="TM_TasksParam?.ShowColor" [style.color]="TM_TasksParam?.ShowColor"></li>
+              <li
+                [style.background-color]="TM_TasksParam?.ShowColor"
+                [style.color]="TM_TasksParam?.ShowColor"
+              ></li>
             </div>
             <div class="show-event">
-              <codx-label name="lblTask" formName="WP_Task" default="Công việc cá nhân"></codx-label>
+              <codx-label
+                name="lblTask"
+                formName="WP_Task"
+                default="Công việc cá nhân"
+              ></codx-label>
             </div>
             <div class="show-event-check">
-              <codx-input type="checkbox" field="TM_Tasks" [checked]="
+              <codx-input
+                type="checkbox"
+                field="TM_Tasks"
+                [checked]="
                   checkTM_TasksParam == 'true' || checkTM_TasksParam == '1'
-                " labelPosition="Before" [disabled]="false" class="test-check"
-                (valueChange)="valueChangeSetting($event)">
+                "
+                labelPosition="Before"
+                [disabled]="false"
+                class="test-check"
+                (valueChange)="valueChangeSetting($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -55,19 +108,32 @@
         <div *ngIf="CO_MeetingsParam != null">
           <div class="flex">
             <div class="w-5px">
-              <li [style.background-color]="CO_MeetingsParam?.ShowColor" [style.color]="CO_MeetingsParam?.ShowColor">
-              </li>
+              <li
+                [style.background-color]="CO_MeetingsParam?.ShowColor"
+                [style.color]="CO_MeetingsParam?.ShowColor"
+              ></li>
             </div>
             <div class="show-event">
-              <codx-label name="lblMeeting" formName="CO_Meetings" default="Lịch họp cá nhân">
+              <codx-label
+                name="lblMeeting"
+                formName="CO_Meetings"
+                default="Lịch họp cá nhân"
+              >
               </codx-label>
             </div>
             <div class="show-event-check">
-              <codx-input type="checkbox" field="CO_Meetings" [checked]="
+              <codx-input
+                type="checkbox"
+                field="CO_Meetings"
+                [checked]="
                   checkCO_MeetingsParam == 'true' ||
                   checkCO_MeetingsParam == '1'
-                " labelPosition="Before" [disabled]="false" class="test-check"
-                (valueChange)="valueChangeSetting($event)">
+                "
+                labelPosition="Before"
+                [disabled]="false"
+                class="test-check"
+                (valueChange)="valueChangeSetting($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -76,19 +142,32 @@
         <div *ngIf="EP_BookingRoomsParam != null">
           <div class="flex">
             <div class="w-5px">
-              <li [style.background-color]="EP_BookingRoomsParam?.ShowColor"
-                [style.color]="EP_BookingRoomsParam?.ShowColor"></li>
+              <li
+                [style.background-color]="EP_BookingRoomsParam?.ShowColor"
+                [style.color]="EP_BookingRoomsParam?.ShowColor"
+              ></li>
             </div>
             <div class="show-event">
-              <codx-label name="lblBookingRoom" formName="EP_BookingRooms" default="Lịch đặt phòng">
+              <codx-label
+                name="lblBookingRoom"
+                formName="EP_BookingRooms"
+                default="Lịch đặt phòng"
+              >
               </codx-label>
             </div>
             <div class="show-event-check">
-              <codx-input type="checkbox" field="EP_BookingRooms" [checked]="
+              <codx-input
+                type="checkbox"
+                field="EP_BookingRooms"
+                [checked]="
                   checkEP_BookingRoomsParam == 'true' ||
                   checkEP_BookingRoomsParam == '1'
-                " labelPosition="Before" [disabled]="false" class="test-check"
-                (valueChange)="valueChangeSetting($event)">
+                "
+                labelPosition="Before"
+                [disabled]="false"
+                class="test-check"
+                (valueChange)="valueChangeSetting($event)"
+              >
               </codx-input>
             </div>
           </div>
@@ -97,26 +176,43 @@
         <div *ngIf="EP_BookingCarsParam != null">
           <div class="flex">
             <div class="w-5px">
-              <li [style.background-color]="EP_BookingCarsParam?.ShowColor"
-                [style.color]="EP_BookingCarsParam?.ShowColor"></li>
+              <li
+                [style.background-color]="EP_BookingCarsParam?.ShowColor"
+                [style.color]="EP_BookingCarsParam?.ShowColor"
+              ></li>
             </div>
             <div class="show-event">
-              <codx-label name="lblBookingCar" formName="EP_BookingCars" default="Lịch đặt xe">
+              <codx-label
+                name="lblBookingCar"
+                formName="EP_BookingCars"
+                default="Lịch đặt xe"
+              >
               </codx-label>
             </div>
             <div class="show-event-check">
-              <codx-input type="checkbox" field="EP_BookingCars" [checked]="
+              <codx-input
+                type="checkbox"
+                field="EP_BookingCars"
+                [checked]="
                   checkEP_BookingCarsParam == 'true' ||
                   checkEP_BookingCarsParam == '1'
-                " labelPosition="Before" [disabled]="false" class="test-check"
-                (valueChange)="valueChangeSetting($event)">
+                "
+                labelPosition="Before"
+                [disabled]="false"
+                class="test-check"
+                (valueChange)="valueChangeSetting($event)"
+              >
               </codx-input>
             </div>
           </div>
         </div>
         <div class="mt-3 ms-2">
-          <button type="button" class="btn btn-sm btn-primary" (click)="updateSettingValueVer2()">
-            <codx-label name="lblSaveSettingValue" default="Apply"></codx-label>
+          <button
+            type="button"
+            class="btn btn-sm btn-primary"
+            (click)="updateSettingValueVer2()"
+          >
+            <codx-label name="lblSaveSettingValue" default="Save"></codx-label>
           </button>
         </div>
       </ul>
@@ -124,60 +220,110 @@
   </div>
   <div class="calendar-box position-relative">
     <div class="form-calendar">
-      <selectweek *ngIf="typeCalendar == 'week'" (onChangeValue)="changeDayOfWeek($event)"
-        (onChangeWeek)="clickChangeWeek($event)" [weekEventTmp]="calendarEvent"
-        [weekEventsSrc]="lstView?.dataService?.data">
+      <selectweek
+        *ngIf="typeCalendar == 'week'"
+        (onChangeValue)="changeDayOfWeek($event)"
+        (onChangeWeek)="clickChangeWeek($event)"
+        [weekEventTmp]="calendarEvent"
+        [weekEventsSrc]="lstView?.dataService?.data"
+      >
       </selectweek>
-      <ejs-calendar *ngIf="typeCalendar == 'month'" #calendar [firstDayOfWeek]="1" locale="vi"
-        (renderDayCell)="onLoad($event)" (change)="changeDayOfMonth($event)" cssClass="width-calendar"
-        class="e-customStyle" title="Lịch các nhân" (navigated)="changeNewMonth($event)" [value]="dateChange">
+      <ejs-calendar
+        *ngIf="typeCalendar == 'month'"
+        #calendar
+        [firstDayOfWeek]="1"
+        locale="vi"
+        (renderDayCell)="onLoad($event)"
+        (change)="changeDayOfMonth($event)"
+        cssClass="width-calendar"
+        class="e-customStyle"
+        title="Lịch các nhân"
+        (navigated)="changeNewMonth($event)"
+        [value]="dateChange"
+      >
       </ejs-calendar>
     </div>
   </div>
   <div class="lstView">
-    <codx-listview #listview [itemTemplate]="dataPara" type="listView" [dataService]="dtService">
+    <codx-listview
+      #listview
+      [itemTemplate]="dataPara"
+      type="listView"
+      [dataService]="dtService"
+    >
     </codx-listview>
   </div>
   <ng-template #dataPara let-item>
-    <div class="d-flex flex-column py-1" *ngIf="item.transType == 'WP_Notes' && item.showCalendar == true">
-      <div [ngStyle]="{
+    <div
+      class="d-flex flex-column py-1"
+      *ngIf="item.transType == 'WP_Notes' && item.showCalendar == true"
+    >
+      <div
+        [ngStyle]="{
           'background-color': WP_NotesParam?.ShowBackground,
           'border-left': '3px ' + WP_NotesParam?.ShowColor + ' solid'
-        }">
+        }"
+      >
         <div class="checkbox-list">
           <div *ngIf="item.noteType == 'text'; else other">
             <div class="action-menu d-flex">
               <div class="d-flex align-items-center">
                 <a class="action-item" (click)="openFormUpdateNote(item)">
                   <div class="d-flex align-items-center btn-tooltip icon-18">
-                    <span [class]="editMF?.largeIcon" [style.color]="editMF?.color"></span>
+                    <span
+                      [class]="editMF?.largeIcon"
+                      [style.color]="editMF?.color"
+                    ></span>
                   </div>
                 </a>
                 <a class="action-item" (click)="onDelete(item)">
                   <div class="d-flex align-items-center btn-tooltip icon-18">
-                    <span [class]="deleteMF?.largeIcon" [style.color]="deleteMF?.color"></span>
+                    <span
+                      [class]="deleteMF?.largeIcon"
+                      [style.color]="deleteMF?.color"
+                    ></span>
                   </div>
                 </a>
                 <div ngbDropdown class="dropdown" container="body">
-                  <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
-                    ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false">
+                  <a
+                    href="javascript:void(0)"
+                    class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                    ngbDropdownToggle
+                    id="dropdownMenuButton1"
+                    aria-expanded="false"
+                  >
                     <i class="icon-more_vert icon-20 text-dark-75"></i>
                   </a>
                   <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                     <li>
-                      <a (click)="checkNumberNotePin(item)" ngbDropdownItem href="javascript:void(0)">
-                        <span [class]="'icon-push_pin me-1'" [style.color]="pinMF?.color"></span>
+                      <a
+                        (click)="checkNumberNotePin(item)"
+                        ngbDropdownItem
+                        href="javascript:void(0)"
+                      >
+                        <span
+                          [class]="'icon-push_pin me-1'"
+                          [style.color]="pinMF?.color"
+                        ></span>
                         <span class="show-customName">{{
                           pinMF?.customName
-                          }}</span>
+                        }}</span>
                       </a>
                     </li>
                     <li>
-                      <a (click)="openFormNoteBooks(item)" ngbDropdownItem href="javascript:void(0)">
-                        <span [class]="saveMF?.largeIcon" class="me-1" [style.color]="saveMF?.color"></span>
+                      <a
+                        (click)="openFormNoteBooks(item)"
+                        ngbDropdownItem
+                        href="javascript:void(0)"
+                      >
+                        <span
+                          [class]="saveMF?.largeIcon"
+                          class="me-1"
+                          [style.color]="saveMF?.color"
+                        ></span>
                         <span class="show-customName">{{
                           saveMF?.customName
-                          }}</span>
+                        }}</span>
                       </a>
                     </li>
                   </ul>
@@ -196,34 +342,60 @@
               <div class="d-flex align-items-center">
                 <a class="action-item" (click)="openFormUpdateNote(item)">
                   <div class="d-flex align-items-center btn-tooltip icon-18">
-                    <span [class]="editMF?.largeIcon" [style.color]="editMF?.color"></span>
+                    <span
+                      [class]="editMF?.largeIcon"
+                      [style.color]="editMF?.color"
+                    ></span>
                   </div>
                 </a>
                 <a class="action-item" (click)="onDelete(item)">
                   <div class="d-flex align-items-center btn-tooltip icon-18">
-                    <span [class]="deleteMF?.largeIcon" [style.color]="deleteMF?.color"></span>
+                    <span
+                      [class]="deleteMF?.largeIcon"
+                      [style.color]="deleteMF?.color"
+                    ></span>
                   </div>
                 </a>
                 <div ngbDropdown class="dropdown" container="body">
-                  <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
-                    ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false">
+                  <a
+                    href="javascript:void(0)"
+                    class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                    ngbDropdownToggle
+                    id="dropdownMenuButton1"
+                    aria-expanded="false"
+                  >
                     <i class="icon-more_vert icon-20 text-dark-75"></i>
                   </a>
                   <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                     <li>
-                      <a (click)="checkNumberNotePin(item)" ngbDropdownItem href="javascript:void(0)">
-                        <span [class]="'icon-push_pin me-1'" [style.color]="pinMF?.color"></span>
+                      <a
+                        (click)="checkNumberNotePin(item)"
+                        ngbDropdownItem
+                        href="javascript:void(0)"
+                      >
+                        <span
+                          [class]="'icon-push_pin me-1'"
+                          [style.color]="pinMF?.color"
+                        ></span>
                         <span class="show-customName">{{
                           pinMF?.customName
-                          }}</span>
+                        }}</span>
                       </a>
                     </li>
                     <li>
-                      <a (click)="openFormNoteBooks(item)" ngbDropdownItem href="javascript:void(0)">
-                        <span [class]="saveMF?.largeIcon" class="me-1" [style.color]="saveMF?.color"></span>
+                      <a
+                        (click)="openFormNoteBooks(item)"
+                        ngbDropdownItem
+                        href="javascript:void(0)"
+                      >
+                        <span
+                          [class]="saveMF?.largeIcon"
+                          class="me-1"
+                          [style.color]="saveMF?.color"
+                        ></span>
                         <span class="show-customName">{{
                           saveMF?.customName
-                          }}</span>
+                        }}</span>
                       </a>
                     </li>
                   </ul>
@@ -244,11 +416,19 @@
                 </div>
                 <div *ngIf="itemList.status != null">
                   <div class="my-2 note-list">
-                    <codx-input #checkBoxNote id="checkBoxNote" type="checkbox" label="{{ itemList.listNote }}"
-                      [disabled]="false" [checked]="
+                    <codx-input
+                      #checkBoxNote
+                      id="checkBoxNote"
+                      type="checkbox"
+                      label="{{ itemList.listNote }}"
+                      [disabled]="false"
+                      [checked]="
                         itemList?.status == 'true' || itemList?.status == '1'
-                      " labelPosition="After" class="test-check"
-                      (valueChange)="valueChangeCB($event, item, i)"></codx-input>
+                      "
+                      labelPosition="After"
+                      class="test-check"
+                      (valueChange)="valueChangeCB($event, item, i)"
+                    ></codx-input>
                   </div>
                 </div>
               </div>
@@ -259,11 +439,16 @@
     </div>
     <!-- Chi Thuong ep buoc sua lai -->
     <!-- <div *ngIf="item?.transType == 'TM_Tasks'"> -->
-    <div *ngIf="item?.transType == 'TM_MyTasks'" (click)="redirectToFuncID(item)">
-      <div [ngStyle]="{
+    <div
+      *ngIf="item?.transType == 'TM_MyTasks'"
+      (click)="redirectToFuncID(item)"
+    >
+      <div
+        [ngStyle]="{
           'background-color': TM_TasksParam?.ShowBackground,
           'border-left': '3px ' + TM_TasksParam?.ShowColor + ' solid'
-        }">
+        }"
+      >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.description"></span>
@@ -271,14 +456,21 @@
         </div>
       </div>
     </div>
-    <div *ngIf="item?.transType == 'CO_Meetings'" (click)="redirectToFuncID(item)">
-      <div [ngStyle]="{
+    <div
+      *ngIf="item?.transType == 'CO_Meetings'"
+      (click)="redirectToFuncID(item)"
+    >
+      <div
+        [ngStyle]="{
           'background-color': CO_MeetingsParam?.ShowBackground,
           'border-left': '3px ' + CO_MeetingsParam?.ShowColor + ' solid'
-        }">
+        }"
+      >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
-            <span [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"></span>
+            <span
+              [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"
+            ></span>
           </div>
           <div class="d-flex flex-column note-option">
             {{ item?.data?.location }}
@@ -297,14 +489,21 @@
         </div>
       </div>
     </div>
-    <div *ngIf="item?.transType == 'EP_BookingRooms'" (click)="redirectToFuncID(item)">
-      <div [ngStyle]="{
+    <div
+      *ngIf="item?.transType == 'EP_BookingRooms'"
+      (click)="redirectToFuncID(item)"
+    >
+      <div
+        [ngStyle]="{
           'background-color': EP_BookingRoomsParam?.ShowBackground,
           'border-left': '3px ' + EP_BookingRoomsParam?.ShowColor + ' solid'
-        }">
+        }"
+      >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
-            <span [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"></span>
+            <span
+              [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"
+            ></span>
           </div>
           <div class="d-flex flex-column note-option">
             <div class="d-flex flex-column note-option">
@@ -324,14 +523,21 @@
         </div>
       </div>
     </div>
-    <div *ngIf="item?.transType == 'EP_BookingCars'" (click)="redirectToFuncID(item)">
-      <div [ngStyle]="{
+    <div
+      *ngIf="item?.transType == 'EP_BookingCars'"
+      (click)="redirectToFuncID(item)"
+    >
+      <div
+        [ngStyle]="{
           'background-color': EP_BookingCarsParam?.ShowBackground,
           'border-left': '3px ' + EP_BookingCarsParam?.ShowColor + ' solid'
-        }">
+        }"
+      >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
-            <span [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"></span>
+            <span
+              [innerHTML]="getStart_EndTime(item?.startTime, item?.endTime)"
+            ></span>
           </div>
 
           <div class="d-flex flex-column note-option">
@@ -354,27 +560,54 @@
   </ng-template>
 </div>
 <ng-template #fieldValue let-data="data">
-  <codx-input [type]="data?.type" [refValue]="data?.refID" [crrValue]="data.value" [field]="" [disabled]="true">
+  <codx-input
+    [type]="data?.type"
+    [refValue]="data?.refID"
+    [crrValue]="data.value"
+    [field]=""
+    [disabled]="true"
+  >
   </codx-input>
 </ng-template>
 
 <ng-template #calendarEvent let-event>
-  <ng-container *ngFor="
+  <ng-container
+    *ngFor="
       let trans of setEventVer2(event);
       let lenght = count;
       let idx = index
-    ">
+    "
+  >
     <ng-template #moreThan3>
-      <span style="font-size: 10px; margin-left: 2px; margin-top: -3px">
-        + {{ lenght - 2 }}
+      <ng-container *ngIf="lenght == 3; else index3">
+        <span
+          [class]="'note-pointed-' + event.replace('/', '-')"
+          [style]="
+            'width: 6px;height: 6px; background-color:' +
+            trans.color +
+            ';margin-left: 2px;border-radius: 50%;'
+          "
+        >
+        </span>
+      </ng-container>
+    </ng-template>
+    <ng-template #index3>
+      <span
+        *ngIf="idx == 2"
+        style="font-size: 10px; margin-left: 2px; margin-top: -3px"
+      >
+        +{{ lenght - 2 }}
       </span>
     </ng-template>
-    <span *ngIf="trans.isActive == '1' && lenght < 4 && idx < 4; else moreThan3"
-      [class]="'note-pointed-' + event.split('/').join('-')" [style]="
+    <span
+      *ngIf="trans.isActive == '1' && idx < 2; else moreThan3"
+      [class]="'note-pointed-' + event.replace('/', '-')"
+      [style]="
         'width: 6px;height: 6px; background-color:' +
         trans.color +
         ';margin-left: 2px;border-radius: 50%;'
-      ">
+      "
+    >
     </span>
   </ng-container>
 </ng-template>

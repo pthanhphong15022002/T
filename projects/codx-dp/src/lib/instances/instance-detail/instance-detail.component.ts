@@ -231,7 +231,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   click(indexNo, data) {
-    if (this.currentStep < indexNo) return;
+    if (this.currentStep < indexNo && (this.instanceStatus === "1" || this.instanceStatus === "2") ) return;
     this.currentNameStep = indexNo;
     var indx = this.listSteps.findIndex((x) => x.stepID == data);
     this.tmpTeps = this.listSteps[indx];
@@ -284,11 +284,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   checkCompletedInstance(instanceStatus: any) {
-    if (instanceStatus === '3' || instanceStatus === '4') {
-      this.listSteps.pop();
-    } else if (instanceStatus === '5' || instanceStatus === '6') {
-      this.listSteps.splice(this.listSteps.length - 2, 1);
-    } else {
+    if (instanceStatus === '1' || instanceStatus === '2') {
       this.deleteListReason(this.listSteps);
     }
   }
@@ -313,22 +309,17 @@ export class InstanceDetailComponent implements OnInit {
     var idx = this.listStepNew.findIndex((x) => x.stepID === stepId);
     return this.listStepNew[idx];
   }
-  getStepNameIsComlepte() {
-    var idx = this.listSteps.findIndex(
-      (x) => x.stepStatus === '4' || x.stepStatus === '5'
-    );
-    if (idx > -1) {
-      var reasonStep = this.listSteps[idx];
-      var idxProccess = this.listCbxProccess.findIndex(
-        (x) => x.recID === this.instance?.newProcessID
-      );
-      var proccesMove = this.listCbxProccess[idxProccess];
+  getStepNameIsComlepte(data) {
+   var idx = this.listSteps.findIndex(
+    (x) => x.stepStatus === '4' || x.stepStatus === '5'
+  );
+  if (idx > -1) {
+    var reasonStep = this.listSteps[idx];
+    var indexProccess = this.listCbxProccess.findIndex(x=>x.recID === data?.refID);
+      var proccesMove = this.listCbxProccess[indexProccess];
       this.proccesNameMove = proccesMove?.processName ?? '';
-    }
+  }
     return reasonStep?.stepName ?? '';
   }
-  //  getProccessNameIsMove(index:any){
 
-  //   return  this.listSteps[idx]?.stepName ?? '';
-  //  }
 }
