@@ -239,7 +239,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   //lấy answerType
   setAnswerType(answerType:any , type:any)
   {
-    debugger
     return this.listMoreFunc.filter(x=>x.id == answerType)[0][type];
   }
 
@@ -1189,6 +1188,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   addCard(itemActive, seqNoSession = null, category) {
+    debugger
     if (itemActive) {
       if (category == 'S') this.addSession(itemActive, seqNoSession);
       else this.addNoSession(itemActive, seqNoSession, category);
@@ -1347,7 +1347,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     tempQuestion.category = category;
     tempQuestion.recID = this.GUID;
     tempQuestion.parentID = this.questions[seqNoSession].recID;
-   
+    tempQuestion.other = false;
     delete tempQuestion.id;
     this.questions[seqNoSession].children.splice(
       itemActive.category == 'S' ? 0 : itemActive.seqNo + 1,
