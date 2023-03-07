@@ -9,6 +9,7 @@ import {
   AuthStore,
   DialogData,
   DialogRef,
+  NotificationsService,
   UIComponent,
   UserModel,
 } from 'codx-core';
@@ -31,6 +32,7 @@ export class PopupAddQuotaComponent extends UIComponent {
     injector: Injector,
     private fb: FormBuilder,
     private auth: AuthStore,
+    private notificationsService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -51,7 +53,7 @@ export class PopupAddQuotaComponent extends UIComponent {
     });
     this.dialogAddQuota.patchValue({ ruleType: '1' });
     this.dialogAddQuota.patchValue({ quantity: 1 });
-    this.dialogAddQuota.addControl('itemLevel', new FormControl('9'));
+    this.dialogAddQuota.addControl('itemLevel', new FormControl('1'));
     this.dialogAddQuota.addControl(
       'itemSelect',
       new FormControl(this.data.resourceID)
@@ -86,7 +88,12 @@ export class PopupAddQuotaComponent extends UIComponent {
         this.dialogAddQuota.value,
       ])
       .subscribe((res) => {
-        console.log(res);
+        if (res) {
+          this.notificationsService.notifyCode('SYS006');
+        } else {
+          this.notificationsService.notifyCode('SYS023');
+        }
+        this.dialog && this.dialog.close();
       });
   }
 }

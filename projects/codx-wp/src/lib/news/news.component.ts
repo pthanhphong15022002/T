@@ -155,19 +155,21 @@ export class NewsComponent extends UIComponent {
         .subscribe((res:any[]) => {
           let data = res[0];
           if(this.scrolled)
+          {
             this.videos = this.videos.concat(data);
+            this.scrolled = false;
+          }
           else
             this.videos = res[0];
           let j = 0;
-          for (let index = 0; index < this.videos.length; index += 3) {
+          for (let index = this.pageIndex; index < this.videos.length; index += 3) {
             this.slides[j] = [];
             this.slides[j] = this.videos.slice(index,index+3);
             j ++;
           }
-          if(j>1){
-            this.showNavigation = j > 1 ? true : false; 
-            this.carousel.pause();
-          }
+          this.showNavigation = j > 1 ? true : false;
+          this.page = res[1];
+          this.pageIndex += 1;
           this.detectorRef.detectChanges();
         });
   }
@@ -222,10 +224,15 @@ export class NewsComponent extends UIComponent {
     } 
   }
 
-
+  page:number = 0;
+  pageIndex:number = 1;
   // navigate slider
-  navigate($event){
-    debugger
+  navigate(event:any){
+    if(event.source === "arrowRight" && this.pageIndex < this.page){
+      //load video
+      this.scrolled = true;
+      this.getVideoAsync(this.category,this.pageIndex);
+    }
   }
 
 }
