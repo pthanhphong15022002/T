@@ -14,20 +14,20 @@ export class ChatService {
     this.listeningChatMessage();
   }
   listeningChatMessage() {
-    this.signalRService.signalChat.subscribe((signData: any) => {
-      let topic = signData.topic;
-      let data = signData.data;
-      switch (topic) {
-        case 'ReadMessageToMe':
-          this.readMessage.emit(data);
-          break;
-        case 'ReceiveMessage':
-          this.receiveMessage.emit(data);
-          break;
-        default:
-          break;
-      }
-    });
+    // this.signalRService.signalChat.subscribe((signData: any) => {
+    //   let topic = signData.topic;
+    //   let data = signData.data;
+    //   switch (topic) {
+    //     case 'ReadMessageToMe':
+    //       this.readMessage.emit(data);
+    //       break;
+    //     case 'ReceiveMessage':
+    //       this.receiveMessage.emit(data);
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    // });
   }
 
   public receiveMessage = new EventEmitter();
