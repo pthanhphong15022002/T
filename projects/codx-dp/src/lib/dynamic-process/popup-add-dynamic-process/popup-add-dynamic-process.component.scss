@@ -8,6 +8,54 @@
   margin-left: 27px;
 }
 
+<<<<<<< HEAD
+=======
+
+.background {
+  font-size: 16px;
+  box-shadow: #e4e4e4 5px 5px 15px 5px;
+
+  .header-job {
+    background-color: #cde7f1;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3rem;
+    margin-left: 0, 5rem;
+
+    .left {
+      margin: 10px;
+      .title {
+        font-weight: 600;
+        color: #2392ef;
+        font-size: 1.2rem;
+      }
+    }
+
+    .right {
+      margin: 10px;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .show-main {
+    display: block;
+    transition: display 12s;
+    padding-bottom: 10px;
+    margin: 10px;
+  }
+
+  .hidden-main {
+    display: none;
+    transition: display 12s;
+  }
+}
+
+.margin-form {
+  margin: 5px 5px 0 5px;
+}
+
+>>>>>>> 14b569f0e0f7da290cd3f8e974735bfd93f54a37
 .dropzone.dropzone-default {
   padding: 20px;
   text-align: center;
@@ -309,7 +357,6 @@
   align-items: center;
   flex-direction: row;
   box-sizing: border-box;
-  cursor: move;
   background: white;
   padding-left: 10px;
 }
@@ -349,9 +396,6 @@
   font-size: 1.2rem;
   font-weight: 600;
 }
-.avata{
-  margin-left: 20px;
-}
 
 .icon-container {
   height: 40px;
@@ -367,6 +411,7 @@
   box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
   border-radius: 5px;
   background-color: #f0f8ff;
+  cursor: default;
 }
 
 .more-funtion-step {
@@ -384,16 +429,13 @@
   cursor: grab;
 }
 
-.card-job {
-  transition: all 0.5s ease-out;
-  cursor: pointer;
-}
-
 .card-job:hover {
   border-radius: 5px;
   box-shadow: 0 0px 10px 0 rgb(38 38 38 / 20%);
 }
-
+codx-attachment{
+  font-size: 12px !important;
+}
 // End Drop drap -- nvthuan
 
 //Thao css

@@ -31,7 +31,6 @@ export class DimensionGroupsComponent extends UIComponent {
   buttons: ButtonModel = { id: 'btnAdd' };
   headerText: any;
   dialog: DialogRef;
-  moreFuncName: any;
   funcName: any;
   constructor(
     private inject: Injector,
@@ -41,12 +40,6 @@ export class DimensionGroupsComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'SYS01');
-        if (m) this.moreFuncName = m.defaultName;
-      }
-    });
   }
   //#endregion
 
@@ -74,7 +67,7 @@ export class DimensionGroupsComponent extends UIComponent {
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
-        this.add();
+        this.add(e);
         break;
     }
   }
@@ -91,8 +84,8 @@ export class DimensionGroupsComponent extends UIComponent {
         break;
     }
   }
-  add() {
-    this.headerText = this.moreFuncName + ' ' + this.funcName;
+  add(e) {
+    this.headerText = e.text + ' ' + this.funcName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',

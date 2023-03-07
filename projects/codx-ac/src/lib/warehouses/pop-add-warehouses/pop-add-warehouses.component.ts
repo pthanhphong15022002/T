@@ -21,6 +21,7 @@ import {
 import { CodxAcService } from '../../codx-ac.service';
 import { PopAddContactComponent } from '../../customers/pop-add-contact/pop-add-contact.component';
 import { Contact } from '../../models/Contact.model';
+import { Objects } from '../../models/Objects.model';
 import { WareHouses } from '../../models/Warehouses.model';
 
 @Component({
@@ -36,11 +37,14 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   dialog!: DialogRef;
   warehouses: WareHouses;
+  objects: Objects = new Objects();
   objectContact: Array<Contact> = [];
   objectContactDelete: Array<Contact> = [];
   valuelist: any;
   gridViewSetup: any;
   formType: any;
+  moreFuncName: any;
+  funcName: any;
   validate: any = 0;
   objecttype: string = '6';
   tabInfo: any[] = [
@@ -122,39 +126,49 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     this.dt.detectChanges();
   }
   openPopupContact() {
-    var obj = {
-      headerText: 'Thêm người liên hệ',
-      datacontact: this.objectContact,
-    };
-    let opt = new DialogModel();
-    let dataModel = new FormModel();
-    dataModel.formName = 'ContactBook';
-    dataModel.gridViewName = 'grvContactBook';
-    dataModel.entityName = 'BS_ContactBook';
-    opt.FormModel = dataModel;
-    this.cache
-      .gridViewSetup('ContactBook', 'grvContactBook')
-      .subscribe((res) => {
-        if (res) {
-          var dialogcontact = this.callfc.openForm(
-            PopAddContactComponent,
-            '',
-            650,
-            570,
-            '',
-            obj,
-            '',
-            opt
-          );
-          dialogcontact.closed.subscribe((x) => {
-            var datacontact = JSON.parse(localStorage.getItem('datacontact'));
-            if (datacontact != null) {
-              this.objectContact.push(datacontact);
-            }
-            window.localStorage.removeItem('datacontact');
-          });
+    this.cache.moreFunction('Contacts', 'grvContacts').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20501');
+        if (m) {
+          this.funcName = m.defaultName;
+          var obj = {
+            headerText: this.moreFuncName + ' ' + this.funcName,
+            datacontact: this.objectContact,
+          };
+          let opt = new DialogModel();
+          let dataModel = new FormModel();
+          dataModel.formName = 'ContactBook';
+          dataModel.gridViewName = 'grvContactBook';
+          dataModel.entityName = 'BS_ContactBook';
+          opt.FormModel = dataModel;
+          this.cache
+            .gridViewSetup('ContactBook', 'grvContactBook')
+            .subscribe((res) => {
+              if (res) {
+                var dialogcontact = this.callfc.openForm(
+                  PopAddContactComponent,
+                  '',
+                  650,
+                  570,
+                  '',
+                  obj,
+                  '',
+                  opt
+                );
+                dialogcontact.closed.subscribe((x) => {
+                  var datacontact = JSON.parse(
+                    localStorage.getItem('datacontact')
+                  );
+                  if (datacontact != null) {
+                    this.objectContact.push(datacontact);
+                  }
+                  window.localStorage.removeItem('datacontact');
+                });
+              }
+            });
         }
-      });
+      }
+    });
   }
   editobject(data: any) {
     let index = this.objectContact.findIndex(
@@ -225,6 +239,25 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
       }
     }
   }
+  addObjects() {
+    this.objects.transID = this.warehouses.recID;
+    this.objects.objectID = this.warehouses.warehouseID;
+    this.objects.objectName = this.warehouses.warehouseName;
+    this.objects.objectName2 = this.warehouses.warehouseName2;
+    this.objects.objectType = this.objecttype;
+    this.objects.objectGroupID = this.warehouses.parentID;
+    this.objects.address = this.warehouses.address;
+    this.objects.countryID = this.warehouses.countryID;
+    this.objects.provinceID = this.warehouses.provinceID;
+    this.objects.districtID = this.warehouses.districtID;
+    this.objects.status = '1';
+    this.objects.note = this.warehouses.note;
+    this.objects.stop = this.warehouses.stop;
+    this.objects.createdOn = this.warehouses.createdOn;
+    this.objects.createdBy = this.warehouses.createdBy;
+    this.objects.modifiedOn = this.warehouses.modifiedOn;
+    this.objects.modifiedBy = this.warehouses.modifiedBy;
+  }
   //#endregion
 
   //#region CRUD
@@ -246,11 +279,17 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
           })
           .subscribe((res) => {
             if (res.save) {
+              this.addObjects();
               this.acService
                 .addData('ERM.Business.BS', 'ContactBookBusiness', 'AddAsync', [
                   this.objecttype,
                   this.warehouses.warehouseID,
                   this.objectContact,
+                ])
+                .subscribe((res: []) => {});
+              this.acService
+                .addData('ERM.Business.AC', 'ObjectsBusiness', 'AddAsync', [
+                  this.objects,
                 ])
                 .subscribe((res: []) => {});
               this.dialog.close();
@@ -277,6 +316,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
           })
           .subscribe((res) => {
             if (res.save || res.update) {
+              this.addObjects();
               this.acService
                 .addData(
                   'ERM.Business.BS',
@@ -289,6 +329,11 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
                     this.objectContactDelete,
                   ]
                 )
+                .subscribe((res: []) => {});
+              this.acService
+                .addData('ERM.Business.AC', 'ObjectsBusiness', 'UpdateAsync', [
+                  this.objects,
+                ])
                 .subscribe((res: []) => {});
               this.dialog.close();
               this.dt.detectChanges();

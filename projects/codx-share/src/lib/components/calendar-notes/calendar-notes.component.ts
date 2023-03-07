@@ -883,7 +883,6 @@ export class CalendarNotesComponent
         }
       }
     });
-
     return uniqueTypes;
   }
 
