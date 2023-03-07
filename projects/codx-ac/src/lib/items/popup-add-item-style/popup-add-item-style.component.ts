@@ -1,10 +1,4 @@
-import {
-  Component,
-  Injector,
-  OnInit,
-  Optional,
-  ViewChild,
-} from '@angular/core';
+import { Component, Injector, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
   DialogData,
@@ -14,6 +8,7 @@ import {
   UIComponent,
   UploadFile,
 } from 'codx-core';
+import { map } from 'rxjs/operators';
 import { ItemStyle } from '../interfaces/ItemStyle.interface';
 import { ItemsService } from '../items.service';
 
@@ -38,6 +33,7 @@ export class PopupAddItemStyleComponent extends UIComponent {
       gvsPropName: 'StyleName',
     },
   ];
+  formTitle: string;
 
   constructor(
     private injector: Injector,
@@ -61,6 +57,25 @@ export class PopupAddItemStyleComponent extends UIComponent {
       this.itemStyle = this.dialogData.data.itemStyle;
       this.savedItemStyles = this.dialogData.data.savedItemStyles;
     }
+
+    this.cache
+      .moreFunction('ItemStyles', 'grvItemStyles')
+      .pipe(
+        map((data) => data.find((m) => m.functionID === 'ACS21302')),
+        map(
+          (data) =>
+            data.defaultName.charAt(0).toLowerCase() + data.defaultName.slice(1)
+        )
+      )
+      .subscribe((functionName) => {
+        this.cache.moreFunction('CoDXSystem', '').subscribe((actions) => {
+          const action = this.isEdit
+            ? actions.find((a) => a.functionID === 'SYS03')?.customName
+            : actions.find((a) => a.functionID === 'SYS01')?.defaultName;
+
+          this.formTitle = `${action} ${functionName}`;
+        });
+      });
   }
   //#endregion
 
@@ -140,5 +155,5 @@ export class PopupAddItemStyleComponent extends UIComponent {
   //#endregion
 
   //#region Function
-  //#endregion 
+  //#endregion
 }
