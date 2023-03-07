@@ -77,7 +77,6 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    console.log(this.form);
   }
   //#endregion
 
@@ -144,7 +143,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      if (this.formType == 'add') {
+      if (this.formType == 'add' || this.formType == 'copy') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'AddAsync';

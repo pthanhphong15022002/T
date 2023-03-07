@@ -8,7 +8,7 @@
             <div class="col-6">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="InventModelID"></codx-label>
-                    <codx-input [Group]="form.formGroup" [crrValue]="inventory.inventModelID"
+                    <codx-input [disabled]="formType == 'edit' ? true : false" [Group]="form.formGroup" [crrValue]="inventory.inventModelID"
                         [formModel]="form.formModel" field="inventModelID" (valueChange)="valueChange($event)">
                     </codx-input>
                 </div>
