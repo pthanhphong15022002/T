@@ -696,8 +696,8 @@ export class InstancesComponent
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
             let reason = isMoveSuccess
-              ? this.listSteps[this.listSteps.length - 2]
-              : this.listSteps[this.listSteps.length - 1];
+              ? this.listSteps[this.listSteps.findIndex(x=>x.isSuccessStep)]
+              : this.listSteps[this.listSteps.findIndex(x=>x.isFailStep)];
             var obj = {
               dataMore: dataMore,
               headerTitle: fun.defaultName,
