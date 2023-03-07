@@ -1,0 +1,28 @@
+<div class="container d-flex flex-column justify-content-between">
+  <div class="title">
+    <codx-label [default]="'Kích hoạt tài khoản'" [name]="'lblActiveTenant'">
+    </codx-label>
+  </div>
+  <div class="body">
+    <codx-label [default]="'Email'" [name]="'lblEmailAccount'"> </codx-label>
+    <div class="emailTmp d-flex">
+      <div class="email flex-grow-1">
+        <codx-input type="text" [disabled]="true" [crrValue]="user?.email">
+        </codx-input>
+      </div>
+      <button (click)="copyToClipboard()">
+        <codx-label [default]="'Copy'" [name]="'lblCopyClipboard'">
+        </codx-label>
+      </button>
+    </div>
+  </div>
+  <div class="business d-flex justify-content-end">
+    <button (click)="resendMail()">
+      <codx-label
+        [default]="'Gửi lại mail kích hoạt'"
+        [name]="'lblResendActiveMail'"
+      >
+      </codx-label>
+    </button>
+  </div>
+</div>

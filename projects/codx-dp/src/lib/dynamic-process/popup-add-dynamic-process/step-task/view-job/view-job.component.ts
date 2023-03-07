@@ -1,4 +1,5 @@
 import { Component, OnInit, Optional } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import {
   ApiHttpService,
   CacheService,
@@ -27,7 +28,7 @@ export class ViewJobComponent implements OnInit {
   listOwner = [];
   taskList: DP_Steps_Tasks[] = [];
   taskListConnect: DP_Steps_Tasks[] = [];
-
+  listTypeTask = [];
   files: any[] = [];
   fileMedias: any[] = [];
   fileDocuments: any[] = [];
@@ -45,6 +46,7 @@ export class ViewJobComponent implements OnInit {
     private callfunc: CallFuncService,
     private codxShareSV: CodxShareService,
     private api: ApiHttpService,
+    public sanitizer: DomSanitizer,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -74,6 +76,12 @@ export class ViewJobComponent implements OnInit {
       }
     });
     this.getFileByObjectID('test');
+
+    this.cache.valueList('DP004').subscribe((res) => {
+      if (res.datas) {
+        this.listTypeTask = res?.datas;
+      }
+    });
   }
 
   onDeleteOwner(objectID, data) {
@@ -98,4 +106,15 @@ export class ViewJobComponent implements OnInit {
         });
     }
   }
+
+  getIconTask(task) {
+    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    return color?.icon;
+  }
+
+  getColor(task) {
+    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    return { 'background-color': color?.color };
+  }
+
 }

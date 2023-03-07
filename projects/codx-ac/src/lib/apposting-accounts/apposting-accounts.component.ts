@@ -31,6 +31,7 @@ export class APPostingAccountsComponent
 
   views: Array<ViewModel> = [];
   menuActive = 1; // = ModuleID
+  menuNavs: any[];
   menuItems1: Array<any> = [];
   menuItems2: Array<any> = [];
   selectedValue: string;
@@ -58,6 +59,11 @@ export class APPostingAccountsComponent
       console.log(res);
       this.menuItems2 = res?.datas;
       this.defaultPostType2 = res?.datas[0].value;
+    });
+
+    this.cache.valueList('AC057').subscribe((res) => {
+      console.log(res);
+      this.menuNavs = res?.datas;
     });
   }
 
@@ -97,9 +103,7 @@ export class APPostingAccountsComponent
         break;
     }
   }
-  //#endregion
 
-  //#region Method
   handleClickAdd(e) {
     (this.grid.dataService as CRUDService).addNew().subscribe((res: any) => {
       let options = new SidebarModel();
@@ -131,14 +135,6 @@ export class APPostingAccountsComponent
         this.view.funcID
       );
     });
-  }
-
-  delete(data): void {
-    console.log(data);
-
-    (this.grid.dataService as CRUDService)
-      .delete([data], true)
-      .subscribe((res) => console.log(res));
   }
 
   edit(e, data): void {
@@ -195,6 +191,16 @@ export class APPostingAccountsComponent
   }
   //#endregion
 
+  //#region Method
+  delete(data): void {
+    console.log(data);
+
+    (this.grid.dataService as CRUDService)
+      .delete([data], true)
+      .subscribe((res) => console.log(res));
+  }
+  //#endregion
+
   //#region Function
   filter(field: string, value: string): void {
     this.selectedValue = value;
@@ -202,20 +208,13 @@ export class APPostingAccountsComponent
   }
 
   getBreadcrumb(moduleId, postType): string {
-    let breadcrumb: string = '';
-    if (moduleId == 1) {
-      breadcrumb += 'Tài khoản';
-      if (postType) {
-        breadcrumb +=
-          ' > ' + this.menuItems1.find((m) => m.value === postType)?.text;
-      }
-    } else {
-      breadcrumb += 'Điều khoản';
-      if (postType) {
-        breadcrumb +=
-          ' > ' + this.menuItems2.find((m) => m.value === postType)?.text;
-      }
-    }
+    let breadcrumb: string = this.menuNavs.find(
+      (m) => m.value == moduleId
+    )?.text;
+    breadcrumb +=
+      moduleId == 1
+        ? ' > ' + this.menuItems1.find((m) => m.value === postType)?.text
+        : ' > ' + this.menuItems2.find((m) => m.value === postType)?.text;
 
     return breadcrumb;
   }

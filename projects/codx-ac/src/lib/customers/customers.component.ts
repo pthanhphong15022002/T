@@ -1,11 +1,28 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { ViewModel, ButtonModel, UIComponent, CallFuncService, ViewType, DialogRef, SidebarModel, RequestOption } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  ViewModel,
+  ButtonModel,
+  UIComponent,
+  CallFuncService,
+  ViewType,
+  DialogRef,
+  SidebarModel,
+  RequestOption,
+} from 'codx-core';
 import { PopAddCustomersComponent } from './pop-add-customers/pop-add-customers.component';
 
 @Component({
   selector: 'lib-customers',
   templateUrl: './customers.component.html',
-  styleUrls: ['./customers.component.css']
+  styleUrls: ['./customers.component.css'],
 })
 export class CustomersComponent extends UIComponent {
   //#region Contructor
@@ -37,8 +54,7 @@ export class CustomersComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void {
-  }
+  onInit(): void {}
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) this.funcName = res.defaultName;
@@ -50,7 +66,7 @@ export class CustomersComponent extends UIComponent {
         sameData: true,
         model: {
           template2: this.templateMore,
-          frozenColumns: 1
+          frozenColumns: 1,
         },
       },
     ];
@@ -73,8 +89,10 @@ export class CustomersComponent extends UIComponent {
       case 'SYS03':
         this.edit(e, data);
         break;
+      case 'SYS04':
+        this.copy(e, data);
+        break;
     }
-
   }
   add() {
     this.headerText = this.moreFuncName + ' ' + this.funcName;
@@ -87,10 +105,14 @@ export class CustomersComponent extends UIComponent {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '800px';
-      this.dialog = this.callfunc.openSide(PopAddCustomersComponent, obj, option, this.view.funcID);
+      this.dialog = this.callfunc.openSide(
+        PopAddCustomersComponent,
+        obj,
+        option,
+        this.view.funcID
+      );
       this.dialog.closed.subscribe((x) => {
-        if (x.event == null)
-          this.view.dataService.clear();
+        if (x.event == null) this.view.dataService.clear();
       });
     });
   }
@@ -98,61 +120,97 @@ export class CustomersComponent extends UIComponent {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-      var obj = {
-        formType: 'edit',
-        headerText: e.text + ' ' + this.funcName
-      };
-      let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfunc.openSide(PopAddCustomersComponent, obj, option);
-    });
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'edit',
+          headerText: e.text + ' ' + this.funcName,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '800px';
+        this.dialog = this.callfunc.openSide(
+          PopAddCustomersComponent,
+          obj,
+          option
+        );
+      });
+  }
+  copy(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .copy(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'copy',
+          headerText: e.text + ' ' + this.funcName,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '800px';
+        this.dialog = this.callfunc.openSide(
+          PopAddCustomersComponent,
+          obj,
+          option
+        );
+      });
   }
   delete(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.delete([data], true, (option: RequestOption) =>
-      this.beforeDelete(option, data)
-    ).subscribe((res: any) => {
-      if (res) {
-        this.api.exec(
-          'ERM.Business.BS',
-          'BankAccountsBusiness',
-          'DeleteAsync',
-          [this.objecttype, data.customerID]
-        ).subscribe((res: any) => {
-          if (res) {
-            this.api.exec(
-              'ERM.Business.BS',
-              'AddressBookBusiness',
-              'DeleteAsync',
-              [this.objecttype, data.customerID]
-            ).subscribe((res: any) => {
+    this.view.dataService
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option, data)
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.api
+            .exec('ERM.Business.BS', 'BankAccountsBusiness', 'DeleteAsync', [
+              this.objecttype,
+              data.customerID,
+            ])
+            .subscribe((res: any) => {
               if (res) {
-                this.api.exec(
-                  'ERM.Business.BS',
-                  'ContactBookBusiness',
-                  'DeleteAsync',
-                  [this.objecttype, data.customerID]
-                ).subscribe((res: any) => {
-                  if (res) {
-                    this.api.exec(
-                      'ERM.Business.AC',
-                      'ObjectsBusiness',
-                      'DeleteAsync',
-                      [data.customerID]
-                    ).subscribe((res: any) => {})
-                  }
-                });
+                this.api
+                  .exec(
+                    'ERM.Business.BS',
+                    'AddressBookBusiness',
+                    'DeleteAsync',
+                    [this.objecttype, data.customerID]
+                  )
+                  .subscribe((res: any) => {
+                    if (res) {
+                      this.api
+                        .exec(
+                          'ERM.Business.BS',
+                          'ContactBookBusiness',
+                          'DeleteAsync',
+                          [this.objecttype, data.customerID]
+                        )
+                        .subscribe((res: any) => {
+                          if (res) {
+                            this.api
+                              .exec(
+                                'ERM.Business.AC',
+                                'ObjectsBusiness',
+                                'DeleteAsync',
+                                [data.customerID]
+                              )
+                              .subscribe((res: any) => {});
+                          }
+                        });
+                    }
+                  });
               }
             });
-          }
-        });
-      }
-    });
+        }
+      });
   }
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';

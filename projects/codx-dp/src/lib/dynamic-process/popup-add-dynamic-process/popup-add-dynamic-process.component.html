@@ -43,6 +43,7 @@
               >
                 <codx-label
                   name="lblGeneral"
+                  [formModel]="dialog.formModel"
                   default="Thông tin quy trình"
                 ></codx-label>
               </div>
@@ -143,6 +144,7 @@
             <codx-label
               *ngIf="currentTab == 0"
               name="lblGeneral"
+              [formModel]="dialog.formModel"
               default="Thông tin quy trình"
             >
             </codx-label>
@@ -251,16 +253,14 @@
           <codx-label
             class="title"
             name="lblGeneral"
-            [formName]="'GridViewSetup'"
-            [gridViewName]="'grvGridViewSetup'"
+            [formModel]="dialog.formModel"
             default="Thông tin chung"
           ></codx-label>
         </div>
         <div>
           <codx-label
             name="lblGeneral"
-            [formName]="'GridViewSetup'"
-            [gridViewName]="'grvGridViewSetup'"
+            [formModel]="dialog.formModel"
             default="Thông tin chung của quy trình"
             style="color: #898989"
           >
@@ -385,13 +385,15 @@
         <div>
           <codx-label
             class="title"
-            name="lblGeneral"
+            name="lblPermissions"
+            [formModel]="dialog.formModel"
             default="Các vai trò trong quy trình"
           ></codx-label>
         </div>
         <div>
           <codx-label
-            name="lblGeneral"
+            name="lblPerm"
+            [formModel]="dialog.formModel"
             default="Những người liên quan và có thể thực hiện các chức năng
             trong quy trình"
             style="color: #898989"
@@ -422,6 +424,7 @@
               <codx-label
                 class="fw-bolder"
                 name="lblSupervisor"
+                [formModel]="dialog.formModel"
                 default="Người giám sát"
               >
               </codx-label>
@@ -486,6 +489,7 @@
               <codx-label
                 class="fw-bolder"
                 name="lblParticipants"
+                [formModel]="dialog.formModel"
                 default="Thành viên tham gia"
               >
               </codx-label>
@@ -502,6 +506,7 @@
               <codx-label
                 class="fw-normal text-gray-400"
                 name="lblParticipantControl"
+                [formModel]="dialog.formModel"
                 default="Có quyền tạo nhiệm vụ trong quy trình"
               >
               </codx-label>
@@ -548,6 +553,7 @@
               <codx-label
                 class="fw-bolder"
                 name="lblFollowers"
+                [formModel]="dialog.formModel"
                 default="Người theo dõi"
               >
               </codx-label>
@@ -564,6 +570,7 @@
               <codx-label
                 class="fw-normal text-gray-400"
                 name="lblFollowerControl"
+                [formModel]="dialog.formModel"
                 default="Có quyền xem các nhiệm vụ trong quy trình"
               >
               </codx-label>
@@ -612,13 +619,15 @@
         <div>
           <codx-label
             class="title"
-            name="lblGeneral"
+            name="lblSetting"
+            [formModel]="dialog.formModel"
             default="Tùy chỉnh quy trình"
           ></codx-label>
         </div>
         <div>
           <codx-label
-            name="lblGeneral"
+            name="lblActived"
+            [formModel]="dialog.formModel"
             default="Cách thức hoạt động của quy trình"
             style="color: #898989"
           >
@@ -671,8 +680,9 @@
                 ></i>
               </div>
             </div>
-            <div *ngIf="instanceNoEx" class="col-6">
-              {{ instanceNoEx }}
+            <div *ngIf="instanceNoEx" class="col-6 fs-6 mt-2 mb-2">
+              <codx-label class="" name="lblPreview" [formModel]="dialog.formModel" default="Xem trước: "></codx-label> 
+              <span class="text-gray-600">{{ instanceNoEx }}</span>
             </div>
           </div>
         </div>
@@ -808,6 +818,7 @@
         <div>
           <codx-label
             name="lblMemo"
+            [formModel]="dialog.formModel"
             default="Mô tả chi tiết quy trình"
             style="color: #898989"
           >
@@ -1335,19 +1346,24 @@
         <div>
           <span class="title">Công việc</span>
         </div>
-        <div>
-          <span style="color: #898989"
-            >Công việc mặc định người phụ trách phải thực hiện trong giai
-            đoạn</span
+        <div class="text-gray-400">
+          <codx-label
+            class="fw-normal text-gray-400"
+            fiedName="taskMemo"
+            default="Công việc mặc định người phụ trách phải thực hiện trong giai đoạn"
           >
+          </codx-label>
         </div>
       </div>
       <div class="right">
         <div class="time ml-2">
-          <div class="d-flex align-items-center">
-            <span style="font-weight: 400; color: #4e4e4e"
-              >Thời hạn công việc so với giai đoạn</span
+          <div class="d-flex align-items-center text-gray-400">
+            <codx-label
+              class="fw-normal text-gray-400"
+              fiedName="taskMemo"
+              default="Thời hạn công việc so với giai đoạn"
             >
+            </codx-label>
             <span
               class="icon-replay icon-22 text-primary-600 py-2"
               style="font-weight: 600; margin-left: 5px"
@@ -1431,11 +1447,12 @@
                     <div
                       class="d-flex justify-content-center align-items-center"
                       style="border: 1px solid #6C757D; width: 25px; height: 25px"
+                      (click)="toggleTask('group' + taskList?.recID)"
                     >
                       <!-- <span class="icon-maximize" style="font-size: 20px; color:#6C757D;"></span> icon-add_box -->
                       <!-- <span class="icon-maximize" style="font-size: 20px; color:#6C757D;">+</span> -->
                       <!-- <span class="icon-add_circle icon-20 text-primary-600 py-2"></span> -->
-                      <span>+</span>
+                      <span style="font-size: 20px; color:#6C757D;">+</span>
                     </div>
                     <div class="avata">
                       <codx-img
@@ -1495,9 +1512,11 @@
                   ></div>
                   <!-- kéo thả ở trong  -->
                   <div
+                    [id]="'group' + taskList?.recID "
                     cdkDropList
                     [cdkDropListData]="taskList?.task || []"
                     (cdkDropListDropped)="drop($event, taskList, false)"
+                    class="task"
                   >
                     <ng-container *ngFor="let task of taskList?.task">
                       <div
@@ -1681,7 +1700,7 @@
       class="btn btn-outline-primary me-5"
       (click)="popupAddStage.close()"
     >
-      <codx-label name="Save" formName="Tasks" default="Hủy"></codx-label>
+      <codx-label name="lblCancel" formName="Tasks" default="Hủy"></codx-label>
     </button>
     <button
       type="button"
@@ -1689,7 +1708,7 @@
       [disabled]="isSaveStep"
       (click)="saveStep()"
     >
-      <codx-label name="Save" formName="Tasks" default="Đồng ý"></codx-label>
+      <codx-label name="lblSuscess" formName="Tasks" default="Đồng ý"></codx-label>
     </button>
   </div>
 </ng-template>
@@ -2715,7 +2734,7 @@
       (click)="popupAddReason.close()"
     >
       <codx-label
-        name="Save"
+        name=" lblfail"
         formName="DPStepsReasons"
         default="Hủy"
       ></codx-label>
@@ -2727,7 +2746,7 @@
       (click)="addReason()"
     >
       <codx-label
-        name="Save"
+        name=" lblSuscess"
         formName="DPStepsReasons"
         default="Đồng ý"
       ></codx-label>

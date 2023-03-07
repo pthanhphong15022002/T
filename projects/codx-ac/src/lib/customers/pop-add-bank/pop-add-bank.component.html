@@ -2,44 +2,44 @@
   [footer]="footer" [data]="bankaccount" subToolbarCss="text-end">
 </codx-form>
 <ng-template #body>
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="BankAcctID" default="Số tài khoản"></codx-label>
-        <codx-input [crrValue]="bankAcctID" [formModel]="form.formModel" field="bankAcctID"
-          (valueChange)="valueChangeBankAcctID($event)">
-        </codx-input>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="row mx-0 mt-3">
+      <div class="col-6 ps-0">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="BankAcctID"></codx-label>
+          <codx-input [Group]="form.formGroup" [crrValue]="bankaccount.bankAcctID" [formModel]="form.formModel" field="bankAcctID"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6 pe-0">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="BankID"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="bankaccount.bankID" field="bankID"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
     </div>
-    <div class="col-6 pe-0">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="BankID" default="Ngân hàng"></codx-label>
-        <codx-input *ngIf="bankID != null" [crrValue]="bankID" type="combobox" refValue="BanksAC" field="bankID"
-          (valueChange)="valueChangeBankID($event)">
-        </codx-input>
-        <codx-input *ngIf="bankID == null" [crrValue]="bankID" type="combobox" refValue="BanksAC" field="bankID"
-          (valueChange)="valueChangeBankID($event)">
-        </codx-input>
-      </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="Owner"></codx-label>
+      <codx-input [Group]="form.formGroup" [crrValue]="bankaccount.owner" [formModel]="form.formModel" field="owner"
+        (valueChange)="valueChange($event)">
+      </codx-input>
     </div>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="Owner" default="Tên chủ tài khoản"></codx-label>
-    <codx-input [crrValue]="owner" [formModel]="form.formModel" field="owner" (valueChange)="valueChangeOwner($event)">
-    </codx-input>
-  </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="Description" default="Ghi chú"></codx-label>
-    <codx-input [crrValue]="description" [formModel]="form.formModel"
-      field="description" (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="Description"></codx-label>
+      <codx-input [Group]="form.formGroup" [crrValue]="bankaccount.description" [formModel]="form.formModel" field="description"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+  </ng-container>
 </ng-template>
 <ng-template #footer>
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <div class="d-flex align-items-center">
-      <codx-input class="me-2" [checked]="isDefault" type="switch"
-        field="isDefault" (valueChange)="valueChange($event)">
+    <div *ngIf="form?.formGroup" class="d-flex align-items-center">
+      <codx-input [Group]="form.formGroup" class="me-2" [checked]="bankaccount.isDefault" type="switch" field="isDefault"
+        (valueChange)="valueChange($event)">
       </codx-input>
       <codx-label [formModel]="form.formModel" fiedName="IsDefault" default="Mặc định"></codx-label>
     </div>
