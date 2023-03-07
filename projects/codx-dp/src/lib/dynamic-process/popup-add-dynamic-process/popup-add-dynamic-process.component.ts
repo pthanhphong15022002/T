@@ -335,8 +335,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
     this.GetListProcessGroups();
   }
 
@@ -1138,6 +1136,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (res?.event) {
         this.process.instanceNoSetting = res?.event?.autoNoCode;
         this.setViewAutoNumber(res?.event);
+        let input: any;
+        if (this.autoNumberSetting.nativeElement) {
+          var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
+            'codx-input[type="text"]'
+          );
+          if (ele) {
+            let htmlE = ele[0] as HTMLElement;
+            input = htmlE.querySelector('input.codx-text') as HTMLElement;
+          }
+          if (input) {
+            input.style.removeProperty('border-color', 'red', 'important');
+          }
+        }
       }
     });
   }
@@ -1210,6 +1221,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     }
   }
+  
   async getVllFormat() {
     this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
     if (!this.adAutoNumber && this.action != 'add') {
@@ -1776,13 +1788,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               let index = this.taskGroupList.findIndex(
                 (group) => group.recID == taskData.taskGroupID
               );
-              if(this.taskGroupList?.length == 0 && index < 0) {
+              if (this.taskGroupList?.length == 0 && index < 0) {
                 let taskGroupNull = new DP_Steps_TaskGroups();
                 taskGroupNull['task'] = [];
                 taskGroupNull['recID'] = null; // group task rỗng để kéo ra ngoài
                 this.taskGroupList.push(taskGroupNull);
                 this.taskGroupList[0]['task']?.push(taskData);
-              }else{
+              } else {
                 this.taskGroupList[index]['task']?.push(taskData);
               }
               this.taskList?.push(taskData);
@@ -2271,17 +2283,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return { 'background-color': color?.color };
   }
 
-  toggleTask(id){
+  toggleTask(id) {
     let elementGroup = document.getElementById(id);
     let isClose = elementGroup.classList.contains('hiddenTask');
-    if(isClose){
+    if (isClose) {
       elementGroup.classList.remove('hiddenTask');
       elementGroup.classList.add('showTask');
-    }else{
+    } else {
       elementGroup.classList.remove('showTask');
       elementGroup.classList.add('hiddenTask');
     }
-    
   }
 
   //#End stage -- nvthuan

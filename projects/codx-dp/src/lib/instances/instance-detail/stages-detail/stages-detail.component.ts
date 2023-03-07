@@ -60,7 +60,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() stepNameEnd: any;
   @Input() proccesNameMove: any;
   @Input() lstIDInvo: any;
-
+  @Input() isClosed = false;
   dateActual: any;
   startDate: any;
   progress: string = '0';
