@@ -309,6 +309,8 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       )
       .subscribe((res: any) => {
         if (res && res.length > 0) {
+          console.log(res);
+
           this.data = res[0];
           this.dataFull = res[1];
           this.quantity = this.fdSV.convertListToObject(
