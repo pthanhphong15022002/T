@@ -43,11 +43,11 @@
   <ng-template #footerbg let-data>
     <div class="d-flex bg-footer m-n3 mt-2">
       <div class="d-flex flex-column w-100 p-3 pt-0">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between pt-6">
           <div style="width: 100%">
             <div
               #processName
-              class="fs-6 fw-bold line-clamp line-clamp-1 pt-6"
+              class="fs-6 fw-bold line-clamp-card process-name"
               [ngbPopover]="setTextPopover(data?.processName)"
               #p="ngbPopover"
               [openDelay]="500"
@@ -69,6 +69,7 @@
             </div>
           </div>
           <span *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
+
         </div>
         <div class="footerCard-item">
           <div class="d-flex justify-content-start mt-1">
