@@ -121,10 +121,10 @@
         class="h4 font-weight-400"
         fiedName="memo"
         [formModel]="dialog?.formModel"
-        default="Ghi chú"
+        default="Ghi chú: "
       >
-        <div [innerHTML]="stepsTasks?.memo"></div>
       </codx-label>
+      <p class="d-inline" [innerHTML]="stepsTasks?.memo"></p>
     </div>
     <hr />
 
