@@ -30,7 +30,6 @@ export class VendorsComponent extends UIComponent {
   headerText: any;
   columnsGrid = [];
   dialog: DialogRef;
-  moreFuncName: any;
   funcName: any;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   constructor(
@@ -40,20 +39,17 @@ export class VendorsComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = this.dialog;
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'SYS01');
-        if (m) this.moreFuncName = m.defaultName;
-      }
-    });
   }
   //#endregion
 
   //#region Init
   onInit(): void {}
   ngAfterViewInit() {
-    this.cache.functionList(this.view.funcID).subscribe((res) => {
-      if (res) this.funcName = res.defaultName;
+    this.cache.moreFunction('Vendors', 'grvVendors').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20600');
+        if (m) this.funcName = m.defaultName;
+      }
     });
     this.views = [
       {
@@ -74,7 +70,7 @@ export class VendorsComponent extends UIComponent {
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
-        this.add();
+        this.add(e);
         break;
     }
   }
@@ -91,8 +87,8 @@ export class VendorsComponent extends UIComponent {
         break;
     }
   }
-  add() {
-    this.headerText = this.moreFuncName + ' ' + this.funcName;
+  add(e) {
+    this.headerText = e.text + ' ' + this.funcName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',
