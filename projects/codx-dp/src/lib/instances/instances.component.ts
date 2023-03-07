@@ -24,6 +24,7 @@ import {
   ResourceModel,
   RequestOption,
   Util,
+  NotificationsService,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Instances } from '../models/models';
@@ -109,6 +110,7 @@ export class InstancesComponent
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
+    private noti: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -430,7 +432,25 @@ export class InstancesComponent
       case 'DP10':
         this.moveReason(e.data, data, this.isMoveSuccess);
         break;
+      //Đóng nhiệm vụ = true;
+      case 'DP14':
+        this.openOrClosed(data, true);
+        break;
+      //Mở nhiệm vụ = false;
+      case 'DP15':
+        this.openOrClosed(data, false);
+        break;
     }
+  }
+
+  openOrClosed(data, check){
+    this.codxDpService.openOrClosedInstance(data.recID, check).subscribe((res)=>{
+      if(res){
+        this.view.dataService.dataSelected.closed = check;
+        this.noti.alertCode(check ? 'DP016' : 'DP017')
+        this.detectorRef.detectChanges();
+      }
+    })
   }
 
   //#popup roles
@@ -470,6 +490,14 @@ export class InstancesComponent
           case 'SYS02':
             let isDelete = data.delete;
             if (!isDelete || data.closed) res.disabled = true;
+            break;
+          //Đóng nhiệm vụ = true
+          case 'DP14':
+            if(data.closed) res.disabled = true;
+            break;
+            //Mở nhiệm vụ = false
+          case 'DP15':
+            if(!data.closed) res.disabled =true;
             break;
         }
       });

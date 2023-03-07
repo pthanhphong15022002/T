@@ -91,7 +91,12 @@ export class DetailPolicyCoinsComponent extends UIComponent implements OnInit {
         `3;${this.applyFor}`,
       ])
       .subscribe((res) => {
-        if (res) this.listPolicyByPredicate = res;
+        if (res) {
+
+
+          this.listPolicyByPredicate = res;
+        }
+
       });
   }
   getSettingRunPolicy(applyFor: string) {
@@ -104,6 +109,7 @@ export class DetailPolicyCoinsComponent extends UIComponent implements OnInit {
         ['WalletPolicy', applyFor]
       )
       .subscribe((result) => {
+        console.log(result);
         this.scheduledTasks = result;
       });
   }
