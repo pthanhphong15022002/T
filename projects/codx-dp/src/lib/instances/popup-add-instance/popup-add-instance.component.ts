@@ -120,7 +120,7 @@ export class PopupAddInstanceComponent implements OnInit {
           (x) => x.roleType === 'P'
         );
       }
-    } else if (this.action === 'add') {
+    } else if (this.action === 'add' || this.action === 'copy') {
       this.lstParticipants = dt?.data[7];
       if (this.lstParticipants != null && this.lstParticipants.length > 0)
         var check = this.lstParticipants.some(
@@ -241,8 +241,8 @@ export class PopupAddInstanceComponent implements OnInit {
     } else if (this.action === 'edit') {
       option.methodName = 'EditInstanceAsync';
     }
-    option.data = [this.instance, this.listStep];
 
+    option.data = [this.instance, this.listStep,this.oldIdInstance];
     return true;
   }
   saveInstances() {

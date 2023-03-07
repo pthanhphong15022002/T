@@ -454,4 +454,13 @@ export class CodxDpService {
       'GetAsync',
     );
   }
+
+  openOrClosedInstance(recID, check) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'OpenOrClosedInstanceAsync',
+      [recID, check]
+    );
+  }
 }

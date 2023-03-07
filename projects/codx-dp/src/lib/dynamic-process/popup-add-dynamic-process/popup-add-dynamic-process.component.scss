@@ -8,59 +8,14 @@
   margin-left: 27px;
 }
 
-
-.background {
-  font-size: 16px;
-  box-shadow: #e4e4e4 5px 5px 15px 5px;
-
-  .header-job {
-    background-color: #cde7f1;
-    display: flex;
-    justify-content: space-between;
-    padding: 0.3rem;
-    margin-left: 0, 5rem;
-
-    .left {
-      margin: 10px;
-      .title {
-        font-weight: 600;
-        color: #2392ef;
-        font-size: 1.2rem;
-      }
-    }
-
-    .right {
-      margin: 10px;
-      display: flex;
-      align-items: center;
-    }
-  }
-
-  .show-main {
-    display: block;
-    transition: display 12s;
-    padding-bottom: 10px;
-    margin: 10px;
-  }
-
-  .hidden-main {
-    display: none;
-    transition: display 12s;
-  }
-}
-
-.margin-form {
-  margin: 5px 5px 0 5px;
-}
-
 .dropzone.dropzone-default {
   padding: 20px;
   text-align: center;
   cursor: pointer;
   border: 0.5px dashed #6c757d;
   border-radius: 0.42rem;
-  height: 250px;
-  width: 520px;
+  height: 238px;
+  width: 100%;
   background: #f5f8fa;
 }
 
@@ -145,9 +100,7 @@
 
 //thuan
 .background-stage {
-  font-size: 1.1rem;
-  font-weight: 400;
-
+ 
   .stage-body {
     .stage-body-left {
       padding-right: 0px;
@@ -203,30 +156,51 @@
   }
 }
 
-.background-job {
-  font-size: 16px;
-  box-shadow: #f0f0f0 0px 5px 5px 5px;
+
+.w-1100px {
+  width: 1100px !important;
+}
+
+.dp-step{
+  margin-top: 1px;
+}
+
+.background {
+  box-shadow: var(--gray-200) 2px 2px 6px -1px;
+  border: 1px var(--gray-200) solid;
   margin-bottom: 15px;
+  border-radius: 4px!important;
 
   .header-job {
-    background-color: #cde7f1;
-    display: flex;
-    justify-content: space-between;
-    padding: 0.3rem;
-    margin-left: 0, 5rem;
+    background-color:var(--primary-lightest);
+    border-bottom: 1px var(--gray-200) solid;
+    border-radius: 4px 4px 0 0!important;
 
-    .left {
-      .title {
-        font-weight: 600;
-        color: #2392ef;
-        font-size: 1.2rem;
-      }
-    }
+  }
+  .main{
+    padding: 20px;
+    transition: display 12s;
+  }
+  .show-main {
+    display: block;
+  }
 
-    .right {
-      display: flex;
-      align-items: center;
-    }
+  .hidden-main {
+    display: none;
+  }
+}
+
+.background-job {
+  box-shadow: var(--gray-200) 2px 2px 6px -1px;
+  border: 1px var(--gray-200) solid;
+  margin-bottom: 15px;
+  border-radius: 4px!important;
+
+
+  .header-job {
+    border-bottom: 1px var(--gray-200) solid;
+    border-radius: 4px 4px 0 0!important;
+
   }
 
   .main-job {
@@ -407,16 +381,13 @@
   cursor: grab;
 }
 
-.card-job {
-  transition: all 0.5s ease-out;
-  cursor: pointer;
-}
-
 .card-job:hover {
   border-radius: 5px;
   box-shadow: 0 0px 10px 0 rgb(38 38 38 / 20%);
 }
-
+codx-attachment{
+  font-size: 12px !important;
+}
 // End Drop drap -- nvthuan
 
 //Thao css
