@@ -462,7 +462,7 @@
     </div>
     <div
       *ngIf="data.category == '3'"
-      class=""
+      id="{{data.taskID}}"
       (mouseenter)="popoverEmpList(popoverList, data)"
       [ngbPopover]="popEmpList"
       popoverClass="taskPopoverClass"
@@ -470,7 +470,6 @@
       placement="right bottom"
       container="body"
       autoClose="outside"
-      [openDelay]="2000"
     >
       <codx-imgs
         [isToolTip]="false"

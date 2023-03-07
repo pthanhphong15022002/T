@@ -603,16 +603,17 @@
             </codx-imgs>
           </div>
           <div
+            id="{{itemSelected.taskID}}"
             *ngIf="itemSelected.category == '2' || itemSelected.category == '3'"
             class="d-flex"
-            (mouseenter)="popoverEmpList(popoverCategory2)"
+            (mouseenter)="popoverEmpList(popoverCategory2,itemSelected)"
+            (mouseleave)="popoverEmpList(null)"
             popoverClass="taskPopoverClass"
             [ngbPopover]="popEmpList"
             #popoverCategory2="ngbPopover"
             placement="right bottom"
             container="body"
             autoClose="outside"
-            [openDelay]="2000"
           >
             <ng-container
               *ngFor="let item of itemSelected.listTaskResources; let i = index"
