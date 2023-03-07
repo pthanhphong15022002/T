@@ -109,7 +109,7 @@
     </div>
     <hr />
 
-    <div class="text">
+    <div class="text" [innerHTML]="sanitizer.bypassSecurityTrustHtml(stepsTasks?.memo)">
       {{ stepsTasks?.memo }}
     </div>
     <hr />
@@ -121,9 +121,10 @@
           *ngFor="let task of taskListConnect"
           class="d-flex align-items-center m-2"
         >
-          <div class="icon-container">
+          <div class="icon-container" [ngStyle]="getColor(task)">
             <span
-              class="icon-supervised_user_circle icon-20 text-primary-600 py-2"
+              class="icon-20 text-primary-600 py-2"
+              [ngClass]="getIconTask(task)"
             ></span>
           </div>
           <div class="d-flex align-items-center ms-2">
