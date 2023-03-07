@@ -56,15 +56,15 @@
                         <codx-input *ngIf="arposting.itemLevel == ''" type="valuelist" field="itemSelection">
                         </codx-input>
                         <codx-input *ngIf="arposting.itemLevel == '1'" type="combobox" refValue="Items"
-                            [crrValue]="form.data.itemSelection" (valueChange)="valueChange($event)"
+                            [crrValue]="arposting.itemSelection" (valueChange)="valueChange($event)"
                             field="itemSelection">
                         </codx-input>
                         <codx-input *ngIf="arposting.itemLevel == '2'" type="combobox" refValue="ItemGroups"
-                            [crrValue]="form.data.custSelection" (valueChange)="valueChange($event)"
+                            [crrValue]="arposting.itemSelection" (valueChange)="valueChange($event)"
                             field="itemSelection">
                         </codx-input>
                         <codx-input *ngIf="arposting.itemLevel == '3'" type="combobox" refValue="ProductLines"
-                            [crrValue]="form.data.custSelection" (valueChange)="valueChange($event)"
+                            [crrValue]="arposting.itemSelection" (valueChange)="valueChange($event)"
                             field="itemSelection">
                         </codx-input>
                         <codx-input *ngIf="arposting.itemLevel == '4'" type="text" [disabled]="true">
@@ -218,8 +218,8 @@
                 <div class="col-6">
                     <div class="form-group">
                         <codx-label [formModel]="form.formModel" fiedName="PmtTermID"></codx-label>
-                        <codx-input [Group]="form.formGroup" [formModel]="form.formModel"  [crrValue]="arposting.pmtTermID"
-                            (valueChange)="valueChange($event)" field="pmtTermID">
+                        <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                            [crrValue]="arposting.pmtTermID" (valueChange)="valueChange($event)" field="pmtTermID">
                         </codx-input>
                     </div>
                 </div>
