@@ -193,6 +193,7 @@ export class PopAddInventoryComponent extends UIComponent {
             this.clearInventory();
             this.dialog.dataService.clear();
             this.dialog.dataService.addNew().subscribe((res) => {
+              this.form.formGroup.reset(res);
               this.inventory = this.dialog.dataService!.dataSelected;
             });
           } else {

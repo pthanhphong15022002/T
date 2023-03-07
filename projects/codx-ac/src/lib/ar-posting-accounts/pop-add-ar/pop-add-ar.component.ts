@@ -205,7 +205,6 @@ export class PopAddArComponent extends UIComponent implements OnInit {
         })
         .subscribe((res) => {
           if (res.save) {
-              
               this.dialog.dataService.clear();
               this.dialog.dataService.addNew().subscribe((res) => {
               this.form.formGroup.reset(res);
