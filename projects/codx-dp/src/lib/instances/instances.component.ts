@@ -162,6 +162,7 @@ export class InstancesComponent
     };
     this.dataObj = {
       processID: this.process?.recID ? this.process?.recID : '',
+      showInstanceControl: this.process?.showInstanceControl ? this.process?.showInstanceControl : '2'
     };
 
     // if(this.process.steps != null && this.process.steps.length > 0){
@@ -440,7 +441,7 @@ export class InstancesComponent
         switch (res.functionID) {
           case 'SYS005':
           case 'SYS003':
-            if (data.status !== '1' && data.status !== '2') res.disabled = true;
+            if ((data.status !== '1' && data.status !== '2') || data.closed) res.disabled = true;
             break;
           case 'SYS004':
           case 'SYS001':
@@ -455,20 +456,20 @@ export class InstancesComponent
           case 'DP09':
           case 'DP10':
             let isUpdate = data.write;
-            if (!isUpdate || (data.status !== '1' && data.status !== '2'))
+            if (!isUpdate || (data.status !== '1' && data.status !== '2') || data.closed)
               res.disabled = true;
             break;
           //Copy
           case 'SYS104':
           case 'SYS04':
             let isCopy = this.isCreate ? true : false;
-            if (!isCopy) res.disabled = true;
+            if (!isCopy || data.closed) res.disabled = true;
             break;
           //xóa
           case 'SYS102':
           case 'SYS02':
             let isDelete = data.delete;
-            if (!isDelete) res.disabled = true;
+            if (!isDelete || data.closed) res.disabled = true;
             break;
         }
       });
@@ -696,8 +697,8 @@ export class InstancesComponent
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
             let reason = isMoveSuccess
-              ? this.listSteps[this.listSteps.length - 2]
-              : this.listSteps[this.listSteps.length - 1];
+              ? this.listSteps[this.listSteps.findIndex(x=>x.isSuccessStep)]
+              : this.listSteps[this.listSteps.findIndex(x=>x.isFailStep)];
             var obj = {
               dataMore: dataMore,
               headerTitle: fun.defaultName,

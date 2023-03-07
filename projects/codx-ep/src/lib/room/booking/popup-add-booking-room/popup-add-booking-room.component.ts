@@ -942,56 +942,104 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                 (item2: any) => {
                   if (item2?.status == 0) {
                     this.fileAdded(item2);
+                    if (approval) {
+                      if (this.approvalRule != '0') {
+                        this.codxEpService
+                          .getCategoryByEntityName(this.formModel.entityName)
+                          .subscribe((res: any) => {
+                            this.codxEpService
+                              .release(
+                                this.returnData,
+                                res?.processID,
+                                'EP_Bookings',
+                                this.formModel.funcID
+                              )
+                              .subscribe((res) => {
+                                if (res?.msgCodeError == null && res?.rowCount) {
+                                  this.notificationsService.notifyCode('ES007');
+                                  this.returnData.approveStatus = '3';
+                                  this.returnData.status = '3';
+                                  this.returnData.write = false;
+                                  this.returnData.delete = false;
+                                  (this.dialogRef.dataService as CRUDService)
+                                    .update(this.returnData)
+                                    .subscribe();
+                                  this.dialogRef && this.dialogRef.close(this.returnData);
+                                } else {
+                                  this.notificationsService.notifyCode(res?.msgCodeError);
+                                  // Thêm booking thành công nhưng gửi duyệt thất bại
+                                  this.dialogRef && this.dialogRef.close(this.returnData);
+                                }
+                              });
+                          });
+                      } else {
+                        this.notificationsService.notifyCode('ES007');
+                        this.codxEpService
+                          .afterApprovedManual(
+                            this.formModel.entityName,
+                            this.returnData.recID,
+                            '5'
+                          )
+                          .subscribe();
+                        this.dialogRef && this.dialogRef.close(this.returnData);
+                      }
+                      this.dialogRef && this.dialogRef.close(this.returnData);
+                    } else {
+                      this.dialogRef && this.dialogRef.close(this.returnData);
+                    }
                   }
                 }
               );
             }
           }
-          if (approval) {
-            if (this.approvalRule != '0') {
-              this.codxEpService
-                .getCategoryByEntityName(this.formModel.entityName)
-                .subscribe((res: any) => {
-                  this.codxEpService
-                    .release(
-                      this.returnData,
-                      res?.processID,
-                      'EP_Bookings',
-                      this.formModel.funcID
-                    )
-                    .subscribe((res) => {
-                      if (res?.msgCodeError == null && res?.rowCount) {
-                        this.notificationsService.notifyCode('ES007');
-                        this.returnData.approveStatus = '3';
-                        this.returnData.status = '3';
-                        this.returnData.write = false;
-                        this.returnData.delete = false;
-                        (this.dialogRef.dataService as CRUDService)
-                          .update(this.returnData)
-                          .subscribe();
-                        this.dialogRef && this.dialogRef.close(this.returnData);
-                      } else {
-                        this.notificationsService.notifyCode(res?.msgCodeError);
-                        // Thêm booking thành công nhưng gửi duyệt thất bại
-                        this.dialogRef && this.dialogRef.close(this.returnData);
-                      }
-                    });
-                });
+          else{
+            if (approval) {
+              if (this.approvalRule != '0') {
+                this.codxEpService
+                  .getCategoryByEntityName(this.formModel.entityName)
+                  .subscribe((res: any) => {
+                    this.codxEpService
+                      .release(
+                        this.returnData,
+                        res?.processID,
+                        'EP_Bookings',
+                        this.formModel.funcID
+                      )
+                      .subscribe((res) => {
+                        if (res?.msgCodeError == null && res?.rowCount) {
+                          this.notificationsService.notifyCode('ES007');
+                          this.returnData.approveStatus = '3';
+                          this.returnData.status = '3';
+                          this.returnData.write = false;
+                          this.returnData.delete = false;
+                          (this.dialogRef.dataService as CRUDService)
+                            .update(this.returnData)
+                            .subscribe();
+                          this.dialogRef && this.dialogRef.close(this.returnData);
+                        } else {
+                          this.notificationsService.notifyCode(res?.msgCodeError);
+                          // Thêm booking thành công nhưng gửi duyệt thất bại
+                          this.dialogRef && this.dialogRef.close(this.returnData);
+                        }
+                      });
+                  });
+              } else {
+                this.notificationsService.notifyCode('ES007');
+                this.codxEpService
+                  .afterApprovedManual(
+                    this.formModel.entityName,
+                    this.returnData.recID,
+                    '5'
+                  )
+                  .subscribe();
+                this.dialogRef && this.dialogRef.close(this.returnData);
+              }
+              this.dialogRef && this.dialogRef.close(this.returnData);
             } else {
-              this.notificationsService.notifyCode('ES007');
-              this.codxEpService
-                .afterApprovedManual(
-                  this.formModel.entityName,
-                  this.returnData.recID,
-                  '5'
-                )
-                .subscribe();
               this.dialogRef && this.dialogRef.close(this.returnData);
             }
-            this.dialogRef && this.dialogRef.close(this.returnData);
-          } else {
-            this.dialogRef && this.dialogRef.close(this.returnData);
           }
+          
         } else {
           return;
         }
