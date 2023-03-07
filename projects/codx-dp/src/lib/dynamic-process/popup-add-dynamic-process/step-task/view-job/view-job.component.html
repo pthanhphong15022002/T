@@ -15,7 +15,7 @@
 <ng-template #body>
   <div>
     <div
-      style="border-left: 3px solid red"
+      [ngStyle]="getColorTile(stepsTasks)"
       class="ps-1 d-flex justify-content-between align-items-center py-1"
     >
       <h3 class="m-0">
@@ -71,7 +71,14 @@
     <hr />
 
     <div class="d-flex align-items-center">
-      <h4 class="m-5 ms-0">Vai trò thực hiện</h4>
+      <codx-label
+        class="h4 font-weight-400"
+        fiedName="roles"
+        [formModel]="dialog?.formModel"
+        default="Người phụ trách"
+      >
+      </codx-label>
+      <!-- <h4 class="m-5 ms-0">Vai trò thực hiện</h4> -->
       <div>
         <ng-container
           *ngIf="listOwner.length > 0"
@@ -84,7 +91,13 @@
     <hr />
 
     <div class="d-flex justify-content-start">
-      <h3>Tài liệu:</h3>
+      <codx-label
+        class="h4 font-weight-400"
+        fiedName="memo"
+        [formModel]="dialog?.formModel"
+        default="Tài liệu"
+      >
+      </codx-label>
       <div>
         <ng-container *ngFor="let item of files">
           <div class="position-relative ms-5">
@@ -100,22 +113,29 @@
           </div>
         </ng-container>
       </div>
-      <!-- <codx-view-files
-        [objectID]="stepsTasks.recID"
-        [medias]="1"
-        [formModel]="dialog.formModel"
-      >
-      </codx-view-files> -->
-    </div>
-    <hr />
-
-    <div class="text" [innerHTML]="sanitizer.bypassSecurityTrustHtml(stepsTasks?.memo)">
-      {{ stepsTasks?.memo }}
     </div>
     <hr />
 
     <div>
-      <h4>Công việc liên kết</h4>
+      <codx-label
+        class="h4 font-weight-400"
+        fiedName="memo"
+        [formModel]="dialog?.formModel"
+        default="Ghi chú"
+      >
+        <div [innerHTML]="stepsTasks?.memo"></div>
+      </codx-label>
+    </div>
+    <hr />
+
+    <div>
+      <codx-label
+        class="h4 font-weight-400"
+        fiedName="parentID"
+        [formModel]="dialog?.formModel"
+        default="Công việc liên kết"
+      >
+      </codx-label>
       <div>
         <div
           *ngFor="let task of taskListConnect"
