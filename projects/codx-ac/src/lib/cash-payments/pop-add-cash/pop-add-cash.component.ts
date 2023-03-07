@@ -176,6 +176,21 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         });
     }
 
+    if (e.field.toLowerCase() === 'exchangerate' && e.data) {
+      this.api
+        .exec<any>('AC', 'CashPaymentsLinesBusiness', 'ChangeCurrenciesAsync', [
+          e.field,
+          this.cashpayment,
+          this.cashpaymentline,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.grid.dataSource = res;
+            this.cashpaymentline = res;
+          }
+        });
+    }
+
     if (e.data && e.field.toLowerCase() === 'bankaccount') {
       this.api
         .exec<any>(
@@ -227,11 +242,30 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           e.field,
           e.data?.isAddNew,
         ])
-        .subscribe((res) => {
+        .subscribe((res: any) => {
           if (res) {
-            console.log(e);
+            this.grid.updateRow(e.idx, res.line);
           }
         });
+    }
+
+    if (e.field.toLowerCase() == 'sublgtype' && e.value) {
+      if (e.value === '3') {
+        //Set lock field
+      } else {
+        this.api
+          .exec<any>(
+            'AC',
+            'AC',
+            'CashPaymentsLinesBusiness',
+            'SetLockFieldAsync'
+          )
+          .subscribe((res) => {
+            if (res) {
+              //Set lock field
+            }
+          });
+      }
     }
   }
 

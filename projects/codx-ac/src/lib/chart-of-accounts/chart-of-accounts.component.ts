@@ -51,7 +51,7 @@ export class ChartOfAccountsComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void { }
+  onInit(): void {}
 
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
@@ -117,14 +117,6 @@ export class ChartOfAccountsComponent extends UIComponent {
         option,
         this.view.funcID
       );
-      this.dialog.closed.subscribe((x) => {
-        if (x.event)
-          this.view.dataService
-            .add([this.view.dataService.dataSelected])
-            .subscribe((x) => {
-              this.dt.detectChanges();
-            });
-      });
     });
   }
 
@@ -137,7 +129,7 @@ export class ChartOfAccountsComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'edit',
-          headerText: e.text + ' ' + this.funcName
+          headerText: e.text + ' ' + this.funcName,
         };
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
@@ -159,7 +151,7 @@ export class ChartOfAccountsComponent extends UIComponent {
       .delete([data], true, (option: RequestOption) =>
         this.beforeDelete(option, data)
       )
-      .subscribe(() => { });
+      .subscribe(() => {});
   }
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
