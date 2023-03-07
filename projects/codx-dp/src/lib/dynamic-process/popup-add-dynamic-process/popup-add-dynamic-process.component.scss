@@ -8,54 +8,6 @@
   margin-left: 27px;
 }
 
-<<<<<<< HEAD
-=======
-
-.background {
-  font-size: 16px;
-  box-shadow: #e4e4e4 5px 5px 15px 5px;
-
-  .header-job {
-    background-color: #cde7f1;
-    display: flex;
-    justify-content: space-between;
-    padding: 0.3rem;
-    margin-left: 0, 5rem;
-
-    .left {
-      margin: 10px;
-      .title {
-        font-weight: 600;
-        color: #2392ef;
-        font-size: 1.2rem;
-      }
-    }
-
-    .right {
-      margin: 10px;
-      display: flex;
-      align-items: center;
-    }
-  }
-
-  .show-main {
-    display: block;
-    transition: display 12s;
-    padding-bottom: 10px;
-    margin: 10px;
-  }
-
-  .hidden-main {
-    display: none;
-    transition: display 12s;
-  }
-}
-
-.margin-form {
-  margin: 5px 5px 0 5px;
-}
-
->>>>>>> 14b569f0e0f7da290cd3f8e974735bfd93f54a37
 .dropzone.dropzone-default {
   padding: 20px;
   text-align: center;
