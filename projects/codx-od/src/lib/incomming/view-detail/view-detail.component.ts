@@ -438,6 +438,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     });
   }
   openFormFuncID(val: any, datas: any = null, isData = false) {
+    debugger
     let that = this;
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
@@ -980,6 +981,45 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             if (x.event) this.view.dataService.update(x.event).subscribe();
           });
         // this.refuse(datas);
+        break;
+      }
+      //Tạo công văn đi 
+      case "ODT115":{
+        this.view.dataService.addNew().subscribe((res: any) => {
+          var obj = {
+            dataSelected: res
+          }
+          res.agencyID = datas?.agencyID;
+          res.agencyName = datas?.agencyName;
+          res.departmentID = datas?.departmentID;
+          res.dispatchType = "2";
+          let option = new SidebarModel();
+          option.DataService = obj;
+          this.dialog = this.callfunc.openSide(
+            IncommingAddComponent,
+            {
+              gridViewSetup: this.gridViewSetup,
+              headerText:'Tạo công văn đi',
+              type: 'copy',
+              formModel: this.formModel,
+            },
+            option
+          );
+          this.dialog.closed.subscribe((x) => {
+            if (x.event) {
+              this.odService.addLink(datas.recID , x.event.recID, "","").subscribe(item2=>{
+                // if(item2) this.notifySvr.notifyCode("OD025");
+                // else this.notifySvr.notifyCode("OD026");
+              });
+              // this.view.dataService.add(x.event, 0).subscribe((item) => {
+              //   this.view.dataService.onAction.next({
+              //     type: 'update',
+              //     data: x.event,
+              //   });
+              // });
+            }
+          });
+        });
         break;
       }
       default: {

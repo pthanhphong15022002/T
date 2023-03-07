@@ -77,4 +77,12 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
       );
     }
   }
+  closeDetailInstance(data){
+    this.dpService.getListInstanceByIdProccess(data.recID).subscribe((res)=> {
+      if(res){
+        data.totalInstance = res;
+        this.dialog.close(data);
+      }
+    })
+  }
 }

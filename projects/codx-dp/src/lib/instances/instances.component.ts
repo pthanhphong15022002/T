@@ -101,6 +101,7 @@ export class InstancesComponent
   oldIdInstance: any;
   viewMode: any;
   viewModeDetail = 'S';
+  totalInstance: number = 0;
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
@@ -122,7 +123,6 @@ export class InstancesComponent
         });
     });
 
-    // em bảo gán tạm
     this.dataProccess = dt?.data?.data;
     this.getListCbxProccess(this.dataProccess?.applyFor);
   }
@@ -241,7 +241,7 @@ export class InstancesComponent
                   .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
                   .subscribe((res) => {
                     if (res) {
-                      this.instanceNo = res;
+                      this.view.dataService.dataSelected.instanceNo = res;
                       this.openPopUpAdd(applyFor, formMD, option, 'add');
                     }
                   });
@@ -252,7 +252,7 @@ export class InstancesComponent
                   )
                   .subscribe((isNo) => {
                     if (isNo) {
-                      this.instanceNo = isNo;
+                      this.view.dataService.dataSelected.instanceNo = isNo;
                       this.openPopUpAdd(applyFor, formMD, option, 'add');
                     }
                   });
@@ -291,6 +291,7 @@ export class InstancesComponent
                   .subscribe((res) => {
                     if (res) {
                       this.view.dataService.dataSelected = data;
+                      this.view.dataService.dataSelected.instanceNo = res;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -302,6 +303,7 @@ export class InstancesComponent
                   .subscribe((isNo) => {
                     if (isNo) {
                       this.view.dataService.dataSelected = data;
+                      this.view.dataService.dataSelected.instanceNo = isNo;
                       this.openPopUpAdd(applyFor, formMD, option, titleAction);
                     }
                   });
@@ -638,7 +640,7 @@ export class InstancesComponent
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
               instance: data,
-              listStepCbx: this.listStepsCbx,
+              listStepCbx: this.listSteps,
               instanceStep: instanceStep,
               stepIdClick: this.stepIdClick,
             };
@@ -694,8 +696,8 @@ export class InstancesComponent
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
             let reason = isMoveSuccess
-              ? this.listSteps[this.listSteps.length - 2]
-              : this.listSteps[this.listSteps.length - 1];
+              ? this.listSteps[this.listSteps.findIndex(x=>x.isSuccessStep)]
+              : this.listSteps[this.listSteps.findIndex(x=>x.isFailStep)];
             var obj = {
               dataMore: dataMore,
               headerTitle: fun.defaultName,
@@ -773,7 +775,7 @@ export class InstancesComponent
       .map((x) => x.stepName)[0];
   }
   clickMoreFunc(e) {
-    this.lstStepInstances = e.lstStepInstance;
+ //   this.lstStepInstances = e.lstStepInstance;
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {

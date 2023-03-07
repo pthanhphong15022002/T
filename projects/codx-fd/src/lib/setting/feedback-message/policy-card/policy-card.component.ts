@@ -118,10 +118,14 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
 
   valueChangeSwitch(e) {
     if (e) {
+      console.log(e);
       var field = e.field;
-      this.objectUpdate[field] = e.data;
-      this.quantity[field] = !this.quantity[field];
-      this.handleSaveParameter();
+      if (this.objectUpdate[field] != e.data) {
+        this.objectUpdate[field] = e.data;
+        this.quantity[field] = !this.quantity[field];
+        this.handleSaveParameter();
+      }
+
     }
   }
 

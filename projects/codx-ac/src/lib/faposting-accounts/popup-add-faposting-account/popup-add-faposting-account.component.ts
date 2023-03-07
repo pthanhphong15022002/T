@@ -52,6 +52,10 @@ export class PopupAddFAPostingAccountComponent extends UIComponent {
         this.gridViewSetup = res;
       });
   }
+
+  ngAfterViewInit() {
+    console.log(this.form);
+  }
   //#endregion
 
   //#region Event

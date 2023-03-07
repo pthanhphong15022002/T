@@ -140,8 +140,8 @@
                           itemQuestion.category == 'C2'
                         "
                       >
-                        <div class="d-flex justify-content-between p-3 border-top">
-                          <div
+                        <div class="d-flex justify-content-end p-3 border-top">
+                          <!-- <div
                             class="d-flex align-items-center pointer"
                             (click)="
                               showAnswer(itemSession.seqNo, itemQuestion.seqNo)
@@ -170,7 +170,7 @@
                               ></codx-label
                               >)
                             </span>
-                          </div>
+                          </div> -->
                           <div
                             class="d-flex align-items-center justify-content-end"
                           >
@@ -197,7 +197,7 @@
                             ></codx-label>
                             <codx-input
                               type="switch"
-                              class="pd-t-10"
+                              class="mt-1 mx-2"
                               (valueChange)="
                                 valueChangeMandatory($event, itemQuestion)
                               "

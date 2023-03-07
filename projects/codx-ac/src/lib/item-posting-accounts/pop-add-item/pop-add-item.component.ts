@@ -52,7 +52,6 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.itemposting = dialog.dataService!.dataSelected;
-    console.log(this.itemposting);
     if (
       dialogData.data?.moduleID != null &&
       dialogData.data?.postType != null
@@ -78,6 +77,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    console.log(this.form);
   }
   //#endregion
 
@@ -89,7 +89,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
     this.itemposting.custSelection = '';
     if (e.field == 'custLevel' && e.data == '3') {
       this.gridViewSetup['CustSelection'].isRequire = false;
-    }else{
+    } else {
       this.gridViewSetup['CustSelection'].isRequire = true;
     }
     this.itemposting[e.field] = e.data;
@@ -98,7 +98,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
     this.itemposting.itemSelection = '';
     if (e.data == '4') {
       this.gridViewSetup['ItemSelection'].isRequire = false;
-    }else{
+    } else {
       this.gridViewSetup['ItemSelection'].isRequire = true;
     }
     this.itemposting[e.field] = e.data;
@@ -107,10 +107,10 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
 
   //#region Function
   checkValidate() {
-    if (this.itemposting.itemLevel == "4") {
+    if (this.itemposting.itemLevel == '4') {
       this.gridViewSetup['ItemSelection'].isRequire = false;
     }
-    if (this.itemposting.custLevel == "3") {
+    if (this.itemposting.custLevel == '3') {
       this.gridViewSetup['CustSelection'].isRequire = false;
     }
     var keygrid = Object.keys(this.gridViewSetup);
@@ -202,6 +202,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
           if (res.save) {
             this.dialog.dataService.clear();
             this.dialog.dataService.addNew().subscribe((res) => {
+              this.form.formGroup.reset(res);
               this.itemposting = this.dialog.dataService.dataSelected;
               this.itemposting.moduleID = this.moduleID;
               this.itemposting.postType = this.postType;
