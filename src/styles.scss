@@ -26,8 +26,8 @@ erm-quick-links-inner .dropdown-menu {
 
 /***** end theme ****/
 ::-webkit-scrollbar {
-  width: 0.4rem;
-  height: 0.4rem;
+  width: 0.6rem;
+  height: 0.6rem;
 }
 .fs-6 {
   font-size: var(--fs-6)!important;
@@ -43,6 +43,15 @@ erm-quick-links-inner .dropdown-menu {
 }
 .mb-5px{
   margin-bottom: 5px;
+}
+codx-listview.card{
+  border-radius: 0;
+}
+codx-view-list-detail {
+  .e-pane.e-static-pane {
+    border-radius: 0;
+  }
+
 }
 /** custom bootstrap  **/
 .rounded-4 {
@@ -741,7 +750,7 @@ codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
 }
 
 .breadcrum-box div::-webkit-scrollbar {
-  height: 2px;
+  height: 6px;
 }
 
 .dms-footer-r {

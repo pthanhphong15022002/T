@@ -138,8 +138,8 @@
     </div>
     <!-- body rieng -->
     <div class="stepper-body pt-2 w-100">
-      <div class="card shadow-none border-0 rounded-0 mx-auto w-1200px h-100">
-        <div class="mt-6 tab-pane-header px-6">
+      <div class="card shadow-none border-0 rounded-0 mx-auto w-1100px h-100">
+        <div class="mt-6 pb-3 tab-pane-header px-9 border-bottom">
           <h2 *ngIf="currentTab != 1" class="h2-title">
             <codx-label
               *ngIf="currentTab == 0"
@@ -162,8 +162,8 @@
           ></ng-container>
         </div>
         <div
-          [ngClass]="currentTab == 1 ? 'scroll-stask' : 'scroll'"
-          class="card-body"
+          [ngClass]="currentTab == 1 ? 'scroll-stask' : 'scroll-y'"
+          class="dp-step pt-4 px-6 mx-3"
           data-kt-scroll="true"
           data-kt-scroll-activate="{default: true}"
           data-kt-scroll-height="auto"
@@ -201,7 +201,7 @@
         </div>
 
         <div
-          class="d-flex flex-stack justify-content-between card-footer border-0"
+          class="d-flex flex-stack justify-content-between card-footer border-top"
         >
           <div class="left">
             <button
@@ -247,27 +247,25 @@
 <ng-template #General>
   <!--Thông tin chung-->
   <div class="background">
-    <div class="header-job">
-      <div class="left">
-        <div>
+    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+      <div class="d-flex flex-column">
+        <div class="title text-primary fs-4 fw-bold">
           <codx-label
-            class="title"
             name="lblGeneral"
             [formModel]="dialog.formModel"
             default="Thông tin chung"
           ></codx-label>
         </div>
-        <div>
+        <div class="text-gray-500">
           <codx-label
             name="lblGeneral"
             [formModel]="dialog.formModel"
             default="Thông tin chung của quy trình"
-            style="color: #898989"
           >
           </codx-label>
         </div>
       </div>
-      <div class="right">
+      <div class="d-flex justify-content-end">
         <div class="group-button">
           <button
             *ngIf="isShowstage"
@@ -369,7 +367,7 @@
           </div>
         </div>
         <div class="col-6">
-          <div class="form-group margin-form">
+          <div class="form-group ms-5">
             <codx-label name="lblAvatarProcess" default="Ảnh đại diện">
             </codx-label>
             <ng-container [ngTemplateOutlet]="avatarProcess"></ng-container>
@@ -380,28 +378,26 @@
   </div>
   <!--Các vai trò quy trình-->
   <div class="background">
-    <div class="header-job">
-      <div class="left">
-        <div>
+    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+      <div class="d-flex flex-column">
+        <div class="title text-primary fs-4 fw-bold">
           <codx-label
-            class="title"
             name="lblPermissions"
             [formModel]="dialog.formModel"
             default="Các vai trò trong quy trình"
           ></codx-label>
         </div>
-        <div>
+        <div class="text-gray-500">
           <codx-label
             name="lblPerm"
             [formModel]="dialog.formModel"
             default="Những người liên quan và có thể thực hiện các chức năng
             trong quy trình"
-            style="color: #898989"
           >
           </codx-label>
         </div>
       </div>
-      <div class="right">
+      <div class="d-flex justify-content-end">
         <div class="group-button">
           <button
             *ngIf="isShowstage"
@@ -614,22 +610,20 @@
   </div>
   <!--Tùy chỉnh quy trình-->
   <div class="background">
-    <div class="header-job">
-      <div class="left">
-        <div>
+    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+      <div class="d-flex flex-column">
+        <div class="title text-primary fs-4 fw-bold">
           <codx-label
-            class="title"
             name="lblSetting"
             [formModel]="dialog.formModel"
             default="Tùy chỉnh quy trình"
           ></codx-label>
         </div>
-        <div>
+        <div class="text-gray-500">
           <codx-label
             name="lblActived"
             [formModel]="dialog.formModel"
             default="Cách thức hoạt động của quy trình"
-            style="color: #898989"
           >
           </codx-label>
         </div>
@@ -809,23 +803,21 @@
   </div>
   <!--Hướng dẫn làm việc với quy trình-->
   <div class="background">
-    <div class="header-job">
-      <div class="left">
-        <div>
+    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+      <div class="d-flex flex-column">
+        <div class="title text-primary fs-4 fw-bold">
           <codx-label
-            class="title"
             name="Memo"
             [formModel]="dialog.formModel"
             default="Hướng dẫn làm việc với quy trình"
           >
           </codx-label>
         </div>
-        <div>
+        <div class="text-gray-500">
           <codx-label
             name="lblMemo"
             [formModel]="dialog.formModel"
             default="Mô tả chi tiết quy trình"
-            style="color: #898989"
           >
           </codx-label>
         </div>
@@ -968,36 +960,34 @@
           [cdkDragData]="item"
         >
           <div class="background-job mb-5">
-            <div class="header-job p-3">
-              <div class="left">
-                <div>
-                  <span class="title" *ngIf="haveTitle">{{
+            <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+              <div class="d-flex flex-column">
+                <div class="title text-primary fs-4 fw-bold">
+                  <span class="me-2" *ngIf="haveTitle">{{
                     titleDefault
                   }}</span>
-                  <span class="title" *ngIf="!haveTitle">{{
+                  <span class="me-2" *ngIf="!haveTitle">{{
                     item.stepName
                   }}</span>
                 </div>
-                <div>
-                  <span style="color: #898989">
-                    <codx-label
+                <div class="text-gray-500">
+                  <codx-label
                       name="lblExpression"
                       formName="DPStepsFields"
                       gridViewName="grvDPStepsFields"
                       [default]="'Kéo thả để sắp xếp các trường tùy chỉnh'"
                     >
                     </codx-label>
-                  </span>
                 </div>
               </div>
               <div class="right">
-                <div class="group-button d-flex align-items-center ml-2">
+                <div class="group-button d-flex align-items-center ms-2">
                   <button
                     class="button-custom"
                     (click)="addCustomField(item.recID, item.processID)"
                   >
                     <span
-                      class="icon-add icon-24 cursor-pointer text-hover-primary py-2"
+                      class="icon-add icon-20 cursor-pointer text-hover-primary py-2"
                     ></span>
                   </button>
                   <button
@@ -1164,29 +1154,26 @@
 <!-- Thiết lập giai đoạn của nvthuan + Bảo -->
 
 <ng-template #stageHeader>
-  <div>
     <div class="d-flex justify-content-between align-items-center">
-      <h2 class="h2-title float-left">Thiết lập giai đoạn</h2>
+      <h2 class="h2-title">Thiết lập giai đoạn</h2>
       <div class="d-flex align-items-center">
         <button
           type="button"
-          class="btn btn-primary d-flex align-items-center"
-          style="padding: 0 15px 0 0 !important"
+          class="btn btn-sm btn-primary"
+
           (click)="openPopupStep('add')"
         >
-          <span
-            class="icon-add icon-20 text-primary-600 py-2"
-            style="font-weight: 600; margin-left: 5px; color: white"
+          <i
+            class="icon-add icon-20"
           >
-          </span>
+          </i>
           <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>
         </button>
-        <button class="button-custom">
-          <span
-            class="icon-replay icon-22 text-primary-600 py-2"
-            style="font-weight: 600; margin-left: 5px"
+        <button type="button" class="btn btn-icon btn-light-primary ms-2">
+          <i
+            class="icon-replay icon-20"
           >
-          </span>
+          </i>
         </button>
       </div>
     </div>
@@ -1199,7 +1186,7 @@
         Lưu mẫu mới
       </button>
     </div> -->
-  </div>
+
 </ng-template>
 
 <ng-template #stage>
@@ -1346,12 +1333,12 @@
 <!-- template công việc -->
 <ng-template #job>
   <div class="background-job">
-    <div class="header-job mb-5">
-      <div class="left" style="margin: auto 10px">
-        <div>
-          <span class="title">Công việc</span>
+    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+      <div class="d-flex flex-column" style="margin: auto 10px">
+        <div  class="title text-primary fs-4 fw-bold">
+          <span>Công việc</span>
         </div>
-        <div class="text-gray-400">
+        <div>
           <codx-label
             class="fw-normal text-gray-400"
             fiedName="taskMemo"
@@ -1747,14 +1734,13 @@
 
 <ng-template #reasonSuccess>
   <div class="background-job form-setting-step-success mb-5">
-    <div class="header-job p-3">
-      <div class="left">
-        <div>
-          <codx-label class="title" default="Tùy chỉnh giai đoạn"></codx-label>
+    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+      <div class="d-flex flex-column">
+        <div class="title text-primary fs-4 fw-bold">
+          <codx-label default="Tùy chỉnh giai đoạn"></codx-label>
         </div>
-        <div>
+        <div class="text-gray-500">
           <codx-label
-            class="text-muted"
             default="Cách thức hoạt động của giai đoạn"
           ></codx-label>
         </div>
@@ -1861,14 +1847,13 @@
   </div>
 
   <div class="background-job form-reason-success">
-    <div class="header-job p-3">
-      <div class="left">
-        <div>
-          <codx-label class="title" default="Lý do thành công"></codx-label>
+    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+      <div class="d-flex flex-column">
+        <div class="title text-primary fs-4 fw-bold">
+          <codx-label default="Lý do thành công"></codx-label>
         </div>
-        <div>
+        <div class="text-gray-500">
           <codx-label
-            class="text-muted"
             default="Lý do nhiệm vụ được ghi nhận là thành công"
           ></codx-label>
         </div>
@@ -1939,14 +1924,13 @@
 </ng-template>
 <ng-template #reasonFail>
   <div class="background-job form-setting-step-fail mb-5">
-    <div class="header-job p-3">
-      <div class="left">
-        <div>
-          <codx-label class="title" default="Tùy chỉnh giai đoạn"></codx-label>
+    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+      <div class="d-flex flex-column">
+        <div class="title text-primary fs-4 fw-bold">
+          <codx-label default="Tùy chỉnh giai đoạn"></codx-label>
         </div>
-        <div>
+        <div class="text-gray-500">
           <codx-label
-            class="text-muted"
             default="Cách thức hoạt động của giai đoạn"
           ></codx-label>
         </div>
@@ -2046,14 +2030,13 @@
   </div>
 
   <div class="background-job form-reason-fail">
-    <div class="header-job p-3">
-      <div class="left">
-        <div>
-          <codx-label class="title" default="Lý do thất bại"></codx-label>
+    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+      <div class="d-flex flex-column">
+        <div class="title text-primary fs-4 fw-bold">
+          <codx-label default="Lý do thất bại"></codx-label>
         </div>
-        <div>
+        <div class="text-gray-500">
           <codx-label
-            class="text-muted"
             default="Lý do nhiệm vụ được ghi nhận là thất bại"
           ></codx-label>
         </div>
@@ -2128,18 +2111,16 @@
 
 <ng-template #rolesInStep>
   <div class="background-job form-setup-role mb-5">
-    <div class="header-job p-3">
-      <div class="left">
-        <div>
+    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+      <div class="d-flex flex-column">
+        <div class="title text-primary fs-4 fw-bold">
           <codx-label
-            class="title"
             name="lblRoles"
             default="Các vai trò trong giai đoạn"
           ></codx-label>
         </div>
-        <div>
+        <div class="text-gray-500">
           <codx-label
-            class="text-muted"
             name="lblRoleControl"
             default="Những người liên quan đến giai đoạn"
           >
@@ -2155,7 +2136,6 @@
           >
             <span
               class="icon-expand_less icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
             ></span>
           </button>
         </div>
@@ -2271,18 +2251,16 @@
 
 <ng-template #setupInStep>
   <div class="background-job form-setup-step mb-5">
-    <div class="header-job p-3">
-      <div class="left">
-        <div>
+    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+      <div class="d-flex flex-column">
+        <div class="title text-primary fs-4 fw-bold">
           <codx-label
-            class="title"
             name=""
             default="Tùy chỉnh giai đoạn"
           ></codx-label>
         </div>
-        <div>
+        <div class="text-gray-500">
           <codx-label
-            class="text-muted"
             name=""
             default="Cách thức hoạt động của giai đoạn"
           >
@@ -2328,7 +2306,7 @@
                   </div>
                   <div>
                     <codx-label
-                      class="text-muted fs-5"
+                      class="text-muted "
                       default="Mặc định khi nhiệm vụ được tạo hoặc chuyển đến
                       giai đoạn sẽ tự động phân bố người phụ trách cho nhiệm vụ"
                     >
@@ -2388,16 +2366,15 @@
 
 <ng-template #durationInStep>
   <div class="background-job form-setup-step mb-5">
-    <div class="header-job p-3">
-      <div class="left">
-        <div>
+    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+      <div class="d-flex flex-column">
+        <div class="title text-primary fs-4 fw-bold">
           <!-- chưa có -->
-          <codx-label class="title" fiedName="" default="Thời hạn"></codx-label>
+          <codx-label fiedName="" default="Thời hạn"></codx-label>
         </div>
-        <div>
+        <div class="text-gray-500">
           <!-- chưa có -->
           <codx-label
-            class="text-muted"
             fiedName=""
             default="Lên kế hoạch cho các nhiệm vụ trong giai đoạn"
           >
@@ -2429,20 +2406,16 @@
           <div class="col-6">
             <div class="d-flex align-items-start">
               <div>
-                <div class="flex-row">
-                  <div>
-                    <strong>
-                      <codx-label
-                        class="text-muted text-opacity-25"
+                <div class="d-flex flex-column">
+                  <codx-label
+                        class="text-gray-500 fw-bold"
                         fiedName=""
                         default="Thời hạn hoàn tất nhiệm vụ trong giai đoạn"
                       >
                       </codx-label>
-                    </strong>
-                  </div>
-                  <div>
+                  <div class="mt-1">
                     <codx-label
-                      class="text-muted fs-5"
+                      class="text-gray-500"
                       default="Thời hạn mà nhiệm vụ cần được đến giai đoạn tiếp
                       theo"
                     >
@@ -2671,19 +2644,17 @@
 
 <ng-template #memoInStep>
   <div class="background-job form-setup-step mb-5">
-    <div class="header-job p-3">
-      <div class="left">
-        <div>
+    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+      <div class="d-flex flex-column">
+        <div class="title text-primary fs-4 fw-bold">
           <codx-label
-            class="title"
             fiedName="Memo"
             [formModel]="dialog.formModel"
             default="Hướng dẫn hoàn thành giai đoạn"
           ></codx-label>
         </div>
-        <div>
+        <div class="text-gray-500">
           <codx-label
-            class="text-muted"
             name=""
             default="Mô tả chi tiết cách hoàn thành giai đoạn cho người phụ
             trách"
