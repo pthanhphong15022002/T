@@ -79,6 +79,20 @@
   }
 }
 
+.task{
+  max-height:  1000px;
+}
+
+.hiddenTask  {
+  max-height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  transition: visibility 0.3s ease, max-height 0.7s ease;
+}
+.showTask {
+  visibility: visible;
+  transition: visibility 2s ease, max-height 1s ease;
+}
 //nvthuan
 .icon-container {
   height: 36px;
@@ -220,7 +234,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 .drap-drop:hover {

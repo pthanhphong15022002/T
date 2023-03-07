@@ -1,4 +1,5 @@
 export class WareHouses {
+  recID:any;
   address: any;
   allowEditKey: any;
   assign: any;

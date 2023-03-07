@@ -148,15 +148,13 @@ export class PopupAddComponent implements OnInit {
         [this.data])
         .subscribe(async (res:boolean) => {
         if (res) {
+          debugger
           if (this.fileUpload.length > 0) {
             this.codxATM.objectId = this.data.recID;
             this.codxATM.fileUploadList = this.fileUpload;
             this.codxATM.saveFilesMulObservable().subscribe((res2: any) => {
-                if (res2) 
-                {
-                  this.loading = false;
-                  this.dialogRef.close();
-                }
+              this.loading = false;
+              this.dialogRef.close();
               }
             );
           }
