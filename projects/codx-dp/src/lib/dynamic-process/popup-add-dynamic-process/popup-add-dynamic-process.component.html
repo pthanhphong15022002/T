@@ -1447,6 +1447,7 @@
                     <div
                       class="d-flex justify-content-center align-items-center"
                       style="border: 1px solid #6C757D; width: 25px; height: 25px"
+                      (click)="toggleTask('group' + taskList?.recID)"
                     >
                       <!-- <span class="icon-maximize" style="font-size: 20px; color:#6C757D;"></span> icon-add_box -->
                       <!-- <span class="icon-maximize" style="font-size: 20px; color:#6C757D;">+</span> -->
@@ -1511,9 +1512,11 @@
                   ></div>
                   <!-- kéo thả ở trong  -->
                   <div
+                    [id]="'group' + taskList?.recID "
                     cdkDropList
                     [cdkDropListData]="taskList?.task || []"
                     (cdkDropListDropped)="drop($event, taskList, false)"
+                    class="task"
                   >
                     <ng-container *ngFor="let task of taskList?.task">
                       <div

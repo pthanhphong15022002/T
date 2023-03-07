@@ -2323,6 +2323,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let color = this.listTypeTask?.find((x) => x.value === task.taskType);
     return { 'background-color': color?.color };
   }
+
+  toggleTask(id){
+    let elementGroup = document.getElementById(id);
+    let isClose = elementGroup.classList.contains('hiddenTask');
+    if(isClose){
+      elementGroup.classList.remove('hiddenTask');
+      elementGroup.classList.add('showTask');
+    }else{
+      elementGroup.classList.remove('showTask');
+      elementGroup.classList.add('hiddenTask');
+    }
+    
+  }
+
   //#End stage -- nvthuan
 
   //#region for reason successful/failed
