@@ -246,7 +246,7 @@
 <!--Phần của Phúc - Thông tin quy trình-->
 <ng-template #General>
   <!--Thông tin chung-->
-  <div class="background">
+  <div class="background mt-3">
     <div class="header-job">
       <div class="left">
         <div>
@@ -305,6 +305,9 @@
               (valueChange)="valueChange($event)"
             >
             </codx-input>
+            <div *ngIf="!checkGroup" class="errorMessage text-danger ms-3" data-field="">
+              {{errorMessage}}
+            </div>
           </div>
           <div class="form-group margin-form">
             <div>
@@ -379,7 +382,7 @@
     </div>
   </div>
   <!--Các vai trò quy trình-->
-  <div class="background">
+  <div class="background mt-3">
     <div class="header-job">
       <div class="left">
         <div>
@@ -613,7 +616,7 @@
     </div>
   </div>
   <!--Tùy chỉnh quy trình-->
-  <div class="background">
+  <div class="background mt-3">
     <div class="header-job">
       <div class="left">
         <div>
@@ -808,7 +811,7 @@
     </div>
   </div>
   <!--Hướng dẫn làm việc với quy trình-->
-  <div class="background">
+  <div class="background mt-3">
     <div class="header-job">
       <div class="left">
         <div>

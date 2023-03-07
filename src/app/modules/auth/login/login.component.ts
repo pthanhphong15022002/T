@@ -10,6 +10,7 @@ import {
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
   FormGroup,
   ValidationErrors,
   ValidatorFn,
@@ -62,6 +63,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   // private fields
   unsubscribe: Subscription[] = [];
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -215,6 +217,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           Validators.maxLength(100),
         ]),
       ],
+      captCha: ['', Validators.compose([Validators.required])],
     });
 
     this.changePassForm = this.fb.group(
@@ -251,6 +254,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             Validators.maxLength(100),
           ]),
         ],
+        captCha: ['', Validators.compose([Validators.required])],
       },
       { validators: this.checkPasswords }
     );
@@ -280,6 +284,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             Validators.maxLength(100),
           ]),
         ],
+        captCha: ['', Validators.compose([Validators.required])],
       },
       { validators: this.checkPasswords }
     );
