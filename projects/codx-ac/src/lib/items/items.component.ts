@@ -2,14 +2,13 @@ import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
   DataRequest,
-  FormModel,
   RequestOption,
   SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { ItemsService } from './items.service';
 import { PopupAddItemComponent } from './popup-add-item/popup-add-item.component';
 
@@ -29,6 +28,7 @@ export class ItemsComponent extends UIComponent {
 
   views: Array<ViewModel> = [];
   btnAdd: ButtonModel = { id: 'btnAdd' };
+  functionName: string;
 
   // combobox data
   warehouses: any[];
@@ -43,6 +43,17 @@ export class ItemsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
+    this.cache
+      .moreFunction('Items', 'grvItems')
+      .pipe(
+        map((data) => data.find((m) => m.functionID === 'ACS21300')),
+        map(
+          (data) =>
+            data.defaultName.charAt(0).toLowerCase() + data.defaultName.slice(1)
+        )
+      )
+      .subscribe((res) => (this.functionName = res));
+
     this.loadComboboxData('Warehouses').subscribe((res) => {
       if (res) {
         console.log(JSON.parse(res[0]));
@@ -104,9 +115,9 @@ export class ItemsComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  handleClickAdd(event) {
+  handleClickAdd(e) {
     // debug
-    console.log({ event });
+    console.log({ e });
     console.log(this.view);
 
     this.view.dataService.addNew().subscribe((newItem) => {
@@ -121,7 +132,7 @@ export class ItemsComponent extends UIComponent {
         PopupAddItemComponent,
         {
           formType: 'add',
-          title: 'Thêm mặt hàng',
+          title: `${e.text} ${this.functionName}`,
         },
         options,
         this.view.funcID
@@ -135,12 +146,38 @@ export class ItemsComponent extends UIComponent {
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(data);
+        this.edit(e, data);
         break;
       case 'SYS04':
         this.copy(e, data);
         break;
     }
+  }
+
+  edit(e, data): void {
+    // debug
+    console.log('edit', { data });
+
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.edit(data).subscribe((selectedItem) => {
+      console.log({ selectedItem });
+
+      const options = new SidebarModel();
+      options.Width = '800px';
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
+      this.callfc
+        .openSide(
+          PopupAddItemComponent,
+          {
+            formType: 'edit',
+            title: `${e.text} ${this.functionName}`,
+          },
+          options,
+          this.view.funcID
+        )
+        .closed.subscribe((res) => console.log(res));
+    });
   }
 
   copy(e, data): void {
@@ -181,7 +218,7 @@ export class ItemsComponent extends UIComponent {
           PopupAddItemComponent,
           {
             formType: 'add',
-            title: `${e.text} mặt hàng`,
+            title: `${e.text} ${this.functionName}`,
           },
           options,
           this.view.funcID
@@ -215,32 +252,6 @@ export class ItemsComponent extends UIComponent {
           );
         }
       });
-  }
-
-  edit(data): void {
-    // debug
-    console.log('edit', { data });
-
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.edit(data).subscribe((selectedItem) => {
-      console.log({ selectedItem });
-
-      const options = new SidebarModel();
-      options.Width = '800px';
-      options.DataService = this.view.dataService;
-      options.FormModel = this.view.formModel;
-      this.callfc
-        .openSide(
-          PopupAddItemComponent,
-          {
-            formType: 'edit',
-            title: 'Sửa mặt hàng',
-          },
-          options,
-          this.view.funcID
-        )
-        .closed.subscribe((res) => console.log(res));
-    });
   }
 
   loadComboboxData(name: string, pageSize: number = 100): Observable<any> {

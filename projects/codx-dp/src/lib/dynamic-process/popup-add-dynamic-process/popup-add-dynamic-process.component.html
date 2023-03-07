@@ -1213,7 +1213,7 @@
           <div
             cdkDrag
             *ngFor="let itemStep of stepList; let i = index"
-            class="list-stage example-box drap-drop"
+            class="list-stage example-box drap-drop cursor-pointer"
             [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''"
             (click)="
               clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)
@@ -1222,7 +1222,6 @@
             <div class="order">{{ i + 1 }}</div>
             <div class="p-3 content">
               <div style="font-weight: 600; font-size: 1.2rem">
-                <!-- <codx-label [default]="itemStep?.stepName"></codx-label> -->
                 <span>{{ itemStep?.stepName }}</span>
               </div>
 
@@ -1422,7 +1421,7 @@
                   >
                     <!-- show hiden group task -->
                     <div
-                      class="d-flex justify-content-center align-items-center"
+                      class="d-flex justify-content-center align-items-center cursor-pointer"
                       style="
                         border: 1px solid #6c757d;
                         width: 25px;
