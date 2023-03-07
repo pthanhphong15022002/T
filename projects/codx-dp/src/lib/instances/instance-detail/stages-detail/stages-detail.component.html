@@ -51,10 +51,17 @@
       </div>
     </div>
     <div class="d-flex justify-content-between">
-      <div class="d-flex align-items-start" *ngIf="(lstIDInvo != null && lstIDInvo != '')">
-        <codx-label class="me-2 fw-bold" name="lblInvolved" default="Người liên quan:"></codx-label>
+      <div
+        class="d-flex align-items-start"
+        *ngIf="lstIDInvo != null && lstIDInvo != ''"
+      >
+        <codx-label
+          class="me-2 fw-bold"
+          name="lblInvolved"
+          default="Người liên quan:"
+        ></codx-label>
         <codx-imgs
-          [objectId]="(lstIDInvo != null || lstIDInvo != '') ? lstIDInvo : ''"
+          [objectId]="lstIDInvo != null || lstIDInvo != '' ? lstIDInvo : ''"
           [isToolTip]="true"
           [width]="30"
           objectType="AD_Users"
@@ -63,7 +70,11 @@
         </codx-imgs>
       </div>
       <div class="d-flex align-items-end">
-        <codx-label name="lblOwner" default="Người phụ trách:" class="me-2 fw-bold"></codx-label>
+        <codx-label
+          name="lblOwner"
+          default="Người phụ trách:"
+          class="me-2 fw-bold"
+        ></codx-label>
         <codx-img
           [objectId]="dataStep.owner"
           [isToolTip]="true"
@@ -76,7 +87,12 @@
   </div>
 </div>
 
-<div *ngIf="(dataStep.stepStatus !== '' && dataStep.stepStatus !== null) || dataStep.stepStatus === 0  ">
+<div
+  *ngIf="
+    (dataStep.stepStatus !== '' && dataStep.stepStatus !== null) ||
+    dataStep.stepStatus === 0
+  "
+>
   <codx-field-detail
     [dataStep]="dataStep"
     [titleDefault]="titleDefault"
@@ -91,7 +107,13 @@
 </div>
 
 <ng-template #popupSup let-dialog>
-  <codx-form [headerText]="titleMemo" [body]="body" [data]="dataStep" [footer]="" [dialog]="dialog">
+  <codx-form
+    [headerText]="titleMemo"
+    [body]="body"
+    [data]="dataStep"
+    [footer]=""
+    [dialog]="dialog"
+  >
     <ng-template #body>
       <div [innerHTML]="dataStep.memo"></div>
       <!-- <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150"
@@ -136,7 +158,7 @@
     </div>
     <div id="step-task" class="main p-3" [ngClass]="'show-main'">
       <!-- drap drop công việc ngoài-->
-      <div class="main-body m-5" *ngIf="taskGroupList.length > 0">
+      <div class="main-body" *ngIf="taskGroupList.length > 0">
         <div
           cdkDropList
           class="list"
@@ -148,25 +170,38 @@
                 class="card-job-list"
                 cdkDrag
                 [cdkDragData]="taskList"
-                [cdkDragStartDelay]="200"
-                [cdkDragDisabled]="taskList?.recID && !taskList?.isTaskDefault ? false : true"
+                [cdkDragStartDelay]="100"
+                [cdkDragDisabled]="
+                  taskList?.recID && !taskList?.isTaskDefault ? false : true
+                "
               >
-                <div class="card-job px-3 pt-3">
+                <div class="card-job">
                   <div
                     *ngIf="taskList?.recID"
                     class="d-flex align-items-center justify-content-between"
                   >
                     <div
-                      class="d-flex justify-content-start align-items-center has-action-menu"
+                      class="d-flex justify-content-start align-items-center has-action-menu ps-5 pt-3"
                       style="flex-grow: 1"
                     >
                       <div
-                        class="icon-container"
-                        (click)="clickShowTask(taskList?.recID)"
+                        class="d-flex justify-content-center align-items-center"
+                        style="
+                          border: 1px solid #6c757d;
+                          width: 25px;
+                          height: 25px;
+                        "
+                        (click)="toggleTask('group' + taskList?.recID)"
                       >
+                        <!-- <span style="font-size: 30px; font-weight: 400; color: #6c757d">-</span> -->
                         <span
-                          class="icon-add_circle icon-20 text-primary-600 py-2"
-                        ></span>
+                          style="
+                            font-size: 20px;
+                            font-weight: 400;
+                            color: #6c757d;
+                          "
+                          >+</span
+                        >
                       </div>
                       <div class="steplist-hearder ms-5">
                         <div>
@@ -219,8 +254,9 @@
                     cdkDropList
                     [cdkDropListData]="taskList?.task || []"
                     (cdkDropListDropped)="drop($event, taskList)"
-                    id="{{ taskList?.recID }}"
-                    class="show-main"
+                    [id]="'group' + taskList?.recID"
+                    class="task"
+                    [ngStyle]="taskList?.recID ? { 'margin-left': '50px' } : {}"
                   >
                     <ng-container *ngFor="let task of taskList?.task">
                       <div
@@ -228,7 +264,7 @@
                         [cdkDragStartDelay]="100"
                         [cdkDragData]="task"
                         [cdkDragDisabled]="task?.isTaskDefault"
-                        class="drap-drop"
+                        class="drap-drop ps-1 pt-2"
                       >
                         <div
                           class="d-flex align-items-center justify-content-between"
@@ -236,23 +272,22 @@
                           <div
                             style="flex-grow: 1"
                             class="has-action-menu"
-                            [ngStyle]="
-                              taskList?.recID ? { 'margin-left': '50px' } : {}
-                            "
                           >
                             <div
                               class="d-flex justify-content-start align-items-center"
                               style="font-size: 1rem"
                             >
+                              <!-- icon task -->
                               <div
                                 class="icon-container"
-                                style="background-color: #3ef8e9"
+                                [ngStyle]="getColor(task)"
                               >
                                 <span
-                                  class="icon-add_circle icon-20 text-primary-600 py-2"
+                                  class="icon-20 text-primary-600 py-2"
+                                  [ngClass]="getIconTask(task)"
                                 ></span>
                               </div>
-                              <div class="steplist-hearder ms-5">
+                              <div class="steplist-hearder ms-3">
                                 <div>
                                   <span
                                     class=""
@@ -281,7 +316,7 @@
                                 </div>
                               </div>
                             </div>
-                            <div>
+                            <div class="ms-5">
                               <codx-attachment
                                 #attachment
                                 hideFolder="1"
@@ -621,7 +656,11 @@
       </div>
       <div
         class="d-flex justify-content-between"
-        *ngIf="instance?.refID !== guidEmpty && instance?.refID !== null && instance?.refID !==''"
+        *ngIf="
+          instance?.refID !== guidEmpty &&
+          instance?.refID !== null &&
+          instance?.refID !== ''
+        "
       >
         <div>
           <codx-label default="Quy trình được chuyển đến"></codx-label>

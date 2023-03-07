@@ -332,8 +332,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
-    console.log('thuận', this.grvMoreFunction);
-    
   }
 
   ngAfterViewInit(): void {
@@ -1468,11 +1466,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           });
           step['taskGroups'] = taskGroupConvert;
 
-          let taskGroup = new DP_Steps_TaskGroups();
-          taskGroup['task'] = taskGroupList['null'] || [];
-          taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
-          step['taskGroups'].push(taskGroup);
-
+          if(step['taskGroups']?.length > 0 || step['tasks']?.length > 0){
+            let taskGroup = new DP_Steps_TaskGroups();
+            taskGroup['task'] = taskGroupList['null'] || [];
+            taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+            step['taskGroups'].push(taskGroup);
+          }
           this.stepList.push(step);
         }
       });
@@ -1803,58 +1802,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         });
       });
     });
-
-    // let frmModel: FormModel = {
-    //   entityName: 'DP_Steps_Tasks',
-    //   formName: 'DPStepsTasks',
-    //   gridViewName: 'grvDPStepsTasks',
-    // };
-    // if (type === 'add') {
-    //   this.popupJob.close();
-    // } else if (type === 'copy') {
-    //   dataInput = JSON.parse(JSON.stringify(data));
-    // } else {
-    //   taskGroupIdOld = data['taskGroupID'];
-    //   roleOld = JSON.parse(JSON.stringify(data['roles']));
-    //   dataInput = data;
-    // }
-
-    // let listData = [
-    //   type,
-    //   this.jobType,
-    //   this.step,
-    //   this.taskGroupList,
-    //   dataInput || {},
-    //   this.taskList,
-    //   this.groupTaskID || this.guidEmpty,
-    // ];
-
-    // let option = new SidebarModel();
-    // option.Width = '550px';
-    // option.zIndex = 1001;
-    // option.FormModel = frmModel;
-
-    // let dialog = this.callfc.openSide(PopupJobComponent, listData, option);
-
-    // dialog.closed.subscribe((e) => {
-    //   if (e?.event) {
-    //     this.groupTaskID = this.guidEmpty;
-    //     let taskData = e?.event?.data;
-    //     if (e.event?.status === 'add' || e.event?.status === 'copy') {
-    //       let index = this.taskGroupList.findIndex(
-    //         (group) => group.recID == taskData.taskGroupID
-    //       );
-    //       this.taskGroupList[index]['task'].push(taskData);
-    //       this.taskList.push(taskData);
-    //       this.addRole(taskData['roles'][0]);
-    //     } else {
-    //       if (taskData?.taskGroupID != taskGroupIdOld) {
-    //         this.changeGroupTaskOfTask(taskData, taskGroupIdOld);
-    //       }
-    //       this.addRole(taskData['roles'][0], roleOld[0]);
-    //     }
-    //   }
-    // });
   }
 
   deleteTask(taskList, task) {
