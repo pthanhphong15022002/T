@@ -8,7 +8,7 @@
       <div class="col-12">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="UMID"></codx-label>
-          <codx-input [Group]="form.formGroup" [crrValue]="unitsofmearsure.umid" [formModel]="form.formModel"
+          <codx-input [disabled]="formType == 'edit' ? true : false" [Group]="form.formGroup" [crrValue]="unitsofmearsure.umid" [formModel]="form.formModel"
             field="umid" (valueChange)="valueChange($event)">
           </codx-input>
         </div>

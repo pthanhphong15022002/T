@@ -76,7 +76,7 @@
   </div>
 </div>
 
-<div *ngIf="dataStep.stepStatus !== '' && dataStep.stepStatus !== null">
+<div *ngIf="(dataStep.stepStatus !== '' && dataStep.stepStatus !== null) || dataStep.stepStatus === 0  ">
   <codx-field-detail
     [dataStep]="dataStep"
     [titleDefault]="titleDefault"
@@ -111,7 +111,7 @@
         <button class="button-custom" (click)="openPopupTaskGroup()">
           <span
             [ngClass]="
-              !this.isCreate ? '' : 'icon-add icon-20 text-primary-600 py-2'
+              (!this.isCreate || isClosed) ? '' : 'icon-add icon-20 text-primary-600 py-2'
             "
             style="font-weight: 500"
           ></span>
@@ -119,7 +119,7 @@
         <button class="button-custom" (click)="openTypeTask()">
           <span
             [ngClass]="
-              !this.isCreate
+            (!this.isCreate || isClosed)
                 ? ''
                 : 'icon-add_task icon-20 text-primary-600 py-2'
             "
@@ -606,12 +606,12 @@
 <ng-template #reason>
   <div class="back-info mb-4">
     <div class="header-info py-3 px-5">
-      <div class="fw-bold fs-4 text-dark">{{ dataStep.stepName }}</div>
+      <div class="fw-bold fs-4 text-dark">{{ dataStep?.stepName }}</div>
       <div class="d-flex align-items-center">
         <div class="me-2 text-dark fw-bold">
           <codx-label default="Ngày chuyển đến giai đoạn"></codx-label>
         </div>
-        <span>{{ dataStep.actualStart | date : "HH:mm - dd/MM/yyyy" }}</span>
+        <span>{{ dataStep?.actualStart | date : "HH:mm - dd/MM/yyyy" }}</span>
       </div>
       <div class="d-flex justify-content-between">
         <div>
@@ -621,7 +621,7 @@
       </div>
       <div
         class="d-flex justify-content-between"
-        *ngIf="dataStep.newProcessID !== null && dataStep.newProcessID !== ''"
+        *ngIf="instance?.refID !== guidEmpty && instance?.refID !== null && instance?.refID !==''"
       >
         <div>
           <codx-label default="Quy trình được chuyển đến"></codx-label>

@@ -4,9 +4,12 @@
         <div class="form-group">
             <codx-label class="text-dark" fiedName="CompetenceID" [formModel]="form.formModel">
             </codx-label>
-            <codx-input class="form-control" [disabled]="isModeAdd ? false : true" (valueChange)="valueChange($event)"
-                field="competenceID" [Group]="form.formGroup" [formModel]="form.formModel">
+            <codx-input class="form-control" [disabled]="true" (valueChange)="valueChange($event)" field="competenceID"
+                [Group]="form.formGroup" [formModel]="form.formModel">
             </codx-input>
+            <!-- <codx-input class="form-control" [disabled]="isModeAdd ? false : true" (valueChange)="valueChange($event)"
+                field="competenceID" [Group]="form.formGroup" [formModel]="form.formModel">
+            </codx-input> -->
         </div>
         <div class="form-group">
             <codx-label class="text-dark" fiedName="CompetenceName" [formModel]="form.formModel">

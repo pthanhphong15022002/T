@@ -1,3 +1,4 @@
+declare var window: any;
 import { TMDashboardService } from './../tmdashboard.service';
 import {
   AfterViewInit,
@@ -355,10 +356,11 @@ export class DashboardContentComponent
   constructor(private inject: Injector, private biSerivce: TMDashboardService) {
     super(inject);
     this.reportID = this.router.snapshot.params['reportID'];
-    this.codxService.reloadComponent();
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.codxService.reloadComponent();
+  }
 
   ngAfterViewInit(): void {
     this.panels = JSON.parse(
