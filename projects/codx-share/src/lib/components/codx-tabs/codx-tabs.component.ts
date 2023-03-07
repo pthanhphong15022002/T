@@ -38,7 +38,7 @@ export class CodxTabsComponent implements OnInit {
   //Attachment
   @Input() hideFolder: string = '1';
   @Input() type: string = 'inline';
-  @Input() allowExtensions: string = '.jpg,.png';
+  @Input() allowExtensions: string = '.jpg,.png,.pdf';
   @Input() allowMultiFile: string = '1';
   @Input() displayThumb: string = 'full';
   @Input() addPermissions: Permission[] = [];
