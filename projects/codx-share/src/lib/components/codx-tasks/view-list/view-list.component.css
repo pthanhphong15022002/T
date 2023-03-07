@@ -46,3 +46,11 @@ td p {
   background-color: white;
   box-shadow: 0 0 35px rgba(0, 0, 0, 0.07);
 }
+.listuser-box {
+  max-height: 220px;
+    overflow: auto;
+    margin-top: 8px;
+    border-top: 1px var(--gray-100) solid;
+    padding-top: 5px;
+    clear: both;
+}
