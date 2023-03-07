@@ -3,13 +3,15 @@
   [data]="cashpayment">
 </codx-form>
 <ng-template #subHeader>
-  <div class="row">
-    <div class="col-8">
-      <codx-input [crrValue]="cashpayment.status" field="status" [formModel]="form.formModel" type="valuelist"
-        (valueChange)="valueChange($event)" refValue="AC040">
-      </codx-input>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="row">
+      <div class="col-8">
+        <codx-input [Group]="form.formGroup" [crrValue]="cashpayment.status" field="status" [formModel]="form.formModel"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
     </div>
-  </div>
+  </ng-container>
 </ng-template>
 <ng-template #body>
   <div class="card-add" #cardbodyRef>
@@ -136,8 +138,8 @@
             <div class="form-group">
               <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" [crrValue]="cashpayment.exchangeRate" field="exchangeRate" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+              <codx-input [Group]="form.formGroup" [crrValue]="cashpayment.exchangeRate" field="exchangeRate"
+                [formModel]="form.formModel" (valueChange)="valueChange($event)">
               </codx-input>
             </div>
           </div>
@@ -148,8 +150,8 @@
             <div class="form-group">
               <codx-label fiedName="VoucherDate" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="cashpayment.voucherDate" field="voucherDate"
-                (valueChange)="valueChange($event)">
+              <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="cashpayment.voucherDate"
+                field="voucherDate" (valueChange)="valueChange($event)">
               </codx-input>
             </div>
           </div>
@@ -160,8 +162,8 @@
             <div class="form-group">
               <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
               </codx-label>
-              <codx-input [Group]="form.formGroup" [crrValue]="cashpayment.voucherNo" field="voucherNo" [formModel]="form.formModel"
-                (valueChange)="valueChange($event)">
+              <codx-input [Group]="form.formGroup" [crrValue]="cashpayment.voucherNo" field="voucherNo"
+                [formModel]="form.formModel" (valueChange)="valueChange($event)">
               </codx-input>
             </div>
           </div>
