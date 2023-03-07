@@ -8,7 +8,7 @@
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="DimGroupID"
                     ></codx-label>
-                    <codx-input [Group]="form.formGroup" [crrValue]="dimensionGroups.dimGroupID" [formModel]="form.formModel" field="dimGroupID"
+                    <codx-input [disabled]="formType == 'edit' ? true : false" [Group]="form.formGroup" [crrValue]="dimensionGroups.dimGroupID" [formModel]="form.formModel" field="dimGroupID"
                         (valueChange)="valueChange($event)">
                     </codx-input>
                 </div>
@@ -39,8 +39,11 @@
                         (valueChange)="valueChange($event)">
                     </codx-input>
                 </span>
-                <span type="button" class="btn btn-icon btn-sm btn-light-primary"
+                <span *ngIf="dimensionGroups.active0" type="button" class="btn btn-icon btn-sm btn-light-primary"
                     (click)="openPopupSetup('Active0','0')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!dimensionGroups.active0" type="button" class="btn btn-icon">
                     <i class="icon-edit_square icon-16"></i>
                 </span>
             </div>
@@ -60,8 +63,11 @@
                         (valueChange)="valueChange($event)">
                     </codx-input>
                 </span>
-                <span type="button" class="btn btn-icon btn-sm btn-light-primary"
+                <span *ngIf="dimensionGroups.active1" type="button" class="btn btn-icon btn-sm btn-light-primary"
                     (click)="openPopupSetup('Active1','1')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!dimensionGroups.active1" type="button" class="btn btn-icon">
                     <i class="icon-edit_square icon-16"></i>
                 </span>
             </div>
@@ -80,8 +86,11 @@
                         (valueChange)="valueChange($event)">
                     </codx-input>
                 </span>
-                <span type="button" class="btn btn-icon btn-sm btn-light-primary"
+                <span *ngIf="dimensionGroups.active2" type="button" class="btn btn-icon btn-sm btn-light-primary"
                     (click)="openPopupSetup('Active2','2')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!dimensionGroups.active2" type="button" class="btn btn-icon">
                     <i class="icon-edit_square icon-16"></i>
                 </span>
             </div>
@@ -100,8 +109,11 @@
                         (valueChange)="valueChange($event)">
                     </codx-input>
                 </span>
-                <span type="button" class="btn btn-icon btn-sm btn-light-primary"
+                <span *ngIf="dimensionGroups.active3" type="button" class="btn btn-icon btn-sm btn-light-primary"
                     (click)="openPopupSetup('Active3','3')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!dimensionGroups.active3" type="button" class="btn btn-icon">
                     <i class="icon-edit_square icon-16"></i>
                 </span>
             </div>
@@ -122,7 +134,10 @@
                         (valueChange)="valueChange($event)">
                     </codx-input>
                 </span>
-                <span type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openPopupSetup('Active4','4')">
+                <span *ngIf="dimensionGroups.active4" type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openPopupSetup('Active4','4')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!dimensionGroups.active4" type="button" class="btn btn-icon">
                     <i class="icon-edit_square icon-16"></i>
                 </span>
             </div>
@@ -141,8 +156,11 @@
                         (valueChange)="valueChange($event)">
                     </codx-input>
                 </span>
-                <span type="button" class="btn btn-icon btn-sm btn-light-primary"
+                <span *ngIf="dimensionGroups.active5" type="button" class="btn btn-icon btn-sm btn-light-primary"
                     (click)="openPopupSetup('Active5','5')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!dimensionGroups.active5" type="button" class="btn btn-icon">
                     <i class="icon-edit_square icon-16"></i>
                 </span>
             </div>
@@ -162,7 +180,10 @@
                         (valueChange)="valueChange($event)">
                     </codx-input>
                 </span>
-                <span type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openPopupSetup('Active6','6')">
+                <span *ngIf="dimensionGroups.active6" type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openPopupSetup('Active6','6')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!dimensionGroups.active6" type="button" class="btn btn-icon">
                     <i class="icon-edit_square icon-16"></i>
                 </span>
             </div>
@@ -182,8 +203,11 @@
                         (valueChange)="valueChange($event)">
                     </codx-input>
                 </span>
-                <span type="button" class="btn btn-icon btn-sm btn-light-primary"
+                <span *ngIf="dimensionGroups.active7" type="button" class="btn btn-icon btn-sm btn-light-primary"
                     (click)="openPopupSetup('Active7','7')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!dimensionGroups.active7" type="button" class="btn btn-icon">
                     <i class="icon-edit_square icon-16"></i>
                 </span>
             </div>
@@ -202,7 +226,10 @@
                         (valueChange)="valueChange($event)">
                     </codx-input>
                 </span>
-                <span type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openPopupSetup('Active8','8')">
+                <span *ngIf="dimensionGroups.active8" type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openPopupSetup('Active8','8')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!dimensionGroups.active8" type="button" class="btn btn-icon">
                     <i class="icon-edit_square icon-16"></i>
                 </span>
             </div>
@@ -221,7 +248,10 @@
                         (valueChange)="valueChange($event)">
                     </codx-input>
                 </span>
-                <span type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openPopupSetup('Active9','9')">
+                <span *ngIf="dimensionGroups.active9" type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openPopupSetup('Active9','9')">
+                    <i class="icon-edit_square icon-16"></i>
+                </span>
+                <span *ngIf="!dimensionGroups.active9" type="button" class="btn btn-icon">
                     <i class="icon-edit_square icon-16"></i>
                 </span>
             </div>

@@ -332,13 +332,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
-    console.log('thuận', this.grvMoreFunction);
-    
   }
 
   ngAfterViewInit(): void {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
     this.GetListProcessGroups();
   }
 
@@ -1140,6 +1136,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (res?.event) {
         this.process.instanceNoSetting = res?.event?.autoNoCode;
         this.setViewAutoNumber(res?.event);
+        let input: any;
+        if (this.autoNumberSetting.nativeElement) {
+          var ele = this.autoNumberSetting.nativeElement.querySelectorAll(
+            'codx-input[type="text"]'
+          );
+          if (ele) {
+            let htmlE = ele[0] as HTMLElement;
+            input = htmlE.querySelector('input.codx-text') as HTMLElement;
+          }
+          if (input) {
+            input.style.removeProperty('border-color', 'red', 'important');
+          }
+        }
       }
     });
   }
@@ -1212,6 +1221,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     }
   }
+  
   async getVllFormat() {
     this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
     if (!this.adAutoNumber && this.action != 'add') {
@@ -1468,11 +1478,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           });
           step['taskGroups'] = taskGroupConvert;
 
-          let taskGroup = new DP_Steps_TaskGroups();
-          taskGroup['task'] = taskGroupList['null'] || [];
-          taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
-          step['taskGroups'].push(taskGroup);
-
+          if(step['taskGroups']?.length > 0 || step['tasks']?.length > 0){
+            let taskGroup = new DP_Steps_TaskGroups();
+            taskGroup['task'] = taskGroupList['null'] || [];
+            taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+            step['taskGroups'].push(taskGroup);
+          }
           this.stepList.push(step);
         }
       });
@@ -1777,13 +1788,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               let index = this.taskGroupList.findIndex(
                 (group) => group.recID == taskData.taskGroupID
               );
-              if(this.taskGroupList?.length == 0 && index < 0) {
+              if (this.taskGroupList?.length == 0 && index < 0) {
                 let taskGroupNull = new DP_Steps_TaskGroups();
                 taskGroupNull['task'] = [];
                 taskGroupNull['recID'] = null; // group task rỗng để kéo ra ngoài
                 this.taskGroupList.push(taskGroupNull);
                 this.taskGroupList[0]['task']?.push(taskData);
-              }else{
+              } else {
                 this.taskGroupList[index]['task']?.push(taskData);
               }
               this.taskList?.push(taskData);
@@ -1803,58 +1814,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         });
       });
     });
-
-    // let frmModel: FormModel = {
-    //   entityName: 'DP_Steps_Tasks',
-    //   formName: 'DPStepsTasks',
-    //   gridViewName: 'grvDPStepsTasks',
-    // };
-    // if (type === 'add') {
-    //   this.popupJob.close();
-    // } else if (type === 'copy') {
-    //   dataInput = JSON.parse(JSON.stringify(data));
-    // } else {
-    //   taskGroupIdOld = data['taskGroupID'];
-    //   roleOld = JSON.parse(JSON.stringify(data['roles']));
-    //   dataInput = data;
-    // }
-
-    // let listData = [
-    //   type,
-    //   this.jobType,
-    //   this.step,
-    //   this.taskGroupList,
-    //   dataInput || {},
-    //   this.taskList,
-    //   this.groupTaskID || this.guidEmpty,
-    // ];
-
-    // let option = new SidebarModel();
-    // option.Width = '550px';
-    // option.zIndex = 1001;
-    // option.FormModel = frmModel;
-
-    // let dialog = this.callfc.openSide(PopupJobComponent, listData, option);
-
-    // dialog.closed.subscribe((e) => {
-    //   if (e?.event) {
-    //     this.groupTaskID = this.guidEmpty;
-    //     let taskData = e?.event?.data;
-    //     if (e.event?.status === 'add' || e.event?.status === 'copy') {
-    //       let index = this.taskGroupList.findIndex(
-    //         (group) => group.recID == taskData.taskGroupID
-    //       );
-    //       this.taskGroupList[index]['task'].push(taskData);
-    //       this.taskList.push(taskData);
-    //       this.addRole(taskData['roles'][0]);
-    //     } else {
-    //       if (taskData?.taskGroupID != taskGroupIdOld) {
-    //         this.changeGroupTaskOfTask(taskData, taskGroupIdOld);
-    //       }
-    //       this.addRole(taskData['roles'][0], roleOld[0]);
-    //     }
-    //   }
-    // });
   }
 
   deleteTask(taskList, task) {
@@ -2324,17 +2283,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return { 'background-color': color?.color };
   }
 
-  toggleTask(id){
+  toggleTask(id) {
     let elementGroup = document.getElementById(id);
     let isClose = elementGroup.classList.contains('hiddenTask');
-    if(isClose){
+    if (isClose) {
       elementGroup.classList.remove('hiddenTask');
       elementGroup.classList.add('showTask');
-    }else{
+    } else {
       elementGroup.classList.remove('showTask');
       elementGroup.classList.add('hiddenTask');
     }
-    
   }
 
   //#End stage -- nvthuan

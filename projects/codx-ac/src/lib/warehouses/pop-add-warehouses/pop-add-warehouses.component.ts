@@ -80,16 +80,17 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.warehouses = dialog.dataService!.dataSelected;
     this.formType = dialogData.data?.formType;
-    if (this.warehouses.warehouseID != null) {
-
-      this.acService
-        .loadData('ERM.Business.BS', 'ContactBookBusiness', 'LoadDataAsync', [
-          this.objecttype,
-          this.warehouses.warehouseID,
-        ])
-        .subscribe((res: any) => {
-          this.objectContact = res;
-        });
+    if (this.formType == 'edit') {
+      if (this.warehouses.warehouseID != null) {
+        this.acService
+          .loadData('ERM.Business.BS', 'ContactBookBusiness', 'LoadDataAsync', [
+            this.objecttype,
+            this.warehouses.warehouseID,
+          ])
+          .subscribe((res: any) => {
+            this.objectContact = res;
+          });
+      }
     }
     this.cache.valueList('AC015').subscribe((res) => {
       this.valuelist = res.datas;
@@ -233,7 +234,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      if (this.formType == 'add') {
+      if (this.formType == 'add' || this.formType == 'copy') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'AddAsync';

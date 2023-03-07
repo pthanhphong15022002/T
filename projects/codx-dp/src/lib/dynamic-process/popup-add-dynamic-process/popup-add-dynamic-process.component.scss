@@ -129,16 +129,16 @@
   width: 60vh;
 }
 
-.button-custom {
-  border: none;
-  outline: none;
-  background: none;
-  color: #0077b1;
+// .button-custom {
+//   border: none;
+//   outline: none;
+//   background: none;
+//   color: #0077b1;
 
-  span {
-    font-weight: 400;
-  }
-}
+//   span {
+//     font-weight: 400;
+//   }
+// }
 
 //thuan
 .background-stage {
@@ -280,7 +280,7 @@
 }
 
 .task{
-  max-height:  100px;
+  max-height:  1000px;
 }
 
 .hiddenTask  {
@@ -371,9 +371,6 @@
   align-items: center;
   font-size: 1.2rem;
   font-weight: 600;
-}
-.avata{
-  margin-left: 20px;
 }
 
 .icon-container {

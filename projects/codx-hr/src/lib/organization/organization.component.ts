@@ -144,7 +144,7 @@ export class OrgorganizationComponent extends UIComponent {
       option.Width = '550px';
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      this.view.dataService.addNew()
+      this.view.dataService.copy()
       .subscribe((result: any) => {
         if (result) {
           let object = {
@@ -196,6 +196,7 @@ export class OrgorganizationComponent extends UIComponent {
       this.view.dataService.addNew()
       .subscribe((result: any) => {
         if (result) {
+          result["parentID"] = this.orgUnitID;
           let object = {
             data: result,
             funcID: this.view.formModel.funcID,

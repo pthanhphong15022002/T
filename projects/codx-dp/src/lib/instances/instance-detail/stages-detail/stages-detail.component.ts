@@ -60,12 +60,13 @@ export class StagesDetailComponent implements OnInit {
   @Input() stepNameEnd: any;
   @Input() proccesNameMove: any;
   @Input() lstIDInvo: any;
-
+  @Input() isClosed = false;
   dateActual: any;
   startDate: any;
   progress: string = '0';
   lstFields = [];
   comment: string;
+  listTypeTask = [];
   //nvthuan
   taskGroupList: DP_Instances_Steps_TaskGroups[] = [];
   userTaskGroup: DP_Instances_Steps_TaskGroups_Roles;
@@ -146,6 +147,11 @@ export class StagesDetailComponent implements OnInit {
             checked: false,
           };
         });
+      }
+    });
+    this.cache.valueList('DP004').subscribe((res) => {
+      if (res.datas) {
+        this.listTypeTask = res?.datas;
       }
     });
   }
@@ -264,21 +270,26 @@ export class StagesDetailComponent implements OnInit {
     }
   }
 
-  clickShowTask(id) {
-    debugger;
-    let element = document.getElementById(id);
-    if (element) {
-      let isClose = element.classList.contains('hidden-main');
-      let isShow = element.classList.contains('show-main');
-      if (isClose) {
-        element.classList.remove('hidden-main');
-        element.classList.add('show-main');
-      } else if (isShow) {
-        element.classList.remove('show-main');
-        element.classList.add('hidden-main');
-      }
+  toggleTask(id){
+    let elementGroup = document.getElementById(id);
+    let isClose = elementGroup.classList.contains('hiddenTask');
+    if(isClose){
+      elementGroup.classList.remove('hiddenTask');
+      elementGroup.classList.add('showTask');
+    }else{
+      elementGroup.classList.remove('showTask');
+      elementGroup.classList.add('hiddenTask');
     }
   }
+  getIconTask(task) {
+    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    return color?.icon;
+  }
+  getColor(task) {
+    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    return { 'background-color': color?.color };
+  }
+
   //huong dan buoc nhiem vu
   openPopupSup(popup, data) {
     this.callfc.openForm(popup, '', 800, 400, '', data);

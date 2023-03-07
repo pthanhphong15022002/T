@@ -681,7 +681,12 @@
               </div>
             </div>
             <div *ngIf="instanceNoEx" class="col-6 fs-6 mt-2 mb-2">
-              <codx-label class="" name="lblPreview" [formModel]="dialog.formModel" default="Xem trước: "></codx-label> 
+              <codx-label
+                class=""
+                name="lblPreview"
+                [formModel]="dialog.formModel"
+                default="Xem trước: "
+              ></codx-label>
               <span class="text-gray-600">{{ instanceNoEx }}</span>
             </div>
           </div>
@@ -1161,7 +1166,12 @@
 <ng-template #stageHeader>
   <div>
     <div class="d-flex justify-content-between align-items-center">
-      <h2 class="h2-title float-left">Thiết lập giai đoạn</h2>
+      <codx-label
+            class="h2 h2-title float-left"
+            fiedName="settingStep"
+            default="Thiết lập giai đoạn"
+          >
+          </codx-label>
       <div class="d-flex align-items-center">
         <button
           type="button"
@@ -1176,24 +1186,8 @@
           </span>
           <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>
         </button>
-        <button class="button-custom">
-          <span
-            class="icon-replay icon-22 text-primary-600 py-2"
-            style="font-weight: 600; margin-left: 5px"
-          >
-          </span>
-        </button>
       </div>
     </div>
-    <!-- <div style="font-weight: 500; margin-left: 30px" class="float-left">
-      <span style="font-size: 1rem">Mẫu giai đoạn: cơ hội</span>
-      <button type="button" class="btn btn-outline-primary ms-2">
-        Đổi mẫu
-      </button>
-      <button type="button" class="btn btn-outline-primary ms-2">
-        Lưu mẫu mới
-      </button>
-    </div> -->
   </div>
 </ng-template>
 
@@ -1202,14 +1196,10 @@
     <div class="stage-body row">
       <div class="stage-body-left col-3">
         <div class="header">
-          <span class="">Giai đoạn</span>
-          <button class="button-custom">
-            <span
-              class="icon-replay icon-22 text-primary-600 py-2"
-              style="font-weight: 600; margin-left: 5px"
-            >
-            </span>
-          </button>
+          <codx-label
+            fiedName="step"
+            default="Giai đoạn"
+          ></codx-label>
         </div>
         <div
           class="example-list stage-body-left-main"
@@ -1341,10 +1331,15 @@
 <!-- template công việc -->
 <ng-template #job>
   <div class="background-job">
-    <div class="header-job mb-5">
-      <div class="left" style="margin: auto 10px">
+    <div class="header-job p-3">
+      <div class="left">
         <div>
-          <span class="title">Công việc</span>
+          <codx-label
+            class="title"
+            fiedName="TaskType"
+            default="Công việc"
+          >
+          </codx-label>
         </div>
         <div class="text-gray-400">
           <codx-label
@@ -1364,10 +1359,6 @@
               default="Thời hạn công việc so với giai đoạn"
             >
             </codx-label>
-            <span
-              class="icon-replay icon-22 text-primary-600 py-2"
-              style="font-weight: 600; margin-left: 5px"
-            ></span>
           </div>
           <div>
             <span style="float: right; color: #2274ae; font-size: 1.1rem"
@@ -1401,27 +1392,10 @@
 
     <div
       id="job-main"
-      class="main-job"
+      class="main-job p-3"
       [ngClass]="'show-main'"
       style="margin-top: 10px"
     >
-      <div
-        class="d-flex justify-content-center"
-        *ngIf="taskGroupList?.length === 0"
-      >
-        <div>
-          <button class="button-custom" (click)="openTaskGroup()">
-            <span class="icon-add icon-20 text-primary-600 py-2"></span>
-            <span>Thêm nhóm công việc</span>
-          </button>
-        </div>
-        <div>
-          <button class="button-custom" (click)="openTypeJob()">
-            <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
-            <span>Thêm công việc</span>
-          </button>
-        </div>
-      </div>
       <!-- drap drop công việc ngoài-->
       <div class="main-body" *ngIf="taskGroupList?.length > 0">
         <div
@@ -1438,31 +1412,33 @@
                 [cdkDragStartDelay]="100"
                 [cdkDragDisabled]="taskList?.recID ? false : true"
               >
-                <div class="card-job mx-5 p-3">
+                <div class="card-job">
                   <div
                     *ngIf="taskList?.recID"
-                    class="d-flex justify-content-start align-items-center has-action-menu"
+                    class="d-flex justify-content-start align-items-center has-action-menu ps-4 pt-3"
                   >
                     <!-- show hiden group task -->
                     <div
                       class="d-flex justify-content-center align-items-center"
-                      style="border: 1px solid #6C757D; width: 25px; height: 25px"
+                      style="
+                        border: 1px solid #6c757d;
+                        width: 25px;
+                        height: 25px;
+                      "
                       (click)="toggleTask('group' + taskList?.recID)"
                     >
-                      <!-- <span class="icon-maximize" style="font-size: 20px; color:#6C757D;"></span> icon-add_box -->
-                      <!-- <span class="icon-maximize" style="font-size: 20px; color:#6C757D;">+</span> -->
-                      <!-- <span class="icon-add_circle icon-20 text-primary-600 py-2"></span> -->
-                      <span style="font-size: 20px; color:#6C757D;">+</span>
+                      <!-- <span style="font-size: 30px; font-weight: 400; color: #6c757d">-</span> -->
+                      <span style="font-size: 20px;font-weight: 400; color: #6c757d">+</span>
                     </div>
-                    <div class="avata">
+                    <div class="ms-5">
                       <codx-img
-                      [width]="40"
-                      class="me-2"
-                      [objectId]="taskList?.roles[0]?.objectID"
-                      objectType="AD_Users"
-                      [objectName]="taskList?.roles[0]?.objectName"
-                    >
-                    </codx-img>
+                        [width]="40"
+                        class="me-2"
+                        [objectId]="taskList?.roles[0]?.objectID"
+                        objectType="AD_Users"
+                        [objectName]="taskList?.roles[0]?.objectName"
+                      >
+                      </codx-img>
                     </div>
                     <div class="steplist-hearder ms-5">
                       <div>
@@ -1474,7 +1450,7 @@
                       </div>
                       <div class="" style="font-weight: 400; font-size: 1.1rem">
                         <!-- TODO -->
-                        <span style="color: #06a9f7">0% </span>
+                        <span style="color: #06a9f7; font-weight: 500;">0% </span>
                         <codx-label
                           fiedName="StepName"
                           [formModel]=""
@@ -1507,30 +1483,26 @@
                   <div
                     *ngIf="!taskList?.recID"
                     [ngStyle]="
-                      taskList?.task?.length == 0 ? { height: '30px' } : {}
+                      taskList?.task?.length == 0 ? { 'min-height': '20px' } : {}
                     "
                   ></div>
                   <!-- kéo thả ở trong  -->
                   <div
-                    [id]="'group' + taskList?.recID "
+                    [id]="'group' + taskList?.recID"
                     cdkDropList
                     [cdkDropListData]="taskList?.task || []"
                     (cdkDropListDropped)="drop($event, taskList, false)"
                     class="task"
+                    [ngStyle]=" taskList?.recID ? { 'margin-left': '45px' } : {} "
                   >
                     <ng-container *ngFor="let task of taskList?.task">
                       <div
                         cdkDrag
                         [cdkDragStartDelay]="200"
                         [cdkDragData]="task"
-                        class="drap-drop"
+                        class="drap-drop ps-3 pt-2"
                       >
-                        <div
-                          [ngStyle]="
-                            taskList?.recID ? { 'margin-left': '45px' } : {}
-                          "
-                          class="has-action-menu"
-                        >
+                        <div class="has-action-menu">
                           <div
                             class="d-flex justify-content-start align-items-center"
                             style="font-size: 1rem"
@@ -1546,15 +1518,15 @@
                               ></span>
                             </div>
                             <!-- avata -->
-                            <div class="avata">
+                            <div class="ms-3">
                               <codx-img
-                              [width]="40"
-                              class="me-2"
-                              [objectId]="task?.roles[0]?.objectID"
-                              objectType="AD_Users"
-                              [objectName]="task?.roles[0]?.objectName"
-                            >
-                            </codx-img>
+                                [width]="40"
+                                class="me-2"
+                                [objectId]="task?.roles[0]?.objectID"
+                                objectType="AD_Users"
+                                [objectName]="task?.roles[0]?.objectName"
+                              >
+                              </codx-img>
                             </div>
                             <div class="steplist-hearder ms-5">
                               <div>
@@ -1591,7 +1563,7 @@
                               </div>
                             </div>
                           </div>
-                          <div>
+                          <div class="ms-5">
                             <codx-attachment
                               #attachment
                               hideFolder="1"
@@ -1647,6 +1619,38 @@
               </div>
             </ng-container>
           </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center pb-3">
+        <div class="me-2">
+          <button
+            class="btn btn-outline-primary btn-sm pb-5 d-flex align-items-center justify-content-between"
+            (click)="openTaskGroup()"
+          >
+            <span class="icon-add icon-20 text-primary-600 py-2"></span>
+            <codx-label
+              class="text-primary-600"
+              [name]="'lblAddGroup'"
+              [formName]="'DPStepsFields'"
+              [gridViewName]="'grvDPStepsFields'"
+              [default]="'Thêm nhóm công việc'"
+            ></codx-label>
+          </button>
+        </div>
+        <div class="ms-2">
+          <button
+            class="btn btn-outline-primary btn-sm pb-5 d-flex align-items-center justify-content-between"
+            (click)="openTypeJob()"
+          >
+            <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
+            <codx-label
+              class="text-primary-600"
+              [name]="'lblAddTask'"
+              [formName]="'DPStepsFields'"
+              [gridViewName]="'grvDPStepsFields'"
+              [default]="'Thêm công việc'"
+            ></codx-label>
+          </button>
         </div>
       </div>
     </div>
@@ -1708,7 +1712,11 @@
       [disabled]="isSaveStep"
       (click)="saveStep()"
     >
-      <codx-label name="lblSuscess" formName="Tasks" default="Đồng ý"></codx-label>
+      <codx-label
+        name="lblSuscess"
+        formName="Tasks"
+        default="Đồng ý"
+      ></codx-label>
     </button>
   </div>
 </ng-template>
