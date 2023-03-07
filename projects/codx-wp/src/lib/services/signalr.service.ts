@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { ApplicationRef, ComponentFactoryResolver, EventEmitter, Injectable, Injector, TemplateRef } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { AuthStore } from 'codx-core';
 import { environment } from 'src/environments/environment';
@@ -10,20 +10,24 @@ import { Post } from 'src/shared/models/post';
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
   connectionId: string;
+
+  templateChatBox:TemplateRef<any> = null;
   userConnect = new EventEmitter<any>();
   signalChat = new EventEmitter<any>();
   signalGroup = new EventEmitter<any>();
-  signalBoxChat = new EventEmitter<any>();
-  constructor(private authStore: AuthStore) {
-    //this.createConnection();
-    //this.registerOnServerEvents();
+  activeGroup = new EventEmitter<any>();
+  constructor(
+    private authStore: AuthStore,
+    private applicationRef:ApplicationRef) {
+    this.createConnection();
+    this.registerOnServerEvents();
   }
 
   public createConnection() {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.apiUrl + '/serverHub', {
         skipNegotiation: true,
-        accessTokenFactory: () => this.authStore.get().token,
+        accessTokenFactory: async () => {return this.authStore.get().token},
         transport: signalR.HttpTransportType.WebSockets,
       })
       .build();
@@ -42,23 +46,23 @@ export class SignalRService {
       this.connectionId = data;
       this.userConnect.emit(data);
     });
-    // chat emit
-    this.hubConnection.on('ChatEmit', (data) => {
-      this.signalChat.emit(data);
-    });
-    // group emit
-    this.hubConnection.on('GroupEmit', (data) => {
-      this.signalGroup.emit(data);
+    this.hubConnection.on('ReceiveMessage', (res) => {
+      switch(res.action){
+        case 'activeGroup':
+          this.activeGroup.emit(res.data);
+          break;
+        case 'newGroup':
+          this.signalGroup.emit(res.data);
+          break;
+        case 'sendMessage':
+          this.signalChat.emit(res.data);
+          break;
+      }
+      
     });
   }
-  //#endregion
 
-  //#region Post to server
   sendData(data, method = null) {
-    if (method) {
-      this.hubConnection.invoke(method, data);
-    }
+    this.hubConnection.invoke(method, data);
   }
-
-  //#endregion
 }

@@ -18,11 +18,13 @@
   <div ngbDropdownMenu #popup aria-labelledby="chat-box" id="chatbox-dropdownPopup"
     class="chat-popup h-600px w-300px">
     <ng-container *ngIf="loaded">
-      <wp-chat-list [(isOpen)]="autoClose" (checkSeenAll)="seenAllMessage()"></wp-chat-list>
+      <wp-chat-list  [(isOpen)]="autoClose" (checkSeenAll)="seenAllMessage()"></wp-chat-list>
     </ng-container>
   </div>
 </div>
 
-<ng-template #chatBox let-group>
-  <codx-chat-box [groupID]="group.groupID"></codx-chat-box>
+
+
+<ng-template #chatBox let-data>
+  <codx-chat-box [groupID]="data"></codx-chat-box>
 </ng-template>
