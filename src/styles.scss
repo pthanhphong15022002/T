@@ -1792,4 +1792,18 @@ a.nav-link {
   margin-right: 15px!important;
 }
 
-/// 14/2/2023 s
+/*** control calendar **/
+codx-calendar{
+  .e-tab .e-tab-header.e-vertical {
+    width: 100px!important;
+    max-width: 100px!important;
+  }
+  .e-tab .e-tab-header.e-vertical:before {
+    border-color: var(--gray-200);
+    left: 100px;
+  }
+  .e-tab .e-tab-header.e-vertical .e-toolbar-item {
+    border-left: 3px transparent solid!important;
+  }
+}
+/// 14/2/2023 
