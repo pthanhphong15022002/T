@@ -413,6 +413,14 @@ export class CodxDpService {
       data
     );
   }
+  getListInstanceByIdProccess(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetTotalIntanceInProccessAsync',
+      data
+    );
+  }
   updateFiels(data) {
     return this.api.exec<any>(
       'DP',

@@ -8,16 +8,16 @@
       <div class="col-12">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="UMID"></codx-label>
-          <codx-input [Group]="form.formGroup" [crrValue]="unitsofmearsure.umid" [formModel]="form.formModel" field="umid"
-            (valueChange)="valueChange($event)">
+          <codx-input [Group]="form.formGroup" [crrValue]="unitsofmearsure.umid" [formModel]="form.formModel"
+            field="umid" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="UMName"></codx-label>
-      <codx-input [Group]="form.formGroup" [crrValue]="unitsofmearsure.umName" field="umName" [formModel]="form.formModel"
-        (valueChange)="valueChange($event)">
+      <codx-input [Group]="form.formGroup" [crrValue]="unitsofmearsure.umName" field="umName"
+        [formModel]="form.formModel" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
     <div class="row">
@@ -32,8 +32,8 @@
       <div class="col-8">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="RoundType"></codx-label>
-          <codx-input [crrValue]="unitsofmearsure.roundType"
-          field="roundType" [formModel]="form.formModel" (valueChange)="valueChange($event)">
+          <codx-input [Group]="form.formGroup" [crrValue]="unitsofmearsure.roundType" field="roundType"
+            [formModel]="form.formModel" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
