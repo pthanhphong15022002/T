@@ -1192,7 +1192,7 @@ export class CodxTasksComponent
           this.listTaskResousceSearch = res;
           this.countResource = res.length;
 
-          if (this.isHoverPop) p.open();
+          if (this.isHoverPop && p) p.open();
           this.popoverCrr = p;
         }
         this.isHoverPop = false;
@@ -1214,7 +1214,7 @@ export class CodxTasksComponent
           this.listTaskResousceSearch = res;
           this.countResource = res.length;
 
-          if (this.isHoverPop) p.open();
+          if (this.isHoverPop && p) p.open();
           this.popoverCrr = p;
         }
         this.isHoverPop = false;
