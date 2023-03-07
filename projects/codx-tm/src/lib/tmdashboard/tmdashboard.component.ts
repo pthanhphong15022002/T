@@ -1,3 +1,4 @@
+declare var window: any;
 import {
   Component,
   Injector,

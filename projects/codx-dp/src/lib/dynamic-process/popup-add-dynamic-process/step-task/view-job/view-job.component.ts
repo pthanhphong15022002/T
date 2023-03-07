@@ -3,13 +3,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {
   ApiHttpService,
   CacheService,
-  CallFuncService,
   DialogData,
   DialogRef,
   FormModel,
 } from 'codx-core';
 import { DP_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
-import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-view-job',
@@ -43,18 +41,16 @@ export class ViewJobComponent implements OnInit {
   };
   constructor(
     private cache: CacheService,
-    private callfunc: CallFuncService,
-    private codxShareSV: CodxShareService,
     private api: ApiHttpService,
     public sanitizer: DomSanitizer,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.dialog = dialog;
     this.status = dt?.data[0];
     this.taskType = dt?.data[1];
     this.stepType = dt?.data[1]['id'];
     this.stepID = dt?.data[2];
-    this.dialog = dialog;
     this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
     this.taskList = dt?.data[5];
     this.stepType = this.stepsTasks.taskType;
@@ -115,6 +111,10 @@ export class ViewJobComponent implements OnInit {
   getColor(task) {
     let color = this.listTypeTask?.find((x) => x.value === task.taskType);
     return { 'background-color': color?.color };
+  }
+  getColorTile(task) {
+    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    return { 'border-left': '3px solid'+ color?.color};
   }
 
 }
