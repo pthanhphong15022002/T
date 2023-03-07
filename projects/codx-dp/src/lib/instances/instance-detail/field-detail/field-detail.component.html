@@ -15,7 +15,7 @@
       <div class="group-button">
         <button
           class="button-custom"
-          *ngIf="dataStep?.stepStatus < 3 && isUpdate"
+          *ngIf="dataStep?.stepStatus < 3 && isUpdate && !isClosed"
         >
           <span
             [ngClass]="'icon-edit icon-20 text-primary-600 py-2'"

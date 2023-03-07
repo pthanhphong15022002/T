@@ -34,22 +34,14 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
   dialog!: DialogRef;
   headerText: string;
   formModel: FormModel;
-  contact: Contact;
+  contact: Contact = new Contact();
   objectContact: Array<Contact> = [];
   gridViewSetup: any;
-  contactName: any;
-  jobTitle: any;
-  phone: any;
-  homePhone: any;
-  phoneExt: any;
-  email: any;
-  gender: any;
-  note: any;
   recIdAddress: any;
   contactType: any;
   type: any;
   validate: any = 0;
-  validateEmail:any = 0;
+  validateEmail: any = 0;
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -65,15 +57,6 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.type = dialogData.data?.type;
-    this.contactName = '';
-    this.jobTitle = '';
-    this.phone = '';
-    this.email = '';
-    this.gender = null;
-    this.homePhone = '';
-    this.contactType = null;
-    this.phoneExt = '';
-    this.note = '';
     this.objectContact = dialogData.data?.datacontact;
     this.recIdAddress = dialogData.data?.recIdAddress;
     this.cache
@@ -85,15 +68,6 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
       });
     if (dialogData.data?.data != null) {
       this.contact = dialogData.data?.data;
-      this.contactName = dialogData.data?.data.contactName;
-      this.jobTitle = dialogData.data?.data.jobTitle;
-      this.phone = dialogData.data?.data.phone;
-      this.email = dialogData.data?.data.email;
-      this.contactType = dialogData.data?.data.contactType;
-      this.gender = dialogData.data?.data.gender;
-      this.homePhone = dialogData.data?.data.homePhone;
-      this.phoneExt = dialogData.data?.data.phoneExt;
-      this.note = dialogData.data?.data.note;
     }
   }
   //#endregion
@@ -102,78 +76,19 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    if (this.contact == null) {
-      this.contact = this.form.formGroup.value;
-      this.contact.longitude = 0;
-      this.contact.income = 0;
-      this.contact.latitude = 0;
-      this.contact.counts = 0;
-      this.contact.recID = Guid.newGuid();
-      this.contact.contactID = this.randomNumber();
-    }
+  }
+  //#endregion
+
+  //#region Event
+  valueChange(e: any) {
+    this.contact[e.field] = e.data;
   }
   //#endregion
 
   //#region Function
-  randomNumber() {
-    var number = Math.floor(Math.random() * 100000);
-    return number.toString();
-  }
-  valueChange(e: any) {
-    switch (e.field) {
-      case 'gender':
-        this.gender = e.data;
-        break;
-      case 'homePhone':
-        this.homePhone = e.data;
-        break;
-      case 'phoneExt':
-        this.phoneExt = e.data;
-        break;
-      case 'phoneExt':
-        this.phoneExt = e.data;
-        break;
-      case 'contactType':
-        this.contactType = e.data;
-        break;
-      case 'note':
-        this.note = e.data;
-        break;
-    }
-    this.contact[e.field] = e.data;
-  }
-  valueChangeContactName(e: any) {
-    this.contactName = e.data;
-    this.contact[e.field] = e.data;
-  }
-  valueChangeJobTitle(e: any) {
-    this.jobTitle = e.data;
-    this.contact[e.field] = e.data;
-  }
-  valueChangePhone(e: any) {
-    this.phone = e.data;
-    this.contact[e.field] = e.data;
-  }
-  valueChangeEmail(e: any) {
-    this.email = e.data;
-    this.contact[e.field] = e.data;
-  }
-  valueChangeContactType(e: any) {
-    this.contactType = e.data;
-    this.contact[e.field] = e.data;
-  }
   clearContact() {
-    this.contactName = '';
-    this.jobTitle = '';
-    this.gender = null;
-    this.phone = '';
-    this.homePhone = '';
-    this.phoneExt = '';
-    this.email = '';
-    this.contactType = null;
-    this.note = '';
-    this.contact.recID = Guid.newGuid();
-    this.contact.contactID = this.randomNumber();
+    this.form.formGroup.reset();
+    this.contact = new Contact();
   }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
@@ -202,33 +117,38 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     const regex = new RegExp(
       '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
     );
-    var checkRegex = regex.test(this.email);
+    var checkRegex = regex.test(this.contact.email);
     if (checkRegex == false) {
-      this.notification.notify("Trường 'Email' không hợp lệ","2");
-      this.validateEmail++;
+      this.notification.notify("'Email' không hợp lệ", '2');
+      this.validate++;
       return;
     }
   }
   //#endregion
 
-  //#region CRUD
+  //#region Method
   onSave() {
-    this.checkValidEmail();
-    this.checkValidate();
-    if (this.validateEmail > 0) {
-      this.validateEmail = 0;
-      return;
+    if (this.contact.email != '') {
+      this.checkValidEmail();
     }
+    this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
       return;
     } else {
-      this.notification.notifyCode('SYS006', 0, '');
+      if (this.type == 'editContact') {
+        this.notification.notifyCode('SYS007', 0, '');
+      }else{
+        this.notification.notifyCode('SYS006', 0, '');
+      }
       window.localStorage.setItem('datacontact', JSON.stringify(this.contact));
       this.dialog.close();
     }
   }
   onSaveAdd() {
+    if (this.contact.email != null) {
+      this.checkValidEmail();
+    }
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
@@ -237,22 +157,14 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
       if (this.recIdAddress != null) {
         this.contact.reference = this.recIdAddress;
       }
-      this.notification.notifyCode('SYS006', 0, '');
+      if (this.type == 'editContact') {
+        this.notification.notifyCode('SYS007', 0, '');
+      }else{
+        this.notification.notifyCode('SYS006', 0, '');
+      }
       this.objectContact.push({ ...this.contact });
       this.clearContact();
     }
   }
   //#endregion
-}
-class Guid {
-  static newGuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
-  }
 }

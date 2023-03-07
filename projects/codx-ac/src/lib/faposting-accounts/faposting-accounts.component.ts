@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   Component,
   Injector,
-  OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -32,12 +31,14 @@ export class FAPostingAccountsComponent
 
   views: Array<ViewModel> = [];
   menuActive = 1; // = ModuleID
+  menuNavs: any[];
   menuItems: Array<any> = [];
   selectedValue: string;
   defaultPostType: string;
   btnAdd = {
     id: 'btnAdd',
   };
+  functionName: string;
 
   constructor(inject: Injector) {
     super(inject);
@@ -50,6 +51,11 @@ export class FAPostingAccountsComponent
       console.log(res);
       this.menuItems = res?.datas;
       this.defaultPostType = res?.datas[0].value;
+    });
+
+    this.cache.valueList('AC059').subscribe((res) => {
+      console.log(res);
+      this.menuNavs = res?.datas;
     });
   }
 
@@ -66,6 +72,12 @@ export class FAPostingAccountsComponent
         },
       },
     ];
+
+    this.cache.functionList(this.view.funcID).subscribe((res) => {
+      console.log(res);
+      this.functionName =
+        res.defaultName.charAt(0).toLowerCase() + res.defaultName.slice(1);
+    });
   }
   //#endregion
 
@@ -76,14 +88,15 @@ export class FAPostingAccountsComponent
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(data);
+        this.edit(e, data);
+        break;
+      case 'SYS04':
+        this.copy(e, data);
         break;
     }
   }
-  //#endregion
 
-  //#region Method
-  handleClickAdd() {
+  handleClickAdd(e) {
     (this.grid.dataService as CRUDService).addNew().subscribe((res: any) => {
       let options = new SidebarModel();
       options.DataService = this.grid.dataService;
@@ -93,7 +106,7 @@ export class FAPostingAccountsComponent
         PopupAddFAPostingAccountComponent,
         {
           formType: 'add',
-          formTitle: 'Thêm thiết lập tài khoản',
+          formTitle: `${e.text} ${this.functionName}`,
           moduleId: this.menuActive,
           postType: this.selectedValue ?? this.defaultPostType,
           breadcrumb: this.getBreadcrumb(
@@ -106,15 +119,7 @@ export class FAPostingAccountsComponent
     });
   }
 
-  delete(data): void {
-    console.log(data);
-
-    (this.grid.dataService as CRUDService)
-      .delete([data], true)
-      .subscribe((res) => console.log(res));
-  }
-
-  edit(data): void {
+  edit(e, data): void {
     console.log(data);
 
     this.grid.dataService.dataSelected = data;
@@ -128,7 +133,50 @@ export class FAPostingAccountsComponent
         PopupAddFAPostingAccountComponent,
         {
           formType: 'edit',
-          formTitle: 'Sửa thiết lập tài khoản',
+          formTitle: `${e.text} ${this.functionName}`,
+          moduleId: data.moduleID,
+          postType: data.postType,
+          breadcrumb: this.getBreadcrumb(data.postType),
+        },
+        options,
+        this.view.funcID
+      );
+    });
+  }
+
+  copy(e, data): void {
+    console.log(data);
+
+    const { diM1, diM2, diM3, buid, ...rest1 } = data;
+    this.grid.dataService.dataSelected = {
+      ...rest1,
+      bUID: buid,
+      dIM1: diM1,
+      dIM2: diM2,
+      dIM3: diM3,
+    };
+    (this.grid.dataService as CRUDService).copy().subscribe((res) => {
+      console.log(res);
+
+      const { bUID, dIM1, dIM2, dIM3, ...rest2 } = res;
+      this.grid.dataService.dataSelected = {
+        ...rest2,
+        buid: bUID,
+        diM1: dIM1,
+        diM2: dIM2,
+        diM3: dIM3,
+      };
+
+      let options = new SidebarModel();
+      options.DataService = this.grid.dataService;
+      options.FormModel = this.grid.formModel;
+      options.Width = '550px';
+
+      this.callfc.openSide(
+        PopupAddFAPostingAccountComponent,
+        {
+          formType: 'add',
+          formTitle: `${e.text} ${this.functionName}`,
           moduleId: data.moduleID,
           postType: data.postType,
           breadcrumb: this.getBreadcrumb(data.postType),
@@ -140,6 +188,16 @@ export class FAPostingAccountsComponent
   }
   //#endregion
 
+  //#region Method
+  delete(data): void {
+    console.log(data);
+
+    (this.grid.dataService as CRUDService)
+      .delete([data], true)
+      .subscribe((res) => console.log(res));
+  }
+  //#endregion
+
   //#region Function
   filter(field: string, value: string): void {
     this.selectedValue = value;
@@ -147,16 +205,11 @@ export class FAPostingAccountsComponent
   }
 
   getBreadcrumb(postType): string {
-    let breadcrumb: string = '';
-    if (this.menuActive == 1) {
-      breadcrumb += 'Tài sản cố định';
-      if (postType) {
-        breadcrumb +=
-          ' > ' + this.menuItems.find((m) => m.value == postType)?.text;
-      }
-    }
-
-    return breadcrumb;
+    return (
+      this.menuNavs.find((m) => m.value == this.menuActive)?.text +
+      ' > ' +
+      this.menuItems.find((m) => m.value == postType)?.text
+    );
   }
   //#endregion
 }

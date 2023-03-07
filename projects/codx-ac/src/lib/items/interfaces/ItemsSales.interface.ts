@@ -1,4 +1,5 @@
 export interface ItemsSales {
+  recID: string;
   itemID: string;
   umid: string;
   warehouseID: string;

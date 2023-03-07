@@ -33,6 +33,7 @@ export class PopupParticipantsComponent implements OnInit {
   fields: Object = { text: 'userName', value: 'userID' };
   query: Query = new Query().select(['userName', 'userID']);
   isDisable = false;
+  id: any;
   constructor(private dpSv: CodxDpService) {}
 
   ngOnInit(): void {
@@ -41,13 +42,19 @@ export class PopupParticipantsComponent implements OnInit {
   }
 
   async ngAfterViewInit() {
+    this.getListUserByOrg(this.lstParticipants);
+
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
-    this.getListUserByOrg(this.lstParticipants);
   }
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
+    // console.log(changes);
+    // if(changes['owner'] != null){
+    //   if(changes['owner'] == this.id) return;
+    //   this.id = changes['owner'].currentValue;
+    // }
   }
   onSave() {
     this.dialog.close();
@@ -226,7 +233,7 @@ export class PopupParticipantsComponent implements OnInit {
           }
         });
       }
-      var lstUser = list.filter((x) => x.objectType == 'U');
+      var lstUser = list.filter((x) => x.objectType == 'U' || x.objectType == '1');
       if (lstUser != null && lstUser.length > 0) {
         var tmpList = [];
         lstUser.forEach((element) => {
@@ -265,17 +272,15 @@ export class PopupParticipantsComponent implements OnInit {
   }
 
   getUserArray(arr1, arr2) {
-    let result = arr2.concat(
-      arr1
-        .filter(function (obj1) {
-          return !arr2.some(function (obj2) {
-            return obj1.userID === obj2.userID;
-          });
-        })
-        .map(function (obj) {
-          return { userID: obj.userID, userName: obj.userName };
-        })
-    );
-    return result;
+    const arr3 = arr1.concat(arr2).reduce((acc, current) => {
+      const duplicateIndex = acc.findIndex((el) => el.userID === current.userID);
+      if (duplicateIndex === -1) {
+        acc.push(current);
+      } else {
+        acc[duplicateIndex] = current;
+      }
+      return acc;
+    }, []);
+    return arr3;
   }
 }

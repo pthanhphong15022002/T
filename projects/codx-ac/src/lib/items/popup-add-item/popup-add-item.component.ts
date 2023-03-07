@@ -20,7 +20,7 @@ import {
 import { Item } from '../interfaces/Item.interface';
 import { ItemColor } from '../interfaces/ItemColor.Interface';
 import { ItemSize } from '../interfaces/ItemSize.interface';
-import { ItemsProduction } from '../interfaces/ItemsProductions.interface';
+import { ItemsProduction } from '../interfaces/ItemsProduction.interface';
 import { ItemsPurchase } from '../interfaces/ItemsPurchase.interface';
 import { ItemsSales } from '../interfaces/ItemsSales.interface';
 import { ItemStyle } from '../interfaces/ItemStyle.interface';
@@ -63,6 +63,7 @@ export class PopupAddItemComponent
   hoveredColorId: string;
   hoveredItemSizeId1: string;
   hoveredItemSizeId2: string;
+  tempItemID: string = '';
   tabInfo = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Common information' },
     {
@@ -97,9 +98,9 @@ export class PopupAddItemComponent
     },
   ];
   requiredFields: { gvsPropName: string; dataPropName?: string }[] = [
-    // {
-    //   gvsPropName: 'ItemGroupID',
-    // },
+    {
+      gvsPropName: 'ItemGroupID',
+    },
     {
       gvsPropName: 'ItemID',
     },
@@ -152,6 +153,7 @@ export class PopupAddItemComponent
     super(injector);
 
     this.item = dialogRef.dataService?.dataSelected;
+    this.tempItemID = this.item?.itemID;
     this.dialogRef.formModel.currentData = this.item;
 
     this.dialogRef.closed.subscribe((res) => {
@@ -480,6 +482,7 @@ export class PopupAddItemComponent
       .subscribe((res) => {
         // debug
         console.log({ res });
+        console.log(this.form.data);
 
         if (res.save || res.update) {
           this.itemSizes1 = this.itemSizes1.map((i) => ({

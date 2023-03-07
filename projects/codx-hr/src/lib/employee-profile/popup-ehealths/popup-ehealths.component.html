@@ -192,6 +192,7 @@
   [dialog]="dialog"
   [data]="healthObj"
   *ngIf="isAfterRender"
+  class="tabhor-popup"
 >
   <ng-template #tmpContent>
     <ejs-tab
@@ -205,14 +206,14 @@
             <codx-label default="Thông tin chung"></codx-label>
           </ng-template>
           <ng-template #content>
-            <div class="pt-6">
+            <div class="mt-8 mb-3">
               <codx-label
                 default="THÔNG TIN CHUNG"
-                class="text-primary"
+                class="text-primary fs-6 fw-bold"
               ></codx-label>
             </div>
 
-            <div class="form-group row pt-2">
+            <div class="form-group row">
               <div class="col-6">
                 <codx-label
                   fiedName="HealthPeriodID"
@@ -303,8 +304,8 @@
               >
               </codx-input>
             </div>
-            <div>
-              <codx-label class="text-primary" default="Kết luận"></codx-label>
+            <div class="mt-8 mb-3">
+              <codx-label class="text-primary text-uppercase fw-bold fs-6" default="Kết luận"></codx-label>
             </div>
 
             <div class="form-group row">
@@ -362,7 +363,7 @@
               </codx-input>
             </div>
 
-            <div class="form-group">
+            <div class="form-group pb-3">
               <codx-label
                 fiedName="Suggestion"
                 [formModel]="formModel"
@@ -382,13 +383,13 @@
             <codx-label default="I. Khám thể lực"></codx-label>
           </ng-template>
           <ng-template #content>
-            <div class="pt-6">
+            <div class="pt-8">
               <codx-label
                 default="I. KHÁM THỂ LỰC"
-                class="text-primary"
+                class="text-primary fs-6 fw-bold"
               ></codx-label>
             </div>
-            <div class="form-group row pt-2">
+            <div class="form-group row pt-4">
               <div class="col-6">
                 <codx-label
                   fiedName="P_High"
@@ -552,15 +553,15 @@
             <codx-label default="II. Khám lâm sàng"></codx-label>
           </ng-template>
           <ng-template #content>
-            <div class="pt-6">
+            <div class="mt-8 mb-3">
               <codx-label
                 default="II. KHÁM LÂM SÀNG"
-                class="text-primary"
+                class="text-primary fs-6 fw-bold"
               ></codx-label>
             </div>
-            <div>
+            <div class="mt-6 mb-3">
               <codx-label
-              class="fw-bold"
+              class="text-italic text-gray-500"
                 default="1. Nội khoa"
               ></codx-label>
             </div>
@@ -767,10 +768,10 @@
               </div>
             </div>
 
-            <div>
+            <div class="mt-6 mb-3">
               <codx-label
                 default="2. Ngoại khoa"
-              class="fw-bold"
+              class="text-italic text-gray-500"
 
               ></codx-label>
             </div>
@@ -804,9 +805,9 @@
               </div>
             </div>
 
-            <div>
+            <div class="mt-6 mb-3">
               <codx-label
-              class="fw-bold"
+              class="text-italic text-gray-500"
                 default="3. Sản phụ khoa"
               ></codx-label>
             </div>
@@ -840,10 +841,9 @@
               </div>
             </div>
 
-            <div>
+            <div class="mt-6 mb-3">
               <codx-label
-              class="fw-bold"
-
+              class="text-italic text-gray-500"
                 default="4. Mắt"
               ></codx-label>
             </div>
@@ -918,9 +918,9 @@
               ></codx-input>
           </div>
 
-          <div>
+          <div class="mt-6 mb-3">
             <codx-label
-            class="fw-bold"
+            class="text-italic text-gray-500"
               default="5. Tai - Mũi - Họng"
             ></codx-label>
           </div>
@@ -966,9 +966,9 @@
               </div>
             </div>
             
-            <div>
+            <div class="mt-6 mb-3">
               <codx-label
-              class="fw-bold"
+              class="text-italic text-gray-500"
                 default="6.Răng - Hàm - Mặt"
               ></codx-label>
             </div>
@@ -1014,9 +1014,9 @@
             </div>
           </div>
 
-          <div>
+          <div class="mt-6 mb-3">
             <codx-label
-            class="fw-bold"
+            class="text-italic text-gray-500"
               default="7.Da liễu"
             ></codx-label>
           </div>
@@ -1070,36 +1070,36 @@
             <codx-label default="III. Khám cận lâm sàng"></codx-label>
           </ng-template>
           <ng-template #content>
-            <div class="pt-6">
+            <div class="mt-8">
               <codx-label
                 default="III. KHÁM CẬN LÂM SÀNG"
                 class="text-primary"
               ></codx-label>
             </div>
 
-            <div class="d-flex flex-stack fs-6 py-2 mt-4 align-items-center">
+            <div class="d-flex flex-stack mt-4 mb-2 align-items-center">
               <codx-label
-              class="fw-bold "
+              class="text-italic text-gray-500"
                 default="1. Xét nghiệm máu"
               ></codx-label>
 
               <span class="text-end align-items-end">
-                <a
+                <button type="button" 
                 (click)="BloodTestPopup()"
-                  class="btn btn-sm border border-gray-300 btn-active-light-primary align-items-center d-flex flex-row text-italic"
+                  class="btn btn-sm btn-light-primary"
                 >
-                  <span
-                    class="icon-table_rows text-danger btn-text-primary me-2"
-                  ></span>
+                  <i
+                    class="icon-table_rows icon-16"
+                  ></i>
                   <codx-label
                     name="lblUpdateECertificates"
                     default="Chi tiết"
                     [formModel]="dialog.formModel"
                   ></codx-label>
-                </a>
+                </button>
               </span>
             </div>
-            <div class="form-group row pt-2">
+            <div class="form-group row pt-3">
               <div class="col-6">
                 <codx-label
                   fiedName="ResultBloodTest"
@@ -1128,9 +1128,9 @@
               </div>
             </div>
 
-            <div>
+            <div class="mt-6 mb-3">
               <codx-label
-              class="fw-bold"
+              class="text-italic text-gray-500"
                 default="2. Xét nghiệm nước tiểu"
               ></codx-label>
             </div>
@@ -1147,9 +1147,9 @@
               ></codx-input>
           </div>
 
-          <div>
+          <div class="mt-6 mb-3">
             <codx-label
-            class="fw-bold"
+            class="text-italic text-gray-500"
               default="3. Kết quả X-quang"
             ></codx-label>
           </div>
@@ -1157,7 +1157,7 @@
           <div class="form-group row">
             <!-- <codx-label
                 fiedName="ResultXRay"
-                [formModel]="formModel"
+                [formModel]="formModel"pr
             ></codx-label> -->
             <codx-input
                 field="resultXRay"
@@ -1166,26 +1166,26 @@
             ></codx-input>
         </div>
 
-        <div class="d-flex flex-stack fs-6 py-2 mt-4 align-items-center">
+        <div class="d-flex flex-stack mt-4 mb-2 align-items-center">
           <codx-label
-          class="fw-bold"
+          class="text-italic text-gray-500"
             default="4. Kết quả siêu âm"
           ></codx-label>
 
           <span class="text-end align-items-end">
-            <a
-            class="btn btn-sm border border-gray-300 btn-active-light-primary align-items-center d-flex flex-row text-italic"
+            <button type="button"
+            class="btn btn-sm btn-light-primary"
             (click)="UltraSoundPopup()"
             >
-              <span
-                class="icon-table_rows text-danger btn-text-primary me-2"
-              ></span>
+              <i
+                class="icon-table_rows icon-16"
+              ></i>
               <codx-label
                 name="lblUpdateECertificates"
                 default="Chi tiết"
                 [formModel]="dialog.formModel"
               ></codx-label>
-            </a>
+            </button>
           </span>
         </div>
 
@@ -1201,9 +1201,9 @@
           ></codx-input>
       </div>
 
-      <div>
+      <div class="mt-6 mb-3">
         <codx-label
-        class="fw-bold"
+        class="text-italic text-gray-500"
           default="5. Điện tâm đồ"
         ></codx-label>
       </div>
@@ -1220,9 +1220,9 @@
         ></codx-input>
     </div>
 
-    <div>
+    <div class="mt-6 mb-3">
       <codx-label
-      class="fw-bold"
+      class="text-italic text-gray-500"
         default="6. Đo loãng xương"
       ></codx-label>
     </div>

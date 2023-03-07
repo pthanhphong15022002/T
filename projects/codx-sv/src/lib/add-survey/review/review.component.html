@@ -5,7 +5,7 @@
         <div *ngIf="itemSession">
           <div class="card-survey" [id]="'card-survey-' + itemSession.seqNo">
             <div
-              class="col-lg-8 control-section inplace-editor-control-section form-lafyout"
+              class="control-section inplace-editor-control-section form-lafyout"
               id="inplace-editor-control"
             >
               <div
@@ -274,7 +274,7 @@
             <button
               *ngIf="itemSession.seqNo == questions.length - 1"
               type="button"
-              class="btn btn-primary"
+              class="btn btn-submit text-white"
               (click)="onSubmit()"
             >
               <codx-label fiedName="Sumbit" default="Gửi"></codx-label>
@@ -326,7 +326,7 @@
       "
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     ></codx-input>
-    <div class="d-flex" *ngIf="itemAnswer.other">
+    <div class="d-flex align-items-center " *ngIf="itemAnswer.other">
       <codx-input
         type="radio"
         labelPosition="After"
@@ -339,15 +339,17 @@
         (valueChange)="
           valueChange($event, itemSession, itemQuestion, itemAnswer)
         "
+        [style.width]="'125px'"
       ></codx-input>
       <codx-input
         type="text"
-        class="border-0"
+        class="border-0 h-20px"
         [crrValue]="itemAnswer.answer"
         field="O"
         (valueChange)="
           valueChange($event, itemSession, itemQuestion, itemAnswer)
         "
+        [ngClass]="'w-100'"
       >
       </codx-input>
     </div>
@@ -571,9 +573,9 @@
   let-itemSession="itemSession"
   let-itemQuestion="itemQuestion"
 >
-  <div class="d-flex">
-    <div #header>
-      <div class="form-group question">
+  <div class="d-flex w-100">
+    <div #header class="w-100">
+      <div class="form-group question w-100 mt-3">
         <div
           [ngClass]="
             itemQuestion?.active ? 'title-des title-des-hover' : 'title-des'
@@ -586,7 +588,7 @@
           <span *ngIf="!itemQuestion.question">{{ "Câu hỏi" }}</span>
         </div>
       </div>
-      <div class="form-group question" *ngIf="itemQuestion.hideComment">
+      <div class="form-group question w-100" *ngIf="itemQuestion.hideComment">
         <div class="title-des">
           <span
             *ngIf="itemQuestion.comment"
@@ -664,7 +666,7 @@
     <div class="box" *ngFor="let itemAnswer of itemQuestion.answers">
       <div class="has-action-menu">
         <div class="d-flex">
-          <div class="d-flex size-input">
+          <div class="d-flex size-input py-2">
             <ng-container
               *ngTemplateOutlet="
                 tempIconAnswers;
@@ -975,7 +977,7 @@
 
 <ng-template #template_card_session_index_0 let-itemSession="itemSession">
   <div class="d-flex">
-    <div class="form-group ms-6">
+    <div class="ms-6">
       <div
         [ngClass]="itemSession.seqNo == 0 ? 'title-des-index0' : 'title-des'"
       >
@@ -996,16 +998,15 @@
       <span *ngIf="!itemSession.comment">{{ "Mô tả biểu mẫu" }}</span>
     </div>
   </div>
-  <hr />
-  <div class="d-flex mt-3 form-group">
-    <span class="ms-6 icon-eye-off icon-24"></span>
-    <span class="ms-3 fw-700">{{ user.email }}</span>
+  <div class="d-flex align-items-center mt-3 border-top py-3">
+    <span class="ms-6 icon-i-eye-slash icon-24"></span>
+    <span class="ms-3">{{ user.email }}</span>
   </div>
 </ng-template>
 
 <ng-template #template_card_session let-itemSession="itemSession">
-  <div class="ms-6">
-    <div class="d-flex">
+  <div class="ms-6 w-100">
+    <div class="d-flex w-100">
       <div class="form-group question w-100" style="margin-top: -50px">
         <div class="title-des d-flex">
           <span

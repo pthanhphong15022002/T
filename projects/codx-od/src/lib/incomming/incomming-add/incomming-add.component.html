@@ -53,7 +53,7 @@
         (valueChange)="changeValueAgencyText($event)"
       >
       </codx-input> -->
-      <span class="btn btn-primary btn-32 ms-2" (click)="openFormAgency('agency')">
+      <span *ngIf="(dispatch.dispatchType == '1' || dispatch.dispatchType == '4')" class="btn btn-primary btn-32 ms-2" (click)="openFormAgency('agency')">
         <codx-label [default]="'Thêm'" [fiedName]="'lblAdd'"></codx-label>
       </span>
     </div>

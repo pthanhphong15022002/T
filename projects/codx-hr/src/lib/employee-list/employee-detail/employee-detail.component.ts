@@ -135,6 +135,7 @@ export class EmployeeDetailComponent extends UIComponent {
   infoPersonal: any;
 
   crrEContract: any;
+  lstContractType: any; //phân loại HĐ không xác định 
 
   funcID = '';
   service = '';
@@ -1012,6 +1013,24 @@ export class EmployeeDetailComponent extends UIComponent {
         this.hrService.getCrrEContract(rqContract).subscribe((res) => {
           if (res && res[0]) {
             this.crrEContract = res[0][0];
+            this.df.detectChanges();
+          }
+        });
+      }
+
+      if(!this.lstContractType){
+        let rqContractType = new DataRequest();
+        rqContractType.entityName = 'HR_ContractTypes';
+        rqContractType.dataValues = '1';
+        rqContractType.predicates =
+          'ContractGroup =@0';
+          rqContractType.pageLoading = false;
+
+        this.hrService.getCrrEContract(rqContractType).subscribe((res) => {
+          if (res && res[0]) {
+            this.lstContractType = res[0];
+            console.log('aaaaaaaaaaaa', this.lstContractType);
+            
             this.df.detectChanges();
           }
         });
@@ -3629,6 +3648,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfc.openSide(
       PopupECertificatesComponent,
       {
+        trainFromHeaderText : this.eSkillHeaderText['TrainFrom'],
+        trainToHeaderText : this.eSkillHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eCertificateFuncID),
@@ -3655,6 +3676,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupEDegreesComponent,
       {
+        trainFromHeaderText : this.eDegreeHeaderText['TrainFrom'],
+        trainToHeaderText : this.eDegreeHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eDegreeFuncID),
@@ -3680,6 +3703,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfc.openSide(
       PopupESkillsComponent,
       {
+        trainFromHeaderText : this.eSkillHeaderText['TrainFrom'],
+        trainToHeaderText : this.eSkillHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eSkillFuncID),
@@ -3722,6 +3747,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupETraincourseComponent,
       {
+        trainFromHeaderText : this.eSkillHeaderText['TrainFrom'],
+        trainToHeaderText : this.eSkillHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eTrainCourseFuncID),
@@ -3746,11 +3773,30 @@ export class EmployeeDetailComponent extends UIComponent {
       .subscribe((res) => {});
   }
 
+  addEContractInfo(actionHeaderText, actionType: string, data: any){
+    //Cảnh báo nếu thêm mới HĐLĐ, mà trước đó có HĐ đang hiệu lực là HĐ không xác định thời hạn => Kiểm tra trước khi thêm 
+    if(actionType == 'add' && this.crrEContract && this.lstContractType ){
+      var item = this.lstContractType.filter(p => p.contractTypeID == this.crrEContract.contractTypeID && p.contractGroup == '1');
+      if(item && item[0]){
+        this.notify.alertCode('HR008').subscribe(res =>{
+          if(res?.event?.status == 'Y'){
+            this.HandleEContractInfo(actionHeaderText, actionType, data);
+          }
+        })
+      }
+    }
+    else{
+      this.HandleEContractInfo(actionHeaderText, actionType, data);
+    }
+  }
+
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.eContractFormModel;
     let isAppendix = false;
+    
+
     if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){
       isAppendix = true;
     }
@@ -5007,14 +5053,14 @@ export class EmployeeDetailComponent extends UIComponent {
   valueChangeFilterAccidentID(evt) {
     this.filterByAccidentIDArr = evt.data;
     let lengthArr = this.filterByAccidentIDArr.length;
-    let first = 0;
-    let last = lengthArr - 1;
+
     if (this.filterByAccidentIDArr?.length > 0) {
       this.filterAccidentIdPredicate = '(';
       for (let i = 0; i < lengthArr; i++) {
-        if (i == first || i == last)
-          this.filterAccidentIdPredicate += `AccidentID==@${i}`;
-        else this.filterAccidentIdPredicate += `AccidentID==@${i} or `;
+        if (i > 0) {
+          this.filterAccidentIdPredicate += ' or ';
+        }
+        this.filterAccidentIdPredicate += `AccidentID==@${i}`;
       }
       this.filterAccidentIdPredicate += ') ';
       (this.eAccidentGridView?.dataService as CRUDService)

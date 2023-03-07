@@ -132,6 +132,7 @@ export class PopAddArComponent extends UIComponent implements OnInit {
   validateRules() {
     this.gridViewSetup['PmtMethodID'].isRequire = false;
     this.gridViewSetup['CurrencyID'].isRequire = false;
+    this.gridViewSetup['RecvAcctID'].isRequire = false;
   }
   //#endregion
 
@@ -145,7 +146,7 @@ export class PopAddArComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      if (this.formType == 'add') {
+      if (this.formType == 'add' || this.formType == 'copy') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'AddAsync';
@@ -206,6 +207,7 @@ export class PopAddArComponent extends UIComponent implements OnInit {
           if (res.save) {
               this.dialog.dataService.clear();
               this.dialog.dataService.addNew().subscribe((res) => {
+              this.form.formGroup.reset(res);
               this.arposting = this.dialog.dataService.dataSelected;
               this.arposting.moduleID = this.moduleID;
               this.arposting.postType = this.postType;

@@ -33,6 +33,7 @@ export class ChartOfAccountsComponent extends UIComponent {
   headerText: any;
   dialog: DialogRef;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  //#region Contructor
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -50,7 +51,7 @@ export class ChartOfAccountsComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void { }
+  onInit(): void {}
 
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
@@ -94,6 +95,9 @@ export class ChartOfAccountsComponent extends UIComponent {
       case 'SYS03':
         this.edit(e, data);
         break;
+      case 'SYS04':
+        this.copy(e,data);
+        break;
     }
   }
   //#endregion
@@ -136,7 +140,30 @@ export class ChartOfAccountsComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'edit',
-          headerText: e.text + ' ' + this.funcName
+          headerText: e.text + ' ' + this.funcName,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '800px';
+        this.dialog = this.callfunc.openSide(
+          PopAddAccountsComponent,
+          obj,
+          option
+        );
+      });
+  }
+
+  copy(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .copy(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'copy',
+          headerText: e.text + ' ' + this.funcName,
         };
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
@@ -158,7 +185,7 @@ export class ChartOfAccountsComponent extends UIComponent {
       .delete([data], true, (option: RequestOption) =>
         this.beforeDelete(option, data)
       )
-      .subscribe(() => { });
+      .subscribe(() => {});
   }
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';

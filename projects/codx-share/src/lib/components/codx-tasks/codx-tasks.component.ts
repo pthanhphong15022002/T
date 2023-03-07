@@ -1588,7 +1588,7 @@ export class CodxTasksComponent
         //tắt duyệt confirm
         if (
           (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
-          (data.confirmStatus != '1')
+          data.confirmStatus != '1'
         ) {
           x.disabled = true;
         }
@@ -1689,6 +1689,25 @@ export class CodxTasksComponent
         break;
       case 'dbClick':
         this.viewTask(e?.data);
+        break;
+      case 'pined-filter':
+        var index = this.view.views.findIndex(x=>x.active==true);
+        if(index!=1){
+          let type = this.view.views[index].type ;
+          if(type==7 || type==8){
+            // calender + schedule
+            // if(Array.isArray(e.data)){
+            //   e.data.forEach((filter:any)=>{
+            //     if(!this.view.currentView['schedule'].dataService.filter.filters){
+            //       this.view.currentView['schedule'].dataService.filter.filters = [];
+            //     }
+            //     debugger
+            //     this.view.currentView['schedule'].dataService.filter.filters[0].filters.push(filter);
+            // });
+            //   this.view.currentView['schedule'].refresh();
+          //}        
+         }
+        }
         break;
     }
   }

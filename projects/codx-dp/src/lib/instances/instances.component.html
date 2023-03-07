@@ -34,6 +34,8 @@
     [dataItem]="data"
     [rootData]="data"
     (dblclick)="dblClick($event, data)"
+    (changeDataMF)="changeDataMF($event, data)"
+
   >
   </codx-card-img>
 </ng-template>
@@ -194,7 +196,6 @@
     #detailViewInstance
     [dataService]="view.dataService"
     [formModel]="view.formModel"
-    [recID]="dataSelected.recID"
     [dataSelect]="dataSelected"
     (moreFunctionEvent)="clickMoreFunc($event)"
     (changeMF)="changeMF($event)"

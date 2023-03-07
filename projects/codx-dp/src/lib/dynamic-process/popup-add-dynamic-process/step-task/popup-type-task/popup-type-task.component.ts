@@ -19,19 +19,20 @@ export class PopupTypeTaskComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cache.valueList('DP035').subscribe((res) => {
+    this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
-        let data = [];
-        res.datas.forEach((element) => {
-          if (['T', 'E', 'M', 'C', 'S'].includes(element['value'])) {
-            data.push(element);
-          }
-        });
-        this.listJobType = data.map((item) => {
+        // console.log(res.datas);
+        
+        // let data = [];
+        // res.datas.forEach((element) => {
+        //   if (['T', 'E', 'M', 'C', 'S'].includes(element['value'])) {
+        //     data.push(element);
+        //   }
+        // });
+        this.listJobType = res?.datas?.map((item) => {
           return {
             ...item,
             color: { background: item['color'] },
-            icon: 'icon-local_phone',
             checked: false,
           };
         });

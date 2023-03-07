@@ -138,9 +138,56 @@ export class ItemsComponent extends UIComponent {
         this.edit(data);
         break;
       case 'SYS04':
-        // copy;
+        this.copy(e, data);
         break;
     }
+  }
+
+  copy(e, data): void {
+    console.log('copy', { data });
+
+    const { cwum, cwDeviation, cwConversion, umid, diM2, diM3, ...rest1 } =
+      data;
+    this.view.dataService.dataSelected = {
+      ...rest1,
+      cWUM: cwum,
+      cWDeviation: cwDeviation,
+      cWConversion: cwConversion,
+      uMID: umid,
+      dIM2: diM2,
+      dIM3: diM3,
+    };
+    this.view.dataService.copy().subscribe((res) => {
+      console.log({ selectedItem: res });
+
+      const { cWUM, cWDeviation, cWConversion, uMID, dIM2, dIM3, ...rest2 } =
+        res;
+      this.view.dataService.dataSelected = {
+        ...rest2,
+        cwum: cWUM,
+        cwDeviation: cWDeviation,
+        cwConversion: cWConversion,
+        umid: uMID,
+        diM2: dIM2,
+        diM3: dIM3,
+      };
+
+      const options = new SidebarModel();
+      options.Width = '800px';
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
+      this.callfc
+        .openSide(
+          PopupAddItemComponent,
+          {
+            formType: 'add',
+            title: `${e.text} mặt hàng`,
+          },
+          options,
+          this.view.funcID
+        )
+        .closed.subscribe((res) => console.log(res));
+    });
   }
   //#endregion
 
@@ -160,13 +207,13 @@ export class ItemsComponent extends UIComponent {
         return true;
       })
       .subscribe((res: any) => {
-        if (res.data) {
+        console.log(res);
+        if (res) {
           this.itemsService.deleteImage(
-            res.data.itemID,
+            data.itemID,
             this.view.formModel.entityName
           );
         }
-        console.log(res);
       });
   }
 

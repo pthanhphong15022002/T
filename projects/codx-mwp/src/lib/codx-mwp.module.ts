@@ -68,6 +68,8 @@ import { MWPBookingCarViewDetailComponent } from './booking/car/view-detail/mwp-
 import { MWPBookingStationeryComponent } from './booking/stationery/mwp-booking-stationery.component';
 import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
 import { BookingStationeryViewDetailComponent } from './booking/stationery/view-detail/view-detail.component';
+import { PortalComponent } from './employeeinfomation/portal/portal.component';
+import { EmployeeDetailComponent } from 'projects/codx-hr/src/lib/employee-list/employee-detail/employee-detail.component';
 
 export const routes: Routes = [
   {
@@ -86,7 +88,10 @@ export const routes: Routes = [
     children: [
       {
         path: 'employeeinfomation/:funcID',
-        component: EmployeeInfomationComponent,
+        // component: EmployeeInfomationComponent,
+        component: PortalComponent
+        // component: EmployeeDetailComponent
+
       },
       {
         path: 'personals/:funcID',
@@ -198,6 +203,7 @@ const Component: Type<any>[] = [
     EditSkillComponent,
     PopAddSkillComponent,
     InformationComponent,
+    PortalComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

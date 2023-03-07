@@ -138,7 +138,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
 
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe((p) => {
       if (p != null) {
-        this.notitfy.notifyCode('SYS006');
+        this.notitfy.notifyCode('SYS007');
         this.dialog && this.dialog.close(p);
       } else this.notitfy.notifyCode('SYS021');
     });

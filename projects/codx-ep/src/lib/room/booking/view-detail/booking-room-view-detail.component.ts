@@ -11,7 +11,15 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { AuthService, CallFuncService, DataRequest, DialogRef, SidebarModel, UIComponent, ViewsComponent } from 'codx-core';
+import {
+  AuthService,
+  CallFuncService,
+  DataRequest,
+  DialogRef,
+  SidebarModel,
+  UIComponent,
+  ViewsComponent,
+} from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
 import { BookingRoomComponent } from '../booking-room.component';
 import { PopupAddBookingRoomComponent } from '../popup-add-booking-room/popup-add-booking-room.component';
@@ -21,24 +29,29 @@ import { Permission } from '@shared/models/file.model';
   selector: 'booking-room-view-detail',
   templateUrl: 'booking-room-view-detail.component.html',
   styleUrls: ['booking-room-view-detail.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
-export class BookingRoomViewDetailComponent extends UIComponent implements OnChanges {
+export class BookingRoomViewDetailComponent
+  extends UIComponent
+  implements OnChanges
+{
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('subTitleHeader') subTitleHeader;
-  @ViewChild('attachment') attachment;  
+  @ViewChild('attachment') attachment;
   @ViewChild('attachment') tabModel;
   @ViewChild('bookingRoom') bookingRoom: BookingRoomComponent;
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('copy') copy: EventEmitter<any> = new EventEmitter();
   @Output('release') release: EventEmitter<any> = new EventEmitter();
-  @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
-  @Output('invite') invite: EventEmitter<any> = new EventEmitter(); 
+  @Output('delete') delete: EventEmitter<any> = new EventEmitter();
+  @Output('invite') invite: EventEmitter<any> = new EventEmitter();
   @Output('cancel') cancel: EventEmitter<any> = new EventEmitter();
   @Output('reschedule') reschedule: EventEmitter<any> = new EventEmitter();
-  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
-  
-  @Output('setPopupTitleOption') setPopupTitleOption: EventEmitter<any> = new EventEmitter();
+  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
+    new EventEmitter();
+
+  @Output('setPopupTitleOption') setPopupTitleOption: EventEmitter<any> =
+    new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
   @Input() funcID;
@@ -56,19 +69,20 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   files = [];
   dialog!: DialogRef;
   routerRecID: any;
-  listFilePermission= [];
-  isEdit= false;
-renderFooter=false;
+  listFilePermission = [];
+  isEdit = false;
+  renderFooter = false;
+
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
     private callFuncService: CallFuncService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
     super(injector);
     this.routerRecID = this.router.snapshot.params['id'];
     if (this.routerRecID != null) {
-      this.hideFooter = true
+      this.hideFooter = true;
     }
   }
 
@@ -77,9 +91,8 @@ renderFooter=false;
     let tempRecID: any;
     if (this.routerRecID != null) {
       tempRecID = this.routerRecID;
-    }
-    else {
-      tempRecID = this.itemDetail?.currentValue?.recID
+    } else {
+      tempRecID = this.itemDetail?.currentValue?.recID;
     }
     this.detectorRef.detectChanges();
     this.setHeight();
@@ -96,9 +109,9 @@ renderFooter=false;
     if (
       changes?.itemDetail &&
       changes.itemDetail?.previousValue?.recID !=
-      changes.itemDetail?.currentValue?.recID
+        changes.itemDetail?.currentValue?.recID
     ) {
-      this.renderFooter=false;
+      this.renderFooter = false;
       this.api
         .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
           changes.itemDetail?.currentValue?.recID,
@@ -106,37 +119,33 @@ renderFooter=false;
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
-            this.listFilePermission=[];
-            if(res.bookingAttendees!=null && res.bookingAttendees!=''){
-              let listAttendees = res.bookingAttendees.split(";");
+            this.listFilePermission = [];
+            if (res.bookingAttendees != null && res.bookingAttendees != '') {
+              let listAttendees = res.bookingAttendees.split(';');
               listAttendees.forEach((item) => {
-                if(item!=''){
-                  let tmpPer= new Permission()
-                  tmpPer.objectID= item;//
-                  tmpPer.objectType= 'U';
-                  tmpPer.read= true;
-                  tmpPer.share=  true;
-                  tmpPer.download=  true;
-                  tmpPer.isActive=  true;
+                if (item != '') {
+                  let tmpPer = new Permission();
+                  tmpPer.objectID = item; //
+                  tmpPer.objectType = 'U';
+                  tmpPer.read = true;
+                  tmpPer.share = true;
+                  tmpPer.download = true;
+                  tmpPer.isActive = true;
                   this.listFilePermission.push(tmpPer);
                 }
-                
               });
               //this.tabModel.addPermissions=this.listFilePermission;
               //this.renderFooter=true;
               this.detectorRef.detectChanges();
-
             }
-            if(this.itemDetail?.createdBy==this.authService.userValue.userID){
-
+            if (
+              this.itemDetail?.createdBy == this.authService.userValue.userID
+            ) {
               this.isEdit = true;
-            }
-            else{
-              
+            } else {
               this.isEdit = false;
             }
             this.detectorRef.detectChanges();
-
           }
         });
       // this.files = [];
@@ -187,13 +196,13 @@ renderFooter=false;
       case 'EP4T1103': //Gửi duyệt
         this.lviewRelease(data);
         break;
-        case 'EP4T1104': //Hủy gửi duyệt
+      case 'EP4T1104': //Hủy gửi duyệt
         this.lviewCancel(data);
         break;
     }
   }
   lviewRelease(data?) {
-    if (data) {      
+    if (data) {
       this.release.emit(data);
     }
   }
@@ -213,7 +222,7 @@ renderFooter=false;
   }
 
   lviewCancel(data?) {
-    if (data) {      
+    if (data) {
       this.cancel.emit(data);
     }
   }
@@ -224,7 +233,7 @@ renderFooter=false;
       this.edit.emit(data);
     }
   }
-  
+
   lviewDelete(data?) {
     if (data) {
       this.delete.emit(data);
@@ -251,10 +260,10 @@ renderFooter=false;
             func.disabled = false;
           }
           if (
-            //Ẩn: dời - mời - hủy 
+            //Ẩn: dời - mời - hủy
             func.functionID == 'EP4T1102' /*MF sửa*/ ||
             func.functionID == 'EP4T1101' /*MF xóa*/ ||
-            func.functionID == 'EP4T1104' /*MF hủy*/ 
+            func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = true;
           }
@@ -263,17 +272,18 @@ renderFooter=false;
         event.forEach((func) => {
           //Đã duyệt
           if (
-            // Hiện: Mời - dời - Chép 
+            // Hiện: Mời - dời - Chép
             func.functionID == 'EP4T1102' /*MF mời*/ ||
             func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - duyệt - hủy 
+          if (
+            //Ẩn: sửa - xóa - duyệt - hủy
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/ ||
             func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = true;
@@ -282,16 +292,18 @@ renderFooter=false;
       } else if (data.approveStatus == '3') {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: dời - mời - chép - hủy
-          func.functionID == 'EP4T1102' /*MF mời*/ ||
-          func.functionID == 'EP4T1101' /*MF dời*/ ||
-          func.functionID == 'SYS04' /*MF chép*/||
-          func.functionID == 'EP4T1104' /*MF hủy*/
+          if (
+            //Hiện: dời - mời - chép - hủy
+            func.functionID == 'EP4T1102' /*MF mời*/ ||
+            func.functionID == 'EP4T1101' /*MF dời*/ ||
+            func.functionID == 'SYS04' /*MF chép*/ ||
+            func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - gửi duyệt
-            
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt
+
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP4T1103' /*MF gửi duyệt*/
@@ -299,39 +311,41 @@ renderFooter=false;
             func.disabled = true;
           }
         });
-      }
-      else if (data.approveStatus == '4') {
+      } else if (data.approveStatus == '4') {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép
-          func.functionID == 'SYS04' /*MF chép*/
+          if (
+            //Hiện: chép
+            func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: còn lại            
+          if (
+            //Ẩn: còn lại
             func.functionID == 'EP4T1102' /*MF mời*/ ||
             func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/ ||
             func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = true;
           }
         });
-      }
-      else  {
+      } else {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép
-          func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
-          func.functionID == 'SYS02' /*MF sửa*/ ||
-          func.functionID == 'SYS03' /*MF xóa*/ ||
-          func.functionID == 'SYS04' /*MF chép*/
+          if (
+            //Hiện: chép
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/ ||
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: còn lại            
+          if (
+            //Ẩn: còn lại
             func.functionID == 'EP4T1102' /*MF mời*/ ||
             func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'EP4T1104' /*MF hủy*/
@@ -350,9 +364,8 @@ renderFooter=false;
   clickChangeItemViewStatus(stt, recID) {
     this.itemDetailStt = stt;
   }
-  meetingNow(url:string){
-    if(url !=null){
-
+  meetingNow(url: string) {
+    if (url != null) {
       window.open(url, '_blank');
     }
   }

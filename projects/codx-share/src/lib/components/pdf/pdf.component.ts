@@ -33,7 +33,6 @@ import {
   tmpSignArea,
 } from './model/tmpSignArea.model';
 import {
-  IPDFViewerApplication,
   NgxExtendedPdfViewerComponent,
   NgxExtendedPdfViewerService,
   pdfDefaultOptions,
@@ -43,15 +42,8 @@ import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-ca-props/popup-ca-props.component';
 import { PopupSelectLabelComponent } from 'projects/codx-es/src/lib/sign-file/popup-select-label/popup-select-label.component';
 import { PopupSignatureComponent } from 'projects/codx-es/src/lib/setting/signature/popup-signature/popup-signature.component';
-import {
-  ES_SignFile,
-  SetupShowSignature,
-} from 'projects/codx-es/src/lib/codx-es.model';
-import { text } from 'stream/consumers';
+import { SetupShowSignature } from 'projects/codx-es/src/lib/codx-es.model';
 import { environment } from 'src/environments/environment';
-import { style } from '@angular/animations';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { NgxExtendedPdfViewerCommonModule } from 'ngx-extended-pdf-viewer/lib/ngx-extended-pdf-viewer-common.module';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 @Component({
   selector: 'lib-pdf',
@@ -419,8 +411,7 @@ export class PdfComponent
           }
         });
     }
-    if(document)
-    {
+    if (document) {
       document.onclick = (e) => {
         let hlaCmt = document.getElementById('hla-Cmt');
         if (hlaCmt) {
@@ -443,8 +434,7 @@ export class PdfComponent
           }
         }
       };
-      if(document.getElementById('add-cmt-btn'))
-      {
+      if (document.getElementById('add-cmt-btn')) {
         //add cmt
         document.getElementById('add-cmt-btn').onclick = (e) => {
           this.curCmtContent = (
@@ -458,8 +448,7 @@ export class PdfComponent
           this.changeHLComment();
         };
       }
-      if(document.getElementById('delete-cmt-btn'))
-      {
+      if (document.getElementById('delete-cmt-btn')) {
         //remove cmt
         document.getElementById('delete-cmt-btn').onclick = (e) => {
           this.curSelectedHLA.comment = {
@@ -472,7 +461,6 @@ export class PdfComponent
         };
       }
     }
-   
 
     //this.hideShowTab();
   }
@@ -710,8 +698,8 @@ export class PdfComponent
 
     let ngxService: NgxExtendedPdfViewerService =
       new NgxExtendedPdfViewerService();
-   
-    if(this.isSignMode){
+
+    if (this.isSignMode) {
       if (this.curPage == 0) {
         this.curPage = this.pageMax;
       }
@@ -2448,7 +2436,7 @@ export class PdfComponent
       )
       .subscribe((lst: Map<string, Array<location>>) => {
         this.lstKey = [];
-        this.lstHighlightTextArea = []
+        this.lstHighlightTextArea = [];
         let lstTextLayer = document.getElementsByClassName('textLayer');
         for (let [key, value] of Object.entries(lst)) {
           let textLayer = Array.from(lstTextLayer).find(
@@ -2605,7 +2593,6 @@ export class PdfComponent
           10,
           res
         );
-        
 
         // let rerenderPages = document.querySelectorAll('.canvasWrapper>canvas');
         // let times = Object.keys(res).length;
