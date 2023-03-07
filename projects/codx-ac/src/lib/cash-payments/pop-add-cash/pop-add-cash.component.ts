@@ -153,7 +153,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   valueChange(e: any) {
-    this.cashpayment[e.field] = e.data;
+    if (e.field.toLowerCase() === 'voucherdate' && e.data)
+      this.cashpayment[e.field] = e.data.fromDate;
+    else this.cashpayment[e.field] = e.data;
     let sArray = [
       'currencyid',
       'voucherdate',
@@ -179,7 +181,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     if (e.field.toLowerCase() === 'exchangerate' && e.data) {
       this.api
         .exec<any>('AC', 'CashPaymentsLinesBusiness', 'ChangeCurrenciesAsync', [
-          e.field,
           this.cashpayment,
           this.cashpaymentline,
         ])
@@ -243,9 +244,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           e.data?.isAddNew,
         ])
         .subscribe((res: any) => {
-          if (res) {
-            this.grid.updateRow(e.idx, res.line);
-          }
+          if (res && res.line)
+            this.setDataGrid(res.line.updateColumns, res.line);
         });
     }
 
@@ -400,6 +400,20 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Function
+  setDataGrid(updateColumn, data) {
+    if (updateColumn) {
+      var arrColumn = [];
+      arrColumn = updateColumn.split(';');
+      if (arrColumn && arrColumn.length) {
+        arrColumn.forEach((e) => {
+          if (e) {
+            let field = Util.camelize(e);
+            this.grid.rowDataSelected[field] = data[field];
+          }
+        });
+      }
+    }
+  }
 
   getvalueNameCashBook(data: any) {
     this.acService
