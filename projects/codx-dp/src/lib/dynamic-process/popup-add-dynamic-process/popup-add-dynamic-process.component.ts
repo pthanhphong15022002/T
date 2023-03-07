@@ -2744,31 +2744,30 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (res) {
         this.editTest(res);
         res.forEach((step) => {
-          if (!step.isSuccessStep && !step.isFailStep) {
+          if (!step['isSuccessStep'] && !step['isFailStep']) {
             const taskGroupList = step?.tasks.reduce((group, product) => {
               const { taskGroupID } = product;
               group[taskGroupID] = group[taskGroupID] ?? [];
               group[taskGroupID].push(product);
               return group;
             }, {});
-            const taskGroupConvert = step.taskGroups.map((taskGroup) => {
+            const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
               return {
                 ...taskGroup,
-                task: taskGroupList[taskGroup.recID] ?? [],
+                task: taskGroupList[taskGroup['recID']] ?? [],
               };
             });
-            step.taskGroups = taskGroupConvert;
-
-            var taskGroup = new DP_Steps_TaskGroups();
+            step['taskGroups'] = taskGroupConvert;
+  
+            let taskGroup = new DP_Steps_TaskGroups();
             taskGroup['task'] = taskGroupList['null'] || [];
-            taskGroup['recID'] = null;
+            taskGroup['recID'] = null; 
             step['taskGroups'].push(taskGroup);
-
+  
             this.stepList.push(step);
           }
         });
-        this.stepList.sort((a, b) => a['stepNo'] - b['stepNo']);
-        this.viewStepSelect(this.stepList[0]);
+        this.viewStepSelect(this.stepList[0]);      
       }
     });
   }
