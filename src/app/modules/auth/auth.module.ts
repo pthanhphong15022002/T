@@ -23,6 +23,12 @@ import { LoginDefaultComponent } from './default/login-default/login-default.com
 import { LoginQTSCComponent } from './cz/qtsc/login-qtsc/login-qtsc.component';
 import { TenantsComponent } from './tenants/tenants.component';
 import { RedirectToComponent } from './redirect-to/redirect-to.component';
+import {
+  RECAPTCHA_SETTINGS,
+  RecaptchaFormsModule,
+  RecaptchaModule,
+  RecaptchaSettings,
+} from 'ng-recaptcha';
 
 @NgModule({
   declarations: [
@@ -41,6 +47,8 @@ import { RedirectToComponent } from './redirect-to/redirect-to.component';
   imports: [
     CommonModule,
     FormsModule,
+    RecaptchaFormsModule,
+    RecaptchaModule,
     ReactiveFormsModule,
     HttpClientModule,
     SharedModule,
@@ -50,6 +58,14 @@ import { RedirectToComponent } from './redirect-to/redirect-to.component';
     AuthRoutingModule,
     HoverPreloadModule,
     CodxCoreModule.forRoot({ environment }),
+  ],
+  providers: [
+    {
+      provide: RECAPTCHA_SETTINGS,
+      useValue: {
+        siteKey: environment.reCaptchaKey,
+      } as RecaptchaSettings,
+    },
   ],
 })
 export class AuthModule {}

@@ -2,14 +2,13 @@ import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
   DataRequest,
-  FormModel,
   RequestOption,
   SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { ItemsService } from './items.service';
 import { PopupAddItemComponent } from './popup-add-item/popup-add-item.component';
 
@@ -29,6 +28,7 @@ export class ItemsComponent extends UIComponent {
 
   views: Array<ViewModel> = [];
   btnAdd: ButtonModel = { id: 'btnAdd' };
+  functionName: string;
 
   // combobox data
   warehouses: any[];
@@ -43,6 +43,17 @@ export class ItemsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
+    this.cache
+      .moreFunction('Items', 'grvItems')
+      .pipe(
+        map((data) => data.find((m) => m.functionID === 'ACS21300')),
+        map(
+          (data) =>
+            data.defaultName.charAt(0).toLowerCase() + data.defaultName.slice(1)
+        )
+      )
+      .subscribe((res) => (this.functionName = res));
+
     this.loadComboboxData('Warehouses').subscribe((res) => {
       if (res) {
         console.log(JSON.parse(res[0]));
@@ -104,9 +115,9 @@ export class ItemsComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  handleClickAdd(event) {
+  handleClickAdd(e) {
     // debug
-    console.log({ event });
+    console.log({ e });
     console.log(this.view);
 
     this.view.dataService.addNew().subscribe((newItem) => {
@@ -121,7 +132,7 @@ export class ItemsComponent extends UIComponent {
         PopupAddItemComponent,
         {
           formType: 'add',
-          title: 'Thêm mặt hàng',
+          title: `${e.text} ${this.functionName}`,
         },
         options,
         this.view.funcID
@@ -135,12 +146,85 @@ export class ItemsComponent extends UIComponent {
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(data);
+        this.edit(e, data);
         break;
       case 'SYS04':
-        // copy;
+        this.copy(e, data);
         break;
     }
+  }
+
+  edit(e, data): void {
+    // debug
+    console.log('edit', { data });
+
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.edit(data).subscribe((selectedItem) => {
+      console.log({ selectedItem });
+
+      const options = new SidebarModel();
+      options.Width = '800px';
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
+      this.callfc
+        .openSide(
+          PopupAddItemComponent,
+          {
+            formType: 'edit',
+            title: `${e.text} ${this.functionName}`,
+          },
+          options,
+          this.view.funcID
+        )
+        .closed.subscribe((res) => console.log(res));
+    });
+  }
+
+  copy(e, data): void {
+    console.log('copy', { data });
+
+    const { cwum, cwDeviation, cwConversion, umid, diM2, diM3, ...rest1 } =
+      data;
+    this.view.dataService.dataSelected = {
+      ...rest1,
+      cWUM: cwum,
+      cWDeviation: cwDeviation,
+      cWConversion: cwConversion,
+      uMID: umid,
+      dIM2: diM2,
+      dIM3: diM3,
+    };
+    this.view.dataService.copy().subscribe((res) => {
+      console.log({ selectedItem: res });
+
+      const { cWUM, cWDeviation, cWConversion, uMID, dIM2, dIM3, ...rest2 } =
+        res;
+      this.view.dataService.dataSelected = {
+        ...rest2,
+        cwum: cWUM,
+        cwDeviation: cWDeviation,
+        cwConversion: cWConversion,
+        umid: uMID,
+        diM2: dIM2,
+        diM3: dIM3,
+      };
+
+      const options = new SidebarModel();
+      options.Width = '800px';
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
+      this.callfc
+        .openSide(
+          PopupAddItemComponent,
+          {
+            formType: 'add',
+            title: `${e.text} ${this.functionName}`,
+          },
+          options,
+          this.view.funcID
+        )
+        .closed.subscribe((res) => console.log(res));
+    });
   }
   //#endregion
 
@@ -160,40 +244,14 @@ export class ItemsComponent extends UIComponent {
         return true;
       })
       .subscribe((res: any) => {
-        if (res.data) {
+        console.log(res);
+        if (res) {
           this.itemsService.deleteImage(
-            res.data.itemID,
+            data.itemID,
             this.view.formModel.entityName
           );
         }
-        console.log(res);
       });
-  }
-
-  edit(data): void {
-    // debug
-    console.log('edit', { data });
-
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.edit(data).subscribe((selectedItem) => {
-      console.log({ selectedItem });
-
-      const options = new SidebarModel();
-      options.Width = '800px';
-      options.DataService = this.view.dataService;
-      options.FormModel = this.view.formModel;
-      this.callfc
-        .openSide(
-          PopupAddItemComponent,
-          {
-            formType: 'edit',
-            title: 'Sửa mặt hàng',
-          },
-          options,
-          this.view.funcID
-        )
-        .closed.subscribe((res) => console.log(res));
-    });
   }
 
   loadComboboxData(name: string, pageSize: number = 100): Observable<any> {

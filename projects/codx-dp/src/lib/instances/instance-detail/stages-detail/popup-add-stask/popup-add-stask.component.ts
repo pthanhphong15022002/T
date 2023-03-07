@@ -67,7 +67,7 @@ export class PopupAddStaskComponent implements OnInit {
   ) {
     this.status = dt?.data[0];
     this.title = dt?.data[1]['text'];
-    this.stepType = dt?.data[1]['id'];
+    this.stepType = dt?.data[1]['value'];
     this.stepID = dt?.data[2];
     this.groupTackList = dt?.data[3];
     this.dialog = dialog;

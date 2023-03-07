@@ -57,7 +57,7 @@
         [hideUploadBtn]="isEdit ? 0 : 1"
         [hideDes]="hideFolder"
         [type]="type"
-        [allowExtensions]="allowExtensions"
+        
         [allowMultiFile]="allowMultiFile"
         [formModel]="formModel"
         [functionID]="funcID"
@@ -73,6 +73,7 @@
         [addPermissions]="addPermissions"
       >
       </codx-attachment>
+      <!-- [allowExtensions]="allowExtensions" -->
     </ng-container>
     <ng-container *ngSwitchCase="'comment'">
       <div class="tab-comt">
