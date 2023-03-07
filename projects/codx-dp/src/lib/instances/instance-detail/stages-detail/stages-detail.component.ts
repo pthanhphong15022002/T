@@ -35,13 +35,13 @@ import {
 import { CodxDpService } from '../../../codx-dp.service';
 import { PopupCustomFieldComponent } from '../field-detail/popup-custom-field/popup-custom-field.component';
 import { ViewJobComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/view-job/view-job.component';
+import { PopupTypeTaskComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',
   styleUrls: ['./stages-detail.component.scss'],
 })
 export class StagesDetailComponent implements OnInit {
-  @ViewChild('setJobPopup') setJobPopup: TemplateRef<any>;
   @ViewChild('addGroupJobPopup') addGroupJobPopup: TemplateRef<any>;
   @ViewChild('updateProgress') updateProgress: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -80,7 +80,7 @@ export class StagesDetailComponent implements OnInit {
   disabledProgressCkeck = false;
   isHaveFile = false;
   folderID = '';
-  groupTaskID = '';
+  groupTaskID = null;
   funcIDparent: any;
   moreDefaut = {
     share: true,
@@ -92,6 +92,8 @@ export class StagesDetailComponent implements OnInit {
   moreReason = {
     delete: true,
   };
+  dateFomat = 'dd/MM/yyyy';
+  dateTimeFomat = 'HH:mm - dd/MM/yyyy';
   frmModel: FormModel = {
     entityName: 'DP_InstancesSteps',
     formName: 'DPInstancesSteps',
@@ -322,16 +324,13 @@ export class StagesDetailComponent implements OnInit {
 
   //task -- nvthuan
   openTypeTask() {
-    this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
-    this.jobType['checked'] = false;
-  }
-
-  getTypeTask(e, value) {
-    if (this.jobType) {
-      this.jobType['checked'] = false;
-    }
-    this.jobType = value;
-    this.jobType['checked'] = true;
+    this.popupJob = this.callfc.openForm(PopupTypeTaskComponent, '', 400, 400);
+    this.popupJob.closed.subscribe(async (value) => {
+      if (value?.event) {
+        this.jobType = value?.event;
+        this.handleTask(null, 'add');
+      }
+    });
   }
 
   handleTask(data?: any, status?: string) {
@@ -365,7 +364,7 @@ export class StagesDetailComponent implements OnInit {
     let dialog = this.callfc.openSide(PopupAddStaskComponent, listData, option);
 
     dialog.closed.subscribe(async (e) => {
-      this.groupTaskID = ''; //set lại
+      this.groupTaskID = null; //set lại
       if (e?.event) {
         let taskData = e?.event?.data;
         if (e.event?.status === 'add' || e.event?.status === 'copy') {
@@ -747,9 +746,16 @@ export class StagesDetailComponent implements OnInit {
   }
 
   calculateProgressStep() {
-    const sum = this.taskGroupList.reduce((accumulator, currentValue) => {
-      return accumulator + Number(currentValue['progress'] || 0);
-    }, 0);
+    let sum = 0;
+    this.taskGroupList?.forEach(group => {
+      if(!group['recID'] && group['task']?.length > 0){
+        sum += group['task']?.reduce((accumulator, currentValue) => {
+          return accumulator + Number(currentValue['progress'] || 0);
+        }, 0);
+      }else{
+        sum += Number(group['progress'] || 0);
+      }
+    });
     let medium = (sum / this.taskGroupList.length).toFixed(2);
     this.step.progress = Number(medium);
     this.progress = medium;
@@ -804,6 +810,7 @@ export class StagesDetailComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
+      this.calculateProgressStep();
       await this.changeValueDrop(
         event.previousContainer.data,
         'indexNo',
