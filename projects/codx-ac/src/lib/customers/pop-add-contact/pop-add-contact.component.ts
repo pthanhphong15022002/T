@@ -76,22 +76,19 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    this.contact.contactID = this.randomNumber();
+  }
+  //#endregion
+
+  //#region Event
+  valueChange(e: any) {
+    this.contact[e.field] = e.data;
   }
   //#endregion
 
   //#region Function
-  randomNumber() {
-    var number = Math.floor(Math.random() * 100000);
-    return number.toString();
-  }
-  valueChange(e: any) {
-    this.contact[e.field] = e.data;
-  }
   clearContact() {
     this.form.formGroup.reset();
     this.contact = new Contact();
-    this.contact.contactID = this.randomNumber();
   }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
@@ -139,7 +136,11 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      this.notification.notifyCode('SYS006', 0, '');
+      if (this.type == 'editContact') {
+        this.notification.notifyCode('SYS007', 0, '');
+      }else{
+        this.notification.notifyCode('SYS006', 0, '');
+      }
       window.localStorage.setItem('datacontact', JSON.stringify(this.contact));
       this.dialog.close();
     }
@@ -156,7 +157,11 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
       if (this.recIdAddress != null) {
         this.contact.reference = this.recIdAddress;
       }
-      this.notification.notifyCode('SYS006', 0, '');
+      if (this.type == 'editContact') {
+        this.notification.notifyCode('SYS007', 0, '');
+      }else{
+        this.notification.notifyCode('SYS006', 0, '');
+      }
       this.objectContact.push({ ...this.contact });
       this.clearContact();
     }

@@ -5053,8 +5053,7 @@ export class EmployeeDetailComponent extends UIComponent {
   valueChangeFilterAccidentID(evt) {
     this.filterByAccidentIDArr = evt.data;
     let lengthArr = this.filterByAccidentIDArr.length;
-    let first = 0;
-    let last = lengthArr - 1;
+
     if (this.filterByAccidentIDArr?.length > 0) {
       this.filterAccidentIdPredicate = '(';
       for (let i = 0; i < lengthArr; i++) {

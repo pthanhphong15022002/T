@@ -114,47 +114,50 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.cache.valueList('AC015').subscribe((res) => {
       this.valuelist = res.datas;
     });
-    if (this.customers.customerID != null) {
-      this.acService
-        .loadData('ERM.Business.BS', 'BankAccountsBusiness', 'LoadDataAsync', [
-          this.objecttype,
-          this.customers.customerID,
-        ])
-        .subscribe((res: any) => {
-          this.objectBankaccount = res;
-        });
-      this.acService
-        .loadData('ERM.Business.BS', 'ContactBookBusiness', 'LoadDataAsync', [
-          this.objecttype,
-          this.customers.customerID,
-        ])
-        .subscribe((res: any) => {
-          this.objectContact = res;
-        });
-      this.acService
-        .loadData('ERM.Business.BS', 'AddressBookBusiness', 'LoadDataAsync', [
-          this.objecttype,
-          this.customers.customerID,
-        ])
-        .subscribe((res: any) => {
-          this.objectAddress = res;
-          for (var i = 0; i < this.objectAddress.length; i++) {
-            var recID = this.objectAddress[i].recID;
-            this.acService
-              .loadData(
-                'ERM.Business.BS',
-                'ContactBookBusiness',
-                'LoadDataAsync',
-                [this.objecttype, recID]
-              )
-              .subscribe((res: any) => {
-                res.forEach((element) => {
-                  this.objectContactAddress.push(element);
+    if (this.formType == 'edit') {
+      if (this.customers.customerID != null) {
+        this.acService
+          .loadData('ERM.Business.BS', 'BankAccountsBusiness', 'LoadDataAsync', [
+            this.objecttype,
+            this.customers.customerID,
+          ])
+          .subscribe((res: any) => {
+            this.objectBankaccount = res;
+          });
+        this.acService
+          .loadData('ERM.Business.BS', 'ContactBookBusiness', 'LoadDataAsync', [
+            this.objecttype,
+            this.customers.customerID,
+          ])
+          .subscribe((res: any) => {
+            this.objectContact = res;
+          });
+        this.acService
+          .loadData('ERM.Business.BS', 'AddressBookBusiness', 'LoadDataAsync', [
+            this.objecttype,
+            this.customers.customerID,
+          ])
+          .subscribe((res: any) => {
+            this.objectAddress = res;
+            for (var i = 0; i < this.objectAddress.length; i++) {
+              var recID = this.objectAddress[i].recID;
+              this.acService
+                .loadData(
+                  'ERM.Business.BS',
+                  'ContactBookBusiness',
+                  'LoadDataAsync',
+                  [this.objecttype, recID]
+                )
+                .subscribe((res: any) => {
+                  res.forEach((element) => {
+                    this.objectContactAddress.push(element);
+                  });
                 });
-              });
-          }
-        });
+            }
+          });
+      }
     }
+   
   }
   //#endregion
 
@@ -176,6 +179,9 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       this.customers[e.field] = true;
     }
   }
+  //#endregion
+
+  //#region Function
   openPopupBank() {
     var obj = {
       headerText: 'Thêm tài khoản ngân hàng',
@@ -194,8 +200,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
           var dialogbank = this.callfc.openForm(
             PopAddBankComponent,
             '',
-            650,
-            550,
+            500,
+            400,
             '',
             obj,
             '',
@@ -294,7 +300,6 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             opt
           );
           dialogaddress.closed.subscribe((x) => {
-            console.log(this.objectContactAddress);
             var dataaddress = JSON.parse(localStorage.getItem('dataaddress'));
             var datacontactaddress = JSON.parse(
               localStorage.getItem('datacontactaddress')
@@ -320,6 +325,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     );
     this.objectBankaccount.splice(index, 1);
     this.objectBankaccountDelete.push(data);
+    this.notification.notifyCode('SYS008', 0, '');
   }
   editobjectBank(data: any) {
     let index = this.objectBankaccount.findIndex(
@@ -425,6 +431,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     });
     this.objectAddress.splice(index, 1);
     this.objectAddressDelete.push(data);
+    this.notification.notifyCode('SYS008', 0, '');
   }
   editobjectContact(data: any) {
     let index = this.objectContact.findIndex((x) => x.recID == data.recID);
@@ -469,10 +476,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     );
     this.objectContact.splice(index, 1);
     this.objectContactDelete.push(data);
+    this.notification.notifyCode('SYS008', 0, '');
   }
-  //#endregion
-
-  //#region Function
   setTitle(e: any) {
     this.title = this.headerText;
     this.dt.detectChanges();
@@ -558,7 +563,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       } else {
         this.customers.overDueControl = true;
       }
-      if (this.formType == 'add') {
+      if (this.formType == 'add' || this.formType == 'copy') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'AddAsync';

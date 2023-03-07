@@ -3126,7 +3126,7 @@
               </div>
 
               <div class="" *ngIf="ViewAllEBasicSalaryFlag">
-                <div class="d-flex align-items-center mt-5 mb-3">
+                <div class="d-flex align-items-center mt-7 mb-3">
                   <span class="icon-i-filter-right icon-20 me-2"></span>
                   <div class="d-flex align-items-center me-3">
                     <codx-label
@@ -3288,7 +3288,7 @@
               </div>
 
               <div class="" *ngIf="ViewAllEJobSalaryFlag">
-                <div class="d-flex align-items-center mt-5 mb-3">
+                <div class="d-flex align-items-center mt-7 mb-3">
                   <span class="icon-i-filter-right icon-20 me-2"></span>
                   <div class="d-flex align-items-center me-3">
                     <codx-label
@@ -3360,10 +3360,10 @@
               </div>
             </div>
 
-            <div class="d-flex flex-wrap pt-3 px-4">
+            <div class="d-flex flex-wrap pt-5 ps-8">
               <ng-container *ngFor="let benefit of listCrrBenefit">
                 <div
-                  class="border border-gray-200 rounded min-w-250px mw-250px me-4 mb-4"
+                  class="border border-gray-200 rounded min-w-250px mw-250px me-3 mb-3"
                   *ngIf="benefit != null"
                 >
                   <codx-temp-full
@@ -3414,7 +3414,7 @@
               </ng-container>
             </div>
             <div *ngIf="ViewAllEBenefitFlag == true">
-              <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+              <div class="d-flex justify-content-between align-items-center mt-6 mb-3">
                 <div class="d-flex align-items-center">
                   <span class="icon-i-filter-right icon-20 me-2"></span>
                   <div class="d-flex align-items-center me-3">
@@ -3536,7 +3536,7 @@
 
             <div *ngIf="ViewAllEAssetFlag == true">
               <div
-                class="d-flex justify-content-between mt-3 mb-3"
+                class="d-flex justify-content-between mt-6 mb-3"
               >
              
 
@@ -3819,7 +3819,7 @@
             </div>
 
             <div class="" *ngIf="ViewAllEContractFlag">
-              <div class="d-flex align-items-center mb-3">
+              <div class="d-flex align-items-center mb-3 mt-5">
                 <span class="icon-i-filter-right icon-20 me-2"></span>
                 <div class="d-flex align-items-center me-3">
                   <codx-label
@@ -3964,7 +3964,7 @@
               </div>
             </div>
 
-            <div class="mb-5">
+            <div class="mt-1">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex flex-wrap">
                   <span class="icon-date_range icon-16 me-2"></span>
@@ -3986,7 +3986,7 @@
             </div>
            
 
-            <div class=" mb-1">
+            <div class=" mb-1 mt-5">
               <div
                 class="profile-grid"
               >
@@ -4527,7 +4527,7 @@
                   </div> -->
               <div *ngIf="ViewAllEskillFlag">
                 <div
-                  class="d-flex justify-content-between mt-5 mb-3"
+                  class="d-flex justify-content-between mt-9 mb-3"
                 >
                   
                   <div class="d-flex align-items-center">
@@ -4837,7 +4837,7 @@
           <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
-                <div class="user-status  text-primary">
+                <div class="user-status text-primary">
                   <span class="icon-sentiment_dissatisfied icon-20 me-2"></span>
                 </div>
 
@@ -4894,30 +4894,28 @@
 
 <!-- pane_7 Sức khỏe-->
 <ng-template #healthInfo>
-  <div class="d-flex justify-content-between mb-2 mt-6">
-    <div class="tab-horizone px-4 h-od-tab">
-      <ul
-        ngbNav
-        #nav="ngbNav"
-        [(activeId)]="active[7]"
-        (navChange)="navChange($event)"
-        class="nav nav-tabs"
-      >
-        <ng-container *ngFor="let item of lstFuncHealth; let i = index">
-          <li [ngbNavItem]="item.functionID" class="nav-item">
-            <a ngbNavLink class="nav-link">
-              <div class="text-uppercase">{{ item.customName }}</div>
-            </a>
+  <div class="tab-horizone bg-white h-od-tab mb-4">
+    <ul
+      ngbNav
+      #nav="ngbNav"
+      [(activeId)]="active[7]"
+      (navChange)="navChange($event)"
+      class="nav nav-tabs px-4"
+    >
+      <ng-container *ngFor="let item of lstFuncHealth; let i = index">
+        <li [ngbNavItem]="item.functionID" class="nav-item">
+          <a ngbNavLink class="nav-link">
+            <div class="text-uppercase">{{ item.customName }}</div>
+          </a>
 
-            <ng-template ngbNavContent> </ng-template>
-          </li>
-        </ng-container>
-      </ul>
+          <ng-template ngbNavContent> </ng-template>
+        </li>
+      </ng-container>
+    </ul>
 
-      <div [ngbNavOutlet]="nav" class="pt-4"></div>
-    </div>
+    <div [ngbNavOutlet]="nav"></div>
   </div>
-  <hr />
+
   <div
     class="pw-content w-100 scroll-y"
     data-kt-scroll="true"
@@ -4930,16 +4928,16 @@
     <div class="user-content flex-row-fluid">
       <ng-container>
         <!-- Khám sức khỏe -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0801">
-          <div class="rounded-2 p-4 bg-white">
+        <div class="user-profile overview d-block" id="HRTEM0801">
+          <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center text-primary">
+              <div class="d-flex align-items-center">
                 <div class="user-status d-flex align-items-center">
                   <span
-                    class="icon-accessibility icon-20 me-1 text-primary"
+                    class="icon-accessibility icon-20 me-2 text-primary"
                   ></span>
                 </div>
-                <div class="fs-5 fw-bold text-uppercase text-primary">
+                <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                   <!-- <codx-label
                     name="lblPhysicalExamination"
                     [formModel]="eInfoFormModel"
@@ -4947,27 +4945,27 @@
                   >
                   </codx-label> -->
                   {{ getFormHeader("HRTEM0801") }}
-                  <span class="text-gray-500 ms-2"> | </span>
-                  <span class="text-dark fw-bold">
-                    <span>({{ eHealthRowCount }})</span>
-                  </span>
+                  
                 </div>
+                <span class="text-gray-400 mx-2">|</span>
+                <span class="text-dark">
+                  <span>({{ eHealthRowCount }})</span>
+                </span>
               </div>
               <div class="d-flex align-items-center ms-5">
-                <button
-                  class="btn btn-icon btn-sm position-relative ms-2"
+                <button type="button"
+                  class="btn btn-icon btn-sm btn-white"
                   (click)="HandleEmployeeEHealths(addHeaderText, 'add', null)"
                 >
                   <span
-                    class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    class="icon-add icon-18"
                   ></span>
                 </button>
-                <span class="text-gray-500 ms-2">|</span>
               </div>
             </div>
-            <div class="mb-1">
+            <div class="mb-1 mt-6">
               <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                class="profile-grid"
               >
                 <codx-gridview
                   *ngIf="eHealthColumnGrid"
@@ -4982,22 +4980,22 @@
                   [dataValues]="employeeID"
                   [pageSize]="numPageSizeGridView"
                   [entityName]="'HR_EHealths'"
-                  [rowHeight]="50"
-                  height="240px"
+                  [rowHeight]="40"
+                  height="auto"
                 ></codx-gridview>
               </div>
             </div>
           </div>
         </div>
         <!-- Tiêm vaccine -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0802">
-          <div class="rounded-2 p-4 bg-white">
+        <div class="user-profile overview d-block" id="HRTEM0802">
+          <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center text-primary">
-                <div class="user-status d-flex align-items-center">
-                  <span class="icon-colorize icon-20 me-1"></span>
+              <div class="d-flex align-items-center">
+                <div class="user-status text-primary">
+                  <span class="icon-colorize icon-20 me-2"></span>
                 </div>
-                <div class="fs-5 fw-bold text-uppercase text-primary">
+                <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                   <!-- <codx-label
                     name="lblVaccination"
                     [formModel]="eInfoFormModel"
@@ -5005,11 +5003,12 @@
                   >
                   </codx-label> -->
                   {{ getFormHeader("HRTEM0802") }}
-                  <span class="text-gray-500 ms-2"> | </span>
-                  <span class="text-dark fw-bold">
-                    <span>({{ eVaccineRowCount }})</span>
-                  </span>
+                  
                 </div>
+                <span class="text-gray-500 mx-2"> | </span>
+                <span class="text-dark">
+                  <span>({{ eVaccineRowCount }})</span>
+                </span>
               </div>
               <div class="d-flex align-items-center ms-5">
                 <codx-dropdown-select
@@ -5024,7 +5023,7 @@
                   (valueChange)="valueChangeFilterVaccineTypeID($event)"
                 ></codx-dropdown-select>
 
-                <span class="text-gray-500 ms-2">|</span>
+                <span class="text-gray-400 mx-2">|</span>
 
                 <codx-dropdown-calendar
                   [cssPopup]="'w-600px h-400px'"
@@ -5035,25 +5034,25 @@
                   [cssClass]="'rounded-pill'"
                   (change)="valueChangeYearFilterEVaccine($event)"
                 ></codx-dropdown-calendar>
-                <span class="text-gray-500 ms-2">|</span>
-                <button
-                  class="btn btn-icon btn-sm position-relative ms-2"
+                <span class="text-gray-400 mx-2">|</span>
+                <button type="button"
+                  class="btn btn-icon btn-sm btn-white"
                   (click)="HandleEVaccinesInfo(addHeaderText, 'add', null)"
                 >
                   <span
-                    class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    class="icon-add icon-18"
                   ></span>
                 </button>
-                <span class="text-gray-500 ms-2">|</span>
-                <button class="btn btn-icon btn-sm position-relative ms-1">
+                <span class="text-gray-400 mx-2">|</span>
+                <button type="button" class="btn btn-icon btn-sm btn-white">
                   <span
-                    class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
+                    class="icon-more_vert icon-18"
                   ></span>
                 </button>
               </div>
             </div>
-            <div class="mb-1">
-              <div class="d-flex flex-wrap mt-6 mb-3">
+            <div class="mt-7">
+              
                 <!-- <ng-container *ngFor="let item of lstVaccine">
                   <div class="mw-300px min-w-300px me-5">
                     <div
@@ -5100,7 +5099,7 @@
                     </div>
                   </div>
                 </ng-container> -->
-
+                <div class="profile-grid">
                 <codx-gridview
                   *ngIf="eVaccineColumnGrid"
                   #eVaccinesGridView
@@ -5114,28 +5113,29 @@
                   [dataValues]="employeeID"
                   [pageSize]="numPageSizeGridView"
                   [entityName]="'HR_EVaccines'"
-                  [rowHeight]="50"
-                  height="240px"
+                  [rowHeight]="40"
+                  height="auto"
                 ></codx-gridview>
               </div>
             </div>
           </div>
         </div>
         <!-- Bệnh nghề nghiệp -->
-        <div class="user-profile overview d-block mb-3" id="HRTEM0803">
-          <div class="rounded-2 p-4 bg-white">
+        <div class="user-profile overview d-block" id="HRTEM0803">
+          <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center text-primary">
-                <div class="user-status d-flex align-items-center">
-                  <span class="icon-sick icon-20 me-1"></span>
+              <div class="d-flex align-items-center">
+                <div class="user-status text-primary">
+                  <span class="icon-sick icon-20 me-2"></span>
                 </div>
-                <div class="fs-5 fw-bold text-uppercase text-primary">
+                <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
                   {{ getFormHeader("HRTEM0803") }}
-                  <span class="text-gray-500 ms-2"> | </span>
-                  <span class="text-dark fw-bold">
-                    <span>({{ eDiseasesRowCount }})</span>
-                  </span>
+                  
                 </div>
+                <span class="text-gray-500 mx-2"> | </span>
+                <span class="text-dark">
+                  <span>({{ eDiseasesRowCount }})</span>
+                </span>
               </div>
               <div class="d-flex align-items-center ms-5">
                 <span>
@@ -5153,29 +5153,29 @@
                     <i class="icon-filter_alt"></i>
                   </codx-dropdown-select>
                 </span>
-                <span class="text-gray-500 ms-2">|</span>
-                <button
-                  class="btn btn-icon btn-sm position-relative ms-2"
+                <span class="text-gray-400 mx-2">|</span>
+                <button type="button"
+                  class="btn btn-icon btn-sm btn-white"
                   (click)="
                     HandleEmployeeEDiseasesInfo(addHeaderText, 'add', null)
                   "
                 >
                   <!--topdiseases-->
                   <span
-                    class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    class="icon-add icon-18"
                   ></span>
                 </button>
-                <span class="text-gray-500 ms-2">|</span>
-                <button class="btn btn-icon btn-sm position-relative ms-1">
+                <span class="text-gray-500 mx-2">|</span>
+                <button class="btn btn-icon btn-sm btn-white">
                   <span
-                    class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
+                    class="icon-more_vert icon-18"
                   ></span>
                 </button>
               </div>
             </div>
 
             <!--Griddiseases-->
-            <div class="mb-1">
+            <div class="profile-grid mt-7">
               <codx-gridview
                 *ngIf="eDiseasesColumnsGrid && eDiseasesFormModel"
                 #eDiseasesGridView
@@ -5189,8 +5189,8 @@
                 [dataValues]="employeeID"
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_EDiseases'"
-                [rowHeight]="50"
-                height="240px"
+                [rowHeight]="40"
+                height="auto"
               >
               </codx-gridview>
               <!-- <div
@@ -5219,12 +5219,12 @@
           </div>
         </div>
         <!-- Tai nạn lao động -->
-        <div class="user-profile overview d-block mb-3" [id]="eAccidentsFuncID">
-          <div class="rounded-2 p-4 bg-white">
+        <div class="user-profile overview d-block" [id]="eAccidentsFuncID">
+          <div class="rounded-2 p-5 bg-white mb-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center text-primary">
                 <div class="user-status d-flex align-items-center">
-                  <span class="icon-wheelchair_pickup icon-20 me-1"></span>
+                  <span class="icon-wheelchair_pickup icon-20 me-2"></span>
                 </div>
                 <div class="fs-5 fw-bold text-uppercase text-primary">
                   <!-- <codx-label
@@ -5251,15 +5251,15 @@
                   <i class="icon-filter_alt"></i>
                 </codx-dropdown-select>
 
-                <span class="text-gray-500 ms-2">|</span>
-                <button
-                  class="btn btn-icon btn-sm position-relative ms-2"
+                <span class="text-gray-400 mx-2">|</span>
+                <button type="button"
+                  class="btn btn-icon btn-sm btn-white"
                   (click)="
                     HandleEmployeeAccidentInfo(addHeaderText, 'add', null)
                   "
                 >
                   <span
-                    class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    class="icon-add icon-18"
                   ></span>
                 </button>
               </div>
@@ -5279,8 +5279,8 @@
                   [dataValues]="employeeID"
                   [pageSize]="numPageSizeGridView"
                   [entityName]="'HR_EDiseases'"
-                  [rowHeight]="50"
-                  height="240px"
+                  [rowHeight]="40"
+                  height="auto"
                 >
                 </codx-gridview>
               </div>
@@ -5460,15 +5460,15 @@
 
 <ng-template #templateEDegreeGridCol3 let-data>
   <div class="has-action-menu">
-    <div>
-      <i class="icon-event icon-16 text-gray-600 me-2 pb-1"></i>
-      <span class="fw-bold fs-6">
-        {{ data?.yearGraduated }}
-      </span>
+    <div class="d-flex align-items-center mb-5px">
+      <i class="icon-event icon-16 text-gray-600 me-2"></i>
+      <span class="text-dark">{{ data?.yearGraduated }}</span>
       <i
-        class="icon-i-info-circle-fill icon-circle-group text-gray-600 pe-1"
+        class="icon-i-info-circle-fill icon-circle-group icon-10 text-gray-400 mx-2"
       ></i>
+      <span>
       {{ data?.issuedDate | fmDT }}
+    </span>
     </div>
     <div *ngIf="data.isMain">
       <span class="badge badge-success border-0">Là bằng cấp chính</span>
@@ -5486,7 +5486,7 @@
 <!--#endregion-->
 
 <ng-template #templateECertificateGridCol1 let-data>
-  <div class="d-flex align-items-center mb-1">
+  <div class="d-flex align-items-center mb-5px">
     <i class="icon-class icon-16 text-primary me-2"></i>
     <span class="text-dark fs-6">
     {{
@@ -5515,46 +5515,46 @@
 </ng-template>
 
 <ng-template #templateECertificateGridCol2 let-data>
-  <div class="d-flex align-items-center mb-1">
+  <div class="d-flex align-items-center mb-5px">
     {{
       data?.trainSupplierID
         | formatvalue : eCertificateFormModel : "trainSupplierID"
         | async
     }}
   </div>
-    <div class="d-flex flex-wrap">
-      <div class="d-flex align-items-center">
-        <span class="icon-insights icon-14 text-warning me-1"></span>
-        <span class="text-warning" #ranking>
+  <div class="d-flex flex-wrap">
+    <div class="d-flex align-items-center">
+      <span class="icon-insights icon-14 text-warning me-1"></span>
+      <span class="text-warning" #ranking>
+        {{
+          data?.ranking
+            | formatvalue : eCertificateFormModel : "ranking"
+            | async
+        }}
+      </span>
+    </div>
+    <div class="d-flex align-items-center">
+      <span
+        class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+      ></span>
+      <span class="fw-bold text-primary">
+        <span class="text-danger">
           {{
-            data?.ranking
-              | formatvalue : eCertificateFormModel : "ranking"
+            data?.totalScore
+              | formatvalue : eCertificateFormModel : "totalScore"
               | async
           }}
         </span>
-      </div>
-      <div class="d-flex align-items-center">
-        <span
-          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
-        ></span>
-        <span class="fw-bold text-primary">
-          <span class="text-danger">
-            {{
-              data?.totalScore
-                | formatvalue : eCertificateFormModel : "totalScore"
-                | async
-            }}
-          </span>
-        </span>
-      </div>
+      </span>
     </div>
-    <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
+  </div>
+  <!--{{data?.trainSupplierID | formatvalue: degreeFormodel:"trainSupplierID" | async}}-->
   
 </ng-template>
 
 <ng-template #templateECertificateGridCol3 let-data>
   <div class="has-action-menu">
-    <div class="d-flex align-items-center pb-1">
+    <div class="d-flex align-items-center mb-5px">
       <i class="icon-event icon-16 text-gray-600 me-2"></i>
       {{ data?.issuedDate | fmDT }}
       <span *ngIf="data?.isExpire" class="badge badge-danger border-0 ms-2">
@@ -5575,7 +5575,7 @@
 
 <!--Template ESkills-->
 <ng-template #templateESkillGridCol1 let-data>
-  <div class="fw-bold fs-6">
+  <div class="fw-bold text-dark mb-5px">
     {{ data?.skillID | formatvalue : eSkillFormmodel : "skillID" | async }}
   </div>
   <div>
@@ -5583,7 +5583,7 @@
       class="badge"
       [ngClass]="
         isMaxGrade(data)
-          ? 'badge-primary border-0 fw-bold'
+          ? 'badge-primary border-0'
           : 'border-1 text-dark badge-secondary fw-bold'
       "
       [style.border-color]="isMaxGrade(data) ? '' : 'black'"
@@ -5598,7 +5598,7 @@
 </ng-template>
 
 <ng-template #templateESkillGridCol2 let-data>
-  <div>
+  <div class="mb-5px">
     {{
       data?.trainSupplierID
         | formatvalue : eSkillFormmodel : "trainSupplierID"
@@ -5606,7 +5606,7 @@
     }}
   </div>
 
-  <div class="d-flex flex-wrap mb-1">
+  <div class="d-flex flex-wrap">
     <div class="d-flex align-items-center">
       <span class="icon-insights icon-14 text-warning me-1"></span>
       <span class="text-warning" #ranking>
@@ -5721,7 +5721,7 @@
 
 <!-- #region Hộ chiếu columnGrid templates-->
 <ng-template #passportCol1 let-data>
-  <div class="d-flex align-items-center mb-2">
+  <div class="d-flex align-items-center ">
     <span
       class="bullet bullet-vertical d-flex align-items-center min-h-40px mh-100 me-3"
       [class]="
@@ -5729,9 +5729,9 @@
       "
     ></span>
     <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-1">
+      <div class="d-flex align-items-center mb-5px">
         <span class="icon-description icon-16 text-gray-500 me-2"></span>
-        <div class="text-dark fw-bold">
+        <div class="text-dark">
           {{
             data?.passportNo
               | formatvalue : ePassportFormModel : "passportNo"
@@ -5756,8 +5756,8 @@
 <ng-template #passportCol2 let-data>
   <div class="has-action-menu">
     <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-2">
-        <span class="icon-event icon-16 text-primary me-1"></span>
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-event icon-16 text-primary me-2"></span>
         <span class="text-dark">
           <span>{{
             data?.issuedDate
@@ -5766,8 +5766,8 @@
           }}</span>
         </span>
       </div>
-      <div class="d-flex align-items-center mb-2">
-        <span class="icon-event icon-16 text-danger me-1"></span>
+      <div class="d-flex align-items-center">
+        <span class="icon-event icon-16 text-danger me-2"></span>
         <span class="text-dark">
           <span>{{
             data?.expiredDate
@@ -5792,16 +5792,16 @@
 <!-- #region Thị thực columnGrid templates-->
 <ng-template #visaCol1 let-data>
   <div class="d-flex flex-column">
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-email icon-16 text-gray-800 me-1"></span>
+    <div class="d-flex align-items-center mb-5px">
+      <span class="icon-email icon-16 text-gray-500 me-2"></span>
       <span class="text-dark">
         <span>{{
           data?.visaNo | formatvalue : eVisaFormModel : "visaNo" | async
         }}</span>
       </span>
     </div>
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-email icon-16 text-gray-800 me-1"></span>
+    <div class="d-flex align-items-center">
+      <span class="icon-email icon-16 text-gray-500 me-2"></span>
       <span class="text-dark">
         <span>{{
           data?.issuedPlace
@@ -5816,8 +5816,8 @@
 <ng-template #visaCol2 let-data>
   <div class="has-action-menu">
     <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-2">
-        <span class="icon-event icon-16 text-primary me-1"></span>
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-event icon-16 text-primary me-2"></span>
         <span class="text-dark">
           <span>{{
             data?.issuedDate
@@ -5826,8 +5826,8 @@
           }}</span>
         </span>
       </div>
-      <div class="d-flex align-items-center mb-2">
-        <span class="icon-event icon-16 text-danger me-1"></span>
+      <div class="d-flex align-items-center">
+        <span class="icon-event icon-16 text-danger me-2"></span>
         <span class="text-dark">
           <span>{{
             data?.effectedDate
@@ -5860,8 +5860,8 @@
 <!-- #region Giấy phép lao động columnGrid templates-->
 <ng-template #workPermitCol1 let-data>
   <div class="d-flex flex-column">
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-email icon-16 text-gray-800 me-1"></span>
+    <div class="d-flex align-items-center mb-5px">
+      <span class="icon-email icon-16 text-gray-500 me-2"></span>
       <span class="text-dark">
         <span>{{
           data?.workPermitNo
@@ -5870,8 +5870,8 @@
         }}</span>
       </span>
     </div>
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-email icon-16 text-gray-800 me-1"></span>
+    <div class="d-flex align-items-center">
+      <span class="icon-email icon-16 text-gray-500 me-2"></span>
       <span class="text-dark">
         <span>{{
           data?.issuedPlace
@@ -5886,8 +5886,8 @@
 <ng-template #workPermitCol2 let-data>
   <div class="has-action-menu">
     <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-2">
-        <span class="icon-event icon-16 text-primary me-1"></span>
+      <div class="d-flex align-items-center mb-5px">
+        <span class="icon-event icon-16 text-primary me-2"></span>
         <span class="text-dark">
           <span>{{
             data?.issuedDate
@@ -5896,8 +5896,8 @@
           }}</span>
         </span>
       </div>
-      <div class="d-flex align-items-center mb-2">
-        <span class="icon-event icon-16 text-danger me-1"></span>
+      <div class="d-flex align-items-center">
+        <span class="icon-event icon-16 text-danger me-2"></span>
         <span class="text-dark">
           <span>{{
             data?.fromDate
@@ -5905,7 +5905,7 @@
               | async
           }}</span>
         </span>
-        <span class="me-1 ms-1">-</span>
+        <span class="mx-2">-</span>
         <span class="text-dark">
           <span>{{
             data?.toDate | formatvalue : eWorkPermitFormModel : "toDate" | async
@@ -5981,16 +5981,16 @@
 <ng-template #basicSalaryCol3 let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center">
-      <span class="icon-event icon-16 text-gray-600 me-2"></span>
-      <span class="text-dark fw-bold fs-6">
+      <span class="icon-event icon-16 text-gray-500 me-2"></span>
+      <span class="text-dark">
         <span>{{
           data?.effectedDate
             | formatvalue : eBasicSalaryFormmodel : "effectedDate"
             | async
         }}</span>
       </span>
-      <span class="mx-1">-</span>
-      <span class="text-dark fw-bold fs-6">
+      <span class="mx-2">-</span>
+      <span class="text-dark">
         <span>{{
           data?.expiredDate
             | formatvalue : eBasicSalaryFormmodel : "expiredDate"
@@ -6004,26 +6004,24 @@
 <ng-template #basicSalaryCol4 let-data>
   <div class="has-action-menu">
     <div class="d-flex flex-column">
-      <div class="d-flex flex-wrap mb-2">
-        <div class="d-flex align-items-center" *ngIf="data?.decisionNo">
-          <span class="icon-qr_code_scanner icon-16 me-1"></span>
-          <span class="fw-bold">
-            <span>{{ data?.decisionNo }}</span>
-          </span>
-        </div>
+      <div class="d-flex align-items-center mb-5px" *ngIf="data?.decisionNo">
+        <span class="icon-qr_code_scanner icon-16 me-2"></span>
+        <span class="text-dark">
+          <span>{{ data?.decisionNo }}</span>
+        </span>
+      </div>
 
-        <div class="d-flex align-items-center">
-          <span
-            class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
-          ></span>
-          <span class="text-gray-600 fw-bold">
-            <span>{{
-              data?.signedDate
-                | formatvalue : eBasicSalaryFormmodel : "signedDate"
-                | async
-            }}</span>
-          </span>
-        </div>
+      <div class="d-flex align-items-center">
+        <span
+          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 mx-2 text-gray-400"
+        ></span>
+        <span class="text-dark">
+          <span>{{
+            data?.signedDate
+              | formatvalue : eBasicSalaryFormmodel : "signedDate"
+              | async
+          }}</span>
+        </span>
       </div>
       <codx-mfunc
         [formModel]="eBasicSalaryFormmodel"
@@ -6049,8 +6047,8 @@
         class="d-flex align-items-center"
         [ngClass]="
           data.isCurrent
-            ? 'text-primary fs-6 fw-bold'
-            : 'text-dark fs-6 fw-bold'
+            ? 'text-primary'
+            : 'text-dark'
         "
       >
         <span class="icon-attach_money icon-16 me-2"></span>
@@ -6069,16 +6067,16 @@
 <ng-template #jobSalaryCol2 let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-2">
-      <span class="icon-event icon-16 text-gray-800 me-1"></span>
-      <span class="text-dark fw-bolder">
+      <span class="icon-event icon-16 text-gray-500 me-2"></span>
+      <span class="text-dark">
         <span>{{
           data?.effectedDate
             | formatvalue : eJobSalaryFormModel : "effectedDate"
             | async
         }}</span>
       </span>
-      <span class="me-1 ms-1">-</span>
-      <span class="text-dark fw-bolder">
+      <span class="mx-2">-</span>
+      <span class="text-dark">
         <span>{{
           data?.expiredDate
             | formatvalue : eJobSalaryFormModel : "expiredDate"
@@ -6223,30 +6221,32 @@
 <!-- #endregion -->
 
 <ng-template #tempCol1EHealthGrid let-data>
-  <div>
-    <i class="icon-calendar_today"></i>
-    {{ data?.healthDate | fmDT }}
+  <div class="d-flex align-items-center mb-5px">
+    <i class="icon-calendar_today icon-16 text-gray-500 me-2"></i>
+    <span class="text-dark">{{ data?.healthDate | fmDT }}</span>
     <i
-      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
+      class="icon-i-circle-fill icon-circle-group mx-2"
     ></i>
-    {{
-      data?.healthPeriodID
-        | formatvalue : eHealthFormModel : "healthPeriodID"
-        | async
-    }}
+    <span>
+      {{
+        data?.healthPeriodID
+          | formatvalue : eHealthFormModel : "healthPeriodID"
+          | async
+      }}
+    </span>
   </div>
-  <div>
-    <i class="icon-add_box"></i>
-    {{ data?.healthPlace }}
+  <div class="d-flex align-items-center">
+    <i class="icon-add_box icon-16 text-gray-500 me-2"></i>
+    <span class="text-dark">{{ data?.healthPlace }}</span>
   </div>
 </ng-template>
 
 <ng-template #tempCol2EHealthGrid let-data>
-  <div>
+  <div class="text-gray-600 mb-5px">
     Loại
     {{ data?.healthType }}
   </div>
-  <div>
+  <div class="text-dark">
     {{ data?.finalConclusion }}
   </div>
 </ng-template>
@@ -6265,22 +6265,26 @@
 </ng-template>
 
 <ng-template #tempEVaccineGridCol1 let-data>
-  <div>
+  <div class="d-flex align-items-center mb-5px">
     <span
-      class="icon-i-arrow-down-left-circle-fill me-2"
+      class="icon-i-arrow-down-left-circle-fill icon-12 me-2"
       [style.color]="getVaccineBackgroundColor(data)"
     ></span>
+    <span>
     {{
       data?.vaccineTypeID
         | formatvalue : eVaccineFormModel : "vaccineTypeID"
         | async
     }}
+    </span>
     <i
-      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
+      class="icon-i-circle-fill icon-circle-group text-gray-400 mx-2"
     ></i>
-    {{ data?.vaccineName }}
+    <span>
+      {{ data?.vaccineName }}
+    </span>
   </div>
-  <div>
+  <div class="text-dark">
     {{
       data?.hopitalID | formatvalue : eVaccineFormModel : "hopitalID" | async
     }}
@@ -6288,19 +6292,19 @@
 </ng-template>
 
 <ng-template #tempEVaccineGridCol2 let-data>
-  <div>
-    <i class="icon-calendar_today"></i>
-    {{ data?.injectDate | fmDT }}
+  <div class="d-flex align-items-center mb-5px">
+    <i class="icon-calendar_today text-gray-500 icon-16 me-2"></i>
+    <span>{{ data?.injectDate | fmDT }}</span>
   </div>
   <div *ngIf="data?.nextInjectDate">
-    <i class="icon-calendar_today"></i>
-    {{ data?.nextInjectDate | fmDT }}
+    <i class="icon-calendar_today text-gray-500 icon-16 me-2"></i>
+    <span>{{ data?.nextInjectDate | fmDT }}</span>
   </div>
 </ng-template>
 
 <ng-template #tempEVaccineGridCol3 let-data>
   <div class="has-action-menu min-h-40px">
-    <i class="icon-edit"></i>
+    <i class="icon-edit text-gray-500 icon-16 me-2"></i>
     {{ data?.note }}
     <codx-mfunc
       [formModel]="eVaccineFormModel"
@@ -6345,7 +6349,7 @@
 
 <ng-template #templateAppointionGridCol3 let-data>
   <div class="has-action-menu">
-    <div class="mb-1 text-gray-600">
+    <div class="mb-5px text-gray-600">
       {{
         data?.orgUnitID
           | formatvalue : appointionFormModel : "orgUnitID"
@@ -6371,7 +6375,7 @@
 </ng-template>
 
 <ng-template #templateDayOffGridCol1 let-data>
-  <div class="d-flex align-items-center mb-1">
+  <div class="d-flex align-items-center mb-5px">
     <i class="icon-calendar_today icon-16 me-2"></i>
     <span class="text-dark">
     {{ data?.kowID | formatvalue : dayofFormModel : "kowID" | async }}</span>
@@ -6382,7 +6386,7 @@
 </ng-template>
 
 <ng-template #templateDayOffGridCol2 let-data>
-  <div class="d-flex align-items-center mb-1">
+  <div class="d-flex align-items-center mb-5px">
     <i class="icon-calendar_today icon-16 me-2"></i>
     <span class="text-dark">
     {{ data?.beginDate | fmDT }} - {{ data?.endDate | fmDT }}</span>
@@ -6413,7 +6417,7 @@
 </ng-template>
 
 <ng-template #templateBusinessTravelGridCol1 let-data>
-  <div class="d-flex flex-wrap mb-1">
+  <div class="d-flex flex-wrap mb-5px">
     <i class="icon-home_work icon-16 me-2"></i>
     <span class="text-dark">{{ data?.businessPlace }}</span>
   </div>
@@ -6427,7 +6431,7 @@
 </ng-template>
 
 <ng-template #templateBusinessTravelGridCol2 let-data>
-  <div class="d-flex flex-wrap mb-1">
+  <div class="d-flex flex-wrap mb-5px">
     <i class="icon-calendar_today icon-16 me-2"></i>
     <span class="text-dark">{{ data?.beginDate | fmDT }} - {{ data?.endDate | fmDT }}</span>
   </div>
@@ -6455,7 +6459,7 @@
 
 <!--region Award - Khen thưởng-->
 <ng-template #templateAwardGridCol1 let-data>
-  <div class="fw-bold fs-6">
+  <div class="mb-5px">
     {{ data?.awardID | formatvalue : awardFormModel : "awardID" | async }}
   </div>
   <div class="text-primary">
@@ -6469,35 +6473,32 @@
 </ng-template>
 
 <ng-template #templateAwardGridCol2 let-data>
-  <div class="d-flex flex-wrap mb-1">
-    <div class="d-flex align-items-center">
-      <span class="me-1"></span>
-      <span #ranking>
-        <i class="icon-event icon-16 text-gray-600 me-2 pb-1 text-primary"></i>
+  <div class="d-flex flex-wrap">
+    <div class="d-flex align-items-center mb-5px" #ranking>
+      <i class="icon-event icon-16 me-2"></i>
+      <span class="text-dark">
         {{ data?.awardDate | fmDT }}
-        <i
-          class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-        ></i>
-        <i class="icon-year fw-bolder"></i>
-        <span class="fw-bold fs-6">{{
-          data?.inYear | formatvalue : awardFormModel : "inYear" | async
-        }}</span>
       </span>
+      <i
+        class="icon-i-circle-fill icon-circle-group icon-10 text-gray-400 mx-2"
+      ></i>
+      <!-- <i class="icon-year icon-16 me-2"></i> -->
+      <span class="text-dark">{{
+        data?.inYear | formatvalue : awardFormModel : "inYear" | async
+      }}</span>
     </div>
-
     <div class="d-flex align-items-center">
-      <span class="me-1"></span>
-      <span>
-        <i class="icon-library_books"></i>
-        {{ data?.decisionNo }}
-        <span class="text-secondary">
-          <i
-            class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-          >
-          </i>
+      <i class="icon-library_books icon-16 me-2"></i>
+        <span class="text-dark">
+          {{ data?.decisionNo }}
+        </span>
+        <i
+          class="icon-i-circle-fill icon-circle-group icon-10 text-gray-400 mx-2"
+        ></i>
+       
+        <span class="text-dark">
           {{ data?.signedDate | fmDT }}
         </span>
-      </span>
     </div>
   </div>
   <!-- <div>
@@ -6513,7 +6514,7 @@
 </ng-template>
 
 <ng-template #templateAwardGridCol3 let-data>
-  <div class="has-action-menu fw-bold min-h-40px">
+  <div class="has-action-menu min-h-40px">
     {{ data?.reason | formatvalue : awardFormModel : "reason" | async }}
     <codx-mfunc
       [formModel]="awardFormModel"
@@ -6527,7 +6528,7 @@
 <!--#end region-->
 
 <ng-template #templateDisciplineGridCol1 let-data>
-  <div class="fw-bold fs-6">
+  <div class="mb-5px">
     {{
       data?.disciplineID
         | formatvalue : eDisciplineFormModel : "DisciplineID"
@@ -6544,22 +6545,24 @@
   </div>
 </ng-template>
 <ng-template #templateDisciplineGridCol2 let-data>
-  <div>
-    <i class="icon-event icon-18 me-2 text-danger"></i>
-    {{ data?.disciplineDate | fmDT }}
+  <div class="d-flex align-items-center mb-5px">
+    <i class="icon-event icon-16 me-2 text-danger"></i>
+    <div class="text-dark">
+      {{ data?.disciplineDate | fmDT }}
+    </div>
   </div>
-  <div>
-    <i class="icon-event icon-18 me-2 text-dark"></i>
-    {{ data?.fromDate | fmDT }}
-    <i
-      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1e"
-    ></i>
-    <i class="icon-library_books"></i>
+  <div class="d-flex align-items-center">
+    <i class="icon-event icon-16 me-2 text-gray-500"></i>
+    <span class="text-dark me-4">{{ data?.fromDate | fmDT }}</span>
+    
+    <i class="icon-library_books icon-16 text-gray-500 me-2"></i>
+    <span>
     {{
       data?.decisionNo
         | formatvalue : eDisciplineFormModel : "decisionNo"
         | async
     }}
+  </span>
   </div>
 </ng-template>
 <ng-template #templateDisciplineGridCol3 let-data>
@@ -6576,28 +6579,29 @@
 </ng-template>
 
 <ng-template #templateDiseasesGridCol1 let-data>
-  <i></i>
-  <div class="fw-bolder mb-1">
+  <div class="mb-5px">
     {{
       data?.diseaseID | formatvalue : eDiseasesFormModel : "diseaseID" | async
     }}
   </div>
-  <div>
-    <span class="badge badge-success fw-bold border-0" *ngIf="data.isInspect">
+  <div class="d-flex align-items-center">
+    <span class="badge badge-success fw-bold border-0 me-3" *ngIf="data.isInspect">
       Có giám định Y khoa
     </span>
-    <i class="icon-calendar_today"></i>
-    {{ data?.diseaseDate | fmDT }}
+    <i class="icon-calendar_today icon-16 me-2"></i>
+    <span class="text-dark">
+      {{ data?.diseaseDate | fmDT }}
+    </span>
   </div>
 </ng-template>
 <ng-template #templateDiseasesGridCol2 let-data>
-  <div class="fw-bold mb-1">
-    <i class="icon-calendar_today"></i>
-    <span class="fw-bold">
+  <div class="d-flex align-items-center mb-5px">
+    <i class="icon-calendar_today icon-16 me-2"></i>
+    <span class="text-dark">
       {{ data?.fromDate | fmDT }} - {{ data?.toDate | fmDT }}
     </span>
   </div>
-  <div class="text-uppercase">
+  <div class="text-dark">
     {{
       data?.treatHopitalID
         | formatvalue : eDiseasesFormModel : "treatHopitalID"
@@ -6623,26 +6627,22 @@
 <!-- #region Tai nạn lao động column template  -->
 
 <ng-template #templateEAccidentCol1 let-data>
-  <div class="d-flex align-items-center mb-4">
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-1">
-        <div class="text-dark fw-bold">
-          {{
-            data?.accidentID
-              | formatvalue : eAccidentsFormModel : "accidentID"
-              | async
-          }}
-        </div>
-      </div>
-      <div class="d-flex align-items-center">
-        <span class="icon-event icon-16 text-danger icon-16 me-2"></span>
-        <div class="text-dark">
-          {{
-            data?.accidentDate
-              | formatvalue : eAccidentsFormModel : "accidentDate"
-              | async
-          }}
-        </div>
+  <div class="d-flex flex-column">
+    <div class="mb-5px">
+      {{
+        data?.accidentID
+          | formatvalue : eAccidentsFormModel : "accidentID"
+          | async
+      }}
+    </div>
+    <div class="d-flex align-items-center">
+      <span class="icon-event icon-16 text-danger icon-16 me-2"></span>
+      <div class="text-dark">
+        {{
+          data?.accidentDate
+            | formatvalue : eAccidentsFormModel : "accidentDate"
+            | async
+        }}
       </div>
     </div>
   </div>
@@ -6650,8 +6650,8 @@
 
 <ng-template #templateEAccidentCol2 let-data>
   <div class="d-flex flex-column">
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-place icon-16 text-gray-600 me-1"></span>
+    <div class="d-flex align-items-center mb-5px">
+      <span class="icon-place icon-16 text-gray-500 me-2"></span>
       <span class="text-dark">
         <span>{{
           data?.accidentPlace
@@ -6660,8 +6660,8 @@
         }}</span>
       </span>
     </div>
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-event icon-16 text-danger me-1"></span>
+    <div class="d-flex align-items-top">
+      <span class="icon-event icon-16 text-danger me-2"></span>
       <span class="text-dark">
         <span>{{
           data?.accidentReasonID
@@ -6675,24 +6675,20 @@
 
 <ng-template #templateEAccidentCol3 let-data>
   <div class="has-action-menu min-h-40px">
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center mb-2">
-        <span class="text-dark">
-          <span>{{
-            data?.accidentLevel
-              | formatvalue : eAccidentsFormModel : "accidentLevel"
-              | async
-          }}</span>
-        </span>
-      </div>
-      <codx-mfunc
-        [formModel]="eAccidentsFormModel"
-        (clickMF)="clickMF($event, data, 'eAccidents')"
-        type="hover"
-        [dataItem]="data"
-      >
-      </codx-mfunc>
-    </div>
+    <span class="text-dark">
+      <span>{{
+        data?.accidentLevel
+          | formatvalue : eAccidentsFormModel : "accidentLevel"
+          | async
+      }}</span>
+    </span>
+    <codx-mfunc
+      [formModel]="eAccidentsFormModel"
+      (clickMF)="clickMF($event, data, 'eAccidents')"
+      type="hover"
+      [dataItem]="data"
+    >
+    </codx-mfunc>
   </div>
 </ng-template>
 

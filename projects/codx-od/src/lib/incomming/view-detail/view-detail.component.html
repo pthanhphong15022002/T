@@ -131,7 +131,7 @@
             <div class="d-flex align-item-center">
               <i class="fa-solid fa-user-tag me-2 mt-1"
                 [ngClass]="{ 'text-primary': active === 1 }"></i><span><codx-label
-                  [default]="formModel.funcID=='ODT31'?'Nơi nhận':'Nơi gửi'"
+                  [default]="(formModel.funcID=='ODT31' || (formModel.funcID=='ODT52' && data.dispatchType == '4' ))?'Nơi nhận':'Nơi gửi'"
                   fiedName="lblTitleReceive "></codx-label></span>
             </div>
           </a>

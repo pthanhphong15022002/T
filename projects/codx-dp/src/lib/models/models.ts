@@ -43,7 +43,7 @@ export class DP_Processes {
   viewMode: string;
   viewModeDetail: string;
   autoName: string;
-  steps: DP_Steps[] = []
+  steps: DP_Steps[] = [];
 }
 
 export class DP_Processes_Permission {
@@ -123,7 +123,7 @@ export class DP_Steps {
   isUsed: boolean;
   createdOn: Date = new Date();
   createdBy: string;
-  modifiedOn: Date = new Date();
+  modifiedOn: Date;
   modifiedBy: string;
   showColumnControl: number = 1;
   newProcessID: string;
@@ -265,7 +265,7 @@ export class DP_Instances {
   datas: string; // Json;
   taskGroups: DP_Instances_Steps_TaskGroups[] = []; // objects;
   tasks: DP_Instances_Steps_Tasks[] = []; // objects;
-  currentStep: number;
+  // currentStep: number; deleted
   statusCodeID: string;
   status: string;
   lastUpdate: Date;
@@ -286,7 +286,6 @@ export class DP_Instances {
   tags: string;
   modifiedBy: string;
   permissions: DP_Instances_Permissions[] = [];
-  steps: DP_Instances_Steps[]=[]
 }
 
 export class DP_Instances_Permissions {
@@ -346,7 +345,6 @@ export class DP_Instances_Steps {
   reasons: DP_Instances_Steps_Reasons[] = []; // objects
   stepStatus: string;
   memo: string;
-  newProcessID:string;
   reasonControl: boolean = false;
   isSuccessStep: boolean =  false;
   isFailStep: boolean = false;

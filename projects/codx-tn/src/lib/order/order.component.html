@@ -1,0 +1,38 @@
+<div class="container d-flex flex-column">
+  <div class="title">
+    <div class="row">
+      <div class="col-4"></div>
+      <div class="col-4">
+        <codx-label
+          [default]="'Đơn hàng'"
+          [fiedName]=""
+          [formModel]="orderFormodel"
+        ></codx-label>
+      </div>
+      <div class="col-4">
+        <codx-input [type]="'number'" [min]="1"> </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="">
+    <codx-gridview
+      *ngIf="orderRecID"
+      #gridView
+      [columnsGrid]="moduleDetailGridClmn"
+      [service]="'Tenant'"
+      [assemblyName]="'ERM.Business.Tenant'"
+      [className]="'OrderModulesBusiness'"
+      [method]="'GetListBoughtModuleByOrderIDAsync'"
+      [entityName]="orderFormodel.entityName"
+      [predicates]="'TransID=@0'"
+      [dataValues]="orderRecID"
+      [pageSize]="20"
+      [rowHeight]="50"
+      height="240px"
+      [templateMore]="templateMore"
+    ></codx-gridview>
+  </div>
+  <div class="">footer</div>
+</div>
+
+<ng-template #templateMore>abc </ng-template>

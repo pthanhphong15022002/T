@@ -72,6 +72,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.user$ = this.auth.user$;
+    if (!this.user) this.user = this.authstore.get();
     this.tenant = this.tenantStore.get()?.tenant;
     this.setLanguage(this.auth.userValue?.language?.toLowerCase());
 
@@ -80,7 +81,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     if (!this.auth.userValue.theme) this.auth.userValue.theme = 'default';
 
     var arr = this.auth.userValue.theme.split('|');
-    let th = arr[0], thMode = arr.length > 1 ? arr[1] : 'light';
+    let th = arr[0],
+      thMode = arr.length > 1 ? arr[1] : 'light';
 
     this.setTheme(th.toLowerCase());
     this.setThemeMode(thMode.toLowerCase());
@@ -113,18 +115,19 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   updateSettting(lang: string, theme: string, themeMode: string) {
-    let l = '', t = '';
+    let l = '',
+      t = '';
     if (lang) {
       this.setLanguage(lang);
       l = this.language.lang.toUpperCase();
     }
     if (theme) {
       this.setTheme(theme);
-      t = this.theme.id + "|" + this.themeMode.id;
+      t = this.theme.id + '|' + this.themeMode.id;
     }
     if (themeMode) {
       this.setThemeMode(themeMode);
-      t = this.theme.id + "|" + this.themeMode.id;
+      t = this.theme.id + '|' + this.themeMode.id;
     }
 
     this.api
@@ -229,6 +232,14 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     //   });
   }
 
+  runCompare() {
+    this.api
+      .execSv('SYS', 'SYS', 'UpdatesBusiness', 'UpdateDataAsync', [])
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
+
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }
@@ -243,13 +254,16 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     var lsLinks = document.getElementsByClassName('ejcss');
     for (let i = 0; i < lsLinks.length; i++) {
       let l: any = lsLinks[i];
-      l.href =this.themeMode.id == 'dark'? l.href.replace('.css','-dark.css'):l.href.replace('-dark.css','.css');
+      l.href =
+        this.themeMode.id == 'dark'
+          ? l.href.replace('.css', '-dark.css')
+          : l.href.replace('-dark.css', '.css');
     }
   }
   // link my profile
-  myProfile(){
-    debugger
-    this.codxService.navigate("MWP009","",{funcID:"MWP009"});
+  myProfile() {
+    debugger;
+    this.codxService.navigate('MWP009', '', { funcID: 'MWP009' });
   }
 }
 
@@ -338,12 +352,12 @@ const themeModeDatas: ThemeMode[] = [
   {
     id: 'light',
     name: 'Light',
-    icon: './assets/media/svg/light.svg'
+    icon: './assets/media/svg/light.svg',
   },
   {
     id: 'dark',
     name: 'Dark',
-    icon: './assets/media/svg/dark.svg'
+    icon: './assets/media/svg/dark.svg',
   },
 ];
 const themeModeDefault = themeModeDatas[0];
