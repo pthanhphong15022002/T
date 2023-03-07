@@ -51,6 +51,7 @@ export class ForgotPasswordComponent implements OnInit {
           Validators.maxLength(100),
         ]),
       ],
+      captCha: ['', Validators.compose([Validators.required])],
     });
   }
 

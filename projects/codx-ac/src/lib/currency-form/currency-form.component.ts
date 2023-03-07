@@ -1,20 +1,37 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ButtonModel, CallFuncService, DialogRef, RequestOption, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import {
+  ButtonModel,
+  CallFuncService,
+  DialogRef,
+  RequestOption,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+} from 'codx-core';
 import { PopAddCurrencyComponent } from './pop-add-currency/pop-add-currency.component';
 @Component({
   selector: 'lib-currency-form',
   templateUrl: './currency-form.component.html',
-  styleUrls: ['./currency-form.component.css']
+  styleUrls: ['./currency-form.component.css'],
 })
 export class CurrencyFormComponent extends UIComponent {
   //#region Contructor
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
-  @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
-  @ViewChild("morefunc") morefunc: TemplateRef<any>;
-  gridViewSetup:any;
-  moreFuncName:any;
-  funcName:any;
+  @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
+  @ViewChild('morefunc') morefunc: TemplateRef<any>;
+  gridViewSetup: any;
+  moreFuncName: any;
+  funcName: any;
   views: Array<ViewModel> = [];
   itemSelected: any;
   dialog: DialogRef;
@@ -36,9 +53,9 @@ export class CurrencyFormComponent extends UIComponent {
   ];
   constructor(
     private inject: Injector,
-    private dt: ChangeDetectorRef, 
+    private dt: ChangeDetectorRef,
     private callfunc: CallFuncService
-    ) {
+  ) {
     super(inject);
     this.dialog = this.dialog;
     this.cache.gridViewSetup('Currencies', 'grvCurrencies').subscribe((res) => {
@@ -53,7 +70,7 @@ export class CurrencyFormComponent extends UIComponent {
       }
     });
   }
- 
+
   //#endregion
 
   //#region Init
@@ -68,29 +85,30 @@ export class CurrencyFormComponent extends UIComponent {
     });
     this.views = [
       {
-      type: ViewType.grid,
-      sameData: true,
-      active: true,
-      model : {
-        template2: this.itemTemplate,  
-        frozenColumns:1
-      }
+        type: ViewType.grid,
+        sameData: true,
+        active: true,
+        model: {
+          template2: this.itemTemplate,
+          frozenColumns: 1,
+        },
       },
-      
-  ];
+    ];
     this.dt.detectChanges();
   }
   //#endregion
 
   //#region Function
   clickMF(e: any, data?: any) {
-    console.log(e.functionID);
     switch (e.functionID) {
       case 'SYS03':
-        this.update(e,data);
+        this.edit(e, data);
         break;
       case 'SYS02':
         this.delete(data);
+        break;
+      case 'SYS04':
+        this.copy(e, data);
         break;
     }
   }
@@ -100,7 +118,6 @@ export class CurrencyFormComponent extends UIComponent {
         this.add();
         break;
       case 'edit':
-        
         break;
     }
   }
@@ -115,53 +132,93 @@ export class CurrencyFormComponent extends UIComponent {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(PopAddCurrencyComponent, obj, option,this.view.funcID);
+      this.dialog = this.callfunc.openSide(
+        PopAddCurrencyComponent,
+        obj,
+        option,
+        this.view.funcID
+      );
     });
   }
-  update(e,data){
+  edit(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-      var obj = {
-        formType: 'edit',
-        headerText: e.text + ' ' + this.funcName
-      };
-      let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '550px';
-      this.dialog = this.callfunc.openSide(PopAddCurrencyComponent, obj, option);
-    });
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'edit',
+          headerText: e.text + ' ' + this.funcName,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfunc.openSide(
+          PopAddCurrencyComponent,
+          obj,
+          option
+        );
+      });
     this.dialog.closed.subscribe((x) => {
       if (x.event == null && this.view.dataService.hasSaved)
         this.view.dataService
           .delete([this.view.dataService.dataSelected])
-          .subscribe(x => {
+          .subscribe((x) => {
             this.dt.detectChanges();
           });
     });
   }
-  delete(data){
+  copy(e, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.delete([data], true, (option: RequestOption) =>
-    this.beforeDelete(option,data)
-  ).subscribe((res:any) => {
-    if (res) {
-      this.api.exec(
-        'ERM.Business.BS',
-        'ExchangeRatesBusiness',
-        'DeleteAsync',
-        [data.currencyID]
-      ).subscribe((res: any) => {
-
+    this.view.dataService
+      .copy(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'copy',
+          headerText: e.text + ' ' + this.funcName,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfunc.openSide(
+          PopAddCurrencyComponent,
+          obj,
+          option
+        );
       });
-    }
-  });
+    this.dialog.closed.subscribe((x) => {
+      if (x.event == null && this.view.dataService.hasSaved)
+        this.view.dataService
+          .delete([this.view.dataService.dataSelected])
+          .subscribe((x) => {
+            this.dt.detectChanges();
+          });
+    });
   }
-  beforeDelete(opt: RequestOption,data) {
+  delete(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option, data)
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.api
+            .exec('ERM.Business.BS', 'ExchangeRatesBusiness', 'DeleteAsync', [
+              data.currencyID,
+            ])
+            .subscribe((res: any) => {});
+        }
+      });
+  }
+  beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'CurrenciesBusiness';
     opt.assemblyName = 'BS';

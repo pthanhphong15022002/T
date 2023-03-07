@@ -49,17 +49,16 @@ export class PopupAddGroupComponent implements OnInit,AfterViewInit {
   }
   ngAfterViewInit(): void {
     this.signalRSV.signalGroup.subscribe((res:any)=>{
-      debugger
       if(res)
-      {
-        this.codxImg.updateFileDirectReload(res.groupID).subscribe();
-        this.notifiSV.notifyCode("Tạo nhóm chat thành công");
-      }
+        this.codxImg.updateFileDirectReload(res.groupID).subscribe((res2:any) => {
+          this.notifiSV.notify("Tạo nhóm chat thành công");
+          this.dialogRef.close(res);
+        });
       else
       {
         this.notifiSV.notify("Tạo nhóm chat không thành công");
+        this.dialogRef.close(null);
       }
-      this.dialogRef.close(res);
 
     });
   }
@@ -154,23 +153,8 @@ export class PopupAddGroupComponent implements OnInit,AfterViewInit {
         return;
       }
       this.group.groupType = "2";
-      this.signalRSV.sendData(JSON.stringify(this.group),"CreateGroup");
-      // this.api.execSv("WP","ERM.Business.WP","GroupBusiness","InsertGroupAsync",[this.group])
-      // .subscribe((res:any[]) =>{
-      //   if(Array.isArray(res) && res[0])
-      //   {
-      //     let group = res[1];
-      //     this.codxImg.updateFileDirectReload(group.groupID).subscribe();
-      //     this.notifiSV.notifyCode("CHAT001");
-      //     this.signalRSV.sendData(group,"CreateGroup");
-      //     this.dialogRef.close(group);
-      //   }
-      //   else
-      //   {
-      //     this.dialogRef.close();
-      //     this.notifiSV.notify("Thêm không thành công");
-      //   }
-      // });
+      let data = JSON.stringify(this.group);
+      this.signalRSV.sendData(data,"NewGroup");
     }
     
   }

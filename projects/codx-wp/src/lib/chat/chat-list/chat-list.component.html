@@ -36,6 +36,7 @@
     <div class="chat-list-body">
         <ng-container *ngIf="searched;else tmpListGroup">
             <codx-listview #codxListViewSerach
+                [dataService]="dataSVSearch"
                 [itemTemplate]="itemTemplateSearch" 
                 [funcId]="funcID"
                 service="WP" 
@@ -79,7 +80,12 @@
             </div>
             <div class="d-flex justify-content-between w-100">
                 <span class="last-message" [classList]="item.isRead ? 'text-dark-500' : 'text-primary'">{{item.message}}</span>
-                <span class="text-dark-500 me-2">{{item.createdOn | timefrom}}</span>
+                <ng-container *ngIf="item.modifiedOn;else createdOn">
+                    <span class="text-dark-500 me-2">{{item.modifiedOn | timefrom}}</span>
+                </ng-container>
+                <ng-template #createdOn>
+                    <span class="text-dark-500 me-2">{{item.createdOn | timefrom}}</span>
+                </ng-template>
             </div>
         </div>
     </div>
@@ -93,7 +99,7 @@
         <ng-template #tmpItem>
             <codx-temp-full 
                 [dataItem]="item" 
-                [title]="item.id" 
+                [title]="item.name" 
                 [imageId]="item.id" 
                 [imageObjType]="item.type == 'U' ? 'AD_Users':'WP_Groups'" 
                 [imageObjName]="item.name">

@@ -50,24 +50,22 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   }
 
   ngAfterViewInit(): void {
-    //receiver
-    this.signalR.signalChat.subscribe((res:any) => {
-      if(res)
-      {
-        // let _boxChat = document.getElementsByTagName("codx-chat-box");
-        // if(_boxChat)
-        let data = JSON.parse(JSON.stringify(res));
-        this.arrMessages.push(data);
-        this.dt.detectChanges();
-      }
-    });
+    
     if(this.chatBoxBody){
       setTimeout(() => {
         this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight)
         this.yValue = this.chatBoxBody.nativeElement.scrollHeight;
       },100)
     }
-    
+    //receiver message
+    this.signalR.signalChat.subscribe((res:any) => {
+      if(res)
+      {
+        let data = JSON.parse(JSON.stringify(res));
+        this.arrMessages.push(data);
+        this.dt.detectChanges();
+      }
+    });
   }
 
   // get group info
@@ -124,22 +122,8 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   }
   // send message
   sendMessage(){
-    if(this.message.message)
-    {
-      this.api.execSv(
-      "WP",
-      "ERM.Business.WP",
-      "ChatBusiness",
-      "SendMessageAsync",
-      [this.message])
-      .subscribe((res:any) => {
-        if(res)
-        {
-          this.message.message = "";
-          this.signalR.sendData(res,"SendMessageToGroup");
-        }
-      })
-    }
+    this.signalR.sendData(this.message,"SendMessageToGroup");
+    this.message.message = "";
   }
   // scroll up load data
   yValue:number = 0;
