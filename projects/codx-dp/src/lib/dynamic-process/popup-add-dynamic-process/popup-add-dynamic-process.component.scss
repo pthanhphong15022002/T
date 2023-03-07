@@ -21,6 +21,7 @@
     margin-left: 0, 5rem;
 
     .left {
+      margin: 10px;
       .title {
         font-weight: 600;
         color: #2392ef;
@@ -29,6 +30,7 @@
     }
 
     .right {
+      margin: 10px;
       display: flex;
       align-items: center;
     }
@@ -38,6 +40,7 @@
     display: block;
     transition: display 12s;
     padding-bottom: 10px;
+    margin: 10px;
   }
 
   .hidden-main {
@@ -332,7 +335,6 @@
   align-items: center;
   flex-direction: row;
   box-sizing: border-box;
-  cursor: move;
   background: white;
   padding-left: 10px;
 }
@@ -387,6 +389,7 @@
   box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
   border-radius: 5px;
   background-color: #f0f8ff;
+  cursor: default;
 }
 
 .more-funtion-step {

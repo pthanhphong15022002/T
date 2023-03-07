@@ -30,7 +30,6 @@ export class CurrencyFormComponent extends UIComponent {
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
   @ViewChild('morefunc') morefunc: TemplateRef<any>;
   gridViewSetup: any;
-  moreFuncName: any;
   funcName: any;
   views: Array<ViewModel> = [];
   itemSelected: any;
@@ -61,12 +60,6 @@ export class CurrencyFormComponent extends UIComponent {
     this.cache.gridViewSetup('Currencies', 'grvCurrencies').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
-      }
-    });
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'SYS01');
-        if (m) this.moreFuncName = m.defaultName;
       }
     });
   }
@@ -115,14 +108,12 @@ export class CurrencyFormComponent extends UIComponent {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        this.add();
-        break;
-      case 'edit':
+        this.add(evt);
         break;
     }
   }
-  add() {
-    this.headerText = this.moreFuncName + ' ' + this.funcName;
+  add(e) {
+    this.headerText = e.text + ' ' + this.funcName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',

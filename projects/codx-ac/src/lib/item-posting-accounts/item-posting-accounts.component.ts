@@ -50,7 +50,6 @@ export class ItempostingaccountsComponent extends UIComponent {
   postManufacture: any;
   postProject: any;
   postType: any;
-  moreFuncName: any;
   funcName: any;
   subheaderText: any;
   headerText: any;
@@ -71,12 +70,6 @@ export class ItempostingaccountsComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'SYS01');
-        if (m) this.moreFuncName = m.defaultName;
-      }
-    });
   }
   //#endregion
 
@@ -189,7 +182,7 @@ export class ItempostingaccountsComponent extends UIComponent {
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
-        this.add();
+        this.add(e);
         break;
     }
   }
@@ -250,9 +243,9 @@ export class ItempostingaccountsComponent extends UIComponent {
         break;
     }
   }
-  add() {
+  add(e) {
     this.loadMenuActive(this.menuActive);
-    this.headerText = this.moreFuncName + ' ' + this.funcName;
+    this.headerText = e.text + ' ' + this.funcName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',
