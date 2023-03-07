@@ -44,8 +44,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   dialog!: DialogRef;
   cashpayment: CashPayment;
   formType: any;
-  objectType: any;
-  voucherDate: any;
   gridViewSetup: any;
   cashbookName: any;
   validate: any = 0;
@@ -63,7 +61,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     allowDeleting: true,
     mode: 'Normal',
   };
-  data: any;
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -86,11 +83,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.data = null;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
-    this.objectType = null;
-    this.voucherDate = null;
     this.cashpayment = dialog.dataService!.dataSelected;
     this.cache
       .gridViewSetup('CashPayments', 'grvCashPayments')
@@ -100,8 +94,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         }
       });
     if (this.cashpayment?.voucherNo != null) {
-      this.objectType = this.cashpayment.objectType;
-      this.voucherDate = this.cashpayment.voucherDate;
       //#region  load cashpaymentline
       this.acService
         .loadData(
@@ -145,9 +137,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     }
   }
 
-  objectTypeChanged(e: any) {
+  objectChanged(e: any) {
     this.cashpayment.objectID = '';
-    this.objectType = e.data;
     this.cashpayment[e.field] = e.data;
     this.cashpaymentline = [];
   }
@@ -269,7 +260,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      this.cashpaymentline = this.data;
+      //this.cashpaymentline = this.data;
       if (this.formType == 'add') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
@@ -330,7 +321,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      this.cashpaymentline = this.data;
+      //this.cashpaymentline = this.data;
       this.dialog.dataService
         .save((opt: RequestOption) => {
           opt.methodName = 'AddAsync';
@@ -354,6 +345,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                   this.clearCashpayment();
                   this.dialog.dataService.clear();
                   this.dialog.dataService.addNew().subscribe((res) => {
+                    this.form.formGroup.reset(res);
                     this.cashpayment = this.dialog.dataService!.dataSelected;
                   });
                 }
@@ -366,19 +358,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Function
-
-  getvalueNameCashBook(data: any) {
-    this.acService
-      .loadData('ERM.Business.AC', 'CashBookBusiness', 'LoadDataAsync', [])
-      .subscribe((res: any) => {
-        res.forEach((element) => {
-          if (element.cashBookID == data) {
-            this.cashbookName = element.cashBookName;
-          }
-        });
-      });
-  }
-
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.cashpayment);
@@ -404,11 +383,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   clearCashpayment() {
-    this.cashbookName = '';
-    this.objectType = null;
-    this.data = null;
-    this.cashpaymentline = [];
-    this.voucherDate = new Date();
+    // this.cashbookName = '';
+    // //this.objectType = null;
+    // this.data = null;
+    // this.cashpaymentline = [];
+    // this.voucherDate = new Date();
   }
   //#endregion
 }

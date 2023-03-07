@@ -309,22 +309,17 @@ export class InstanceDetailComponent implements OnInit {
     var idx = this.listStepNew.findIndex((x) => x.stepID === stepId);
     return this.listStepNew[idx];
   }
-  getStepNameIsComlepte() {
-    var idx = this.listSteps.findIndex(
-      (x) => x.stepStatus === '4' || x.stepStatus === '5'
-    );
-    if (idx > -1) {
-      var reasonStep = this.listSteps[idx];
-      var idxProccess = this.listCbxProccess.findIndex(
-        (x) => x.recID === this.instance?.newProcessID
-      );
-      var proccesMove = this.listCbxProccess[idxProccess];
+  getStepNameIsComlepte(data) {
+   var idx = this.listSteps.findIndex(
+    (x) => x.stepStatus === '4' || x.stepStatus === '5'
+  );
+  if (idx > -1) {
+    var reasonStep = this.listSteps[idx];
+    var indexProccess = this.listCbxProccess.findIndex(x=>x.recID === data?.refID);
+      var proccesMove = this.listCbxProccess[indexProccess];
       this.proccesNameMove = proccesMove?.processName ?? '';
-    }
+  }
     return reasonStep?.stepName ?? '';
   }
-  //  getProccessNameIsMove(index:any){
 
-  //   return  this.listSteps[idx]?.stepName ?? '';
-  //  }
 }

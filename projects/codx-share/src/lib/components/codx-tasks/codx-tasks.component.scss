@@ -74,3 +74,12 @@ codx-tasks {
 .list-task .text-gray-700 {
   color: var(--gray-500) !important;
 }
+
+.taskPopoverClass {
+  width: 370px !important;
+}
+.taskPopoverClass .popover-body {
+  width: 370px !important;
+  background-color: white;
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.07);
+}

@@ -999,12 +999,12 @@
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
-                <a class="btn btn-icon btn-white btn-hover-primary">
+                <button type="button" class="btn btn-icon btn-white">
                   <span
-                    class="icon-edit icon-18 text-primary"
+                    class="icon-edit icon-18"
                     (click)="editEmployeeSelfInfo(editHeaderText)"
                   ></span>
-                </a>
+                </button>
               </div>
             </div>
             <div #DangDoan class="mt-6">
@@ -1507,12 +1507,12 @@
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
-                <a class="btn btn-icon btn-white btn-hover-primary">
+                <button type="button" class="btn btn-icon btn-white">
                   <span
-                    class="icon-edit icon-18 text-primary"
+                    class="icon-edit icon-18"
                     (click)="editEmployeePartyInfo(editHeaderText)"
                   ></span>
-                </a>
+                </button>
               </div>
             </div>
             <div #DangDoan class="mt-6">
@@ -1600,12 +1600,12 @@
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
-                <a class="btn btn-icon btn-white btn-hover-primary">
+                <button type="button" class="btn btn-icon btn-white">
                   <span
-                    class="icon-add icon-18 text-primary"
+                    class="icon-add icon-18"
                     (click)="handleEFamilyInfo(addHeaderText, 'add', null)"
                   ></span>
-                </a>
+                </button>
               </div>
             </div>
 
@@ -2048,14 +2048,14 @@
               <span class="text-gray-500 ms-1">({{ passportRowCount }})</span>
             </div>
             <div class="d-flex align-items-center ms-5">
-              <a class="btn btn-icon btn-white btn-hover-primary">
+              <button type="button" class="btn btn-icon btn-white">
                 <span
-                  class="icon-add icon-18 text-primary"
+                  class="icon-add icon-18"
                   (click)="
                     handleEmployeePassportInfo(addHeaderText, 'add', null)
                   "
                 ></span>
-              </a>
+              </button>
             </div>
           </div>
           <div #passport class="mb-1">
@@ -2105,9 +2105,9 @@
               <span class="text-gray-500 ms-1">({{ visaRowCount }})</span>
             </div>
             <div class="d-flex align-items-center ms-5">
-              <a class="btn btn-icon btn-white btn-hover-primary">
+              <a class="btn btn-icon btn-white">
                 <span
-                  class="icon-add icon-18 text-primary"
+                  class="icon-add icon-18"
                   (click)="handleEmployeeVisaInfo(addHeaderText, 'add', null)"
                 ></span>
               </a>
@@ -2159,9 +2159,9 @@
               <span class="text-gray-500 ms-1">({{ workPermitRowCount }})</span>
             </div>
             <div class="d-flex align-items-center ms-5">
-              <a class="btn btn-icon btn-white btn-hover-primary">
+              <a class="btn btn-icon btn-white">
                 <span
-                  class="icon-add icon-18 text-primary"
+                  class="icon-add icon-18"
                   (click)="
                     handleEmployeeWorkingPermitInfo(addHeaderText, 'add', null)
                   "
@@ -2258,9 +2258,9 @@
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
-                <a class="btn btn-icon btn-white btn-hover-primary">
+                <a class="btn btn-icon btn-white">
                   <span
-                    class="icon-edit icon-18 text-primary"
+                    class="icon-edit icon-18"
                     (click)="
                       HandleEmployeeJobGeneralInfo(editHeaderText, 'edit')
                     "
@@ -2654,9 +2654,9 @@
               </div>
 
               <div class="d-flex align-items-center ms-5">
-                <a class="btn btn-icon btn-white btn-hover-primary">
+                <a class="btn btn-icon btn-white">
                   <span
-                    class="icon-edit icon-18 text-primary"
+                    class="icon-edit icon-18"
                     (click)="editEmployeeTimeCardInfo(editHeaderText)"
                   ></span>
                 </a>
@@ -2831,9 +2831,9 @@
               </div>
 
               <div class="d-flex align-items-center ms-5">
-                <a class="btn btn-icon btn-white btn-hover-primary">
+                <a class="btn btn-icon btn-white">
                   <span
-                    class="icon-edit icon-18 text-primary"
+                    class="icon-edit icon-18"
                     (click)="editEmployeeCaculateSalaryInfo(editHeaderText)"
                   ></span>
                 </a>
@@ -3680,15 +3680,15 @@
                 </div>
               </div>
               <div class="d-flex align-items-center ms-5">
-                <button
-                  class="btn btn-icon btn-sm position-relative ms-2"
+                <button type="button"
+                  class="btn btn-icon btn-sm btn-white"
                   (click)="addEContractInfo(addHeaderText, 'add', null)"
                 >
                   <span
                     class="icon-add icon-18"
                   ></span>
                 </button>
-                <span class="text-gray-400 me-3 ms-1">|</span>
+                <span class="text-gray-400 mx-2">|</span>
                 <codx-label
                   class="me-3"
                   name="lblSeeAllEBenefit"

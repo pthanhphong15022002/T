@@ -31,7 +31,6 @@ export class WarehousesComponent extends UIComponent {
   headerText: any;
   columnsGrid = [];
   dialog: DialogRef;
-  moreFuncName: any;
   funcName: any;
   objecttype: string = '6';
   gridViewSetup: any;
@@ -44,20 +43,17 @@ export class WarehousesComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'SYS01');
-        if (m) this.moreFuncName = m.defaultName;
-      }
-    });
   }
   //#endregion
 
   //#region Init
   onInit(): void {}
   ngAfterViewInit() {
-    this.cache.functionList(this.view.funcID).subscribe((res) => {
-      if (res) this.funcName = res.defaultName;
+    this.cache.moreFunction('Warehouses', 'grvWarehouses').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS21500');
+        if (m) this.funcName = m.defaultName;
+      }
     });
     this.views = [
       {
@@ -73,11 +69,11 @@ export class WarehousesComponent extends UIComponent {
   }
   //#endregion
 
-  //#region Functione
+  //#region Function
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
-        this.add();
+        this.add(e);
         break;
     }
   }
@@ -94,9 +90,9 @@ export class WarehousesComponent extends UIComponent {
         break;
     }
   }
-  add() {
+  add(e) {
     console.log(this.view.dataService);
-    this.headerText = this.moreFuncName + ' ' + this.funcName;
+    this.headerText = e.text + ' ' + this.funcName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',
@@ -176,7 +172,18 @@ export class WarehousesComponent extends UIComponent {
               this.objecttype,
               data.warehouseID,
             ])
-            .subscribe((res: any) => {});
+            .subscribe((res: any) => {
+              if (res) {
+                this.api
+                  .exec(
+                    'ERM.Business.AC',
+                    'ObjectsBusiness',
+                    'DeleteAsync',
+                    [data.warehouseID]
+                  )
+                  .subscribe((res: any) => {});
+              }
+            });
         }
       });
   }
