@@ -2,6 +2,7 @@ import {
   ApiHttpService,
   AuthStore,
   CacheService,
+  CallFuncService,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -75,9 +76,11 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   referedFunction: any;
   referedData: any;
   isClickSave = false;
+  crrRole: any;
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTasksService,
+    private callFC : CallFuncService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -503,8 +506,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     var listUserID = '';
     var listPositionID = '';
     var listEmployeeID = '';
-
-    e?.data?.forEach((obj) => {
+    if(!e && e?.length==0) return
+    e.forEach((obj) => {
       if (obj.objectType && obj.id) {
         switch (obj.objectType) {
           case 'U':
@@ -580,12 +583,10 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           }
         });
         if (arrNew.length > 0) {
-          // assignTo = arrNew.join(';');
-          // this.task.assignTo += ';' + assignTo;
+          assignTo = arrNew.join(';');
           this.getListUser(assignTo);
         }
       } else {
-        // this.task.assignTo = assignTo;
         this.getListUser(assignTo);
       }
     }
@@ -617,7 +618,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
             taskResource.resourceName = emp?.userName;
             taskResource.positionName = emp?.positionName;
             taskResource.departmentName = emp?.departmentName;
-            taskResource.roleType = 'R';
+            taskResource.roleType = this.crrRole??'R';
             this.listTaskResources.push(taskResource);
           }
 
@@ -923,5 +924,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           });
         }
       });
+  }
+  //open control share
+  openControlShare(controlShare: any,roleType) {
+    this.crrRole = roleType
+    if (controlShare) {
+      this.callFC.openForm(controlShare, '', 450, 600);
+    }
   }
 }

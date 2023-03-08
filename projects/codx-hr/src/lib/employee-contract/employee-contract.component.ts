@@ -11,29 +11,30 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./employee-contract.component.css']
 })
 export class EmployeeContractComponent extends UIComponent {
-  funcID: string
-  method : 'GetDefaultAsync';
+  @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
+  @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   views: Array<ViewModel> = []
+  funcID: string
+  method = 'LoadDataEcontractWithEmployeeInfoAsync';
+
   buttonAdd: ButtonModel = {
     id : 'btnAdd',
     text: 'Thêm'
   }
 
-  buttonRefresh: ButtonModel = {
-    id : 'btnRefresh',
-    text: 'Thêm'
-  }
+  // moreFuncs = [
+  //   {
+  //     id: 'btnEdit',
+  //     icon: 'icon-list-checkbox',
+  //     text: 'Chỉnh sửa',
+  //   },
+  //   {
+  //     id: 'btnDelete',
+  //     icon: 'icon-list-checkbox',
+  //     text: 'Xóa',
+  //   },
+  // ];
 
-//   buttons: ButtonModel[] = [{
-//     id : 'btnRefresh',
-//     text: 'Refresh'
-//   },
-//   {
-//     id : 'btnAdd',
-//     text: 'Thêm'
-//   }
-// ]
-  columnsGrid = [];
   constructor(
     inject: Injector,
     private hrService: CodxHrService,
@@ -53,22 +54,25 @@ export class EmployeeContractComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.views = [
       {
-        type: ViewType.content,
+        type: ViewType.list,
         active: true,
         sameData: true,
-        showFilter:true,
         model: {
-          
-          // panelLeftRef: this.templateLeft,
-          // widthLeft: '15%',
-          // panelRightRef: this.templateRight,
+          template: this.itemTemplate,
+          headerTemplate: this.headerTemplate
         }
       }
     ]
+    console.log('view cua e contract', this.view);
+    
   }
 
   HandleAction(evt){
     console.log('on action', evt);
+  }
+
+  clickMF(evt, data){
+
   }
 
 }
