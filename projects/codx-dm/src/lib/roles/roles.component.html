@@ -28,7 +28,7 @@
                       </ng-template>
                     </div>
                   </div>
-                  <ng-container *ngIf="!this.checkItemRight(i) && !this.propertiesFolder && fileEditing?.assign">
+                  <ng-container *ngIf="!this.checkItemRight(i) && !this.propertiesFolder && fileEditing?.assign && !perm.isParentShare">
                     <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
                       (click)="removeUserRight(i)">
                       <i class="icon-close text-danger icon-16"></i>
