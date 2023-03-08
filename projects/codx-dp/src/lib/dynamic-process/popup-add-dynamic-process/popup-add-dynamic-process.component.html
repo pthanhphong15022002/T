@@ -1236,6 +1236,7 @@
           <!-- Step Reason successs -->
           <div
             class="list-stage cursor-pointer drap-drop"
+            [ngClass]=" viewStepCrr  === viewStepReasonSuccess?'click' : ''"
             (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)"
           >
             <div class="order">T</div>
@@ -1250,6 +1251,7 @@
           <!-- Reason fail -->
           <div
             class="list-stage cursor-pointer drap-drop"
+            [ngClass]=" viewStepCrr  === viewStepReasonFail?'click' : ''"
             (click)="clickViewStep($event, viewStepReasonFail, strEmpty)"
           >
             <div class="order">F</div>
@@ -1273,12 +1275,27 @@
               <strong>{{ titleViewStepCrr }}</strong>
             </h2>
           </div>
-          <div *ngIf="isSwitchReason">
+          <div *ngIf="isSwitchReason && viewStepCrr  === viewStepReasonSuccess">
             <codx-input
               class="test-check"
               type="switch"
               style="width: 100%"
-              field="read"
+              field="isUsed"
+              [checked]="stepSuccess?.isUsed ?? true"
+              [crrValue]="stepSuccess?.isUsed"
+              (valueChange)="turnOnReason($event,viewStepReasonSuccess)"
+            >
+            </codx-input>
+          </div>
+          <div *ngIf="isSwitchReason && viewStepCrr  === viewStepReasonFail ">
+            <codx-input
+              class="test-check"
+              type="switch"
+              style="width: 100%"
+              field="isUsed"
+              [checked]="stepFail?.isUsed ?? true"
+              [crrValue]="stepFail?.isUsed"
+              (valueChange)="turnOnReason($event,viewStepReasonFail)"
             >
             </codx-input>
           </div>
@@ -1748,6 +1765,7 @@
           <button
             *ngIf="isShowstage"
             class="button-custom"
+            [disabled]="stepSuccess?.isUsed ? false : true"
             (click)="clickShow($event, 'setup-step')"
           >
             <span
@@ -1782,11 +1800,13 @@
                   style="width: 100%"
                   field="yes"
                   [label]="titleRadioYes"
+                  [disabled]="stepSuccess.isUsed ? false : true"
                   [checked]="stepSuccess?.reasonControl ?? false"
                   [crrValue]="stepSuccess?.reasonControl"
                   (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   "
+                  
                 >
                 </codx-input>
               </div>
@@ -1798,10 +1818,12 @@
                   field="no"
                   [label]="titleRadioNo"
                   [checked]="!stepSuccess?.reasonControl ?? false"
+                  [disabled]="stepSuccess.isUsed ? false : true"
                   [crrValue]="stepSuccess?.reasonControl"
                   (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
                   "
+                  readonly
                 >
                 </codx-input>
               </div>
@@ -1830,6 +1852,7 @@
               [fields]="fieldCbxProccess"
               (valueChange)="cbxChange($event, viewStepReasonSuccess)"
               [value]="stepSuccess.newProcessID"
+              [readonly]="stepSuccess.isUsed ? false : true"
             >
             </ejs-combobox>
             <codx-label
@@ -1862,6 +1885,7 @@
         <div class="group-button">
           <button
             class="button-custom"
+            [disabled]="stepSuccess?.isUsed ? false : true"
             (click)="openPopupReason(viewStepReasonSuccess, null, null)"
           >
             <span
@@ -1872,6 +1896,7 @@
           <button
             *ngIf="isShowstage"
             class="button-custom"
+            [disabled]="stepSuccess?.isUsed ? false : true"
             (click)="clickShow($event, 'reason-success')"
           >
             <span
@@ -1890,19 +1915,36 @@
     >
       <div class="main-body pt-5 ps-5" *ngIf="stepSuccess.reasons?.length > 0">
         <div *ngFor="let item of stepSuccess?.reasons" class="pb-2">
-          <ul class="text-left drap-drop me-5 py-2 has-action-menu">
-            <li>
-              {{ item.reasonName }}
-              <codx-mfunc
-                [formModel]="dialog.formModel"
-                (clickMF)="clickMFReason($event, item, viewStepReasonSuccess)"
-                (changeDataMF)="changeReasonMF($event)"
-                [dataItem]="moreDefaut"
-                [type]="'hover'"
-              >
-              </codx-mfunc>
+          <ul class="text-left drap-drop me-5 py-2 has-action-menu"  >
+            <li >
+              <div *ngIf="stepSuccess.isUsed;else other_content">
+                {{ item.reasonName }}
+                <codx-mfunc
+                  [formModel]="dialog.formModel"
+                  (clickMF)="clickMFReason($event, item, viewStepReasonSuccess)"
+                  (changeDataMF)="changeReasonMF($event)"
+                  [dataItem]="moreDefaut"
+                  [type]="'hover'"
+                >
+                </codx-mfunc>
+              </div>
+            
             </li>
-          </ul>
+          </ul>      
+        <ng-template #other_content>
+          <div>
+            {{ item.reasonName }}
+            <codx-mfunc
+              [formModel]="dialog.formModel"
+              (clickMF)="clickMFReason($event, item, viewStepReasonSuccess)"
+              (changeDataMF)="changeReasonMF($event)"
+              [dataItem]="''"
+              [type]="'hover'"
+            >
+            </codx-mfunc>
+          </div>
+    
+        </ng-template>
         </div>
       </div>
       <div class="main-body">
@@ -1911,6 +1953,7 @@
             <button
               type="button"
               class="btn btn-outline-primary btn-sm pb-5"
+              [disabled]="stepSuccess?.isUsed ? false : true"
               (click)="openPopupReason(viewStepReasonSuccess, null, null)"
             >
               <i class="icon-add icon-18"> </i>
@@ -1940,6 +1983,7 @@
           <button
             *ngIf="isShowstage"
             class="button-custom"
+            [disabled]="stepFail?.isUsed ? false : true"
             (click)="clickShow($event, 'setup-step')"
           >
             <span
@@ -1975,6 +2019,7 @@
                   [label]="titleRadioYes"
                   [checked]="stepFail?.reasonControl ?? false"
                   [crrValue]="stepFail?.reasonControl"
+                  [disabled]="stepFail?.isUsed ? false : true"
                   (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
                 >
                 </codx-input>
@@ -1987,6 +2032,7 @@
                   [checked]="!stepFail?.reasonControl"
                   [crrValue]="stepFail?.reasonControl ?? false"
                   [label]="titleRadioNo"
+                  [disabled]="stepFail?.isUsed ? false : true"
                   (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
                 >
                 </codx-input>
@@ -2015,6 +2061,7 @@
               [fields]="fieldCbxProccess"
               [placeholder]="'Chọn quy trình kìa'"
               (valueChange)="cbxChange($event, viewStepReasonFail)"
+              [readonly]="stepFail?.isUsed ? false : true"
               [value]="stepFail?.newProcessID"
             ></ejs-combobox>
             <codx-label
@@ -2047,6 +2094,7 @@
         <div class="group-button">
           <button
             class="button-custom"
+            [disabled]="stepFail?.isUsed ? false : true"
             (click)="openPopupReason(viewStepReasonFail, null, null)"
           >
             <span
@@ -2056,6 +2104,7 @@
           </button>
           <button
             *ngIf="isShowstage"
+            [disabled]="stepFail?.isUsed ? false : true"
             class="button-custom"
             (click)="clickShow($event, 'reason-success')"
           >
@@ -2077,28 +2126,46 @@
         <div *ngFor="let item of stepFail.reasons" class="pb-2">
           <ul class="text-left drap-drop me-5 py-2 has-action-menu">
             <li>
-              {{ item.reasonName }}
-              <codx-mfunc
-                [formModel]="dialog.formModel"
-                (clickMF)="clickMFReason($event, item, viewStepReasonFail)"
-                (changeDataMF)="changeReasonMF($event)"
-                [dataItem]="moreDefaut"
-                [type]="'hover'"
-              >
-              </codx-mfunc>
+              <div *ngIf="stepFail.isUsed;else other_fail">
+                {{ item.reasonName }}
+                <codx-mfunc
+                  [formModel]="dialog.formModel"
+                  (clickMF)="clickMFReason($event, item, viewStepReasonFail)"
+                  (changeDataMF)="changeReasonMF($event)"
+                  [dataItem]="moreDefaut"
+                  [type]="'hover'"
+                >
+                </codx-mfunc>
+              </div>
+             
             </li>
           </ul>
+    
+        <ng-template #other_fail>
+          <div>
+            {{ item.reasonName }}
+            <codx-mfunc
+              [formModel]="dialog.formModel"
+              (clickMF)="clickMFReason($event, item, viewStepReasonFail)"
+              (changeDataMF)="changeReasonMF($event)"
+              [dataItem]="''"
+              [type]="'hover'"
+            >
+            </codx-mfunc>
+          </div>
+        </ng-template>
+
         </div>
       </div>
       <div class="main-body">
         <div
           class="position-relative p-9"
-          *ngIf="stepFail.reasons?.length == 0"
         >
           <div class="position-absolute top-50 start-50 translate-middle">
             <button
               type="button"
               class="btn btn-outline-primary btn-sm pb-5"
+              [disabled]="stepFail?.isUsed ? false : true"
               (click)="openPopupReason(viewStepReasonFail, null, null)"
             >
               <i class="icon-add icon-18"> </i>
@@ -2107,6 +2174,7 @@
           </div>
         </div>
       </div>
+      
     </div>
   </div>
 </ng-template>

@@ -33,6 +33,7 @@ export const environment = {
     app_secret: '123456',
   },
   reCaptchaKey: '6LctVdwkAAAAAF_yJPT2NGF2SvEpCKyLS4t68Ps1',
+  reCaptchaEnable: 0,
 
   firebase: {
     apiKey: 'AIzaSyC1SKqppxpxwT7i3qEdUjJjn-J_SMoUBic',
