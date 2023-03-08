@@ -42,6 +42,9 @@ import { PopupTypeTaskComponent } from '../../../dynamic-process/popup-add-dynam
   styleUrls: ['./stages-detail.component.scss'],
 })
 export class StagesDetailComponent implements OnInit {
+Number(arg0: string) {
+throw new Error('Method not implemented.');
+}
   @ViewChild('addGroupJobPopup') addGroupJobPopup: TemplateRef<any>;
   @ViewChild('updateProgress') updateProgress: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -209,6 +212,7 @@ export class StagesDetailComponent implements OnInit {
         //nvthuan
         this.groupByTask(changes['dataStep'].currentValue);
         this.step = changes['dataStep'].currentValue;
+        this.progress = this.step?.progress.toString();
       } else {
         this.dataStep = null;
       }
@@ -348,14 +352,14 @@ export class StagesDetailComponent implements OnInit {
       if (e?.event) {
         let taskData = e?.event?.data;
         if (e.event?.status === 'add' || e.event?.status === 'copy') {
-          let lengthTask = this.taskGroupList.find(
+          let groupTask = this.taskGroupList?.find(
             (x) => x.recID === taskData.taskGroupID
           );
           let role = new DP_Instances_Steps_Tasks_Roles();
           this.setRole(role);
           taskData['roles'] = [role];
           taskData['createdOn'] = new Date();
-          taskData['indexNo'] = lengthTask['task'].length;
+          taskData['indexNo'] = groupTask['task']?.length || 1;
           let progress = await this.calculateProgressTaskGroup(taskData, 'add');
           this.dpService
             .addTask([taskData, progress?.average])
@@ -454,32 +458,18 @@ export class StagesDetailComponent implements OnInit {
   }
   //View task
   viewTask(data?: any) {
-    let status = 'edit';
-    let frmModel: FormModel = {
-      entityName: 'DP_Steps_Tasks',
-      formName: 'DPStepsTasks',
-      gridViewName: 'grvDPStepsTasks',
-    };
     if (!data) {
       this.popupJob.close();
-      status = 'add';
     }
-    let option = new SidebarModel();
-    option.Width = '550px';
-    option.zIndex = 1001;
-    option.FormModel = frmModel;
-    let dialog = this.callfc.openSide(
+    this.callfc.openForm(
       ViewJobComponent,
-      [
-        status,
-        this.jobType,
-        this.step?.recID,
-        this.taskGroupList,
-        data || {},
-        this.taskList,
-      ],
-      option
+      '',
+      500,
+      500,
+      '',
+      {step: data, listStep: this.taskList}
     );
+    
   }
 
   changeGroupTask(taskData, taskGroupIdOld) {
@@ -554,16 +544,16 @@ export class StagesDetailComponent implements OnInit {
     let index = this.taskGroupList.length;
     let taskBefore;
     if(index > 0){
-      taskBefore = this.taskGroupList[index - 1];
+      taskBefore = this.taskGroupList[index - 2];
     }
     if (data) {
       let dataCopy = JSON.parse(JSON.stringify(data));
       taskGroup = dataCopy;
-      taskGroup['startDate'] = type === 'copy' ? taskBefore['endDate'] || new Date() : taskGroup['startDate'];
+      taskGroup['startDate'] = type === 'copy' ? taskBefore?.endDate || new Date() : taskGroup['startDate'];
     } else {
       taskGroup['progress'] = 0;
       taskGroup['stepID'] = this.step['recID'];
-      taskGroup['startDate'] = taskBefore['endDate'] || this.step['endDate'];
+      taskGroup['startDate'] = taskBefore?.endDate || this.step?.startDate;
       taskGroup['task'] = [];
     }
     this.popupTaskGroup = this.callfc.openForm(
@@ -602,7 +592,7 @@ export class StagesDetailComponent implements OnInit {
       let role = new DP_Instances_Steps_TaskGroups_Roles();
       await this.setRole(role);
       value['roles'] = [role];
-      let index = this.taskGroupList.length;
+      let index = this.taskGroupList?.length;
       value['recID'] = Util.uid();
       value['createdOn'] = new Date();
       value['indexNo'] = index;
@@ -641,7 +631,7 @@ export class StagesDetailComponent implements OnInit {
         let value = [data?.recID, data?.stepID];
         this.dpService.deleteTaskGroups(value).subscribe((res) => {
           if (res) {
-            let index = this.taskGroupList.findIndex(
+            let index = this.taskGroupList?.findIndex(
               (x) => x.recID == data.recID
             );
             this.taskGroupList.splice(index, 1);
@@ -680,10 +670,10 @@ export class StagesDetailComponent implements OnInit {
   }
 
   handelProgress() {
-    if (this.dataProgress['taskGroupID']) {
-      this.updateProgressTask();
-    } else {
+    if (this.dataProgress['taskGroupID'] === undefined) {
       this.updateProgressGroupTask();
+    } else {
+      this.updateProgressTask();
     }
   }
 
@@ -725,7 +715,7 @@ export class StagesDetailComponent implements OnInit {
     let proggress = 0;
     let average = 0;
     let indexTask = -1;
-    let indexGroup = this.taskGroupList.findIndex(
+    let indexGroup = this.taskGroupList?.findIndex(
       (task) => task.recID == data?.taskGroupID
     );
     let taskGroupFind = JSON.parse(
@@ -734,7 +724,7 @@ export class StagesDetailComponent implements OnInit {
     if (status == 'add') {
       taskGroupFind.push(data);
     } else if (status == 'delete') {
-      indexTask = taskGroupFind.findIndex((task) => task.recID == data.recID);
+      indexTask = taskGroupFind?.findIndex((task) => task.recID == data.recID);
       taskGroupFind.splice(indexTask, 1);
     }
     taskGroupFind.forEach((item) => {
@@ -760,8 +750,13 @@ export class StagesDetailComponent implements OnInit {
       }
     });
     let medium = (sum / length).toFixed(2);
-    this.step.progress = Number(medium);
-    this.progress = medium;
+    let stepID = this.step?.recID;
+    this.dpService.updateProgressStep([stepID,Number(medium)]).subscribe((res) => {
+      if(res){
+        this.step.progress = Number(medium);
+        this.progress = medium;
+      }
+    })
   }
 
   setRole<T>(role: T) {
@@ -833,7 +828,7 @@ export class StagesDetailComponent implements OnInit {
   async updateDropDrap(status) {
     let listTask = [];
     let taskGroupListClone = JSON.parse(JSON.stringify(this.taskGroupList));
-    let listGroupTask = taskGroupListClone.map((group) => {
+    let listGroupTask = taskGroupListClone?.map((group) => {
       listTask = [...listTask, ...group['task']];
       delete group['task'];
       return group;
@@ -865,7 +860,7 @@ export class StagesDetailComponent implements OnInit {
     isProgress = false
   ) {
     if (data.length > 0) {
-      let index = this.taskGroupList.findIndex(
+      let index = this.taskGroupList?.findIndex(
         (group) => group.recID == data[0]['taskGroupID']
       );
       let sum = 0;

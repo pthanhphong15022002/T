@@ -138,7 +138,7 @@
     </div>
     <!-- body rieng -->
     <div class="stepper-body pt-2 w-100">
-      <div class="card shadow-none border-0 rounded-0 mx-auto w-1100px h-100">
+      <div class="card shadow-none border-0 rounded-0 mx-auto w-1200px h-100">
         <div class="mt-6 pb-3 tab-pane-header px-9 border-bottom">
           <h2 *ngIf="currentTab != 1" class="h2-title">
             <codx-label
@@ -258,7 +258,7 @@
             default="Thông tin chung"
           ></codx-label>
         </div>
-        <div class="text-gray-500">
+        <div class="text-gray-600">
           <codx-label
             name="lblGeneral"
             [formModel]="dialog.formModel"
@@ -398,7 +398,7 @@
             default="Các vai trò trong quy trình"
           ></codx-label>
         </div>
-        <div class="text-gray-500">
+        <div class="text-gray-600">
           <codx-label
             name="lblPerm"
             [formModel]="dialog.formModel"
@@ -424,190 +424,199 @@
       </div>
     </div>
     <div id="role-main" class="main" [ngClass]="'show-main'">
-      <div class="row">
-        <div class="col-6">
-          <div class="d-flex flex-column margin-form mb-4">
-            <div class="d-flex flex">
-              <codx-label
-                class="fw-bolder"
-                name="lblSupervisor"
-                [formModel]="dialog.formModel"
-                default="Người giám sát"
-              >
-              </codx-label>
-              <i
-                class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
-                (click)="sharePerm(controlShare, 'supervisor')"
-              ></i>
-              <i
-                class="icon-settings icon-20 margin-user"
-                (click)="clickRoles()"
-              ></i>
-            </div>
-            <div>
-              <codx-label
-                class="fw-normal text-gray-400"
-                name="lblLocationControl"
-                default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
-                viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa
-                nhiệm vụ"
-              >
-              </codx-label>
-            </div>
-          </div>
+      <div class="d-flex flex-column mb-4">
+        <div class="d-flex align-items-center mb-2">
+          <codx-label
+            class="fw-bold fs-5 text-dark me-3"
+            name="lblSupervisor"
+            [formModel]="dialog.formModel"
+            default="Người giám sát"
+          >
+          </codx-label>
+          <button type="button" 
+            class="btn btn-icon btn-sm btn-light-primary me-2"
+            (click)="sharePerm(controlShare, 'supervisor')"
+          >
+          <i
+          class="icon-person_add_alt_1 icon-16"
+          ></i>
+          </button>
+          <button type="button"
+          class="btn btn-icon btn-sm btn-light-primary" (click)="clickRoles()"
+          >
+          <i
+          class="icon-settings icon-16"
+          ></i>
+          </button>
         </div>
+        <div class="text-gray-500">
+          <codx-label
+            name="lblLocationControl"
+            default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
+            viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa
+            nhiệm vụ"
+          >
+          </codx-label>
+        </div>
+      </div>
+      <div
+      class="d-flex flex-wrap"
+      *ngIf="process.permissions != null && process.permissions?.length > 0"
+    >
+      <ng-container *ngFor="let perm of process.permissions; index as i">
         <div
-          class="col-6 group-permission witdh-permission scroll-user"
-          *ngIf="process.permissions != null && process.permissions?.length > 0"
+          *ngIf="perm.roleType == 'O'"
+          class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
         >
-          <ng-container *ngFor="let perm of process.permissions; index as i">
-            <div
-              *ngIf="perm.roleType == 'O'"
-              class="cursor-pointer has-action-menu-od me-4 d-flex align-items-center margin-form mb-4"
+          <div class="me-2">
+            <codx-img
+              [width]="20"
+              [objectId]="perm.objectName"
+              objectType="AD_Users"
             >
-              <div class="d-flex align-items-center position-relative">
-                <codx-img
-                  class=""
-                  [width]="25"
-                  [objectId]="perm.objectName"
-                  objectType="AD_Users"
-                >
-                </codx-img>
-              </div>
-              <div class="ms-1">
-                <div class="text-dark fw-bold">{{ perm.objectName }}</div>
-              </div>
-              <ng-container *ngIf="checkAssignRemove(i)">
-                <div
-                  class="action-menu-od ms-2 d-flex justify-content-center align-items-center cursor-pointer"
-                  (click)="removeUser(i)"
-                >
-                  <i class="icon-close text-danger icon-16"></i>
-                </div>
-              </ng-container>
+            </codx-img>
+          </div>
+          <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
+          <ng-container *ngIf="checkAssignRemove(i)">
+            <div
+              class="action-menu-od"
+              (click)="removeUser(i)"
+            >
+              <i class="icon-close text-danger icon-16"></i>
             </div>
           </ng-container>
         </div>
+      </ng-container>
+    </div>
+    <hr />
+
+    <div class="d-flex flex-column mb-4">
+      <div class="d-flex align-items-center mb-2">
+        <codx-label
+          class="fw-bold fs-5 text-dark me-3"
+          name="lblParticipants"
+          [formModel]="dialog.formModel"
+          default="Thành viên tham gia"
+        >
+        </codx-label>
+        <button type="button" class="btn btn-icon btn-sm btn-light-primary me-2"
+        (click)="sharePerm(controlShare, 'participants')"
+        >
+        <i
+          class="icon-person_add_alt_1 icon-16"
+        ></i>
+      </button>
+        
+        
+        <button type="button" class="btn btn-icon btn-sm btn-light-primary me-2"
+        (click)="clickRoles()"
+        >
+        <i
+          class="icon-settings icon-16"
+        ></i>
+      </button>
+        
       </div>
-      <div class="row">
-        <div class="col-6">
-          <div class="d-flex flex-column margin-form mb-4">
-            <div class="d-flex flex">
-              <codx-label
-                class="fw-bolder"
-                name="lblParticipants"
-                [formModel]="dialog.formModel"
-                default="Thành viên tham gia"
-              >
-              </codx-label>
-              <i
-                class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
-                (click)="sharePerm(controlShare, 'participants')"
-              ></i>
-              <i
-                class="icon-settings icon-20 margin-user"
-                (click)="clickRoles()"
-              ></i>
-            </div>
-            <div>
-              <codx-label
-                class="fw-normal text-gray-400"
-                name="lblParticipantControl"
-                [formModel]="dialog.formModel"
-                default="Có quyền tạo nhiệm vụ trong quy trình"
-              >
-              </codx-label>
-            </div>
-          </div>
-        </div>
-        <div
-          class="col-6 group-permission witdh-permission scroll-user"
+      <div>
+        <codx-label
+          class="fw-normal text-gray-400"
+          name="lblParticipantControl"
+          [formModel]="dialog.formModel"
+          default="Có quyền tạo nhiệm vụ trong quy trình"
+        >
+        </codx-label>
+      </div>
+    </div>
+
+    <div
+          class="d-flex flex-wrap"
           *ngIf="process.permissions != null && process.permissions?.length > 0"
         >
-          <ng-container *ngFor="let perm of process.permissions; index as i">
-            <div
-              *ngIf="perm.roleType == 'P'"
-              class="cursor-pointer has-action-menu-od me-4 d-flex align-items-center margin-form mb-4"
-            >
-              <div class="d-flex align-items-center position-relative">
-                <codx-img
-                  class=""
-                  [width]="25"
-                  [objectId]="perm.objectName"
-                  objectType="AD_Users"
-                >
-                </codx-img>
-              </div>
-              <div class="ms-1">
-                <div class="text-dark fw-bold">{{ perm.objectName }}</div>
-              </div>
-              <ng-container *ngIf="checkAssignRemove(i)">
-                <div
-                  class="action-menu-od ms-2 d-flex justify-content-center align-items-center cursor-pointer"
-                  (click)="removeUser(i)"
-                >
-                  <i class="icon-close text-danger icon-16"></i>
-                </div>
-              </ng-container>
+        <ng-container *ngFor="let perm of process.permissions; index as i">
+          <div
+            *ngIf="perm.roleType == 'P'"
+            class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
+          >
+            <div class="me-2">
+              <codx-img
+                [width]="20"
+                [objectId]="perm.objectName"
+                objectType="AD_Users"
+              >
+              </codx-img>
             </div>
-          </ng-container>
+            <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
+            <ng-container *ngIf="checkAssignRemove(i)">
+              <div
+                class="action-menu-od"
+                (click)="removeUser(i)"
+              >
+                <i class="icon-close text-danger icon-16"></i>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+    
+      <hr />
+      <div class="d-flex flex-column mb-4">
+        <div class="d-flex align-items-center mb-2">
+          <codx-label
+            class="fw-bold fs-5 text-dark me-3"
+            name="lblFollowers"
+            [formModel]="dialog.formModel"
+            default="Người theo dõi"
+          >
+          </codx-label>
+          <button type="button"
+            class="btn btn-icon btn-sm btn-light-primary me-2"
+            (click)="sharePerm(controlShare, 'followers')"
+            >
+            <i
+            class="icon-person_add_alt_1 icon-16"
+          ></i>
+          </button>
+          <button type="button"
+            class="btn btn-icon btn-sm btn-light-primary me-2"
+            (click)="clickRoles()"
+          >
+          <i
+          class="icon-settings icon-16"
+        ></i>
+          </button>
+        </div>
+        <div>
+          <codx-label
+            class="fw-normal text-gray-400"
+            name="lblFollowerControl"
+            [formModel]="dialog.formModel"
+            default="Có quyền xem các nhiệm vụ trong quy trình"
+          >
+          </codx-label>
         </div>
       </div>
-      <div class="row">
-        <div class="col-6">
-          <div class="d-flex flex-column margin-form mb-4">
-            <div class="d-flex flex">
-              <codx-label
-                class="fw-bolder"
-                name="lblFollowers"
-                [formModel]="dialog.formModel"
-                default="Người theo dõi"
-              >
-              </codx-label>
-              <i
-                class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
-                (click)="sharePerm(controlShare, 'followers')"
-              ></i>
-              <i
-                class="icon-settings icon-20 margin-user"
-                (click)="clickRoles()"
-              ></i>
-            </div>
-            <div>
-              <codx-label
-                class="fw-normal text-gray-400"
-                name="lblFollowerControl"
-                [formModel]="dialog.formModel"
-                default="Có quyền xem các nhiệm vụ trong quy trình"
-              >
-              </codx-label>
-            </div>
-          </div>
-        </div>
-        <div
-          class="col-6 group-permission witdh-permission scroll-user"
+
+      <div
+          class="d-flex flex-wrap"
           *ngIf="process.permissions != null && process.permissions?.length > 0"
         >
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div
               *ngIf="perm.roleType == 'F'"
-              class="cursor-pointer has-action-menu-od me-4 d-flex align-items-center margin-form mb-4"
+              class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
             >
-              <div class="d-flex align-items-center position-relative">
+              <div class="me-2">
                 <codx-img
-                  class=""
-                  [width]="25"
+                  [width]="20"
                   [objectId]="perm.objectName"
                   objectType="AD_Users"
                 >
                 </codx-img>
               </div>
-              <div class="ms-1">
-                <div class="text-dark fw-bold">{{ perm.objectName }}</div>
-              </div>
+              <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
               <ng-container *ngIf="checkAssignRemove(i)">
                 <div
-                  class="action-menu-od ms-2 d-flex justify-content-center align-items-center cursor-pointer"
+                  class="action-menu-od"
                   (click)="removeUser(i)"
                 >
                   <i class="icon-close text-danger icon-16"></i>
@@ -616,7 +625,6 @@
             </div>
           </ng-container>
         </div>
-      </div>
     </div>
   </div>
   <!--Tùy chỉnh quy trình-->
@@ -632,7 +640,7 @@
             default="Tùy chỉnh quy trình"
           ></codx-label>
         </div>
-        <div class="text-gray-500">
+        <div class="text-gray-600">
           <codx-label
             name="lblActived"
             [formModel]="dialog.formModel"
@@ -828,7 +836,7 @@
           >
           </codx-label>
         </div>
-        <div class="text-gray-500">
+        <div class="text-gray-600">
           <codx-label
             name="lblMemo"
             [formModel]="dialog.formModel"
@@ -985,7 +993,7 @@
                     item.stepName
                   }}</span>
                 </div>
-                <div class="text-gray-500">
+                <div class="text-gray-600">
                   <codx-label
                     name="lblExpression"
                     formName="DPStepsFields"
@@ -1170,19 +1178,20 @@
 
 <ng-template #stageHeader>
   <div class="d-flex justify-content-between align-items-center">
-    <codx-label
-      class="h2 h2-title float-left"
-      fiedName="settingStep"
-      default="Thiết lập giai đoạn"
-    >
-    </codx-label>
+    <h2 class="h2-title">
+      <codx-label
+        fiedName="settingStep"
+        default="Thiết lập giai đoạn"
+      >
+      </codx-label>
+    </h2>
     <div class="d-flex align-items-center">
       <button
         type="button"
-        class="btn btn-sm btn-primary"
+        class="btn btn-primary"
         (click)="openPopupStep('add')"
       >
-        <i class="icon-add icon-20"> </i>
+        <i class="icon-add icon-18"></i>
         <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>
       </button>
     </div>
@@ -1190,9 +1199,9 @@
 </ng-template>
 
 <ng-template #stage>
-  <div class="background-stage mt-3">
-    <div class="stage-body row">
-      <div class="stage-body-left col-3">
+  <div class="background-stage dp-step">
+    <div class="stage-body d-flex">
+      <div class="stage-body-left w-250px minw-250px aqua">
         <div class="header">
           <codx-label fiedName="step" default="Giai đoạn"></codx-label>
         </div>
@@ -1213,16 +1222,14 @@
           >
             <div class="order">{{ i + 1 }}</div>
             <div class="p-3 content">
-              <div style="font-weight: 600; font-size: 1.2rem">
-                <span>{{ itemStep?.stepName }}</span>
-              </div>
+              <div class="fw-bold text-dark mb-1">{{ itemStep?.stepName }}</div>
 
-              <div style="font-size: 1.1rem; font-weight: 500">
-                Thời hạn {{ itemStep?.durationDay || 0 }} ngày
-                {{ itemStep?.durationHour || 0 }} giờ
+              <div class="text-gray-500 mb-1">
+                Thời hạn: <span class="text-dark fw-bold">{{ itemStep?.durationDay || 0 }}</span> ngày
+                <span class="text-dark fw-bold">{{ itemStep?.durationHour || 0 }}</span> giờ
               </div>
               <div style="font-size: 1.1rem; font-weight: 500">
-                Công việc {{ itemStep?.taskGroups?.length }}
+                Công việc: <span class="text-dark fw-bold">{{ itemStep?.taskGroups?.length }}</span>
               </div>
             </div>
           </div>
@@ -1259,39 +1266,37 @@
           <!--end danh sách giai đoạn -->
         </div>
       </div>
-      <div class="stage-body-right col-9">
-        <div>
-          <div class="d-flex justify-content-end ms-3">
-            <div class="me-auto">
-              <h2>
-                <strong>{{ titleViewStepCrr }}</strong>
-              </h2>
-            </div>
-            <div *ngIf="isSwitchReason">
-              <codx-input
-                class="test-check"
-                type="switch"
-                style="width: 100%"
-                field="read"
-              >
-              </codx-input>
-            </div>
-            <!-- more function step -->
-            <div
-              *ngIf="step"
-              class="icon-more_vert has-action-menu more-funtion-step"
-              style="cursor: pointer"
+      <div class="stage-body-right w-100">
+        <div class="d-flex justify-content-end ms-3">
+          <div class="me-auto">
+            <h2>
+              <strong>{{ titleViewStepCrr }}</strong>
+            </h2>
+          </div>
+          <div *ngIf="isSwitchReason">
+            <codx-input
+              class="test-check"
+              type="switch"
+              style="width: 100%"
+              field="read"
             >
-              <codx-mfunc
-                *ngIf="viewStepCrr == viewStepCustom"
-                [formModel]="dialog.formModel"
-                (clickMF)="clickMFStep($event, step)"
-                [dataItem]="moreDefaut"
-                [type]="'hover'"
-                (changeDataMF)="changeDataMF($event, 'step')"
-              >
-              </codx-mfunc>
-            </div>
+            </codx-input>
+          </div>
+          <!-- more function step -->
+          <div
+            *ngIf="step"
+            class="icon-more_vert has-action-menu more-funtion-step"
+            style="cursor: pointer"
+          >
+            <codx-mfunc
+              *ngIf="viewStepCrr == viewStepCustom"
+              [formModel]="dialog.formModel"
+              (clickMF)="clickMFStep($event, step)"
+              [dataItem]="moreDefaut"
+              [type]="'hover'"
+              (changeDataMF)="changeDataMF($event, 'step')"
+            >
+            </codx-mfunc>
           </div>
         </div>
         <div class="main">
@@ -1333,9 +1338,8 @@
           <codx-label class="title" fiedName="TaskType" default="Công việc">
           </codx-label>
         </div>
-        <div>
+        <div class="text-gray-600">
           <codx-label
-            class="fw-normal text-gray-400"
             fiedName="taskMemo"
             default="Công việc mặc định người phụ trách phải thực hiện trong giai đoạn"
           >
@@ -1735,7 +1739,7 @@
         <div class="title text-primary fs-4 fw-bold">
           <codx-label default="Tùy chỉnh giai đoạn"></codx-label>
         </div>
-        <div class="text-gray-500">
+        <div class="text-gray-600">
           <codx-label default="Cách thức hoạt động của giai đoạn"></codx-label>
         </div>
       </div>
@@ -1848,7 +1852,7 @@
         <div class="title text-primary fs-4 fw-bold">
           <codx-label default="Lý do thành công"></codx-label>
         </div>
-        <div class="text-gray-500">
+        <div class="text-gray-600">
           <codx-label
             default="Lý do nhiệm vụ được ghi nhận là thành công"
           ></codx-label>
@@ -1927,7 +1931,7 @@
         <div class="title text-primary fs-4 fw-bold">
           <codx-label default="Tùy chỉnh giai đoạn"></codx-label>
         </div>
-        <div class="text-gray-500">
+        <div class="text-gray-600">
           <codx-label default="Cách thức hoạt động của giai đoạn"></codx-label>
         </div>
       </div>
@@ -2033,7 +2037,7 @@
         <div class="title text-primary fs-4 fw-bold">
           <codx-label default="Lý do thất bại"></codx-label>
         </div>
-        <div class="text-gray-500">
+        <div class="text-gray-600">
           <codx-label
             default="Lý do nhiệm vụ được ghi nhận là thất bại"
           ></codx-label>
@@ -2119,7 +2123,7 @@
             default="Các vai trò trong giai đoạn"
           ></codx-label>
         </div>
-        <div class="text-gray-500">
+        <div class="text-gray-600">
           <codx-label
             name="lblRoleControl"
             default="Những người liên quan đến giai đoạn"
@@ -2190,7 +2194,7 @@
                 </codx-img>
               </div>
               <div class="ms-1">
-                <div class="text-dark fw-bold">{{ perm.objectName }}</div>
+                <div class="text-gray-600">{{ perm.objectName }}</div>
               </div>
             </div>
           </ng-container>
@@ -2256,7 +2260,7 @@
         <div class="title text-primary fs-4 fw-bold">
           <codx-label name="" default="Tùy chỉnh giai đoạn"></codx-label>
         </div>
-        <div class="text-gray-500">
+        <div class="text-gray-600">
           <codx-label name="" default="Cách thức hoạt động của giai đoạn">
           </codx-label>
         </div>
@@ -2368,7 +2372,7 @@
           <!-- chưa có -->
           <codx-label fiedName="" default="Thời hạn"></codx-label>
         </div>
-        <div class="text-gray-500">
+        <div class="text-gray-600">
           <!-- chưa có -->
           <codx-label
             fiedName=""
@@ -2651,7 +2655,7 @@
             default="Hướng dẫn hoàn thành giai đoạn"
           ></codx-label>
         </div>
-        <div class="text-gray-500">
+        <div class="text-gray-600">
           <codx-label
             name=""
             default="Mô tả chi tiết cách hoàn thành giai đoạn cho người phụ
