@@ -14,6 +14,8 @@ import {
   UIComponent,
   UploadFile,
 } from 'codx-core';
+import { combineLatest } from 'rxjs';
+import { combineLatestWith, map } from 'rxjs/operators';
 import { ItemSize } from '../interfaces/ItemSize.interface';
 import { ItemsService } from '../items.service';
 
@@ -67,13 +69,44 @@ export class PopupAddItemSizeComponent
       this.savedItemSizes = this.dialogData.data.savedItemSizes;
     }
 
-    if (this.dialogData.data.sizeType == 1) {
-      this.formTitle = this.isEdit
-        ? 'Sửa quy cách đóng gói'
-        : 'Thêm quy cách đóng gói';
-    } else {
-      this.formTitle = this.isEdit ? 'Sửa quy cách' : 'Thêm quy cách';
-    }
+    const functionName1$ = this.cache.moreFunction('Items', 'grvItems').pipe(
+      map((data) => data.find((m) => m.functionID === 'ACS21301')),
+      map(
+        (data) =>
+          data.defaultName.charAt(0).toLowerCase() + data.defaultName.slice(1)
+      )
+    );
+
+    const functionName2$ = this.cache
+      .moreFunction('ItemSizes', 'grvItemSizes')
+      .pipe(
+        map((data) => data.find((m) => m.functionID === 'ACS21304')),
+        map(
+          (data) =>
+            data.defaultName.charAt(0).toLowerCase() + data.defaultName.slice(1)
+        )
+      );
+
+    this.cache
+      .moreFunction('CoDXSystem', '')
+      .pipe(
+        combineLatestWith(functionName1$),
+        combineLatestWith(functionName2$)
+      )
+      .subscribe(([[actions, functionName1], functionName2]) => {
+        console.log({ actions });
+        console.log({ functionName1 });
+        console.log({ functionName2 });
+
+        const action = this.isEdit
+          ? actions.find((a) => a.functionID === 'SYS03')?.customName
+          : actions.find((a) => a.functionID === 'SYS01')?.defaultName;
+
+        console.log(action);
+        const functionName =
+          this.dialogData.data.sizeType == 1 ? functionName1 : functionName2;
+        this.formTitle = `${action} ${functionName}`;
+      });
   }
 
   ngAfterViewInit(): void {

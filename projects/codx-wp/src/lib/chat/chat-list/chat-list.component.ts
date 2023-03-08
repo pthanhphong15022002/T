@@ -5,6 +5,7 @@ import {
   Component,
   EventEmitter,
   HostBinding,
+  Injector,
   Input,
   OnInit,
   Output,
@@ -19,6 +20,7 @@ import {
   CodxListviewComponent,
   CRUDService,
   DataRequest,
+  DataService,
   DialogModel,
   FormModel,
   NotificationsService,
@@ -44,12 +46,13 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   grdViewSetUp: any = null;
   moreFC: any = null;
   user:any = null;
-  dataSerach:any[] = [];
+  dataSVSearch:DataService = null;
   searched:boolean = false;
   @ViewChild('codxListViewGroup') codxListViewGroup: CodxListviewComponent;
   @ViewChild('codxListViewSerach') codxListViewSerach: CodxListviewComponent;
   @ViewChild("chatBox") chatBox:TemplateRef<any>;
   constructor(
+    private injector:Injector,
     private api: ApiHttpService,
     private signalRSV: SignalRService,
     private callFCSV: CallFuncService,
@@ -63,6 +66,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   {
     this.user = this.auth.get();
     this.formModel = new FormModel();
+    this.dataSVSearch = new DataService(this.injector);
   }
 
   ngOnInit(): void {
@@ -93,37 +97,39 @@ export class ChatListComponent implements OnInit, AfterViewInit {
         }
       });
     }
+    this.dataSVSearch.service = "WP";
+    this.dataSVSearch.assemblyName = "ERM.Business.WP";
+    this.dataSVSearch.className = "GroupBusiness";
+    this.dataSVSearch.method = "SearchAsync";
+
   }
 
   ngAfterViewInit() {
-    // add group
-    this.signalRSV.signalGroup.subscribe((res: any) => {
-      debugger
-      if (res) 
-      {
-        (this.codxListViewGroup.dataService as CRUDService).add(res).subscribe();
-      }
-    });
     // add mesage
     this.signalRSV.signalChat.subscribe((res: any) => {
       if (res) 
       {
         this.addBoxChat(res.groupID);
-        let _group = this.codxListViewGroup.dataService.data;
-        let _index = _group.findIndex(e => e['groupID'] === res.groupID);
+        let data = this.codxListViewGroup.dataService.data;
+        let _index = data.findIndex(e => e['groupID'] === res.groupID);
         if(_index > -1){
-          _group[_index].message = res.message;
-          _group[_index].isRead = res.status.some(x => x["UserID"] === this.user.UserID);
+          let group = data[_index]; 
+          group.message = res.message;
+          group.modifiedOn = res.modifiedOn;
+          group.isRead = res.status.some(x => x["UserID"] === this.user.UserID);
+          (this.codxListViewGroup.dataService as CRUDService).removeIndex(_index).subscribe();
+          (this.codxListViewGroup.dataService as CRUDService).add(group).subscribe();
         }
       }
     });
+    
   }
   // searrch
   search(event: any) {
     this.searched = event ? true : false;
     this.dt.detectChanges();
-    if(this.codxListViewSerach.dataService)
-      this.codxListViewSerach.dataService.search(event).subscribe();
+    if(this.dataSVSearch)
+      this.dataSVSearch.search(event).subscribe(res=> console.log(res));
   }
 
   // check read all
@@ -201,6 +207,13 @@ export class ChatListComponent implements OnInit, AfterViewInit {
         option
       );
       popup.closed.subscribe((res: any) => {
+        debugger
+        if(res.event){
+          let boxChat = res.event[0];
+          (this.codxListViewGroup.dataService as CRUDService).add(boxChat).subscribe();
+          this.signalRSV.templateChatBox = this.chatBox;
+          this.signalRSV.sendData(boxChat,"ActiveGroupAsync");
+        }
         this.isOpen = true;
         this.isOpenChange.emit(this.isOpen);
       });

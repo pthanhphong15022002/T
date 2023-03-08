@@ -69,6 +69,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   loadParam = false;
   param?: TM_Parameter = new TM_Parameter();
   isEdit = true;
+  timeoutId :any
 
   constructor(
     private api: ApiHttpService,
@@ -136,9 +137,24 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
     }
     //sua ngày 16/2/2023
-    p.open();
-    this.popoverDataSelected = p;
-    this.hoverPopover.emit(p);
+    // p.open();
+    // this.popoverDataSelected = p;
+    // this.hoverPopover.emit(p);
+    //sua ngay 07/03/2023
+    if(p){
+      var element = document.getElementById(task?.taskID);
+      if (element) {
+        this.timeoutId = setTimeout(function () {
+          p.open();
+          this.popoverDataSelected = p;
+        }, 2000);
+      }
+      this.hoverPopover.emit(p);
+    }else{
+      if(this.timeoutId)
+      clearTimeout( this.timeoutId);
+    }
+   
 
     // this.listTaskResousceSearch = [];
     // this.countResource = 0;
@@ -174,7 +190,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       e.forEach((x) => {
         if (
           (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
-          (data.confirmStatus != '1')
+          data.confirmStatus != '1'
         ) {
           x.disabled = true;
         }

@@ -33,6 +33,7 @@ export const environment = {
     app_id: 'demo.suremeet@gmail.com',
     app_secret: '123456',
   },
+  reCaptchaKey: '6LctVdwkAAAAAF_yJPT2NGF2SvEpCKyLS4t68Ps1',
   firebase: {
     apiKey: 'AIzaSyC1SKqppxpxwT7i3qEdUjJjn-J_SMoUBic',
     authDomain: 'ermtest-2a9bb.firebaseapp.com',

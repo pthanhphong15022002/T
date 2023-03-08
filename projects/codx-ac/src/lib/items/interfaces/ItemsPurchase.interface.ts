@@ -1,4 +1,5 @@
 export interface ItemsPurchase {
+  recID: string;
   itemID: string;
   umid: string;
   warehouseID: string;
