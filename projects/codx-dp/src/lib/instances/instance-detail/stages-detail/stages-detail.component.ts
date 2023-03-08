@@ -458,18 +458,16 @@ throw new Error('Method not implemented.');
   }
   //View task
   viewTask(data?: any) {
-    if (!data) {
-      this.popupJob.close();
-    }
-    this.callfc.openForm(
-      ViewJobComponent,
-      '',
-      500,
-      500,
-      '',
-      {step: data, listStep: this.taskList}
-    );
-    
+    if (data) {
+      this.callfc.openForm(
+        ViewJobComponent,
+        '',
+        700,
+        550,
+        '',
+        {step: data, listStep: this.taskList}
+      );
+    }    
   }
 
   changeGroupTask(taskData, taskGroupIdOld) {

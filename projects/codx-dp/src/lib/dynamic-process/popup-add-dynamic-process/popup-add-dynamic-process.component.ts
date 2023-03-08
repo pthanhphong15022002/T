@@ -2317,28 +2317,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //View task
   async openPopupViewJob(data?: any) {
-    let status = 'edit';
-    let frmModel = await this.getFormModel('DPS0106');
-    if (!data) {
-      this.popupJob.close();
-      status = 'add';
-    }
-    let option = new SidebarModel();
-    option.Width = '550px';
-    option.zIndex = 1001;
-    option.FormModel = frmModel;
-    this.callfc.openSide(
-      ViewJobComponent,
-      [
-        status,
-        this.jobType,
-        this.step?.recID,
-        this.taskGroupList,
-        data || {},
-        this.taskList,
-      ],
-      option
-    );
+    if (data) {
+      this.callfc.openForm(
+        ViewJobComponent,
+        '',
+        700,
+        550,
+        '',
+        {step: data, listStep: this.taskList}
+      );
+    }    
   }
 
   getIconTask(task) {
