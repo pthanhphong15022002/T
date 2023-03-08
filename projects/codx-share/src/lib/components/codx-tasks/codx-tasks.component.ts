@@ -1189,7 +1189,7 @@ export class CodxTasksComponent
             .subscribe((res) => {
               t.listTaskResousceSearch = [];
               t.countResource = 0;
-              if (t.popoverCrr && mouseenter && t.popoverCrr.isOpen())
+              if (t.popoverCrr && p != t.popoverCrr && mouseenter && t.popoverCrr.isOpen())
                 t.popoverCrr.close();
               if (t.popoverDataSelected && t.popoverDataSelected.isOpen()) {
                 t.popoverDataSelected.close();

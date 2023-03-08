@@ -174,8 +174,13 @@ export class ViewListComponent implements OnInit {
             .subscribe((res) => {
               t.listTaskResousceSearch = [];
               t.countResource = 0;
-              if (t.popoverCrr && t.popoverCrr.isOpen()) t.popoverCrr.close();
-              if (t.popoverSelected && t.popoverSelected.isOpen()) {
+              if (t.popoverCrr && p != t.popoverCrr && t.popoverCrr.isOpen())
+                t.popoverCrr.close();
+              if (
+                t.popoverSelected &&
+                p != t.popoverSelected &&
+                t.popoverSelected.isOpen()
+              ) {
                 t.popoverSelected.close();
               }
               if (res) {
