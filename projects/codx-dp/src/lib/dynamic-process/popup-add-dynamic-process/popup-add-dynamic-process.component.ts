@@ -787,11 +787,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             var data = value[i];
             var perm = new DP_Processes_Permission();
             perm.objectName =
-              (data.text != null || data.text != '') && data.objectType != 'U'
-                ? data.text
-                : data.objectType == '9' || data.objectType == '0'
-                ? data.objectName
-                : data.dataSelected.EmployeeName;
+            (data.text == null && data.text == '') && data.objectType == 'U'
+              ? data.dataSelected.EmployeeName
+              : ((data.text == null || data.text == '') &&
+                  data.objectType == '9') ||
+                data.objectType == '0'
+              ? data.objectName
+              : data.text;
             perm.objectID = data.id != null || data.id != '' ? data.id : null;
             perm.objectType = data.objectType;
             perm.full = true;
@@ -811,8 +813,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           for (var i = 0; i < value.length; i++) {
             var data = value[i];
             var perm = new DP_Processes_Permission();
-            perm.objectName = perm.objectName =
-              (data.text == null || data.text == '') && data.objectType == 'U'
+            perm.objectName =
+              (data.text == null && data.text == '') && data.objectType == 'U'
                 ? data.dataSelected.EmployeeName
                 : ((data.text == null || data.text == '') &&
                     data.objectType == '9') ||
@@ -843,7 +845,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             var data = value[i];
             var perm = new DP_Processes_Permission();
             perm.objectName =
-              (data.text == null || data.text == '') && data.objectType == 'U'
+              (data.text == null && data.text == '') && data.objectType == 'U'
                 ? data.dataSelected.EmployeeName
                 : ((data.text == null || data.text == '') &&
                     data.objectType == '9') ||
@@ -871,7 +873,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             var data = value[i];
             var roles = new DP_Steps_Roles();
             roles.objectName =
-              (data.text == null || data.text == '') && data.objectType == 'U'
+              (data.text == null && data.text == '') && data.objectType == 'U'
                 ? data.dataSelected.EmployeeName
                 : ((data.text == null || data.text == '') &&
                     data.objectType == '9') ||
@@ -884,7 +886,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             tmpRole = this.checkRolesStep(this.step.roles, roles);
             var perm = new DP_Processes_Permission();
             perm.objectName =
-              (data.text == null || data.text == '') && data.objectType == 'U'
+              (data.text == null && data.text == '') && data.objectType == 'U'
                 ? data.dataSelected.EmployeeName
                 : ((data.text == null || data.text == '') &&
                     data.objectType == '9') ||
@@ -2776,16 +2778,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               };
             });
             step['taskGroups'] = taskGroupConvert;
-  
+
             let taskGroup = new DP_Steps_TaskGroups();
             taskGroup['task'] = taskGroupList['null'] || [];
-            taskGroup['recID'] = null; 
+            taskGroup['recID'] = null;
             step['taskGroups'].push(taskGroup);
-  
+
             this.stepList.push(step);
           }
         });
-        this.viewStepSelect(this.stepList[0]);      
+        this.viewStepSelect(this.stepList[0]);
       }
     });
   }

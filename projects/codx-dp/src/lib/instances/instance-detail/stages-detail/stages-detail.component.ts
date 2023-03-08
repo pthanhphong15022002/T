@@ -205,7 +205,6 @@ export class StagesDetailComponent implements OnInit {
         }
         var tasks = changes['dataStep'].currentValue?.tasks;
         var taskGroups = changes['dataStep'].currentValue?.taskGroups;
-        this.totalProgress(tasks, taskGroups);
         this.lstFields = changes['dataStep'].currentValue?.fields;
         //nvthuan
         this.groupByTask(changes['dataStep'].currentValue);
@@ -218,25 +217,6 @@ export class StagesDetailComponent implements OnInit {
         : changes['dataStep'].currentValue?.isFailStep
         ? 'Lý do thất bại'
         : '';
-    }
-  }
-
-  totalProgress(tasks, taskGroups) {
-    if (tasks?.length > 0 || taskGroups?.length > 0) {
-      var totalTask = 0;
-      var totalTaskGroup = 0;
-      for (var i = 0; i < tasks.length; i++) {
-        var value = tasks[i].progress;
-        totalTask += value;
-      }
-      for (var i = 0; i < taskGroups.length; i++) {
-        var value = taskGroups[i].progress;
-        totalTaskGroup += value;
-      }
-
-      this.progress = (totalTask / tasks.length).toFixed(1).toString();
-    } else {
-      this.progress = '0';
     }
   }
 
