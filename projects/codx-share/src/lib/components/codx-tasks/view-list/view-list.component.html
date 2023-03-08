@@ -103,23 +103,21 @@
           </button>
         </div>
       </div>
-
       <div class="w-100px min-w-100px">
-        <div *ngIf="data.category == '3'" class="">
+        <div *ngIf="data.category == '3'" id="{{data.taskID}}">
           <codx-imgs
             [isToolTip]="false"
             [width]="30"
             [objectId]="data?.assignTo"
             objectType="AD_Users"
             [numberImages]="2"
-            (click)="popoverEmpList(popoverList, data)"
+            (mouseenter)="popoverEmpList(popoverList, data)"
+            (mouseleave)="popoverEmpList(null,data,false)"
             [ngbPopover]="popEmpList"
             popoverClass="taskPopoverClass"
             #popoverList="ngbPopover"
             placement="right bottom left"
-            container="body"
             autoClose="outside"
-            [openDelay]="2000"
           >
           </codx-imgs>
         </div>

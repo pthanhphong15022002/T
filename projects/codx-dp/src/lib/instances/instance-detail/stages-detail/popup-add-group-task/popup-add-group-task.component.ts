@@ -54,6 +54,9 @@ export class PopupAddGroupTaskComponent implements OnInit {
   }
 
   changeValueInput(event, data) {
+    if(event?.field === 'endDate'){
+      
+    }
     data[event?.field] = event?.data;
   }
   changeValueDate(event, data) {

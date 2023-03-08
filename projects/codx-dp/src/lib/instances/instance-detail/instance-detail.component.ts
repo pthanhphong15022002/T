@@ -176,12 +176,22 @@ export class InstanceDetailComponent implements OnInit {
     return id;
   }
 
-  getStepsByInstanceID(list) {
-    list.forEach((element) => {
-      if (element.indexNo == this.currentStep) {
-        this.tmpTeps = element;
-      }
+  sortListSteps(ins, process){
+    var listStep = process.steps.sort(function(x, y) {
+        return x.stepNo > 0 && y.stepNo > 0 ? x.stepNo - y.stepNo : x.stepNo > 0 ? -1 : y.stepNo > 0 ? 1 : x.stepNo - y.stepNo;
     });
+    ins = listStep.reduce((result, x) => {
+      let matches = ins.filter(y => x.recID === y.stepID);
+      if (matches.length) {
+        result.push(matches[0]);
+      }
+      return result;
+    }, []).sort((x, y) => {
+      let firstStep = listStep.find(z => z.recID === y.stepID);
+      return listStep.indexOf(firstStep);
+    });
+
+    return ins;
   }
 
   // getStepsByProcessID(recID){

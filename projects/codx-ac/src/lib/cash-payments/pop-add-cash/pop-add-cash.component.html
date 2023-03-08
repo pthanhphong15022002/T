@@ -18,7 +18,15 @@
     <ejs-tab #cashRef>
       <e-tabitems>
         <!-- Tab thông tin chứng từ -->
-        <e-tabitem [header]="tabItem[0]">
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top mb-2">
+                <div class="me-2">
+                    <div class="icon-info icon-20"></div>
+                </div>
+                <div class="fw-bold fs-5">Thông tin chứng từ</div>
+            </div>
+        </ng-template>
           <ng-template #content>
             <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
           </ng-template>
@@ -29,7 +37,15 @@
     <ejs-tab>
       <e-tabitems>
         <!-- Tab chi tiết bút toán -->
-        <e-tabitem [header]="tabItem[1]">
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top mb-2">
+                <div class="me-2">
+                    <div class="icon-format_list_numbered icon-20"></div>
+                </div>
+                <div class="fw-bold fs-5">Chi tiết bút toán</div>
+            </div>
+        </ng-template>
           <ng-template #content>
             <ng-container *ngTemplateOutlet="tabCashPaymentLine"></ng-container>
           </ng-template>

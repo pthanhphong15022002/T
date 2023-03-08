@@ -1822,4 +1822,9 @@ codx-calendar{
   }
 }
 
+erm-quick-links-inner .dropdown-menu{
+  max-height:calc(100vh - 55px) ;
+  margin-top: 7px!important;
+  overflow: auto;
+}
 /// 14/2/2023 

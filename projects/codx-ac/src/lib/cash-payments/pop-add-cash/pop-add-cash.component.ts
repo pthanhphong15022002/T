@@ -67,10 +67,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
-  tabItem: any = [
-    { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
-    { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
-  ];
   constructor(
     private inject: Injector,
     cache: CacheService,
@@ -104,15 +100,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         )
         .subscribe((res: any) => {
           this.cashpaymentline = res;
-        });
-      this.acService
-        .loadData('ERM.Business.AC', 'CashBookBusiness', 'LoadDataAsync', [])
-        .subscribe((res: any) => {
-          res.forEach((element) => {
-            if (element.cashBookID == this.cashpayment.cashBookID) {
-              this.cashbookName = element.cashBookName;
-            }
-          });
         });
       //#endregion
     }
@@ -196,8 +183,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   cellChanged(e: any) {
-    // this.cashpaymentline[e.field] = e.value;
-    //this.data = JSON.stringify(this.cashpaymentline);
     const field = [
       'accountid',
       'offsetacctid',
@@ -243,6 +228,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.grid.addRow(data, idx);
+          console.log(res);
         }
       });
   }
