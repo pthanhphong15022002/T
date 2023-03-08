@@ -1,1 +1,15 @@
-<p>employee-contract works!</p>
+<codx-views
+    #view
+    [funcID]="funcID"
+    service="HR" 
+    assemblyName="ERM.Business.HR" 
+    entityName="HR_EContracts"
+    className="EContractsBusiness" 
+    [method]="method"
+    [views]="views"
+    [autoLoad]="true"
+    idField="recID"
+    [button]="buttonAdd"
+    (onActions)="HandleAction($event)"
+>
+</codx-views>
