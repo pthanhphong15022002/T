@@ -197,9 +197,7 @@
                 cdkDrag
                 [cdkDragData]="taskList"
                 [cdkDragStartDelay]="100"
-                [cdkDragDisabled]="
-                taskList?.recID && !taskList?.isTaskDefault ? false : true
-                ">
+                [cdkDragDisabled]="true">
                 <div class="card-job">
                   <div
                     *ngIf="taskList?.recID"
@@ -283,7 +281,7 @@
                         cdkDrag
                         [cdkDragStartDelay]="100"
                         [cdkDragData]="task"
-                        [cdkDragDisabled]="task?.isTaskDefault"
+                        [cdkDragDisabled]="true"
                         class="drap-drop ps-1 pt-2">
                         <div
                           class="d-flex align-items-center
