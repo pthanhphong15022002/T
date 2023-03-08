@@ -123,11 +123,12 @@
           [isEdit]="dataSelect.edit"
           [isUpdate]="dataSelect.write"
           [isCreate]="dataSelect.create"
+          [isClosed]="dataSelect.closed"
           [titleDefault]="titleDefault"
           [instance]="instance"
           [lstIDInvo]="lstInv"
           [listStepReason]="getReasonByStepId(dataSelect.stepID)"
-          [stepNameEnd]="getStepNameIsComlepte()"
+          [stepNameEnd]="getStepNameIsComlepte(instance)"
           [proccesNameMove]="proccesNameMove"
         ></codx-stages-detail>
         </ng-container>
@@ -135,7 +136,9 @@
       </ng-container>
       <ng-container *ngIf="viewModelDetail == 'F'">
         <ng-container *ngFor="let item of listSteps">
-          <codx-field-detail *ngIf="!item?.isSuccessStep && !item?.isFailStep" [dataStep]="item" [isUpdate]="dataSelect.write"></codx-field-detail>
+          <codx-field-detail *ngIf="!item?.isSuccessStep && !item?.isFailStep" [dataStep]="item" [isUpdate]="dataSelect.write"
+          [isClosed]="dataSelect.closed"
+          ></codx-field-detail>
         </ng-container>
       </ng-container>
     </ng-template>

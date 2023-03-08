@@ -132,6 +132,9 @@ export class CodxDMService {
   public ChangeData = new BehaviorSubject<boolean>(null);
   isChangeData = this.ChangeData.asObservable();
 
+  public ChangeDataView = new BehaviorSubject<boolean>(null);
+  isChangeDataView = this.ChangeData.asObservable();
+
   public ChangeDataViewFile = new BehaviorSubject<any>(null);
   isChangeDataViewFile = this.ChangeDataViewFile.asObservable();
 
@@ -309,6 +312,7 @@ export class CodxDMService {
   ngOnInit(): void {}
 
   getRight(folder: FolderInfo) {
+    debugger
     this.parentCreate = folder.create;
     this.parentRead = folder.read;
     this.parentUpdate = folder.write;
@@ -319,7 +323,7 @@ export class CodxDMService {
     this.parentAssign = folder.assign;
     if (folder.revision != null) this.parentRevision = folder.revision;
     else this.parentRevision = false;
-
+    debugger;
     this.revision = this.parentRevision;
     this.parentApproval = folder.approval;
     this.parentPhysical = folder.physical;
@@ -381,6 +385,7 @@ export class CodxDMService {
       case '.zip':
         return 'zip.svg';
       case '.jpg':
+      case '.jpeg':
         return 'jpg.svg';
       case '.mp4':
         return 'mp4.svg';
@@ -639,7 +644,6 @@ export class CodxDMService {
   }
 
   filterMoreFunction(e: any, data: any, modeView = false) {
-    debugger
     var type = this.getType(data, 'entity');
     var bookmark = this.isBookmark(data);
     var list =

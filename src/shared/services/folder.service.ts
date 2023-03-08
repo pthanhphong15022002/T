@@ -24,7 +24,7 @@ export class FolderService implements OnDestroy {
     private api: ApiHttpService
   ) {
     this.options.pageLoading = false;
-    this.options.pageSize = 100;
+    this.options.pageSize = 20;
     this.options.funcID = '';
   }
 

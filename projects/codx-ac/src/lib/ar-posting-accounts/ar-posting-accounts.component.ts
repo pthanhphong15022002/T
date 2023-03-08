@@ -32,7 +32,7 @@ export class ArPostingAccountsComponent extends UIComponent {
   @ViewChild('grid') grid: CodxGridviewComponent;
   views: Array<ViewModel> = [];
   menuAccount: Array<any> = [];
-  postTypeAccount: any = "10";
+  postTypeAccount: any = '10';
   menuRules: Array<any> = [];
   postTypeRules: any;
   dialog: DialogRef;
@@ -66,9 +66,9 @@ export class ArPostingAccountsComponent extends UIComponent {
       }
     });
   }
-//#endregion
+  //#endregion
 
-//#region Init
+  //#region Init
   onInit() {
     this.cache.valueList('AC047').subscribe((res) => {
       if (res) {
@@ -106,13 +106,13 @@ export class ArPostingAccountsComponent extends UIComponent {
       case 1:
         this.menuActive = 1;
         if (this.postTypeAccount == null) {
-          this.postTypeAccount = "10";
+          this.postTypeAccount = '10';
         }
         break;
       case 2:
         this.menuActive = 2;
         if (this.postTypeRules == null) {
-          this.postTypeRules = "20";
+          this.postTypeRules = '20';
         }
         break;
     }
@@ -120,7 +120,7 @@ export class ArPostingAccountsComponent extends UIComponent {
   load(field: string, value: string) {
     if (this.menuActive == 1) {
       this.postTypeAccount = value;
-    }else{
+    } else {
       this.postTypeRules = value;
     }
     this.grid.dataService.setPredicates([field + '=@0'], [value]).subscribe();
@@ -139,6 +139,9 @@ export class ArPostingAccountsComponent extends UIComponent {
         break;
       case 'SYS03':
         this.edit(e, data);
+        break;
+      case 'SYS04':
+        this.copy(e, data);
         break;
     }
   }
@@ -204,6 +207,39 @@ export class ArPostingAccountsComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'edit',
+          headerText: e.text + ' ' + this.funcName,
+          subheaderText: this.subheaderText,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfunc.openSide(PopAddArComponent, obj, option);
+      });
+  }
+  copy(e, data) {
+    if (data.moduleID == '1') {
+      this.menuAccount.forEach((element) => {
+        if (element.value == data.postType) {
+          this.subheaderText = 'Tài khoản > ' + element.text;
+        }
+      });
+    }
+    if (data.moduleID == '2') {
+      this.menuRules.forEach((element) => {
+        if (element.value == data.postType) {
+          this.subheaderText = 'Điều khoản > ' + element.text;
+        }
+      });
+    }
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .copy(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'copy',
           headerText: e.text + ' ' + this.funcName,
           subheaderText: this.subheaderText,
         };

@@ -21,6 +21,7 @@ export class FieldDetailComponent implements OnInit {
   @Input() titleDefault = '';
   @Input() isUpdate = false;
   @Input() showColumnControl = 1;
+  @Input() isClosed = false;
   currentRate = 0;
   dtFormatDate: any = [];
 
