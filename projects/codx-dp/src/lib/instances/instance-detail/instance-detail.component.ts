@@ -15,7 +15,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { CRUDService, ApiHttpService, CacheService } from 'codx-core';
+import { CRUDService, ApiHttpService, CacheService, CallFuncService, DialogModel, DialogRef } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
 import { log } from 'console';
@@ -38,9 +38,10 @@ export class InstanceDetailComponent implements OnInit {
   @Input() listStepNew: any;
   @Input() listCbxProccess: any;
   @Input() viewModelDetail = 'S';
+  @ViewChild('viewDetailsItem') viewDetailsItem ;
+  @Input() listSteps: DP_Instances_Steps[] = [];
   id: any;
   totalInSteps: any;
-  @Input() listSteps: DP_Instances_Steps[] = [];
   tmpTeps: DP_Instances_Steps;
   currentNameStep: Number;
   //progressbar
@@ -67,6 +68,7 @@ export class InstanceDetailComponent implements OnInit {
     type: 'type',
     color: 'color',
   };
+  dialogPopupDetail: DialogRef;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -86,12 +88,14 @@ export class InstanceDetailComponent implements OnInit {
   lstInv = '';
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
+ 
 
   constructor(
     private dpSv: CodxDpService,
     private api: ApiHttpService,
     private cache: CacheService,
     private changeDetec: ChangeDetectorRef,
+    private callFC : CallFuncService ,
     private popupInstances: InstancesComponent,
     public sanitizer: DomSanitizer
   ) {
@@ -343,4 +347,18 @@ export class InstanceDetailComponent implements OnInit {
     return reasonStep?.stepName ?? '';
   }
 
+  clickDetailGanchart(type,recID){
+    let option = new DialogModel();
+    option.zIndex = 1001;
+    this.dialogPopupDetail = this.callFC.openForm(
+      this.viewDetailsItem,
+      '',
+      500,
+      10,
+      '',
+      null,
+      '',
+      option
+    );
+  }
 }
