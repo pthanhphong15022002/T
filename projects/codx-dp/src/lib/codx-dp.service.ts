@@ -245,7 +245,15 @@ export class CodxDpService {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
-      'updateStepDrapDropAsync',
+      'UpdateStepDrapDropAsync',
+      data
+    );
+  }
+  updateProgressStep(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateProgressStep',
       data
     );
   }
