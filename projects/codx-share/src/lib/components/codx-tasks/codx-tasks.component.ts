@@ -153,6 +153,7 @@ export class CodxTasksComponent
   disabledProject = false;
   crrFuncID = '';
   isHoverPop = false;
+  timeoutId: any;
 
   constructor(
     inject: Injector,
@@ -1157,37 +1158,78 @@ export class CodxTasksComponent
     this.param.CompletedControl = taskGroup.completedControl;
   }
   //#endregion
-
-  popoverEmpList(p: any, task) {
-    this.listTaskResousceSearch = [];
-    this.countResource = 0;
-    if (this.popoverCrr) {
-      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+  //region Popoverer
+  popoverEmpList(p: any, task, mouseenter = true) {
+    if (
+      this.popoverCrr &&
+      p != this.popoverCrr &&
+      mouseenter &&
+      this.popoverCrr.isOpen()
+    ) {
+      this.popoverCrr.close();
     }
-    if (this.popoverDataSelected) {
-      if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
+    if (this.popoverDataSelected && this.popoverDataSelected.isOpen()) {
+      this.popoverDataSelected.close();
     }
-    if (this.isHoverPop) return;
-    this.isHoverPop = true;
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskResourcesBusiness',
-        'GetListTaskResourcesByTaskIDAsync',
-        task.taskID
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.listTaskResousce = res;
-          this.listTaskResousceSearch = res;
-          this.countResource = res.length;
+    if (p) {
+      var element = document.getElementById(task?.taskID);
+      if (element) {
+        let t = this;
+        this.timeoutId = setTimeout(function () {
+          if (t.isHoverPop) return;
+          t.isHoverPop = true;
+          t.api
+            .execSv<any>(
+              'TM',
+              'ERM.Business.TM',
+              'TaskResourcesBusiness',
+              'GetListTaskResourcesByTaskIDAsync',
+              task.taskID
+            )
+            .subscribe((res) => {
+              t.listTaskResousceSearch = [];
+              t.countResource = 0;
+              if (t.popoverCrr && p != t.popoverCrr && mouseenter && t.popoverCrr.isOpen())
+                t.popoverCrr.close();
+              if (t.popoverDataSelected && t.popoverDataSelected.isOpen()) {
+                t.popoverDataSelected.close();
+              }
+              if (res) {
+                t.listTaskResousce = res;
+                t.listTaskResousceSearch = res;
+                t.countResource = res.length;
 
-          if (this.isHoverPop) p.open();
-          this.popoverCrr = p;
-        }
-        this.isHoverPop = false;
-      });
+                if (t.isHoverPop && p) p.open();
+                if (p) t.popoverCrr = p;
+              }
+              t.isHoverPop = false;
+            });
+        }, 2000);
+      }
+    } else {
+      if (this.timeoutId) clearTimeout(this.timeoutId);
+    }
+    // if (this.isHoverPop) return;
+    // this.isHoverPop = true;
+    // this.api
+    //   .execSv<any>(
+    //     'TM',
+    //     'ERM.Business.TM',
+    //     'TaskResourcesBusiness',
+    //     'GetListTaskResourcesByTaskIDAsync',
+    //     task.taskID
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.listTaskResousce = res;
+    //       this.listTaskResousceSearch = res;
+    //       this.countResource = res.length;
+
+    //       if (this.isHoverPop && p) p.open();
+    //       this.popoverCrr = p;
+    //     }
+    //     this.isHoverPop = false;
+    //   });
   }
 
   searchName(e) {
@@ -1209,7 +1251,7 @@ export class CodxTasksComponent
   hoverPopover(p: any) {
     this.popoverDataSelected = p;
   }
-
+  //#endregion
   //#region Confirm
   openConfirmStatusPopup(moreFunc, data) {
     if (data.owner != this.user.userID) {
@@ -1691,10 +1733,10 @@ export class CodxTasksComponent
         this.viewTask(e?.data);
         break;
       case 'pined-filter':
-        var index = this.view.views.findIndex(x=>x.active==true);
-        if(index!=1){
-          let type = this.view.views[index].type ;
-          if(type==7 || type==8){
+        var index = this.view.views.findIndex((x) => x.active == true);
+        if (index != 1) {
+          let type = this.view.views[index].type;
+          if (type == 7 || type == 8) {
             // calender + schedule
             // if(Array.isArray(e.data)){
             //   e.data.forEach((filter:any)=>{
@@ -1705,8 +1747,8 @@ export class CodxTasksComponent
             //     this.view.currentView['schedule'].dataService.filter.filters[0].filters.push(filter);
             // });
             //   this.view.currentView['schedule'].refresh();
-          //}        
-         }
+            //}
+          }
         }
         break;
     }

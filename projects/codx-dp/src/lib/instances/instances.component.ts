@@ -24,6 +24,7 @@ import {
   ResourceModel,
   RequestOption,
   Util,
+  NotificationsService,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Instances } from '../models/models';
@@ -102,13 +103,14 @@ export class InstancesComponent
   viewMode: any;
   viewModeDetail = 'S';
   totalInstance: number = 0;
-
+  itemSelected: any;
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private inject: Injector,
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
+    private noti: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -162,7 +164,9 @@ export class InstancesComponent
     };
     this.dataObj = {
       processID: this.process?.recID ? this.process?.recID : '',
-      showInstanceControl: this.process?.showInstanceControl ? this.process?.showInstanceControl : '2'
+      showInstanceControl: this.process?.showInstanceControl
+        ? this.process?.showInstanceControl
+        : '2',
     };
 
     // if(this.process.steps != null && this.process.steps.length > 0){
@@ -267,52 +271,64 @@ export class InstancesComponent
       this.view.dataService.dataSelected = data;
       this.oldIdInstance = data.recID;
     }
-    this.view.dataService.copy(this.view.dataService.dataSelected).subscribe((res) => {
-      const funcIDApplyFor =
-        this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
-      const applyFor = this.process.applyFor;
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-        this.cache.gridView(fun.gridViewName).subscribe((grv) => {
-          this.cache
-            .gridViewSetup(fun.formName, fun.gridViewName)
-            .subscribe((grvSt) => {
-              var formMD = new FormModel();
-              formMD.funcID = funcIDApplyFor;
-              formMD.entityName = fun.entityName;
-              formMD.formName = fun.formName;
-              formMD.gridViewName = fun.gridViewName;
-              option.Width = '850px';
-              option.zIndex = 1001;
-              if (!this.process.instanceNoSetting) {
-                this.codxDpService
-                  .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
-                  .subscribe((res) => {
-                    if (res) {
-                      this.view.dataService.dataSelected = data;
-                      this.view.dataService.dataSelected.instanceNo = res;
-                      this.openPopUpAdd(applyFor, formMD, option, titleAction);
-                    }
-                  });
-              } else {
-                this.codxDpService
-                  .getAutoNumberByInstanceNoSetting(
-                    this.process.instanceNoSetting
-                  )
-                  .subscribe((isNo) => {
-                    if (isNo) {
-                      this.view.dataService.dataSelected = data;
-                      this.view.dataService.dataSelected.instanceNo = isNo;
-                      this.openPopUpAdd(applyFor, formMD, option, titleAction);
-                    }
-                  });
-              }
-            });
+    this.view.dataService
+      .copy(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        const funcIDApplyFor =
+          this.process.applyFor === '1' ? 'DPT0406' : 'DPT0405';
+        const applyFor = this.process.applyFor;
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+          this.cache.gridView(fun.gridViewName).subscribe((grv) => {
+            this.cache
+              .gridViewSetup(fun.formName, fun.gridViewName)
+              .subscribe((grvSt) => {
+                var formMD = new FormModel();
+                formMD.funcID = funcIDApplyFor;
+                formMD.entityName = fun.entityName;
+                formMD.formName = fun.formName;
+                formMD.gridViewName = fun.gridViewName;
+                option.Width = '850px';
+                option.zIndex = 1001;
+                if (!this.process.instanceNoSetting) {
+                  this.codxDpService
+                    .genAutoNumber(this.funcID, 'DP_Instances', 'InstanceNo')
+                    .subscribe((res) => {
+                      if (res) {
+                        this.view.dataService.dataSelected = data;
+                        this.view.dataService.dataSelected.instanceNo = res;
+                        this.openPopUpAdd(
+                          applyFor,
+                          formMD,
+                          option,
+                          titleAction
+                        );
+                      }
+                    });
+                } else {
+                  this.codxDpService
+                    .getAutoNumberByInstanceNoSetting(
+                      this.process.instanceNoSetting
+                    )
+                    .subscribe((isNo) => {
+                      if (isNo) {
+                        this.view.dataService.dataSelected = data;
+                        this.view.dataService.dataSelected.instanceNo = isNo;
+                        this.openPopUpAdd(
+                          applyFor,
+                          formMD,
+                          option,
+                          titleAction
+                        );
+                      }
+                    });
+                }
+              });
+          });
         });
       });
-    });
   }
   openPopUpAdd(applyFor, formMD, option, action) {
     var dialogCustomField = this.callfc.openSide(
@@ -407,7 +423,7 @@ export class InstancesComponent
 
   //Event
   clickMF(e, data?) {
-    // this.itemSelected = data;
+    this.itemSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
     switch (e.functionID) {
@@ -430,7 +446,34 @@ export class InstancesComponent
       case 'DP10':
         this.moveReason(e.data, data, this.isMoveSuccess);
         break;
+      //Đóng nhiệm vụ = true;
+      case 'DP14':
+        this.openOrClosed(data, true);
+        break;
+      //Mở nhiệm vụ = false;
+      case 'DP15':
+        this.openOrClosed(data, false);
+        break;
     }
+  }
+
+  openOrClosed(data, check) {
+    this.noti
+      .alertCode('DP018', null, "'" + this.titleAction + "'")
+      .subscribe((info) => {
+        if (info.event.status == 'Y') {
+          this.codxDpService
+            .openOrClosedInstance(data.recID, check)
+            .subscribe((res) => {
+              if (res) {
+                this.itemSelected.closed = check;
+                this.noti.notifyCode(check ? 'DP016' : 'DP017');
+                this.view.dataService.update(this.itemSelected).subscribe();
+                this.detectorRef.detectChanges();
+              }
+            });
+        }
+      });
   }
 
   //#popup roles
@@ -441,7 +484,8 @@ export class InstancesComponent
         switch (res.functionID) {
           case 'SYS005':
           case 'SYS003':
-            if ((data.status !== '1' && data.status !== '2') || data.closed) res.disabled = true;
+            if ((data.status !== '1' && data.status !== '2') || data.closed)
+              res.disabled = true;
             break;
           case 'SYS004':
           case 'SYS001':
@@ -456,7 +500,11 @@ export class InstancesComponent
           case 'DP09':
           case 'DP10':
             let isUpdate = data.write;
-            if (!isUpdate || (data.status !== '1' && data.status !== '2') || data.closed)
+            if (
+              !isUpdate ||
+              (data.status !== '1' && data.status !== '2') ||
+              data.closed
+            )
               res.disabled = true;
             break;
           //Copy
@@ -470,6 +518,14 @@ export class InstancesComponent
           case 'SYS02':
             let isDelete = data.delete;
             if (!isDelete || data.closed) res.disabled = true;
+            break;
+          //Đóng nhiệm vụ = true
+          case 'DP14':
+            if (data.closed) res.disabled = true;
+            break;
+          //Mở nhiệm vụ = false
+          case 'DP15':
+            if (!data.closed) res.disabled = true;
             break;
         }
       });
@@ -697,8 +753,8 @@ export class InstancesComponent
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
             let reason = isMoveSuccess
-              ? this.listSteps[this.listSteps.findIndex(x=>x.isSuccessStep)]
-              : this.listSteps[this.listSteps.findIndex(x=>x.isFailStep)];
+              ? this.listSteps[this.listSteps.findIndex((x) => x.isSuccessStep)]
+              : this.listSteps[this.listSteps.findIndex((x) => x.isFailStep)];
             var obj = {
               dataMore: dataMore,
               headerTitle: fun.defaultName,
@@ -732,9 +788,6 @@ export class InstancesComponent
                 }
                 this.dataSelected = data;
                 this.detailViewInstance.dataSelect = this.dataSelected;
-                // this.detailViewInstance.GetStepsByInstanceIDAsync(
-                //   this.dataSelected.recID
-                // );
                 this.view.dataService.update(data).subscribe();
                 this.detectorRef.detectChanges();
               }
@@ -776,7 +829,7 @@ export class InstancesComponent
       .map((x) => x.stepName)[0];
   }
   clickMoreFunc(e) {
- //   this.lstStepInstances = e.lstStepInstance;
+    //   this.lstStepInstances = e.lstStepInstance;
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {

@@ -19,10 +19,7 @@ export class ViewJobComponent implements OnInit {
   dialog!: DialogRef;
   formModelMenu: FormModel;
   stepsTasks: DP_Steps_Tasks;
-  status = '';
-  stepType = '';
   taskType = '';
-  stepID = '';
   listOwner = [];
   taskList: DP_Steps_Tasks[] = [];
   taskListConnect: DP_Steps_Tasks[] = [];
@@ -39,6 +36,11 @@ export class ViewJobComponent implements OnInit {
     VIDEO: 'video',
     APPLICATION: 'application',
   };
+  frmModel: FormModel = {
+    entityName: 'DP_Steps_Tasks',
+    formName: 'DPStepsTasks',
+    gridViewName: 'grvDPStepsTasks',
+  };
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -47,13 +49,9 @@ export class ViewJobComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.status = dt?.data[0];
-    this.taskType = dt?.data[1];
-    this.stepType = dt?.data[1]['id'];
-    this.stepID = dt?.data[2];
-    this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
-    this.taskList = dt?.data[5];
-    this.stepType = this.stepsTasks.taskType;
+    this.taskType = dt?.data?.step?.stepType;
+    this.stepsTasks = dt?.data?.step;
+    this.taskList = dt?.data?.listStep;
   }
 
   ngOnInit(): void {

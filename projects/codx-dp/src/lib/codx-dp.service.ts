@@ -143,6 +143,15 @@ export class CodxDpService {
     );
   }
 
+  getStepsByInstanceIDAndProcessID(data){
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'GetStepsByInstanceIDAndProcessIDAsync',
+      data
+    );
+  }
+
   GetStepInstance(recID) {
     return this.api.exec<any>('DP', 'InstanceStepsBusiness', 'GetAsync', recID);
   }
@@ -245,7 +254,15 @@ export class CodxDpService {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
-      'updateStepDrapDropAsync',
+      'UpdateStepDrapDropAsync',
+      data
+    );
+  }
+  updateProgressStep(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateProgressStep',
       data
     );
   }
@@ -452,6 +469,15 @@ export class CodxDpService {
       'DP',
       'ProcessGroupsBusiness',
       'GetAsync',
+    );
+  }
+
+  openOrClosedInstance(recID, check) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'OpenOrClosedInstanceAsync',
+      [recID, check]
     );
   }
 }

@@ -677,7 +677,7 @@ export class DynamicProcessComponent
     dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
         this.view.dataService.clear();
-        data.totalInstance = e.event.totalInstance;
+        data.totalInstance = e.event.totalInstance ?? 0;
         this.view.dataService.update(data).subscribe();
         this.detectorRef.detectChanges();
       }
