@@ -257,6 +257,7 @@ export class Permission {
     allowOtherDownload: boolean = false;
     isActive: boolean = false;
     isSystem: boolean = false;
+    isParentShare: boolean = false;
     icon: string;
     startDate: Date;
     endDate: Date;

@@ -64,7 +64,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   orgViews: Array<ViewModel> = [];
   listFolders: FolderInfo[];
   listFiles: FileInfo[];
-  data = [];
+  data:any;
   titleAccessDeniedFile = 'Bạn không có quyền truy cập file này';
   titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
   titleFileName = 'Tên tài liệu';
@@ -113,9 +113,11 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       if (params?.funcID) {
         this.funcID = params?.funcID;
         this.dmSV.folderID = '';
+        this.dmSV.idMenuActive =  this.funcID;
         this.fileService.options.funcID = this.funcID
         this.fileService.options.page = 1;
         this.getDataByFuncID(this.funcID);
+        this.setBreadCumb();
        //FuncID
       }
     });
@@ -151,7 +153,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
     this.dmSV.isNodeSelect.subscribe((res) => {
       if (res) {
-        debugger
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
           if (res.recID) tree.getCurrentNode(res.recID);
@@ -186,6 +187,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.folderService.options.page = 1;
         this.fileService.options.page = 1;
         this.getDataByFuncID(this.funcID);
+        this.changeDetectorRef.detectChanges();
         //this.data = this.view.dataService.data
       }
     });
@@ -360,6 +362,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
   getDataByFuncID(funcID:any)
   {
+    debugger
     //GetFolder()
     this.fileService.options.page = 1;
     this.folderService.options.page = 1;
@@ -642,10 +645,9 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   onSelectionChanged($data) {
-    ScrollComponent.reinitialization();
-    if (!$data && ($data == null || $data?.data == null)) {
-      return;
-    }
+    debugger
+    //ScrollComponent.reinitialization();
+    if (!$data || !$data?.data) return
     this.isSearch = false;
     this.clearWaitingThumbnail();
     let id = $data?.data?.recID;
@@ -701,11 +703,11 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.parentFolderId = item.parentId;
         this.dmSV.parentFolder.next(item);
         this.dmSV.level = item.level;
-        this.dmSV.idMenuActive = this.funcID;
-        this.dmSV.getRight(item);
+        //this.dmSV.getRight(item);
         this.dmSV.folderID = id;
         this.dmSV.folderId.next(id);
         this.getDataFolder(id);
+        this.changeDetectorRef.detectChanges();
       }
     } else {
       //this.data = [];
@@ -868,7 +870,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       this.fileService.options.favoriteID = "2";
     }
     this.dmSV.disableInput.next(false);
-    this.setBreadCumb();
+ 
    
   }
 
@@ -1259,6 +1261,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
   }
   getDataFile(id: any, isSize = false) {
+
+    if(!this.isScrollFile) return;
     this.fileService.options.funcID = this.view.funcID;
     //this.fileService.options.srtColumns = this.sortColumn;
     //this.fileService.options.srtDirections = this.sortDirection;
@@ -1271,20 +1275,22 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.totalPage = parseInt(res[1]);
         this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
       }
-      ScrollComponent.reinitialization();
+      this.detectorRef.detectChanges();
+      //ScrollComponent.reinitialization();
     });
   }
   getDataFolder(id: any) {
     //this.dmSV.listFolder = [];
     //this.folderService.options.srtColumns = this.sortColumn;
     //this.folderService.options.srtDirections = this.sortDirection;
+    if(!this.isScrollFolder) return;
     this.folderService.options.funcID = this.funcID;
     this.folderService.getFolders(id).subscribe((res) => {
       if (res && res[0]){
         this.dmSV.listFolder = res[0];
         this.listFolders = res[0];
         this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
-        if(res[0].length <=0 || res[0].length < this.folderService.options.pageSize)
+        if(res[0].length <=0 || (res[0].length < this.folderService.options.pageSize))
         {
           this.fileService.options.pageSize = this.folderService.options.pageSize - res[0].length;
           this.isScrollFolder = false;
@@ -1292,6 +1298,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         }
         this._beginDrapDrop();
       }
+      this.detectorRef.detectChanges();
     });
   }
   public dlgBtnClick = (): void => {

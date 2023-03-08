@@ -96,6 +96,7 @@
                                         </ng-template>
                                     </div>
                                     <!-- <div class="text-gray-700">{{perm.objectName}}</div> -->
+                                    {{perm.isParentShare}}
                                     <span *ngIf="perm.isSystem == false && this.assignRight"
                                         (click)="removeUserRight(i)" class="icon-close icon-16 ms-2 text-danger">
                                     </span>
