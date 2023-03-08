@@ -130,8 +130,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   popoverEmpList(p: any, task = null) {
-    if (this.popoverCrr) {
-      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+    if (this.popoverCrr && this.popoverCrr.isOpen()) {
+       this.popoverCrr.close();
     }
     if (this.popoverDataSelected) {
       if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
@@ -144,9 +144,13 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     if(p){
       var element = document.getElementById(task?.taskID);
       if (element) {
+        var t = this
         this.timeoutId = setTimeout(function () {
           p.open();
-          this.popoverDataSelected = p;
+          if (t.popoverCrr && t.popoverCrr.isOpen()) {
+            t.popoverCrr.close();
+          }
+         //this.popoverDataSelected = p;
         }, 2000);
       }
       this.hoverPopover.emit(p);
