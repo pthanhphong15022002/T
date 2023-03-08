@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UIComponent, ViewModel, DialogRef, ButtonModel, CallFuncService, ViewType, DialogModel } from 'codx-core';
+import { UIComponent, ViewModel, DialogRef, ButtonModel, CallFuncService, ViewType, DialogModel, RequestOption } from 'codx-core';
 import { PopAddReceiptsComponent } from './pop-add-receipts/pop-add-receipts.component';
 
 @Component({
@@ -61,10 +61,10 @@ export class CashReceiptsComponent extends UIComponent{
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        //this.delete(data);
+        this.delete(data);
         break;
       case 'SYS03':
-        //this.edit(e, data);
+        this.edit(e, data);
         break;
     }
   }
@@ -97,5 +97,61 @@ export class CashReceiptsComponent extends UIComponent{
           option
         );
       });
+  }
+  edit(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'edit',
+          headerText: e.text + ' ' + this.funcName,
+        };
+        let option = new DialogModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.IsFull = true;
+        this.dialog = this.callfunc.openForm(
+          PopAddReceiptsComponent,
+          '',
+          null,
+          null,
+          this.view.funcID,
+          obj,
+          '',
+          option
+        );
+      });
+  }
+  delete(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .delete([data], true, (option: RequestOption) =>
+        this.beforeDelete(option, data)
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.api
+            .exec(
+              'ERM.Business.AC',
+              'CashReceiptsLinesBusiness',
+              'DeleteAsync',
+              [data.recID]
+            )
+            .subscribe((res: any) => {});
+        }
+      });
+  }
+  beforeDelete(opt: RequestOption, data) {
+    opt.methodName = 'DeleteAsync';
+    opt.className = 'CashReceiptsBusiness';
+    opt.assemblyName = 'AC';
+    opt.service = 'AC';
+    opt.data = data.recID;
+    return true;
   }
 }
