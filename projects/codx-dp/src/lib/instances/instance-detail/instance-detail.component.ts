@@ -103,20 +103,23 @@ export class InstanceDetailComponent implements OnInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-   
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelect']) {
-      this.id = changes['dataSelect'].currentValue.recID;
-      this.dataSelect = changes['dataSelect'].currentValue;
-      // this.currentStep = this.dataSelect.currentStep; // instance.curenSteps da xoa
-      this.instanceStatus = this.dataSelect.status;
-      this.instance = this.dataSelect;
-      // sort theo by step
-      this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
-      // this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
-      this.getDataGanttChart(this.dataSelect.recID,this.dataSelect.processID);
+      if(changes['dataSelect'].currentValue.recID != null){
+        this.id = changes['dataSelect'].currentValue.recID;
+        this.dataSelect = changes['dataSelect'].currentValue;
+        // this.currentStep = this.dataSelect.currentStep; // instance.curenSteps da xoa
+        this.instanceStatus = this.dataSelect.status;
+        this.instance = this.dataSelect;
+        // sort theo by step
+        this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
+        // this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
+        this.getDataGanttChart(this.dataSelect.recID,this.dataSelect.processID);
+      }
+
     }
     console.log(this.formModel);
   }
@@ -303,7 +306,7 @@ export class InstanceDetailComponent implements OnInit {
       return 'step old';
     }
     return 'step';
-    
+
   }
   getReasonByStepId(stepId: string) {
     var idx = this.listStepNew.findIndex((x) => x.stepID === stepId);
