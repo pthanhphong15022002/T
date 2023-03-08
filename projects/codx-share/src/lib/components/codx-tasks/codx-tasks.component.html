@@ -42,6 +42,8 @@
     [user]="user"
     (clickMoreFunction)="receiveMF($event)"
     (viewTask)="viewTask($event)"
+    [popoverSelected]="popoverDataSelected"
+    (hoverPopover)="hoverPopover($event)"
   >
   </share-view-list>
 </ng-template>
@@ -157,7 +159,7 @@
           >
         </div>
       </div>
-      <div class="symbol-group symbol-hover justify-content-end">
+      <div class="symbol-group symbol-hover justify-content-end" id="{{data.taskID}}">
         <ng-container
           *ngIf="
             data.category == '3' &&
@@ -167,19 +169,19 @@
             else avatTemplate
           "
         >
-          <codx-imgs
+          <codx-imgs 
             [width]="30"
             [objectId]="data.assignTo"
             objectType="AD_Users"
             [numberImages]="3"
             (mouseenter)="popoverEmpList(popoverList, data)"
+            (mouseleave)="popoverEmpList(null,data,false)"
             [ngbPopover]="popEmpList"
             popoverClass="taskPopoverClass"
             #popoverList="ngbPopover"
             placement="right left bottom top"
             container="body"
             autoClose="outside"
-            [openDelay]="2000"
           >
           </codx-imgs>
         </ng-container>
@@ -464,6 +466,7 @@
       *ngIf="data.category == '3'"
       id="{{data.taskID}}"
       (mouseenter)="popoverEmpList(popoverList, data)"
+      (mouseleave)="popoverEmpList(null,data,false)"
       [ngbPopover]="popEmpList"
       popoverClass="taskPopoverClass"
       #popoverList="ngbPopover"

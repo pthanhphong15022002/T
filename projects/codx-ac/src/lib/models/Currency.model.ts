@@ -1,5 +1,5 @@
 export class Currency {
-  aRoundOff: any;
+  aRounding: any;
   aRoundType: any;
   allowEditKey: any;
   assign: any;
@@ -21,7 +21,7 @@ export class Currency {
   multiply: any;
   orgUnitID: any;
   owner: any;
-  pRoundOff: any;
+  pRounding: any;
   pRoundType: '';
   penny: any;
   pennyRule: any;
