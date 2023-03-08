@@ -140,8 +140,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly radioNo: string = 'no';
   readonly titleRadioYes: string = 'Có';
   readonly titleRadioNo: string = 'Không';
-  readonly saturday: string = 'Thứ 7';
-  readonly sunday: string = 'Chủ nhật';
+  // readonly saturday: string = 'Thứ 7';
+  // readonly sunday: string = 'Chủ nhật';
   readonly viewSaturday: string = '7';
   readonly viewSunday: string = '8';
   readonly formNameSteps: string = 'DPSteps';
@@ -241,6 +241,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.userId = this.user?.userID;
     this.titleAction = dt.data.titleAction;
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    debugger;
     if (this.action === 'copy') {
       this.listClickedCoppy = dt.data.conditionCopy;
       (this.oldIdProccess = dt.data.oldIdProccess),

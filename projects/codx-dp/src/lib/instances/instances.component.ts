@@ -760,9 +760,6 @@ export class InstancesComponent
                 }
                 this.dataSelected = data;
                 this.detailViewInstance.dataSelect = this.dataSelected;
-                // this.detailViewInstance.GetStepsByInstanceIDAsync(
-                //   this.dataSelected.recID
-                // );
                 this.view.dataService.update(data).subscribe();
                 this.detectorRef.detectChanges();
               }
