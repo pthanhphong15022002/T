@@ -9,7 +9,7 @@
 }
 
 .dropzone.dropzone-default {
-  padding: 20px;
+  padding: 0;
   text-align: center;
   cursor: pointer;
   border: 0.5px dashed #6c757d;
@@ -17,6 +17,13 @@
   height: 238px;
   width: 100%;
   background: #f5f8fa;
+  overflow: hidden;
+}
+.dropzone-msg{
+  border: 4px var(--bg-white) solid;
+  height: 100%;
+  width: 100%;
+  border-radius: 8px!important;
 }
 
 .dropzone-msg-title {
@@ -43,12 +50,8 @@
 }
 
 .image-maxsize {
-  /* width: 494px !important;
-  height: 242px !important; */
-  height: 250px !important;
-  width: auto !important;
-  max-width: 498px !important;
-  max-height: 245px !important;
+  width: 100% !important;
+  height: auto !important;
 }
 
 .margin-user {
