@@ -241,7 +241,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.userId = this.user?.userID;
     this.titleAction = dt.data.titleAction;
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
-    debugger;
     if (this.action === 'copy') {
       this.listClickedCoppy = dt.data.conditionCopy;
       (this.oldIdProccess = dt.data.oldIdProccess),
@@ -2382,6 +2381,27 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  turnOnReason($event, view: string) {
+    debugger;
+    if (view === this.viewStepReasonSuccess) {
+      if ($event.field === 'isUsed' && $event.component.checked === true) {
+        this.stepSuccess.isUsed = true;
+      } else if ($event.field == 'isUsed' && $event.component.checked === false) {
+        this.stepSuccess.isUsed = false;
+        this.stepSuccess.reasonControl = false;
+        this.stepSuccess.newProcessID = this.guidEmpty;
+      }
+    } else {
+      if ($event.field === 'isUsed' && $event.component.checked === true) {
+        this.stepFail.isUsed = true;
+      } else if ($event.field == 'isUsed' && $event.component.checked === false) {
+        this.stepFail.isUsed = false;
+        this.stepFail.reasonControl = false;
+        this.stepFail.newProcessID = this.guidEmpty;
+      }
+    }
+    this.changeDetectorRef.detectChanges();
+  }
   clickViewStep($event: any, view: any, data: any) {
     if ($event && $event != null) {
       if (
