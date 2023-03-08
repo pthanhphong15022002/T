@@ -49,17 +49,17 @@
     <div class="row">
       <div class="col-6">
         <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="PRoundOff"></codx-label>
-          <codx-input field="pRoundOff" [crrValue]="currencies.pRoundOff" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
+          <codx-label [formModel]="form.formModel" fiedName="PRounding"></codx-label>
+          <codx-input field="pRounding" [crrValue]="currencies.pRounding" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)" [min]="0">
           </codx-input>
         </div>
       </div>
       <div class="col-6">
         <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="ARoundOff"></codx-label>
-          <codx-input field="aRoundOff" [crrValue]="currencies.aRoundOff" [formModel]="form.formModel"
-            (valueChange)="valueChange($event)">
+          <codx-label [formModel]="form.formModel" fiedName="ARounding"></codx-label>
+          <codx-input field="aRounding" [crrValue]="currencies.aRounding" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)" [min]="0">
           </codx-input>
         </div>
       </div>
