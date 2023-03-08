@@ -148,12 +148,10 @@ export class PopupAddStaskComponent implements OnInit {
   }
 
   filterText(value, key) {
-    if (value) {
       this.stepsTasks[key] = value;
-      this.taskGroupName = this.groupTackList.find((x) => x.recID === value)[
-        'taskGroupName'
-      ];
-    }
+      let taskGroup = this.groupTackList.find((x) => x.recID === value);
+      this.taskGroupName = taskGroup['taskGroupName'] || '';
+      this.stepsTasks['startDate'] = taskGroup['startDate'] || new Date();
   }
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;

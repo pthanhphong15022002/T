@@ -328,7 +328,7 @@
       </codx-input>
     </div>
 
-    <div class="form-group">
+    <div class="form-group d-flex align-item-center">
       <codx-input
         type="switch"
         class="test-check"
@@ -337,14 +337,14 @@
         (valueChange)="valueChangeAlert($event)"
       >
       </codx-input>
-      <span style="margin-left: 10px">
+     
         <codx-label
+        class="ms-3 mb-3"
           name="lblAlert"
           [formModel]="form.formModel"
           default="Tạo tack trong phân hệ quản lý công việc"
         >
         </codx-label>
-      </span>
     </div>
   </div>
   

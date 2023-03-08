@@ -30,11 +30,11 @@ export class ForgotPasswordDefaultComponent implements OnInit, AfterViewInit {
   @Input() f: any;
   @Output() submitEvent = new EventEmitter();
   captChaValid = false;
-  saas = 0;
+  enableCaptcha = 0;
   // private fields
   constructor() {
-    this.saas = environment.saas;
-    if (this.saas == 0) {
+    this.enableCaptcha = environment.reCaptchaEnable;
+    if (this.enableCaptcha == 0) {
       this.captChaValid = true;
     }
   }
@@ -42,13 +42,14 @@ export class ForgotPasswordDefaultComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    console.log('fg', this.formGroup);
-
-    let captChaControl = this.formGroup.controls['captCha'];
-    captChaControl.valueChanges.subscribe((e) => {
-      console.log('capt', captChaControl);
-      this.captChaValid = captChaControl.valid;
-    });
+    if (this.enableCaptcha == 0) {
+      this.captChaValid = true;
+    } else {
+      let captChaControl = this.formGroup.controls['captCha'];
+      captChaControl.valueChanges.subscribe((e) => {
+        this.captChaValid = captChaControl.valid;
+      });
+    }
   }
 
   submit() {

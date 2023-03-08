@@ -28,11 +28,54 @@
       [dataValues]="orderRecID"
       [pageSize]="20"
       [rowHeight]="50"
-      height="240px"
-      [templateMore]="templateMore"
+      height="500px"
     ></codx-gridview>
   </div>
   <div class="">footer</div>
 </div>
 
-<ng-template #templateMore>abc </ng-template>
+<ng-template #moduleTmpl let-data>
+  <div class="module-info d-flex" *ngIf="data.refID == null">
+    <codx-temp-full
+      cardCss="card-template mb-3"
+      [typeMF]="'hover'"
+      [imageSrc]="data?.image"
+      [titleLine]="2"
+      typeMF="hover"
+      [dataItem]="data"
+    >
+    </codx-temp-full>
+    <div class="txtInfo">
+      <div class="">
+        <codx-label name="lblMDTitle" [default]="data.moduleName"> </codx-label>
+      </div>
+      <div class="operator d-flex">
+        <codx-label [name]="'operator'" [default]="'Nhân viên nghiệp vụ '">
+        </codx-label>
+        <span>
+          {{
+            data.price +
+              " " +
+              data.currency +
+              "/" +
+              data.conversion +
+              " " +
+              data.umid +
+              " / "
+          }}
+        </span>
+        <codx-vll
+          [name]="'L1449'"
+          [value]="data?.interval"
+          [showText]="true"
+          [showBgColor]="false"
+        >
+        </codx-vll>
+      </div>
+      <div class="employee" *ngIf="data.childModule">
+        <codx-label [name]="'employee'" [default]="'Nhân viên thường'">
+        </codx-label>
+      </div>
+    </div>
+  </div>
+</ng-template>

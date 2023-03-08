@@ -346,6 +346,8 @@ export class DP_Instances_Steps {
   reasonControl: boolean = false;
   isSuccessStep: boolean =  false;
   isFailStep: boolean = false;
+  durationControl: boolean;
+  leadtimeControl: boolean;
 }
 
 export class DP_Instances_Steps_Roles {
