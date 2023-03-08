@@ -312,6 +312,7 @@ export class CodxDMService {
   ngOnInit(): void {}
 
   getRight(folder: FolderInfo) {
+    debugger
     this.parentCreate = folder.create;
     this.parentRead = folder.read;
     this.parentUpdate = folder.write;
@@ -322,7 +323,7 @@ export class CodxDMService {
     this.parentAssign = folder.assign;
     if (folder.revision != null) this.parentRevision = folder.revision;
     else this.parentRevision = false;
-
+    debugger;
     this.revision = this.parentRevision;
     this.parentApproval = folder.approval;
     this.parentPhysical = folder.physical;

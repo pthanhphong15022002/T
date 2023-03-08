@@ -361,15 +361,14 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   getDataByFuncID(funcID:any)
   {
     //GetFolder()
-    switch(funcID)
-    {
-      //Kho tài liệu
-      case 'DMT02':
-        {
-          this.getDataFolder(this.dmSV.folderID);
-          break;
-        }
-    }
+    this.fileService.options.page = 1;
+    this.folderService.options.page = 1;
+    this.isScrollFile = true;
+    this.isScrollFolder = true;
+    this.dmSV.listFiles = [];
+    this.dmSV.listFolder = [];
+    this.data = [];
+    this.getDataFolder(this.dmSV.folderID);
    
   }
   onScroll(event) {
@@ -702,6 +701,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.parentFolderId = item.parentId;
         this.dmSV.parentFolder.next(item);
         this.dmSV.level = item.level;
+        this.dmSV.idMenuActive = this.funcID;
         this.dmSV.getRight(item);
         this.dmSV.folderID = id;
         this.dmSV.folderId.next(id);
