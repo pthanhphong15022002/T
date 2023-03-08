@@ -101,15 +101,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           this.cashpaymentline = res;
         });
-      this.acService
-        .loadData('ERM.Business.AC', 'CashBookBusiness', 'LoadDataAsync', [])
-        .subscribe((res: any) => {
-          res.forEach((element) => {
-            if (element.cashBookID == this.cashpayment.cashBookID) {
-              this.cashbookName = element.cashBookName;
-            }
-          });
-        });
       //#endregion
     }
   }
@@ -237,6 +228,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.grid.addRow(data, idx);
+          console.log(res);
         }
       });
   }

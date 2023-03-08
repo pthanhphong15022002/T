@@ -178,15 +178,7 @@ export class InstanceDetailComponent implements OnInit {
 
   sortListSteps(ins, process){
     var listStep = process.steps.sort(function(x, y) {
-      if (x.stepNo > 0 && y.stepNo > 0) {
-        return x.stepNo - y.stepNo;
-      } else if (x.stepNo > 0) {
-        return -1;
-      } else if (y.stepNo > 0) {
-        return 1;
-      } else {
-        return x.stepNo - y.stepNo;
-      }
+        return x.stepNo > 0 && y.stepNo > 0 ? x.stepNo - y.stepNo : x.stepNo > 0 ? -1 : y.stepNo > 0 ? 1 : x.stepNo - y.stepNo;
     });
     ins = listStep.reduce((result, x) => {
       let matches = ins.filter(y => x.recID === y.stepID);
