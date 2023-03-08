@@ -99,3 +99,12 @@
     box-sizing: content-box;
     max-height: none !important;
 }
+
+.listuser-box {
+    max-height: 350px;
+      overflow: auto;
+      margin-top: 8px;
+      border-top: 1px var(--gray-100) solid;
+      padding-top: 5px;
+      clear: both;
+  }

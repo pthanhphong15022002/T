@@ -60,6 +60,8 @@ import { FAPostingAccountsComponent } from './faposting-accounts/faposting-accou
 import { PopupAddFAPostingAccountComponent } from './faposting-accounts/popup-add-faposting-account/popup-add-faposting-account.component';
 import { CashTransfersComponent } from './cash-transfers/cash-transfers.component';
 import { PopupAddCashTransferComponent } from './cash-transfers/popup-add-cash-transfer/popup-add-cash-transfer.component';
+import { CashReceiptsComponent } from './cash-receipts/cash-receipts.component';
+import { PopAddReceiptsComponent } from './cash-receipts/pop-add-receipts/pop-add-receipts.component';
 
 export const routes: Routes = [
   {
@@ -69,6 +71,10 @@ export const routes: Routes = [
       {
         path: 'cashpayments/:funcID',
         component: CashPaymentsComponent,
+      },
+      {
+        path: 'cashreceipts/:funcID',
+        component: CashReceiptsComponent,
       },
       {
         path: 'journalnames/:funcID',
@@ -188,6 +194,8 @@ export const routes: Routes = [
     PopupAddFAPostingAccountComponent,
     CashTransfersComponent,
     PopupAddCashTransferComponent,
+    CashReceiptsComponent,
+    PopAddReceiptsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
