@@ -135,19 +135,19 @@ export class PopupMoveStageComponent implements OnInit {
           //Phụ trách giai đoạn chuyển tiếp
           case '1':
             var index = -1;
-            index = this.listStep.findIndex(
+            index = this.listStepsCbx.findIndex(
               (x) => x.stepID == this.stepIdClick
             );
-            this.owner = this.listStep[index]?.owner; // Thêm ? vô dùng cái
+            this.owner = this.listStepsCbx[index]?.owner; // Thêm ? vô dùng cái
             // if (this.owner != null) this.getNameAndPosition(this.owner);
 
             break;
           //Giữ nguyên phụ trách trước
           case '2':
-            i = this.listStep.findIndex(
+            i = this.listStepsCbx.findIndex(
               (x) => x.stepID == this.stepCurrent.stepID
             );
-            this.stepOld = this.listStep[i - 1].owner;
+            this.stepOld = this.listStepsCbx[i - 1].owner;
             this.owner = this.stepOld;
             // if (this.owner != null) this.getNameAndPosition(this.owner);
             break;
