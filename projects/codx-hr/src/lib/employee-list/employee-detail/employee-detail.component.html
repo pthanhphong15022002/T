@@ -4626,6 +4626,7 @@
                 ></codx-dropdown-select>
                 <span class="ms-1">
                 <codx-dropdown-calendar
+                  *ngIf="eTrainCourseGrvSetup"
                   [cssPopup]="'w-600px h-400px'"
                   emptyText="Năm"
                   [EmptyText]="eTrainCourseGrvSetup.InYear.headerText"
@@ -4766,6 +4767,7 @@
               </div>
               <div class="d-flex align-items-center ms-5">
                 <codx-dropdown-calendar
+                  *ngIf="awardHeaderText"
                   [cssPopup]="'w-600px h-400px'"
                   [emptyText]="awardHeaderText['InYear']"
                   [firstChange]="false"

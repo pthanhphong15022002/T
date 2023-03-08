@@ -2639,13 +2639,19 @@ export class EmployeeDetailComponent extends UIComponent {
                   }
                 });
             } else if (funcID == 'eContract') {
-              this.hrService.deleteEContract(data).subscribe((p) => {
-                if (p) {
+              this.hrService.deleteEContract(data).subscribe((res) => {
+                if (res && res[0]) {
                   this.notify.notifyCode('SYS008');
                   (this.eContractGridview?.dataService as CRUDService)
                     ?.remove(data)
                     .subscribe();
                   this.eContractRowCount--;
+                  if(data.isCurrent && res[1]){
+                    (this.eContractGridview?.dataService as CRUDService)
+                    ?.update(res[1])
+                    .subscribe();
+                    this.crrEContract = res[1];
+                  }
                   this.df.detectChanges();
                 } else {
                   this.notify.notifyCode('SYS022');
@@ -3784,10 +3790,14 @@ export class EmployeeDetailComponent extends UIComponent {
           }
         })
       }
+      else{
+        this.HandleEContractInfo(actionHeaderText, actionType, data);
+      }
     }
     else{
       this.HandleEContractInfo(actionHeaderText, actionType, data);
     }
+    
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
@@ -3813,11 +3823,28 @@ export class EmployeeDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (res) {
-        this.crrJobSalaries = res.event;
-        this.df.detectChanges();
+      if (!res?.event) this.view.dataService.clear();
+      else if(res?.event[0]){
+        if(this.eContractGridview)
+          this.eContractRowCount += this.updateGridView(this.eContractGridview, actionType, res?.event[0])
+          if(res?.event[1]){
+            (this.eContractGridview.dataService as CRUDService)
+            .update(res.event[1])
+            .subscribe();
+          }
+        else if(actionType == 'copy' || actionType == 'add'){
+          this.eContractRowCount++
+        }
+
+        res.event.forEach(element => {
+          if(element.isCurrent){
+            this.crrEContract = element;
+          }
+          
+        });
+       
       }
-      if (res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
