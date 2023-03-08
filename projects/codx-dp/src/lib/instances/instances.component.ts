@@ -448,7 +448,7 @@ export class InstancesComponent
       if(res){
         this.itemSelected.closed = check;
         this.view.dataService.update(this.itemSelected).subscribe();
-        this.noti.alertCode(check ? 'DP016' : 'DP017')
+        this.noti.notifyCode(check ? 'DP016' : 'DP017')
         this.detectorRef.detectChanges();
       }
     })
