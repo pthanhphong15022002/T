@@ -103,7 +103,7 @@ export class InstancesComponent
   viewMode: any;
   viewModeDetail = 'S';
   totalInstance: number = 0;
-
+  itemSelected: any;
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private inject: Injector,
@@ -409,7 +409,7 @@ export class InstancesComponent
 
   //Event
   clickMF(e, data?) {
-    // this.itemSelected = data;
+    this.itemSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
     switch (e.functionID) {
@@ -446,7 +446,8 @@ export class InstancesComponent
   openOrClosed(data, check){
     this.codxDpService.openOrClosedInstance(data.recID, check).subscribe((res)=>{
       if(res){
-        this.view.dataService.dataSelected.closed = check;
+        this.itemSelected.closed = check;
+        this.view.dataService.update(this.itemSelected).subscribe();
         this.noti.alertCode(check ? 'DP016' : 'DP017')
         this.detectorRef.detectChanges();
       }
