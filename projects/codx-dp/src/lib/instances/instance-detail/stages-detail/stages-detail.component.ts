@@ -205,7 +205,6 @@ export class StagesDetailComponent implements OnInit {
         }
         var tasks = changes['dataStep'].currentValue?.tasks;
         var taskGroups = changes['dataStep'].currentValue?.taskGroups;
-        this.totalProgress(tasks, taskGroups);
         this.lstFields = changes['dataStep'].currentValue?.fields;
         //nvthuan
         this.groupByTask(changes['dataStep'].currentValue);
@@ -218,25 +217,6 @@ export class StagesDetailComponent implements OnInit {
         : changes['dataStep'].currentValue?.isFailStep
         ? 'Lý do thất bại'
         : '';
-    }
-  }
-
-  totalProgress(tasks, taskGroups) {
-    if (tasks?.length > 0 || taskGroups?.length > 0) {
-      var totalTask = 0;
-      var totalTaskGroup = 0;
-      for (var i = 0; i < tasks.length; i++) {
-        var value = tasks[i].progress;
-        totalTask += value;
-      }
-      for (var i = 0; i < taskGroups.length; i++) {
-        var value = taskGroups[i].progress;
-        totalTaskGroup += value;
-      }
-
-      this.progress = (totalTask / tasks.length).toFixed(1).toString();
-    } else {
-      this.progress = '0';
     }
   }
 
@@ -272,13 +252,13 @@ export class StagesDetailComponent implements OnInit {
     }
   }
 
-  toggleTask(id){
+  toggleTask(id) {
     let elementGroup = document.getElementById(id);
     let isClose = elementGroup.classList.contains('hiddenTask');
-    if(isClose){
+    if (isClose) {
       elementGroup.classList.remove('hiddenTask');
       elementGroup.classList.add('showTask');
-    }else{
+    } else {
       elementGroup.classList.remove('showTask');
       elementGroup.classList.add('hiddenTask');
     }
@@ -385,10 +365,19 @@ export class StagesDetailComponent implements OnInit {
                 let index = this.taskGroupList.findIndex(
                   (task) => task.recID == taskData.taskGroupID
                 );
-                this.taskGroupList[index]['task'].push(taskData);
+                if(index < 0){
+                  let taskGroup = new DP_Instances_Steps_TaskGroups();
+                  taskGroup['task'] = [];
+                  taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+                  this.taskGroupList.push(taskGroup);
+                  this.taskGroupList[0]['task'].push(taskData);
+                }else{
+                  this.taskGroupList[index]['task'].push(taskData);
+                }
                 this.taskList.push(taskData);
                 this.taskGroupList[progress?.indexGroup]['progress'] =
                   progress?.average; // cập nhật tiến độ của cha
+                this.calculateProgressStep();
               }
             });
         } else {
@@ -426,6 +415,7 @@ export class StagesDetailComponent implements OnInit {
             1
           );
           this.notiService.notifyCode('SYS008');
+          this.calculateProgressStep();
         }
       });
     });
@@ -531,10 +521,12 @@ export class StagesDetailComponent implements OnInit {
       });
       step['taskGroups'] = taskGroupConvert;
       this.taskGroupList = step['taskGroups'];
-      let taskGroup = new DP_Instances_Steps_TaskGroups();
-      taskGroup['task'] = taskGroupList['null'] || [];
-      taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
-      this.taskGroupList.push(taskGroup);
+      if(step['taskGroups']?.length > 0 || step['tasks']?.length > 0){
+        let taskGroup = new DP_Instances_Steps_TaskGroups();
+        taskGroup['task'] = taskGroupList['null'] || [];
+        taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
+        this.taskGroupList.push(taskGroup);
+      }
       this.taskList = step['tasks'];
     }
   }
@@ -559,12 +551,19 @@ export class StagesDetailComponent implements OnInit {
 
   async openPopupTaskGroup(data?: any, type = '') {
     let taskGroup = new DP_Instances_Steps_TaskGroups();
+    let index = this.taskGroupList.length;
+    let taskBefore;
+    if(index > 0){
+      taskBefore = this.taskGroupList[index - 1];
+    }
     if (data) {
       let dataCopy = JSON.parse(JSON.stringify(data));
       taskGroup = dataCopy;
+      taskGroup['startDate'] = type === 'copy' ? taskBefore['endDate'] || new Date() : taskGroup['startDate'];
     } else {
       taskGroup['progress'] = 0;
       taskGroup['stepID'] = this.step['recID'];
+      taskGroup['startDate'] = taskBefore['endDate'] || this.step['endDate'];
       taskGroup['task'] = [];
     }
     this.popupTaskGroup = this.callfc.openForm(
@@ -639,17 +638,18 @@ export class StagesDetailComponent implements OnInit {
   deleteGroupTask(data) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
+        let value = [data?.recID, data?.stepID];
+        this.dpService.deleteTaskGroups(value).subscribe((res) => {
+          if (res) {
+            let index = this.taskGroupList.findIndex(
+              (x) => x.recID == data.recID
+            );
+            this.taskGroupList.splice(index, 1);
+            this.notiService.notifyCode('SYS008');
+            this.calculateProgressStep();
+          }
+        });
       }
-      let value = [data?.recID, data?.stepID];
-      this.dpService.deleteTaskGroups(value).subscribe((res) => {
-        if (res) {
-          let index = this.taskGroupList.findIndex(
-            (x) => x.recID == data.recID
-          );
-          this.taskGroupList.splice(index, 1);
-          this.notiService.notifyCode('SYS008');
-        }
-      });
     });
   }
   // Progress
@@ -741,22 +741,25 @@ export class StagesDetailComponent implements OnInit {
       proggress += parseFloat(item?.progress) || 0;
     });
     average = parseFloat((proggress / taskGroupFind.length).toFixed(1)) || 0;
-    this.calculateProgressStep();
     return { average: average, indexGroup: indexGroup, indexTask: indexTask };
   }
 
   calculateProgressStep() {
     let sum = 0;
-    this.taskGroupList?.forEach(group => {
-      if(!group['recID'] && group['task']?.length > 0){
+    let length = 0;
+    this.taskGroupList?.forEach((group) => {
+      if (!group['recID'] && group['task']?.length > 0) {
         sum += group['task']?.reduce((accumulator, currentValue) => {
           return accumulator + Number(currentValue['progress'] || 0);
         }, 0);
-      }else{
+        length += group['task']?.length;
+      }
+      if(group['recID']){
         sum += Number(group['progress'] || 0);
+        length++;
       }
     });
-    let medium = (sum / this.taskGroupList.length).toFixed(2);
+    let medium = (sum / length).toFixed(2);
     this.step.progress = Number(medium);
     this.progress = medium;
   }

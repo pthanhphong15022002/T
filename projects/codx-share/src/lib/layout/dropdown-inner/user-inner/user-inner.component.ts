@@ -20,6 +20,7 @@ import {
   ApiHttpService,
   AuthStore,
   CallFuncService,
+  AlertConfirmInputConfig,
 } from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 import { CodxShareService } from '../../../codx-share.service';
@@ -233,10 +234,23 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   runCompare() {
-    this.api
-      .execSv('SYS', 'SYS', 'UpdatesBusiness', 'UpdateDataAsync', [])
-      .subscribe((res) => {
-        console.log(res);
+    var config = new AlertConfirmInputConfig();
+    // config.type = 'YesNo';
+    this.notifyService
+      .alert(
+        'Cánh báo',
+        '<span style="color: red">ĐÂY LÀ CHỨC NĂNG NGUY HIỂM!!!! bạn có chắc chắn muốn thực hiện không???</span>'
+        //config
+      )
+      .closed.subscribe((x) => {
+        if (x.event.status == 'Y') {
+          this.api
+            .execSv('SYS', 'SYS', 'UpdatesBusiness', 'UpdateDataAsync', [])
+            .subscribe((res) => {
+              if (res) this.notifyService.notify('Đã compare xong');
+              console.log(res);
+            });
+        }
       });
   }
 

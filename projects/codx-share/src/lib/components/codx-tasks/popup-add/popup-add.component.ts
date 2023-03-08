@@ -14,6 +14,7 @@ import {
   ApiHttpService,
   AuthStore,
   CacheService,
+  CallFuncService,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -157,10 +158,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   titleAction = '';
   disableDueDate = false;
   titleViewTask = 'Xem';
+  crrRole: any;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
+    private callFC: CallFuncService,
     private authStore: AuthStore,
     private tmSv: CodxTasksService,
     private notiService: NotificationsService,
@@ -673,8 +676,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var listUserID = '';
     var listPositionID = '';
     var listEmployeeID = '';
-
-    e?.data?.forEach((obj) => {
+    if (!e || e?.length == 0) return;
+    e.forEach((obj) => {
       if (obj.objectType && obj.id) {
         switch (obj.objectType) {
           case 'U':
@@ -748,7 +751,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           }
         });
         if (arrNew.length > 0) {
-          // assignTo = arrNew.join(';');
+          assignTo = arrNew.join(';');
           // this.task.assignTo += ';' + assignTo;
           this.getListUser(assignTo);
         }
@@ -892,7 +895,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       listUser = listUser.replace(' ', '');
     }
     var arrUser = listUser.split(';');
-   
+
     this.api
       .execSv<any>(
         'HR',
@@ -912,14 +915,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             taskResource.resourceName = emp?.userName;
             taskResource.positionName = emp?.positionName;
             taskResource.departmentName = emp?.departmentName;
-            taskResource.roleType = 'R';
+            taskResource.roleType = this.crrRole??'R';
             this.listTaskResources.push(taskResource);
           }
-          if(arrUser.length!= res.length){
-              arrUser = res.map(x=>x.userID) ;
-          } 
+          if (arrUser.length != res.length) {
+            arrUser = res.map((x) => x.userID);
+          }
           this.listUser = this.listUser.concat(arrUser);
-          this.task.assignTo = this.listUser.join(";");
+          this.task.assignTo = this.listUser.join(';');
         }
       });
   }
@@ -1203,6 +1206,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       });
   }
   //#endregion
+
+  //open control share
+  openControlShare(controlShare: any,roleType) {
+    this.crrRole = roleType
+    if (controlShare) {
+      this.callFC.openForm(controlShare, '', 450, 600);
+    }
+  }
 
   convertParameterByTaskGroup(taskGroup: TM_TaskGroups) {
     this.param.ApproveBy = taskGroup.approveBy;
