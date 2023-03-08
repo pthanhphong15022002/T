@@ -484,7 +484,6 @@ export class CreateFolderComponent implements OnInit {
   }
 
   onSaveRightChanged($event, ctrl) {
-    debugger;
     var value = $event.data;
     switch (ctrl) {
       case 'security':
@@ -610,7 +609,6 @@ export class CreateFolderComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
-    debugger;
     this.folderName = this.folderName.trim();
     this.fileEditing.folderName = this.folderName;
     this.fileEditing.approval = this.approval;
@@ -632,14 +630,13 @@ export class CreateFolderComponent implements OnInit {
       this.fileEditing.folderType = this.dmSV.idMenuActive;
       this.folderService.addFolder(this.fileEditing).subscribe(async (res) => {
         if (res.status == 0) {
-          debugger;
           var folders = this.dmSV.listFolder;
           if (folders == null) folders = [];
           folders.push(Object.assign({}, res.data));
           this.fileEditing = res.data;
           this.setFolderAS(this.fileEditing);
           that.dmSV.listFolder = folders;
-          that.dmSV.ChangeData.next(true);
+          that.dmSV.ChangeDataView.next(true);
           that.dmSV.addFolder.next(res.data);
           that.changeDetectorRef.detectChanges();
           this.dialog.close();

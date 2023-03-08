@@ -247,7 +247,9 @@
 <ng-template #General>
   <!--Thông tin chung-->
   <div class="background">
-    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+    <div
+      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+    >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label
@@ -303,8 +305,12 @@
               (valueChange)="valueChange($event)"
             >
             </codx-input>
-            <div *ngIf="!checkGroup" class="errorMessage text-danger ms-3" data-field="">
-              {{errorMessage}}
+            <div
+              *ngIf="!checkGroup"
+              class="errorMessage text-danger ms-3"
+              data-field=""
+            >
+              {{ errorMessage }}
             </div>
           </div>
           <div class="form-group margin-form">
@@ -381,7 +387,9 @@
   </div>
   <!--Các vai trò quy trình-->
   <div class="background">
-    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+    <div
+      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+    >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label
@@ -613,7 +621,9 @@
   </div>
   <!--Tùy chỉnh quy trình-->
   <div class="background">
-    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+    <div
+      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+    >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label
@@ -806,7 +816,9 @@
   </div>
   <!--Hướng dẫn làm việc với quy trình-->
   <div class="background">
-    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+    <div
+      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+    >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label
@@ -963,24 +975,24 @@
           [cdkDragData]="item"
         >
           <div class="background-job mb-5">
-            <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+            <div
+              class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+            >
               <div class="d-flex flex-column">
                 <div class="title text-primary fs-4 fw-bold">
-                  <span class="me-2" *ngIf="haveTitle">{{
-                    titleDefault
-                  }}</span>
+                  <span class="me-2" *ngIf="haveTitle">{{ titleDefault }}</span>
                   <span class="me-2" *ngIf="!haveTitle">{{
                     item.stepName
                   }}</span>
                 </div>
                 <div class="text-gray-500">
                   <codx-label
-                      name="lblExpression"
-                      formName="DPStepsFields"
-                      gridViewName="grvDPStepsFields"
-                      [default]="'Kéo thả để sắp xếp các trường tùy chỉnh'"
-                    >
-                    </codx-label>
+                    name="lblExpression"
+                    formName="DPStepsFields"
+                    gridViewName="grvDPStepsFields"
+                    [default]="'Kéo thả để sắp xếp các trường tùy chỉnh'"
+                  >
+                  </codx-label>
                 </div>
               </div>
               <div class="right">
@@ -1157,28 +1169,24 @@
 <!-- Thiết lập giai đoạn của nvthuan + Bảo -->
 
 <ng-template #stageHeader>
-    <div class="d-flex justify-content-between align-items-center">
-      <codx-label
-            class="h2 h2-title float-left"
-            fiedName="settingStep"
-            default="Thiết lập giai đoạn"
-          >
-          </codx-label>
-      <div class="d-flex align-items-center">
-        <button
-          type="button"
-          class="btn btn-sm btn-primary"
-
-          (click)="openPopupStep('add')"
-        >
-          <i
-            class="icon-add icon-20"
-          >
-          </i>
-          <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>
-        </button>
-      </div>
+  <div class="d-flex justify-content-between align-items-center">
+    <codx-label
+      class="h2 h2-title float-left"
+      fiedName="settingStep"
+      default="Thiết lập giai đoạn"
+    >
+    </codx-label>
+    <div class="d-flex align-items-center">
+      <button
+        type="button"
+        class="btn btn-sm btn-primary"
+        (click)="openPopupStep('add')"
+      >
+        <i class="icon-add icon-20"> </i>
+        <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>
+      </button>
     </div>
+  </div>
 </ng-template>
 
 <ng-template #stage>
@@ -1186,10 +1194,7 @@
     <div class="stage-body row">
       <div class="stage-body-left col-3">
         <div class="header">
-          <codx-label
-            fiedName="step"
-            default="Giai đoạn"
-          ></codx-label>
+          <codx-label fiedName="step" default="Giai đoạn"></codx-label>
         </div>
         <div
           class="example-list stage-body-left-main"
@@ -1320,14 +1325,12 @@
 <!-- template công việc -->
 <ng-template #job>
   <div class="background-job">
-    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+    <div
+      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+    >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label
-            class="title"
-            fiedName="TaskType"
-            default="Công việc"
-          >
+          <codx-label class="title" fiedName="TaskType" default="Công việc">
           </codx-label>
         </div>
         <div>
@@ -1417,7 +1420,14 @@
                       (click)="toggleTask('group' + taskList?.recID)"
                     >
                       <!-- <span style="font-size: 30px; font-weight: 400; color: #6c757d">-</span> -->
-                      <span style="font-size: 20px;font-weight: 400; color: #6c757d">+</span>
+                      <span
+                        style="
+                          font-size: 20px;
+                          font-weight: 400;
+                          color: #6c757d;
+                        "
+                        >+</span
+                      >
                     </div>
                     <div class="ms-5">
                       <codx-img
@@ -1439,7 +1449,9 @@
                       </div>
                       <div class="" style="font-weight: 400; font-size: 1.1rem">
                         <!-- TODO -->
-                        <span style="color: #06a9f7; font-weight: 500;">0% </span>
+                        <span style="color: #06a9f7; font-weight: 500"
+                          >0%
+                        </span>
                         <codx-label
                           fiedName="StepName"
                           [formModel]=""
@@ -1472,7 +1484,9 @@
                   <div
                     *ngIf="!taskList?.recID"
                     [ngStyle]="
-                      taskList?.task?.length == 0 ? { 'min-height': '20px' } : {}
+                      taskList?.task?.length == 0
+                        ? { 'min-height': '20px' }
+                        : {}
                     "
                   ></div>
                   <!-- kéo thả ở trong  -->
@@ -1482,7 +1496,7 @@
                     [cdkDropListData]="taskList?.task || []"
                     (cdkDropListDropped)="drop($event, taskList, false)"
                     class="task"
-                    [ngStyle]=" taskList?.recID ? { 'margin-left': '45px' } : {} "
+                    [ngStyle]="taskList?.recID ? { 'margin-left': '45px' } : {}"
                   >
                     <ng-container *ngFor="let task of taskList?.task">
                       <div
@@ -1714,15 +1728,15 @@
 
 <ng-template #reasonSuccess>
   <div class="background-job form-setting-step-success mb-5">
-    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+    <div
+      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+    >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label default="Tùy chỉnh giai đoạn"></codx-label>
         </div>
         <div class="text-gray-500">
-          <codx-label
-            default="Cách thức hoạt động của giai đoạn"
-          ></codx-label>
+          <codx-label default="Cách thức hoạt động của giai đoạn"></codx-label>
         </div>
       </div>
       <div class="right">
@@ -1827,7 +1841,9 @@
   </div>
 
   <div class="background-job form-reason-success">
-    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+    <div
+      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+    >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label default="Lý do thành công"></codx-label>
@@ -1904,15 +1920,15 @@
 </ng-template>
 <ng-template #reasonFail>
   <div class="background-job form-setting-step-fail mb-5">
-    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+    <div
+      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+    >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label default="Tùy chỉnh giai đoạn"></codx-label>
         </div>
         <div class="text-gray-500">
-          <codx-label
-            default="Cách thức hoạt động của giai đoạn"
-          ></codx-label>
+          <codx-label default="Cách thức hoạt động của giai đoạn"></codx-label>
         </div>
       </div>
       <div class="right">
@@ -2010,7 +2026,9 @@
   </div>
 
   <div class="background-job form-reason-fail">
-    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+    <div
+      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+    >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label default="Lý do thất bại"></codx-label>
@@ -2091,7 +2109,9 @@
 
 <ng-template #rolesInStep>
   <div class="background-job form-setup-role mb-5">
-    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+    <div
+      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+    >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label
@@ -2114,9 +2134,7 @@
             class="button-custom"
             (click)="clickShow($event, 'role-setup-step')"
           >
-            <span
-              class="icon-expand_less icon-20 text-primary-600 py-2"
-            ></span>
+            <span class="icon-expand_less icon-20 text-primary-600 py-2"></span>
           </button>
         </div>
       </div>
@@ -2231,19 +2249,15 @@
 
 <ng-template #setupInStep>
   <div class="background-job form-setup-step mb-5">
-    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+    <div
+      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+    >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label
-            name=""
-            default="Tùy chỉnh giai đoạn"
-          ></codx-label>
+          <codx-label name="" default="Tùy chỉnh giai đoạn"></codx-label>
         </div>
         <div class="text-gray-500">
-          <codx-label
-            name=""
-            default="Cách thức hoạt động của giai đoạn"
-          >
+          <codx-label name="" default="Cách thức hoạt động của giai đoạn">
           </codx-label>
         </div>
       </div>
@@ -2286,7 +2300,7 @@
                   </div>
                   <div>
                     <codx-label
-                      class="text-muted "
+                      class="text-muted"
                       default="Mặc định khi nhiệm vụ được tạo hoặc chuyển đến
                       giai đoạn sẽ tự động phân bố người phụ trách cho nhiệm vụ"
                     >
@@ -2346,7 +2360,9 @@
 
 <ng-template #durationInStep>
   <div class="background-job form-setup-step mb-5">
-    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+    <div
+      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+    >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <!-- chưa có -->
@@ -2388,11 +2404,11 @@
               <div>
                 <div class="d-flex flex-column">
                   <codx-label
-                        class="text-gray-500 fw-bold"
-                        fiedName=""
-                        default="Thời hạn hoàn tất nhiệm vụ trong giai đoạn"
-                      >
-                      </codx-label>
+                    class="text-gray-500 fw-bold"
+                    fiedName=""
+                    default="Thời hạn hoàn tất nhiệm vụ trong giai đoạn"
+                  >
+                  </codx-label>
                   <div class="mt-1">
                     <codx-label
                       class="text-gray-500"
@@ -2624,7 +2640,9 @@
 
 <ng-template #memoInStep>
   <div class="background-job form-setup-step mb-5">
-    <div class="header-job d-flex align-items-center justify-content-between py-3 px-6">
+    <div
+      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+    >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label
