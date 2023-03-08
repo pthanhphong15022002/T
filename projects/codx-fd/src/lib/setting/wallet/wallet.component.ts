@@ -65,8 +65,8 @@ export class WalletComponent extends UIComponent implements OnInit {
     this.LoadData();
     this.LoadDataPolicies('2');
     this.LoadDataPolicies('1');
-    this.getSettingRunPolicyCoCoin();
-    this.getSettingRunPolicyKuDos();
+    // this.getSettingRunPolicyCoCoin();
+    // this.getSettingRunPolicyKuDos();
     this.api
       .call('ERM.Business.SYS', 'FunctionListBusiness', 'GetAsync', [
         '',
