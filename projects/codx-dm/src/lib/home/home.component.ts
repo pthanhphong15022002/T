@@ -1281,7 +1281,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.folderService.options.funcID = this.funcID;
     this.folderService.getFolders(id).subscribe((res) => {
       if (res && res[0]){
-        debugger
         this.dmSV.listFolder = res[0];
         this.listFolders = res[0];
         this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
