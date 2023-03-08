@@ -500,8 +500,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let newNo = tabNo;
     let oldNo = this.currentTab;
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
-      if(this.process?.groupID == null ||
-        this.process?.groupID.trim() == ''){
+      if (this.process?.groupID == null || this.process?.groupID.trim() == '') {
         this.checkGroup = false;
         this.cache.message('DP015').subscribe((res) => {
           if (res) this.errorMessage = res.customName || res.defaultName;
@@ -511,20 +510,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       var checkGroup = this.lstGroup.some(
         (x) => x.groupID == this.process?.groupID
       );
-      if(!checkGroup){
+      if (!checkGroup) {
         this.checkGroup = false;
         this.cache.message('DP015').subscribe((res) => {
           if (res) this.errorMessage = res.customName || res.defaultName;
         });
         return;
-      }else{
+      } else {
         this.checkGroup = true;
       }
       if (
         this.process?.processName == null ||
         this.process?.processName.trim() == ''
       ) {
-        return
+        return;
       }
 
       if (
@@ -609,8 +608,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let newNode = oldNode + 1;
     switch (currentTab) {
       case 0:
-        if(this.process?.groupID == null ||
-          this.process?.groupID.trim() == ''){
+        if (
+          this.process?.groupID == null ||
+          this.process?.groupID.trim() == ''
+        ) {
           this.checkGroup = false;
           this.cache.message('DP015').subscribe((res) => {
             if (res) this.errorMessage = res.customName || res.defaultName;
@@ -787,13 +788,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             var data = value[i];
             var perm = new DP_Processes_Permission();
             perm.objectName =
-            (data.text == null && data.text == '') && data.objectType == 'U'
-              ? data.dataSelected.EmployeeName
-              : ((data.text == null || data.text == '') &&
-                  data.objectType == '9') ||
-                data.objectType == '0'
-              ? data.objectName
-              : data.text;
+              data.text == null && data.text == '' && data.objectType == 'U'
+                ? data.dataSelected.EmployeeName
+                : ((data.text == null || data.text == '') &&
+                    data.objectType == '9') ||
+                  data.objectType == '0'
+                ? data.objectName
+                : data.text;
             perm.objectID = data.id != null || data.id != '' ? data.id : null;
             perm.objectType = data.objectType;
             perm.full = true;
@@ -814,7 +815,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             var data = value[i];
             var perm = new DP_Processes_Permission();
             perm.objectName =
-              (data.text == null && data.text == '') && data.objectType == 'U'
+              data.text == null && data.text == '' && data.objectType == 'U'
                 ? data.dataSelected.EmployeeName
                 : ((data.text == null || data.text == '') &&
                     data.objectType == '9') ||
@@ -845,7 +846,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             var data = value[i];
             var perm = new DP_Processes_Permission();
             perm.objectName =
-              (data.text == null && data.text == '') && data.objectType == 'U'
+              data.text == null && data.text == '' && data.objectType == 'U'
                 ? data.dataSelected.EmployeeName
                 : ((data.text == null || data.text == '') &&
                     data.objectType == '9') ||
@@ -873,7 +874,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             var data = value[i];
             var roles = new DP_Steps_Roles();
             roles.objectName =
-              (data.text == null && data.text == '') && data.objectType == 'U'
+              data.text == null && data.text == '' && data.objectType == 'U'
                 ? data.dataSelected.EmployeeName
                 : ((data.text == null || data.text == '') &&
                     data.objectType == '9') ||
@@ -886,7 +887,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             tmpRole = this.checkRolesStep(this.step.roles, roles);
             var perm = new DP_Processes_Permission();
             perm.objectName =
-              (data.text == null && data.text == '') && data.objectType == 'U'
+              data.text == null && data.text == '' && data.objectType == 'U'
                 ? data.dataSelected.EmployeeName
                 : ((data.text == null || data.text == '') &&
                     data.objectType == '9') ||
@@ -1010,9 +1011,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         );
 
         this.stepRoleOld = listPerm.filter((x) => x.roleType == 'S')[0];
-        indexOld = listPerm.findIndex(
-          (x) => x.objectID == this.stepRoleOld.objectID
-        );
+        if (this.stepRoleOld)
+          indexOld = listPerm.findIndex(
+            (x) => x.objectID == this.stepRoleOld?.objectID
+          );
       }
     } else {
       listPerm = [];
@@ -1527,7 +1529,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           });
           step['taskGroups'] = taskGroupConvert;
 
-          if(step['taskGroups']?.length > 0 || step['tasks']?.length > 0){
+          if (step['taskGroups']?.length > 0 || step['tasks']?.length > 0) {
             let taskGroup = new DP_Steps_TaskGroups();
             taskGroup['task'] = taskGroupList['null'] || [];
             taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
@@ -2097,7 +2099,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       } else {
         this.checkGroup = true;
       }
-      return this.process.processName && this.process?.groupID && this.checkGroup
+      return this.process.processName &&
+        this.process?.groupID &&
+        this.checkGroup
         ? true
         : false;
     } else {
