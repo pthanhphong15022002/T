@@ -146,7 +146,7 @@ export class PopAddArComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      if (this.formType == 'add') {
+      if (this.formType == 'add' || this.formType == 'copy') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'AddAsync';
@@ -205,9 +205,9 @@ export class PopAddArComponent extends UIComponent implements OnInit {
         })
         .subscribe((res) => {
           if (res.save) {
-              this.form.formGroup.reset();
               this.dialog.dataService.clear();
               this.dialog.dataService.addNew().subscribe((res) => {
+              this.form.formGroup.reset(res);
               this.arposting = this.dialog.dataService.dataSelected;
               this.arposting.moduleID = this.moduleID;
               this.arposting.postType = this.postType;

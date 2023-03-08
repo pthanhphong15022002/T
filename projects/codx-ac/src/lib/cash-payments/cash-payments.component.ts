@@ -62,7 +62,11 @@ export class CashPaymentsComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.api
+      .exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [this.parentID])
+      .subscribe((res) => {});
+  }
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) this.funcName = res.defaultName;

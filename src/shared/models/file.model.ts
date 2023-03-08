@@ -102,6 +102,7 @@ export class FileUpload {
     thumbnail: string;
     uploadId: string;
     createdBy: string;
+    createdByName: string;
     referType: string;
     createdOn: any;
     extension: string;
