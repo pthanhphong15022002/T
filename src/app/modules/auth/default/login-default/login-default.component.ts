@@ -57,23 +57,26 @@ export class LoginDefaultComponent implements OnInit, OnDestroy, AfterViewInit {
   externalLogin = false;
   externalLoginCol = '';
   externalLoginShowText = true;
-  saas = 0;
+  enableCaptcha = 0;
   token = '';
   captChaValid = false;
   // private fields
   constructor(private dt: ChangeDetectorRef, private api: ApiHttpService) {
-    this.saas = environment.saas;
-    if (this.saas == 0) {
+    this.enableCaptcha = environment.reCaptchaEnable;
+    if (this.enableCaptcha == 0) {
       this.captChaValid = true;
     }
   }
 
   ngOnInit(): void {
-    let captChaControl = this.loginForm.controls['captCha'];
-    captChaControl.valueChanges.subscribe((e) => {
-      console.log('capt', captChaControl);
-      this.captChaValid = captChaControl.valid;
-    });
+    if (this.enableCaptcha == 0) {
+      this.captChaValid = true;
+    } else {
+      let captChaControl = this.loginForm.controls['captCha'];
+      captChaControl.valueChanges.subscribe((e) => {
+        this.captChaValid = captChaControl.valid;
+      });
+    }
 
     // if (
     //   environment.saas == 1 &&

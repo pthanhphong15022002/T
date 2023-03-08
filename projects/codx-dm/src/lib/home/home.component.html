@@ -230,7 +230,7 @@
 </ng-template>
 <ng-template #nodata>
   <ng-container *ngIf="
-      (data === undefined || !data || data.length <= 0)
+      (!data || data.length <= 0)
     ">
     <div class="container h-100">
       <div class="list-empty card card-flush h-100">
