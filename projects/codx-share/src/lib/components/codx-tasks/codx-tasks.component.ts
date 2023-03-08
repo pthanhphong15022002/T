@@ -1160,8 +1160,13 @@ export class CodxTasksComponent
   //#endregion
   //region Popoverer
   popoverEmpList(p: any, task, mouseenter = true) {
-    if (this.popoverCrr && mouseenter && this.popoverCrr.isOpen()) {
-       this.popoverCrr.close();
+    if (
+      this.popoverCrr &&
+      p != this.popoverCrr &&
+      mouseenter &&
+      this.popoverCrr.isOpen()
+    ) {
+      this.popoverCrr.close();
     }
     if (this.popoverDataSelected && this.popoverDataSelected.isOpen()) {
       this.popoverDataSelected.close();
@@ -1186,6 +1191,9 @@ export class CodxTasksComponent
               t.countResource = 0;
               if (t.popoverCrr && mouseenter && t.popoverCrr.isOpen())
                 t.popoverCrr.close();
+              if (t.popoverDataSelected && t.popoverDataSelected.isOpen()) {
+                t.popoverDataSelected.close();
+              }
               if (res) {
                 t.listTaskResousce = res;
                 t.listTaskResousceSearch = res;
@@ -1223,7 +1231,7 @@ export class CodxTasksComponent
     //     this.isHoverPop = false;
     //   });
   }
- 
+
   searchName(e) {
     var listTaskResousceSearch = [];
     this.searchField = e;

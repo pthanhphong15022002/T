@@ -42,6 +42,8 @@
     [user]="user"
     (clickMoreFunction)="receiveMF($event)"
     (viewTask)="viewTask($event)"
+    [popoverSelected]="popoverDataSelected"
+    (hoverPopover)="hoverPopover($event)"
   >
   </share-view-list>
 </ng-template>
