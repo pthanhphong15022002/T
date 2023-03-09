@@ -38,6 +38,7 @@ import { ViewJobComponent } from '../../../dynamic-process/popup-add-dynamic-pro
 import { PopupTypeTaskComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
+import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',
@@ -457,19 +458,24 @@ export class StagesDetailComponent implements OnInit {
         this.viewTask(task);
         break;
       case 'DP13':
-        
+        this.assignTask(e.data,task)
       break;
     }
   }
   //giao viec
-  assignTask(moreFunc){
+  assignTask(moreFunc,data){
+    var task = new TM_Tasks();
+    task.refID = data?.recID;
+    task.refType = "DP_Instance";
+    task.dueDate = data?.endDate;
     let assignModel: AssignTaskModel = {
       vllRole: 'TM001',
       title: moreFunc.customName,
       vllShare: 'TM003',
-      task: '',
+      task: task,
     };
     let option = new SidebarModel();
+    option.FormModel = this.frmModel;
     option.Width = '550px';
     var dialogAssign = this.callfc.openSide(
       AssignInfoComponent,
@@ -480,10 +486,20 @@ export class StagesDetailComponent implements OnInit {
   }
   //View task
   viewTask(data?: any) {
+    let listTaskConvert = this.taskList?.map(item => {
+      return{
+        ...item,
+        name: item?.taskName,
+        type: item?.taskType,
+      }
+    })
+    let value = JSON.parse(JSON.stringify(data));
+    value['name'] = value['taskName'];
+    value['type'] = value['taskType'];
     if (data) {
       this.callfc.openForm(ViewJobComponent, '', 700, 550, '', {
-        step: data,
-        listStep: this.taskList,
+        value: value,
+        listValue: listTaskConvert,
       });
     }
   }
