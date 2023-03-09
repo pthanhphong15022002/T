@@ -260,24 +260,19 @@ export class PopupJobComponent implements OnInit {
   }
 
   getFormModel() {
-    // this.frmModel = {
-    //   entityName: 'DP_Steps_Tasks',
-    //   formName: 'DPStepsTasks',
-    //   gridViewName: 'grvDPStepsTasks',
-    // };
-    this.cache.gridView('grvDPStepsTasks').subscribe((res) => {
-      this.cache
-        .gridViewSetup('DPStepsTasks', 'grvDPStepsTasks')
-        .subscribe((res) => {
-          for (let key in res) {
-            if (res[key]['isRequire']) {
-              let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
-              this.view[keyConvert] = res[key]['headerText'];
-            }
+    this.cache
+      .gridViewSetup(
+        this.dialog?.formModel?.formName,
+        this.dialog?.formModel?.gridViewName
+      )
+      .subscribe((res) => {
+        for (let key in res) {
+          if (res[key]['isRequire']) {
+            let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
+            this.view[keyConvert] = res[key]['headerText'];
           }
-          console.log(this.view);
-        });
-    });
+        }
+      });
   }
   //Email
   handelMail() {
@@ -397,7 +392,7 @@ export class PopupJobComponent implements OnInit {
       if (!this.stepsTasks['parentID'].trim()) {
         //if ko có parentID thì so sánh trực tiếp với step
         if (this.getHour(this.stepsTasks) > this.getHour(this.step)) {
-          this.notiService.alertCode("DP010").subscribe((x) => {
+          this.notiService.alertCode('DP010').subscribe((x) => {
             if (x.event && x.event.status == 'Y') {
               this.step['durationDay'] = this.stepsTasks['durationDay'];
               this.step['durationHour'] = this.stepsTasks['durationHour'];
@@ -419,7 +414,7 @@ export class PopupJobComponent implements OnInit {
         });
         maxtime += this.getHour(this.stepsTasks);
         if (maxtime > this.getHour(this.step)) {
-          this.notiService.alertCode("DP010").subscribe((x) => {
+          this.notiService.alertCode('DP010').subscribe((x) => {
             if (x.event && x.event.status == 'Y') {
               this.step['durationDay'] = Math.floor(maxtime / 24);
               this.step['durationHour'] = maxtime % 24;
@@ -442,7 +437,7 @@ export class PopupJobComponent implements OnInit {
       this.dialog.close({ data: this.stepsTasks, status: this.status });
     } else {
       // nếu vượt quá thì hỏi ý kiến
-      this.notiService.alertCode("DP010").subscribe((x) => {
+      this.notiService.alertCode('DP010').subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           if (timeInput) {
             groupTask['durationDay'] = Math.floor(time / 24);

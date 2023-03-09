@@ -1229,9 +1229,9 @@
                 giờ
               </div>
               <div class="text-gray-500">
-                Công việc:
+                <codx-label  fiedName="task"  [formModel]="dialog.formModel" [default]="'Công việc:'"></codx-label>
                 <span class="text-gray-700">{{
-                  itemStep?.taskGroups?.length
+                  itemStep?.tasks?.length
                 }}</span>
               </div>
             </div>
