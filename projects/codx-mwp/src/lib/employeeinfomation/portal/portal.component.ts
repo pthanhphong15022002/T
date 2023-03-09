@@ -438,6 +438,7 @@ export class PortalComponent extends UIComponent {
   lstFuncTaskInfo: any = [];
   lstFuncSalary: any = [];
   lstFuncHRProcess: any = [];
+  dayOffTravelHRProcess: any = [];
   lstFuncKnowledge: any = [];
   lstFuncAward: any = [];
   lstFuncHealth: any = [];
@@ -482,7 +483,7 @@ export class PortalComponent extends UIComponent {
   rewDisInfoFuncID: string = 'HRPEM08';
   healthInfoFuncID: string = 'HRTEM08';
 
-  eContactFuncID = 'HRPEM0102';
+  eContactFuncID = 'HRPEM0102'; // thông tin liên hệ
   eAccountFuncID = 'HRPEM0203'; // Tài khoản cá nhân
   eTaxCodeFuncID = 'HRPEM0202'; // Mã số thuế TNCN
   eInfoFuncID = 'HRPEM0101'; // Thông tin bản thân
@@ -513,7 +514,8 @@ export class PortalComponent extends UIComponent {
   eContractFuncID = 'HRPEM0601'; // Hợp đồng
   eDisciplineFuncID = 'HRPEM0802'; // Kỷ luật
   eDiseasesFuncID = 'HRTEM0803';
-  eAccidentsFuncID = 'HRTEM0804';
+  eAwardFuncID = 'HRPEM0801';
+  eAccidentsFuncID = '';
   //#endregion
 
   //#region Vll colors
@@ -1180,6 +1182,11 @@ export class PortalComponent extends UIComponent {
           (p) => p.parentID == this.benefitInfoFuncID
         );
 
+        this.dayOffTravelHRProcess = res[0].filter(
+          (p) => p.parentID == this.dayoffParentInfoFuncID
+        );
+        
+
         // this.lstFuncHRProcess = res[0].filter(
         //   (p) => p.parentID == this.processInfoFuncID
         // );
@@ -1499,17 +1506,7 @@ export class PortalComponent extends UIComponent {
         });
     });
 
-    this.hrService.getFormModel(this.eAccidentsFuncID).then((res) => {
-      this.eAccidentsFormModel = res;
-      this.cache
-        .gridViewSetup(
-          this.eAccidentsFormModel.formName,
-          this.eAccidentsFormModel.gridViewName
-        )
-        .subscribe((res) => {
-          this.eAccidentsGrvSetup = res;
-        });
-    });
+
     //#endregion
 
     //#region get columnGrid EVisa - Thị thực

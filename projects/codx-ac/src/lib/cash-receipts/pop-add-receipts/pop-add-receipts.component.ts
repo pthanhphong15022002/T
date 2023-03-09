@@ -93,7 +93,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         }
       });
     if (this.cashreceipts?.voucherNo != null) {
-      //#region  load cashpaymentline
+      //#region  load CashReceiptsLines
       this.acService
         .loadData(
           'ERM.Business.AC',
@@ -284,7 +284,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
                 if (res) {
                   this.clearCashrecipts();
                   this.dialog.dataService.clear();
-                  this.dialog.dataService.addNew().subscribe((res) => {
+                  this.dialog.dataService.addNew((o) => this.setDefault(o)).subscribe((res) => {
                     this.form.formGroup.patchValue(res);
                     this.cashreceipts = this.dialog.dataService!.dataSelected;
                   });

@@ -103,13 +103,12 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
 
   //#region Init
   onInit(): void {}
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
   //#endregion
 
   //#region Event
   valueChange(e: any) {
-      this.currencies[e.field] = e.data;
+    this.currencies[e.field] = e.data;
   }
   //#endregion
 
@@ -146,7 +145,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     this.title = 'Thêm tỷ giá';
     var obj = {
       headerText: this.title,
-      dataex:this.objectExchange
+      dataex: this.objectExchange,
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -212,7 +211,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     var obj = {
       headerText: this.title,
       data: { ...data },
-      type:'edit'
+      type: 'edit',
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -304,11 +303,14 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
                 .subscribe((res: []) => {
                   if (res) {
                     this.dialog.close();
-                    this.dt.detectChanges();
                   }
                 });
             } else {
-              this.notification.notifyCode('SYS031', 0, '"' + this.currencies.currencyID + '"');
+              this.notification.notifyCode(
+                'SYS031',
+                0,
+                '"' + this.currencies.currencyID + '"'
+              );
               return;
             }
           });
@@ -331,7 +333,11 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
                   'ERM.Business.BS',
                   'ExchangeRatesBusiness',
                   'UpdateAsync',
-                  [this.currencies.currencyID, this.objectExchange, this.objectExchangeDelete]
+                  [
+                    this.currencies.currencyID,
+                    this.objectExchange,
+                    this.objectExchangeDelete,
+                  ]
                 )
                 .subscribe((res: []) => {
                   if (res) {
@@ -371,7 +377,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
                 this.clearCurrencies();
                 this.dialog.dataService.clear();
                 this.dialog.dataService.addNew().subscribe((res) => {
-                  this.form.formGroup.reset(res);
+                  this.form.formGroup.patchValue(res);
                   this.currencies = this.dialog.dataService!.dataSelected;
                 });
               }
