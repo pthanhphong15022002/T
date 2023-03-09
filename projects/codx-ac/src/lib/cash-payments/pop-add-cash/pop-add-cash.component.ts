@@ -7,6 +7,7 @@ import {
   Optional,
   ViewChild,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import {
   CacheService,
@@ -47,6 +48,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   gridViewSetup: any;
   cashbookName: any;
   validate: any = 0;
+  parentID: string;
   cashpaymentline: Array<CashPaymentLine> = [];
   cashpaymentlineDelete: Array<CashPaymentLine> = [];
   fmCashPaymentsLines: FormModel = {
@@ -74,11 +76,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     private dt: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private notification: NotificationsService,
+    private routerActive: ActivatedRoute,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
     super(inject);
     this.dialog = dialog;
+    this.routerActive.queryParams.subscribe((res) => {
+      if (res && res?.recID) this.parentID = res.recID;
+    });
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.cashpayment = dialog.dataService!.dataSelected;
@@ -100,15 +106,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         )
         .subscribe((res: any) => {
           this.cashpaymentline = res;
-        });
-      this.acService
-        .loadData('ERM.Business.AC', 'CashBookBusiness', 'LoadDataAsync', [])
-        .subscribe((res: any) => {
-          res.forEach((element) => {
-            if (element.cashBookID == this.cashpayment.cashBookID) {
-              this.cashbookName = element.cashBookName;
-            }
-          });
         });
       //#endregion
     }
@@ -245,6 +242,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.cashpaymentlineDelete.push(data);
     this.grid.deleteRow();
   }
+  setDefault(o) {
+    return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+      this.parentID,
+    ]);
+  }
   //#endregion
 
   //#region Method
@@ -254,7 +256,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      //this.cashpaymentline = this.data;
+      this.cashpaymentline = this.grid.dataSource;
       if (this.formType == 'add') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
@@ -262,7 +264,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             opt.className = 'CashPaymentsBusiness';
             opt.assemblyName = 'AC';
             opt.service = 'AC';
-            opt.data = [this.cashpayment, this.cashpaymentline];
+            opt.data = [this.cashpayment];
             return true;
           })
           .subscribe((res) => {
@@ -272,7 +274,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                   'ERM.Business.AC',
                   'CashPaymentsLinesBusiness',
                   'AddAsync',
-                  this.cashpaymentline
+                  [this.cashpaymentline]
                 )
                 .subscribe((res) => {});
               this.dialog.close();
@@ -315,7 +317,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      //this.cashpaymentline = this.data;
+      this.cashpaymentline = this.grid.dataSource;
       this.dialog.dataService
         .save((opt: RequestOption) => {
           opt.methodName = 'AddAsync';
@@ -332,14 +334,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 'ERM.Business.AC',
                 'CashPaymentsLinesBusiness',
                 'AddAsync',
-                this.cashpaymentline
+                [this.cashpaymentline]
               )
               .subscribe((res) => {
                 if (res) {
                   this.clearCashpayment();
                   this.dialog.dataService.clear();
-                  this.dialog.dataService.addNew().subscribe((res) => {
-                    this.form.formGroup.reset(res);
+                  this.dialog.dataService.addNew((o) => this.setDefault(o)).subscribe((res) => {
+                    this.form.formGroup.patchValue(res);
                     this.cashpayment = this.dialog.dataService!.dataSelected;
                   });
                 }
@@ -377,11 +379,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   clearCashpayment() {
-    // this.cashbookName = '';
-    // //this.objectType = null;
-    // this.data = null;
-    // this.cashpaymentline = [];
-    // this.voucherDate = new Date();
+    this.cashpaymentline = [];
   }
   //#endregion
 }

@@ -17,12 +17,8 @@ import { DP_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
 export class ViewJobComponent implements OnInit {
   title = '';
   dialog!: DialogRef;
-  formModelMenu: FormModel;
   stepsTasks: DP_Steps_Tasks;
-  status = '';
-  stepType = '';
   taskType = '';
-  stepID = '';
   listOwner = [];
   taskList: DP_Steps_Tasks[] = [];
   taskListConnect: DP_Steps_Tasks[] = [];
@@ -39,6 +35,7 @@ export class ViewJobComponent implements OnInit {
     VIDEO: 'video',
     APPLICATION: 'application',
   };
+  frmModel: FormModel = {};
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -47,13 +44,10 @@ export class ViewJobComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.status = dt?.data[0];
-    this.taskType = dt?.data[1];
-    this.stepType = dt?.data[1]['id'];
-    this.stepID = dt?.data[2];
-    this.stepsTasks = dt?.data[4] || new DP_Steps_Tasks();
-    this.taskList = dt?.data[5];
-    this.stepType = this.stepsTasks.taskType;
+    this.taskType = dt?.data?.step?.taskType;
+    this.stepsTasks = dt?.data?.step;
+    this.taskList = dt?.data?.listStep;
+    this. getModeFunction();
   }
 
   ngOnInit(): void {
@@ -65,24 +59,26 @@ export class ViewJobComponent implements OnInit {
         }
       });
     }
-    this.cache.valueList('DP035').subscribe((res) => {
+    this.getFileByObjectID('test');
+    this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
+        this.listTypeTask = res?.datas;
         let type = res.datas.find((x) => x.value === this.taskType);
         this.title = type['text'];
       }
     });
-    this.getFileByObjectID('test');
-
-    this.cache.valueList('DP004').subscribe((res) => {
-      if (res.datas) {
-        this.listTypeTask = res?.datas;
-      }
-    });
   }
 
-  onDeleteOwner(objectID, data) {
-    let index = data.findIndex((item) => item.id == objectID);
-    if (index != -1) data.splice(index, 1);
+  getModeFunction(){
+    var functionID = 'DPT0206';
+    this.cache.functionList(functionID).subscribe((f) => {
+      this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
+        this.frmModel['formName'] = f.formName;
+        this.frmModel['gridViewName'] = f.gridViewName;
+        this.frmModel['entityName'] = f.entityName;
+        this.frmModel['funcID'] = functionID;
+      });
+    });
   }
 
   getFileByObjectID(objectID: string) {

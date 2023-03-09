@@ -5,7 +5,7 @@
   [subHeader]="subHeader"
   [body]="body"
   [dialog]="dialog"
-  [formModel]="formModelMenu"
+  [formModel]="frmModel"
   [data]="stepsTasks"
   [openMore]="false"
 ></codx-form>
@@ -41,11 +41,11 @@
           <codx-label name="durationHour" default="giờ"></codx-label>
         </div>
 
-        <div *ngIf="stepType == 'C'" class="d-flex align-items-center me-2">
+        <div *ngIf="taskType == 'C'" class="d-flex align-items-center me-2">
           <span class="icon-local_phone icon-18 me-1"></span>
           <span class="mx-1 text-primary-500">{{ stepsTasks?.callType }}</span>
         </div>
-        <div *ngIf="stepType === 'M'">
+        <div *ngIf="taskType === 'M'">
           <div class="d-flex justify-content-center">
             <codx-input
               type="switch"
@@ -57,7 +57,7 @@
             </codx-input>
             <codx-label
               fiedName="isOnline"
-              [formModel]="dialog?.formModel"
+              [formModel]="frmModel"
               default="Họp trực tuyến"
             >
             </codx-label>
@@ -74,7 +74,7 @@
       <codx-label
         class="h4 font-weight-400 me-2"
         fiedName="roles"
-        [formModel]="dialog?.formModel"
+        [formModel]="frmModel"
         default="Người phụ trách"
       >
       </codx-label>
@@ -94,7 +94,7 @@
       <codx-label
         class="h4 font-weight-400"
         fiedName="memo"
-        [formModel]="dialog?.formModel"
+        [formModel]="frmModel"
         default="Tài liệu"
       >
       </codx-label>
@@ -120,7 +120,7 @@
       <codx-label
         class="h4 font-weight-400"
         fiedName="memo"
-        [formModel]="dialog?.formModel"
+        [formModel]="frmModel"
         default="Ghi chú: "
       >
       </codx-label>
@@ -132,7 +132,7 @@
       <codx-label
         class="h4 font-weight-400"
         fiedName="parentID"
-        [formModel]="dialog?.formModel"
+        [formModel]="frmModel"
         default="Công việc liên kết"
       >
       </codx-label>

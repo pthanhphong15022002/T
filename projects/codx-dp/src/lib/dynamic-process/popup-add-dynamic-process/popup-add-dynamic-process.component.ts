@@ -241,7 +241,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.userId = this.user?.userID;
     this.titleAction = dt.data.titleAction;
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
-    debugger;
     if (this.action === 'copy') {
       this.listClickedCoppy = dt.data.conditionCopy;
       (this.oldIdProccess = dt.data.oldIdProccess),
@@ -2317,28 +2316,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //View task
   async openPopupViewJob(data?: any) {
-    let status = 'edit';
-    let frmModel = await this.getFormModel('DPS0106');
-    if (!data) {
-      this.popupJob.close();
-      status = 'add';
-    }
-    let option = new SidebarModel();
-    option.Width = '550px';
-    option.zIndex = 1001;
-    option.FormModel = frmModel;
-    this.callfc.openSide(
-      ViewJobComponent,
-      [
-        status,
-        this.jobType,
-        this.step?.recID,
-        this.taskGroupList,
-        data || {},
-        this.taskList,
-      ],
-      option
-    );
+    if (data) {
+      this.callfc.openForm(
+        ViewJobComponent,
+        '',
+        700,
+        550,
+        '',
+        {step: data, listStep: this.taskList}
+      );
+    }    
   }
 
   getIconTask(task) {
@@ -2382,6 +2369,27 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  turnOnReason($event, view: string) {
+    debugger;
+    if (view === this.viewStepReasonSuccess) {
+      if ($event.field === 'isUsed' && $event.component.checked === true) {
+        this.stepSuccess.isUsed = true;
+      } else if ($event.field == 'isUsed' && $event.component.checked === false) {
+        this.stepSuccess.isUsed = false;
+        this.stepSuccess.reasonControl = false;
+        this.stepSuccess.newProcessID = this.guidEmpty;
+      }
+    } else {
+      if ($event.field === 'isUsed' && $event.component.checked === true) {
+        this.stepFail.isUsed = true;
+      } else if ($event.field == 'isUsed' && $event.component.checked === false) {
+        this.stepFail.isUsed = false;
+        this.stepFail.reasonControl = false;
+        this.stepFail.newProcessID = this.guidEmpty;
+      }
+    }
+    this.changeDetectorRef.detectChanges();
+  }
   clickViewStep($event: any, view: any, data: any) {
     if ($event && $event != null) {
       if (

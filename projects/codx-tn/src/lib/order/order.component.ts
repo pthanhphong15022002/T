@@ -1,6 +1,12 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Injector,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormModel, UIComponent } from 'codx-core';
+import { CodxGridviewComponent, FormModel, UIComponent } from 'codx-core';
 
 @Component({
   selector: 'lib-order',
@@ -21,11 +27,12 @@ export class OrderComponent extends UIComponent {
   }
 
   //#region View Child
-
+  @ViewChild('moduleTmpl') moduleTmpl: ElementRef;
+  @ViewChild('gridView') gridView: CodxGridviewComponent;
   //#endregion
   orderFormodel: FormModel = {
-    formName: 'TNOrders',
-    gridViewName: 'grvTNOrders',
+    formName: 'OrderModules',
+    gridViewName: 'grvOrderModules',
     entityName: 'TN_OrderModules',
   };
 
@@ -49,11 +56,14 @@ export class OrderComponent extends UIComponent {
           this.orderFormControl = grv;
         }
       });
+  }
 
+  ngAfterViewInit() {
     this.moduleDetailGridClmn = [
       {
         headerText: this.moduleGridHeaderText['apps'],
-        width: '50',
+        template: this.moduleTmpl,
+        width: '400',
       },
       {
         headerText: this.moduleGridHeaderText['operator'],
