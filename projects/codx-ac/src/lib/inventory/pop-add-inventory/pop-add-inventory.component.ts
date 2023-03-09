@@ -39,7 +39,7 @@ export class PopAddInventoryComponent extends UIComponent {
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     {
-      icon: 'icon-playlist_add_check',
+      icon: 'icon-rule',
       text: 'Dành hàng',
       name: 'Goods',
     },
@@ -94,9 +94,6 @@ export class PopAddInventoryComponent extends UIComponent {
   setTitle(e: any) {
     this.title = this.headerText;
     this.dt.detectChanges();
-  }
-  clearInventory() {
-    this.form.formGroup.reset();
   }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
@@ -190,7 +187,6 @@ export class PopAddInventoryComponent extends UIComponent {
         })
         .subscribe((res) => {
           if (res.save) {
-            this.clearInventory();
             this.dialog.dataService.clear();
             this.dialog.dataService.addNew().subscribe((res) => {
               this.form.formGroup.patchValue(res);

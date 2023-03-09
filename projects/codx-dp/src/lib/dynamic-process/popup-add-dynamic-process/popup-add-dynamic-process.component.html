@@ -163,7 +163,7 @@
         </div>
         <div
           [ngClass]="currentTab == 1 ? 'scroll-stask' : 'scroll-y'"
-          class="dp-step pt-4 px-6 mx-3"
+          class="dp-step pt-4 px-5 mx-1"
           data-kt-scroll="true"
           data-kt-scroll-activate="{default: true}"
           data-kt-scroll-height="auto"
@@ -1193,8 +1193,8 @@
 <ng-template #stage>
   <div class="background-stage dp-step">
     <div class="stage-body d-flex">
-      <div class="stage-body-left w-250px minw-250px aqua">
-        <div class="header">
+      <div class="stage-body-left w-300px minw-300px pe-1 mb-3">
+        <div class="fw-bold fs-4 text-dark">
           <codx-label fiedName="step" default="Giai đoạn"></codx-label>
         </div>
         <div
@@ -1206,7 +1206,7 @@
           <div
             cdkDrag
             *ngFor="let itemStep of stepList; let i = index"
-            class="list-stage example-box drap-drop cursor-pointer"
+            class="list-stage example-box drap-drop cursor-pointer border-bottom"
             [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''"
             (click)="
               clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)
@@ -1242,7 +1242,7 @@
             (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)"
           >
             <div class="order">T</div>
-            <div class="content p-3">
+            <div class="content">
               <div style="font-weight: 600; font-size: 1.2rem">
                 <codx-label [default]="stepNameSuccess"></codx-label>
               </div>
@@ -1270,13 +1270,9 @@
           <!--end danh sách giai đoạn -->
         </div>
       </div>
-      <div class="stage-body-right w-100">
-        <div class="d-flex justify-content-end ms-3">
-          <div class="me-auto">
-            <h2>
-              <strong>{{ titleViewStepCrr }}</strong>
-            </h2>
-          </div>
+      <div class="stage-body-right w-100 ps-6">
+        <div class="d-flex align-items-center justify-content-between pe-1">
+          <div class="fw-bold fs-4 text-dark mb-3">{{ titleViewStepCrr }}</div>
           <div *ngIf="isSwitchReason && viewStepCrr === viewStepReasonSuccess">
             <codx-input
               class="test-check"
@@ -1303,22 +1299,50 @@
           </div>
           <!-- more function step -->
           <div
-            *ngIf="step"
-            class="icon-more_vert has-action-menu more-funtion-step"
-            style="cursor: pointer"
-          >
-            <codx-mfunc
-              *ngIf="viewStepCrr == viewStepCustom"
-              [formModel]="dialog.formModel"
-              (clickMF)="clickMFStep($event, step)"
-              [dataItem]="moreDefaut"
-              [type]="'hover'"
-              (changeDataMF)="changeDataMF($event, 'step')"
+              *ngIf="step"
+              class="icon-more_vert has-action-menu more-funtion-step"
+              style="cursor: pointer"
             >
-            </codx-mfunc>
+              <codx-mfunc
+                *ngIf="viewStepCrr == viewStepCustom"
+                [formModel]="dialog.formModel"
+                (clickMF)="clickMFStep($event, step)"
+                [dataItem]="moreDefaut"
+                [type]="'hover'"
+                (changeDataMF)="changeDataMF($event, 'step')"
+              >
+              </codx-mfunc>
+            </div>
+          <div class="d-flex align-items-center">
+            <div *ngIf="isSwitchReason && viewStepCrr  === viewStepReasonSuccess">
+              <codx-input
+                class="test-check"
+                type="switch"
+                style="width: 100%"
+                field="isUsed"
+                [checked]="stepSuccess?.isUsed ?? true"
+                [crrValue]="stepSuccess?.isUsed"
+                (valueChange)="turnOnReason($event,viewStepReasonSuccess)"
+              >
+              </codx-input>
+            </div>
+            <div *ngIf="isSwitchReason && viewStepCrr  === viewStepReasonFail ">
+              <codx-input
+                class="test-check"
+                type="switch"
+                style="width: 100%"
+                field="isUsed"
+                [checked]="stepFail?.isUsed ?? true"
+                [crrValue]="stepFail?.isUsed"
+                (valueChange)="turnOnReason($event,viewStepReasonFail)"
+              >
+              </codx-input>
+            </div>
+            <!-- more function step -->
+            
           </div>
         </div>
-        <div class="main">
+        <div class="stage-right-main pe-1 mt-4">
           <ng-container
             [ngTemplateOutlet]="
               viewStepCrr === viewStepCustom
@@ -1783,8 +1807,8 @@
       id="setup-step"
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
     >
-      <div class="main-body p-3">
-        <div class="row pt-3 pb-5">
+      <div class="main-body px-4 aqua">
+        <div class="row pb-3">
           <div class="col-6">
             <div class="title-switch">
               <codx-label
@@ -2207,7 +2231,7 @@
     </div>
     <div
       id="role-setup-step"
-      class="main-job"
+      class="main-job px-5"
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
     >
       <div class="row">

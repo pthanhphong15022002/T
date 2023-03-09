@@ -94,6 +94,8 @@ export class InstancesComponent
   dataColums = [];
   dataDrop: any;
   isClick: boolean = true;
+  isUseSuccess: boolean = true;
+  isUseFail: boolean = true;
   stepIdClick = '';
   listProccessCbx: any;
   dataProccess: any;
@@ -124,8 +126,13 @@ export class InstancesComponent
           }
         });
     });
-
     this.dataProccess = dt?.data?.data;
+    this.isUseSuccess = this.dataProccess.steps.filter(
+      (x) => x.isSuccessStep
+    )[0].isUsed;
+    this.isUseFail = this.dataProccess.steps.filter(
+      (x) => x.isFailStep
+    )[0].isUsed;
     this.getListCbxProccess(this.dataProccess?.applyFor);
   }
   ngAfterViewInit(): void {
@@ -423,7 +430,7 @@ export class InstancesComponent
 
   //Event
   clickMF(e, data?) {
-    this.itemSelected = data;
+    this.dataSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
     switch (e.functionID) {
@@ -467,39 +474,37 @@ export class InstancesComponent
               .openOrClosedInstance(data.recID, check)
               .subscribe((res) => {
                 if (res) {
-                  this.itemSelected.closed = check;
+                  this.dataSelected.closed = check;
                   this.noti.notifyCode(check ? 'DP016' : 'DP017');
-                  this.view.dataService.update(this.itemSelected).subscribe();
-                  this.detectorRef.detectChanges();
+                  this.view.dataService.update(this.dataSelected).subscribe();
                 }
               });
           }
         });
-    } else if (this.process.showInstanceControl === '0' || this.process.showInstanceControl === '2') {
+    } else if (
+      this.process.showInstanceControl === '0' ||
+      this.process.showInstanceControl === '2'
+    ) {
       this.view.dataService.dataSelected = data;
 
       this.noti
         .alertCode('DP018', null, "'" + this.titleAction + "'")
         .subscribe((info) => {
           if (info.event.status == 'Y') {
-            this.view.dataService
-              .delete([this.view.dataService.dataSelected], true, (opt) =>
-                this.beforeClosed(opt, check)
-              )
+            this.codxDpService
+              .openOrClosedInstance(data.recID, check)
               .subscribe((res) => {
                 if (res) {
-                  this.view.dataService.onAction.next({
-                    type: '',
-                    data: data,
-                  });
+                  this.dataSelected.closed = check;
                   this.noti.notifyCode(check ? 'DP016' : 'DP017');
+                  this.view.dataService.remove(this.dataSelected).subscribe();
+                  this.detectorRef.detectChanges();
                 }
               });
-              this.changeDetectorRef.detectChanges();
           }
         });
-
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   beforeClosed(opt: RequestOption, check) {
@@ -529,9 +534,7 @@ export class InstancesComponent
           //Chỉnh sửa, chuyển tiếp, thất bại, thành công
           case 'SYS103':
           case 'SYS03':
-          case 'DP02':
           case 'DP09':
-          case 'DP10':
             let isUpdate = data.write;
             if (
               !isUpdate ||
@@ -559,6 +562,27 @@ export class InstancesComponent
           //Mở nhiệm vụ = false
           case 'DP15':
             if (!data.closed) res.disabled = true;
+            break;
+          case 'DP02':
+            let isUpdateFail = data.write;
+            if ( !isUpdateFail ||
+              (data.status !== '1' && data.status !== '2') ||
+              data.closed ||
+              !this.isUseFail
+            ) {
+              res.disabled = true;
+            }
+
+            break;
+          case 'DP10':
+            let isUpdateSuccess = data.write;
+            if ( !isUpdateSuccess ||
+              (data.status !== '1' && data.status !== '2') ||
+              data.closed ||
+              !this.isUseSuccess
+            ) {
+              res.disabled = true;
+            }
             break;
         }
       });
