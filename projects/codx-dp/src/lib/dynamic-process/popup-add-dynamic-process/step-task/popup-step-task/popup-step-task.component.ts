@@ -29,8 +29,8 @@ import {
 
 @Component({
   selector: 'lib-popup-job',
-  templateUrl: './popup-job.component.html',
-  styleUrls: ['./popup-job.component.scss'],
+  templateUrl: './popup-step-task.component.html',
+  styleUrls: ['./popup-step-task.component.scss'],
 })
 export class PopupJobComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
@@ -140,6 +140,10 @@ export class PopupJobComponent implements OnInit {
       taskLinks = data;
     }
     return taskLinks;
+  }
+
+  setOwner(){
+    
   }
 
   getTypeTask() {

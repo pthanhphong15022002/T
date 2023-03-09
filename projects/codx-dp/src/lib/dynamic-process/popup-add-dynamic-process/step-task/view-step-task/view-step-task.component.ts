@@ -11,8 +11,8 @@ import { DP_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
 
 @Component({
   selector: 'lib-view-job',
-  templateUrl: './view-job.component.html',
-  styleUrls: ['./view-job.component.scss'],
+  templateUrl: './view-step-task.component.html',
+  styleUrls: ['./view-step-task.component.scss'],
 })
 export class ViewJobComponent implements OnInit {
   title = '';
