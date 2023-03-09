@@ -21,7 +21,7 @@
     (click)="addFile()"
   ></span>
   <span *ngIf="customField.dataType == 'P'" class="mx-2 me-5">
-    <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
+    <button class="btn btn-sm btn-icon" (click)="openUserPopup()" [disabled]="disable">
       <span class="icon-group_add text-primary icon-18"></span>
     </button>
   </span>
@@ -42,6 +42,7 @@
     (keyUpEnter)="valueChange($event)"
     (controlBlur)="valueChange($event)"
     (valueChange)="valueChange($event)"
+    [disabled]="disable"
   >
   </codx-input>
   <codx-input
@@ -54,6 +55,7 @@
     [crrValue]="customField.dataValue||''"
     (controlBlur)="valueChange($event)"
     (valueChange)="valueChange($event)"
+    [disabled]="disable"
   >
   </codx-input>
 </ng-container>
@@ -68,6 +70,7 @@
       (keyUpEnter)="valueChange($event)"
       (controlBlur)="valueChange($event)"
       (valueChange)="valueChange($event)"
+      [disabled]="disable"
     ></codx-input>
   </ng-container>
 </ng-container>
@@ -82,6 +85,7 @@
     (controlBlur)="valueChange($event)"
     (keyUpEnter)="valueChange($event)"
     (valueChange)="valueChange($event)"
+    [disabled]="disable"
   >
   </codx-input>
 </ng-container>
@@ -96,6 +100,7 @@
     (controlBlur)="valueChange($event)"
     (keyUpEnter)="valueChange($event)"
     (valueChange)="valueChange($event)"
+    [disabled]="disable"
   >
   </codx-input>
 </ng-container>
@@ -149,6 +154,7 @@
     (leave)="hovered = currentRate"
     [readonly]="readonly"
     [starTemplate]="temp"
+    [disabled]="disable"
   >
     <ng-template #temp let-fill="fill" let-index="index">
       <span
