@@ -371,7 +371,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
                 this.clearCurrencies();
                 this.dialog.dataService.clear();
                 this.dialog.dataService.addNew().subscribe((res) => {
-                  this.form.formGroup.reset(res);
+                  this.form.formGroup.patchValue(res);
                   this.currencies = this.dialog.dataService!.dataSelected;
                 });
               }

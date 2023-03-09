@@ -191,7 +191,7 @@ export class CashPaymentsComponent extends UIComponent {
     opt.className = 'CashPaymentsBusiness';
     opt.assemblyName = 'AC';
     opt.service = 'AC';
-    opt.data = data;
+    opt.data = data.recID;
     return true;
   }
   //#endregion

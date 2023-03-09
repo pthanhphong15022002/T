@@ -207,7 +207,7 @@ export class PopAddArComponent extends UIComponent implements OnInit {
           if (res.save) {
               this.dialog.dataService.clear();
               this.dialog.dataService.addNew().subscribe((res) => {
-              this.form.formGroup.reset(res);
+              this.form.formGroup.patchValue(res);
               this.arposting = this.dialog.dataService.dataSelected;
               this.arposting.moduleID = this.moduleID;
               this.arposting.postType = this.postType;
