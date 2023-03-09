@@ -1,6 +1,6 @@
 import { BehaviorSubject, finalize, map, Observable, of, share } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { TM_Tasks } from './components/codx-tasks/model/task.model';
+import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import {
   ApiHttpService,
   AuthStore,
@@ -22,6 +22,7 @@ import {
 import { PopupCommentComponent } from 'projects/codx-es/src/lib/sign-file/popup-comment/popup-comment.component';
 import { environment } from 'src/environments/environment';
 import { AssignTaskModel } from './models/assign-task.model';
+
 
 @Injectable({
   providedIn: 'root',
