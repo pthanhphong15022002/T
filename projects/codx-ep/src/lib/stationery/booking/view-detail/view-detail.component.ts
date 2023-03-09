@@ -38,7 +38,6 @@ export class BookingStationeryViewDetailComponent
   @Input() funcID;
   @Input() formModel;
   @Input() data: any;
-  @Input() override view: ViewsComponent;
   @Input() hideMF = false;
   @Input() hideFooter = false;
   firstLoad = true;
