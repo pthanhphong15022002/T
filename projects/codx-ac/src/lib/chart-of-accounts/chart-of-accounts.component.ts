@@ -89,7 +89,7 @@ export class ChartOfAccountsComponent extends UIComponent {
         this.edit(e, data);
         break;
       case 'SYS04':
-        this.copy(e,data);
+        this.copy(e, data);
         break;
     }
   }
@@ -113,14 +113,6 @@ export class ChartOfAccountsComponent extends UIComponent {
         option,
         this.view.funcID
       );
-      this.dialog.closed.subscribe((x) => {
-        if (x.event)
-          this.view.dataService
-            .add([this.view.dataService.dataSelected])
-            .subscribe((x) => {
-              this.dt.detectChanges();
-            });
-      });
     });
   }
 
