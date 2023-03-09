@@ -112,30 +112,42 @@ export class EmployeeDetailComponent extends UIComponent {
     this.funcID = this.routeActive.snapshot.params['funcID'];
     // this.infoPersonal =
   }
-  navChange(evt: any) {
+
+  isClick: boolean = false;
+
+  navChange(evt: any, index: number = -1) {
     if (!evt) return;
     let element = document.getElementById(evt.nextId);
+    if (index > -1) {
+      this.active[index] = evt.nextId;
+      this.detectorRef.detectChanges();
+    }
     element.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
       inline: 'nearest',
     });
+    this.isClick = true;
+    this.detectorRef.detectChanges();
+    setTimeout(() => {
+      this.isClick = false;
+      return;
+    }, 500);
+    
+  }
 
-    // let footer = document.querySelector('.codx-detail-footer');
-    // if (footer) {
-    //   var f = footer as HTMLElement;
-    //   let clss = f.classList;
-    //   if (!clss.contains('expand')) {
-    //     clss.remove('collape');
-    //     clss.add('expand');
-    //   }
-    // }
+  
+  onSectionChange(data: any, index: number = -1) {
+    if (index > -1 && this.isClick == false) {
+      this.active[index] = data;
+      this.detectorRef.detectChanges();
+    }
   }
 
   infoPersonal: any;
 
   crrEContract: any;
-  lstContractType: any; //phân loại HĐ không xác định 
+  lstContractType: any; //phân loại HĐ không xác định
 
   funcID = '';
   service = '';
@@ -574,11 +586,6 @@ export class EmployeeDetailComponent extends UIComponent {
   dataService: DataService = null;
   clickItem(evet) {}
 
-  onSectionChange(data: any) {
-    console.log('change section', data);
-    this.codxMwpService.currentSection = data.current;
-    this.detectorRef.detectChanges();
-  }
 
   initPersonalInfo() {
     if (this.employeeID) {
@@ -1018,19 +1025,18 @@ export class EmployeeDetailComponent extends UIComponent {
         });
       }
 
-      if(!this.lstContractType){
+      if (!this.lstContractType) {
         let rqContractType = new DataRequest();
         rqContractType.entityName = 'HR_ContractTypes';
         rqContractType.dataValues = '1';
-        rqContractType.predicates =
-          'ContractGroup =@0';
-          rqContractType.pageLoading = false;
+        rqContractType.predicates = 'ContractGroup =@0';
+        rqContractType.pageLoading = false;
 
         this.hrService.getCrrEContract(rqContractType).subscribe((res) => {
           if (res && res[0]) {
             this.lstContractType = res[0];
             console.log('aaaaaaaaaaaa', this.lstContractType);
-            
+
             this.df.detectChanges();
           }
         });
@@ -2411,11 +2417,16 @@ export class EmployeeDetailComponent extends UIComponent {
                   (this.grid?.dataService as CRUDService)
                     ?.remove(data)
                     .subscribe();
-                    this.hrService.GetIsCurrentBenefitWithBenefitID(this.employeeID, data.benefitID).subscribe((res)=>{
+                  this.hrService
+                    .GetIsCurrentBenefitWithBenefitID(
+                      this.employeeID,
+                      data.benefitID
+                    )
+                    .subscribe((res) => {
                       (this.grid?.dataService as CRUDService)
-                    ?.update(res)
-                    .subscribe();
-                    })
+                        ?.update(res)
+                        .subscribe();
+                    });
                   this.eBenefitRowCount = this.eBenefitRowCount - 1;
                   this.df.detectChanges();
                 } else {
@@ -2489,7 +2500,7 @@ export class EmployeeDetailComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            } else if (funcID == 'eSkill') { 
+            } else if (funcID == 'eSkill') {
               this.hrService.deleteESkill1(data).subscribe((res) => {
                 if (res) {
                   if (!this.skillGrid && res[0] == true) {
@@ -2498,7 +2509,11 @@ export class EmployeeDetailComponent extends UIComponent {
                   } else if (this.lstESkill && res[0] == true) {
                     this.notify.notifyCode('SYS008');
                     this.lstESkill = res[1];
-                    this.eSkillRowCount += this.updateGridView(this.skillGrid, 'delete', data);
+                    this.eSkillRowCount += this.updateGridView(
+                      this.skillGrid,
+                      'delete',
+                      data
+                    );
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -2646,10 +2661,10 @@ export class EmployeeDetailComponent extends UIComponent {
                     ?.remove(data)
                     .subscribe();
                   this.eContractRowCount--;
-                  if(data.isCurrent && res[1]){
+                  if (data.isCurrent && res[1]) {
                     (this.eContractGridview?.dataService as CRUDService)
-                    ?.update(res[1])
-                    .subscribe();
+                      ?.update(res[1])
+                      .subscribe();
                     this.crrEContract = res[1];
                   }
                   this.df.detectChanges();
@@ -3082,6 +3097,16 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogEdit.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
       else {
+        if(res.event.orgUnitID != this.infoPersonal.orgUnitID){
+          this.hrService
+          .getOrgTreeByOrgID(res.event.orgUnitID, 3)
+          .subscribe((res) => {
+            if (res) {
+              this.lstOrg = res;
+              console.log('lst Org', this.lstOrg);
+            }
+          });
+        }
         this.infoPersonal = JSON.parse(JSON.stringify(res.event));
         this.df.detectChanges();
       }
@@ -3505,8 +3530,12 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.eDisciplineGrid?.dataService as CRUDService).clear();
-      if(res.event)
-        this.eDisciplineRowCount += this.updateGridView(this.eDisciplineGrid, actionType, res.event);
+      if (res.event)
+        this.eDisciplineRowCount += this.updateGridView(
+          this.eDisciplineGrid,
+          actionType,
+          res.event
+        );
       this.df.detectChanges();
     });
   }
@@ -3654,8 +3683,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfc.openSide(
       PopupECertificatesComponent,
       {
-        trainFromHeaderText : this.eSkillHeaderText['TrainFrom'],
-        trainToHeaderText : this.eSkillHeaderText['TrainTo'],
+        trainFromHeaderText: this.eSkillHeaderText['TrainFrom'],
+        trainToHeaderText: this.eSkillHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eCertificateFuncID),
@@ -3669,8 +3698,12 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
       else if (res.event)
-        this.eCertificateRowCount += this.updateGridView(this.eCertificateGrid, actionType, res.event);
-          this.df.detectChanges();
+        this.eCertificateRowCount += this.updateGridView(
+          this.eCertificateGrid,
+          actionType,
+          res.event
+        );
+      this.df.detectChanges();
     });
   }
 
@@ -3682,8 +3715,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupEDegreesComponent,
       {
-        trainFromHeaderText : this.eDegreeHeaderText['TrainFrom'],
-        trainToHeaderText : this.eDegreeHeaderText['TrainTo'],
+        trainFromHeaderText: this.eDegreeHeaderText['TrainFrom'],
+        trainToHeaderText: this.eDegreeHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eDegreeFuncID),
@@ -3695,8 +3728,12 @@ export class EmployeeDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if(res)
-       this.eDegreeRowCount += this.updateGridView(this.eDegreeGrid, actionType, res.event);
+      if (res)
+        this.eDegreeRowCount += this.updateGridView(
+          this.eDegreeGrid,
+          actionType,
+          res.event
+        );
       this.df.detectChanges();
     });
   }
@@ -3709,8 +3746,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfc.openSide(
       PopupESkillsComponent,
       {
-        trainFromHeaderText : this.eSkillHeaderText['TrainFrom'],
-        trainToHeaderText : this.eSkillHeaderText['TrainTo'],
+        trainFromHeaderText: this.eSkillHeaderText['TrainFrom'],
+        trainToHeaderText: this.eSkillHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eSkillFuncID),
@@ -3753,8 +3790,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupETraincourseComponent,
       {
-        trainFromHeaderText : this.eSkillHeaderText['TrainFrom'],
-        trainToHeaderText : this.eSkillHeaderText['TrainTo'],
+        trainFromHeaderText: this.eSkillHeaderText['TrainFrom'],
+        trainToHeaderText: this.eSkillHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eTrainCourseFuncID),
@@ -3767,8 +3804,12 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.eTrainCourseGrid?.dataService as CRUDService).clear();
-      else if(res.event)
-        this.eTrainCourseRowCount += this.updateGridView(this.eTrainCourseGrid, actionType, res.event);
+      else if (res.event)
+        this.eTrainCourseRowCount += this.updateGridView(
+          this.eTrainCourseGrid,
+          actionType,
+          res.event
+        );
       this.df.detectChanges();
     });
   }
@@ -3779,25 +3820,26 @@ export class EmployeeDetailComponent extends UIComponent {
       .subscribe((res) => {});
   }
 
-  addEContractInfo(actionHeaderText, actionType: string, data: any){
-    //Cảnh báo nếu thêm mới HĐLĐ, mà trước đó có HĐ đang hiệu lực là HĐ không xác định thời hạn => Kiểm tra trước khi thêm 
-    if(actionType == 'add' && this.crrEContract && this.lstContractType ){
-      var item = this.lstContractType.filter(p => p.contractTypeID == this.crrEContract.contractTypeID && p.contractGroup == '1');
-      if(item && item[0]){
-        this.notify.alertCode('HR008').subscribe(res =>{
-          if(res?.event?.status == 'Y'){
+  addEContractInfo(actionHeaderText, actionType: string, data: any) {
+    //Cảnh báo nếu thêm mới HĐLĐ, mà trước đó có HĐ đang hiệu lực là HĐ không xác định thời hạn => Kiểm tra trước khi thêm
+    if (actionType == 'add' && this.crrEContract && this.lstContractType) {
+      var item = this.lstContractType.filter(
+        (p) =>
+          p.contractTypeID == this.crrEContract.contractTypeID &&
+          p.contractGroup == '1'
+      );
+      if (item && item[0]) {
+        this.notify.alertCode('HR008').subscribe((res) => {
+          if (res?.event?.status == 'Y') {
             this.HandleEContractInfo(actionHeaderText, actionType, data);
           }
-        })
-      }
-      else{
+        });
+      } else {
         this.HandleEContractInfo(actionHeaderText, actionType, data);
       }
-    }
-    else{
+    } else {
       this.HandleEContractInfo(actionHeaderText, actionType, data);
     }
-    
   }
 
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
@@ -3805,9 +3847,11 @@ export class EmployeeDetailComponent extends UIComponent {
     option.Width = '550px';
     option.FormModel = this.eContractFormModel;
     let isAppendix = false;
-    
 
-    if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){
+    if (
+      (actionType == 'edit' || actionType == 'copy') &&
+      data.isAppendix == true
+    ) {
       isAppendix = true;
     }
     let dialogAdd = this.callfunc.openSide(
@@ -3824,25 +3868,26 @@ export class EmployeeDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
-      else if(res?.event[0]){
-        if(this.eContractGridview)
-          this.eContractRowCount += this.updateGridView(this.eContractGridview, actionType, res?.event[0])
-          if(res?.event[1]){
-            (this.eContractGridview.dataService as CRUDService)
+      else if (res?.event[0]) {
+        if (this.eContractGridview)
+          this.eContractRowCount += this.updateGridView(
+            this.eContractGridview,
+            actionType,
+            res?.event[0]
+          );
+        if (res?.event[1]) {
+          (this.eContractGridview.dataService as CRUDService)
             .update(res.event[1])
             .subscribe();
-          }
-        else if(actionType == 'copy' || actionType == 'add'){
-          this.eContractRowCount++
+        } else if (actionType == 'copy' || actionType == 'add') {
+          this.eContractRowCount++;
         }
 
-        res.event.forEach(element => {
-          if(element.isCurrent){
+        res.event.forEach((element) => {
+          if (element.isCurrent) {
             this.crrEContract = element;
           }
-          
         });
-       
       }
       this.df.detectChanges();
     });
@@ -3909,8 +3954,12 @@ export class EmployeeDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) (this.AwardGrid?.dataService as CRUDService).clear();
-      if(res.event)
-        this.awardRowCount += this.updateGridView(this.AwardGrid, actionType, res.event);
+      if (res.event)
+        this.awardRowCount += this.updateGridView(
+          this.AwardGrid,
+          actionType,
+          res.event
+        );
       this.df.detectChanges();
     });
   }
@@ -3922,8 +3971,7 @@ export class EmployeeDetailComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.DataService = this.view.dataService;
     option.Width = '550px';
-    let dialogAdd = this.callfc.openSide(
-      PopupEDiseasesComponent, {
+    let dialogAdd = this.callfc.openSide(PopupEDiseasesComponent, {
       actionType: actionType,
       funcID: this.eDiseasesFuncID,
       employeeId: this.employeeID,
@@ -3932,9 +3980,16 @@ export class EmployeeDetailComponent extends UIComponent {
         actionHeaderText + ' ' + this.getFormHeader(this.eDiseasesFuncID),
     });
     dialogAdd.closed.subscribe((res) => {
-      console.log('ressssss diseasesssssssssssssssssssssssssssssssssssssssssssssssss', res);
-        if(res)
-        this.eDiseasesRowCount += this.updateGridView(this.eDiseasesGrid, actionType, res.event);
+      console.log(
+        'ressssss diseasesssssssssssssssssssssssssssssssssssssssssssssssss',
+        res
+      );
+      if (res)
+        this.eDiseasesRowCount += this.updateGridView(
+          this.eDiseasesGrid,
+          actionType,
+          res.event
+        );
       this.df.detectChanges();
     });
 
@@ -4483,10 +4538,11 @@ export class EmployeeDetailComponent extends UIComponent {
         });
     } else if (flag == 'eTrainCourses') {
       this.eTrainCourseGrid.dataService.dataSelected = data;
-      this.hrService.copy(data, this.eTrainCourseFormModel, 'RecID')
-      .subscribe((res) => {
-        this.HandleEmployeeTrainCourseInfo(actionHeaderText, 'copy', res);
-      })
+      this.hrService
+        .copy(data, this.eTrainCourseFormModel, 'RecID')
+        .subscribe((res) => {
+          this.HandleEmployeeTrainCourseInfo(actionHeaderText, 'copy', res);
+        });
       // (this.eTrainCourseGrid.dataService as CRUDService)
       //   .copy()
       //   .subscribe((res) => {
