@@ -38,27 +38,6 @@ import { PopupSelectTemplateComponent } from './popup-select-template/popup-sele
   styleUrls: ['codx-dashboard.component.scss'],
 })
 export class CodxDashboardComponent implements OnInit, AfterViewInit {
-  ngOnInit(): void {}
-  ngAfterViewInit(): void {
-    document
-      .getElementsByClassName('card-body')[0]
-      .setAttribute('style', 'padding: 0 !important');
-    // let ins = setInterval(() => {
-    //   let _layout = document.getElementsByTagName('ejs-dashboardlayout')[0];
-    //   if (_layout) {
-    //     clearInterval(ins);
-    //     document.getElementsByTagName(
-    //       'ejs-dashboardlayout'
-    //     )[0].parentElement!.parentElement!.style.padding = '5px';
-    //   }
-    // }, 200);
-  }
-  @Input() columns: number = 48;
-  @Input() cellSpacing: number[] = [0, 0];
-  @Input() cellAspectRatio: number = 1 / 1;
-  @Input() name!: string;
-  @Input() templates!: any;
-
   @ViewChild('dashboard') objDashboard!: DashboardLayoutComponent;
   @ViewChild('panelLayout') panelLayout?: TemplateRef<any>;
   @ViewChild('chart') chart?: TemplateRef<any>;
@@ -94,7 +73,11 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('dfPyramid') dfPyramid?: TemplateRef<any>;
   @ViewChild('dfFunnel') dfFunnel?: TemplateRef<any>;
 
-  dialog: any;
+  @Input() columns: number = 48;
+  @Input() cellSpacing: number[] = [0, 0];
+  @Input() cellAspectRatio: number = 1 / 1;
+  @Input() name!: string;
+  @Input() templates!: any;
   @Input() service!: string;
   @Input() assembly!: string;
   @Input() className!: string;
@@ -103,9 +86,12 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @Input() dataValue!: string;
   @Input() panels: any = [];
   @Input() datas: any = [];
+
+  dialog: any;
   isChart: boolean = false;
 
   annotations: ChartAnnotationSettingsModel[] = [];
+
   primaryXAxis: AxisModel = {
     valueType: 'Category',
     interval: 1,
@@ -196,6 +182,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   dataItem: any;
   enableCrosshair: boolean = false;
   isCollapsed: boolean = true;
+
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,
@@ -233,6 +220,23 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
         }
       }
     }
+  }
+
+  ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    document
+      .getElementsByClassName('card-body')[0]
+      .setAttribute('style', 'padding: 0 !important');
+    // let ins = setInterval(() => {
+    //   let _layout = document.getElementsByTagName('ejs-dashboardlayout')[0];
+    //   if (_layout) {
+    //     clearInterval(ins);
+    //     document.getElementsByTagName(
+    //       'ejs-dashboardlayout'
+    //     )[0].parentElement!.parentElement!.style.padding = '5px';
+    //   }
+    // }, 200);
   }
 
   changeCondition(evt: any) {
@@ -609,7 +613,16 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onChange(evt: any) {
+  onChange(evt: any) {}
+
+  onDragStart($event: any) {
+    console.log($event);
+  }
+
+  onDrag($event: any) {}
+
+  onDragStop($event: any) {
+    //save panel
   }
 
   addPanelAuto() {

@@ -95,7 +95,13 @@
         </div>
       </div>
       <div class="d-flex align-items-start">
-        <div class="me-3" style="white-space: nowrap;"> <codx-label class="text-dark" fiedName="Memo" [formModel]="formModel" default="Mô tả: "></codx-label>
+        <div class="me-3" style="white-space: nowrap">
+          <codx-label
+            class="text-dark"
+            fiedName="Memo"
+            [formModel]="formModel"
+            default="Mô tả: "
+          ></codx-label>
         </div>
         <div
           *ngIf="dataSelect?.memo"
@@ -113,79 +119,81 @@
       </div>
     </ng-template>
     <ng-template #body>
-      <ng-container *ngIf="viewModelDetail == 'G'">
-        <codx-gantt-chart
-          [dataSource]="ganttDs"
-          [taskFields]="taskFields"
-          [taskbarHeight]="60"
-          [rowHeight]="60"
-          [readOnly]="true"
-          [templateTaskbar]="ganttItems"
-          [toolbar]="[]"
-        ></codx-gantt-chart>
-        <ng-template #ganttItems let-data>
+      <div id="viewModeDetail" class="view-step-box">
+        <ng-container *ngIf="viewModelDetail == 'G'">
+          <codx-gantt-chart
+            [dataSource]="ganttDs"
+            [taskFields]="taskFields"
+            [taskbarHeight]="60"
+            [rowHeight]="60"
+            [readOnly]="true"
+            [templateTaskbar]="ganttItems"
+            [toolbar]="[]"
+          ></codx-gantt-chart>
+          <ng-template #ganttItems let-data>
+            <div
+              class="badge badge-light badge-square badge-md fs-7 p-2"
+              (click)="clickDetailGanchart(data.recID)"
+              [ngStyle]="{ 'background-color': getColor(data.recID) }"
+            >
+              <div class="fw-bold text-dark">{{ data.name }}</div>
+            </div>
+          </ng-template>
+
+          <ng-template #viewDetailsItem let-dialogPopupDetail>
+            <p>NOi dung nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn</p>
+          </ng-template>
+        </ng-container>
+
+        <ng-container *ngIf="viewModelDetail == 'S'">
           <div
-            class="badge badge-light badge-square badge-md fs-7 p-2"
-            (click)="clickDetailGanchart(data.type, data.recID)"
-            [ngStyle]="{ 'background-color': getColor(data.recID) }"
+            class="group-steps"
+            *ngIf="listSteps != null && listSteps.length > 0"
           >
-            <div class="fw-bold text-dark">{{ data.name }}</div>
+            <div class="d-flex arrow-steps flex-container">
+              <ng-container *ngFor="let item of listSteps; index as i">
+                <div
+                  id="step-click"
+                  style="flex-grow: 1"
+                  [ngClass]="getColorStepName(item?.stepStatus)"
+                  (click)="click(i, item.stepID)"
+                >
+                  <span> {{ item.stepName }}</span>
+                </div>
+              </ng-container>
+            </div>
           </div>
-        </ng-template>
-
-        <ng-template #viewDetailsItem let-dialogPopupDetail>
-          <p>NOi dung nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn</p>
-        </ng-template>
-      </ng-container>
-
-      <ng-container *ngIf="viewModelDetail == 'S'">
-        <div
-          class="group-steps"
-          *ngIf="listSteps != null && listSteps.length > 0"
-        >
-          <div class="d-flex arrow-steps flex-container">
-            <ng-container *ngFor="let item of listSteps; index as i">
-              <div
-                id="step-click"
-                style="flex-grow: 1"
-                [ngClass]="getColorStepName(item?.stepStatus)"
-                (click)="click(i, item.stepID)"
-              >
-                <span> {{ item.stepName }}</span>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-        <ng-container *ngIf="tmpTeps">
-          <codx-stages-detail
-            [dataStep]="tmpTeps"
-            [formModel]="formModel"
-            [currentStep]="currentNameStep"
-            [stepID]="dataSelect.stepID"
-            [isDelete]="dataSelect.delete"
-            [isEdit]="dataSelect.edit"
-            [isUpdate]="dataSelect.write"
-            [isCreate]="dataSelect.create"
-            [isClosed]="dataSelect.closed"
-            [titleDefault]="titleDefault"
-            [instance]="instance"
-            [lstIDInvo]="lstInv"
-            [listStepReason]="getReasonByStepId(dataSelect.stepID)"
-            [stepNameEnd]="getStepNameIsComlepte(instance)"
-            [proccesNameMove]="proccesNameMove"
-          ></codx-stages-detail>
+          <ng-container *ngIf="tmpTeps">
+            <codx-stages-detail
+              [dataStep]="tmpTeps"
+              [formModel]="formModel"
+              [currentStep]="currentNameStep"
+              [stepID]="dataSelect.stepID"
+              [isDelete]="dataSelect.delete"
+              [isEdit]="dataSelect.edit"
+              [isUpdate]="dataSelect.write"
+              [isCreate]="dataSelect.create"
+              [isClosed]="dataSelect.closed"
+              [titleDefault]="titleDefault"
+              [instance]="instance"
+              [lstIDInvo]="lstInv"
+              [listStepReason]="getReasonByStepId(dataSelect.stepID)"
+              [stepNameEnd]="getStepNameIsComlepte(instance)"
+              [proccesNameMove]="proccesNameMove"
+            ></codx-stages-detail>
+          </ng-container>
         </ng-container>
-      </ng-container>
-      <ng-container *ngIf="viewModelDetail == 'F'">
-        <ng-container *ngFor="let item of listSteps">
-          <codx-field-detail
-            *ngIf="!item?.isSuccessStep && !item?.isFailStep"
-            [dataStep]="item"
-            [isUpdate]="dataSelect.write"
-            [isClosed]="dataSelect.closed"
-          ></codx-field-detail>
+        <ng-container *ngIf="viewModelDetail == 'F'">
+          <ng-container *ngFor="let item of listSteps">
+            <codx-field-detail
+              *ngIf="!item?.isSuccessStep && !item?.isFailStep"
+              [dataStep]="item"
+              [isUpdate]="dataSelect.write"
+              [isClosed]="dataSelect.closed"
+            ></codx-field-detail>
+          </ng-container>
         </ng-container>
-      </ng-container>
+      </div>
     </ng-template>
 
     <ng-template #tabs>

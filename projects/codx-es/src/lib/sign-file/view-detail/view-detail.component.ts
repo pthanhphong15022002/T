@@ -23,9 +23,10 @@ import {
   ViewsComponent,
 } from 'codx-core';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
-import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
+import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
 import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddSignFileComponent } from '../popup-add-sign-file/popup-add-sign-file.component';
+
 
 @Component({
   selector: 'lib-view-detail',

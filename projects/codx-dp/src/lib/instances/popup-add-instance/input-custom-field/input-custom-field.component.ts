@@ -25,6 +25,7 @@ export class InputCustomFieldComponent implements OnInit {
   @Input() funID: any = '';
   @Input() formModel: any = null;
   @Input() disable = false;
+  @Input() viewFileName = false;
   @ViewChild('attachment') attachment: AttachmentComponent;
   errorMessage = '';
   showErrMess = false;

@@ -48,7 +48,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
       name: 'Description',
     },
     {
-      icon: 'icon-playlist_add_check',
+      icon: 'icon-rule',
       text: 'Thông tin quy đổi',
       name: 'ConversionInformation',
     },

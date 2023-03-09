@@ -112,18 +112,22 @@ export class PortalComponent extends UIComponent {
     this.funcID = this.routeActive.snapshot.params['funcID'];
     this.user = this.auth.get();
     let request = new DataRequest();
-    request.entityName = 'HR_Employees'
-    request.predicates = 'DomainUser=@0'
-    request.dataValues = this.user.userID
+    request.entityName = 'HR_Employees';
+    request.predicates = 'DomainUser=@0';
+    request.dataValues = this.user.userID;
     request.pageLoading = false;
-    this.hrService.loadData('HR', request).subscribe(res => {
-      if(res && res[1] > 0){
+    this.hrService.loadData('HR', request).subscribe((res) => {
+      if (res && res[1] > 0) {
         this.infoPersonal = res[0][0];
+        this.employeeID = this.infoPersonal.employeeID;
       }
-    console.log('employee', res);
+      console.log('employee', res);
+    });
+    console.log(
+      'userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',
+      this.user
+    );
 
-    })
-    console.log('userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', this.user);
     
     // this.infoPersonal =
   }
@@ -482,40 +486,40 @@ export class PortalComponent extends UIComponent {
   knowledgeInfoFuncID: string = 'HRPEM07';
   rewDisInfoFuncID: string = 'HRPEM08';
   healthInfoFuncID: string = 'HRTEM08';
+  awardDisciplineFuncID: string = 'HRPEM08';
 
-  eContactFuncID = 'HRPEM0102'; // thông tin liên hệ
-  eAccountFuncID = 'HRPEM0203'; // Tài khoản cá nhân
-  eTaxCodeFuncID = 'HRPEM0202'; // Mã số thuế TNCN
   eInfoFuncID = 'HRPEM0101'; // Thông tin bản thân
-  //ePartyFuncID = 'HRPEM0102'; // Thông tin Đảng - Đoàn
+  eContactFuncID = 'HRPEM0102'; // thông tin liên hệ
   eFamiliesFuncID = 'HRPEM0103'; // Quan hệ gia đình
   eAssurFunc = 'HRPEM0201'; // Bảo hiểm
-  ePassportFuncID = 'HRTEM0202';
-  eDegreeFuncID = 'HRPEM0701'; // Bằng cấp
-  eVisaFuncID = 'HRTEM0203';
-  eWorkPermitFuncID = 'HRTEM0204';
-  eCertificateFuncID = 'HRPEM0702'; // Chứng chỉ
-  eSkillFuncID = 'HRPEM0703'; // Kỹ năng
-  eExperienceFuncID = 'HRTEM0505'; // Kinh nghiệm trước đây
-  eAssetFuncID = 'HRPEM0404'; // Tài sản cấp phát
+  eTaxCodeFuncID = 'HRPEM0202'; // Mã số thuế TNCN
+  eAccountFuncID = 'HRPEM0203'; // Tài khoản cá nhân
+  jobGeneralFuncID = 'HRPEM0301'; // Thông tin chung
   eTimeCardFuncID = 'HRPEM0302'; // Thông tin chấm công
   eCalSalaryFuncID = 'HRPEM0303'; // Thông tin tính lương
-  jobGeneralFuncID = 'HRPEM0301'; // Thông tin chung
+  appointionFuncID = 'HRPEM0304'; // Bổ nhiệm - điều chuyển
   eBasicSalaryFuncID = 'HRPEM0401'; // Lương cơ bản
   eJobSalFuncID = 'HRPEM0402'; //Lương chức danh
-  eTrainCourseFuncID = 'HRPEM0704'; // đào tạo
-  eBusinessTravelFuncID = 'HRPEM0502'; // Công tác
-  eHealthFuncID = 'HRTEM0801'; // Khám sức khỏe
-  eVaccinesFuncID = 'HRTEM0802'; // Tiêm vắc xin
   benefitFuncID = 'HRPEM0403'; // Phụ cấp
+  eAssetFuncID = 'HRPEM0404'; // Tài sản cấp phát
   dayoffFuncID = 'HRPEM0501'; // Nghỉ phép
-  appointionFuncID = 'HRPEM0304'; // Bổ nhiệm - điều chuyển
-  awardFuncID = 'HRPEM0801'; // Khen thưởng
-  eContractFuncID = 'HRPEM0601'; // Hợp đồng
+  eBusinessTravelFuncID = 'HRPEM0502'; // Công tác
+  eContractFuncID = 'HRPEM0601'; // Hợp đồng lao động
+  eDegreeFuncID = 'HRPEM0701'; // Bằng cấp
+  eCertificateFuncID = 'HRPEM0702'; // Chứng chỉ
+  eSkillFuncID = 'HRPEM0703'; // Kỹ năng
+  eTrainCourseFuncID = 'HRPEM0704'; // đào tạo
+  eAwardFuncID = 'HRPEM0801'; // Khen thưởng
   eDisciplineFuncID = 'HRPEM0802'; // Kỷ luật
-  eDiseasesFuncID = 'HRTEM0803';
-  eAwardFuncID = 'HRPEM0801';
+  //ePartyFuncID = 'HRPEM0102'; // Thông tin Đảng - Đoàn
+  ePassportFuncID = 'HRTEM0202';
+  eVisaFuncID = 'HRTEM0203';
+  eWorkPermitFuncID = 'HRTEM0204';
+  eExperienceFuncID = 'HRTEM0505'; // Kinh nghiệm trước đây
   eAccidentsFuncID = '';
+  eHealthFuncID = '';
+  eVaccinesFuncID = '';
+  eDiseasesFuncID = '';
   //#endregion
 
   //#region Vll colors
@@ -1195,7 +1199,7 @@ export class PortalComponent extends UIComponent {
           (p) => p.parentID == this.knowledgeInfoFuncID
         );
 
-        this.lstFuncAward = res[0].filter((p) => p.parentID == 'HRTEM07');
+        this.lstFuncAward = res[0].filter((p) => p.parentID == this.awardDisciplineFuncID);
 
         this.lstFuncHealth = res[0].filter((p) => p.parentID == 'HRTEM08');
 
@@ -1486,7 +1490,7 @@ export class PortalComponent extends UIComponent {
       this.eJobSalaryFormModel = res;
     });
 
-    this.hrService.getFormModel(this.awardFuncID).then((res) => {
+    this.hrService.getFormModel(this.eAwardFuncID).then((res) => {
       this.awardFormModel = res;
     });
 
@@ -1930,7 +1934,7 @@ export class PortalComponent extends UIComponent {
     //#endregion
 
     //#region EReward - Khen thưởng
-    this.hrService.getHeaderText(this.awardFuncID).then((res) => {
+    this.hrService.getHeaderText(this.eAwardFuncID).then((res) => {
       this.awardHeaderText = res;
       this.awardColumnsGrid = [
         {
@@ -2189,7 +2193,7 @@ export class PortalComponent extends UIComponent {
       case this.eTrainCourseFuncID:
         this.HandleEmployeeTrainCourseInfo(this.addHeaderText, 'add', null);
         break;
-      case this.awardFuncID:
+      case this.eAwardFuncID:
         this.HandleEmployeeEAwardsInfo(this.addHeaderText, 'add', null);
         break;
       case this.eDisciplineFuncID:
@@ -3899,9 +3903,9 @@ export class PortalComponent extends UIComponent {
       {
         actionType: actionType,
         headerText:
-          actionHeaderText + ' ' + this.getFormHeader(this.awardFuncID),
+          actionHeaderText + ' ' + this.getFormHeader(this.eAwardFuncID),
         employeeId: this.employeeID,
-        funcID: this.awardFuncID,
+        funcID: this.eAwardFuncID,
         dataInput: data,
       },
       option

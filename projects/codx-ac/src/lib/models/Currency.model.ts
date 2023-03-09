@@ -1,9 +1,7 @@
 export class Currency {
   aRounding: any;
-  aRoundType: any;
   allowEditKey: any;
   assign: any;
-  buid: any;
   calculation: any;
   createdBy: any;
   createdOn: any;
@@ -11,23 +9,17 @@ export class Currency {
   currencyName: any;
   currencyName2: any;
   delete: any;
-  divisionID: any;
-  employeeID: any;
   idField: any;
   includeTables: any;
   isoCode: any;
   modifiedBy: any;
   modifiedOn: any;
-  multiply: any;
-  orgUnitID: any;
-  owner: any;
+  multi: any;
   pRounding: any;
-  pRoundType: '';
   penny: any;
-  pennyRule: any;
-  positionID: any;
   precisionName: any;
   prefix: any;
+  recID: any;
   share: any;
   stop: any;
   symbol: any;
