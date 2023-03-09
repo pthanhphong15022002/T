@@ -201,6 +201,17 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             if (res) {
               this.gridViewSetup = res;
               this.planholderTaskChild = res['Memo']?.description;
+
+              // for (let key in res) {
+              //   if (res[key]['isRequire']) {
+              //     let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
+              //     let obj = {
+              //       keyRequire: keyConvert,
+              //       textHeader: res[key]['headerText'],
+              //     };
+              //     this.listRequire.push(obj);
+              //   }
+              //}
             }
           });
       }
@@ -210,17 +221,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.planholderTaskGoal = res['Memo']?.description;
       }
     });
-    // this.functionID = this.dialog.formModel.funcID;
-    // this.cache
-    //   .gridViewSetup(
-    //     this.dialog.formModel.formName,
-    //     this.dialog.formModel.gridViewName
-    //   )
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.gridViewSetup = res;
-    //     }
-    //   });
+   
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -465,6 +466,15 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('TM027');
       return;
     }
+    if (!this.task.taskGroupID && this.gridViewSetup['TaskGroupID'].isRequire) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        this.gridViewSetup['TaskGroupID'].headerText
+      );
+      return;
+    }
+
     if (this.task.estimated < 0) {
       this.notiService.notifyCode('TM033');
       return;
@@ -915,7 +925,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             taskResource.resourceName = emp?.userName;
             taskResource.positionName = emp?.positionName;
             taskResource.departmentName = emp?.departmentName;
-            taskResource.roleType = this.crrRole??'R';
+            taskResource.roleType = this.crrRole ?? 'R';
             this.listTaskResources.push(taskResource);
           }
           if (arrUser.length != res.length) {
@@ -1208,8 +1218,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //open control share
-  openControlShare(controlShare: any,roleType) {
-    this.crrRole = roleType
+  openControlShare(controlShare: any, roleType) {
+    this.crrRole = roleType;
     if (controlShare) {
       this.callFC.openForm(controlShare, '', 450, 600);
     }

@@ -703,6 +703,10 @@ export class DynamicProcessComponent
   }
 
   editName() {
+    if(!this.processName?.trim()){
+      this.notificationsService.notifyCode('SYS009', 0, 'Tên quy trình');
+      return;
+    }
     this.dpService
       .renameProcess([this.processName, this.processRename['recID']])
       .subscribe((res) => {

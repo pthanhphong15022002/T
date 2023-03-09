@@ -1,3 +1,55 @@
 .chat-popup{
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 }
+
+.chat-list{
+    padding: 8px;
+    overflow: hidden;
+}
+.chat-list-header{
+    max-height: 100px;
+}
+.chat-list-body{
+    max-height: 500px;
+    overflow: hidden;
+}
+.chat-list-header_func{
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+.chat-list-header_func > li {
+    display: inline-block;
+    padding: 8px;
+    font-weight: bolder;
+}
+
+.last-message{
+    width: 50%;
+    display: -webkit-box;
+    -webkit-box-orient: horizontal ;
+    -webkit-line-clamp: 1;
+    text-align: left;
+}
+.dots {
+    height: 6px;
+    width: 6px;
+    background-color: rgb(19, 101, 224);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .row {
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-0.5 * var(--bs-gutter-x));
+    margin-left: calc(-0.5 * var(--bs-gutter-x));
+}
+
+
+
+
+

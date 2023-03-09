@@ -106,10 +106,8 @@ export class ChatListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     // add mesage
-    this.signalRSV.signalChat.subscribe((res: any) => {
-      if (res) 
-      {
-        this.addBoxChat(res.groupID);
+    this.signalRSV.reciverChat.subscribe((res: any) => {
+      if (res.groupID){
         let data = this.codxListViewGroup.dataService.data;
         let _index = data.findIndex(e => e['groupID'] === res.groupID);
         if(_index > -1){
@@ -146,41 +144,20 @@ export class ChatListComponent implements OnInit, AfterViewInit {
         }
       });
   }
-  //click goup chat
-  clickGroupChat(group: any){
-    if(!group.isRead){
-      this.api.execSv(
-        "WP",
-        "ERM.Business.WP",
-        "ChatBusiness",
-        "SeenMessageByGroupAsync",
-        [group.groupID])
-        .subscribe((res:boolean) => group.isRead = res);
-    }
-    this.addBoxChat(group.groupID);
+  
+  //select goup chat
+  selectItem(group: any){
+    group.isRead = true;
+    group.messageMissed = 0;
+    this.signalRSV.sendData(group,"ActiveGroupAsync");
+    this.dt.detectChanges();
   }
-  // click group chat - chat box
-  openChatBox(group: any) {
-    if(group["type"] === "U"){
-      this.api.execSv("WP","ERM.Business.WP","GroupBusiness","GetGroupByUserIDAsync",[group.id,group.name])
-      .subscribe((res:any)=>{
-        if(res[0].groupID){
-          this.addBoxChat(res[0].groupID);
-        }
-      });
-    }
-    else if(group["type"] === "G"){
-      if(!group.isRead){
-        this.api.execSv(
-          "WP",
-          "ERM.Business.WP",
-          "ChatBusiness",
-          "SeenMessageByGroupAsync",
-          [group.groupID])
-          .subscribe();
-        group.isRead = true;
-      }
-      this.addBoxChat(group.groupID);
+
+  // select item search
+  selectItemSeach(item: any) {
+    if(item.type != 'H'){
+      item.type = item.type == 'U' ? '1':'2';
+      this.signalRSV.sendData(item,"GetGroupSearch");
     }
   }
 
@@ -207,12 +184,8 @@ export class ChatListComponent implements OnInit, AfterViewInit {
         option
       );
       popup.closed.subscribe((res: any) => {
-        debugger
         if(res.event){
-          let boxChat = res.event[0];
-          (this.codxListViewGroup.dataService as CRUDService).add(boxChat).subscribe();
-          this.signalRSV.templateChatBox = this.chatBox;
-          this.signalRSV.sendData(boxChat,"ActiveGroupAsync");
+          (this.codxListViewGroup.dataService as CRUDService).add(res.event).subscribe();
         }
         this.isOpen = true;
         this.isOpenChange.emit(this.isOpen);
