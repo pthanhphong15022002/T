@@ -500,6 +500,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let newNo = tabNo;
     let oldNo = this.currentTab;
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
+      //A Thảo Cmt để cho nó chạy nhanh đã
       // if (this.process?.groupID == null || this.process?.groupID.trim() == '') {
       //   this.checkGroup = false;
       //   this.cache.message('DP015').subscribe((res) => {
@@ -618,17 +619,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           });
           return;
         }
-        var checkGroup = this.lstGroup.some(
-          (x) => x.groupID == this.process?.groupID
-        );
-        if (!checkGroup) {
-          this.checkGroup = false;
-          this.cache.message('DP015').subscribe((res) => {
-            if (res) this.errorMessage = res.customName || res.defaultName;
-          });
-        } else {
-          this.checkGroup = true;
-        }
+        //A Thảo Cmt để cho nó chạy nhanh đã
+        // var checkGroup = this.lstGroup.some(
+        //   (x) => x.groupID == this.process?.groupID
+        // );
+        // if (!checkGroup) {
+        //   this.checkGroup = false;
+        //   this.cache.message('DP015').subscribe((res) => {
+        //     if (res) this.errorMessage = res.customName || res.defaultName;
+        //   });
+        // } else {
+        //   this.checkGroup = true;
+        // }
         if (
           !this.process.instanceNoSetting ||
           (this.process.instanceNoSetting &&
