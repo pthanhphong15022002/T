@@ -17,7 +17,7 @@ import { DP_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
 export class ViewJobComponent implements OnInit {
   title = '';
   dialog!: DialogRef;
-  dataInput = {}; //format về như vậy {id,name,startDate,type, roles, durationHour, durationDay,parentID }
+  dataInput = {}; //format về như vậy {recID,name,startDate,type, roles, durationHour, durationDay,parentID }
   type = '';
   listOwner = [];
   listDataInput = [];
