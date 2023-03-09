@@ -350,6 +350,9 @@ export class PopupJobComponent implements OnInit {
         message.push(this.view[key]);
       }
     }
+    if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
+      message.push(this.view['durationDay']);
+    }
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
     } else {
