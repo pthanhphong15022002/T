@@ -485,7 +485,7 @@ export class StagesDetailComponent implements OnInit {
     dialogAssign.closed.subscribe((e) => {})
   }
   //View task
-  viewTask(data?: any) {
+  viewTask(data?: any, type?: string) {
     let listTaskConvert = this.taskList?.map(item => {
       return{
         ...item,
@@ -494,8 +494,8 @@ export class StagesDetailComponent implements OnInit {
       }
     })
     let value = JSON.parse(JSON.stringify(data));
-    value['name'] = value['taskName'];
-    value['type'] = value['taskType'];
+    value['name'] = value['taskName'] || value['taskGroupName'];
+    value['type'] = value['taskType'] || type;
     if (data) {
       this.callfc.openForm(ViewJobComponent, '', 700, 550, '', {
         value: value,
@@ -567,6 +567,9 @@ export class StagesDetailComponent implements OnInit {
       case 'DP08':
         this.groupTaskID = data?.recID;
         this.openTypeTask();
+        break;
+      case 'DP12':
+        this.viewTask(data,'G');
         break;
     }
   }

@@ -1928,7 +1928,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         break;
       case 'DP07':
         this.jobType = task.taskType;
-        this.openPopupViewJob(task);
+        this.viewTask(task);
         break;
     }
   }
@@ -1947,6 +1947,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       case 'DP08':
         this.groupTaskID = data?.recID;
         this.openTypeJob();
+        break;
+      case 'DP12':
+        this.viewTask(data,"G");
         break;
     }
   }
@@ -1985,7 +1988,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           case 'DP07':
             if (type == 'group' || type == 'step') res.disabled = true;
             break;
-          default:
+            case 'DP13':
             res.disabled = true;
         }
       });
@@ -2317,7 +2320,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return formModel;
   }
   //View task
-  async openPopupViewJob(data?: any) {
+  viewTask(data?: any, type?: string) {
     let listTaskConvert = this.taskList?.map(item => {
       return{
         ...item,
@@ -2326,8 +2329,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
     })
     let value = JSON.parse(JSON.stringify(data));
-    value['name'] = value['taskName'];
-    value['type'] = value['taskType'];
+    value['name'] = value['taskName'] || value['taskGroupName'];
+    value['type'] = value['taskType'] || type;
     if (data) {
       this.callfc.openForm(ViewJobComponent, '', 700, 550, '', {
         value: value,
