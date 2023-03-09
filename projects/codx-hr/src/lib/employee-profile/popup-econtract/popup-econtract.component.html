@@ -405,12 +405,96 @@
         [Group]="formGroup"
       ></codx-input>
     </div>
+
+    <div class="extend-function" *ngIf="actionType=='edit' && lstSubContract?.length > 0" >
+      <hr />
+      <div class="d-flex justify-content-center">
+        <div class="d-flex align-items-center w-auto extend-title">
+          <span
+            class="text-primary text-hover-primary_darker fw-bold me-1"
+          >
+            <codx-label
+              default="Phụ lục hợp đồng"
+              name="lblSubContract"
+              [formModel]="formModel"
+            ></codx-label>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex" *ngIf="actionType=='edit' && lstSubContract?.length > 0">
+      <ng-container *ngFor="let item of lstSubContract">
+        <div
+          class="border rounded border-gray-200 min-w-250px mw-400px me-4 mb-4"
+        >
+          
+          <codx-temp-full
+            cardCss="card codx_cardcenter p-3"
+            [imageId]="item.recID"
+            [imageObjType]="'HR_EFamilies'"
+            [imageWidth]="40"
+            [formModel]="formModel"
+            [titleTmp]="titleTmp"
+            [dataItem]="item"
+            [typeMF]="'hover'"
+          >
+          </codx-temp-full>
+          <ng-template #titleTmp let-data>
+            <div class="row">
+              <div class="fw-bold fs-6 text-dark">
+                {{ data.relationName }}
+              </div>
+              <div class="d-flex align-items-center mb-1">
+                <span class="fw-bold">{{
+                  item.relationType | vll : "HR006" : "text" | async
+                }}</span>
+                <span class="text-gray-400 mx-2">|</span>
+                <span class="d-flex align-items-center">
+                  <codx-label
+                    class="text-gray-600 label-colon me-2"
+                    fiedName="Birthday"
+                    [formModel]="formModel"
+                  >
+                  </codx-label>
+                  <span class="text-dark">
+                    {{ item.birthday | fmDT }}</span
+                  >
+                </span>
+              </div>
+
+              <div
+                class="d-flex align-items-center mb-1"
+                *ngIf="data.isDependent"
+              >
+                <span
+                  class="icon-check icon-16 me-2 text-success"
+                ></span
+                >Phụ thuộc giảm trừ gia cảnh
+              </div>
+              <div
+                class="d-flex align-items-center"
+                *ngIf="data.isEmergency"
+              >
+                <span
+                  class="icon-check icon-16 me-2 text-danger"
+                ></span
+                >Liên hệ khẩn cấp: {{ data.mobile }}
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </ng-container>
+    </div>
+
+
   </ng-template>
 </codx-form>
 
 <ng-template #footer>
-  <div class="d-flex justify-content-between">
+  <div class="d-flex" [ngClass]="actionType == 'edit' ? 'justify-content-between' : 'justify-content-end'">
     <button
+      *ngIf="actionType == 'edit'"
       class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
       (click)="handleSubContract('', 'add', null)"
     >

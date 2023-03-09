@@ -17,24 +17,13 @@ import { DP_Steps_Tasks } from 'projects/codx-dp/src/lib/models/models';
 export class ViewJobComponent implements OnInit {
   title = '';
   dialog!: DialogRef;
-  stepsTasks: DP_Steps_Tasks;
-  taskType = '';
+  dataInput = {}; //format về như vậy {recID,name,startDate,type, roles, durationHour, durationDay,parentID }
+  type = '';
   listOwner = [];
-  taskList: DP_Steps_Tasks[] = [];
-  taskListConnect: DP_Steps_Tasks[] = [];
+  listDataInput = [];
   listTypeTask = [];
-  files: any[] = [];
-  fileMedias: any[] = [];
-  fileDocuments: any[] = [];
-  filesDelete: any[] = [];
-  filesAdd: any[] = [];
-  size: number = 0;
-  medias = 0;
-  FILE_REFERTYPE = {
-    IMAGE: 'image',
-    VIDEO: 'video',
-    APPLICATION: 'application',
-  };
+  listDataLink = [];
+
   frmModel: FormModel = {};
   constructor(
     private cache: CacheService,
@@ -44,26 +33,33 @@ export class ViewJobComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.taskType = dt?.data?.step?.taskType;
-    this.stepsTasks = dt?.data?.step;
-    this.taskList = dt?.data?.listStep;
+    this.type = dt?.data?.value?.type;
+    this.dataInput = dt?.data?.value;
+    this.listDataInput = dt?.data?.listValue;
     this. getModeFunction();
   }
 
   ngOnInit(): void {
-    this.listOwner = this.stepsTasks?.roles || [];
-    if (this.stepsTasks?.parentID) {
-      this.taskList.forEach((task) => {
-        if (this.stepsTasks?.parentID.includes(task.recID)) {
-          this.taskListConnect.push(task);
+    this.listOwner = this.dataInput['roles'] || [];
+    if (this.dataInput['parentID']) {
+      this.listDataInput?.forEach((task) => {
+        if (this.dataInput['parentID']?.includes(task.recID)) {
+          this.listDataLink.push(task);
         }
       });
     }
-    this.getFileByObjectID('test');
-    this.cache.valueList('DP004').subscribe((res) => {
+    if(this.dataInput['type'] == 'G'){
+      this.listDataLink = this.listDataInput?.filter(data => data['taskGroupID'] && data['taskGroupID'] == this.dataInput['recID'])
+      this.listDataInput?.forEach((task) => {
+        if (this.dataInput['parentID']?.includes(task.recID)) {
+          this.listDataLink.push(task);
+        }
+      });
+    }
+    this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;
-        let type = res.datas.find((x) => x.value === this.taskType);
+        let type = res.datas.find((x) => x.value === this.type);
         this.title = type['text'];
       }
     });
@@ -81,36 +77,18 @@ export class ViewJobComponent implements OnInit {
     });
   }
 
-  getFileByObjectID(objectID: string) {
-    if (objectID) {
-      this.api
-        .execSv(
-          'DM',
-          'ERM.Business.DM',
-          'FileBussiness',
-          'GetFilesByIbjectIDAsync',
-          [this.stepsTasks?.recID]
-        )
-        .subscribe((res: any[]) => {
-          if (Array.isArray(res) && res.length > 0) {
-            this.files = JSON.parse(JSON.stringify(res));
-          }
-        });
-    }
-  }
 
   getIconTask(task) {
-    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    let color = this.listTypeTask?.find((x) => x.value === task.type);
     return color?.icon;
   }
 
   getColor(task) {
-    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    let color = this.listTypeTask?.find((x) => x.value === task.type);
     return { 'background-color': color?.color };
   }
   getColorTile(task) {
-    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    let color = this.listTypeTask?.find((x) => x.value === task.type);
     return { 'border-left': '3px solid'+ color?.color};
   }
-
 }
