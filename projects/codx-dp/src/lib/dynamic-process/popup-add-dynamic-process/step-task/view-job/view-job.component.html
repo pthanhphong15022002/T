@@ -89,7 +89,7 @@
 
     <hr />
 
-    <div class="d-flex justify-content-start align-items-center">
+    <div class="d-flex justify-content-start align-items-center" *ngIf="type!== 'G'">
       <codx-label
         class="h4 font-weight-400 me-3"
         fiedName="memo"
@@ -116,7 +116,7 @@
         </codx-attachment>
       </div>
     </div>
-    <hr />
+    <hr *ngIf="type!== 'G'" />
 
     <div>
       <codx-label
