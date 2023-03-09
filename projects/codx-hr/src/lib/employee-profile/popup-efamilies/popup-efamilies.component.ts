@@ -16,6 +16,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  ImageViewerComponent,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
@@ -27,6 +28,7 @@ import { CalendarView } from '@syncfusion/ej2-angular-calendars';
   styleUrls: ['./popup-efamilies.component.css'],
 })
 export class PopupEFamiliesComponent extends UIComponent implements OnInit {
+  @ViewChild('imageUpLoad') imageUpLoad: ImageViewerComponent;
   start: CalendarView = 'Year';
   depth: CalendarView = 'Year';
   format: string = 'MM/yyyy';
@@ -59,22 +61,15 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    // this.lstFamilyMembers = data?.data?.lstFamilyMembers;
-    // this.indexSelected =
-    //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
     this.dialog = dialog;
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
     this.actionType = data?.data?.actionType;
-    this.familyMemberObj = JSON.parse(JSON.stringify(data?.data?.familyMemberObj));
+    this.familyMemberObj = JSON.parse(
+      JSON.stringify(data?.data?.familyMemberObj)
+    );
     this.formModel = dialog?.FormModel;
-
-    // if (this.actionType == 'edit' || this.actionType == 'copy') {
-    //   this.familyMemberObj = JSON.parse(
-    //     JSON.stringify(this.lstFamilyMembers[this.indexSelected])
-    //   );
-    // }
   }
 
   initForm() {
@@ -157,18 +152,16 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
         .AddEmployeeFamilyInfo(this.familyMemberObj)
         .subscribe((p) => {
           if (p != null) {
-            // this.familyMemberObj.recID = p.recID;
             this.notify.notifyCode('SYS006');
-            // this.lstFamilyMembers.push(
-            //   JSON.parse(JSON.stringify(this.familyMemberObj))
-            // );
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService)
-            //     .add(this.familyMemberObj)
-            //     .subscribe();
-            // }
-            // this.dialog.close(p)
-            this.dialog && this.dialog.close(p);
+            if (this.imageUpLoad?.imageUpload?.item) {
+              this.imageUpLoad
+                .updateFileDirectReload(this.familyMemberObj.recID)
+                .subscribe((img) => {
+                  this.dialog && this.dialog.close(p);
+                });
+            } else {
+              this.dialog && this.dialog.close(p);
+            }
           } else this.notify.notifyCode('SYS023');
         });
     } else {
@@ -176,16 +169,26 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
         .UpdateEmployeeFamilyInfo(this.formModel.currentData)
         .subscribe((p) => {
           if (p != null) {
+            if (this.imageUpLoad?.imageUpload?.item) {
+              this.imageUpLoad
+                .updateFileDirectReload(this.familyMemberObj.recID)
+                .subscribe((img) => {
+                  this.dialog && this.dialog.close(p);
+                });
+            } else {
+              this.dialog && this.dialog.close(p);
+            }
             this.notify.notifyCode('SYS007');
-            // this.lstFamilyMembers[this.indexSelected] = p;
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService)
-            //     .update(this.lstFamilyMembers[this.indexSelected])
-            //     .subscribe();
-            // }
-            this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS021');
         });
+    }
+  }
+
+  saveImageUpload() {}
+
+  changeAvatar(event: any) {
+    if (event) {
+      this.familyMemberObj['modifiedOn'] = new Date();
     }
   }
 
