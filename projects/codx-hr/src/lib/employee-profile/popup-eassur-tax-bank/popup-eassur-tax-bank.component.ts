@@ -68,7 +68,7 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
     this.hrService
       .saveEmployeeSelfInfo(this.data)
       .subscribe((p) => {
-        if ((p = !null)) {
+        if (p != null) {
           this.notify.notifyCode('SYS007');
           this.dialog && this.dialog.close(p);
         } else this.notify.notifyCode('SYS021');

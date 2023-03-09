@@ -40,7 +40,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
   validate: any = 0;
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
-    { icon: 'icon-playlist_add_check', text: 'Thiết lập', name: 'Establish' },
+    { icon: 'icon-rule', text: 'Thiết lập', name: 'Establish' },
   ];
   constructor(
     private inject: Injector,

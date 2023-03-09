@@ -28,7 +28,6 @@ import { BookingService } from '../../../services/booking.services';
   styleUrls: ['./popup-request-stationery.component.scss'],
 })
 export class PopupRequestStationeryComponent extends UIComponent {
-  @ViewChild('view') override view: ViewsComponent;
   @ViewChild('status') status: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('stepAppr') stepAppr: ApprovalStepComponent;

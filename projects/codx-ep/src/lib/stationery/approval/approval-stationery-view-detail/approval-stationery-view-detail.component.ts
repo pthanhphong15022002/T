@@ -31,7 +31,6 @@ export class ApprovalStationeryViewDetailComponent
   @Output('undo') undo: EventEmitter<any> = new EventEmitter();
   @Input() funcID;
   @Input() formModel;
-  @Input() override view: ViewsComponent;
   @Input() hideMF = false;
   @Input() hideFooter = false;
   itemDetailDataStt: any;
@@ -104,7 +103,7 @@ export class ApprovalStationeryViewDetailComponent
       case 'EPT40302':
         {
           //alert('Từ chối');
-          this.approve.emit(datas);
+          this.reject.emit(datas);
         }
         break;
       case 'EPT40306':
@@ -115,39 +114,7 @@ export class ApprovalStationeryViewDetailComponent
         break;
     }
   }
-  // undo(data: any) {
-  //   this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
-  //       if (res != null) {
 
-  //         this.notificationsService.notifyCode('SYS034'); //đã thu hồi
-  //         data.approveStatus = '3';
-  //         data.status = '3';
-  //         this.updateStatus.emit(data);
-  //       } else {
-  //         this.notificationsService.notifyCode(res?.msgCodeError);
-  //       }
-  //     });
-  // }
-  // approve(data: any) {
-  //   this.codxEpService
-  //     .approve(
-  //       data?.approvalTransRecID, //ApprovelTrans.RecID
-  //       '5',
-  //       '',
-  //       ''
-  //     )
-  //     .subscribe(async (res: any) => {
-  //       if (res?.msgCodeError == null && res?.rowCount >= 0) {
-
-  //           this.notificationsService.notifyCode('SYS034'); //đã duyệt
-  //           data.approveStatus = '5';
-
-  //         this.updateStatus.emit(data);
-  //       } else {
-  //         this.notificationsService.notifyCode(res?.msgCodeError);
-  //       }
-  //     });
-  // }
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
       event.forEach((func) => {
@@ -188,8 +155,6 @@ export class ApprovalStationeryViewDetailComponent
       }
     }
   }
-
-  getDetailBooking(id: string) {}
 
   private setHeight() {
     let main,

@@ -77,8 +77,8 @@
 
         .list-stage {
           display: flex;
-          align-items: center;
-          padding: 0 10px;
+          align-items: start;
+          padding: 8px 4px;
         }
 
         .list-stage:hover {
@@ -285,15 +285,17 @@
 }
 
 .order {
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
-  background: var(--primary-lighter);
+  margin-right: 10px;
+  background: var(--primary);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--primary-inverse);
 }
 
 .icon-container {
@@ -322,8 +324,8 @@
   cursor: grab;
 }
 
-.card-job:hover {
-border-top: 1px yellow solid;
+.card-job {
+border-bottom: 1px var(--gray-100) solid;
 }
 codx-attachment{
   font-size: 12px !important;
@@ -332,9 +334,9 @@ codx-attachment{
 
 //Thao css
 .class-field>.crr-fiels:hover {
-  box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
-  border-radius: 5px;
-  background-color: #f0f8ff;
+  //box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
+  border-radius: 3px;
+  background-color: var(--primary-lighter);
 }
 
 .action-menu-od {
