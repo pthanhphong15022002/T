@@ -500,25 +500,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let newNo = tabNo;
     let oldNo = this.currentTab;
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
-      if (this.process?.groupID == null || this.process?.groupID.trim() == '') {
-        this.checkGroup = false;
-        this.cache.message('DP015').subscribe((res) => {
-          if (res) this.errorMessage = res.customName || res.defaultName;
-        });
-        return;
-      }
-      var checkGroup = this.lstGroup.some(
-        (x) => x.groupID == this.process?.groupID
-      );
-      if (!checkGroup) {
-        this.checkGroup = false;
-        this.cache.message('DP015').subscribe((res) => {
-          if (res) this.errorMessage = res.customName || res.defaultName;
-        });
-        return;
-      } else {
-        this.checkGroup = true;
-      }
+      // if (this.process?.groupID == null || this.process?.groupID.trim() == '') {
+      //   this.checkGroup = false;
+      //   this.cache.message('DP015').subscribe((res) => {
+      //     if (res) this.errorMessage = res.customName || res.defaultName;
+      //   });
+      //   return;
+      // }
+      // var checkGroup = this.lstGroup.some(
+      //   (x) => x.groupID == this.process?.groupID
+      // );
+      // if (!checkGroup) {
+      //   this.checkGroup = false;
+      //   this.cache.message('DP015').subscribe((res) => {
+      //     if (res) this.errorMessage = res.customName || res.defaultName;
+      //   });
+      //   return;
+      // } else {
+      //   this.checkGroup = true;
+      // }
       if (
         this.process?.processName == null ||
         this.process?.processName.trim() == ''
