@@ -77,8 +77,8 @@
 
         .list-stage {
           display: flex;
-          align-items: center;
-          padding: 0 10px;
+          align-items: start;
+          padding: 10px 10px 10px 2px;
         }
 
         .list-stage:hover {
@@ -285,15 +285,17 @@
 }
 
 .order {
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
-  background: var(--primary-lighter);
+  margin-right: 10px;
+  background: var(--primary);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--primary-inverse);
 }
 
 .icon-container {
