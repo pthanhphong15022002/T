@@ -2318,16 +2318,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //View task
   async openPopupViewJob(data?: any) {
+    let listTaskConvert = this.taskList?.map(item => {
+      return{
+        ...item,
+        name: item?.taskName,
+        type: item?.taskType,
+      }
+    })
+    let value = JSON.parse(JSON.stringify(data));
+    value['name'] = value['taskName'];
+    value['type'] = value['taskType'];
     if (data) {
-      this.callfc.openForm(
-        ViewJobComponent,
-        '',
-        700,
-        550,
-        '',
-        {step: data, listStep: this.taskList}
-      );
-    }    
+      this.callfc.openForm(ViewJobComponent, '', 700, 550, '', {
+        value: value,
+        listValue: listTaskConvert,
+      });
+    }
   }
 
   getIconTask(task) {
