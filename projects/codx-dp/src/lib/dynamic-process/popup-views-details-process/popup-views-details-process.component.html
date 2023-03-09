@@ -94,6 +94,7 @@
             <codx-instances
               [process]="process"
               [isCreate]="isCreate"
+              (valueListID)="valueList($event)"
             ></codx-instances>
           </ng-container>
           <ng-container *ngIf="name == 'Dashboard'">

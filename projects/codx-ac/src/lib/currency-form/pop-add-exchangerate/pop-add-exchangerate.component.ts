@@ -120,6 +120,11 @@ export class PopAddExchangerateComponent extends UIComponent implements OnInit {
         'dataexchangeRate',
         JSON.stringify(this.exchangerate)
       );
+      if (this.type == 'edit') {
+        this.notification.notifyCode('SYS007', 0, '');
+      }else{
+        this.notification.notifyCode('SYS006', 0, '');
+      }
       this.dialog.close();
     }
   }
@@ -134,6 +139,7 @@ export class PopAddExchangerateComponent extends UIComponent implements OnInit {
         this.validate++;
         return;
       }
+      this.notification.notifyCode('SYS006', 0, '');
       this.objectExchange.push({ ...this.exchangerate });
       this.clearExchangerate();
     }

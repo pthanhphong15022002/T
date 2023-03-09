@@ -48,11 +48,15 @@ export class PopupAddGroupComponent implements OnInit,AfterViewInit {
     
   }
   ngAfterViewInit(): void {
-    this.signalRSV.signalGroup.subscribe((res:any)=>{
+    this.signalRSV.newGroup.subscribe((res:any)=>{
       if(res)
         this.codxImg.updateFileDirectReload(res.groupID).subscribe((res2:any) => {
-          this.notifiSV.notify("Tạo nhóm chat thành công");
-          this.dialogRef.close(res);
+          if(res2){
+            this.notifiSV.notify("Tạo nhóm chat thành công");
+            // open box chat to all connection
+            this.signalRSV.sendData(res,"ActiveNewGroup");
+            this.dialogRef.close(res);
+          }
         });
       else
       {

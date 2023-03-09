@@ -160,18 +160,20 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     }
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
-      this.data.contractTypeID = '1';
-
-      this.hrSevice.addEContract(this.data).subscribe((res) => {
-        if (res) {
+      this.hrSevice.validateBeforeSaveContract(this.data, true).subscribe((res) => {
+        console.log('result', res);
+        if (res && res[0]) {
           //code test
-
+          this.notify.notifyCode('SYS006');
+          this.dialog && this.dialog.close(res);
           this.data = res;
         }
       });
     } else if (this.actionType == 'edit') {
       this.hrSevice.editEContract(this.data).subscribe((res) => {
-        if (res) {
+        if (res && res[0]) {
+          this.notify.notifyCode('SYS007');
+          this.dialog && this.dialog.close(res);
         }
       });
     }

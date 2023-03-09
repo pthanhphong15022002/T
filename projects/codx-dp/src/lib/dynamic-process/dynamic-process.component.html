@@ -90,10 +90,13 @@
         <div class="footerCard-item">
           <div class="d-flex justify-content-start mt-1">
             <div class="me-2 mt-1">
-              <span class="icon-server icon-14 ">&nbsp;{{totalSteps(data)}}</span>
+              <span class="icon-server icon-14 " #steps="ngbPopover" [ngbPopover]="popperSteps"
+              [openDelay]="500" (mouseenter)="steps.open()" (mouseleave)="steps.close()" placement="right">&nbsp;{{totalSteps(data)}}</span>
             </div>
             <div class="me-2 mt-1">
-              <span class="icon-format_list_bulleted icon-14">&nbsp;{{data?.totalInstance}}</span>
+              <span class="icon-format_list_bulleted icon-14"  #instances="ngbPopover"
+              [ngbPopover]="popperInstances" [openDelay]="500" (mouseenter)="instances.open()"
+              (mouseleave)="instances.close()" placement="right ">&nbsp;{{data?.totalInstance}}</span>
             </div>
             <div class="ms-auto">
               <codx-imgs
@@ -146,20 +149,18 @@
 
 <ng-template #editNameFooter>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-outline-primary me-5">
+    <button type="button" class="btn btn-outline-primary me-5" (click)="popupEditName.close()">
       <codx-label
-        name="Save"
-        formName="Tasks"
+        fiedName="lblCancel"
+        [formModel]="view.formModel"
         default="Hủy"
-        (click)="popupEditName.close()"
       ></codx-label>
     </button>
-    <button type="button" class="btn btn-primary">
+    <button type="button" class="btn btn-primary"  (click)="editName()">
       <codx-label
-        name="Save"
-        formName="Tasks"
+        name=" lblSuscess"
+        [formModel]="view.formModel"
         default="Đồng ý"
-        (click)="editName()"
       ></codx-label>
     </button>
   </div>
@@ -260,4 +261,18 @@
   <button type="button" class="btn btn-primary" (click)="saveCopy()">
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
+</ng-template>
+
+
+<ng-template #popperSteps>
+  <span>
+    <codx-label name="lblSteps" [formModel]="view.formModel" default="Số lượng
+      giai đoạn"></codx-label>
+  </span>
+</ng-template>
+<ng-template #popperInstances>
+  <span>
+    <codx-label name="lblInstances" [formModel]="view.formModel" default="Số
+      lượng nhiệm vụ"></codx-label>
+  </span>
 </ng-template>

@@ -131,8 +131,6 @@ export class PopupEBasicSalariesComponent
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS006');
-            console.log(p);
-            debugger;
             this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS023');
         });
@@ -142,8 +140,6 @@ export class PopupEBasicSalariesComponent
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
-            console.log(p);
-            debugger;
             this.dialog && this.dialog.close(p);
           } else this.notify.notifyCode('SYS021');
         });

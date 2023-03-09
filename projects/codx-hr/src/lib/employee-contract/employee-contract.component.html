@@ -1,50 +1,145 @@
 <codx-views
-    #view
-    [funcID]="funcID"
-    service="HR" 
-    assemblyName="ERM.Business.HR" 
-    entityName="HR_EContracts"
-    className="EContractsBusiness" 
-    [method]="method"
-    [views]="views"
-    [autoLoad]="true"
-    idField="recID"
-    [button]="buttonAdd"
-    (onActions)="HandleAction($event)"
+  #view
+  [funcID]="funcID"
+  service="HR"
+  assemblyName="ERM.Business.HR"
+  entityName="HR_EContracts"
+  className="EContractsBusiness"
+  [method]="method"
+  [views]="views"
+  [autoLoad]="true"
+  idField="recID"
+  [button]="buttonAdd"
+  (buttonClick)="addContract($event)"
+  (onActions)="HandleAction($event)"
 >
 </codx-views>
 
 <ng-template #templateList let-data>
-    <codx-temp-full
-    cardCss="card codx_cardcenter p-3"
-    [imageId]="data.employee.recID"
-    [imageObjType]="'HR_EFamilies'"
-    [imageWidth]="40"
-    [formModel]="view.formModel"
-    [titleTmp]="titleTmp"
-    [dataItem]="data"
-  >
-  </codx-temp-full>
+  <div class="d-flex align-items-center min-h-100px">
+    <div class="w-25">
+      <div class="d-flex align-items-start">
+        <span
+        *ngIf="data.isCurrent == true"
+          class="bullet bullet-vertical d-flex align-items-center min-h-100px me-3 bg-primary"
+        >
+        </span>
+        <div class="d-flex flex-column">
+          <codx-img
+            [width]="35"
+            class="me-3"
+            [objectId]="data.emp.domainUser"
+            [referType]="'avt'"
+            [objectName]="data.emp.employeeName"
+            [objectType]="'AD_Users'"
+          >
+          </codx-img>
+          <codx-vll
+          class="badge badge-sm"
+          [name]="'HR001'"
+          [value]="data.emp.gender"
+          [showText]="true"
+          [showBgColor]="true"
+        >
+        </codx-vll>
+        </div>
+        <div class="d-flex flex-column">
+          <div>
+            <div class="text-dark fw-bold">
+              <span>
+                {{ data.emp.employeeName }}
+              </span>
+              <i class="icon-accessibility"></i>
+              <span>
+                {{ data.emp.employeeID }}
+              </span>
+            </div>
 
-  <codx-temp-full
-  [dataItem]="data"
-  [formModel]="view.formModel"
-  [footer]="footerBenefit"
-  cardCss="card codx_cardcenter px-2 pt-4 pb-2"
->
-</codx-temp-full>
+          </div>
+          <div class="text-gray-700">
+            <span>{{ data.positionID }}</span>
+          </div>
+
+          <div class="text-gray-700">
+            <span>{{ data.orgUnitID }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-25">
+      <div class="d-flex flex-column">
+        <div class="text-gray-700">
+          <span>{{ data.contractTypeID | formatvalue : view.formModel : "contractTypeID" | async}}</span>
+        </div>
+
+        <div class="text-gray-700">
+          <span>{{ data.effectedDate | fmDT }}</span>
+          <span> - </span>
+          <span>{{ data.expiredDate | fmDT }}</span>
+        </div>
+
+        <div class="text-gray-700">
+          <span>{{ data.contractNo}}</span>
+          <span> - </span>
+          <span>{{ data.signedDate | fmDT }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-25">
+      <codx-attachment #attachment [objectId]="data.recID" [objectType]="view.formModel.entityName" hideFolder="1"
+      hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
+      [formModel]="view.formModel" 
+      displayThumb="full" showMessage="0">
+    </codx-attachment>
+    </div>
+
+    <div class="w-25">
+      {{ data.signStatus | formatvalue : view.formModel : "signStatus" | async}}
+    </div>
+
+    <codx-mfunc
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      [dataItem]="data"
+      type="hover"
+    >
+    </codx-mfunc>
+  </div>
 </ng-template>
-
 
 <ng-template #headerTemplate let-data>
-    <div>Nhân viên</div>
-    <div>Hợp đồng</div>
-    <div>Đính kèm</div>
-    <div>Tình trạng</div>
+  <div class="w-25">Nhân viên</div>
+  <div class="w-25">Hợp đồng</div>
+  <div class="w-25">Đính kèm</div>
+  <div class="w-25">Tình trạng</div>
 </ng-template>
 
-<ng-template #footerBenefit let-data>
-    <!-- <div class="d-flex align-items-center mt-1">
+<ng-template #eInfoTemplate let-data>
+  <div class="row">
+    <div class="fw-bold fs-6 text-dark">
+      {{ data.emp.employeeName }}
+    </div>
+
+    <div class="fw-bold fs-6 text-dark">
+      {{ data.emp.employeeName }}
+    </div>
+
+    <div class="fw-bold fs-6 text-dark">
+      {{ data.emp.employeeName }}
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #contractTemplate let-data>
+  <div>
+    <div>data.contractTypeID</div>
+    <div>data.effectedDate</div>
+    <div>data.signedDate</div>
+  </div>
+
+  <!-- <div class="d-flex align-items-center mt-1">
       <span
         class="icon-i-plus-circle text-success icon-12 text-gray-600 pe-2"
       ></span
@@ -77,48 +172,4 @@
       -
       {{ data.expiredDate | fmDT }}
     </div> -->
-  </ng-template>
-
-<ng-template #titleTmp let-data>
-    <!-- <div class="row">
-      <div class="fw-bold fs-6 text-dark">
-        {{ data.relationName }}
-      </div>
-      <div class="d-flex align-items-center mb-1">
-        <span class="fw-bold">{{
-          item.relationType | vll : "HR006" : "text" | async
-        }}</span>
-        <span class="text-gray-400 mx-2">|</span>
-        <span class="d-flex align-items-center">
-          <codx-label
-            class="text-gray-600 label-colon me-2"
-            fiedName="Birthday"
-            [formModel]="eFamilyFormModel"
-          >
-          </codx-label>
-          <span class="text-dark">
-            {{ item.birthday | fmDT }}</span
-          >
-        </span>
-      </div>
-
-      <div
-        class="d-flex align-items-center mb-1"
-        *ngIf="data.isDependent"
-      >
-        <span
-          class="icon-check icon-16 me-2 text-success"
-        ></span
-        >Phụ thuộc giảm trừ gia cảnh
-      </div>
-      <div
-        class="d-flex align-items-center"
-        *ngIf="data.isEmergency"
-      >
-        <span
-          class="icon-check icon-16 me-2 text-danger"
-        ></span
-        >Liên hệ khẩn cấp: {{ data.mobile }}
-      </div>
-    </div> -->
-  </ng-template>
+</ng-template>

@@ -73,8 +73,11 @@ export class CurrencyFormComponent extends UIComponent {
     };
   }
   ngAfterViewInit(): void {
-    this.cache.functionList(this.view.funcID).subscribe((res) => {
-      if (res) this.funcName = res.defaultName;
+    this.cache.moreFunction('Currencies', 'grvCurrencies').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20800');
+        if (m) this.funcName = m.defaultName;
+      }
     });
     this.views = [
       {

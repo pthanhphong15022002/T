@@ -21,7 +21,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { PopupJobComponent } from './step-task/popup-job/popup-job.component';
+import { PopupJobComponent } from './step-task/popup-step-task/popup-step-task.component';
 import {
   DialogData,
   DialogRef,
@@ -50,7 +50,7 @@ import {
 import { format } from 'path';
 import { FormGroup } from '@angular/forms';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
-import { ViewJobComponent } from './step-task/view-job/view-job.component';
+import { ViewJobComponent } from './step-task/view-step-task/view-step-task.component';
 import { PopupTypeTaskComponent } from './step-task/popup-type-task/popup-type-task.component';
 import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-group.component';
 import { paste } from '@syncfusion/ej2-angular-richtexteditor';
@@ -500,25 +500,26 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let newNo = tabNo;
     let oldNo = this.currentTab;
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
-      if (this.process?.groupID == null || this.process?.groupID.trim() == '') {
-        this.checkGroup = false;
-        this.cache.message('DP015').subscribe((res) => {
-          if (res) this.errorMessage = res.customName || res.defaultName;
-        });
-        return;
-      }
-      var checkGroup = this.lstGroup.some(
-        (x) => x.groupID == this.process?.groupID
-      );
-      if (!checkGroup) {
-        this.checkGroup = false;
-        this.cache.message('DP015').subscribe((res) => {
-          if (res) this.errorMessage = res.customName || res.defaultName;
-        });
-        return;
-      } else {
-        this.checkGroup = true;
-      }
+      //A Thảo Cmt để cho nó chạy nhanh đã
+      // if (this.process?.groupID == null || this.process?.groupID.trim() == '') {
+      //   this.checkGroup = false;
+      //   this.cache.message('DP015').subscribe((res) => {
+      //     if (res) this.errorMessage = res.customName || res.defaultName;
+      //   });
+      //   return;
+      // }
+      // var checkGroup = this.lstGroup.some(
+      //   (x) => x.groupID == this.process?.groupID
+      // );
+      // if (!checkGroup) {
+      //   this.checkGroup = false;
+      //   this.cache.message('DP015').subscribe((res) => {
+      //     if (res) this.errorMessage = res.customName || res.defaultName;
+      //   });
+      //   return;
+      // } else {
+      //   this.checkGroup = true;
+      // }
       if (
         this.process?.processName == null ||
         this.process?.processName.trim() == ''
@@ -618,17 +619,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           });
           return;
         }
-        var checkGroup = this.lstGroup.some(
-          (x) => x.groupID == this.process?.groupID
-        );
-        if (!checkGroup) {
-          this.checkGroup = false;
-          this.cache.message('DP015').subscribe((res) => {
-            if (res) this.errorMessage = res.customName || res.defaultName;
-          });
-        } else {
-          this.checkGroup = true;
-        }
+        //A Thảo Cmt để cho nó chạy nhanh đã
+        // var checkGroup = this.lstGroup.some(
+        //   (x) => x.groupID == this.process?.groupID
+        // );
+        // if (!checkGroup) {
+        //   this.checkGroup = false;
+        //   this.cache.message('DP015').subscribe((res) => {
+        //     if (res) this.errorMessage = res.customName || res.defaultName;
+        //   });
+        // } else {
+        //   this.checkGroup = true;
+        // }
         if (
           !this.process.instanceNoSetting ||
           (this.process.instanceNoSetting &&
@@ -1833,7 +1835,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
         dialog.closed.subscribe((e) => {
           if (e?.event) {
-            this.groupTaskID = null;
             let taskData = e?.event?.data;
             if (e.event?.status === 'add' || e.event?.status === 'copy') {
               let index = this.taskGroupList.findIndex(
@@ -1863,6 +1864,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             }
           }
         });
+        this.groupTaskID = null;
       });
     });
   }
@@ -1926,7 +1928,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         break;
       case 'DP07':
         this.jobType = task.taskType;
-        this.openPopupViewJob(task);
+        this.viewTask(task);
         break;
     }
   }
@@ -1945,6 +1947,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       case 'DP08':
         this.groupTaskID = data?.recID;
         this.openTypeJob();
+        break;
+      case 'DP12':
+        this.viewTask(data,"G");
         break;
     }
   }
@@ -1983,7 +1988,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           case 'DP07':
             if (type == 'group' || type == 'step') res.disabled = true;
             break;
-          default:
+            case 'DP13':
             res.disabled = true;
         }
       });
@@ -2315,17 +2320,23 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return formModel;
   }
   //View task
-  async openPopupViewJob(data?: any) {
+  viewTask(data?: any, type?: string) {
+    let listTaskConvert = this.taskList?.map(item => {
+      return{
+        ...item,
+        name: item?.taskName,
+        type: item?.taskType,
+      }
+    })
+    let value = JSON.parse(JSON.stringify(data));
+    value['name'] = value['taskName'] || value['taskGroupName'];
+    value['type'] = value['taskType'] || type;
     if (data) {
-      this.callfc.openForm(
-        ViewJobComponent,
-        '',
-        700,
-        550,
-        '',
-        {step: data, listStep: this.taskList}
-      );
-    }    
+      this.callfc.openForm(ViewJobComponent, '', 700, 550, '', {
+        value: value,
+        listValue: listTaskConvert,
+      });
+    }
   }
 
   getIconTask(task) {
