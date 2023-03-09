@@ -80,7 +80,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTasksService,
-    private callFC : CallFuncService,
+    private callFC: CallFuncService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -301,6 +301,14 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('TM027');
       return;
     }
+    if (!this.task.taskGroupID && this.gridViewSetup['TaskGroupID'].isRequire) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        this.gridViewSetup['TaskGroupID'].headerText
+      );
+      return;
+    }
     if (this.task.assignTo == null || this.task.assignTo == '') {
       this.notiService.notifyCode('TM011');
       return;
@@ -375,13 +383,13 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         this.listTodo,
         taskIDParent,
         this.formModel.entityName,
-        this.formModel.funcID
+        this.formModel.funcID,
       ])
       .subscribe((res) => {
         if (res && res[0]) {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
-        
+
           //send mail FE
           // if (this.param?.ConfirmControl == '1')
           //   this.tmSv
@@ -393,7 +401,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           //     .subscribe();
 
           //lưu his giao việc da chuyen vao BE -Thao chuyen - 22/2/2023
-         // var taskParent = res[1][0];
+          // var taskParent = res[1][0];
           // var objectType = this.formModel.entityName;
           // var objectID = this.task.refID;
           // this.api
@@ -506,7 +514,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     var listUserID = '';
     var listPositionID = '';
     var listEmployeeID = '';
-    if(!e && e?.length==0) return
+    if (!e && e?.length == 0) return;
     e.forEach((obj) => {
       if (obj.objectType && obj.id) {
         switch (obj.objectType) {
@@ -618,7 +626,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
             taskResource.resourceName = emp?.userName;
             taskResource.positionName = emp?.positionName;
             taskResource.departmentName = emp?.departmentName;
-            taskResource.roleType = this.crrRole??'R';
+            taskResource.roleType = this.crrRole ?? 'R';
             this.listTaskResources.push(taskResource);
           }
 
@@ -926,8 +934,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       });
   }
   //open control share
-  openControlShare(controlShare: any,roleType) {
-    this.crrRole = roleType
+  openControlShare(controlShare: any, roleType) {
+    this.crrRole = roleType;
     if (controlShare) {
       this.callFC.openForm(controlShare, '', 450, 600);
     }

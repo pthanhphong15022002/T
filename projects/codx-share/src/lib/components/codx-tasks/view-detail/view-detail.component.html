@@ -350,6 +350,7 @@
                     class="label-colon"
                     name="lblTaskGroupName"
                     formName="Tasks"
+                    gridViewName="grvTasks"
                     default="Nhóm công việc"
                   >
                   </codx-label>
@@ -567,10 +568,19 @@
       <ng-container *ngIf="!taskExtends">
         <div class="mt-2 mb-3 text-primary fw-bold">
           <codx-label
-            fiedName="AssignTo"
+            *ngIf="itemSelected?.category != '2'"
+            fiedName="Owner"
             formName="Tasks"
             gridViewName="grvTasks"
             default="Người thực hiện"
+          >
+          </codx-label>
+          <codx-label
+            *ngIf="itemSelected?.category == '2'"
+            name="Combination"
+            formName="Tasks"
+            gridViewName="grvTasks"
+            default="Người phối hợp"
           >
           </codx-label>
         </div>
@@ -603,10 +613,10 @@
             </codx-imgs>
           </div>
           <div
-            id="{{itemSelected.taskID}}"
+            id="{{ itemSelected.taskID }}"
             *ngIf="itemSelected.category == '2' || itemSelected.category == '3'"
             class="d-flex"
-            (mouseenter)="popoverEmpList(popoverCategory2,itemSelected)"
+            (mouseenter)="popoverEmpList(popoverCategory2, itemSelected)"
             (mouseleave)="popoverEmpList(null)"
             popoverClass="taskPopoverClass"
             [ngbPopover]="popEmpList"

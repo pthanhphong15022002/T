@@ -35,8 +35,8 @@
         </div>
         <div class="d-flex align-items-top pb-2">
             <div class="me-2">
-                <codx-input [formModel]="form.formModel" [checked]="inventory.accountControl" field="accountControl"
-                    (valueChange)="valueChange($event)">
+                <codx-input [formModel]="form.formModel" [checked]="inventory.accountControl == '0' || inventory.accountControl == null ? false : true" field="accountControl"
+                    (valueChange)="valueChanges($event)">
                 </codx-input>
             </div>
             <codx-label [formModel]="form.formModel" fiedName="AccountControl"></codx-label>
@@ -118,8 +118,8 @@
             <div class="col-6">
                 <div class="d-flex align-items-top mb-2">
                     <div class="me-2">
-                        <codx-input [formModel]="form.formModel" [checked]="inventory.stdCostReceipt"
-                            field="stdCostReceipt" (valueChange)="valueChange($event)">
+                        <codx-input [formModel]="form.formModel" [checked]="inventory.stdCostReceipt == '0' || inventory.stdCostReceipt == null ? false : true"
+                            field="stdCostReceipt" (valueChange)="valueChanges($event)">
                         </codx-input>
                     </div>
                     <codx-label [formModel]="form.formModel" fiedName="StdCostReceipt"></codx-label>
@@ -140,8 +140,8 @@
             <div class="col-6">
                 <div class="d-flex align-items-top mb-2">
                     <div class="me-2">
-                        <codx-input [formModel]="form.formModel" [checked]="inventory.stdCostIssue" field="stdCostIssue"
-                            (valueChange)="valueChange($event)">
+                        <codx-input [formModel]="form.formModel" [checked]="inventory.stdCostIssue == '0' || inventory.stdCostIssue == null ? false : true" field="stdCostIssue"
+                            (valueChange)="valueChanges($event)">
                         </codx-input>
                     </div>
                     <codx-label [formModel]="form.formModel" fiedName="StdCostIssue"></codx-label>

@@ -34,17 +34,20 @@ import {
 } from '../../../models/models';
 import { CodxDpService } from '../../../codx-dp.service';
 import { PopupCustomFieldComponent } from '../field-detail/popup-custom-field/popup-custom-field.component';
-import { ViewJobComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/view-job/view-job.component';
+import { ViewJobComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
 import { PopupTypeTaskComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
+import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
+import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
+import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/model/task.model';
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',
   styleUrls: ['./stages-detail.component.scss'],
 })
 export class StagesDetailComponent implements OnInit {
-Number(arg0: string) {
-throw new Error('Method not implemented.');
-}
+  Number(arg0: string) {
+    throw new Error('Method not implemented.');
+  }
   @ViewChild('addGroupJobPopup') addGroupJobPopup: TemplateRef<any>;
   @ViewChild('updateProgress') updateProgress: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -98,11 +101,11 @@ throw new Error('Method not implemented.');
   dateFomat = 'dd/MM/yyyy';
   dateTimeFomat = 'HH:mm - dd/MM/yyyy';
   frmModel: FormModel = {
-    entityName: 'DP_InstancesSteps',
-    formName: 'DPInstancesSteps',
-    gridViewName: 'grvDPInstancesSteps',
-    entityPer: 'DP_Processes',
-    funcID: 'DP0101',
+    entityName: 'DP_Instances_Steps_Tasks',
+    formName: 'DPInstancesStepsTasks',
+    gridViewName: 'grvDPInstancesStepsTasks',
+    entityPer: 'DP_Instance',
+    funcID: 'DPT04',
   };
   popupJob: DialogRef;
   popupTaskGroup: DialogRef;
@@ -369,13 +372,13 @@ throw new Error('Method not implemented.');
                 let index = this.taskGroupList.findIndex(
                   (task) => task.recID == taskData.taskGroupID
                 );
-                if(index < 0){
+                if (index < 0) {
                   let taskGroup = new DP_Instances_Steps_TaskGroups();
                   taskGroup['task'] = [];
                   taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
                   this.taskGroupList.push(taskGroup);
                   this.taskGroupList[0]['task'].push(taskData);
-                }else{
+                } else {
                   this.taskGroupList[index]['task'].push(taskData);
                 }
                 this.taskList.push(taskData);
@@ -454,20 +457,51 @@ throw new Error('Method not implemented.');
         }
         this.viewTask(task);
         break;
+      case 'DP13':
+        this.assignTask(e.data,task)
+      break;
     }
   }
+  //giao viec
+  assignTask(moreFunc,data){
+    var task = new TM_Tasks();
+    task.refID = data?.recID;
+    task.refType = "DP_Instance";
+    task.dueDate = data?.endDate;
+    let assignModel: AssignTaskModel = {
+      vllRole: 'TM001',
+      title: moreFunc.customName,
+      vllShare: 'TM003',
+      task: task,
+    };
+    let option = new SidebarModel();
+    option.FormModel = this.frmModel;
+    option.Width = '550px';
+    var dialogAssign = this.callfc.openSide(
+      AssignInfoComponent,
+      assignModel,
+      option
+    );
+    dialogAssign.closed.subscribe((e) => {})
+  }
   //View task
-  viewTask(data?: any) {
+  viewTask(data?: any, type?: string) {
+    let listTaskConvert = this.taskList?.map(item => {
+      return{
+        ...item,
+        name: item?.taskName,
+        type: item?.taskType,
+      }
+    })
+    let value = JSON.parse(JSON.stringify(data));
+    value['name'] = value['taskName'] || value['taskGroupName'];
+    value['type'] = value['taskType'] || type;
     if (data) {
-      this.callfc.openForm(
-        ViewJobComponent,
-        '',
-        700,
-        550,
-        '',
-        {step: data, listStep: this.taskList}
-      );
-    }    
+      this.callfc.openForm(ViewJobComponent, '', 700, 550, '', {
+        value: value,
+        listValue: listTaskConvert,
+      });
+    }
   }
 
   changeGroupTask(taskData, taskGroupIdOld) {
@@ -509,7 +543,7 @@ throw new Error('Method not implemented.');
       });
       step['taskGroups'] = taskGroupConvert;
       this.taskGroupList = step['taskGroups'];
-      if(step['taskGroups']?.length > 0 || step['tasks']?.length > 0){
+      if (step['taskGroups']?.length > 0 || step['tasks']?.length > 0) {
         let taskGroup = new DP_Instances_Steps_TaskGroups();
         taskGroup['task'] = taskGroupList['null'] || [];
         taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
@@ -534,6 +568,9 @@ throw new Error('Method not implemented.');
         this.groupTaskID = data?.recID;
         this.openTypeTask();
         break;
+      case 'DP12':
+        this.viewTask(data,'G');
+        break;
     }
   }
 
@@ -541,13 +578,16 @@ throw new Error('Method not implemented.');
     let taskGroup = new DP_Instances_Steps_TaskGroups();
     let index = this.taskGroupList.length;
     let taskBefore;
-    if(index > 0){
+    if (index > 0) {
       taskBefore = this.taskGroupList[index - 2];
     }
     if (data) {
       let dataCopy = JSON.parse(JSON.stringify(data));
       taskGroup = dataCopy;
-      taskGroup['startDate'] = type === 'copy' ? taskBefore?.endDate || new Date() : taskGroup['startDate'];
+      taskGroup['startDate'] =
+        type === 'copy'
+          ? taskBefore?.endDate || new Date()
+          : taskGroup['startDate'];
     } else {
       taskGroup['progress'] = 0;
       taskGroup['stepID'] = this.step['recID'];
@@ -742,19 +782,21 @@ throw new Error('Method not implemented.');
         }, 0);
         length += group['task']?.length;
       }
-      if(group['recID']){
+      if (group['recID']) {
         sum += Number(group['progress'] || 0);
         length++;
       }
     });
     let medium = (sum / length).toFixed(2);
     let stepID = this.step?.recID;
-    this.dpService.updateProgressStep([stepID,Number(medium)]).subscribe((res) => {
-      if(res){
-        this.step.progress = Number(medium);
-        this.progress = medium;
-      }
-    })
+    this.dpService
+      .updateProgressStep([stepID, Number(medium)])
+      .subscribe((res) => {
+        if (res) {
+          this.step.progress = Number(medium);
+          this.progress = medium;
+        }
+      });
   }
 
   setRole<T>(role: T) {
@@ -886,7 +928,7 @@ throw new Error('Method not implemented.');
     data[event?.field] = event?.data?.fromDate;
   }
 
-  async changeDataMF(e, type) {
+  async changeDataMF(e, type, data = null) {
     if (e != null) {
       e.forEach((res) => {
         switch (res.functionID) {
@@ -919,8 +961,11 @@ throw new Error('Method not implemented.');
           case 'DP07':
             if (type == 'group') res.disabled = true;
             break;
-          default:
-            res.disabled = true;
+          // giao viẹc
+          case 'DP13':
+            if (type == 'group') res.disabled = true;
+            if (data?.assignControl == '1') res.isblur = true;
+            break;
         }
       });
     }

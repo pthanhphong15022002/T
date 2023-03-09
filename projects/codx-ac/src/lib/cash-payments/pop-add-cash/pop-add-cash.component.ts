@@ -164,10 +164,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
     if (e.field.toLowerCase() === 'exchangerate' && e.data) {
       this.api
-        .exec<any>('AC', 'CashPaymentsLinesBusiness', 'ChangeCurrenciesAsync', [
-          this.cashpayment,
-          this.cashpaymentline,
-        ])
+        .exec<any>(
+          'AC',
+          'CashPaymentsLinesBusiness',
+          'ChangeExchangeRateAsync',
+          [this.cashpayment, this.cashpaymentline]
+        )
         .subscribe((res) => {
           if (res) {
             this.grid.dataSource = res;
@@ -276,6 +278,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.cashpaymentlineDelete.push(data);
     this.grid.deleteRow();
   }
+
   setDefault(o) {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       this.parentID,
@@ -290,6 +293,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
+      let data = this.form.data;
       this.cashpaymentline = this.grid.dataSource;
       if (this.formType == 'add') {
         this.dialog.dataService
@@ -298,7 +302,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             opt.className = 'CashPaymentsBusiness';
             opt.assemblyName = 'AC';
             opt.service = 'AC';
-            opt.data = [this.cashpayment];
+            opt.data = [data];
             return true;
           })
           .subscribe((res) => {
@@ -324,7 +328,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             opt.className = 'CashPaymentsBusiness';
             opt.assemblyName = 'AC';
             opt.service = 'AC';
-            opt.data = [this.cashpayment];
+            opt.data = [data];
             return true;
           })
           .subscribe((res) => {
@@ -351,6 +355,8 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
+      let data = this.form.data;
+
       this.cashpaymentline = this.grid.dataSource;
       this.dialog.dataService
         .save((opt: RequestOption) => {
@@ -358,7 +364,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           opt.className = 'CashPaymentsBusiness';
           opt.assemblyName = 'AC';
           opt.service = 'AC';
-          opt.data = [this.cashpayment];
+          opt.data = [data];
           return true;
         })
         .subscribe((res) => {
@@ -374,10 +380,12 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
                 if (res) {
                   this.clearCashpayment();
                   this.dialog.dataService.clear();
-                  this.dialog.dataService.addNew((o) => this.setDefault(o)).subscribe((res) => {
-                    this.form.formGroup.patchValue(res);
-                    this.cashpayment = this.dialog.dataService!.dataSelected;
-                  });
+                  this.dialog.dataService
+                    .addNew((o) => this.setDefault(o))
+                    .subscribe((res) => {
+                      this.form.formGroup.patchValue(res);
+                      this.cashpayment = this.dialog.dataService!.dataSelected;
+                    });
                 }
               });
           } else {

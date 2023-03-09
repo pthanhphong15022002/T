@@ -31,6 +31,9 @@ export class BookingStationeryViewDetailComponent
   @Output('release') release: EventEmitter<any> = new EventEmitter();
   @Output('allocate') allocate: EventEmitter<any> = new EventEmitter();
   @Output('cancel') cancel: EventEmitter<any> = new EventEmitter();
+  @Output('approve') approve: EventEmitter<any> = new EventEmitter();
+  @Output('reject') reject: EventEmitter<any> = new EventEmitter();
+  @Output('undo') undo: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
     new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
@@ -113,7 +116,7 @@ export class BookingStationeryViewDetailComponent
     this.active = 1;
   }
 
-  childClickMF(event, data) {
+  clickMF(event, data) {
     switch (event?.functionID) {
       case 'SYS02': //Xoa
         this.lviewDelete(data);
@@ -132,6 +135,15 @@ export class BookingStationeryViewDetailComponent
         break;
       case 'EP8T1102': //Hủy gửi duyệt
         this.lviewCancel(data);
+        break;
+      case 'EPT40301':
+        this.lviewApprove(data);
+        break;
+      case 'EPT40302':
+        this.lviewReject(data);
+        break;
+      case 'EPT40306':
+        this.lviewUndo(data);
         break;
     }
   }
@@ -171,6 +183,24 @@ export class BookingStationeryViewDetailComponent
   lviewCancel(data?) {
     if (data) {
       this.cancel.emit(data);
+    }
+  }
+
+  lviewApprove(data){
+    if(data){
+      this.approve.emit()
+    }
+  }
+
+  lviewReject(data){
+    if(data){
+      this.reject.emit();
+    }
+  }
+
+  lviewUndo(data){
+    if(data){
+      this.undo.emit();
     }
   }
 
