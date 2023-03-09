@@ -231,6 +231,9 @@ export class CodxDMService {
   public addFile = new BehaviorSubject<any>(null);
   isAddFile = this.addFile.asObservable();
 
+  public deleteFileView = new BehaviorSubject<any>(null);
+  isDeleteFileView = this.deleteFileView.asObservable();
+
   public editFolder = new BehaviorSubject<any>(null);
   isEditFolder = this.editFolder.asObservable();
 
@@ -540,42 +543,50 @@ export class CodxDMService {
               this.fileService
                 .deleteFileToTrash(id, this.folderId.getValue(), false)
                 .subscribe(async (res) => {
-                  let list = this.listFiles;
-                  //list = list.filter(item => item.recID != id);
-
-                  let index = list.findIndex(
-                    (d) => d.recID.toString() === id.toString()
-                  ); //find index in your array
-                  if (index >= 0) {
-                    list.splice(index, 1); //remove element from array
-                    //this.changeData(null, list, id);
-                    this.listFiles = list;
-                    this.notificationsService.notifyCode(
-                      'DM046',
-                      0,
-                      this.user?.userName
-                    );
-                    this.addFile.next(true);
-                    //  this.changeDetectorRef.detectChanges();
+                  if(res)
+                  {
+                    let list = this.listFiles;
+                    //list = list.filter(item => item.recID != id);
+  
+                    let index = list.findIndex(
+                      (d) => d.recID.toString() === id.toString()
+                    ); //find index in your array
+                    if (index >= 0) {
+                      list.splice(index, 1); //remove element from array
+                      //this.changeData(null, list, id);
+                      this.listFiles = list;
+                      this.notificationsService.notifyCode(
+                        'DM046',
+                        0,
+                        this.user?.userName
+                      );
+                      this.addFile.next(true);
+                      //  this.changeDetectorRef.detectChanges();
+                    }
+                    this.deleteFileView.next(id);
+                    this.fileService.getTotalHdd().subscribe((i) => {
+                      this.updateHDD.next(i);
+                      //   this.changeDetectorRef.detectChanges();
+                    });
                   }
-
-                  this.fileService.getTotalHdd().subscribe((i) => {
-                    this.updateHDD.next(i);
-                    //   this.changeDetectorRef.detectChanges();
-                  });
+                  else this.notificationsService.notifyCode("SYS022");
+                 
                 });
             } else {
               this.folderService
                 .deleteFolderToTrash(id, false)
                 .subscribe(async (res) => {
-                  this.listFolder = this.listFolder.filter(
-                    (x) => x.recID != id
-                  );
-                  this.nodeDeleted.next(id);
-                  this.fileService.getTotalHdd().subscribe((i) => {
-                    this.updateHDD.next(i);
-                    //  this.changeDetectorRef.detectChanges();
-                  });
+                  if(res)
+                  {
+                    this.listFolder = this.listFolder.filter(
+                      (x) => x.recID != id
+                    );
+                    this.nodeDeleted.next(id);
+                    this.fileService.getTotalHdd().subscribe((i) => {
+                      this.updateHDD.next(i);
+                      //  this.changeDetectorRef.detectChanges();
+                    });
+                  }
                 });
             }
           }

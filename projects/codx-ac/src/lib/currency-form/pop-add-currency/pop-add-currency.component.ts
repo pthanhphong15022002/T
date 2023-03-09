@@ -63,6 +63,9 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   gridViewSetup: any;
   title: any;
   validate: any = 0;
+  moreFuncNameAdd:any;
+  moreFuncNameEdit:any;
+  funcName:any;
   constructor(
     private inject: Injector,
     override cache: CacheService,
@@ -79,6 +82,14 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.currencies = dialog.dataService!.dataSelected;
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let add = res.find((x) => x.functionID == 'SYS01');
+        let edit = res.find((x) => x.functionID == 'SYS03');
+        if (add) this.moreFuncNameAdd = add.defaultName;
+        if (edit) this.moreFuncNameEdit = edit.customName;
+      }
+    });
     this.cache.gridViewSetup('Currencies', 'grvCurrencies').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -104,25 +115,30 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   //#region Init
   onInit(): void {}
   ngAfterViewInit() {
+    this.cache.moreFunction('ExchangeRates', 'grvExchangeRates').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20801');
+        if (m) this.funcName = m.defaultName;
+      }
+    });
   }
   //#endregion
 
   //#region Event
   valueChange(e: any) {
-      this.currencies[e.field] = e.data;
+    this.currencies[e.field] = e.data;
   }
   //#endregion
 
   //#region Function
   opensetting() {
-    this.title = 'Thiết lập tỷ giá';
+    this.title = 'Thiết lập' + ' ' + this.funcName;
     var obj = {
       headerText: this.title,
-      data: this.currencies,
     };
     let optionForm = new DialogModel();
-    optionForm.DataService = this.view?.currentView?.dataService;
-    optionForm.FormModel = this.view?.currentView?.formModel;
+    optionForm.DataService = this.dialog.dataService;
+    optionForm.FormModel = this.dialog.formModel;
     var dialog = this.callfc.openForm(
       PopSettingExchangeComponent,
       '',
@@ -136,17 +152,18 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     dialog.closed.subscribe((x) => {
       var dataexchange = JSON.parse(localStorage.getItem('dataexchange'));
       if (dataexchange != null) {
-        this.currencies.multiply = dataexchange.multiply;
+        this.currencies.multi = dataexchange.multi;
         this.currencies.calculation = dataexchange.calculation;
       }
       window.localStorage.removeItem('dataexchange');
     });
   }
   openPopup() {
-    this.title = 'Thêm tỷ giá';
+    this.title = this.moreFuncNameAdd + ' ' + this.funcName;
     var obj = {
       headerText: this.title,
-      dataex:this.objectExchange
+      dataex:this.objectExchange,
+      type:'add'
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -162,7 +179,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
             PopAddExchangerateComponent,
             '',
             500,
-            400,
+            450,
             '',
             obj,
             '',
@@ -208,11 +225,11 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     this.objectExchangeDelete.push(data);
   }
   editExchangerate(data: any) {
-    this.title = 'Thêm tỷ giá';
+    this.title = this.moreFuncNameEdit + ' ' + this.funcName;
     var obj = {
       headerText: this.title,
       data: { ...data },
-      type:'edit'
+      type: 'edit',
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -304,11 +321,14 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
                 .subscribe((res: []) => {
                   if (res) {
                     this.dialog.close();
-                    this.dt.detectChanges();
                   }
                 });
             } else {
-              this.notification.notifyCode('SYS031', 0, '"' + this.currencies.currencyID + '"');
+              this.notification.notifyCode(
+                'SYS031',
+                0,
+                '"' + this.currencies.currencyID + '"'
+              );
               return;
             }
           });
@@ -331,7 +351,11 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
                   'ERM.Business.BS',
                   'ExchangeRatesBusiness',
                   'UpdateAsync',
-                  [this.currencies.currencyID, this.objectExchange, this.objectExchangeDelete]
+                  [
+                    this.currencies.currencyID,
+                    this.objectExchange,
+                    this.objectExchangeDelete,
+                  ]
                 )
                 .subscribe((res: []) => {
                   if (res) {
@@ -371,7 +395,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
                 this.clearCurrencies();
                 this.dialog.dataService.clear();
                 this.dialog.dataService.addNew().subscribe((res) => {
-                  this.form.formGroup.reset(res);
+                  this.form.formGroup.patchValue(res);
                   this.currencies = this.dialog.dataService!.dataSelected;
                 });
               }
