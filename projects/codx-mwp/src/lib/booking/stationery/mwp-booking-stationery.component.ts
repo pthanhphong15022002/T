@@ -28,7 +28,6 @@ export class MWPBookingStationeryComponent
   implements AfterViewInit
 {
   @ViewChild('chart') chart: TemplateRef<any>;
-
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   viewType = ViewType;
