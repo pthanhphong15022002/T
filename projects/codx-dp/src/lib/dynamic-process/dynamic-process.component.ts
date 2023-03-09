@@ -270,7 +270,6 @@ export class DynamicProcessComponent
         this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
-            e.event.totalInstance =  this.totalInstance;
             this.view.dataService.update(e.event).subscribe();
             this.changeDetectorRef.detectChanges();
           }
@@ -611,10 +610,10 @@ export class DynamicProcessComponent
   }
 
   doubleClickViewProcess(data) {
-    let isRead = this.checkPermissionRead(data);
-    if (isRead) {
-      this.viewDetailProcess(data);
-    }
+    // let isRead = this.checkPermissionRead(data);
+    // if (isRead) {
+    //   this.viewDetailProcess(data);
+    // }
   }
   getNameUsersStr(data) {
     if (data?.length > 0 && data !== null) {
@@ -676,9 +675,7 @@ export class DynamicProcessComponent
 
     dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        this.view.dataService.clear();
-        data.totalInstance = e.event.totalInstance ?? 0;
-        this.view.dataService.update(data).subscribe();
+        this.view.dataService.update(e?.event).subscribe();
         this.detectorRef.detectChanges();
       }
     });

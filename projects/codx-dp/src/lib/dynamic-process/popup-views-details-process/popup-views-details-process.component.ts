@@ -78,7 +78,10 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     }
   }
   closeDetailInstance(data){
-    this.dpService.getListInstanceByIdProccess(data.recID).subscribe((res)=> {
+    var isUseSuccess = data.steps.filter(x=>x.isSuccessStep)[0].isUsed;
+    var isUseFail = data.steps.filter(x=>x.isFailStep)[0].isUsed;
+    var dataCountInstance = [data.recID, isUseSuccess, isUseFail];
+    this.dpService.countInstanceByProccessId(dataCountInstance).subscribe((res)=> {
       if(res){
         data.totalInstance = res;
         this.dialog.close(data);
