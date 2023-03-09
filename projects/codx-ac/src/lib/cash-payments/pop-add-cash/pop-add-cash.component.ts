@@ -137,7 +137,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   }
 
   valueChange(e: any) {
-    this.cashpayment[e.field] = e.data;
+    if (e.field.toLowerCase() === 'voucherdate' && e.data)
+      this.cashpayment[e.field] = e.data.fromDate;
+    else this.cashpayment[e.field] = e.data;
     let sArray = [
       'currencyid',
       'voucherdate',
@@ -156,6 +158,20 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           if (res) {
             this.cashpayment = res;
             this.form.formGroup.patchValue(this.cashpayment);
+          }
+        });
+    }
+
+    if (e.field.toLowerCase() === 'exchangerate' && e.data) {
+      this.api
+        .exec<any>('AC', 'CashPaymentsLinesBusiness', 'ChangeCurrenciesAsync', [
+          this.cashpayment,
+          this.cashpaymentline,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.grid.dataSource = res;
+            this.cashpaymentline = res;
           }
         });
     }
@@ -209,11 +225,29 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           e.field,
           e.data?.isAddNew,
         ])
-        .subscribe((res) => {
-          if (res) {
-            console.log(e);
-          }
+        .subscribe((res: any) => {
+          if (res && res.line)
+            this.setDataGrid(res.line.updateColumns, res.line);
         });
+    }
+
+    if (e.field.toLowerCase() == 'sublgtype' && e.value) {
+      if (e.value === '3') {
+        //Set lock field
+      } else {
+        this.api
+          .exec<any>(
+            'AC',
+            'AC',
+            'CashPaymentsLinesBusiness',
+            'SetLockFieldAsync'
+          )
+          .subscribe((res) => {
+            if (res) {
+              //Set lock field
+            }
+          });
+      }
     }
   }
 
@@ -354,6 +388,35 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Function
+  setDataGrid(updateColumn, data) {
+    if (updateColumn) {
+      var arrColumn = [];
+      arrColumn = updateColumn.split(';');
+      if (arrColumn && arrColumn.length) {
+        arrColumn.forEach((e) => {
+          if (e) {
+            let field = Util.camelize(e);
+            this.grid.rowDataSelected[field] = data[field];
+            this.grid.rowDataSelected.updateColumns = '';
+            this.grid.gridRef.refreshColumns();
+          }
+        });
+      }
+    }
+  }
+
+  getvalueNameCashBook(data: any) {
+    this.acService
+      .loadData('ERM.Business.AC', 'CashBookBusiness', 'LoadDataAsync', [])
+      .subscribe((res: any) => {
+        res.forEach((element) => {
+          if (element.cashBookID == data) {
+            this.cashbookName = element.cashBookName;
+          }
+        });
+      });
+  }
+
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.cashpayment);
