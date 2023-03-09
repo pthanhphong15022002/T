@@ -2,10 +2,12 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnInit,
   Optional,
+  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -53,6 +55,7 @@ export class InstancesComponent
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
+  @Output() valueListID = new EventEmitter<any>();
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   showButtonAdd = true;
@@ -840,6 +843,7 @@ export class InstancesComponent
                 //xu ly data đổ về
                 data = e.event.instance;
                 this.listStepInstances = e.event.listStep;
+                this.valueListID.emit(data.refID)
                 if (e.event.isReason != null) {
                   this.moveReason(null, data, e.event.isReason);
                 }
