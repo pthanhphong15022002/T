@@ -21,7 +21,7 @@ import { DynamicProcessComponent } from './dynamic-process/dynamic-process.compo
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { PopupAddDynamicProcessComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
-import { PopupJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/popup-job/popup-job.component';
+import { PopupJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/popup-step-task/popup-step-task.component';
 import { PopupAddCustomFieldComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-custom-field.component';
 import { PopupViewsDetailsProcessComponent } from './dynamic-process/popup-views-details-process/popup-views-details-process.component';
 import { InstancesComponent } from './instances/instances.component';
@@ -31,7 +31,7 @@ import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { InputCustomFieldComponent } from './instances/popup-add-instance/input-custom-field/input-custom-field.component';
 import { PopupMoveStageComponent } from './instances/popup-move-stage/popup-move-stage.component';
 import { PopupMoveReasonComponent } from './instances/popup-move-reason/popup-move-reason.component';
-import { ViewJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/view-job/view-job.component';
+import { ViewJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
 import { PopupTypeTaskComponent } from './dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
 import { StepTaskGroupComponent } from './dynamic-process/popup-add-dynamic-process/step-task/step-task-group/step-task-group.component';
 import { UserComponent } from './dynamic-process/popup-add-dynamic-process/step-task/user/user.component';

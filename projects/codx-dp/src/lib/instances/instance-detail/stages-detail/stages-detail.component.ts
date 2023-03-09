@@ -34,7 +34,7 @@ import {
 } from '../../../models/models';
 import { CodxDpService } from '../../../codx-dp.service';
 import { PopupCustomFieldComponent } from '../field-detail/popup-custom-field/popup-custom-field.component';
-import { ViewJobComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/view-job/view-job.component';
+import { ViewJobComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
 import { PopupTypeTaskComponent } from '../../../dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
