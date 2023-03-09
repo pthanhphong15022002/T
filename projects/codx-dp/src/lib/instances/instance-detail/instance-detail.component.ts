@@ -15,7 +15,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { CRUDService, ApiHttpService, CacheService } from 'codx-core';
+import { CRUDService, ApiHttpService, CacheService, CallFuncService, DialogModel, DialogRef } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
 import { log } from 'console';
@@ -38,9 +38,10 @@ export class InstanceDetailComponent implements OnInit {
   @Input() listStepNew: any;
   @Input() listCbxProccess: any;
   @Input() viewModelDetail = 'S';
+  @ViewChild('viewDetailsItem') viewDetailsItem ;
+  @Input() listSteps: DP_Instances_Steps[] = [];
   id: any;
   totalInSteps: any;
-  @Input() listSteps: DP_Instances_Steps[] = [];
   tmpTeps: DP_Instances_Steps;
   currentNameStep: Number;
   //progressbar
@@ -67,6 +68,7 @@ export class InstanceDetailComponent implements OnInit {
     type: 'type',
     color: 'color',
   };
+  dialogPopupDetail: DialogRef;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -86,12 +88,14 @@ export class InstanceDetailComponent implements OnInit {
   lstInv = '';
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
+ 
 
   constructor(
     private dpSv: CodxDpService,
     private api: ApiHttpService,
     private cache: CacheService,
     private changeDetec: ChangeDetectorRef,
+    private callFC : CallFuncService ,
     private popupInstances: InstancesComponent,
     public sanitizer: DomSanitizer
   ) {
@@ -103,20 +107,23 @@ export class InstanceDetailComponent implements OnInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-   
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelect']) {
-      this.id = changes['dataSelect'].currentValue.recID;
-      this.dataSelect = changes['dataSelect'].currentValue;
-      // this.currentStep = this.dataSelect.currentStep; // instance.curenSteps da xoa
-      this.instanceStatus = this.dataSelect.status;
-      this.instance = this.dataSelect;
-      // sort theo by step
-      this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
-      // this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
-      this.getDataGanttChart(this.dataSelect.recID,this.dataSelect.processID);
+      if(changes['dataSelect'].currentValue.recID != null){
+        this.id = changes['dataSelect'].currentValue.recID;
+        this.dataSelect = changes['dataSelect'].currentValue;
+        // this.currentStep = this.dataSelect.currentStep; // instance.curenSteps da xoa
+        this.instanceStatus = this.dataSelect.status;
+        this.instance = this.dataSelect;
+        // sort theo by step
+        this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
+        // this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
+        this.getDataGanttChart(this.dataSelect.recID,this.dataSelect.processID);
+      }
+
     }
     console.log(this.formModel);
   }
@@ -173,12 +180,22 @@ export class InstanceDetailComponent implements OnInit {
     return id;
   }
 
-  getStepsByInstanceID(list) {
-    list.forEach((element) => {
-      if (element.indexNo == this.currentStep) {
-        this.tmpTeps = element;
-      }
+  sortListSteps(ins, process){
+    var listStep = process.steps.sort(function(x, y) {
+        return x.stepNo > 0 && y.stepNo > 0 ? x.stepNo - y.stepNo : x.stepNo > 0 ? -1 : y.stepNo > 0 ? 1 : x.stepNo - y.stepNo;
     });
+    ins = listStep.reduce((result, x) => {
+      let matches = ins.filter(y => x.recID === y.stepID);
+      if (matches.length) {
+        result.push(matches[0]);
+      }
+      return result;
+    }, []).sort((x, y) => {
+      let firstStep = listStep.find(z => z.recID === y.stepID);
+      return listStep.indexOf(firstStep);
+    });
+
+    return ins;
   }
 
   // getStepsByProcessID(recID){
@@ -303,28 +320,37 @@ export class InstanceDetailComponent implements OnInit {
       return 'step old';
     }
     return 'step';
-    
+
   }
   getReasonByStepId(stepId: string) {
     var idx = this.listStepNew.findIndex((x) => x.stepID === stepId);
     return this.listStepNew[idx];
   }
-  getStepNameIsComlepte() {
-    var idx = this.listSteps.findIndex(
-      (x) => x.stepStatus === '4' || x.stepStatus === '5'
-    );
-    if (idx > -1) {
-      var reasonStep = this.listSteps[idx];
-      var idxProccess = this.listCbxProccess.findIndex(
-        (x) => x.recID === this.instance?.newProcessID
-      );
-      var proccesMove = this.listCbxProccess[idxProccess];
+  getStepNameIsComlepte(data) {
+   var idx = this.listSteps.findIndex(
+    (x) => x.stepStatus === '4' || x.stepStatus === '5'
+  );
+  if (idx > -1) {
+    var reasonStep = this.listSteps[idx];
+    var indexProccess = this.listCbxProccess.findIndex(x=>x.recID === data?.refID);
+      var proccesMove = this.listCbxProccess[indexProccess];
       this.proccesNameMove = proccesMove?.processName ?? '';
-    }
+  }
     return reasonStep?.stepName ?? '';
   }
-  //  getProccessNameIsMove(index:any){
 
-  //   return  this.listSteps[idx]?.stepName ?? '';
-  //  }
+  clickDetailGanchart(type,recID){
+    let option = new DialogModel();
+    option.zIndex = 1001;
+    this.dialogPopupDetail = this.callFC.openForm(
+      this.viewDetailsItem,
+      '',
+      500,
+      10,
+      '',
+      null,
+      '',
+      option
+    );
+  }
 }

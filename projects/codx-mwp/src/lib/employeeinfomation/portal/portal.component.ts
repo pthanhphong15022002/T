@@ -67,7 +67,7 @@ import { PopupEVaccineComponent } from 'projects/codx-hr/src/lib/employee-profil
 @Component({
   selector: 'lib-portal',
   templateUrl: './portal.component.html',
-  styleUrls: ['./portal.component.css'],
+  styleUrls: ['./portal.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class PortalComponent extends UIComponent {
@@ -109,10 +109,22 @@ export class PortalComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.funcID = this.routeActive.snapshot.params['funcID'];
     this.user = this.auth.get();
+    let request = new DataRequest();
+    request.entityName = 'HR_Employees'
+    request.predicates = 'DomainUser=@0'
+    request.dataValues = this.user.userID
+    request.pageLoading = false;
+    this.hrService.loadData('HR', request).subscribe(res => {
+      if(res && res[1] > 0){
+        this.infoPersonal = res[0][0];
+      }
+    console.log('employee', res);
+
+    })
     console.log('userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr', this.user);
     
-    this.funcID = this.routeActive.snapshot.params['funcID'];
     // this.infoPersonal =
   }
   navChange(evt: any) {
@@ -426,6 +438,7 @@ export class PortalComponent extends UIComponent {
   lstFuncTaskInfo: any = [];
   lstFuncSalary: any = [];
   lstFuncHRProcess: any = [];
+  dayOffTravelHRProcess: any = [];
   lstFuncKnowledge: any = [];
   lstFuncAward: any = [];
   lstFuncHealth: any = [];
@@ -460,44 +473,49 @@ export class PortalComponent extends UIComponent {
   //#endregion
 
   //#region var functionID
-  selfInfoFuncID: string = 'HRTEM01';
-  legalInfoFuncID: string = 'HRTEM02';
-  jobInfoFuncID: string = 'HRTEM03';
-  benefitInfoFuncID: string = 'HRTEM04';
-  processInfoFuncID: string = 'HRTEM05';
-  knowledgeInfoFuncID: string = 'HRTEM06';
-  rewDisInfoFuncID: string = 'HRTEM07';
+  selfInfoFuncID: string = 'HRPEM01'; //Thong tin ban than
+  legalInfoFuncID: string = 'HRPEM02'; //Thong tin phap li
+  jobInfoFuncID: string = 'HRPEM03';
+  benefitInfoFuncID: string = 'HRPEM04';
+  dayoffParentInfoFuncID: string = 'HRPEM05'
+  contractInfoFuncID: string = 'HRPEM06';
+  knowledgeInfoFuncID: string = 'HRPEM07';
+  rewDisInfoFuncID: string = 'HRPEM08';
   healthInfoFuncID: string = 'HRTEM08';
 
-  eInfoFuncID = 'HRTEM0101';
-  ePartyFuncID = 'HRTEM0102';
-  eFamiliesFuncID = 'HRTEM0103';
-  eAssurFunc = 'HRTEM0201';
+  eContactFuncID = 'HRPEM0102'; // thông tin liên hệ
+  eAccountFuncID = 'HRPEM0203'; // Tài khoản cá nhân
+  eTaxCodeFuncID = 'HRPEM0202'; // Mã số thuế TNCN
+  eInfoFuncID = 'HRPEM0101'; // Thông tin bản thân
+  //ePartyFuncID = 'HRPEM0102'; // Thông tin Đảng - Đoàn
+  eFamiliesFuncID = 'HRPEM0103'; // Quan hệ gia đình
+  eAssurFunc = 'HRPEM0201'; // Bảo hiểm
   ePassportFuncID = 'HRTEM0202';
-  eDegreeFuncID = 'HRTEM0601';
+  eDegreeFuncID = 'HRPEM0701'; // Bằng cấp
   eVisaFuncID = 'HRTEM0203';
   eWorkPermitFuncID = 'HRTEM0204';
-  eCertificateFuncID = 'HRTEM0602';
-  eSkillFuncID = 'HRTEM0603';
+  eCertificateFuncID = 'HRPEM0702'; // Chứng chỉ
+  eSkillFuncID = 'HRPEM0703'; // Kỹ năng
   eExperienceFuncID = 'HRTEM0505'; // Kinh nghiệm trước đây
-  eAssetFuncID = 'HRTEM0406'; // Tài sản cấp phát
-  eTimeCardFuncID = 'HRTEM0302';
-  eCalSalaryFuncID = 'HRTEM0303';
-  jobGeneralFuncID = 'HRTEM0301';
-  eBasicSalaryFuncID = 'HRTEM0401';
-  eJobSalFuncID = 'HRTEM0402'; //Lương chức danh
-  eTrainCourseFuncID = 'HRTEM0604';
-  eBusinessTravelFuncID = 'HRTEM0504';
+  eAssetFuncID = 'HRPEM0404'; // Tài sản cấp phát
+  eTimeCardFuncID = 'HRPEM0302'; // Thông tin chấm công
+  eCalSalaryFuncID = 'HRPEM0303'; // Thông tin tính lương
+  jobGeneralFuncID = 'HRPEM0301'; // Thông tin chung
+  eBasicSalaryFuncID = 'HRPEM0401'; // Lương cơ bản
+  eJobSalFuncID = 'HRPEM0402'; //Lương chức danh
+  eTrainCourseFuncID = 'HRPEM0704'; // đào tạo
+  eBusinessTravelFuncID = 'HRPEM0502'; // Công tác
   eHealthFuncID = 'HRTEM0801'; // Khám sức khỏe
   eVaccinesFuncID = 'HRTEM0802'; // Tiêm vắc xin
-  benefitFuncID = 'HRTEM0403';
-  dayoffFuncID = 'HRTEM0503';
-  appointionFuncID = 'HRTEM0502';
-  awardFuncID = 'HRTEM0701';
-  eContractFuncID = 'HRTEM0501';
-  eDisciplineFuncID = 'HRTEM0702';
+  benefitFuncID = 'HRPEM0403'; // Phụ cấp
+  dayoffFuncID = 'HRPEM0501'; // Nghỉ phép
+  appointionFuncID = 'HRPEM0304'; // Bổ nhiệm - điều chuyển
+  awardFuncID = 'HRPEM0801'; // Khen thưởng
+  eContractFuncID = 'HRPEM0601'; // Hợp đồng
+  eDisciplineFuncID = 'HRPEM0802'; // Kỷ luật
   eDiseasesFuncID = 'HRTEM0803';
-  eAccidentsFuncID = 'HRTEM0804';
+  eAwardFuncID = 'HRPEM0801';
+  eAccidentsFuncID = '';
   //#endregion
 
   //#region Vll colors
@@ -582,6 +600,7 @@ export class PortalComponent extends UIComponent {
     this.codxMwpService.currentSection = data.current;
     this.detectorRef.detectChanges();
   }
+
 
   initPersonalInfo() {
     if (this.employeeID) {
@@ -1130,12 +1149,19 @@ export class PortalComponent extends UIComponent {
   }
 
   onInit(): void {
+
+    console.log('funtionID', this.functionID);
+    console.log('view', this.view);
+    
+    
+
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
       console.log('functionList', res);
       if (res && res[1] > 0) {
         this.lstTab = res[0].filter((p) => p.parentID == this.funcID);
         this.crrFuncTab = this.lstTab[this.crrTab].functionID;
         console.log('crrFuncTab', this.crrFuncTab);
+        console.log('crrFuncTab', this.lstTab );
         this.lstFuncID = res[0];
 
         this.lstFuncSelfInfo = res[0].filter(
@@ -1156,9 +1182,14 @@ export class PortalComponent extends UIComponent {
           (p) => p.parentID == this.benefitInfoFuncID
         );
 
-        this.lstFuncHRProcess = res[0].filter(
-          (p) => p.parentID == this.processInfoFuncID
+        this.dayOffTravelHRProcess = res[0].filter(
+          (p) => p.parentID == this.dayoffParentInfoFuncID
         );
+        
+
+        // this.lstFuncHRProcess = res[0].filter(
+        //   (p) => p.parentID == this.processInfoFuncID
+        // );
 
         this.lstFuncKnowledge = res[0].filter(
           (p) => p.parentID == this.knowledgeInfoFuncID
@@ -1222,32 +1253,32 @@ export class PortalComponent extends UIComponent {
         }
       }
     });
-    this.router.params.subscribe((param: any) => {
-      if (param) {
-        this.functionID = param['funcID'];
-        if (!this.infoPersonal) {
-          let empRequest = new DataRequest();
-          empRequest.entityName = 'HR_Employees';
-          empRequest.dataValues = this.employeeID;
-          empRequest.predicates = 'EmployeeID=@0';
-          empRequest.pageLoading = false;
-          this.hrService.loadData('HR', empRequest).subscribe((emp) => {
-            if (emp[1] > 0) {
-              this.infoPersonal = emp[0][0];
-              this.initForm();
-            }
-          });
-        } else {
-          this.initForm();
-        }
-        this.getDataAsync(this.functionID);
-        this.codxMwpService.empInfo.subscribe((res: string) => {
-          if (res) {
-            console.log(res);
-          }
-        });
-      }
-    });
+    // this.router.params.subscribe((param: any) => {
+    //   if (param) {
+    //     this.functionID = param['funcID'];
+    //     if (!this.infoPersonal) {
+    //       let empRequest = new DataRequest();
+    //       empRequest.entityName = 'HR_Employees';
+    //       empRequest.dataValues = this.employeeID;
+    //       empRequest.predicates = 'EmployeeID=@0';
+    //       empRequest.pageLoading = false;
+    //       this.hrService.loadData('HR', empRequest).subscribe((emp) => {
+    //         if (emp[1] > 0) {
+    //           this.infoPersonal = emp[0][0];
+    //           this.initForm();
+    //         }
+    //       });
+    //     } else {
+    //       this.initForm();
+    //     }
+    //     this.getDataAsync(this.functionID);
+    //     this.codxMwpService.empInfo.subscribe((res: string) => {
+    //       if (res) {
+    //         console.log(res);
+    //       }
+    //     });
+    //   }
+    // });
 
     //#region filter
     this.dayOffSortModel = new SortModel();
@@ -1475,17 +1506,7 @@ export class PortalComponent extends UIComponent {
         });
     });
 
-    this.hrService.getFormModel(this.eAccidentsFuncID).then((res) => {
-      this.eAccidentsFormModel = res;
-      this.cache
-        .gridViewSetup(
-          this.eAccidentsFormModel.formName,
-          this.eAccidentsFormModel.gridViewName
-        )
-        .subscribe((res) => {
-          this.eAccidentsGrvSetup = res;
-        });
-    });
+
     //#endregion
 
     //#region get columnGrid EVisa - Thị thực
@@ -2777,6 +2798,8 @@ export class PortalComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
+    console.log('view after', this.view);
+    
     // this.view.dataService.methodDelete = 'DeleteSignFileAsync';
     this.views = [
       {
@@ -2975,10 +2998,10 @@ export class PortalComponent extends UIComponent {
         this.lstBtnAdd = this.lstFuncSalary;
         this.initSalaryInfo();
         break;
-      case this.processInfoFuncID:
-        this.lstBtnAdd = this.lstFuncHRProcess;
-        this.initHRProcess();
-        break;
+      // case this.processInfoFuncID:
+      //   this.lstBtnAdd = this.lstFuncHRProcess;
+      //   this.initHRProcess();
+      //   break;
       case this.knowledgeInfoFuncID:
         this.lstBtnAdd = this.lstFuncKnowledge;
         this.initKnowledgeInfo();
@@ -2999,9 +3022,9 @@ export class PortalComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupEmployeePartyInfoComponent,
       {
-        funcID: this.ePartyFuncID,
+        funcID: this.eContactFuncID,
         headerText:
-          actionHeaderText + ' ' + this.getFormHeader(this.ePartyFuncID),
+          actionHeaderText + ' ' + this.getFormHeader(this.eContactFuncID),
         dataObj: this.infoPersonal,
       },
       option

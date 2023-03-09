@@ -117,7 +117,21 @@
                         ></a>
                       </div>
                       <div class="form-group d-grid gap-2 mb-5">
+                        <!-- <div
+                          *ngIf="saas == 1"
+                          class="form-group g-recaptcha"
+                          id="captcha"
+                          data-sitekey="siteKey"
+                          data-callback="activeLoginBtn"
+                          data-expired-callback="disabledLoginBtn"
+                          data-error-callback="disabledLoginBtn"
+                        ></div> -->
+                        <re-captcha
+                          *ngIf="enableCaptcha"
+                          formControlName="captCha"
+                        ></re-captcha>
                         <button
+                          [disabled]="!captChaValid"
                           type="submit"
                           class="btn btn-primary fw-bold px-6 py-3"
                         >
@@ -413,6 +427,10 @@
                         </div>
                       </div>
                       <div class="form-group d-grid gap-2 mb-5">
+                        <re-captcha
+                          *ngIf="enableCaptcha"
+                          formControlName="captCha"
+                        ></re-captcha>
                         <button
                           type="submit"
                           id="btn-signin"
@@ -591,6 +609,10 @@
                         </div>
                       </div>
                       <div class="form-group d-grid gap-2 mb-5">
+                        <re-captcha
+                          *ngIf="enableCaptcha"
+                          formControlName="captCha"
+                        ></re-captcha>
                         <button
                           type="submit"
                           id="btn-signin"

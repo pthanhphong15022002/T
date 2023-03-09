@@ -8,13 +8,16 @@ import {
   Input,
   Output,
   EventEmitter,
+  AfterViewInit,
 } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
   FormGroup,
   ValidationErrors,
   ValidatorFn,
+  Validators,
 } from '@angular/forms';
 import { ApiHttpService } from 'codx-core';
 import { environment } from 'src/environments/environment';
@@ -24,7 +27,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './login-default.component.html',
   styleUrls: ['./login-default.component.scss'],
 })
-export class LoginDefaultComponent implements OnInit, OnDestroy {
+export class LoginDefaultComponent implements OnInit, OnDestroy, AfterViewInit {
   environment = environment;
   @ViewChild('Error') error: ElementRef;
   @Input() defaultAuth: any = {
@@ -54,11 +57,27 @@ export class LoginDefaultComponent implements OnInit, OnDestroy {
   externalLogin = false;
   externalLoginCol = '';
   externalLoginShowText = true;
-
+  enableCaptcha = 0;
+  token = '';
+  captChaValid = false;
   // private fields
-  constructor(private dt: ChangeDetectorRef, private api: ApiHttpService) {}
+  constructor(private dt: ChangeDetectorRef, private api: ApiHttpService) {
+    this.enableCaptcha = environment.reCaptchaEnable;
+    if (this.enableCaptcha == 0) {
+      this.captChaValid = true;
+    }
+  }
 
   ngOnInit(): void {
+    if (this.enableCaptcha == 0) {
+      this.captChaValid = true;
+    } else {
+      let captChaControl = this.loginForm.controls['captCha'];
+      captChaControl.valueChanges.subscribe((e) => {
+        this.captChaValid = captChaControl.valid;
+      });
+    }
+
     // if (
     //   environment.saas == 1 &&
     //   (environment.externalLogin.amazonId ||
@@ -80,7 +99,7 @@ export class LoginDefaultComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroyEven.emit();
   }
-
+  ngAfterViewInit() {}
   checkPasswords: ValidatorFn = (
     group: AbstractControl
   ): ValidationErrors | null => {

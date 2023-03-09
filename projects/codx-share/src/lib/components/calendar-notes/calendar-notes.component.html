@@ -212,7 +212,7 @@
             class="btn btn-sm btn-primary"
             (click)="updateSettingValueVer2()"
           >
-            <codx-label name="lblSaveSettingValue" default="Apply"></codx-label>
+            <codx-label name="lblSaveSettingValue" default="Save"></codx-label>
           </button>
         </div>
       </ul>
@@ -579,15 +579,29 @@
     "
   >
     <ng-template #moreThan3>
-      <ng-container *ngIf="idx == 3">
-        <span style="font-size: 10px; margin-left: 2px; margin-top: -3px">
-          + {{ lenght - 2 }}
+      <ng-container *ngIf="lenght == 3; else index3">
+        <span
+          [class]="'note-pointed-' + event.replace('/', '-')"
+          [style]="
+            'width: 6px;height: 6px; background-color:' +
+            trans.color +
+            ';margin-left: 2px;border-radius: 50%;'
+          "
+        >
         </span>
       </ng-container>
     </ng-template>
+    <ng-template #index3>
+      <span
+        *ngIf="idx == 2"
+        style="font-size: 10px; margin-left: 2px; margin-top: -3px"
+      >
+        +{{ lenght - 2 }}
+      </span>
+    </ng-template>
     <span
-      *ngIf="trans.isActive == '1' && lenght < 4 && idx < 4; else moreThan3"
-      [class]="'note-pointed-' + event.split('/').join('-')"
+      *ngIf="trans.isActive == '1' && idx < 2; else moreThan3"
+      [class]="'note-pointed-' + event.replace('/', '-')"
       [style]="
         'width: 6px;height: 6px; background-color:' +
         trans.color +

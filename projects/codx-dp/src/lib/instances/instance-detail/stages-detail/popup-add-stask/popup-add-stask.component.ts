@@ -67,7 +67,7 @@ export class PopupAddStaskComponent implements OnInit {
   ) {
     this.status = dt?.data[0];
     this.title = dt?.data[1]['text'];
-    this.stepType = dt?.data[1]['id'];
+    this.stepType = dt?.data[1]['value'];
     this.stepID = dt?.data[2];
     this.groupTackList = dt?.data[3];
     this.dialog = dialog;
@@ -148,12 +148,10 @@ export class PopupAddStaskComponent implements OnInit {
   }
 
   filterText(value, key) {
-    if (value) {
       this.stepsTasks[key] = value;
-      this.taskGroupName = this.groupTackList.find((x) => x.recID === value)[
-        'taskGroupName'
-      ];
-    }
+      let taskGroup = this.groupTackList.find((x) => x.recID === value);
+      this.taskGroupName = taskGroup['taskGroupName'] || '';
+      this.stepsTasks['startDate'] = taskGroup['startDate'] || new Date();
   }
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;

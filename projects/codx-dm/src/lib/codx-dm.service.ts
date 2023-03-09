@@ -132,6 +132,9 @@ export class CodxDMService {
   public ChangeData = new BehaviorSubject<boolean>(null);
   isChangeData = this.ChangeData.asObservable();
 
+  public ChangeDataView = new BehaviorSubject<boolean>(null);
+  isChangeDataView = this.ChangeData.asObservable();
+
   public ChangeDataViewFile = new BehaviorSubject<any>(null);
   isChangeDataViewFile = this.ChangeDataViewFile.asObservable();
 
@@ -228,6 +231,9 @@ export class CodxDMService {
   public addFile = new BehaviorSubject<any>(null);
   isAddFile = this.addFile.asObservable();
 
+  public deleteFileView = new BehaviorSubject<any>(null);
+  isDeleteFileView = this.deleteFileView.asObservable();
+
   public editFolder = new BehaviorSubject<any>(null);
   isEditFolder = this.editFolder.asObservable();
 
@@ -317,9 +323,9 @@ export class CodxDMService {
     this.parentUpload = folder.upload;
     this.parentDelete = folder.delete;
     this.parentAssign = folder.assign;
-    if (folder.revision != null) this.parentRevision = folder.revision;
+    if (folder.revision != null) 
+      this.parentRevision = folder.revision;
     else this.parentRevision = false;
-
     this.revision = this.parentRevision;
     this.parentApproval = folder.approval;
     this.parentPhysical = folder.physical;
@@ -381,6 +387,7 @@ export class CodxDMService {
       case '.zip':
         return 'zip.svg';
       case '.jpg':
+      case '.jpeg':
         return 'jpg.svg';
       case '.mp4':
         return 'mp4.svg';
@@ -473,29 +480,29 @@ export class CodxDMService {
       this.nodeSelect.next(data);
       this.disableInput.next(false);
 
-      this.folderService.getFolder(data.recID).subscribe(async (res) => {
-        if (res != null) {
-          this.parentFolder.next(res);
-          this.getRight(res);
-          this.folderName = res.folderName;
-          this.parentFolderId = res.parentId;
-          this.add.next(true);
-        }
-      });
+      // this.folderService.getFolder(data.recID).subscribe(async (res) => {
+      //   if (res != null) {
+      //     this.parentFolder.next(res);
+      //     this.getRight(res);
+      //     this.folderName = res.folderName;
+      //     this.parentFolderId = res.parentId;
+      //     this.add.next(true);
+      //   }
+      // });
 
-      this.folderService.options.funcID = this.idMenuActive;
-      this.folderService.getFolders(data.recID).subscribe(async (res) => {
-        this.isTree = true;
-        this.listFolder = res[0];
-        this.listFiles = [];
-        this.ChangeData.next(true);
-      });
+      // this.folderService.options.funcID = this.idMenuActive;
+      // this.folderService.getFolders(data.recID).subscribe(async (res) => {
+      //   this.isTree = true;
+      //   this.listFolder = res[0];
+      //   this.listFiles = [];
+      //   this.ChangeData.next(true);
+      // });
 
-      this.fileService.options.funcID = this.idMenuActive;
-      this.fileService.GetFiles(data.recID).subscribe(async (res) => {
-        this.listFiles = res[0];
-        this.ChangeData.next(true);
-      });
+      // this.fileService.options.funcID = this.idMenuActive;
+      // this.fileService.GetFiles(data.recID).subscribe(async (res) => {
+      //   this.listFiles = res[0];
+      //   this.ChangeData.next(true);
+      // });
     } else {
       // open file
       if (!data.read) {
@@ -536,42 +543,50 @@ export class CodxDMService {
               this.fileService
                 .deleteFileToTrash(id, this.folderId.getValue(), false)
                 .subscribe(async (res) => {
-                  let list = this.listFiles;
-                  //list = list.filter(item => item.recID != id);
-
-                  let index = list.findIndex(
-                    (d) => d.recID.toString() === id.toString()
-                  ); //find index in your array
-                  if (index >= 0) {
-                    list.splice(index, 1); //remove element from array
-                    //this.changeData(null, list, id);
-                    this.listFiles = list;
-                    this.notificationsService.notifyCode(
-                      'DM046',
-                      0,
-                      this.user?.userName
-                    );
-                    this.addFile.next(true);
-                    //  this.changeDetectorRef.detectChanges();
+                  if(res)
+                  {
+                    let list = this.listFiles;
+                    //list = list.filter(item => item.recID != id);
+  
+                    let index = list.findIndex(
+                      (d) => d.recID.toString() === id.toString()
+                    ); //find index in your array
+                    if (index >= 0) {
+                      list.splice(index, 1); //remove element from array
+                      //this.changeData(null, list, id);
+                      this.listFiles = list;
+                      this.notificationsService.notifyCode(
+                        'DM046',
+                        0,
+                        this.user?.userName
+                      );
+                      this.addFile.next(true);
+                      //  this.changeDetectorRef.detectChanges();
+                    }
+                    this.deleteFileView.next(id);
+                    this.fileService.getTotalHdd().subscribe((i) => {
+                      this.updateHDD.next(i);
+                      //   this.changeDetectorRef.detectChanges();
+                    });
                   }
-
-                  this.fileService.getTotalHdd().subscribe((i) => {
-                    this.updateHDD.next(i);
-                    //   this.changeDetectorRef.detectChanges();
-                  });
+                  else this.notificationsService.notifyCode("SYS022");
+                 
                 });
             } else {
               this.folderService
                 .deleteFolderToTrash(id, false)
                 .subscribe(async (res) => {
-                  this.listFolder = this.listFolder.filter(
-                    (x) => x.recID != id
-                  );
-                  this.nodeDeleted.next(id);
-                  this.fileService.getTotalHdd().subscribe((i) => {
-                    this.updateHDD.next(i);
-                    //  this.changeDetectorRef.detectChanges();
-                  });
+                  if(res)
+                  {
+                    this.listFolder = this.listFolder.filter(
+                      (x) => x.recID != id
+                    );
+                    this.nodeDeleted.next(id);
+                    this.fileService.getTotalHdd().subscribe((i) => {
+                      this.updateHDD.next(i);
+                      //  this.changeDetectorRef.detectChanges();
+                    });
+                  }
                 });
             }
           }
@@ -639,7 +654,6 @@ export class CodxDMService {
   }
 
   filterMoreFunction(e: any, data: any, modeView = false) {
-    debugger
     var type = this.getType(data, 'entity');
     var bookmark = this.isBookmark(data);
     var list =

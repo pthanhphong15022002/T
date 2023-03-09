@@ -12,13 +12,14 @@ export const environment = {
   urlUpload: '',
   office365: '',
   appName: '',
-  saas: 0,
+  saas: 1,
   layoutCZ: 'qtsc',
   themeMode: 'body', //layout,
   externalLogin: {
     amazonId: '',
     facebookId: '',
-    googleId: '1004809784960-375udeskttcpr03e0pqshf0hpococ0vq.apps.googleusercontent.com',
+    googleId:
+      '1004809784960-375udeskttcpr03e0pqshf0hpococ0vq.apps.googleusercontent.com',
     microsoftId: '',
   },
   SureMeet: {
@@ -31,6 +32,9 @@ export const environment = {
     app_id: 'demo.suremeet@gmail.com',
     app_secret: '123456',
   },
+  reCaptchaKey: '6LctVdwkAAAAAF_yJPT2NGF2SvEpCKyLS4t68Ps1',
+  reCaptchaEnable: 0,
+
   firebase: {
     apiKey: 'AIzaSyC1SKqppxpxwT7i3qEdUjJjn-J_SMoUBic',
     authDomain: 'ermtest-2a9bb.firebaseapp.com',

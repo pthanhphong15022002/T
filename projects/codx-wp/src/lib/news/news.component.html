@@ -212,10 +212,10 @@
     <div class="row my-8" style="height: 300px;">
       <ng-container *ngIf="videos.length > 0; else tmpEmptyListVideo">
         <ngb-carousel (slide)="navigate($event)" *ngIf="slides.length > 0" 
-          carousel [wrap]="false" [keyboard]="false" 
+          carousel [wrap]="false" [keyboard]="false" [activeId]="0"
           [showNavigationIndicators]="false" [showNavigationArrows]="showNavigation">
           <ng-template ngbSlide *ngFor="let slide of slides">
-            <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center w-100">
               <ng-container *ngFor="let item of slide">
                 <div (click)="clickViewDetail(item)" class="video cursor-pointer mx-5">
                   <codx-img 

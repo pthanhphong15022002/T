@@ -307,7 +307,8 @@ const T_Component: Type<any>[] = [
   PopupEmpBusinessTravelsComponent,
   PopupEbenefitComponent,
   PopupJobGeneralInfoComponent,
-  EmployeeDetailComponent
+  EmployeeDetailComponent,
+  EmployeeContractComponent
 ];
 @NgModule({
   imports: [
