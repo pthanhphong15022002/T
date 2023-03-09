@@ -1238,7 +1238,6 @@ export class PortalComponent extends UIComponent {
     this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
       this.eInfoFormModel = res;
       console.log('infooooooooooooooooooo', res);
-      
     });
 
     this.hrService.getFormModel(this.eFamiliesFuncID).then((res) => {
