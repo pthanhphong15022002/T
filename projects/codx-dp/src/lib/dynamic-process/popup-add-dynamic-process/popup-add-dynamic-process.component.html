@@ -1379,7 +1379,7 @@
     <div
       class="header-job d-flex align-items-center justify-content-between py-3 px-6"
     >
-      <div class="d-flex flex-column w-100">
+      <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label class="title" fiedName="TaskType" default="Công việc">
           </codx-label>
@@ -1392,8 +1392,8 @@
           </codx-label>
         </div>
       </div>
-      <div class="d-flex align-items-center">
-        <div class="d-flex flex-column">
+      <div class="d-flex align-items-center w-100">
+        <div class="d-flex justify-content-end flex-column">
           <div class="text-gray-500 fs-7">
             <codx-label
               fiedName="taskMemo"
@@ -1806,7 +1806,7 @@
       <div class="main-body px-4 aqua">
         <div class="row pb-3">
           <div class="col-6">
-            <div class="title-switch">
+            <div class="text-dark fw-bold">
               <codx-label
                 default="Bắt buộc chọn lý do khi đánh dấu nhiệm vụ là thành
                 công:"
@@ -1814,8 +1814,8 @@
             </div>
           </div>
           <div class="col-6">
-            <div class="row">
-              <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div class="me-5">
                 <codx-input
                   name="success-radio"
                   type="radio"
@@ -1831,7 +1831,7 @@
                 >
                 </codx-input>
               </div>
-              <div class="col-6">
+              <div class="me-5">
                 <codx-input
                   name="success-radio"
                   type="radio"
@@ -2021,15 +2021,15 @@
       <div class="main-body p-6">
         <div class="row pt-3 pb-5">
           <div class="col-6">
-            <div class="title-switch">
+            <div class="text-dark fw-bold">
               <codx-label
                 default="Bắt buộc chọn lý do khi đánh dấu nhiệm vụ là thất bại"
               ></codx-label>
             </div>
           </div>
           <div class="col-6">
-            <div class="row">
-              <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div class="me-5">
                 <codx-input
                   name="fail-radio"
                   type="radio"
@@ -2043,7 +2043,7 @@
                 >
                 </codx-input>
               </div>
-              <div class="col-6">
+              <div class="me-5">
                 <codx-input
                   type="radio"
                   name="fail-radio"
@@ -2613,7 +2613,7 @@
 <hr />
         <div class="row">
           <div class="col-6">
-            <div class="title-switch">
+            <div class="text-dark fw-bold">
               <codx-label
                 class="text-muted"
                 default="Cho phép người phụ trách chỉnh sửa thời gian hoành
@@ -2623,8 +2623,8 @@
             </div>
           </div>
           <div class="col-6">
-            <div class="row">
-              <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div class="me-5">
                 <codx-input
                   [name]="formDurationCtrl"
                   type="radio"
@@ -2637,7 +2637,7 @@
                 >
                 </codx-input>
               </div>
-              <div class="col-6">
+              <div class="me-5">
                 <codx-input
                   type="radio"
                   [name]="formDurationCtrl"
@@ -2655,17 +2655,16 @@
 <hr />
         <div class="row">
           <div class="col-6">
-            <div class="title-switch">
+            <div class="text-dark fw-bold">
               <codx-label
-                class="text-muted"
                 default="Cho phép người phụ trách chỉnh sửa thời hạn công việc
                 mặc định"
               ></codx-label>
             </div>
           </div>
           <div class="col-6">
-            <div class="row">
-              <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div class="me-5">
                 <codx-input
                   [name]="formLeaTimeCtrl"
                   type="radio"
@@ -2678,7 +2677,7 @@
                 >
                 </codx-input>
               </div>
-              <div class="col-6">
+              <div class="me-5">
                 <codx-input
                   type="radio"
                   [name]="formLeaTimeCtrl"
