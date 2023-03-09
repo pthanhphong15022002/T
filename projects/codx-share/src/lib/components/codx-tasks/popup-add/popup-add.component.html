@@ -230,9 +230,9 @@
   </ng-container>
   <ng-container *ngIf="showAssignTo">
     <div
-      class="d-flex align-items-center justify-content-between nav-item w-100 mb-1 mt-3"
+      class="d-flex flex-column w-100 mb-1 mt-3"
     >
-      <div class="d-flex align-items-center mb-3">
+      <div class="d-flex align-items-center mb-2">
         <span class="icon-person icon-18 me-2 text-primary"></span>
         <div class="fw-bold text-primary mt-1">
           <codx-label
@@ -254,18 +254,18 @@
         [disabled]="readOnly"
       ></codx-input> -->
 
-      <div class="d-flex justify-content-end me-2">
+      <div class="d-flex justify-content-end">
         <ng-container *ngFor="let item of listRoles">
-          <button
-            class="button d-flex align-items-center ms-4 cursor-pointer text-hover-primary btn-light-primary"
+          <button type="button"
+            class="btn btn-sm ms-2 btn-light-primary"
             (click)="
               !readOnly ? openControlShare(controlShare, item.value) : ''
             "
           >
-            <span class="me-1"
+            <i class="me-1"
               ><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt=""
-            /></span>
-            <div class="fs-8 text-gray-500">{{ item.text }}</div>
+            /></i>
+            <span class="fs-8">{{ item.text }}</span>
           </button>
         </ng-container>
       </div>
@@ -408,7 +408,7 @@
       </div>
     </ng-container>
   </div> -->
-  <div class="d-flex align-items-center justify-content-between mt-3">
+  <div class="d-flex flex-column mt-3">
     <div class="d-flex align-items-center">
       <span class="icon-person icon-18 me-2 text-primary"></span>
       <div class="fw-bold text-primary mt-1">
@@ -420,16 +420,16 @@
         </codx-label>
       </div>
     </div>
-    <div class="d-flex justify-content-end me-2">
+    <div class="d-flex justify-content-end mt-2">
       <ng-container *ngFor="let item of listRoles">
-        <button
-          class="button d-flex align-items-center ms-4 cursor-pointer text-hover-primary btn-light-primary"
+        <button type="button"
+          class="btn btn-sm ms-2 btn-light-primary"
           (click)="!readOnly ? openControlShare(controlShare, item.value) : ''"
         >
-          <span class="me-1"
+          <i class="me-1"
             ><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt=""
-          /></span>
-          <div class="fs-8 text-gray-500">{{ item.text }}</div>
+          /></i>
+          <span class="fs-8">{{ item.text }}</span>
         </button>
       </ng-container>
     </div>
