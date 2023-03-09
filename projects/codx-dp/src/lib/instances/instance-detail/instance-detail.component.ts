@@ -363,9 +363,7 @@ export class InstanceDetailComponent implements OnInit {
 
   clickDetailGanchart(recID){
     let data = this.ganttDsClone?.find(item => item.recID === recID);
-    console.log(this.ganttDsClone);
-    
-    console.log(data);
+    console.log(this.ganttDs);
     
     if (data) {
       this.callfc.openForm(
