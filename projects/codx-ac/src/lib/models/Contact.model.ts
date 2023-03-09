@@ -1,3 +1,5 @@
+import { Util } from "codx-core";
+
 export class Contact {
   alternative: any;
   anniversary: any;
@@ -28,7 +30,7 @@ export class Contact {
   firstName: any;
   fullAddress: any;
   gender: any;
-  homePhone: any;
+  homePhone: any = '';
   idCardNo: any;
   idType: any;
   income: any = 0;
@@ -59,7 +61,7 @@ export class Contact {
   positionID: any;
   postalCode: any;
   provinceID: any;
-  recID: any = Guid.newGuid();
+  recID: any = Util.uid();
   reference: any;
   referenceType: any;
   regionID: any;
@@ -75,16 +77,4 @@ export class Contact {
   userID: any;
   vip: any;
   webPage: any;
-}
-class Guid {
-  static newGuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
-  }
 }

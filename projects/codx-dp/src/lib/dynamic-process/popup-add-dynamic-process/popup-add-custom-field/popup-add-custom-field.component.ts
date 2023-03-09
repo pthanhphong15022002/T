@@ -32,6 +32,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   grvSetup: any;
   action = 'add';
   titleAction = 'Thêm';
+  disable = false;
   //
   value: number = 5;
   min: number = 0;
@@ -63,7 +64,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.action = dt?.data[1];
     this.titleAction = dt?.data[2];
     this.stepList = dt?.data[3];
-
     this.value = this.field.rank;
     this.cache
       .gridViewSetup('DPStepsFields', 'grvDPStepsFields')

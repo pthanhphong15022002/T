@@ -57,8 +57,11 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   gridViewSetup: any;
   gridViewSetupBank: any;
   valuelist: any;
-  moreFuncName: any;
-  funcName: any;
+  moreFuncNameAdd:any;
+  moreFuncNameEdit:any;
+  funcNameContact: any;
+  funcNameBank:any;
+  funcNameAddress:any;
   formType: any;
   validate: any = 0;
   tabInfo: any[] = [
@@ -108,8 +111,10 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     this.formType = dialogData.data?.formType;
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'SYS01');
-        if (m) this.moreFuncName = m.defaultName;
+        let add = res.find((x) => x.functionID == 'SYS01');
+        let edit = res.find((x) => x.functionID == 'SYS03');
+        if (add) this.moreFuncNameAdd = add.defaultName;
+        if (edit) this.moreFuncNameEdit = edit.customName;
       }
     });
     this.cache.gridViewSetup('Vendors', 'grvVendors').subscribe((res) => {
@@ -179,6 +184,24 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    this.cache.moreFunction('BankAccounts', 'grvBankAccounts').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20503');
+        this.funcNameBank = m.defaultName;
+      }
+    });
+    this.cache.moreFunction('Contacts', 'grvContacts').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20501');
+        this.funcNameContact = m.defaultName;
+      }
+    });
+    this.cache.moreFunction('AddressBook', 'grvAddressBook').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20502');
+        this.funcNameAddress = m.defaultName;
+      }
+    });
   }
   //#endregion
 
@@ -202,171 +225,143 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     this.dt.detectChanges();
   }
   openPopupBank() {
+    var obj = {
+      headerText: this.moreFuncNameAdd + ' ' + this.funcNameBank,
+      dataBank: this.objectBankaccount,
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'BankAccounts';
+    dataModel.gridViewName = 'grvBankAccounts';
+    dataModel.entityName = 'BS_BankAccounts';
+    opt.FormModel = dataModel;
     this.cache
-      .moreFunction('BankAccounts', 'grvBankAccounts')
+      .gridViewSetup('BankAccounts', 'grvBankAccounts')
       .subscribe((res) => {
-        if (res && res.length) {
-          let m = res.find((x) => x.functionID == 'ACS20503');
-          if (m) {
-            this.funcName = m.defaultName;
-            var obj = {
-              headerText: this.moreFuncName + ' ' + this.funcName,
-              dataBank: this.objectBankaccount,
-            };
-            let opt = new DialogModel();
-            let dataModel = new FormModel();
-            dataModel.formName = 'BankAccounts';
-            dataModel.gridViewName = 'grvBankAccounts';
-            dataModel.entityName = 'BS_BankAccounts';
-            opt.FormModel = dataModel;
-            this.cache
-              .gridViewSetup('BankAccounts', 'grvBankAccounts')
-              .subscribe((res) => {
-                if (res) {
-                  var dialogbank = this.callfc.openForm(
-                    PopAddBankComponent,
-                    '',
-                    500,
-                    400,
-                    '',
-                    obj,
-                    '',
-                    opt
-                  );
-                  dialogbank.closed.subscribe((x) => {
-                    var databankaccount = JSON.parse(
-                      localStorage.getItem('databankaccount')
+        if (res) {
+          var dialogbank = this.callfc.openForm(
+            PopAddBankComponent,
+            '',
+            500,
+            400,
+            '',
+            obj,
+            '',
+            opt
+          );
+          dialogbank.closed.subscribe((x) => {
+            var databankaccount = JSON.parse(
+              localStorage.getItem('databankaccount')
+            );
+            if (databankaccount != null) {
+              this.api
+                .exec(
+                  'ERM.Business.BS',
+                  'BankAccountsBusiness',
+                  'CheckBankAccount',
+                  [this.objectBankaccount, databankaccount]
+                )
+                .subscribe((res: any) => {
+                  if (res) {
+                    this.objectBankaccount.push(databankaccount);
+                  } else {
+                    this.notification.notifyCode(
+                      'SYS031',
+                      0,
+                      '"' + databankaccount.bankAcctID + '"'
                     );
-                    if (databankaccount != null) {
-                      this.api
-                        .exec(
-                          'ERM.Business.BS',
-                          'BankAccountsBusiness',
-                          'CheckBankAccount',
-                          [this.objectBankaccount, databankaccount]
-                        )
-                        .subscribe((res: any) => {
-                          if (res) {
-                            this.objectBankaccount.push(databankaccount);
-                          } else {
-                            this.notification.notifyCode(
-                              'SYS031',
-                              0,
-                              '"' + databankaccount.bankAcctID + '"'
-                            );
-                            return;
-                          }
-                        });
-                    }
-                    window.localStorage.removeItem('databankaccount');
-                  });
-                }
-              });
-          }
+                    return;
+                  }
+                });
+            }
+            window.localStorage.removeItem('databankaccount');
+          });
         }
       });
   }
   openPopupContact() {
-    this.cache.moreFunction('Contacts', 'grvContacts').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'ACS20501');
-        if (m) {
-          this.funcName = m.defaultName;
-          var obj = {
-            headerText: this.moreFuncName + ' ' + this.funcName,
-            datacontact: this.objectContact,
-          };
-          let opt = new DialogModel();
-          let dataModel = new FormModel();
-          dataModel.formName = 'ContactBook';
-          dataModel.gridViewName = 'grvContactBook';
-          dataModel.entityName = 'BS_ContactBook';
-          opt.FormModel = dataModel;
-          this.cache
-            .gridViewSetup('ContactBook', 'grvContactBook')
-            .subscribe((res) => {
-              if (res) {
-                var dialogcontact = this.callfc.openForm(
-                  PopAddContactComponent,
-                  '',
-                  650,
-                  570,
-                  '',
-                  obj,
-                  '',
-                  opt
-                );
-                dialogcontact.closed.subscribe((x) => {
-                  var datacontact = JSON.parse(
-                    localStorage.getItem('datacontact')
-                  );
-                  if (datacontact != null) {
-                    this.objectContact.push(datacontact);
-                  }
-                  window.localStorage.removeItem('datacontact');
-                });
-              }
-            });
+    var obj = {
+      headerText: this.moreFuncNameAdd + ' ' + this.funcNameContact,
+      datacontact: this.objectContact,
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'ContactBook';
+    dataModel.gridViewName = 'grvContactBook';
+    dataModel.entityName = 'BS_ContactBook';
+    opt.FormModel = dataModel;
+    this.cache
+      .gridViewSetup('ContactBook', 'grvContactBook')
+      .subscribe((res) => {
+        if (res) {
+          var dialogcontact = this.callfc.openForm(
+            PopAddContactComponent,
+            '',
+            650,
+            570,
+            '',
+            obj,
+            '',
+            opt
+          );
+          dialogcontact.closed.subscribe((x) => {
+            var datacontact = JSON.parse(
+              localStorage.getItem('datacontact')
+            );
+            if (datacontact != null) {
+              this.objectContact.push(datacontact);
+            }
+            window.localStorage.removeItem('datacontact');
+          });
         }
-      }
-    });
+      });
   }
   openPopupAddress() {
+    var obj = {
+      headerText: this.moreFuncNameAdd + ' ' + this.funcNameAddress,
+      dataAddress: this.objectAddress,
+      dataContactAddress: this.objectContactAddress,
+      objectype: this.objecttype,
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'AddressBook';
+    dataModel.gridViewName = 'grvAddressBook';
+    dataModel.entityName = 'BS_AddressBook';
+    opt.FormModel = dataModel;
     this.cache
-      .moreFunction('AddressBook', 'grvAddressBook')
+      .gridViewSetup('AddressBook', 'grvAddressBook')
       .subscribe((res) => {
-        if (res && res.length) {
-          let m = res.find((x) => x.functionID == 'ACS20502');
-          if (m) {
-            this.funcName = m.defaultName;
-            var obj = {
-              headerText: this.moreFuncName + ' ' + this.funcName,
-              dataAddress: this.objectAddress,
-              dataContactAddress: this.objectContactAddress,
-              objectype: this.objecttype,
-            };
-            let opt = new DialogModel();
-            let dataModel = new FormModel();
-            dataModel.formName = 'AddressBook';
-            dataModel.gridViewName = 'grvAddressBook';
-            dataModel.entityName = 'BS_AddressBook';
-            opt.FormModel = dataModel;
-            this.cache
-              .gridViewSetup('AddressBook', 'grvAddressBook')
-              .subscribe((res) => {
-                if (res) {
-                  var dialogaddress = this.callfc.openForm(
-                    PopAddAddressComponent,
-                    '',
-                    550,
-                    650,
-                    '',
-                    obj,
-                    '',
-                    opt
-                  );
-                  dialogaddress.closed.subscribe((x) => {
-                    var dataaddress = JSON.parse(
-                      localStorage.getItem('dataaddress')
-                    );
-                    var datacontactaddress = JSON.parse(
-                      localStorage.getItem('datacontactaddress')
-                    );
-                    if (dataaddress != null) {
-                      this.objectAddress.push(dataaddress);
-                    }
-                    if (datacontactaddress != null) {
-                      datacontactaddress.forEach((element) => {
-                        this.objectContactAddress.push(element);
-                      });
-                    }
-                    window.localStorage.removeItem('dataaddress');
-                    window.localStorage.removeItem('datacontactaddress');
-                    window.localStorage.removeItem('datacontactaddressdelete');
-                  });
-                }
+        if (res) {
+          var dialogaddress = this.callfc.openForm(
+            PopAddAddressComponent,
+            '',
+            550,
+            650,
+            '',
+            obj,
+            '',
+            opt
+          );
+          dialogaddress.closed.subscribe((x) => {
+            var dataaddress = JSON.parse(
+              localStorage.getItem('dataaddress')
+            );
+            var datacontactaddress = JSON.parse(
+              localStorage.getItem('datacontactaddress')
+            );
+            if (dataaddress != null) {
+              this.objectAddress.push(dataaddress);
+            }
+            if (datacontactaddress != null) {
+              datacontactaddress.forEach((element) => {
+                this.objectContactAddress.push(element);
               });
-          }
+            }
+            window.localStorage.removeItem('dataaddress');
+            window.localStorage.removeItem('datacontactaddress');
+            window.localStorage.removeItem('datacontactaddressdelete');
+          });
         }
       });
   }
@@ -383,7 +378,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
       (x) => x.bankAcctID == data.bankAcctID
     );
     var obj = {
-      headerText: 'Chỉnh sửa',
+      headerText: this.moreFuncNameEdit + ' ' + this.funcNameBank,
       type: 'editbank',
       data: { ...data },
     };
@@ -422,7 +417,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   editobjectAddress(data: any) {
     let index = this.objectAddress.findIndex((x) => x.recID == data.recID);
     var obs = {
-      headerText: 'Chỉnh sửa địa chỉ',
+      headerText: this.moreFuncNameEdit + ' ' + this.funcNameAddress,
       type: 'editaddress',
       data: { ...data },
       datacontactaddress: [...this.objectContactAddress],
@@ -440,8 +435,8 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
           var dialogaddress = this.callfc.openForm(
             PopAddAddressComponent,
             '',
+            550,
             650,
-            600,
             '',
             obs,
             '',
@@ -487,7 +482,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   editobjectContact(data: any) {
     let index = this.objectContact.findIndex((x) => x.recID == data.recID);
     var ob = {
-      headerText: 'Chỉnh sửa liên hệ',
+      headerText: this.moreFuncNameEdit + ' ' + this.funcNameContact,
       type: 'editContact',
       data: { ...data },
     };
