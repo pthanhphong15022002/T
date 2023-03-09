@@ -94,6 +94,8 @@ export class InstancesComponent
   dataColums = [];
   dataDrop: any;
   isClick: boolean = true;
+  isUseSuccess: boolean = true;
+  isUseFail: boolean = true;
   stepIdClick = '';
   listProccessCbx: any;
   dataProccess: any;
@@ -124,8 +126,13 @@ export class InstancesComponent
           }
         });
     });
-
     this.dataProccess = dt?.data?.data;
+    this.isUseSuccess = this.dataProccess.steps.filter(
+      (x) => x.isSuccessStep
+    )[0].isUsed;
+    this.isUseFail = this.dataProccess.steps.filter(
+      (x) => x.isFailStep
+    )[0].isUsed;
     this.getListCbxProccess(this.dataProccess?.applyFor);
   }
   ngAfterViewInit(): void {
@@ -496,9 +503,7 @@ export class InstancesComponent
           //Chỉnh sửa, chuyển tiếp, thất bại, thành công
           case 'SYS103':
           case 'SYS03':
-          case 'DP02':
           case 'DP09':
-          case 'DP10':
             let isUpdate = data.write;
             if (
               !isUpdate ||
@@ -526,6 +531,27 @@ export class InstancesComponent
           //Mở nhiệm vụ = false
           case 'DP15':
             if (!data.closed) res.disabled = true;
+            break;
+          case 'DP02':
+            let isUpdateFail = data.write;
+            if ( !isUpdateFail ||
+              (data.status !== '1' && data.status !== '2') ||
+              data.closed ||
+              !this.isUseFail
+            ) {
+              res.disabled = true;
+            }
+
+            break;
+          case 'DP10':
+            let isUpdateSuccess = data.write;
+            if ( !isUpdateSuccess ||
+              (data.status !== '1' && data.status !== '2') ||
+              data.closed ||
+              !this.isUseSuccess
+            ) {
+              res.disabled = true;
+            }
             break;
         }
       });
