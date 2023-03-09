@@ -37,7 +37,6 @@ export class BookingStationeryComponent
   implements AfterViewInit
 {
   @ViewChild('chart') chart: TemplateRef<any>;
-
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   viewType = ViewType;
@@ -61,7 +60,7 @@ export class BookingStationeryComponent
   itemDetail;
   popupClosed = true;
   isAdmin: boolean;
-  
+
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -84,14 +83,13 @@ export class BookingStationeryComponent
   }
 
   onInit(): void {
-    this.codxEpService.roleCheck().subscribe(res=>{
-      if(res==true){
-        this.isAdmin=true;
+    this.codxEpService.roleCheck().subscribe((res) => {
+      if (res == true) {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
       }
-      else{        
-        this.isAdmin=false;
-      }
-    })
+    });
   }
 
   ngAfterViewInit(): void {
@@ -170,7 +168,11 @@ export class BookingStationeryComponent
 
   cancel(data: any) {
     if (
-      !this.codxEpService.checkRole(this.authService.userValue, data?.owner,this.isAdmin)
+      !this.codxEpService.checkRole(
+        this.authService.userValue,
+        data?.owner,
+        this.isAdmin
+      )
     ) {
       this.notificationsService.notifyCode('TM052');
       return;
@@ -199,6 +201,69 @@ export class BookingStationeryComponent
           this.notificationsService.notifyCode(res?.msgCodeError);
         }
       });
+  }
+
+  undo(data: any) {
+    this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
+      if (res != null) {
+        this.notificationsService.notifyCode('SYS034'); //đã thu hồi
+        data.approveStatus = '3';
+        data.status = '3';
+        this.view.dataService.update(data).subscribe();
+      } else {
+        this.notificationsService.notifyCode(res?.msgCodeError);
+      }
+    });
+  }
+  reject(data: any) {
+    this.codxEpService
+      .getCategoryByEntityName(this.formModel.entityName)
+      .subscribe((res: any) => {
+        this.codxEpService
+          .approve(
+            data?.approvalTransRecID, //ApprovelTrans.RecID
+            '4',
+            '',
+            ''
+          )
+          .subscribe((res: any) => {
+            if (res?.msgCodeError == null && res?.rowCount >= 0) {
+              this.notificationsService.notifyCode('SYS034'); //đã duyệt
+              data.approveStatus = '4';
+              data.status = '4';
+              this.view.dataService.update(data).subscribe();
+            } else {
+              this.notificationsService.notifyCode(res?.msgCodeError);
+            }
+          });
+      });
+  }
+  approve(data: any) {
+    this.codxEpService
+      .getCategoryByEntityName(this.formModel.entityName)
+      .subscribe((res: any) => {
+        this.codxEpService
+          .approve(
+            data?.approvalTransRecID, //ApprovelTrans.RecID
+            '5',
+            '',
+            ''
+          )
+          .subscribe((res: any) => {
+            if (res?.msgCodeError == null && res?.rowCount >= 0) {
+              this.notificationsService.notifyCode('SYS034'); //đã duyệt
+              data.approveStatus = '5';
+              data.status = '5';
+              this.view.dataService.update(data).subscribe();
+            } else {
+              this.notificationsService.notifyCode(res?.msgCodeError);
+            }
+          });
+      });
+  }
+
+  updateStatus(data: any) {
+    this.view.dataService.update(data).subscribe();
   }
 
   changeDataMF(event, data: any) {
@@ -357,7 +422,11 @@ export class BookingStationeryComponent
   edit(evt: any) {
     if (evt) {
       if (
-        !this.codxEpService.checkRole(this.authService.userValue, evt?.owner,this.isAdmin)
+        !this.codxEpService.checkRole(
+          this.authService.userValue,
+          evt?.owner,
+          this.isAdmin
+        )
       ) {
         this.notificationsService.notifyCode('TM052');
         return;
@@ -521,7 +590,11 @@ export class BookingStationeryComponent
     if (evt) {
       deleteItem = evt;
       if (
-        !this.codxEpService.checkRole(this.authService.userValue, evt?.owner,this.isAdmin)
+        !this.codxEpService.checkRole(
+          this.authService.userValue,
+          evt?.owner,
+          this.isAdmin
+        )
       ) {
         this.notificationsService.notifyCode('TM052');
         return;

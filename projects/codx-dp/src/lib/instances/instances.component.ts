@@ -423,7 +423,7 @@ export class InstancesComponent
 
   //Event
   clickMF(e, data?) {
-    this.itemSelected = data;
+    this.dataSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
     switch (e.functionID) {
@@ -458,22 +458,53 @@ export class InstancesComponent
   }
 
   openOrClosed(data, check) {
-    this.noti
-      .alertCode('DP018', null, "'" + this.titleAction + "'")
-      .subscribe((info) => {
-        if (info.event.status == 'Y') {
-          this.codxDpService
-            .openOrClosedInstance(data.recID, check)
-            .subscribe((res) => {
-              if (res) {
-                this.itemSelected.closed = check;
-                this.noti.notifyCode(check ? 'DP016' : 'DP017');
-                this.view.dataService.update(this.itemSelected).subscribe();
-                this.detectorRef.detectChanges();
-              }
-            });
-        }
-      });
+    if (this.process.showInstanceControl === '1') {
+      this.noti
+        .alertCode('DP018', null, "'" + this.titleAction + "'")
+        .subscribe((info) => {
+          if (info.event.status == 'Y') {
+            this.codxDpService
+              .openOrClosedInstance(data.recID, check)
+              .subscribe((res) => {
+                if (res) {
+                  this.dataSelected.closed = check;
+                  this.noti.notifyCode(check ? 'DP016' : 'DP017');
+                  this.view.dataService.update(this.dataSelected).subscribe();
+                }
+              });
+          }
+        });
+    } else if (
+      this.process.showInstanceControl === '0' ||
+      this.process.showInstanceControl === '2'
+    ) {
+      this.view.dataService.dataSelected = data;
+
+      this.noti
+        .alertCode('DP018', null, "'" + this.titleAction + "'")
+        .subscribe((info) => {
+          if (info.event.status == 'Y') {
+            this.codxDpService
+              .openOrClosedInstance(data.recID, check)
+              .subscribe((res) => {
+                if (res) {
+                  this.dataSelected.closed = check;
+                  this.noti.notifyCode(check ? 'DP016' : 'DP017');
+                  this.view.dataService.remove(this.dataSelected).subscribe();
+                  this.detectorRef.detectChanges();
+                }
+              });
+          }
+        });
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  beforeClosed(opt: RequestOption, check) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'OpenOrClosedInstanceAsync';
+    opt.data = [itemSelected.recID, check];
+    return true;
   }
 
   //#popup roles

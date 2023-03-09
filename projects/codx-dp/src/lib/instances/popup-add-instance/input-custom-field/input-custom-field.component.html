@@ -6,22 +6,30 @@
     [default]="customField.title"
   >
   </codx-label>
-  <span *ngIf="customField.isRequired"
-    ><codx-label
+  <span *ngIf="viewFileName && customField.fieldName">
+    {{ "(" + customField.fieldName + ")" }}
+  </span>
+  <span *ngIf="customField.isRequired">
+    <codx-label
       class="text-danger"
       name="attentionIsRequired"
       formName="DPInstancesStepsFields"
       gridViewName="grvDPInstancesStepsFields"
       default="*"
-    ></codx-label
-  ></span>
+    >
+    </codx-label>
+  </span>
   <span
     *ngIf="customField.dataType == 'A'"
     class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"
     (click)="addFile()"
   ></span>
   <span *ngIf="customField.dataType == 'P'" class="mx-2 me-5">
-    <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
+    <button
+      class="btn btn-sm btn-icon"
+      (click)="openUserPopup()"
+      [disabled]="disable"
+    >
       <span class="icon-group_add text-primary icon-18"></span>
     </button>
   </span>
@@ -38,10 +46,11 @@
     [field]="customField.fieldName"
     type="text"
     [placeholder]="customField.note"
-    [crrValue]="customField.dataValue ||''"
+    [crrValue]="customField.dataValue || ''"
     (keyUpEnter)="valueChange($event)"
     (controlBlur)="valueChange($event)"
     (valueChange)="valueChange($event)"
+    [disabled]="disable"
   >
   </codx-input>
   <codx-input
@@ -51,9 +60,10 @@
     format="ed2"
     [placeholder]="customField.note"
     (keyUpEnter)="valueChange($event)"
-    [crrValue]="customField.dataValue||''"
+    [crrValue]="customField.dataValue || ''"
     (controlBlur)="valueChange($event)"
     (valueChange)="valueChange($event)"
+    [disabled]="disable"
   >
   </codx-input>
 </ng-container>
@@ -68,6 +78,7 @@
       (keyUpEnter)="valueChange($event)"
       (controlBlur)="valueChange($event)"
       (valueChange)="valueChange($event)"
+      [disabled]="disable"
     ></codx-input>
   </ng-container>
 </ng-container>
@@ -82,6 +93,7 @@
     (controlBlur)="valueChange($event)"
     (keyUpEnter)="valueChange($event)"
     (valueChange)="valueChange($event)"
+    [disabled]="disable"
   >
   </codx-input>
 </ng-container>
@@ -96,6 +108,7 @@
     (controlBlur)="valueChange($event)"
     (keyUpEnter)="valueChange($event)"
     (valueChange)="valueChange($event)"
+    [disabled]="disable"
   >
   </codx-input>
 </ng-container>
@@ -149,6 +162,7 @@
     (leave)="hovered = currentRate"
     [readonly]="readonly"
     [starTemplate]="temp"
+    [disabled]="disable"
   >
     <ng-template #temp let-fill="fill" let-index="index">
       <span
