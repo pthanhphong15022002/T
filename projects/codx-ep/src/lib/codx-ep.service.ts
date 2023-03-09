@@ -1,7 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { APICONSTANT } from '@shared/constant/api-const';
 import axios from 'axios';
 import {
   ApiHttpService,
@@ -9,12 +8,9 @@ import {
   CacheService,
   FormModel,
   NotificationsService,
-  UploadFile,
   UserModel,
-  Util,
 } from 'codx-core';
 import { Observable } from 'rxjs/internal/Observable';
-//import { environment } from 'src/environments/environment';
 
 export class ModelPage {
   functionID = '';
@@ -272,15 +268,14 @@ export class CodxEpService {
       )
       .subscribe();
   }
-  roleCheck() {    
-    return this.api
-      .execSv(
-        'EP',
-        'ERM.Business.EP',
-        'BookingsBusiness',
-        'AdminModuleCheckAsync',
-        []
-      )
+  roleCheck() {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'AdminModuleCheckAsync',
+      []
+    );
   }
 
   getListResource(resourceType: string) {
@@ -603,14 +598,14 @@ export class CodxEpService {
       [booking.recID]
     );
   }
-  
-  checkRole(curUser: any, owner: string,isAdmin:boolean) {
+
+  checkRole(curUser: any, owner: string, isAdmin: boolean) {
     return (
       curUser?.userID == owner ||
       curUser?.systemAdmin ||
       curUser?.functionAdmin ||
       curUser?.administrator ||
-      isAdmin==true
+      isAdmin == true
     );
   }
   checkDuplicateBooking(

@@ -238,6 +238,7 @@ export class BookingStationeryComponent
           });
       });
   }
+  
   approve(data: any) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
