@@ -54,7 +54,7 @@
                 service="WP" 
                 assemblyName="ERM.Business.WP" 
                 className="GroupBusiness"
-                method="GetGroupsChatAsync"
+                method="GetGroupAsync"
                 [selectFirst]="false">
             </codx-listview>
         </ng-template>
@@ -62,7 +62,7 @@
 </div>
 <!-- template group chat -->
 <ng-template #itemTemplateGroup let-item>
-    <div class="d-flex align-items-center my-2 p-2 w-100" (click)="clickGroupChat(item)">
+    <div class="d-flex align-items-center my-2 p-2 w-100" (click)="selectItem(item)">
         <!-- image -->
         <div class="me-2">
             <codx-img 
@@ -76,23 +76,21 @@
         <div class="w-100">
             <div class="d-flex justify-content-between w-100">
                 <span class="fw-bolder m-0 p-0">{{ item.groupType == '1' ? item.groupName2 : item.groupName}}</span>
-                <span *ngIf="item.mssgCount > 0" class="topbar-badge badge badge-sm rounded-pill bg-danger px-2 ">{{item.mssgCount}}</span>
+                <span *ngIf="item.messageMissed > 0" class="topbar-badge badge badge-sm rounded-pill bg-danger px-2 ">{{item.messageMissed}}</span>
             </div>
             <div class="d-flex justify-content-between w-100">
                 <span class="last-message" [classList]="item.isRead ? 'text-dark-500' : 'text-primary'">{{item.message}}</span>
-                <ng-container *ngIf="item.modifiedOn;else createdOn">
-                    <span class="text-dark-500 me-2">{{item.modifiedOn | timefrom}}</span>
+                <ng-container *ngIf="item.messageSend">
+                    <span class="text-dark-500 me-2">{{item.messageSend | timefrom}}</span>
                 </ng-container>
-                <ng-template #createdOn>
-                    <span class="text-dark-500 me-2">{{item.createdOn | timefrom}}</span>
-                </ng-template>
+                
             </div>
         </div>
     </div>
 </ng-template>
 <!-- template search chat -->
 <ng-template #itemTemplateSearch let-item>
-    <div class="p-2" (click)="openChatBox(item)">
+    <div class="p-2" (click)="selectItemSeach(item)">
         <ng-container *ngIf="item.type == 'H';else tmpItem">
             <codx-label [formModel]="" [name]="'lblHeader'" [default]="item.name"></codx-label>
         </ng-container>
@@ -108,6 +106,6 @@
     </div>
 </ng-template>
 
-<ng-template #chatBox let-data>
-    <codx-chat-box [groupID]="data"></codx-chat-box>
+<ng-template #chatBox let-id>
+    <codx-chat-box [groupID]="id"></codx-chat-box>
 </ng-template>
