@@ -86,4 +86,7 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
       this.dialog.close(data);
     })
   }
+  valueList(e){
+    //bat e ve xu lys
+  }
 }
