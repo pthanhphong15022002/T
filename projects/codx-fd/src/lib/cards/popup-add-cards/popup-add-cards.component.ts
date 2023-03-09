@@ -287,13 +287,16 @@ export class PopupAddCardsComponent implements OnInit {
         this.form.patchValue({ situation: this.situation });
         break;
       case "receiver":
-        this.userReciver = data;
-        this.userReciverName = e.component.itemsSelected[0].UserName;
-        this.form.patchValue({ receiver: this.userReciver });
-        if (this.parameter.MaxReceiveControl == "1") {
-          this.getCountCardRecive(data, this.cardType);
+        if (data) {
+          this.userReciver = data;
+          this.userReciverName = e.component.itemsSelected[0].UserName;
+          this.form.patchValue({ receiver: this.userReciver });
+          if (this.parameter.MaxReceiveControl == "1") {
+            this.getCountCardRecive(data, this.cardType);
+          }
+          this.checkValidateWallet(this.userReciver);
         }
-        this.checkValidateWallet(this.userReciver);
+
         break;
       default:
         break;

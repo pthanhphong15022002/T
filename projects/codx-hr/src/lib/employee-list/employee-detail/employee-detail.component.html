@@ -266,8 +266,12 @@
               <div class="fw-bold fs-5 mb-1">
                 {{ infoPersonal?.employeeName }}
               </div>
-              <div class="text-gray-500">
-                {{ infoPersonal?.positionName }}
+              <div class="text-gray-500" *ngIf="infoPersonal">
+                {{
+                  infoPersonal?.positionID
+                    | formatvalue : eInfoFormModel : "positionID"
+                    | async
+                }}
               </div>
             </div>
           </div>
@@ -1173,6 +1177,7 @@
                       [formModel]="eInfoFormModel"
                       [titleTmp]="titleTmp"
                       [dataItem]="item"
+                      [imgOn]="item?.modifiedOn"
                       [typeMF]="'hover'"
                     >
                     </codx-temp-full>
