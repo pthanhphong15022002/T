@@ -134,7 +134,10 @@
                                 </span>
                                 <div class="setting-btnright">
                                     <span class="icon-edit-one text-hover-primary icon-18"
+                                        *ngIf="quantity.MaxCoinsForEGiftControl == '1'"
                                         (click)="open(content, 2)"></span>
+                                    <span class="icon-edit-one text-hover-primary icon-18"
+                                        *ngIf="quantity.MaxCoinsForEGiftControl == '0'"></span>
                                 </div>
                             </div>
                         </div>

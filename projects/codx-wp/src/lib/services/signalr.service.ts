@@ -13,12 +13,13 @@ export class SignalRService {
 
   templateChatBox:TemplateRef<any> = null;
   userConnect = new EventEmitter<any>();
-  signalChat = new EventEmitter<any>();
-  signalGroup = new EventEmitter<any>();
+  newGroup = new EventEmitter<any>();
+  activeNewGroup = new EventEmitter<any>();
   activeGroup = new EventEmitter<any>();
+  reciverChat = new EventEmitter<any>();
+
   constructor(
-    private authStore: AuthStore,
-    private applicationRef:ApplicationRef) {
+    private authStore: AuthStore) {
     this.createConnection();
     this.registerOnServerEvents();
   }
@@ -39,30 +40,32 @@ export class SignalRService {
       })
       .catch((err) => console.log('Error while starting connection: ' + err));
   }
-
-  //#region  get data from server
+  // reciver from server
   public registerOnServerEvents() {
-    this.hubConnection.on('onConnect', (data) => {
-      this.connectionId = data;
-      this.userConnect.emit(data);
-    });
+    // this.hubConnection.on('onConnect', (data) => {
+    //   this.connectionId = data;
+    //   this.userConnect.emit(data);
+    // });
     this.hubConnection.on('ReceiveMessage', (res) => {
       switch(res.action){
+        case 'newGroup':
+          this.newGroup.emit(res.data);
+          break;
+        case 'activeNewGroup':
+          this.activeNewGroup.emit(res.data);
+          break;
         case 'activeGroup':
           this.activeGroup.emit(res.data);
           break;
-        case 'newGroup':
-          this.signalGroup.emit(res.data);
-          break;
         case 'sendMessage':
-          this.signalChat.emit(res.data);
+          this.reciverChat.emit(res.data);
           break;
       }
       
     });
   }
-
-  sendData(data, method = null) {
+  // send to server
+  sendData(data:any, method = null) {
     this.hubConnection.invoke(method, data);
   }
 }

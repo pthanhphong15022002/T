@@ -30,7 +30,7 @@ export class Contact {
   firstName: any;
   fullAddress: any;
   gender: any;
-  homePhone: any;
+  homePhone: any = '';
   idCardNo: any;
   idType: any;
   income: any = 0;

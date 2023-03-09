@@ -990,37 +990,38 @@
                   </codx-label>
                 </div>
               </div>
-              <div class="right">
-                <div class="group-button d-flex align-items-center ms-2">
-                  <button
-                    class="button-custom"
-                    (click)="addCustomField(item.recID, item.processID)"
-                  >
-                    <span
-                      class="icon-add icon-20 cursor-pointer text-hover-primary py-2"
-                    ></span>
-                  </button>
-                  <button
-                    class="button-custom"
-                    #p="ngbPopover"
-                    [ngbPopover]="popperHandelSetting"
-                    (mouseenter)="popoverSelectView(p, item)"
-                    placement="bottom right top left"
-                    [popoverClass]=""
-                  >
-                    <span
-                      class="icon-settings icon-24 cursor-pointer text-hover-primary py-2"
-                    ></span>
-                  </button>
-                  <button
-                    class="button-custom"
-                    (click)="clickShow($event, item.recID)"
-                  >
-                    <span
-                      class="icon-expand_less icon-24 cursor-pointer text-hover-primary py-2"
-                    ></span>
-                  </button>
-                </div>
+              <div class="d-flex align-items-center">
+                <button 
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary ms-2"
+                  (click)="addCustomField(item.recID, item.processID)"
+                >
+                  <i
+                    class="icon-add icon-16"
+                  ></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary ms-2"
+                  #p="ngbPopover"
+                  [ngbPopover]="popperHandelSetting"
+                  (mouseenter)="popoverSelectView(p, item)"
+                  placement="bottom right top left"
+                  [popoverClass]=""
+                >
+                  <i
+                    class="icon-settings icon-16"
+                  ></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary ms-2"
+                  (click)="clickShow($event, item.recID)"
+                >
+                  <i
+                    class="icon-expand_less icon-16"
+                  ></i>
+                </button>
               </div>
             </div>
             <div
@@ -1058,7 +1059,7 @@
               </div>
 
               <div *ngIf="item?.fields?.length > 0">
-                <div class="d-flex row class-field m-5">
+                <div class="class-field p-2">
                   <ng-container *ngFor="let item1 of item?.fields">
                     <div
                       class="col-{{
@@ -1214,7 +1215,7 @@
             "
           >
             <div class="order">{{ i + 1 }}</div>
-            <div class="content">
+            <div class="d-flex flex-column">
               <div class="fw-bold text-dark">{{ itemStep?.stepName }}</div>
 
               <div class="text-gray-500">
@@ -1229,9 +1230,9 @@
                 giờ
               </div>
               <div class="text-gray-500">
-                Công việc:
+                <codx-label  fiedName="task"  [formModel]="dialog.formModel" [default]="'Công việc:'"></codx-label>
                 <span class="text-gray-700">{{
-                  itemStep?.taskGroups?.length
+                  itemStep?.tasks?.length
                 }}</span>
               </div>
             </div>
@@ -1243,7 +1244,7 @@
             (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)"
           >
             <div class="order">T</div>
-            <div class="content">
+            <div class="d-flex flex-column">
               <div class="text-dark fw-bold">
                 <codx-label [default]="stepNameSuccess"></codx-label>
               </div>
@@ -1259,7 +1260,7 @@
             (click)="clickViewStep($event, viewStepReasonFail, strEmpty)"
           >
             <div class="order">F</div>
-            <div class="content">
+            <div class="d-flex flex-column">
               <div class="text-dark fw-bold">
                 <codx-label [default]="stepNameFail"></codx-label>
               </div>
@@ -1378,7 +1379,7 @@
     <div
       class="header-job d-flex align-items-center justify-content-between py-3 px-6"
     >
-      <div class="d-flex flex-column">
+      <div class="d-flex flex-column w-100">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label class="title" fiedName="TaskType" default="Công việc">
           </codx-label>
@@ -1391,41 +1392,35 @@
           </codx-label>
         </div>
       </div>
-      <div class="right">
-        <div class="time ml-2">
-          <div class="d-flex align-items-center text-gray-400">
+      <div class="d-flex align-items-center">
+        <div class="d-flex flex-column">
+          <div class="text-gray-500 fs-7">
             <codx-label
-              class="fw-normal text-gray-400"
               fiedName="taskMemo"
               default="Thời hạn công việc so với giai đoạn"
             >
             </codx-label>
           </div>
-          <div>
-            <span style="float: right; color: #2274ae; font-size: 1.1rem"
-              >{{ dayStep }} ngày {{ hourStep }} giờ /
-              {{ step?.durationDay }} ngày {{ step?.durationHour }} giờ</span
-            >
+          <div class="text-primary">
+            {{ dayStep }} ngày {{ hourStep }} giờ /
+              {{ step?.durationDay }} ngày {{ step?.durationHour }} giờ
           </div>
         </div>
-        <div class="group-button">
-          <button class="button-custom" (click)="openTaskGroup()">
-            <span
-              class="icon-add icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+        <div class="d-flex align-items-center me-5">
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary me-2" (click)="openTaskGroup()">
+            <i
+              class="icon-add icon-16"
+            ></i>
           </button>
-          <button class="button-custom" (click)="openTypeJob()">
-            <span
-              class="icon-add_task icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary me-2" (click)="openTypeJob()">
+            <i
+              class="icon-add_task icon-16"
+            ></i>
           </button>
-          <button class="button-custom" (click)="clickShow($event, 'job-main')">
-            <span
-              class="icon-expand_less icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary me-2" (click)="clickShow($event, 'job-main')">
+            <i
+              class="icon-expand_less icon-16"
+            ></i>
           </button>
         </div>
       </div>
@@ -1433,9 +1428,8 @@
 
     <div
       id="job-main"
-      class="main-job p-3"
+      class="main-job p-6"
       [ngClass]="'show-main'"
-      style="margin-top: 10px"
     >
       <!-- drap drop công việc ngoài-->
       <div class="main-body" *ngIf="taskGroupList?.length > 0">
@@ -2024,7 +2018,7 @@
       id="setup-step"
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
     >
-      <div class="main-body p-3">
+      <div class="main-body p-6">
         <div class="row pt-3 pb-5">
           <div class="col-6">
             <div class="title-switch">
@@ -2147,7 +2141,7 @@
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
       #view
     >
-      <div class="main-body pt-5 ps-5">
+      <div class="main-body p-6">
         <div *ngFor="let item of stepFail.reasons" class="pb-2">
           <ul class="text-left drap-drop me-5 py-2 has-action-menu">
             <li>
@@ -2236,7 +2230,7 @@
       class="main-job px-5"
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
     >
-      <div class="row mt-3">
+      <div class="row mt-3 pb-3">
         <div class="col-6">
           <div class="d-flex flex-column">
             <div class="d-flex align-items-center mb-2">
@@ -2291,7 +2285,8 @@
           </ng-container>
         </div>
       </div>
-      <div class="row border-bottom">
+      <hr />
+      <div class="row mt-3">
         <div class="col-6">
           <div class="d-flex flex-column mb-2">
             <div class="fw-bold fs-6 text-dark mb-1">
@@ -2374,8 +2369,8 @@
       class="main-job"
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
     >
-      <div class="main-body p-5">
-        <div class="row py-3 border-bottom">
+      <div class="main-body p-6">
+        <div class="row">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
               <codx-label
@@ -2406,7 +2401,8 @@
             </codx-input>
           </div>
         </div>
-        <div class=" py-3 border-bottom">
+        <hr />
+        <div class="row mt-3">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
               <codx-label
@@ -2475,28 +2471,22 @@
       class="main-job"
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
     >
-      <div class="main-body p-5">
-        <div class="row pb-5">
+      <div class="main-body p-6">
+        <div class="row">
           <div class="col-6">
-            <div class="d-flex align-items-start">
-              <div>
-                <div class="d-flex flex-column">
-                  <codx-label
-                    class="text-gray-500 fw-bold"
-                    fiedName=""
-                    default="Thời hạn hoàn tất nhiệm vụ trong giai đoạn"
-                  >
-                  </codx-label>
-                  <div class="mt-1">
-                    <codx-label
-                      class="text-gray-500"
-                      default="Thời hạn mà nhiệm vụ cần được đến giai đoạn tiếp
-                      theo"
-                    >
-                    </codx-label>
-                  </div>
-                </div>
-              </div>
+            <div class="text-dark fw-bold mb-1">
+              <codx-label
+                fiedName=""
+                default="Thời hạn hoàn tất nhiệm vụ trong giai đoạn"
+              >
+              </codx-label>
+            </div>
+            <div class="text-gray-600">
+              <codx-label
+                default="Thời hạn mà nhiệm vụ cần được đến giai đoạn tiếp
+                theo"
+              >
+              </codx-label>
             </div>
           </div>
           <div class="col-6">
@@ -2555,23 +2545,20 @@
             </div>
           </div>
         </div>
-
-        <div class="row pb-5">
+<hr />
+        <div class="row">
           <div class="col-6">
-            <div class="title-switch">
-              <strong>
-                <codx-label
-                  class="text-muted"
+            <div class="text-dark fw-bold">
+              <codx-label
                   default="Bỏ qua ngày nghỉ trong tuần khi tính toán ngày đến
                   hạn cho nhiệm vụ trong giai đoạn"
                 >
                 </codx-label>
-              </strong>
             </div>
           </div>
           <div class="col-6">
-            <div class="row">
-              <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div class="me-5">
                 <codx-input
                   [name]="viewSaturday"
                   type="checkbox"
@@ -2583,7 +2570,7 @@
                 >
                 </codx-input>
               </div>
-              <div class="col-6">
+              <div class="me-2">
                 <codx-input
                   type="checkbox"
                   [name]="viewSunday"
@@ -2598,21 +2585,16 @@
             </div>
           </div>
         </div>
-
-        <div class="row pb-5">
+<hr />
+        <div class="row">
           <div class="col-6">
-            <div class="d-flex align-items-start">
-              <div>
-                <strong>
-                  <codx-label
-                    class="text-muted text-opacity-25"
-                    fiedName="StartControl"
-                    default="Bắt đầu tính thời gian thực tế cho nhiệm vụ trong
-                    giai đoạn lúc"
-                  >
-                  </codx-label>
-                </strong>
-              </div>
+            <div class="text-dark fw-bold">
+              <codx-label
+                  fiedName="StartControl"
+                  default="Bắt đầu tính thời gian thực tế cho nhiệm vụ trong
+                  giai đoạn lúc"
+                >
+                </codx-label>
             </div>
           </div>
           <div class="col-6">
@@ -2628,8 +2610,8 @@
             </codx-input>
           </div>
         </div>
-
-        <div class="row pb-5">
+<hr />
+        <div class="row">
           <div class="col-6">
             <div class="title-switch">
               <codx-label
@@ -2670,8 +2652,8 @@
             </div>
           </div>
         </div>
-
-        <div class="row pb-5">
+<hr />
+        <div class="row">
           <div class="col-6">
             <div class="title-switch">
               <codx-label
@@ -2758,7 +2740,7 @@
       class="main-job"
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
     >
-      <div class="main-body p-5">
+      <div class="main-body p-6">
         <div class="row pt-3 pb-5">
           <codx-input
             field="memo"
