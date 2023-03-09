@@ -53,13 +53,16 @@
     [itemDetail]="itemDetail"
     [funcID]="funcID"
     [formModel]="view?.formModel"
-    [view]="view"
     (copy)="copy($event)"
     (edit)="edit($event)"
     (delete)="delete($event)"
     (release)="release($event)"
     (allocate)="allocate($event)"
     (cancel)="cancel($event)"
+    (reject)="reject($event)"
+    (approve)="approve($event)"
+    (undo)="undo($event)"
+    (updateStatus)="updateStatus($event)"
     (setPopupTitle)="setPopupTitle($event)"
   ></booking-stationery-view-detail>
 </ng-template>

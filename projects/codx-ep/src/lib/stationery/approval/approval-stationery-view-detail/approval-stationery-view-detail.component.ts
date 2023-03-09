@@ -26,7 +26,6 @@ export class ApprovalStationeryViewDetailComponent
   @Input() itemDetail: any;
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
-
   @Output('approve') approve: EventEmitter<any> = new EventEmitter();
   @Output('reject') reject: EventEmitter<any> = new EventEmitter();
   @Output('undo') undo: EventEmitter<any> = new EventEmitter();
