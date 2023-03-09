@@ -844,7 +844,9 @@ export class InstancesComponent
                 //xu ly data đổ về
                 data = e.event.instance;
                 this.listStepInstances = e.event.listStep;
-                this.valueListID.emit(data.refID)
+                if(data.refID !== this.guidEmpty) {
+                  this.valueListID.emit(data.refID)
+                }
                 if (e.event.isReason != null) {
                   this.moveReason(null, data, e.event.isReason);
                 }
