@@ -66,7 +66,7 @@ export class DetailPolicyCoinsComponent extends UIComponent implements OnInit {
   onInit(): void {
     if (this.applyFor) {
       this.getListFEDPolicy();
-      this.getSettingRunPolicy(this.applyFor);
+      //this.getSettingRunPolicy(this.applyFor);
       this.getInfoCMParameter(this.applyFor);
     }
   }
@@ -91,21 +91,27 @@ export class DetailPolicyCoinsComponent extends UIComponent implements OnInit {
         `3;${this.applyFor}`,
       ])
       .subscribe((res) => {
-        if (res) this.listPolicyByPredicate = res;
+        if (res) {
+
+
+          this.listPolicyByPredicate = res;
+        }
+
       });
   }
   getSettingRunPolicy(applyFor: string) {
-    this.api
-      .execSv<any>(
-        'SYS',
-        'AD',
-        'AlertRulesBusiness',
-        'GetSettingRunPolicyAsync',
-        ['WalletPolicy', applyFor]
-      )
-      .subscribe((result) => {
-        this.scheduledTasks = result;
-      });
+    // this.api
+    //   .execSv<any>(
+    //     'SYS',
+    //     'AD',
+    //     'AlertRulesBusiness',
+    //     'GetSettingRunPolicyAsync',
+    //     ['WalletPolicy', applyFor]
+    //   )
+    //   .subscribe((result) => {
+    //     console.log(result);
+    //     this.scheduledTasks = result;
+    //   });
   }
   valueChange(e) {
     if (e.field == 'stop') {

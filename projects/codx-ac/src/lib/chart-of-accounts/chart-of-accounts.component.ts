@@ -28,7 +28,6 @@ export class ChartOfAccountsComponent extends UIComponent {
   views: Array<ViewModel> = [];
   buttons: ButtonModel = { id: 'btnAdd' };
   funcName = '';
-  moreFuncName = '';
   columnsGrid = [];
   headerText: any;
   dialog: DialogRef;
@@ -41,12 +40,6 @@ export class ChartOfAccountsComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = this.dialog;
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'SYS01');
-        if (m) this.moreFuncName = m.defaultName;
-      }
-    });
   }
   //#endregion
 
@@ -82,7 +75,7 @@ export class ChartOfAccountsComponent extends UIComponent {
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
-        this.add();
+        this.add(e);
         break;
     }
   }
@@ -96,15 +89,15 @@ export class ChartOfAccountsComponent extends UIComponent {
         this.edit(e, data);
         break;
       case 'SYS04':
-        this.copy(e,data);
+        this.copy(e, data);
         break;
     }
   }
   //#endregion
 
   //#region Function
-  add() {
-    this.headerText = this.moreFuncName + ' ' + this.funcName;
+  add(e) {
+    this.headerText = e.text + ' ' + this.funcName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',
@@ -120,14 +113,6 @@ export class ChartOfAccountsComponent extends UIComponent {
         option,
         this.view.funcID
       );
-      this.dialog.closed.subscribe((x) => {
-        if (x.event)
-          this.view.dataService
-            .add([this.view.dataService.dataSelected])
-            .subscribe((x) => {
-              this.dt.detectChanges();
-            });
-      });
     });
   }
 

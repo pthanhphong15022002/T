@@ -63,6 +63,7 @@ export class CashPaymentsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {}
+
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) this.funcName = res.defaultName;
@@ -191,7 +192,7 @@ export class CashPaymentsComponent extends UIComponent {
     opt.className = 'CashPaymentsBusiness';
     opt.assemblyName = 'AC';
     opt.service = 'AC';
-    opt.data = data;
+    opt.data = data.recID;
     return true;
   }
   //#endregion

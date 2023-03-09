@@ -152,7 +152,7 @@
                             </ng-template>
                           </div>
                           <span
-                            *ngIf="perm.isSystem == false && this.assignRight"
+                            *ngIf="perm.isSystem == false && this.assignRight && !perm.isParentShare" 
                             (click)="removeUserRight(i)"
                             class="icon-close icon-16 ms-2 text-danger"
                           >

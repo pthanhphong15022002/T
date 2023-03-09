@@ -56,6 +56,11 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   objectContactAddress: Array<Contact> = [];
   objectContactAddressDelete: Array<Contact> = [];
   objecttype: string = '1';
+  moreFuncNameAdd:any;
+  moreFuncNameEdit:any;
+  funcNameContact: any;
+  funcNameBank:any;
+  funcNameAddress:any;
   gridViewSetup: any;
   valuelist: any;
   formType: any;
@@ -104,6 +109,14 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.customers = dialog.dataService!.dataSelected;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let add = res.find((x) => x.functionID == 'SYS01');
+        let edit = res.find((x) => x.functionID == 'SYS03');
+        if (add) this.moreFuncNameAdd = add.defaultName;
+        if (edit) this.moreFuncNameEdit = edit.customName;
+      }
+    });
     this.cache
       .gridViewSetup('Customers', 'grvCustomers')
       .subscribe((res: []) => {
@@ -117,10 +130,12 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     if (this.formType == 'edit') {
       if (this.customers.customerID != null) {
         this.acService
-          .loadData('ERM.Business.BS', 'BankAccountsBusiness', 'LoadDataAsync', [
-            this.objecttype,
-            this.customers.customerID,
-          ])
+          .loadData(
+            'ERM.Business.BS',
+            'BankAccountsBusiness',
+            'LoadDataAsync',
+            [this.objecttype, this.customers.customerID]
+          )
           .subscribe((res: any) => {
             this.objectBankaccount = res;
           });
@@ -157,7 +172,6 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
           });
       }
     }
-   
   }
   //#endregion
 
@@ -165,6 +179,24 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    this.cache.moreFunction('BankAccounts', 'grvBankAccounts').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20503');
+        this.funcNameBank = m.defaultName;
+      }
+    });
+    this.cache.moreFunction('Contacts', 'grvContacts').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20501');
+        this.funcNameContact = m.defaultName;
+      }
+    });
+    this.cache.moreFunction('AddressBook', 'grvAddressBook').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20502');
+        this.funcNameAddress = m.defaultName;
+      }
+    });
   }
   //#endregion
 
@@ -184,7 +216,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   //#region Function
   openPopupBank() {
     var obj = {
-      headerText: 'Thêm tài khoản ngân hàng',
+      headerText: this.moreFuncNameAdd + ' ' + this.funcNameBank,
       dataBank: this.objectBankaccount,
     };
     let opt = new DialogModel();
@@ -239,7 +271,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   }
   openPopupContact() {
     var obj = {
-      headerText: 'Thêm người liên hệ',
+      headerText: this.moreFuncNameAdd + ' ' + this.funcNameContact,
       datacontact: this.objectContact,
     };
     let opt = new DialogModel();
@@ -263,7 +295,9 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             opt
           );
           dialogcontact.closed.subscribe((x) => {
-            var datacontact = JSON.parse(localStorage.getItem('datacontact'));
+            var datacontact = JSON.parse(
+              localStorage.getItem('datacontact')
+            );
             if (datacontact != null) {
               this.objectContact.push(datacontact);
             }
@@ -274,7 +308,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   }
   openPopupAddress() {
     var obj = {
-      headerText: 'Thêm địa chỉ',
+      headerText: this.moreFuncNameAdd + ' ' + this.funcNameAddress,
       dataAddress: this.objectAddress,
       dataContactAddress: this.objectContactAddress,
       objectype: this.objecttype,
@@ -300,7 +334,9 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
             opt
           );
           dialogaddress.closed.subscribe((x) => {
-            var dataaddress = JSON.parse(localStorage.getItem('dataaddress'));
+            var dataaddress = JSON.parse(
+              localStorage.getItem('dataaddress')
+            );
             var datacontactaddress = JSON.parse(
               localStorage.getItem('datacontactaddress')
             );
@@ -332,7 +368,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       (x) => x.bankAcctID == data.bankAcctID
     );
     var obj = {
-      headerText: 'Chỉnh sửa',
+      headerText: this.moreFuncNameEdit + ' ' + this.funcNameBank,
       type: 'editbank',
       data: { ...data },
     };
@@ -349,8 +385,8 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
           var dialogbank = this.callfc.openForm(
             PopAddBankComponent,
             '',
-            650,
-            550,
+            500,
+            400,
             '',
             obj,
             '',
@@ -371,7 +407,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   editobjectAddress(data: any) {
     let index = this.objectAddress.findIndex((x) => x.recID == data.recID);
     var obs = {
-      headerText: 'Chỉnh sửa địa chỉ',
+      headerText: this.moreFuncNameEdit + ' ' + this.funcNameAddress,
       type: 'editaddress',
       data: { ...data },
       datacontactaddress: [...this.objectContactAddress],
@@ -436,7 +472,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
   editobjectContact(data: any) {
     let index = this.objectContact.findIndex((x) => x.recID == data.recID);
     var ob = {
-      headerText: 'Chỉnh sửa liên hệ',
+      headerText: this.moreFuncNameEdit + ' ' + this.funcNameContact,
       type: 'editContact',
       data: { ...data },
     };
@@ -536,23 +572,35 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.objects.debtComparision = this.customers.debtComparision;
   }
   checkValidEmail() {
-    const regex = new RegExp(
-      '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
-    );
-    var checkRegex = regex.test(this.customers.email);
-    if (checkRegex == false) {
-      this.notification.notify("Trường 'Email' không hợp lệ","2");
-      this.validate++;
-      return;
+    if (this.customers.email != null) {
+      const regex = new RegExp(
+        '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
+      );
+      var checkRegex = regex.test(this.customers.email);
+      if (checkRegex == false) {
+        this.notification.notify("'Email' không hợp lệ", '2');
+        this.validate++;
+        return;
+      }
+    }
+  }
+  checkValidPhone(){
+    if (this.customers.phone != null) {
+      var phonenumberFormat = /(([\+84|84|(+84)|0]+(3|5|7|8|9|1[2|6|8|9])+([0-9]{8}))\b)/;
+      var checkRegex = this.customers.phone.toLocaleLowerCase().match(phonenumberFormat)
+      if (checkRegex == null) {
+        this.notification.notify("'Phone' không hợp lệ", '2');
+        this.validate++;
+        return;
+      }
     }
   }
   //#endregion
 
   //#region CRUD
   onSave() {
-    if (this.customers.email != null) {
-      this.checkValidEmail();
-    }
+    this.checkValidPhone();  
+    this.checkValidEmail();
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;
@@ -581,7 +629,11 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                   'ERM.Business.BS',
                   'BankAccountsBusiness',
                   'AddAsync',
-                  [this.objecttype, this.customers.customerID, this.objectBankaccount]
+                  [
+                    this.objecttype,
+                    this.customers.customerID,
+                    this.objectBankaccount,
+                  ]
                 )
                 .subscribe((res: []) => {});
               this.acService
@@ -601,7 +653,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                 .subscribe((res: []) => {});
               this.acService
                 .addData('ERM.Business.AC', 'ObjectsBusiness', 'AddAsync', [
-                  this.objects
+                  this.objects,
                 ])
                 .subscribe((res: []) => {});
               this.dialog.close();
@@ -662,7 +714,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
                 .subscribe((res: any) => {});
               this.acService
                 .addData('ERM.Business.AC', 'ObjectsBusiness', 'UpdateAsync', [
-                  this.objects
+                  this.objects,
                 ])
                 .subscribe((res: []) => {});
               this.dialog.close();

@@ -6,6 +6,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { map } from 'rxjs/operators';
 import { ItemColor } from '../interfaces/ItemColor.Interface';
 import { ItemsService } from '../items.service';
 
@@ -28,6 +29,7 @@ export class PopupAddItemColorComponent extends UIComponent {
       gvsPropName: 'ColorName',
     },
   ];
+  formTitle: string = '';
 
   constructor(
     private injector: Injector,
@@ -53,6 +55,25 @@ export class PopupAddItemColorComponent extends UIComponent {
     } else {
       this.itemColor.colorCode = '#66ffcc';
     }
+
+    this.cache
+      .moreFunction('ItemColors', 'grvItemColors')
+      .pipe(
+        map((data) => data.find((m) => m.functionID === 'ACS21303')),
+        map(
+          (data) =>
+            data.defaultName.charAt(0).toLowerCase() + data.defaultName.slice(1)
+        )
+      )
+      .subscribe((functionName) => {
+        this.cache.moreFunction('CoDXSystem', '').subscribe((actions) => {
+          const action = this.isEdit
+            ? actions.find((a) => a.functionID === 'SYS03')?.customName
+            : actions.find((a) => a.functionID === 'SYS01')?.defaultName;
+
+          this.formTitle = `${action} ${functionName}`;
+        });
+      });
   }
   //#endregion
 

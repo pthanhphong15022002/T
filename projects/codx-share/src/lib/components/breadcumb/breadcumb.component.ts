@@ -73,6 +73,7 @@ export class BreadcumbComponent implements OnInit {
   }
 
   onJump(id) {
+    debugger
     this.dmSV.isTree = false;
     // alert(this.linkList[id]);
     this.dmSV.parentFolderId = this.linkList[id];

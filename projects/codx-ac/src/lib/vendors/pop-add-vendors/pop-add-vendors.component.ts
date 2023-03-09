@@ -57,6 +57,11 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   gridViewSetup: any;
   gridViewSetupBank: any;
   valuelist: any;
+  moreFuncNameAdd:any;
+  moreFuncNameEdit:any;
+  funcNameContact: any;
+  funcNameBank:any;
+  funcNameAddress:any;
   formType: any;
   validate: any = 0;
   tabInfo: any[] = [
@@ -104,6 +109,14 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     this.vendors = dialog.dataService!.dataSelected;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let add = res.find((x) => x.functionID == 'SYS01');
+        let edit = res.find((x) => x.functionID == 'SYS03');
+        if (add) this.moreFuncNameAdd = add.defaultName;
+        if (edit) this.moreFuncNameEdit = edit.customName;
+      }
+    });
     this.cache.gridViewSetup('Vendors', 'grvVendors').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -122,10 +135,12 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     if (this.formType == 'edit') {
       if (this.vendors.vendorID != null) {
         this.acService
-          .loadData('ERM.Business.BS', 'BankAccountsBusiness', 'LoadDataAsync', [
-            this.objecttype,
-            this.vendors.vendorID,
-          ])
+          .loadData(
+            'ERM.Business.BS',
+            'BankAccountsBusiness',
+            'LoadDataAsync',
+            [this.objecttype, this.vendors.vendorID]
+          )
           .subscribe((res: any) => {
             this.objectBankaccount = res;
           });
@@ -169,11 +184,29 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    this.cache.moreFunction('BankAccounts', 'grvBankAccounts').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20503');
+        this.funcNameBank = m.defaultName;
+      }
+    });
+    this.cache.moreFunction('Contacts', 'grvContacts').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20501');
+        this.funcNameContact = m.defaultName;
+      }
+    });
+    this.cache.moreFunction('AddressBook', 'grvAddressBook').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20502');
+        this.funcNameAddress = m.defaultName;
+      }
+    });
   }
   //#endregion
 
   //#region Event
-  
+
   valueChange(e: any) {
     this.vendors[e.field] = e.data;
   }
@@ -193,7 +226,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   }
   openPopupBank() {
     var obj = {
-      headerText: 'Thêm tài khoản ngân hàng',
+      headerText: this.moreFuncNameAdd + ' ' + this.funcNameBank,
       dataBank: this.objectBankaccount,
     };
     let opt = new DialogModel();
@@ -248,7 +281,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   }
   openPopupContact() {
     var obj = {
-      headerText: 'Thêm người liên hệ',
+      headerText: this.moreFuncNameAdd + ' ' + this.funcNameContact,
       datacontact: this.objectContact,
     };
     let opt = new DialogModel();
@@ -265,14 +298,16 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
             PopAddContactComponent,
             '',
             650,
-            550,
+            570,
             '',
             obj,
             '',
             opt
           );
           dialogcontact.closed.subscribe((x) => {
-            var datacontact = JSON.parse(localStorage.getItem('datacontact'));
+            var datacontact = JSON.parse(
+              localStorage.getItem('datacontact')
+            );
             if (datacontact != null) {
               this.objectContact.push(datacontact);
             }
@@ -283,7 +318,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   }
   openPopupAddress() {
     var obj = {
-      headerText: 'Thêm địa chỉ',
+      headerText: this.moreFuncNameAdd + ' ' + this.funcNameAddress,
       dataAddress: this.objectAddress,
       dataContactAddress: this.objectContactAddress,
       objectype: this.objecttype,
@@ -301,16 +336,17 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
           var dialogaddress = this.callfc.openForm(
             PopAddAddressComponent,
             '',
+            550,
             650,
-            600,
             '',
             obj,
             '',
             opt
           );
           dialogaddress.closed.subscribe((x) => {
-            console.log(this.objectContactAddress);
-            var dataaddress = JSON.parse(localStorage.getItem('dataaddress'));
+            var dataaddress = JSON.parse(
+              localStorage.getItem('dataaddress')
+            );
             var datacontactaddress = JSON.parse(
               localStorage.getItem('datacontactaddress')
             );
@@ -342,7 +378,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
       (x) => x.bankAcctID == data.bankAcctID
     );
     var obj = {
-      headerText: 'Chỉnh sửa',
+      headerText: this.moreFuncNameEdit + ' ' + this.funcNameBank,
       type: 'editbank',
       data: { ...data },
     };
@@ -381,7 +417,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   editobjectAddress(data: any) {
     let index = this.objectAddress.findIndex((x) => x.recID == data.recID);
     var obs = {
-      headerText: 'Chỉnh sửa địa chỉ',
+      headerText: this.moreFuncNameEdit + ' ' + this.funcNameAddress,
       type: 'editaddress',
       data: { ...data },
       datacontactaddress: [...this.objectContactAddress],
@@ -399,8 +435,8 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
           var dialogaddress = this.callfc.openForm(
             PopAddAddressComponent,
             '',
+            550,
             650,
-            600,
             '',
             obs,
             '',
@@ -446,7 +482,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   editobjectContact(data: any) {
     let index = this.objectContact.findIndex((x) => x.recID == data.recID);
     var ob = {
-      headerText: 'Chỉnh sửa liên hệ',
+      headerText: this.moreFuncNameEdit + ' ' + this.funcNameContact,
       type: 'editContact',
       data: { ...data },
     };
@@ -547,7 +583,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     );
     var checkRegex = regex.test(this.vendors.email);
     if (checkRegex == false) {
-      this.notification.notify("Trường 'Email' không hợp lệ","2");
+      this.notification.notify("Trường 'Email' không hợp lệ", '2');
       this.validate++;
       return;
     }
@@ -587,7 +623,11 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
                   'ERM.Business.BS',
                   'BankAccountsBusiness',
                   'AddAsync',
-                  [this.objecttype, this.vendors.vendorID, this.objectBankaccount]
+                  [
+                    this.objecttype,
+                    this.vendors.vendorID,
+                    this.objectBankaccount,
+                  ]
                 )
                 .subscribe((res: []) => {});
               this.acService
@@ -605,9 +645,9 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
                   this.objectContactAddress,
                 ])
                 .subscribe((res: []) => {});
-                this.acService
+              this.acService
                 .addData('ERM.Business.AC', 'ObjectsBusiness', 'AddAsync', [
-                  this.objects
+                  this.objects,
                 ])
                 .subscribe((res: []) => {});
               this.dialog.close();
@@ -668,7 +708,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
                 .subscribe((res: any) => {});
               this.acService
                 .addData('ERM.Business.AC', 'ObjectsBusiness', 'UpdateAsync', [
-                  this.objects
+                  this.objects,
                 ])
                 .subscribe((res: []) => {});
               this.dialog.close();

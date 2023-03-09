@@ -1,3 +1,4 @@
+import { Approvers } from './../../../../../../codx-share/src/lib/codx-share.service';
 import { SettingService } from './../../setting.service';
 import {
   ChangeDetectorRef,
@@ -74,6 +75,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       this.handleSaveParameter();
     }
   }
+
   valueChangValueList(data) {
     this.quantity[data.field] = data.data;
     this.handleLock(data.data);
@@ -81,6 +83,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     objectUpdate[data.field] = data.data;
     this.onSaveCMParameter(objectUpdate);
   }
+
   handleLock(status) {
     if (status == '0') {
       this.isLockCoin = true;
@@ -160,6 +163,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
 
   openPopupCbb(content) {
     // this.cbxsv.dataSelcected = [];
+    console.log(this.data.Approvers);
     var split = this.data.Approvers.split(';');
     if (split.length > 1) {
       this.api
@@ -190,6 +194,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     }
     this.change.detectChanges();
   }
+
   open(content, typeContent) {
     let arrayTitle = [
       'Giới hạn phiếu cho',
@@ -220,6 +225,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       size: 'sm',
     });
   }
+
   changeValueListRuleSelected(selected) {
     this.quantity.RuleSelected = selected.data;
     this.objectUpdate['RuleSelected'] = selected.data;
@@ -230,6 +236,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
   MaxSendPeriod: any;
   MaxReceivePeriod: any;
   MaxPointPeriod: any;
+
   changValueListPopup(selected, typeContent) {
     if (selected) {
       var dt = JSON.parse(JSON.stringify(selected.data));
@@ -297,6 +304,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
         }
       });
   }
+
   dataFull: any;
   LoadData() {
     this.api
@@ -309,6 +317,8 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       )
       .subscribe((res: any) => {
         if (res && res.length > 0) {
+          console.log('load:', res);
+
           this.data = res[0];
           this.dataFull = res[1];
           this.quantity = this.fdSV.convertListToObject(
@@ -325,6 +335,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
         }
       });
   }
+
   // LoadDataForChangeVLL() {
   //   this.settingSV.getParameter().subscribe((res) => {
   //     if (res) {
@@ -332,6 +343,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
   //     }
   //   });
   // }
+
   stringToBoolean(val) {
     var a = {
       true: true,
@@ -341,6 +353,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     };
     return a[val];
   }
+
   setValueListName(list) {
     if (!list) return;
     var dataActiveCoins;

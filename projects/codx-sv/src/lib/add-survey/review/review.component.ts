@@ -214,6 +214,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
 
   lstAnswer: any = [];
   valueChange(e, itemSession, itemQuestion, itemAnswer) {
+    //itemAnswer.choose = true
     if (!e.data && !e.component) return;
     if (e.component) {
       if (

@@ -48,7 +48,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
       name: 'Description',
     },
     {
-      icon: 'icon-playlist_add_check',
+      icon: 'icon-rule',
       text: 'Thông tin quy đổi',
       name: 'ConversionInformation',
     },
@@ -319,6 +319,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
                 if (res) {
                   this.clearUnitsofmearsure();
                   this.dialog.dataService.addNew().subscribe((res) => {
+                    this.form.formGroup.patchValue(res);
                     this.unitsofmearsure =
                       this.dialog.dataService!.dataSelected;
                   });

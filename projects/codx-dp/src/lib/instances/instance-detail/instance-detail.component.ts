@@ -15,11 +15,18 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { CRUDService, ApiHttpService, CacheService } from 'codx-core';
+import {
+  CRUDService,
+  ApiHttpService,
+  CacheService,
+  CallFuncService,
+  DialogModel,
+  DialogRef,
+} from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
-import { log } from 'console';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ViewJobComponent } from '../../dynamic-process/popup-add-dynamic-process/step-task/view-job/view-job.component';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -38,9 +45,11 @@ export class InstanceDetailComponent implements OnInit {
   @Input() listStepNew: any;
   @Input() listCbxProccess: any;
   @Input() viewModelDetail = 'S';
+  @ViewChild('viewDetailsItem') viewDetailsItem;
+  @Input() listSteps: DP_Instances_Steps[] = [];
+  @ViewChild('viewDetail') viewDetail;
   id: any;
   totalInSteps: any;
-  @Input() listSteps: DP_Instances_Steps[] = [];
   tmpTeps: DP_Instances_Steps;
   currentNameStep: Number;
   //progressbar
@@ -58,6 +67,7 @@ export class InstanceDetailComponent implements OnInit {
   instance: any;
   //gantchat
   ganttDs = [];
+  ganttDsClone = [];
   dataColors = [];
   taskFields = {
     id: 'recID',
@@ -67,6 +77,7 @@ export class InstanceDetailComponent implements OnInit {
     type: 'type',
     color: 'color',
   };
+  dialogPopupDetail: DialogRef;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -82,16 +93,18 @@ export class InstanceDetailComponent implements OnInit {
 
   instanceId: string;
   proccesNameMove: string;
-  onwer:string;
+  onwer: string;
   lstInv = '';
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
 
   constructor(
+    private callfc: CallFuncService,
     private dpSv: CodxDpService,
     private api: ApiHttpService,
     private cache: CacheService,
     private changeDetec: ChangeDetectorRef,
+    private callFC: CallFuncService,
     private popupInstances: InstancesComponent,
     public sanitizer: DomSanitizer
   ) {
@@ -103,22 +116,28 @@ export class InstanceDetailComponent implements OnInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-   
+    this.rollHeight();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelect']) {
-      this.id = changes['dataSelect'].currentValue.recID;
-      this.dataSelect = changes['dataSelect'].currentValue;
-      // this.currentStep = this.dataSelect.currentStep; // instance.curenSteps da xoa
-      this.instanceStatus = this.dataSelect.status;
-      this.instance = this.dataSelect;
-      // sort theo by step
-      this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
-      // this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
-      this.getDataGanttChart(this.dataSelect.recID,this.dataSelect.processID);
+      if (changes['dataSelect'].currentValue.recID != null) {
+        this.id = changes['dataSelect'].currentValue.recID;
+        this.dataSelect = changes['dataSelect'].currentValue;
+        // this.currentStep = this.dataSelect.currentStep; // instance.curenSteps da xoa
+        this.instanceStatus = this.dataSelect.status;
+        this.instance = this.dataSelect;
+        // sort theo by step
+        this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
+        // this.GetStepsByInstanceIDAsync(changes['dataSelect'].currentValue.steps);
+        this.getDataGanttChart(
+          this.dataSelect.recID,
+          this.dataSelect.processID
+        );
+        this.rollHeight();
+      }
     }
-    console.log(this.formModel);
+  
   }
 
   GetStepsByInstanceIDAsync(insID, proccessID) {
@@ -160,12 +179,12 @@ export class InstanceDetailComponent implements OnInit {
     });
   }
 
-  getInvolved(roles){
+  getInvolved(roles) {
     var id = '';
-    if(roles != null && roles.length > 0){
-      var lstRole = roles.filter(x=>x.roleType == 'R');
-      lstRole.forEach(element => {
-        if(!id.split(';').includes(element.objectID)){
+    if (roles != null && roles.length > 0) {
+      var lstRole = roles.filter((x) => x.roleType == 'R');
+      lstRole.forEach((element) => {
+        if (!id.split(';').includes(element.objectID)) {
           id = id + ';' + element.objectID;
         }
       });
@@ -173,12 +192,30 @@ export class InstanceDetailComponent implements OnInit {
     return id;
   }
 
-  getStepsByInstanceID(list) {
-    list.forEach((element) => {
-      if (element.indexNo == this.currentStep) {
-        this.tmpTeps = element;
-      }
+  sortListSteps(ins, process) {
+    var listStep = process.steps.sort(function (x, y) {
+      return x.stepNo > 0 && y.stepNo > 0
+        ? x.stepNo - y.stepNo
+        : x.stepNo > 0
+        ? -1
+        : y.stepNo > 0
+        ? 1
+        : x.stepNo - y.stepNo;
     });
+    ins = listStep
+      .reduce((result, x) => {
+        let matches = ins.filter((y) => x.recID === y.stepID);
+        if (matches.length) {
+          result.push(matches[0]);
+        }
+        return result;
+      }, [])
+      .sort((x, y) => {
+        let firstStep = listStep.find((z) => z.recID === y.stepID);
+        return listStep.indexOf(firstStep);
+      });
+
+    return ins;
   }
 
   // getStepsByProcessID(recID){
@@ -231,7 +268,11 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   click(indexNo, data) {
-    if (this.currentStep < indexNo && (this.instanceStatus === "1" || this.instanceStatus === "2") ) return;
+    if (
+      this.currentStep < indexNo &&
+      (this.instanceStatus === '1' || this.instanceStatus === '2')
+    )
+      return;
     this.currentNameStep = indexNo;
     var indx = this.listSteps.findIndex((x) => x.stepID == data);
     this.tmpTeps = this.listSteps[indx];
@@ -256,17 +297,16 @@ export class InstanceDetailComponent implements OnInit {
   setHTMLCssStages(oldStage, newStage) {}
 
   //ganttchar
-  getDataGanttChart(instanceID,processID) {
+  getDataGanttChart(instanceID, processID) {
     this.api
-      .exec<any>(
-        'DP',
-        'InstanceStepsBusiness',
-        'GetDataGanntChartAsync',
-        [instanceID,processID]
-      )
+      .exec<any>('DP', 'InstanceStepsBusiness', 'GetDataGanntChartAsync', [
+        instanceID,
+        processID,
+      ])
       .subscribe((res) => {
-        if (res && res?.length > 0) {
+        if (res && res?.length > 0) {       
           this.ganttDs = res;
+          this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
           this.changeDetec.detectChanges();
         }
       });
@@ -276,7 +316,6 @@ export class InstanceDetailComponent implements OnInit {
     return this.ganttDs[idx]?.color;
   }
   //end ganttchar
-
 
   deleteListReason(listStep: any): void {
     listStep.pop();
@@ -288,7 +327,6 @@ export class InstanceDetailComponent implements OnInit {
       this.deleteListReason(this.listSteps);
     }
   }
-
 
   getColorStepName(status: string) {
     if (status === '1') {
@@ -303,28 +341,54 @@ export class InstanceDetailComponent implements OnInit {
       return 'step old';
     }
     return 'step';
-    
   }
   getReasonByStepId(stepId: string) {
     var idx = this.listStepNew.findIndex((x) => x.stepID === stepId);
     return this.listStepNew[idx];
   }
-  getStepNameIsComlepte() {
+  getStepNameIsComlepte(data) {
     var idx = this.listSteps.findIndex(
       (x) => x.stepStatus === '4' || x.stepStatus === '5'
     );
     if (idx > -1) {
       var reasonStep = this.listSteps[idx];
-      var idxProccess = this.listCbxProccess.findIndex(
-        (x) => x.recID === this.instance?.newProcessID
+      var indexProccess = this.listCbxProccess.findIndex(
+        (x) => x.recID === data?.refID
       );
-      var proccesMove = this.listCbxProccess[idxProccess];
+      var proccesMove = this.listCbxProccess[indexProccess];
       this.proccesNameMove = proccesMove?.processName ?? '';
     }
     return reasonStep?.stepName ?? '';
   }
-  //  getProccessNameIsMove(index:any){
 
-  //   return  this.listSteps[idx]?.stepName ?? '';
-  //  }
+  clickDetailGanchart(recID){
+    let data = this.ganttDsClone?.find(item => item.recID === recID);
+    if (data) {
+      this.callfc.openForm(
+        ViewJobComponent,
+        '',
+        700,
+        550,
+        '',
+        {value: data, listValue: this.ganttDsClone}
+      );
+    }    
+  }
+
+  rollHeight() {
+    let classViewDetail =
+      document.getElementsByClassName('codx-detail-main')[0];
+    let heightVD = classViewDetail.clientHeight;
+    let classHeader = document.getElementsByClassName('codx-detail-header')[0];
+    let heightHD = classHeader.clientHeight;
+    let classFooter = document.getElementsByClassName('codx-detail-footer')[0];
+    let heightFT = classFooter.clientHeight;
+
+    var maxHeight = heightVD - heightHD - heightFT;
+
+    var div = document.getElementById('viewModeDetail');
+    if (div) {
+      div.style.setProperty('max-height', maxHeight + 'px', 'important');
+    }
+  }
 }

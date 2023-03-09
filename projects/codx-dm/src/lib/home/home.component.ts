@@ -64,7 +64,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   orgViews: Array<ViewModel> = [];
   listFolders: FolderInfo[];
   listFiles: FileInfo[];
-  data = [];
+  data:any;
   titleAccessDeniedFile = 'Bạn không có quyền truy cập file này';
   titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
   titleFileName = 'Tên tài liệu';
@@ -84,9 +84,10 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   //icon Sort
   itemSelected: any;
   dataFile: any;
-
+  funcID:any;
   visible: boolean = false;
-
+  isScrollFolder = true;
+  isScrollFile = true;
   //loadedFile: boolean;
   //loadedFolder: boolean;
   //page = 1;
@@ -96,7 +97,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   dialog!: DialogRef;
   interval: ItemInterval[];
   item: any;
-
   // @ViewChild('attachment') attachment: AttachmentComponent
   constructor(
     inject: Injector,
@@ -109,34 +109,374 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     private notificationsService: NotificationsService
   ) {
     super(inject);
+    this.route.params.subscribe((params) => {
+      if (params?.funcID) {
+        this.funcID = params?.funcID;
+        this.dmSV.folderID = '';
+        this.dmSV.idMenuActive =  this.funcID;
+        this.fileService.options.funcID = this.funcID
+        this.fileService.options.page = 1;
+        this.getDataByFuncID(this.funcID);
+        this.setBreadCumb();
+       //FuncID
+      }
+    });
+    
   }
+  onInit(): void {
+    //View mặc định 
+    
+    this.user = this.auth.get();
+    this.path = this.getPath();
+    this.button = {
+      id: 'btnUpload',
+      text: 'Tải lên',
+    };
 
+   this.dmSV.ChangeDataView.subscribe(res =>{
+    if(res) this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
+   })
+    this.dmSV.isAddFolder.subscribe((item) => {
+      if (item) {
+        var tree = this.codxview?.currentView?.currentComponent?.treeView;
+        if (tree) tree.setNodeTree(item);
+        if(this.view.dataService.data.length == 0)
+          this.view.dataService.data.push(item);
+        // var ele = document.getElementsByClassName('item-selected');
+        // if (ele.length > 0) ele[0].classList.remove('item-selected');
+        // var ele2 = document.getElementsByClassName(item?.recID);
+        // if (ele2.length > 0) ele2[0].classList.add('item-selected');
+        //this.onSelectionChanged(a);
+      }
+      this._beginDrapDrop();
+    });
+
+    this.dmSV.isNodeSelect.subscribe((res) => {
+      if (res) {
+        var tree = this.codxview?.currentView?.currentComponent?.treeView;
+        if (tree) {
+          if (res.recID) tree.getCurrentNode(res.recID);
+          else tree.getCurrentNode(res);
+        }
+      }
+    });
+    this.dmSV.isRefreshTree.subscribe((res) => {
+      if (res) {
+        var ele = document.getElementsByClassName('collapse');
+        for (var i = 0; i < ele.length; i++) {
+          // Only if there is only single class
+          if (ele[i].className.includes('show')) {
+            ele[i].classList.remove('show');
+            ele[i].classList.add('hide');
+          }
+        }
+        ele = document.getElementsByClassName('item-selected');
+        if (ele.length > 0) ele[0].classList.remove('item-selected');
+        ele = document.getElementsByClassName('icon-arrow_drop_down');
+        if (ele.length > 0) {
+          ele[0].classList.add('icon-arrow_right');
+          ele[0].classList.remove('icon-arrow_drop_down');
+        }
+        this.dmSV.folderId.next('');
+        this.dmSV.folderID = "";
+        this.dmSV.page = 1;
+        this.dmSV.listFiles = [];
+        this.dmSV.listFolder = [];
+        this.isScrollFile = true;
+        this.isScrollFolder = true;
+        this.folderService.options.page = 1;
+        this.fileService.options.page = 1;
+        this.getDataByFuncID(this.funcID);
+        this.changeDetectorRef.detectChanges();
+        //this.data = this.view.dataService.data
+      }
+    });
+    this.dmSV.isAddFile.subscribe((item) => {
+      if (item) {
+        if (this.dmSV.listFiles && this.dmSV.listFiles.length > 0)
+          this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+    this.dmSV.isNodeDeleted.subscribe((res) => {
+      if (res) {
+        var tree = this.codxview?.currentView?.currentComponent?.treeView;
+        if (tree) {
+          tree.removeNodeTree(res);
+          var breadcumb = [];
+          var breadcumbLink = [];
+          breadcumb.push(this.dmSV.menuActive.getValue());
+          tree.textField = 'folderName';
+          var list = tree.arrBreadCumb;
+          if (list && list.length > 0) {
+            var index = list.findIndex((x) => x.id == res);
+            this.codxview.dataService.data =
+              this.codxview.dataService.data.filter((x) => x.id != res);
+            if (index >= 0) {
+              list = list.slice(index + 1);
+              if (list.length > 0) {
+                this.dmSV.folderId.next(list[0].id);
+                this.dmSV.folderID = list[0].id;
+                for (var i = list.length - 1; i >= 0; i--) {
+                  breadcumb.push(list[i].text);
+                  breadcumbLink.push(list[i].id);
+                }
+              } else {
+                this.dmSV.folderId.next('');
+                this.dmSV.folderID = '';
+              }
+              this.dmSV.breadcumbLink = breadcumbLink;
+              this.dmSV.breadcumb.next(breadcumb);
+            }
+          }
+
+          if (breadcumbLink.length <= 1) {
+            this.refeshData();
+            this.getDataFolder(this.dmSV.folderID)
+          }
+        }
+        this.data = this.data.filter((x) => x.recID != res);
+        this.view.dataService.data = this.view.dataService.data.filter(
+          (x) => x.recID != res
+        );
+        this.changeDetectorRef.detectChanges();
+        this._beginDrapDrop();
+      }
+    });
+    this.dmSV.isDisableUpload.subscribe((res) => {
+      if (res) {
+        this.button.disabled = res;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+
+    //Xóa File
+    this.dmSV.isDeleteFileView.subscribe(item=>{
+      if(item)
+      {
+        this.data = this.data.filter((x) => x.recID != item);
+        this.view.dataService.data = this.view.dataService.data.filter(
+          (x) => x.recID != item
+        );
+      }
+    })
+    // this.dmSV.isNodeSelect.subscribe((res) => {
+    //   if (res) {
+    //     var tree = this.codxview?.currentView?.currentComponent?.treeView;
+    //     if (tree) {
+    //       if (res.recID) tree.getCurrentNode(res.recID);
+    //       else tree.getCurrentNode(res);
+    //     }
+    //   }
+    // });
+
+    // this.dmSV.isNodeDeleted.subscribe((res) => {
+    //   if (res) {
+    //     var tree = this.codxview?.currentView?.currentComponent?.treeView;
+    //     if (tree) {
+    //       tree.removeNodeTree(res);
+    //       var breadcumb = [];
+    //       var breadcumbLink = [];
+    //       breadcumb.push(this.dmSV.menuActive.getValue());
+    //       tree.textField = 'folderName';
+    //       var list = tree.arrBreadCumb;
+    //       if (list && list.length > 0) {
+    //         var index = list.findIndex((x) => x.id == res);
+    //         this.codxview.dataService.data =
+    //           this.codxview.dataService.data.filter((x) => x.id != res);
+    //         if (index >= 0) {
+    //           list = list.slice(index + 1);
+    //           if (list.length > 0) {
+    //             this.dmSV.folderId.next(list[0].id);
+    //             this.dmSV.folderID = list[0].id;
+    //             for (var i = list.length - 1; i >= 0; i--) {
+    //               breadcumb.push(list[i].text);
+    //               breadcumbLink.push(list[i].id);
+    //             }
+    //           } else {
+    //             this.dmSV.folderId.next('');
+    //             this.dmSV.folderID = '';
+    //           }
+    //           this.dmSV.breadcumbLink = breadcumbLink;
+    //           this.dmSV.breadcumb.next(breadcumb);
+    //         }
+    //       }
+
+    //       if (breadcumbLink.length <= 1) {
+    //         this.dmSV.page = 1;
+    //         this.getDataFolder(this.dmSV.folderID);
+    //         this.getDataFile(this.dmSV.folderID);
+    //       }
+    //     }
+    //     this.data = this.data.filter((x) => x.recID != res);
+    //     this.view.dataService.data = this.view.dataService.data.filter(
+    //       (x) => x.recID != res
+    //     );
+    //     this.changeDetectorRef.detectChanges();
+    //     this._beginDrapDrop();
+    //   }
+    // });
+
+    // this.dmSV.isNodeChange.subscribe((res) => {
+    //   if (res) {
+    //     var tree = this.codxview?.currentView?.currentComponent?.treeView;
+    //     if (tree != null) tree.setNodeTree(res);
+    //     //  that.dmSV.folderId.next(res.recID);
+    //   }
+    // });
+
+    // this.dmSV.isSetThumbnailWait.subscribe((item) => {
+    //   if (item != null) {
+    //     this.displayThumbnail(item.recID, item.thumbnail);
+    //   }
+    // });
+    // this.dmSV.isRefreshTree.subscribe((res) => {
+    //   if (res) {
+    //     var ele = document.getElementsByClassName('collapse');
+    //     for (var i = 0; i < ele.length; i++) {
+    //       // Only if there is only single class
+    //       if (ele[i].className.includes('show')) {
+    //         ele[i].classList.remove('show');
+    //         ele[i].classList.add('hide');
+    //       }
+    //     }
+    //     ele = document.getElementsByClassName('item-selected');
+    //     if (ele.length > 0) ele[0].classList.remove('item-selected');
+    //     ele = document.getElementsByClassName('icon-arrow_drop_down');
+    //     if (ele.length > 0) {
+    //       ele[0].classList.add('icon-arrow_right');
+    //       ele[0].classList.remove('icon-arrow_drop_down');
+    //     }
+    //     this.dmSV.folderId.next('');
+    //     this.dmSV.folderID = '';
+    //     this.dmSV.page = 1;
+    //     this.dmSV.listFolder = this.view.dataService.data;
+    //     this.fileService.options.page = 1;
+    //     this.fileService.options.funcID = this.view.funcID;
+
+    //     this.fileService.GetFiles('').subscribe(async (res) => {
+    //       if (res) {
+    //         this.dmSV.listFiles = res[0];
+    //         this.dmSV.totalPage = parseInt(res[1]);
+    //       } else {
+    //         this.dmSV.listFiles = [];
+    //       }
+
+    //       this.data = [...this.dmSV.listFolder, ...res[0]];
+
+    //       this.changeDetectorRef.detectChanges();
+    //     });
+
+    //     //this.data = this.view.dataService.data
+    //   }
+    // });
+    // this.dmSV.isChangeData.subscribe((item) => {
+    //   if (item) {
+    //     this.dmSV.page = 1;
+    //     this.getDataFolder(this.dmSV.folderID);
+    //     this.getDataFile(this.dmSV.folderID);
+    //   }
+    // });
+    // this.dmSV.isAddFile.subscribe((item) => {
+    //   if (item) {
+    //     this.dmSV.page = 1;
+    //     this.getDataFolder(this.dmSV.folderID);
+    //     var result = this.dmSV.listFolder;
+    //     if (this.dmSV.listFiles && this.dmSV.listFiles.length > 0)
+    //       result = result.concat(this.dmSV.listFiles);
+    //     this.data = result;
+    //     this.data = [...this.data];
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // });
+   
+    // this.dmSV.isAddFolder.subscribe((item) => {
+    //   if (item) {
+    //     var tree = this.codxview?.currentView?.currentComponent?.treeView;
+    //     if (tree) tree.setNodeTree(item);
+    //     this.changeDetectorRef.detectChanges();
+    //     this.data = [];
+    //     if(this.view.dataService.data.length == 0)
+    //       this.view.dataService.data.push(item);
+    //     var ele = document.getElementsByClassName('item-selected');
+    //     if (ele.length > 0) ele[0].classList.remove('item-selected');
+    //     var ele2 = document.getElementsByClassName(item?.recID);
+    //     if (ele2.length > 0) ele2[0].classList.add('item-selected');
+    //     //this.onSelectionChanged(a);
+    //   }
+    //   this._beginDrapDrop();
+    // });
+    // this.dmSV.isEmptyTrashData.subscribe((item) => {
+    //   if (item) {
+    //     this.data = [];
+    //     this.dmSV.listFiles = [];
+    //     this.dmSV.listFolder = [];
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // });
+  }
+  refeshData()
+  {
+    this.fileService.options.page = 1;
+    this.folderService.options.page = 1;
+    this.isScrollFile = true;
+    this.isScrollFolder = true;
+    this.dmSV.listFiles = [];
+    this.dmSV.listFolder = [];
+    this.data = [];
+  }
+  getDataByFuncID(funcID:any)
+  {
+    debugger
+    //GetFolder()
+    this.refeshData();
+    this.getDataFolder(this.dmSV.folderID);
+   
+  }
   onScroll(event) {
     const dcScroll = event.srcElement;
     if (
-      dcScroll.scrollTop + dcScroll.clientHeight <
-      dcScroll.scrollHeight - 150
+      dcScroll.scrollTop <
+      dcScroll.scrollHeight - dcScroll.clientHeight
     ) {
       return;
     }
-    if (this.dmSV.page < this.dmSV.totalPage) {
-      this.dmSV.page++;
-      if (!this.isSearch) {
-        this.folderService.options.srtColumns = this.sortColumn;
-        this.folderService.options.srtDirections = this.sortDirection;
-        this.fileService.options.funcID = this.view.funcID;
-        this.fileService.options.page = this.dmSV.page;
-        this.fileService.GetFiles(this.dmSV.folderID).subscribe(async (res) => {
-          if (res != null) {
-            this.dmSV.listFiles = this.dmSV.listFiles.concat(res[0]);
-            this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
-            this.dmSV.totalPage = parseInt(res[1]);
-          }
-
-          this.changeDetectorRef.detectChanges();
-        });
-      } else this.search(true);
+    // Nếu còn dữ liệu folder thì scroll folder
+    if(this.isScrollFolder) {
+      this.folderService.options.page ++;
+      this.getDataFolder(this.dmSV.folderID);
     }
+    else if(this.isScrollFile)
+    {
+        this.fileService.options.page ++;
+        this.fileService.options.funcID = this.funcID
+        this.getDataFile(this.dmSV.folderID);
+        // this.fileService.GetFiles(this.dmSV.folderID).subscribe(async (res) => {
+        //   if (res != null && res[0] && res[0].length>0) {
+        //     this.dmSV.listFiles = this.dmSV.listFiles.concat(res[0]);
+        //     this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
+        //   }
+        //   else this.isScrollFile = false;
+        // });
+    }
+    // if (this.dmSV.page < this.dmSV.totalPage) {
+    //   this.dmSV.page++;
+    //   if (!this.isSearch) {
+    //     this.folderService.options.srtColumns = this.sortColumn;
+    //     this.folderService.options.srtDirections = this.sortDirection;
+    //     this.fileService.options.funcID = this.view.funcID;
+    //     this.fileService.options.page = this.dmSV.page;
+    //     this.fileService.GetFiles(this.dmSV.folderID).subscribe(async (res) => {
+    //       if (res != null) {
+    //         this.dmSV.listFiles = this.dmSV.listFiles.concat(res[0]);
+    //         this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
+    //         this.dmSV.totalPage = parseInt(res[1]);
+    //       }
+
+    //       this.changeDetectorRef.detectChanges();
+    //     });
+    //   } else this.search(true);
+    // }
   }
 
   openItem(data: any) {
@@ -185,210 +525,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     // this.changeDetectorRef.detectChanges();
   }
 
-  onInit(): void {
-    this.user = this.auth.get();
-    this.path = this.getPath();
-    this.button = {
-      id: 'btnUpload',
-      text: 'Tải lên',
-    };
-
-    this.route.queryParams.subscribe((params) => {
-      if (params?.id) {
-        var dialogModel = new DialogModel();
-        dialogModel.IsFull = true;
-        this.fileService.getFile(params?.id).subscribe((data) => {
-          if (data.read) {
-            this.callfc.openForm(
-              ViewFileDialogComponent,
-              data.fileName,
-              1000,
-              800,
-              '',
-              [data, this.codxview],
-              '',
-              dialogModel
-            );
-            var files = this.listFiles;
-            if (files != null) {
-              let index = files.findIndex(
-                (d) => d.recID.toString() === data.recID
-              );
-              if (index != -1) {
-                files[index] = data;
-              }
-              this.listFiles = files;
-              this.dmSV.ChangeData.next(true);
-            }
-          } else {
-            this.notificationsService.notify(this.titleAccessDeniedFile);
-          }
-        });
-      }
-    });
-   
-    this.dmSV.isDisableUpload.subscribe((res) => {
-      if (res) {
-        this.button.disabled = res;
-        this.changeDetectorRef.detectChanges();
-      }
-    });
-
-    this.dmSV.isNodeSelect.subscribe((res) => {
-      if (res) {
-        var tree = this.codxview?.currentView?.currentComponent?.treeView;
-        if (tree) {
-          if (res.recID) tree.getCurrentNode(res.recID);
-          else tree.getCurrentNode(res);
-        }
-      }
-    });
-
-    this.dmSV.isNodeDeleted.subscribe((res) => {
-      if (res) {
-        var tree = this.codxview?.currentView?.currentComponent?.treeView;
-        if (tree) {
-          tree.removeNodeTree(res);
-          var breadcumb = [];
-          var breadcumbLink = [];
-          breadcumb.push(this.dmSV.menuActive.getValue());
-          tree.textField = 'folderName';
-          var list = tree.arrBreadCumb;
-          if (list && list.length > 0) {
-            var index = list.findIndex((x) => x.id == res);
-            this.codxview.dataService.data =
-              this.codxview.dataService.data.filter((x) => x.id != res);
-            if (index >= 0) {
-              list = list.slice(index + 1);
-              if (list.length > 0) {
-                this.dmSV.folderId.next(list[0].id);
-                this.dmSV.folderID = list[0].id;
-                for (var i = list.length - 1; i >= 0; i--) {
-                  breadcumb.push(list[i].text);
-                  breadcumbLink.push(list[i].id);
-                }
-              } else {
-                this.dmSV.folderId.next('');
-                this.dmSV.folderID = '';
-              }
-              this.dmSV.breadcumbLink = breadcumbLink;
-              this.dmSV.breadcumb.next(breadcumb);
-            }
-          }
-
-          if (breadcumbLink.length <= 1) {
-            this.dmSV.page = 1;
-            this.getDataFolder(this.dmSV.folderID);
-            this.getDataFile(this.dmSV.folderID);
-          }
-        }
-        this.data = this.data.filter((x) => x.recID != res);
-        this.view.dataService.data = this.view.dataService.data.filter(
-          (x) => x.recID != res
-        );
-        this.changeDetectorRef.detectChanges();
-        this._beginDrapDrop();
-      }
-    });
-
-    this.dmSV.isNodeChange.subscribe((res) => {
-      if (res) {
-        var tree = this.codxview?.currentView?.currentComponent?.treeView;
-        if (tree != null) tree.setNodeTree(res);
-        //  that.dmSV.folderId.next(res.recID);
-      }
-    });
-
-    this.dmSV.isSetThumbnailWait.subscribe((item) => {
-      if (item != null) {
-        this.displayThumbnail(item.recID, item.thumbnail);
-      }
-    });
-    this.dmSV.isRefreshTree.subscribe((res) => {
-      if (res) {
-        var ele = document.getElementsByClassName('collapse');
-        for (var i = 0; i < ele.length; i++) {
-          // Only if there is only single class
-          if (ele[i].className.includes('show')) {
-            ele[i].classList.remove('show');
-            ele[i].classList.add('hide');
-          }
-        }
-        ele = document.getElementsByClassName('item-selected');
-        if (ele.length > 0) ele[0].classList.remove('item-selected');
-        ele = document.getElementsByClassName('icon-arrow_drop_down');
-        if (ele.length > 0) {
-          ele[0].classList.add('icon-arrow_right');
-          ele[0].classList.remove('icon-arrow_drop_down');
-        }
-        this.dmSV.folderId.next('');
-        this.dmSV.folderID = '';
-        this.dmSV.page = 1;
-        this.dmSV.listFolder = this.view.dataService.data;
-        this.fileService.options.page = 1;
-        this.fileService.options.funcID = this.view.funcID;
-
-        this.fileService.GetFiles('').subscribe(async (res) => {
-          if (res) {
-            this.dmSV.listFiles = res[0];
-            this.dmSV.totalPage = parseInt(res[1]);
-          } else {
-            this.dmSV.listFiles = [];
-          }
-
-          this.data = [...this.dmSV.listFolder, ...res[0]];
-
-          this.changeDetectorRef.detectChanges();
-        });
-
-        //this.data = this.view.dataService.data
-      }
-    });
-    this.dmSV.isChangeData.subscribe((item) => {
-      if (item) {
-        this.dmSV.page = 1;
-        this.getDataFolder(this.dmSV.folderID);
-        this.getDataFile(this.dmSV.folderID);
-      }
-    });
-    this.dmSV.isAddFile.subscribe((item) => {
-      if (item) {
-        this.dmSV.page = 1;
-        this.getDataFolder(this.dmSV.folderID);
-        var result = this.dmSV.listFolder;
-        if (this.dmSV.listFiles && this.dmSV.listFiles.length > 0)
-          result = result.concat(this.dmSV.listFiles);
-        this.data = result;
-        this.data = [...this.data];
-        this.changeDetectorRef.detectChanges();
-      }
-    });
-   
-    this.dmSV.isAddFolder.subscribe((item) => {
-      if (item) {
-        var tree = this.codxview?.currentView?.currentComponent?.treeView;
-        if (tree) tree.setNodeTree(item);
-        this.changeDetectorRef.detectChanges();
-        this.data = [];
-        if(this.view.dataService.data.length == 0)
-          this.view.dataService.data.push(item);
-        var ele = document.getElementsByClassName('item-selected');
-        if (ele.length > 0) ele[0].classList.remove('item-selected');
-        var ele2 = document.getElementsByClassName(item?.recID);
-        if (ele2.length > 0) ele2[0].classList.add('item-selected');
-        //this.onSelectionChanged(a);
-      }
-      this._beginDrapDrop();
-    });
-    this.dmSV.isEmptyTrashData.subscribe((item) => {
-      if (item) {
-        this.data = [];
-        this.dmSV.listFiles = [];
-        this.dmSV.listFolder = [];
-        this.changeDetectorRef.detectChanges();
-      }
-    });
-  }
+ 
   public trackItem(index: number, item: any) {
     if (item.folderName) return item.folderName;
     return null;
@@ -567,10 +704,9 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   onSelectionChanged($data) {
-    ScrollComponent.reinitialization();
-    if (!$data && ($data == null || $data?.data == null)) {
-      return;
-    }
+    debugger
+    //ScrollComponent.reinitialization();
+    if (!$data || !$data?.data) return
     this.isSearch = false;
     this.clearWaitingThumbnail();
     let id = $data?.data?.recID;
@@ -615,48 +751,22 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         if (breadcumb.length == 0) {
           id = '';
         }
+        //Chuyển page về 1
+        this.folderService.options.page = 1;
+        this.fileService.options.page = 1;
+
+        this.isScrollFile = true;
+        this.isScrollFolder = true;
+
         this.dmSV.folderName = item.folderName;
         this.dmSV.parentFolderId = item.parentId;
         this.dmSV.parentFolder.next(item);
         this.dmSV.level = item.level;
-        this.dmSV.getRight(item);
-
+        //this.dmSV.getRight(item);
         this.dmSV.folderID = id;
         this.dmSV.folderId.next(id);
-        this.folderService.options.srtColumns = this.sortColumn;
-        this.folderService.options.srtDirections = this.sortDirection;
-        this.folderService.options.funcID = this.view.funcID;
-        this.folderService.getFolders(id).subscribe(async (res) => {
-          if (res != null) {
-            this.dmSV.listFolder = res[0];
-            this.listFolders = res[0];
-            this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
-            var tree = this.codxview?.currentView?.currentComponent?.treeView;
-            item.items = [];
-            if (tree) tree.addChildNodes(item, res[0]);
-            this.changeDetectorRef.detectChanges();
-            this._beginDrapDrop();
-          }
-        });
-        this.fileService.options.page = 1;
-        this.fileService.options.funcID = this.view.funcID;
-        this.fileService.GetFiles(id).subscribe(async (res) => {
-          if (res != null) {
-            this.dmSV.listFiles = res[0];
-            this.dmSV.totalPage = parseInt(res[1]);
-            this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
-          } else {
-            this.dmSV.listFiles = [];
-          }
-
-          // if (this.sortDirection == null || this.sortDirection == "asc") {
-          //   this.data = [...this.dmSV.listFolder, ...res[0]];
-          // }
-          // else
-          //   this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles,];
-
-          this.changeDetectorRef.detectChanges();
-        });
+        this.getDataFolder(id);
+        this.changeDetectorRef.detectChanges();
       }
     } else {
       //this.data = [];
@@ -689,7 +799,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.views = [
       {
         id: '1',
-        icon: this.sys025?.datas[3].icon,
+        icon: '',
         text: 'card',
         type: ViewType.tree_card,
         active: true,
@@ -718,7 +828,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       },
       {
         id: '1',
-        icon: this.sys025?.datas[4].icon,
+        icon: '',
         text: 'smallcard',
         type: ViewType.tree_smallcard,
         active: false,
@@ -805,6 +915,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         },
       },
     ];
+    //View mặc định
+    this.currView = this.templateCard
     this.viewActive = this.views.filter((x) => x.active == true)[0];
     this.codxview.dataService.parentIdField = 'parentId';
     this.dmSV.formModel = this.view.formModel;
@@ -816,9 +928,27 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       this.folderService.options.favoriteID = "2";
       this.fileService.options.favoriteID = "2";
     }
-    this.getDataFile("");
-    //   console.log(this.button);
+    this.dmSV.disableInput.next(false);
+ 
+   
   }
+
+  setBreadCumb()
+  {
+    this.cache.functionList(this.funcID).subscribe(item=>{
+      if(item)
+      {
+        var breadcumb = [];
+        breadcumb.push(item.customName);
+        //this.dmSV.breadcumbLink.push(item.customName);
+        this.dmSV.menuActive.next(item.customName);
+        this.dmSV.breadcumb.next(breadcumb);
+        
+      }
+    
+    })
+  }
+
 
   changeView(event) {
     this.currView = null;
@@ -1189,36 +1319,45 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
 
   }
-  getDataFile(id: any) {
+  getDataFile(id: any, isSize = false) {
+
+    if(!this.isScrollFile) return;
     this.fileService.options.funcID = this.view.funcID;
-    this.dmSV.listFiles = [];
-    this.folderService.options.srtColumns = this.sortColumn;
-    this.folderService.options.srtDirections = this.sortDirection;
-    this.fileService.options.funcID = this.view.funcID;
-    this.fileService.options.page = this.dmSV.page;
+    //this.fileService.options.srtColumns = this.sortColumn;
+    //this.fileService.options.srtDirections = this.sortDirection;
+    if(!isSize) this.fileService.options.pageSize = 20;
     this.fileService.GetFiles(id).subscribe((res) => {
-      if (res) {
-        this.dmSV.listFiles = res[0];
+      if (res && res[0]) {
+        if(res[0].length <=0 || ((res[0].length < this.fileService.options.pageSize) && !isSize))
+          this.isScrollFile = false;
+        this.dmSV.listFiles = this.dmSV.listFiles.concat(res[0]);
         this.dmSV.totalPage = parseInt(res[1]);
         this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
-        this.changeDetectorRef.detectChanges();
       }
-      ScrollComponent.reinitialization();
+      this.detectorRef.detectChanges();
+      //ScrollComponent.reinitialization();
     });
   }
   getDataFolder(id: any) {
-    this.dmSV.listFolder = [];
-    this.folderService.options.srtColumns = this.sortColumn;
-    this.folderService.options.srtDirections = this.sortDirection;
-    this.folderService.options.funcID = this.view.funcID;
+    //this.dmSV.listFolder = [];
+    //this.folderService.options.srtColumns = this.sortColumn;
+    //this.folderService.options.srtDirections = this.sortDirection;
+    if(!this.isScrollFolder) return;
+    this.folderService.options.funcID = this.funcID;
     this.folderService.getFolders(id).subscribe((res) => {
-      if (res) {
+      if (res && res[0]){
         this.dmSV.listFolder = res[0];
         this.listFolders = res[0];
         this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
-        this.changeDetectorRef.detectChanges();
+        if(res[0].length <=0 || (res[0].length < this.folderService.options.pageSize))
+        {
+          this.fileService.options.pageSize = this.folderService.options.pageSize - res[0].length;
+          this.isScrollFolder = false;
+          this.getDataFile(id, true);
+        }
         this._beginDrapDrop();
       }
+      this.detectorRef.detectChanges();
     });
   }
   public dlgBtnClick = (): void => {
