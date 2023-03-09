@@ -25,8 +25,8 @@ import {
 } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
-import { log } from 'console';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ViewJobComponent } from '../../dynamic-process/popup-add-dynamic-process/step-task/view-job/view-job.component';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -67,6 +67,7 @@ export class InstanceDetailComponent implements OnInit {
   instance: any;
   //gantchat
   ganttDs = [];
+  ganttDsClone = [];
   dataColors = [];
   taskFields = {
     id: 'recID',
@@ -98,6 +99,7 @@ export class InstanceDetailComponent implements OnInit {
   readonly strInstnaceStep: string = 'instnaceStep';
 
   constructor(
+    private callfc: CallFuncService,
     private dpSv: CodxDpService,
     private api: ApiHttpService,
     private cache: CacheService,
@@ -302,8 +304,9 @@ export class InstanceDetailComponent implements OnInit {
         processID,
       ])
       .subscribe((res) => {
-        if (res && res?.length > 0) {
+        if (res && res?.length > 0) {       
           this.ganttDs = res;
+          this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
           this.changeDetec.detectChanges();
         }
       });
@@ -358,19 +361,22 @@ export class InstanceDetailComponent implements OnInit {
     return reasonStep?.stepName ?? '';
   }
 
-  clickDetailGanchart(type, recID) {
-    let option = new DialogModel();
-    option.zIndex = 1001;
-    this.dialogPopupDetail = this.callFC.openForm(
-      this.viewDetailsItem,
-      '',
-      500,
-      10,
-      '',
-      null,
-      '',
-      option
-    );
+  clickDetailGanchart(recID){
+    let data = this.ganttDsClone?.find(item => item.recID === recID);
+    console.log(this.ganttDsClone);
+    
+    console.log(data);
+    
+    if (data) {
+      this.callfc.openForm(
+        ViewJobComponent,
+        '',
+        700,
+        550,
+        '',
+        {value: data, listValue: this.ganttDsClone}
+      );
+    }    
   }
 
   rollHeight() {

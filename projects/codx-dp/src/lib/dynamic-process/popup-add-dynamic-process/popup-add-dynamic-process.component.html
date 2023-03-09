@@ -427,7 +427,7 @@
       <div class="d-flex flex-column mb-4">
         <div class="d-flex align-items-center mb-2">
           <codx-label
-            class="fw-bold fs-5 text-dark me-3"
+            class="fw-bold fs-4 text-dark me-3"
             name="lblSupervisor"
             [formModel]="dialog.formModel"
             default="Người giám sát"
@@ -440,9 +440,10 @@
           >
             <i class="icon-person_add_alt_1 icon-16"></i>
           </button>
+
           <button
             type="button"
-            class="btn btn-icon btn-sm btn-light-primary"
+            class="btn btn-icon btn-sm btn-light-primary me-2"
             (click)="clickRoles()"
           >
             <i class="icon-settings icon-16"></i>
@@ -1193,8 +1194,8 @@
 <ng-template #stage>
   <div class="background-stage dp-step">
     <div class="stage-body d-flex">
-      <div class="stage-body-left w-300px minw-300px pe-1 mb-3">
-        <div class="fw-bold fs-4 text-dark">
+      <div class="stage-body-left w-300px minw-300px pe-1">
+        <div class="fw-bold fs-4 text-dark pb-2 mb-1 border-bottom stage-header">
           <codx-label fiedName="step" default="Giai đoạn"></codx-label>
         </div>
         <div
@@ -1213,23 +1214,23 @@
             "
           >
             <div class="order">{{ i + 1 }}</div>
-            <div class="p-3 content">
-              <div class="fw-bold text-dark mb-1">{{ itemStep?.stepName }}</div>
+            <div class="content">
+              <div class="fw-bold text-dark">{{ itemStep?.stepName }}</div>
 
-              <div class="text-gray-500 mb-1">
+              <div class="text-gray-500">
                 Thời hạn:
-                <span class="text-dark fw-bold">{{
+                <span class="text-gray-700">{{
                   itemStep?.durationDay || 0
                 }}</span>
                 ngày
-                <span class="text-dark fw-bold">{{
+                <span class="text-gray-700">{{
                   itemStep?.durationHour || 0
                 }}</span>
                 giờ
               </div>
-              <div style="font-size: 1.1rem; font-weight: 500">
+              <div class="text-gray-500">
                 Công việc:
-                <span class="text-dark fw-bold">{{
+                <span class="text-gray-700">{{
                   itemStep?.taskGroups?.length
                 }}</span>
               </div>
@@ -1243,10 +1244,11 @@
           >
             <div class="order">T</div>
             <div class="content">
-              <div style="font-weight: 600; font-size: 1.2rem">
+              <div class="text-dark fw-bold">
                 <codx-label [default]="stepNameSuccess"></codx-label>
               </div>
-              <codx-label default="Hoàn thành tất cả giai đoạn"></codx-label>
+              <div class="text-gray-500">
+              <codx-label default="Hoàn thành tất cả giai đoạn"></codx-label></div>
             </div>
           </div>
 
@@ -1257,13 +1259,14 @@
             (click)="clickViewStep($event, viewStepReasonFail, strEmpty)"
           >
             <div class="order">F</div>
-            <div class="content p-3">
-              <div style="font-weight: 600; font-size: 1.2rem">
+            <div class="content">
+              <div class="text-dark fw-bold">
                 <codx-label [default]="stepNameFail"></codx-label>
               </div>
+              <div class="text-gray-500">
               <codx-label
                 default="Thất bại ở một giai đoạn bất kỳ"
-              ></codx-label>
+              ></codx-label></div>
             </div>
           </div>
 
@@ -1271,48 +1274,8 @@
         </div>
       </div>
       <div class="stage-body-right w-100 ps-6">
-        <div class="d-flex align-items-center justify-content-between pe-1">
-          <div class="fw-bold fs-4 text-dark mb-3">{{ titleViewStepCrr }}</div>
-          <div *ngIf="isSwitchReason && viewStepCrr === viewStepReasonSuccess">
-            <codx-input
-              class="test-check"
-              type="switch"
-              style="width: 100%"
-              field="isUsed"
-              [checked]="stepSuccess?.isUsed ?? true"
-              [crrValue]="stepSuccess?.isUsed"
-              (valueChange)="turnOnReason($event, viewStepReasonSuccess)"
-            >
-            </codx-input>
-          </div>
-          <div *ngIf="isSwitchReason && viewStepCrr === viewStepReasonFail">
-            <codx-input
-              class="test-check"
-              type="switch"
-              style="width: 100%"
-              field="isUsed"
-              [checked]="stepFail?.isUsed ?? true"
-              [crrValue]="stepFail?.isUsed"
-              (valueChange)="turnOnReason($event, viewStepReasonFail)"
-            >
-            </codx-input>
-          </div>
-          <!-- more function step -->
-          <div
-              *ngIf="step"
-              class="icon-more_vert has-action-menu more-funtion-step"
-              style="cursor: pointer"
-            >
-              <codx-mfunc
-                *ngIf="viewStepCrr == viewStepCustom"
-                [formModel]="dialog.formModel"
-                (clickMF)="clickMFStep($event, step)"
-                [dataItem]="moreDefaut"
-                [type]="'hover'"
-                (changeDataMF)="changeDataMF($event, 'step')"
-              >
-              </codx-mfunc>
-            </div>
+        <div class="d-flex align-items-center justify-content-between pe-1 pb-2 mb-1 border-bottom stage-header">
+          <div class="fw-bold fs-4 text-dark w-100">{{ titleViewStepCrr }}</div>
           <div class="d-flex align-items-center">
             <div *ngIf="isSwitchReason && viewStepCrr  === viewStepReasonSuccess">
               <codx-input
@@ -1339,10 +1302,49 @@
               </codx-input>
             </div>
             <!-- more function step -->
-            
+            <div *ngIf="isSwitchReason && viewStepCrr === viewStepReasonSuccess">
+              <codx-input
+                class="test-check"
+                type="switch"
+                style="width: 100%"
+                field="isUsed"
+                [checked]="stepSuccess?.isUsed ?? true"
+                [crrValue]="stepSuccess?.isUsed"
+                (valueChange)="turnOnReason($event, viewStepReasonSuccess)"
+              >
+              </codx-input>
+            </div>
+            <div *ngIf="isSwitchReason && viewStepCrr === viewStepReasonFail">
+              <codx-input
+                class="test-check"
+                type="switch"
+                style="width: 100%"
+                field="isUsed"
+                [checked]="stepFail?.isUsed ?? true"
+                [crrValue]="stepFail?.isUsed"
+                (valueChange)="turnOnReason($event, viewStepReasonFail)"
+              >
+              </codx-input>
+            </div>
+            <!-- more function step -->
+            <div
+                *ngIf="step"
+                class="icon-more_vert has-action-menu more-funtion-step"
+                style="cursor: pointer"
+              >
+                <codx-mfunc
+                  *ngIf="viewStepCrr == viewStepCustom"
+                  [formModel]="dialog.formModel"
+                  (clickMF)="clickMFStep($event, step)"
+                  [dataItem]="moreDefaut"
+                  [type]="'hover'"
+                  (changeDataMF)="changeDataMF($event, 'step')"
+                >
+                </codx-mfunc>
+              </div>
           </div>
         </div>
-        <div class="stage-right-main pe-1 mt-4">
+        <div class="stage-right-main pe-1">
           <ng-container
             [ngTemplateOutlet]="
               viewStepCrr === viewStepCustom
@@ -2234,24 +2236,29 @@
       class="main-job px-5"
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
     >
-      <div class="row">
+      <div class="row mt-3">
         <div class="col-6">
-          <div class="d-flex flex-column margin-form mb-4">
-            <div class="d-flex flex">
+          <div class="d-flex flex-column">
+            <div class="d-flex align-items-center mb-2">
               <codx-label
-                class="fw-bolder"
+                class="fw-bold fs-6 text-dark me-3
+                "
                 name="lblParticipantRole"
                 default="Người giám sát"
               >
               </codx-label>
-              <i
-                class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
+              <button
+                type="button"
+                class="btn btn-icon btn-sm btn-light-primary"
                 (click)="sharePerm(controlShare, 'participants-2')"
+              >
+              <i
+                class="icon-person_add_alt_1 icon-16"
               ></i>
+            </button>
             </div>
-            <div>
+            <div class="text-gray-600">
               <codx-label
-                class="fw-normal text-gray-400"
                 name="lblParticipantRoleControl"
                 default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
               viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa
@@ -2268,38 +2275,34 @@
           <ng-container *ngFor="let perm of step.roles; index as i">
             <div
               *ngIf="perm.roleType == 'S'"
-              class="me-4 d-flex align-items-center margin-form mb-4"
+              class="d-flex align-items-center flex-wrap mb-3 me-3"
             >
-              <div class="d-flex align-items-center position-relative">
+              <div class="me-2">
                 <codx-img
                   class=""
-                  [width]="25"
+                  [width]="20"
                   [objectId]="perm.objectName"
                   objectType="AD_Users"
                 >
                 </codx-img>
               </div>
-              <div class="ms-1">
-                <div class="text-gray-600">{{ perm.objectName }}</div>
-              </div>
+              <div class="text-gray-600">{{ perm.objectName }}</div>
             </div>
           </ng-container>
         </div>
       </div>
-      <div class="row">
+      <div class="row border-bottom">
         <div class="col-6">
-          <div class="d-flex flex-column margin-form mb-4">
-            <div class="d-flex flex">
+          <div class="d-flex flex-column mb-2">
+            <div class="fw-bold fs-6 text-dark mb-1">
               <codx-label
-                class="fw-bolder"
                 name="lblInvolved"
                 default="Người liên quan"
               >
               </codx-label>
             </div>
-            <div>
+            <div class="text-gray-600">
               <codx-label
-                class="fw-normal text-gray-400"
                 name="lblInvolvedControl"
                 default="Người liên quan có thể cập nhật công việc mà họ đang
                 phụ trách"
@@ -2371,33 +2374,23 @@
       class="main-job"
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
     >
-      <div class="main-body p-3">
-        <div class="row pt-3 pb-5">
+      <div class="main-body p-5">
+        <div class="row py-3 border-bottom">
           <div class="col-6">
-            <div class="d-flex align-items-start">
-              <div>
-                <div class="flex-row">
-                  <div>
-                    <strong>
-                      <codx-label
-                        class="text-muted text-opacity-25"
-                        fiedName="AssignControl"
-                        default="Phân bố người phụ trách cho nhiệm vụ"
-                        [formModel]="dialog.formModel"
-                      >
-                      </codx-label>
-                    </strong>
-                  </div>
-                  <div>
-                    <codx-label
-                      class="text-muted"
-                      default="Mặc định khi nhiệm vụ được tạo hoặc chuyển đến
-                      giai đoạn sẽ tự động phân bố người phụ trách cho nhiệm vụ"
-                    >
-                    </codx-label>
-                  </div>
-                </div>
-              </div>
+            <div class="text-dark fw-bold mb-1">
+              <codx-label
+                fiedName="AssignControl"
+                default="Phân bố người phụ trách cho nhiệm vụ"
+                [formModel]="dialog.formModel"
+              >
+              </codx-label>
+            </div>
+            <div class="text-gray-500">
+              <codx-label
+                default="Mặc định khi nhiệm vụ được tạo hoặc chuyển đến
+                giai đoạn sẽ tự động phân bố người phụ trách cho nhiệm vụ"
+              >
+              </codx-label>
             </div>
           </div>
           <div class="col-6">
@@ -2413,21 +2406,16 @@
             </codx-input>
           </div>
         </div>
-        <div class="row pb-5">
+        <div class=" py-3 border-bottom">
           <div class="col-6">
-            <div class="d-flex align-items-start">
-              <div>
-                <strong>
-                  <codx-label
-                    class="text-muted text-opacity-25"
-                    fiedName=""
-                    default="Tự động chuyển nhiệm vụ qua giai đoạn tiếp theo
-                    khi"
-                    [formModel]="dialog.formModel"
-                  >
-                  </codx-label>
-                </strong>
-              </div>
+            <div class="text-dark fw-bold mb-1">
+              <codx-label
+                  fiedName=""
+                  default="Tự động chuyển nhiệm vụ qua giai đoạn tiếp theo
+                  khi"
+                  [formModel]="dialog.formModel"
+                >
+                </codx-label>
             </div>
           </div>
           <div class="col-6">
@@ -2487,7 +2475,7 @@
       class="main-job"
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
     >
-      <div class="main-body p-3">
+      <div class="main-body p-5">
         <div class="row pb-5">
           <div class="col-6">
             <div class="d-flex align-items-start">
@@ -2770,7 +2758,7 @@
       class="main-job"
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
     >
-      <div class="main-body p-3">
+      <div class="main-body p-5">
         <div class="row pt-3 pb-5">
           <codx-input
             field="memo"
