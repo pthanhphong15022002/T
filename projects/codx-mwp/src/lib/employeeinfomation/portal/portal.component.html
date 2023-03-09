@@ -787,7 +787,6 @@
 
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="HandleEVaccinesInfo(addHeaderText, 'add', null)"
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -3018,7 +3017,7 @@
       (navChange)="navChange($event)"
       class="nav nav-tabs px-4"
     >
-      <ng-container *ngFor="let item of lstFuncHRProcess; let i = index">
+      <ng-container *ngFor="let item of dayOffTravelHRProcess; let i = index">
         <li [ngbNavItem]="item.functionID" class="nav-item">
           <a ngbNavLink class="nav-link">
             <div class="text-uppercase fw-bold">{{ item.customName }}</div>
@@ -3785,7 +3784,7 @@
               <div class="d-flex align-items-center ms-5">
                 <codx-dropdown-calendar
                   [cssPopup]="'w-600px h-400px'"
-                  [emptyText]="'456456'"
+                  [emptyText]="'Năm'"
                   [firstChange]="false"
                   [displayOption]="ops"
                   [selectedType]="'y'"
@@ -3818,7 +3817,7 @@
           </div>
         </div>
         <!-- Kỷ luật -->
-        <div class="user-profile overview d-block" [id]="eDiseasesFuncID">
+        <div class="user-profile overview d-block" [id]="eDisciplineFuncID">
           <ngx-skeleton-loader
             count="5"
             animation="progress"
@@ -3831,7 +3830,7 @@
                 </div>
 
                 <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
-                  {{ getFormHeader(eDiseasesFuncID) }}
+                  {{ getFormHeader(eDisciplineFuncID) }}
                 </div>
                 <span class="text-gray-500 mx-2">|</span>
                 <span class="text-dark">

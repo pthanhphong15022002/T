@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
-import { DialogData, DialogRef } from 'codx-core';
+import { DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { Currency } from '../../models/Currency.model';
 import { PopAddCurrencyComponent } from '../pop-add-currency/pop-add-currency.component';
 
@@ -17,12 +17,13 @@ export class PopSettingExchangeComponent implements OnInit {
   data:any;
   calculationName:any;
   constructor(
-    @Optional() dialogsetting?: DialogRef,
+    private notification: NotificationsService,
+    @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData,
   ) { 
-    this.dialog = dialogsetting;
+    this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
-    this.currencies = dialogData.data?.data;
+    this.currencies = dialog.dataService!.dataSelected;
     if (this.currencies.calculation == '0') {
       this.calculation = false;
     }else{
@@ -53,6 +54,7 @@ export class PopSettingExchangeComponent implements OnInit {
   
   //#region CRUD
   onSave(){
+    this.notification.notifyCode('DP007', 0, '');
     window.localStorage.setItem("dataexchange",JSON.stringify(this.currencies));
     this.dialog.close();
   }
