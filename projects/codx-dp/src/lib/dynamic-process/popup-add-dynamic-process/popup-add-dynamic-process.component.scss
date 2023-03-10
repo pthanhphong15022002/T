@@ -205,8 +205,11 @@
 
 .task{
   max-height:  1000px;
+  overflow: auto;
 }
-
+.task-att{
+  margin-left: 80px;
+}
 .hiddenTask  {
   max-height: 0;
   overflow: hidden;
@@ -299,10 +302,10 @@
 }
 
 .icon-container {
-  height: 40px;
-  width: 40px;
+  height: 35px;
+  width: 35px;
   border-radius: 50%;
-  background-color: #e4e4e4;
+  background-color:var(--gray-100);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -322,10 +325,6 @@
 
 .card-job:active {
   cursor: grab;
-}
-
-.card-job {
-border-bottom: 1px var(--gray-100) solid;
 }
 codx-attachment{
   font-size: 12px !important;
