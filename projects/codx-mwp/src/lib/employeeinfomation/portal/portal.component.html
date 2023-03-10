@@ -15,14 +15,14 @@
           <div class="bg-sidebar">
             <div class="profile-bg"></div>
             <div class="d-flex flex-column text-center mx-4 profile-info">
-              <div class="mb-4 d-flex justify-content-between align-items-top">
-                <span
+              <div class="mb-4 d-flex justify-content-center align-items-top">
+                <!-- <span
                   type="button"
                   class="btn btn-icon btn-light-primary rounded-circle"
                   (click)="previousEmp()"
                 >
                   <i class="icon-arrow_back_ios icon-16"></i>
-                </span>
+                </span> -->
                 <div class="d-flex justify-content-center">
                   <div class="position-relative mt-6">
                     <codx-img
@@ -44,7 +44,7 @@
                         class="btn btn-icon btn-sm rounded-circle btn-primary"
                         ngbDropdownToggle
                       >
-                        <!-- <i class="icon-keyboard_arrow_down"></i> -->
+                        <i class="icon-keyboard_arrow_down"></i>
                       </span>
                       <div ngbDropdownMenu class="" style="min-width: 350px">
                         <div class="card card-flush" *ngIf="eInfoFormModel">
@@ -301,19 +301,25 @@
                     </div>
                   </div>
                 </div>
-                <span
+                <!-- <span
                   type="button"
                   class="btn btn-icon btn-light-primary rounded-circle"
                   (click)="nextEmp()"
                 >
                   <i class="icon-arrow_forward_ios icon-16"></i>
-                </span>
+                </span> -->
               </div>
               <div class="fw-bold fs-5 mb-1">
                 {{ infoPersonal?.employeeName }}
               </div>
               <div class="text-gray-500">
-                {{ infoPersonal?.positionName }}
+                <div class="text-gray-500" *ngIf="view.formModel">
+                  {{
+                    infoPersonal?.positionID
+                      | formatvalue : view.formModel : "positionID"
+                      | async
+                  }}
+                </div>
               </div>
             </div>
           </div>
@@ -756,7 +762,7 @@
   </div>
 </ng-template>
 
-<!-- pane_1 Thông tin cá nhân2-->
+<!-- pane_1 Thông tin cá nhân-->
 <ng-template #info>
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul
