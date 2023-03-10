@@ -329,6 +329,7 @@ export class DynamicProcessComponent
   OpenFormCopy(data) {
     this.isCopy = false;
     this.listClickedCoppy = [];
+    this.isChecked = false;
     this.dataCopy = data;
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,
@@ -612,10 +613,10 @@ export class DynamicProcessComponent
   }
 
   doubleClickViewProcess(data) {
-    // let isRead = this.checkPermissionRead(data);
-    // if (isRead) {
-    //   this.viewDetailProcess(data);
-    // }
+    let isRead = this.checkPermissionRead(data);
+    if (isRead) {
+      this.viewDetailProcess(data);
+    }
   }
   getNameUsersStr(data) {
     if (data?.length > 0 && data !== null) {
