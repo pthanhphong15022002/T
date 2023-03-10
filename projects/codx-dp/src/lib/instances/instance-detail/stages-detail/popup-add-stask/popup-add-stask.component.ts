@@ -168,10 +168,10 @@ export class PopupAddStaskComponent implements OnInit {
       this.isSave = true;
     }    
     if(new Date(this.stepsTasks['endDate']) > new Date(this.groupTask?.endDate)){
-      this.notiService.notifyCode('DP019');
+      this.notiService.notifyCode('DP020');
     }
     if(new Date(this.stepsTasks['startDate']) > new Date(this.groupTask['startDate'])){
-      this.notiService.notifyCode('DP019');
+      this.notiService.notifyCode('DP020');
     }
   }
   applyOwner(e, datas) {
