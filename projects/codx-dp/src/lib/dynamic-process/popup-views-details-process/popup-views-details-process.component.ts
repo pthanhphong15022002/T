@@ -98,7 +98,7 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
       this.dialog.close(datas);
     })
   }
-  valueList(e){
+  valueListRefID(e){
     //bat e ve xu lys
     if(e){
       this.listValueRefid.push(e);

@@ -1,7 +1,9 @@
 import {
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   SimpleChanges,
   TemplateRef,
   ViewChild,
@@ -67,6 +69,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() proccesNameMove: any;
   @Input() lstIDInvo: any;
   @Input() isClosed = false;
+  @Output() saveAssign = new EventEmitter<any>();;
   dateActual: any;
   startDate: any;
   progress: string = '0';
@@ -119,6 +122,7 @@ export class StagesDetailComponent implements OnInit {
   listReasonStep: DP_Instances_Steps_Reasons[] = [];
   listReasonsClick: DP_Instances_Steps_Reasons[] = [];
   dialogPopupReason: DialogRef;
+  
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   titleReason: any;
@@ -465,6 +469,7 @@ export class StagesDetailComponent implements OnInit {
   //giao viec
   assignTask(moreFunc,data){
     var task = new TM_Tasks();
+    task.taskName = data.taskName ;
     task.refID = data?.recID;
     task.refType = "DP_Instance";
     task.dueDate = data?.endDate;
@@ -482,7 +487,13 @@ export class StagesDetailComponent implements OnInit {
       assignModel,
       option
     );
-    dialogAssign.closed.subscribe((e) => {})
+    dialogAssign.closed.subscribe((e) => {
+      var doneSave = false ;
+      if(e && e.event!=null){
+        doneSave = true ;
+      }
+      this.saveAssign.emit(doneSave);
+    })
   }
   //View task
   viewTask(data?: any, type?: string) {
