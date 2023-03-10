@@ -248,7 +248,7 @@
   <!--Thông tin chung-->
   <div class="background">
     <div
-      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
@@ -388,7 +388,7 @@
   <!--Các vai trò quy trình-->
   <div class="background">
     <div
-      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
@@ -617,7 +617,7 @@
   <!--Tùy chỉnh quy trình-->
   <div class="background">
     <div
-      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
@@ -812,7 +812,7 @@
   <!--Hướng dẫn làm việc với quy trình-->
   <div class="background">
     <div
-      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
@@ -971,7 +971,7 @@
         >
           <div class="background-job mb-5">
             <div
-              class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+              class="header-job d-flex align-items-center justify-content-between py-2 px-5"
             >
               <div class="d-flex flex-column">
                 <div class="title text-primary fs-4 fw-bold">
@@ -997,7 +997,7 @@
                   (click)="addCustomField(item.recID, item.processID)"
                 >
                   <i
-                    class="icon-add icon-16"
+                    class="icon-add icon-18"
                   ></i>
                 </button>
                 <button
@@ -1010,7 +1010,7 @@
                   [popoverClass]=""
                 >
                   <i
-                    class="icon-settings icon-16"
+                    class="icon-settings icon-18"
                   ></i>
                 </button>
                 <button
@@ -1019,7 +1019,7 @@
                   (click)="clickShow($event, item.recID)"
                 >
                   <i
-                    class="icon-expand_less icon-16"
+                    class="icon-expand_less icon-18"
                   ></i>
                 </button>
               </div>
@@ -1059,12 +1059,12 @@
               </div>
 
               <div *ngIf="item?.fields?.length > 0">
-                <div class="class-field p-2">
+                <div class="class-field row p-5">
                   <ng-container *ngFor="let item1 of item?.fields">
                     <div
                       class="col-{{
                         12 / item.showColumnControl
-                      }} p-3 has-action-menu crr-fiels mb-5"
+                      }} has-action-menu crr-fiels p-3"
                       cdkDrag
                       [cdkDragStartDelay]="200"
                       [cdkDragData]="item1"
@@ -1098,15 +1098,13 @@
                         >
                         </codx-input>
                       </div> -->
-                      <div class="form-group">
-                        <codx-input-custom-field
-                          [customField]="item1"
-                          [objectId]="item1.recID"
-                          [disable]="true"
-                          [viewFileName]="true"
+                      <codx-input-custom-field
+                        [customField]="item1"
+                        [objectId]="item1.recID"
+                        [disable]="true"
+                        [viewFileName]="true"
                         >
                         </codx-input-custom-field>
-                      </div>
                       <codx-mfunc
                         [formModel]="dialog.formModel"
                         (clickMF)="clickMFFields($event, item1)"
@@ -1377,9 +1375,10 @@
 <ng-template #job>
   <div class="background-job">
     <div
-      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+      class="header-job d-flex align-items-center justify-content-between w-100 py-2 px-5"
     >
-      <div class="d-flex flex-column">
+    <div class="row w-100">
+      <div class="d-flex flex-column col-7">
         <div class="title text-primary fs-4 fw-bold">
           <codx-label class="title" fiedName="TaskType" default="Công việc">
           </codx-label>
@@ -1392,7 +1391,7 @@
           </codx-label>
         </div>
       </div>
-      <div class="d-flex align-items-center w-100">
+      <div class="d-flex align-items-center justify-content-end col-5 pe-0">
         <div class="d-flex justify-content-end flex-column">
           <div class="text-gray-500 fs-7">
             <codx-label
@@ -1406,24 +1405,25 @@
               {{ step?.durationDay }} ngày {{ step?.durationHour }} giờ
           </div>
         </div>
-        <div class="d-flex align-items-center me-5">
-          <button type="button" class="btn btn-icon btn-sm btn-light-primary me-2" (click)="openTaskGroup()">
+        <div class="d-flex align-items-center ms-5">
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openTaskGroup()">
             <i
               class="icon-add icon-16"
             ></i>
           </button>
-          <button type="button" class="btn btn-icon btn-sm btn-light-primary me-2" (click)="openTypeJob()">
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary ms-2" (click)="openTypeJob()">
             <i
               class="icon-add_task icon-16"
             ></i>
           </button>
-          <button type="button" class="btn btn-icon btn-sm btn-light-primary me-2" (click)="clickShow($event, 'job-main')">
+          <button type="button" class="btn btn-icon btn-sm btn-light-primary ms-2" (click)="clickShow($event, 'job-main')">
             <i
               class="icon-expand_less icon-16"
             ></i>
           </button>
         </div>
       </div>
+    </div>
     </div>
 
     <div
@@ -1667,37 +1667,33 @@
           </div>
         </div>
       </div>
-      <div class="d-flex justify-content-center pb-3">
-        <div class="me-2">
+      <div class="d-flex justify-content-center mt-3">
           <button
-            class="btn btn-outline-primary btn-sm pb-5 d-flex align-items-center justify-content-between"
+            type="button"
+            class="btn btn-outline-primary me-2"
             (click)="openTaskGroup()"
           >
-            <span class="icon-add icon-20 text-primary-600 py-2"></span>
+            <i class="icon-add icon-18 text-primary"></i>
             <codx-label
-              class="text-primary-600"
               [name]="'lblAddGroup'"
               [formName]="'DPStepsFields'"
               [gridViewName]="'grvDPStepsFields'"
               [default]="'Thêm nhóm công việc'"
             ></codx-label>
           </button>
-        </div>
-        <div class="ms-2">
           <button
-            class="btn btn-outline-primary btn-sm pb-5 d-flex align-items-center justify-content-between"
+            type="button"
+            class="btn btn-outline-primary"
             (click)="openTypeJob()"
           >
-            <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
+            <i class="icon-add_task icon-18 text-primary"></i>
             <codx-label
-              class="text-primary-600"
               [name]="'lblAddTask'"
               [formName]="'DPStepsFields'"
               [gridViewName]="'grvDPStepsFields'"
               [default]="'Thêm công việc'"
             ></codx-label>
           </button>
-        </div>
       </div>
     </div>
   </div>
@@ -1772,7 +1768,7 @@
 <ng-template #reasonSuccess>
   <div class="background-job form-setting-step-success mb-5">
     <div
-      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
@@ -1890,7 +1886,7 @@
 
   <div class="background-job form-reason-success">
     <div
-      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
@@ -1987,7 +1983,7 @@
 <ng-template #reasonFail>
   <div class="background-job form-setting-step-fail mb-5">
     <div
-      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
@@ -2097,7 +2093,7 @@
 
   <div class="background-job form-reason-fail">
     <div
-      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
@@ -2196,7 +2192,7 @@
 <ng-template #rolesInStep>
   <div class="background-job form-setup-role mb-5">
     <div
-      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
@@ -2230,7 +2226,7 @@
       class="main-job px-5"
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
     >
-      <div class="row mt-3 pb-3">
+      <div class="row mt-3">
         <div class="col-6">
           <div class="d-flex flex-column">
             <div class="d-flex align-items-center mb-2">
@@ -2317,16 +2313,14 @@
             >
               <div class="d-flex align-items-center position-relative">
                 <codx-img
-                  class=""
+                  class="me-2"
                   [width]="25"
                   [objectId]="perm.objectName"
                   objectType="AD_Users"
                 >
                 </codx-img>
               </div>
-              <div class="ms-1">
-                <div class="text-dark fw-bold">{{ perm.objectName }}</div>
-              </div>
+              <div class="text-dark fw-bold">{{ perm.objectName }}</div>
             </div>
           </ng-container>
         </div>
@@ -2338,7 +2332,7 @@
 <ng-template #setupInStep>
   <div class="background-job form-setup-step mb-5">
     <div
-      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
@@ -2435,7 +2429,7 @@
 <ng-template #durationInStep>
   <div class="background-job form-setup-step mb-5">
     <div
-      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
@@ -2615,8 +2609,7 @@
           <div class="col-6">
             <div class="text-dark fw-bold">
               <codx-label
-                class="text-muted"
-                default="Cho phép người phụ trách chỉnh sửa thời gian hoành
+                default="Cho phép người phụ trách chỉnh sửa thời gian hoàn
                 thành giai đoạn thực tế"
               >
               </codx-label>
@@ -2700,7 +2693,7 @@
 <ng-template #memoInStep>
   <div class="background-job form-setup-step mb-5">
     <div
-      class="header-job d-flex align-items-center justify-content-between py-3 px-6"
+      class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
@@ -2740,16 +2733,14 @@
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
     >
       <div class="main-body p-6">
-        <div class="row pt-3 pb-5">
-          <codx-input
-            field="memo"
-            type="textarea"
-            [placeholder]=""
-            [crrValue]="step.memo"
-            (valueChange)="valueChangeMemo($event)"
-          >
-          </codx-input>
-        </div>
+        <codx-input
+          field="memo"
+          type="textarea"
+          [placeholder]=""
+          [crrValue]="step.memo"
+          (valueChange)="valueChangeMemo($event)"
+        >
+        </codx-input>
       </div>
     </div>
   </div>
