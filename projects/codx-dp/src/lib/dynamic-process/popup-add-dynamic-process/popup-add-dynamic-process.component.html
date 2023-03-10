@@ -1446,10 +1446,10 @@
                 [cdkDragStartDelay]="100"
                 [cdkDragDisabled]="taskList?.recID ? false : true"
               >
-                <div class="card-job aqua task123">
+                <div class="card-job task-main">
                   <div
                     *ngIf="taskList?.recID"
-                    class="d-flex align-items-center has-action-menu mb-4"
+                    class="d-flex align-items-center has-action-menu mb-4 task-groups"
                   >
                     <!-- show hiden group task -->
                     <span class="me-4">
@@ -1524,7 +1524,7 @@
                     cdkDropList
                     [cdkDropListData]="taskList?.task || []"
                     (cdkDropListDropped)="drop($event, taskList, false)"
-                    class="task ms-14"
+                    class="task ps-14"
                     [ngStyle]="taskList?.recID ? {} : {}"
                   >
                     <ng-container *ngFor="let task of taskList?.task">
