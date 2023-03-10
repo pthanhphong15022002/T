@@ -115,7 +115,7 @@ export class PopAddArComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.arposting[keymodel[i]] == null ||
-              this.arposting[keymodel[i]] == ''
+              this.arposting[keymodel[i]].match(/^ *$/) != null
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -207,7 +207,7 @@ export class PopAddArComponent extends UIComponent implements OnInit {
           if (res.save) {
               this.dialog.dataService.clear();
               this.dialog.dataService.addNew().subscribe((res) => {
-              this.form.formGroup.reset(res);
+              this.form.formGroup.patchValue(res);
               this.arposting = this.dialog.dataService.dataSelected;
               this.arposting.moduleID = this.moduleID;
               this.arposting.postType = this.postType;

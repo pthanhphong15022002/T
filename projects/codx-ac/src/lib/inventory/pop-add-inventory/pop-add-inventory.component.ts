@@ -39,7 +39,7 @@ export class PopAddInventoryComponent extends UIComponent {
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     {
-      icon: 'icon-playlist_add_check',
+      icon: 'icon-rule',
       text: 'Dành hàng',
       name: 'Goods',
     },
@@ -95,9 +95,6 @@ export class PopAddInventoryComponent extends UIComponent {
     this.title = this.headerText;
     this.dt.detectChanges();
   }
-  clearInventory() {
-    this.form.formGroup.reset();
-  }
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.inventory);
@@ -107,7 +104,7 @@ export class PopAddInventoryComponent extends UIComponent {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.inventory[keymodel[i]] == null ||
-              this.inventory[keymodel[i]] == ''
+              this.inventory[keymodel[i]].match(/^ *$/) != null
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -190,10 +187,9 @@ export class PopAddInventoryComponent extends UIComponent {
         })
         .subscribe((res) => {
           if (res.save) {
-            this.clearInventory();
             this.dialog.dataService.clear();
             this.dialog.dataService.addNew().subscribe((res) => {
-              this.form.formGroup.reset(res);
+              this.form.formGroup.patchValue(res);
               this.inventory = this.dialog.dataService!.dataSelected;
             });
           } else {

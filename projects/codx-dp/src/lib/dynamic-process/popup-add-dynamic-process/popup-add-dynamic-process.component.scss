@@ -59,61 +59,38 @@
   margin-left: 10px;
 }
 
-.scroll {
-  overflow: scroll;
-  height: 80vh;
-}
-
-.scroll-stask {
-  overflow: hidden;
-  height: 75vh;
-}
-
 .background-stage {
 
   
   .stage-body {
     .stage-body-left {
-      padding-right: 0px;
-      margin: 10px 0 0 0;
-      border-right: 1px solid #dfdfdf;
+      border-right: 1px solid var(--gray-150);
 
       .header {
         justify-content: flex-start;
-        font-weight: 600;
-        font-size: 1.2rem;
       }
 
       .stage-body-left-main {
-        height: 70vh;
+        height: calc(100vh - 240px);
         overflow-y: scroll;
         padding: 0px;
 
         .list-stage {
           display: flex;
-          align-items: center;
-          padding: 0 10px;
+          align-items: start;
+          padding: 8px 4px;
         }
 
         .list-stage:hover {
-          box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
-          border-radius: 5px;
-          background-color: #f0f8ff;
-        }
-
-        .list-stage:hover .content {
-          color: #0172e4;
+          background-color:var(--primary-lighter);
         }
       }
     }
 
     .stage-body-right {
-      margin: 10px 0 0 0;
-
-      .main {
-        height: 72vh;
+      .stage-right-main {
+        height: calc(100vh - 240px);
         overflow-y: scroll;
-        padding: 10px;
       }
     }
   }
@@ -137,7 +114,7 @@
 }
 
 .background {
-  box-shadow: var(--gray-200) 2px 2px 6px -1px;
+  //box-shadow: var(--gray-300) 1px 2px 5px -1px;
   border: 1px var(--gray-200) solid;
   margin-bottom: 15px;
   border-radius: 4px!important;
@@ -163,7 +140,7 @@
 
 
 .background-job {
-  box-shadow: var(--gray-200) 2px 2px 6px -1px;
+  //box-shadow: var(--gray-300) 1px 2px 5px -1px;
   border: 1px var(--gray-200) solid;
   margin-bottom: 15px;
   border-radius: 4px!important;
@@ -223,15 +200,15 @@
 }
 
 .click {
-  box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
-  border-radius: 5px;
-  background-color: #f0f8ff !important;
+  background-color: var(--primary-lightest) !important;
 }
 
 .task{
   max-height:  1000px;
 }
-
+.task-att{
+  margin-left: 80px;
+}
 .hiddenTask  {
   max-height: 0;
   overflow: hidden;
@@ -310,33 +287,29 @@
 }
 
 .order {
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
-  background: var(--primary-lighter);
+  margin-right: 10px;
+  background: var(--primary);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--primary-inverse);
 }
 
 .icon-container {
-  height: 40px;
-  width: 40px;
+  height: 35px;
+  width: 35px;
   border-radius: 50%;
-  background-color: #e4e4e4;
+  background-color:var(--gray-100);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.drap-drop:hover {
-  box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
-  border-radius: 5px;
-  background-color: #f0f8ff;
-  cursor: default;
-}
 
 .more-funtion-step {
   codx-mfunc {
@@ -352,11 +325,6 @@
 .card-job:active {
   cursor: grab;
 }
-
-.card-job:hover {
-  border-radius: 5px;
-  box-shadow: 0 0px 10px 0 rgb(38 38 38 / 20%);
-}
 codx-attachment{
   font-size: 12px !important;
 }
@@ -364,9 +332,9 @@ codx-attachment{
 
 //Thao css
 .class-field>.crr-fiels:hover {
-  box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
-  border-radius: 5px;
-  background-color: #f0f8ff;
+  //box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
+  border-radius: 3px;
+  background-color: var(--primary-lighter);
 }
 
 .action-menu-od {
@@ -387,3 +355,58 @@ codx-attachment{
 .has-action-menu-od:hover .action-menu-od {
   opacity: 1;
 }
+
+.card-job.task-main{
+  border: 1px transparent solid;
+  position: relative;
+}
+
+// .card-job.task-main:hover{
+//   background-color:var(--gray-100);
+//   border-color:var(--gray-100);
+
+ 
+// }
+// .card-job.task-main:hover .cdk-drag.drap-drop:last-child:after{
+//   background-color:var(--gray-100)!important;
+// }
+
+.card-job.task-main:has(.task-groups){
+
+  &::before{
+    display: block;
+    content: "";
+    width: 10px;
+    border-left: 1px var(--gray-300) dotted;
+    position: absolute;
+    top: 20px;
+    left: 15px;
+    bottom: 0;
+  }
+  .cdk-drop-list.task .cdk-drag.drap-drop{
+    position: relative;
+  }
+  .cdk-drop-list.task .cdk-drag.drap-drop::before{
+    display: block;
+    content: "";
+    width: 30px;
+    border-top: 1px var(--gray-300) dotted;
+    position: absolute;
+    top: 20px;
+    left: -28px;
+    height: 10px;
+  }
+  
+  .cdk-drop-list.task .cdk-drag.drap-drop:last-child:after{
+    display: block;
+    content: "";
+    width: 1px;
+    background-color: var(--bg-body);
+    position: absolute;
+    top: 22px;
+    left: -30px;
+    height: 90%;
+  }
+}
+
+

@@ -36,6 +36,7 @@ export class CodxHrService {
   reportingLineComponent: any;
   positionsComponent: any;
   orgchart: any;
+  expression: RegExp = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
 
   constructor(
     private api: ApiHttpService,
@@ -1553,6 +1554,18 @@ export class CodxHrService {
     );
   }
 
+  validateBeforeSaveContract(data: any, isAddNew: boolean) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EContractsBusiness',
+      'ValidateBeforeSaveAsync',
+      [data, isAddNew]
+    );
+  }
+
+  ValidateBeforeSaveAsync
+
   editEContract(data: any) {
     return this.api.execSv<any>(
       'HR',
@@ -1899,6 +1912,11 @@ export class CodxHrService {
 
     return obj;
   }
+
+  checkEmail(email: string){
+    return this.expression.test(email);
+  }
+
   //#endregion
 
   getFunctionList(funcID: string) {

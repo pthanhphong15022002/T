@@ -124,6 +124,16 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
       return;
     }
 
+    if(!this.hrService.checkEmail(this.data.email)){
+      this.notitfy.notifyCode('SYS037');
+      return;
+    }
+
+    if(!this.hrService.checkEmail(this.data.personalEmail)){
+      this.notitfy.notifyCode('SYS037');
+      return;
+    }
+
     //Xu li validate thong tin CMND nhan vien
     console.log(this.data.expiredOn);
     console.log(this.data.issuedOn);

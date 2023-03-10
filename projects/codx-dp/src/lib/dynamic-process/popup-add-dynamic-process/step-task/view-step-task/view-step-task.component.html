@@ -5,8 +5,7 @@
   [subHeader]="subHeader"
   [body]="body"
   [dialog]="dialog"
-  [formModel]="formModelMenu"
-  [data]="stepsTasks"
+  [formModel]="frmModel"
   [openMore]="false"
 ></codx-form>
 
@@ -15,42 +14,42 @@
 <ng-template #body>
   <div>
     <div
-      [ngStyle]="getColorTile(stepsTasks)"
+      [ngStyle]="getColorTile(dataInput)"
       class="ps-1 d-flex justify-content-between align-items-center py-1"
     >
       <h3 class="m-0">
-        {{ stepsTasks?.taskName }}
+        {{ dataInput["name"] }}
       </h3>
       <div class="d-flex">
         <div class="d-flex align-items-center me-2">
           <span class="icon-notifications icon-20 text-primary-500 me-1"></span>
           <span>
-            {{ stepsTasks?.reminders }}
+            {{ dataInput["reminders"] }}
           </span>
         </div>
 
         <div class="d-flex align-items-center me-2">
           <span class="icon-access_time icon-20 text-primary-500 me-1"></span>
           <span class="mx-1 text-primary-500">{{
-            stepsTasks?.durationDay
+            dataInput["durationDay"]
           }}</span>
           <codx-label name="durationDay" default="ngày"></codx-label>
           <span class="mx-1 text-primary-500">{{
-            stepsTasks?.durationHour
+            dataInput["durationHour"]
           }}</span>
           <codx-label name="durationHour" default="giờ"></codx-label>
         </div>
 
-        <div *ngIf="taskType == 'C'" class="d-flex align-items-center me-2">
+        <div *ngIf="type == 'C'" class="d-flex align-items-center me-2">
           <span class="icon-local_phone icon-18 me-1"></span>
-          <span class="mx-1 text-primary-500">{{ stepsTasks?.callType }}</span>
+          <span class="mx-1 text-primary-500">{{ dataInput["callType"] }}</span>
         </div>
-        <div *ngIf="taskType === 'M'">
+        <div *ngIf="type === 'M'">
           <div class="d-flex justify-content-center">
             <codx-input
               type="switch"
               class="test-check me-1"
-              [checked]="stepsTasks?.isOnline"
+              [checked]="dataInput['isOnline']"
               field="isOnline"
               [disabled]="true"
             >
@@ -90,31 +89,34 @@
 
     <hr />
 
-    <div class="d-flex justify-content-start">
+    <div class="d-flex justify-content-start align-items-center" *ngIf="type!== 'G'">
       <codx-label
-        class="h4 font-weight-400"
+        class="h4 font-weight-400 me-3"
         fiedName="memo"
         [formModel]="frmModel"
         default="Tài liệu"
       >
       </codx-label>
       <div>
-        <ng-container *ngFor="let item of files">
-          <div class="position-relative ms-5">
-            <div class="mb-3">
-              <codx-temp-full
-                imageSrc="{{ item.extension | avtFile }}"
-                imgCss="w-20px me-3 cursor-pointer"
-                title="{{ item.fileName }}"
-                [descLine]="1"
-              >
-              </codx-temp-full>
-            </div>
-          </div>
-        </ng-container>
+        <codx-attachment
+          #attachment
+          [objectId]="dataInput['recID']"
+          hideFolder="1"
+          hideImageUpload="0"
+          hideImageThumb="0"
+          hideUploadBtn="1"
+          hideDelete="1"
+          hideDes="1"
+          type="inline"
+          allowMultiFile="1"
+          displayThumb="full"
+          showMessage="0"
+          [dataSelected]="dataInput"
+        >
+        </codx-attachment>
       </div>
     </div>
-    <hr />
+    <hr *ngIf="type!== 'G'" />
 
     <div>
       <codx-label
@@ -124,21 +126,30 @@
         default="Ghi chú: "
       >
       </codx-label>
-      <p [innerHTML]="stepsTasks?.memo"></p>
+      <p [innerHTML]="dataInput['memo']"></p>
     </div>
     <hr />
 
     <div>
       <codx-label
+        *ngIf="type !== 'G'"
         class="h4 font-weight-400"
         fiedName="parentID"
         [formModel]="frmModel"
         default="Công việc liên kết"
       >
       </codx-label>
+      <codx-label
+        *ngIf="type === 'G'"
+        class="h4 font-weight-400"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Công việc"
+      >
+      </codx-label>
       <div>
         <div
-          *ngFor="let task of taskListConnect"
+          *ngFor="let task of listDataLink"
           class="d-flex align-items-center m-2"
         >
           <div class="icon-container" [ngStyle]="getColor(task)">
@@ -149,7 +160,7 @@
           </div>
           <div class="d-flex align-items-center ms-2">
             <span class="" style="font-size: 1.2rem; font-weight: 500">{{
-              task?.taskName
+              task?.name
             }}</span>
           </div>
         </div>
@@ -166,8 +177,8 @@
           <codx-img
             [width]="45"
             class="me-2"
-            [objectId]="item?.recID"
-            objectType="AD_Users"
+            [objectId]="item?.objectID"
+            objectType="item?.objectType"
             [objectName]="item?.objectName"
           ></codx-img>
         </span>

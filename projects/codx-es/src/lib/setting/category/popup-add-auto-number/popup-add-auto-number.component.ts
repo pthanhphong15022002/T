@@ -115,7 +115,6 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
               .getAutoNumberDefaults(this.functionID)
               .subscribe((model) => {
                 if (model) {
-                  console.log(model);
                   model.autoNumber = this.autoNoCode;
                   this.fmANumberDefault.currentData = model;
                   this.autoDefaultData = model;
@@ -134,7 +133,6 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((fg) => {
-        console.log(fg);
         if (fg) {
           this.dialogAutoNum = fg;
           this.esService.getAutoNumber(this.autoNoCode).subscribe((res) => {
@@ -155,7 +153,6 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
               }
 
               this.setViewAutoNumber();
-              console.log(this.data);
             }
           });
         }

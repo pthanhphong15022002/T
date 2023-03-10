@@ -7,9 +7,9 @@
   (searchChanged)="searchChange($event)">
 </codx-views> -->
 <codx-views id="dm" #view [autoLoad]="true" [entityName]="'DM_FolderInfo'" [method]="'GetFoldersAsync'"
-  [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views" [orgView]="orgViews"
+  [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views" 
   [autoSort]="false" [autoSearch]="false" [selectedFirst]="false" [button]="button" (buttonClick)="addFile($event)"
-  (selectedChange)="onSelectionChanged($event)" 
+  (selectedChange)="onSelectionChanged($event)"  (sortChanged)="sortChanged($event)"
   >
 </codx-views>
 <ng-template #templateMain let-data>
@@ -40,7 +40,7 @@
   <div *ngIf="isSearch">
   </div>
   <div (scroll)="onScroll($event)" appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
-    class="w-100 scroll-y home rounded-2 h-100" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+    class="w-100 scroll-y home rounded-2 h-100 bg-white containerScroll" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
     data-kt-scroll-height="auto" data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
     data-kt-scroll-offset="0">
     <ng-container *ngTemplateOutlet="empty"></ng-container>
@@ -110,14 +110,16 @@
   </div>
 </ng-template>
 <ng-template #templateCard>
-  <div class="d-flex flex-wrap dms-card p-5">
-    <ng-container *ngFor="let item of data ; trackBy: trackItem">
-      <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
-        [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item" [formModel]="view.formModel"
-        [view]="codxview" >
-      </card>
-    </ng-container>
-  </div>
+  <ng-container *ngIf="data && data.length>0">
+    <div class="d-flex flex-wrap dms-card p-5">
+      <ng-container *ngFor="let item of data ; trackBy: trackItem">
+        <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
+          [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item" [formModel]="view.formModel"
+          [view]="codxview" >
+        </card>
+      </ng-container>
+    </div>
+  </ng-container>
 </ng-template>
 <ng-template #templateSmallCard>
   <div class="d-flex flex-wrap dms-card-sm p-5">

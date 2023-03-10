@@ -47,9 +47,10 @@ export class ChartOfAccountsComponent extends UIComponent {
   onInit(): void {}
 
   ngAfterViewInit() {
-    this.cache.functionList(this.view.funcID).subscribe((res) => {
-      if (res) {
-        this.funcName = res.defaultName;
+    this.cache.moreFunction('ChartOfAccounts', 'grvChartOfAccounts').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20100');
+        if (m) this.funcName = m.defaultName;
       }
     });
     this.views = [
@@ -89,7 +90,7 @@ export class ChartOfAccountsComponent extends UIComponent {
         this.edit(e, data);
         break;
       case 'SYS04':
-        this.copy(e,data);
+        this.copy(e, data);
         break;
     }
   }
@@ -113,14 +114,6 @@ export class ChartOfAccountsComponent extends UIComponent {
         option,
         this.view.funcID
       );
-      this.dialog.closed.subscribe((x) => {
-        if (x.event)
-          this.view.dataService
-            .add([this.view.dataService.dataSelected])
-            .subscribe((x) => {
-              this.dt.detectChanges();
-            });
-      });
     });
   }
 

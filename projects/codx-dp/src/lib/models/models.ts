@@ -120,7 +120,7 @@ export class DP_Steps {
   taskGroups: DP_Steps_TaskGroups[] = []; // objects
   tasks: DP_Steps_Tasks[] = []; // objects
   fields: DP_Steps_Fields[] = []; // objects
-  isUsed: boolean;
+  isUsed: boolean = true;
   createdOn: Date = new Date();
   createdBy: string;
   modifiedOn: Date;

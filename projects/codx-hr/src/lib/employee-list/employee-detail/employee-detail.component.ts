@@ -112,30 +112,40 @@ export class EmployeeDetailComponent extends UIComponent {
     this.funcID = this.routeActive.snapshot.params['funcID'];
     // this.infoPersonal =
   }
-  navChange(evt: any) {
+
+  isClick: boolean = false;
+
+  navChange(evt: any, index: number = -1) {
     if (!evt) return;
     let element = document.getElementById(evt.nextId);
+    if (index > -1) {
+      this.active[index] = evt.nextId;
+      this.detectorRef.detectChanges();
+    }
     element.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
       inline: 'nearest',
     });
+    this.isClick = true;
+    this.detectorRef.detectChanges();
+    setTimeout(() => {
+      this.isClick = false;
+      return;
+    }, 500);
+  }
 
-    // let footer = document.querySelector('.codx-detail-footer');
-    // if (footer) {
-    //   var f = footer as HTMLElement;
-    //   let clss = f.classList;
-    //   if (!clss.contains('expand')) {
-    //     clss.remove('collape');
-    //     clss.add('expand');
-    //   }
-    // }
+  onSectionChange(data: any, index: number = -1) {
+    if (index > -1 && this.isClick == false) {
+      this.active[index] = data;
+      this.detectorRef.detectChanges();
+    }
   }
 
   infoPersonal: any;
 
   crrEContract: any;
-  lstContractType: any; //phân loại HĐ không xác định 
+  lstContractType: any; //phân loại HĐ không xác định
 
   funcID = '';
   service = '';
@@ -312,6 +322,7 @@ export class EmployeeDetailComponent extends UIComponent {
   //#region filter variables of form main eAwards
   Start_Date_Award_Filter_Value;
   End_Date_Award_Filter_Value;
+  Filter_Award_Predicates;
   //#endregion
 
   //#region ViewChild template
@@ -573,12 +584,6 @@ export class EmployeeDetailComponent extends UIComponent {
   //#endregion
   dataService: DataService = null;
   clickItem(evet) {}
-
-  onSectionChange(data: any) {
-    console.log('change section', data);
-    this.codxMwpService.currentSection = data.current;
-    this.detectorRef.detectChanges();
-  }
 
   initPersonalInfo() {
     if (this.employeeID) {
@@ -1018,19 +1023,18 @@ export class EmployeeDetailComponent extends UIComponent {
         });
       }
 
-      if(!this.lstContractType){
+      if (!this.lstContractType) {
         let rqContractType = new DataRequest();
         rqContractType.entityName = 'HR_ContractTypes';
         rqContractType.dataValues = '1';
-        rqContractType.predicates =
-          'ContractGroup =@0';
-          rqContractType.pageLoading = false;
+        rqContractType.predicates = 'ContractGroup =@0';
+        rqContractType.pageLoading = false;
 
         this.hrService.getCrrEContract(rqContractType).subscribe((res) => {
           if (res && res[0]) {
             this.lstContractType = res[0];
             console.log('aaaaaaaaaaaa', this.lstContractType);
-            
+
             this.df.detectChanges();
           }
         });
@@ -2408,14 +2412,19 @@ export class EmployeeDetailComponent extends UIComponent {
                         }
                       });
                   }
-                  (this.grid?.dataService as CRUDService)
+                  (this.eBenefitGrid?.dataService as CRUDService)
                     ?.remove(data)
                     .subscribe();
-                    this.hrService.GetIsCurrentBenefitWithBenefitID(this.employeeID, data.benefitID).subscribe((res)=>{
-                      (this.grid?.dataService as CRUDService)
-                    ?.update(res)
-                    .subscribe();
-                    })
+                  this.hrService
+                    .GetIsCurrentBenefitWithBenefitID(
+                      this.employeeID,
+                      data.benefitID
+                    )
+                    .subscribe((res) => {
+                      (this.eBenefitGrid?.dataService as CRUDService)
+                        ?.update(res)
+                        .subscribe();
+                    });
                   this.eBenefitRowCount = this.eBenefitRowCount - 1;
                   this.df.detectChanges();
                 } else {
@@ -2489,7 +2498,7 @@ export class EmployeeDetailComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            } else if (funcID == 'eSkill') { 
+            } else if (funcID == 'eSkill') {
               this.hrService.deleteESkill1(data).subscribe((res) => {
                 if (res) {
                   if (!this.skillGrid && res[0] == true) {
@@ -2498,7 +2507,11 @@ export class EmployeeDetailComponent extends UIComponent {
                   } else if (this.lstESkill && res[0] == true) {
                     this.notify.notifyCode('SYS008');
                     this.lstESkill = res[1];
-                    this.eSkillRowCount += this.updateGridView(this.skillGrid, 'delete', data);
+                    this.eSkillRowCount += this.updateGridView(
+                      this.skillGrid,
+                      'delete',
+                      data
+                    );
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
@@ -2639,13 +2652,19 @@ export class EmployeeDetailComponent extends UIComponent {
                   }
                 });
             } else if (funcID == 'eContract') {
-              this.hrService.deleteEContract(data).subscribe((p) => {
-                if (p) {
+              this.hrService.deleteEContract(data).subscribe((res) => {
+                if (res && res[0]) {
                   this.notify.notifyCode('SYS008');
                   (this.eContractGridview?.dataService as CRUDService)
                     ?.remove(data)
                     .subscribe();
                   this.eContractRowCount--;
+                  if (data.isCurrent && res[1]) {
+                    (this.eContractGridview?.dataService as CRUDService)
+                      ?.update(res[1])
+                      .subscribe();
+                    this.crrEContract = res[1];
+                  }
                   this.df.detectChanges();
                 } else {
                   this.notify.notifyCode('SYS022');
@@ -3076,6 +3095,16 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogEdit.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
       else {
+        if (res.event.orgUnitID != this.infoPersonal.orgUnitID) {
+          this.hrService
+            .getOrgTreeByOrgID(res.event.orgUnitID, 3)
+            .subscribe((res) => {
+              if (res) {
+                this.lstOrg = res;
+                console.log('lst Org', this.lstOrg);
+              }
+            });
+        }
         this.infoPersonal = JSON.parse(JSON.stringify(res.event));
         this.df.detectChanges();
       }
@@ -3156,20 +3185,20 @@ export class EmployeeDetailComponent extends UIComponent {
       if (res.event) {
         if (actionType == 'add' || actionType == 'copy') {
           if (res.event.length > 1) {
-            (this.grid?.dataService as CRUDService)
+            (this.eBenefitGrid?.dataService as CRUDService)
               ?.update(res.event[0])
               .subscribe();
-            (this.grid?.dataService as CRUDService)
+            (this.eBenefitGrid?.dataService as CRUDService)
               ?.add(res.event[1])
               .subscribe();
           } else {
-            (this.grid?.dataService as CRUDService)
+            (this.eBenefitGrid?.dataService as CRUDService)
               ?.add(res.event[0])
               .subscribe();
           }
           this.eBenefitRowCount += 1;
         } else if (actionType == 'edit') {
-          (this.grid?.dataService as CRUDService)
+          (this.eBenefitGrid?.dataService as CRUDService)
             ?.update(res.event)
             .subscribe();
         }
@@ -3499,8 +3528,12 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.eDisciplineGrid?.dataService as CRUDService).clear();
-      if(res.event)
-        this.eDisciplineRowCount += this.updateGridView(this.eDisciplineGrid, actionType, res.event);
+      if (res.event)
+        this.eDisciplineRowCount += this.updateGridView(
+          this.eDisciplineGrid,
+          actionType,
+          res.event
+        );
       this.df.detectChanges();
     });
   }
@@ -3648,8 +3681,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfc.openSide(
       PopupECertificatesComponent,
       {
-        trainFromHeaderText : this.eSkillHeaderText['TrainFrom'],
-        trainToHeaderText : this.eSkillHeaderText['TrainTo'],
+        trainFromHeaderText: this.eSkillHeaderText['TrainFrom'],
+        trainToHeaderText: this.eSkillHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eCertificateFuncID),
@@ -3663,8 +3696,12 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
       else if (res.event)
-        this.eCertificateRowCount += this.updateGridView(this.eCertificateGrid, actionType, res.event);
-          this.df.detectChanges();
+        this.eCertificateRowCount += this.updateGridView(
+          this.eCertificateGrid,
+          actionType,
+          res.event
+        );
+      this.df.detectChanges();
     });
   }
 
@@ -3676,8 +3713,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupEDegreesComponent,
       {
-        trainFromHeaderText : this.eDegreeHeaderText['TrainFrom'],
-        trainToHeaderText : this.eDegreeHeaderText['TrainTo'],
+        trainFromHeaderText: this.eDegreeHeaderText['TrainFrom'],
+        trainToHeaderText: this.eDegreeHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eDegreeFuncID),
@@ -3689,8 +3726,12 @@ export class EmployeeDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if(res)
-       this.eDegreeRowCount += this.updateGridView(this.eDegreeGrid, actionType, res.event);
+      if (res)
+        this.eDegreeRowCount += this.updateGridView(
+          this.eDegreeGrid,
+          actionType,
+          res.event
+        );
       this.df.detectChanges();
     });
   }
@@ -3703,8 +3744,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfc.openSide(
       PopupESkillsComponent,
       {
-        trainFromHeaderText : this.eSkillHeaderText['TrainFrom'],
-        trainToHeaderText : this.eSkillHeaderText['TrainTo'],
+        trainFromHeaderText: this.eSkillHeaderText['TrainFrom'],
+        trainToHeaderText: this.eSkillHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eSkillFuncID),
@@ -3747,8 +3788,8 @@ export class EmployeeDetailComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupETraincourseComponent,
       {
-        trainFromHeaderText : this.eSkillHeaderText['TrainFrom'],
-        trainToHeaderText : this.eSkillHeaderText['TrainTo'],
+        trainFromHeaderText: this.eSkillHeaderText['TrainFrom'],
+        trainToHeaderText: this.eSkillHeaderText['TrainTo'],
         actionType: actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader(this.eTrainCourseFuncID),
@@ -3761,8 +3802,12 @@ export class EmployeeDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event)
         (this.eTrainCourseGrid?.dataService as CRUDService).clear();
-      else if(res.event)
-        this.eTrainCourseRowCount += this.updateGridView(this.eTrainCourseGrid, actionType, res.event);
+      else if (res.event)
+        this.eTrainCourseRowCount += this.updateGridView(
+          this.eTrainCourseGrid,
+          actionType,
+          res.event
+        );
       this.df.detectChanges();
     });
   }
@@ -3773,19 +3818,24 @@ export class EmployeeDetailComponent extends UIComponent {
       .subscribe((res) => {});
   }
 
-  addEContractInfo(actionHeaderText, actionType: string, data: any){
-    //Cảnh báo nếu thêm mới HĐLĐ, mà trước đó có HĐ đang hiệu lực là HĐ không xác định thời hạn => Kiểm tra trước khi thêm 
-    if(actionType == 'add' && this.crrEContract && this.lstContractType ){
-      var item = this.lstContractType.filter(p => p.contractTypeID == this.crrEContract.contractTypeID && p.contractGroup == '1');
-      if(item && item[0]){
-        this.notify.alertCode('HR008').subscribe(res =>{
-          if(res?.event?.status == 'Y'){
+  addEContractInfo(actionHeaderText, actionType: string, data: any) {
+    //Cảnh báo nếu thêm mới HĐLĐ, mà trước đó có HĐ đang hiệu lực là HĐ không xác định thời hạn => Kiểm tra trước khi thêm
+    if (actionType == 'add' && this.crrEContract && this.lstContractType) {
+      var item = this.lstContractType.filter(
+        (p) =>
+          p.contractTypeID == this.crrEContract.contractTypeID &&
+          p.contractGroup == '1'
+      );
+      if (item && item[0]) {
+        this.notify.alertCode('HR008').subscribe((res) => {
+          if (res?.event?.status == 'Y') {
             this.HandleEContractInfo(actionHeaderText, actionType, data);
           }
-        })
+        });
+      } else {
+        this.HandleEContractInfo(actionHeaderText, actionType, data);
       }
-    }
-    else{
+    } else {
       this.HandleEContractInfo(actionHeaderText, actionType, data);
     }
   }
@@ -3795,9 +3845,11 @@ export class EmployeeDetailComponent extends UIComponent {
     option.Width = '550px';
     option.FormModel = this.eContractFormModel;
     let isAppendix = false;
-    
 
-    if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){
+    if (
+      (actionType == 'edit' || actionType == 'copy') &&
+      data.isAppendix == true
+    ) {
       isAppendix = true;
     }
     let dialogAdd = this.callfunc.openSide(
@@ -3813,11 +3865,29 @@ export class EmployeeDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (res) {
-        this.crrJobSalaries = res.event;
-        this.df.detectChanges();
+      if (!res?.event) this.view.dataService.clear();
+      else if (res?.event[0]) {
+        if (this.eContractGridview)
+          this.eContractRowCount += this.updateGridView(
+            this.eContractGridview,
+            actionType,
+            res?.event[0]
+          );
+        if (res?.event[1]) {
+          (this.eContractGridview.dataService as CRUDService)
+            .update(res.event[1])
+            .subscribe();
+        } else if (actionType == 'copy' || actionType == 'add') {
+          this.eContractRowCount++;
+        }
+
+        res.event.forEach((element) => {
+          if (element.isCurrent) {
+            this.crrEContract = element;
+          }
+        });
       }
-      if (res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
@@ -3882,8 +3952,12 @@ export class EmployeeDetailComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) (this.AwardGrid?.dataService as CRUDService).clear();
-      if(res.event)
-        this.awardRowCount += this.updateGridView(this.AwardGrid, actionType, res.event);
+      if (res.event)
+        this.awardRowCount += this.updateGridView(
+          this.AwardGrid,
+          actionType,
+          res.event
+        );
       this.df.detectChanges();
     });
   }
@@ -3895,8 +3969,7 @@ export class EmployeeDetailComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.DataService = this.view.dataService;
     option.Width = '550px';
-    let dialogAdd = this.callfc.openSide(
-      PopupEDiseasesComponent, {
+    let dialogAdd = this.callfc.openSide(PopupEDiseasesComponent, {
       actionType: actionType,
       funcID: this.eDiseasesFuncID,
       employeeId: this.employeeID,
@@ -3905,9 +3978,16 @@ export class EmployeeDetailComponent extends UIComponent {
         actionHeaderText + ' ' + this.getFormHeader(this.eDiseasesFuncID),
     });
     dialogAdd.closed.subscribe((res) => {
-      console.log('ressssss diseasesssssssssssssssssssssssssssssssssssssssssssssssss', res);
-        if(res)
-        this.eDiseasesRowCount += this.updateGridView(this.eDiseasesGrid, actionType, res.event);
+      console.log(
+        'ressssss diseasesssssssssssssssssssssssssssssssssssssssssssssssss',
+        res
+      );
+      if (res)
+        this.eDiseasesRowCount += this.updateGridView(
+          this.eDiseasesGrid,
+          actionType,
+          res.event
+        );
       this.df.detectChanges();
     });
 
@@ -4142,7 +4222,7 @@ export class EmployeeDetailComponent extends UIComponent {
   @ViewChild('eAssetGridView') eAssetGrid: CodxGridviewComponent;
   @ViewChild('eHealthsGridView') eHealthsGrid: CodxGridviewComponent;
   @ViewChild('eVaccinesGridView') eVaccinesGrid: CodxGridviewComponent;
-  @ViewChild('gridView') grid: CodxGridviewComponent;
+  @ViewChild('gridView') eBenefitGrid: CodxGridviewComponent;
   @ViewChild('eDegreeGridView') eDegreeGrid: CodxGridviewComponent;
   @ViewChild('dayoffGridView') dayoffGrid: CodxGridviewComponent;
   @ViewChild('templateBenefitID', { static: true })
@@ -4238,18 +4318,6 @@ export class EmployeeDetailComponent extends UIComponent {
 
   valueChangeFilterBenefit(evt) {
     this.filterByBenefitIDArr = evt.data;
-    // let predicates = '('
-    // for(let i =0 ; i< this.filterByBenefitIDArr.length; i++){
-    //   if(i>0){
-    //     predicates +=' or '
-    //   }
-    //   predicates += `BenefitID==@${i}`
-    // }
-    // predicates += ') and ';
-
-    // (this.grid.dataService as CRUDService).setPredicates(['BenefitID==@0'], ['1']).subscribe((item) => {
-    //   console.log('item tra ve', item);
-    // });
     this.UpdateEBenefitPredicate();
   }
 
@@ -4259,7 +4327,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.filterByBenefitIDArr.length > 0 &&
       this.startDateEBenefitFilterValue != null
     ) {
-      this.filterEBenefitPredicates = '(';
+      this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.filterByBenefitIDArr.length; i++) {
         if (i > 0) {
@@ -4269,19 +4337,20 @@ export class EmployeeDetailComponent extends UIComponent {
       }
       this.filterEBenefitPredicates += ') ';
       this.filterEBenefitPredicates += `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
-      //this.filterEBenefitDatavalues = this.filterByBenefitIDArr.concat([this.startDateEBenefitFilterValue, this.endDateEBenefitFilterValue]);
-
-      (this.grid.dataService as CRUDService)
+      this.filterEBenefitPredicates += ') ';
+      console.log('truong hop 1', this.filterEBenefitPredicates);
+      (this.eBenefitGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEBenefitPredicates],
           [this.filterByBenefitIDArr.join(';')]
         )
-        .subscribe((item) => {});
+        .subscribe();
     } else if (
-      (this.filterByBenefitIDArr.length > 0 &&
-        this.startDateEBenefitFilterValue == undefined) ||
-      this.startDateEBenefitFilterValue == null
+      this.filterByBenefitIDArr.length > 0 &&
+      (this.startDateEBenefitFilterValue == undefined ||
+        this.startDateEBenefitFilterValue == null)
     ) {
+      this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.filterByBenefitIDArr.length; i++) {
         if (i > 0) {
@@ -4289,51 +4358,62 @@ export class EmployeeDetailComponent extends UIComponent {
         }
         this.filterEBenefitPredicates += `BenefitID==@${i}`;
       }
-
-      (this.grid.dataService as CRUDService)
+      this.filterEBenefitPredicates += ') ';
+      this.filterEBenefitPredicates += ') ';
+      console.log('truong hop 2', this.filterEBenefitPredicates);
+      (this.eBenefitGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEBenefitPredicates],
           [this.filterByBenefitIDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 2', item);
-        });
-    } else if (this.startDateEBenefitFilterValue != null) {
-      (this.grid.dataService as CRUDService)
-        .setPredicates(
-          [
-            `EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}"`,
-          ],
-          []
-        )
-        .subscribe((item) => {});
+        .subscribe();
+    } else if (
+      this.filterByBenefitIDArr.length <= 0 &&
+      this.startDateEBenefitFilterValue != null
+    ) {
+      this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeID}" and EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
+      (this.eBenefitGrid.dataService as CRUDService)
+        .setPredicates([this.filterEBenefitPredicates], [])
+        .subscribe();
+      console.log('truong hop 3', this.filterEBenefitPredicates);
+    } else if (
+      this.filterByBenefitIDArr.length <= 0 &&
+      (this.startDateEBenefitFilterValue == undefined ||
+        this.startDateEBenefitFilterValue == null)
+    ) {
+      this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeID}")`;
+      console.log('truong hop 4', this.filterEBenefitPredicates);
+      (this.eBenefitGrid.dataService as CRUDService)
+        .setPredicates([this.filterEBenefitPredicates], [''])
+        .subscribe();
     }
   }
 
   valueChangeYearFilterBenefit(evt) {
-    this.startDateEBenefitFilterValue = evt.fromDate.toJSON();
-    this.endDateEBenefitFilterValue = evt.toDate.toJSON();
+    if (evt.formatDate == undefined && evt.toDate == undefined) {
+      this.startDateEBenefitFilterValue = null;
+      this.endDateEBenefitFilterValue = null;
+    } else {
+      this.startDateEBenefitFilterValue = evt.fromDate.toJSON();
+      this.endDateEBenefitFilterValue = evt.toDate.toJSON();
+    }
     this.UpdateEBenefitPredicate();
-
-    // (this.grid.dataService as CRUDService).setPredicates(['EffectedDate>=@0 and EffectedDate<=@1'], [start, endDate]).subscribe((item) => {
-    //   console.log('item tra ve', item);
-    // });
   }
 
   valueChangeViewAllEBenefit(evt) {
     this.ViewAllEBenefitFlag = evt.data;
     let ins = setInterval(() => {
-      if (this.grid) {
+      if (this.eBenefitGrid) {
         clearInterval(ins);
         let t = this;
-        this.grid.dataService.onAction.subscribe((res) => {
+        this.eBenefitGrid.dataService.onAction.subscribe((res) => {
           if (res) {
             if (res.type == 'loaded') {
               t.eBenefitRowCount = res['data'].length;
             }
           }
         });
-        this.eBenefitRowCount = this.grid.dataService.rowCount;
+        this.eBenefitRowCount = this.eBenefitGrid.dataService.rowCount;
       }
     }, 100);
   }
@@ -4359,15 +4439,15 @@ export class EmployeeDetailComponent extends UIComponent {
   valueChangeViewAllESkill(evt) {
     this.ViewAllEskillFlag = evt.data;
     let ins = setInterval(() => {
-      if (this.grid) {
+      if (this.skillGrid) {
         clearInterval(ins);
         let t = this;
-        this.grid.dataService.onAction.subscribe((res) => {
+        this.skillGrid.dataService.onAction.subscribe((res) => {
           if (res.type == 'loaded') {
             t.eSkillRowCount = res['data'].length;
           }
         });
-        this.eSkillRowCount = this.grid.dataService.rowCount;
+        this.eSkillRowCount = this.skillGrid.dataService.rowCount;
       }
     }, 100);
   }
@@ -4421,11 +4501,13 @@ export class EmployeeDetailComponent extends UIComponent {
 
   copyValue(actionHeaderText, data, flag) {
     if (flag == 'benefit') {
-      if (this.grid) {
-        this.grid.dataService.dataSelected = data;
-        (this.grid.dataService as CRUDService).copy().subscribe((res: any) => {
-          this.handlEmployeeBenefit(actionHeaderText, 'copy', res);
-        });
+      if (this.eBenefitGrid) {
+        this.eBenefitGrid.dataService.dataSelected = data;
+        (this.eBenefitGrid.dataService as CRUDService)
+          .copy()
+          .subscribe((res: any) => {
+            this.handlEmployeeBenefit(actionHeaderText, 'copy', res);
+          });
       } else {
         this.hrService
           .copy(data, this.benefitFormodel, 'RecID')
@@ -4456,10 +4538,11 @@ export class EmployeeDetailComponent extends UIComponent {
         });
     } else if (flag == 'eTrainCourses') {
       this.eTrainCourseGrid.dataService.dataSelected = data;
-      this.hrService.copy(data, this.eTrainCourseFormModel, 'RecID')
-      .subscribe((res) => {
-        this.HandleEmployeeTrainCourseInfo(actionHeaderText, 'copy', res);
-      })
+      this.hrService
+        .copy(data, this.eTrainCourseFormModel, 'RecID')
+        .subscribe((res) => {
+          this.HandleEmployeeTrainCourseInfo(actionHeaderText, 'copy', res);
+        });
       // (this.eTrainCourseGrid.dataService as CRUDService)
       //   .copy()
       //   .subscribe((res) => {
@@ -4571,27 +4654,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.filterByAssetCatIDArr.length > 0 &&
       this.startDateEAssetFilterValue != null
     ) {
-      this.filterEAssetPredicates = '(';
-      let i = 0;
-      for (i; i < this.filterByAssetCatIDArr.length; i++) {
-        if (i > 0) {
-          this.filterEAssetPredicates += ' or ';
-        }
-      }
-      this.filterEAssetPredicates += ') ';
-      (this.eAssetGrid.dataService as CRUDService)
-        .setPredicates(
-          [this.filterEAssetPredicates],
-          [this.filterByAssetCatIDArr.join(';')]
-        )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 1', item);
-        });
-    } else if (
-      (this.filterByAssetCatIDArr.length > 0 &&
-        this.startDateEAssetFilterValue == undefined) ||
-      this.startDateEAssetFilterValue == null
-    ) {
+      this.filterEAssetPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.filterByAssetCatIDArr.length; i++) {
         if (i > 0) {
@@ -4599,34 +4662,66 @@ export class EmployeeDetailComponent extends UIComponent {
         }
         this.filterEAssetPredicates += `AssetCategory==@${i}`;
       }
-
+      this.filterEAssetPredicates += ') ';
+      this.filterEAssetPredicates += `and (IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEAssetFilterValue}")`;
+      this.filterEAssetPredicates += ') ';
+      console.log('truong hop 1', this.filterEAssetPredicates);
       (this.eAssetGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEAssetPredicates],
           [this.filterByAssetCatIDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 2', item);
-        });
-    } else if (this.startDateEAssetFilterValue != null) {
+        .subscribe();
+    } else if (
+      this.filterByAssetCatIDArr.length > 0 &&
+      (this.startDateEAssetFilterValue == undefined ||
+        this.startDateEAssetFilterValue == null)
+    ) {
+      this.filterEAssetPredicates = `(EmployeeID=="${this.employeeID}" and (`;
+      let i = 0;
+      for (i; i < this.filterByAssetCatIDArr.length; i++) {
+        if (i > 0) {
+          this.filterEAssetPredicates += ' or ';
+        }
+        this.filterEAssetPredicates += `AssetCategory==@${i}`;
+      }
+      this.filterEAssetPredicates += ') ';
+      this.filterEAssetPredicates += ') ';
+      console.log('truong hop 2', this.filterEAssetPredicates);
       (this.eAssetGrid.dataService as CRUDService)
         .setPredicates(
-          [
-            `IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEAssetFilterValue}"`,
-          ],
-          []
+          [this.filterEAssetPredicates],
+          [this.filterByAssetCatIDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 3', item);
-        });
+        .subscribe();
+    } else if (
+      this.filterByAssetCatIDArr.length <= 0 &&
+      this.startDateEAssetFilterValue != null
+    ) {
+      this.filterEAssetPredicates = `(EmployeeID=="${this.employeeID}" and IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEAssetFilterValue}")`;
+      (this.eAssetGrid.dataService as CRUDService)
+        .setPredicates([this.filterEAssetPredicates], [])
+        .subscribe();
+      console.log('truong hop 3', this.filterEAssetPredicates);
+    } else if (
+      this.filterByAssetCatIDArr.length <= 0 &&
+      (this.startDateEAssetFilterValue == undefined ||
+        this.startDateEAssetFilterValue == null)
+    ) {
+      this.filterEAssetPredicates = `(EmployeeID=="${this.employeeID}")`;
+      console.log('truong hop 4', this.filterEAssetPredicates);
+      (this.eAssetGrid.dataService as CRUDService)
+        .setPredicates([this.filterEAssetPredicates], [''])
+        .subscribe();
     }
   }
   valueChangeYearFilterAward(evt) {
     if (evt.formatDate == undefined && evt.toDate == undefined) {
       this.Start_Date_Award_Filter_Value = null;
       this.End_Date_Award_Filter_Value = null;
+      this.Filter_Award_Predicates = `(EmployeeID=="${this.employeeID}")`;
       (this.AwardGrid.dataService as CRUDService)
-        .setPredicates([''], [''])
+        .setPredicates([this.Filter_Award_Predicates], [''])
         .subscribe();
     } else {
       this.Start_Date_Award_Filter_Value = evt.fromDate.toJSON();
@@ -4634,7 +4729,7 @@ export class EmployeeDetailComponent extends UIComponent {
       (this.AwardGrid.dataService as CRUDService)
         .setPredicates(
           [
-            `AwardDate>="${this.Start_Date_Award_Filter_Value}" and AwardDate<="${this.End_Date_Award_Filter_Value}"`,
+            `(EmployeeID=="${this.employeeID}" and AwardDate>="${this.Start_Date_Award_Filter_Value}" and AwardDate<="${this.End_Date_Award_Filter_Value}")`,
           ],
           []
         )
@@ -4659,7 +4754,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.filterByVaccineTypeIDArr.length > 0 &&
       this.startDateEVaccineFilterValue != null
     ) {
-      this.filterEVaccinePredicates = '(';
+      this.filterEVaccinePredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.filterByVaccineTypeIDArr.length; i++) {
         if (i > 0) {
@@ -4669,20 +4764,20 @@ export class EmployeeDetailComponent extends UIComponent {
       }
       this.filterEVaccinePredicates += ') ';
       this.filterEVaccinePredicates += `and (InjectDate>="${this.startDateEVaccineFilterValue}" and InjectDate<="${this.endDateEVaccineFilterValue}")`;
-
+      this.filterEVaccinePredicates += ') ';
+      console.log('truong hop 1', this.filterEVaccinePredicates);
       (this.eVaccinesGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEVaccinePredicates],
           [this.filterByVaccineTypeIDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 1', item);
-        });
+        .subscribe();
     } else if (
-      (this.filterByVaccineTypeIDArr.length > 0 &&
-        this.startDateEVaccineFilterValue == undefined) ||
-      this.startDateEVaccineFilterValue == null
+      this.filterByVaccineTypeIDArr.length > 0 &&
+      (this.startDateEVaccineFilterValue == undefined ||
+        this.startDateEVaccineFilterValue == null)
     ) {
+      this.filterEVaccinePredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.filterByVaccineTypeIDArr.length; i++) {
         if (i > 0) {
@@ -4690,71 +4785,65 @@ export class EmployeeDetailComponent extends UIComponent {
         }
         this.filterEVaccinePredicates += `VaccineTypeID==@${i}`;
       }
-
+      this.filterEVaccinePredicates += ') ';
+      this.filterEVaccinePredicates += ') ';
+      console.log('truong hop 2', this.filterEVaccinePredicates);
       (this.eVaccinesGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEVaccinePredicates],
           [this.filterByVaccineTypeIDArr.join(';')]
         )
-        .subscribe((item) => {});
-    } else if (this.startDateEVaccineFilterValue != null) {
+        .subscribe();
+    } else if (
+      this.filterByVaccineTypeIDArr.length <= 0 &&
+      this.startDateEVaccineFilterValue != null
+    ) {
+      this.filterEVaccinePredicates = `(EmployeeID=="${this.employeeID}" and InjectDate>="${this.startDateEVaccineFilterValue}" and InjectDate<="${this.endDateEVaccineFilterValue}")`;
       (this.eVaccinesGrid.dataService as CRUDService)
-        .setPredicates(
-          [
-            `InjectDate>="${this.startDateEVaccineFilterValue}" and InjectDate<="${this.endDateEVaccineFilterValue}"`,
-          ],
-          []
-        )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 3', item);
-        });
+        .setPredicates([this.filterEVaccinePredicates], [])
+        .subscribe();
+      console.log('truong hop 3', this.filterEVaccinePredicates);
+    } else if (
+      this.filterByVaccineTypeIDArr.length <= 0 &&
+      (this.startDateEVaccineFilterValue == undefined ||
+        this.startDateEVaccineFilterValue == null)
+    ) {
+      this.filterEVaccinePredicates = `(EmployeeID=="${this.employeeID}")`;
+      console.log('truong hop 4', this.filterEVaccinePredicates);
+      (this.eVaccinesGrid.dataService as CRUDService)
+        .setPredicates([this.filterEVaccinePredicates], [''])
+        .subscribe();
     }
   }
 
-  UpdateESkillPredicate() {
-    this.filterESkillPredicates = '';
-    if (
-      this.filterByESkillIDArr.length > 0 &&
-      this.startDateESkillFilterValue != null
-    ) {
-      this.filterESkillPredicates = '(';
-      let i = 0;
-      for (i; i < this.filterByESkillIDArr.length; i++) {
+  UpdateESkillPredicate(evt) {
+    this.filterByESkillIDArr = evt.data;
+    let lengthArr = this.filterByESkillIDArr.length;
+
+    if (lengthArr <= 0) {
+      this.filterESkillPredicates = `(EmployeeID=="${this.employeeID}")`;
+      console.log('truong hop 1', this.filterESkillPredicates);
+      (this.skillGrid.dataService as CRUDService)
+        .setPredicates([this.filterESkillPredicates], [''])
+        .subscribe();
+    } else {
+      this.filterESkillPredicates = `(EmployeeID=="${this.employeeID}" and (`;
+      for (let i = 0; i < lengthArr; i++) {
         if (i > 0) {
           this.filterESkillPredicates += ' or ';
         }
         this.filterESkillPredicates += `SkillID==@${i}`;
       }
       this.filterESkillPredicates += ') ';
-      (this.skillGrid.dataService as CRUDService)
-        .setPredicates(
-          [this.filterESkillPredicates],
-          [this.filterByESkillIDArr.join(';')]
-        )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 1', item);
-        });
-    } else if (
-      (this.filterByESkillIDArr.length > 0 &&
-        this.startDateESkillFilterValue == undefined) ||
-      this.startDateESkillFilterValue == null
-    ) {
-      let i = 0;
-      for (i; i < this.filterByESkillIDArr.length; i++) {
-        if (i > 0) {
-          this.filterESkillPredicates += ' or ';
-        }
-        this.filterESkillPredicates += `SkillID==@${i}`;
-      }
+      this.filterESkillPredicates += ') ';
+      console.log('truong hop 2', this.filterESkillPredicates);
 
       (this.skillGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterESkillPredicates],
           [this.filterByESkillIDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 2', item);
-        });
+        .subscribe();
     }
   }
 
@@ -4764,7 +4853,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.Filter_By_ETrainCourse_IDArr.length > 0 &&
       this.Start_Date_ETrainCourse_Filter_Value != null
     ) {
-      this.Filter_ETrainCourse_Predicates = '(';
+      this.Filter_ETrainCourse_Predicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.Filter_By_ETrainCourse_IDArr.length; i++) {
         if (i > 0) {
@@ -4774,6 +4863,8 @@ export class EmployeeDetailComponent extends UIComponent {
       }
       this.Filter_ETrainCourse_Predicates += ') ';
       this.Filter_ETrainCourse_Predicates += `and (TrainFromDate>="${this.Start_Date_ETrainCourse_Filter_Value}" and TrainFromDate<="${this.End_Date_ETrainCourse_Filter_Value}")`;
+      this.Filter_ETrainCourse_Predicates += ') ';
+      console.log('truong hop 1', this.Filter_ETrainCourse_Predicates);
       (this.eTrainCourseGrid.dataService as CRUDService)
         .setPredicates(
           [this.Filter_ETrainCourse_Predicates],
@@ -4781,10 +4872,11 @@ export class EmployeeDetailComponent extends UIComponent {
         )
         .subscribe();
     } else if (
-      (this.Filter_By_ETrainCourse_IDArr.length > 0 &&
-        this.Start_Date_ETrainCourse_Filter_Value == undefined) ||
-      this.Start_Date_ETrainCourse_Filter_Value == null
+      this.Filter_By_ETrainCourse_IDArr.length > 0 &&
+      (this.Start_Date_ETrainCourse_Filter_Value == undefined ||
+        this.Start_Date_ETrainCourse_Filter_Value == null)
     ) {
+      this.Filter_ETrainCourse_Predicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.Filter_By_ETrainCourse_IDArr.length; i++) {
         if (i > 0) {
@@ -4792,93 +4884,48 @@ export class EmployeeDetailComponent extends UIComponent {
         }
         this.Filter_ETrainCourse_Predicates += `TrainForm==@${i}`;
       }
+      this.Filter_ETrainCourse_Predicates += ') ';
+      this.Filter_ETrainCourse_Predicates += ') ';
+      console.log('truong hop 2', this.Filter_ETrainCourse_Predicates);
       (this.eTrainCourseGrid.dataService as CRUDService)
         .setPredicates(
           [this.Filter_ETrainCourse_Predicates],
           [this.Filter_By_ETrainCourse_IDArr.join(';')]
         )
         .subscribe();
-    } else if (this.Start_Date_ETrainCourse_Filter_Value != null) {
+    } else if (
+      this.Filter_By_ETrainCourse_IDArr.length <= 0 &&
+      this.Start_Date_ETrainCourse_Filter_Value != null
+    ) {
+      this.Filter_ETrainCourse_Predicates = `(EmployeeID=="${this.employeeID}" and TrainFromDate>="${this.Start_Date_ETrainCourse_Filter_Value}" and TrainFromDate<="${this.End_Date_ETrainCourse_Filter_Value}")`;
       (this.eTrainCourseGrid.dataService as CRUDService)
-        .setPredicates(
-          [
-            `TrainFromDate>="${this.Start_Date_ETrainCourse_Filter_Value}" and TrainFromDate<="${this.End_Date_ETrainCourse_Filter_Value}"`,
-          ],
-          []
-        )
+        .setPredicates([this.Filter_ETrainCourse_Predicates], [])
+        .subscribe();
+      console.log('truong hop 3', this.Filter_ETrainCourse_Predicates);
+    } else if (
+      this.Filter_By_ETrainCourse_IDArr.length <= 0 &&
+      (this.Start_Date_ETrainCourse_Filter_Value == undefined ||
+        this.Start_Date_ETrainCourse_Filter_Value == null)
+    ) {
+      this.Filter_ETrainCourse_Predicates = `(EmployeeID=="${this.employeeID}")`;
+      console.log('truong hop 4', this.Filter_ETrainCourse_Predicates);
+      (this.eTrainCourseGrid.dataService as CRUDService)
+        .setPredicates([this.Filter_ETrainCourse_Predicates], [''])
         .subscribe();
     }
   }
-  // UpdateInYearPredicate() {
-  //   this.filterInYearPredicates = '';
-  //   if (
-  //     this.filterByInYearIDArr.length > 0 &&
-  //     this.startDateInYearFilterValue != null
-  //   ) {
-  //     this.filterInYearPredicates = '(';
-  //     let i = 0;
-  //     for (i; i < this.filterByInYearIDArr.length; i++) {
-  //       if (i > 0) {
-  //         this.filterInYearPredicates += ' or ';
-  //       }
-  //       this.filterInYearPredicates += `TrainForm==@${i}`;
-  //     }
-  //     this.filterInYearPredicates += ') ';
-  //     //this.filterTrainFormPredicates += `and (InjectDate>="${this.startDateTrainFormFilterValue}" and InjectDate<="${this.endDateTrainFormFilterValue}")`;
-
-  //     (this.trainCourseGrid.dataService as CRUDService)
-  //       .setPredicates(
-  //         [this.filterInYearPredicates],
-  //         [this.filterByInYearIDArr.join(';')]
-  //       )
-  //       .subscribe((item) => {
-  //         console.log('item tra ve sau khi loc 1', item);
-  //       });
-  //   } else if (
-  //     (this.filterByInYearIDArr.length > 0 &&
-  //       this.startDateInYearFilterValue == undefined) ||
-  //     this.startDateInYearFilterValue == null
-  //   ) {
-  //     let i = 0;
-  //     for (i; i < this.filterByInYearIDArr.length; i++) {
-  //       if (i > 0) {
-  //         this.filterInYearPredicates += ' or ';
-  //       }
-  //       this.filterInYearPredicates += `TrainForm==@${i}`;
-  //     }
-
-  //     (this.trainCourseGrid.dataService as CRUDService)
-  //       .setPredicates(
-  //         [this.filterInYearPredicates],
-  //         [this.filterByInYearIDArr.join(';')]
-  //       )
-  //       .subscribe((item) => {
-  //         console.log('item tra ve sau khi loc 2', item);
-  //       });
-  //   } else if (this.startDateInYearFilterValue != null) {
-  //     (this.trainCourseGrid.dataService as CRUDService)
-  //       .setPredicates(
-  //         [
-  //           `InjectDate>="${this.startDateInYearFilterValue}" and InjectDate<="${this.endDateInYearFilterValue}"`,
-  //         ],
-  //         []
-  //       )
-  //       .subscribe((item) => {
-  //         console.log('item tra ve sau khi loc 3', item);
-  //       });
-  //   }
-  // }
-
-  // valueChangeFilterInYear(evt) {
-  //   this.filterByInYearIDArr = evt.data;
-  //   this.UpdateInYearPredicate();
-  // }
 
   valueChangeFilterDiseasesTypeID(evt) {
     this.Filter_By_EDiseases_IDArr = evt.data;
     let lengthArr = this.Filter_By_EDiseases_IDArr.length;
-    if (lengthArr > 0) {
-      this.Filter_EDiseases_Predicates = '(';
+    if (lengthArr <= 0) {
+      this.Filter_EDiseases_Predicates = `(EmployeeID=="${this.employeeID}")`;
+      console.log('truong hop 1', this.Filter_EDiseases_Predicates);
+      (this.eDiseasesGrid.dataService as CRUDService)
+        .setPredicates([this.Filter_EDiseases_Predicates], [''])
+        .subscribe();
+    } else {
+      this.Filter_EDiseases_Predicates = `(EmployeeID=="${this.employeeID}" and (`;
       for (let i = 0; i < lengthArr; i++) {
         if (i > 0) {
           this.Filter_EDiseases_Predicates += ' or ';
@@ -4886,21 +4933,14 @@ export class EmployeeDetailComponent extends UIComponent {
         this.Filter_EDiseases_Predicates += `DiseaseID==@${i}`;
       }
       this.Filter_EDiseases_Predicates += ') ';
+      this.Filter_EDiseases_Predicates += ') ';
+      console.log('truong hop 2', this.Filter_EDiseases_Predicates);
+
       (this.eDiseasesGrid.dataService as CRUDService)
         .setPredicates(
           [this.Filter_EDiseases_Predicates],
           [this.Filter_By_EDiseases_IDArr.join(';')]
         )
-        .subscribe();
-    } else {
-      for (let i = 0; i < lengthArr; i++) {
-        if (i > 0) {
-          this.Filter_EDiseases_Predicates += ' or ';
-        }
-        this.Filter_EDiseases_Predicates += `DiseaseID==@${i}`;
-      }
-      (this.eDiseasesGrid.dataService as CRUDService)
-        .setPredicates([''], [''])
         .subscribe();
     }
   }
@@ -4911,7 +4951,7 @@ export class EmployeeDetailComponent extends UIComponent {
   }
   valueChangeFilterSkillID(evt) {
     this.filterByESkillIDArr = evt.data;
-    this.UpdateESkillPredicate();
+    this.UpdateESkillPredicate(evt);
   }
 
   valueChangeFilterVaccineTypeID(evt) {
@@ -4941,33 +4981,26 @@ export class EmployeeDetailComponent extends UIComponent {
     this.UpdateTrainCoursePredicate();
   }
 
-  UpdateBusinessTravelPredicate() {
-    this.filterBusinessTravelPredicates = '';
-    if (this.startDateBusinessTravelFilterValue == null) {
-      (this.businessTravelGrid.dataService as CRUDService)
-        .setPredicates([`EmployeeID=@0`], [this.employeeID])
-        .subscribe((item) => {});
-    } else {
-      (this.businessTravelGrid.dataService as CRUDService)
-        .setPredicates(
-          [
-            `BeginDate>="${this.startDateBusinessTravelFilterValue}" and EndDate<="${this.endDateBusinessTravelFilterValue}"`,
-          ],
-          []
-        )
-        .subscribe((item) => {});
-    }
-  }
-
   valueChangeYearFilterBusinessTravel(evt) {
     if (evt.formatDate == undefined && evt.toDate == undefined) {
       this.startDateBusinessTravelFilterValue = null;
       this.endDateBusinessTravelFilterValue = null;
+      this.filterBusinessTravelPredicates = `(EmployeeID=="${this.employeeID}")`;
+      (this.businessTravelGrid.dataService as CRUDService)
+        .setPredicates([this.filterBusinessTravelPredicates], [''])
+        .subscribe();
     } else {
       this.startDateBusinessTravelFilterValue = evt.fromDate.toJSON();
       this.endDateBusinessTravelFilterValue = evt.toDate.toJSON();
+      (this.businessTravelGrid.dataService as CRUDService)
+        .setPredicates(
+          [
+            `(EmployeeID=="${this.employeeID}" and BeginDate>="${this.startDateBusinessTravelFilterValue}" and EndDate<="${this.endDateBusinessTravelFilterValue}")`,
+          ],
+          []
+        )
+        .subscribe();
     }
-    this.UpdateBusinessTravelPredicate();
   }
 
   UpdateEDayOffsPredicate() {
@@ -4976,7 +5009,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.filterByKowIDArr.length > 0 &&
       this.startDateEDayoffFilterValue != null
     ) {
-      this.filterEDayoffPredicates = '(';
+      this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.filterByKowIDArr.length; i++) {
         if (i > 0) {
@@ -4986,21 +5019,20 @@ export class EmployeeDetailComponent extends UIComponent {
       }
       this.filterEDayoffPredicates += ') ';
       this.filterEDayoffPredicates += `and (BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}")`;
-      //this.filterEBenefitDatavalues = this.filterByKowIDArr.concat([this.startDateEBenefitFilterValue, this.endDateEBenefitFilterValue]);
-
+      this.filterEDayoffPredicates += ') ';
+      console.log('truong hop 1', this.filterEDayoffPredicates);
       (this.dayoffGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEDayoffPredicates],
           [this.filterByKowIDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 1', item);
-        });
+        .subscribe();
     } else if (
       this.filterByKowIDArr.length > 0 &&
       (this.startDateEDayoffFilterValue == undefined ||
         this.startDateEDayoffFilterValue == null)
     ) {
+      this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.filterByKowIDArr.length; i++) {
         if (i > 0) {
@@ -5008,28 +5040,34 @@ export class EmployeeDetailComponent extends UIComponent {
         }
         this.filterEDayoffPredicates += `KowID==@${i}`;
       }
-
+      this.filterEDayoffPredicates += ') ';
+      this.filterEDayoffPredicates += ') ';
+      console.log('truong hop 2', this.filterEDayoffPredicates);
       (this.dayoffGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEDayoffPredicates],
           [this.filterByKowIDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 2', item);
-        });
-    } else if (this.startDateEDayoffFilterValue) {
+        .subscribe();
+    } else if (
+      this.filterByKowIDArr.length <= 0 &&
+      this.startDateEDayoffFilterValue != null
+    ) {
+      this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}" and BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}")`;
       (this.dayoffGrid.dataService as CRUDService)
-        .setPredicates(
-          [
-            `BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}"`,
-          ],
-          []
-        )
-        .subscribe((item) => {});
-    } else {
+        .setPredicates([this.filterEDayoffPredicates], [])
+        .subscribe();
+      console.log('truong hop 3', this.filterEDayoffPredicates);
+    } else if (
+      this.filterByKowIDArr.length <= 0 &&
+      (this.startDateEDayoffFilterValue == undefined ||
+        this.startDateEDayoffFilterValue == null)
+    ) {
+      this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}")`;
+      console.log('truong hop 4', this.filterEDayoffPredicates);
       (this.dayoffGrid.dataService as CRUDService)
-        .setPredicates([`EmployeeID=@0`], [this.employeeID])
-        .subscribe((item) => {});
+        .setPredicates([this.filterEDayoffPredicates], [''])
+        .subscribe();
     }
   }
 
@@ -5054,8 +5092,14 @@ export class EmployeeDetailComponent extends UIComponent {
     this.filterByAccidentIDArr = evt.data;
     let lengthArr = this.filterByAccidentIDArr.length;
 
-    if (this.filterByAccidentIDArr?.length > 0) {
-      this.filterAccidentIdPredicate = '(';
+    if (lengthArr <= 0) {
+      this.filterAccidentIdPredicate = `(EmployeeID=="${this.employeeID}")`;
+      console.log('truong hop 1', this.filterAccidentIdPredicate);
+      (this.eAccidentGridView.dataService as CRUDService)
+        .setPredicates([this.filterAccidentIdPredicate], [''])
+        .subscribe();
+    } else {
+      this.filterAccidentIdPredicate = `(EmployeeID=="${this.employeeID}" and (`;
       for (let i = 0; i < lengthArr; i++) {
         if (i > 0) {
           this.filterAccidentIdPredicate += ' or ';
@@ -5063,21 +5107,14 @@ export class EmployeeDetailComponent extends UIComponent {
         this.filterAccidentIdPredicate += `AccidentID==@${i}`;
       }
       this.filterAccidentIdPredicate += ') ';
-      (this.eAccidentGridView?.dataService as CRUDService)
-        ?.setPredicates(
+      this.filterAccidentIdPredicate += ') ';
+      console.log('truong hop 2', this.filterAccidentIdPredicate);
+
+      (this.eAccidentGridView.dataService as CRUDService)
+        .setPredicates(
           [this.filterAccidentIdPredicate],
           [this.filterByAccidentIDArr.join(';')]
         )
-        .subscribe();
-    } else {
-      for (let i = 0; i < lengthArr; i++) {
-        if (i > 0) {
-          this.filterAccidentIdPredicate += ' or ';
-        }
-        this.filterAccidentIdPredicate += `AccidentID==@${i}`;
-      }
-      (this.eAccidentGridView?.dataService as CRUDService)
-        ?.setPredicates([''], [''])
         .subscribe();
     }
   }

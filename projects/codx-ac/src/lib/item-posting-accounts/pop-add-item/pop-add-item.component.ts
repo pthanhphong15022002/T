@@ -120,7 +120,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.itemposting[keymodel[i]] == null ||
-              this.itemposting[keymodel[i]] == ''
+              this.itemposting[keymodel[i]].match(/^ *$/) != null
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -201,7 +201,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
           if (res.save) {
             this.dialog.dataService.clear();
             this.dialog.dataService.addNew().subscribe((res) => {
-              this.form.formGroup.reset(res);
+              this.form.formGroup.patchValue(res);
               this.itemposting = this.dialog.dataService.dataSelected;
               this.itemposting.moduleID = this.moduleID;
               this.itemposting.postType = this.postType;

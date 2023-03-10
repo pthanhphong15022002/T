@@ -34,6 +34,7 @@ export class ArPostingAccountsComponent extends UIComponent {
   menuAccount: Array<any> = [];
   postTypeAccount: any = '10';
   menuRules: Array<any> = [];
+  menuIcon: Array<any> = [];
   postTypeRules: any;
   dialog: DialogRef;
   headerText: any;
@@ -78,6 +79,11 @@ export class ArPostingAccountsComponent extends UIComponent {
     this.cache.valueList('AC048').subscribe((res) => {
       if (res) {
         this.menuRules = res.datas;
+      }
+    });
+    this.cache.valueList('AC057').subscribe((res) => {
+      if (res) {
+        this.menuIcon = res.datas;
       }
     });
   }
