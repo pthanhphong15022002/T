@@ -205,7 +205,6 @@
 
 .task{
   max-height:  1000px;
-  overflow: auto;
 }
 .task-att{
   margin-left: 80px;
@@ -362,10 +361,15 @@ codx-attachment{
   position: relative;
 }
 
-.card-job.task-main:hover{
-  background-color:#369bff0c;
-  border-color:var(--gray-100);
-}
+// .card-job.task-main:hover{
+//   background-color:var(--gray-100);
+//   border-color:var(--gray-100);
+
+ 
+// }
+// .card-job.task-main:hover .cdk-drag.drap-drop:last-child:after{
+//   background-color:var(--gray-100)!important;
+// }
 
 .card-job.task-main:has(.task-groups){
 
@@ -393,7 +397,16 @@ codx-attachment{
     height: 10px;
   }
   
-
+  .cdk-drop-list.task .cdk-drag.drap-drop:last-child:after{
+    display: block;
+    content: "";
+    width: 1px;
+    background-color: var(--bg-body);
+    position: absolute;
+    top: 22px;
+    left: -30px;
+    height: 90%;
+  }
 }
 
 
