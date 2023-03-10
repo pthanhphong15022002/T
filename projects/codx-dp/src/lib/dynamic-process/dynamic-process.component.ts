@@ -227,7 +227,7 @@ export class DynamicProcessComponent
       this.dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e && e.event != null) {
-          e.event.totalInstance =  this.totalInstance;
+          e.event.totalInstance = this.totalInstance;
           this.view.dataService.update(e.event).subscribe();
           this.changeDetectorRef.detectChanges();
         }
@@ -270,7 +270,6 @@ export class DynamicProcessComponent
         this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
-            e.event.totalInstance =  this.totalInstance;
             this.view.dataService.update(e.event).subscribe();
             this.changeDetectorRef.detectChanges();
           }
@@ -313,7 +312,7 @@ export class DynamicProcessComponent
         dialogProcessCopy.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
-            e.event.totalInstance =  this.totalInstance;
+            e.event.totalInstance = this.totalInstance;
             this.view.dataService.update(e.event).subscribe();
             this.changeDetectorRef.detectChanges();
           }
@@ -342,7 +341,9 @@ export class DynamicProcessComponent
     if ($event && $event.currentTarget.checked) {
       this.listClickedCoppy.push(data);
       if (data.id === '3') {
-        this.listClickedCoppy= this.listClickedCoppy.concat(this.listSelectStepCoppy);
+        this.listClickedCoppy = this.listClickedCoppy.concat(
+          this.listSelectStepCoppy
+        );
       }
     } else {
       if (data.id === '3') {
@@ -611,10 +612,10 @@ export class DynamicProcessComponent
   }
 
   doubleClickViewProcess(data) {
-    let isRead = this.checkPermissionRead(data);
-    if (isRead) {
-      this.viewDetailProcess(data);
-    }
+    // let isRead = this.checkPermissionRead(data);
+    // if (isRead) {
+    //   this.viewDetailProcess(data);
+    // }
   }
   getNameUsersStr(data) {
     if (data?.length > 0 && data !== null) {
@@ -642,8 +643,9 @@ export class DynamicProcessComponent
       : '';
   }
 
-  totalSteps(listStep:any){
-    return listStep.steps?.filter(x=> !x.isSuccessStep && !x.isFailStep).length;
+  totalSteps(listStep: any) {
+    return listStep.steps?.filter((x) => !x.isSuccessStep && !x.isFailStep)
+      .length;
   }
 
   //#endregion đang test
@@ -676,14 +678,29 @@ export class DynamicProcessComponent
 
     dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        this.view.dataService.clear();
-        data.totalInstance = e.event.totalInstance ?? 0;
-        this.view.dataService.update(data).subscribe();
-        this.detectorRef.detectChanges();
+        this.view.dataService.update(e?.event[0]).subscribe();
+        let totalInstanceById = e?.event[1];
+        if (totalInstanceById.size > 0 && totalInstanceById) {
+          let listProccess = this.view.dataService.data;
+          var index = 0;
+          for (let i = 0; i < listProccess.length; i++) {
+            let value = totalInstanceById.get(listProccess[i].recID);
+            if (value) {
+              listProccess[i].totalInstance =
+                listProccess[i].totalInstance + value;
+              this.view.dataService
+                .update(listProccess[i].totalInstance)
+                .subscribe();
+              index++;
+            }
+            if (index === totalInstanceById.size) {
+              break;
+            }
+          }
+        }
       }
     });
-
-
+    this.detectorRef.detectChanges();
   }
 
   // nvthuan
@@ -703,6 +720,10 @@ export class DynamicProcessComponent
   }
 
   editName() {
+    if (!this.processName?.trim()) {
+      this.notificationsService.notifyCode('SYS009', 0, 'Tên quy trình');
+      return;
+    }
     this.dpService
       .renameProcess([this.processName, this.processRename['recID']])
       .subscribe((res) => {

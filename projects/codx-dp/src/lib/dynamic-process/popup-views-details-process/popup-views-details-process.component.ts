@@ -24,6 +24,7 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
   dialogGuide: DialogRef;
   headerText = 'Hướng dẫn các bước thực hiện';
   // openPop =false ;
+  listValueRefid: string[] = [];
   stepNames = [];
   @ViewChild('popupGuide') popupGuide;
   tabControl: TabModel[] = [
@@ -78,12 +79,29 @@ export class PopupViewsDetailsProcessComponent implements OnInit {
     }
   }
   closeDetailInstance(data){
-    this.dpService.getListInstanceByIdProccess(data.recID).subscribe((res)=> {
+    let listMap = new Map();
+    for (let i = 0; i < this.listValueRefid.length; i++) {
+      let id = this.listValueRefid[i];
+      listMap.set(id, listMap.get(id) + 1 || 1);
+    }
+    var isUseSuccess = data.steps.filter(x=>x.isSuccessStep)[0].isUsed;
+    var isUseFail = data.steps.filter(x=>x.isFailStep)[0].isUsed;
+    var dataCountInstance = [data.recID, isUseSuccess, isUseFail];
+    this.dpService.countInstanceByProccessId(dataCountInstance).subscribe((res)=> {
       if(res){
         data.totalInstance = res;
-        this.dialog.close(data);
       }
-      this.dialog.close(data);
+      else {
+        data.totalInstance = 0;
+      }
+      var datas= [data,listMap];
+      this.dialog.close(datas);
     })
+  }
+  valueList(e){
+    //bat e ve xu lys
+    if(e){
+      this.listValueRefid.push(e);
+    }
   }
 }

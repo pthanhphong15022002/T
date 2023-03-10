@@ -572,23 +572,39 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.objects.debtComparision = this.customers.debtComparision;
   }
   checkValidEmail() {
-    const regex = new RegExp(
-      '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
-    );
-    var checkRegex = regex.test(this.customers.email);
-    if (checkRegex == false) {
-      this.notification.notify("Trường 'Email' không hợp lệ", '2');
-      this.validate++;
-      return;
+    if (this.customers.email != null) {
+      const regex = new RegExp(
+        '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
+      );
+      var checkRegex = regex.test(this.customers.email);
+      if (checkRegex == false) {
+        this.notification.notifyCode(
+          'SYS037',
+          0,
+          ''
+        );
+        this.validate++;
+        return;
+      }
+    }
+  }
+  checkValidPhone(){
+    if (this.customers.phone != null) {
+      var phonenumberFormat = /(([\+84|84|(+84)|0]+(3|5|7|8|9|1[2|6|8|9])+([0-9]{8}))\b)/;
+      var checkRegex = this.customers.phone.toLocaleLowerCase().match(phonenumberFormat)
+      if (checkRegex == null) {
+        this.notification.notify("'Phone' không hợp lệ", '2');
+        this.validate++;
+        return;
+      }
     }
   }
   //#endregion
 
   //#region CRUD
   onSave() {
-    if (this.customers.email != null) {
-      this.checkValidEmail();
-    }
+    this.checkValidPhone();  
+    this.checkValidEmail();
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;

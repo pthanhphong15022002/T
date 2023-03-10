@@ -30,7 +30,7 @@ export class FileService implements OnDestroy {
         //  private aesCrypto: AESCryptoService,
         private api: ApiHttpService
     ) {
-      //  this.options.pageLoading = false;
+        this.options.pageLoading = false;
         this.options.pageSize = 20;
         this.options.funcID = "";
         this.options.srtDirections

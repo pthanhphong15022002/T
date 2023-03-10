@@ -47,8 +47,11 @@ export class InventoryComponent extends UIComponent {
   //#region Init
   onInit(): void {}
   ngAfterViewInit() {
-    this.cache.functionList(this.view.funcID).subscribe((res) => {
-      if (res) this.funcName = res.defaultName;
+    this.cache.moreFunction('InventoryModels', 'grvInventoryModels').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS21000');
+        if (m) this.funcName = m.defaultName;
+      }
     });
     this.views = [
       {

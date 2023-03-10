@@ -149,20 +149,18 @@
 
 <ng-template #editNameFooter>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-outline-primary me-5">
+    <button type="button" class="btn btn-outline-primary me-5" (click)="popupEditName.close()">
       <codx-label
-        name="Save"
-        formName="Tasks"
+        fiedName="lblCancel"
+        [formModel]="view.formModel"
         default="Hủy"
-        (click)="popupEditName.close()"
       ></codx-label>
     </button>
-    <button type="button" class="btn btn-primary">
+    <button type="button" class="btn btn-primary"  (click)="editName()">
       <codx-label
-        name="Save"
-        formName="Tasks"
+        name=" lblSuscess"
+        [formModel]="view.formModel"
         default="Đồng ý"
-        (click)="editName()"
       ></codx-label>
     </button>
   </div>

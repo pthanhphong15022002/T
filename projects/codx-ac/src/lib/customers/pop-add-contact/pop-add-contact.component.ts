@@ -119,15 +119,36 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     );
     var checkRegex = regex.test(this.contact.email);
     if (checkRegex == false) {
-      this.notification.notify("'Email' không hợp lệ", '2');
+      this.notification.notifyCode(
+        'SYS037',
+        0,
+        ''
+      );
       this.validate++;
       return;
+    }
+  }
+  checkValidPhone(){
+    var keymodel = Object.keys(this.contact);
+    var phonenumberFormat = /(([\+84|84|(+84)|0]+(3|5|7|8|9|1[2|6|8|9])+([0-9]{8}))\b)/;
+    for (let i = 0; i < keymodel.length; i++) {
+      if (keymodel[i] == 'phone' || keymodel[i] == 'homePhone') {
+        if (this.contact[keymodel[i]] != '') {
+          var checkRegex = this.contact[keymodel[i]].toLocaleLowerCase().match(phonenumberFormat)
+          if (checkRegex == null) {
+            var field = keymodel[i].charAt(0).toUpperCase() + keymodel[i].slice(1);
+            this.notification.notify(this.gridViewSetup[field].headerText + ' ' + 'không hợp lệ', '2');
+            this.validate++;
+          }
+        }
+      }
     }
   }
   //#endregion
 
   //#region Method
   onSave() {
+    this.checkValidPhone();
     if (this.contact.email != '') {
       this.checkValidEmail();
     }
