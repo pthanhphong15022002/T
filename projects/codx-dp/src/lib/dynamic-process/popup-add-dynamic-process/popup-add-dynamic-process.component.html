@@ -1059,7 +1059,7 @@
               </div>
 
               <div *ngIf="item?.fields?.length > 0">
-                <div class="class-field row p-5">
+                <div class="class-field p-2">
                   <ng-container *ngFor="let item1 of item?.fields">
                     <div
                       class="col-{{
@@ -1450,64 +1450,51 @@
                 <div class="card-job">
                   <div
                     *ngIf="taskList?.recID"
-                    class="d-flex justify-content-start align-items-center has-action-menu ps-4 pt-3"
+                    class="d-flex align-items-center has-action-menu mb-4"
                   >
                     <!-- show hiden group task -->
-                    <div
-                      class="d-flex justify-content-center align-items-center cursor-pointer"
-                      style="
-                        border: 1px solid #6c757d;
-                        width: 25px;
-                        height: 25px;
-                      "
-                      (click)="toggleTask('group' + taskList?.recID)"
-                    >
-                      <!-- <span style="font-size: 30px; font-weight: 400; color: #6c757d">-</span> -->
-                      <span
-                        style="
-                          font-size: 20px;
-                          font-weight: 400;
-                          color: #6c757d;
-                        "
-                        >+</span
+                    <span class="me-4">
+                      <button
+                        type="button"
+                        class="btn btn-icon btn-light-primary"
+                        (click)="toggleTask('group' + taskList?.recID)"
                       >
-                    </div>
-                    <div class="ms-5">
+                      <i class="icon-add icon-18"></i>
+                      </button>
+                    </span>
+                    <div class="me-3">
                       <codx-img
-                        [width]="40"
-                        class="me-2"
+                        [width]="35"
                         [objectId]="taskList?.roles[0]?.objectID"
                         objectType="AD_Users"
                         [objectName]="taskList?.roles[0]?.objectName"
                       >
                       </codx-img>
                     </div>
-                    <div class="steplist-hearder ms-5">
-                      <div>
-                        <span
-                          class=""
-                          style="font-size: 1.2rem; font-weight: 500"
-                          >{{ taskList?.taskGroupName }}</span
-                        >
+                    <div class="steplist-hearder">
+                      <div class="text-dark fw-bold fs-6">
+                        {{ taskList?.taskGroupName }}
                       </div>
-                      <div class="" style="font-weight: 400; font-size: 1.1rem">
+                      <div class="d-flex align-items-center fs-7">
                         <!-- TODO -->
-                        <span style="color: #06a9f7; font-weight: 500"
-                          >0%
+                        <span class="text-primary">0%</span>
+                        <span class="mx-2 text-gray-400">|</span>
+                        <span class="text-gray-600 me-1">
+                          <codx-label
+                            fiedName="StepName"
+                            [formModel]=""
+                            [default]="'Thời hạn'"
+                          >
+                          </codx-label>
                         </span>
-                        <codx-label
-                          fiedName="StepName"
-                          [formModel]=""
-                          [default]="'Thời hạn'"
-                        >
-                        </codx-label>
-                        <span>
+                        <span class="me-1 fw-bold"> 
                           {{
                             (+taskList?.durationDay || 0) * 24 +
                               (+taskList?.durationHour || 0)
                           }}
                         </span>
                         <codx-label
+                          class="text-gray-600"
                           fiedName="StepName"
                           [formModel]=""
                           [default]="'Giờ'"
@@ -1538,20 +1525,19 @@
                     cdkDropList
                     [cdkDropListData]="taskList?.task || []"
                     (cdkDropListDropped)="drop($event, taskList, false)"
-                    class="task"
-                    [ngStyle]="taskList?.recID ? { 'margin-left': '45px' } : {}"
+                    class="task ms-14"
+                    [ngStyle]="taskList?.recID ? {} : {}"
                   >
                     <ng-container *ngFor="let task of taskList?.task">
                       <div
                         cdkDrag
                         [cdkDragStartDelay]="200"
                         [cdkDragData]="task"
-                        class="drap-drop ps-3 pt-2"
+                        class="drap-drop"
                       >
                         <div class="has-action-menu">
                           <div
                             class="d-flex justify-content-start align-items-center"
-                            style="font-size: 1rem"
                           >
                             <!-- icon task -->
                             <div
@@ -1559,48 +1545,44 @@
                               [ngStyle]="getColor(task)"
                             >
                               <span
-                                class="icon-20 text-primary-600 py-2"
+                                class="icon-18"
                                 [ngClass]="getIconTask(task)"
                               ></span>
                             </div>
                             <!-- avata -->
-                            <div class="ms-3">
+                            <div class="me-3">
                               <codx-img
-                                [width]="40"
-                                class="me-2"
+                                [width]="35"
                                 [objectId]="task?.roles[0]?.objectID"
                                 objectType="AD_Users"
                                 [objectName]="task?.roles[0]?.objectName"
                               >
                               </codx-img>
                             </div>
-                            <div class="steplist-hearder ms-5">
-                              <div>
-                                <span
-                                  class=""
-                                  style="font-size: 1.2rem; font-weight: 500"
-                                  >{{ task?.taskName }}</span
-                                >
+                            <div class="steplist-hearder">
+                              <div class="text-dark fw-bold fs-6">
+                                {{ task?.taskName }}
                               </div>
-                              <div
-                                class=""
-                                style="font-weight: 400; font-size: 1.1rem"
-                              >
+                              <div class="d-flex align-items-center fs-7">
                                 <!-- TODO -->
-                                <span style="color: #06a9f7">0% </span>
-                                <codx-label
-                                  fiedName="StepName"
-                                  [formModel]=""
-                                  [default]="'Thời hạn'"
-                                >
-                                </codx-label>
-                                <span>
+                                <span class="text-primary">0%</span>
+                                <span class="mx-2 text-gray-400">|</span>
+                                <span class="text-gray-600 me-1">
+                                  <codx-label
+                                    fiedName="StepName"
+                                    [formModel]=""
+                                    [default]="'Thời hạn'"
+                                  >
+                                  </codx-label>
+                                </span>
+                                <span class="me-1 fw-bold"> 
                                   {{
                                     (+task?.durationDay || 0) * 24 +
                                       (+task?.durationHour || 0)
                                   }}
                                 </span>
                                 <codx-label
+                                  class="text-gray-600"
                                   fiedName="StepName"
                                   [formModel]=""
                                   [default]="'Giờ'"
@@ -1609,7 +1591,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="ms-5">
+                          <div class="task-att">
                             <codx-attachment
                               #attachment
                               hideFolder="1"
@@ -1636,7 +1618,7 @@
                           >
                           </codx-mfunc>
                         </div>
-                        <div style="margin-left: 70px">
+                        <div class="task-att">
                           <codx-attachment
                             #attachment
                             [objectId]="task?.recID"
@@ -1658,11 +1640,11 @@
                     </ng-container>
                     <div
                       *ngIf="taskList?.task?.length === 0"
-                      style="height: 10px"
                     ></div>
                   </div>
                 </div>
               </div>
+              <hr />
             </ng-container>
           </div>
         </div>
@@ -1799,7 +1781,7 @@
       id="setup-step"
       [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
     >
-      <div class="main-body px-4 aqua">
+      <div class="main-body px-4">
         <div class="row pb-3">
           <div class="col-6">
             <div class="text-dark fw-bold">
