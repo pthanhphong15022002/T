@@ -93,19 +93,21 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    if (this.cashreceipts?.voucherNo != null) {
-      //#region  load CashReceiptsLines
-      this.acService
-        .loadData(
-          'ERM.Business.AC',
-          'CashReceiptsLinesBusiness',
-          'LoadDataAsync',
-          this.cashreceipts.recID
-        )
-        .subscribe((res: any) => {
-          this.cashreceiptslines = res;
-        });
-      //#endregion
+    if (this.formType == 'edit') {
+      if (this.cashreceipts?.voucherNo != null) {
+        //#region  load CashReceiptsLines
+        this.acService
+          .loadData(
+            'ERM.Business.AC',
+            'CashReceiptsLinesBusiness',
+            'LoadDataAsync',
+            this.cashreceipts.recID
+          )
+          .subscribe((res: any) => {
+            this.cashreceiptslines = res;
+          });
+        //#endregion
+      }
     }
   }
   //#endregion
