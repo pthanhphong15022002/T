@@ -348,7 +348,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     this.dialogCheckIn = this.callfc.openForm(
       PopupCheckInComponent,
       '',
-      800,
+      650,
       500,
       'OMT01',
       [kr, this.formModelCheckin]

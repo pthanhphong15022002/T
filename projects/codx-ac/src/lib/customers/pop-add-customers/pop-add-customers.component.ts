@@ -555,7 +555,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.customers[keymodel[i]] == null ||
-              this.customers[keymodel[i]] == ''
+              this.customers[keymodel[i]].match(/^ *$/) != null
             ) {
               this.notification.notifyCode(
                 'SYS009',

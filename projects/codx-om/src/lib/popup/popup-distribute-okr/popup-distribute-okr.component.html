@@ -1,10 +1,9 @@
-<codx-form [headerText]="headerText" [dialog]="dialogRef" [bodyCss]="'bg-secondary'" 
+<codx-form [headerText]="headerText" [dialog]="dialogRef" [bodyCss]="'bgEDEDED pt-5 '" 
 [body]="body" *ngIf="isAfterRender">
 </codx-form>
 
 <ng-template #body>
     <div class="w-100 h-100 bg-white d-flex flex-column">
-    <span class="pt-5 bg-secondary row"></span>
     <!-- <div class="pt-5 pb-2 text-center">
       <codx-label [default]="'Mục tiêu: '+obName" fiedName="titleO" class="fw-bold fs-4"></codx-label>
     </div> -->
@@ -42,28 +41,29 @@
               </div>
             </ng-template>
             <ng-template #content>
+              <div class="d-flex flex-row mt-5">
+                <div class="form-group col-5 text-center">
+                  <codx-label name="lbl" class="text-dark" default="Phòng ban"></codx-label>
+                </div>
+                <div class="form-group col-1 text-center">
+                  <codx-label name="lbl" class="text-dark" default="% phân bổ"></codx-label>
+                </div>
+                <div class="form-group col-1 text-center">
+                  <codx-label name="lbl" class="text-dark" default="Giá trị"></codx-label>
+                </div>
+                <div class="form-group col-1 text-center">
+                  <codx-label name="lbl" class="text-dark" default="DVT"></codx-label>
+                </div>
+                <div class="form-group col-4 text-center" *ngIf="this.distributeToType==typeKR">
+                  <codx-label name="lblKR" class="text-dark" default="Tên kết quả"></codx-label>
+                </div>
+                <div class="form-group col-4 text-center" *ngIf="this.distributeToType==typeOB">
+                  <codx-label name="lblOB" class="text-dark" default="Tên mục tiêu"></codx-label>
+                </div>
+              </div>
               <div class="mt-2 d-flex flex-column">
                 <!--header-->
-                <div class="d-flex flex-row">
-                  <div class="form-group col-5 text-center">
-                    <codx-label name="lbl" class="text-dark" default="Phòng ban"></codx-label>
-                  </div>
-                  <div class="form-group col-1 text-center">
-                    <codx-label name="lbl" class="text-dark" default="% phân bổ"></codx-label>
-                  </div>
-                  <div class="form-group col-1 text-center">
-                    <codx-label name="lbl" class="text-dark" default="Giá trị"></codx-label>
-                  </div>
-                  <div class="form-group col-1 text-center">
-                    <codx-label name="lbl" class="text-dark" default="DVT"></codx-label>
-                  </div>
-                  <div class="form-group col-4 text-center" *ngIf="this.distributeToType==typeKR">
-                    <codx-label name="lblKR" class="text-dark" default="Tên kết quả"></codx-label>
-                  </div>
-                  <div class="form-group col-4 text-center" *ngIf="this.distributeToType==typeOB">
-                    <codx-label name="lblOB" class="text-dark" default="Tên mục tiêu"></codx-label>
-                  </div>
-                </div>
+                
                 <div class="d-flex flex-row  align-items-center">
                   <div class="d-flex justify-content-center align-items-center"
                     style="height:30px;width:30px;background:#3699FF"><span
@@ -115,7 +115,7 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem>
+          <!-- <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-center">
                 <span class="fa-solid icon-groups me-2"></span>
@@ -139,12 +139,12 @@
             <ng-template #content>
 
             </ng-template>
-          </e-tabitem>
+          </e-tabitem> -->
         </e-tabitems>
       </ejs-tab>
     </div>
     <!--Footer-->
-    <div class="pt-5 d-flex justify-content-center">
+    <div class="pt-5 pb-5 d-flex justify-content-center">
 
       <div class="btn-group"> 
         <span type="button" (click)="cancel()"

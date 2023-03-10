@@ -192,7 +192,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.address[keymodel[i]] == null ||
-              this.address[keymodel[i]] == ''
+              this.address[keymodel[i]].match(/^ *$/) != null
             ) {
               this.notification.notifyCode(
                 'SYS009',

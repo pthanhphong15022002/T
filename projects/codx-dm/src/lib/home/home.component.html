@@ -110,14 +110,16 @@
   </div>
 </ng-template>
 <ng-template #templateCard>
-  <div class="d-flex flex-wrap dms-card p-5">
-    <ng-container *ngFor="let item of data ; trackBy: trackItem">
-      <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
-        [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item" [formModel]="view.formModel"
-        [view]="codxview" >
-      </card>
-    </ng-container>
-  </div>
+  <ng-container *ngIf="data && data.length>0">
+    <div class="d-flex flex-wrap dms-card p-5">
+      <ng-container *ngFor="let item of data ; trackBy: trackItem">
+        <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
+          [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item" [formModel]="view.formModel"
+          [view]="codxview" >
+        </card>
+      </ng-container>
+    </div>
+  </ng-container>
 </ng-template>
 <ng-template #templateSmallCard>
   <div class="d-flex flex-wrap dms-card-sm p-5">
