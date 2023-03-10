@@ -98,6 +98,9 @@ export class CashPaymentsComponent extends UIComponent {
       case 'SYS03':
         this.edit(e, data);
         break;
+      case 'SYS04':
+        this.copy(e, data);
+        break;
     }
   }
   //#endregion
@@ -144,6 +147,33 @@ export class CashPaymentsComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'edit',
+          headerText: e.text + ' ' + this.funcName,
+        };
+        let option = new DialogModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.IsFull = true;
+        this.dialog = this.callfunc.openForm(
+          PopAddCashComponent,
+          '',
+          null,
+          null,
+          this.view.funcID,
+          obj,
+          '',
+          option
+        );
+      });
+  }
+  copy(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .copy(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'copy',
           headerText: e.text + ' ' + this.funcName,
         };
         let option = new DialogModel();

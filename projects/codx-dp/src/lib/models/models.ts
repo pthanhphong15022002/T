@@ -367,6 +367,7 @@ export class DP_Instances_Steps_Roles {
 
 export class DP_Instances_Steps_TaskGroups {
   recID: string;
+  refID: string;
   instanceID: string;
   stepID: string;
   indexNo: number;
@@ -406,6 +407,7 @@ export class DP_Instances_Steps_TaskGroups_Roles {
 
 export class DP_Instances_Steps_Tasks {
   recID = Util.uid();
+  refID: string;
   instanceID: string;
   stepID: string;
   indexNo: number;
