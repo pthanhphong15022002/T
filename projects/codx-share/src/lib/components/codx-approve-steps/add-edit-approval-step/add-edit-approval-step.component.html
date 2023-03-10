@@ -12,6 +12,7 @@
   [footer]="footer"
   [openMore]="false"
   [data]="data"
+  (tabChange)="buttonClick($event)"
 >
 </codx-layout-add>
 
@@ -343,7 +344,7 @@
 </ng-template>
 <ng-template #tabQuery>
   <div class="w-100">
-    <codx-query-builder></codx-query-builder>
+    <!-- <codx-query-builder #queryBuilder [isPopup]="false" (change)="change($event)"></codx-query-builder> -->
   </div>
 </ng-template>
 <ng-template #tabEmail>

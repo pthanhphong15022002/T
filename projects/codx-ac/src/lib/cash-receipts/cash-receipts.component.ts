@@ -1,14 +1,31 @@
-import { Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UIComponent, ViewModel, DialogRef, ButtonModel, CallFuncService, ViewType, DialogModel, RequestOption } from 'codx-core';
+import {
+  UIComponent,
+  ViewModel,
+  DialogRef,
+  ButtonModel,
+  CallFuncService,
+  ViewType,
+  DialogModel,
+  RequestOption,
+} from 'codx-core';
 import { PopAddReceiptsComponent } from './pop-add-receipts/pop-add-receipts.component';
 
 @Component({
   selector: 'lib-cash-receipts',
   templateUrl: './cash-receipts.component.html',
-  styleUrls: ['./cash-receipts.component.css']
+  styleUrls: ['./cash-receipts.component.css'],
 })
-export class CashReceiptsComponent extends UIComponent{
+export class CashReceiptsComponent extends UIComponent {
+  //#region Contructor
   views: Array<ViewModel> = [];
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
@@ -26,14 +43,16 @@ export class CashReceiptsComponent extends UIComponent{
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
     @Optional() dialog?: DialogRef
-  ) { 
+  ) {
     super(inject);
     this.dialog = dialog;
     this.routerActive.queryParams.subscribe((res) => {
       if (res && res?.recID) this.parentID = res.recID;
     });
   }
+//#endregion
 
+//#region Init
   onInit(): void {}
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
@@ -51,6 +70,9 @@ export class CashReceiptsComponent extends UIComponent{
       },
     ];
   }
+  //#endregion
+
+  //#region Event
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
@@ -66,15 +88,13 @@ export class CashReceiptsComponent extends UIComponent{
       case 'SYS03':
         this.edit(e, data);
         break;
+      case 'SYS04':
+        this.copy(e, data);
+        break;
     }
   }
-  setDefault(o) {
-    return this.api.exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [
-      this.parentID,
-    ]);
-  }
   add(e) {
-    this.headerText = e.text  + ' ' + this.funcName;
+    this.headerText = e.text + ' ' + this.funcName;
     this.view.dataService
       .addNew((o) => this.setDefault(o))
       .subscribe((res: any) => {
@@ -125,6 +145,33 @@ export class CashReceiptsComponent extends UIComponent{
         );
       });
   }
+  copy(e, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .copy(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'copy',
+          headerText: e.text + ' ' + this.funcName,
+        };
+        let option = new DialogModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.IsFull = true;
+        this.dialog = this.callfunc.openForm(
+          PopAddReceiptsComponent,
+          '',
+          null,
+          null,
+          this.view.funcID,
+          obj,
+          '',
+          option
+        );
+      });
+  }
   delete(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -146,6 +193,14 @@ export class CashReceiptsComponent extends UIComponent{
         }
       });
   }
+  //#endregion
+
+  //#region Function
+  setDefault(o) {
+    return this.api.exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [
+      this.parentID,
+    ]);
+  }
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'CashReceiptsBusiness';
@@ -154,4 +209,5 @@ export class CashReceiptsComponent extends UIComponent{
     opt.data = data.recID;
     return true;
   }
+  //#endregion
 }

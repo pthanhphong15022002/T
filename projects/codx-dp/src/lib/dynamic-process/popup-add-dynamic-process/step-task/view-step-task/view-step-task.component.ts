@@ -36,25 +36,23 @@ export class ViewJobComponent implements OnInit {
     this.type = dt?.data?.value?.type;
     this.dataInput = dt?.data?.value;
     this.listDataInput = dt?.data?.listValue;
-    this. getModeFunction();
+    this.getModeFunction();
   }
 
   ngOnInit(): void {
     this.listOwner = this.dataInput['roles'] || [];
     if (this.dataInput['parentID']) {
       this.listDataInput?.forEach((task) => {
-        if (this.dataInput['parentID']?.includes(task.recID)) {
+        if (this.dataInput['parentID']?.includes(task.refID)) {
           this.listDataLink.push(task);
         }
       });
     }
-    if(this.dataInput['type'] == 'G'){
-      this.listDataLink = this.listDataInput?.filter(data => data['taskGroupID'] && data['taskGroupID'] == this.dataInput['recID'])
-      this.listDataInput?.forEach((task) => {
-        if (this.dataInput['parentID']?.includes(task.recID)) {
-          this.listDataLink.push(task);
-        }
-      });
+    if (this.dataInput['type'] == 'G') {
+      this.listDataLink = this.listDataInput?.filter(
+        (data) =>
+          data['taskGroupID'] && data['taskGroupID'] == this.dataInput['refID']
+      );
     }
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
@@ -65,7 +63,7 @@ export class ViewJobComponent implements OnInit {
     });
   }
 
-  getModeFunction(){
+  getModeFunction() {
     var functionID = 'DPT0206';
     this.cache.functionList(functionID).subscribe((f) => {
       this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
@@ -76,7 +74,6 @@ export class ViewJobComponent implements OnInit {
       });
     });
   }
-
 
   getIconTask(task) {
     let color = this.listTypeTask?.find((x) => x.value === task.type);
@@ -89,6 +86,6 @@ export class ViewJobComponent implements OnInit {
   }
   getColorTile(task) {
     let color = this.listTypeTask?.find((x) => x.value === task.type);
-    return { 'border-left': '3px solid'+ color?.color};
+    return { 'border-left': '3px solid' + color?.color };
   }
 }

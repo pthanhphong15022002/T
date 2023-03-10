@@ -42,8 +42,8 @@ export class PopupAddStaskComponent implements OnInit {
   isNewEmails = true;
   groupTackList = [];
   stepsTasks: DP_Instances_Steps_Tasks;
-  fieldsGroup = { text: 'taskGroupName', value: 'recID' };
-  fieldsTask = { text: 'taskName', value: 'recID' };
+  fieldsGroup = { text: 'taskGroupName', value: 'refID' };
+  fieldsTask = { text: 'taskName', value: 'refID' };
   tasksItem = '';
   stepID = '';
   status = 'add';
@@ -58,6 +58,8 @@ export class PopupAddStaskComponent implements OnInit {
   folderID = '';
   groupTaskID = ''
   view = [];
+  isSave = true;
+  groupTask;
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -78,6 +80,7 @@ export class PopupAddStaskComponent implements OnInit {
       this.stepsTasks['stepID'] = this.stepID;
       this.stepsTasks['progress'] = 0;
       this.stepsTasks['taskGroupID'] = dt?.data[7];
+      this.stepsTasks['refID'] = Util.uid();;
     }else {
       this.showLabelAttachment = true;
       this.stepsTasks = dt?.data[4] || new DP_Instances_Steps_Tasks();
@@ -116,8 +119,8 @@ export class PopupAddStaskComponent implements OnInit {
         );
         this.dataCombobox.splice(index, 1);
         this.taskGroupName = this.groupTackList.find(
-          (x) => x.recID === this.stepsTasks.taskGroupID
-        )['taskGroupName'];
+          (x) => x.refID === this.stepsTasks.taskGroupID
+        )['taskGroupName'] || null;
       }
       this.valueInput = this.dataCombobox
         .filter((x) => x.checked)
@@ -149,15 +152,27 @@ export class PopupAddStaskComponent implements OnInit {
 
   filterText(value, key) {
       this.stepsTasks[key] = value;
-      let taskGroup = this.groupTackList.find((x) => x.recID === value);
-      this.taskGroupName = taskGroup['taskGroupName'] || '';
-      this.stepsTasks['startDate'] = taskGroup['startDate'] || new Date();
+      this.groupTask = this.groupTackList.find((x) => x.refID === value);
+      this.taskGroupName = this.groupTask['taskGroupName'] || '';
+      this.stepsTasks['startDate'] = this.groupTask['startDate'] || new Date();
   }
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
   changeValueDate(event) {
     this.stepsTasks[event?.field] = event?.data?.fromDate;
+    if(new Date(this.stepsTasks['startDate']) > new Date(this.stepsTasks['endDate'] && this.stepsTasks['endDate'])){
+      this.isSave = false;
+      this.notiService.notifyCode('DP019');
+    }else{
+      this.isSave = true;
+    }    
+    if(new Date(this.stepsTasks['endDate']) > new Date(this.groupTask?.endDate)){
+      this.notiService.notifyCode('DP020');
+    }
+    if(new Date(this.stepsTasks['startDate']) > new Date(this.groupTask['startDate'])){
+      this.notiService.notifyCode('DP020');
+    }
   }
   applyOwner(e, datas) {
     if (!e || e?.data.length == 0) return;
@@ -200,6 +215,7 @@ export class PopupAddStaskComponent implements OnInit {
           if (res) {
             if(this.status === 'copy'){
               this.stepsTasks['recID'] = Util.uid();
+              this.stepsTasks['refID'] = Util.uid();;
             }
             this.dialog.close({ data: this.stepsTasks, status: this.status });
           }

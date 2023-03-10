@@ -1802,6 +1802,9 @@ export class PortalComponent extends UIComponent {
       case this.rewDisInfoFuncID:
         this.lstBtnAdd = this.lstFuncAward;
         break;
+      case this.contractInfoFuncID:
+        this.initHRProcess();
+        break;
     }
   }
 

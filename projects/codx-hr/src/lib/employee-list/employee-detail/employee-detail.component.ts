@@ -115,11 +115,14 @@ export class EmployeeDetailComponent extends UIComponent {
 
   isClick: boolean = false;
 
+  
   navChange(evt: any, index: number = -1) {
     if (!evt) return;
-    let element = document.getElementById(evt.nextId);
+    // let element = document.getElementById(evt?.nextId); 
+    let element = document.getElementById(evt);
     if (index > -1) {
-      this.active[index] = evt.nextId;
+      // this.active[index] = evt.nextId;
+      this.active[index] = evt;
       this.detectorRef.detectChanges();
     }
     element.scrollIntoView({
@@ -137,6 +140,8 @@ export class EmployeeDetailComponent extends UIComponent {
 
   onSectionChange(data: any, index: number = -1) {
     if (index > -1 && this.isClick == false) {
+      let element = document.getElementById(this.active[index]);
+      element.blur();
       this.active[index] = data;
       this.detectorRef.detectChanges();
     }
