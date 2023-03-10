@@ -17,18 +17,19 @@ export class OrderComponent extends UIComponent {
   constructor(private inject: Injector, private routeActive: ActivatedRoute) {
     super(inject);
     this.routeActive.queryParams.subscribe((params) => {
-      console.log('params', params);
       if (params?.orderID) {
         this.orderRecID = params?.orderID;
-        console.log('params', this.orderRecID);
-        this.detectorRef.detectChanges();
       }
     });
   }
 
   //#region View Child
   @ViewChild('moduleTmpl') moduleTmpl: ElementRef;
+  @ViewChild('moduleQuantityTmpl') moduleQuantityTmpl: ElementRef;
+  @ViewChild('moduleNetAmt') moduleNetAmt: ElementRef;
+  @ViewChild('childModuleQuantityTmpl') childModuleQuantityTmpl: ElementRef;
   @ViewChild('gridView') gridView: CodxGridviewComponent;
+
   //#endregion
   orderFormodel: FormModel = {
     formName: 'OrderModules',
@@ -63,20 +64,36 @@ export class OrderComponent extends UIComponent {
       {
         headerText: this.moduleGridHeaderText['apps'],
         template: this.moduleTmpl,
-        width: '400',
+        width: '250',
       },
       {
         headerText: this.moduleGridHeaderText['operator'],
-        width: '150',
+        template: this.moduleQuantityTmpl,
+        width: '100',
       },
       {
         headerText: this.moduleGridHeaderText['employee'],
-        width: '150',
+        template: this.childModuleQuantityTmpl,
+        width: '100',
       },
       {
         headerText: this.moduleGridHeaderText['netAmt'],
+        template: this.moduleNetAmt,
         width: '150',
       },
     ];
+  }
+
+  changeModuleQuantity(moduleID: string, isChild: boolean, e) {
+    let curMD = this.gridView.dataSource.find((x) => x.moduleID == moduleID);
+    if (curMD) {
+      if (isChild) {
+        curMD.childModule.quantity = e.data;
+      } else {
+        curMD.quantity = e.data;
+      }
+      this.gridView.update();
+      this.detectorRef.detectChanges();
+    }
   }
 }

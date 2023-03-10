@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment.prod';
 import { CodxTnComponent } from './codx-tn.component';
 import { OrderComponent } from './order/order.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { BuyModuleComponent } from './order/buy-module/buy-module.component';
 
 const routes: Routes = [
   {
@@ -23,11 +24,20 @@ const routes: Routes = [
         path: 'order',
         component: OrderComponent,
       },
+      {
+        path: 'module',
+        component: BuyModuleComponent,
+      },
     ],
   },
 ];
 @NgModule({
-  declarations: [CodxTnComponent, LayoutComponent, OrderComponent],
+  declarations: [
+    CodxTnComponent,
+    LayoutComponent,
+    OrderComponent,
+    BuyModuleComponent,
+  ],
   imports: [
     RouterModule.forChild(routes),
     CodxCoreModule.forRoot({ environment }),
