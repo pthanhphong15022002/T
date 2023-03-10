@@ -175,6 +175,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.fileService.options.srtDirections = "desc"
     this.folderService.options.srtColumns = "CreatedOn"
     this.folderService.options.srtDirections = "desc"
+    
     this.dmSV.ChangeDataView.subscribe(res =>{
       if(res) this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
     })
@@ -192,7 +193,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       }
       this._beginDrapDrop();
     });
-
     this.dmSV.isNodeSelect.subscribe((res) => {
       if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
@@ -290,7 +290,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.changeDetectorRef.detectChanges();
       }
     });
-
     //Xóa File
     this.dmSV.isDeleteFileView.subscribe(item=>{
       if(item)
@@ -301,7 +300,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         );
       }
     })
-
     //Thay đổi tên Folder
     this.dmSV.isNodeChange.subscribe((res) => {
       if (res) {
