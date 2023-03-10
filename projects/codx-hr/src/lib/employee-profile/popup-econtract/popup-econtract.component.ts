@@ -160,34 +160,47 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     }
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
-      this.hrSevice.validateBeforeSaveContract(this.data, true).subscribe((res) => {
-        console.log('result', res);
-        if (res) {
-          if(res[0]){
-            //code test
-            this.notify.notifyCode('SYS006');
-            this.dialog && this.dialog.close(res);
-            this.data = res;
-          }
-          else if(res[1]){
-            this.notify.alertCode(res[1]).subscribe(stt =>{
-              console.log('click', res);
-              if(stt?.event.status == 'Y'){
-                if(res[1] == 'HR010'){
-                  this.hrSevice.addEContract(this.data).subscribe(result =>{
-                    if(result && result[0]){
-                      this.notify.notifyCode('SYS006');
-                      this.dialog && this.dialog.close(result);
-                    }
-                  })
+      this.hrSevice
+        .validateBeforeSaveContract(this.data, true)
+        .subscribe((res) => {
+          console.log('result', res);
+          if (res) {
+            if (res[0]) {
+              //code test
+              this.notify.notifyCode('SYS006');
+              this.dialog && this.dialog.close(res);
+              this.data = res;
+            } else if (res[1]) {
+              this.notify.alertCode(res[1]).subscribe((stt) => {
+                console.log('click', res);
+                if (stt?.event.status == 'Y') {
+                  if (res[1] == 'HR010') {
+                    this.hrSevice
+                      .addEContract(this.data)
+                      .subscribe((result) => {
+                        if (result && result[0]) {
+                          this.notify.notifyCode('SYS006');
+                          this.dialog && this.dialog.close(result);
+                        }
+                      });
+                  } else if (res[1] == 'HR009') {
+                    this.data.hiredOn = this.data.effectedDate;
+                    this.formGroup.patchValue({ hiredOn: this.data.hiredOn });
+
+                    this.hrSevice
+                      .addEContract(this.data)
+                      .subscribe((result) => {
+                        if (result && result[0]) {
+                          this.notify.notifyCode('SYS006');
+                          this.dialog && this.dialog.close(result);
+                        }
+                      });
+                  }
                 }
-              }
-              
-            })
+              });
+            }
           }
-         
-        }
-      });
+        });
     } else if (this.actionType == 'edit') {
       this.hrSevice.editEContract(this.data).subscribe((res) => {
         if (res && res[0]) {
@@ -265,7 +278,7 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     }
   }
 
-  handleSubContract(headerText : string, actionType: string, data: any) {
+  handleSubContract(headerText: string, actionType: string, data: any) {
     let optionSub = new SidebarModel();
     optionSub.Width = '550px';
     optionSub.zIndex = 1001;
