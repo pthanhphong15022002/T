@@ -481,4 +481,13 @@ export class CodxDpService {
       data
     );
   }
+
+  getTree(listRef){
+    return this.api.exec<any>(
+      'TM',
+      'TaskBusiness',
+      'GetListTaskTreeByListRefIDAsync',
+      listRef
+    );
+  }
 }

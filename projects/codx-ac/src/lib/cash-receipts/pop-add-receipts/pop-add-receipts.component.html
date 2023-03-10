@@ -76,12 +76,12 @@
                     </div>
                     <div class="col-3">
                         <div class="form-group">
-                            <!-- Địa chỉ -->
+                            <!-- Số tiền -->
                             <div class="form-group">
-                                <codx-label field="ReceiptAmt" [formModel]="form.formModel" default="Số tiền">
+                                <codx-label fiedName="ReceiptAmt" [formModel]="form.formModel">
                                 </codx-label>
                                 <codx-input [Group]="form.formGroup" [crrValue]="cashreceipts.receiptAmt"
-                                    [formModel]="form.formModel" field="ReceiptAmt"
+                                    [formModel]="form.formModel" field="receiptAmt" [min]="0"
                                     (valueChange)="valueChange($event)"></codx-input>
                             </div>
                         </div>
@@ -148,8 +148,8 @@
                         <div class="form-group">
                             <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
                             </codx-label>
-                            <codx-input [Group]="form.formGroup" [crrValue]="cashreceipts.currencyID" field="currencyID"
-                                [formModel]="form.formModel" (valueChange)="valueChange($event)">
+                            <codx-input [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
+                              (valueChange)="valueChange($event)">
                             </codx-input>
                         </div>
                     </div>

@@ -1,7 +1,9 @@
 import {
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   SimpleChanges,
   TemplateRef,
   ViewChild,
@@ -67,6 +69,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() proccesNameMove: any;
   @Input() lstIDInvo: any;
   @Input() isClosed = false;
+  @Output() saveAssign = new EventEmitter<any>();;
   dateActual: any;
   startDate: any;
   progress: string = '0';
@@ -119,6 +122,7 @@ export class StagesDetailComponent implements OnInit {
   listReasonStep: DP_Instances_Steps_Reasons[] = [];
   listReasonsClick: DP_Instances_Steps_Reasons[] = [];
   dialogPopupReason: DialogRef;
+  
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   titleReason: any;
@@ -356,7 +360,7 @@ export class StagesDetailComponent implements OnInit {
         let taskData = e?.event?.data;
         if (e.event?.status === 'add' || e.event?.status === 'copy') {
           let groupTask = this.taskGroupList?.find(
-            (x) => x.recID === taskData.taskGroupID
+            (x) => x.refID === taskData.taskGroupID
           );
           let role = new DP_Instances_Steps_Tasks_Roles();
           this.setRole(role);
@@ -370,7 +374,7 @@ export class StagesDetailComponent implements OnInit {
               if (res) {
                 this.notiService.notifyCode('SYS006');
                 let index = this.taskGroupList.findIndex(
-                  (task) => task.recID == taskData.taskGroupID
+                  (task) => task.refID == taskData.taskGroupID
                 );
                 if (index < 0) {
                   let taskGroup = new DP_Instances_Steps_TaskGroups();
@@ -465,6 +469,7 @@ export class StagesDetailComponent implements OnInit {
   //giao viec
   assignTask(moreFunc,data){
     var task = new TM_Tasks();
+    task.taskName = data.taskName ;
     task.refID = data?.recID;
     task.refType = "DP_Instance";
     task.dueDate = data?.endDate;
@@ -482,7 +487,13 @@ export class StagesDetailComponent implements OnInit {
       assignModel,
       option
     );
-    dialogAssign.closed.subscribe((e) => {})
+    dialogAssign.closed.subscribe((e) => {
+      var doneSave = false ;
+      if(e && e.event!=null){
+        doneSave = true ;
+      }
+      this.saveAssign.emit(doneSave);
+    })
   }
   //View task
   viewTask(data?: any, type?: string) {
@@ -507,10 +518,10 @@ export class StagesDetailComponent implements OnInit {
   changeGroupTask(taskData, taskGroupIdOld) {
     let tastClone = JSON.parse(JSON.stringify(taskData));
     let indexNew = this.taskGroupList.findIndex(
-      (task) => task.recID == taskData.taskGroupID
+      (group) => group.recID == taskData.taskGroupID
     );
     let index = this.taskGroupList.findIndex(
-      (task) => task.recID == taskGroupIdOld
+      (group) => group.recID == taskGroupIdOld
     );
     let listTaskOld = this.taskGroupList[indexNew]['task'] || [];
     let listTaskNew = this.taskGroupList[indexNew]['task'] || [];
@@ -526,8 +537,7 @@ export class StagesDetailComponent implements OnInit {
 
   //taskGroup
   groupByTask(data) {
-    let step = JSON.parse(JSON.stringify(data));
-
+    let step = JSON.parse(JSON.stringify(data));    
     if (!step['isSuccessStep'] && !step['isFailStep']) {
       const taskGroupList = step?.tasks.reduce((group, product) => {
         const { taskGroupID } = product;
@@ -538,7 +548,7 @@ export class StagesDetailComponent implements OnInit {
       const taskGroupConvert = step['taskGroups'].map((taskGroup) => {
         return {
           ...taskGroup,
-          task: taskGroupList[taskGroup['recID']] ?? [],
+          task: taskGroupList[taskGroup['refID']] ?? [],
         };
       });
       step['taskGroups'] = taskGroupConvert;
@@ -615,6 +625,7 @@ export class StagesDetailComponent implements OnInit {
         return {
           ...task,
           recID: Util.uid(),
+          refID: Util.uid(),
           taskGroupID: groupID,
           createdOn: new Date(),
           modifiedOn: null,
@@ -632,12 +643,14 @@ export class StagesDetailComponent implements OnInit {
       value['roles'] = [role];
       let index = this.taskGroupList?.length;
       value['recID'] = Util.uid();
+      value['refID'] = Util.uid();
       value['createdOn'] = new Date();
       value['indexNo'] = index;
       let listTaskSave = await this.copyTaskInGroup(
         value['task'],
-        value['recID']
+        value['refID']
       );
+      value['task'] = listTaskSave || [];
       let valueSave = JSON.parse(JSON.stringify(value));
       delete valueSave['task'];
 
@@ -754,7 +767,7 @@ export class StagesDetailComponent implements OnInit {
     let average = 0;
     let indexTask = -1;
     let indexGroup = this.taskGroupList?.findIndex(
-      (task) => task.recID == data?.taskGroupID
+      (task) => task.refID == data?.taskGroupID
     );
     let taskGroupFind = JSON.parse(
       JSON.stringify(this.taskGroupList[indexGroup]['task'])

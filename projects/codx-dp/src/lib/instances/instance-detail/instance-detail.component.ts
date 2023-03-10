@@ -84,7 +84,7 @@ export class InstanceDetailComponent implements OnInit {
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
-    { name: 'Tasks', textDefault: 'Công việc', isActive: false },
+    { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
     { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
   ];
   titleDefault = '';
@@ -97,6 +97,7 @@ export class InstanceDetailComponent implements OnInit {
   lstInv = '';
   readonly strInstnace: string = 'instnace';
   readonly strInstnaceStep: string = 'instnaceStep';
+  treeTask = [];
 
   constructor(
     private callfc: CallFuncService,
@@ -137,14 +138,14 @@ export class InstanceDetailComponent implements OnInit {
         this.rollHeight();
       }
     }
-  
   }
 
   GetStepsByInstanceIDAsync(insID, proccessID) {
     var data = [insID, proccessID];
     //   var data = [insID];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
-      if (res) {
+      if (res && res?.length > 0) {
+        this.loadTree(res);
         this.listSteps = res;
         var total = 0;
         for (var i = 0; i < this.listSteps.length; i++) {
@@ -304,7 +305,7 @@ export class InstanceDetailComponent implements OnInit {
         processID,
       ])
       .subscribe((res) => {
-        if (res && res?.length > 0) {       
+        if (res && res?.length > 0) {
           this.ganttDs = res;
           this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
           this.changeDetec.detectChanges();
@@ -361,18 +362,14 @@ export class InstanceDetailComponent implements OnInit {
     return reasonStep?.stepName ?? '';
   }
 
-  clickDetailGanchart(recID){
-    let data = this.ganttDsClone?.find(item => item.recID === recID);
+  clickDetailGanchart(recID) {
+    let data = this.ganttDsClone?.find((item) => item.recID === recID);
     if (data) {
-      this.callfc.openForm(
-        ViewJobComponent,
-        '',
-        700,
-        550,
-        '',
-        {value: data, listValue: this.ganttDsClone}
-      );
-    }    
+      this.callfc.openForm(ViewJobComponent, '', 700, 550, '', {
+        value: data,
+        listValue: this.ganttDsClone,
+      });
+    }
   }
 
   rollHeight() {
@@ -390,5 +387,22 @@ export class InstanceDetailComponent implements OnInit {
     if (div) {
       div.style.setProperty('max-height', maxHeight + 'px', 'important');
     }
+  }
+  loadTree(listStep) {
+    var listRefTask = [];
+    listStep.forEach((obj) => {
+      if (obj.tasks?.length > 0) {
+        var arr = obj.tasks.map((x) => x.recID);
+        listRefTask = listRefTask.concat(arr);
+      }
+    });
+    if (listRefTask?.length > 0) {
+      this.dpSv.getTree(JSON.stringify(listRefTask)).subscribe((res) => {
+        if (res) this.treeTask = res;
+      });
+    }
+  }
+  saveAssign(e){
+    if(e) this.loadTree(this.listSteps);
   }
 }
