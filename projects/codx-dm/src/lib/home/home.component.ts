@@ -194,6 +194,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.fileService.options.page = 1;
         this.getDataByFuncID(this.funcID);
         this.changeDetectorRef.detectChanges();
+        this.view.dataService.dataSelected = null;
         //this.data = this.view.dataService.data
       }
     });
