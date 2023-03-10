@@ -161,7 +161,7 @@
               <ng-container *ngFor="let item of listSteps; index as i">
                 <div
                   id="step-click"
-                  style="flex-grow: 1"
+                  style="flex-grow: 1;cursor: pointer;"
                   [ngClass]="getColorStepName(item?.stepStatus)"
                   (click)="click(i, item.stepID)"
                 >
