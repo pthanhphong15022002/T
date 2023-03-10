@@ -737,7 +737,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.tmSv
         .getListUserIDByListEmployeeID(listEmployeeID)
         .subscribe((res) => {
-          if (res && res.length > 0) {
+          if (res && res?.length > 0) {
             this.valueSelectUser(res);
           }
         });
@@ -747,7 +747,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.tmSv
         .getListUserIDByListPositionsID(listPositionID)
         .subscribe((res) => {
-          if (res && res.length > 0) {
+          if (res && res?.length > 0) {
             if (!res[1]) this.notiService.notifyCode('TM066');
             this.valueSelectUser(res[0]);
           } else this.notiService.notifyCode('TM066');

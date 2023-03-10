@@ -563,7 +563,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       this.tmSv
         .getListUserIDByListEmployeeID(listEmployeeID)
         .subscribe((res) => {
-          if (res && res.length > 0) {
+          if (res && res?.length > 0) {
             this.valueSelectUser(res);
           }
         });
@@ -573,7 +573,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       this.tmSv
         .getListUserIDByListPositionsID(listPositionID)
         .subscribe((res) => {
-          if (res && res.length > 0) {
+          if (res && res?.length > 0) {
             if (!res[1]) this.notiService.notifyCode('TM066');
             assignTo = res[0];
             this.valueSelectUser(assignTo);
