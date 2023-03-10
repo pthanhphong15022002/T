@@ -46,7 +46,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   cashpayment: CashPayment;
   formType: any;
   gridViewSetup: any;
-  cashbookName: any;
   validate: any = 0;
   parentID: string;
   cashpaymentline: Array<CashPaymentLine> = [];
@@ -412,19 +411,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }
   }
-
-  getvalueNameCashBook(data: any) {
-    this.acService
-      .loadData('ERM.Business.AC', 'CashBookBusiness', 'LoadDataAsync', [])
-      .subscribe((res: any) => {
-        res.forEach((element) => {
-          if (element.cashBookID == data) {
-            this.cashbookName = element.cashBookName;
-          }
-        });
-      });
-  }
-
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.cashpayment);
@@ -434,7 +420,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.cashpayment[keymodel[i]] == null ||
-              this.cashpayment[keymodel[i]] == ''
+              this.cashpayment[keymodel[i]].match(/^ *$/) != null
             ) {
               this.notification.notifyCode(
                 'SYS009',
