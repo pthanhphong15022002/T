@@ -14,6 +14,7 @@ export class PopupAddGroupTaskComponent implements OnInit {
   taskGroup: DP_Instances_Steps_TaskGroups;
   view = {};
   REQUIRE = ['endDate','startDate','taskGroupName'];
+  isSave = true;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -61,6 +62,12 @@ export class PopupAddGroupTaskComponent implements OnInit {
   }
   changeValueDate(event, data) {
     data[event?.field] = event?.data?.fromDate;
+    if(this.taskGroup['startDate'] > this.taskGroup['endDate'] && this.taskGroup['endDate']){
+      this.isSave = false;
+      this.notiService.notifyCode('DP019');
+    }else{
+      this.isSave = true;
+    }
   }
   handleSave(){
     let message = [];
@@ -78,7 +85,9 @@ export class PopupAddGroupTaskComponent implements OnInit {
         0,
          message.join(', ')
       );
-    }else{
+    }else if(!this.isSave){
+      this.notiService.notifyCode('DP019');
+    } else{
       this.dialog.close(this.taskGroup);
     }
   }
