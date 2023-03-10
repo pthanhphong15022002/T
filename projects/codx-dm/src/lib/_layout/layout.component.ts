@@ -326,13 +326,12 @@ db.DM_FolderInfo.updateMany(
   }
   onJump() {
     //Tài liệu chia sẻ hoặc tài liệu yêu cầu chia sẻ
-    if(this.dmSV.idMenuActive == "DMT06" || this.dmSV.idMenuActive == "DMT05") return ;
+    if(this.dmSV.idMenuActive == "DMT06" || this.dmSV.idMenuActive == "DMT05" || this.dmSV.idMenuActive == "DMT07") return ;
     var data = {} as any;
     data.recID = '';
     this.dmSV.refreshTree.next(true);
     this.dmSV.breadcumb.next([this.dmSV.menuActive.getValue()]);
-    if(this.dmSV.breadcumbLink)
-      this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0,1);
+    if(this.dmSV.breadcumbLink) this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0,1);
     //isFolderId
     this.changeDetectorRef.detectChanges();
   }
