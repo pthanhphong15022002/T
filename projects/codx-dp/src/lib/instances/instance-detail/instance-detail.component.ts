@@ -145,18 +145,7 @@ export class InstanceDetailComponent implements OnInit {
     //   var data = [insID];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {
-        var listRefTask = [];
-        res.forEach((obj) => {
-          if (obj.tasks?.length > 0) {
-            var arr = obj.tasks.map((x) => x.recID);
-            listRefTask = listRefTask.concat(arr);
-          }
-        });
-        if (listRefTask?.length > 0) {
-          this.dpSv.getTree(JSON.stringify(listRefTask)).subscribe((res) => {
-            if (res) this.treeTask = res;
-          });
-        }
+        this.loadTree(res);
         this.listSteps = res;
         var total = 0;
         for (var i = 0; i < this.listSteps.length; i++) {
@@ -398,5 +387,22 @@ export class InstanceDetailComponent implements OnInit {
     if (div) {
       div.style.setProperty('max-height', maxHeight + 'px', 'important');
     }
+  }
+  loadTree(listStep) {
+    var listRefTask = [];
+    listStep.forEach((obj) => {
+      if (obj.tasks?.length > 0) {
+        var arr = obj.tasks.map((x) => x.recID);
+        listRefTask = listRefTask.concat(arr);
+      }
+    });
+    if (listRefTask?.length > 0) {
+      this.dpSv.getTree(JSON.stringify(listRefTask)).subscribe((res) => {
+        if (res) this.treeTask = res;
+      });
+    }
+  }
+  saveAssign(e){
+    if(e) this.loadTree(this.listSteps);
   }
 }

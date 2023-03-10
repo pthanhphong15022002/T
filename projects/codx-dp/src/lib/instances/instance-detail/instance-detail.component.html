@@ -180,6 +180,7 @@
               [listStepReason]="getReasonByStepId(dataSelect.stepID)"
               [stepNameEnd]="getStepNameIsComlepte(instance)"
               [proccesNameMove]="proccesNameMove"
+              (saveAssign)="saveAssign($event)"
             ></codx-stages-detail>
           </ng-container>
         </ng-container>
