@@ -97,7 +97,56 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   dialog!: DialogRef;
   interval: ItemInterval[];
   item: any;
-  // @ViewChild('attachment') attachment: AttachmentComponent
+  breakCumbArr = [
+    {
+      id : "DMT06",
+      sub : [
+        {
+          id : "1",
+          name : "Tài liệu được yêu cầu"
+        },
+        {
+          id : "2",
+          name : "Tài liệu yêu cầu"
+        },
+        {
+          id : "3",
+          name : "Lịch sử yêu cầu"
+        }
+      ]
+    },
+    {
+      id : "DMT05",
+      sub : [
+        {
+          id : "1",
+          name : "Được chia sẻ"
+        },
+        {
+          id : "2",
+          name : "Chia sẻ"
+        }
+      ]
+    },
+    {
+      id : "DMT07",
+      sub : [
+        {
+          id : "1",
+          name : "Tài liệu yêu cầu"
+        },
+        {
+          id : "2",
+          name : "Tài liệu chờ duyệt"
+        },
+        {
+          id : "3",
+          name : "Lịch sử xét duyệt"
+        }
+      ]
+    },
+  ]
+  //@ViewChild('attachment') attachment: AttachmentComponent
   constructor(
     inject: Injector,
     public dmSV: CodxDMService,
@@ -119,6 +168,10 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.fileService.options.page = 1;
         this.getDataByFuncID(this.funcID);
         this.setBreadCumb();
+        if(this.funcID == "DMT06" || this.funcID == "DMT05" || this.funcID == "DMT07") {
+          this.fileService.options.favoriteID = "1";
+          this.folderService.options.favoriteID = "1";
+        };
        //FuncID
       }
     });
@@ -126,7 +179,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
   onInit(): void {
     //View mặc định 
-    
+   
     this.user = this.auth.get();
     this.path = this.getPath();
     this.button = {
@@ -138,9 +191,9 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.fileService.options.srtDirections = "desc"
     this.folderService.options.srtColumns = "CreatedOn"
     this.folderService.options.srtDirections = "desc"
-   this.dmSV.ChangeDataView.subscribe(res =>{
-    if(res) this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
-   })
+    this.dmSV.ChangeDataView.subscribe(res =>{
+      if(res) this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
+    })
     this.dmSV.isAddFolder.subscribe((item) => {
       if (item) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
@@ -157,6 +210,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     });
 
     this.dmSV.isNodeSelect.subscribe((res) => {
+      debugger
       if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
@@ -276,6 +330,15 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         //  that.dmSV.folderId.next(res.recID);
       }
     });
+
+    //RefeshData
+    this.dmSV.refeshData.subscribe(res=>{
+      if(res)
+      {
+        this.refeshData();
+        this.getDataFolder(this.dmSV.folderID);
+      }
+    })
     // this.dmSV.isNodeSelect.subscribe((res) => {
     //   if (res) {
     //     var tree = this.codxview?.currentView?.currentComponent?.treeView;
@@ -752,7 +815,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.listFolder = [];
         this.dmSV.listFiles = [];
         var treeView = this.codxview?.currentView?.currentComponent?.treeView;
-        if (treeView) {
+        if (treeView && this.funcID != "DMT06") {
           treeView.textField = 'folderName';
           var list = treeView.getBreadCumb(id);
           breadcumb.push(this.dmSV.menuActive.getValue());
@@ -827,6 +890,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           panelRightRef: this.templateRight,
           template2: this.templateCard,
           resizable: false,
+          panelLeftHide : false
         },
       },
       {
@@ -934,20 +998,16 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     ];
     //View mặc định
     this.currView = this.templateCard
+
+    //if(this.funcID == "DMT06") this.view.page = null;
     this.viewActive = this.views.filter((x) => x.active == true)[0];
+    this.codxview.dataService.pageSize = 50;
+    this.codxview.dataService.pageLoading = false;
     this.codxview.dataService.parentIdField = 'parentId';
     this.dmSV.formModel = this.view.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
-   
-    if(this.view.funcID == 'DMT05' || this.view.funcID == 'DMT06')
-    {
-      this.dmSV.dmFavoriteID = "2";
-      this.folderService.options.favoriteID = "2";
-      this.fileService.options.favoriteID = "2";
-    }
     this.dmSV.disableInput.next(false);
- 
-   
+    //event.view.model.template2
   }
 
   setBreadCumb()
@@ -957,6 +1017,14 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       {
         var breadcumb = [];
         breadcumb.push(item.customName);
+
+        //Tài liệu yêu cầu chia sẻ
+        if(this.funcID == "DMT06" || this.funcID == "DMT05" || this.funcID == "DMT07")
+        {
+          var x =this.breakCumbArr.filter(x=>x.id == this.funcID)
+          breadcumb.push(x[0].sub[0].name);
+        }
+
         //this.dmSV.breadcumbLink.push(item.customName);
         this.dmSV.menuActive.next(item.customName);
         this.dmSV.breadcumb.next(breadcumb);

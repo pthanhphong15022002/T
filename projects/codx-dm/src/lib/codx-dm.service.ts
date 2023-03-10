@@ -135,6 +135,9 @@ export class CodxDMService {
   public ChangeDataView = new BehaviorSubject<boolean>(null);
   isChangeDataView = this.ChangeData.asObservable();
 
+  public refeshData = new BehaviorSubject<boolean>(null);
+  isRefeshData = this.ChangeData.asObservable();
+
   public ChangeDataViewFile = new BehaviorSubject<any>(null);
   isChangeDataViewFile = this.ChangeDataViewFile.asObservable();
 
@@ -654,14 +657,14 @@ export class CodxDMService {
   }
 
   filterMoreFunction(e: any, data: any, modeView = false) {
+    debugger
     var type = this.getType(data, 'entity');
     var bookmark = this.isBookmark(data);
     var list =
       'DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233'; //DMT08
     if (e) {
       for (var i = 0; i < e.length; i++) {
-        if (e[i].data != null && e[i].data.entityName == type)
-          e[i].disabled = false;
+        if (e[i].data != null && e[i].data.entityName == type) e[i].disabled = false;
         else e[i].disabled = true;
         // DMT0204;DMT0216
         // khong phai cho duyet
@@ -698,6 +701,7 @@ export class CodxDMService {
             if (this.fileService.options.favoriteID == '1') list = 'DMT0230;DMT0231';
             else list = 'DMT0231';
           }
+          debugger
           if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
             e[i].disabled = false;
           } else {
@@ -1052,7 +1056,7 @@ export class CodxDMService {
               this.listFiles = list;
               //this.changeDetectorRef.detectChanges();
               this.notificationsService.notify(res.message);
-              this.ChangeData.next(true);
+              //this.ChangeData.next(true);
             }
           } else {
             // xet duyet huy
@@ -1067,7 +1071,7 @@ export class CodxDMService {
                 //   this.changeDetectorRef.detectChanges();
                 //this.changeDetectorRef.detectChanges();
                 this.notificationsService.notify(res.message);
-                this.ChangeData.next(true);
+                //this.ChangeData.next(true);
               }
             } else {
               var files = this.listFiles;
@@ -1094,38 +1098,27 @@ export class CodxDMService {
           let list = this.listFolder;
           var idTemplate = this.idMenuActive;
           //   if (idTemplate == "11" || idTemplate == "12" || idTemplate == "13")
-          if (idTemplate == 'DMT07' || idTemplate == '12' || idTemplate == '13')
-            id = recId;
-
+          if (idTemplate == 'DMT07' || idTemplate == '12' || idTemplate == '13') id = recId;
           //if (this.idMenuActive != '10' && this.idMenuActive != '13') {
           if (this.idMenuActive != '10' && this.idMenuActive != '13') {
             let index = list.findIndex(
               (d) => d.id.toString() === id.toString()
             ); //find index in your array
             if (index > -1) {
-              list.splice(index, 1); //remove element from array
-              // this.dmSV.changeData(null, list, id);
-
+              this.deleteFileView.next(list[index].recID);
+              list.splice(index, 1);
               this.listFolder = list;
-              //this.changeDetectorRef.detectChanges();
-              //this.changeDetectorRef.detectChanges();
               this.notificationsService.notify(res.message);
-              this.ChangeData.next(true);
             }
           } else {
             // xet duyet huy
             if (this.idMenuActive == '13' && (status == '7' || status == '8')) {
               let index = list.findIndex((d) => d.id.toString() === id); //find index in your array
               if (index > -1) {
+                this.deleteFileView.next(list[index].recID);
                 list.splice(index, 1); //remove element from array
-                // this.dmSV.changeData(null, list, id);
-
                 this.listFolder = list;
-                //  this.changeDetectorRef.detectChanges();
-                // this.refresh();
-                // this.changeDetectorRef.detectChanges();
                 this.notificationsService.notify(res.message);
-                this.ChangeData.next(true);
               }
             } else {
               var folder = this.listFolder;
@@ -1137,11 +1130,9 @@ export class CodxDMService {
               }
               //this.dmSV.listFolder.next(folder);
               this.listFolder = folder;
-              //this.changeDetectorRef.detectChanges();
-              // this.refresh();
-              //this.changeDetectorRef.detectChanges();
+              
               this.notificationsService.notify(res.message);
-              this.ChangeData.next(true);
+              //this.ChangeData.next(true);
             }
           }
         });
