@@ -138,7 +138,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   valueChange(e: any) {
     if (e.field.toLowerCase() === 'voucherdate' && e.data)
-      this.cashpayment[e.field] = e.data.fromDate;
+      this.cashpayment[e.field] = e.data;
     else this.cashpayment[e.field] = e.data;
     let sArray = [
       'currencyid',
@@ -276,7 +276,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   deleteRow(data) {
     this.cashpaymentlineDelete.push(data);
-    this.grid.deleteRow();
+    this.grid.deleteRow(data);
   }
 
   setDefault(o) {

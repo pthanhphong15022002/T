@@ -26,8 +26,8 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="VendorTaxCode"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="vendors.vendorTaxCode"
-            field="vendorTaxCode" (valueChange)="valueChange($event)">
+          <codx-input [disabled]="formType == 'edit' ? true : false" [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="vendors.vendorTaxCode"
+            field="vendorTaxCode" (controlBlur)="mstChange($event)">
           </codx-input>
         </div>
       </div>
