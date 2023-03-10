@@ -77,18 +77,8 @@ export class PortalComponent extends UIComponent {
     super(inject);
     this.funcID = this.routeActive.snapshot.params['funcID'];
     this.user = this.auth.get();
-    let request = new DataRequest();
-    request.entityName = 'HR_Employees';
-    request.predicates = 'DomainUser=@0';
-    request.dataValues = this.user.userID;
-    request.pageLoading = false;
-    this.hrService.loadData('HR', request).subscribe((res) => {
-      if (res && res[1] > 0) {
-        this.infoPersonal = res[0][0];
-        this.employeeID = this.infoPersonal.employeeID;
-      }
-      console.log('employeeeeeeeeeeeeeeee', res);
-    });
+    
+    
     console.log(
       'userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',
       this.user
@@ -1137,54 +1127,23 @@ export class PortalComponent extends UIComponent {
         this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
       }
     });
-
-    this.routeActive.queryParams.subscribe((params) => {
-      if (params.employeeID || this.user.userID) {
-        this.employeeID = params.employeeID;
-        this.listEmp = history.state?.data;
-        this.request = history.state?.request;
-        if (!this.request && !this.listEmp) {
-          let i = 1;
-          this.listEmp = [];
-          let flag = true;
-          //while (flag) {
-          this.request = new DataRequest();
-          this.request.entityName = 'HR_Employees';
-          this.request.gridViewName = 'grvEmployees';
-          this.request.page = params?.page ?? 1;
-          this.request.predicate = params?.predicate ?? '';
-          this.request.dataValue = params?.dataValue ?? '';
-          if (params?.filter) this.request.filter = JSON.parse(params?.filter);
-          this.request.pageSize = 20;
-          this.hrService.getModelFormEmploy(this.request).subscribe((res) => {
-            if (res && res[0]) {
-              this.listEmp.push(...res[0]);
-              let index = this.listEmp?.findIndex(
-                (p) => p.employeeID == params.employeeID
-              );
-              i++;
-              if (index > -1) {
-                flag = false;
-              }
-            }
-          });
-          //}
-        }
-
-        let index = this.listEmp?.findIndex(
-          (p) => p.employeeID == params.employeeID
-        );
-        if (index > -1 && !this.listEmp[index + 1]?.employeeID) {
-          this.request.page += 1;
-          this.hrService.getModelFormEmploy(this.request).subscribe((res) => {
-            if (res && res[0]) {
-              this.listEmp.push(...res[0]);
-            }
-          });
-        }
+    
+    let request = new DataRequest();
+    request.entityName = 'HR_Employees';
+    request.predicates = 'DomainUser=@0';
+    request.dataValues = this.user.userID;
+    this.employeeID = this.user?.employee?.employeeID;
+    request.pageLoading = false;
+    this.hrService.loadData('HR', request).subscribe((res) => {
+      if (res && res[1] > 0) {
+        this.infoPersonal = res[0][0];
+        this.employeeID = this.infoPersonal.employeeID;
+        this.initForm()
       }
+      console.log('employeeeeeeeeeeeeeeee', res);
     });
-
+    
+    
     //#region filter
     this.dayOffSortModel = new SortModel();
     this.dayOffSortModel.field = 'BeginDate';

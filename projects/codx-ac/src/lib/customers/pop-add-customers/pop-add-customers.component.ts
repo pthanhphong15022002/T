@@ -578,7 +578,11 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       );
       var checkRegex = regex.test(this.customers.email);
       if (checkRegex == false) {
-        this.notification.notify("'Email' không hợp lệ", '2');
+        this.notification.notifyCode(
+          'SYS037',
+          0,
+          ''
+        );
         this.validate++;
         return;
       }

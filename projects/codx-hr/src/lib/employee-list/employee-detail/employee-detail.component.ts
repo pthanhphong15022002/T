@@ -4800,7 +4800,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.filterByESkillIDArr.length > 0 &&
       this.startDateESkillFilterValue != null
     ) {
-      this.filterESkillPredicates = '(';
+      this.filterESkillPredicates = `(EmployeeID="${this.employeeID}" && `;
       let i = 0;
       for (i; i < this.filterByESkillIDArr.length; i++) {
         if (i > 0) {
@@ -4847,7 +4847,7 @@ export class EmployeeDetailComponent extends UIComponent {
       this.Filter_By_ETrainCourse_IDArr.length > 0 &&
       this.Start_Date_ETrainCourse_Filter_Value != null
     ) {
-      this.Filter_ETrainCourse_Predicates = '(';
+      this.Filter_ETrainCourse_Predicates = `(EmployeeID="${this.employeeID}" && `;
       let i = 0;
       for (i; i < this.Filter_By_ETrainCourse_IDArr.length; i++) {
         if (i > 0) {

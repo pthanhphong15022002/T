@@ -92,6 +92,9 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
         });
     } else {
       if (this.actionType === 'edit' || this.actionType === 'copy') {
+        if(this.actionType == 'edit'){
+          this.familyMemberObj.modifiedOn = new Date();
+        }
         this.formGroup.patchValue(this.familyMemberObj);
         this.formModel.currentData = this.familyMemberObj;
         this.formGroup.patchValue(this.familyMemberObj);
