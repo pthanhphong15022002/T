@@ -122,7 +122,9 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
     }
   }
   valueChange(e: any) {
-    this.cashreceipts[e.field] = e.data;
+    if (e.field.toLowerCase() === 'voucherdate' && e.data)
+      this.cashreceipts[e.field] = e.data;
+    else this.cashreceipts[e.field] = e.data;
     let sArray = [
       'currencyid',
       'voucherdate',
