@@ -12,6 +12,7 @@ import { FormGroup } from '@angular/forms';
 
 import {
   AuthService,
+  AuthStore,
   CodxFormComponent,
   CRUDService,
   DialogData,
@@ -99,11 +100,13 @@ export class PopupAddOBComponent extends UIComponent {
   // }
   okrRecID: any;
   shareModel: any;
+  curUser: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
     private codxOmService: CodxOmService,
-    private notificationsService: NotificationsService,
+    private notificationsService: NotificationsService,    
+    private authStore: AuthStore,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -116,6 +119,7 @@ export class PopupAddOBComponent extends UIComponent {
     this.dialogRef= dialogRef;
     this.formModel= dialogRef.formModel;
     
+    this.curUser = authStore.get();
   }
 
   //-----------------------Base Func-------------------------//
@@ -137,6 +141,7 @@ export class PopupAddOBComponent extends UIComponent {
           krModel.year= this.okrPlan.year;
           krModel.interval= this.okrPlan.interval;
           krModel.transID = this.okrPlan.recID;
+          krModel.parentID=this.okrPlan.recID;
         }
         if (this.funcType == OMCONST.MFUNCID.Add) {
           
@@ -180,8 +185,6 @@ export class PopupAddOBComponent extends UIComponent {
 
   //-----------------------Base Event------------------------//
 
-  
-
   valueChange(evt: any) {
     if (evt && evt.field) {
       this.ob[evt.field]=evt.data;      
@@ -221,8 +224,15 @@ export class PopupAddOBComponent extends UIComponent {
     
     //---------------------------------------
     this.fGroupAddOB=this.form?.formGroup;
+    this.ob.buid= this.ob.buid?? this.curUser?.buid;
     this.fGroupAddOB.patchValue(this.ob);
-    
+    // if (this.fGroupAddOB.invalid == true) {
+    //   this.codxOmService.notifyInvalid(
+    //     this.fGroupAddOB,
+    //     this.formModel
+    //   );
+    //   return;
+    // }
     if (this.funcType == OMCONST.MFUNCID.Add || this.funcType == OMCONST.MFUNCID.Copy) {
       this.methodAdd(this.ob,this.listShares);
     } else if(this.funcType == OMCONST.MFUNCID.Edit) {
