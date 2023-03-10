@@ -2335,6 +2335,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let listTaskConvert = this.taskList?.map(item => {
       return{
         ...item,
+        refID:item.recID,
         name: item?.taskName,
         type: item?.taskType,
       }
@@ -2342,6 +2343,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let value = JSON.parse(JSON.stringify(data));
     value['name'] = value['taskName'] || value['taskGroupName'];
     value['type'] = value['taskType'] || type;
+    value['refID'] = value['recID'];
     if (data) {
       this.callfc.openForm(ViewJobComponent, '', 700, 550, '', {
         value: value,
