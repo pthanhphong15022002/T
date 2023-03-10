@@ -561,7 +561,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.vendors[keymodel[i]] == null ||
-              this.vendors[keymodel[i]] == ''
+              this.vendors[keymodel[i]].match(/^ *$/) != null
             ) {
               this.notification.notifyCode(
                 'SYS009',
