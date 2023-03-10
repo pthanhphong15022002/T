@@ -119,7 +119,11 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     );
     var checkRegex = regex.test(this.contact.email);
     if (checkRegex == false) {
-      this.notification.notify("'Email' không hợp lệ", '2');
+      this.notification.notifyCode(
+        'SYS037',
+        0,
+        ''
+      );
       this.validate++;
       return;
     }
