@@ -200,7 +200,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           if (res.recID) tree.getCurrentNode(res.recID);
           else tree.getCurrentNode(res);
           this.scrollTop();
-          this.refeshData();
+          //this.refeshData();
           // this.getDataFolder(this.dmSV.folderID);
         }
       }
