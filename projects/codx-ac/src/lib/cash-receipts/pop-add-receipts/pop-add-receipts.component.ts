@@ -33,6 +33,7 @@ import { CashReceiptsLines } from '../../models/CashReceiptsLines.model';
   styleUrls: ['./pop-add-receipts.component.css'],
 })
 export class PopAddReceiptsComponent extends UIComponent implements OnInit {
+  //#region Contructor
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
@@ -107,13 +108,18 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       //#endregion
     }
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {}
 
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashreceipts);
   }
+  //#endregion
+
+  //#region Event
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
@@ -122,7 +128,9 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
     }
   }
   valueChange(e: any) {
-    this.cashreceipts[e.field] = e.data;
+    if (e.field.toLowerCase() === 'voucherdate' && e.data)
+      this.cashreceipts[e.field] = e.data;
+    else this.cashreceipts[e.field] = e.data;
     let sArray = [
       'currencyid',
       'voucherdate',
@@ -224,6 +232,9 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
     this.cashreceiptslinesDelete.push(data);
     this.grid.deleteRow();
   }
+  //#endregion
+
+  //#region Function
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.cashreceipts);
@@ -233,7 +244,7 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.cashreceipts[keymodel[i]] == null ||
-              this.cashreceipts[keymodel[i]] == ''
+              this.cashreceipts[keymodel[i]].match(/^ *$/) != null
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -255,6 +266,9 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
   clearCashrecipts() {
     this.cashreceiptslines = [];
   }
+  //#endregion
+
+  //#region Method
   onSaveAdd() {
     this.checkValidate();
     if (this.validate > 0) {
@@ -284,10 +298,12 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
                 if (res) {
                   this.clearCashrecipts();
                   this.dialog.dataService.clear();
-                  this.dialog.dataService.addNew((o) => this.setDefault(o)).subscribe((res) => {
-                    this.form.formGroup.patchValue(res);
-                    this.cashreceipts = this.dialog.dataService!.dataSelected;
-                  });
+                  this.dialog.dataService
+                    .addNew((o) => this.setDefault(o))
+                    .subscribe((res) => {
+                      this.form.formGroup.patchValue(res);
+                      this.cashreceipts = this.dialog.dataService!.dataSelected;
+                    });
                 }
               });
           } else {
@@ -356,4 +372,5 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
       }
     }
   }
+  //#endregion
 }
