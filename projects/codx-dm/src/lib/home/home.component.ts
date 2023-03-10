@@ -199,8 +199,9 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         if (tree) {
           if (res.recID) tree.getCurrentNode(res.recID);
           else tree.getCurrentNode(res);
+          this.scrollTop();
           this.refeshData();
-          this.getDataFolder(this.dmSV.folderID);
+          // this.getDataFolder(this.dmSV.folderID);
         }
       }
     });
@@ -493,6 +494,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
    
   }
   onScroll(event) {
+    debugger
     const dcScroll = event.srcElement;
     if ((dcScroll.scrollTop < (dcScroll.scrollHeight - dcScroll.clientHeight))|| dcScroll.scrollTop == 0) return;
     // Nếu còn dữ liệu folder thì scroll folder
@@ -1382,7 +1384,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     });
   }
   getDataFolder(id: any) {
-  
     if(!this.isScrollFolder) return;
     this.folderService.options.funcID = this.funcID;
     this.folderService.getFolders(id).subscribe((res) => {

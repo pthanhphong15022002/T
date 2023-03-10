@@ -82,7 +82,6 @@ export class CardComponent implements OnInit , OnChanges {
   }
   dbView()
   {
-    if(this.formModel.funcID == "DMT06") return;
     if(this.data?.recID && this.data?.fileName != null)
     {
       if (!this.data.read) {
