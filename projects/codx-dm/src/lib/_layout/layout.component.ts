@@ -168,23 +168,9 @@ db.DM_FolderInfo.updateMany(
     this.dmSV.currentNode = '';
     this.dmSV.folderId.next(id);
     this.dmSV.dmFavoriteID = "2";
-    this.folderService.options.funcID = id;
     this.folderService.options.favoriteID = subid;
-    this.folderService.getFolders('').subscribe(async (list) => {
-      if (list) {
-        this.dmSV.listFolder = list[0];
-        this.dmSV.addFile.next(true);
-        this.changeDetectorRef.detectChanges();
-      }
-    });
-
-    this.fileService.options.funcID = id;
     this.fileService.options.favoriteID = subid;
-    this.fileService.GetFiles('').subscribe(async (list) => {
-      this.dmSV.listFiles = list[0];
-      this.dmSV.addFile.next(true);
-      this.changeDetectorRef.detectChanges();
-    });
+    this.dmSV.refeshData.next(true);
   }
 
   getHDDInformaton(item: any) {
@@ -339,11 +325,13 @@ db.DM_FolderInfo.updateMany(
     this.dialog.closed.subscribe();
   }
   onJump() {
+    //Tài liệu chia sẻ hoặc tài liệu yêu cầu chia sẻ
+    if(this.dmSV.idMenuActive == "DMT06" || this.dmSV.idMenuActive == "DMT05" || this.dmSV.idMenuActive == "DMT07") return ;
     var data = {} as any;
     data.recID = '';
     this.dmSV.refreshTree.next(true);
     this.dmSV.breadcumb.next([this.dmSV.menuActive.getValue()]);
-    this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0,1);
+    if(this.dmSV.breadcumbLink) this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0,1);
     //isFolderId
     this.changeDetectorRef.detectChanges();
   }

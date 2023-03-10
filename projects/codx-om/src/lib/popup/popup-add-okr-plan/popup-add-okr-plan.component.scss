@@ -1,14 +1,71 @@
-.bgEDEDED{
+.bgEDEDED {
     background-color: #ededed !important;
 }
-.om-input
-{
-    border : solid 1px white !important;
-    width: 100%;
-    height: 100%;
+
+.om-input {
+    border: solid 1px white !important;
+    
 }
-.om-input:focus
-{
-    border:solid 1px white;
-    border-bottom-color: #9ACCFF !important;
+
+.om-input:focus {
+    border: solid 1px white;
+}
+
+codx-input {
+    width: 100%;
+}
+
+input {
+    border-width: 0px !important;
+}
+
+.e-input .e-float-input input {
+
+    border-width: 0px !important;
+}
+
+#om-input-text div input {
+
+    border-width: 0px !important;
+}
+
+
+.w-10{
+    width: 10%;
+}
+.w-20{
+    width: 20%;
+}
+.w-30{
+    width: 30%;
+}
+.w-40{
+    width: 40%;
+}
+.w-45{
+    width: 45%;
+}
+.w-60{
+    width: 60%;
+}
+.w-70{
+    width: 70%;
+}
+.w-80{
+    width: 80%;
+}
+.w-90{
+    width: 90%;
+}
+.w-fit{
+    width: fit-content;
+}
+.h-95{
+    height: 95%;
+}
+.min-h-table {
+    min-height: 45px;
+}
+.e-input-group.e-control-wrapper,.e-input-group {
+    border: 0px !important;
 }
