@@ -94,19 +94,21 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    if (this.cashpayment?.voucherNo != null) {
-      //#region  load cashpaymentline
-      this.acService
-        .loadData(
-          'ERM.Business.AC',
-          'CashPaymentsLinesBusiness',
-          'LoadDataAsync',
-          this.cashpayment.recID
-        )
-        .subscribe((res: any) => {
-          this.cashpaymentline = res;
-        });
-      //#endregion
+    if (this.formType == 'edit') {
+      if (this.cashpayment?.voucherNo != null) {
+        //#region  load cashpaymentline
+        this.acService
+          .loadData(
+            'ERM.Business.AC',
+            'CashPaymentsLinesBusiness',
+            'LoadDataAsync',
+            this.cashpayment.recID
+          )
+          .subscribe((res: any) => {
+            this.cashpaymentline = res;
+          });
+        //#endregion
+      }
     }
   }
   //#endregion
@@ -294,7 +296,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     } else {
       let data = this.form.data;
       this.cashpaymentline = this.grid.dataSource;
-      if (this.formType == 'add') {
+      if (this.formType == 'add' || this.formType == 'copy') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'AddAsync';
