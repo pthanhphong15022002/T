@@ -77,6 +77,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   referedData: any;
   isClickSave = false;
   crrRole: any;
+  accountable: boolean = false;
+
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTasksService,
@@ -582,8 +584,15 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
 
   valueSelectUser(assignTo) {
     if (assignTo != '') {
+      var arrAssign = assignTo.split(';');
+      if (arrAssign?.length > 1 && this.crrRole =="A" && this.accountable) {
+        this.notiService.notify(
+          'Người chiu trách nhiệm chỉ được chọn 1 người - Cần messcode từ Thuong',
+          '2'
+        );
+        return;
+      }
       if (this.task.assignTo && this.task.assignTo != '') {
-        var arrAssign = assignTo.split(';');
         var arrNew = [];
         arrAssign.forEach((e) => {
           if (!this.task.assignTo.includes(e)) {
@@ -594,6 +603,11 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           assignTo = arrNew.join(';');
           this.getListUser(assignTo);
         }
+        if (arrNew?.length != arrAssign?.length)
+          this.notiService.notify(
+            'Người được chọn đã có trong danh sách trước đó - Cần messcode từ Thuong',
+            '3'
+          );
       } else {
         this.getListUser(assignTo);
       }
@@ -730,17 +744,14 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
+          if (res?.Accountable == '1') this.accountable = true;
+          else this.accountable = false;
           var param = JSON.parse(res.dataValue);
           this.param = param;
           this.taskType = param?.TaskType;
           if (this.param?.PlanControl == '1' && this.task.startDate == null) {
             this.task.startDate = new Date();
           }
-          //  else {
-          //   this.task.startDate = null;
-          //   this.task.endDate = null;
-          //   this.task.estimated = 0;
-          // }
         }
       });
   }
