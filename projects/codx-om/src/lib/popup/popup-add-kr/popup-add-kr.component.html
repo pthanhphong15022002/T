@@ -259,7 +259,7 @@
               field="day" [crrValue]="kr?.checkIn?.day" (valueChange)="checkInChange($event)"></codx-input>
             <span class="mx-2">trong tháng vào lúc</span>
             <codx-input type="number" [class]="'w-40px text-center mx-2'" style="width: 35px;" [showSpinButton]="false"
-              field="hour" [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
+              field="time" [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
             <span class="mx-2">giờ</span>
           </div>
 
@@ -270,14 +270,14 @@
               (valueChange)="checkInChange($event)"></codx-input>
             <span class="mx-2">trong tuần vào lúc</span>
             <codx-input type="number" [class]="'w-40px text-center mx-2'" style="width: 35px;" [showSpinButton]="false"
-              field="hour" [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
+              field="time" [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
             <span class="mx-2">giờ</span>
           </div>
 
           <div class="d-flex flex-row justify-content-start align-items-center" *ngIf="kr.frequence=='D'">
             <span class="mx-2">Trong ngày vào lúc</span>
             <codx-input type="number" [class]="'w-40px text-center mx-2'" style="width: 35px;" [showSpinButton]="false"
-              field="hour" [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
+              field="time" [crrValue]="kr?.checkIn?.time" (valueChange)="checkInChange($event)"></codx-input>
             <span class="mx-2">giờ</span>
           </div>
 
@@ -288,7 +288,7 @@
       <div class="modal-footer">
         <div class="w-100 d-flex justify-content-end">
 
-          <button class="btn btn-primary" (click)="onSaveTarget()">
+          <button class="btn btn-primary" (click)="onSaveCheckIn()">
             <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
           </button>
         </div>

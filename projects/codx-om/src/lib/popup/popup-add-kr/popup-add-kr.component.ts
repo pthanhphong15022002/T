@@ -68,6 +68,8 @@ export class PopupAddKRComponent extends UIComponent {
   defaultCheckInTime: any;
   messMonthSub: any;
   curUser: any;
+  tempDay='';
+  tempTime='';
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -201,10 +203,15 @@ export class PopupAddKRComponent extends UIComponent {
     }
   }
   checkInChange(evt:any){
-    if (evt?.field) {
-      this.kr.checkIn.day=evt?.data;
+    if (evt?.field =='day') {
+      this.tempDay=evt?.data;
       this.detectorRef.detectChanges();
     }
+    if (evt?.field =='time') {
+      this.tempTime=evt?.data;
+      this.detectorRef.detectChanges();
+    }
+    
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Validate Func---------------------------------//
@@ -213,12 +220,7 @@ export class PopupAddKRComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
-  beforeSave(option: RequestOption) {
-    let itemData = this.fGroupAddKR.value;
-    option.methodName = '';
-    option.data = [itemData, this.funcType];
-    return true;
-  }
+ 
 
   onSaveForm() {
     //xóa khi đã lấy được model chuẩn từ setting
@@ -235,9 +237,13 @@ export class PopupAddKRComponent extends UIComponent {
     }
     //---------------------------------------
     this.fGroupAddKR = this.form?.formGroup;
-    if(this.kr.buid ==null){
-      this.kr.buid= this.curUser?.buid;
-    }
+    
+      this.kr.buid= this.kr.buid?? this.curUser?.buid;
+      this.kr.divisionID= this.kr.divisionID?? this.curUser?.divisionID;
+      if (this.kr.targets?.length == 0 || this.kr.targets == null) {
+        this.calculatorTarget(this.kr?.plan);
+        this.onSaveTarget();
+      }
     // this.fGroupAddKR.patchValue(this.kr);
     //   if (this.fGroupAddKR.invalid == true) {
     //   this.codxOmService.notifyInvalid(
@@ -247,10 +253,7 @@ export class PopupAddKRComponent extends UIComponent {
     //   return;
     // }
     //tính lại Targets cho KR
-    if (this.kr.targets?.length == 0 || this.kr.targets == null) {
-      this.calculatorTarget(this.kr?.plan);
-      this.onSaveTarget();
-    }
+    
     if (
       this.funcType == OMCONST.MFUNCID.Add ||
       this.funcType == OMCONST.MFUNCID.Copy
@@ -426,6 +429,16 @@ export class PopupAddKRComponent extends UIComponent {
   onSaveTarget() {
     this.dialogTargets?.close();
     this.dialogTargets = null;
+  }
+  onSaveCheckIn() {
+    
+      if(this.kr?.checkIn==null){
+        this.kr.checkIn={day:'',time:''};
+      }
+      this.kr.checkIn.day=this.tempDay;
+      this.kr.checkIn.time=this.tempTime;
+
+    this.dialogTargets?.close();
   }
 
   valuePlanTargetChange(evt: any, index: number) {

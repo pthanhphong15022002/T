@@ -6,8 +6,10 @@ import { OMCONST } from './../../codx-om.constant';
 import {
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import {
@@ -57,6 +59,8 @@ export class OkrTargetsComponent implements OnInit {
   @Input() funcID: any;
   @Input() groupModel: any;
   @Input() isHiddenChart: boolean;
+  
+  @Output('getOKRPlanForComponent') getOKRPlanForComponent: EventEmitter<any> = new EventEmitter();
   isCollapsed=false;
   dtStatus = [];
   openAccordion = [];
@@ -168,12 +172,11 @@ export class OkrTargetsComponent implements OnInit {
   }
   //_______________________Base Func_________________________//
   ngOnInit(): void {
-    
-    
     this.button = {
       id: 'btnAdd',
       separator:true,
       hasSet:true,
+      action:'OpenSidebarLeft',
       items:[
         {
           text:'Thêm mục tiêu',
@@ -352,6 +355,7 @@ export class OkrTargetsComponent implements OnInit {
       }
 
       //phân công KR
+      case OMCONST.MFUNCID.SKRAssign:
       case OMCONST.MFUNCID.KRAssign: {
         this.assignmentOKR(kr, e.text);
         break;
@@ -484,7 +488,7 @@ export class OkrTargetsComponent implements OnInit {
     let dialogCheckIn = this.callfunc.openForm(
       PopupCheckInComponent,
       '',
-      800,
+      650,
       500,
       'OMT01',
       [kr,popupTitle,{...this.groupModel?.checkInsModel}]
@@ -643,49 +647,13 @@ export class OkrTargetsComponent implements OnInit {
   // Dataservice mod
   renderOB(ob:any,isAdd:boolean){
     if (ob !=null) {
-      if(isAdd){
-        this.dataOKR.push(ob);
-      }
-      else{
-        for(let oldOB of this.dataOKR){
-          if(oldOB.recID== ob.recID){
-           
-            this.editRender(oldOB,ob);
-              
-            
-          }
-        }
-      }
+      if(isAdd){ this.dataOKR.push(ob); } else{ for(let oldOB of this.dataOKR){ if(oldOB.recID== ob.recID){ this.editRender(oldOB,ob); } } }
     }
   }
   renderKR(kr:any,isAdd:boolean){
     if (kr!=null) {
-      if(isAdd){
-        for (let ob of this.dataOKR) {
-          if (ob.recID == kr.parentID) {
-            if(ob.child==null){
-              ob.child=[];
-            }
-            ob.child.push(kr);
-          }
-        }
-      } 
-      else{
-        for (let ob of this.dataOKR) {
-          if (ob.recID == kr.parentID) {
-            if(ob.child==null){
-              ob.child=[];
-            }
-            ob.child.forEach(oldKR => {
-              if(oldKR.recID==kr.recID){
-                this.editRender(oldKR,kr);
-                
-              }
-            });
-                    
-          }
-        }
-      }     
+      if(isAdd){ for (let ob of this.dataOKR) { if (ob.recID == kr.parentID) { if(ob.child==null){ ob.child=[]; } ob.child.push(kr); } } } 
+      else{ for (let ob of this.dataOKR) { if (ob.recID == kr.parentID) { if(ob.child==null){ ob.child=[]; } ob.child.forEach(oldKR => { if(oldKR.recID==kr.recID){ this.editRender(oldKR,kr); } }); } } }     
     }    
   }
   editRender(oldOKR:any, newOKR:any){
@@ -697,44 +665,9 @@ export class OkrTargetsComponent implements OnInit {
     oldOKR.category=newOKR?.category;
   }
   renderSKR(skr:any,isAdd:boolean){
-    if (skr!=null) {
-      if(isAdd){
-        for (let ob of this.dataOKR) {
-          if (ob.child!=null) {
-              for (let kr of ob.child) {
-                if (kr.recID == skr.parentID) {
-                  if(kr.child==null){
-                    kr.child=[];
-                  }
-                  kr.child.push(skr);
-                }
-              }          
-            
-          }
-        }
-      }
-      else{
-        for (let ob of this.dataOKR) {
-          if (ob.child!=null) {
-              for (let kr of ob.child) {
-                if (kr.recID == skr.parentID) {
-                  if(kr.child==null){
-                    kr.child=[];
-                  }
-                  for(let oldSKR of kr.child){
-                    if(oldSKR.recID==skr.recID)
-                    {
-                      
-            this.editRender(oldSKR,skr);
-                    }
-                  }
-                }
-              }          
-            
-          }
-        }
-      }
-      
+    if (skr!=null) { 
+      if(isAdd){ for (let ob of this.dataOKR) { if (ob.child!=null) { for (let kr of ob.child) { if (kr.recID == skr.parentID) { if(kr.child==null){ kr.child=[]; } kr.child.push(skr); } } } } }
+      else{ for (let ob of this.dataOKR) { if (ob.child!=null) { for (let kr of ob.child) { if (kr.recID == skr.parentID) { if(kr.child==null){ kr.child=[]; } for(let oldSKR of kr.child){ if(oldSKR.recID==skr.recID) { this.editRender(oldSKR,skr); } } } } } } }
     }
   }
   removeOB(ob:any){
@@ -743,27 +676,10 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
   removeKR(kr:any){
-    if(kr!=null){
-      for (let ob of this.dataOKR) {
-        if(ob?.recID==kr?.parentID){
-          ob.items=ob?.items.filter(res=>res.recID!=kr.recID);
-        }
-      }      
-    }    
+    if(kr!=null){ for (let ob of this.dataOKR) { if(ob?.recID==kr?.parentID){ ob.items=ob?.items.filter(res=>res.recID!=kr.recID); } } }    
   }
   removeSKR(skr:any){
-    if(skr!=null){
-      for (let ob of this.dataOKR) {
-        for (let kr of ob?.items) {
-        for (let i=0;i<kr?.items.length;i++) {
-          if(skr?.recID == kr.items[i].recID){
-            kr.items=kr.items.filter(res=>res.recID!=skr.recID);
-            return;
-          }        
-        }
-      }
-      }   
-    }    
+    if(skr!=null){ for (let ob of this.dataOKR) { for (let kr of ob?.items) { for (let i=0;i<kr?.items.length;i++) { if(skr?.recID == kr.items[i].recID){ kr.items=kr.items.filter(res=>res.recID!=skr.recID); return; } } } } }    
   }
   //Xem chi tiết OB
   showOB(obj: any) {
@@ -814,16 +730,21 @@ export class OkrTargetsComponent implements OnInit {
   }
   assignmentOKR(okr: any, title: any) {
     let dModel = new DialogModel();
-    let dialogAssgKR = this.callfunc.openForm(
+    let dialogAssgOKR = this.callfunc.openForm(
       PopupAssignmentOKRComponent,
       '',
       null,
       450,
       null,
-      [okr.okrName, okr.recID, okr.okrType, this.funcID, title],
+      [okr.okrName, okr.recID, okr.okrType, this.funcID, title,this.dataOKRPlans.recID],
       '',
       dModel
     );
+    dialogAssgOKR.closed.subscribe((res) => {
+      if (res?.event) {        
+        this.getOKRPlanForComponent.emit(res?.event);
+      }
+    });
   }
 
   //-----------------------End-------------------------------//
