@@ -627,7 +627,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.codxview.dataService.parentIdField = 'parentId';
     this.dmSV.formModel = this.view.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
-    this.dmSV.disableInput.next(false);
+    this.setDisableAddNewFolder();
     this.route.params.subscribe((params) => {
       if (params?.funcID) {
         this.funcID = params?.funcID;
@@ -646,11 +646,19 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         };
         if(this.funcID == "DMT03" || this.funcID == "DMT02") this.viewActive.model.panelLeftHide = false;
         this.view.viewChange(this.viewActive);
+        this.setDisableAddNewFolder();
       }
     });
     //event.view.model.template2
   }
 
+  //Disable nút tạo mới folder tùy theo funcID
+  setDisableAddNewFolder()
+  {
+    var dis = true;
+    if(this.funcID == "DMT02" || this.funcID == "DMT03") dis = false;
+    this.dmSV.disableInput.next(dis);
+  }
   //Set chiều cao view list
   setHeight()
   {
