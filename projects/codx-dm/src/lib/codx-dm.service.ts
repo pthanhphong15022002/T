@@ -134,10 +134,10 @@ export class CodxDMService {
   isChangeData = this.ChangeData.asObservable();
 
   public ChangeDataView = new BehaviorSubject<boolean>(null);
-  isChangeDataView = this.ChangeData.asObservable();
+  isChangeDataView = this.ChangeDataView.asObservable();
 
   public refeshData = new BehaviorSubject<boolean>(null);
-  isRefeshData = this.ChangeData.asObservable();
+  isRefeshData = this.refeshData.asObservable();
 
   public ChangeDataViewFile = new BehaviorSubject<any>(null);
   isChangeDataViewFile = this.ChangeDataViewFile.asObservable();
