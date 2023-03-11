@@ -633,10 +633,11 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.codxview.dataService.parentIdField = 'parentId';
     this.dmSV.formModel = this.view.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
-    this.setDisableAddNewFolder();
+   
     this.route.params.subscribe((params) => {
       if (params?.funcID) {
         this.funcID = params?.funcID;
+
         this.dmSV.folderID = '';
         this.dmSV.idMenuActive =  this.funcID;
         this.dmSV.menuIdActive.next(this.funcID);
@@ -644,6 +645,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.fileService.options.page = 1;
         this.viewActive.model.panelLeftHide = true;
         this.view.dataService.dataSelected = null;
+        this.setDisableAddNewFolder();
         this.getDataByFuncID(this.funcID);
         this.setBreadCumb();
         if(this.funcID == "DMT06" || this.funcID == "DMT05" || this.funcID == "DMT07") {
@@ -652,7 +654,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         };
         if(this.funcID == "DMT03" || this.funcID == "DMT02") this.viewActive.model.panelLeftHide = false;
         this.view.viewChange(this.viewActive);
-        this.setDisableAddNewFolder();
       }
     });
     //event.view.model.template2
@@ -662,9 +663,14 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   setDisableAddNewFolder()
   {
     var dis = true;
-    if(this.funcID == "DMT02" || this.funcID == "DMT03") dis = false;
+    if(this.funcID == "DMT02" || this.funcID == "DMT03") {
+      dis = false;
+      this.button.disabled = false;
+    }
+    else this.button.disabled = true;
     this.dmSV.disableInput.next(dis);
   }
+  
   //Set chiều cao view list
   setHeight()
   {
@@ -1239,20 +1245,11 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       this.searchAdvance = false;
       this.dmSV.isSearchView = true;
       if (this.textSearch == null || this.textSearch == '') {
-        this.views.forEach((item) => {
-          item.active = false;
-          item.hide = false;
-          if (item.text == 'Search') item.hide = true;
-          if (item.text == this.viewActive.text && (this.view.funcID == 'DMT02' || this.view.funcID == 'DMT03')) item.active = true;
-          else if(item.text == "Thẻ") item.active = true;
-          this.changeDetectorRef.detectChanges();
-        });
         if (this.view.funcID == 'DMT02' || this.view.funcID == 'DMT03') {
           this.view.viewChange(this.viewActive);
           this.codxview.currentView.viewModel.model.panelLeftHide = false;
         }
         this.getDataFolder(this.dmSV.folderID);
-        this.changeDetectorRef.detectChanges();
       } else {
         this.currView = this.templateSearch;
         this.search();
@@ -1264,108 +1261,108 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     }
   }
 
-  requestEnded(e: any) {
-    this.isSearch = false;
-    if (e.type === 'read') {
-      //this.data = [];
-      this.clearWaitingThumbnail();
-      // this.dmSV.listFolder = [];
-      //this.dmSV.listFiles = [];
-      this.fileService.getTotalHdd().subscribe((item) => {
-        //  totalUsed: any;
-        // totalHdd: any;
-        this.dmSV.updateHDD.next(item);
-      });
-      this.changeDetectorRef.detectChanges();
-      this.dmSV.page = 1;
-      //this.isSearch = false;
-      this.folderService.options.funcID = this.view.funcID;
-      if (this.dmSV.idMenuActive != this.view.funcID) {
-        if (e.data) {
-          this.data = [...e.data, ...this.data];
-          this.dmSV.listFolder = e.data;
-          //this.data = this.dmSV.listFolder.concat(this.listFiles);
-        } else this.dmSV.listFolder = [];
-      }
-      this.view.views.forEach((item) => {
-        if (item.text != 'Search') item.hide = false;
-        else item.hide = true;
-      });
+  // requestEnded(e: any) {
+  //   this.isSearch = false;
+  //   if (e.type === 'read') {
+  //     //this.data = [];
+  //     this.clearWaitingThumbnail();
+  //     // this.dmSV.listFolder = [];
+  //     //this.dmSV.listFiles = [];
+  //     this.fileService.getTotalHdd().subscribe((item) => {
+  //       //  totalUsed: any;
+  //       // totalHdd: any;
+  //       this.dmSV.updateHDD.next(item);
+  //     });
+  //     this.changeDetectorRef.detectChanges();
+  //     this.dmSV.page = 1;
+  //     //this.isSearch = false;
+  //     this.folderService.options.funcID = this.view.funcID;
+  //     if (this.dmSV.idMenuActive != this.view.funcID) {
+  //       if (e.data) {
+  //         this.data = [...e.data, ...this.data];
+  //         this.dmSV.listFolder = e.data;
+  //         //this.data = this.dmSV.listFolder.concat(this.listFiles);
+  //       } else this.dmSV.listFolder = [];
+  //     }
+  //     this.view.views.forEach((item) => {
+  //       if (item.text != 'Search') item.hide = false;
+  //       else item.hide = true;
+  //     });
 
-      if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {
-        if (this.codxview.currentView.viewModel.model != null)
-          this.codxview.currentView.viewModel.model.panelLeftHide = true;
+  //     if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {
+  //       if (this.codxview.currentView.viewModel.model != null)
+  //         this.codxview.currentView.viewModel.model.panelLeftHide = true;
 
-        this.dmSV.deniedRight();
-        this.dmSV.disableInput.next(true);
-        this.button.disabled = true;
-      } else {
-        if (
-          this.codxview?.currentView?.viewModel &&
-          this.codxview?.currentView?.viewModel?.model != null
-        )
-          this.codxview.currentView.viewModel.model.panelLeftHide = false;
-        this.dmSV.parentApproval = false;
-        this.dmSV.parentPhysical = false;
-        this.dmSV.parentCopyrights = false;
-        this.dmSV.parentApprovers = '';
-        this.dmSV.parentRevisionNote = '';
-        this.dmSV.parentLocation = '';
-        this.dmSV.parentCopyrights = false;
-        this.dmSV.parentCreate = true;
-        this.dmSV.parentFull = true;
-        this.dmSV.parentAssign = true;
-        this.dmSV.parentDelete = true;
-        this.dmSV.parentDownload = true;
-        this.dmSV.parentRead = true;
-        this.dmSV.parentShare = true;
-        this.dmSV.parentUpload = true;
-        this.dmSV.parentUpdate = true;
-        this.dmSV.disableInput.next(false);
-        this.button.disabled = false;
-      }
+  //       this.dmSV.deniedRight();
+  //       this.dmSV.disableInput.next(true);
+  //       this.button.disabled = true;
+  //     } else {
+  //       if (
+  //         this.codxview?.currentView?.viewModel &&
+  //         this.codxview?.currentView?.viewModel?.model != null
+  //       )
+  //         this.codxview.currentView.viewModel.model.panelLeftHide = false;
+  //       this.dmSV.parentApproval = false;
+  //       this.dmSV.parentPhysical = false;
+  //       this.dmSV.parentCopyrights = false;
+  //       this.dmSV.parentApprovers = '';
+  //       this.dmSV.parentRevisionNote = '';
+  //       this.dmSV.parentLocation = '';
+  //       this.dmSV.parentCopyrights = false;
+  //       this.dmSV.parentCreate = true;
+  //       this.dmSV.parentFull = true;
+  //       this.dmSV.parentAssign = true;
+  //       this.dmSV.parentDelete = true;
+  //       this.dmSV.parentDownload = true;
+  //       this.dmSV.parentRead = true;
+  //       this.dmSV.parentShare = true;
+  //       this.dmSV.parentUpload = true;
+  //       this.dmSV.parentUpdate = true;
+  //       this.dmSV.disableInput.next(false);
+  //       this.button.disabled = false;
+  //     }
 
-      this.changeDetectorRef.detectChanges();
-      this._beginDrapDrop();
-      this.dmSV.folderId.next('');
-      this.dmSV.folderID = '';
+  //     this.changeDetectorRef.detectChanges();
+  //     this._beginDrapDrop();
+  //     this.dmSV.folderId.next('');
+  //     this.dmSV.folderID = '';
 
-      this.dmSV.menuIdActive.next(this.view.funcID);
-      this.dmSV.idMenuActive = this.view.funcID;
-      var breadcumb = [];
-      breadcumb.push(this.view.function.customName);
-      this.dmSV.menuActive.next(this.view.function.customName);
-      this.dmSV.breadcumb.next(breadcumb);
+  //     this.dmSV.menuIdActive.next(this.view.funcID);
+  //     this.dmSV.idMenuActive = this.view.funcID;
+  //     var breadcumb = [];
+  //     breadcumb.push(this.view.function.customName);
+  //     this.dmSV.menuActive.next(this.view.function.customName);
+  //     this.dmSV.breadcumb.next(breadcumb);
 
-      switch (this.view.funcID) {
-        case 'DMT05':
-          breadcumb.push(this.dmSV.titleShareBy);
-          this.folderService.options.funcID = "DMT05";
-          break;
-        case 'DMT06':
-          breadcumb.push(this.dmSV.titleRequestShare);
-          this.folderService.options.funcID = "DMT06";
-          break;
-        case 'DMT07':
-          breadcumb.push(this.dmSV.titleRequestBy);
-          break;
-      }
-      if(this.view.funcID == 'DMT05' || this.view.funcID == 'DMT06')
-      {
-        this.getDataFile("");
-        this.getDataFolder("");
-      }
-      if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {
-        this.dmSV.disableInput.next(true);
-        this.button.disabled = true;
-      } else {
-        this.button.disabled = false;
-        this.dmSV.disableInput.next(false);
-      }
-    }
+  //     switch (this.view.funcID) {
+  //       case 'DMT05':
+  //         breadcumb.push(this.dmSV.titleShareBy);
+  //         this.folderService.options.funcID = "DMT05";
+  //         break;
+  //       case 'DMT06':
+  //         breadcumb.push(this.dmSV.titleRequestShare);
+  //         this.folderService.options.funcID = "DMT06";
+  //         break;
+  //       case 'DMT07':
+  //         breadcumb.push(this.dmSV.titleRequestBy);
+  //         break;
+  //     }
+  //     if(this.view.funcID == 'DMT05' || this.view.funcID == 'DMT06')
+  //     {
+  //       this.getDataFile("");
+  //       this.getDataFolder("");
+  //     }
+  //     if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {
+  //       this.dmSV.disableInput.next(true);
+  //       this.button.disabled = true;
+  //     } else {
+  //       this.button.disabled = false;
+  //       this.dmSV.disableInput.next(false);
+  //     }
+  //   }
 
 
-  }
+  // }
 
   getDataFile(id: any) {
 
