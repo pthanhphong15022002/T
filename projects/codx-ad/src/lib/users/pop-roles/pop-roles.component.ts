@@ -1,5 +1,3 @@
-import { N } from '@angular/cdk/keycodes';
-import { variable } from '@angular/compiler/src/output/output_ast';
 import {
   ChangeDetectorRef,
   Component,
@@ -7,16 +5,15 @@ import {
   Optional,
   ViewChild,
 } from '@angular/core';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { eventClick } from '@syncfusion/ej2-angular-schedule';
 import {
   DialogData,
   DialogRef,
   ApiHttpService,
   NotificationsService,
-  FormModel,
   CodxFormComponent,
   CacheService,
+  AuthStore,
+  UserModel,
 } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { CodxAdService } from '../../codx-ad.service';
@@ -55,7 +52,8 @@ export class PopRolesComponent implements OnInit {
   checkRoleIDNull = false;
   userID: any;
   lstChangeFunc: tmpTNMD[] = [];
-
+  user: UserModel;
+  ermSysTenant = ['', 'default'];
   @ViewChild('form') form: CodxFormComponent;
 
   constructor(
@@ -64,6 +62,7 @@ export class PopRolesComponent implements OnInit {
     private notiService: NotificationsService,
     private adService: CodxAdService,
     private cache: CacheService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -74,6 +73,7 @@ export class PopRolesComponent implements OnInit {
       if (dt?.data?.userID)
         this.userID = JSON.parse(JSON.stringify(dt.data?.userID));
     }
+    this.user = authStore.get();
   }
   ngOnInit(): void {
     if (this.data?.length > 0) {
@@ -290,7 +290,10 @@ export class PopRolesComponent implements OnInit {
 
   //check valid quantity add new modules
   beforeSave() {
-    if (environment.saas == 1) {
+    if (
+      environment.saas == 1 &&
+      !this.ermSysTenant.includes(this.user.tenant)
+    ) {
       this.adService
         .getListValidOrderForModules(this.lstChangeFunc)
         .subscribe((lstTNMDs: tmpTNMD[]) => {

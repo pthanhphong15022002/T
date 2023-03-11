@@ -161,7 +161,7 @@ export class PopupAddStaskComponent implements OnInit {
   }
   changeValueDate(event) {
     this.stepsTasks[event?.field] = event?.data?.fromDate;
-    if(this.stepsTasks['startDate'] > this.stepsTasks['endDate'] && this.stepsTasks['endDate']){
+    if(new Date(this.stepsTasks['startDate']) > new Date(this.stepsTasks['endDate'] && this.stepsTasks['endDate'])){
       this.isSave = false;
       this.notiService.notifyCode('DP019');
     }else{
