@@ -203,6 +203,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         if (tree) {
           if (res.recID) tree.getCurrentNode(res.recID);
           else tree.getCurrentNode(res);
+        
           this.scrollTop();
           //this.refeshData();
           // this.getDataFolder(this.dmSV.folderID);
@@ -233,6 +234,11 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.getDataByFuncID(this.funcID);
         this.changeDetectorRef.detectChanges();
         this.view.dataService.dataSelected = null;
+        if(this.dmSV.isSearchView) {
+          this.currView = this.templateCard;
+          this.view.viewChange(this.viewActive);
+          this.codxview.currentView.viewModel.model.panelLeftHide = false;
+        }
         //this.data = this.view.dataService.data
       }
     });
@@ -1143,13 +1149,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       document.getElementsByClassName('containerScroll')[0].scrollTo(0,0);
   }
 
-  getTotalPage(total) {
-    let pages = total / this.dmSV.pageSize;
-    if (pages * this.dmSV.pageSize < total) pages++;
-    this.dmSV.totalPage = pages;
-  }
-
-  search(isScroll = false) {
+  search() {
     this.views.forEach((item) => {
       item.hide = true;
       if (item.text == 'Search') item.hide = false;
@@ -1157,29 +1157,15 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
     var model = new DataRequest();
     model.funcID = this.view.formModel.funcID;
-    model.page = this.dmSV.page;
-    model.pageSize = this.dmSV.pageSize;
+    model.page = 1;
+    model.pageSize = 20;
     model.entityName = this.view.formModel.entityPer;
     this.fileService.searchFile(this.textSearchAll, model).subscribe((item) => {
-      if (item != null) {
-        if (!isScroll) {
-          var view = this.views.filter((x) => x.text == 'Search')[0];
-          view.active = true;
-          this.view.viewChange(view);
-        }
-
-        // this.dmSV.listFiles = item.data;
-        this.totalSearch = item.total;
-        this.dmSV.listFiles = [...this.dmSV.listFiles, ...item.data];
-        this.data = [...this.data, ...this.dmSV.listFiles];
-        this.getTotalPage(item.total);
+      debugger
+      if (item) {
+        this.data = item.data;
         this.changeDetectorRef.detectChanges();
-      } else {
-        //this.dmSV.loadedFile = true;
-        this.totalSearch = 0;
-        this.dmSV.totalPage = 0;
-        this.changeDetectorRef.detectChanges();
-      }
+      } 
     });
   }
 
@@ -1225,7 +1211,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
                 this.dmSV.listFiles = item.data;
                 this.totalSearch = item.total;
                 this.data = [...this.data, ...this.dmSV.listFiles];
-                this.getTotalPage(item.total);
                 this.changeDetectorRef.detectChanges();
               } else {
                 this.totalSearch = 0;
@@ -1245,21 +1230,14 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   searchChange($event) {
     try {
       this.textSearch = $event;
-      this.data = [];
-      this.dmSV.listFiles = [];
-      this.dmSV.listFolder = [];
-
-      if (this.codxview.currentView.viewModel.model != null)
-        this.codxview.currentView.viewModel.model.panelLeftHide = true;
+      this.refeshData();
+      if (this.codxview.currentView.viewModel.model != null) this.codxview.currentView.viewModel.model.panelLeftHide = true;
       this.isSearch = true;
-      this.view.orgView = this.orgViews;
-      this.dmSV.page = 1;
-      this.fileService.options.page = this.dmSV.page;
       this.textSearchAll = this.textSearch;
       this.predicates = 'FileName.Contains(@0)';
       this.values = this.textSearch;
       this.searchAdvance = false;
-
+      this.dmSV.isSearchView = true;
       if (this.textSearch == null || this.textSearch == '') {
         this.views.forEach((item) => {
           item.active = false;
@@ -1274,9 +1252,11 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.codxview.currentView.viewModel.model.panelLeftHide = false;
         }
         this.getDataFolder(this.dmSV.folderID);
-        this.getDataFile(this.dmSV.folderID);
         this.changeDetectorRef.detectChanges();
-      } else this.search();
+      } else {
+        this.currView = this.templateSearch;
+        this.search();
+      }
     } catch (ex) {
       this.totalSearch = 0;
       this.changeDetectorRef.detectChanges();

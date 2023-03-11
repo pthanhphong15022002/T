@@ -117,6 +117,7 @@ export class CodxDMService {
   public dataFileEditing: FileUpload;
   public listFolder = [];
   public listFiles = [];
+  isSearchView = false;
   page = 1;
   totalPage = 1;
   pageSize = 50;

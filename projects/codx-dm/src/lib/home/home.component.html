@@ -10,6 +10,7 @@
   [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views" 
   [autoSort]="false" [autoSearch]="false" [selectedFirst]="false" [button]="button" (buttonClick)="addFile($event)"
   (selectedChange)="onSelectionChanged($event)"  (sortChanged)="sortChanged($event)" (viewChanged)="changeView($event)"
+  (searchChanged)="searchChange($event)"
   >
 </codx-views>
 <ng-template #templateMain let-data>
@@ -103,7 +104,7 @@
         </div>
       </div>
       <div class="action-menu-item ml-2">
-        <codx-mfunc [formModel]="view.formModel" (clickMF)="dmSV.clickMF($event, file)"
+        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMoreFunction($event,file)"
           (changeDataMF)="dmSV.filterMoreFunction($event, file)" [type]="'hover'"></codx-mfunc>
       </div>
     </div>
