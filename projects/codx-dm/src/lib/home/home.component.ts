@@ -88,6 +88,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   visible: boolean = false;
   isScrollFolder = true;
   isScrollFile = true;
+
   //loadedFile: boolean;
   //loadedFolder: boolean;
   //page = 1;
@@ -97,6 +98,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   dialog!: DialogRef;
   interval: ItemInterval[];
   item: any;
+
   breakCumbArr = [
     {
       id : "DMT06",
@@ -133,7 +135,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       sub : [
         {
           id : "1",
-          name : "Tài liệu yêu cầu"
+          name : "Tài liệu được yêu cầu"
         },
         {
           id : "2",
@@ -158,23 +160,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     private notificationsService: NotificationsService
   ) {
     super(inject);
-    this.route.params.subscribe((params) => {
-      if (params?.funcID) {
-        this.funcID = params?.funcID;
-        this.dmSV.folderID = '';
-        this.dmSV.idMenuActive =  this.funcID;
-        this.dmSV.menuIdActive.next(this.funcID);
-        this.fileService.options.funcID = this.funcID
-        this.fileService.options.page = 1;
-        this.getDataByFuncID(this.funcID);
-        this.setBreadCumb();
-        if(this.funcID == "DMT06" || this.funcID == "DMT05" || this.funcID == "DMT07") {
-          this.fileService.options.favoriteID = "1";
-          this.folderService.options.favoriteID = "1";
-        };
-       //FuncID
-      }
-    });
+    
     
   }
   onInit(): void {
@@ -191,6 +177,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.fileService.options.srtDirections = "desc"
     this.folderService.options.srtColumns = "CreatedOn"
     this.folderService.options.srtDirections = "desc"
+    
     this.dmSV.ChangeDataView.subscribe(res =>{
       if(res) this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
     })
@@ -208,15 +195,15 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       }
       this._beginDrapDrop();
     });
-
     this.dmSV.isNodeSelect.subscribe((res) => {
-      debugger
       if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
           if (res.recID) tree.getCurrentNode(res.recID);
           else tree.getCurrentNode(res);
-          this.refeshData();
+          this.scrollTop();
+          //this.refeshData();
+          // this.getDataFolder(this.dmSV.folderID);
         }
       }
     });
@@ -237,15 +224,10 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           ele[0].classList.add('icon-arrow_right');
           ele[0].classList.remove('icon-arrow_drop_down');
         }
+        this.scrollTop();
         this.dmSV.folderId.next('');
         this.dmSV.folderID = "";
-        this.dmSV.page = 1;
-        this.dmSV.listFiles = [];
-        this.dmSV.listFolder = [];
-        this.isScrollFile = true;
-        this.isScrollFolder = true;
-        this.folderService.options.page = 1;
-        this.fileService.options.page = 1;
+        this.refeshData();
         this.getDataByFuncID(this.funcID);
         this.changeDetectorRef.detectChanges();
         this.view.dataService.dataSelected = null;
@@ -310,7 +292,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.changeDetectorRef.detectChanges();
       }
     });
-
     //Xóa File
     this.dmSV.isDeleteFileView.subscribe(item=>{
       if(item)
@@ -321,7 +302,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         );
       }
     })
-
     //Thay đổi tên Folder
     this.dmSV.isNodeChange.subscribe((res) => {
       if (res) {
@@ -332,7 +312,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     });
 
     //RefeshData
-    this.dmSV.refeshData.subscribe(res=>{
+    this.dmSV.isRefeshData.subscribe(res=>{
       if(res)
       {
         this.refeshData();
@@ -494,6 +474,181 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     //   }
     // });
   }
+
+  ngAfterViewInit(): void {
+    this.cache.valueList('SYS025').subscribe((item) => {
+      if (item) {
+        this.sys025 = item;
+        this.views[0].text = item.datas[3].text;
+        this.views[0].icon = item.datas[3].icon;
+        this.views[1].text = item.datas[4].text;
+        this.views[1].icon = item.datas[4].icon;
+        this.views[2].text = item.datas[0].text;
+        this.views[2].icon = item.datas[0].icon;
+        this.orgViews[1].text = item.datas[3].text;
+        this.orgViews[1].icon = item.datas[3].icon;
+        this.orgViews[2].text = item.datas[4].text;
+        this.orgViews[2].icon = item.datas[4].icon;
+        this.orgViews[3].text = item.datas[0].text;
+        this.orgViews[3].icon = item.datas[0].icon;
+        this.view.views = this.views;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+    this.views = [
+      {
+        id: '1',
+        icon: '',
+        text: 'card',
+        type: ViewType.tree_card,
+        active: true,
+        sameData: true,
+        /*  toolbarTemplate: this.templateSearch,*/
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          //template2: this.templateCard,
+          resizable: false,
+        },
+      },
+      // {
+      //   id: '1',
+      //   icon: 'icon-search',
+      //   text: 'Search',
+      //   hide: true,
+      //   type: ViewType.tree_list,
+      //   sameData: true,
+      //   model: {
+      //     template: this.templateMain,
+      //     panelRightRef: this.templateRight,
+      //     template2: this.templateSearch,
+      //     resizable: false,
+      //   },
+      // },
+      {
+        id: '1',
+        icon: '',
+        text: 'smallcard',
+        type: ViewType.tree_smallcard,
+        active: false,
+        sameData: true,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          //template2: this.templateSmallCard,
+          resizable: false,
+        },
+      },
+      {
+        id: '1',
+        icon: this.sys025?.datas[0].icon,
+        text: 'list',
+        type: ViewType.tree_list,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          //template2: this.templateList,
+          resizable: false,
+        },
+      },
+    ];
+    this.orgViews = [
+      {
+        id: '1',
+        icon: 'icon-search',
+        text: 'Search',
+        hide: true,
+        type: ViewType.tree_list,
+        sameData: true,
+        /*  toolbarTemplate: this.templateSearch,*/
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateSearch,
+          resizable: false,
+        },
+      },
+      {
+        id: '1',
+        icon: this.sys025?.datas[3].icon,
+        text: 'card',
+        type: ViewType.tree_card,
+        active: true,
+        sameData: true,
+        /*  toolbarTemplate: this.templateSearch,*/
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateCard,
+          resizable: false,
+          panelLeftHide: true
+        },
+      },
+      {
+        id: '1',
+        icon: this.sys025?.datas[4].icon,
+        text: 'smallcard',
+        type: ViewType.tree_smallcard,
+        active: false,
+        sameData: true,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateSmallCard,
+          resizable: false,
+        },
+      },
+      {
+        id: '1',
+        icon: this.sys025?.datas[0].icon,
+        text: 'list',
+        type: ViewType.tree_list,
+        active: false,
+        sameData: true,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateList,
+          resizable: false,
+        },
+      },
+    ];
+    //View mặc định
+    this.currView = this.templateCard
+
+    //if(this.funcID == "DMT06") this.view.page = null;
+    this.viewActive = this.views.filter((x) => x.active == true)[0];
+    this.codxview.dataService.pageSize = 50;
+    this.codxview.dataService.pageLoading = false;
+    this.codxview.dataService.parentIdField = 'parentId';
+    this.dmSV.formModel = this.view.formModel;
+    this.dmSV.dataService = this.view?.currentView?.dataService;
+    this.dmSV.disableInput.next(false);
+    this.route.params.subscribe((params) => {
+      if (params?.funcID) {
+        this.funcID = params?.funcID;
+        this.dmSV.folderID = '';
+        this.dmSV.idMenuActive =  this.funcID;
+        this.dmSV.menuIdActive.next(this.funcID);
+        this.fileService.options.funcID = this.funcID
+        this.fileService.options.page = 1;
+        this.viewActive.model.panelLeftHide = true;
+        this.getDataByFuncID(this.funcID);
+        this.setBreadCumb();
+        if(this.funcID == "DMT06" || this.funcID == "DMT05" || this.funcID == "DMT07") {
+          this.fileService.options.favoriteID = "1";
+          this.folderService.options.favoriteID = "1";
+        };
+        if(this.funcID == "DMT03" || this.funcID == "DMT02") this.viewActive.model.panelLeftHide = false;
+        this.view.viewChange(this.viewActive);
+      }
+    });
+   
+    //event.view.model.template2
+  }
+  //Refesh lại data
   refeshData()
   {
     this.fileService.options.page = 1;
@@ -506,6 +661,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.dmSV.listFolder = [];
     this.data = [];
   }
+
+  //get lại data
   getDataByFuncID(funcID:any)
   {
     //GetFolder()
@@ -513,14 +670,10 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.getDataFolder(this.dmSV.folderID );
    
   }
+  
   onScroll(event) {
     const dcScroll = event.srcElement;
-    if (
-      dcScroll.scrollTop <
-      dcScroll.scrollHeight - dcScroll.clientHeight
-    ) {
-      return;
-    }
+    if ((dcScroll.scrollTop < (dcScroll.scrollHeight - dcScroll.clientHeight))|| dcScroll.scrollTop == 0) return;
     // Nếu còn dữ liệu folder thì scroll folder
     if(this.isScrollFolder) {
       this.folderService.options.page ++;
@@ -610,6 +763,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     if (item.folderName) return item.folderName;
     return null;
   }
+
   classFile(item, className) {
     if (item.folderName != null) return className;
     else return `${className} noDrop`;
@@ -807,7 +961,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
             dialogModel
           );
         });
-      } else {
+      } 
+      else {
         var breadcumb = [];
         var breadcumbLink = [];
         this.dmSV.page = 1;
@@ -815,7 +970,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.listFolder = [];
         this.dmSV.listFiles = [];
         var treeView = this.codxview?.currentView?.currentComponent?.treeView;
-        if (treeView && this.funcID != "DMT06") {
+        if (treeView) {
           treeView.textField = 'folderName';
           var list = treeView.getBreadCumb(id);
           breadcumb.push(this.dmSV.menuActive.getValue());
@@ -828,9 +983,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.dmSV.breakCumArr = breadcumb;
           this.dmSV.breadcumb.next(breadcumb);
         }
-        if (breadcumb.length == 0) {
-          id = '';
-        }
+        if (breadcumb.length == 0) id = '';
         //Chuyển page về 1
         this.folderService.options.page = 1;
         this.fileService.options.page = 1;
@@ -856,159 +1009,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
   loading() {}
 
-  ngAfterViewInit(): void {
-    this.cache.valueList('SYS025').subscribe((item) => {
-      if (item) {
-        this.sys025 = item;
-        this.views[0].text = item.datas[3].text;
-        this.views[0].icon = item.datas[3].icon;
-        this.views[2].text = item.datas[4].text;
-        this.views[2].icon = item.datas[4].icon;
-        this.views[3].text = item.datas[0].text;
-        this.views[3].icon = item.datas[0].icon;
-        this.orgViews[1].text = item.datas[3].text;
-        this.orgViews[1].icon = item.datas[3].icon;
-        this.orgViews[2].text = item.datas[4].text;
-        this.orgViews[2].icon = item.datas[4].icon;
-        this.orgViews[3].text = item.datas[0].text;
-        this.orgViews[3].icon = item.datas[0].icon;
-        this.view.views = this.views;
-        this.changeDetectorRef.detectChanges();
-      }
-    });
-    this.views = [
-      {
-        id: '1',
-        icon: '',
-        text: 'card',
-        type: ViewType.tree_card,
-        active: true,
-        sameData: true,
-        /*  toolbarTemplate: this.templateSearch,*/
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateCard,
-          resizable: false,
-          panelLeftHide : false
-        },
-      },
-      {
-        id: '1',
-        icon: 'icon-search',
-        text: 'Search',
-        hide: true,
-        type: ViewType.tree_list,
-        sameData: true,
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateSearch,
-          resizable: false,
-        },
-      },
-      {
-        id: '1',
-        icon: '',
-        text: 'smallcard',
-        type: ViewType.tree_smallcard,
-        active: false,
-        sameData: true,
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateSmallCard,
-          resizable: false,
-        },
-      },
-      {
-        id: '1',
-        icon: this.sys025?.datas[0].icon,
-        text: 'list',
-        type: ViewType.tree_list,
-        sameData: true,
-        active: false,
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateList,
-          resizable: false,
-        },
-      },
-    ];
-    this.orgViews = [
-      {
-        id: '1',
-        icon: 'icon-search',
-        text: 'Search',
-        hide: true,
-        type: ViewType.tree_list,
-        sameData: true,
-        /*  toolbarTemplate: this.templateSearch,*/
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateSearch,
-          resizable: false,
-        },
-      },
-      {
-        id: '1',
-        icon: this.sys025?.datas[3].icon,
-        text: 'card',
-        type: ViewType.tree_card,
-        active: true,
-        sameData: true,
-        /*  toolbarTemplate: this.templateSearch,*/
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateCard,
-          resizable: false,
-        },
-      },
-      {
-        id: '1',
-        icon: this.sys025?.datas[4].icon,
-        text: 'smallcard',
-        type: ViewType.tree_smallcard,
-        active: false,
-        sameData: true,
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateSmallCard,
-          resizable: false,
-        },
-      },
-      {
-        id: '1',
-        icon: this.sys025?.datas[0].icon,
-        text: 'list',
-        type: ViewType.tree_list,
-        active: false,
-        sameData: true,
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateList,
-          resizable: false,
-        },
-      },
-    ];
-    //View mặc định
-    this.currView = this.templateCard
-
-    //if(this.funcID == "DMT06") this.view.page = null;
-    this.viewActive = this.views.filter((x) => x.active == true)[0];
-    this.codxview.dataService.pageSize = 50;
-    this.codxview.dataService.pageLoading = false;
-    this.codxview.dataService.parentIdField = 'parentId';
-    this.dmSV.formModel = this.view.formModel;
-    this.dmSV.dataService = this.view?.currentView?.dataService;
-    this.dmSV.disableInput.next(false);
-    //event.view.model.template2
-  }
+  
 
   setBreadCumb()
   {
@@ -1034,32 +1035,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     })
   }
 
-
-  changeView(event) {
-    this.currView = null;
-    this.currView = event.view.model.template2;
-    this.dmSV.page = 1;
-    if(event.view.text != 'Search')
-    {
-      this.getDataFile(this.dmSV.folderID);
-    }
-    //  this.data = [];
-  }
-  viewChanging(event) {
- 
-    if (event.text != 'Search' && this.view.formModel.funcID != 'DMT02') {
-      this.data = [];
-      if(this.view.funcID == 'DMT05' || this.view.funcID == 'DMT06')
-      {
-        this.dmSV.dmFavoriteID = "2";
-        this.folderService.options.favoriteID = "2";
-        this.fileService.options.favoriteID = "2";
-      }
-      this.dmSV.page = 1;
-      var id = !this.dmSV.folderID ? '' : this.dmSV.folderID;
-      this.getDataFile(id);
-    }
-  }
+  
   ngOnDestroy() {
     //this.dmSV.isAddFolder
   }
@@ -1140,14 +1116,15 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.fileService.options.srtColumns = this.sortColumn;
     this.fileService.options.srtDirections = this.sortDirection;
     if(this.folderService.options.srtColumns == "FileName") this.folderService.options.srtColumns = "FolderName"
+    this.scrollTop();
     this.refeshData();
     this.getDataFolder(this.dmSV.folderID);
-    this.scrollTop();
   }
 
   scrollTop()
   {
-    document.getElementsByClassName('containerScroll')[0].scrollTo(0,0);
+    if(document.getElementsByClassName('containerScroll') && document.getElementsByClassName('containerScroll')[0])
+      document.getElementsByClassName('containerScroll')[0].scrollTo(0,0);
   }
 
   getTotalPage(total) {
@@ -1393,6 +1370,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
 
   }
+
   getDataFile(id: any) {
 
     if(!this.isScrollFile) return;
@@ -1413,10 +1391,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       //ScrollComponent.reinitialization();
     });
   }
+
   getDataFolder(id: any) {
-    //this.dmSV.listFolder = [];
-    //this.folderService.options.srtColumns = this.sortColumn;
-    //this.folderService.options.srtDirections = this.sortDirection;
     if(!this.isScrollFolder) return;
     this.folderService.options.funcID = this.funcID;
     this.folderService.getFolders(id).subscribe((res) => {
@@ -1435,13 +1411,16 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       this.detectorRef.detectChanges();
     });
   }
+  
   public dlgBtnClick = (): void => {
     this.Dialog.hide();
   };
+  
   viewFile(e: any) {
     this.dataFile = e;
     this.visible = true;
   }
+
   dbView(data: any) {
     if (data.recID && data.fileName != null) {
       if (!data.read) {
@@ -1454,16 +1433,19 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     }
     this.dmSV.openItem(data);
   }
+
   dialogClosed() {
     this.visible = false;
     this.changeDetectorRef.detectChanges();
   }
+
   getPUser(data)
   {
     var item = data.permissions.filter(x=>x.approvalStatus == "3")[0];
     if(item) return item?.objectID;
     return ""
   }
+
   getDUser(data)
   {
     var item = data.permissions.filter(x=>x.approvalStatus == "3")[0];
@@ -1471,4 +1453,17 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     return ""
   }
   
+  changeView(e: any)
+  {
+    debugger
+    if(e)
+    {
+      //View card
+      if(e?.view?.type == ViewType.tree_card) this.currView = this.templateCard;
+      //View Small Card
+      else if(e?.view?.type == ViewType.tree_smallcard) this.currView = this.templateSmallCard;
+      //View 
+      else if(e?.view?.type == ViewType.tree_list) this.currView = this.templateList;
+    }
+  }
 }

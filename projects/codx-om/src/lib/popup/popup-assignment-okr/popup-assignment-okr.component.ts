@@ -68,12 +68,14 @@ export class PopupAssignmentOKRComponent
   cbbOrg = [];
   //fields: Object = { text: 'orgUnitName', value: 'orgUnitID' };
   assignmentOKR: any;
-  distributeToType: string;
-  distributeType: any;
+  distributeFromType: any;
   owner: any;
   compFuncID = OMCONST.FUNCID.COMP;
   deptFuncID = OMCONST.FUNCID.DEPT;
   orgFuncID = OMCONST.FUNCID.ORG;
+  statusVLL :any
+  okrPlan: any;
+  okrPlanRecID: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -88,19 +90,19 @@ export class PopupAssignmentOKRComponent
     this.dialogRef = dialogRef;
     this.okrName = dialogData.data[0];
     this.okrRecID = dialogData.data[1];
-    this.distributeType = dialogData.data[2];
+    this.distributeFromType = dialogData.data[2];
     this.funcID = dialogData.data[3];
     this.title = dialogData?.data[4];
+    this.okrPlanRecID = dialogData?.data[5];
     this.curUser = authStore.get();
     this.assignmentOKR = new DistributeOKR();
-    this.distributeToType = this.distributeType;
-    if (this.distributeToType == this.typeKR) {
-      this.radioKRCheck = true;
-      this.radioOBCheck = false;
-    } else {
-      this.radioKRCheck = false;
-      this.radioOBCheck = true;
-    }
+    // if (this.distributeToType == this.typeKR) {
+    //   this.radioKRCheck = true;
+    //   this.radioOBCheck = false;
+    // } else {
+    //   this.radioKRCheck = false;
+    //   this.radioOBCheck = true;
+    // }
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
@@ -121,14 +123,24 @@ export class PopupAssignmentOKRComponent
   }
 
   onInit(): void {
+    this.getCacheData();
     this.getOKRAssign();
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
-  // getCacheData(){
-
-  // }
+  getCacheData(){
+    this.cache.valueList('OM002').subscribe(res=>{
+      if(res){
+        this.statusVLL=res?.datas;
+      }
+    })
+    this.codxOmService.getOKRPlansByID(this.okrPlanRecID).subscribe(res=>{
+      if(res){
+        this.okrPlan=res;
+      }
+    })
+  }
 
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Data Func---------------------------------//
@@ -183,6 +195,7 @@ export class PopupAssignmentOKRComponent
             this.isAfterRender = true;
           }
         });
+        
       }
     });
   }
@@ -193,14 +206,14 @@ export class PopupAssignmentOKRComponent
     switch (event) {
     }
   }
-  valueTypeChange(event) {
-    if (event?.field == this.typeKR) {
-      this.distributeToType = OMCONST.VLL.OKRType.KResult;
-    } else if (event?.field == this.typeOB) {
-      this.distributeToType = OMCONST.VLL.OKRType.Obj;
-    }
-    this.detectorRef.detectChanges();
-  }
+  // valueTypeChange(event) {
+  //   if (event?.field == this.typeKR) {
+  //     this.distributeToType = OMCONST.VLL.OKRType.KResult;
+  //   } else if (event?.field == this.typeOB) {
+  //     this.distributeToType = OMCONST.VLL.OKRType.Obj;
+  //   }
+  //   this.detectorRef.detectChanges();
+  // }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Event----------------------------------//
   //---------------------------------------------------------------------------------//
@@ -221,12 +234,9 @@ export class PopupAssignmentOKRComponent
   cbxOrgChange(evt: any) {
     if (evt?.data != null && evt?.data != '') {
       this.assignmentOKR.orgUnitID = evt.data;
-      this.assignmentOKR.orgUnitName =
-        evt.component?.itemsSelected[0]?.OrgUnitName;
-
-      this.codxOmService
-        .getManagerByOrgUnitID(this.assignmentOKR.orgUnitID)
-        .subscribe((ownerInfo) => {
+      this.assignmentOKR.orgUnitName = evt.component?.itemsSelected[0]?.OrgUnitName;
+      this.assignmentOKR.objectID = evt.data;
+      this.codxOmService .getManagerByOrgUnitID(this.assignmentOKR.orgUnitID).subscribe((ownerInfo) => {
           if (ownerInfo) {
             this.owner = ownerInfo;
             this.assignmentOKR.owner = this.owner?.userID;
@@ -235,6 +245,7 @@ export class PopupAssignmentOKRComponent
             this.assignmentOKR.departmentID = this.owner?.departmentID;
             this.assignmentOKR.companyID = this.owner?.companyID;
             this.assignmentOKR.positionID = this.owner?.positionID;
+
             this.assignmentOKR.employeeName = this.owner?.employeeName;
             this.assignmentOKR.orgUnitName = this.owner?.orgUnitName;
             this.assignmentOKR.departmentName = this.owner?.departmentName;
@@ -256,21 +267,19 @@ export class PopupAssignmentOKRComponent
 
   onSaveForm() {
     if (this.assignmentOKR.orgUnitID == null) {
-      this.notificationsService.notify('OM', '2', null);
+      this.notificationsService.notify('Đối tượng phân công không được bỏ trống', '2', null);
       return;
     }
-    this.codxOmService
-      .distributeOKR(
-        this.okrRecID,
-        this.distributeToType,
-        [this.assignmentOKR],
-        this.isAdd
-      )
-      .subscribe((res) => {
+    if (this.okrPlan.status!= '1') {
+      this.notificationsService.notify('Kế hoạch mục tiêu kỳ ' + this.okrPlan?.periodID +' đang ở tình trạng' + this.statusVLL[this.okrPlan?.status]?.text+' nên không thể thay đổi đối tượng phân công', '2', null);
+      return;
+    }
+    this.codxOmService.assignmentOKR( this.okrRecID, this.distributeFromType, this.assignmentOKR, this.isAdd, this.funcID).subscribe((res) => {
         if (res) {
           this.notificationsService.notifyCode('SYS034');
+          
+        this.dialogRef && this.dialogRef.close(this.okrPlan);
         }
-        this.dialogRef && this.dialogRef.close();
       });
   }
   //---------------------------------------------------------------------------------//

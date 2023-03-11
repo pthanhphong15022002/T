@@ -15,20 +15,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import {
-  ApiHttpService,
-  AuthService,
-  AuthStore,
-  CacheService,
-  CRUDService,
-  DialogData,
-  DialogRef,
-  FormModel,
-  NotificationsService,
-  RequestOption,
-  UIComponent,
-  Util,
-} from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, CacheService, CRUDService, DialogData, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent, Util, } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEpService, ModelPage } from '../../../codx-ep.service';
 import { APICONSTANT } from '@shared/constant/api-const';

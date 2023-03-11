@@ -51,7 +51,7 @@
             <div class="col-4">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="CustLevel"></codx-label>
-                    <codx-input *ngIf="itemposting.custType == ''" type="valuelist" field="custLevel">
+                    <codx-input *ngIf="itemposting.custType == null" type="valuelist" field="custLevel">
                     </codx-input>
                     <codx-input *ngIf="itemposting.custType == '1' || itemposting.custType == '2'" type="valuelist"
                         refValue="AC054" [crrValue]="itemposting.custLevel" (valueChange)="valueChangeCust($event)"
@@ -66,7 +66,7 @@
             <div class="col-4">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="CustSelection"></codx-label>
-                    <codx-input *ngIf="itemposting.custType == '' && itemposting.custLevel == '3'" type="valuelist"
+                    <codx-input *ngIf="itemposting.custType == null && itemposting.custLevel == '3'" type="valuelist"
                         field="custSelection">
                     </codx-input>
                     <codx-input *ngIf="itemposting.custType == '1' && itemposting.custLevel == '1'"

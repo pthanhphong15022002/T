@@ -25,17 +25,16 @@ import {
   FormModel,
   AuthService,
   Util,
+  NotificationsService,
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
 import { PopupAddKRComponent } from '../popup/popup-add-kr/popup-add-kr.component';
-import { PopupShowKRComponent } from '../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from './okr-add/okr-add.component';
-import { OkrPlansComponent } from './okr-plans/okr-plans.component';
 import { ActivatedRoute } from '@angular/router';
-import { OkrPlanShareComponent } from './okr-plans/okr-plans-share/okr-plans-share.component';
 import { PopupAddOBComponent } from '../popup/popup-add-ob/popup-add-ob.component';
 import { PopupOKRWeightComponent } from '../popup/popup-okr-weight/popup-okr-weight.component';
 import { PopupAddOKRPlanComponent } from '../popup/popup-add-okr-plan/popup-add-okr-plan.component';
+import { PopupShareOkrPlanComponent } from '../popup/popup-share-okr-plans/popup-share-okr-plans.component';
 const _isAdd = true;
 const _isSubKR = true;
 const _notSubKR = false;
@@ -120,10 +119,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   linksModel: any;
   targetsModel: any;
   groupModel: any;
+  curOrgName: any;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
-    private codxOmService: CodxOmService
+    private codxOmService: CodxOmService,
+    private notificationsService:NotificationsService,
   ) {
     super(inject);
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
@@ -245,6 +246,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     });
   }
   //Lấy OKR Plan
+  getOKRPlanForComponent(event:any) {
+    if(event){
+      this.getOKRPlans(event?.periodID, event?.interval, event?.year)
+    }
+  }
+
   getOKRPlans(periodID: any, interval: any, year: any) {
     if (true) {
       this.okrService
@@ -280,8 +287,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  mapDefaultPlanData() {}
-
   //Lấy fucID con
   funcIDChanged() {
     switch (this.funcID) {
@@ -291,6 +296,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.obFuncID = OMCONST.OBFUNCID.COMP;
         this.okrLevel = OMCONST.VLL.OKRLevel.COMP;
         this.curOrgID= this.curUser?.employee?.companyID;
+        this.curOrgName= this.curUser?.employee?.companyName;
         break;
       case OMCONST.FUNCID.DEPT:
         this.skrFuncID = OMCONST.SKRFUNCID.DEPT;
@@ -298,6 +304,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.obFuncID = OMCONST.OBFUNCID.DEPT;
         this.okrLevel = OMCONST.VLL.OKRLevel.DEPT;
         this.curOrgID= this.curUser?.employee?.departmentID;
+        this.curOrgName= this.curUser?.employee?.departmentName;
         break;
       case OMCONST.FUNCID.ORG:
         this.skrFuncID = OMCONST.SKRFUNCID.ORG;
@@ -305,6 +312,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.obFuncID = OMCONST.OBFUNCID.ORG;
         this.okrLevel = OMCONST.VLL.OKRLevel.ORG;
         this.curOrgID= this.curUser?.employee?.orgUnitID;
+        this.curOrgName= this.curUser?.employee?.orgUnitName;
         break;
       case OMCONST.FUNCID.PERS:
         this.skrFuncID = OMCONST.SKRFUNCID.PERS;
@@ -312,6 +320,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.obFuncID = OMCONST.OBFUNCID.PERS;
         this.okrLevel = OMCONST.VLL.OKRLevel.PERS;
         this.curOrgID= this.curUser?.employee?.employeeID;
+        this.curOrgName= this.curUser?.employee?.employeeName;
         break;
     }
     this.detectorRef.detectChanges();
@@ -337,6 +346,16 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       case OMCONST.MFUNCID.PlanWeight:
         this.editPlanWeight(evt?.text);
         break;
+      case OMCONST.MFUNCID.ReleasePlan:
+        this.changePlanStatus(OMCONST.VLL.PlanStatus.Ontracking);
+        break;
+      case OMCONST.MFUNCID.UnReleasePlan:
+        //this.changePlanStatus(OMCONST.VLL.PlanStatus.NotStarted);
+        break;
+      case OMCONST.MFUNCID.SharesPlan:
+        this.sharePlan(evt?.text);
+        break;
+
     }
   }
   //Hàm click
@@ -364,10 +383,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       }
       case 'Calendar': {
         this.changeCalendar(event.data);
-        break;
-      }
-      case 'SharePlan': {
-        this.sharePlan();
         break;
       }
     }
@@ -415,6 +430,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.dataOKRPlans.status = status;
+          this.notificationsService.notifyCode('SYS034'); //đã duyệt
         }
       });
   }
@@ -583,8 +599,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       tmpPlan.year=this.year;
       tmpPlan.periodID =this.periodID;
       tmpPlan.okrLevel= this.okrLevel;
+      tmpPlan.fromDate =this.fromDate;
+      tmpPlan.toDate= this.toDate;
     }
-    let curFunc = isAdd ? OMCONST.MFUNCID.Add :OMCONST.MFUNCID.Edit;
+    let curFunc = isAdd ? OMCONST.MFUNCID.Add : OMCONST.MFUNCID.Edit;
     let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
     dialogModel.FormModel = this.formModelPlan;
@@ -600,6 +618,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         {...this.okrModel},
         this.addPlanTitle,
         this.curOrgID,
+        this.curOrgName,
         this.listFormModel,
         this.obFG,
         curFunc,
@@ -740,11 +759,18 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     });
   }
   //Chia sẻ bộ mục tiêu
-  sharePlan() {
-    let dialog = this.callfc.openSide(OkrPlanShareComponent, [
+  sharePlan(popupTitle:any) {
+    let shareFM= new FormModel();
+    shareFM.entityName = 'OM_OKRs.Shares';
+    shareFM.entityPer = 'OM_OKRs.Shares';
+    shareFM.gridViewName = 'grvOKRs.Shares';
+    shareFM.formName = 'OKRs.Shares';
+    let dialog = this.callfc.openSide(PopupShareOkrPlanComponent, [      
+      popupTitle,
       this.gridView,
-      this.view.formModel,
-      this.dataOKRPlans,
+      shareFM,
+      this.dataOKRPlans?.recID,
+      {...this.sharesModel},
     ]);
   }
 }

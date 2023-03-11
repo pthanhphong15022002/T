@@ -9,29 +9,39 @@
           [formModel]="orderFormodel"
         ></codx-label>
       </div>
-      <div class="col-4">
-        <codx-input [type]="'number'" [min]="1"> </codx-input>
+      <div class="col-2">
+        <codx-input
+          [type]="'number'"
+          [min]="1"
+          [crrValue]="nMonths"
+          [disabled]="mode == 'trial'"
+        >
+        </codx-input>
       </div>
     </div>
   </div>
   <div class="">
     <codx-gridview
-      *ngIf="orderRecID"
+      *ngIf="moduleID"
       #gridView
       [columnsGrid]="moduleDetailGridClmn"
       [service]="'Tenant'"
       [assemblyName]="'ERM.Business.Tenant'"
-      [className]="'OrderModulesBusiness'"
-      [method]="'GetListBoughtModuleByOrderIDAsync'"
-      [entityName]="orderFormodel.entityName"
+      [className]="'ModulesBusiness'"
+      [method]="'GetModuleAsync'"
+      [entityName]="orderFormodel?.entityName"
       [predicates]="'TransID=@0'"
-      [dataValues]="orderRecID"
+      [dataValues]="moduleID"
       [pageSize]="20"
       [rowHeight]="50"
       height="500px"
     ></codx-gridview>
   </div>
-  <div class="">footer</div>
+  <div class="d-flex justify-self-end">
+    <button (click)="confirmBuyMD()">
+      <codx-label name="lblBuyMD" [default]="'Thanh toán'"> </codx-label>
+    </button>
+  </div>
 </div>
 
 <ng-template #moduleTmpl let-data>
@@ -57,7 +67,7 @@
             ": " +
               data.price +
               " " +
-              data.currency +
+              currency +
               "/" +
               data.conversion +
               " " +
@@ -73,30 +83,32 @@
         >
         </codx-vll>
       </div>
-      <div class="employee" *ngIf="data.childModule != null">
-        <codx-label [name]="'employee'" [default]="'Nhân viên thường'">
-        </codx-label>
-        <span>
-          {{
-            ": " +
-              data.childModule.price +
-              " " +
-              data.childModule.currency +
-              "/" +
-              data.childModule.conversion +
-              " " +
-              data.childModule.umid +
-              " / "
-          }}
-        </span>
-        <codx-vll
-          [name]="'L1449'"
-          [value]="data?.childModule?.interval"
-          [showText]="true"
-          [showBgColor]="false"
-        >
-        </codx-vll>
-      </div>
+      <ng-container *ngIf="data.childModule">
+        <div class="employee">
+          <codx-label [name]="'employee'" [default]="'Nhân viên thường: '">
+          </codx-label>
+          <span>
+            {{
+              ": " +
+                +data.childModule.price +
+                " " +
+                currency +
+                "/" +
+                data.childModule.conversion +
+                " " +
+                data.childModule.umid +
+                " / "
+            }}
+          </span>
+          <codx-vll
+            [name]="'L1449'"
+            [value]="data?.childModule?.interval"
+            [showText]="true"
+            [showBgColor]="false"
+          >
+          </codx-vll>
+        </div>
+      </ng-container>
     </div>
   </div>
 </ng-template>
@@ -104,10 +116,11 @@
 <ng-template #moduleQuantityTmpl let-data>
   <ng-container *ngIf="data">
     <codx-input
+      [disabled]="mode == 'trial'"
       [type]="'number'"
       [crrValue]="data.quantity"
-      (valueChange)="changeModuleQuantity(data.moduleID, false, $event)"
       [min]="0"
+      (valueChange)="changeModuleQuantity(data.moduleID, false, $event)"
     >
     </codx-input>
   </ng-container>
@@ -116,6 +129,7 @@
 <ng-template #childModuleQuantityTmpl let-data>
   <ng-container *ngIf="data.childModule">
     <codx-input
+      [disabled]="mode == 'trial'"
       [type]="'number'"
       [crrValue]="data.childModule.quantity"
       (valueChange)="changeModuleQuantity(data.moduleID, true, $event)"
@@ -128,8 +142,8 @@
 <ng-template #moduleNetAmt let-data>
   <span>
     {{
-      +data.quantity * +data.price +
-        +(+data.childModule?.quantity) * +data.childModule?.price
+      data.quantity * data.price +
+        data.childModule?.quantity * data.childModule?.price
     }}
   </span>
 </ng-template>

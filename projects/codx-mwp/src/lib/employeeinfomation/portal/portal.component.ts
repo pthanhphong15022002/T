@@ -77,8 +77,7 @@ export class PortalComponent extends UIComponent {
     super(inject);
     this.funcID = this.routeActive.snapshot.params['funcID'];
     this.user = this.auth.get();
-    
-    
+
     console.log(
       'userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',
       this.user
@@ -86,6 +85,7 @@ export class PortalComponent extends UIComponent {
   }
   infoPersonal: any;
   crrEContract: any;
+  isRegular: string;
   lstContractType: any; //phân loại HĐ không xác định
   funcID = '';
   service = '';
@@ -1087,7 +1087,7 @@ export class PortalComponent extends UIComponent {
         this.lstTab = res[0].filter((p) => p.parentID == this.funcID);
         this.crrFuncTab = this.lstTab[this.crrTab].functionID;
         console.log('crrFuncTab', this.crrFuncTab);
-        console.log('crrFuncTab', this.lstTab);
+        console.log('lstcrrFuncTab', this.lstTab);
         this.lstFuncID = res[0];
 
         this.lstFuncSelfInfo = res[0].filter(
@@ -1127,7 +1127,7 @@ export class PortalComponent extends UIComponent {
         this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
       }
     });
-    
+
     let request = new DataRequest();
     request.entityName = 'HR_Employees';
     request.predicates = 'DomainUser=@0';
@@ -1138,12 +1138,12 @@ export class PortalComponent extends UIComponent {
       if (res && res[1] > 0) {
         this.infoPersonal = res[0][0];
         this.employeeID = this.infoPersonal.employeeID;
-        this.initForm()
+        this.isRegular = this.infoPersonal.employeeTypeID;
+        this.initForm();
       }
       console.log('employeeeeeeeeeeeeeeee', res);
     });
-    
-    
+
     //#region filter
     this.dayOffSortModel = new SortModel();
     this.dayOffSortModel.field = 'BeginDate';
@@ -1801,6 +1801,9 @@ export class PortalComponent extends UIComponent {
         break;
       case this.rewDisInfoFuncID:
         this.lstBtnAdd = this.lstFuncAward;
+        break;
+      case this.contractInfoFuncID:
+        this.initHRProcess();
         break;
     }
   }
