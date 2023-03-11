@@ -90,7 +90,9 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   visible: boolean = false;
   isScrollFolder = true;
   isScrollFile = true;
+  isScrollSearch = true;
   maxHeightScroll = 500;
+  pageSearch = 1;
   //loadedFile: boolean;
   //loadedFolder: boolean;
   //page = 1;
@@ -100,7 +102,11 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   dialog!: DialogRef;
   interval: ItemInterval[];
   item: any;
-
+  modelSearch :DataRequest = {
+    page : 1,
+    pageSize: 20,
+    pageLoading: false
+  };
   breakCumbArr = [
     {
       id : "DMT06",
@@ -242,14 +248,14 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           ele[0].classList.add('icon-arrow_right');
           ele[0].classList.remove('icon-arrow_drop_down');
         }
-        this.scrollTop();
         this.dmSV.folderId.next('');
         this.dmSV.folderID = "";
+        this.view.dataService.dataSelected = null;
+        this.scrollTop();
         this.refeshData();
         this.getDataByFuncID(this.funcID);
-        this.changeDetectorRef.detectChanges();
-        this.view.dataService.dataSelected = null;
-        if(this.dmSV.isSearchView) {
+        if(!this.dmSV.isSearchView) {
+          this.isScrollSearch = false;
           this.setHideModeView();
           this.currView = this.templateCard;
           this.view.viewChange(this.viewActive);
@@ -509,12 +515,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.views[1].icon = item.datas[4].icon;
         this.views[2].text = item.datas[0].text;
         this.views[2].icon = item.datas[0].icon;
-        this.orgViews[1].text = item.datas[3].text;
-        this.orgViews[1].icon = item.datas[3].icon;
-        this.orgViews[2].text = item.datas[4].text;
-        this.orgViews[2].icon = item.datas[4].icon;
-        this.orgViews[3].text = item.datas[0].text;
-        this.orgViews[3].icon = item.datas[0].icon;
         this.view.views = this.views;
         this.changeDetectorRef.detectChanges();
       }
@@ -578,67 +578,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         },
       },
     ];
-    this.orgViews = [
-      {
-        id: '1',
-        icon: 'icon-search',
-        text: 'Search',
-        hide: true,
-        type: ViewType.tree_list,
-        sameData: true,
-        /*  toolbarTemplate: this.templateSearch,*/
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateSearch,
-          resizable: false,
-        },
-      },
-      {
-        id: '1',
-        icon: this.sys025?.datas[3].icon,
-        text: 'card',
-        type: ViewType.tree_card,
-        active: true,
-        sameData: true,
-        /*  toolbarTemplate: this.templateSearch,*/
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateCard,
-          resizable: false,
-          panelLeftHide: true
-        },
-      },
-      {
-        id: '1',
-        icon: this.sys025?.datas[4].icon,
-        text: 'smallcard',
-        type: ViewType.tree_smallcard,
-        active: false,
-        sameData: true,
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateSmallCard,
-          resizable: false,
-        },
-      },
-      {
-        id: '1',
-        icon: this.sys025?.datas[0].icon,
-        text: 'list',
-        type: ViewType.tree_list,
-        active: false,
-        sameData: true,
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateList,
-          resizable: false,
-        },
-      },
-    ];
+ 
     //View mặc định
     this.currView = this.templateCard
 
@@ -653,7 +593,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.route.params.subscribe((params) => {
       if (params?.funcID) {
         this.funcID = params?.funcID;
-
         this.dmSV.folderID = '';
         this.dmSV.idMenuActive =  this.funcID;
         this.dmSV.menuIdActive.next(this.funcID);
@@ -661,6 +600,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.fileService.options.page = 1;
         this.viewActive.model.panelLeftHide = true;
         this.view.dataService.dataSelected = null;
+        this.dmSV.isSearchView = false;
         this.setDisableAddNewFolder();
         this.getDataByFuncID(this.funcID);
         this.setBreadCumb();
@@ -726,6 +666,15 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     const dcScroll = event.srcElement;
     if ((dcScroll.scrollTop < (dcScroll.scrollHeight - dcScroll.clientHeight))|| dcScroll.scrollTop == 0) return;
     // Nếu còn dữ liệu folder thì scroll folder
+    if(this.dmSV.isSearchView)
+    {
+      if(this.isScrollSearch)
+      {
+        this.modelSearch.page ++;
+        this.getDataSearch();
+      }
+      return
+    }
     if(this.isScrollFolder) {
       this.folderService.options.page ++;
       this.getDataFolder(this.dmSV.folderID);
@@ -1035,13 +984,15 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.dmSV.breadcumb.next(breadcumb);
         }
         if (breadcumb.length == 0) id = '';
+
         //Chuyển page về 1
         this.folderService.options.page = 1;
         this.fileService.options.page = 1;
 
         this.isScrollFile = true;
         this.isScrollFolder = true;
-
+        this.isScrollSearch = false;
+        this.dmSV.isSearchView = false;
         this.dmSV.folderName = item.folderName;
         this.dmSV.parentFolderId = item.parentId;
         this.dmSV.parentFolder.next(item);
@@ -1180,19 +1131,22 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
 
   search() {
     this.setHideModeView(true);
-    var model = new DataRequest();
-    model.funcID = this.view.formModel.funcID;
-    model.page = 1;
-    model.pageSize = 20;
-    model.entityName = this.view.formModel.entityPer;
-    this.fileService.searchFile(this.textSearchAll, model).subscribe((item) => {
-      if (item) {
-        this.data = item.data;
-        this.changeDetectorRef.detectChanges();
+    this.modelSearch.funcID = this.view.formModel.funcID;
+    this.modelSearch.page = 1;
+    this.modelSearch.entityName = this.view.formModel.entityPer;
+    this.isScrollSearch = true;
+    this.getDataSearch();
+  }
+  getDataSearch()
+  {
+    this.fileService.searchFile(this.textSearchAll, this.modelSearch).subscribe((item) => {
+      if (item && item.data) {
+        if(item.data.length <= 0 || item.data.length < this.modelSearch.pageSize)
+          this.isScrollSearch = false;
+        this.data = this.data.concat(item.data);
       } 
     });
   }
-
   filterChange($event) {
     if (!$event) {
       this.dmSV.page = 1;
@@ -1261,15 +1215,18 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       this.predicates = 'FileName.Contains(@0)';
       this.values = this.textSearch;
       this.searchAdvance = false;
-      this.dmSV.isSearchView = true;
+      
       if (this.textSearch == null || this.textSearch == '') {
+        this.isScrollSearch = false;
         if (this.view.funcID == 'DMT02' || this.view.funcID == 'DMT03') {
+          this.dmSV.isSearchView = false;
           this.setHideModeView();
           this.view.viewChange(this.viewActive);
           this.codxview.currentView.viewModel.model.panelLeftHide = false;
         }
         this.getDataFolder(this.dmSV.folderID);
       } else {
+        this.dmSV.isSearchView = true;
         this.currView = this.templateSearch;
         this.search();
       }
