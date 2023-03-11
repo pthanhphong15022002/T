@@ -220,7 +220,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           var list = treeView.getBreadCumb(res.recID);
           if(list.length == 0) treeView.setNodeTree(res);
           treeView.getCurrentNode(res.recID)
-         
+          this.scrollTop();
         }
       }
       
