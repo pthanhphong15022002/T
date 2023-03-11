@@ -201,6 +201,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
+          tree.textField = 'folderName';
           if (res.recID) tree.getCurrentNode(res.recID);
           else tree.getCurrentNode(res);
         
@@ -210,6 +211,20 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         }
       }
     });
+
+    this.dmSV.isChangeClickData.subscribe(res=>{
+      if(res)
+      {
+        var treeView = this.codxview?.currentView?.currentComponent?.treeView;
+        if (treeView) {
+          var list = treeView.getBreadCumb(res.recID);
+          if(list.length == 0) treeView.setNodeTree(res);
+          treeView.getCurrentNode(res.recID)
+         
+        }
+      }
+      
+    })
     this.dmSV.isRefreshTree.subscribe((res) => {
       if (res) {
         var ele = document.getElementsByClassName('collapse');
@@ -1171,7 +1186,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     model.pageSize = 20;
     model.entityName = this.view.formModel.entityPer;
     this.fileService.searchFile(this.textSearchAll, model).subscribe((item) => {
-      debugger
       if (item) {
         this.data = item.data;
         this.changeDetectorRef.detectChanges();

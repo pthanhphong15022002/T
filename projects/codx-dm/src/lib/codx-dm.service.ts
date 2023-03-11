@@ -237,7 +237,10 @@ export class CodxDMService {
 
   public deleteFileView = new BehaviorSubject<any>(null);
   isDeleteFileView = this.deleteFileView.asObservable();
-
+  
+  public changeClickData = new BehaviorSubject<any>(null);
+  isChangeClickData = this.changeClickData.asObservable();
+  
   public editFolder = new BehaviorSubject<any>(null);
   isEditFolder = this.editFolder.asObservable();
 
@@ -481,7 +484,8 @@ export class CodxDMService {
       this.currentNode = '';
       this.folderId.next(data.recID);
       this.folderID = data.recID;
-      this.nodeSelect.next(data);
+      //this.nodeSelect.next(data);
+      this.changeClickData.next(data);
       this.disableInput.next(false);
 
       // this.folderService.getFolder(data.recID).subscribe(async (res) => {
@@ -701,7 +705,6 @@ export class CodxDMService {
             if (this.fileService.options.favoriteID == '1') list = 'DMT0230;DMT0231';
             else list = 'DMT0231';
           }
-          debugger
           if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
             e[i].disabled = false;
           } else {
