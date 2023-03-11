@@ -5,6 +5,7 @@ import {
   TemplateRef,
   Injector,
   OnDestroy,
+  ElementRef,
 } from '@angular/core';
 import {
   AuthStore,
@@ -42,6 +43,7 @@ import {
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent extends UIComponent implements  OnDestroy {
+  @ViewChild('divHome') divHome: ElementRef;
   @ViewChild('templateMain') templateMain: TemplateRef<any>;
   @ViewChild('templateSearch') templateSearch: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
@@ -67,7 +69,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   data:any;
   titleAccessDeniedFile = 'Bạn không có quyền truy cập file này';
   titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
-  titleFileName = 'Tên tài liệu';
+  titleFileName = 'Tên';
   titleCreatedBy = 'Người tạo';
   titleCreatedOn = 'Ngày tạo';
   titleLength = 'Dung lượng';
@@ -88,7 +90,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   visible: boolean = false;
   isScrollFolder = true;
   isScrollFile = true;
-
+  maxHeightScroll = 500;
   //loadedFile: boolean;
   //loadedFolder: boolean;
   //page = 1;
@@ -635,6 +637,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.fileService.options.funcID = this.funcID
         this.fileService.options.page = 1;
         this.viewActive.model.panelLeftHide = true;
+        this.view.dataService.dataSelected = null;
         this.getDataByFuncID(this.funcID);
         this.setBreadCumb();
         if(this.funcID == "DMT06" || this.funcID == "DMT05" || this.funcID == "DMT07") {
@@ -645,8 +648,13 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.view.viewChange(this.viewActive);
       }
     });
-   
     //event.view.model.template2
+  }
+
+  //Set chiều cao view list
+  setHeight()
+  {
+    this.maxHeightScroll = this.divHome.nativeElement.offsetHeight - 60;
   }
   //Refesh lại data
   refeshData()
@@ -1427,9 +1435,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.notificationsService.notifyCode('DM059');
         return null;
       }
-      this.fileService.getFile(data.recID).subscribe((data) => {
-        this.viewFile(data);
-      });
+      this.viewFile(data);
     }
     this.dmSV.openItem(data);
   }
@@ -1455,7 +1461,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   
   changeView(e: any)
   {
-    debugger
     if(e)
     {
       //View card
@@ -1464,6 +1469,17 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       else if(e?.view?.type == ViewType.tree_smallcard) this.currView = this.templateSmallCard;
       //View 
       else if(e?.view?.type == ViewType.tree_list) this.currView = this.templateList;
+      this.setHeight();
     }
+  }
+  clickMoreFunction(e:any,data:any)
+  {
+    if(e?.functionID == "DMT0210")
+    {
+      this.dataFile = data;
+      this.visible = true;
+    }
+    else this.dmSV.clickMF(e, data ,this.view)
+    //if(e?.functionID == "DMT0211") this.downc += 1;
   }
 }

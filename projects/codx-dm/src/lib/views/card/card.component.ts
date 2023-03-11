@@ -67,6 +67,7 @@ export class CardComponent implements OnInit , OnChanges {
   }
   clickMoreFunction(e,data:any)
   {
+    debugger
     if(e?.functionID == "DMT0210")
     {
       this.fileService.getFile(data.recID).subscribe(data => {

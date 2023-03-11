@@ -22,7 +22,7 @@
 
   <ng-template #context>
     <div appDragDropFileFolder [dataDrapDrop]="data" (fileFolderDropped)="fileFolderDropped($event)"
-      class="d-flex align-items-center px-3 py-1 home ">
+      class="d-flex align-items-center px-3 py-1 home">
       <div [attr.id]="data.recID" class="leaf d-flex align-items-center" [innerHTML]="dmSV.setFullHtmlNode(data, '')">
       </div>
       <codx-temp-full class="float-start" imgCss="me-3 cursor-pointer" (clickMF)="dmSV.clickMF($event, data , codxview)"
@@ -39,7 +39,7 @@
 
   <div *ngIf="isSearch">
   </div>
-  <div (scroll)="onScroll($event)" appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
+  <div #divHome  (scroll)="onScroll($event)" appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
     class="w-100 scroll-y home rounded-2 h-100 bg-white containerScroll" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
     data-kt-scroll-height="auto" data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
     data-kt-scroll-offset="0">
@@ -126,7 +126,7 @@
     <ng-container *ngFor="let item of data">
       <codx-temp-full (dblclick)="dbView(item)" appDragDropFileFolder [dataDrapDrop]="item"
         (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(item, 'float-start')"
-        [imageSrc]="dmSV.getImage(item)" (clickMF)="dmSV.clickMF($event, item)" imgCss="card-item img-folder me-3"
+        [imageSrc]="dmSV.getImage(item)" (clickMF)="clickMoreFunction($event,item)" imgCss="card-item img-folder me-3"
         [title]="item.folderName != undefined ? item.folderName : item.fileName"
         (changeDataMF)="dmSV.filterMoreFunction($event, item)" [formModel]="view.formModel" [typeMF]="'hover'"
         [bookmark]="dmSV.showBookmark(item)" subTitle="{{ item.createdOn | date: 'dd/MM/yyyy' }} | {{ item.userName }}"
@@ -141,47 +141,50 @@
 </ng-template>
 <ng-template #templateList>
   <ng-container *ngIf="data && data.length > 0">
-    <div class="dms-listview h-100 p-2" style="overflow-x:auto;">
+    <div class="tabel-div">
       <table class="table tb-dm">
-        <thead class="border-top">
+        <thead >
           <tr>
-            <th scope="col" class="w-5">
+            <th scope="col" class="w-50px">
             </th>
-            <th scope="col" class="w-30">
+            <th scope="col" class="w-300px">
               <div class="fw-bold text-dark">{{ titleFileName }}</div>
             </th>
-            <th scope="col" class="w-10">
+            <th scope="col" class="w-100px">
               <div class="fw-bold text-dark">{{ titleLength }}</div>
             </th>
-            <th scope="col" class="w-30">
-              <div class="fw-bold text-dark">Người yêu cầu</div>
-            </th>
-            <th scope="col" class="w-30">
-              <div class="fw-bold text-dark">Ngày yêu cầu</div>
-            </th>
-            <th scope="col" class="w-30">
+            <ng-container *ngIf="funcID == 'DMT06' || funcID == 'DMT05'">
+              <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark">Người yêu cầu</div>
+              </th>
+              <th scope="col" class="w-200px">
+                <div class="fw-bold text-dark">Ngày yêu cầu</div>
+              </th>
+            </ng-container>
+          
+            <th scope="col" class="w-200px">
               <div class="fw-bold text-dark">{{ titleCreatedBy }}</div>
             </th>
-            <th scope="col" class="w-30">
+            <th scope="col" class="w-200px">
               <div class="fw-bold text-dark">{{ titleCreatedOn }}</div>
             </th>
-            <th scope="col" class="w-30">
+            <th scope="col" class="w-300px">
               <div class="fw-bold text-dark">{{ titleDisc }}</div>
             </th>
           </tr>
         </thead>
-        <tbody>
-          <tr class="border-top dms-list" *ngFor="let item of data" [title]="
+        <tbody (scroll)="onScroll($event)"  [ngStyle]="{'max-height.px': maxHeightScroll}">
+          <tr class="border-top dms-list align-items-center" *ngFor="let item of data" [title]="
               item.folderName != undefined ? item.folderName : item.fileName
             ">
-            <td class="w-5">
-              <codx-mfunc (clickMF)="dmSV.clickMF($event, item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
+            <td class="w-50px">
+              <codx-mfunc (clickMF)="clickMoreFunction($event,item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
                 type="hover" [formModel]="view.formModel"></codx-mfunc>
             </td>
-            <td class="w-30" (dblclick)="dbView(item)">
+            <td class="w-300px cursor-pointer" (dblclick)="dbView(item)">
               <codx-temp-full appDragDropFileFolder [dataDrapDrop]="item"
                 (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(item, 'float-start')"
-                [imageWidth]="20" [imageSrc]="dmSV.getImage(item)" imgCss="w-20px me-3 cursor-pointer" [title]="
+                [imageWidth]="20" [imageSrc]="dmSV.getImage(item)" imgCss="w-20px me-3" [title]="
                   item.folderName != undefined ? item.folderName : item.fileName
                 " cardCss="w-250px" titleCss="dms-title pe-6" [baseHeaderRightTmp]="rightSecurity">
               </codx-temp-full>
@@ -189,26 +192,28 @@
                 <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18"></span>
               </ng-template>
             </td>
-            <td class="w-10">
+            <td class="w-100px">
               {{dmSV.getSizeKB(item)}}
             </td>
-            <td class="w-30">
-              {{getPUser(item)}}
-            </td>
-            <td class="w-30">
-              {{getDUser(item) | date: "dd/MM/yyyy"}}
-            </td>
-            <td class="w-30">
+            <ng-container *ngIf="funcID == 'DMT06' || funcID == 'DMT05'">
+              <td class="w-200px">
+                {{getPUser(item)}}
+              </td>
+              <td class="w-200px">
+                {{getDUser(item) | date: "dd/MM/yyyy"}}
+              </td>
+            </ng-container>
+            <td class="w-200px">
               <codx-temp-full [imageId]="item.createdBy" imageObjType="AD_Users" imgCss="me-3 cursor-pointer"
                 [imageWidth]="25" [subTitle]="item.userName">
               </codx-temp-full>
             </td>
-            <td class="w-30">
+            <td class="w-200px">
               <div class="erm-date">
                 {{ item.createdOn | date: "dd/MM/yyyy" }}
               </div>
             </td>
-            <td class="w-30">
+            <td class="w-300px">
               <span>{{item.description}}</span><!-- item.revisionNote -->
             </td>
           </tr>
@@ -223,8 +228,7 @@
       <div class="d-flex justify-content-between page-heading align-items-center p-2">
         <div class="fw-bold ms-2">{{ dmSV.titleEmptyTrash30 }}</div>
         <div class="cursor-pointer">
-          <span class="badge badge-light-primary fw-bold me-auto px-4 py-3" (click)="this.dmSV.emptyTrash()">{{
-            dmSV.titleEmptyAction }}</span>
+          <div class="div-btn-delete d-flex justify-content-center align-items-center cursor-pointer" (click)="this.dmSV.emptyTrash()" title="Dọn sạch thùng rác"><i class="far fa-trash-alt fs-4" ></i></div>
         </div>
       </div>
     </div>

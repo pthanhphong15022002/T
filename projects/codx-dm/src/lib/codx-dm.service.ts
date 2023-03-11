@@ -51,8 +51,6 @@ export class CodxDMService {
   public titleUpdateFolder = 'Cập nhật thư mục';
   public titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
   public titleTrashmessage = 'Bạn có muốn cho {0} vào thùng rác không ?';
-  public titleDeleteeMessage =
-    'Bạn có muốn xóa hẳn {0} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?';
   public titleNoRight = 'Bạn không có quyền download file này';
   public restoreFilemessage = '{0} đã có bạn có muốn ghi đè lên không ?';
   public restoreFoldermessage = '{0} đã có bạn có muốn ghi đè lên không ?';
@@ -63,6 +61,8 @@ export class CodxDMService {
   public FOLDER_NAME = 'DM'; //"QUẢN LÝ TÀI LIỆU CÁ NHÂN";
   public titleEmptyTrash30 =
     'Các mục trong thùng rác sẽ xóa vĩnh viễn trong 30 ngày';
+    public titleDeleteeMessage =
+    'Bạn có muốn xóa hẳn {0} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?';
   public titleEmptyAction = 'Dọn sạch thùng rác';
   public titleNodaTa = 'Không có tài liệu';
   public titleNodaTaFolder = 'Thư mục hiện tại không chứa tài liệu nào!';
@@ -1238,27 +1238,30 @@ export class CodxDMService {
         //   req.send();
         // };
 
-        this.fileService.getFile(data.recID).subscribe(async (file) => {
+        this.fileService.getFile(data.recID,false).subscribe(async (file) => {
           var id = file.recID;
           if (this.checkDownloadRight(file)) {
+            this.fileService.downloadFile(id).subscribe(async (item2)=>{
               let blob = await fetch(environment.urlUpload +"/"+ file.pathDisk).then((r) => r.blob());
-                let url = window.URL.createObjectURL(blob);
-                var link = document.createElement('a');
-                link.setAttribute('href', url);
-                link.setAttribute('download', data.fileName);
-                link.style.display = 'none';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                var files = this.listFiles;
-                if (files != null) {
-                  let index = files.findIndex((d) => d.recID.toString() === id);
-                  if (index != -1) {
-                    files[index].countDownload = files[index].countDownload + 1;
-                  }
-                  this.listFiles = files;
-                  this.ChangeData.next(true);
+              let url = window.URL.createObjectURL(blob);
+              var link = document.createElement('a');
+              link.setAttribute('href', url);
+              link.setAttribute('download', data.fileName);
+              link.style.display = 'none';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              var files = this.listFiles;
+              if (files != null) {
+                let index = files.findIndex((d) => d.recID.toString() === id);
+                if (index != -1) {
+                  files[index].countDownload = files[index].countDownload + 1;
                 }
+                this.listFiles = files;
+                //this.ChangeData.next(true);
+
+              }
+            })
           } else {
             this.notificationsService.notify(this.titleNoRight);
           }
@@ -1583,7 +1586,7 @@ export class CodxDMService {
   getSizeKB(item: any) {
     if (item.fileSize != undefined) {
       var kb = item.fileSize / 1024;
-      return kb.toFixed(2).toString() + 'Kb';
+      return kb.toFixed(2).toString() + ' Kb';
     } else return '';
   }
 
@@ -1674,14 +1677,21 @@ export class CodxDMService {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notificationsService
-      .alert(this.title, this.titleDeleteeMessage, config)
-      .closed.subscribe((x) => {
+      .alertCode("DM068", config)
+      .subscribe((x) => {
         if (x.event.status == 'Y') {
           this.folderService.emptyTrash('').subscribe(async (res) => {
-            this.fileService.getTotalHdd().subscribe((i) => {
-              this.updateHDD.next(i);
-            });
-            this.EmptyTrashData.next(true);
+            if(res)
+            {
+              this.listFolder = [];
+              this.listFiles = [];
+              this.fileService.getTotalHdd().subscribe((i) => {
+                this.updateHDD.next(i);
+              });
+              this.ChangeDataView.next(true);
+              this.notificationsService.notifyCode("SYS008");
+            }
+           
           });
         }
       });
