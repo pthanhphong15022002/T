@@ -235,6 +235,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.changeDetectorRef.detectChanges();
         this.view.dataService.dataSelected = null;
         if(this.dmSV.isSearchView) {
+          this.setHideModeView();
           this.currView = this.templateCard;
           this.view.viewChange(this.viewActive);
           this.codxview.currentView.viewModel.model.panelLeftHide = false;
@@ -659,6 +660,13 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     //event.view.model.template2
   }
 
+  //An cac mode view khac khi search
+  setHideModeView(hide = false)
+  {
+    this.views.forEach((item) => {
+      item.hide = hide;
+    });
+  }
   //Disable nút tạo mới folder tùy theo funcID
   setDisableAddNewFolder()
   {
@@ -1156,11 +1164,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   search() {
-    this.views.forEach((item) => {
-      item.hide = true;
-      if (item.text == 'Search') item.hide = false;
-    });
-
+    this.setHideModeView(true);
     var model = new DataRequest();
     model.funcID = this.view.formModel.funcID;
     model.page = 1;
@@ -1246,6 +1250,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       this.dmSV.isSearchView = true;
       if (this.textSearch == null || this.textSearch == '') {
         if (this.view.funcID == 'DMT02' || this.view.funcID == 'DMT03') {
+          this.setHideModeView();
           this.view.viewChange(this.viewActive);
           this.codxview.currentView.viewModel.model.panelLeftHide = false;
         }
