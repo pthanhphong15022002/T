@@ -130,11 +130,11 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       sub : [
         {
           id : "1",
-          name : "Được chia sẻ"
+          name : "Tài liệu được chia sẻ"
         },
         {
           id : "2",
-          name : "Chia sẻ"
+          name : "Tài liệu chia sẻ"
         }
       ]
     },
