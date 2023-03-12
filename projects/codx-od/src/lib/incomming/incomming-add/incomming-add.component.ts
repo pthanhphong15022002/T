@@ -434,6 +434,7 @@ export class IncommingAddComponent implements OnInit {
               }
             }
             if (this.attachment.fileUploadList && this.attachment.fileUploadList.length>0) {
+              this.addPermission();
               this.attachment.objectId = item.data.recID;
               (await this.attachment.saveFilesObservable()).subscribe(
                 (item2: any) => {
