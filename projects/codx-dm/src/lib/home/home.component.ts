@@ -232,6 +232,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       
     })
     this.dmSV.isRefreshTree.subscribe((res) => {
+      if(this.funcID != "DMT02" && this.funcID != "DMT03") return;
       if (res) {
         var ele = document.getElementsByClassName('collapse');
         for (var i = 0; i < ele.length; i++) {
