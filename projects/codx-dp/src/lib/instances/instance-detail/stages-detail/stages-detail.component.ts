@@ -347,6 +347,7 @@ export class StagesDetailComponent implements OnInit {
       this.taskList,
       this.step?.stepName,
       this.groupTaskID,
+      this.step?.leadtimeControl,
     ];
     let option = new SidebarModel();
     option.Width = '550px';
@@ -366,7 +367,7 @@ export class StagesDetailComponent implements OnInit {
           this.setRole(role);
           taskData['roles'] = [role];
           taskData['createdOn'] = new Date();
-          taskData['indexNo'] = groupTask['task']?.length || 1;
+          taskData['indexNo'] = groupTask ? groupTask['task']?.length : 1;
           let progress = await this.calculateProgressTaskGroup(taskData, 'add');
           this.dpService
             .addTask([taskData, progress?.average])
