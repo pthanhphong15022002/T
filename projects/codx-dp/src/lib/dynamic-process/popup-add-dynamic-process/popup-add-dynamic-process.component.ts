@@ -942,6 +942,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           break;
         //Người liên quan
         case '5':
+          e?.forEach(element => {
+            let role = {
+              objectID: element.id,
+              objectName: element.text,
+              objectType: element.objectType,
+              roleType: type,
+            }
+            this.addRole(role);
+          });
           break;
       }
     }
