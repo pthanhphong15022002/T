@@ -62,7 +62,7 @@ export class PopupAddEmployeesComponent implements OnInit {
   grvSetup: any = {};
   arrFieldRequire: any[] = [];
   mssgCode: string = 'SYS009';
-  functionName:string ="";
+  functionName: string = '';
   @ViewChild('form') form: LayoutAddComponent;
   constructor(
     private auth: AuthService,
@@ -78,11 +78,9 @@ export class PopupAddEmployeesComponent implements OnInit {
     this.user = this.auth.userValue;
     this.dialogData = dialogData.data;
     this.dialogRef = dialogRef;
-    if(this.dialogData.employee)
-    {
+    if (this.dialogData.employee) {
       this.employee = JSON.parse(JSON.stringify(this.dialogData.employee));
     }
-
   }
 
   ngOnInit(): void {
@@ -101,27 +99,25 @@ export class PopupAddEmployeesComponent implements OnInit {
   getFunction(functionID: string) {
     if (functionID) {
       this.cache.functionList(functionID).subscribe((func: any) => {
-        if (func){
+        if (func) {
           this.functionName = func.description;
-          this.getGridViewSetup(func.formName,func.gridViewName);
+          this.getGridViewSetup(func.formName, func.gridViewName);
         }
       });
     }
   }
   // get grvsetup
-  getGridViewSetup(formName: string,gridViewName:string) {
+  getGridViewSetup(formName: string, gridViewName: string) {
     if (formName && gridViewName) {
-      this.cache
-        .gridViewSetup(formName,gridViewName)
-        .subscribe((grd: any) => {
-          if (grd) {
-            this.grvSetup = grd;
-            let arrField = Object.values(grd).filter((x: any) => x.isRequire);
-            if (arrField) {
-              this.arrFieldRequire = arrField.map((x: any) => x.fieldName);
-            }
+      this.cache.gridViewSetup(formName, gridViewName).subscribe((grd: any) => {
+        if (grd) {
+          this.grvSetup = grd;
+          let arrField = Object.values(grd).filter((x: any) => x.isRequire);
+          if (arrField) {
+            this.arrFieldRequire = arrField.map((x: any) => x.fieldName);
           }
-        });
+        }
+      });
     }
   }
   // set title popup
@@ -143,13 +139,10 @@ export class PopupAddEmployeesComponent implements OnInit {
     }
     if (arrFieldUnValid) {
       this.notifiSV.notifyCode(this.mssgCode, 0, arrFieldUnValid);
-    } else 
-    {
-      if (this.isAdd) 
-      {
-        this.addEmployeeAsync(this.employee,this.funcID);
-      } 
-      else {
+    } else {
+      if (this.isAdd) {
+        this.addEmployeeAsync(this.employee, this.funcID);
+      } else {
         this.updateEmployeeAsync(this.employee);
       }
     }
@@ -158,7 +151,10 @@ export class PopupAddEmployeesComponent implements OnInit {
   updateEmployeeAsync(employee: any) {
     if (employee) {
       this.api
-        .execSv("HR","ERM.Business.HR","EmployeesBusiness","UpdateAsync",[employee,this.funcID])
+        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'UpdateAsync', [
+          employee,
+          this.funcID,
+        ])
         .subscribe((res: any) => {
           let _mssgCode = res ? 'SYS007' : 'SYS021';
           this.notifiSV.notifyCode(_mssgCode);
@@ -167,9 +163,13 @@ export class PopupAddEmployeesComponent implements OnInit {
     }
   }
   // add employee
-  addEmployeeAsync(employee: any,funcID:string) {
-    this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","SaveAsync",[employee,funcID])
-      .subscribe((res:any) => {
+  addEmployeeAsync(employee: any, funcID: string) {
+    this.api
+      .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'SaveAsync', [
+        employee,
+        funcID,
+      ])
+      .subscribe((res: any) => {
         let _mssgCode = res ? 'SYS006' : 'SYS023';
         this.notifiSV.notifyCode(_mssgCode);
         this.dialogRef.close(res);
@@ -177,46 +177,39 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
   //value change
   dataChange(e: any) {
-    if (e){
+    if (e) {
       let field = Util.camelize(e.field);
       let data = e.data;
       this.employee[field] = data;
-      if(field == "positionID"){
-        debugger
+      if (field == 'positionID') {
         let itemSelected = e.component?.itemsSelected[0];
-        if(itemSelected){
-          if(itemSelected["OrgUnitID"])
-          {
-            let orgUnitID = itemSelected["OrgUnitID"];
-            if(orgUnitID != this.employee["orgUnitID"])
-            {
-              this.form.formGroup.patchValue({"orgUnitID":orgUnitID});
-              this.employee["orgUnitID"] = orgUnitID;
+        if (itemSelected) {
+          if (itemSelected['OrgUnitID']) {
+            let orgUnitID = itemSelected['OrgUnitID'];
+            if (orgUnitID != this.employee['orgUnitID']) {
+              this.form.formGroup.patchValue({ orgUnitID: orgUnitID });
+              this.employee['orgUnitID'] = orgUnitID;
             }
           }
-          if(itemSelected["DepartmentID"])
-          {
-            let departmentID = itemSelected["DepartmentID"];
-            if(departmentID != this.employee["departmentID"])
-            {
-              this.form.formGroup.patchValue({"departmentID":departmentID});
-              this.employee["departmentID"] = departmentID;
+          if (itemSelected['DepartmentID']) {
+            let departmentID = itemSelected['DepartmentID'];
+            if (departmentID != this.employee['departmentID']) {
+              this.form.formGroup.patchValue({ departmentID: departmentID });
+              this.employee['departmentID'] = departmentID;
             }
           }
-          if(itemSelected["DivisionID"])
-          {
-            let divisionID = itemSelected["DivisionID"];
-            if(divisionID !=  this.employee["divisionID"]){
-              this.form.formGroup.patchValue({"divisionID":divisionID});
-              this.employee["divisionID"] = divisionID;
+          if (itemSelected['DivisionID']) {
+            let divisionID = itemSelected['DivisionID'];
+            if (divisionID != this.employee['divisionID']) {
+              this.form.formGroup.patchValue({ divisionID: divisionID });
+              this.employee['divisionID'] = divisionID;
             }
           }
-          if(itemSelected["CompanyID"])
-          {
-            let companyID = itemSelected["CompanyID"];
-            if(companyID != this.employee["companyID"]){
-              this.form.formGroup.patchValue({"companyID":companyID});
-              this.employee["companyID"] = companyID;
+          if (itemSelected['CompanyID']) {
+            let companyID = itemSelected['CompanyID'];
+            if (companyID != this.employee['companyID']) {
+              this.form.formGroup.patchValue({ companyID: companyID });
+              this.employee['companyID'] = companyID;
             }
           }
         }

@@ -64,6 +64,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   funcNameAddress:any;
   formType: any;
   validate: any = 0;
+  dicMST: Map<string, any> = new Map<string, any>();
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     {
@@ -210,6 +211,28 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   valueChange(e: any) {
     this.vendors[e.field] = e.data;
   }
+  mstChange(e: any) {
+    if (e && e.crrValue) {
+      this.vendors[e.ControlName] = e.crrValue;
+      let mst = this.dicMST.has(e.crrValue);
+      if (mst) this.bindingTaxInfor(this.dicMST.get(e.crrValue));
+      else
+        this.api
+          .exec<any>('PS', 'VendorsBusiness', 'GetVendorAsync', e.crrValue)
+          .subscribe((res) => {
+            if (res) {
+              this.dicMST.set(e.crrValue, res);
+              this.bindingTaxInfor(res);
+            }
+          });
+    } else {
+      this.dialog.dataService.clear();
+      this.dialog.dataService.addNew().subscribe((res) => {
+        this.form.formGroup.patchValue(res);
+        this.vendors = this.dialog.dataService!.dataSelected;
+      });
+    }
+  }
   valueChangeOverdueControl(e: any) {
     if (e.data == '0') {
       this.vendors[e.field] = false;
@@ -220,6 +243,11 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Function
+  bindingTaxInfor(data) {
+    this.form.formGroup.patchValue({ address: data['address'] });
+    this.form.formGroup.patchValue({ vendorName: data['vendorName'] });
+    this.form.formGroup.patchValue({ vendorID: data['vendorID'] });
+  }
   setTitle(e: any) {
     this.title = this.headerText;
     this.dt.detectChanges();
@@ -527,13 +555,14 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.vendors);
+    var reWhiteSpace = new RegExp("/^\s+$/");
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.vendors[keymodel[i]] == null ||
-              this.vendors[keymodel[i]] == ''
+              reWhiteSpace.test(this.vendors[keymodel[i]])
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -578,23 +607,39 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
     this.objects.debtComparision = this.vendors.debtComparision;
   }
   checkValidEmail() {
-    const regex = new RegExp(
-      '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
-    );
-    var checkRegex = regex.test(this.vendors.email);
-    if (checkRegex == false) {
-      this.notification.notify("Trường 'Email' không hợp lệ", '2');
-      this.validate++;
-      return;
+    if (this.vendors.email != null) {
+      const regex = new RegExp(
+        '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
+      );
+      var checkRegex = regex.test(this.vendors.email);
+      if (checkRegex == false) {
+        this.notification.notifyCode(
+          'SYS037',
+          0,
+          ''
+        );
+        this.validate++;
+        return;
+      }
+    }
+  }
+  checkValidPhone(){
+    if (this.vendors.phone != null) {
+      var phonenumberFormat = /(([\+84|84|(+84)|0]+(3|5|7|8|9|1[2|6|8|9])+([0-9]{8}))\b)/;
+      var checkRegex = this.vendors.phone.toLocaleLowerCase().match(phonenumberFormat)
+      if (checkRegex == null) {
+        this.notification.notify(this.gridViewSetup['Phone'].headerText + ' ' + 'không hợp lệ', '2');
+        this.validate++;
+        return;
+      }
     }
   }
   //#endregion
 
   //#region Method
   onSave() {
-    if (this.vendors.email != null) {
-      this.checkValidEmail();
-    }
+    this.checkValidPhone();  
+    this.checkValidEmail();
     this.checkValidate();
     if (this.validate > 0) {
       this.validate = 0;

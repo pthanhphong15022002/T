@@ -1,9 +1,11 @@
+import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { CodxHrService } from './../codx-hr.service';
 import { filter } from 'rxjs';
-import { UIComponent, ViewModel, ButtonModel, ViewType } from 'codx-core';
-import { Component, OnInit, ViewChild, TemplateRef, Injector } from '@angular/core';
+import { UIComponent, ViewModel, ButtonModel, ViewType, NotificationsService, SidebarModel } from 'codx-core';
+import { Component, OnInit, ViewChild, TemplateRef, Injector, ChangeDetectorRef } from '@angular/core';
 import { DataRequest } from '@shared/models/data.request';
 import { ActivatedRoute } from '@angular/router';
+import { PopupEContractComponent } from '../employee-profile/popup-econtract/popup-econtract.component';
 
 @Component({
   selector: 'lib-employee-contract',
@@ -13,6 +15,9 @@ import { ActivatedRoute } from '@angular/router';
 export class EmployeeContractComponent extends UIComponent {
   @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
+  @ViewChild('eInfoTemplate') eInfoTemplate?: TemplateRef<any>;
+  @ViewChild('contractTemplate') contractTemplate?: TemplateRef<any>;
+
   views: Array<ViewModel> = []
   funcID: string
   method = 'LoadDataEcontractWithEmployeeInfoAsync';
@@ -39,6 +44,8 @@ export class EmployeeContractComponent extends UIComponent {
     inject: Injector,
     private hrService: CodxHrService,
     private activedRouter: ActivatedRoute,
+    private df: ChangeDetectorRef,
+    private notify: NotificationsService,
     ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -64,15 +71,87 @@ export class EmployeeContractComponent extends UIComponent {
       }
     ]
     console.log('view cua e contract', this.view);
-    
+    this.view.dataService.methodDelete = 'DeleteEContractAsync';
   }
 
   HandleAction(evt){
     console.log('on action', evt);
   }
 
-  clickMF(evt, data){
+  clickMF(event, data){
+    switch (event.functionID) {
+      case 'SYS03':
+        this.HandleEContractInfo(event.text, 'edit', data);
+        this.df.detectChanges();
+        break;
+      case 'SYS02': //delete
+      this.view.dataService.delete([data]).subscribe((res) => {
+        if(res){
+          // debugger
+          // this.view.dataService.remove(data).subscribe((res) => {
+          //   console.log('res sau khi remove', res);
+            
+          // });
+          // this.df.detectChanges();
+        }
+      })
+      // this.hrService.deleteEContract(data.contract).subscribe((p) => {
+      //   if (p) {
+      //     this.notify.notifyCode('SYS008');
+      //     this.view.dataService.delete(data).subscribe((res) => {});
+      //     this.df.detectChanges();
+      //   } else {
+      //     this.notify.notifyCode('SYS022');
+      //   }
+      // });
+        break;
+      case 'SYS04': //copy
+        this.copyValue(event.text, data, 'eContract');
+        this.df.detectChanges();
+        break;
+    }
+  }
 
+  copyValue(actionHeaderText, data, flag) {
+    this.hrService
+    .copy(data, this.view.formModel, 'RecID')
+    .subscribe((res) => {
+      this.HandleEContractInfo(actionHeaderText, 'copy', res);
+    });
+  }
+
+  addContract(evt){
+    this.HandleEContractInfo(evt.text,'add',null);
+  }
+
+  HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.FormModel = this.view.formModel;
+    // let isAppendix = false;
+    // if((actionType == 'edit' || actionType == 'copy') && data.isAppendix == true){
+    //   isAppendix = true;
+    // }
+    let dialogAdd = this.callfc.openSide(
+      PopupEProcessContractComponent,
+      // isAppendix ? PopupSubEContractComponent : PopupEContractComponent,
+      {
+        actionType: actionType,
+        dataObj: data,
+        headerText:
+          actionHeaderText + ' ' + this.view.function.description,
+        employeeId: data?.employeeID,
+        funcID: this.view.funcID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res) {
+        this.view.dataService.addNew(res);
+        this.df.detectChanges();
+      }
+      if (res?.event) this.view.dataService.clear();
+    });
   }
 
 }

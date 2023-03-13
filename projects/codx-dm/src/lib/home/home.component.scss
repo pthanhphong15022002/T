@@ -65,14 +65,6 @@ codx-treeview .no-permission {
 // }
 
 
-.dms-listview {
-
-  .table tr:first-child,
-  .table th:first-child,
-  .table td:first-child {
-    padding-left: 1rem;
-  }
-}
 
 .w-30 {
   width: 130px;
@@ -96,4 +88,48 @@ codx-treeview .no-permission {
 .result-group-dm:hover
 {
   background-color: #F4F8FF;
+}
+.tabel-div
+{
+  overflow-x:auto;
+  max-width: 100%;
+  height: calc(100%);
+}
+.tabel-div> table
+{
+  min-width: 100%;
+  thead , tbody{
+    display:block;
+  }
+  tbody
+  {
+    overflow-x:hidden;
+  }
+  tr{
+    display:flex;
+  }
+  td{
+    border: none;
+
+  }
+}
+.w-300px
+{
+  width: 300px;
+}
+.div-btn-delete
+{
+  padding: 10px;
+  i{
+    color: #F73D50;
+  }
+}
+
+.div-btn-delete:hover
+{
+  background-color: #DC3545;
+  i
+  {
+    color: white
+  }
 }

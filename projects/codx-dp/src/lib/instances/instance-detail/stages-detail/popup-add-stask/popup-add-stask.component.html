@@ -176,6 +176,7 @@
         >
         </codx-label>
         <codx-input
+          [disabled]="leadtimeControl && stepsTasks?.isTaskDefault"
           field="startDate"
           (valueChange)="changeValueDate($event)"
           [crrValue]="stepsTasks?.startDate"
@@ -192,6 +193,7 @@
         >
         </codx-label>
         <codx-input
+          [disabled]="leadtimeControl && stepsTasks?.isTaskDefault"
           field="endDate"
           (valueChange)="changeValueDate($event)"
           [crrValue]="stepsTasks?.endDate"

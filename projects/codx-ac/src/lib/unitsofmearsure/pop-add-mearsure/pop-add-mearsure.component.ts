@@ -206,13 +206,14 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.unitsofmearsure);
+    var reWhiteSpace = new RegExp("/^\s+$/");
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.unitsofmearsure[keymodel[i]] == null ||
-              this.unitsofmearsure[keymodel[i]] == ''
+              reWhiteSpace.test(this.unitsofmearsure[keymodel[i]])
             ) {
               this.notification.notifyCode(
                 'SYS009',

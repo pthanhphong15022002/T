@@ -46,7 +46,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   cashpayment: CashPayment;
   formType: any;
   gridViewSetup: any;
-  cashbookName: any;
   validate: any = 0;
   parentID: string;
   cashpaymentline: Array<CashPaymentLine> = [];
@@ -95,19 +94,21 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    if (this.cashpayment?.voucherNo != null) {
-      //#region  load cashpaymentline
-      this.acService
-        .loadData(
-          'ERM.Business.AC',
-          'CashPaymentsLinesBusiness',
-          'LoadDataAsync',
-          this.cashpayment.recID
-        )
-        .subscribe((res: any) => {
-          this.cashpaymentline = res;
-        });
-      //#endregion
+    if (this.formType == 'edit') {
+      if (this.cashpayment?.voucherNo != null) {
+        //#region  load cashpaymentline
+        this.acService
+          .loadData(
+            'ERM.Business.AC',
+            'CashPaymentsLinesBusiness',
+            'LoadDataAsync',
+            this.cashpayment.recID
+          )
+          .subscribe((res: any) => {
+            this.cashpaymentline = res;
+          });
+        //#endregion
+      }
     }
   }
   //#endregion
@@ -127,6 +128,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       case 'SYS02':
         this.deleteRow(data);
         break;
+      case 'SYS03':
+        this.editRow(data);
+        break;
     }
   }
 
@@ -138,7 +142,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   valueChange(e: any) {
     if (e.field.toLowerCase() === 'voucherdate' && e.data)
-      this.cashpayment[e.field] = e.data.fromDate;
+      this.cashpayment[e.field] = e.data;
     else this.cashpayment[e.field] = e.data;
     let sArray = [
       'currencyid',
@@ -276,7 +280,11 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
 
   deleteRow(data) {
     this.cashpaymentlineDelete.push(data);
-    this.grid.deleteRow();
+    this.grid.deleteRow(data);
+  }
+
+  editRow(data){
+    // this.grid.upda(data.rowNo);
   }
 
   setDefault(o) {
@@ -295,7 +303,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     } else {
       let data = this.form.data;
       this.cashpaymentline = this.grid.dataSource;
-      if (this.formType == 'add') {
+      if (this.formType == 'add' || this.formType == 'copy') {
         this.dialog.dataService
           .save((opt: RequestOption) => {
             opt.methodName = 'AddAsync';
@@ -355,8 +363,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      let data = this.form.data;
-
       this.cashpaymentline = this.grid.dataSource;
       this.dialog.dataService
         .save((opt: RequestOption) => {
@@ -364,7 +370,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           opt.className = 'CashPaymentsBusiness';
           opt.assemblyName = 'AC';
           opt.service = 'AC';
-          opt.data = [data];
+          opt.data = [this.cashpayment];
           return true;
         })
         .subscribe((res) => {
@@ -412,29 +418,17 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       }
     }
   }
-
-  getvalueNameCashBook(data: any) {
-    this.acService
-      .loadData('ERM.Business.AC', 'CashBookBusiness', 'LoadDataAsync', [])
-      .subscribe((res: any) => {
-        res.forEach((element) => {
-          if (element.cashBookID == data) {
-            this.cashbookName = element.cashBookName;
-          }
-        });
-      });
-  }
-
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.cashpayment);
+    var reWhiteSpace = new RegExp("/^\s+$/");
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.cashpayment[keymodel[i]] == null ||
-              this.cashpayment[keymodel[i]] == ''
+              reWhiteSpace.test(this.cashpayment[keymodel[i]])
             ) {
               this.notification.notifyCode(
                 'SYS009',

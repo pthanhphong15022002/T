@@ -275,7 +275,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   addUserTemp() {
-    debugger;
     this.checkBtnAdd = true;
     var formGroup = this.form.formGroup.controls;
     if (!this.adUser.buid) formGroup.buid.setValue(null);
@@ -340,6 +339,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         false,
         false,
         this.lstChangeModule,
+        this.saveSuccess,
       ];
     }
     if (this.formType == 'edit') {
@@ -358,7 +358,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   beforeSaveTemp(op: RequestOption) {
-    debugger;
     var data = [];
     this.isAddMode = true;
     op.methodName = 'AddUserAsync';
@@ -369,6 +368,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       false,
       false,
       this.lstChangeModule,
+      this.saveSuccess,
     ];
     op.data = data;
     return true;

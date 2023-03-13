@@ -15,14 +15,14 @@
           <div class="bg-sidebar">
             <div class="profile-bg"></div>
             <div class="d-flex flex-column text-center mx-4 profile-info">
-              <div class="mb-4 d-flex justify-content-between align-items-top">
-                <span
+              <div class="mb-4 d-flex justify-content-center align-items-top">
+                <!-- <span
                   type="button"
                   class="btn btn-icon btn-light-primary rounded-circle"
                   (click)="previousEmp()"
                 >
                   <i class="icon-arrow_back_ios icon-16"></i>
-                </span>
+                </span> -->
                 <div class="d-flex justify-content-center">
                   <div class="position-relative mt-6">
                     <codx-img
@@ -44,7 +44,7 @@
                         class="btn btn-icon btn-sm rounded-circle btn-primary"
                         ngbDropdownToggle
                       >
-                        <!-- <i class="icon-keyboard_arrow_down"></i> -->
+                        <i class="icon-keyboard_arrow_down"></i>
                       </span>
                       <div ngbDropdownMenu class="" style="min-width: 350px">
                         <div class="card card-flush" *ngIf="eInfoFormModel">
@@ -301,19 +301,25 @@
                     </div>
                   </div>
                 </div>
-                <span
+                <!-- <span
                   type="button"
                   class="btn btn-icon btn-light-primary rounded-circle"
                   (click)="nextEmp()"
                 >
                   <i class="icon-arrow_forward_ios icon-16"></i>
-                </span>
+                </span> -->
               </div>
               <div class="fw-bold fs-5 mb-1">
                 {{ infoPersonal?.employeeName }}
               </div>
               <div class="text-gray-500">
-                {{ infoPersonal?.positionName }}
+                <div class="text-gray-500" *ngIf="view.formModel">
+                  {{
+                    infoPersonal?.positionID
+                      | formatvalue : view.formModel : "positionID"
+                      | async
+                  }}
+                </div>
               </div>
             </div>
           </div>
@@ -329,6 +335,13 @@
               <div class="d-flex align-items-center text-gray-700 me-4">
                 <span class="icon-date_range icon-14 me-1"></span>
                 <span #joinedOn>{{ infoPersonal?.joinedOn | fmDT }}</span>
+              </div>
+              <div
+                class="d-flex align-items-center text-gray-700 me-4"
+                *ngIf="isRegular == 'ChinhThuc'"
+              >
+                <span class="icon-i-dot text-gray-500"></span>
+                <span class="badge badge-success border-0"> Chính thức </span>
               </div>
               <div class="d-flex align-items-center">
                 <codx-vll
@@ -756,7 +769,7 @@
   </div>
 </ng-template>
 
-<!-- pane_1 Thông tin cá nhân2-->
+<!-- pane_1 Thông tin cá nhân-->
 <ng-template #info>
   <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul
@@ -920,9 +933,7 @@
                     </codx-label>
                   </div>
                   <div class="d-flex">
-                    <span
-                      class="icon-wysiwyg icon-16 text-gray-600 me-2"
-                    ></span>
+                    <span class="icon-flag icon-16 text-gray-600 me-2"></span>
                     <span class="fw-bold text-dark fs-6">
                       {{
                         infoPersonal?.nationality
@@ -1079,7 +1090,6 @@
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span class="icon-school icon-16 text-gray-600 me-2"></span>
                     <span class="fw-bold text-dark fs-6">
                       <codx-vll
                         [showText]="true"
@@ -1103,7 +1113,6 @@
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span class="icon-school icon-16 text-gray-600 me-2"></span>
                     <span class="fw-bold"> {{ infoPersonal?.degreeName }}</span>
                   </div>
                 </div>
@@ -1179,7 +1188,7 @@
                   </div>
 
                   <div class="d-flex align-items-center">
-                    <span class="icon-event icon-16 text-gray-600 me-2"></span>
+                    <span class="icon-mail icon-16 text-gray-600 me-2"></span>
                     <span class="text-dark fw-bold fs-6">
                       {{ infoPersonal?.email }}</span
                     >
@@ -1211,7 +1220,7 @@
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
-                    <span class="icon-event icon-16 text-gray-600 me-2"></span>
+                    <span class="icon-mail icon-16 text-gray-600 me-2"></span>
                     <span class="text-dark fw-bold fs-6">
                       {{ infoPersonal?.personalEmail }}</span
                     >
@@ -1960,9 +1969,7 @@
                       </codx-label>
                     </div>
                     <div class="d-flex align-items-center">
-                      <span
-                        class="icon-event icon-16 text-gray-600 me-2"
-                      ></span>
+                      <span class="icon-book icon-16 text-gray-600 me-2"></span>
                       <span class="fw-bold text-dark fs-6">
                         {{
                           infoPersonal?.positionID
@@ -2004,6 +2011,7 @@
                       </codx-label>
                     </div>
                     <div class="fw-bold text-dark fs-6">
+                      <i class="icon-connection-point"></i>
                       {{
                         infoPersonal?.orgUnitID
                           | formatvalue : eInfoFormModel : "orgUnitID"
@@ -2024,6 +2032,7 @@
                       </codx-label>
                     </div>
                     <div #idCardNo class="fw-bold text-dark fs-6">
+                      <i class="icon-location_on"></i>
                       {{
                         infoPersonal?.locationID
                           | formatvalue : eInfoFormModel : "locationID"

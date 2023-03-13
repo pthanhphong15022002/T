@@ -219,13 +219,14 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.warehouses);
+    var reWhiteSpace = new RegExp("/^\s+$/");
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.warehouses[keymodel[i]] == null ||
-              this.warehouses[keymodel[i]] == ''
+              reWhiteSpace.test(this.warehouses[keymodel[i]])
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -257,6 +258,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     this.objects.createdBy = this.warehouses.createdBy;
     this.objects.modifiedOn = this.warehouses.modifiedOn;
     this.objects.modifiedBy = this.warehouses.modifiedBy;
+    this.objects.buid = this.warehouses.buid;
   }
   //#endregion
 
