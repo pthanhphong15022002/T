@@ -114,13 +114,14 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
     }
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.itemposting);
+    var reWhiteSpace = new RegExp("/^\s+$/");
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.itemposting[keymodel[i]] == null ||
-              this.itemposting[keymodel[i]].match(/^ *$/) != null
+              reWhiteSpace.test(this.itemposting[keymodel[i]])
             ) {
               this.notification.notifyCode(
                 'SYS009',

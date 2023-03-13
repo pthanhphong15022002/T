@@ -100,7 +100,7 @@
       <div class="d-flex mb-4 justify-content-between">
         <div class="d-flex flex-row">
           <div class="me-2">
-            <codx-img [objectId]="item?.recID" imageType="circle" width="35" objectType="EP_Resources"
+            <codx-img [objectId]="item?.resourceRecID" imageType="circle" width="35" objectType="EP_Resources"
               [objectName]="item?.itemName"></codx-img>
           </div>
           <div class="">
@@ -118,7 +118,7 @@
         <div class="d-flex align-items-center me-3">
           <codx-label default="Số lượng" name="lblQuantity" class="text-gray-800"></codx-label>
           <span>:</span>
-          <span class="ms-2 fw-bold">{{ item.quantity }}</span>
+          <span class="ms-2 fw-bold">{{ item?.quantity }}</span>
         </div>
       </div>
     </div>

@@ -128,6 +128,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       case 'SYS02':
         this.deleteRow(data);
         break;
+      case 'SYS03':
+        this.editRow(data);
+        break;
     }
   }
 
@@ -280,6 +283,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.grid.deleteRow(data);
   }
 
+  editRow(data){
+    // this.grid.upda(data.rowNo);
+  }
+
   setDefault(o) {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       this.parentID,
@@ -356,8 +363,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      let data = this.form.data;
-
       this.cashpaymentline = this.grid.dataSource;
       this.dialog.dataService
         .save((opt: RequestOption) => {
@@ -365,7 +370,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           opt.className = 'CashPaymentsBusiness';
           opt.assemblyName = 'AC';
           opt.service = 'AC';
-          opt.data = [data];
+          opt.data = [this.cashpayment];
           return true;
         })
         .subscribe((res) => {
@@ -416,13 +421,14 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.cashpayment);
+    var reWhiteSpace = new RegExp("/^\s+$/");
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.cashpayment[keymodel[i]] == null ||
-              this.cashpayment[keymodel[i]].match(/^ *$/) != null
+              reWhiteSpace.test(this.cashpayment[keymodel[i]])
             ) {
               this.notification.notifyCode(
                 'SYS009',
