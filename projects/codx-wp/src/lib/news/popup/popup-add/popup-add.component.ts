@@ -151,7 +151,8 @@ export class PopupAddComponent implements OnInit {
           debugger
           if (this.fileUpload.length > 0) {
             this.codxATM.objectId = this.data.recID;
-            this.codxATM.fileUploadList = this.fileUpload;
+            this.codxATM.objectType = 'WP_News';
+            this.codxATM.fileUploadList = JSON.parse(JSON.stringify(this.fileUpload));
             this.codxATM.saveFilesMulObservable().subscribe((res2: any) => {
               this.loading = false;
               this.dialogRef.close();
@@ -201,7 +202,7 @@ export class PopupAddComponent implements OnInit {
         .subscribe(async (res:any[]) => {
         if (res) {
           let data = res[1];
-          if (this.fileUpload.length > 0 && data.recID) {
+          if (this.fileUpload.length) {
             this.codxATM.objectId = data.recID;
             this.codxATM.fileUploadList = this.fileUpload;
             (await this.codxATM.saveFilesObservable()).subscribe(
@@ -225,29 +226,24 @@ export class PopupAddComponent implements OnInit {
       });
   }
   valueChange(event: any) {
-    if(event)
-    {
+    if(event){
       let field = event.field;
-      field = field[0].toLowerCase() + field.slice(1);
       let value = event.data;
+      field = field[0].toLowerCase() + field.slice(1);
       if(field === "startDate" ||  field == "endDate"){
         value = value.toDate;
       }
       this.data[field] = value;
-      this.changedt.detectChanges();
     }
-    
   }
   eventApply(event: any) {
-    if (event) 
-    {
+    if (event){
       this.data.shareControl = event[0].objectType;
       this.getValueShare(this.data.shareControl, event);
     }
   }
   getValueShare(shareControl: string, data: any[] = null) {
-    if (shareControl && data.length > 0) 
-    {
+    if (shareControl && data.length > 0){
       let permissions:any[] = [];
       switch (shareControl) {
         case this.SHARECONTROLS.OWNER:
@@ -298,24 +294,35 @@ export class PopupAddComponent implements OnInit {
     }
     this.changedt.detectChanges();
   }
+  // attachment return files
   addFiles(files: any) {
-    if (files && files.data.length > 0) {
-      files.data.forEach(f => {
-        if (f.mimeType.indexOf("image") >= 0) {
-          f['referType'] = this.FILE_REFERTYPE.IMAGE;
-          this.fileImage = f;
-          this.data['image'] = "1";
-        }
-        else if (f.mimeType.indexOf("video") >= 0) {
-          f['referType'] = this.FILE_REFERTYPE.VIDEO;
-          this.fileVideo = f;
-        }
-        this.fileUpload.push(f);
-      });
-      
+    debugger
+    if (files.data){
+      let file = files.data[0]; 
+      if(file.mimeType.indexOf("image") >= 0){
+        file['referType'] = this.FILE_REFERTYPE.IMAGE;
+        this.fileImage = JSON.parse(JSON.stringify(file));
+      }
+      else if (file.mimeType.indexOf("video") >= 0) {
+        file['referType'] = this.FILE_REFERTYPE.VIDEO;
+        this.fileVideo = JSON.parse(JSON.stringify(file));
+      }
+      if(this.fileUpload.length > 0){
+        let index = this.fileUpload.findIndex(x => x['referType'] === file['referType'])
+        if(index != -1)
+          this.fileUpload[index] = file;
+        else
+          this.fileUpload.push(file);
+      }
+      else
+      {
+        this.fileUpload.push(file);
+      }
+      this.data.image = this.fileUpload.length;
       this.changedt.detectChanges();
     }
   }
+  //close popup
   clickClosePopup() {
     this.dialogRef.close();
   }
