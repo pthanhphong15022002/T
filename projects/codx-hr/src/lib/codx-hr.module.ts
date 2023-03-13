@@ -91,6 +91,7 @@ import { EmployeeDetailComponent } from './employee-list/employee-detail/employe
 // import { LayoutComponent } from './_layout/layout.component';
 import { LayoutComponent } from 'projects/codx-hr/src/lib/_layout/layout.component';
 import { ScrollSpyDirective } from './scroll-spy.directive';
+import { PopupEProcessContractComponent } from './employee-contract/popup-eprocess-contract/popup-eprocess-contract.component';
 export const routes: Routes = [
   {
     path: '',
@@ -311,6 +312,7 @@ const T_Component: Type<any>[] = [
   EmployeeDetailComponent,
   EmployeeContractComponent,
   ScrollSpyDirective,
+  PopupEProcessContractComponent
 ];
 @NgModule({
   imports: [

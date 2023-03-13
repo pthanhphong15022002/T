@@ -22,14 +22,14 @@ import {
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxHrService } from '../../codx-hr.service';
-import { PopupSubEContractComponent } from '../popup-sub-econtract/popup-sub-econtract.component';
+import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 
 @Component({
-  selector: 'lib-popup-econtract',
-  templateUrl: './popup-econtract.component.html',
-  styleUrls: ['./popup-econtract.component.scss'],
+  selector: 'lib-popup-eprocess-contract',
+  templateUrl: './popup-eprocess-contract.component.html',
+  styleUrls: ['./popup-eprocess-contract.component.css']
 })
-export class PopupEContractComponent extends UIComponent implements OnInit {
+export class PopupEProcessContractComponent extends UIComponent implements OnInit{
   formModel: FormModel;
   formModelPL: FormModel;
   formGroup: FormGroup;
@@ -41,10 +41,10 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   lstSubContract: any;
   headerText: string;
+  employeeObj: any;
 
   dataCbxContractType: any;
   @ViewChild('form') form: CodxFormComponent;
-
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,
@@ -269,4 +269,9 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
       }
     });
   }
+
+  handleSelectEmp(evt){
+
+  }
+
 }
