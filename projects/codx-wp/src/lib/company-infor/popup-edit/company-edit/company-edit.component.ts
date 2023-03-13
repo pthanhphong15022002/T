@@ -62,22 +62,15 @@ export class CompanyEditComponent implements OnInit {
 
   clickInsertNews(){
     if(this.data){
-        this.api.execSv(
-          'WP',
-          'ERM.Business.WP',
-          'NewsBusiness',
-          'InsertCompanyinfoAsync',
-          [this.data])
-          .subscribe((res:any) => {
-          if(res)
-          {
-            this.dialogRef.close(res);
-          }
-          else
-          {
-            this.dialogRef.close();
-          }
-        });
-      }
+      this.api.execSv(
+        'WP',
+        'ERM.Business.WP',
+        'NewsBusiness',
+        'InsertCompanyinfoAsync',
+        [this.data])
+        .subscribe((res:any) => {
+          this.dialogRef.close(res);
+      });
     }
+  }
 }

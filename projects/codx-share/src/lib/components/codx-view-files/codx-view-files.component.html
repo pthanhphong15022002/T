@@ -198,10 +198,10 @@
 </div>
 <!-- template view image -->
 <ng-template #image let-file>
-    <div class="position-relative w-100 h-100 p-0">
-        <ng-container>
+    <div class="files-image" [ngStyle]="{'background-image': 'url(' + file.source + ')'}">
+        <!-- <ng-container>
             <img (click)="clickViewDetail(file)" [src]="file.source" class="codx-view-file_image"/>
-        </ng-container>
+        </ng-container> -->
         <ng-container *ngIf="allowEdit">
             <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: file}"></ng-container>
         </ng-container>
