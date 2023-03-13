@@ -1568,7 +1568,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               task: taskGroupList[taskGroup['recID']] ?? [],
             };
           });
-          step['taskGroups'] = taskGroupConvert;
+          step['taskGroups'] = taskGroupConvert;        
 
           if (step['taskGroups']?.length > 0 || step['tasks']?.length > 0) {
             let taskGroup = new DP_Steps_TaskGroups();
