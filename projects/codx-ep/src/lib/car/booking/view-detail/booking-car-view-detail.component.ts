@@ -78,8 +78,7 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
     this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-      
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },      
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
   }
@@ -96,6 +95,7 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            this.listFilePermission=[];
             if(res.bookingAttendees!=null && res.bookingAttendees!=''){
               let listAttendees = res.bookingAttendees.split(";");
               listAttendees.forEach((item) => {
@@ -111,6 +111,21 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
                 }                
               });
             } 
+            if (res.listApprovers != null && res.listApprovers.length>0) {
+              res.listApprovers.forEach((item) => {
+                if (item != '') {
+                  let tmpPer = new Permission();
+                  tmpPer.objectID = item; //
+                  tmpPer.objectType = 'U';
+                  tmpPer.read = true;
+                  tmpPer.share = true;
+                  tmpPer.download = true;
+                  tmpPer.isActive = true;
+                  this.listFilePermission.push(tmpPer);
+                }
+              });
+              this.detectorRef.detectChanges();
+            }
             if(this.itemDetail?.createdBy==this.authService.userValue.userID){
 
               this.isEdit = true;

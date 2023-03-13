@@ -302,8 +302,8 @@ export class CodxEpService {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
-      'BookingItemsBusiness',
-      'GetAsync',
+      'BookingBusiness',
+      'GetListBookingItemAsyncLogic',
       [recID]
     );
   }
@@ -622,6 +622,21 @@ export class CodxEpService {
       [startDate, endDate, resourceID, recID]
     );
   }
+  bookingAttendeesValidator(listAttendees:any,startDate: string, endDate: string,recID:any) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'BookingAttendeesValidatorAsync',
+      [listAttendees,startDate, endDate, recID]
+    );
+  }
+  getBookingItems(recID:any) {
+    return this.api.execSv(
+      'EP', 'ERM.Business.EP', 'BookingItemsBusiness', 'GetAsync', 
+      [recID]
+    );
+  }
   getAvailableResources(
     resourceType: string,
     startDate: string,
@@ -647,7 +662,7 @@ export class CodxEpService {
       [startDate, endDate]
     );
   }
-
+  
   assignDriver(recID: string, driverID: string) {
     return this.api.execSv(
       'EP',
