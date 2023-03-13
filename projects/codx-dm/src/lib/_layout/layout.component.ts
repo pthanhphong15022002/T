@@ -329,10 +329,10 @@ db.DM_FolderInfo.updateMany(
     if(this.dmSV.idMenuActive == "DMT06" || this.dmSV.idMenuActive == "DMT05" || this.dmSV.idMenuActive == "DMT07") return ;
     var data = {} as any;
     data.recID = '';
+    this.dmSV.isSearchView = false;
     this.dmSV.refreshTree.next(true);
     this.dmSV.breadcumb.next([this.dmSV.menuActive.getValue()]);
     if(this.dmSV.breadcumbLink) this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0,1);
-    //isFolderId
     this.changeDetectorRef.detectChanges();
   }
   /* public funcs$: Observable<any> = of([

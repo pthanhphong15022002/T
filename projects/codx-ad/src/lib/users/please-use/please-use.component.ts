@@ -33,13 +33,17 @@ export class PleaseUseComponent extends UIComponent implements OnInit {
         'GetByEmailAsync',
         this.email
       )
-      .subscribe((res) => {
+      .subscribe((res: any) => {
         var obj: any;
         if (res) {
-          obj = {
-            formType: 'edit',
-            data: res,
-          };
+          if (!res.isExistInTenant) {
+            obj = {
+              formType: 'edit',
+              data: res,
+            };
+          } else {
+            this.notificationsService.notifyCode('AD007');
+          }
         } else {
           obj = {
             formType: 'add',

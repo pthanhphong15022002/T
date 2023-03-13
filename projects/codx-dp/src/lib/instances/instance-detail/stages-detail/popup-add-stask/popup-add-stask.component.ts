@@ -60,6 +60,7 @@ export class PopupAddStaskComponent implements OnInit {
   view = [];
   isSave = true;
   groupTask;
+  leadtimeControl = false;
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
@@ -80,7 +81,8 @@ export class PopupAddStaskComponent implements OnInit {
       this.stepsTasks['stepID'] = this.stepID;
       this.stepsTasks['progress'] = 0;
       this.stepsTasks['taskGroupID'] = dt?.data[7];
-      this.stepsTasks['refID'] = Util.uid();;
+      this.stepsTasks['refID'] = Util.uid();
+      this.stepsTasks['isTaskDefault'] = false;
     }else {
       this.showLabelAttachment = true;
       this.stepsTasks = dt?.data[4] || new DP_Instances_Steps_Tasks();
@@ -89,6 +91,7 @@ export class PopupAddStaskComponent implements OnInit {
     this.taskList = dt?.data[5];
     this.taskName = dt?.data[6];
     this.groupTaskID = dt?.data[7];
+    this.leadtimeControl = dt?.data[8];
   }
 
   ngOnInit(): void {
@@ -99,28 +102,27 @@ export class PopupAddStaskComponent implements OnInit {
     }
     if (this.taskList.length > 0) {
       this.dataCombobox = this.taskList.map((data) => {
-        if (this.litsParentID.some((x) => x == data.recID)) {
+        if (this.litsParentID.some((x) => x == data.refID)) {
           return {
-            key: data.recID,
+            key: data.refID,
             value: data.taskName,
             checked: true,
           };
         } else {
           return {
-            key: data.recID,
+            key: data.refID,
             value: data.taskName,
             checked: false,
           };
         }
       });
       if (this.status == 'edit') {
-        let index = this.dataCombobox.findIndex(
-          (x) => x.key === this.stepsTasks.recID
+        let index = this.dataCombobox?.findIndex(
+          (x) => x.key === this.stepsTasks.refID
         );
         this.dataCombobox.splice(index, 1);
-        this.taskGroupName = this.groupTackList.find(
-          (x) => x.refID === this.stepsTasks.taskGroupID
-        )['taskGroupName'] || null;
+        this.taskGroupName = this.groupTackList?.find(
+          (x) => x.refID === this.stepsTasks.taskGroupID)?.taskGroupName || null;
       }
       this.valueInput = this.dataCombobox
         .filter((x) => x.checked)
@@ -161,17 +163,17 @@ export class PopupAddStaskComponent implements OnInit {
   }
   changeValueDate(event) {
     this.stepsTasks[event?.field] = event?.data?.fromDate;
-    if(this.stepsTasks['startDate'] > this.stepsTasks['endDate'] && this.stepsTasks['endDate']){
+    if(new Date(this.stepsTasks['startDate']) > new Date(this.stepsTasks['endDate'] && this.stepsTasks['endDate'])){
       this.isSave = false;
       this.notiService.notifyCode('DP019');
     }else{
       this.isSave = true;
     }    
     if(new Date(this.stepsTasks['endDate']) > new Date(this.groupTask?.endDate)){
-      this.notiService.notifyCode('DP019');
+      this.notiService.notifyCode('DP020');
     }
     if(new Date(this.stepsTasks['startDate']) > new Date(this.groupTask['startDate'])){
-      this.notiService.notifyCode('DP019');
+      this.notiService.notifyCode('DP020');
     }
   }
   applyOwner(e, datas) {
@@ -215,7 +217,8 @@ export class PopupAddStaskComponent implements OnInit {
           if (res) {
             if(this.status === 'copy'){
               this.stepsTasks['recID'] = Util.uid();
-              this.stepsTasks['refID'] = Util.uid();;
+              this.stepsTasks['refID'] = Util.uid();
+              this.stepsTasks['isTaskDefault'] = false;
             }
             this.dialog.close({ data: this.stepsTasks, status: this.status });
           }

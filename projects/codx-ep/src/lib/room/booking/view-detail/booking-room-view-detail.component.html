@@ -227,18 +227,18 @@
                   <div class="d-flex flex-row">
                     <div class="me-2">
                       <codx-img
-                        [objectId]="item.recID"
+                        [objectId]="item?.resourceRecID"
                         imageType="circle"
                         width="35"
                         objectType="EP_Resources"
-                        [objectName]="item.itemName"
+                        [objectName]="item?.itemName"
                       >
                       </codx-img>
                     </div>
                     <div class="ms-2">
                       <div class="">
                         <span href="#" class="fw-bold">{{
-                          item.itemName
+                          item?.itemName
                         }}</span>
                       </div>
                       <div class="d-flex flex-row flex-grow-1">
@@ -260,7 +260,7 @@
                       name="lblQuantity"
                       class="text-gray-800"
                     ></codx-label>
-                    <span class="ms-2 fw-bold">{{ item.quantity }}</span>
+                    <span class="ms-2 fw-bold">{{ item?.quantity }}</span>
                   </div>
                 </div>
               </div>
