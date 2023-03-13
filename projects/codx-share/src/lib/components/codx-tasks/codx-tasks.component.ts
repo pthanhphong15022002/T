@@ -242,7 +242,7 @@ export class CodxTasksComponent
           this.vllExtendStatus = grv?.ExtendStatus?.referedValue;
           this.vllVerifyStatus = grv?.VerifyStatus?.referedValue;
           this.vllConfirmStatus = grv?.ConfirmStatus?.referedValue;
-          this.vllPriority = grv?.Priority.referedValue;
+          this.vllPriority = grv?.Priority?.referedValue;
         }
       });
     });

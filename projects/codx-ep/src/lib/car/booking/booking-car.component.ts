@@ -422,69 +422,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-  getMoreInfo(recID:any){  
-    this.selectBookingAttendees='';
-    this.driverName=' ';
-    let driverCheck=true;
-    this.codxEpService.getListAttendees(recID).subscribe((attendees:any)=>{
-      if(attendees){
-        let lstAttendees=attendees;
-        lstAttendees.forEach(element => {
-          if(element.roleType!='2'){            
-            this.selectBookingAttendees=this.selectBookingAttendees +element.userID+';';
-          }
-          else{
-            this.driverName= this.getDriverName(element.userID);
-          }
-        });
-        this.selectBookingAttendees;
-        
-        if(this.driverName==' '){
-          this.driverName=null;
-        };
-      }        
-    });
-  }
-  getListAttendees(resources:any){
-    if(resources){
-      let attendees='';
-      for(let i=0;i<resources.length;i++){
-        attendees+=resources[i]?.userID+';';
-      }
-      return attendees;
-    }
-    else {
-      return '';
-    }
-  }
-  getResourceName(resourceID:any){
-    this.tempCarName='';
-    this.listCar.forEach(r=>{
-      if(r.resourceID==resourceID){
-        this.tempCarName= r.resourceName;
-      }      
-    });
-    return this.tempCarName;
-  }
-  getDriverName(resourceID:any){
-    this.tempDriverName='';
-    this.listDriver.forEach(r=>{
-      if(r.resourceID==resourceID){
-        this.tempDriverName= r.resourceName;
-      }      
-    });
-    return this.tempDriverName;
-  }
-
-  getReasonName(reasonID:any){
-    this.tempReasonName='';
-    this.listReason.forEach(r=>{
-      if(r.reasonID==reasonID){
-        this.tempReasonName= r.description;
-      }      
-    });
-    return this.tempReasonName;
-  }
+  
 
   changeItemDetail(event) {
     this.itemDetail = event?.data;
