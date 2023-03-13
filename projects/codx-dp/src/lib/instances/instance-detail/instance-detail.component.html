@@ -110,7 +110,7 @@
             default="Mô tả: "
           ></codx-label>
         </div>
-        <div
+        <div class="text"
           *ngIf="dataSelect?.memo"
           [innerHTML]="sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)"
         ></div>
