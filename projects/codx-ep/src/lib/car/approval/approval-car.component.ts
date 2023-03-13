@@ -332,7 +332,6 @@ export class ApprovalCarsComponent extends UIComponent {
       if (res != null) {
         this.notificationsService.notifyCode('SYS034'); //đã thu hồi
         data.approveStatus = '3';
-        data.status = '3';
         this.view.dataService.update(data).subscribe();
       } else {
         this.notificationsService.notifyCode(res?.msgCodeError);
@@ -354,8 +353,7 @@ export class ApprovalCarsComponent extends UIComponent {
             if (res?.msgCodeError == null && res?.rowCount >= 0) {
               
                 this.notificationsService.notifyCode('SYS034'); //đã duyệt
-                data.approveStatus = '5';
-                data.status = '5';             
+                data.approveStatus = '5';           
 
               this.view.dataService.update(data).subscribe();
             } else {
@@ -380,7 +378,6 @@ export class ApprovalCarsComponent extends UIComponent {
               
                 this.notificationsService.notifyCode('SYS034'); //bị hủy
                 data.approveStatus = '4';
-                data.status = '4';
               
 
               this.view.dataService.update(data).subscribe();
