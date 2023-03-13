@@ -89,9 +89,16 @@ textarea.e-input,
 .e-input-group,
 .e-input-group.e-control-wrapper {
   font-size: 13px;
-  color: var(--gray-600)!important;
+  color: var(--gray-800)!important;
 }
 
+
+input.e-input::placeholder,
+textarea.e-input::placeholder,
+.e-input-group::placeholder,
+.e-input-group.e-control-wrapper::placeholder {
+  color: var(--gray-400)!important;
+}
 .popover-body {
   padding: 1rem;
   max-height: 360px;
