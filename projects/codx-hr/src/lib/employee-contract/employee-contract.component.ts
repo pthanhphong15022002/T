@@ -1,3 +1,4 @@
+import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { CodxHrService } from './../codx-hr.service';
 import { filter } from 'rxjs';
 import { UIComponent, ViewModel, ButtonModel, ViewType, NotificationsService, SidebarModel } from 'codx-core';
@@ -132,7 +133,7 @@ export class EmployeeContractComponent extends UIComponent {
     //   isAppendix = true;
     // }
     let dialogAdd = this.callfc.openSide(
-      PopupEContractComponent,
+      PopupEProcessContractComponent,
       // isAppendix ? PopupSubEContractComponent : PopupEContractComponent,
       {
         actionType: actionType,
