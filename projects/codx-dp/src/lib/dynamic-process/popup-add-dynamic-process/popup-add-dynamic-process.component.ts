@@ -218,7 +218,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   adAutoNumber: any;
   vllDateFormat: any;
   lstGroup = [];
-  checkGroup = false;
+  checkGroup = true;
   errorMessage = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -334,6 +334,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
+
   }
 
   ngAfterViewInit(): void {
@@ -1972,7 +1973,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.openTypeJob();
         break;
       case 'DP12':
-        this.viewTask(data,"G");
+        this.viewTask(data, 'G');
         break;
     }
   }
@@ -2011,7 +2012,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           case 'DP07':
             if (type == 'group' || type == 'step') res.disabled = true;
             break;
-            case 'DP13':
+          case 'DP13':
             res.disabled = true;
         }
       });
@@ -2344,14 +2345,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //View task
   viewTask(data?: any, type?: string) {
-    let listTaskConvert = this.taskList?.map(item => {
-      return{
+    let listTaskConvert = this.taskList?.map((item) => {
+      return {
         ...item,
-        refID:item.recID,
+        refID: item.recID,
         name: item?.taskName,
         type: item?.taskType,
-      }
-    })
+      };
+    });
     let value = JSON.parse(JSON.stringify(data));
     value['name'] = value['taskName'] || value['taskGroupName'];
     value['type'] = value['taskType'] || type;
