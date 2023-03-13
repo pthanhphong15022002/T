@@ -789,6 +789,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           O: 'Share_OrgUnits_Sgl',
         };
         break;
+      case 'involved':
+        this.vllShare = 'DP0331';
+        this.typeShare = '5';
+        this.multiple = true;
+        break;
     }
     this.callfc.openForm(share, '', 420, 600);
   }
@@ -801,6 +806,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (e.length > 0) {
       console.log(e);
       switch (type) {
+        //Người giám sát
         case '1':
           var value = e;
           for (var i = 0; i < value.length; i++) {
@@ -828,6 +834,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
           this.process.permissions = this.permissions;
           break;
+        //Người tham gia
         case '2':
           var value = e;
           for (var i = 0; i < value.length; i++) {
@@ -859,6 +866,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           );
           this.process.permissions = this.permissions;
           break;
+        //Người theo dõi
         case '3':
           var value = e;
           for (var i = 0; i < value.length; i++) {
@@ -886,6 +894,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
           this.process.permissions = this.permissions;
           break;
+        //Người giám sát giai đoạn
         case '4':
           var value = e;
           var tmpRole = [];
@@ -930,6 +939,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
           this.step.roles = tmpRole;
           this.process.permissions = this.permissions;
+          break;
+        //Người liên quan
+        case '5':
           break;
       }
     }

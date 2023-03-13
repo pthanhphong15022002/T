@@ -32,7 +32,7 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="TranslateName"></codx-label>
-          <codx-input field="translateName" [crrValue]="currencies.translateName" [formModel]="form.formModel"
+          <codx-input [Group]="form.formGroup" field="translateName" [crrValue]="currencies.translateName" [formModel]="form.formModel"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -40,7 +40,7 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="PrecisionName"></codx-label>
-          <codx-input field="precisionName" [crrValue]="currencies.precisionName" [formModel]="form.formModel"
+          <codx-input [Group]="form.formGroup" field="precisionName" [crrValue]="currencies.precisionName" [formModel]="form.formModel"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>

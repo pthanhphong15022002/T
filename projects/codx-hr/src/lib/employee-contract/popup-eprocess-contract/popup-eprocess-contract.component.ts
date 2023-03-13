@@ -22,14 +22,14 @@ import {
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxHrService } from '../../codx-hr.service';
-import { PopupSubEContractComponent } from '../popup-sub-econtract/popup-sub-econtract.component';
+import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 
 @Component({
-  selector: 'lib-popup-econtract',
-  templateUrl: './popup-econtract.component.html',
-  styleUrls: ['./popup-econtract.component.scss'],
+  selector: 'lib-popup-eprocess-contract',
+  templateUrl: './popup-eprocess-contract.component.html',
+  styleUrls: ['./popup-eprocess-contract.component.css']
 })
-export class PopupEContractComponent extends UIComponent implements OnInit {
+export class PopupEProcessContractComponent extends UIComponent implements OnInit{
   formModel: FormModel;
   formModelPL: FormModel;
   formGroup: FormGroup;
@@ -41,10 +41,10 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   lstSubContract: any;
   headerText: string;
+  employeeObj: any;
 
   dataCbxContractType: any;
   @ViewChild('form') form: CodxFormComponent;
-
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,
@@ -160,47 +160,15 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     }
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
-      this.hrSevice
-        .validateBeforeSaveContract(this.data, true)
-        .subscribe((res) => {
-          console.log('result', res);
-          if (res) {
-            if (res[0]) {
-              //code test
-              this.notify.notifyCode('SYS006');
-              this.dialog && this.dialog.close(res);
-              this.data = res;
-            } else if (res[1]) {
-              this.notify.alertCode(res[1]).subscribe((stt) => {
-                console.log('click', res);
-                if (stt?.event.status == 'Y') {
-                  if (res[1] == 'HR010') {
-                    this.hrSevice
-                      .addEContract(this.data)
-                      .subscribe((result) => {
-                        if (result && result[0]) {
-                          this.notify.notifyCode('SYS006');
-                          this.dialog && this.dialog.close(result);
-                        }
-                      });
-                  } else if (res[1] == 'HR009') {
-                    this.data.hiredOn = this.data.effectedDate;
-                    this.formGroup.patchValue({ hiredOn: this.data.hiredOn });
-
-                    this.hrSevice
-                      .addEContract(this.data)
-                      .subscribe((result) => {
-                        if (result && result[0]) {
-                          this.notify.notifyCode('SYS006');
-                          this.dialog && this.dialog.close(result);
-                        }
-                      });
-                  }
-                }
-              });
-            }
-          }
-        });
+      this.hrSevice.validateBeforeSaveContract(this.data, true).subscribe((res) => {
+        console.log('result', res);
+        if (res && res[0]) {
+          //code test
+          this.notify.notifyCode('SYS006');
+          this.dialog && this.dialog.close(res);
+          this.data = res;
+        }
+      });
     } else if (this.actionType == 'edit') {
       this.hrSevice.editEContract(this.data).subscribe((res) => {
         if (res && res[0]) {
@@ -230,13 +198,13 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
           this.data.limitMonths =
             event?.component?.itemsSelected[0]?.LimitMonths;
           this.formGroup.patchValue({ limitMonths: this.data.limitMonths });
-          this.setExpiredDate(this.data.limitMonths);
+          this.setExpiredDate();
           break;
         }
         case 'effectedDate': {
           this.data.effectedDate = event.data;
           this.formGroup.patchValue({ effectedDate: this.data.effectedDate });
-          this.setExpiredDate(this.data.limitMonths);
+          this.setExpiredDate();
           break;
         }
         case 'signerID': {
@@ -269,16 +237,16 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     }
   }
 
-  setExpiredDate(month) {
+  setExpiredDate() {
     if (this.data.effectedDate) {
       let date = new Date(this.data.effectedDate);
-      this.data.expiredDate = new Date(date.setMonth(date.getMonth() + month));
+      this.data.expiredDate = new Date(date.setMonth(date.getMonth() + 14));
       this.formGroup.patchValue({ expiredDate: this.data.expiredDate });
       this.cr.detectChanges();
     }
   }
 
-  handleSubContract(headerText: string, actionType: string, data: any) {
+  handleSubContract(headerText : string, actionType: string, data: any) {
     let optionSub = new SidebarModel();
     optionSub.Width = '550px';
     optionSub.zIndex = 1001;
@@ -301,4 +269,9 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
       }
     });
   }
+
+  handleSelectEmp(evt){
+
+  }
+
 }

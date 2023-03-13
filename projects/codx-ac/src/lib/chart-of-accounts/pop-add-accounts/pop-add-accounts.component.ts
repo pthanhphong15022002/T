@@ -112,7 +112,7 @@ export class PopAddAccountsComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.chartOfAccounts[keymodel[i]] == null ||
-              this.chartOfAccounts[keymodel[i]].match(/^ *$/) != null
+              String(this.chartOfAccounts[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',
