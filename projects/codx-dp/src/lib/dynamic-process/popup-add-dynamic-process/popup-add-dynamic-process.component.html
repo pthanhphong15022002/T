@@ -453,8 +453,7 @@
           <codx-label
             name="lblLocationControl"
             default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
-            viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa
-            nhiệm vụ"
+            viên trong quy trình"
           >
           </codx-label>
         </div>
@@ -789,7 +788,8 @@
             <div class="position-relative col-6">
               <codx-input
                 field="closeInstanceControl"
-                type="text"
+                type="number"
+                [showSpinButton]="false"
                 [placeholder]="
                   gridViewSetup['CloseInstanceControl']?.description
                 "
@@ -1514,7 +1514,7 @@
                     *ngIf="!taskList?.recID"
                     [ngStyle]="
                       taskList?.task?.length == 0
-                        ? { 'min-height': '20px' }
+                        ? { 'min-height': '5px' }
                         : {}
                     "
                   ></div>
@@ -1639,11 +1639,12 @@
                     </ng-container>
                     <div
                       *ngIf="taskList?.task?.length === 0"
+                      style="height: 20px;"
                     ></div>
                   </div>
                 </div>
               </div>
-              <hr />
+              <hr/>
             </ng-container>
           </div>
         </div>

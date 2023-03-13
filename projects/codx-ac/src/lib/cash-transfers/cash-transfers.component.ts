@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   Component,
   Injector,
-  OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -25,9 +24,14 @@ export class CashTransfersComponent
     id: 'btnAdd',
   };
   functionName: string;
+  parentID: string;
 
   constructor(inject: Injector) {
     super(inject);
+
+    this.router.queryParams.subscribe((res) => {
+      if (res?.recID) this.parentID = res.recID;
+    });
   }
   //#endregion
 
@@ -62,40 +66,140 @@ export class CashTransfersComponent
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(data);
+        this.edit(e, data);
+        break;
+      case 'SYS04':
+        this.copy(e, data);
         break;
     }
   }
-  //#endregion
 
-  //#region Method
   handleClickAdd(e): void {
-    this.view.dataService.addNew().subscribe((res) => {
+    this.view.dataService
+      .addNew(() =>
+        this.api.exec('AC', 'CashTranfersBusiness', 'SetDefaultAsync', [
+          this.parentID,
+        ])
+      )
+      .subscribe((res: any) => {
+        console.log({ res });
+
+        let options = new DialogModel();
+        options.DataService = this.view.dataService;
+        options.FormModel = this.view.formModel;
+        options.IsFull = true;
+        options.IsModal = true;
+
+        this.cache
+          .gridViewSetup('VATInvoices', 'grvVATInvoices')
+          .subscribe((res) => {
+            if (res) {
+              this.callfc.openForm(
+                PopupAddCashTransferComponent,
+                'This param is not working',
+                null,
+                null,
+                this.view.funcID,
+                {
+                  formType: 'add',
+                  parentID: this.parentID,
+                  formTitle: `${e.text} ${this.functionName}`,
+                },
+                '',
+                options
+              );
+            }
+          });
+      });
+  }
+
+  edit(e, data): void {
+    console.log('edit', { data });
+
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.edit(data).subscribe((res: any) => {
+      console.log({ res });
+
       let options = new DialogModel();
       options.DataService = this.view.dataService;
       options.FormModel = this.view.formModel;
       options.IsFull = true;
       options.IsModal = true;
 
-      this.callfc.openForm(
-        PopupAddCashTransferComponent,
-        'This param is not working',
-        null,
-        null,
-        this.view.funcID,
-        {
-          formType: 'add',
-          formTitle: `${e.text} ${this.functionName}`,
-        },
-        '',
-        options
-      );
+      this.cache
+        .gridViewSetup('VATInvoices', 'grvVATInvoices')
+        .subscribe((res) => {
+          if (res) {
+            this.callfc.openForm(
+              PopupAddCashTransferComponent,
+              'This param is not working',
+              null,
+              null,
+              this.view.funcID,
+              {
+                formType: 'edit',
+                formTitle: `${e.text} ${this.functionName}`,
+              },
+              '',
+              options
+            );
+          }
+        });
     });
   }
 
-  delete(data): void {}
+  copy(e, data): void {
+    console.log('copy', { data });
 
-  edit(data): void {}
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.copy().subscribe((res) => {
+      console.log(res);
+
+      let options = new DialogModel();
+      options.DataService = this.view.dataService;
+      options.FormModel = this.view.formModel;
+      options.IsFull = true;
+      options.IsModal = true;
+
+      this.cache
+        .gridViewSetup('VATInvoices', 'grvVATInvoices')
+        .subscribe((res) => {
+          if (res) {
+            this.callfc.openForm(
+              PopupAddCashTransferComponent,
+              'This param is not working',
+              null,
+              null,
+              this.view.funcID,
+              {
+                formType: 'add',
+                formTitle: `${e.text} ${this.functionName}`,
+              },
+              '',
+              options
+            );
+          }
+        });
+    });
+  }
+  //#endregion
+
+  //#region Method
+  delete(data): void {
+    this.view.dataService.delete([data], true).subscribe((res: any) => {
+      console.log({ res });
+      if (res?.data) {
+        this.api
+          .exec(
+            'ERM.Business.AC',
+            'VATInvoicesBusiness',
+            'DeleteVATInvoiceAsync',
+            data
+          )
+          .subscribe((res) => console.log(res));
+      }
+    });
+  }
   //#endregion
 
   //#region Function

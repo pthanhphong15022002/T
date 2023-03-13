@@ -1,6 +1,4 @@
-import { map } from 'rxjs';
-import { group } from '@angular/animations';
-import { async } from '@angular/core/testing';
+
 import {
   ChangeDetectorRef,
   Component,
@@ -11,6 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  ApiHttpService,
   CacheService,
   CallFuncService,
   DialogData,
@@ -69,11 +68,13 @@ export class PopupJobComponent implements OnInit {
   frmModel: FormModel;
   view = [];
   step: DP_Steps;
+  listFileTask: string[] =[];
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -101,6 +102,7 @@ export class PopupJobComponent implements OnInit {
     }
     this.taskList = dt?.data[5];
     this.taskGroupID = dt?.data[6];
+    this.listFileTask = dt?.data[7];
   }
   async ngOnInit() {
     this.getTypeTask();
@@ -108,11 +110,17 @@ export class PopupJobComponent implements OnInit {
     this.roles = this.stepsTasks['roles'];
     this.owner = this.roles?.filter(role => role.roleType === 'O');
     this.participant = this.roles?.filter(role => role.roleType === 'P');
+
     if (this.stepsTasks['parentID']) {
       this.litsParentID = this.stepsTasks['parentID'].split(';');
     }
 
-    this.dataCombobox = await this.setTaskLink(this.stepsTasks?.taskGroupID);
+    let group = this.taskGroupList.find((x) => x.recID === this.stepsTasks?.taskGroupID);
+
+    let listTaskConvert = group?.recID ? JSON.parse(JSON.stringify(group['task'])) : JSON.parse(JSON.stringify(this.taskList));
+    await this.getTasksWithoutLoop(this.stepsTasks, listTaskConvert);  
+    this.dataCombobox = this.mapDataTask(listTaskConvert,this.litsParentID);
+    // this.dataCombobox = await this.setTaskLink(this.stepsTasks?.taskGroupID);
     this.valueInput = this.dataCombobox
       .filter((x) => x.checked)
       .map((y) => y.value)
@@ -133,7 +141,6 @@ export class PopupJobComponent implements OnInit {
         }
       });
     }
-
     if (listID && listID.length > 0 && taskLinks.length > 0) {
       data = taskLinks.map((task) => {
         return listID.some((x) => x == task.key)
@@ -143,10 +150,6 @@ export class PopupJobComponent implements OnInit {
       taskLinks = data;
     }
     return taskLinks;
-  }
-
-  setOwner(){
-    
   }
 
   getTypeTask() {
@@ -169,10 +172,24 @@ export class PopupJobComponent implements OnInit {
 
   async filterText(value, key) {
     this.stepsTasks[key] = value;
-    this.taskGroupName = this.taskGroupList.find((x) => x.recID === value)[
-      'taskGroupName'
-    ];
-    this.dataCombobox = await this.setTaskLink(value);
+    let group = this.taskGroupList.find((x) => x.recID === value);
+    this.taskGroupName = group['taskGroupName'];
+    this.dataCombobox = group ? JSON.parse(JSON.stringify(group['task'])) : JSON.parse(JSON.stringify(this.taskList));
+    await this.getTasksWithoutLoop(this.stepsTasks,this.dataCombobox);    
+  }
+
+  async getTasksWithoutLoop(task, tasks) {
+    let indexTask  = tasks?.findIndex(item => item.recID === task.recID);
+    if(indexTask >= 0 ){
+      tasks.splice(indexTask, 1);
+    }
+    let listTask = tasks.filter(item => item?.parentID?.includes(task?.recID));
+    if(listTask?.length == 0) return; 
+
+
+    listTask?.forEach( async element => {
+      await this.getTasksWithoutLoop(element, tasks);
+    });
   }
 
   valueChangeAlert(event) {
@@ -344,7 +361,10 @@ export class PopupJobComponent implements OnInit {
   addFile(evt: any) {
     this.attachment.uploadFile();
   }
-  fileAdded(e) {}
+  fileAdded(e) {
+    console.log(e);
+    
+  }
 
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
@@ -375,6 +395,16 @@ export class PopupJobComponent implements OnInit {
       if (this.attachment && this.attachment.fileUploadList.length) {
         (await this.attachment.saveFilesObservable()).subscribe((res) => {
           if (res) {
+            if(res?.length >= 0){
+              res.forEach(item => {
+                if(item['data']['recID']) {
+                  this.listFileTask.push(item['data']['recID']);
+                }  
+              }) 
+            }else{
+              this.listFileTask.push(res['data']['recID']);
+            }
+                   
             this.handelSave();
           }
         });

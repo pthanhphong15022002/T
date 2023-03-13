@@ -71,18 +71,9 @@ export class PopupAddAttendeesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.apiHttpService
-    .callSv(
-      'EP',
-      'ERM.Business.EP',
-      'BookingAttendeesBusiness',
-      'GetAsync',
-      [this.data.recID]
-    )
-    .subscribe((res) => {
+    this.codxEpService.getListAttendees(this.data.recID).subscribe((res:any) => {
       if (res) {
-        let peopleAttend = res.msgBodyData[0];
-        peopleAttend.forEach((people) => {
+        res.forEach((people) => {
           let tempAttender = new BookingAttendees();
           tempAttender.userID = people.userID;
           tempAttender.userName = people.userName;
@@ -94,8 +85,7 @@ export class PopupAddAttendeesComponent implements OnInit {
               tempAttender.icon = element.icon;
               tempAttender.roleName = element.text;
             }
-          });
-          
+          });          
           this.oldAttendees.push(tempAttender);
           this.resources.push(tempAttender);
 
