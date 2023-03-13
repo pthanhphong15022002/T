@@ -1515,7 +1515,7 @@
                     *ngIf="!taskList?.recID"
                     [ngStyle]="
                       taskList?.task?.length == 0
-                        ? { 'min-height': '20px' }
+                        ? { 'min-height': '5px' }
                         : {}
                     "
                   ></div>
@@ -1640,11 +1640,12 @@
                     </ng-container>
                     <div
                       *ngIf="taskList?.task?.length === 0"
+                      style="height: 20px;"
                     ></div>
                   </div>
                 </div>
               </div>
-              <hr />
+              <hr/>
             </ng-container>
           </div>
         </div>
