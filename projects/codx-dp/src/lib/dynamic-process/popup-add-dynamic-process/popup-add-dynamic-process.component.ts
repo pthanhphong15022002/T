@@ -431,7 +431,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             .update(res.update)
             .subscribe();
           res.update.modifiedOn = new Date();
-          this.dialog.close(res.update);
+
+          var isUseSuccess = this.stepSuccess.isUsed;
+          var isUseFail = this.stepFail.isUsed;
+          var dataCountInstance = [res.update.recID, isUseSuccess, isUseFail];
+          this.dpService
+            .countInstanceByProccessId(dataCountInstance)
+            .subscribe((totalInstance) => {
+              if (totalInstance) {
+                res.update.totalInstance = totalInstance;
+                this.dialog.close(res.update);
+              }
+            });
         }
       });
   }
@@ -2324,6 +2335,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let listTaskConvert = this.taskList?.map(item => {
       return{
         ...item,
+        refID:item.recID,
         name: item?.taskName,
         type: item?.taskType,
       }
@@ -2331,6 +2343,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let value = JSON.parse(JSON.stringify(data));
     value['name'] = value['taskName'] || value['taskGroupName'];
     value['type'] = value['taskType'] || type;
+    value['refID'] = value['recID'];
     if (data) {
       this.callfc.openForm(ViewJobComponent, '', 700, 550, '', {
         value: value,
@@ -2385,7 +2398,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (view === this.viewStepReasonSuccess) {
       if ($event.field === 'isUsed' && $event.component.checked === true) {
         this.stepSuccess.isUsed = true;
-      } else if ($event.field == 'isUsed' && $event.component.checked === false) {
+      } else if (
+        $event.field == 'isUsed' &&
+        $event.component.checked === false
+      ) {
         this.stepSuccess.isUsed = false;
         this.stepSuccess.reasonControl = false;
         this.stepSuccess.newProcessID = this.guidEmpty;
@@ -2393,7 +2409,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     } else {
       if ($event.field === 'isUsed' && $event.component.checked === true) {
         this.stepFail.isUsed = true;
-      } else if ($event.field == 'isUsed' && $event.component.checked === false) {
+      } else if (
+        $event.field == 'isUsed' &&
+        $event.component.checked === false
+      ) {
         this.stepFail.isUsed = false;
         this.stepFail.reasonControl = false;
         this.stepFail.newProcessID = this.guidEmpty;

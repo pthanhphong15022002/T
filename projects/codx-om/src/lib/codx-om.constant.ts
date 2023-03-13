@@ -44,9 +44,11 @@ export const OMCONST = {
     Delete: 'SYS02',
     Edit: 'SYS03',
     Copy: 'SYS04',
-
+    //Plan
+    ReleasePlan:'OMT011',
+    UnReleasePlan:'OMT012',
     PlanWeight:'OMT013',
-
+    SharesPlan:'OMT014',
     //OB
     OBDetail: 'OMT101',
     OBAssign: 'OMT102',
@@ -88,6 +90,14 @@ export const OMCONST = {
       Align: '1',
       Assign: '2',
     },
+    PlanStatus:{
+      Cancelled:'0',
+      NotStarted:'1',
+      Ontracking:'2',
+      AtRisk:'3',
+      InTrouble:'4',
+      Completed:'5',
+    }
   },
   GRVNAME: {},
   FORMMODEL: {},

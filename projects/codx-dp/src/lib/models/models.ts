@@ -120,7 +120,7 @@ export class DP_Steps {
   taskGroups: DP_Steps_TaskGroups[] = []; // objects
   tasks: DP_Steps_Tasks[] = []; // objects
   fields: DP_Steps_Fields[] = []; // objects
-  isUsed: boolean;
+  isUsed: boolean = true;
   createdOn: Date = new Date();
   createdBy: string;
   modifiedOn: Date;
@@ -367,6 +367,7 @@ export class DP_Instances_Steps_Roles {
 
 export class DP_Instances_Steps_TaskGroups {
   recID: string;
+  refID: string;
   instanceID: string;
   stepID: string;
   indexNo: number;
@@ -389,6 +390,7 @@ export class DP_Instances_Steps_TaskGroups {
   modifiedOn: Date;
   modifiedBy: string;
   reminders: string;
+  isTaskDefault: boolean;
 }
 export class DP_Instances_Steps_TaskGroups_Roles {
   recID = Util.uid();
@@ -406,6 +408,7 @@ export class DP_Instances_Steps_TaskGroups_Roles {
 
 export class DP_Instances_Steps_Tasks {
   recID = Util.uid();
+  refID: string;
   instanceID: string;
   stepID: string;
   indexNo: number;
@@ -448,6 +451,7 @@ export class DP_Instances_Steps_Tasks {
   modifiedBy: string;
   callType: boolean;
   isOnline: boolean;
+  isTaskDefault: boolean;
 }
 
 export class DP_Instances_Steps_Tasks_Roles {

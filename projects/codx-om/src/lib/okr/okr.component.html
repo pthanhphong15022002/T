@@ -76,7 +76,7 @@
                     <lib-okr-targets [dataOKRPlans]="dataOKRPlans" [dataOKR]="dataOKR" [formModel]="view?.formModel"
                     [gridView]="gridView" [obFuncID]="obFuncID" [krFuncID]="krFuncID" [skrFuncID]="skrFuncID"
                     [formModelKR]="formModelKR" [formModelOB]="formModelOB" [formModelSKR]="formModelSKR" [groupModel]="groupModel"
-                    [funcID]="funcID" [isHiddenChart]="isHiddenChart"></lib-okr-targets>
+                    [funcID]="funcID" [isHiddenChart]="isHiddenChart" (getOKRPlanForComponent)="getOKRPlanForComponent($event)" ></lib-okr-targets>
                   
                   
                 </div>

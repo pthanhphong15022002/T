@@ -54,7 +54,7 @@ export class PopupAddOKRPlanComponent
   okrPlan: any;
   headerText = '';
   modelOKR: any;
-  curOrg = '';
+  curOrgName = '';
   listFM: any;
   okrFG: FormGroup;
   listFG: any;
@@ -79,9 +79,10 @@ export class PopupAddOKRPlanComponent
     this.okrPlan = dialogData.data[1];
     this.headerText = dialogData.data[3];
     this.curOrgID = dialogData.data[4];
-    this.listFM = dialogData.data[5];
-    this.okrFG = dialogData.data[6];
-    this.funcType = dialogData.data[7];
+    this.curOrgName = dialogData.data[5];
+    this.listFM = dialogData.data[6];
+    this.okrFG = dialogData.data[7];
+    this.funcType = dialogData.data[8];
 
     this.dialogRef = dialogRef;
     this.formModel = dialogRef.formModel;
@@ -95,6 +96,8 @@ export class PopupAddOKRPlanComponent
       this.modelOKR.year = this.okrPlan.year;
       this.modelOKR.interval = this.okrPlan.interval;
       this.modelOKR.okrType = this.obType;
+      this.modelOKR.target = 0;
+      this.modelOKR.measurement = null;
       this.dataOKR = [{ ...this.modelOKR }];
     }
   }
@@ -143,6 +146,15 @@ export class PopupAddOKRPlanComponent
           this.skrGrid = Util.camelizekeyObj(skrGrd);
         }
       });
+
+      this.cache
+      .valueList("OM004"
+      )
+      .subscribe((skrGrd) => {
+        if (skrGrd) {
+          let x = skrGrd;
+        }
+      });
   }
 
   //---------------------------------------------------------------------------------//
@@ -150,10 +162,9 @@ export class PopupAddOKRPlanComponent
   //---------------------------------------------------------------------------------//
   //Lấy thông tin owner
   getData() {
-    if(this.isAdd){
+    if (this.isAdd) {
       this.getOwnerInfo();
-    }
-    else {
+    } else {
       this.afterOpenEditForm();
     }
   }
@@ -172,7 +183,7 @@ export class PopupAddOKRPlanComponent
     this.codxOmService
       .getManagerByOrgUnitID(this.curOrgID)
       .subscribe((ownerInfo) => {
-        if (ownerInfo ) {
+        if (ownerInfo) {
           this.owner = ownerInfo;
           this.okrPlan.owner = this.owner?.userID;
           this.okrPlan.employeeID = this.owner?.employeeID;
@@ -200,7 +211,7 @@ export class PopupAddOKRPlanComponent
     if (type && obIndex != null && krIndex != null) {
       let tmpOKR = { ...this.modelOKR };
       tmpOKR.items = [];
-      tmpOKR.isAdd=true;
+      tmpOKR.isAdd = true;
       switch (type) {
         case this.obType:
           tmpOKR.okrType = this.obType;
@@ -272,25 +283,33 @@ export class PopupAddOKRPlanComponent
   //---------------------------------------------------------------------------------//
   //-----------------------------------Validate Func---------------------------------//
   //---------------------------------------------------------------------------------//
-
+  inputValidate(){
+    for (let ob of this.dataOKR) {
+      if (ob.okrName == null || ob.okrName == '') {
+        this.notificationsService.notify('OM002');
+        return;
+      } else {
+        for (let kr of ob.items) {
+          if (kr.okrName == null || kr.okrName == '') {
+            this.notificationsService.notify('OM002');
+            return;
+          } else {
+            for (let skr of kr.items) {
+              if (skr.okrName == null || skr.okrName == '') {
+                this.notificationsService.notify('OM002');
+                return;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   onSaveForm() {
-    // this.dataOKR.forEach(o => {
-    //   console.log('o',o.okrName,o.recID,o.id);
-    // });
-    // this.dataOKR.forEach(o => {
-    //   o.items.forEach(kr => {
-    //     console.log('kr',kr.okrName,kr.recID,kr.id);
-    //   });
-    // });
-    // this.dataOKR.forEach(o => {
-    //   o.items.forEach(kr => {
-    //     kr.items.forEach(skr => {
-    //     console.log('skr',skr.okrName,skr.recID,skr.id);
-    //   });});
-    // });
+    this.inputValidate();
     this.codxOmService
       .addEditOKRPlans(this.okrPlan, this.dataOKR, this.isAdd)
       .subscribe((res) => {

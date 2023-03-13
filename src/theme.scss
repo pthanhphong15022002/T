@@ -713,6 +713,11 @@
     background: var(--primary-light) !important;
 }
 
-
-
+.badge-primary {
+    background-color: var(--primary);
+}
+.badge-light-primary {
+    color: var(--primary);
+    background-color: var(--primary-lighter);
+}
 /// end 22/12/2022

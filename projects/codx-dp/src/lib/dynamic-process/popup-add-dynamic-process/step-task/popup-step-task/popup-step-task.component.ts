@@ -44,8 +44,9 @@ export class PopupJobComponent implements OnInit {
   stepName = '';
   taskGroupName = '';
   linkQuesiton = 'http://';
-  listOwner: DP_Steps_Tasks_Roles[] = [];
-  listChair = [];
+  roles: DP_Steps_Tasks_Roles[] = [];
+  participant: DP_Steps_Tasks_Roles[] = [];
+  owner:  DP_Steps_Tasks_Roles[] = [];;
   recIdEmail = '';
   isNewEmails = true;
   taskGroupList = [];
@@ -104,7 +105,9 @@ export class PopupJobComponent implements OnInit {
   async ngOnInit() {
     this.getTypeTask();
     this.getFormModel();
-    this.listOwner = this.stepsTasks['roles'];
+    this.roles = this.stepsTasks['roles'];
+    this.owner = this.roles?.filter(role => role.roleType === 'O');
+    this.participant = this.roles?.filter(role => role.roleType === 'P');
     if (this.stepsTasks['parentID']) {
       this.litsParentID = this.stepsTasks['parentID'].split(';');
     }
@@ -176,7 +179,16 @@ export class PopupJobComponent implements OnInit {
     this.stepsTasks[event?.field] = event?.data;
   }
 
-  applyOwner(e, datas) {
+  changeOwner(e) {
+    let owner = e?.map(x => {
+      return {
+        ...x,
+        roleType: "O"
+      }
+    });
+    this.owner = owner;
+  }
+  changeRoler(e, datas, type) {
     if (!e || e?.data.length == 0) return;
     let listUser = e?.data;
     listUser.forEach((element) => {
@@ -185,7 +197,7 @@ export class PopupJobComponent implements OnInit {
           objectID: element.id,
           objectName: element.text,
           objectType: element.objectType,
-          roleType: element.objectName,
+          roleType: type,
           taskID: this.stepsTasks['recID'],
         });
       }
@@ -346,7 +358,7 @@ export class PopupJobComponent implements OnInit {
 
   // save
   async saveData() {
-    this.stepsTasks['roles'] = this.listOwner;
+    this.stepsTasks['roles'] = [...this.owner, ...this.participant];
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
     let message = [];
     for (let key of this.REQUIRE) {
