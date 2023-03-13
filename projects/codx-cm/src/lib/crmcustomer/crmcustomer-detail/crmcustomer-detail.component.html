@@ -1,0 +1,110 @@
+<ng-container *ngIf="dataSelected?.recID">
+  <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [dataItem]="dataSelected" [hideMF]="false"
+    [footer]="tabs">
+    <ng-template #header let-data>
+      <div class="container_detail mt-3">
+        <div class="d-flex flex-grow-1 mb-4">
+          <div class="me-3">
+            <codx-img [objectId]="
+              dataSelected.recID
+              " [objectName]="
+              dataSelected?.processName
+              " objectType="AD_Users" [width]="35">
+            </codx-img>
+          </div>
+          <div class="d-flex flex-column flex-grow-1">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-column">
+                <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+                  {{dataSelected?.processName}}
+                </div>
+                <div class="me-4 mb-1">
+                  <span class="icon-email icon-16 me-1 text-gray-700"></span>
+                  <span class="text-gray-700">Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
+                </div>
+              </div>
+              <div class="d-flex flex-column align-items-start">
+                Tag
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex align-items-start">
+          <div class="me-3" style="white-space: nowrap">
+            <codx-label class="text-dark" fiedName="Memo" [formModel]="formModel" default="Liên hệ: "></codx-label>
+          </div>
+          <div class="d-flex flex-grow-1 mb-4">
+            <div class="me-3">
+              <codx-img [objectId]="
+                dataSelected.recID
+                " [objectName]="
+                dataSelected?.processName
+                " objectType="AD_Users" [width]="35">
+              </codx-img>
+            </div>
+            <div class="d-flex flex-column flex-grow-1">
+              <div class="d-flex flex-column">
+                <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+                  Trương Đặng Ngọc Phúc
+                </div>
+                <div class="d-flex align-items-start me-4 mb-1">
+                  <div class="me-3">
+                    <span class="icon-phone_android text-primary icon-16 me-1"></span>
+                    <span class="text-gray-700">Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
+                  </div>
+                  <div>
+                    <span class="icon-email icon-16 me-1 text-gray-500"></span>
+                    <span class="text-gray-700">tdnphuck42@gmail.com</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="view-details-header bg-body scroll-y me-3 h-100">
+          <div class="d-flex align-items-center justify-content-between mt-3">
+            <!-- <div class="d-flex flex-column">
+                Nội dung cần thêm - có thì thêm kpo có thì bỏ đi
+              </div> -->
+            <div class="d-flex tab-header">
+              <ng-container *ngFor="let item of tabDetail; let i = index">
+                <a [class]="
+                      'tab-item text-dark fw-bold' +
+                      ' ' +
+                      (item.isActive ? 'tab-active' : '')
+                    ">
+                  <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
+                    (click)="clickMenu(item)">
+                  </codx-label>
+                </a>
+              </ng-container>
+            </div>
+          </div>
+          <hr />
+
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #body let-data>
+      <div class="view-details-content m-0 mt-2">
+        <div class="process-views-detail" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+          data-kt-scroll-height="auto" data-kt-scroll-dependencies=".popup-process-header"
+          data-kt-scroll-wrappers=".process-body .no-header" [attr.data-kt-scroll-offset]="'0px'">
+          <ng-container *ngIf="nameDetail == 'Information'">
+            Thông tin chung
+          </ng-container>
+          <ng-container *ngIf="nameDetail == 'Contact'">
+            <ng-container>Liên hệ </ng-container>
+          </ng-container>
+          <ng-container *ngIf="nameDetail == 'History'">
+            <ng-container>Lịch sử </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #tabs let-data>
+      <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel" [TabControl]="tabControl"
+        [objectID]="dataSelected.recID" [funcID]="formModel.funcID" [dataTree]="treeTask"></codx-tabs>
+    </ng-template>
+  </codx-detail-tmp>
+</ng-container>

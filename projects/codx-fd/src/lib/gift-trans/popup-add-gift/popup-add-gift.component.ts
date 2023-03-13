@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Thickness } from '@syncfusion/ej2-charts';
@@ -24,6 +24,9 @@ export class PopupAddGiftComponent implements OnInit {
   amount: number = 0
   maxQuantity: number = 0;
   cardTypeDefault: string = "6";
+  @ViewChild("popupViewCard") popupViewCard: TemplateRef<any>;
+  patternSelected: any;
+  showNavigationArrows: boolean = false;
   giftTrans = new tmpAddGiftTrans();
   constructor(
     private api: ApiHttpService,
@@ -40,6 +43,7 @@ export class PopupAddGiftComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.giftTrans.TransType = "3";
     this.innitForm();
     this.getMyWalletInfor();
     this.getDataPattern(this.cardTypeDefault);
@@ -59,6 +63,8 @@ export class PopupAddGiftComponent implements OnInit {
     this.api.execSv("FD", "ERM.Business.FD", "PatternsBusiness", "GetPatternsAsync", [cardType])
       .subscribe((res: any) => {
         if (res) {
+          console.log('pattern:', res);
+
           this.lstPattern = res;
           this.dt.detectChanges();
         }
@@ -148,6 +154,7 @@ export class PopupAddGiftComponent implements OnInit {
         }
       });
   }
+
   getReciverWallet(pUserID: string) {
     if (!pUserID) return;
     this.api.execSv("FD", "ERM.Business.FD", "WalletsBusiness", "GetWalletsAsync", pUserID)
@@ -162,6 +169,7 @@ export class PopupAddGiftComponent implements OnInit {
         this.dt.detectChanges();
       });
   }
+
   getGiftInfor(giftID: string) {
     this.api.execSv("FD", "ERM.Business.FD", "GiftsBusiness", "GetGiftAsync", [giftID])
       .subscribe((res: any) => {
@@ -174,7 +182,6 @@ export class PopupAddGiftComponent implements OnInit {
       });
   }
 
-
   patternIDSeleted: string = null;
   selectedPattern(pattern: any) {
     if (!pattern) return;
@@ -185,5 +192,23 @@ export class PopupAddGiftComponent implements OnInit {
       this.patternIDSeleted = pattern.patternID;
     }
     this.dt.detectChanges();
+  }
+
+  selectCard(item) {
+    if (!item) {
+      return;
+    }
+    this.patternSelected = item;
+    this.dt.detectChanges();
+  }
+
+  previewCard() {
+    if (this.popupViewCard) {
+      this.callfc.openForm(this.popupViewCard, "", 350, 500, "", null, "");
+    }
+  }
+
+  closeViewCard(dialogRef: DialogRef) {
+    dialogRef.close();
   }
 }

@@ -44,7 +44,6 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
 
   ngOnInit(): void 
   {
-    debugger
     this.getGroupInfo();
     this.getMessage();
   }
@@ -121,21 +120,12 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   }
   // close 
   closeChatBox(){
-    let element = document.getElementById(this.group.groupID);
-    if(element){
+    debugger
+    let elementContainer = document.querySelector(".container-chat");
+    if(elementContainer){
+      let element = document.getElementById(this.group.groupID);
       element.remove();
-      let elementContainer = document.querySelector(".container-chat");
-      if(elementContainer){
-        elementContainer.childNodes.forEach((e:any) => {
-          e.setAttribute('style',`
-          position: fixed!important;
-          bottom: 0px;
-          right: 100px;
-          margin-top: -500px;
-          background-color: white;`)
-        })
-      }
-    } 
+    }
   }
   // value Change
   valueChange(event:any){
