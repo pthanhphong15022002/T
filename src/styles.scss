@@ -26,8 +26,8 @@ erm-quick-links-inner .dropdown-menu {
 
 /***** end theme ****/
 ::-webkit-scrollbar {
-  width: 0.6rem;
-  height: 0.6rem;
+  width: 0.4rem!important;
+  height: 0.6rem!important;
 }
 .fs-6 {
   font-size: var(--fs-6)!important;
@@ -515,15 +515,15 @@ codx-view-list-detail .codx-detail-footer {
   border-radius: 0;
 }
 
-.e-tab .e-tab-header .e-toolbar-item.e-active span,
-.e-tab .e-tab-header .e-toolbar-item.e-active {
-  color: #333 !important;
-}
+
 
 .e-tab .e-tab-header .e-toolbar-item.e-icon .e-tab-wrap {
-  padding: 0 10px !important;
+  padding: 0 5px !important;
 }
-
+.e-tab .e-tab-header .e-toolbar-item.e-active,
+.e-tab .e-tab-header .e-toolbar-item.e-active *{
+  color:var(--primary-dark) !important;
+}
 .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
   margin: 0;
 }
@@ -694,13 +694,13 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 }
 
 .codx-tab .tab-content {
-  min-width: 545px !important;
+  min-width: 544px !important;
   // width: 545px !important;
 }
 
 .e-sidebar {
   .codx-tab .tab-content {
-    width: 545px !important;
+    width: 544px !important;
   }
 }
 
@@ -991,9 +991,10 @@ codx-layout-add .card-header {
   float: left;
 }
 
-.e-dlg-content {
-  border-radius: 5px !important;
-}
+// .e-dlg-content {
+//   border-radius: 5px !important; //van
+//   border: 1px aqua solid;
+// }
 
 .badge.badge-xs.badge-circle {
   width: 1.2rem;
@@ -1832,4 +1833,14 @@ erm-quick-links-inner .dropdown-menu{
   margin-top: 7px!important;
   overflow: auto;
 }
+
+
+
+.codx-form > .card-body, .e-dialog > .e-dlg-content .card-body {
+  margin-right: 2px;
+}
+
+// .dialog-vll codx-valuelist{
+
+// }
 /// 14/2/2023 

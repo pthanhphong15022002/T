@@ -38,7 +38,7 @@ export interface ICashTransfer {
     bankingFees: number;
     withdrawFees: number;
     vATID: string;
-    feeControl: string;
+    feeControl: any;
     cashAcctID: string;
     offsetAcctID: string;
     feeAcctID: string;

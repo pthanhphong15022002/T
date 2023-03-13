@@ -99,7 +99,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   dataReferences = [];
   disabledProject = false;
   isClickSave = false;
-  accountable = false ;
+  accountable = false;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -223,7 +223,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.planholderTaskGoal = res['Memo']?.description;
       }
     });
-   
+
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -325,14 +325,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
-          if(res?.Accountable=="1") this.accountable = true ;else this.accountable= false ;
-          if(!this.task.taskGroupID){
-            var param = JSON.parse(res.dataValue);
+          //var dataValue = JSON.parse(res.dataValue);
+          var param = JSON.parse(res.dataValue);
+          if (param.Accountable == '1') this.accountable = true;
+          else this.accountable = false;
+          if (!this.task.taskGroupID) {
             this.param = param;
             this.taskType = param?.TaskType;
             if (this.param?.PlanControl == '1' && this.task.startDate == null)
               this.task.startDate = new Date();
-          }     
+          }
         }
       });
   }
@@ -758,9 +760,13 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   valueSelectUser(assignTo) {
     if (assignTo != '') {
       var arrAssign = assignTo.split(';');
-      if(arrAssign?.length > 1 && this.crrRole =="A" && this.accountable){
-        this.notiService.notify("Người chiu trách nhiệm chỉ được chọn 1 người - Cần messcode từ Thuong","2")
-        return
+      if (arrAssign?.length > 1 && this.crrRole == 'A' && this.accountable) {
+        this.notiService.notifyCode('TM078');
+        // this.notiService.notify(
+        //   'Người chiu trách nhiệm chỉ được chọn 1 người - Cần messcode từ Thuong',
+        //   '2'
+        // );
+        return;
       }
       if (this.task.assignTo && this.task.assignTo != '') {
         var arrNew = [];
@@ -773,7 +779,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           assignTo = arrNew.join(';');
           this.getListUser(assignTo);
         }
-        if(arrNew?.length != arrAssign?.length) this.notiService.notify("Người được chọn đã có trong danh sách trước đó - Cần messcode từ Thuong","3")
+        if (arrNew?.length != arrAssign?.length)
+          this.notiService.notifyCode('TM077');
+        // this.notiService.notify(
+        //   'Người được chọn đã có trong danh sách trước đó - Cần messcode từ Thuong',
+        //   '3'
+        // );
       } else {
         // this.task.assignTo = assignTo;
         this.getListUser(assignTo);
