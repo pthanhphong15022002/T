@@ -1,14 +1,18 @@
-<div class="form-group">
-  <div class="d-flex align-items-center">
-    <codx-label
+<div class=" w-100">
+  <div class="d-flex align-items-center" [ngStyle]="style">
+    <div> <codx-label
       class="fw-bolder"
-      fiedName="Permission"
-      default="Người phụ trách"
-    ></codx-label>
-    <i
-      class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user ms-2"
-      (click)="shareUser(controlUser)"
-    ></i>
+      [fiedName]="fiedName"
+      [formModel]="formModel"
+      [default]="default"
+    ></codx-label></div>
+    <div>
+      <button class="btn btn-icon btn-light"  (click)="shareUser(controlUser)">
+        <span class="icon-16" [ngClass]="icon"></span>
+      </button>
+    </div>
+    
+   
   </div>
   <div>
     <ng-container *ngIf="isPopupUserCbb">
@@ -29,10 +33,11 @@
       [ngTemplateOutletContext]="{ users: dataSource }"
     ></ng-container>
     <codx-label
-      *ngIf="dataSource.length == 0"
+      *ngIf="dataSource.length == 0 && title"
       class="fw-normal text-gray-400"
-      fiedName="LocationControl"
-      default="Nếu không chọn mặc định là người phụ trách của nhiệm vụ"
+      [fiedName]="fiedNameTitle"
+      [formModel]="formModel"
+      [default]="title"
     >
     </codx-label>
   </div>

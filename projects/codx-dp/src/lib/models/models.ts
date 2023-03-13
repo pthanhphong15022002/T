@@ -390,6 +390,7 @@ export class DP_Instances_Steps_TaskGroups {
   modifiedOn: Date;
   modifiedBy: string;
   reminders: string;
+  isTaskDefault: boolean;
 }
 export class DP_Instances_Steps_TaskGroups_Roles {
   recID = Util.uid();
@@ -450,6 +451,7 @@ export class DP_Instances_Steps_Tasks {
   modifiedBy: string;
   callType: boolean;
   isOnline: boolean;
+  isTaskDefault: boolean;
 }
 
 export class DP_Instances_Steps_Tasks_Roles {
