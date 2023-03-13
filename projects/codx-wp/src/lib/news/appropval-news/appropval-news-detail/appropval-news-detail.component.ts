@@ -32,7 +32,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
   assemblyName = "ERM.Business.WP";
   className = "NewsBusiness";
   functionName:string = "";
-
+  hideMFC:boolean = false;
   constructor(private api:ApiHttpService,
     private dt:ChangeDetectorRef,
     private callFuc:CallFuncService,
@@ -73,6 +73,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
           {
             this.data = JSON.parse(JSON.stringify(res));
             this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
+            this.hideMFC = this.data.approvalStatus === '5';            
             this.dt.detectChanges();
           }
         });

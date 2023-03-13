@@ -211,9 +211,13 @@
     </div>
     <div class="row my-8" style="height: 300px;">
       <ng-container *ngIf="videos.length > 0; else tmpEmptyListVideo">
-        <ngb-carousel (slide)="navigate($event)" *ngIf="slides.length > 0" 
-          carousel [wrap]="false" [keyboard]="false" [activeId]="0"
-          [showNavigationIndicators]="false" [showNavigationArrows]="showNavigation">
+        <ngb-carousel *ngIf="slides.length > 0"
+          (slide)="navigate($event)"  
+          carousel [wrap]="false" 
+          [keyboard]="false" [activeId]="0"
+          [pauseOnFocus]="true"
+          [showNavigationIndicators]="false" 
+          [showNavigationArrows]="showNavigation">
           <ng-template ngbSlide *ngFor="let slide of slides">
             <div class="d-flex align-items-center w-100">
               <ng-container *ngFor="let item of slide">
@@ -243,7 +247,7 @@
         entityName="WP_News" 
         [selectFirst]="false"
         [dataValue]="category"
-        [emptyTemplate]="emptyTemplate"
+        [emptyTemplate]="null"
         [itemTemplate]="itemTemplate" 
         [formModel]="view.formModel">
     </codx-listview>
@@ -253,7 +257,7 @@
 <ng-template #itemTemplate let-item>
   <ng-container *ngIf="item.type;else content">
     <div class="row">
-      <span *ngIf="item.type=='title';else oldValue" class="fw-bolder fs-2">{{item.subject}}</span>
+      <span *ngIf="item.type=='home';else oldValue" class="fw-bolder fs-2">{{item.subject}}</span>
       <ng-template #oldValue>
         <div class="">
           <codx-label [classList]="'fw-bold text-dark fs-2'" [formModel]="view.formModel"  default="Tin cũ hơn"></codx-label>
@@ -307,7 +311,7 @@
   </div>
 </ng-template>
 <ng-template #tmpEmptyListVideo>
-  <div class="d-flex justify-content-between">
+  <div class="d-flex justify-content-between w-100 h-100">
     <div>
       <div class="w-100 video">
         <img style="width:300px; height: 200px;" src="/assets/themes/wp/default/img/Image_NoData.svg"/>
@@ -332,10 +336,5 @@
         <div class="fw-bolder">{{mssgWP025}}</div>
       </div>
     </div>
-  </div>
-</ng-template>
-<ng-template #emptyTemplate>
-  <div>
-
   </div>
 </ng-template>

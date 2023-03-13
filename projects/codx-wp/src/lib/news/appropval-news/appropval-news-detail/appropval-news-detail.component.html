@@ -1,12 +1,14 @@
-<codx-detail-tmp 
-    [header]="header" 
-    [body]="body" 
-    (clickMF)="clickMF($event)" 
-    [hideMF]="data.approveStatus == 5"
-    [formModel]="formModel" 
-    [dataItem]="data"
-    [footer]="footer">
-</codx-detail-tmp>
+<ng-container *ngIf="data">
+    <codx-detail-tmp 
+        [header]="header" 
+        [body]="body" 
+        (clickMF)="clickMF($event)" 
+        [hideMF]="hideMFC"
+        [formModel]="formModel" 
+        [dataItem]="data"
+        [footer]="footer">
+    </codx-detail-tmp>
+</ng-container>
 
 <ng-template #header>
     <div class="d-flex align-items-center">
