@@ -250,11 +250,19 @@ export class CodxDpService {
       data
     );
   }
+  deleteFileTask(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'DeleteFilesAsync',
+      data
+    );
+  }
   updateDataDrop(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
-      'UpdateStepDrapDropAsync',
+      'DeleteFilesAsync',
       data
     );
   }
