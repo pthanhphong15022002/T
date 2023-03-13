@@ -104,7 +104,7 @@ export class PopAddInventoryComponent extends UIComponent {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.inventory[keymodel[i]] == null ||
-              this.inventory[keymodel[i]].match(/^ *$/) != null
+              String(this.inventory[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',

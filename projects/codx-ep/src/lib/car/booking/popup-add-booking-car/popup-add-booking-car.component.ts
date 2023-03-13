@@ -133,6 +133,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   approvalRule: any;
   dueDateControl: any;
   grView: any;
+  oData: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -144,7 +145,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data = dialogData?.data[0];
+    this.oData = dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
@@ -153,6 +154,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
+    this.data={...this.oData};
     if (this.isAdd) {
       this.data.requester = this.authService?.userValue?.userName;
     }
@@ -186,18 +188,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
         this.data?.equipments != null &&
         this.optionalData == null
       ) {
-        // this.data?.equipments.forEach((equip) => {
-        //   let tmpDevice = new Device();
-        //   tmpDevice.id = equip.equipmentID;
-        //   tmpDevice.isSelected = equip.isPicked;
-        //   this.lstDeviceCar.forEach((vlDevice) => {
-        //     if (tmpDevice.id == vlDevice.id) {
-        //       tmpDevice.text = vlDevice.text;
-        //       tmpDevice.icon = vlDevice.icon;
-        //     }
-        //   });
-        //   this.tmplstDevice.push(tmpDevice);
-        // });
         //Lấy list Thiết bị
         this.codxEpService.getResourceEquipments(this.data?.resourceID).subscribe((eq:any)=>{
           if(eq!=null){
@@ -617,6 +607,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
           }
         });
     }
+    
+    this.isAfterRender = true;
   }
 
   initForm() {
@@ -624,7 +616,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
       .getFormGroupBooking(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.fGroupAddBookingCar = item;
-        this.isAfterRender = true;
       });
     this.detectorRef.detectChanges();
   }
@@ -664,13 +655,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
         return;
         
       } 
-      
-      // let hours = parseInt(
-      //   ((this.data.endDate - this.data.startDate) / 1000 / 60 / 60).toFixed()
-      // );
-      // if (!isNaN(hours) && hours > 0) {
-      //   this.data.hours = hours;
-      // }
 
       this.fGroupAddBookingCar.patchValue(this.data);
       if (this.fGroupAddBookingCar.invalid == true) {

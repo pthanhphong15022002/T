@@ -131,12 +131,12 @@
     </codx-input>
   </div>
   <div class="form-group row">
-    <div class="col-6">
+    <div class="col" *ngIf="gridViewSetup && gridViewSetup['Urgency'].allowPopup == '1'">
       <codx-label [formModel]="form.formModel" fiedName="Urgency" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="urgency">
       </codx-input>
     </div>
-    <div class="col-6">
+    <div class="col" *ngIf="gridViewSetup && gridViewSetup['Security'].allowPopup == '1'">
       <codx-label [formModel]="form.formModel" fiedName="Security" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="security">
       </codx-input>
@@ -189,7 +189,7 @@
         (valueChange)="valueChangeDate($event)">
       </codx-input>
     </div>
-    <div class="col" *ngIf="form.formModel.funcID != 'ODT41'">
+    <div class="col" *ngIf="form.formModel.funcID != 'ODT41' && gridViewSetup && gridViewSetup['Deadline'].allowPopup == '1'">
       <codx-label [formModel]="form.formModel" fiedName="Deadline"></codx-label>
       <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deadline" [format]="'d'">
       </codx-input> -->
