@@ -89,7 +89,7 @@ export class PopAddBankComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.bankaccount[keymodel[i]] == null ||
-              this.bankaccount[keymodel[i]].match(/^ *$/) != null
+              String(this.bankaccount[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',

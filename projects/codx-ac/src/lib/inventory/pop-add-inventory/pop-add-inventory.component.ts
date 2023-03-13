@@ -98,14 +98,13 @@ export class PopAddInventoryComponent extends UIComponent {
   checkValidate() {
     var keygrid = Object.keys(this.gridViewSetup);
     var keymodel = Object.keys(this.inventory);
-    var reWhiteSpace = new RegExp("/^\s+$/");
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.inventory[keymodel[i]] == null ||
-              reWhiteSpace.test(this.inventory[keymodel[i]])
+              String(this.inventory[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',
