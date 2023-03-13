@@ -2945,7 +2945,7 @@
                 [isMulti]="true"
                 type="combobox"
                 field="KowID"
-                [refValue]="eDayOffGrvSetup?.KowID?.referedValue"
+                [refValue]="eDayOffGrvSetup.KowID?.referedValue"
                 (valueChange)="valueChangeFilterDayOff($event)"
               ></codx-dropdown-select>
               <span class="ms-2">
@@ -2993,7 +2993,7 @@
                 *ngIf="dayoffColumnGrid"
                 [sort]="[dayOffSortModel]"
                 #dayoffGridView
-                [formModel]="dayofFormModel"
+                [formModel]="dayoffFormModel"
                 [columnsGrid]="dayoffColumnGrid"
                 [service]="'HR'"
                 [assemblyName]="'Core'"
@@ -3235,9 +3235,9 @@
           </div>
 
           <div class="" *ngIf="ViewAllEContractFlag">
-            <div class="d-flex align-items-center mb-3 mt-5">
-              <span class="icon-i-filter-right icon-20 me-2"></span>
+            <div class="d-flex justify-content-between mb-3 mt-5">
               <div class="d-flex align-items-center me-3">
+                <span class="icon-i-filter-right icon-20 me-2"></span>
                 <codx-label
                   default="Chi tiết"
                   class="fw-bold text-uppercase fs-5 text-gray-600"
@@ -3245,6 +3245,19 @@
                 </codx-label>
                 <span class="text-gray-500 mx-2"> | </span>
                 <span class="text-gray-500">({{ eContractRowCount }})</span>
+              </div>
+              <div class="d-flex me-3 ">
+                <codx-dropdown-select
+                  *ngIf="eContractgrvSetup"
+                  [cssClass]="'rounded-pill border-1'"
+                  cssPopup="h-350px w-300px"
+                  [isMulti]="true"
+                  type="combobox"
+                  [emptyText]="eContractHeaderText['ContractTypeID']"
+                  field="ContractTypeID"
+                  [refValue]="eContractgrvSetup.ContractTypeID.referedValue"
+                  (valueChange)="valueChangFilterContract($event)"
+                ></codx-dropdown-select>
               </div>
             </div>
 
@@ -3403,7 +3416,7 @@
               <div class="d-flex align-items-center ms-5">
                 <codx-label
                   class="text-dark me-3"
-                  name="lblSeeAllEBenefit"
+                  name="lblSeeAllESkill"
                   default="Xem tất cả"
                 >
                 </codx-label>
@@ -3492,7 +3505,7 @@
                       cssPopup="h-350px w-300px"
                       [isMulti]="true"
                       type="combobox"
-                      [emptyText]="'Kỹ năng'"
+                      [emptyText]="eSkillHeaderText['SkillID']"
                       field="SkillID"
                       [refValue]="eSkillgrvSetup.SkillID.referedValue"
                       (valueChange)="valueChangeFilterSkillID($event)"
@@ -4565,7 +4578,7 @@
   <div class="d-flex align-items-center mb-5px">
     <i class="icon-calendar_today icon-16 me-2"></i>
     <span class="text-dark">
-      {{ data?.kowID | formatvalue : dayofFormModel : "kowID" | async }}</span
+      {{ data?.kowID | formatvalue : dayoffFormModel : "kowID" | async }}</span
     >
   </div>
   <div class="text-dark fs-6">
@@ -4595,7 +4608,7 @@
     <div class="min-h-40px">
       {{ data?.reason }}
     </div>
-    <codx-mfunc [formModel]="dayofFormModel" [dataItem]="data" type="hover">
+    <codx-mfunc [formModel]="dayoffFormModel" [dataItem]="data" type="hover">
     </codx-mfunc>
   </div>
 </ng-template>

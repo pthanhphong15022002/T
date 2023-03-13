@@ -11,6 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  ApiHttpService,
   CacheService,
   CallFuncService,
   DialogData,
@@ -69,11 +70,13 @@ export class PopupJobComponent implements OnInit {
   frmModel: FormModel;
   view = [];
   step: DP_Steps;
+  listFileTask: string[] =[];
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -101,6 +104,7 @@ export class PopupJobComponent implements OnInit {
     }
     this.taskList = dt?.data[5];
     this.taskGroupID = dt?.data[6];
+    this.listFileTask = dt?.data[7];
   }
   async ngOnInit() {
     this.getTypeTask();
@@ -117,6 +121,12 @@ export class PopupJobComponent implements OnInit {
       .filter((x) => x.checked)
       .map((y) => y.value)
       .join('; ');
+  }
+
+  getTasksWithoutLoop(task, tasks) {
+    // const subTasks = tasks.filter(t => t?.recID.includes(task['parentID']));
+    // const subTaskLists = subTasks.map(subTask => this.getTasksWithoutLoop(subTask, tasks, visited));
+    // return [task, ...subTaskLists.flat()];
   }
 
   mapDataTask(liskTask, listID?) {
@@ -173,6 +183,7 @@ export class PopupJobComponent implements OnInit {
       'taskGroupName'
     ];
     this.dataCombobox = await this.setTaskLink(value);
+    // console.log('----',this.getTasksWithoutLoop(this.stepsTasks, this.taskGroupName['task']));
   }
 
   valueChangeAlert(event) {
@@ -344,7 +355,10 @@ export class PopupJobComponent implements OnInit {
   addFile(evt: any) {
     this.attachment.uploadFile();
   }
-  fileAdded(e) {}
+  fileAdded(e) {
+    console.log(e);
+    
+  }
 
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
@@ -375,6 +389,16 @@ export class PopupJobComponent implements OnInit {
       if (this.attachment && this.attachment.fileUploadList.length) {
         (await this.attachment.saveFilesObservable()).subscribe((res) => {
           if (res) {
+            if(res?.length >= 0){
+              res.forEach(item => {
+                if(item['data']['recID']) {
+                  this.listFileTask.push(item['data']['recID']);
+                }  
+              }) 
+            }else{
+              this.listFileTask.push(res['data']['recID']);
+            }
+                   
             this.handelSave();
           }
         });
