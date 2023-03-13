@@ -128,6 +128,9 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       case 'SYS02':
         this.deleteRow(data);
         break;
+      case 'SYS03':
+        this.editRow(data);
+        break;
     }
   }
 
@@ -280,6 +283,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.grid.deleteRow(data);
   }
 
+  editRow(data){
+    // this.grid.upda(data.rowNo);
+  }
+
   setDefault(o) {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       this.parentID,
@@ -356,8 +363,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      let data = this.form.data;
-
       this.cashpaymentline = this.grid.dataSource;
       this.dialog.dataService
         .save((opt: RequestOption) => {
@@ -365,7 +370,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           opt.className = 'CashPaymentsBusiness';
           opt.assemblyName = 'AC';
           opt.service = 'AC';
-          opt.data = [data];
+          opt.data = [this.cashpayment];
           return true;
         })
         .subscribe((res) => {
@@ -422,7 +427,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.cashpayment[keymodel[i]] == null ||
-              this.cashpayment[keymodel[i]].match(/^ *$/) != null
+              String(this.cashpayment[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',

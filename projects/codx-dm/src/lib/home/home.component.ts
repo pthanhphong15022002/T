@@ -319,7 +319,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     });
     this.dmSV.isDisableUpload.subscribe((res) => {
       if (res) {
-        this.button.disabled = res;
+        //this.button.disabled = res;
         this.changeDetectorRef.detectChanges();
       }
     });

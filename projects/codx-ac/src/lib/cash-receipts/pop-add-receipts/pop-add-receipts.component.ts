@@ -245,8 +245,8 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
-              this.cashreceipts[keymodel[i]] == null ||
-              this.cashreceipts[keymodel[i]].match(/^ *$/) != null
+              this.cashreceipts[keymodel[i]] === null ||
+              String(this.cashreceipts[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',
