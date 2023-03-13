@@ -3,6 +3,7 @@ import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.servic
 import { CodxService, CallFuncService, ApiHttpService, DataService, FormModel, AuthStore, CacheService, NotificationsService, DialogModel, CodxListviewComponent, CRUDService } from 'codx-core';
 import { group } from '@angular/animations';
 import { PopupAddGroupComponent } from '../chat-list/popup/popup-add-group/popup-add-group.component';
+import { ChatListComponent } from '../chat-list/chat-list.component';
 
 @Component({
   selector: 'codx-chat',
@@ -21,10 +22,10 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   function: any = null;
   grdViewSetUp: any = null;
   moreFC: any = null;
+  autoClose=true;
 
   @ViewChild("chatBox") chatBox:TemplateRef<any>;
-  @ViewChild('codxListViewGroup') codxListViewGroup: CodxListviewComponent;
-  @ViewChild('codxListViewSerach') codxListViewSerach: CodxListviewComponent;
+  @ViewChild('listChat') listChat: ChatListComponent;
   constructor(
     private injector:Injector,
     public codxService:CodxService,
@@ -40,7 +41,6 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   { 
     this.user = this.auth.get();
     this.formModel = new FormModel();
-    this.dataSVSearch = new DataService(this.injector);
   }
   
 
@@ -73,10 +73,6 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
         }
       });
     }
-    this.dataSVSearch.service = "WP";
-    this.dataSVSearch.assemblyName = "ERM.Business.WP";
-    this.dataSVSearch.className = "GroupBusiness";
-    this.dataSVSearch.method = "SearchAsync";
     this.getTotalMessage();
   }
 
@@ -89,26 +85,23 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     });
     // active group - add box chat to connection
     this.signalRSV.activeGroup.subscribe((res:any) => {
-      if(res){
-        this.addBoxChat(res.groupID);
+      if(res)
+      {
+        let boxChat = this.checkBoxChat(res.groupID);
+        if(!boxChat){
+          this.getTotalMessage();
+          this.addBoxChat(res.groupID);
+        }
       }
     });
     //receiver message to connection
     this.signalRSV.reciverChat.subscribe((res:any) => {
       if(res.groupID){
-        this.addBoxChat(res.groupID);
-        if(this.codxListViewGroup){
-          let data = this.codxListViewGroup.dataService.data;
-          let _index = data.findIndex(e => e['groupID'] === res.groupID);
-          if(_index > -1){
-            let group = data[_index]; 
-            group.message = res.message;
-            group.modifiedOn = res.modifiedOn;
-            group.isRead = res.status.some(x => x["UserID"] === this.user.UserID);
-            (this.codxListViewGroup.dataService as CRUDService).removeIndex(_index).subscribe();
-            (this.codxListViewGroup.dataService as CRUDService).add(group).subscribe();
-          }
+        let isOpenBoxChat = this.checkBoxChat(res.groupID);
+        if(!isOpenBoxChat){
+          this.addBoxChat(res.groupID);
         }
+        
       }
     });
   }
@@ -125,10 +118,11 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   }
   // open chat box
   openChatList(){
-    this.loaded = true;
+    if(!this.loaded)
+      this.loaded = true;
   }
   // check box chat
-  checkBoxChat(groupID:string):boolean{
+  checkBoxChat(groupID:string):boolean {
     let _eleChatBoxs = document.getElementsByTagName("codx-chat-box");
     let _arrBoxChat = Array.from(_eleChatBoxs);
     if(Array.isArray(_arrBoxChat)){
@@ -138,38 +132,35 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   }
   // add box chat
   addBoxChat(groupID:any){
-    if(!this.checkBoxChat(groupID)){
-      this.getTotalMessage();
-      let viewRef = this.chatBox.createEmbeddedView({ $implicit: groupID });
-      this.applicationRef.attachView(viewRef);
-      viewRef.detectChanges();
-      let html = viewRef.rootNodes[0];
-      let elementContainer = document.querySelector(".container-chat");
-      if(elementContainer){
-        let length = elementContainer.children.length;
-        // add box chat
-        if(length < 3){ 
-          html.setAttribute('style',`
-          position: fixed!important;
-          bottom: 0px;
-          right: ${(length*320 + 100)}px;
-          margin-top: -500px;
-          background-color: white;`);
-          html.setAttribute('id',groupID);
-          elementContainer.append(html);
-        }
-        else{
-          
-        }
+    let viewRef = this.chatBox.createEmbeddedView({ $implicit: groupID });
+    this.applicationRef.attachView(viewRef);
+    viewRef.detectChanges();
+    let html = viewRef.rootNodes[0];
+    let elementContainer = document.querySelector(".container-chat");
+    if(elementContainer){
+      let length = elementContainer.children.length;
+      // add box chat
+      if(length < 3){ 
+        html.setAttribute('style',`
+        position: fixed!important;
+        bottom: 0px;
+        right: ${(length*320 + 100)}px;
+        margin-top: -500px;
+        background-color: white;`);
+        html.setAttribute('id',groupID);
+        elementContainer.append(html);
+      }
+      else{
+        
       }
     }
   }
 
   // open popup 
-  openPopupAddGroup(){
+  openPopupAdd(){
+    this.autoClose = false;
     if (this.function) {
       let option = new DialogModel();
-      option.DataService = this.codxListViewGroup.dataService;
       option.FormModel = this.formModel;
       let data = {
         headerText: 'Tạo nhóm chat',
@@ -187,36 +178,26 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
       );
       popup.closed.subscribe((res: any) => {
         if(res.event){
-          (this.codxListViewGroup.dataService as CRUDService).add(res.event).subscribe();
+          this.listChat.addGroup(res.event);
         }
+        this.autoClose = true;
       });
     }
   }
   // check read all
-  clickCheckSeenAll(){
-    this.api.execSv("WP","ERM.Business.WP","ChatBusiness","SeenAllMessageAsync",[])
-      .subscribe((res:boolean)=>{
-        if(res){
-          this.codxListViewGroup.dataService.data.map(e => {
-            e.isRead = true;
-            e.mssgCount = 0;
-          });
-          this.totalMessage = 0;
-          this.dt.detectChanges();
-        }
-      });
+  clickReadAll(){
+    this.listChat.readAllMessage();
+    this.totalMessage = 0;
   }
-  searched:boolean = false;
-  dataSVSearch:DataService = null;
   // searrch
   search(event: any) {
-    this.searched = event ? true : false;
-    if(this.dataSVSearch)
-      this.dataSVSearch.search(event).subscribe(res=> console.log(res));
+    this.listChat.search(event);
   }
   //select goup chat
   selectItem(group: any){
+    debugger
     group.isRead = true;
+    this.totalMessage -= group.messageMissed;
     group.messageMissed = 0;
     this.signalRSV.sendData(group,"ActiveGroupAsync");
     this.dt.detectChanges();
@@ -230,5 +211,10 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     }
   }
 
+
+
+  clear(event){
+    debugger
+  }
   
 }

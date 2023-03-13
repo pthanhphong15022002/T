@@ -139,13 +139,15 @@
                             [default]="grvSetup['Image']['headerText']">
                         </codx-label>
                         <div class="w-100 px-9 bg-gray-100 rounded-2 py-4 150px" (click)="clickUploadImage()">
-                            <div class="d-flex justify-content-center" *ngIf="fileImage;else defaultImage">
-                                <img class="pic-news h-150px" [src]="fileImage.avatar || fileImage.thumbnail" alt="">
-                            </div>
+                           <ng-container *ngIf="fileImage;else defaultImage">
+                                <div class="d-flex justify-content-center" >
+                                    <img class="pic-news h-150px" [src]="fileImage.avatar || fileImage.thumbnail">
+                                </div>
+                           </ng-container>
                             <ng-template #defaultImage>
                                 <div class="text-center d-flex flex-column justify-content-center">
                                     <img class="pic-default w-auto h-75px"
-                                        src="../assets/themes/wp/default/img/upload_image.svg" alt="">
+                                        src="../assets/themes/wp/default/img/upload_image.svg">
                                     <div class="text-center">
                                         <codx-label 
                                             class="fw-bolder" 
@@ -161,15 +163,13 @@
                                 <codx-attachment 
                                     #codxATM 
                                     [functionID]="dialogRef.formModel.funcID"
-                                    [objectType]="'WP_News'" 
-                                    [allowMultiFile]="0" 
-                                    [showMessage]="0"
+                                    [allowMultiFile]="'0'" 
+                                    [showMessage]="'0'"
                                     [hideImageUpload]="'1'" 
-                                    [hideUploadBtn]="1" 
-                                    [hideBtnSave]="1" 
-                                    [hideImageThumb]="1"
-                                    [hideUploadBtn]="1" 
-                                    [showMessage]="0" 
+                                    [hideUploadBtn]="'1'" 
+                                    [hideBtnSave]="'1'" 
+                                    [hideImageThumb]="'1'"
+                                    [hideUploadBtn]="'1'" 
                                     (fileAdded)="addFiles($event)">
                                 </codx-attachment>
                             </div>
