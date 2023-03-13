@@ -48,14 +48,14 @@ export class PortalComponent extends UIComponent {
   user;
 
   active = [
-    'HRTEM0101',
-    'HRTEM0201',
-    'HRTEM0301',
-    'HRTEM0401',
-    'HRTEM0501',
-    'HRTEM0601',
-    'HRTEM0701',
-    'HRTEM0801',
+    'HRPEM0101',
+    'HRPEM0201',
+    'HRPEM0301',
+    'HRPEM0401',
+    'HRPEM0501',
+    'HRPEM0601',
+    'HRPEM0701',
+    'HRPEM0801',
   ];
 
   constructor(
@@ -392,8 +392,9 @@ export class PortalComponent extends UIComponent {
   lstFuncLegalInfo: any = [];
   lstFuncTaskInfo: any = [];
   lstFuncSalary: any = [];
-  lstFuncHRProcess: any = [];
-  dayOffTravelHRProcess: any = [];
+  lstFuncDayOffTravel: any = [];
+  //dayOffTravelHRProcess: any = [];
+  lstFuncContract: any = [];
   lstFuncKnowledge: any = [];
   lstFuncAward: any = [];
   lstFuncArchiveRecords: any = [];
@@ -519,22 +520,52 @@ export class PortalComponent extends UIComponent {
   filterBusinessTravelPredicates: string;
   //#endregion
   dataService: DataService = null;
+  isClick: boolean = false;
 
-  navChange(evt: any) {
+  // navChange(evt: any) {
+  //   if (!evt) return;
+  //   let element = document.getElementById(evt.nextId);
+  //   element.scrollIntoView({
+  //     behavior: 'smooth',
+  //     block: 'start',
+  //     inline: 'nearest',
+  //   });
+  // }
+  navChange(evt: any, index: number = -1) {
     if (!evt) return;
-    let element = document.getElementById(evt.nextId);
+    // let element = document.getElementById(evt?.nextId); 
+    let element = document.getElementById(evt);
+    if (index > -1) {
+      // this.active[index] = evt.nextId;
+      this.active[index] = evt;
+      this.detectorRef.detectChanges();
+    }
     element.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
       inline: 'nearest',
     });
+    this.isClick = true;
+    this.detectorRef.detectChanges();
+    setTimeout(() => {
+      this.isClick = false;
+      return;
+    }, 500);
   }
   clickItem(evet) {}
 
-  onSectionChange(data: any) {
-    console.log('change section', data);
-    this.codxMwpService.currentSection = data.current;
-    this.detectorRef.detectChanges();
+  // onSectionChange(data: any) {
+  //   console.log('change section', data);
+  //   this.codxMwpService.currentSection = data.current;
+  //   this.detectorRef.detectChanges();
+  // }
+  onSectionChange(data: any, index: number = -1) {
+    if (index > -1 && this.isClick == false) {
+      let element = document.getElementById(this.active[index]);
+      element.blur();
+      this.active[index] = data;
+      this.detectorRef.detectChanges();
+    }
   }
 
   initPersonalInfo() {
@@ -1115,8 +1146,12 @@ export class PortalComponent extends UIComponent {
           (p) => p.parentID == this.benefitInfoFuncID
         );
 
-        this.dayOffTravelHRProcess = res[0].filter(
+        this.lstFuncDayOffTravel = res[0].filter(
           (p) => p.parentID == this.dayoffParentInfoFuncID
+        );
+
+        this.lstFuncContract = res[0].filter(
+          (p) => p.parentID == this.contractInfoFuncID
         );
 
         this.lstFuncKnowledge = res[0].filter(
@@ -1127,11 +1162,11 @@ export class PortalComponent extends UIComponent {
           (p) => p.parentID == this.awardDisciplineFuncID
         );
 
-        this.lstFuncArchiveRecords = res[0].filter(
-          (p) => p.parentID == 'HRT030210'
-        );
+        // this.lstFuncArchiveRecords = res[0].filter(
+        //   (p) => p.parentID == 'HRT030210'
+        // );
 
-        this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
+        // this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
       }
     });
 
