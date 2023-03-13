@@ -95,7 +95,7 @@
                         </div>
                     </div>
                     <codx-input type="share" field="addUser" refValue="DM002" [showInput]="false"
-                        (valueChange)="onSaveRole($event, 'by')" [crrValue]="ownerID"> </codx-input>
+                        (valueChange)="onSaveRole($event, 'to')" [crrValue]="ownerID"> </codx-input>
                 </div>
                 <div class="d-flex justify-content-between border-bottom py-1">
                     <div class="d-flex align-items-center flex-grow-1">
@@ -260,7 +260,7 @@
         </div>         
       </div> -->
 
-            <div *ngIf="isShare" class="text-primary font-weight-bold mt-4">
+            <div *ngIf="isShare" class="text-primary font-weight-bold mt-7">
                 <codx-label name="lblDownload" [formModel]="formModel" default="Giới hạn thời gian chia sẻ"
                     class="fw-bold"></codx-label>
             </div>
@@ -299,15 +299,15 @@
         <div class="d-flex align-items-center justify-content-between">
             <div class="checkbox-inline d-flex align-items-center">
                 <ng-container *ngIf="isShare">
-                    <codx-input class="test-check" type="checkbox" [checked]="sentEmail" field="sentEmail"
+                    <!-- <codx-input class="test-check" type="checkbox" [checked]="sentEmail" field="sentEmail"
                         (valueChange)="txtValue($event, 'sentemail')"></codx-input>
                     <codx-label name="lblSendEmail" [formModel]="formModel" default="Gửi mail" class="ms-2 fw-bold">
-                    </codx-label>
-                    <codx-input class="test-check ms-5" type="checkbox" [checked]="postblog" field="postblog"
+                    </codx-label> -->
+                    <!-- <codx-input class="test-check" type="checkbox" [checked]="postblog" field="postblog"
                         (valueChange)="txtValue($event, 'postblog')"></codx-input>
                     <span></span>
                     <codx-label name="lblCreatePost" [formModel]="formModel" default="Tạo bài viết"
-                        class="ms-2 fw-bold"></codx-label>
+                        class="ms-2 fw-bold"></codx-label> -->
                 </ng-container>
             </div>
             <button type="button" id="btnShare" class="btn btn-primary" (click)="onShare()">
