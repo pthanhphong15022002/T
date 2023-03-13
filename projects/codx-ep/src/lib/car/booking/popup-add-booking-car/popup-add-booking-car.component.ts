@@ -699,7 +699,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.data.resourceType = '2';
       if (this.approvalRule == '0' && approval) {
         this.data.approveStatus = '5';
-        this.data.status = '5';
       } 
       this.data.approveStatus = this.data.approveStatus?? '1';
       this.data.status = this.data.status ?? '1';    
@@ -810,7 +809,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
                       if (res?.msgCodeError == null && res?.rowCount) {
                         this.notificationsService.notifyCode('ES007');
                         this.returnData.approveStatus = '3';
-                        this.returnData.status = '3';
                         this.returnData.write = false;
                         this.returnData.delete = false;
                         (this.dialogRef.dataService as CRUDService)
