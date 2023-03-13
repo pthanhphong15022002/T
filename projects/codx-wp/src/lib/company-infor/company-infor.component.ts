@@ -61,10 +61,9 @@ export class CompanyInforComponent extends UIComponent {
       });
     }
   }
-  loadData(funcID:string)
-  {
-    if(funcID)
-    {
+  // get companyinfor
+  loadData(funcID:string){
+    if(funcID){
       this.api
       .execSv(
         'WP',
@@ -73,22 +72,19 @@ export class CompanyInforComponent extends UIComponent {
         'GetConpanyInforAsync',
         [funcID])
         .subscribe((res:any) => {
-        if(res)
-        {
-          let companyPost = res[0];
-          this.data = {...companyPost};
-          this.detectorRef.detectChanges();
-        }
-        else{
-          this.loaded = false;
-        }
+          if(res)
+          {
+            this.data = JSON.parse(JSON.stringify(res));
+            this.detectorRef.detectChanges();
+          }
+          else
+            this.loaded = false;
       });
     }
   }
 
   clickShowPopupEdit(){
-    if(this.view)
-    {
+    if(this.view){
       let option = new DialogModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
@@ -99,8 +95,7 @@ export class CompanyInforComponent extends UIComponent {
           let isAppro = res.event[0];
           if(!isAppro)
           {
-            let result = res.event[1];
-            this.data = JSON.parse(JSON.stringify(result));
+            this.data = JSON.parse(JSON.stringify(res.event[1]));
             this.detectorRef.detectChanges();
           }
           this.notifySvr.notifyCode('WP024');

@@ -201,7 +201,7 @@ export class PopAddDimensionGroupsComponent
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.dimensionGroups[keymodel[i]] == null ||
-              this.dimensionGroups[keymodel[i]].match(/^ *$/) != null
+              String(this.dimensionGroups[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',

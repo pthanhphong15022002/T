@@ -12,7 +12,7 @@ export class WP_News{
     public subject:string;
     public contents:string;
     public subContent:string
-    public image:string;
+    public image:number;
     public shareControl:string
     public publishControl:string;
     public status:string;
@@ -47,7 +47,7 @@ export class WP_News{
         this.subContent = "";
         this.refType = "";
         this.tags = "";
-        this.image = "";
+        this.image = 0;
         this.allowShare = false;
         this.createPost = false;
         this.contents = "";

@@ -42,12 +42,15 @@ export class SignalRService {
   }
   // reciver from server
   public registerOnServerEvents() {
-    // this.hubConnection.on('onConnect', (data) => {
-    //   this.connectionId = data;
-    //   this.userConnect.emit(data);
-    // });
+    this.hubConnection.on('onConnect', (data) => {
+      this.connectionId = data;
+      this.userConnect.emit(data);
+    });
     this.hubConnection.on('ReceiveMessage', (res) => {
       switch(res.action){
+        case 'onConnected':
+          console.log('onConnected: ',res);
+          break;
         case 'newGroup':
           this.newGroup.emit(res.data);
           break;
