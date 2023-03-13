@@ -369,7 +369,6 @@ export class CreateFolderComponent implements OnInit {
     this.showAll = true;
     this.folderService.getFolder(this.id).subscribe(async (res) => {
       if (res) {
-        debugger;
         this.setFolderAS(res);
         if (this.edit) {
           this.noeditName = false;

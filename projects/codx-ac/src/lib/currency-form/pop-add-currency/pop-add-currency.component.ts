@@ -275,7 +275,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.currencies[keymodel[i]] == null ||
-              this.currencies[keymodel[i]] == ''
+              String(this.currencies[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',

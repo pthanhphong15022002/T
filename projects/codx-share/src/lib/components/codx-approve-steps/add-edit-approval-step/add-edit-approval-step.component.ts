@@ -21,6 +21,7 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  QueryBuilderComponent,
 } from 'codx-core';
 // import { Approvers } from 'projects/codx-es/src/lib/codx-es.model';
 // import { CodxEsService } from 'projects/codx-es/src/public-api';
@@ -42,6 +43,8 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   @ViewChild('tabQuery', { static: true }) tabQuery: TemplateRef<any>;
   @ViewChild('tabEmail', { static: true }) tabEmail: TemplateRef<any>;
   @ViewChild('tabAnother', { static: true }) tabAnother: TemplateRef<any>;
+  @ViewChild('queryBuilder', { static: false }) queryBuilder: QueryBuilderComponent;
+
 
   @Output() close = new EventEmitter();
   @Input() transId = '';
@@ -98,7 +101,18 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   buttonClick(e: any) {
+    // if(e.nextId =='tabQuery'){
+    //   setTimeout(()=>{
+    //     document.getElementsByTagName('codx-query-builder')[0]?.querySelector('.card-header').classList.add('d-none');
+    //     document.getElementsByTagName('codx-query-builder')[0]?.querySelector('.card-footer').classList.add('d-none');
+    //   },200)
+    // }
     console.log(e);
+  }
+
+  change(event){
+    console.log('filter change',event);
+    
   }
 
   constructor(
@@ -351,6 +365,10 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   onSaveForm() {
+    // console.log(this.queryBuilder);
+    // this.queryBuilder.saveForm()
+    // return;
+    
     this.isSaved = true;
     if (this.dialogApprovalStep.invalid == true) {
       this.codxService.notifyInvalid(this.dialogApprovalStep, this.formModel);

@@ -1,8 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ApiHttpService, AuthStore, CodxListviewComponent, CRUDService, DataRequest, DialogData, DialogRef, ImageViewerComponent, NotificationsService } from 'codx-core';
 import { WP_Groups } from 'projects/codx-wp/src/lib/models/WP_Groups.model';
-import { WP_Members } from 'projects/codx-wp/src/lib/models/WP_Members.model';
 import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
 
 @Component({
@@ -48,12 +46,19 @@ export class PopupAddGroupComponent implements OnInit,AfterViewInit {
     
   }
   ngAfterViewInit(): void {
-    this.signalRSV.signalGroup.subscribe((res:any)=>{
+    this.signalRSV.newGroup.subscribe((res:any)=>{
+      debugger
       if(res)
+      {
         this.codxImg.updateFileDirectReload(res.groupID).subscribe((res2:any) => {
-          this.notifiSV.notify("Tạo nhóm chat thành công");
+          debugger
+          if(res2){
+            this.notifiSV.notify("Tạo nhóm chat thành công");
+          }
+          this.signalRSV.sendData(res,"ActiveNewGroup");
           this.dialogRef.close(res);
         });
+      }
       else
       {
         this.notifiSV.notify("Tạo nhóm chat không thành công");

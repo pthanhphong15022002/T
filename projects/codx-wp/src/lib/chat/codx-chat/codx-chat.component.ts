@@ -1,7 +1,9 @@
-import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, HostBinding, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, HostBinding, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
-import { CodxService, CallFuncService, ApiHttpService } from 'codx-core';
+import { CodxService, CallFuncService, ApiHttpService, DataService, FormModel, AuthStore, CacheService, NotificationsService, DialogModel, CodxListviewComponent, CRUDService } from 'codx-core';
 import { group } from '@angular/animations';
+import { PopupAddGroupComponent } from '../chat-list/popup/popup-add-group/popup-add-group.component';
+import { ChatListComponent } from '../chat-list/chat-list.component';
 
 @Component({
   selector: 'codx-chat',
@@ -13,30 +15,95 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     return "d-flex align-items-center " + this.codxService.toolbarButtonMarginClass; 
   }
   loaded = false;
-  autoClose:boolean = true;
   totalMessage:number = 0;
+  formModel:FormModel = null;
+  user:any = null;
+  funcID: string = 'WPT11';
+  function: any = null;
+  grdViewSetUp: any = null;
+  moreFC: any = null;
+  autoClose=true;
 
+  @ViewChild("chatBox") chatBox:TemplateRef<any>;
+  @ViewChild('listChat') listChat: ChatListComponent;
   constructor(
+    private injector:Injector,
     public codxService:CodxService,
     private api:ApiHttpService,
     private signalRSV:SignalRService,
-    private applicationRef:ApplicationRef
+    private applicationRef:ApplicationRef,
+    private callFCSV: CallFuncService,
+    private cache: CacheService,
+    private notifySV: NotificationsService,
+    private dt: ChangeDetectorRef,
+    private auth: AuthStore,
   ) 
-  { }
+  { 
+    this.user = this.auth.get();
+    this.formModel = new FormModel();
+  }
   
 
   
   ngOnInit(): void {
+    // get function - gridViewsetup
+    if (this.funcID) {
+      this.cache.functionList(this.funcID).subscribe((func: any) => {
+        if (func) {
+          this.function = JSON.parse(JSON.stringify(func));
+          this.formModel.funcID = func.functionID;
+          this.formModel.entityName = func.entityName;
+          this.formModel.formName = func.formName;
+          this.formModel.gridViewName = func.gridViewName;
+          this.cache
+            .gridViewSetup(func.formName, func.gridViewName)
+            .subscribe((grd: any) => {
+              if (grd) {
+                this.grdViewSetUp = JSON.parse(JSON.stringify(grd));
+                this.dt.detectChanges();
+              }
+            });
+          this.cache
+            .moreFunction(func.formName, func.gridViewName)
+            .subscribe((mFC: any) => {
+              if (mFC) {
+                this.moreFC = JSON.parse(JSON.stringify(mFC));
+              }
+            });
+        }
+      });
+    }
     this.getTotalMessage();
   }
 
   ngAfterViewInit(): void {
-    this.signalRSV.activeGroup.subscribe((res:any) => {
-      debugger
+    // active new group - add box chat to all connection
+    this.signalRSV.activeNewGroup.subscribe((res:any) => {
       if(res){
-        this.addBoxChat(res);
+        this.addBoxChat(res.groupID);
       }
-    })
+    });
+    // active group - add box chat to connection
+    this.signalRSV.activeGroup.subscribe((res:any) => {
+      if(res)
+      {
+        let boxChat = this.checkBoxChat(res.groupID);
+        if(!boxChat){
+          this.getTotalMessage();
+          this.addBoxChat(res.groupID);
+        }
+      }
+    });
+    //receiver message to connection
+    this.signalRSV.reciverChat.subscribe((res:any) => {
+      if(res.groupID){
+        let isOpenBoxChat = this.checkBoxChat(res.groupID);
+        if(!isOpenBoxChat){
+          this.addBoxChat(res.groupID);
+        }
+        
+      }
+    });
   }
   // get total message
   getTotalMessage(){
@@ -51,47 +118,103 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   }
   // open chat box
   openChatList(){
-    this.loaded = true;
+    if(!this.loaded)
+      this.loaded = true;
   }
-  // seen all message
-  seenAllMessage(){
-    this.totalMessage = 0;
-  }
-
-
-
-
-  @ViewChild("chatBox") chatBox:TemplateRef<any>;
-
-  // add box chat
-  addBoxChat(groupID:any){
+  // check box chat
+  checkBoxChat(groupID:string):boolean {
     let _eleChatBoxs = document.getElementsByTagName("codx-chat-box");
     let _arrBoxChat = Array.from(_eleChatBoxs);
-    let _boxChat = _arrBoxChat.find(e => e.id === groupID);
-    if(!_boxChat){
-      let viewRef = this.chatBox.createEmbeddedView({ $implicit: groupID });
-      this.applicationRef.attachView(viewRef);
-      viewRef.detectChanges();
-      let html = viewRef.rootNodes[0];
-      let elementContainer = document.querySelector(".container-chat");
-      if(elementContainer){
-        let length = elementContainer.children.length;
-        // add box chat
-        if(length < 3){ 
-          html.setAttribute('style',`
-          position: fixed!important;
-          bottom: 0px;
-          right: ${(length*320 + 100)}px;
-          margin-top: -500px;
-          background-color: white;`);
-          html.setAttribute('id',groupID);
-          elementContainer.append(html);
-        }
-        else{
-          
-        }
+    if(Array.isArray(_arrBoxChat)){
+      return _arrBoxChat.some(e => e.id === groupID);
+    }
+    return false;
+  }
+  // add box chat
+  addBoxChat(groupID:any){
+    let viewRef = this.chatBox.createEmbeddedView({ $implicit: groupID });
+    this.applicationRef.attachView(viewRef);
+    viewRef.detectChanges();
+    let html = viewRef.rootNodes[0];
+    let elementContainer = document.querySelector(".container-chat");
+    if(elementContainer){
+      let length = elementContainer.children.length;
+      // add box chat
+      if(length < 3){ 
+        html.setAttribute('style',`
+        position: fixed!important;
+        bottom: 0px;
+        right: ${(length*320 + 100)}px;
+        margin-top: -500px;
+        background-color: white;`);
+        html.setAttribute('id',groupID);
+        elementContainer.append(html);
+      }
+      else{
+        
       }
     }
+  }
+
+  // open popup 
+  openPopupAdd(){
+    this.autoClose = false;
+    if (this.function) {
+      let option = new DialogModel();
+      option.FormModel = this.formModel;
+      let data = {
+        headerText: 'Tạo nhóm chat',
+        gridViewSetUp: this.grdViewSetUp,
+      };
+      let popup = this.callFCSV.openForm(
+        PopupAddGroupComponent,
+        '',
+        0,
+        0,
+        this.function.funcID,
+        data,
+        '',
+        option
+      );
+      popup.closed.subscribe((res: any) => {
+        if(res.event){
+          this.listChat.addGroup(res.event);
+        }
+        this.autoClose = true;
+      });
+    }
+  }
+  // check read all
+  clickReadAll(){
+    this.listChat.readAllMessage();
+    this.totalMessage = 0;
+  }
+  // searrch
+  search(event: any) {
+    this.listChat.search(event);
+  }
+  //select goup chat
+  selectItem(group: any){
+    debugger
+    group.isRead = true;
+    this.totalMessage -= group.messageMissed;
+    group.messageMissed = 0;
+    this.signalRSV.sendData(group,"ActiveGroupAsync");
+    this.dt.detectChanges();
+  }
+
+  // select item search
+  selectItemSeach(item: any) {
+    if(item.type != 'H'){
+      item.type = item.type == 'U' ? '1':'2';
+      this.signalRSV.sendData(item,"GetGroupSearch");
+    }
+  }
+
+
+
+  clear(event){
+    debugger
   }
   
 }

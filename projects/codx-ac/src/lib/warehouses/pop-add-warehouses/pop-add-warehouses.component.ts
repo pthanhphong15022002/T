@@ -225,7 +225,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.warehouses[keymodel[i]] == null ||
-              this.warehouses[keymodel[i]] == ''
+              String(this.warehouses[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -257,6 +257,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     this.objects.createdBy = this.warehouses.createdBy;
     this.objects.modifiedOn = this.warehouses.modifiedOn;
     this.objects.modifiedBy = this.warehouses.modifiedBy;
+    this.objects.buid = this.warehouses.buid;
   }
   //#endregion
 

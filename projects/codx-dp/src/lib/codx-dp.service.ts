@@ -250,11 +250,19 @@ export class CodxDpService {
       data
     );
   }
+  deleteFileTask(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'DeleteFilesAsync',
+      data
+    );
+  }
   updateDataDrop(data) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
-      'UpdateStepDrapDropAsync',
+      'DeleteFilesAsync',
       data
     );
   }
@@ -430,14 +438,6 @@ export class CodxDpService {
       data
     );
   }
-  getListInstanceByIdProccess(data) {
-    return this.api.exec<any>(
-      'DP',
-      'InstancesBusiness',
-      'GetTotalIntanceInProccessAsync',
-      data
-    );
-  }
   updateFiels(data) {
     return this.api.exec<any>(
       'DP',
@@ -478,6 +478,24 @@ export class CodxDpService {
       'InstancesBusiness',
       'OpenOrClosedInstanceAsync',
       [recID, check]
+    );
+  }
+
+  countInstanceByProccessId(data){
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'TotalInstanceInProcessAsync',
+      data
+    );
+  }
+
+  getTree(listRef){
+    return this.api.exec<any>(
+      'TM',
+      'TaskBusiness',
+      'GetListTaskTreeByListRefIDAsync',
+      listRef
     );
   }
 }

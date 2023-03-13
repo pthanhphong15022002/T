@@ -35,10 +35,6 @@ import { PopupAddGroupComponent } from './popup/popup-add-group/popup-add-group.
 })
 export class ChatListComponent implements OnInit, AfterViewInit {
   
-  @Input() isOpen: boolean; // check open dropdown
-  @Output() isOpenChange = new EventEmitter<boolean>();
-  @Output() checkSeenAll = new EventEmitter<boolean>();
-
   
   funcID: string = 'WPT11';
   function: any = null;
@@ -48,9 +44,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   user:any = null;
   dataSVSearch:DataService = null;
   searched:boolean = false;
-  @ViewChild('codxListViewGroup') codxListViewGroup: CodxListviewComponent;
-  @ViewChild('codxListViewSerach') codxListViewSerach: CodxListviewComponent;
-  @ViewChild("chatBox") chatBox:TemplateRef<any>;
+  @ViewChild('codxListView') codxListView: CodxListviewComponent;
   constructor(
     private injector:Injector,
     private api: ApiHttpService,
@@ -106,147 +100,72 @@ export class ChatListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     // add mesage
-    this.signalRSV.signalChat.subscribe((res: any) => {
-      if (res) 
-      {
-        this.addBoxChat(res.groupID);
-        let data = this.codxListViewGroup.dataService.data;
+    this.signalRSV.reciverChat.subscribe((res: any) => {
+      if (res.groupID){
+        let data = this.codxListView.dataService.data;
         let _index = data.findIndex(e => e['groupID'] === res.groupID);
         if(_index > -1){
           let group = data[_index]; 
           group.message = res.message;
           group.modifiedOn = res.modifiedOn;
           group.isRead = res.status.some(x => x["UserID"] === this.user.UserID);
-          (this.codxListViewGroup.dataService as CRUDService).removeIndex(_index).subscribe();
-          (this.codxListViewGroup.dataService as CRUDService).add(group).subscribe();
+          (this.codxListView.dataService as CRUDService).removeIndex(_index).subscribe();
+          (this.codxListView.dataService as CRUDService).add(group).subscribe();
         }
       }
     });
     
   }
-  // searrch
-  search(event: any) {
-    this.searched = event ? true : false;
-    this.dt.detectChanges();
-    if(this.dataSVSearch)
-      this.dataSVSearch.search(event).subscribe(res=> console.log(res));
-  }
-
   // check read all
-  clickCheckSeenAll(){
+  readAllMessage(){
     this.api.execSv("WP","ERM.Business.WP","ChatBusiness","SeenAllMessageAsync",[])
       .subscribe((res:boolean)=>{
         if(res){
-          this.codxListViewGroup.dataService.data.map(e => {
+          this.codxListView.dataService.data.map(e => {
             e.isRead = true;
-            e.mssgCount = 0;
+            e.messageMissed = 0;
           });
           this.dt.detectChanges();
-          this.checkSeenAll.emit();
         }
       });
   }
-  //click goup chat
-  clickGroupChat(group: any){
-    if(!group.isRead){
-      this.api.execSv(
-        "WP",
-        "ERM.Business.WP",
-        "ChatBusiness",
-        "SeenMessageByGroupAsync",
-        [group.groupID])
-        .subscribe((res:boolean) => group.isRead = res);
+  // searrch
+  search(event: any) {
+    if(event){
+      this.searched = true;
+      this.codxListView.dataService.method = 'SearchAsync';
+      this.codxListView.dataService.search(event).subscribe();
     }
-    this.addBoxChat(group.groupID);
+    else
+    {
+      this.searched = false;
+      this.codxListView.dataService.method = 'GetGroupAsync';
+      this.codxListView.dataService.search(event).subscribe();
+    }
+    this.dt.detectChanges();
+
   }
-  // click group chat - chat box
-  openChatBox(group: any) {
-    if(group["type"] === "U"){
-      this.api.execSv("WP","ERM.Business.WP","GroupBusiness","GetGroupByUserIDAsync",[group.id,group.name])
-      .subscribe((res:any)=>{
-        if(res[0].groupID){
-          this.addBoxChat(res[0].groupID);
-        }
-      });
+
+  
+   //select goup chat
+   selectItem(group: any){
+    group.isRead = true;
+    group.messageMissed = 0;
+    this.signalRSV.sendData(group,"ActiveGroupAsync");
+  }
+   // select item search
+   selectItemSeach(item: any) {
+    if(item.type != 'H'){
+      item.type = item.type == 'U' ? '1':'2';
+      this.signalRSV.sendData(item,"GetGroupSearch");
     }
-    else if(group["type"] === "G"){
-      if(!group.isRead){
-        this.api.execSv(
-          "WP",
-          "ERM.Business.WP",
-          "ChatBusiness",
-          "SeenMessageByGroupAsync",
-          [group.groupID])
-          .subscribe();
-        group.isRead = true;
-      }
-      this.addBoxChat(group.groupID);
+  }
+  
+  // open popup add group chat
+  addGroup(group:any) {
+    if(group){
+      (this.codxListView.dataService as CRUDService).add(group).subscribe();
     }
   }
 
-  // open popup add group chat
-  openPopupAddGroup() {
-    if (this.function) {
-      this.isOpen = false;
-      this.isOpenChange.emit(this.isOpen);
-      let option = new DialogModel();
-      option.DataService = this.codxListViewGroup.dataService;
-      option.FormModel = this.formModel;
-      let data = {
-        headerText: 'Tạo nhóm chat',
-        gridViewSetUp: this.grdViewSetUp,
-      };
-      let popup = this.callFCSV.openForm(
-        PopupAddGroupComponent,
-        '',
-        0,
-        0,
-        this.function.funcID,
-        data,
-        '',
-        option
-      );
-      popup.closed.subscribe((res: any) => {
-        debugger
-        if(res.event){
-          let boxChat = res.event[0];
-          (this.codxListViewGroup.dataService as CRUDService).add(boxChat).subscribe();
-          this.signalRSV.templateChatBox = this.chatBox;
-          this.signalRSV.sendData(boxChat,"ActiveGroupAsync");
-        }
-        this.isOpen = true;
-        this.isOpenChange.emit(this.isOpen);
-      });
-    }
-  }
-  // add box chat
-  addBoxChat(groupID:any){
-    let _eleChatBoxs = document.getElementsByTagName("codx-chat-box");
-    let _arrBoxChat = Array.from(_eleChatBoxs);
-    let _boxChat = _arrBoxChat.find(e => e.id === groupID);
-    if(!_boxChat){
-      let viewRef = this.chatBox.createEmbeddedView({ $implicit: groupID });
-      this.applicationRef.attachView(viewRef);
-      viewRef.detectChanges();
-      let html = viewRef.rootNodes[0];
-      let elementContainer = document.querySelector(".container-chat");
-      if(elementContainer){
-        let length = elementContainer.children.length;
-        // add box chat
-        if(length < 3){ 
-          html.setAttribute('style',`
-          position: fixed!important;
-          bottom: 0px;
-          right: ${(length*320 + 100)}px;
-          margin-top: -500px;
-          background-color: white;`);
-          html.setAttribute('id',groupID);
-          elementContainer.append(html);
-        }
-        else{
-          
-        }
-      }
-    }
-  }
 }

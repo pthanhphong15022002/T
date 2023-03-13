@@ -1,4 +1,4 @@
-<div ngbDropdown class="d-inline-block w-100" [autoClose]="true" #dropdown container="body">
+<div ngbDropdown class="d-inline-block w-100" [autoClose]="autoClose" #dropdown container="body">
   <button type="button" class="btn btn-sm" (click)="openChatList()" id="chat-box"
     ngbDropdownToggle>
     <div
@@ -16,15 +16,46 @@
   </div>
   </button>
   <div ngbDropdownMenu #popup aria-labelledby="chat-box" id="chatbox-dropdownPopup"
-    class="chat-popup h-600px w-300px">
-    <ng-container *ngIf="loaded">
-      <wp-chat-list  [(isOpen)]="autoClose" (checkSeenAll)="seenAllMessage()"></wp-chat-list>
-    </ng-container>
+    class="chat-popup w-300px">
+    <div class="chat-list d-flex flex-column h-100">
+      <div class="chat-list-header">
+          <div class="row">
+              <h3 class="fw-bolder">Chatting</h3>
+          </div>
+          <div class="row">
+              <div class="d-flex align-items-center justify-content-end">
+                  <ul class="chat-list-header_func">
+                      <li class="cursor-pointer" (click)="openPopupAdd()">
+                          <i class="icon-people_alt"></i>
+                      </li>
+                      <li class="cursor-pointer" (click)="clickReadAll()">
+                         <i class="icon-playlist_add_check"></i>
+                      </li>
+                      <li class="cursor-pointer">
+                         <i class="icon-open_in_new"></i>
+                      </li>
+                  </ul>
+              </div>
+              <div >
+                  <codx-searchbar #codxSearch 
+                      [iconPos]="'left'" 
+                      [width]="300" 
+                      (searchEvent)="search($event)">
+                  </codx-searchbar>
+              </div>
+          </div>
+      </div>
+      <div class="chat-list-body">
+        <ng-container *ngIf="loaded">
+            <wp-chat-list #listChat></wp-chat-list>
+        </ng-container>
+      </div>
+    </div>
   </div>
 </div>
 
 
 
-<ng-template #chatBox let-data>
-  <codx-chat-box [groupID]="data"></codx-chat-box>
+<ng-template #chatBox let-id>
+  <codx-chat-box [groupID]="id"></codx-chat-box>
 </ng-template>

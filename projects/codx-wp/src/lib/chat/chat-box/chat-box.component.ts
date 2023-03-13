@@ -14,16 +14,17 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   @HostListener('click', ['$event'])
   onClick(event:any) {
     this.isChatBox(event.target);
-    this.checkActive(this.group.groupID);
+    this.checkActive(this.groupID);
   }
-  @Input() groupID:string ;
+  @Input() groupID:any;
 
-  group:any = {};
   user:any = {};
   arrMessages:any[] = [];
-  message:WP_Messages = new WP_Messages();
+  message:WP_Messages = null;
   page:number = 0;
   pageIndex:number = 0;
+  yValue:number = 0;
+  group:any = null;
   @ViewChild("chatBoxBody") chatBoxBody:ElementRef<HTMLDivElement>;
   constructor
   (
@@ -35,22 +36,20 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     private dt:ChangeDetectorRef,
   ) 
   {
-    this.user = this.auth.get()
+    this.user = this.auth.get();
+    this.message = new WP_Messages();
   }
   
  
 
   ngOnInit(): void 
   {
-    if(this.groupID){
-      this.message.userID = this.user.userID;
-      this.message.groupID = this.groupID;
-      this.getGroupInfo(this.groupID);
-    }
+    this.getGroupInfo();
+    this.getMessage();
   }
 
   ngAfterViewInit(): void {
-    
+    // scroll up data
     if(this.chatBoxBody){
       setTimeout(() => {
         this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight)
@@ -58,8 +57,8 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
       },100)
     }
     //receiver message
-    this.signalR.signalChat.subscribe((res:any) => {
-      if(res)
+    this.signalR.reciverChat.subscribe((res:any) => {
+      if(res.groupID === this.groupID)
       {
         let data = JSON.parse(JSON.stringify(res));
         this.arrMessages.push(data);
@@ -67,66 +66,32 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
       }
     });
   }
-
-  // get group info
-  getGroupInfo(groupID:string){
-    if(groupID){
-      this.api.execSv(
-        "WP",
-        "ERM.Business.WP",
-        "GroupBusiness",
-        "GetGroupByIDAsync",
-        [groupID])
-        .subscribe((res:any[]) =>{
-        if(res){
-          let _group = res[0];
-          let _messages = res[1];
-          this.group = JSON.parse(JSON.stringify(_group));
-          if(_messages.length > 0)
-          {
-            this.arrMessages = JSON.parse(JSON.stringify(_messages[0]));
-            this.page = _messages[1] / 20;
-          }
+  // get group infor
+  getGroupInfo(){
+    this.api.execSv("WP","ERM.Business.WP","GroupBusiness","GetGroupInforAsync",[this.groupID])
+    .subscribe((res:any) => {
+      if(res){
+        this.group = res;
+        this.message.groupID = this.group.groupID;
+      }
+    })
+  }
+  // get history chat
+  getMessage(){
+    this.api.execSv(
+      "WP",
+      "ERM.Business.WP",
+      "ChatBusiness",
+      "GetMessageByGroupIDAsync",
+      [this.groupID,this.pageIndex])
+      .subscribe((res:any[]) => {
+        if(res[1] > 0)
+        {
+          this.arrMessages = res[0];
         }
       });
-    }
-  }
-  // close 
-  closeChatBox(groupID:string){
-    if(groupID)
-    {
-      let element = document.getElementById(groupID);
-      element.remove();
-      if(element){
-        element.remove();
-        let elementContainer = document.querySelector(".container-chat");
-        if(elementContainer){
-          elementContainer.childNodes.forEach((e:any) => {
-            e.setAttribute('style',`
-            position: fixed!important;
-            bottom: 0px;
-            right: 100px;
-            margin-top: -500px;
-            background-color: white;`)
-          })
-        }
-      } 
-    }
-  }
-  // value Change
-  valueChange(event:any){
-    if(event?.data){
-      this.message.messageType = "1";
-      this.message.message = event.data;
-    }
-  }
-  // send message
-  sendMessage(){
-    this.signalR.sendData(this.message,"SendMessageToGroup");
-    this.message.message = "";
   }
   // scroll up load data
-  yValue:number = 0;
   scroll(){
     let _y = this.chatBoxBody.nativeElement.scrollTop;
     if(_y < this.yValue && _y <= 50){
@@ -143,7 +108,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
         "ERM.Business.WP",
         "ChatBusiness",
         "GetMessageByGroupIDAsync",
-        [this.groupID,this.pageIndex])
+        [this.group.groupID,this.pageIndex])
         .subscribe((res:any[]) => {
           if(res[1] > 0)
           {
@@ -153,6 +118,29 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
         });
     }
   }
+  // close 
+  closeChatBox(){
+    debugger
+    let elementContainer = document.querySelector(".container-chat");
+    if(elementContainer){
+      let element = document.getElementById(this.group.groupID);
+      element.remove();
+    }
+  }
+  // value Change
+  valueChange(event:any){
+    if(event?.data){
+      this.message.messageType = "1";
+      this.message.message = event.data;
+    }
+  }
+  // send message
+  sendMessage(){
+    let jsMessage = JSON.stringify(this.message);
+    this.signalR.sendData(jsMessage,"SendMessageToGroup");
+    this.message.message = "";
+  }
+  
   // check tag name 
   isChatBox(element:HTMLElement){
     if(element.tagName == "CODX-CHAT-BOX"){
@@ -162,20 +150,22 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
       }
       return;
     }
-    else{
+    else
+    {
       this.isChatBox(element.parentElement);
     }
   }
   // check active
   checkActive(id:string){
-    let _boxChats = document.getElementsByTagName("codx-chat-box");
-    if(_boxChats.length > 0){
-      Array.from(_boxChats).forEach(e => {
-        if(e.id != id && e.classList.contains("active")){
-          e.classList.remove("active");
-        }
-      });
-      
+    if(id){
+      let _boxChats = document.getElementsByTagName("codx-chat-box");
+      if(_boxChats.length > 0){
+        Array.from(_boxChats).forEach(e => {
+          if(e.id != id && e.classList.contains("active")){
+            e.classList.remove("active");
+          }
+        });
+      }
     }
   }
 }

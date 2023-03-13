@@ -99,7 +99,7 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.contact[keymodel[i]] == null ||
-              this.contact[keymodel[i]] == ''
+              String(this.contact[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',
@@ -119,7 +119,11 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
     );
     var checkRegex = regex.test(this.contact.email);
     if (checkRegex == false) {
-      this.notification.notify("'Email' không hợp lệ", '2');
+      this.notification.notifyCode(
+        'SYS037',
+        0,
+        ''
+      );
       this.validate++;
       return;
     }

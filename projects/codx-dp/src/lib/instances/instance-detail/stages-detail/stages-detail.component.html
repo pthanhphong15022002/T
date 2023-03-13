@@ -7,7 +7,7 @@
   ">
   <div class="header-job py-3 px-5">
     <div class="d-flex align-items-top mb-2">
-      <span class="fw-bold fs-4 text-dark me-2">{{ currentStep + 1 }}. {{
+      <span class="fw-bold fs-4 text-dark me-2">{{
         dataStep?.stepName }}</span>
       <i
         class="icon-event_notes text-gray-500 icon-20"
@@ -31,7 +31,7 @@
             fiedName="StartDate"
             formName="DPInstancesSteps"
             gridViewName="grvDPInstancesSteps"
-            default="Bắt đầu lúc"></codx-label><span class="ms-1">{{ startDate
+            default="Bắt đầu dự kiến:"></codx-label><span class="ms-1">{{ startDate
             }}</span>
         </div>
       </div>
@@ -185,7 +185,7 @@
     </div>
     <div id="step-task" class="main p-3" [ngClass]="'show-main'">
       <!-- drap drop công việc ngoài-->
-      <div class="main-body" *ngIf="taskGroupList.length> 0">
+      <div class="main-body" *ngIf="taskGroupList?.length> 0">
         <div
           cdkDropList
           class="list"
@@ -265,7 +265,7 @@
                   <div
                     *ngIf="!taskList?.recID"
                     [ngStyle]="
-                    taskList?.task.length == 0 ? { height: '30px' } : {}
+                    taskList?.task?.length == 0 ? { height: '30px' } : {}
                     "></div>
 
                   <!-- kéo thả ở trong  -->
@@ -386,7 +386,7 @@
                       </div>
                     </ng-container>
                     <div
-                      *ngIf="taskList?.task.length === 0"
+                      *ngIf="taskList?.task?.length === 0"
                       style="height: 10px"></div>
                   </div>
                 </div>
@@ -466,7 +466,7 @@
     </span>
     <div class="notify">
       <span class="me-3">
-        <codx-attachment-temp [objectID]="data.recID"></codx-attachment-temp>
+        <codx-attachment-temp [objectID]="data.refID"></codx-attachment-temp>
       </span>
     </div>
     <div class="notify">

@@ -2,10 +2,12 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnInit,
   Optional,
+  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -53,6 +55,7 @@ export class InstancesComponent
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
+  @Output() valueListID = new EventEmitter<any>();
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   showButtonAdd = true;
@@ -174,6 +177,7 @@ export class InstancesComponent
       showInstanceControl: this.process?.showInstanceControl
         ? this.process?.showInstanceControl
         : '2',
+      hiddenInstanceReason: this.getListStatusInstance(this.isUseSuccess, this.isUseFail),
     };
 
     // if(this.process.steps != null && this.process.steps.length > 0){
@@ -840,6 +844,9 @@ export class InstancesComponent
                 //xu ly data đổ về
                 data = e.event.instance;
                 this.listStepInstances = e.event.listStep;
+                if(data.refID !== this.guidEmpty) {
+                  this.valueListID.emit(data.refID)
+                }
                 if (e.event.isReason != null) {
                   this.moveReason(null, data, e.event.isReason);
                 }
@@ -908,6 +915,20 @@ export class InstancesComponent
   getSumDurationDayOfSteps(listStepCbx: any) {
     let total = listStepCbx?.reduce((sum, f) => sum + f?.durationDay, 0);
     return total;
+  }
+
+  getListStatusInstance(isSuccess: boolean, isFail: boolean){
+    if(!isSuccess && !isFail)
+    {
+      return '1;2';
+    }
+    else if(!isSuccess) {
+      return '3;4';
+    }
+    else if(!isFail) {
+      return '5;6';
+    }
+    return '';
   }
   #endregion;
 }

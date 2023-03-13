@@ -11,6 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  ApiHttpService,
   CacheService,
   CallFuncService,
   DialogData,
@@ -29,8 +30,8 @@ import {
 
 @Component({
   selector: 'lib-popup-job',
-  templateUrl: './popup-job.component.html',
-  styleUrls: ['./popup-job.component.scss'],
+  templateUrl: './popup-step-task.component.html',
+  styleUrls: ['./popup-step-task.component.scss'],
 })
 export class PopupJobComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
@@ -44,8 +45,9 @@ export class PopupJobComponent implements OnInit {
   stepName = '';
   taskGroupName = '';
   linkQuesiton = 'http://';
-  listOwner: DP_Steps_Tasks_Roles[] = [];
-  listChair = [];
+  roles: DP_Steps_Tasks_Roles[] = [];
+  participant: DP_Steps_Tasks_Roles[] = [];
+  owner:  DP_Steps_Tasks_Roles[] = [];;
   recIdEmail = '';
   isNewEmails = true;
   taskGroupList = [];
@@ -68,11 +70,13 @@ export class PopupJobComponent implements OnInit {
   frmModel: FormModel;
   view = [];
   step: DP_Steps;
+  listFileTask: string[] =[];
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -100,11 +104,14 @@ export class PopupJobComponent implements OnInit {
     }
     this.taskList = dt?.data[5];
     this.taskGroupID = dt?.data[6];
+    this.listFileTask = dt?.data[7];
   }
   async ngOnInit() {
     this.getTypeTask();
     this.getFormModel();
-    this.listOwner = this.stepsTasks['roles'];
+    this.roles = this.stepsTasks['roles'];
+    this.owner = this.roles?.filter(role => role.roleType === 'O');
+    this.participant = this.roles?.filter(role => role.roleType === 'P');
     if (this.stepsTasks['parentID']) {
       this.litsParentID = this.stepsTasks['parentID'].split(';');
     }
@@ -114,6 +121,12 @@ export class PopupJobComponent implements OnInit {
       .filter((x) => x.checked)
       .map((y) => y.value)
       .join('; ');
+  }
+
+  getTasksWithoutLoop(task, tasks) {
+    // const subTasks = tasks.filter(t => t?.recID.includes(task['parentID']));
+    // const subTaskLists = subTasks.map(subTask => this.getTasksWithoutLoop(subTask, tasks, visited));
+    // return [task, ...subTaskLists.flat()];
   }
 
   mapDataTask(liskTask, listID?) {
@@ -142,6 +155,10 @@ export class PopupJobComponent implements OnInit {
     return taskLinks;
   }
 
+  setOwner(){
+    
+  }
+
   getTypeTask() {
     this.cache.valueList('DP035').subscribe((res) => {
       if (res.datas) {
@@ -166,13 +183,23 @@ export class PopupJobComponent implements OnInit {
       'taskGroupName'
     ];
     this.dataCombobox = await this.setTaskLink(value);
+    // console.log('----',this.getTasksWithoutLoop(this.stepsTasks, this.taskGroupName['task']));
   }
 
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
 
-  applyOwner(e, datas) {
+  changeOwner(e) {
+    let owner = e?.map(x => {
+      return {
+        ...x,
+        roleType: "O"
+      }
+    });
+    this.owner = owner;
+  }
+  changeRoler(e, datas, type) {
     if (!e || e?.data.length == 0) return;
     let listUser = e?.data;
     listUser.forEach((element) => {
@@ -181,7 +208,7 @@ export class PopupJobComponent implements OnInit {
           objectID: element.id,
           objectName: element.text,
           objectType: element.objectType,
-          roleType: element.objectName,
+          roleType: type,
           taskID: this.stepsTasks['recID'],
         });
       }
@@ -260,24 +287,19 @@ export class PopupJobComponent implements OnInit {
   }
 
   getFormModel() {
-    // this.frmModel = {
-    //   entityName: 'DP_Steps_Tasks',
-    //   formName: 'DPStepsTasks',
-    //   gridViewName: 'grvDPStepsTasks',
-    // };
-    this.cache.gridView('grvDPStepsTasks').subscribe((res) => {
-      this.cache
-        .gridViewSetup('DPStepsTasks', 'grvDPStepsTasks')
-        .subscribe((res) => {
-          for (let key in res) {
-            if (res[key]['isRequire']) {
-              let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
-              this.view[keyConvert] = res[key]['headerText'];
-            }
+    this.cache
+      .gridViewSetup(
+        this.dialog?.formModel?.formName,
+        this.dialog?.formModel?.gridViewName
+      )
+      .subscribe((res) => {
+        for (let key in res) {
+          if (res[key]['isRequire']) {
+            let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
+            this.view[keyConvert] = res[key]['headerText'];
           }
-          console.log(this.view);
-        });
-    });
+        }
+      });
   }
   //Email
   handelMail() {
@@ -333,7 +355,10 @@ export class PopupJobComponent implements OnInit {
   addFile(evt: any) {
     this.attachment.uploadFile();
   }
-  fileAdded(e) {}
+  fileAdded(e) {
+    console.log(e);
+    
+  }
 
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
@@ -347,7 +372,7 @@ export class PopupJobComponent implements OnInit {
 
   // save
   async saveData() {
-    this.stepsTasks['roles'] = this.listOwner;
+    this.stepsTasks['roles'] = [...this.owner, ...this.participant];
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
     let message = [];
     for (let key of this.REQUIRE) {
@@ -355,12 +380,25 @@ export class PopupJobComponent implements OnInit {
         message.push(this.view[key]);
       }
     }
+    if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
+      message.push(this.view['durationDay']);
+    }
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
     } else {
       if (this.attachment && this.attachment.fileUploadList.length) {
         (await this.attachment.saveFilesObservable()).subscribe((res) => {
           if (res) {
+            if(res?.length >= 0){
+              res.forEach(item => {
+                if(item['data']['recID']) {
+                  this.listFileTask.push(item['data']['recID']);
+                }  
+              }) 
+            }else{
+              this.listFileTask.push(res['data']['recID']);
+            }
+                   
             this.handelSave();
           }
         });
@@ -397,7 +435,7 @@ export class PopupJobComponent implements OnInit {
       if (!this.stepsTasks['parentID'].trim()) {
         //if ko có parentID thì so sánh trực tiếp với step
         if (this.getHour(this.stepsTasks) > this.getHour(this.step)) {
-          this.notiService.alertCode("DP010").subscribe((x) => {
+          this.notiService.alertCode('DP010').subscribe((x) => {
             if (x.event && x.event.status == 'Y') {
               this.step['durationDay'] = this.stepsTasks['durationDay'];
               this.step['durationHour'] = this.stepsTasks['durationHour'];
@@ -419,7 +457,7 @@ export class PopupJobComponent implements OnInit {
         });
         maxtime += this.getHour(this.stepsTasks);
         if (maxtime > this.getHour(this.step)) {
-          this.notiService.alertCode("DP010").subscribe((x) => {
+          this.notiService.alertCode('DP010').subscribe((x) => {
             if (x.event && x.event.status == 'Y') {
               this.step['durationDay'] = Math.floor(maxtime / 24);
               this.step['durationHour'] = maxtime % 24;
@@ -442,7 +480,7 @@ export class PopupJobComponent implements OnInit {
       this.dialog.close({ data: this.stepsTasks, status: this.status });
     } else {
       // nếu vượt quá thì hỏi ý kiến
-      this.notiService.alertCode("DP010").subscribe((x) => {
+      this.notiService.alertCode('DP010').subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           if (timeInput) {
             groupTask['durationDay'] = Math.floor(time / 24);

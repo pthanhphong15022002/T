@@ -160,15 +160,47 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     }
 
     if (this.actionType == 'add' || this.actionType == 'copy') {
-      this.hrSevice.validateBeforeSaveContract(this.data, true).subscribe((res) => {
-        console.log('result', res);
-        if (res && res[0]) {
-          //code test
-          this.notify.notifyCode('SYS006');
-          this.dialog && this.dialog.close(res);
-          this.data = res;
-        }
-      });
+      this.hrSevice
+        .validateBeforeSaveContract(this.data, true)
+        .subscribe((res) => {
+          console.log('result', res);
+          if (res) {
+            if (res[0]) {
+              //code test
+              this.notify.notifyCode('SYS006');
+              this.dialog && this.dialog.close(res);
+              this.data = res;
+            } else if (res[1]) {
+              this.notify.alertCode(res[1]).subscribe((stt) => {
+                console.log('click', res);
+                if (stt?.event.status == 'Y') {
+                  if (res[1] == 'HR010') {
+                    this.hrSevice
+                      .addEContract(this.data)
+                      .subscribe((result) => {
+                        if (result && result[0]) {
+                          this.notify.notifyCode('SYS006');
+                          this.dialog && this.dialog.close(result);
+                        }
+                      });
+                  } else if (res[1] == 'HR009') {
+                    this.data.hiredOn = this.data.effectedDate;
+                    this.formGroup.patchValue({ hiredOn: this.data.hiredOn });
+
+                    this.hrSevice
+                      .addEContract(this.data)
+                      .subscribe((result) => {
+                        if (result && result[0]) {
+                          this.notify.notifyCode('SYS006');
+                          this.dialog && this.dialog.close(result);
+                        }
+                      });
+                  }
+                }
+              });
+            }
+          }
+        });
     } else if (this.actionType == 'edit') {
       this.hrSevice.editEContract(this.data).subscribe((res) => {
         if (res && res[0]) {
@@ -198,13 +230,13 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
           this.data.limitMonths =
             event?.component?.itemsSelected[0]?.LimitMonths;
           this.formGroup.patchValue({ limitMonths: this.data.limitMonths });
-          this.setExpiredDate();
+          this.setExpiredDate(this.data.limitMonths);
           break;
         }
         case 'effectedDate': {
           this.data.effectedDate = event.data;
           this.formGroup.patchValue({ effectedDate: this.data.effectedDate });
-          this.setExpiredDate();
+          this.setExpiredDate(this.data.limitMonths);
           break;
         }
         case 'signerID': {
@@ -237,16 +269,16 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     }
   }
 
-  setExpiredDate() {
+  setExpiredDate(month) {
     if (this.data.effectedDate) {
       let date = new Date(this.data.effectedDate);
-      this.data.expiredDate = new Date(date.setMonth(date.getMonth() + 14));
+      this.data.expiredDate = new Date(date.setMonth(date.getMonth() + month));
       this.formGroup.patchValue({ expiredDate: this.data.expiredDate });
       this.cr.detectChanges();
     }
   }
 
-  handleSubContract(headerText : string, actionType: string, data: any) {
+  handleSubContract(headerText: string, actionType: string, data: any) {
     let optionSub = new SidebarModel();
     optionSub.Width = '550px';
     optionSub.zIndex = 1001;
@@ -269,42 +301,4 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
       }
     });
   }
-
-  // validateBeforeSave(isAddNew: boolean) {
-  //   if (this.lstAllContract && this.lstAllContract?.length > 0) {
-  //     //khoảng thời gian ["Ngày hiệu lực", "Ngày hết hạn"] ko được lồng nhau với các HĐLĐ đã tồn tại trước đó
-  //     if (this.data?.isAppendix == false) {
-  //       let lstIsAppendix = this.lstAllContract.filter(
-  //         (x) => x.IsAppendix == false
-  //       );
-  //       if (lstIsAppendix?.length > 0) {
-  //         if (this.data?.effectedDate < lstIsAppendix[0].expiredDate) {
-  //           this.notify.notifyCode('HR007');
-  //           return;
-  //         }
-  //       }
-  //     }
-
-  //     if (isAddNew) {
-  //       //Cảnh báo nếu thêm mới HĐLĐ, mà trước đó có  HĐ đang hiệu lực là HĐ không xác định thời hạn (có phân loại = 1)
-  //       let crrValidContract = this.lstAllContract.filter(
-  //         (p) => p.isCurrent == true
-  //       );
-  //       if (crrValidContract) {
-  //         let cType = this.dataCbxContractType.filter(
-  //           (p) => p.contractTypeID == crrValidContract.contractTypeID
-  //         );
-  //         if (cType && cType?.contractGroup == 1) {
-  //           this.notify.alertCode('HR008').subscribe((x) => {
-  //             if (x.event?.status == 'Y') {
-  //               this.onSaveForm(false);
-  //             } else return;
-  //           });
-  //         }
-  //       }
-
-  //       //Cập nhật “Ngày hợp đồng chính thức” đối với Hợp đồng chính thức đầu tiên
-  //     }
-  //   }
-  // }
 }

@@ -21,7 +21,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { PopupJobComponent } from './step-task/popup-job/popup-job.component';
+import { PopupJobComponent } from './step-task/popup-step-task/popup-step-task.component';
 import {
   DialogData,
   DialogRef,
@@ -50,7 +50,7 @@ import {
 import { format } from 'path';
 import { FormGroup } from '@angular/forms';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
-import { ViewJobComponent } from './step-task/view-job/view-job.component';
+import { ViewJobComponent } from './step-task/view-step-task/view-step-task.component';
 import { PopupTypeTaskComponent } from './step-task/popup-type-task/popup-type-task.component';
 import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-group.component';
 import { paste } from '@syncfusion/ej2-angular-richtexteditor';
@@ -172,6 +172,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
+  listFileTask: string[] = [];
 
   dayStep = 0;
   hourStep = 0;
@@ -218,7 +219,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   adAutoNumber: any;
   vllDateFormat: any;
   lstGroup = [];
-  checkGroup = false;
+  checkGroup = true;
   errorMessage = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -334,6 +335,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
+
   }
 
   ngAfterViewInit(): void {
@@ -431,7 +433,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             .update(res.update)
             .subscribe();
           res.update.modifiedOn = new Date();
-          this.dialog.close(res.update);
+
+          var isUseSuccess = this.stepSuccess.isUsed;
+          var isUseFail = this.stepFail.isUsed;
+          var dataCountInstance = [res.update.recID, isUseSuccess, isUseFail];
+          this.dpService
+            .countInstanceByProccessId(dataCountInstance)
+            .subscribe((totalInstance) => {
+              if (totalInstance) {
+                res.update.totalInstance = totalInstance;
+                this.dialog.close(res.update);
+              }
+            });
         }
       });
   }
@@ -488,6 +501,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // } else return;
     this.notiService.alertCode('DP013').subscribe((e) => {
       if (e?.event?.status == 'Y') {
+        if(this.listFileTask?.length > 0){
+          this.dpService
+            .deleteFileTask([this.listFileTask])
+            .subscribe((rec) => {})
+        }
         this.dialog.close();
       } else return;
     });
@@ -772,6 +790,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           O: 'Share_OrgUnits_Sgl',
         };
         break;
+      case 'involved':
+        this.vllShare = 'DP0331';
+        this.typeShare = '5';
+        this.multiple = true;
+        break;
     }
     this.callfc.openForm(share, '', 420, 600);
   }
@@ -784,6 +807,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (e.length > 0) {
       console.log(e);
       switch (type) {
+        //Người giám sát
         case '1':
           var value = e;
           for (var i = 0; i < value.length; i++) {
@@ -811,6 +835,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
           this.process.permissions = this.permissions;
           break;
+        //Người tham gia
         case '2':
           var value = e;
           for (var i = 0; i < value.length; i++) {
@@ -842,6 +867,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           );
           this.process.permissions = this.permissions;
           break;
+        //Người theo dõi
         case '3':
           var value = e;
           for (var i = 0; i < value.length; i++) {
@@ -869,6 +895,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
           this.process.permissions = this.permissions;
           break;
+        //Người giám sát giai đoạn
         case '4':
           var value = e;
           var tmpRole = [];
@@ -913,6 +940,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
           this.step.roles = tmpRole;
           this.process.permissions = this.permissions;
+          break;
+        //Người liên quan
+        case '5':
+          e?.forEach(element => {
+            let role = {
+              objectID: element.id,
+              objectName: element.text,
+              objectType: element.objectType,
+              roleType: type,
+            }
+            this.addRole(role);
+          });
           break;
       }
     }
@@ -1818,6 +1857,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       dataInput || {},
       this.taskList,
       this.groupTaskID || null,
+      this.listFileTask
     ];
     var functionID = 'DPT0206'; //id tuy chojn menu ne
     this.cache.functionList(functionID).subscribe((f) => {
@@ -1835,7 +1875,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
         dialog.closed.subscribe((e) => {
           if (e?.event) {
-            this.groupTaskID = null;
             let taskData = e?.event?.data;
             if (e.event?.status === 'add' || e.event?.status === 'copy') {
               let index = this.taskGroupList.findIndex(
@@ -1865,6 +1904,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             }
           }
         });
+        this.groupTaskID = null;
       });
     });
   }
@@ -1928,7 +1968,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         break;
       case 'DP07':
         this.jobType = task.taskType;
-        this.openPopupViewJob(task);
+        this.viewTask(task);
         break;
     }
   }
@@ -1947,6 +1987,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       case 'DP08':
         this.groupTaskID = data?.recID;
         this.openTypeJob();
+        break;
+      case 'DP12':
+        this.viewTask(data, 'G');
         break;
     }
   }
@@ -1985,7 +2028,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           case 'DP07':
             if (type == 'group' || type == 'step') res.disabled = true;
             break;
-          default:
+          case 'DP13':
             res.disabled = true;
         }
       });
@@ -2317,17 +2360,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return formModel;
   }
   //View task
-  async openPopupViewJob(data?: any) {
-    let listTaskConvert = this.taskList?.map(item => {
-      return{
+  viewTask(data?: any, type?: string) {
+    let listTaskConvert = this.taskList?.map((item) => {
+      return {
         ...item,
+        refID: item.recID,
         name: item?.taskName,
         type: item?.taskType,
-      }
-    })
+      };
+    });
     let value = JSON.parse(JSON.stringify(data));
-    value['name'] = value['taskName'];
-    value['type'] = value['taskType'];
+    value['name'] = value['taskName'] || value['taskGroupName'];
+    value['type'] = value['taskType'] || type;
+    value['refID'] = value['recID'];
     if (data) {
       this.callfc.openForm(ViewJobComponent, '', 700, 550, '', {
         value: value,
@@ -2382,7 +2427,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (view === this.viewStepReasonSuccess) {
       if ($event.field === 'isUsed' && $event.component.checked === true) {
         this.stepSuccess.isUsed = true;
-      } else if ($event.field == 'isUsed' && $event.component.checked === false) {
+      } else if (
+        $event.field == 'isUsed' &&
+        $event.component.checked === false
+      ) {
         this.stepSuccess.isUsed = false;
         this.stepSuccess.reasonControl = false;
         this.stepSuccess.newProcessID = this.guidEmpty;
@@ -2390,7 +2438,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     } else {
       if ($event.field === 'isUsed' && $event.component.checked === true) {
         this.stepFail.isUsed = true;
-      } else if ($event.field == 'isUsed' && $event.component.checked === false) {
+      } else if (
+        $event.field == 'isUsed' &&
+        $event.component.checked === false
+      ) {
         this.stepFail.isUsed = false;
         this.stepFail.reasonControl = false;
         this.stepFail.newProcessID = this.guidEmpty;

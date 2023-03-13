@@ -9,14 +9,14 @@
     --bghover: #f4f8ff;
     --border-gray: #e3e7e9;
     --text-menu: #28292b;
-    --scrollbar-thumb: var(--gray-300);
+    --scrollbar-thumb: #ced6da;
     --border-list: #e1e6e7;
 
     --gray-800: #28292b;
     --gray-700: #3f4144;
     --gray-600: #6f7475;
     --gray-500: #8f9596;
-    --gray-400: #a4a9ac;
+    --gray-400: #a7adb1;
     --gray-300: #c2c8ca;
     --gray-200: #cad0d3;
     --gray-150: #e1e6e7;
@@ -713,6 +713,11 @@
     background: var(--primary-light) !important;
 }
 
-
-
+.badge-primary {
+    background-color: var(--primary);
+}
+.badge-light-primary {
+    color: var(--primary);
+    background-color: var(--primary-lighter);
+}
 /// end 22/12/2022

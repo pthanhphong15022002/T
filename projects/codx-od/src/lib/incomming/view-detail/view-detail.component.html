@@ -39,7 +39,7 @@
                 </ng-container>
             </ng-container>
           </div>
-          <div class="d-flex align-items-center me-5 mb-1">
+          <div class="d-flex align-items-center me-5 mb-1" *ngIf="gridViewSetup && gridViewSetup['Urgency'].allowPopup == '1'">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="Urgency"
               [ngClass]="'fw-bold label-colon'"></codx-label>
             <codx-vll [formModel]="formModel" [field]="'Urgency'" [value]="data?.urgency" [showText]="true"
@@ -47,7 +47,7 @@
             </codx-vll>
             <!-- icon-flag -->
           </div>
-          <div class="d-flex align-items-center me-5 mb-1">
+          <div class="d-flex align-items-center me-5 mb-1" *ngIf="gridViewSetup && gridViewSetup['Security'].allowPopup == '1'">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
               fiedName="Security" [ngClass]="'fw-bold label-colon'"></codx-label>
             <codx-vll [formModel]="formModel" [field]="'Security'" [value]="data?.security" [showText]="true"
@@ -73,7 +73,7 @@
               }}</span>
             <!-- <codx-label [default]="data?.dispatchOn | date:'dd/MM/yyyy'" ngClass="text-gray-700"></codx-label> -->
           </div>
-          <div class="d-flex align-items-center me-5 mb-1">
+          <div class="d-flex align-items-center me-5 mb-1" *ngIf="gridViewSetup && gridViewSetup['Deadline'].allowPopup == '1'">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
               fiedName="Deadline" ngClass="fw-bold label-colon"></codx-label>
             <span class="text-gray-700">{{
@@ -116,11 +116,11 @@
         </div>
       </div>
     </div>
-    <ng-container *ngIf="data ">
-      <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment>
-      <!-- <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'1'" [hideMoreF]="'0'"
+    <ng-container *ngIf="data">
+      <!-- <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment> -->
+      <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'1'" [hideMoreF]="'0'"
         (viewFile)="handleViewFile($event)" [permissions]="data?.relations">
-      </codx-thumbnail> -->
+      </codx-thumbnail>
     </ng-container>
   </ng-template>
   <ng-template #body>
