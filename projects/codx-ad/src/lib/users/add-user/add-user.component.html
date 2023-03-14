@@ -18,11 +18,14 @@
         #imageUpload
         class="image-inpt-wrapper fullImage"
         [width]="90"
-        [funcId]="formModel?.funcID"
+        [funcId]="'HR000'"
         [objectId]="adUser.userID"
-        [objectType]="'AD_Users'"
+        [objectType]="'HR_Employees'"
         [isAllowEdit]="true"
         [isDefaulImg]="true"
+        [parentType]="'AD_Users'"
+        [referType]="'avt2'"
+        [parentID]="adUser.userID"
         [imgOn]="date"
       >
       </codx-img>
