@@ -68,10 +68,7 @@ export class CodxHistoryItemComponent implements OnInit {
 
   //check value string is null or empty
   isNullOrEmpty(value:string):boolean{
-    if(!value.trim()){
-      return true;
-    }
-    return false;
+    return value == null || value==undefined || !value.trim();
   }
   // Check data type is object || josn || array
   isObject(value:any):boolean {
