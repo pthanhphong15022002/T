@@ -13,20 +13,26 @@ export class CrmcustomerDetailComponent implements OnInit {
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
-    { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Task', textDefault: 'Công việc', isActive: false },
+    { name: 'Approve', textDefault: 'Ký duyệt', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
-    { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
-    { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+    { name: 'Quote', textDefault: 'Báo giá', isActive: false },
+    { name: 'Order', textDefault: 'Đơn hàng', isActive: false },
+    { name: 'Contract', textDefault: 'Hợp đồng', isActive: false },
+
   ];
   treeTask = [];
 
   nameDetail = 'Information';
 
   tabDetail = [
-    { name: 'Information', textDefault: 'Thông tin chung', icon: '', isActive: true },
-    { name: 'Contact', textDefault: 'Liên hệ', icon: '', isActive: false },
-    { name: 'History', textDefault: 'Lịch sử tác nghiệp', icon: '', isActive: false }
+    { name: 'Information', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
+    { name: 'Contact', textDefault: 'Liên hệ', icon: 'icon-contact_phone', isActive: false },
+    { name: 'Opportunity', textDefault: 'Cơ hội', icon: 'icon-add_shopping_cart', isActive: false },
+    { name: 'Product', textDefault: 'Sản phẩm đã mua', icon: 'icon-shopping_bag', isActive: false }
+
   ]
   constructor(
     private changeDetectorRef: ChangeDetectorRef
