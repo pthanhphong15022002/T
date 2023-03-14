@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, HostBinding, Injector, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Component, HostBinding, Injector, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarousel, NgbSlideEvent, NgbSlideEventSource } from '@ng-bootstrap/ng-bootstrap';
 import { load } from '@syncfusion/ej2-angular-charts';
 import { ListViewComponent } from '@syncfusion/ej2-angular-lists';
 import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, ViewType, DialogModel, UIComponent, NotificationsService, CRUDService } from 'codx-core';
@@ -15,7 +15,7 @@ import { PopupSearchComponent } from './popup/popup-search/popup-search.componen
 })
 
 
-export class NewsComponent extends UIComponent {
+export class NewsComponent extends UIComponent implements AfterContentInit {
 
   @HostBinding('class') get class() {
     return "bg-body h-100 news-main card-body hover-scroll-overlay-y";
@@ -50,13 +50,16 @@ export class NewsComponent extends UIComponent {
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('listview') listview: CodxListviewComponent;
-  @ViewChild('carousel', { static: true }) carousel: NgbCarousel;
+  @ViewChild('carousel') carousel: NgbCarousel;
   constructor
   (
     private injector: Injector
   ) 
   { 
     super(injector)
+  }
+  ngAfterContentInit(): void {
+    
   }
   onInit(): void {
     this.router.params.subscribe((param) => {
@@ -155,7 +158,6 @@ export class NewsComponent extends UIComponent {
         'GetVideoAsync',
         [category,pageIndex])
         .subscribe((res:any[]) => {
-          debugger
           let data = res[0];
           let total = res[1];
           this.page = Math.ceil(total/6);
@@ -163,23 +165,47 @@ export class NewsComponent extends UIComponent {
           {
             this.videos = this.videos.concat(data);
             this.scrolled = false;
+            this.carousel.pause();
+            let slideIndex = this.slides.length;
+            for (let index = 0; index < data.length; index+=3) {
+              this.slides[slideIndex] = [];
+              this.slides[slideIndex] = data.slice(index,index+3);
+              slideIndex++;
+            }
           }
           else
           {
             this.videos = JSON.parse(JSON.stringify(data));
-          }
-          let slide = 0;
-          for (let index = 0; index < this.videos.length; index += 3) {
-            this.slides[slide] = [];
-            this.slides[slide] = this.videos.slice(index,index+3);
-            slide ++;
-          }
-          if(this.page >= 1){
-            this.showNavigation = this.page >= 1 ? true : false;
+            let slide = 0;
+            for (let index = 0; index < this.videos.length; index += 3) {
+              this.slides[slide] = [];
+              this.slides[slide] = this.videos.slice(index,index+3);
+              slide ++;
+            }
+            let ins = setInterval(()=>{
+              if(this.carousel){
+                this.showNavigation = this.page >= 1 ? true : false;
+                this.carousel.pause();
+                this.detectorRef.detectChanges();
+                clearInterval(ins);
+              }
+            },100)
           }
           this.pageIndex += 1;
-          this.detectorRef.detectChanges();
         });
+  }
+
+  //
+
+  // slideChange
+  slideChange(slideEvent:NgbSlideEvent){
+    // if(slideEvent.paused){
+    //   this.carousel.cycle();
+    // }
+    if(slideEvent.source === NgbSlideEventSource.ARROW_RIGHT && this.pageIndex < this.page){
+      this.scrolled = true;
+      this.getVideoAsync(this.category,this.pageIndex);
+    }
   }
   // click view detail news
   clickViewDetail(data: any) {
@@ -237,14 +263,6 @@ export class NewsComponent extends UIComponent {
   }
 
 
-  // navigate slider
-  navigate(event:any){
-    debugger
-    if(event.source === "arrowRight" && this.pageIndex < this.page){
-      //load video
-      this.scrolled = true;
-      this.getVideoAsync(this.category,this.pageIndex);
-    }
-  }
+  
 
 }
