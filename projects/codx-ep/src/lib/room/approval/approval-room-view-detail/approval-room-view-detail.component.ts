@@ -83,7 +83,6 @@ export class ApprovalRoomViewDetailComponent
       this.api
         .exec<any>('EP', 'BookingsBusiness', 'GetApprovalBookingByIDAsync', [
           changes.itemDetail?.currentValue?.recID,
-          changes.itemDetail?.currentValue?.approvalTransRecID,
         ])
         .subscribe((res) => {
           if (res) {
