@@ -1135,6 +1135,128 @@ export class EmployeeDetailComponent extends UIComponent {
     }
   }
 
+  initLegalInfo(){
+    //#region get columnGrid EVisa - Thị thực
+    if(!this.visaColumnGrid){
+      this.hrService.getHeaderText(this.eVisaFuncID).then((res) => {
+        let visaHeaderText = res;
+        this.visaColumnGrid = [
+          {
+            headerText:
+              visaHeaderText['VisaNo'] + ' | ' + visaHeaderText['IssuedPlace'],
+            template: this.visaCol1,
+            width: '150',
+          },
+          {
+            headerText:
+              visaHeaderText['IssuedDate'] +
+              ' | ' +
+              visaHeaderText['ExpiredDate'],
+            template: this.visaCol2,
+            width: '150',
+          },
+        ];
+      });
+  
+      let insVisa = setInterval(() => {
+        if (this.visaGridview) {
+          clearInterval(insVisa);
+          let t = this;
+          this.visaGridview.dataService.onAction.subscribe((res) => {
+            if (res) {
+              if (res.type == 'loaded') {
+                t.visaRowCount = res['data'].length;
+              }
+            }
+          });
+          this.visaRowCount = this.visaGridview.dataService.rowCount;
+        }
+      }, 100);
+    }
+    //#endregion
+
+    //#region get columnGrid EPassport - Hộ chiếu
+    if(!this.passportColumnGrid){
+      this.hrService.getHeaderText(this.ePassportFuncID).then((res) => {
+        let passportHeaderText = res;
+        this.passportColumnGrid = [
+          {
+            headerText:
+              passportHeaderText['PassportNo'] +
+              ' | ' +
+              passportHeaderText['IssuedPlace'],
+            template: this.passportCol1,
+            width: '150',
+          },
+          {
+            headerText:
+              passportHeaderText['IssuedDate'] +
+              ' | ' +
+              passportHeaderText['ExpiredDate'],
+            template: this.passportCol2,
+            width: '150',
+          },
+        ];
+      });
+  
+      let insPassport = setInterval(() => {
+        if (this.passportGridview) {
+          clearInterval(insPassport);
+          let t = this;
+          this.passportGridview?.dataService.onAction.subscribe((res) => {
+            if (res) {
+              if (res.type == 'loaded') {
+                t.passportRowCount = res['data'].length;
+              }
+            }
+          });
+          this.passportRowCount = this.passportGridview?.dataService.rowCount;
+        }
+      }, 100);
+    }
+    //#endregion
+
+    //#region get columnGrid EWorkPermit - Giấy phép lao động
+    if(!this.workPermitColumnGrid){
+      this.hrService.getHeaderText(this.eWorkPermitFuncID).then((res) => {
+        let workHeaderText = res;
+        this.workPermitColumnGrid = [
+          {
+            headerText:
+              workHeaderText['WorkPermitNo'] +
+              ' | ' +
+              workHeaderText['IssuedPlace'],
+            template: this.workPermitCol1,
+            width: '150',
+          },
+          {
+            headerText:
+              workHeaderText['IssuedDate'] + ' | ' + workHeaderText['ToDate'],
+            template: this.workPermitCol2,
+            width: '150',
+          },
+        ];
+      });
+  
+      let insWorkPermit = setInterval(() => {
+        if (this.workPermitGridview) {
+          clearInterval(insWorkPermit);
+          let t = this;
+          this.workPermitGridview?.dataService.onAction.subscribe((res) => {
+            if (res) {
+              if (res.type == 'loaded') {
+                t.workPermitRowCount = res['data'].length;
+              }
+            }
+          });
+          this.workPermitRowCount = this.workPermitGridview.dataService.rowCount;
+        }
+      }, 100);
+    }
+    //#endregion
+
+  }
+
   onInit(): void {
     this.hrService.getFunctionList(this.funcID).subscribe((res) => {
       console.log('functionList', res);
@@ -1188,6 +1310,9 @@ export class EmployeeDetailComponent extends UIComponent {
         if(history.state.empInfo){
           this.infoPersonal = history.state.empInfo;
         }
+        if(history.state?.empInfo){
+          this.infoPersonal = JSON.parse(history.state?.empInfo);
+        }
         this.listEmp = history.state?.data;
         this.request = history.state?.request;
         if (!this.request && !this.listEmp) {
@@ -1203,7 +1328,7 @@ export class EmployeeDetailComponent extends UIComponent {
           this.request.dataValue = params?.dataValue ?? '';
           if (params?.filter) this.request.filter = JSON.parse(params?.filter);
           this.request.pageSize = 20;
-          this.hrService.getModelFormEmploy(this.request).subscribe((res) => {
+          this.hrService.loadData('HR', this.request).subscribe((res) => {
             if (res && res[0]) {
               this.listEmp.push(...res[0]);
               let index = this.listEmp?.findIndex(
@@ -1221,16 +1346,20 @@ export class EmployeeDetailComponent extends UIComponent {
         let index = this.listEmp?.findIndex(
           (p) => p.employeeID == params.employeeID
         );
+        console.log('lst 1', this.listEmp);
+        
         if (index > -1 && !this.listEmp[index + 1]?.employeeID) {
           this.request.page += 1;
-          this.hrService.getModelFormEmploy(this.request).subscribe((res) => {
+          this.hrService.loadData('HR', this.request).subscribe((res) => {
             if (res && res[0]) {
               this.listEmp.push(...res[0]);
+              console.log('lst 2', this.listEmp);
             }
           });
         }
       }
     });
+
     this.router.params.subscribe((param: any) => {
       if (param) {
         this.functionID = param['funcID'];
@@ -1249,12 +1378,12 @@ export class EmployeeDetailComponent extends UIComponent {
         } else {
           this.initForm();
         }
-        this.getDataAsync(this.functionID);
-        this.codxMwpService.empInfo.subscribe((res: string) => {
-          if (res) {
-            console.log(res);
-          }
-        });
+        // this.getDataAsync(this.functionID);
+        // this.codxMwpService.empInfo.subscribe((res: string) => {
+        //   if (res) {
+        //     console.log(res);
+        //   }
+        // });
       }
     });
 
@@ -1310,6 +1439,8 @@ export class EmployeeDetailComponent extends UIComponent {
       this.addHeaderText = res[0].customName;
       this.editHeaderText = res[2].customName;
     });
+
+    //#endregion
 
     //#region get FormModel
     this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
@@ -1387,7 +1518,6 @@ export class EmployeeDetailComponent extends UIComponent {
         )
         .subscribe((res) => {
           this.eTrainCourseGrvSetup = res;
-          console.log('traincourseeeeeeeeeeee', this.eTrainCourseGrvSetup);
         });
     });
     this.hrService.getFormModel(this.eHealthFuncID).then((res) => {
@@ -1396,7 +1526,6 @@ export class EmployeeDetailComponent extends UIComponent {
 
     this.hrService.getFormModel(this.benefitFuncID).then((res) => {
       this.benefitFormodel = res;
-      console.log('benefit form mo do` ne` ', res);
 
       this.cache
         .gridViewSetup(
@@ -1405,14 +1534,12 @@ export class EmployeeDetailComponent extends UIComponent {
         )
         .subscribe((res) => {
           this.eBenefitGrvSetup = res;
-          console.log('grid view set up benefit', res);
           let dataRequest = new DataRequest();
 
           dataRequest.comboboxName = res.BenefitID.referedValue;
           dataRequest.pageLoading = false;
 
           this.hrService.loadDataCbx('HR', dataRequest).subscribe((data) => {
-            console.log('gia tri vll lay ra dc tu db benefit', data[0]);
             this.BeneFitColorValArr = JSON.parse(data[0]);
           });
         });
@@ -1497,121 +1624,7 @@ export class EmployeeDetailComponent extends UIComponent {
     });
     //#endregion
 
-    //#region get columnGrid EVisa - Thị thực
-    this.hrService.getHeaderText(this.eVisaFuncID).then((res) => {
-      let visaHeaderText = res;
-      this.visaColumnGrid = [
-        {
-          headerText:
-            visaHeaderText['VisaNo'] + ' | ' + visaHeaderText['IssuedPlace'],
-          template: this.visaCol1,
-          width: '150',
-        },
-        {
-          headerText:
-            visaHeaderText['IssuedDate'] +
-            ' | ' +
-            visaHeaderText['ExpiredDate'],
-          template: this.visaCol2,
-          width: '150',
-        },
-      ];
-    });
-
-    let insVisa = setInterval(() => {
-      if (this.visaGridview) {
-        clearInterval(insVisa);
-        let t = this;
-        this.visaGridview.dataService.onAction.subscribe((res) => {
-          if (res) {
-            if (res.type == 'loaded') {
-              t.visaRowCount = res['data'].length;
-            }
-          }
-        });
-        this.visaRowCount = this.visaGridview.dataService.rowCount;
-      }
-    }, 100);
-
-    //#endregion
-
-    //#region get columnGrid EPassport - Hộ chiếu
-    this.hrService.getHeaderText(this.ePassportFuncID).then((res) => {
-      let passportHeaderText = res;
-      this.passportColumnGrid = [
-        {
-          headerText:
-            passportHeaderText['PassportNo'] +
-            ' | ' +
-            passportHeaderText['IssuedPlace'],
-          template: this.passportCol1,
-          width: '150',
-        },
-        {
-          headerText:
-            passportHeaderText['IssuedDate'] +
-            ' | ' +
-            passportHeaderText['ExpiredDate'],
-          template: this.passportCol2,
-          width: '150',
-        },
-      ];
-    });
-
-    let insPassport = setInterval(() => {
-      if (this.passportGridview) {
-        clearInterval(insPassport);
-        let t = this;
-        this.passportGridview?.dataService.onAction.subscribe((res) => {
-          if (res) {
-            if (res.type == 'loaded') {
-              t.passportRowCount = res['data'].length;
-            }
-          }
-        });
-        this.passportRowCount = this.passportGridview?.dataService.rowCount;
-      }
-    }, 100);
-
-    //#endregion
-
-    //#region get columnGrid EWorkPermit - Giấy phép lao động
-    this.hrService.getHeaderText(this.eWorkPermitFuncID).then((res) => {
-      let workHeaderText = res;
-      this.workPermitColumnGrid = [
-        {
-          headerText:
-            workHeaderText['WorkPermitNo'] +
-            ' | ' +
-            workHeaderText['IssuedPlace'],
-          template: this.workPermitCol1,
-          width: '150',
-        },
-        {
-          headerText:
-            workHeaderText['IssuedDate'] + ' | ' + workHeaderText['ToDate'],
-          template: this.workPermitCol2,
-          width: '150',
-        },
-      ];
-    });
-
-    let insWorkPermit = setInterval(() => {
-      if (this.workPermitGridview) {
-        clearInterval(insWorkPermit);
-        let t = this;
-        this.workPermitGridview?.dataService.onAction.subscribe((res) => {
-          if (res) {
-            if (res.type == 'loaded') {
-              t.workPermitRowCount = res['data'].length;
-            }
-          }
-        });
-        this.workPermitRowCount = this.workPermitGridview.dataService.rowCount;
-      }
-    }, 100);
-
-    //#endregion
+    this.initLegalInfo();
 
     //#region - Công tác
     this.hrService.getHeaderText(this.eBusinessTravelFuncID).then((res) => {
@@ -2760,45 +2773,28 @@ export class EmployeeDetailComponent extends UIComponent {
     }
   }
 
-  // clickMFVaccine(event: any, data: any, vaccineGroup: any) {
-  //   switch (event.functionID) {
-  //     case 'SYS03': //edit
-  //       this.HandleEVaccinesInfo('edit', data);
-  //       break;
-  //     case 'SYS02': //delete
-  //       this.notifySvr.alertCode('SYS030').subscribe((x) => {
-  //         if (x.event?.status == 'Y') {
-  //           this.deleteEVaccine(data, vaccineGroup);
+  // getDataAsync(funcID: string) {
+  //   this.getDataFromFunction(funcID);
+  // }
+  // getDataFromFunction(functionID: string) {
+  //   if (functionID) {
+  //     this.api
+  //       .execSv(
+  //         'SYS',
+  //         'ERM.Business.SYS',
+  //         'MoreFunctionsBusiness',
+  //         'GetMoreFunctionByHRAsync',
+  //         [this.functionID]
+  //       )
+  //       .subscribe((res: any[]) => {
+  //         if (res && res.length > 0) {
+  //           // this.moreFunc = res;
+  //           // this.defautFunc = res[0];
+  //           this.detectorRef.detectChanges();
   //         }
   //       });
-  //       break;
-  //     case 'SYS04': //copy
-  //       break;
   //   }
   // }
-
-  getDataAsync(funcID: string) {
-    this.getDataFromFunction(funcID);
-  }
-  getDataFromFunction(functionID: string) {
-    if (functionID) {
-      this.api
-        .execSv(
-          'SYS',
-          'ERM.Business.SYS',
-          'MoreFunctionsBusiness',
-          'GetMoreFunctionByHRAsync',
-          [this.functionID]
-        )
-        .subscribe((res: any[]) => {
-          if (res && res.length > 0) {
-            // this.moreFunc = res;
-            // this.defautFunc = res[0];
-            this.detectorRef.detectChanges();
-          }
-        });
-    }
-  }
 
   ngAfterViewInit(): void {
     // this.view.dataService.methodDelete = 'DeleteSignFileAsync';
@@ -4178,7 +4174,7 @@ export class EmployeeDetailComponent extends UIComponent {
             filter: JSON.stringify(this.request?.filter),
           },
           {
-            empInfo: this.listEmp[index + 1],
+            empInfo: JSON.stringify(this.listEmp[index + 1]),
             data: this.listEmp,
             request: this.request,
           }
@@ -4198,7 +4194,7 @@ export class EmployeeDetailComponent extends UIComponent {
         this.codxService.replaceNavigate(
           urlView,
           {
-            employeeID: this.listEmp[index + 1]?.employeeID,
+            employeeID: this.listEmp[index - 1]?.employeeID,
             page: this.request?.page,
             predicate:
               this.request?.predicate == ''
@@ -4211,7 +4207,7 @@ export class EmployeeDetailComponent extends UIComponent {
             filter: JSON.stringify(this.request?.filter),
           },
           {
-            empInfo: this.listEmp[index -1],
+            empInfo: JSON.stringify(this.listEmp[index - 1]),
             data: this.listEmp,
             request: this.request,
           }
