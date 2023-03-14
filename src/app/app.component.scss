@@ -4,5 +4,9 @@
  overflow: hidden;
 }
 .container-chat{
-	position: relative;
+	width: 100%;
+	position: fixed;
+	display: flex;
+	bottom: 0;
+	justify-content: end;
 }

@@ -2450,7 +2450,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   turnOnReason($event, view: string) {
-    debugger;
     if (view === this.viewStepReasonSuccess) {
       if ($event.field === 'isUsed' && $event.component.checked === true) {
         this.stepSuccess.isUsed = true;
@@ -2842,6 +2841,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               // 'Không chuyển đến quy trình khác'
             };
             this.listCbxProccess.unshift(obj);
+            if(this.action === 'edit') {
+              this.listCbxProccess = this.listCbxProccess.filter(x => x.recID !== this.process?.recID );
+            } 
           }
         });
     });
