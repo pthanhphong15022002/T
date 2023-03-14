@@ -292,8 +292,8 @@ export class CodxEpService {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
-      'BookingAttendeesBusiness',
-      'GetAsync',
+      'BookingsBusiness',
+      'GetListBookingAttendeesAsync',
       [recID]
     );
   }
@@ -423,6 +423,14 @@ export class CodxEpService {
       'EP',
       'BookingsBusiness',
       'GetBookingByIDAsync',
+      recID
+    );
+  }
+  getApproveByRecID(recID: string) {
+    return this.api.exec<any>(
+      'EP',
+      'BookingsBusiness',
+      'GetApprovalBookingByIDAsync',
       recID
     );
   }

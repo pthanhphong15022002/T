@@ -119,7 +119,7 @@ export class BookingRoomViewDetailComponent
           if (res) {
             this.itemDetail = res;
             this.listFilePermission = [];
-            if (res.bookingAttendees != null && res.bookingAttendees != '') {
+            if (res?.bookingAttendees != null && res?.bookingAttendees != '') {
               let listAttendees = res.bookingAttendees.split(';');
               listAttendees.forEach((item) => {
                 if (item != '') {
@@ -133,11 +133,8 @@ export class BookingRoomViewDetailComponent
                   this.listFilePermission.push(tmpPer);
                 }
               });
-              //this.tabModel.addPermissions=this.listFilePermission;
-              //this.renderFooter=true;
-              this.detectorRef.detectChanges();
             }
-            if (res.listApprovers != null && res.listApprovers.length>0) {
+            if (res?.listApprovers != null && res?.listApprovers.length > 0) {
               res.listApprovers.forEach((item) => {
                 if (item != '') {
                   let tmpPer = new Permission();
@@ -150,14 +147,15 @@ export class BookingRoomViewDetailComponent
                   this.listFilePermission.push(tmpPer);
                 }
               });
-              this.detectorRef.detectChanges();
             }
-            if (
-              this.itemDetail?.createdBy == this.authService.userValue.userID
-            ) {
-              this.isEdit = true;
-            } else {
-              this.isEdit = false;
+            this.isEdit = false;
+            for (let u of res.bookingAttendees) {
+              if (
+                res?.createdBy == this.authService?.userValue?.userID ||
+                this.authService?.userValue?.userID == u?.userID
+              ) {
+                this.isEdit = true;
+              }
             }
             this.detectorRef.detectChanges();
           }

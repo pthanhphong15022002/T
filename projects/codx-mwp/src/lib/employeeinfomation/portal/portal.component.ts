@@ -30,6 +30,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Sort } from '@syncfusion/ej2-angular-grids';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
+
 @Component({
   selector: 'lib-portal',
   templateUrl: './portal.component.html',
@@ -48,16 +49,15 @@ export class PortalComponent extends UIComponent {
   user;
 
   active = [
-    'HRTEM0101',
-    'HRTEM0201',
-    'HRTEM0301',
-    'HRTEM0401',
-    'HRTEM0501',
-    'HRTEM0601',
-    'HRTEM0701',
-    'HRTEM0801',
+    'HRPEM0101',
+    'HRPEM0201',
+    'HRPEM0301',
+    'HRPEM0401',
+    'HRPEM0501',
+    'HRPEM0601',
+    'HRPEM0701',
+    'HRPEM0801',
   ];
-
   constructor(
     private inject: Injector,
     private routeActive: ActivatedRoute,
@@ -392,8 +392,9 @@ export class PortalComponent extends UIComponent {
   lstFuncLegalInfo: any = [];
   lstFuncTaskInfo: any = [];
   lstFuncSalary: any = [];
-  lstFuncHRProcess: any = [];
-  dayOffTravelHRProcess: any = [];
+  lstFuncDayOffTravel: any = [];
+  //dayOffTravelHRProcess: any = [];
+  lstFuncContract: any = [];
   lstFuncKnowledge: any = [];
   lstFuncAward: any = [];
   lstFuncArchiveRecords: any = [];
@@ -421,6 +422,7 @@ export class PortalComponent extends UIComponent {
   //#endregion
 
   //#region var functionID
+
   selfInfoFuncID: string = 'HRPEM01'; //Thong tin ban than
   legalInfoFuncID: string = 'HRPEM02'; //Thong tin phap li
   jobInfoFuncID: string = 'HRPEM03';
@@ -445,7 +447,7 @@ export class PortalComponent extends UIComponent {
   eJobSalFuncID = 'HRPEM0402'; //Lương chức danh
   benefitFuncID = 'HRPEM0403'; // Phụ cấp
   eAssetFuncID = 'HRPEM0404'; // Tài sản cấp phát
-  dayoffFuncID = 'HRPEM0501'; // Nghỉ phép 
+  dayoffFuncID = 'HRPEM0501'; // Nghỉ phép
   eBusinessTravelFuncID = 'HRPEM0502'; // Công tác
   eContractFuncID = 'HRPEM0601'; // Hợp đồng lao động
   eDegreeFuncID = 'HRPEM0701'; // Bằng cấp
@@ -519,22 +521,43 @@ export class PortalComponent extends UIComponent {
   filterBusinessTravelPredicates: string;
   //#endregion
   dataService: DataService = null;
+  isClick: boolean = false;
 
-  navChange(evt: any) {
+  navChange(evt: any, index: number = -1) {
     if (!evt) return;
-    let element = document.getElementById(evt.nextId);
+    // let element = document.getElementById(evt?.nextId);
+    let element = document.getElementById(evt);
+    if (index > -1) {
+      // this.active[index] = evt.nextId;
+      this.active[index] = evt;
+      this.detectorRef.detectChanges();
+    }
     element.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
       inline: 'nearest',
     });
+    this.isClick = true;
+    this.detectorRef.detectChanges();
+    setTimeout(() => {
+      this.isClick = false;
+      return;
+    }, 500);
   }
   clickItem(evet) {}
 
-  onSectionChange(data: any) {
-    console.log('change section', data);
-    this.codxMwpService.currentSection = data.current;
-    this.detectorRef.detectChanges();
+  // onSectionChange(data: any) {
+  //   console.log('change section', data);
+  //   this.codxMwpService.currentSection = data.current;
+  //   this.detectorRef.detectChanges();
+  // }
+  onSectionChange(data: any, index: number = -1) {
+    if (index > -1 && this.isClick == false) {
+      let element = document.getElementById(this.active[index]);
+      element.blur();
+      this.active[index] = data;
+      this.detectorRef.detectChanges();
+    }
   }
 
   initPersonalInfo() {
@@ -1100,12 +1123,15 @@ export class PortalComponent extends UIComponent {
         this.lstFuncSelfInfo = res[0].filter(
           (p) => p.parentID == this.selfInfoFuncID
         );
+        console.log('thong tin ca nhan', this.lstFuncSelfInfo);
+
         this.lstBtnAdd = JSON.parse(JSON.stringify(this.lstFuncSelfInfo));
         this.lstBtnAdd.splice(0, 2);
 
         this.lstFuncLegalInfo = res[0].filter(
           (p) => p.parentID == this.legalInfoFuncID
         );
+        console.log('thong tin phap ly', this.lstFuncLegalInfo);
 
         this.lstFuncTaskInfo = res[0].filter(
           (p) => p.parentID == this.jobInfoFuncID
@@ -1115,8 +1141,12 @@ export class PortalComponent extends UIComponent {
           (p) => p.parentID == this.benefitInfoFuncID
         );
 
-        this.dayOffTravelHRProcess = res[0].filter(
+        this.lstFuncDayOffTravel = res[0].filter(
           (p) => p.parentID == this.dayoffParentInfoFuncID
+        );
+
+        this.lstFuncContract = res[0].filter(
+          (p) => p.parentID == this.contractInfoFuncID
         );
 
         this.lstFuncKnowledge = res[0].filter(
@@ -1126,12 +1156,6 @@ export class PortalComponent extends UIComponent {
         this.lstFuncAward = res[0].filter(
           (p) => p.parentID == this.awardDisciplineFuncID
         );
-
-        this.lstFuncArchiveRecords = res[0].filter(
-          (p) => p.parentID == 'HRT030210'
-        );
-
-        this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
       }
     });
 
@@ -1260,14 +1284,14 @@ export class PortalComponent extends UIComponent {
         .subscribe((res) => {
           this.eAssetGrvSetup = res;
           console.log('eassetgrvsetup', this.eAssetGrvSetup);
-          
+
           let dataRequest = new DataRequest();
           dataRequest.comboboxName = res.AssetCategory.referedValue;
           dataRequest.pageLoading = false;
 
           this.hrService.loadDataCbx('HR', dataRequest).subscribe((data) => {
             console.log('data eassetttttt', data);
-            
+
             this.AssetColorValArr = JSON.parse(data[0]);
           });
         });
@@ -1315,9 +1339,9 @@ export class PortalComponent extends UIComponent {
     this.hrService.getFormModel(this.dayoffFuncID).then((res) => {
       this.dayoffFormModel = res;
       console.log('dayoff funcID', this.dayoffFuncID);
-      
+
       console.log('form model dayoff', this.dayoffFormModel);
-      
+
       this.cache
         .gridViewSetup(
           this.dayoffFormModel.formName,
@@ -1433,7 +1457,7 @@ export class PortalComponent extends UIComponent {
     this.hrService.getHeaderText(this.eBusinessTravelFuncID).then((res) => {
       this.eBusinessTravelHeaderTexts = res;
       console.log('ngay cong tac', this.eBusinessTravelHeaderTexts);
-      
+
       this.businessTravelColumnGrid = [
         {
           headerText:
@@ -1481,9 +1505,9 @@ export class PortalComponent extends UIComponent {
     this.hrService.getHeaderText(this.dayoffFuncID).then((res) => {
       this.dayoffHeaderTexts = res;
       console.log('dayoff FUNCID', this.dayoffFuncID);
-      
+
       console.log('dayOffs', this.dayoffHeaderTexts);
-      
+
       this.dayoffColumnGrid = [
         {
           headerText:
@@ -2471,7 +2495,7 @@ export class PortalComponent extends UIComponent {
     // }
   }
 
-  valueChangFilterContract(evt){
+  valueChangFilterContract(evt) {
     this.filterByContractIDArr = evt.data;
     let lengthArr = this.filterByContractIDArr.length;
     if (lengthArr <= 0) {
@@ -2513,7 +2537,6 @@ export class PortalComponent extends UIComponent {
     this.UpdateTrainCoursePredicate();
   }
 
-
   valueChangeYearFilterBusinessTravel(evt) {
     if (evt.formatDate == undefined && evt.toDate == undefined) {
       this.startDateBusinessTravelFilterValue = null;
@@ -2534,7 +2557,6 @@ export class PortalComponent extends UIComponent {
         )
         .subscribe();
     }
-
   }
   UpdateEDayOffsPredicate() {
     this.filterEDayoffPredicates = '';

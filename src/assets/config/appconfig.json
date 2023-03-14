@@ -5,9 +5,11 @@
   "urlUpload": "http://localhost:8011/lvfile",
   "appName": "hps-file-test",
   "office365": "",
-  "saas": 1,
+  "saas": 0,
   "layoutCZ": "",
   "themeMode": "body",
+  "reCaptchaKey": "6LctVdwkAAAAAF_yJPT2NGF2SvEpCKyLS4t68Ps1",
+  "reCaptchaEnable": 0,
   "externalLogin": {
     "amazonId": "amzn1.application-oa2-client.f074ae67c0a146b6902cc0c4a3297935",
     "facebookId": "553419903425493",

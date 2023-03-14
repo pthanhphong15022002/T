@@ -69,6 +69,7 @@ import { MWPBookingStationeryComponent } from './booking/stationery/mwp-booking-
 import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
 import { BookingStationeryViewDetailComponent } from './booking/stationery/view-detail/view-detail.component';
 import { PortalComponent } from './employeeinfomation/portal/portal.component';
+import { ScrollSpyDirective } from './scroll-spy.directive'
 import { EmployeeDetailComponent } from 'projects/codx-hr/src/lib/employee-list/employee-detail/employee-detail.component';
 
 export const routes: Routes = [
@@ -174,7 +175,8 @@ const Component: Type<any>[] = [
   MWPBookingCarViewDetailComponent,
   MWPBookingStationeryComponent,
   BookingStationeryViewDetailComponent,
-  PopupRequestStationeryComponent
+  PopupRequestStationeryComponent,
+  ScrollSpyDirective,
 ];
 
 @NgModule({

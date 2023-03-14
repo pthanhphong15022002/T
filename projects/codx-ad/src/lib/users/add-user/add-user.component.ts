@@ -85,6 +85,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
   contentComment: any;
   userGroupVisible: boolean = true;
   date = new Date();
+
+  //employeeID first change
+  isEmpIDNotNull = false;
+
   constructor(
     private injector: Injector,
     private changeDetector: ChangeDetectorRef,
@@ -100,6 +104,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.data = dialog.dataService!.dataSelected;
     this.dataCopy = dt?.data?.dataCopy;
     this.adUser = JSON.parse(JSON.stringify(this.data));
+    this.isEmpIDNotNull = this.adUser.employeeID != null ? true : false;
     if (this.formType == 'edit') {
       // this.adUser.userID = this.data._uuid;
       this.viewChooseRole = this.data?.chooseRoles;
@@ -565,7 +570,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
           this.form.formGroup.patchValue({
             // employeeID: this.adUser.employeeID,
             userName: this.adUser.userName,
-            buid: this.adUser.buid,
+            // buid: this.adUser.buid,
             mobile: this.adUser.phone,
           });
           this.changeDetector.detectChanges();
