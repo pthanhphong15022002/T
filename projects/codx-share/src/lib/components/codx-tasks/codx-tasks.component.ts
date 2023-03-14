@@ -1732,6 +1732,9 @@ export class CodxTasksComponent
       case 'dbClick':
         this.viewTask(e?.data);
         break;
+      case 'doubleClick':
+        this.viewTask(e?.data);
+        break;
       case 'pined-filter':
         var index = this.view.views.findIndex((x) => x.active == true);
         if (index != 1) {

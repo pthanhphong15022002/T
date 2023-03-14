@@ -119,7 +119,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         this.funcIDName = res.customName.toString().toLowerCase();
       }
     });
-    
+
   }
 
   onInit(): void {
@@ -128,11 +128,11 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       if(res==true){
         this.isAdmin=true;
       }
-      else{        
+      else{
         this.isAdmin=false;
       }
     });
-    
+
     this.cache
       .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
       .subscribe((grv) => {
@@ -140,7 +140,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           this.grView = Util.camelizekeyObj(grv);
         }
       });
-    
+
     //lấy list booking để vẽ schedule
     this.request = new ResourceModel();
     this.request.assemblyName = 'EP';
@@ -162,7 +162,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.modelResource.method = 'GetResourceAsync';
     this.modelResource.predicate = 'ResourceType=@0 ';
     this.modelResource.dataValue = '1';
-    
+
 
     this.fields = {
       id: 'recID',
@@ -183,14 +183,14 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
     this.buttons = {
       id: 'btnAdd',
-    };    
+    };
   }
 
   ngAfterViewInit(): void {
     this.view.dataService.methodDelete = 'DeleteBookingAsync';
     this.columnGrids = [
-      
-      
+
+
     ]
     this.views = [
       {
@@ -261,7 +261,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       }
     }
   }
-  
+
   changeItemDetail(event) {
     let recID = '';
     if (event?.data) {
@@ -308,10 +308,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
             func.disabled = false;
           }
           if (
-            //Ẩn: dời - mời - hủy 
+            //Ẩn: dời - mời - hủy
             func.functionID == 'EP4T1102' /*MF sửa*/ ||
             func.functionID == 'EP4T1101' /*MF xóa*/ ||
-            func.functionID == 'EP4T1104' /*MF hủy*/ 
+            func.functionID == 'EP4T1104' /*MF hủy*/
           ) {
             func.disabled = true;
           }
@@ -320,14 +320,14 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         event.forEach((func) => {
           //Đã duyệt
           if (
-            // Hiện: Mời - dời - Chép 
+            // Hiện: Mời - dời - Chép
             func.functionID == 'EP4T1102' /*MF mời*/ ||
             func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - duyệt - hủy 
+          if (//Ẩn: sửa - xóa - duyệt - hủy
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
@@ -348,7 +348,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
             func.disabled = false;
           }
           if (//Ẩn: sửa - xóa - gửi duyệt
-            
+
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP4T1103' /*MF gửi duyệt*/
@@ -365,7 +365,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: còn lại            
+          if (//Ẩn: còn lại
             func.functionID == 'EP4T1102' /*MF mời*/ ||
             func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'SYS02' /*MF sửa*/ ||
@@ -388,7 +388,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: còn lại            
+          if (//Ẩn: còn lại
             func.functionID == 'EP4T1102' /*MF mời*/ ||
             func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'EP4T1104' /*MF hủy*/
@@ -403,6 +403,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     if (event.type == 'add' && event.data?.resourceId != null) {
       this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(event.data);
+    }
+    if(event.type == 'doubleClick' || event.type == 'edit'){
+      this.edit(event.data);
     }
   }
   clickMF(event, data) {
@@ -509,7 +512,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         this.notificationsService.notifyCode(res?.msgCodeError);
       }
     });
-    
+
   }
   reschedule(data: any) {
     if (
