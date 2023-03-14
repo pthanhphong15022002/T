@@ -426,6 +426,14 @@ export class CodxEpService {
       recID
     );
   }
+  getApproveByRecID(recID: string) {
+    return this.api.exec<any>(
+      'EP',
+      'BookingsBusiness',
+      'GetApprovalBookingByIDAsync',
+      recID
+    );
+  }
 
   getBookingByRefID(recID: string) {
     return this.api.exec(

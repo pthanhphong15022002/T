@@ -1934,16 +1934,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   changeGroupTaskOfTask(taskData, taskGroupIdOld) {
     let tastClone = JSON.parse(JSON.stringify(taskData));
     let indexNew = this.taskGroupList.findIndex(
-      (task) => task.recID == taskData.taskGroupID
+      (group) => group.recID == taskData.taskGroupID
     );
     let index = this.taskGroupList.findIndex(
-      (task) => task.recID == taskGroupIdOld
+      (group) => group.recID == taskGroupIdOld
     );
-    let listTaskOld = this.taskGroupList[indexNew]['task'] || [];
+    let listTaskOld = this.taskGroupList[index]['task'] || [];
     let listTaskNew = this.taskGroupList[indexNew]['task'] || [];
 
-    listTaskOld.push(tastClone);
-    listTaskNew.forEach((element, i) => {
+    listTaskNew.push(tastClone);
+    listTaskOld.forEach((element, i) => {
       if (element?.taskGroupID !== taskGroupIdOld) {
         this.taskGroupList[index]['task'].splice(i, 1);
       }

@@ -146,3 +146,37 @@
 // .pic-newshot {
 //     border: 1px aqua solid;
 // }
+
+.slide-item{
+    padding:0px 50px ;
+    width: 100%;
+}
+.silde-item-block{
+    display: flex;
+    align-items: center;
+}
+.video{
+    width: calc(100%/3);
+    padding: 0px 20px;
+    box-sizing: border-box;
+}
+
+.video-block{
+    width: 250px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+}
+.video-block:hover{
+    cursor: pointer;
+    color: var(--text-primary);
+}
+.video-title{
+    margin-top: 8px;
+    font-weight: bold;
+    font-size: 1.15rem;
+}
+.post:hover .news-title{
+    color: var(--text-primary);
+}
+

@@ -25,6 +25,7 @@ import { ApprovalRoomsComponent } from './approval/approval-room.component';
 import { PopupAddRoomsComponent } from './settings/rooms/popup-add-rooms/popup-add-rooms.component';
 import { RoomsComponent } from './settings/rooms/rooms.component';
 import { PopupAddAttendeesComponent } from './booking/popup-add-attendees/popup-add-attendees.component';
+import { BookingRoomViewDetailComponent2 } from './view-detail/booking-room-view-detail2.component';
 
 const routes: Route[] = [
   {
@@ -74,6 +75,7 @@ const Components: Type<any>[] = [
   ApprovalRoomViewDetailComponent,
   PopupRescheduleBookingComponent,
   PopupAddAttendeesComponent,
+  BookingRoomViewDetailComponent2,
 ];
 
 @NgModule({
