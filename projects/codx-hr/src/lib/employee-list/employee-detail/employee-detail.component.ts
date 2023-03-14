@@ -1185,6 +1185,9 @@ export class EmployeeDetailComponent extends UIComponent {
     this.routeActive.queryParams.subscribe((params) => {
       if (params.employeeID || this.user.userID) {
         this.employeeID = params.employeeID;
+        if(history.state.empInfo){
+          this.infoPersonal = history.state.empInfo;
+        }
         this.listEmp = history.state?.data;
         this.request = history.state?.request;
         if (!this.request && !this.listEmp) {
@@ -4157,6 +4160,7 @@ export class EmployeeDetailComponent extends UIComponent {
         //     request: this.request,
         //   }
         // );
+        
 
         this.codxService.replaceNavigate(
           urlView,
@@ -4174,10 +4178,12 @@ export class EmployeeDetailComponent extends UIComponent {
             filter: JSON.stringify(this.request?.filter),
           },
           {
+            empInfo: this.listEmp[index + 1],
             data: this.listEmp,
             request: this.request,
           }
         );
+
       }
     }
   }
@@ -4205,6 +4211,7 @@ export class EmployeeDetailComponent extends UIComponent {
             filter: JSON.stringify(this.request?.filter),
           },
           {
+            empInfo: this.listEmp[index -1],
             data: this.listEmp,
             request: this.request,
           }
