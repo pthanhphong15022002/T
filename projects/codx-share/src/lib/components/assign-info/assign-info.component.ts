@@ -534,7 +534,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     if (listGroupMembersID != ''){
       listGroupMembersID = listGroupMembersID.substring(0, listGroupMembersID.length - 1);
       this.tmSv
-      .getListUserIDByListGroupID(listEmployeeID)
+      .getListUserIDByListGroupID(listGroupMembersID)
       .subscribe((res) => {
         if (res && res?.length > 0) {
           this.valueSelectUser(res);
