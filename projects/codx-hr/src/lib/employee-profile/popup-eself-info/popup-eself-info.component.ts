@@ -115,10 +115,10 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   }
 
   handleOnSaveEmployeeSelfInfo(e?: any) {
-    if(this.formGroup.invalid){
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
-      return;
-    }
+    // if(this.formGroup.invalid){
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
     //Xu li validate thong tin ngay sinh nhan vien
     if (
       new Date().getFullYear() - new Date(this.data.birthday).getFullYear() <
