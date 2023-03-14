@@ -73,20 +73,20 @@ export class CodxViewFilesComponent implements OnInit {
           switch(_files.length)
           {
             case 1:
-              _files[0]["source"] = this.codxShareSV.getThumbByUrl(_files[0].url,600);
+              _files[0]["source"] = this.codxShareSV.getThumbByUrl(_files[0].url,900);
               break;
             case 2:
-              _files[0]["source"] = this.codxShareSV.getThumbByUrl(_files[0].url,300);
-              _files[1]["source"] = this.codxShareSV.getThumbByUrl(_files[1].url,300);
+              _files[0]["source"] = this.codxShareSV.getThumbByUrl(_files[0].url,450);
+              _files[1]["source"] = this.codxShareSV.getThumbByUrl(_files[1].url,450);
               break;
             case 3:
-              _files[0]["source"] = this.codxShareSV.getThumbByUrl(_files[0].url,600);
-              _files[1]["source"] = this.codxShareSV.getThumbByUrl(_files[1].url,300);
-              _files[2]["source"] = this.codxShareSV.getThumbByUrl(_files[2].url,300);
+              _files[0]["source"] = this.codxShareSV.getThumbByUrl(_files[0].url,900);
+              _files[1]["source"] = this.codxShareSV.getThumbByUrl(_files[1].url,450);
+              _files[2]["source"] = this.codxShareSV.getThumbByUrl(_files[2].url,450);
               break;
             default:
               _files.map(f => {
-                f["source"] = this.codxShareSV.getThumbByUrl(f.url,300);
+                f["source"] = this.codxShareSV.getThumbByUrl(f.url,450);
               })   
               break
           }
@@ -149,6 +149,7 @@ export class CodxViewFilesComponent implements OnInit {
   }
   // remove files
   removeFiles(file: any) {
+    debugger
     this.deleteFiles
     let _key = file.hasOwnProperty('recID') ? "recID" : "fileName";
     let _index = this.files.findIndex(x => x[_key] === file.recID);

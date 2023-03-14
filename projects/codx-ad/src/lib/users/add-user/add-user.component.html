@@ -46,7 +46,7 @@
           <codx-label fiedName="EmployeeID" [formModel]="form?.formModel">
           </codx-label>
           <codx-input
-            [disabled]="!adUser.employeeID ? false : true"
+            [disabled]="isEmpIDNotNull"
             field="employeeID"
             (valueChange)="valueEmp($event)"
             [Group]="form.formGroup"

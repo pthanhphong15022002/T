@@ -192,9 +192,7 @@
                                   >
                                   </codx-label>
                                   <span class="text-primary">
-                                    <span>{{
-                                      infoPersonal?.employeeTypeID
-                                    }}</span>
+                                    <span>{{ infoPersonal?.employeeTypeID | formatvalue : eInfoFormModel : "employeeTypeID" | async }}</span>
                                   </span>
                                 </div>
                                 <div
@@ -228,7 +226,7 @@
                                   >
                                   </codx-label>
                                   <span class="text-dark fw-bold">
-                                    <span>{{ infoPersonal?.lineManager }}</span>
+                                    <span>{{ infoPersonal?.lineManager | formatvalue : eInfoFormModel : "lineManager" | async }}</span>
                                   </span>
                                 </div>
                                 <hr class="mt-0" />
@@ -290,7 +288,11 @@
                                   </codx-label>
 
                                   <span class="text-dark fw-bold">
-                                    <span>{{ infoPersonal?.timeCardNo }}</span>
+                                    <span>{{
+                                      infoPersonal?.payrollGroupID
+                                        | formatvalue : eInfoFormModel : "payrollGroupID"
+                                        | async
+                                    }}</span>
                                   </span>
                                 </div>
                               </div>
@@ -630,20 +632,9 @@
                       | formatvalue : eInfoFormModel : "maritalStatus"
                       | async
                   }}
-                  <!-- <codx-vll
-                      [showText]="true"
-                      [showBgColor]="false"
-                      [showIcon]="false"
-                      [formModel]="eInfoFormModel"
-                      [field]="'MaritalStatus'"
-                      [value]="data?.maritalStatus"
-                      class="text-dark"
-                    >
-                    </codx-vll> -->
                 </div>
               </div>
             </div>
-
             <div class="row mb-5">
               <!-- Ngày sinh -->
               <div class="col">
@@ -1346,7 +1337,7 @@
                     [default]="getFormHeader('HRTEM0201')"
                   >
                   </codx-label> -->
-                {{ getFormHeader("HRTEM0201") }}
+                {{ getFormHeader(eAssurFunc) }}
               </div>
             </div>
             <div class="d-flex align-items-center ms-5">
@@ -1822,12 +1813,6 @@
                 <span class="icon-assignment_ind icon-20 me-2"></span>
               </div>
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
-                <!-- <codx-label
-                    [formModel]="eInfoFormModel"
-                    name="lblEmployeeJobGeneralTitle"
-                    [default]="getFormHeader(jobGeneralFuncID)"
-                  >
-                  </codx-label> -->
                 {{ getFormHeader(jobGeneralFuncID) }}
               </div>
             </div>
@@ -1887,16 +1872,6 @@
                         | formatvalue : eInfoFormModel : "employeeTypeID"
                         | async
                     }}
-                    <!-- <codx-vll
-                          [showText]="true"
-                          [showBgColor]="false"
-                          [showIcon]="false"
-                          [formModel]="eInfoFormModel"
-                          [field]="'MaritalStatus'"
-                          [value]="data?.maritalStatus"
-                          class="text-dark"
-                        >
-                        </codx-vll> -->
                   </div>
                 </div>
               </div>
@@ -2550,7 +2525,7 @@
       <!-- Lương cơ bản -->
       <div class="user-profile overview d-block" [id]="eBasicSalaryFuncID">
         <div class="rounded-2 p-5 bg-white mb-4">
-          <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center justify-content-between" *ngIf="eBasicSalaryFormmodel">
             <div class="d-flex align-items-center text-primary">
               <div class="user-status d-flex align-items-center">
                 <span class="icon-attach_money icon-20 me-2"></span>
@@ -2732,7 +2707,7 @@
       </div>
       <!-- Lương chức danh -->
       <div class="user-profile overview d-block" [id]="eJobSalFuncID">
-        <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="rounded-2 p-5 bg-white mb-4" *ngIf="eJobSalaryFormModel">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <div class="user-status d-flex align-items-center">
@@ -2883,7 +2858,7 @@
       </div>
       <!-- Phụ cấp -->
       <div class="user-profile overview d-block" [id]="benefitFuncID">
-        <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="rounded-2 p-5 bg-white mb-4" *ngIf="benefitFormodel">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <div class="user-status d-flex align-items-center">
@@ -2933,7 +2908,7 @@
                 <codx-temp-full
                   (clickMF)="clickMF($event, benefit, 'eBenefit')"
                   [dataItem]="benefit"
-                  [formModel]="eInfoFormModel"
+                  [formModel]="benefitFormodel"
                   [footer]="footerBenefit"
                   cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                   [typeMF]="'hover'"
@@ -3047,7 +3022,7 @@
         class="user-profile overview d-block user-family"
         [id]="eAssetFuncID"
       >
-        <div class="rounded-2 p-5 bg-white mb-1">
+        <div class="rounded-2 p-5 bg-white mb-1" *ngIf="eAssetFormModel">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <div class="user-status d-flex align-items-center">
@@ -3214,10 +3189,11 @@
     data-kt-scroll-dependencies=".pw-profile,.pw-menu"
     data-kt-scroll-wrappers=".employee-container"
     data-kt-scroll-offset="0px"
-    [spiedTags]="['DIV']"
     scrollSpy
+    [spiedTags]="['DIV']"
     (sectionChange)="onSectionChange($event, 4)"
-  >
+    >
+    <!-- [spiedTags]="['DIV']" -->
     <!-- <div
       class="user-content flex-row-fluid"
       scrollSpy
@@ -3233,12 +3209,6 @@
                 <span class="icon-check icon-20 me-2"></span>
               </div>
               <div class="fs-5 fw-bold text-uppercase mt-1">
-                <!-- <codx-label
-                    name="lblEmployeeCurContract"
-                    [formModel]="eInfoFormModel"
-                    [default]="getFormHeader(eContractFuncID)"
-                  >
-                  </codx-label> -->
                 {{ getFormHeader(eContractFuncID) }}
               </div>
             </div>
@@ -3413,7 +3383,7 @@
                       [default]="getFormHeader('HRTEM0502')"
                     >
                     </codx-label> -->
-                {{ getFormHeader("HRTEM0502") }}
+                {{ getFormHeader(appointionFuncID) }}
               </div>
               <span class="text-gray-500 mx-2">|</span>
               <span class="text-gray-800">({{ appointionRowCount }})</span>
@@ -3454,7 +3424,7 @@
       </div>
       <!-- Nghỉ phép -->
       <div class="user-profile overview d-block" [id]="dayoffFuncID">
-        <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="rounded-2 p-5 bg-white mb-4" *ngIf="dayofFormModel">
           <div class="d-flex align-items-center justify-content-between mb-3">
             <div class="d-flex align-items-center">
               <span class="icon-deck icon-20 me-2 text-primary"></span>
@@ -3554,7 +3524,7 @@
       </div>
       <!-- Nhật ký công tác -->
       <div class="user-profile overview d-block" [id]="eBusinessTravelFuncID">
-        <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="rounded-2 p-5 bg-white mb-4" *ngIf="EBusinessTravelFormodel">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
               <div class="user-status text-primary">
@@ -3622,7 +3592,7 @@
         class="user-profile overview d-block user-family"
         [id]="eExperienceFuncID"
       >
-        <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="rounded-2 p-5 bg-white mb-4" *ngIf="eExperienceFormModel">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <div class="user-status d-flex align-items-center">
@@ -3720,7 +3690,7 @@
               </div>
 
               <div class="fs-5 fw-bold text-uppercase text-primary">
-                {{ getFormHeader("HRTEM0601") }}
+                {{ getFormHeader(eDegreeFuncID) }}
               </div>
               <span class="text-gray-500 mx-2">|</span>
               <span class="text-dark">({{ eDegreeRowCount }})</span>
@@ -4268,7 +4238,7 @@
                 <span class="icon-sentiment_satisfied icon-20 me-2"></span>
               </div>
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
-                {{ getFormHeader("HRTEM0701") }}
+                {{ getFormHeader(awardFuncID) }}
               </div>
               <span class="text-gray-500 mx-2"> | </span>
               <span class="text-dark">
@@ -4450,7 +4420,7 @@
                     [default]="getFormHeader('HRTEM0801')"
                   >
                   </codx-label> -->
-                {{ getFormHeader("HRTEM0801") }}
+                {{ getFormHeader(eHealthFuncID) }}
               </div>
               <span class="text-gray-400 mx-2">|</span>
               <span class="text-dark">

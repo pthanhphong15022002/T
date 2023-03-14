@@ -447,6 +447,7 @@ export class EmployeeListComponent extends UIComponent {
           filter: JSON.stringify(request?.filter),
         },
         {
+          empInfo: JSON.stringify(data),
           data: this.viewBase?.dataService?.data,
           request: request,
         }

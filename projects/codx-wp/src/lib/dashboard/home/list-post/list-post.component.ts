@@ -340,7 +340,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         if (res) {
           this.codxService.navigate(
             '',
-            'wp/news/WPT02/' + data.category + '/' + data.recID
+            'wp2/news/WPT02/' + data.category + '/' + data.recID
           );
         }
       });
