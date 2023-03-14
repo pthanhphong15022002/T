@@ -55,7 +55,7 @@
 /***/
 .popup-process-detail {
     codx-views>.container-fluid {
-        height: calc(100vh - 150px) !important;
+        height: calc(100vh - 138px) !important;
         overflow: hidden;
         overflow-y: auto;
 
@@ -68,7 +68,7 @@
     }
 
     .process-views-detail {
-        height: calc(100vh - 120px) !important;
+        height: calc(100vh - 98px) !important;
         overflow: hidden;
 
 
@@ -91,7 +91,6 @@
 
     .container-toolbar{
         border-bottom: 1px var(--gray-150) solid;
-        margin-bottom: 5px;
         padding: 0 15px;
 
         .toolbar {
@@ -104,4 +103,9 @@
     ejs-kanban{
         height: 100%;
     }
+}
+
+.process-views-detail .codx-detail-main{
+    padding-bottom: 0;
+    padding-left: 0!important;
 }
