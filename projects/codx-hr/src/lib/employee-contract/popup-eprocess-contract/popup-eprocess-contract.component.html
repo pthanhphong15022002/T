@@ -1,0 +1,330 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [formModel]="formModel"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="data"
+  *ngIf="isAfterRender"
+>
+  <ng-template #body>
+    <div *ngIf="actionType == 'add'" class="form-group row">
+        <codx-img
+            [width]="35"
+            class="me-3 col-3"
+            [objectId]="employeeObj?.employeeID"
+            [referType]="'avt'"
+            [objectName]="employeeObj?.employeeName"
+            [objectType]="'HR_Employees'"
+        >
+        </codx-img>
+        <div class="col-8">
+            <codx-label
+                fiedName="EmployeeID" [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="employeeID"
+                [formModel]="formModel" 
+                [Group]="formGroup" 
+                (valueChange)="handleSelectEmp($event)"
+            >
+            </codx-input>
+        </div>
+    </div>
+    <div *ngIf="actionType == 'edit'">
+      <div class="d-flex"> 
+        <div class="d-flex flex-column">
+          <codx-img
+            [width]="35"
+            class="me-3"
+            [objectId]="data?.emp.employeeID"
+            [referType]="'avt'"
+            [objectName]="data?.emp.employeeName"
+            [objectType]="'HR_Employees'"
+          >
+          </codx-img>
+          <codx-vll
+          class="badge badge-sm"
+          [name]="'HR001'"
+          [value]="data.emp.gender"
+          [showText]="true"
+          [showBgColor]="true"
+        >
+        </codx-vll>
+        </div>
+        <div class="d-flex flex-column">
+          <div>
+            <div class="text-dark fw-bold">
+              <span>
+                {{ data.emp.employeeName }}
+              </span>
+              <i class="icon-accessibility"></i>
+              <span>
+                {{ data.emp.employeeID }}
+              </span>
+            </div>
+  
+          </div>
+          <div class="text-gray-700">
+            <span>{{ data.positionID }}</span>
+          </div>
+  
+          <div class="text-gray-700">
+            <span>{{ data.orgUnitID }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row mt-5">
+      <div class="col-6">
+        <codx-label fiedName="ContractNo" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="contractNo"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="SignedDate"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label
+          fiedName="ContractTypeID"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+          field="contractTypeID"
+          [formModel]="formModel"
+          [Group]="formGroup"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="LimitMonths" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="limitMonths"
+          [formModel]="formModel"
+          [Group]="formGroup"
+          [showSpinButton]="false"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label
+          fiedName="EffectedDate"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+          field="effectedDate"
+          [formModel]="formModel"
+          [Group]="formGroup"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="expiredDate"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="OrgUnitID"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="PositionID" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="PositionID"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="LocationID" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="LocationID"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label
+          fiedName="TransportType"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+          field="TransportType"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="SignStatus" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="SignStatus"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
+        <div>
+          <codx-input
+            field="IsCurrent"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="signerID"
+        [formModel]="formModel"
+        [Group]="formGroup"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+
+    <div class="form-group row">
+      <codx-label
+        fiedName="SignerPosition"
+        [formModel]="formModel"
+      ></codx-label>
+      <codx-input
+        field="signerPosition"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="form-group row">
+      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="note"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+
+    <div class="extend-function" *ngIf="actionType=='edit' && lstSubContract?.length > 0" >
+      <hr />
+      <div class="d-flex justify-content-center">
+        <div class="d-flex align-items-center w-auto extend-title">
+          <span
+            class="text-primary text-hover-primary_darker fw-bold me-1"
+          >
+            <codx-label
+              default="Phụ lục hợp đồng"
+              name="lblSubContract"
+              [formModel]="formModel"
+            ></codx-label>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column" *ngIf="actionType=='edit' && lstSubContract?.length > 0">
+      <ng-container *ngFor="let item of lstSubContract">
+          <codx-temp-full
+            cardCss="card codx_cardcenter p-3"
+            [imageId]="item.recID"
+            [imageObjType]="'HR_EContract'"
+            [imageWidth]="40"
+            [formModel]="formModel"
+            [hideMF]="true"
+            [titleTmp]="titleTmp"
+            [dataItem]="item"
+          >
+          </codx-temp-full>
+      </ng-container>
+    </div>
+
+  </ng-template>
+  <!-- <div class="extend-function" *ngIf="actionType=='edit' && lstSubContract?.length > 0" >
+    <hr />
+    <div class="d-flex justify-content-center">
+      <div class="d-flex align-items-center w-auto extend-title">
+        <span
+          class="text-primary text-hover-primary_darker fw-bold me-1"
+        >
+          <codx-label
+            default="Phụ lục hợp đồng"
+            name="lblSubContract"
+            [formModel]="formModel"
+          ></codx-label>
+        </span>
+      </div>
+    </div>
+  </div> -->
+
+
+</codx-form>
+
+<ng-template #titleTmp let-data>
+  <div class="row">
+    <div>
+
+    </div>
+    <div class="d-flex flex-column">
+      <div>
+        {{data.contractNo}}
+        <i class="icon-i-circle-fill icon-circle-group icon-12 text-gray-400 me-2"></i>
+        {{data.signedDate |fmDT}}
+      </div>
+      <div>
+        <i class="icon-calendar_today"></i>
+        {{data.effectedDate |fmDT}} - {{data.expiredDate|fmDT}}
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex" [ngClass]="actionType == 'edit' ? 'justify-content-between' : 'justify-content-end'">
+    <button
+      *ngIf="actionType == 'edit'"
+      class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+      (click)="handleSubContract('', 'add', null)"
+    >
+      <span class="icon-add btn-text-primary me-2"></span>
+      <codx-label
+        name="lblAddSubContract"
+        default="Thêm phụ lục HĐLĐ"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+    <button class="btn btn-primary" (click)="onSaveForm()">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>

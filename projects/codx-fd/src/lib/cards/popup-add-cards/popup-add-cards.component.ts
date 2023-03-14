@@ -387,7 +387,7 @@ export class PopupAddCardsComponent implements OnInit {
           card.pattern = this.patternSelected.patternID;
         }
       }
-      if (this.gifts) {
+      if (this.gifts && this.gifts.length > 0) {
         card.hasGifts = true;
         card.gifts = this.gifts;
       }

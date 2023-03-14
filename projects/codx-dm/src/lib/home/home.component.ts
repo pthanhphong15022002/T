@@ -130,11 +130,11 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       sub : [
         {
           id : "1",
-          name : "Được chia sẻ"
+          name : "Tài liệu được chia sẻ"
         },
         {
           id : "2",
-          name : "Chia sẻ"
+          name : "Tài liệu chia sẻ"
         }
       ]
     },
@@ -179,6 +179,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.button = {
       id: 'btnUpload',
       text: 'Tải lên',
+      hasSet: true,
     };
     //Mặc định filter
     this.fileService.options.srtColumns = "CreatedOn"
@@ -939,6 +940,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   onSelectionChanged($data) {
+    debugger
     ScrollComponent.reinitialization();
     this.scrollTop();
     if (!$data || !$data?.data) return

@@ -771,12 +771,12 @@
 
 <!-- pane_1 Thông tin cá nhân-->
 <ng-template #info>
-  <div class="tab-horizone bg-white h-od-tab mb-4">
+  <!-- <div class="tab-horizone bg-white h-od-tab mb-4">
     <ul
       ngbNav
       #nav="ngbNav"
       [(activeId)]="active[0]"
-      (navChange)="navChange($event)"
+      (navChange)="navChange($event, 0)"
       class="nav nav-tabs px-4"
     >
       <ng-container *ngFor="let item of lstFuncSelfInfo; let i = index">
@@ -791,21 +791,33 @@
     </ul>
 
     <div [ngbNavOutlet]="nav"></div>
+  </div> -->
+  <div class="tab-horizone bg-white h-od-tab mb-4">
+    <ul class="nav nav-tabs px-4">
+      <ng-container *ngFor="let item of lstFuncSelfInfo; let i = index">
+        <li class="nav-item" (click)="navChange(item.functionID, 0)">
+          <a
+            class="nav-link"
+            [ngClass]="item.functionID == active[0] ? 'active' : ''"
+          >
+            <div class="text-uppercase fw-bold">{{ item.customName }}</div>
+          </a>
+        </li>
+      </ng-container>
+    </ul>
   </div>
 
   <div
-    class="pw-content w-100 scroll-y"
-    data-kt-scroll-activate="{default: true}"
-    data-kt-scroll-max-height="auto"
-    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
-    data-kt-scroll-wrappers=".employee-container"
-    data-kt-scroll-offset="0px"
+  class="pw-content w-100 scroll-y"
+  data-kt-scroll-activate="{default: true}"
+  data-kt-scroll-max-height="auto"
+  data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+  data-kt-scroll-wrappers=".employee-container"
+  data-kt-scroll-offset="0px"
+  scrollSpy
+  [spiedTags]="['DIV']"
+  (sectionChange)="onSectionChange($event, 0)"
   >
-    <div
-      class="user-content flex-row-fluid"
-      scrollSpy
-      (sectionChange)="onSectionChange($event)"
-    >
       <ng-container>
         <!-- Thông tin bản thân -->
         <div class="user-profile overview d-block" [id]="eInfoFuncID">
@@ -1478,7 +1490,6 @@
         </div>
       </ng-container>
     </div>
-  </div>
 </ng-template>
 
 <!-- pane_2 Thông tin pháp lý-->
@@ -1488,7 +1499,7 @@
       ngbNav
       #nav="ngbNav"
       [(activeId)]="active[1]"
-      (navChange)="navChange($event)"
+      (navChange)="navChange($event, 1)"
       class="nav nav-tabs px-4"
     >
       <ng-container *ngFor="let item of lstFuncLegalInfo; let i = index">
@@ -1510,13 +1521,11 @@
     data-kt-scroll-max-height="auto"
     data-kt-scroll-dependencies=".pw-profile,.pw-menu"
     data-kt-scroll-wrappers=".employee-container"
+    scrollSpy
+    [spiedTags]="['DIV']"
     data-kt-scroll-offset="0px"
+    (sectionChange)="onSectionChange($event, 1)"
   >
-    <div
-      class="user-content flex-row-fluid"
-      scrollSpy
-      (sectionChange)="onSectionChange($event)"
-    >
       <!-- <ng-container> -->
       <!-- BẢO HIỂM xã hội  -->
 
@@ -1775,7 +1784,6 @@
       </div>
       <!-- </ng-container> -->
     </div>
-  </div>
 </ng-template>
 
 <!-- pane_3 Thông tin công việc-->
@@ -1785,7 +1793,7 @@
       ngbNav
       #nav="ngbNav"
       [(activeId)]="active[2]"
-      (navChange)="navChange($event)"
+      (navChange)="navChange($event, 2)"
       class="nav nav-tabs px-4"
     >
       <ng-container *ngFor="let item of lstFuncTaskInfo; let i = index">
@@ -1807,13 +1815,11 @@
     data-kt-scroll-max-height="auto"
     data-kt-scroll-dependencies=".pw-profile,.pw-menu"
     data-kt-scroll-wrappers=".employee-container"
+    scrollSpy
+    [spiedTags]="['DIV']"
     data-kt-scroll-offset="0px"
+    (sectionChange)="onSectionChange($event, 2)"
   >
-    <div
-      class="user-content flex-row-fluid"
-      scrollSpy
-      (sectionChange)="onSectionChange($event)"
-    >
       <ng-container>
         <!-- Thông tin chung -->
         <div class="user-profile overview d-block" [id]="jobGeneralFuncID">
@@ -2275,7 +2281,6 @@
         </div>
       </ng-container>
     </div>
-  </div>
 </ng-template>
 
 <!-- pane_4 Lương & Phúc lợi -->
@@ -2285,7 +2290,7 @@
       ngbNav
       #nav="ngbNav"
       [(activeId)]="active[3]"
-      (navChange)="navChange($event)"
+      (navChange)="navChange($event, 3)"
       class="nav nav-tabs px-4"
     >
       <ng-container *ngFor="let item of lstFuncSalary; let i = index">
@@ -2306,13 +2311,11 @@
     data-kt-scroll-max-height="auto"
     data-kt-scroll-dependencies=".pw-profile,.pw-menu"
     data-kt-scroll-wrappers=".employee-container"
+    scrollSpy
+    [spiedTags]="['DIV']"
     data-kt-scroll-offset="0px"
+    (sectionChange)="onSectionChange($event, 3)"
   >
-    <div
-      class="user-content flex-row-fluid"
-      scrollSpy
-      (sectionChange)="onSectionChange($event)"
-    >
       <ng-container>
         <!-- Lương cơ bản -->
         <div class="user-profile overview d-block" [id]="eBasicSalaryFuncID">
@@ -2881,7 +2884,6 @@
         </div>
       </ng-container>
     </div>
-  </div>
 </ng-template>
 
 <!-- pane_5 Nghỉ phép - công tác -->
@@ -2891,10 +2893,10 @@
       ngbNav
       #nav="ngbNav"
       [(activeId)]="active[4]"
-      (navChange)="navChange($event)"
+      (navChange)="navChange($event, 4)"
       class="nav nav-tabs px-4"
     >
-      <ng-container *ngFor="let item of dayOffTravelHRProcess; let i = index">
+      <ng-container *ngFor="let item of lstFuncDayOffTravel; let i = index">
         <li [ngbNavItem]="item.functionID" class="nav-item">
           <a ngbNavLink class="nav-link">
             <div class="text-uppercase fw-bold">{{ item.customName }}</div>
@@ -2916,13 +2918,9 @@
     data-kt-scroll-wrappers=".employee-container"
     data-kt-scroll-offset="0px"
     scrollSpy
-    (sectionChange)="onSectionChange($event)"
+    [spiedTags]="['DIV']"
+    (sectionChange)="onSectionChange($event, 4)"
   >
-    <div
-      class="user-content flex-row-fluid"
-      scrollSpy
-      (sectionChange)="onSectionChange($event)"
-    >
       <!-- <ng-container> -->
       <!-- Nghỉ phép -->
       <div class="user-profile overview d-block" [id]="dayoffFuncID">
@@ -2945,7 +2943,7 @@
                 [isMulti]="true"
                 type="combobox"
                 field="KowID"
-                [refValue]="eDayOffGrvSetup?.KowID?.referedValue"
+                [refValue]="eDayOffGrvSetup.KowID?.referedValue"
                 (valueChange)="valueChangeFilterDayOff($event)"
               ></codx-dropdown-select>
               <span class="ms-2">
@@ -2993,7 +2991,7 @@
                 *ngIf="dayoffColumnGrid"
                 [sort]="[dayOffSortModel]"
                 #dayoffGridView
-                [formModel]="dayofFormModel"
+                [formModel]="dayoffFormModel"
                 [columnsGrid]="dayoffColumnGrid"
                 [service]="'HR'"
                 [assemblyName]="'Core'"
@@ -3064,7 +3062,6 @@
       </div>
       <!-- </ng-container> -->
     </div>
-  </div>
 </ng-template>
 
 <!-- pane_6 Hợp đồng lao động-->
@@ -3073,11 +3070,11 @@
     <ul
       ngbNav
       #nav="ngbNav"
-      [(activeId)]="active[4]"
-      (navChange)="navChange($event)"
+      [(activeId)]="active[5]"
+      (navChange)="navChange($event, 5)"
       class="nav nav-tabs px-4"
     >
-      <ng-container *ngFor="let item of lstFuncHRProcess; let i = index">
+      <ng-container *ngFor="let item of lstFuncContract; let i = index">
         <li [ngbNavItem]="item.functionID" class="nav-item">
           <a ngbNavLink class="nav-link">
             <div class="text-uppercase fw-bold">{{ item.customName }}</div>
@@ -3099,13 +3096,10 @@
     data-kt-scroll-wrappers=".employee-container"
     data-kt-scroll-offset="0px"
     scrollSpy
-    (sectionChange)="onSectionChange($event)"
+    [spiedTags]="['DIV']"
+    (sectionChange)="onSectionChange($event, 5)"
   >
-    <div
-      class="user-content flex-row-fluid"
-      scrollSpy
-      (sectionChange)="onSectionChange($event)"
-    >
+
       <!-- <ng-container> -->
       <!-- Hợp đồng lao động -->
       <div class="user-profile overview d-block" [id]="eContractFuncID">
@@ -3235,9 +3229,9 @@
           </div>
 
           <div class="" *ngIf="ViewAllEContractFlag">
-            <div class="d-flex align-items-center mb-3 mt-5">
-              <span class="icon-i-filter-right icon-20 me-2"></span>
+            <div class="d-flex justify-content-between mb-3 mt-5">
               <div class="d-flex align-items-center me-3">
+                <span class="icon-i-filter-right icon-20 me-2"></span>
                 <codx-label
                   default="Chi tiết"
                   class="fw-bold text-uppercase fs-5 text-gray-600"
@@ -3245,6 +3239,19 @@
                 </codx-label>
                 <span class="text-gray-500 mx-2"> | </span>
                 <span class="text-gray-500">({{ eContractRowCount }})</span>
+              </div>
+              <div class="d-flex me-3 ">
+                <codx-dropdown-select
+                  *ngIf="eContractgrvSetup"
+                  [cssClass]="'rounded-pill border-1'"
+                  cssPopup="h-350px w-300px"
+                  [isMulti]="true"
+                  type="combobox"
+                  [emptyText]="eContractHeaderText['ContractTypeID']"
+                  field="ContractTypeID"
+                  [refValue]="eContractgrvSetup.ContractTypeID.referedValue"
+                  (valueChange)="valueChangFilterContract($event)"
+                ></codx-dropdown-select>
               </div>
             </div>
 
@@ -3270,7 +3277,6 @@
       </div>
       <!-- </ng-container> -->
     </div>
-  </div>
 </ng-template>
 
 <!-- pane_7 Kiến thức-->
@@ -3279,8 +3285,8 @@
     <ul
       ngbNav
       #nav="ngbNav"
-      [(activeId)]="active[5]"
-      (navChange)="navChange($event)"
+      [(activeId)]="active[6]"
+      (navChange)="navChange($event, 6)"
       class="nav nav-tabs px-4"
     >
       <ng-container *ngFor="let item of lstFuncKnowledge; let i = index">
@@ -3403,7 +3409,7 @@
               <div class="d-flex align-items-center ms-5">
                 <codx-label
                   class="text-dark me-3"
-                  name="lblSeeAllEBenefit"
+                  name="lblSeeAllESkill"
                   default="Xem tất cả"
                 >
                 </codx-label>
@@ -3492,7 +3498,7 @@
                       cssPopup="h-350px w-300px"
                       [isMulti]="true"
                       type="combobox"
-                      [emptyText]="'Kỹ năng'"
+                      [emptyText]="eSkillHeaderText['SkillID']"
                       field="SkillID"
                       [refValue]="eSkillgrvSetup.SkillID.referedValue"
                       (valueChange)="valueChangeFilterSkillID($event)"
@@ -3603,8 +3609,8 @@
     <ul
       ngbNav
       #nav="ngbNav"
-      [(activeId)]="active[6]"
-      (navChange)="navChange($event)"
+      [(activeId)]="active[7]"
+      (navChange)="navChange($event, 7)"
       class="nav nav-tabs px-4"
     >
       <ng-container *ngFor="let item of lstFuncAward; let i = index">
@@ -4565,7 +4571,7 @@
   <div class="d-flex align-items-center mb-5px">
     <i class="icon-calendar_today icon-16 me-2"></i>
     <span class="text-dark">
-      {{ data?.kowID | formatvalue : dayofFormModel : "kowID" | async }}</span
+      {{ data?.kowID | formatvalue : dayoffFormModel : "kowID" | async }}</span
     >
   </div>
   <div class="text-dark fs-6">
@@ -4595,7 +4601,7 @@
     <div class="min-h-40px">
       {{ data?.reason }}
     </div>
-    <codx-mfunc [formModel]="dayofFormModel" [dataItem]="data" type="hover">
+    <codx-mfunc [formModel]="dayoffFormModel" [dataItem]="data" type="hover">
     </codx-mfunc>
   </div>
 </ng-template>

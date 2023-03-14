@@ -137,6 +137,21 @@ export class BookingRoomViewDetailComponent
               //this.renderFooter=true;
               this.detectorRef.detectChanges();
             }
+            if (res.listApprovers != null && res.listApprovers.length>0) {
+              res.listApprovers.forEach((item) => {
+                if (item != '') {
+                  let tmpPer = new Permission();
+                  tmpPer.objectID = item; //
+                  tmpPer.objectType = 'U';
+                  tmpPer.read = true;
+                  tmpPer.share = true;
+                  tmpPer.download = true;
+                  tmpPer.isActive = true;
+                  this.listFilePermission.push(tmpPer);
+                }
+              });
+              this.detectorRef.detectChanges();
+            }
             if (
               this.itemDetail?.createdBy == this.authService.userValue.userID
             ) {

@@ -1,15 +1,19 @@
 import { Component, Injector, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
+  CRUDService,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
   NotificationsService,
+  RequestOption,
   UIComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { map, Observable } from 'rxjs';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
-import { IVoucherLineInvoice } from '../interfaces/IVoucherLineInvoice.interface';
+import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
 
 @Component({
   selector: 'lib-popup-add-cash-transfer',
@@ -20,7 +24,7 @@ export class PopupAddCashTransferComponent extends UIComponent {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   cashTransfer: ICashTransfer = {} as ICashTransfer;
-  voucherLineInvoice: IVoucherLineInvoice = {} as IVoucherLineInvoice;
+  vatInvoice: IVATInvoice = {} as IVATInvoice;
   formTitle: string;
   hasInvoice: boolean = false;
   tabs: TabModel[] = [
@@ -29,12 +33,15 @@ export class PopupAddCashTransferComponent extends UIComponent {
     { name: 'attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'link', textDefault: 'Liên kết', isActive: false },
   ];
-  fmVoucherLineInvoice: FormModel = {
-    entityName: 'AC_VoucherLineInvoices',
-    formName: 'VoucherLineInvoices',
-    gridViewName: 'grvVoucherLineInvoices',
-    entityPer: 'VoucherLineInvoices',
+  fmVATInvoice: FormModel = {
+    entityName: 'AC_VATInvoices',
+    formName: 'VATInvoices',
+    gridViewName: 'grvVATInvoices',
+    entityPer: 'VATInvoices',
   };
+  cashBooks: any[];
+  gvsCashTransfers: any;
+  gvsVATInvoices: any;
 
   constructor(
     private injector: Injector,
@@ -45,22 +52,272 @@ export class PopupAddCashTransferComponent extends UIComponent {
     super(injector);
 
     this.formTitle = dialogData.data.formTitle;
+    this.cashTransfer = this.dialogRef.dataService?.dataSelected;
+
+    this.cashTransfer.feeControl = Boolean(
+      Number(this.cashTransfer.feeControl)
+    );
   }
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.loadComboboxData('CashBooks').subscribe((res) => {
+      if (res) {
+        console.log(JSON.parse(res[0]));
+        this.cashBooks = JSON.parse(res[0]);
+      }
+    });
+
+    this.cache
+      .gridViewSetup(
+        this.dialogRef.formModel.formName,
+        this.dialogRef.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        this.gvsCashTransfers = res;
+      });
+
+    this.cache
+      .gridViewSetup(this.fmVATInvoice.formName, this.fmVATInvoice.gridViewName)
+      .subscribe((res) => {
+        console.log(res);
+        this.gvsVATInvoices = res;
+      });
+
+    if (this.dialogData.data.formType === 'edit') {
+      // load vatInvoice
+      const options = new DataRequest();
+      options.entityName = 'AC_VATInvoices';
+      options.page = 1;
+      this.api
+        .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+        .pipe(
+          map((invoices) =>
+            invoices[0].find((i) => i.transID === this.cashTransfer.recID)
+          )
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.vatInvoice = res;
+            this.hasInvoice = true;
+          }
+        });
+    }
+  }
+
+  ngAfterViewInit(): void {
+    // this.form.formGroup.patchValue(this.cashTransfer);
+  }
   //#endregion
 
   //#region Event
   handleInputChange(e, prop: string = 'cashTransfer') {
-    this[prop][e.field] = e.data;
+    console.log(e);
+
+    if (e.field) {
+      this[prop][e.field] =
+        e.field === 'invoiceDate' ? e.data?.fromDate : e.data;
+    } else {
+      this[prop] = e.data;
+    }
+
+    const fields: string[] = ['currencyid', 'cashbookid', 'payamount2'];
+
+    if (fields.includes(e.field.toLowerCase())) {
+      this.api
+        .exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
+          e.field,
+          this.cashTransfer,
+        ])
+        .subscribe((res: ICashTransfer) => {
+          if (res) {
+            this.form.formGroup.patchValue({
+              currencyID: res.currencyID,
+              exchangeRate: res.exchangeRate,
+              multi: res.multi,
+              payAmount2: res.payAmount2,
+            });
+          }
+        });
+    }
+  }
+
+  payAmountChanged(e) {
+    console.log(e);
+
+    this.api
+      .exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
+        e.field,
+        this.cashTransfer,
+      ])
+      .subscribe((res: ICashTransfer) => {
+        if (res) {
+          this.form.formGroup.patchValue({
+            exchangeRate: res.exchangeRate,
+            multi: res.multi,
+            payAmount2: res.payAmount2,
+          });
+        }
+      });
   }
   //#endregion
 
   //#region Method
+  save(closeAfterSaving: boolean): void {
+    console.log(this.cashTransfer);
+    console.log(this.vatInvoice);
+
+    // validate data
+    let isValid = true;
+    const controls = this.form.formGroup.controls;
+    for (const propName in controls) {
+      if (controls[propName].invalid) {
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          `"${this.gvsCashTransfers[this.toPascalCase(propName)]?.headerText}"`
+        );
+
+        isValid = false;
+      }
+    }
+
+    if (!isValid) {
+      return;
+    }
+
+    if (
+      this.hasInvoice &&
+      !this.validateVATInvoice(this.gvsVATInvoices, this.vatInvoice)
+    ) {
+      return;
+    }
+
+    this.cashTransfer.feeControl = +this.cashTransfer.feeControl;
+    this.cashTransfer.totalAmount =
+      (this.cashTransfer?.payAmount || 0) +
+      (this.cashTransfer?.paymentFees || 0) +
+      (this.hasInvoice ? this.vatInvoice?.taxAmt || 0 : 0);
+
+    this.dialogRef.dataService
+      .save((req: RequestOption) => {
+        req.methodName =
+          this.dialogData.data.formType === 'add'
+            ? 'AddCashTransferAsync'
+            : 'UpdateCashTransferAsync';
+        req.className = 'CashTranfersBusiness';
+        req.assemblyName = 'ERM.Business.AC';
+        req.service = 'AC';
+        req.data = [this.cashTransfer, this.vatInvoice];
+
+        return true;
+      })
+      .subscribe((res) => {
+        if (res.save || res.update) {
+          const tempCashTransfer = res.save || res.update;
+
+          // handle invoice
+          if (this.hasInvoice) {
+            this.vatInvoice.taxBase = this.vatInvoice.taxBase || 0;
+            this.vatInvoice.taxAmt = this.vatInvoice.taxAmt || 0;
+
+            if (this.vatInvoice.transID) {
+              // update
+              this.crudVatInvoice('UpdateVATInvoiceAsync', this.vatInvoice);
+            } else {
+              // add
+              this.vatInvoice.transID = tempCashTransfer.recID;
+              this.crudVatInvoice('AddVATInvoiceAsync', this.vatInvoice);
+            }
+          } else {
+            if (this.vatInvoice.transID) {
+              // delete
+              this.crudVatInvoice('DeleteVATInvoiceAsync', this.vatInvoice);
+            }
+          }
+
+          // handle closing
+          if (closeAfterSaving) {
+            this.dialogRef.close();
+          } else {
+            delete this.cashTransfer.recID;
+
+            this.dialogRef.dataService
+              .addNew(() =>
+                this.api.exec('AC', 'CashTranfersBusiness', 'SetDefaultAsync', [
+                  this.dialogData.data.parentID,
+                ])
+              )
+              .subscribe((res: ICashTransfer) => {
+                console.log(res);
+                this.form.formGroup.patchValue(res);
+              });
+
+            this.vatInvoice = {} as IVATInvoice;
+            this.hasInvoice = false;
+          }
+        }
+      });
+  }
+
+  loadComboboxData(name: string, pageSize: number = 100): Observable<any> {
+    const dataRequest = new DataRequest();
+    dataRequest.comboboxName = name;
+    dataRequest.page = 1;
+    dataRequest.pageSize = pageSize;
+    return this.api.execSv(
+      'AC',
+      'ERM.Business.Core',
+      'DataBusiness',
+      'LoadDataCbxAsync',
+      [dataRequest]
+    );
+  }
+
+  crudVatInvoice(methodName: string, vatInvoice: IVATInvoice) {
+    this.api
+      .exec('AC', 'VATInvoicesBusiness', methodName, vatInvoice)
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
   //#endregion
 
   //#region Function
+  getCashBookNameById(id: string): string {
+    return this.cashBooks?.find((c) => c.CashBookID === id)?.CashBookName;
+  }
+
+  toPascalCase(camelCase: string): string {
+    return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+  }
+
+  toCamelCase(camelCase: string): string {
+    return camelCase.charAt(0).toLowerCase() + camelCase.slice(1);
+  }
+
+  validateVATInvoice(gvsVATInvoices, vatInvoice): boolean {
+    let isValid = true;
+    for (const prop in gvsVATInvoices) {
+      if (gvsVATInvoices[prop].isRequire) {
+        console.log(prop);
+        if (
+          gvsVATInvoices[prop].datatype === 'String' &&
+          !vatInvoice[this.toCamelCase(prop)]?.trim()
+        ) {
+          this.notiService.notifyCode(
+            'SYS009',
+            0,
+            `"${this.gvsVATInvoices[prop]?.headerText}"`
+          );
+
+          isValid = false;
+        }
+      }
+    }
+
+    return isValid;
+  }
   //#endregion
 }

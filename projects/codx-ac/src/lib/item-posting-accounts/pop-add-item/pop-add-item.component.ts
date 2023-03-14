@@ -120,7 +120,7 @@ export class PopAddItemComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.itemposting[keymodel[i]] == null ||
-              this.itemposting[keymodel[i]].match(/^ *$/) != null
+              String(this.itemposting[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',

@@ -84,7 +84,7 @@ export class PopAddExchangerateComponent extends UIComponent implements OnInit {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (
               this.exchangerate[keymodel[i]] == null ||
-              this.exchangerate[keymodel[i]] == ''
+              String(this.exchangerate[keymodel[i]]).match(/^ *$/) !== null
             ) {
               this.notification.notifyCode(
                 'SYS009',

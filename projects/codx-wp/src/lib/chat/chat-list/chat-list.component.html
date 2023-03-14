@@ -1,64 +1,13 @@
-<div class="chat-list d-flex flex-column h-100">
-    <div class="chat-list-header">
-        <!-- title -->
-        <div class="row">
-            <h3 class="fw-bolder">Chatting</h3>
-        </div>
-        <!-- end title -->
-        <!-- feature -->
-        <div class="row">
-            <!-- users - check - chat -->
-            <div class="d-flex align-items-center justify-content-end">
-                <ul class="chat-list-header_func">
-                    <li class="cursor-pointer" (click)="openPopupAddGroup()">
-                        <i class="icon-people_alt"></i>
-                    </li>
-                    <li class="cursor-pointer" (click)="clickCheckSeenAll()">
-                       <i class="icon-playlist_add_check"></i>
-                    </li>
-                    <li class="cursor-pointer">
-                       <i class="icon-open_in_new"></i>
-                    </li>
-                </ul>
-            </div>
-            <!-- search -->
-            <div>
-                <codx-searchbar #codxSearch 
-                    [iconPos]="'left'" 
-                    [width]="300" 
-                    (searchEvent)="search($event)">
-                </codx-searchbar>
-            </div>
-        </div>
-        <!-- end feature -->
-    </div>
-    <!-- list group chat -->
-    <div class="chat-list-body">
-        <ng-container *ngIf="searched;else tmpListGroup">
-            <codx-listview #codxListViewSerach
-                [dataService]="dataSVSearch"
-                [itemTemplate]="itemTemplateSearch" 
-                [funcId]="funcID"
-                service="WP" 
-                [emptyTemplate]="null"
-                assemblyName="ERM.Business.WP" 
-                className="GroupBusiness"
-                method="SearchAsync"
-                [selectFirst]="false">
-            </codx-listview>
-        </ng-container>
-        <ng-template #tmpListGroup>
-            <codx-listview #codxListViewGroup
-                [itemTemplate]="itemTemplateGroup" 
-                [funcId]="funcID"
-                service="WP" 
-                assemblyName="ERM.Business.WP" 
-                className="GroupBusiness"
-                method="GetGroupAsync"
-                [selectFirst]="false">
-            </codx-listview>
-        </ng-template>
-    </div>
+<div class="w-100 h-100">
+    <codx-listview #codxListView
+        [itemTemplate]="searched ? itemTemplateSearch : itemTemplateGroup" 
+        [funcId]="funcID"
+        service="WP" 
+        assemblyName="ERM.Business.WP" 
+        className="GroupBusiness"
+        method="GetGroupAsync"
+        [selectFirst]="false">
+    </codx-listview>
 </div>
 <!-- template group chat -->
 <ng-template #itemTemplateGroup let-item>
@@ -104,8 +53,4 @@
             </codx-temp-full>
         </ng-template>
     </div>
-</ng-template>
-
-<ng-template #chatBox let-id>
-    <codx-chat-box [groupID]="id"></codx-chat-box>
 </ng-template>
