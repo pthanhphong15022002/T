@@ -172,6 +172,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
+  listFileTask: string[] = [];
 
   dayStep = 0;
   hourStep = 0;
@@ -218,7 +219,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   adAutoNumber: any;
   vllDateFormat: any;
   lstGroup = [];
-  checkGroup = false;
+  checkGroup = true;
   errorMessage = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -334,6 +335,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
+
   }
 
   ngAfterViewInit(): void {
@@ -499,6 +501,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // } else return;
     this.notiService.alertCode('DP013').subscribe((e) => {
       if (e?.event?.status == 'Y') {
+        if(this.listFileTask?.length > 0){
+          this.dpService
+            .deleteFileTask([this.listFileTask])
+            .subscribe((rec) => {})
+        }
         this.dialog.close();
       } else return;
     });
@@ -936,6 +943,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           break;
         //Người liên quan
         case '5':
+          e?.forEach(element => {
+            let role = {
+              objectID: element.id,
+              objectName: element.text,
+              objectType: element.objectType,
+              roleType: type,
+            }
+            this.addRole(role);
+          });
           break;
       }
     }
@@ -1552,7 +1568,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               task: taskGroupList[taskGroup['recID']] ?? [],
             };
           });
-          step['taskGroups'] = taskGroupConvert;
+          step['taskGroups'] = taskGroupConvert;        
 
           if (step['taskGroups']?.length > 0 || step['tasks']?.length > 0) {
             let taskGroup = new DP_Steps_TaskGroups();
@@ -1841,6 +1857,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       dataInput || {},
       this.taskList,
       this.groupTaskID || null,
+      this.listFileTask
     ];
     var functionID = 'DPT0206'; //id tuy chojn menu ne
     this.cache.functionList(functionID).subscribe((f) => {
@@ -1972,7 +1989,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.openTypeJob();
         break;
       case 'DP12':
-        this.viewTask(data,"G");
+        this.viewTask(data, 'G');
         break;
     }
   }
@@ -2011,7 +2028,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           case 'DP07':
             if (type == 'group' || type == 'step') res.disabled = true;
             break;
-            case 'DP13':
+          case 'DP13':
             res.disabled = true;
         }
       });
@@ -2344,14 +2361,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //View task
   viewTask(data?: any, type?: string) {
-    let listTaskConvert = this.taskList?.map(item => {
-      return{
+    let listTaskConvert = this.taskList?.map((item) => {
+      return {
         ...item,
-        refID:item.recID,
+        refID: item.recID,
         name: item?.taskName,
         type: item?.taskType,
-      }
-    })
+      };
+    });
     let value = JSON.parse(JSON.stringify(data));
     value['name'] = value['taskName'] || value['taskGroupName'];
     value['type'] = value['taskType'] || type;

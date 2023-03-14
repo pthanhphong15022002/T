@@ -585,11 +585,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   valueSelectUser(assignTo) {
     if (assignTo != '') {
       var arrAssign = assignTo.split(';');
-      if (arrAssign?.length > 1 && this.crrRole =="A" && this.accountable) {
-        this.notiService.notify(
-          'Người chiu trách nhiệm chỉ được chọn 1 người - Cần messcode từ Thuong',
-          '2'
-        );
+      if (arrAssign?.length > 1 && this.crrRole == 'A' && this.accountable) {
+        this.notiService.notifyCode('TM078');
+        // this.notiService.notify(
+        //   'Người chiu trách nhiệm chỉ được chọn 1 người - Cần messcode từ Thuong',
+        //   '2'
+        // );
         return;
       }
       if (this.task.assignTo && this.task.assignTo != '') {
@@ -604,10 +605,11 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           this.getListUser(assignTo);
         }
         if (arrNew?.length != arrAssign?.length)
-          this.notiService.notify(
-            'Người được chọn đã có trong danh sách trước đó - Cần messcode từ Thuong',
-            '3'
-          );
+          this.notiService.notifyCode('TM077');
+        // this.notiService.notify(
+        //   'Người được chọn đã có trong danh sách trước đó - Cần messcode từ Thuong',
+        //   '3'
+        // );
       } else {
         this.getListUser(assignTo);
       }
@@ -744,7 +746,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
-          if (res?.Accountable == '1') this.accountable = true;
+          var param = JSON.parse(res.dataValue);
+          if (param.Accountable == '1') this.accountable = true;
           else this.accountable = false;
           var param = JSON.parse(res.dataValue);
           this.param = param;

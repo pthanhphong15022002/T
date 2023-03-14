@@ -448,7 +448,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
               if (res?.msgCodeError == null && res?.rowCount) {
                 this.notificationsService.notifyCode('ES007');
                 data.approveStatus = '3';
-                data.status = '3';
                 data.write = false;
                 data.delete = false;
                 this.view.dataService.update(data).subscribe();
@@ -459,7 +458,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         });
     } else {
       data.approveStatus = '5';
-      data.status = '5';
       data.write = false;
       data.delete = false;
       this.view.dataService.update(data).subscribe();
@@ -483,7 +481,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     //         if (res) {
     //           this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
     //           data.approveStatus = '0';
-    //           data.status = '1';
     //           this.view.dataService.update(data).subscribe();
     //         } else {
     //           this.notificationsService.notifyCode(res?.msgCodeError);
@@ -495,7 +492,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     //         if (res != null) {
     //           this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
     //           data.approveStatus = '1';
-    //           data.status = '1';
     //           this.view.dataService.update(data).subscribe();
     //         } else {
     //           this.notificationsService.notifyCode(res?.msgCodeError);
@@ -508,7 +504,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       if (res && res?.msgCodeError==null) {
         this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
         data.approveStatus = '0';
-        data.status = '0';
         this.view.dataService.update(data).subscribe();
       } else {
         this.notificationsService.notifyCode(res?.msgCodeError);

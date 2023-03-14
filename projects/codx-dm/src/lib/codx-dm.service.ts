@@ -487,30 +487,6 @@ export class CodxDMService {
       //this.nodeSelect.next(data);
       this.changeClickData.next(data);
       this.disableInput.next(false);
-
-      // this.folderService.getFolder(data.recID).subscribe(async (res) => {
-      //   if (res != null) {
-      //     this.parentFolder.next(res);
-      //     this.getRight(res);
-      //     this.folderName = res.folderName;
-      //     this.parentFolderId = res.parentId;
-      //     this.add.next(true);
-      //   }
-      // });
-
-      // this.folderService.options.funcID = this.idMenuActive;
-      // this.folderService.getFolders(data.recID).subscribe(async (res) => {
-      //   this.isTree = true;
-      //   this.listFolder = res[0];
-      //   this.listFiles = [];
-      //   this.ChangeData.next(true);
-      // });
-
-      // this.fileService.options.funcID = this.idMenuActive;
-      // this.fileService.GetFiles(data.recID).subscribe(async (res) => {
-      //   this.listFiles = res[0];
-      //   this.ChangeData.next(true);
-      // });
     } else {
       // open file
       if (!data.read) {

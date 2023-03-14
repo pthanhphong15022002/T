@@ -38,6 +38,7 @@ export class ViewDetailGiftComponent implements OnInit, OnChanges {
     this.api.execSv(this.service, this.assemblyName, this.className, "GetGiftTranInforAsync", objectID)
       .subscribe((res: any) => {
         if (res) {
+          console.log(res);
           this.data = res;
           this.dt.detectChanges();
         }

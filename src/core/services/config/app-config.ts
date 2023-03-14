@@ -10,6 +10,8 @@ export abstract class AppConfig {
   themeMode: string;
   sureMeet: any;
   firebase: any;
+  reCaptchaKey: string;
+  reCaptchaEnable: number;
   externalLogin: ExternalLogin;
 }
 
