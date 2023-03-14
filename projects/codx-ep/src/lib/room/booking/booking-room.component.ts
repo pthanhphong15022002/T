@@ -26,6 +26,7 @@ import {
   NotificationsService,
   AuthService,
   CodxScheduleComponent,
+  Util,
 } from 'codx-core';
 import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
 import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
@@ -96,6 +97,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   navigated = false;
   columnGrids=[];
   isAdmin=false;
+  grView: any;
   constructor(
     private injector: Injector,
     private callFuncService: CallFuncService,
@@ -121,7 +123,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
-    //lấy list booking để vẽ schedule
+    //Kiểm tra quyền admin
     this.codxEpService.roleCheck().subscribe(res=>{
       if(res==true){
         this.isAdmin=true;
@@ -129,7 +131,17 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       else{        
         this.isAdmin=false;
       }
-    })
+    });
+    
+    this.cache
+      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+      .subscribe((grv) => {
+        if (grv) {
+          this.grView = Util.camelizekeyObj(grv);
+        }
+      });
+    
+    //lấy list booking để vẽ schedule
     this.request = new ResourceModel();
     this.request.assemblyName = 'EP';
     this.request.className = 'BookingsBusiness';
@@ -171,22 +183,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
     this.buttons = {
       id: 'btnAdd',
-    };
-
-    this.codxEpService.getListResource('1').subscribe((res: any) => {
-      if (res) {
-        this.listRoom = [];
-        this.listRoom = res;
-      }
-    });
-    this.codxEpService
-      .getListReason('EP_BookingRooms')
-      .subscribe((res: any) => {
-        if (res) {
-          this.listReason = [];
-          this.listReason = res;
-        }
-      });
+    };    
   }
 
   ngAfterViewInit(): void {
@@ -264,57 +261,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       }
     }
   }
-
-  getResourceName(resourceID: any) {
-    this.tempRoomName = '';
-    this.listRoom.forEach((r) => {
-      if (r.resourceID == resourceID) {
-        this.tempRoomName = r.resourceName;
-      }
-    });
-    return this.tempRoomName;
-  }
-  getReasonName(reasonID: any) {
-    this.tempReasonName = '';
-    this.listReason.forEach((r) => {
-      if (r.reasonID == reasonID) {
-        this.tempReasonName = r.description;
-      }
-    });
-    return this.tempReasonName;
-  }
-  getListAttendees(resources: any) {
-    if (resources) {
-      let attendees = '';
-      for (let i = 0; i < resources.length; i++) {
-        attendees += resources[i]?.userID + ';';
-      }
-      return attendees;
-    } else {
-      return '';
-    }
-  }
-
-  getMoreInfo(recID: any) {
-    this.selectBookingItems = [];
-    //this.selectBookingAttendees = '';
-
-    this.codxEpService.getListItems(recID).subscribe((item: any) => {
-      if (item) {
-        this.selectBookingItems = item;
-      }
-    });
-    // this.codxEpService.getListAttendees(recID).subscribe((attendees: any) => {
-    //   if (attendees) {
-    //     let lstAttendees = attendees;
-    //     lstAttendees.forEach((element) => {
-    //       this.selectBookingAttendees =
-    //         this.selectBookingAttendees + element.userID + ';';
-    //     });
-    //     this.selectBookingAttendees;
-    //   }
-    // });
-  }
+  
   changeItemDetail(event) {
     let recID = '';
     if (event?.data) {
@@ -501,7 +448,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
               if (res?.msgCodeError == null && res?.rowCount) {
                 this.notificationsService.notifyCode('ES007');
                 data.approveStatus = '3';
-                data.status = '3';
                 data.write = false;
                 data.delete = false;
                 this.view.dataService.update(data).subscribe();
@@ -512,7 +458,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         });
     } else {
       data.approveStatus = '5';
-      data.status = '5';
       data.write = false;
       data.delete = false;
       this.view.dataService.update(data).subscribe();
@@ -536,7 +481,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     //         if (res) {
     //           this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
     //           data.approveStatus = '0';
-    //           data.status = '1';
     //           this.view.dataService.update(data).subscribe();
     //         } else {
     //           this.notificationsService.notifyCode(res?.msgCodeError);
@@ -548,7 +492,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     //         if (res != null) {
     //           this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
     //           data.approveStatus = '1';
-    //           data.status = '1';
     //           this.view.dataService.update(data).subscribe();
     //         } else {
     //           this.notificationsService.notifyCode(res?.msgCodeError);
@@ -561,7 +504,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       if (res && res?.msgCodeError==null) {
         this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
         data.approveStatus = '0';
-        data.status = '0';
         this.view.dataService.update(data).subscribe();
       } else {
         this.notificationsService.notifyCode(res?.msgCodeError);

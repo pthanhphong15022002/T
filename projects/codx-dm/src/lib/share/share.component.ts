@@ -48,7 +48,7 @@ export class ShareComponent implements OnInit {
   loadedFolder: boolean;
   setting: any;  
   title = 'Thông báo';    
-  titleDialog = `Chia sẻ qua email`;  
+  titleDialog = `Chia sẻ`;  
   titleDialogRequest = `Yêu cầu cấp quyền`;  
   fileEditing: FileUpload;
   titleShared = "Chia sẻ thành công";
@@ -77,7 +77,6 @@ export class ShareComponent implements OnInit {
   byPermission: Permission[] = [];
   ccPermission: Permission[];
   bccPermission: Permission[];  
-
   shareGroup: FormGroup
 //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
   @ViewChild('view') view!: ViewsComponent; 
@@ -104,11 +103,11 @@ export class ShareComponent implements OnInit {
       this.type = data.data[0];
       this.fileEditing = data.data[1];
       this.id =  this.fileEditing.recID;
-      
       this.isShare = data.data[2];
       this.fullName = this.fileEditing.folderName ? this.fileEditing.folderName : this.fileEditing.fileName;
       this.formModel = dialog.formModel;  
-
+      this.titleDialog = "Chia sẻ thư mục"
+      if(!this.fileEditing.folderName) this.titleDialog = "Chia sẻ tài liệu"; 
     //  this.id = this.data.recID;     
   }
 

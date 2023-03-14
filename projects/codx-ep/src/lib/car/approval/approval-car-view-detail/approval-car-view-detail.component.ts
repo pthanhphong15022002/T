@@ -230,7 +230,6 @@ export class ApprovalCarViewDetailComponent
   //     if (res != null) {
   //       this.notificationsService.notifyCode('SYS034'); //đã thu hồi
   //       data.approveStatus = '3';
-  //       data.status = '3';
   //       this.updateStatus.emit(data);
   //     } else {
   //       this.notificationsService.notifyCode(res?.msgCodeError);

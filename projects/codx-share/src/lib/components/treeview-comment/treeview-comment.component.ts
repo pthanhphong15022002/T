@@ -15,6 +15,7 @@ import { AttachmentComponent } from '../attachment/attachment.component';
 import { ImageGridComponent } from '../image-grid/image-grid.component';
 import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
 import { CodxShareService } from '../../codx-share.service';
+import { PopupDetailComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/popup-detail/popup-detail.component';
 @Component({
   selector: 'treeview-comment',
   templateUrl: './treeview-comment.component.html',
@@ -407,9 +408,31 @@ export class TreeviewCommentComponent implements OnInit {
   // view file
   clickViewDetailComment(file:any){
     if(file){
-      let dialog = new DialogModel();
-      dialog.IsFull = true;
-      this.callFuc.openForm(ViewFileDialogComponent,"",0,0,"",file,"",dialog);
+      // let dialog = new DialogModel();
+      // dialog.FormModel = this.formModel;
+      // dialog.IsFull = true;
+      // this.callFuc.openForm(ViewFileDialogComponent,"",0,0,"",file,"",dialog);
+      if (file) {
+        let _data = {
+          objectID:file.objectID,
+          recID:file.recID,
+          referType:file.referType
+        };
+        let option = new DialogModel();
+        option.FormModel = this.formModel;
+        option.IsFull = true;
+        option.zIndex = 999;
+        this.callFuc.openForm(
+          PopupDetailComponent,
+          '',
+          0,
+          0,
+          '',
+          _data,
+          '',
+          option
+        );
+      }
     }
   }
 }

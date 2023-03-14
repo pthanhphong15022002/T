@@ -16,8 +16,8 @@ import {
   CallFuncService,
   NotificationsService,
   DialogData,
+  Util,
 } from 'codx-core';
-import { Util } from 'konva/lib/Util';
 import { CodxAcService } from '../../codx-ac.service';
 import { DimensionControl } from '../../models/DimensionControl.model';
 import { DimensionSetup } from '../../models/DimensionSetup.model';
@@ -36,16 +36,10 @@ export class PopAddDimensionSetupComponent
   dialog!: DialogRef;
   headerText: string;
   formModel: FormModel;
-  dimensionSetup: DimensionSetup;
+  dimensionSetup: DimensionSetup = new DimensionSetup();
   type: any;
   isPopupCbb: any;
   dataCbx: any;
-  dimensionControl: DimensionControl = {
-    entityName: '',
-    dimGroupID: '',
-    recID: Guid.newGuid(),
-    dimType: '',
-  };
   objectDimensionControl: Array<DimensionControl> = [];
   constructor(
     private inject: Injector,
@@ -84,10 +78,8 @@ export class PopAddDimensionSetupComponent
   onInit(): void {}
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    if (this.dimensionSetup == null) {
-      this.dimensionSetup = this.form.formGroup.value;
+    if (this.dimensionSetup.dimType == null) {
       this.dimensionSetup.dimType = this.type;
-      this.dimensionSetup.recID = Guid.newGuid();
     }
   }
   //#endregion
@@ -109,7 +101,7 @@ export class PopAddDimensionSetupComponent
         this.objectDimensionControl.push({
           entityName: element.EntityName,
           dimGroupID: null,
-          recID: Guid.newGuid(),
+          recID: Util.uid(),
           dimType: this.type,
         });
       });
@@ -119,7 +111,6 @@ export class PopAddDimensionSetupComponent
     });
     this.dataCbx = value.substring(0, value.length - 1);
     this.isPopupCbb = false;
-    console.log(this.objectDimensionControl);
   }
   openPopup() {
     this.isPopupCbb = true;
@@ -141,17 +132,3 @@ export class PopAddDimensionSetupComponent
   }
   //#endregion
 }
-//#region Guid
-class Guid {
-  static newGuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
-  }
-}
-//#endregion

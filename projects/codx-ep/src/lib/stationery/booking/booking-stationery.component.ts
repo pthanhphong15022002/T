@@ -183,7 +183,6 @@ export class BookingStationeryComponent
         if (res != null && res?.msgCodeError == null) {
           this.notificationsService.notifyCode('SYS034'); //đã hủy gửi duyệt
           data.approveStatus = '0';
-          data.status = '0';
           this.view.dataService.update(data).subscribe();
         } else {
           this.notificationsService.notifyCode(res?.msgCodeError);
@@ -208,7 +207,6 @@ export class BookingStationeryComponent
       if (res != null) {
         this.notificationsService.notifyCode('SYS034'); //đã thu hồi
         data.approveStatus = '3';
-        data.status = '3';
         this.view.dataService.update(data).subscribe();
       } else {
         this.notificationsService.notifyCode(res?.msgCodeError);
@@ -230,7 +228,6 @@ export class BookingStationeryComponent
             if (res?.msgCodeError == null && res?.rowCount >= 0) {
               this.notificationsService.notifyCode('SYS034'); //đã duyệt
               data.approveStatus = '4';
-              data.status = '4';
               this.view.dataService.update(data).subscribe();
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
@@ -254,7 +251,6 @@ export class BookingStationeryComponent
             if (res?.msgCodeError == null && res?.rowCount >= 0) {
               this.notificationsService.notifyCode('SYS034'); //đã duyệt
               data.approveStatus = '5';
-              data.status = '5';
               this.view.dataService.update(data).subscribe();
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
@@ -560,7 +556,6 @@ export class BookingStationeryComponent
               if (res?.msgCodeError == null && res?.rowCount >= 0) {
                 this.notificationsService.notifyCode('ES007');
                 data.approveStatus = '3';
-                data.status = '3';
                 data.write = false;
                 data.delete = false;
                 this.view.dataService.update(data).subscribe();
@@ -571,7 +566,6 @@ export class BookingStationeryComponent
         });
     } else {
       data.approveStatus = '5';
-      data.status = '5';
       data.write = false;
       data.delete = false;
       this.view.dataService.update(data).subscribe();

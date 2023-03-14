@@ -48,14 +48,14 @@ export class PortalComponent extends UIComponent {
   user;
 
   active = [
-    'HRTEM0101',
-    'HRTEM0201',
-    'HRTEM0301',
-    'HRTEM0401',
-    'HRTEM0501',
-    'HRTEM0601',
-    'HRTEM0701',
-    'HRTEM0801',
+    'HRPEM0101',
+    'HRPEM0201',
+    'HRPEM0301',
+    'HRPEM0401',
+    'HRPEM0501',
+    'HRPEM0601',
+    'HRPEM0701',
+    'HRPEM0801',
   ];
 
   constructor(
@@ -144,6 +144,7 @@ export class PortalComponent extends UIComponent {
   eAssetGrvSetup;
   eDayOffGrvSetup;
   eTrainCourseGrvSetup;
+  eContractgrvSetup;
   //#endregion
 
   //#region sortModels
@@ -199,6 +200,11 @@ export class PortalComponent extends UIComponent {
   ViewAllEContractFlag = false;
   ops = ['y'];
 
+  //#region filter Econtracts
+  filterEContractPredicates: string;
+  filterByContractIDArr;
+  //#endregion
+
   //#region filter variables of form main eAssets
   filterByAssetCatIDArr: any = [];
   startDateEAssetFilterValue;
@@ -225,6 +231,7 @@ export class PortalComponent extends UIComponent {
   //#region filter variables of form main eAwards
   Start_Date_Award_Filter_Value;
   End_Date_Award_Filter_Value;
+  Filter_Award_Predicates: string;
   //#endregion
 
   //#region ViewChild template
@@ -287,6 +294,7 @@ export class PortalComponent extends UIComponent {
   eContractCol3: TemplateRef<any>;
 
   numPageSizeGridView = 100;
+  @ViewChild('eContractGridview') eContractGrid: CodxGridviewComponent;
   @ViewChild('eAwardGridView') AwardGrid: CodxGridviewComponent;
   @ViewChild('eDisciplineGridView') eDisciplineGrid: CodxGridviewComponent;
   @ViewChild('businessTravelGrid') businessTravelGrid: CodxGridviewComponent;
@@ -294,7 +302,7 @@ export class PortalComponent extends UIComponent {
   @ViewChild('eSkillGridViewID') skillGrid: CodxGridviewComponent;
   @ViewChild('eCertificateGridView') eCertificateGrid: CodxGridviewComponent;
   @ViewChild('eAssetGridView') eAssetGrid: CodxGridviewComponent;
-  @ViewChild('gridView') grid: CodxGridviewComponent;
+  @ViewChild('gridView') benefitGrid: CodxGridviewComponent;
   @ViewChild('eDegreeGridView') eDegreeGrid: CodxGridviewComponent;
   @ViewChild('dayoffGridView') dayoffGrid: CodxGridviewComponent;
   @ViewChild('templateBenefitID', { static: true })
@@ -384,8 +392,9 @@ export class PortalComponent extends UIComponent {
   lstFuncLegalInfo: any = [];
   lstFuncTaskInfo: any = [];
   lstFuncSalary: any = [];
-  lstFuncHRProcess: any = [];
-  dayOffTravelHRProcess: any = [];
+  lstFuncDayOffTravel: any = [];
+  //dayOffTravelHRProcess: any = [];
+  lstFuncContract: any = [];
   lstFuncKnowledge: any = [];
   lstFuncAward: any = [];
   lstFuncArchiveRecords: any = [];
@@ -400,7 +409,7 @@ export class PortalComponent extends UIComponent {
   eCertificateRowCount;
   eBenefitRowCount: number = 0;
   eBusinessTravelRowCount = 0;
-  eSkillRowCount = 0;
+  eSkillRowCount;
   dayoffRowCount: number = 0;
   eAssetRowCount;
   eBasicSalaryRowCount;
@@ -437,7 +446,7 @@ export class PortalComponent extends UIComponent {
   eJobSalFuncID = 'HRPEM0402'; //Lương chức danh
   benefitFuncID = 'HRPEM0403'; // Phụ cấp
   eAssetFuncID = 'HRPEM0404'; // Tài sản cấp phát
-  dayoffFuncID = 'HRPEM0501'; // Nghỉ phép
+  dayoffFuncID = 'HRPEM0501'; // Nghỉ phép 
   eBusinessTravelFuncID = 'HRPEM0502'; // Công tác
   eContractFuncID = 'HRPEM0601'; // Hợp đồng lao động
   eDegreeFuncID = 'HRPEM0701'; // Bằng cấp
@@ -469,7 +478,7 @@ export class PortalComponent extends UIComponent {
   eBasicSalaryFormmodel: FormModel; //Lương cơ bản
   eTrainCourseFormModel: FormModel; // Đào tạo
   appointionFormModel: FormModel;
-  dayofFormModel: FormModel;
+  dayoffFormModel: FormModel;
   eJobSalaryFormModel: FormModel; // Lương chức danh
   awardFormModel: FormModel; // Khen thưởng
   eContractFormModel: FormModel; // Hợp đồng lao động
@@ -499,11 +508,9 @@ export class PortalComponent extends UIComponent {
 
   //#region filter variables of form main eDayoffs
   filterByKowIDArr: [];
-  yearFilterValueDayOffs;
   startDateEDayoffFilterValue;
   endDateEDayoffFilterValue;
   filterEDayoffPredicates: string;
-  filterEDayoffDatavalues;
   //#endregion
 
   //#region filter variables of form main EBusinessTravel
@@ -513,22 +520,52 @@ export class PortalComponent extends UIComponent {
   filterBusinessTravelPredicates: string;
   //#endregion
   dataService: DataService = null;
+  isClick: boolean = false;
 
-  navChange(evt: any) {
+  // navChange(evt: any) {
+  //   if (!evt) return;
+  //   let element = document.getElementById(evt.nextId);
+  //   element.scrollIntoView({
+  //     behavior: 'smooth',
+  //     block: 'start',
+  //     inline: 'nearest',
+  //   });
+  // }
+  navChange(evt: any, index: number = -1) {
     if (!evt) return;
-    let element = document.getElementById(evt.nextId);
+    // let element = document.getElementById(evt?.nextId); 
+    let element = document.getElementById(evt);
+    if (index > -1) {
+      // this.active[index] = evt.nextId;
+      this.active[index] = evt;
+      this.detectorRef.detectChanges();
+    }
     element.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
       inline: 'nearest',
     });
+    this.isClick = true;
+    this.detectorRef.detectChanges();
+    setTimeout(() => {
+      this.isClick = false;
+      return;
+    }, 500);
   }
   clickItem(evet) {}
 
-  onSectionChange(data: any) {
-    console.log('change section', data);
-    this.codxMwpService.currentSection = data.current;
-    this.detectorRef.detectChanges();
+  // onSectionChange(data: any) {
+  //   console.log('change section', data);
+  //   this.codxMwpService.currentSection = data.current;
+  //   this.detectorRef.detectChanges();
+  // }
+  onSectionChange(data: any, index: number = -1) {
+    if (index > -1 && this.isClick == false) {
+      let element = document.getElementById(this.active[index]);
+      element.blur();
+      this.active[index] = data;
+      this.detectorRef.detectChanges();
+    }
   }
 
   initPersonalInfo() {
@@ -880,6 +917,7 @@ export class PortalComponent extends UIComponent {
           this.skillGrid.dataService.onAction.subscribe((res) => {
             if (res) {
               if (res.type == 'loaded') {
+                t.eSkillRowCount = 0;
                 t.eSkillRowCount = res['data'].length;
               }
             }
@@ -1108,8 +1146,12 @@ export class PortalComponent extends UIComponent {
           (p) => p.parentID == this.benefitInfoFuncID
         );
 
-        this.dayOffTravelHRProcess = res[0].filter(
+        this.lstFuncDayOffTravel = res[0].filter(
           (p) => p.parentID == this.dayoffParentInfoFuncID
+        );
+
+        this.lstFuncContract = res[0].filter(
+          (p) => p.parentID == this.contractInfoFuncID
         );
 
         this.lstFuncKnowledge = res[0].filter(
@@ -1120,11 +1162,11 @@ export class PortalComponent extends UIComponent {
           (p) => p.parentID == this.awardDisciplineFuncID
         );
 
-        this.lstFuncArchiveRecords = res[0].filter(
-          (p) => p.parentID == 'HRT030210'
-        );
+        // this.lstFuncArchiveRecords = res[0].filter(
+        //   (p) => p.parentID == 'HRT030210'
+        // );
 
-        this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
+        // this.lstFuncSeverance = res[0].filter((p) => p.parentID == 'HRT030208');
       }
     });
 
@@ -1227,6 +1269,18 @@ export class PortalComponent extends UIComponent {
         });
     });
 
+    this.hrService.getFormModel(this.eContractFuncID).then((res) => {
+      this.eContractFormModel = res;
+      this.cache
+        .gridViewSetup(
+          this.eContractFormModel.formName,
+          this.eContractFormModel.gridViewName
+        )
+        .subscribe((res) => {
+          this.eContractgrvSetup = res;
+        });
+    });
+
     this.hrService.getFormModel(this.eDegreeFuncID).then((res) => {
       this.eDegreeFormModel = res;
     });
@@ -1240,11 +1294,15 @@ export class PortalComponent extends UIComponent {
         )
         .subscribe((res) => {
           this.eAssetGrvSetup = res;
+          console.log('eassetgrvsetup', this.eAssetGrvSetup);
+          
           let dataRequest = new DataRequest();
           dataRequest.comboboxName = res.AssetCategory.referedValue;
           dataRequest.pageLoading = false;
 
           this.hrService.loadDataCbx('HR', dataRequest).subscribe((data) => {
+            console.log('data eassetttttt', data);
+            
             this.AssetColorValArr = JSON.parse(data[0]);
           });
         });
@@ -1290,20 +1348,24 @@ export class PortalComponent extends UIComponent {
     });
 
     this.hrService.getFormModel(this.dayoffFuncID).then((res) => {
-      this.dayofFormModel = res;
+      this.dayoffFormModel = res;
+      console.log('dayoff funcID', this.dayoffFuncID);
+      
+      console.log('form model dayoff', this.dayoffFormModel);
+      
       this.cache
         .gridViewSetup(
-          this.dayofFormModel.formName,
-          this.dayofFormModel.gridViewName
+          this.dayoffFormModel.formName,
+          this.dayoffFormModel.gridViewName
         )
         .subscribe((res) => {
           this.eDayOffGrvSetup = res;
+          console.log('edayofff', this.eDayOffGrvSetup);
         });
     });
 
     this.hrService.getFormModel(this.eBusinessTravelFuncID).then((res) => {
       this.EBusinessTravelFormodel = res;
-      console.log('formmodel cong tac', this.EBusinessTravelFormodel);
     });
 
     this.hrService.getFormModel(this.appointionFuncID).then((res) => {
@@ -1405,6 +1467,8 @@ export class PortalComponent extends UIComponent {
     //#region - Công tác
     this.hrService.getHeaderText(this.eBusinessTravelFuncID).then((res) => {
       this.eBusinessTravelHeaderTexts = res;
+      console.log('ngay cong tac', this.eBusinessTravelHeaderTexts);
+      
       this.businessTravelColumnGrid = [
         {
           headerText:
@@ -1451,6 +1515,10 @@ export class PortalComponent extends UIComponent {
     //#region - Nghỉ phép
     this.hrService.getHeaderText(this.dayoffFuncID).then((res) => {
       this.dayoffHeaderTexts = res;
+      console.log('dayoff FUNCID', this.dayoffFuncID);
+      
+      console.log('dayOffs', this.dayoffHeaderTexts);
+      
       this.dayoffColumnGrid = [
         {
           headerText:
@@ -1898,7 +1966,7 @@ export class PortalComponent extends UIComponent {
       this.filterByBenefitIDArr.length > 0 &&
       this.startDateEBenefitFilterValue != null
     ) {
-      this.filterEBenefitPredicates = '(';
+      this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.filterByBenefitIDArr.length; i++) {
         if (i > 0) {
@@ -1908,17 +1976,20 @@ export class PortalComponent extends UIComponent {
       }
       this.filterEBenefitPredicates += ') ';
       this.filterEBenefitPredicates += `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
-      (this.grid.dataService as CRUDService)
+      this.filterEBenefitPredicates += ') ';
+      console.log('truong hop 1', this.filterEBenefitPredicates);
+      (this.benefitGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEBenefitPredicates],
           [this.filterByBenefitIDArr.join(';')]
         )
-        .subscribe((item) => {});
+        .subscribe();
     } else if (
-      (this.filterByBenefitIDArr.length > 0 &&
-        this.startDateEBenefitFilterValue == undefined) ||
-      this.startDateEBenefitFilterValue == null
+      this.filterByBenefitIDArr.length > 0 &&
+      (this.startDateEBenefitFilterValue == undefined ||
+        this.startDateEBenefitFilterValue == null)
     ) {
+      this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.filterByBenefitIDArr.length; i++) {
         if (i > 0) {
@@ -1926,47 +1997,114 @@ export class PortalComponent extends UIComponent {
         }
         this.filterEBenefitPredicates += `BenefitID==@${i}`;
       }
-
-      (this.grid.dataService as CRUDService)
+      this.filterEBenefitPredicates += ') ';
+      this.filterEBenefitPredicates += ') ';
+      console.log('truong hop 2', this.filterEBenefitPredicates);
+      (this.benefitGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEBenefitPredicates],
           [this.filterByBenefitIDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 2', item);
-        });
-    } else if (this.startDateEBenefitFilterValue != null) {
-      (this.grid.dataService as CRUDService)
-        .setPredicates(
-          [
-            `EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}"`,
-          ],
-          []
-        )
-        .subscribe((item) => {});
+        .subscribe();
+    } else if (
+      this.filterByBenefitIDArr.length <= 0 &&
+      this.startDateEBenefitFilterValue != null
+    ) {
+      this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeID}" and EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
+      (this.benefitGrid.dataService as CRUDService)
+        .setPredicates([this.filterEBenefitPredicates], [])
+        .subscribe();
+      console.log('truong hop 3', this.filterEBenefitPredicates);
+    } else if (
+      this.filterByBenefitIDArr.length <= 0 &&
+      (this.startDateEBenefitFilterValue == undefined ||
+        this.startDateEBenefitFilterValue == null)
+    ) {
+      this.filterEBenefitPredicates = `(EmployeeID=="${this.employeeID}")`;
+      console.log('truong hop 4', this.filterEBenefitPredicates);
+      (this.benefitGrid.dataService as CRUDService)
+        .setPredicates([this.filterEBenefitPredicates], [''])
+        .subscribe();
     }
+    // this.filterEBenefitPredicates = '';
+    // if (
+    //   this.filterByBenefitIDArr.length > 0 &&
+    //   this.startDateEBenefitFilterValue != null
+    // ) {
+    //   this.filterEBenefitPredicates = '(';
+    //   let i = 0;
+    //   for (i; i < this.filterByBenefitIDArr.length; i++) {
+    //     if (i > 0) {
+    //       this.filterEBenefitPredicates += ' or ';
+    //     }
+    //     this.filterEBenefitPredicates += `BenefitID==@${i}`;
+    //   }
+    //   this.filterEBenefitPredicates += ') ';
+    //   this.filterEBenefitPredicates += `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
+    //   (this.grid.dataService as CRUDService)
+    //     .setPredicates(
+    //       [this.filterEBenefitPredicates],
+    //       [this.filterByBenefitIDArr.join(';')]
+    //     )
+    //     .subscribe((item) => {});
+    // } else if (
+    //   (this.filterByBenefitIDArr.length > 0 &&
+    //     this.startDateEBenefitFilterValue == undefined) ||
+    //   this.startDateEBenefitFilterValue == null
+    // ) {
+    //   let i = 0;
+    //   for (i; i < this.filterByBenefitIDArr.length; i++) {
+    //     if (i > 0) {
+    //       this.filterEBenefitPredicates += ' or ';
+    //     }
+    //     this.filterEBenefitPredicates += `BenefitID==@${i}`;
+    //   }
+
+    //   (this.grid.dataService as CRUDService)
+    //     .setPredicates(
+    //       [this.filterEBenefitPredicates],
+    //       [this.filterByBenefitIDArr.join(';')]
+    //     )
+    //     .subscribe((item) => {
+    //       console.log('item tra ve sau khi loc 2', item);
+    //     });
+    // } else if (this.startDateEBenefitFilterValue != null) {
+    //   (this.grid.dataService as CRUDService)
+    //     .setPredicates(
+    //       [
+    //         `EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}"`,
+    //       ],
+    //       []
+    //     )
+    //     .subscribe((item) => {});
+    // }
   }
 
   valueChangeYearFilterBenefit(evt) {
-    this.startDateEBenefitFilterValue = evt.fromDate.toJSON();
-    this.endDateEBenefitFilterValue = evt.toDate.toJSON();
+    if (evt.formatDate == undefined && evt.toDate == undefined) {
+      this.startDateEBenefitFilterValue = null;
+      this.endDateEBenefitFilterValue = null;
+    } else {
+      this.startDateEBenefitFilterValue = evt.fromDate.toJSON();
+      this.endDateEBenefitFilterValue = evt.toDate.toJSON();
+    }
     this.UpdateEBenefitPredicate();
   }
 
   valueChangeViewAllEBenefit(evt) {
     this.ViewAllEBenefitFlag = evt.data;
     let ins = setInterval(() => {
-      if (this.grid) {
+      if (this.benefitGrid) {
         clearInterval(ins);
         let t = this;
-        this.grid.dataService.onAction.subscribe((res) => {
+        this.benefitGrid.dataService.onAction.subscribe((res) => {
           if (res) {
             if (res.type == 'loaded') {
               t.eBenefitRowCount = res['data'].length;
             }
           }
         });
-        this.eBenefitRowCount = this.grid.dataService.rowCount;
+        this.eBenefitRowCount = this.benefitGrid.dataService.rowCount;
       }
     }, 100);
   }
@@ -1992,15 +2130,15 @@ export class PortalComponent extends UIComponent {
   valueChangeViewAllESkill(evt) {
     this.ViewAllEskillFlag = evt.data;
     let ins = setInterval(() => {
-      if (this.grid) {
+      if (this.skillGrid) {
         clearInterval(ins);
         let t = this;
-        this.grid.dataService.onAction.subscribe((res) => {
+        this.skillGrid.dataService.onAction.subscribe((res) => {
           if (res.type == 'loaded') {
             t.eSkillRowCount = res['data'].length;
           }
         });
-        this.eSkillRowCount = this.grid.dataService.rowCount;
+        this.eSkillRowCount = this.skillGrid.dataService.rowCount;
       }
     }, 100);
   }
@@ -2068,34 +2206,13 @@ export class PortalComponent extends UIComponent {
     this.filterByAssetCatIDArr = evt.data;
     this.UpdateEAssetPredicate();
   }
-
   UpdateEAssetPredicate() {
     this.filterEAssetPredicates = '';
     if (
       this.filterByAssetCatIDArr.length > 0 &&
       this.startDateEAssetFilterValue != null
     ) {
-      this.filterEAssetPredicates = '(';
-      let i = 0;
-      for (i; i < this.filterByAssetCatIDArr.length; i++) {
-        if (i > 0) {
-          this.filterEAssetPredicates += ' or ';
-        }
-      }
-      this.filterEAssetPredicates += ') ';
-      (this.eAssetGrid.dataService as CRUDService)
-        .setPredicates(
-          [this.filterEAssetPredicates],
-          [this.filterByAssetCatIDArr.join(';')]
-        )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 1', item);
-        });
-    } else if (
-      (this.filterByAssetCatIDArr.length > 0 &&
-        this.startDateEAssetFilterValue == undefined) ||
-      this.startDateEAssetFilterValue == null
-    ) {
+      this.filterEAssetPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.filterByAssetCatIDArr.length; i++) {
         if (i > 0) {
@@ -2103,34 +2220,120 @@ export class PortalComponent extends UIComponent {
         }
         this.filterEAssetPredicates += `AssetCategory==@${i}`;
       }
-
+      this.filterEAssetPredicates += ') ';
+      this.filterEAssetPredicates += `and (IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEAssetFilterValue}")`;
+      this.filterEAssetPredicates += ') ';
+      console.log('truong hop 1', this.filterEAssetPredicates);
       (this.eAssetGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEAssetPredicates],
           [this.filterByAssetCatIDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 2', item);
-        });
-    } else if (this.startDateEAssetFilterValue != null) {
+        .subscribe();
+    } else if (
+      this.filterByAssetCatIDArr.length > 0 &&
+      (this.startDateEAssetFilterValue == undefined ||
+        this.startDateEAssetFilterValue == null)
+    ) {
+      this.filterEAssetPredicates = `(EmployeeID=="${this.employeeID}" and (`;
+      let i = 0;
+      for (i; i < this.filterByAssetCatIDArr.length; i++) {
+        if (i > 0) {
+          this.filterEAssetPredicates += ' or ';
+        }
+        this.filterEAssetPredicates += `AssetCategory==@${i}`;
+      }
+      this.filterEAssetPredicates += ') ';
+      this.filterEAssetPredicates += ') ';
+      console.log('truong hop 2', this.filterEAssetPredicates);
       (this.eAssetGrid.dataService as CRUDService)
         .setPredicates(
-          [
-            `IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEAssetFilterValue}"`,
-          ],
-          []
+          [this.filterEAssetPredicates],
+          [this.filterByAssetCatIDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 3', item);
-        });
+        .subscribe();
+    } else if (
+      this.filterByAssetCatIDArr.length <= 0 &&
+      this.startDateEAssetFilterValue != null
+    ) {
+      this.filterEAssetPredicates = `(EmployeeID=="${this.employeeID}" and IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEAssetFilterValue}")`;
+      (this.eAssetGrid.dataService as CRUDService)
+        .setPredicates([this.filterEAssetPredicates], [])
+        .subscribe();
+      console.log('truong hop 3', this.filterEAssetPredicates);
+    } else if (
+      this.filterByAssetCatIDArr.length <= 0 &&
+      (this.startDateEAssetFilterValue == undefined ||
+        this.startDateEAssetFilterValue == null)
+    ) {
+      this.filterEAssetPredicates = `(EmployeeID=="${this.employeeID}")`;
+      console.log('truong hop 4', this.filterEAssetPredicates);
+      (this.eAssetGrid.dataService as CRUDService)
+        .setPredicates([this.filterEAssetPredicates], [''])
+        .subscribe();
     }
+    // this.filterEAssetPredicates = '';
+    // if (
+    //   this.filterByAssetCatIDArr.length > 0 &&
+    //   this.startDateEAssetFilterValue != null
+    // ) {
+    //   this.filterEAssetPredicates = '(';
+    //   let i = 0;
+    //   for (i; i < this.filterByAssetCatIDArr.length; i++) {
+    //     if (i > 0) {
+    //       this.filterEAssetPredicates += ' or ';
+    //     }
+    //   }
+    //   this.filterEAssetPredicates += ') ';
+    //   (this.eAssetGrid.dataService as CRUDService)
+    //     .setPredicates(
+    //       [this.filterEAssetPredicates],
+    //       [this.filterByAssetCatIDArr.join(';')]
+    //     )
+    //     .subscribe((item) => {
+    //       console.log('item tra ve sau khi loc 1', item);
+    //     });
+    // } else if (
+    //   (this.filterByAssetCatIDArr.length > 0 &&
+    //     this.startDateEAssetFilterValue == undefined) ||
+    //   this.startDateEAssetFilterValue == null
+    // ) {
+    //   let i = 0;
+    //   for (i; i < this.filterByAssetCatIDArr.length; i++) {
+    //     if (i > 0) {
+    //       this.filterEAssetPredicates += ' or ';
+    //     }
+    //     this.filterEAssetPredicates += `AssetCategory==@${i}`;
+    //   }
+
+    //   (this.eAssetGrid.dataService as CRUDService)
+    //     .setPredicates(
+    //       [this.filterEAssetPredicates],
+    //       [this.filterByAssetCatIDArr.join(';')]
+    //     )
+    //     .subscribe((item) => {
+    //       console.log('item tra ve sau khi loc 2', item);
+    //     });
+    // } else if (this.startDateEAssetFilterValue != null) {
+    //   (this.eAssetGrid.dataService as CRUDService)
+    //     .setPredicates(
+    //       [
+    //         `IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEAssetFilterValue}"`,
+    //       ],
+    //       []
+    //     )
+    //     .subscribe((item) => {
+    //       console.log('item tra ve sau khi loc 3', item);
+    //     });
+    // }
   }
   valueChangeYearFilterAward(evt) {
     if (evt.formatDate == undefined && evt.toDate == undefined) {
       this.Start_Date_Award_Filter_Value = null;
       this.End_Date_Award_Filter_Value = null;
+      this.Filter_Award_Predicates = `(EmployeeID=="${this.employeeID}")`;
       (this.AwardGrid.dataService as CRUDService)
-        .setPredicates([''], [''])
+        .setPredicates([this.Filter_Award_Predicates], [''])
         .subscribe();
     } else {
       this.Start_Date_Award_Filter_Value = evt.fromDate.toJSON();
@@ -2138,7 +2341,7 @@ export class PortalComponent extends UIComponent {
       (this.AwardGrid.dataService as CRUDService)
         .setPredicates(
           [
-            `AwardDate>="${this.Start_Date_Award_Filter_Value}" and AwardDate<="${this.End_Date_Award_Filter_Value}"`,
+            `(EmployeeID=="${this.employeeID}" and AwardDate>="${this.Start_Date_Award_Filter_Value}" and AwardDate<="${this.End_Date_Award_Filter_Value}")`,
           ],
           []
         )
@@ -2157,60 +2360,13 @@ export class PortalComponent extends UIComponent {
     this.UpdateEAssetPredicate();
   }
 
-  UpdateESkillPredicate() {
-    this.filterESkillPredicates = '';
-    if (
-      this.filterByESkillIDArr.length > 0 &&
-      this.startDateESkillFilterValue != null
-    ) {
-      this.filterESkillPredicates = '(';
-      let i = 0;
-      for (i; i < this.filterByESkillIDArr.length; i++) {
-        if (i > 0) {
-          this.filterESkillPredicates += ' or ';
-        }
-        this.filterESkillPredicates += `SkillID==@${i}`;
-      }
-      this.filterESkillPredicates += ') ';
-      (this.skillGrid.dataService as CRUDService)
-        .setPredicates(
-          [this.filterESkillPredicates],
-          [this.filterByESkillIDArr.join(';')]
-        )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 1', item);
-        });
-    } else if (
-      (this.filterByESkillIDArr.length > 0 &&
-        this.startDateESkillFilterValue == undefined) ||
-      this.startDateESkillFilterValue == null
-    ) {
-      let i = 0;
-      for (i; i < this.filterByESkillIDArr.length; i++) {
-        if (i > 0) {
-          this.filterESkillPredicates += ' or ';
-        }
-        this.filterESkillPredicates += `SkillID==@${i}`;
-      }
-
-      (this.skillGrid.dataService as CRUDService)
-        .setPredicates(
-          [this.filterESkillPredicates],
-          [this.filterByESkillIDArr.join(';')]
-        )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 2', item);
-        });
-    }
-  }
-
   UpdateTrainCoursePredicate() {
     this.Filter_ETrainCourse_Predicates = '';
     if (
       this.Filter_By_ETrainCourse_IDArr.length > 0 &&
       this.Start_Date_ETrainCourse_Filter_Value != null
     ) {
-      this.Filter_ETrainCourse_Predicates = '(';
+      this.Filter_ETrainCourse_Predicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.Filter_By_ETrainCourse_IDArr.length; i++) {
         if (i > 0) {
@@ -2220,6 +2376,8 @@ export class PortalComponent extends UIComponent {
       }
       this.Filter_ETrainCourse_Predicates += ') ';
       this.Filter_ETrainCourse_Predicates += `and (TrainFromDate>="${this.Start_Date_ETrainCourse_Filter_Value}" and TrainFromDate<="${this.End_Date_ETrainCourse_Filter_Value}")`;
+      this.Filter_ETrainCourse_Predicates += ') ';
+      console.log('truong hop 1', this.Filter_ETrainCourse_Predicates);
       (this.eTrainCourseGrid.dataService as CRUDService)
         .setPredicates(
           [this.Filter_ETrainCourse_Predicates],
@@ -2227,10 +2385,11 @@ export class PortalComponent extends UIComponent {
         )
         .subscribe();
     } else if (
-      (this.Filter_By_ETrainCourse_IDArr.length > 0 &&
-        this.Start_Date_ETrainCourse_Filter_Value == undefined) ||
-      this.Start_Date_ETrainCourse_Filter_Value == null
+      this.Filter_By_ETrainCourse_IDArr.length > 0 &&
+      (this.Start_Date_ETrainCourse_Filter_Value == undefined ||
+        this.Start_Date_ETrainCourse_Filter_Value == null)
     ) {
+      this.Filter_ETrainCourse_Predicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.Filter_By_ETrainCourse_IDArr.length; i++) {
         if (i > 0) {
@@ -2238,20 +2397,33 @@ export class PortalComponent extends UIComponent {
         }
         this.Filter_ETrainCourse_Predicates += `TrainForm==@${i}`;
       }
+      this.Filter_ETrainCourse_Predicates += ') ';
+      this.Filter_ETrainCourse_Predicates += ') ';
+      console.log('truong hop 2', this.Filter_ETrainCourse_Predicates);
       (this.eTrainCourseGrid.dataService as CRUDService)
         .setPredicates(
           [this.Filter_ETrainCourse_Predicates],
           [this.Filter_By_ETrainCourse_IDArr.join(';')]
         )
         .subscribe();
-    } else if (this.Start_Date_ETrainCourse_Filter_Value != null) {
+    } else if (
+      this.Filter_By_ETrainCourse_IDArr.length <= 0 &&
+      this.Start_Date_ETrainCourse_Filter_Value != null
+    ) {
+      this.Filter_ETrainCourse_Predicates = `(EmployeeID=="${this.employeeID}" and TrainFromDate>="${this.Start_Date_ETrainCourse_Filter_Value}" and TrainFromDate<="${this.End_Date_ETrainCourse_Filter_Value}")`;
       (this.eTrainCourseGrid.dataService as CRUDService)
-        .setPredicates(
-          [
-            `TrainFromDate>="${this.Start_Date_ETrainCourse_Filter_Value}" and TrainFromDate<="${this.End_Date_ETrainCourse_Filter_Value}"`,
-          ],
-          []
-        )
+        .setPredicates([this.Filter_ETrainCourse_Predicates], [])
+        .subscribe();
+      console.log('truong hop 3', this.Filter_ETrainCourse_Predicates);
+    } else if (
+      this.Filter_By_ETrainCourse_IDArr.length <= 0 &&
+      (this.Start_Date_ETrainCourse_Filter_Value == undefined ||
+        this.Start_Date_ETrainCourse_Filter_Value == null)
+    ) {
+      this.Filter_ETrainCourse_Predicates = `(EmployeeID=="${this.employeeID}")`;
+      console.log('truong hop 4', this.Filter_ETrainCourse_Predicates);
+      (this.eTrainCourseGrid.dataService as CRUDService)
+        .setPredicates([this.Filter_ETrainCourse_Predicates], [''])
         .subscribe();
     }
   }
@@ -2262,7 +2434,106 @@ export class PortalComponent extends UIComponent {
   }
   valueChangeFilterSkillID(evt) {
     this.filterByESkillIDArr = evt.data;
-    this.UpdateESkillPredicate();
+    let lengthArr = this.filterByESkillIDArr.length;
+    if (lengthArr <= 0) {
+      this.filterESkillPredicates = `(EmployeeID=="${this.employeeID}")`;
+      console.log('truong hop 1', this.filterESkillPredicates);
+      (this.skillGrid.dataService as CRUDService)
+        .setPredicates([this.filterESkillPredicates], [''])
+        .subscribe();
+    } else {
+      this.filterESkillPredicates = `(EmployeeID=="${this.employeeID}" and (`;
+      for (let i = 0; i < lengthArr; i++) {
+        if (i > 0) {
+          this.filterESkillPredicates += ' or ';
+        }
+        this.filterESkillPredicates += `SkillID==@${i}`;
+      }
+      this.filterESkillPredicates += ') ';
+      this.filterESkillPredicates += ') ';
+      console.log('truong hop 2', this.filterESkillPredicates);
+
+      (this.skillGrid.dataService as CRUDService)
+        .setPredicates(
+          [this.filterESkillPredicates],
+          [this.filterByESkillIDArr.join(';')]
+        )
+        .subscribe();
+    }
+    // this.filterESkillPredicates = '';
+    // if (
+    //   this.filterByESkillIDArr.length > 0 &&
+    //   this.startDateESkillFilterValue != null
+    // ) {
+    //   this.filterESkillPredicates = '(';
+    //   let i = 0;
+    //   for (i; i < this.filterByESkillIDArr.length; i++) {
+    //     if (i > 0) {
+    //       this.filterESkillPredicates += ' or ';
+    //     }
+    //     this.filterESkillPredicates += `SkillID==@${i}`;
+    //   }
+    //   this.filterESkillPredicates += ') ';
+    //   (this.skillGrid.dataService as CRUDService)
+    //     .setPredicates(
+    //       [this.filterESkillPredicates],
+    //       [this.filterByESkillIDArr.join(';')]
+    //     )
+    //     .subscribe((item) => {
+    //       console.log('item tra ve sau khi loc 1', item);
+    //     });
+    // } else if (
+    //   (this.filterByESkillIDArr.length > 0 &&
+    //     this.startDateESkillFilterValue == undefined) ||
+    //   this.startDateESkillFilterValue == null
+    // ) {
+    //   let i = 0;
+    //   for (i; i < this.filterByESkillIDArr.length; i++) {
+    //     if (i > 0) {
+    //       this.filterESkillPredicates += ' or ';
+    //     }
+    //     this.filterESkillPredicates += `SkillID==@${i}`;
+    //   }
+
+    //   (this.skillGrid.dataService as CRUDService)
+    //     .setPredicates(
+    //       [this.filterESkillPredicates],
+    //       [this.filterByESkillIDArr.join(';')]
+    //     )
+    //     .subscribe((item) => {
+    //       console.log('item tra ve sau khi loc 2', item);
+    //     });
+    // }
+  }
+
+  valueChangFilterContract(evt){
+    this.filterByContractIDArr = evt.data;
+    let lengthArr = this.filterByContractIDArr.length;
+    if (lengthArr <= 0) {
+      this.filterEContractPredicates = `(EmployeeID=="${this.employeeID}")`;
+      console.log('truong hop 1', this.filterEContractPredicates);
+      (this.eContractGrid.dataService as CRUDService)
+        .setPredicates([this.filterEContractPredicates], [''])
+        .subscribe();
+    } else {
+      this.filterEContractPredicates = `(EmployeeID=="${this.employeeID}" and (`;
+      for (let i = 0; i < lengthArr; i++) {
+        if (i > 0) {
+          this.filterEContractPredicates += ' or ';
+        }
+        this.filterEContractPredicates += `ContractTypeID==@${i}`;
+      }
+      this.filterEContractPredicates += ') ';
+      this.filterEContractPredicates += ') ';
+      console.log('truong hop 2', this.filterEContractPredicates);
+
+      (this.eContractGrid.dataService as CRUDService)
+        .setPredicates(
+          [this.filterEContractPredicates],
+          [this.filterByContractIDArr.join(';')]
+        )
+        .subscribe();
+    }
   }
 
   // filter đào tạo 1
@@ -2277,42 +2548,36 @@ export class PortalComponent extends UIComponent {
     this.UpdateTrainCoursePredicate();
   }
 
-  UpdateBusinessTravelPredicate() {
-    this.filterBusinessTravelPredicates = '';
-    if (this.startDateBusinessTravelFilterValue == null) {
-      (this.businessTravelGrid.dataService as CRUDService)
-        .setPredicates([`EmployeeID=@0`], [this.employeeID])
-        .subscribe((item) => {});
-    } else {
-      (this.businessTravelGrid.dataService as CRUDService)
-        .setPredicates(
-          [
-            `BeginDate>="${this.startDateBusinessTravelFilterValue}" and EndDate<="${this.endDateBusinessTravelFilterValue}"`,
-          ],
-          []
-        )
-        .subscribe((item) => {});
-    }
-  }
 
   valueChangeYearFilterBusinessTravel(evt) {
     if (evt.formatDate == undefined && evt.toDate == undefined) {
       this.startDateBusinessTravelFilterValue = null;
       this.endDateBusinessTravelFilterValue = null;
+      this.filterBusinessTravelPredicates = `(EmployeeID=="${this.employeeID}")`;
+      (this.businessTravelGrid.dataService as CRUDService)
+        .setPredicates([this.filterBusinessTravelPredicates], [''])
+        .subscribe();
     } else {
       this.startDateBusinessTravelFilterValue = evt.fromDate.toJSON();
       this.endDateBusinessTravelFilterValue = evt.toDate.toJSON();
+      (this.businessTravelGrid.dataService as CRUDService)
+        .setPredicates(
+          [
+            `(EmployeeID=="${this.employeeID}" and BeginDate>="${this.startDateBusinessTravelFilterValue}" and EndDate<="${this.endDateBusinessTravelFilterValue}")`,
+          ],
+          []
+        )
+        .subscribe();
     }
-    this.UpdateBusinessTravelPredicate();
-  }
 
+  }
   UpdateEDayOffsPredicate() {
     this.filterEDayoffPredicates = '';
     if (
       this.filterByKowIDArr.length > 0 &&
       this.startDateEDayoffFilterValue != null
     ) {
-      this.filterEDayoffPredicates = '(';
+      this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.filterByKowIDArr.length; i++) {
         if (i > 0) {
@@ -2322,21 +2587,20 @@ export class PortalComponent extends UIComponent {
       }
       this.filterEDayoffPredicates += ') ';
       this.filterEDayoffPredicates += `and (BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}")`;
-      //this.filterEBenefitDatavalues = this.filterByKowIDArr.concat([this.startDateEBenefitFilterValue, this.endDateEBenefitFilterValue]);
-
+      this.filterEDayoffPredicates += ') ';
+      console.log('truong hop 1', this.filterEDayoffPredicates);
       (this.dayoffGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEDayoffPredicates],
           [this.filterByKowIDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 1', item);
-        });
+        .subscribe();
     } else if (
       this.filterByKowIDArr.length > 0 &&
       (this.startDateEDayoffFilterValue == undefined ||
         this.startDateEDayoffFilterValue == null)
     ) {
+      this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}" and (`;
       let i = 0;
       for (i; i < this.filterByKowIDArr.length; i++) {
         if (i > 0) {
@@ -2344,28 +2608,34 @@ export class PortalComponent extends UIComponent {
         }
         this.filterEDayoffPredicates += `KowID==@${i}`;
       }
-
+      this.filterEDayoffPredicates += ') ';
+      this.filterEDayoffPredicates += ') ';
+      console.log('truong hop 2', this.filterEDayoffPredicates);
       (this.dayoffGrid.dataService as CRUDService)
         .setPredicates(
           [this.filterEDayoffPredicates],
           [this.filterByKowIDArr.join(';')]
         )
-        .subscribe((item) => {
-          console.log('item tra ve sau khi loc 2', item);
-        });
-    } else if (this.startDateEDayoffFilterValue) {
+        .subscribe();
+    } else if (
+      this.filterByKowIDArr.length <= 0 &&
+      this.startDateEDayoffFilterValue != null
+    ) {
+      this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}" and BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}")`;
       (this.dayoffGrid.dataService as CRUDService)
-        .setPredicates(
-          [
-            `BeginDate>="${this.startDateEDayoffFilterValue}" and EndDate<="${this.endDateEDayoffFilterValue}"`,
-          ],
-          []
-        )
-        .subscribe((item) => {});
-    } else {
+        .setPredicates([this.filterEDayoffPredicates], [])
+        .subscribe();
+      console.log('truong hop 3', this.filterEDayoffPredicates);
+    } else if (
+      this.filterByKowIDArr.length <= 0 &&
+      (this.startDateEDayoffFilterValue == undefined ||
+        this.startDateEDayoffFilterValue == null)
+    ) {
+      this.filterEDayoffPredicates = `(EmployeeID=="${this.employeeID}")`;
+      console.log('truong hop 4', this.filterEDayoffPredicates);
       (this.dayoffGrid.dataService as CRUDService)
-        .setPredicates([`EmployeeID=@0`], [this.employeeID])
-        .subscribe((item) => {});
+        .setPredicates([this.filterEDayoffPredicates], [''])
+        .subscribe();
     }
   }
 

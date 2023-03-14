@@ -166,7 +166,7 @@
   ></report-viewer>
 </ng-template>
 <ng-template #cardTemplate let-data>
-  <div class="d-flex flex-column w-100" (click)="getMoreInfo(data.recID)">
+  <div class="d-flex flex-column w-100" >
     <span>{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span>
     <span
       class="fw-bold"

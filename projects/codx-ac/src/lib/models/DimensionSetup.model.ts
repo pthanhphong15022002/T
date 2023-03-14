@@ -1,3 +1,5 @@
+import { Util } from "codx-core";
+
 export class DimensionSetup {
   barcodeControl: any;
   batchStatusID: any;
@@ -19,7 +21,7 @@ export class DimensionSetup {
   modifiedOn: any;
   physicalCosting: any;
   physicalOnhand: any;
-  recID: any;
+  recID: any = Util.uid();
   requireIssue: any;
   requireReceipt: any;
   seriControl: any;

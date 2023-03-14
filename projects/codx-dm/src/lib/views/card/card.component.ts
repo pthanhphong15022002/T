@@ -82,6 +82,7 @@ export class CardComponent implements OnInit , OnChanges {
   }
   dbView()
   {
+    debugger
     if(this.data?.recID && this.data?.fileName != null)
     {
       if (!this.data.read) {

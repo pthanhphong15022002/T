@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef } from '@angular/core';
-import { CacheService, CallFuncService, NotificationsService } from 'codx-core';
+import { CacheService, CallFuncService, FormModel, NotificationsService } from 'codx-core';
 
 @Component({
   selector: 'codx-user',
@@ -8,6 +8,13 @@ import { CacheService, CallFuncService, NotificationsService } from 'codx-core';
 })
 export class UserComponent implements OnInit {
   @Input() dataSource: any = [];
+  @Input() formModel: FormModel;
+  @Input() default: string;
+  @Input() fiedName: string;
+  @Input() fiedNameTitle: string;
+  @Input() title: string;
+  @Input() icon: string;
+  @Input() style = {};
   @Output() valueList = new EventEmitter();
   isPopupUserCbb = false;
   constructor(

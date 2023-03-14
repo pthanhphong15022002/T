@@ -1,3 +1,4 @@
+import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { CodxHrService } from './../codx-hr.service';
 import { filter } from 'rxjs';
 import { UIComponent, ViewModel, ButtonModel, ViewType, NotificationsService, SidebarModel } from 'codx-core';
@@ -25,6 +26,7 @@ export class EmployeeContractComponent extends UIComponent {
     id : 'btnAdd',
     text: 'Thêm'
   }
+
 
   // moreFuncs = [
   //   {
@@ -123,6 +125,38 @@ export class EmployeeContractComponent extends UIComponent {
     this.HandleEContractInfo(evt.text,'add',null);
   }
 
+  // addNew(actionHeaderText, actionType: string, data: any){
+  //   this.view.dataService.addNew().subscribe((res) => {
+  //     this.dataSelected = this.view.dataService.dataSelected;
+  //     let option = new SidebarModel();
+  //     option.Width = '550px';
+  //     option.DataService = this.view?.dataService
+  //     option.FormModel = this.view.formModel;
+  //     let dialogAdd = this.callfc.openSide(
+  //       PopupEProcessContractComponent,
+  //       // isAppendix ? PopupSubEContractComponent : PopupEContractComponent,
+  //       {
+  //         actionType: actionType,
+  //         dataObj: data,
+  //         headerText:
+  //           actionHeaderText + ' ' + this.view.function.description,
+  //         employeeId: data?.employeeID,
+  //         funcID: this.view.funcID,
+  //       },
+  //       option
+  //     );
+  //     dialogAdd.closed.subscribe((res) => {
+  //       if (res.event) {
+  //         console.log('moi add hop dong xong', res.event[0]);
+  //         this.view.dataService.addNew(res.event[0]).subscribe((res) => {
+  //         });
+  //         this.df.detectChanges();
+  //       }
+  //       if (res?.event) this.view.dataService.clear();
+  //     });
+  //   })
+  // }
+
   HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '550px';
@@ -132,7 +166,7 @@ export class EmployeeContractComponent extends UIComponent {
     //   isAppendix = true;
     // }
     let dialogAdd = this.callfc.openSide(
-      PopupEContractComponent,
+      PopupEProcessContractComponent,
       // isAppendix ? PopupSubEContractComponent : PopupEContractComponent,
       {
         actionType: actionType,
@@ -145,9 +179,19 @@ export class EmployeeContractComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (res) {
-        this.view.dataService.addNew(res);
-        this.df.detectChanges();
+      if (res.event) {
+        if(actionType == 'add'){
+          console.log('moi add hop dong xong', res.event[0]);
+          this.view.dataService.add(res.event[0],0).subscribe((res) => {
+          });
+          this.df.detectChanges();
+        }
+        else if(actionType == 'edit'){
+          this.view.dataService.update(res.event[0]).subscribe((res) => {
+
+          })
+          this.df.detectChanges();
+        }
       }
       if (res?.event) this.view.dataService.clear();
     });

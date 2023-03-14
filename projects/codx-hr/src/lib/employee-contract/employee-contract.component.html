@@ -20,7 +20,7 @@
     <div class="w-25">
       <div class="d-flex align-items-start">
         <span
-        *ngIf="data.isCurrent == true"
+        *ngIf="data?.isCurrent == true"
           class="bullet bullet-vertical d-flex align-items-center min-h-100px me-3 bg-primary"
         >
         </span>
@@ -28,16 +28,16 @@
           <codx-img
             [width]="35"
             class="me-3"
-            [objectId]="data.emp.domainUser"
+            [objectId]="data?.emp?.employeeID"
             [referType]="'avt'"
-            [objectName]="data.emp.employeeName"
-            [objectType]="'AD_Users'"
+            [objectName]="data?.emp?.employeeName"
+            [objectType]="'HR_Employees'"
           >
           </codx-img>
           <codx-vll
           class="badge badge-sm"
           [name]="'HR001'"
-          [value]="data.emp.gender"
+          [value]="data?.emp?.gender"
           [showText]="true"
           [showBgColor]="true"
         >
@@ -47,21 +47,21 @@
           <div>
             <div class="text-dark fw-bold">
               <span>
-                {{ data.emp.employeeName }}
+                {{ data?.emp?.employeeName }}
               </span>
               <i class="icon-accessibility"></i>
               <span>
-                {{ data.emp.employeeID }}
+                {{ data?.emp?.employeeID }}
               </span>
             </div>
 
           </div>
           <div class="text-gray-700">
-            <span>{{ data.positionID }}</span>
+            <span>{{ data?.positionID }}</span>
           </div>
 
           <div class="text-gray-700">
-            <span>{{ data.orgUnitID }}</span>
+            <span>{{ data?.orgUnitID }}</span>
           </div>
         </div>
       </div>
@@ -70,25 +70,25 @@
     <div class="w-25">
       <div class="d-flex flex-column">
         <div class="text-gray-700">
-          <span>{{ data.contractTypeID | formatvalue : view.formModel : "contractTypeID" | async}}</span>
+          <span>{{ data?.contractTypeID | formatvalue : view.formModel : "contractTypeID" | async}}</span>
         </div>
 
         <div class="text-gray-700">
-          <span>{{ data.effectedDate | fmDT }}</span>
+          <span>{{ data?.effectedDate | fmDT }}</span>
           <span> - </span>
-          <span>{{ data.expiredDate | fmDT }}</span>
+          <span>{{ data?.expiredDate | fmDT }}</span>
         </div>
 
         <div class="text-gray-700">
-          <span>{{ data.contractNo}}</span>
+          <span>{{ data?.contractNo}}</span>
           <span> - </span>
-          <span>{{ data.signedDate | fmDT }}</span>
+          <span>{{ data?.signedDate | fmDT }}</span>
         </div>
       </div>
     </div>
 
     <div class="w-25">
-      <codx-attachment #attachment [objectId]="data.recID" [objectType]="view.formModel.entityName" hideFolder="1"
+      <codx-attachment #attachment [objectId]="data?.recID" [objectType]="view.formModel.entityName" hideFolder="1"
       hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
       [formModel]="view.formModel" 
       displayThumb="full" showMessage="0">
@@ -96,7 +96,7 @@
     </div>
 
     <div class="w-25">
-      {{ data.signStatus | formatvalue : view.formModel : "signStatus" | async}}
+      {{ data?.signStatus | formatvalue : view.formModel : "signStatus" | async}}
     </div>
 
     <codx-mfunc
@@ -119,24 +119,24 @@
 <ng-template #eInfoTemplate let-data>
   <div class="row">
     <div class="fw-bold fs-6 text-dark">
-      {{ data.emp.employeeName }}
+      {{ data?.emp?.employeeName }}
     </div>
 
     <div class="fw-bold fs-6 text-dark">
-      {{ data.emp.employeeName }}
+      {{ data?.emp?.employeeName }}
     </div>
 
     <div class="fw-bold fs-6 text-dark">
-      {{ data.emp.employeeName }}
+      {{ data?.emp?.employeeName }}
     </div>
   </div>
 </ng-template>
 
 <ng-template #contractTemplate let-data>
   <div>
-    <div>data.contractTypeID</div>
-    <div>data.effectedDate</div>
-    <div>data.signedDate</div>
+    <div>data?.contractTypeID</div>
+    <div>data?.effectedDate</div>
+    <div>data?.signedDate</div>
   </div>
 
   <!-- <div class="d-flex align-items-center mt-1">

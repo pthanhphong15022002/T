@@ -20,11 +20,10 @@
     [modeImgs]="false"
     [bookmark]="data.isBookmark"
     [titleLine]="2"
-   
     [dataItem]="data"
     (changeDataMF)="changeDataMF($event, data)"
     [footer]="footerTmp"
-    [moreFuncCss]="'me-12'"
+    [moreFuncCss]="(gridViewSetup['Urgency'].allowPopup == '1' && gridViewSetup['Security'].allowPopup == '1') ? 'me-12' : ''"
     [hideMF]="view.formModel.funcID.includes('ODT8')"
   >
   </codx-temp-full>

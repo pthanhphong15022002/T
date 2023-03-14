@@ -62,7 +62,7 @@
                                 <ng-container *ngIf="fileEditing">
                                     <codx-label [default]="titleFiletype" fiedName="lblFileType"
                                         class="text-gray-600 me-2 w-100px"></codx-label>
-                                    <span class="">{{fileEditing.fileName + " ("+fileEditing.extension+")"}}</span>
+                                    <span class="">{{fileEditing.extension}}</span>
                                 </ng-container>
                                 <ng-template #elseVersion>
                                     <span class="">{{messerror}}</span>
