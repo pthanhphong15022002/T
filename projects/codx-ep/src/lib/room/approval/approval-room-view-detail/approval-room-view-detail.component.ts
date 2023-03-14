@@ -88,23 +88,45 @@ export class ApprovalRoomViewDetailComponent
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
-            if(res.bookingAttendees!=null && res.bookingAttendees!=''){
-              let listAttendees = res.bookingAttendees.split(";");
+            this.listFilePermission = [];
+            if (res?.bookingAttendees != null && res?.bookingAttendees != '') {
+              let listAttendees = res.bookingAttendees.split(';');
               listAttendees.forEach((item) => {
-                if(item!=''){
-                  let tmpPer= new Permission()
-                  tmpPer.objectID= item;//
-                  tmpPer.objectType= 'U';
-                  tmpPer.read= true;
-                  tmpPer.share=  true;
-                  tmpPer.download=  true;
-                  tmpPer.isActive=  true;
+                if (item != '') {
+                  let tmpPer = new Permission();
+                  tmpPer.objectID = item; //
+                  tmpPer.objectType = 'U';
+                  tmpPer.read = true;
+                  tmpPer.share = true;
+                  tmpPer.download = true;
+                  tmpPer.isActive = true;
                   this.listFilePermission.push(tmpPer);
-                }                
+                }
               });
-              this.detectorRef.detectChanges();
-
-            }            
+            }
+            if (res?.listApprovers != null && res?.listApprovers.length > 0) {
+              res.listApprovers.forEach((item) => {
+                if (item != '') {
+                  let tmpPer = new Permission();
+                  tmpPer.objectID = item; //
+                  tmpPer.objectType = 'U';
+                  tmpPer.read = true;
+                  tmpPer.share = true;
+                  tmpPer.download = true;
+                  tmpPer.isActive = true;
+                  this.listFilePermission.push(tmpPer);
+                }
+              });
+            }
+            this.isEdit = false;
+            // for (let u of res.bookingAttendees) {
+            //   if (
+            //     res?.createdBy == this.authService?.userValue?.userID ||
+            //     this.authService?.userValue?.userID == u?.userID
+            //   ) {
+            //     this.isEdit = true;
+            //   }
+            // }       
             this.detectorRef.detectChanges();
           }
         });
@@ -125,6 +147,7 @@ export class ApprovalRoomViewDetailComponent
       ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
+  
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
       event.forEach((func) => {
@@ -159,15 +182,9 @@ export class ApprovalRoomViewDetailComponent
       }
     }
   }
+
   clickMF(value, datas: any = null) {
     let funcID = value?.functionID;
-    // if (!datas) datas = this.data;
-    // else {
-    //   var index = this.view.dataService.data.findIndex((object) => {
-    //     return object.recID === datas.recID;
-    //   });
-    //   datas = this.view.dataService.data[index];
-    // }
     switch (funcID) {
       case 'EPT40101':
         {
@@ -189,98 +206,6 @@ export class ApprovalRoomViewDetailComponent
         break;
     }
   }
-  // undo(data: any) {
-  //   this.codxEpService.undo(data?.approvalTransRecID).subscribe((res: any) => {
-  //       if (res != null) {
-          
-  //         this.notificationsService.notifyCode('SYS034'); //đã thu hồi
-  //         data.approveStatus = '3';
-  //         this.updateStatus.emit(data);
-  //       } else {
-  //         this.notificationsService.notifyCode(res?.msgCodeError);
-  //       }
-  //     });
-  // }
-  // approve(data: any) {
-  //   this.codxEpService
-  //     .getCategoryByEntityName(this.formModel.entityName)
-  //     .subscribe((res: any) => {
-  //       this.codxEpService
-  //         .approve(
-  //           data?.approvalTransRecID, //ApprovelTrans.RecID
-  //           '5',
-  //           '',
-  //           ''
-  //         )
-  //         .subscribe(async (res: any) => {
-  //           if (res?.msgCodeError == null && res?.rowCount >= 0) {
-              
-  //               this.notificationsService.notifyCode('SYS034'); //đã duyệt
-  //               data.approveStatus = '5';              
-              
-  //             this.updateStatus.emit(data);
-  //           } else {
-  //             this.notificationsService.notifyCode(res?.msgCodeError);
-  //           }
-  //         });
-  //     });
-  // }
-  // reject(data: any) {
-  //   this.codxEpService
-  //     .getCategoryByEntityName(this.formModel.entityName)
-  //     .subscribe((res: any) => {
-  //       this.codxEpService
-  //         .approve(
-  //           data?.approvalTransRecID, //ApprovelTrans.RecID
-  //           '4',
-  //           '',
-  //           ''
-  //         )
-  //         .subscribe(async (res: any) => {
-  //           if (res?.msgCodeError == null && res?.rowCount >= 0) {
-  //             if (status == '5') {
-  //               this.notificationsService.notifyCode('SYS034'); //đã duyệt
-  //               data.approveStatus = '5';
-  //             }
-  //             if (status == '4') {
-  //               this.notificationsService.notifyCode('SYS034'); //bị hủy
-  //               data.approveStatus = '4';
-  //             }
-  //             this.updateStatus.emit(data);
-  //           } else {
-  //             this.notificationsService.notifyCode(res?.msgCodeError);
-  //           }
-  //         });
-  //     });
-  // }
-  // changeDataMF(event, data: any) {
-  //   if (event != null && data != null) {
-  //     event.forEach((func) => {
-  //       if (func.functionID == 'SYS04' /*Copy*/) {
-  //         func.disabled = true;
-  //       }
-  //     });
-  //     if (data.approveStatus == '3') {
-  //       event.forEach((func) => {
-  //         if (
-  //           func.functionID == 'EPT40101' /*MF Duyệt*/ ||
-  //           func.functionID == 'EPT40105' /*MF từ chối*/
-  //         ) {
-  //           func.disabled = false;
-  //         }
-  //       });
-  //     } else {
-  //       event.forEach((func) => {
-  //         if (
-  //           func.functionID == 'EPT40101' /*MF Duyệt*/ ||
-  //           func.functionID == 'EPT40105' /*MF từ chối*/
-  //         ) {
-  //           func.disabled = true;
-  //         }
-  //       });
-  //     }
-  //   }
-  // }
 
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;
