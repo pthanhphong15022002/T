@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { CacheService, FormModel } from 'codx-core';
 import { firstValueFrom } from 'rxjs';
 
@@ -10,6 +10,11 @@ import { firstValueFrom } from 'rxjs';
 export class CodxShowTaskComponent implements OnInit {
   @Input() dataSource: any;
   @Input() formModel: FormModel;
+
+  data: any;
+
+  dateFomat = 'dd/MM/yyyy';
+  dateTimeFomat = 'HH:mm - dd/MM/yyyy';
   listTypeTask = [];
   grvMoreFunction: FormModel;
   moreDefaut = {
@@ -25,11 +30,14 @@ export class CodxShowTaskComponent implements OnInit {
 
   async ngOnInit(){
     this.grvMoreFunction = await this.getFormModel('DPT0402');
-    this.cache.valueList('DP004').subscribe((res) => {
-      if (res.datas) {
-        this.listTypeTask = res?.datas;
-      }
-    });
+  }
+
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    if (changes?.dataSource?.currentValue) {
+      let data = await firstValueFrom(this.cache.valueList('DP004'));
+      this.listTypeTask = data['datas'];
+      await this.groupByTask(this.dataSource); 
+    }
   }
 
   getIconTask(task) {
@@ -49,6 +57,26 @@ export class CodxShowTaskComponent implements OnInit {
     formModel['entityName'] = f?.entityName;
     formModel['funcID'] = functionID;
     return formModel;
+  }
+
+   async groupByTask(data) {  
+    if (data && !data['isSuccessStep'] && !data['isFailStep']) {
+      console.log(data?.tasks);
+      
+      const taskGroupList = data?.tasks?.reduce((group, product) => {
+        const { taskGroupID } = product;
+        group[taskGroupID] = group[taskGroupID] ?? [];
+        group[taskGroupID].push(product);
+        return group;
+      }, {});
+      const taskGroupConvert = data['taskGroups'].map((taskGroup) => {
+        return {
+          ...taskGroup,
+          task: taskGroupList[taskGroup['refID']] ?? [],
+        };
+      });
+      data['taskGroups'] = taskGroupConvert;
+    }
   }
 
 }
