@@ -6,9 +6,9 @@
   [button]="button"
   (buttonClick)="btnClick()"
   idField="employeeID"
-  assemblyName="ERM.Business.HR"
-  className="EmployeesBusiness"
-  method="GetModelFormEmployAsync"
+  assemblyName="ERM.Business.Core"
+  className="DataBusiness"
+  method="LoadDataAsync"
   [selectedFirst]="true"
   [itemSelected]="itemSelected"
 >
@@ -52,16 +52,10 @@
         [imageObjType]="view.formModel.entityName"
         [imgOn]="data?.modifiedOn"
         [imageObjName]="data.employeeName"
-        [title]="
-          placeholder(data.employeeName, view.formModel, 'EmployeeName') | async
-        "
-        [subTitle]="
-          placeholder(data.positionName, view.formModel, 'PositionID') | async
-        "
+        [title]="data?.employeeName | formatvalue : view.formModel : 'employeeName' | async"
+        [subTitle]="data?.positionID | formatvalue : view.formModel : 'positionID' | async"
         [dataItem]="data"
-        [desc]="
-          placeholder(data.birthday | fmDT, view.formModel, 'Birthday') | async
-        "
+        [desc]=" data?.birthday | formatvalue : view.formModel : 'birthday' | async"
         [footer]="footer"
         [typeMF]="'hover'"
         (clickMF)="clickMF($event, data)"
@@ -127,39 +121,23 @@
             </div>
           </div>
 
-          <span class="text-dark fw-bold">
-            <span #positionName>{{
-              data.positionName
-                | formatvalue: view.formModel:"positionID":positionName
-                | async
-            }}</span>
+          <span class="text-dark">
+            <span #positionName>{{ data?.positionID | formatvalue : view.formModel : "positionID" | async }}</span>
           </span>
 
-          <span class="text-dark fw-bold">
-            <span #organizationName>{{
-              data.organizationName
-                | formatvalue: view.formModel:"orgUnitID":organizationName
-                | async
-            }}</span>
+          <span class="text-dark">
+            <span #organizationName>{{ data?.orgUnitID | formatvalue : view.formModel : "orgUnitID" | async }}</span>
           </span>
 
           <div>
-            <span class="text-dark fw-bold">
-              <span #departmentName>{{
-                data.departmentName
-                  | formatvalue: view.formModel:"departmentID":departmentName
-                  | async
-              }}</span>
+            <span class="text-dark">
+              <span #departmentName>{{ data?.departmentID | formatvalue : view.formModel : "departmentID" | async }}</span>
             </span>
 
             <span class="text-gray-400"> | </span>
 
-            <span class="text-dark fw-bold">
-              <span #divisionName>{{
-                data.divisionName
-                  | formatvalue: view.formModel:"divisionID":divisionName
-                  | async
-              }}</span>
+            <span class="text-dark">
+              <span #divisionName>{{ data?.divisionID | formatvalue : view.formModel : "divisionID" | async }}</span>
             </span>
           </div>
         </div>
@@ -228,11 +206,7 @@
         </span>
 
         <span class="text-dark fw-bold">
-          <span #birthPlace>{{
-            data.provinceName
-              | formatvalue: view.formModel:"birthPlace":birthPlace
-              | async
-          }}</span>
+          <span #birthPlace>{{ data?.birthPlace | formatvalue : view.formModel : "birthPlace" | async }}</span>
         </span>
       </div>
       <div class="align-items-center fs-7">
