@@ -179,10 +179,14 @@ export class EmployeeListComponent extends UIComponent {
       option.Width = '800px';
       this.dialog = this.callfc.openSide(
         PopupAddNewHRComponent,
-        this.view.dataService.dataSelected,
+        {
+          actionType: 'add',
+          itemSelected: this.view.dataService.dataSelected,
+        },
         option
       );
       this.dialog.closed.subscribe((e) => {
+        
         console.log(e);
         this.detectorRef.detectChanges();
       });

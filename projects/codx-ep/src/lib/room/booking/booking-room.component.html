@@ -14,8 +14,9 @@
   (selectedChange)="changeItemDetail($event)"
   [selectedFirst]="true"
   [autoLoad]="true"
-  [viewActiveType]="viewType.schedule"
   (onActions)="onActionClick($event)"
+  (onLoading)="onLoading($event)"   
+  [viewActiveType]="viewType.schedule"
 >
 </codx-views>
 
@@ -141,8 +142,30 @@
   ></booking-room-view-detail2>
 </ng-template>
 
-<!-- Other -->
+<!-- GridView Template -->
+<ng-template #gridMF let-data>
+  <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [dataItem]="data" 
+  (changeDataMF)="changeDataMF($event, data)">
+  </codx-mfunc>
+</ng-template>
+<ng-template #gridResourceName let-data>  
+  <div>{{data?.resourceName}}</div>
+</ng-template>
+<ng-template #gridHost let-data>
+  <div>{{data?.host}}</div>
+</ng-template>
 
+<ng-template #gridBookingOn let-data>
+  <div>{{data?.bookingOn | fmDT : "dmy" }}</div>
+</ng-template>
+<ng-template #gridStartDate let-data>
+  <div>{{data?.startDate | fmDT : "dmy" : true}}</div>
+</ng-template>
+<ng-template #gridEndDate let-data>
+  <div>{{data?.endDate | fmDT : "dmy" : true}}</div>
+</ng-template>
+
+<!-- Other -->
 <ng-template #mfButton let-data>
   <div class="mt-1 me-1">
     <codx-mfunc

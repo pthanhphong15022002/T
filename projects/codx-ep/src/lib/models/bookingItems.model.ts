@@ -1,7 +1,7 @@
 export class BookingItems {
     itemID: string;
     quantity: number;
-    text: string;
+    itemName: string;
     objectType: string;
     umid: string;
     umName: string;
