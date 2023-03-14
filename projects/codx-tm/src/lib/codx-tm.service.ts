@@ -350,6 +350,16 @@ export class CodxTMService {
     );
   }
 
+  getListUserIDByListGroupID(listGroupID){
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'GroupMembersBusiness',
+      'GetListUserIDByListGroupIDAsync',
+      listGroupID
+    );  
+  }
+
   getResourcesTrackEvent(meetingID, data, startDate, endDate) {
     return this.api.execSv<any>(
       'CO',

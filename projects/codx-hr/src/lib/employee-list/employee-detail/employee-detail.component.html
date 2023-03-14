@@ -192,9 +192,7 @@
                                   >
                                   </codx-label>
                                   <span class="text-primary">
-                                    <span>{{
-                                      infoPersonal?.employeeTypeID
-                                    }}</span>
+                                    <span>{{ infoPersonal?.employeeTypeID | formatvalue : eInfoFormModel : "employeeTypeID" | async }}</span>
                                   </span>
                                 </div>
                                 <div
@@ -228,7 +226,7 @@
                                   >
                                   </codx-label>
                                   <span class="text-dark fw-bold">
-                                    <span>{{ infoPersonal?.lineManager }}</span>
+                                    <span>{{ infoPersonal?.lineManager | formatvalue : eInfoFormModel : "lineManager" | async }}</span>
                                   </span>
                                 </div>
                                 <hr class="mt-0" />
@@ -290,7 +288,11 @@
                                   </codx-label>
 
                                   <span class="text-dark fw-bold">
-                                    <span>{{ infoPersonal?.timeCardNo }}</span>
+                                    <span>{{
+                                      infoPersonal?.payrollGroupID
+                                        | formatvalue : eInfoFormModel : "payrollGroupID"
+                                        | async
+                                    }}</span>
                                   </span>
                                 </div>
                               </div>
@@ -2523,7 +2525,7 @@
       <!-- Lương cơ bản -->
       <div class="user-profile overview d-block" [id]="eBasicSalaryFuncID">
         <div class="rounded-2 p-5 bg-white mb-4">
-          <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center justify-content-between" *ngIf="eBasicSalaryFormmodel">
             <div class="d-flex align-items-center text-primary">
               <div class="user-status d-flex align-items-center">
                 <span class="icon-attach_money icon-20 me-2"></span>
@@ -2705,7 +2707,7 @@
       </div>
       <!-- Lương chức danh -->
       <div class="user-profile overview d-block" [id]="eJobSalFuncID">
-        <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="rounded-2 p-5 bg-white mb-4" *ngIf="eJobSalaryFormModel">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <div class="user-status d-flex align-items-center">
@@ -2856,7 +2858,7 @@
       </div>
       <!-- Phụ cấp -->
       <div class="user-profile overview d-block" [id]="benefitFuncID">
-        <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="rounded-2 p-5 bg-white mb-4" *ngIf="benefitFormodel">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <div class="user-status d-flex align-items-center">
@@ -2906,7 +2908,7 @@
                 <codx-temp-full
                   (clickMF)="clickMF($event, benefit, 'eBenefit')"
                   [dataItem]="benefit"
-                  [formModel]="eInfoFormModel"
+                  [formModel]="benefitFormodel"
                   [footer]="footerBenefit"
                   cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                   [typeMF]="'hover'"
@@ -3020,7 +3022,7 @@
         class="user-profile overview d-block user-family"
         [id]="eAssetFuncID"
       >
-        <div class="rounded-2 p-5 bg-white mb-1">
+        <div class="rounded-2 p-5 bg-white mb-1" *ngIf="eAssetFormModel">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <div class="user-status d-flex align-items-center">
@@ -3188,6 +3190,7 @@
     data-kt-scroll-wrappers=".employee-container"
     data-kt-scroll-offset="0px"
     scrollSpy
+    [spiedTags]="['DIV']"
     (sectionChange)="onSectionChange($event, 4)"
     >
     <!-- [spiedTags]="['DIV']" -->
@@ -3421,7 +3424,7 @@
       </div>
       <!-- Nghỉ phép -->
       <div class="user-profile overview d-block" [id]="dayoffFuncID">
-        <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="rounded-2 p-5 bg-white mb-4" *ngIf="dayofFormModel">
           <div class="d-flex align-items-center justify-content-between mb-3">
             <div class="d-flex align-items-center">
               <span class="icon-deck icon-20 me-2 text-primary"></span>
@@ -3521,7 +3524,7 @@
       </div>
       <!-- Nhật ký công tác -->
       <div class="user-profile overview d-block" [id]="eBusinessTravelFuncID">
-        <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="rounded-2 p-5 bg-white mb-4" *ngIf="EBusinessTravelFormodel">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
               <div class="user-status text-primary">
@@ -3589,7 +3592,7 @@
         class="user-profile overview d-block user-family"
         [id]="eExperienceFuncID"
       >
-        <div class="rounded-2 p-5 bg-white mb-4">
+        <div class="rounded-2 p-5 bg-white mb-4" *ngIf="eExperienceFormModel">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center text-primary">
               <div class="user-status d-flex align-items-center">

@@ -141,7 +141,7 @@
                         <div class="w-100 px-9 bg-gray-100 rounded-2 py-4 150px" (click)="clickUploadImage()">
                            <ng-container *ngIf="fileImage;else defaultImage">
                                 <div class="d-flex justify-content-center" >
-                                    <img class="pic-news h-150px" [src]="fileImage.avatar || fileImage.thumbnail">
+                                    <img class="pic-news w-100 h-100 " [src]="fileImage.source">
                                 </div>
                            </ng-container>
                             <ng-template #defaultImage>
@@ -163,7 +163,8 @@
                                 <codx-attachment 
                                     #codxATM 
                                     [functionID]="dialogRef.formModel.funcID"
-                                    [allowMultiFile]="'0'" 
+                                    [allowMultiFile]="'0'"
+                                    [objectType]="'WP_News'" 
                                     [showMessage]="'0'"
                                     [hideImageUpload]="'1'" 
                                     [hideUploadBtn]="'1'" 
@@ -243,7 +244,7 @@
                         <div class="w-100">
                             <ng-container *ngIf="fileVideo; else defaultVideo ">
                                 <video controls class="w-100 h-300px">
-                                    <source [src]="fileVideo.data" alt="" />
+                                    <source [src]="fileVideo.source | safe:'resourceUrl'"/>
                                 </video>
                             </ng-container>
                         </div>
@@ -283,6 +284,22 @@
         <button type="button" class="btn btn-light" (click)="clickUploadVideo()">
             <codx-label [formModel]="dialogRef.formModel" name="lblUploadVideo" default="Video"></codx-label>
         </button>
+        <!-- bổ sung tạm thời chờ core hỗ trợ attachment files - mode select single file-->
+        <div class="d-none">
+            <codx-attachment 
+                #codxATMVideo
+                [functionID]="dialogRef.formModel.funcID"
+                [allowMultiFile]="'0'"
+                [objectType]="'WP_News'" 
+                [showMessage]="'0'"
+                [hideImageUpload]="'1'" 
+                [hideUploadBtn]="'1'" 
+                [hideBtnSave]="'1'" 
+                [hideImageThumb]="'1'"
+                [hideUploadBtn]="'1'" 
+                (fileAdded)="addFilesVideo($event)">
+            </codx-attachment>
+        </div>
     </div>
 </ng-template>
 <ng-template #templateShares let-post>

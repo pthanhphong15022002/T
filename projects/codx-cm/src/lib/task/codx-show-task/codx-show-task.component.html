@@ -1,0 +1,211 @@
+<ng-container>
+	<div
+	cdkDropList
+	class="list"
+  >
+	<div cdkDropListGroup>
+	  <ng-container *ngFor="let taskList of dataSource">
+		<div
+		  class="card-job-list"
+		  cdkDrag
+		  [cdkDragData]="taskList"
+		  [cdkDragStartDelay]="100"
+		  [cdkDragDisabled]="taskList?.recID ? false : true"
+		>
+		  <div class="card-job task-main">
+			<div
+			  *ngIf="taskList?.recID"
+			  class="d-flex align-items-center has-action-menu mb-4 task-groups"
+			>
+			  <!-- show hiden group task -->
+			  <span class="me-4">
+				<button
+				  type="button"
+				  class="btn btn-icon btn-light-primary"
+				>
+				<i class="icon-add icon-18"></i>
+				</button>
+			  </span>
+			  <div class="me-3">
+				<codx-img
+				  [width]="35"
+				  [objectId]="taskList?.roles[0]?.objectID"
+				  objectType="AD_Users"
+				  [objectName]="taskList?.roles[0]?.objectName"
+				>
+				</codx-img>
+			  </div>
+			  <div class="steplist-hearder">
+				<div class="text-dark fw-bold fs-6">
+				  {{ taskList?.taskGroupName }}
+				</div>
+				<div class="d-flex align-items-center fs-7">
+				  <!-- TODO -->
+				  <span class="text-primary">0%</span>
+				  <span class="mx-2 text-gray-400">|</span>
+				  <span class="text-gray-600 me-1">
+					<codx-label
+					  fiedName="StepName"
+					  [formModel]=""
+					  [default]="'Thời hạn'"
+					>
+					</codx-label>
+				  </span>
+				  <span class="me-1 fw-bold">
+					{{
+					  (+taskList?.durationDay || 0) * 24 +
+						(+taskList?.durationHour || 0)
+					}}
+				  </span>
+				  <codx-label
+					class="text-gray-600"
+					fiedName="StepName"
+					[formModel]=""
+					[default]="'Giờ'"
+				  >
+				  </codx-label>
+				</div>
+			  </div>
+			  <codx-mfunc
+				[formModel]="grvMoreFunction"
+				[dataItem]="moreDefaut"
+				[type]="'hover'"
+			  >
+			  </codx-mfunc>
+			</div>
+			<div
+			  *ngIf="!taskList?.recID"
+			  [ngStyle]="
+				taskList?.task?.length == 0
+				  ? { 'min-height': '5px' }
+				  : {}
+			  "
+			></div>
+			<!-- kéo thả ở trong  -->
+			<div
+			  [id]="'group' + taskList?.recID"
+			  cdkDropList
+			  [cdkDropListData]="taskList?.task || []"
+			
+			  class="task ps-14"
+			  [ngStyle]="taskList?.recID ? {} : {}"
+			>
+			  <ng-container *ngFor="let task of taskList?.task">
+				<div
+				  cdkDrag
+				  [cdkDragStartDelay]="200"
+				  [cdkDragData]="task"
+				  class="drap-drop"
+				>
+				  <div class="has-action-menu">
+					<div
+					  class="d-flex justify-content-start align-items-center"
+					>
+					  <!-- icon task -->
+					  <div
+						class="icon-container"
+						[ngStyle]="getColor(task)"
+					  >
+						<span
+						  class="icon-18"
+						  [ngClass]="getIconTask(task)"
+						></span>
+					  </div>
+					  <!-- avata -->
+					  <div class="me-3">
+						<codx-img
+						  [width]="35"
+						  [objectId]="task?.roles[0]?.objectID"
+						  objectType="AD_Users"
+						  [objectName]="task?.roles[0]?.objectName"
+						>
+						</codx-img>
+					  </div>
+					  <div class="steplist-hearder">
+						<div class="text-dark fw-bold fs-6">
+						  {{ task?.taskName }}
+						</div>
+						<div class="d-flex align-items-center fs-7">
+						  <!-- TODO -->
+						  <span class="text-primary">0%</span>
+						  <span class="mx-2 text-gray-400">|</span>
+						  <span class="text-gray-600 me-1">
+							<codx-label
+							  fiedName="StepName"
+							  [formModel]=""
+							  [default]="'Thời hạn'"
+							>
+							</codx-label>
+						  </span>
+						  <span class="me-1 fw-bold">
+							{{
+							  (+task?.durationDay || 0) * 24 +
+								(+task?.durationHour || 0)
+							}}
+						  </span>
+						  <codx-label
+							class="text-gray-600"
+							fiedName="StepName"
+							[formModel]=""
+							[default]="'Giờ'"
+						  >
+						  </codx-label>
+						</div>
+					  </div>
+					</div>
+					<div class="task-att">
+					  <codx-attachment
+						#attachment
+						hideFolder="1"
+						hideImageUpload="0"
+						hideImageThumb="0"
+						hideUploadBtn="1"
+						hideDes="1"
+						type="inline"
+						allowMultiFile="1"
+						displayThumb="full"
+						showMessage="1"
+					  >
+					  </codx-attachment>
+					</div>
+					<codx-mfunc
+					  [formModel]="grvMoreFunction"
+					  [isBookMark]="true"
+					  [dataItem]="moreDefaut"
+					  [type]="'hover'"
+
+					>
+					</codx-mfunc>
+				  </div>
+				  <div class="task-att">
+					<codx-attachment
+					  #attachment
+					  [objectId]="task?.recID"
+					  hideFolder="1"
+					  hideImageUpload="0"
+					  hideImageThumb="0"
+					  hideUploadBtn="1"
+					  hideDes="1"
+					  type="inline"
+					  allowMultiFile="1"
+					  displayThumb="full"
+					  showMessage="0"
+					  [fdName]="task?.stepID"
+					  [dataSelected]="task"
+					>
+					</codx-attachment>
+				  </div>
+				</div>
+			  </ng-container>
+			  <div
+				*ngIf="taskList?.task?.length === 0"
+				style="height: 20px;"
+			  ></div>
+			</div>
+		  </div>
+		</div>
+		<hr/>
+	  </ng-container>
+	</div>
+  </div>
+</ng-container>

@@ -693,6 +693,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var listUserID = '';
     var listPositionID = '';
     var listEmployeeID = '';
+    var listGroupMembersID = '';
     if (!e || e?.length == 0) return;
     e.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -710,6 +711,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             break;
           case 'RE':
             listEmployeeID += obj.id + ';';
+            break;
+          case 'UG':
+            listGroupMembersID += obj.id + ';';
             break;
         }
       }
@@ -753,6 +757,19 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             if (!res[1]) this.notiService.notifyCode('TM066');
             this.valueSelectUser(res[0]);
           } else this.notiService.notifyCode('TM066');
+        });
+    }
+    if (listGroupMembersID != '') {
+      listGroupMembersID = listGroupMembersID.substring(
+        0,
+        listGroupMembersID.length - 1
+      );
+      this.tmSv
+        .getListUserIDByListGroupID(listGroupMembersID)
+        .subscribe((res) => {
+          if (res && res?.length > 0) {
+            this.valueSelectUser(res);
+          }
         });
     }
   }
@@ -920,7 +937,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       listUser = listUser.replace(' ', '');
     }
     var arrUser = listUser.split(';');
-
+    var crrRole =this.crrRole 
     this.api
       .execSv<any>(
         'HR',
@@ -940,7 +957,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             taskResource.resourceName = emp?.userName;
             taskResource.positionName = emp?.positionName;
             taskResource.departmentName = emp?.departmentName;
-            taskResource.roleType = this.crrRole ?? 'R';
+            taskResource.roleType = crrRole ?? 'R';
             this.listTaskResources.push(taskResource);
           }
           if (arrUser.length != res.length) {
@@ -1054,6 +1071,15 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   selectRoseType(idUserSelected, value) {
+    if (value == 'A' && this.accountable) {
+      var checkRoleA = this.listTaskResources.some(
+        (x) => x.roleType == 'A' && x.resourceID != idUserSelected
+      );
+      if (checkRoleA) {
+        this.notiService.notifyCode('TM078');
+        return;
+      }
+    }
     this.listTaskResources.forEach((res) => {
       if (res.resourceID == idUserSelected) res.roleType = value;
     });

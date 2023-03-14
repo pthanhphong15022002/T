@@ -330,7 +330,7 @@ export class PopRolesComponent implements OnInit {
         this.dialogSecond.close([this.listChooseRole, lstTNMDs]);
         this.changeDec.detectChanges();
       } else {
-        this.notiService.notifyCode('Không có gì thay đổi');
+        // this.notiService.notifyCode('Không có gì thay đổi');
         this.dialogSecond.close([this.listChooseRole, lstTNMDs]);
       }
     }

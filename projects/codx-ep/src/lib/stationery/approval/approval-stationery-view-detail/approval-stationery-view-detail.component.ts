@@ -69,11 +69,11 @@ export class ApprovalStationeryViewDetailComponent
       this.api
         .exec<any>('EP', 'BookingsBusiness', 'GetApprovalBookingByIDAsync', [
           changes.itemDetail?.currentValue?.recID,
-          changes.itemDetail?.currentValue?.approvalTransRecID,
         ])
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            this.listFilePermission=[];
             let tmpPer = new Permission();
             tmpPer.objectID = this.itemDetail.createdBy; //
             tmpPer.objectType = 'U';

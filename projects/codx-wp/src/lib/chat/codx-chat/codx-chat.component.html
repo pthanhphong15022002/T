@@ -56,6 +56,16 @@
 
 
 
-<ng-template #chatBox let-id>
+<ng-template #boxChat let-id>
   <codx-chat-box [groupID]="id"></codx-chat-box>
+</ng-template>
+
+<ng-template #lstBoxChat let-lstBoxChat>
+  <ng-container *ngFor="let item of lstBoxChat">
+    <codx-img 
+      [objectId]="item.groupType == '1'? item.groupID2:item.groupID" 
+      [objectType]="item.groupType == '1'? 'AD_Users':'WP_Groups'"
+      [width]="30">
+    </codx-img>
+  </ng-container>
 </ng-template>

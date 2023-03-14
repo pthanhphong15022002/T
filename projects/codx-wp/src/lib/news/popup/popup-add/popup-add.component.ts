@@ -151,7 +151,6 @@ export class PopupAddComponent implements OnInit {
           debugger
           if (this.fileUpload.length > 0) {
             this.codxATM.objectId = this.data.recID;
-            this.codxATM.objectType = 'WP_News';
             this.codxATM.fileUploadList = JSON.parse(JSON.stringify(this.fileUpload));
             this.codxATM.saveFilesMulObservable().subscribe((res2: any) => {
               this.loading = false;
@@ -300,15 +299,40 @@ export class PopupAddComponent implements OnInit {
     if (files.data){
       let file = files.data[0]; 
       if(file.mimeType.indexOf("image") >= 0){
+        file["source"] = file.avatar;
         file['referType'] = this.FILE_REFERTYPE.IMAGE;
         this.fileImage = JSON.parse(JSON.stringify(file));
       }
-      else if (file.mimeType.indexOf("video") >= 0) {
+      // else if (file.mimeType.indexOf("video") >= 0) {
+      //   file['referType'] = this.FILE_REFERTYPE.VIDEO;
+      //   this.fileVideo = JSON.parse(JSON.stringify(file));
+      // }
+      if(this.fileUpload.length > 0){
+        let index = this.fileUpload.findIndex(x => x['referType'] === file['referType'])
+        if(index != -1)
+          this.fileUpload[index] = file;
+        else
+          this.fileUpload.push(file);
+      }
+      else
+      {
+        this.fileUpload.push(file);
+      }
+      this.data.image = this.fileUpload.length;
+      this.changedt.detectChanges();
+    }
+  }
+  // attachment return files
+  addFilesVideo(files: any) {
+    if (files.data){
+      let file = files.data[0]; 
+      if (file.mimeType.indexOf("video") >= 0) {
         file['referType'] = this.FILE_REFERTYPE.VIDEO;
+        file['source'] = file.data.changingThisBreaksApplicationSecurity;
         this.fileVideo = JSON.parse(JSON.stringify(file));
       }
       if(this.fileUpload.length > 0){
-        let index = this.fileUpload.findIndex(x => x['referType'] === file['referType'])
+        let index = this.fileUpload.findIndex(x => x['referType'] === this.FILE_REFERTYPE.VIDEO)
         if(index != -1)
           this.fileUpload[index] = file;
         else
@@ -330,7 +354,7 @@ export class PopupAddComponent implements OnInit {
     this.codxATM.uploadFile();
   }
   clickUploadVideo() {
-    this.codxATM.uploadFile();
+    this.codxATMVideo.uploadFile();
   }
 
 }

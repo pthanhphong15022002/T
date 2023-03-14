@@ -1176,16 +1176,6 @@
       <codx-label fiedName="settingStep" default="Thiết lập giai đoạn">
       </codx-label>
     </h2>
-    <div class="d-flex align-items-center">
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="openPopupStep('add')"
-      >
-        <i class="icon-add icon-18"></i>
-        <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>
-      </button>
-    </div>
   </div>
 </ng-template>
 
@@ -1193,8 +1183,16 @@
   <div class="background-stage dp-step">
     <div class="stage-body d-flex">
       <div class="stage-body-left w-300px minw-300px pe-1">
-        <div class="fw-bold fs-4 text-dark pb-2 mb-1 border-bottom stage-header">
+        <div class="fw-bold fs-4 text-dark pb-2 mb-1 border-bottom stage-header d-flex align-items-center justify-content-between">
           <codx-label fiedName="step" default="Giai đoạn"></codx-label>
+            <button
+              type="button"
+              class="btn btn-primary d-flex align-items-center me-2 btn-sm"
+              (click)="openPopupStep('add')"
+            >
+              <i class="icon-add icon-18"></i>
+              <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>
+            </button>
         </div>
         <div
           class="example-list stage-body-left-main"
@@ -1205,7 +1203,7 @@
           <div
             cdkDrag
             *ngFor="let itemStep of stepList; let i = index"
-            class="list-stage example-box drap-drop cursor-pointer border-bottom"
+            class="list-stage example-box drap-drop cursor-pointer border-bottom  has-action-menu"
             [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''"
             (click)="
               clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)
@@ -1233,6 +1231,15 @@
                 }}</span>
               </div>
             </div>
+            <codx-mfunc
+              *ngIf="viewStepCrr == viewStepCustom"
+              [formModel]="grvMoreFunction"
+              (clickMF)="clickMFStep($event, itemStep)"
+              [dataItem]="moreDefaut"
+              [type]="'hover'"
+              (changeDataMF)="changeDataMF($event, 'step')"
+            >
+            </codx-mfunc>
           </div>
           <!-- Step Reason successs -->
           <div
@@ -1325,21 +1332,6 @@
               </codx-input>
             </div>
             <!-- more function step -->
-            <div
-                *ngIf="step"
-                class="icon-more_vert has-action-menu more-funtion-step"
-                style="cursor: pointer"
-              >
-                <codx-mfunc
-                  *ngIf="viewStepCrr == viewStepCustom"
-                  [formModel]="dialog.formModel"
-                  (clickMF)="clickMFStep($event, step)"
-                  [dataItem]="moreDefaut"
-                  [type]="'hover'"
-                  (changeDataMF)="changeDataMF($event, 'step')"
-                >
-                </codx-mfunc>
-              </div>
           </div>
         </div>
         <div class="stage-right-main pe-1">
@@ -1456,7 +1448,7 @@
                       <button
                         type="button"
                         class="btn btn-icon btn-light-primary"
-                        (click)="toggleTask('group' + taskList?.recID)"
+                        (click)="toggleTask($event,taskList?.recID)"
                       >
                       <i class="icon-add icon-18"></i>
                       </button>
@@ -1475,9 +1467,6 @@
                         {{ taskList?.taskGroupName }}
                       </div>
                       <div class="d-flex align-items-center fs-7">
-                        <!-- TODO -->
-                        <span class="text-primary">0%</span>
-                        <span class="mx-2 text-gray-400">|</span>
                         <span class="text-gray-600 me-1">
                           <codx-label
                             fiedName="StepName"
@@ -1514,7 +1503,7 @@
                     *ngIf="!taskList?.recID"
                     [ngStyle]="
                       taskList?.task?.length == 0
-                        ? { 'min-height': '20px' }
+                        ? { 'min-height': '5px' }
                         : {}
                     "
                   ></div>
@@ -1549,7 +1538,7 @@
                               ></span>
                             </div>
                             <!-- avata -->
-                            <div class="me-3">
+                            <div class="mx-3">
                               <codx-img
                                 [width]="35"
                                 [objectId]="task?.roles[0]?.objectID"
@@ -1563,9 +1552,6 @@
                                 {{ task?.taskName }}
                               </div>
                               <div class="d-flex align-items-center fs-7">
-                                <!-- TODO -->
-                                <span class="text-primary">0%</span>
-                                <span class="mx-2 text-gray-400">|</span>
                                 <span class="text-gray-600 me-1">
                                   <codx-label
                                     fiedName="StepName"
@@ -1639,11 +1625,12 @@
                     </ng-container>
                     <div
                       *ngIf="taskList?.task?.length === 0"
+                      style="height: 20px;"
                     ></div>
                   </div>
                 </div>
               </div>
-              <hr />
+              <hr/>
             </ng-container>
           </div>
         </div>

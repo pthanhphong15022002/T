@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { auto } from '@popperjs/core';
 import { CallFuncService, DialogRef, FormModel, SidebarModel } from 'codx-core';
 import { PopupTypeTaskComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/step-task/popup-type-task/popup-type-task.component';
-import { PopupTaskComponent } from '../popup-task/popup-task.component';
+import { PopupTaskComponent } from '../task/popup-task/popup-task.component';
 
 @Component({
   selector: 'lib-test-componet',
@@ -11,66 +11,291 @@ import { PopupTaskComponent } from '../popup-task/popup-task.component';
 })
 export class TestComponetComponent implements OnInit {
   popupJob: DialogRef;
-  jobType = '';
-  public type1: string = 'Circular';
-  public type2: string = 'Circular';
-  public type3: string = 'Circular';
-  public min1: number = 0;
-  public max1: number = 100;
-  public value1: number = 80;
-  public startAngle1: number = 0;
-  public endAngle1: number = 0;
-  public width: string = '55';
-  public height: string = '55';
-  public min2: number = 0;
-  public max2: number = 100;
-  public value2: number = 100;
-  public min3: number = 0;
-  public max3: number = 100;
-  public value3: number = 100;
-  public animation = { enable: true, duration: 2000, delay: 0 };
+  taskGroupList = [
+    {
+      assign: true,
+      createdBy: 'ADMIN',
+      createdOn: '2023-03-13T08:33:43.955+07:00',
+      delete: true,
+      durationDay: 0,
+      durationHour: 14,
+      id: '640e7d77ab1857a918161d00',
+      includeTables: null,
+      indexNo: 1,
+      interval: '1',
+      memo: '<p><span>tiến hành xây dựng CSDL</span><br></p>',
+      modifiedBy: null,
+      modifiedOn: null,
+      recID: '59077c30-98c9-46e2-be2c-df5c5f223a89',
+      share: true,
+      statusCodeID: null,
+      stepID: '193854fa-b9e2-4baf-b0c2-526afd9b3031',
+      taskGroupName: 'Thu tập từ người dùng ',
+      unbounds: null,
+      updateColumns: '',
+      write: true,
+      roles: [
+        {
+          assign: true,
+          createdBy: null,
+          createdOn: '2023-03-13T08:33:43.957+07:00',
+          delete: true,
+          id: '640e7d77ab1857a918161d01',
+          includeTables: null,
+          modifiedBy: null,
+          modifiedOn: null,
+          objectID: '2207130006',
+          objectName: 'Nguyễn Thị Thanh Dung',
+          objectType: 'U',
+          recID: '16e1aa3d-c13f-11ed-949d-00155d035517',
+          roleType: '',
+          share: true,
+          taskGroupID: '59077c30-98c9-46e2-be2c-df5c5f223a89',
+          unbounds: null,
+          updateColumns: '',
+          write: true,
+        },
+      ],
+      task: [
+        {
+          assign: true,
+          assignControl: '0',
+          attachments: 0,
+          callType: '1',
+          createTask: false,
+          createTaskControl: null,
+          createdBy: null,
+          createdOn: '2023-03-13T08:33:43.963+07:00',
+          delete: true,
+          dependOnTasks: null,
+          dependRule: '1',
+          durationDay: 0,
+          durationHour: 1,
+          id: '640e7d77ab1857a918161d04',
+          includeTables: null,
+          indexNo: 1,
+          interval: '1',
+          isOnline: true,
+          memo: null,
+          modifiedBy: 'ADMIN',
+          modifiedOn: '2023-03-13T08:49:17.513+07:00',
+          parentID: '',
+          recID: 'a959dd13-c4b3-49a4-8cbb-0031efb17d96',
+          reference: null,
+          reminderBy: '1',
+          reminders: null,
+          requireCompleted: false,
+          share: true,
+          statusCodeID: null,
+          stepID: '193854fa-b9e2-4baf-b0c2-526afd9b3031',
+          stop: false,
+          taskGroupID: '59077c30-98c9-46e2-be2c-df5c5f223a89',
+          taskName: 'Cuộc họp trước khi bắt đầu',
+          taskType: 'M',
+          unbounds: null,
+          updateColumns: '',
+          write: true,
+          roles: [
+            {
+              assign: true,
+              createdBy: null,
+              createdOn: '2023-03-13T08:33:43.965+07:00',
+              delete: true,
+              id: '640e7d77ab1857a918161d05',
+              includeTables: null,
+              modifiedBy: null,
+              modifiedOn: null,
+              objectID: '2207130006',
+              objectName: 'Nguyễn Thị Thanh Dung',
+              objectType: 'U',
+              recID: '16e1aa41-c13f-11ed-949d-00155d035517',
+              roleType: 'O',
+              share: true,
+              taskID: '00000000-0000-0000-0000-000000000000',
+              unbounds: null,
+              updateColumns: '',
+              write: true,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      assign: true,
+      createdBy: 'ADMIN',
+      createdOn: '2023-03-13T08:33:43.955+07:00',
+      delete: true,
+      durationDay: 0,
+      durationHour: 14,
+      id: '640e7d77ab1857a918161d00',
+      includeTables: null,
+      indexNo: 1,
+      interval: '1',
+      memo: '<p><span>tiến hành xây dựng CSDL</span><br></p>',
+      modifiedBy: null,
+      modifiedOn: null,
+      recID: '59077c30-98c9-46e2-be2c-df5c5f223a89',
+      share: true,
+      statusCodeID: null,
+      stepID: '193854fa-b9e2-4baf-b0c2-526afd9b3031',
+      taskGroupName: 'Thu tập từ người dùng ',
+      unbounds: null,
+      updateColumns: '',
+      write: true,
+      roles: [
+        {
+          assign: true,
+          createdBy: null,
+          createdOn: '2023-03-13T08:33:43.957+07:00',
+          delete: true,
+          id: '640e7d77ab1857a918161d01',
+          includeTables: null,
+          modifiedBy: null,
+          modifiedOn: null,
+          objectID: '2207130006',
+          objectName: 'Nguyễn Thị Thanh Dung',
+          objectType: 'U',
+          recID: '16e1aa3d-c13f-11ed-949d-00155d035517',
+          roleType: '',
+          share: true,
+          taskGroupID: '59077c30-98c9-46e2-be2c-df5c5f223a89',
+          unbounds: null,
+          updateColumns: '',
+          write: true,
+        },
+      ],
+      task: [
+        {
+          assign: true,
+          assignControl: '0',
+          attachments: 0,
+          callType: '1',
+          createTask: false,
+          createTaskControl: null,
+          createdBy: null,
+          createdOn: '2023-03-13T08:33:43.963+07:00',
+          delete: true,
+          dependOnTasks: null,
+          dependRule: '1',
+          durationDay: 0,
+          durationHour: 1,
+          id: '640e7d77ab1857a918161d04',
+          includeTables: null,
+          indexNo: 1,
+          interval: '1',
+          isOnline: true,
+          memo: null,
+          modifiedBy: 'ADMIN',
+          modifiedOn: '2023-03-13T08:49:17.513+07:00',
+          parentID: '',
+          recID: 'a959dd13-c4b3-49a4-8cbb-0031efb17d96',
+          reference: null,
+          reminderBy: '1',
+          reminders: null,
+          requireCompleted: false,
+          share: true,
+          statusCodeID: null,
+          stepID: '193854fa-b9e2-4baf-b0c2-526afd9b3031',
+          stop: false,
+          taskGroupID: '59077c30-98c9-46e2-be2c-df5c5f223a89',
+          taskName: 'Cuộc họp trước khi bắt đầu',
+          taskType: 'M',
+          unbounds: null,
+          updateColumns: '',
+          write: true,
+          roles: [
+            {
+              assign: true,
+              createdBy: null,
+              createdOn: '2023-03-13T08:33:43.965+07:00',
+              delete: true,
+              id: '640e7d77ab1857a918161d05',
+              includeTables: null,
+              modifiedBy: null,
+              modifiedOn: null,
+              objectID: '2207130006',
+              objectName: 'Nguyễn Thị Thanh Dung',
+              objectType: 'U',
+              recID: '16e1aa41-c13f-11ed-949d-00155d035517',
+              roleType: 'O',
+              share: true,
+              taskID: '00000000-0000-0000-0000-000000000000',
+              unbounds: null,
+              updateColumns: '',
+              write: true,
+            },
+          ],
+        },
+        {
+          assign: true,
+          assignControl: '0',
+          attachments: 0,
+          callType: '1',
+          createTask: false,
+          createTaskControl: null,
+          createdBy: null,
+          createdOn: '2023-03-13T08:33:43.963+07:00',
+          delete: true,
+          dependOnTasks: null,
+          dependRule: '1',
+          durationDay: 0,
+          durationHour: 1,
+          id: '640e7d77ab1857a918161d04',
+          includeTables: null,
+          indexNo: 1,
+          interval: '1',
+          isOnline: true,
+          memo: null,
+          modifiedBy: 'ADMIN',
+          modifiedOn: '2023-03-13T08:49:17.513+07:00',
+          parentID: '',
+          recID: 'a959dd13-c4b3-49a4-8cbb-0031efb17d96',
+          reference: null,
+          reminderBy: '1',
+          reminders: null,
+          requireCompleted: false,
+          share: true,
+          statusCodeID: null,
+          stepID: '193854fa-b9e2-4baf-b0c2-526afd9b3031',
+          stop: false,
+          taskGroupID: '59077c30-98c9-46e2-be2c-df5c5f223a89',
+          taskName: 'Cuộc họp trước khi bắt đầu',
+          taskType: 'M',
+          unbounds: null,
+          updateColumns: '',
+          write: true,
+          roles: [
+            {
+              assign: true,
+              createdBy: null,
+              createdOn: '2023-03-13T08:33:43.965+07:00',
+              delete: true,
+              id: '640e7d77ab1857a918161d05',
+              includeTables: null,
+              modifiedBy: null,
+              modifiedOn: null,
+              objectID: '2207130006',
+              objectName: 'Nguyễn Thị Thanh Dung',
+              objectType: 'U',
+              recID: '16e1aa41-c13f-11ed-949d-00155d035517',
+              roleType: 'O',
+              share: true,
+              taskID: '00000000-0000-0000-0000-000000000000',
+              unbounds: null,
+              updateColumns: '',
+              write: true,
+            },
+          ],
+        },
+      ],
+    },
+  ];
   constructor( 
     private callfc: CallFuncService,) { }
 
   ngOnInit(): void {
   }
-
-  openTypeJob(action: string,task?:any) {
-    let popupJob = this.callfc.openForm(PopupTypeTaskComponent, '', 400, 400);
-    popupJob.closed.subscribe(async (value) => {
-      if (value?.event) {
-        let typeTask = value?.event;
-        this.handleTask(typeTask,action,task);
-      }
-    });
-  }
-
-  handleTask(typeTask:object, action: string, task?: any) {
-    let frmModel: FormModel = {
-      entityName: 'DP_Steps_Tasks',
-      formName: 'DPStepsTasks',
-      gridViewName: 'grvDPStepsTasks',
-    };
-    let dataInput = {
-      typeTask,
-      action,
-      task,
-      frmModel,
-    };
-    let dialog = this.callfc.openForm(
-      PopupTaskComponent,
-      '',
-      800,
-      700,
-      '',
-      dataInput
-    );
-
-    dialog.closed.subscribe((e) => {
-      if (e?.event) {
-
-      }
-    });
-  }
+ 
+  
 
 }

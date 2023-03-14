@@ -940,7 +940,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   onSelectionChanged($data) {
-    debugger
     ScrollComponent.reinitialization();
     this.scrollTop();
     if (!$data || !$data?.data) return
@@ -1000,7 +999,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.parentFolderId = item.parentId;
         this.dmSV.parentFolder.next(item);
         this.dmSV.level = item.level;
-        //this.dmSV.getRight(item);
+        this.dmSV.getRight(item);
         this.dmSV.folderID = id;
         this.dmSV.folderId.next(id);
         this.getDataFolder(id);
