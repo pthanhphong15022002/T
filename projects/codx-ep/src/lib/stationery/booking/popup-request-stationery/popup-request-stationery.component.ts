@@ -150,6 +150,9 @@ export class PopupRequestStationeryComponent extends UIComponent {
       this.radioPersonalCheck = true;
       this.radioGroupCheck = false;
       this.cart = this.data.bookingItems;
+      this.cart.forEach((res) => {
+        res.resourceID = res.itemID;
+      });
       this.changeTab(2);
     } else {
       if (this.data?.category == '1') {
