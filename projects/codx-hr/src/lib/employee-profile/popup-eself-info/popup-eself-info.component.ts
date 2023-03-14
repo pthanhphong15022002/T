@@ -115,6 +115,10 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   }
 
   handleOnSaveEmployeeSelfInfo(e?: any) {
+    // if(this.formGroup.invalid){
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
     //Xu li validate thong tin ngay sinh nhan vien
     if (
       new Date().getFullYear() - new Date(this.data.birthday).getFullYear() <
@@ -124,12 +128,12 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
       return;
     }
 
-    if(!this.hrService.checkEmail(this.data.email)){
+    if(this.data.email && !this.hrService.checkEmail(this.data.email)){
       this.notitfy.notifyCode('SYS037');
       return;
     }
 
-    if(!this.hrService.checkEmail(this.data.personalEmail)){
+    if(this.data.personalEmail && !this.hrService.checkEmail(this.data.personalEmail)){
       this.notitfy.notifyCode('SYS037');
       return;
     }
