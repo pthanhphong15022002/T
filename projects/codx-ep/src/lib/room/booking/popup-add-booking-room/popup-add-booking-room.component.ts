@@ -359,7 +359,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       if (setting) {
         let sysSetting = JSON.parse(setting.dataValue);
         this.calendarID = sysSetting?.CalendarID;
-        this.dueDateControl = sysSetting?.DueDateControl;
+        this.dueDateControl = '0'; //sysSetting?.DueDateControl;
         if (this.calendarID) {
           this.codxEpService
             .getCalendarWeekdays(this.calendarID)
@@ -581,7 +581,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               let tmpSta=new BookingItems()
               tmpSta.itemID= item?.itemID,
               tmpSta.quantity= item?.quantity,
-              tmpSta.text= item?.itemName,
+              tmpSta.itemName= item?.itemName,
               tmpSta.umid= item?.umid,
               tmpSta.umName= item?.umName !=null && item?.umName!=""? item?.umName : item?.umid,
               tmpSta.objectType='EP_Resources',
@@ -856,117 +856,24 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             this.returnData = res.save;
           }
           if (this.returnData?.recID && this.returnData?.attachments > 0) {
-            if (
-              this.attachment.fileUploadList &&
-              this.attachment.fileUploadList.length > 0
-            ) {
+            if ( this.attachment.fileUploadList && this.attachment.fileUploadList.length > 0 ) {
               this.attachment.addPermissions = this.listFilePermission;
               this.attachment.objectId = this.returnData?.recID;
-              (await this.attachment.saveFilesObservable()).subscribe(
-                (item2: any) => {
+              (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
                   if (item2?.status == 0) {
-                    this.fileAdded(item2);
-                    if (approval) {
-                      if (this.approvalRule != '0') {
-                        this.codxEpService
-                          .getCategoryByEntityName(this.formModel.entityName)
-                          .subscribe((res: any) => {
-                            this.codxEpService
-                              .release(
-                                this.returnData,
-                                res?.processID,
-                                'EP_Bookings',
-                                this.formModel.funcID
-                              )
-                              .subscribe((res) => {
-                                if (
-                                  res?.msgCodeError == null &&
-                                  res?.rowCount
-                                ) {
-                                  this.notificationsService.notifyCode('ES007');
-                                  this.returnData.approveStatus = '3';
-                                  this.returnData.write = false;
-                                  this.returnData.delete = false;
-                                  (this.dialogRef.dataService as CRUDService)
-                                    .update(this.returnData)
-                                    .subscribe();
-                                  this.dialogRef &&
-                                    this.dialogRef.close(this.returnData);
-                                } else {
-                                  this.notificationsService.notifyCode(
-                                    res?.msgCodeError
-                                  );
-                                  // Thêm booking thành công nhưng gửi duyệt thất bại
-                                  this.dialogRef &&
-                                    this.dialogRef.close(this.returnData);
-                                }
-                              });
-                          });
-                      } else {
-                        this.notificationsService.notifyCode('ES007');
-                        this.codxEpService
-                          .afterApprovedManual(
-                            this.formModel.entityName,
-                            this.returnData.recID,
-                            '5'
-                          )
-                          .subscribe();
-                        this.dialogRef && this.dialogRef.close(this.returnData);
-                      }
-                      this.dialogRef && this.dialogRef.close(this.returnData);
-                    } else {
-                      this.dialogRef && this.dialogRef.close(this.returnData);
-                    }
+                    this.fileAdded(item2);                    
+                  }
+                  if (approval) {
+                    this.startRelease()
+                  } else {
+                    this.dialogRef && this.dialogRef.close(this.returnData);
                   }
                 }
               );
             }
           } else {
             if (approval) {
-              if (this.approvalRule != '0') {
-                this.codxEpService
-                  .getCategoryByEntityName(this.formModel.entityName)
-                  .subscribe((res: any) => {
-                    this.codxEpService
-                      .release(
-                        this.returnData,
-                        res?.processID,
-                        'EP_Bookings',
-                        this.formModel.funcID
-                      )
-                      .subscribe((res) => {
-                        if (res?.msgCodeError == null && res?.rowCount) {
-                          this.notificationsService.notifyCode('ES007');
-                          this.returnData.approveStatus = '3';
-                          this.returnData.write = false;
-                          this.returnData.delete = false;
-                          (this.dialogRef.dataService as CRUDService)
-                            .update(this.returnData)
-                            .subscribe();
-                          this.dialogRef &&
-                            this.dialogRef.close(this.returnData);
-                        } else {
-                          this.notificationsService.notifyCode(
-                            res?.msgCodeError
-                          );
-                          // Thêm booking thành công nhưng gửi duyệt thất bại
-                          this.dialogRef &&
-                            this.dialogRef.close(this.returnData);
-                        }
-                      });
-                  });
-              } else {
-                this.notificationsService.notifyCode('ES007');
-                this.codxEpService
-                  .afterApprovedManual(
-                    this.formModel.entityName,
-                    this.returnData.recID,
-                    '5'
-                  )
-                  .subscribe();
-                this.dialogRef && this.dialogRef.close(this.returnData);
-              }
-              this.dialogRef && this.dialogRef.close(this.returnData);
+              this.startRelease()
             } else {
               this.dialogRef && this.dialogRef.close(this.returnData);
             }
@@ -975,6 +882,52 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           return;
         }
       });
+  }
+  startRelease(){
+    if (this.approvalRule != '0') {
+      this.codxEpService
+        .getCategoryByEntityName(this.formModel.entityName)
+        .subscribe((res: any) => {
+          this.codxEpService
+            .release(
+              this.returnData,
+              res?.processID,
+              'EP_Bookings',
+              this.formModel.funcID
+            )
+            .subscribe((res) => {
+              if (res?.msgCodeError == null && res?.rowCount) {
+                this.notificationsService.notifyCode('ES007');
+                this.returnData.approveStatus = '3';
+                this.returnData.write = false;
+                this.returnData.delete = false;
+                (this.dialogRef.dataService as CRUDService)
+                  .update(this.returnData)
+                  .subscribe();
+                this.dialogRef &&
+                  this.dialogRef.close(this.returnData);
+              } else {
+                this.notificationsService.notifyCode(
+                  res?.msgCodeError
+                );
+                // Thêm booking thành công nhưng gửi duyệt thất bại
+                this.dialogRef &&
+                  this.dialogRef.close(this.returnData);
+              }
+            });
+        });
+    } 
+    else {
+      this.notificationsService.notifyCode('ES007');
+      this.codxEpService
+        .afterApprovedManual(
+          this.formModel.entityName,
+          this.returnData.recID,
+          '5'
+        )
+        .subscribe();
+      this.dialogRef && this.dialogRef.close(this.returnData);
+    }
   }
 
   valueChange(event) {
@@ -1248,7 +1201,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       let tmpSta=new BookingItems()
       tmpSta.itemID= item.ResourceID,
       tmpSta.quantity= this.attendeesNumber,
-      tmpSta.text= item.ResourceName,
+      tmpSta.itemName= item.ResourceName,
       tmpSta.umid= item.UMID,
       tmpSta.umName= item.UMID,//Chờ cập nhật thành tên đơn vị tính
       tmpSta.objectType='EP_Resources',
