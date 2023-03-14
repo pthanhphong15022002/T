@@ -1,10 +1,10 @@
-<codx-form #form [subHeader]="subHeader" [headerText]="headerText" [body]="body" [footer]="footer"
+<codx-form #form [subHeader]="subHeader"[body]="body" [footer]="footer"
   [formModel]="dialog.formModel" [dialog]="dialog" [data]="cashpayment" subToolbarCss="text-end"
   [subToolbar]="subToolbar">
 </codx-form>
 <ng-template #subHeader>
   <ng-container *ngIf="form?.formGroup">
-    <div class="row">
+    <div class="row mt-2">
       <div class="col-8">
         <codx-input [Group]="form.formGroup" field="status" [formModel]="form.formModel"
           (valueChange)="valueChange($event)">
@@ -224,18 +224,35 @@
     [funcID]="form.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
 </ng-template>
 <ng-template #subToolbar>
-  <div class="d-flex justify-content-end mt-1 me-3">
-    <div *ngIf="formType != 'edit'" class="ms-2">
-      <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
-        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-          [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
-      </button>
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex justify-content-start mt-1 me-2">
+      <div class="card-title">
+        <div class="d-flex flex-column">
+          <div class="dialog-title line-clamp line-clamp-1 me-3">{{headerText}}</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8" *ngIf="form?.formGroup">
+          <codx-input [Group]="form.formGroup" field="status" [formModel]="form.formModel"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
     </div>
-    <div class="ms-2">
-      <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="onSave()">
-        <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-          [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
-      </button>
+    <div class="d-flex justify-content-end mt-1 me-3">
+      <div *ngIf="formType != 'edit'" class="ms-2">
+        <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
+          <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+            [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+        </button>
+      </div>
+      <div class="ms-2">
+        <button type="button" class="btn btn-primary" style="min-width: 60px" (click)="onSave()">
+          <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+            [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+        </button>
+      </div>
     </div>
   </div>
+
 </ng-template>

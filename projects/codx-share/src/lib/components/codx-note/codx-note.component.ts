@@ -852,6 +852,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   assign(index) {
     var task = new TM_Tasks();
     task.refID = this.contents[index].recID;
+    task.refNo = this.objectParentID ;
     task.refType = this.objectType;
     task.taskName = this.contents[index].memo;
     let assignModel: AssignTaskModel = {
