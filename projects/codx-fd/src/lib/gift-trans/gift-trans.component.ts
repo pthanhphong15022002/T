@@ -5,73 +5,73 @@ import { mode } from 'crypto-js';
 import { PopupAddGiftComponent } from './popup-add-gift/popup-add-gift.component';
 
 @Component({
-  selector: 'lib-gift-trans',
-  templateUrl: './gift-trans.component.html',
-  styleUrls: ['./gift-trans.component.scss']
+    selector: 'lib-gift-trans',
+    templateUrl: './gift-trans.component.html',
+    styleUrls: ['./gift-trans.component.scss']
 })
 export class GiftTransComponent extends UIComponent {
-    views:Array<ViewModel>;
+    views: Array<ViewModel>;
     buttonAdd: ButtonModel;
-    service:string = "FD";
-    assemblyName:string = "ERM.Business.FD";
-    className:string = "GiftTransBusiness"
-    predicate:string ="";
-    dataValue:string ="";
-    entityName:string ="FD_GiftTrans";
-    funcID:string ="";
+    service: string = "FD";
+    assemblyName: string = "ERM.Business.FD";
+    className: string = "GiftTransBusiness"
+    predicate: string = "";
+    dataValue: string = "";
+    entityName: string = "FD_GiftTrans";
+    funcID: string = "";
     //
-    listGiftTran:any[] = [];
-    selectedGiftID:string = "";
-    @ViewChild("itemTemplate") itemTemplate:TemplateRef<any>;
-    @ViewChild("panelRightRef") panelRightRef:TemplateRef<any>;
-    @ViewChild("panelLefRef") panelLefRef:TemplateRef<any>;
+    listGiftTran: any[] = [];
+    selectedGiftID: string = "";
+    @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
+    @ViewChild("panelRightRef") panelRightRef: TemplateRef<any>;
+    @ViewChild("panelLefRef") panelLefRef: TemplateRef<any>;
 
-    
+
     constructor(
-        private injector:Injector,
-        private auth:AuthService,
-        private notifiSV:NotificationsService,
-        private route:ActivatedRoute,
-        private dt:ChangeDetectorRef
-    ) 
-    {
+        private injector: Injector,
+        private auth: AuthService,
+        private notifiSV: NotificationsService,
+        private route: ActivatedRoute,
+        private dt: ChangeDetectorRef
+    ) {
         super(injector);
     }
 
     onInit() {
+        this.funcID = this.route.snapshot.paramMap.get('funcID');
+        //console.log('funcID:', this.funcID);
     }
 
     ngAfterViewInit(): void {
         this.buttonAdd = {
             id: 'btnAdd',
-            };
+        };
         this.views = [{
-            type : ViewType.listdetail,
-            active : true,
+            type: ViewType.listdetail,
+            active: true,
             sameData: true,
-            model:{
+            model: {
                 template: this.itemTemplate,
                 panelRightRef: this.panelRightRef,
-                panelLeftRef :this.panelLefRef
+                panelLeftRef: this.panelLefRef
             }
         }];
         this.dt.detectChanges();
     }
 
-    clickMF(event:any,data:any){
-
+    clickMF(event: any, data: any) {
     }
 
 
     clickShowAssideRight() {
-        if(!this.view) return;
+        if (!this.view) return;
         let option = new SidebarModel();
         option.DataService = (this.view.dataService as CRUDService);
         option.FormModel = this.view.formModel;
-        this.callfc.openSide(PopupAddGiftComponent,null,option,"");
+        this.callfc.openSide(PopupAddGiftComponent, this.funcID, option, "");
     }
-    selectedChange(event:any){
-        if(!event || !event.data) return;
+    selectedChange(event: any) {
+        if (!event || !event.data) return;
         this.selectedGiftID = event.data.recID;
         this.dt.detectChanges();
     }
