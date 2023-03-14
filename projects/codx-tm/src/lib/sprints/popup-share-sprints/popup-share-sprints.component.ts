@@ -102,6 +102,7 @@ export class PopupShareSprintsComponent implements OnInit {
     var listUserID = '';
     var listPositionID = '';
     var listEmployeeID = '';
+    var listGroupMembersID = '' ;
 
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -120,6 +121,9 @@ export class PopupShareSprintsComponent implements OnInit {
           case 'RE':
             listEmployeeID += obj.id + ';';
             break;
+          case 'UG':
+            listGroupMembersID += obj.id + ';';
+              break;
         }
       }
     });
@@ -165,6 +169,16 @@ export class PopupShareSprintsComponent implements OnInit {
             this.valueSelectUser(resources);
           } else this.notiService.notifyCode('TM066');
         });
+    }
+    if (listGroupMembersID != ''){
+      listGroupMembersID = listGroupMembersID.substring(0, listGroupMembersID.length - 1);
+      this.tmSv
+      .getListUserIDByListGroupID(listGroupMembersID)
+      .subscribe((res) => {
+        if (res && res?.length > 0) {
+          this.valueSelectUser(res);
+        }
+      });
     }
   }
 

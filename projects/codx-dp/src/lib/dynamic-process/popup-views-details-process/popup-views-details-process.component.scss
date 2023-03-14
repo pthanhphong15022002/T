@@ -55,7 +55,7 @@
 /***/
 .popup-process-detail {
     codx-views>.container-fluid {
-        height: calc(100vh - 225px) !important;
+        height: calc(100vh - 138px) !important;
         overflow: hidden;
         overflow-y: auto;
 
@@ -68,7 +68,7 @@
     }
 
     .process-views-detail {
-        height: calc(100vh - 120px) !important;
+        height: calc(100vh - 98px) !important;
         overflow: hidden;
 
 
@@ -84,6 +84,36 @@
     }
 
     .view-details-main {
-        height: calc(100vh - 54px);
+        height: calc(100vh - 82px);
     }
+}
+.dp-process-main{
+
+    .container-toolbar{
+        border-bottom: 1px var(--gray-150) solid;
+        padding: 0 15px;
+
+        .toolbar {
+            padding-bottom: 4px;
+        }
+    }
+    codx-kanban{
+        height: 100%;
+    }
+    ejs-kanban{
+        height: 100%;
+    }
+}
+
+.process-views-detail .codx-detail-main{
+    padding-bottom: 0;
+    padding-left: 0!important;
+}
+.popup-process-detail{
+   .tab-footer {
+        margin-top: 5px!important;
+    }
+}
+#viewModeDetail{
+    padding-bottom: 40px;
 }

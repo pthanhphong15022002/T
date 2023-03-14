@@ -618,8 +618,7 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.recID = this.id;
     this.fileEditing.location = this.location;
     this.fileEditing.hasSubFolder = this.createSubFolder;
-    this.fileEditing.checkSecurity =
-      this.security == null ? false : this.security;
+    this.fileEditing.checkSecurity = this.security == null ? false : this.security;
     this.fileEditing.approvers = this.approvers;
     this.fileEditing.revisionNote = this.revisionNote;
     this.fileEditing.icon = this.icon;

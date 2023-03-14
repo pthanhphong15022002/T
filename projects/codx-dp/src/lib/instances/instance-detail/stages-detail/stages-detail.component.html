@@ -598,9 +598,7 @@
       <div
         class="d-flex justify-content-between"
         *ngIf="
-        instance?.refID !== guidEmpty &&
-        instance?.refID !== null &&
-        instance?.refID !== ''
+        !!proccesNameMove 
         ">
         <div>
           <codx-label default="Quy trình được chuyển đến"></codx-label>

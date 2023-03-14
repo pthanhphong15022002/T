@@ -22,6 +22,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
+import { BookingItems } from '../../../models/bookingItems.model';
 
 @Component({
   selector: 'popup-request-stationery',
@@ -502,13 +503,48 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   getItemQty(itemID) {
-    let item = this.cart.filter((x) => x.resourceID == itemID);
+    let item = this.cart.filter((x) => x.itemID == itemID);
     if (item.length == 0) {
       return 0;
     }
     return item[0].quantity;
   }
 
+  // addCart(event, data) {
+  //   let tmpResource = new BookingItems();
+  //   tmpResource.itemID = data?.resourceID;
+  //   tmpResource.quantity = 1;
+  //   tmpResource.itemName = data?.resourceName;
+  //   tmpResource.umid = data?.umid;
+  //   tmpResource.umName = data?.umid;
+  //   tmpResource.objectType = 'EP_Resources';
+  //   tmpResource.objectID = data?.recID;
+
+  //   let isPresent = this.cart.find((item) => item.itemID == tmpResource.itemID);
+
+  //   //NagetivePhysical = 0: khong am kho
+  //   if (data.currentQty <= 0) {
+  //     if (this.nagetivePhysical == '0') {
+  //       //không add
+  //       this.notificationsService.notifyCode('EP013');
+  //       return;
+  //     }
+  //   }
+
+  //   if (isPresent) {
+  //     this.cart.filter((item: any) => {
+  //       if (item.itemID == tmpResource.itemID) {
+  //         item.quantity = item.quantity + 1;
+  //         item.itemName = item.resourceName;
+  //       }
+  //     });
+  //   } else {
+  //     tmpResource.quantity = 1;
+  //     tmpResource.itemName = data?.resourceName;
+  //     this.cart.push(tmpResource);
+  //   }
+  //   this.detectorRef.detectChanges();
+  // }
   addCart(event, data) {
     let tmpResource;
     tmpResource = { ...data };
