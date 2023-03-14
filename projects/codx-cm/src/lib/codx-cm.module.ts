@@ -25,6 +25,7 @@ import { CrmCustomerComponent } from './crmcustomer/crmcustomer.component';
 import { CrmcustomerDetailComponent } from './crmcustomer/crmcustomer-detail/crmcustomer-detail.component';
 import { CodxShowTaskComponent } from './task/codx-show-task/codx-show-task.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { InformationComponent } from './crmcustomer/crmcustomer-detail/information/information.component';
 
 const routes: Routes = [
   {
@@ -59,6 +60,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CrmCustomerComponent,
     CrmcustomerDetailComponent,
     CodxShowTaskComponent,
+    InformationComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
