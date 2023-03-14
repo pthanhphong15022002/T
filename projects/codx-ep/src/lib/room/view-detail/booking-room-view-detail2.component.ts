@@ -18,20 +18,20 @@ import {
   DialogRef,
   SidebarModel,
   UIComponent,
+  Util,
   ViewsComponent,
 } from 'codx-core';
-import { CodxEpService } from '../../../codx-ep.service';
-import { BookingRoomComponent } from '../booking-room.component';
-import { PopupAddBookingRoomComponent } from '../popup-add-booking-room/popup-add-booking-room.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Permission } from '@shared/models/file.model';
+import { BookingRoomComponent } from '../booking/booking-room.component';
+import { CodxEpService } from '../../codx-ep.service';
 @Component({
-  selector: 'booking-room-view-detail',
-  templateUrl: 'booking-room-view-detail.component.html',
-  styleUrls: ['booking-room-view-detail.component.scss'],
+  selector: 'booking-room-view-detail2',
+  templateUrl: 'booking-room-view-detail2.component.html',
+  styleUrls: ['booking-room-view-detail2.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class BookingRoomViewDetailComponent
+export class BookingRoomViewDetailComponent2
   extends UIComponent
   implements OnChanges
 {
@@ -40,6 +40,7 @@ export class BookingRoomViewDetailComponent
   @ViewChild('attachment') attachment;
   @ViewChild('attachment') tabModel;
   @ViewChild('bookingRoom') bookingRoom: BookingRoomComponent;
+  //MFunction Booking
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('copy') copy: EventEmitter<any> = new EventEmitter();
   @Output('release') release: EventEmitter<any> = new EventEmitter();
@@ -47,14 +48,18 @@ export class BookingRoomViewDetailComponent
   @Output('invite') invite: EventEmitter<any> = new EventEmitter();
   @Output('cancel') cancel: EventEmitter<any> = new EventEmitter();
   @Output('reschedule') reschedule: EventEmitter<any> = new EventEmitter();
-  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
-    new EventEmitter();
+  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
 
-  @Output('setPopupTitleOption') setPopupTitleOption: EventEmitter<any> =
-    new EventEmitter();
+  //MFunction Approve
+  @Output('setPopupTitleOption') setPopupTitleOption: EventEmitter<any> =  new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
+  @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
+  @Output('approve') approve: EventEmitter<any> = new EventEmitter();  
+  @Output('reject') reject: EventEmitter<any> = new EventEmitter(); 
+  @Output('undo') undo: EventEmitter<any> = new EventEmitter();
   @Input() itemDetail: any;
   @Input() funcID;
+  @Input() type;
   @Input() formModel;
   @Input() data: any;
   @Input() hideMF = false;
@@ -69,8 +74,9 @@ export class BookingRoomViewDetailComponent
   dialog!: DialogRef;
   routerRecID: any;
   listFilePermission = [];
-  isEdit = false;
+  allowUploadFile = false;
   renderFooter = false;
+  grView: any;
 
   constructor(
     private injector: Injector,
@@ -83,9 +89,19 @@ export class BookingRoomViewDetailComponent
     if (this.routerRecID != null) {
       this.hideFooter = true;
     }
+    if (this.type == null) {
+      this.type = '1';
+    }
   }
 
   onInit(): void {
+    this.cache
+      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+      .subscribe((grv) => {
+        if (grv) {
+          this.grView = Util.camelizekeyObj(grv);
+        }
+      });
     this.itemDetailStt = 1;
     let tempRecID: any;
     if (this.routerRecID != null) {
@@ -111,72 +127,72 @@ export class BookingRoomViewDetailComponent
         changes.itemDetail?.currentValue?.recID
     ) {
       this.renderFooter = false;
-      this.api
-        .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
-          changes.itemDetail?.currentValue?.recID,
-        ])
-        .subscribe((res) => {
+      if(this.type=='1'){
+        this.codxEpService.getBookingByRecID(changes.itemDetail?.currentValue?.recID).subscribe((res) => {
           if (res) {
             this.itemDetail = res;
-            this.listFilePermission = [];
-            if (res?.bookingAttendees != null && res?.bookingAttendees != '') {
-              let listAttendees = res.bookingAttendees.split(';');
-              listAttendees.forEach((item) => {
-                if (item != '') {
-                  let tmpPer = new Permission();
-                  tmpPer.objectID = item; //
-                  tmpPer.objectType = 'U';
-                  tmpPer.read = true;
-                  tmpPer.share = true;
-                  tmpPer.download = true;
-                  tmpPer.isActive = true;
-                  this.listFilePermission.push(tmpPer);
-                }
-              });
-            }
-            if (res?.listApprovers != null && res?.listApprovers.length > 0) {
-              res.listApprovers.forEach((item) => {
-                if (item != '') {
-                  let tmpPer = new Permission();
-                  tmpPer.objectID = item; //
-                  tmpPer.objectType = 'U';
-                  tmpPer.read = true;
-                  tmpPer.share = true;
-                  tmpPer.download = true;
-                  tmpPer.isActive = true;
-                  this.listFilePermission.push(tmpPer);
-                }
-              });
-            }
-            this.isEdit = false;
-            for (let u of res.bookingAttendees) {
-              if (
-                res?.createdBy == this.authService?.userValue?.userID ||
-                this.authService?.userValue?.userID == u?.userID
-              ) {
-                this.isEdit = true;
-              }
-            }
+            this.refeshData(this.itemDetail)
             this.detectorRef.detectChanges();
           }
         });
-      // this.files = [];
-      // this.api.execSv(
-      //   'DM',
-      //   'ERM.Business.DM',
-      //   'FileBussiness',
-      //   'GetFilesForOutsideAsync',
-      //   [this.funcID, this.itemDetail.recID, 'EP_BookingRooms']
-      // ).subscribe((res: []) => {
-      //   if (res) {
-      //     this.files = res;
-      //   }
-      // });
-      //this.itemDetail = changes.itemDetail.currentValue;
       this.detectorRef.detectChanges();
+      }
+      else if(this.type=='2'){
+        this.codxEpService.getApproveByRecID(changes.itemDetail?.currentValue?.recID).subscribe((res) => {
+          if (res) {
+            this.itemDetail = res;
+            this.refeshData(this.itemDetail)
+            this.detectorRef.detectChanges();
+          }
+        });
+      this.detectorRef.detectChanges();
+      }
+      
     }
     this.setHeight();
     this.active = 1;
+  }
+  refeshData(res:any){
+    this.listFilePermission = [];
+    if (res?.bookingAttendees != null && res?.bookingAttendees != '') {
+      let listAttendees = res.bookingAttendees.split(';');
+      listAttendees.forEach((item) => {
+        if (item != '') {
+          let tmpPer = new Permission();
+          tmpPer.objectID = item; //
+          tmpPer.objectType = 'U';
+          tmpPer.read = true;
+          tmpPer.share = true;
+          tmpPer.download = true;
+          tmpPer.isActive = true;
+          this.listFilePermission.push(tmpPer);
+        }
+      });
+    }            
+    if (res?.listApprovers != null && res?.listApprovers.length > 0) {
+      res.listApprovers.forEach((item) => {
+        if (item != '') {
+          let tmpPer = new Permission();
+          tmpPer.objectID = item; //
+          tmpPer.objectType = 'U';
+          tmpPer.read = true;
+          tmpPer.share = true;
+          tmpPer.download = true;
+          tmpPer.isActive = true;
+          this.listFilePermission.push(tmpPer);
+        }
+      });
+    }
+    if(this.type=='1'){
+      this.allowUploadFile = false;
+      for(let u of res.bookingAttendees){
+        if (res?.createdBy == this.authService?.userValue?.userID || this.authService?.userValue?.userID == u?.userID ) {
+          this.allowUploadFile = true;
+        }
+      } 
+    }
+    
+    this.detectorRef.detectChanges();
   }
   showHour(date: any) {
     let temp = new Date(date);
@@ -187,78 +203,113 @@ export class BookingRoomViewDetailComponent
     return time;
   }
   childClickMF(event, data) {
-    switch (event?.functionID) {
-      case 'SYS02': //Xoa
-        this.lviewDelete(data);
+      if(this.type=='1'){
+
+        switch (event?.functionID) {
+
+        case 'SYS02': //Xoa
+      this.delete.emit(data);
         break;
 
       case 'SYS03': //Sua.
-        this.lviewEdit(data, event.text);
+      this.setPopupTitle.emit(event?.text);
+      this.edit.emit(data);
         break;
 
       case 'SYS04': //copy.
-        this.lviewCopy(data, event.text);
+      this.setPopupTitle.emit(event?.text);
+      this.copy.emit(data);
         break;
       case 'EP4T1101': //Dời
-        this.lviewReschedule(data, event?.text);
+      this.setPopupTitleOption.emit(event?.text);
+      this.reschedule.emit(data);
         break;
       case 'EP4T1102': //Mời
-        this.lviewInvite(data, event?.text);
+      this.setPopupTitleOption.emit(event?.text);
+      this.invite.emit(data);
         break;
       case 'EP4T1103': //Gửi duyệt
-        this.lviewRelease(data);
+      this.release.emit(data);
         break;
       case 'EP4T1104': //Hủy gửi duyệt
-        this.lviewCancel(data);
-        break;
-    }
-  }
-  lviewRelease(data?) {
-    if (data) {
-      this.release.emit(data);
-    }
-  }
-
-  lviewReschedule(data?, mfuncName?) {
-    if (data) {
-      this.setPopupTitleOption.emit(mfuncName);
-      this.reschedule.emit(data);
-    }
-  }
-
-  lviewInvite(data?, mfuncName?) {
-    if (data) {
-      this.setPopupTitleOption.emit(mfuncName);
-      this.invite.emit(data);
-    }
-  }
-
-  lviewCancel(data?) {
-    if (data) {
       this.cancel.emit(data);
+        break;
+      }
+      
     }
-  }
+    else if(this.type=='2'){
+      let funcID = event?.functionID;
+      switch (funcID) {
+        case 'EPT40101':
+          {
+            //alert('Duyệt');
+            this.approve.emit(data);
+          }
+          break;
+        case 'EPT40105':
+          {
+            //alert('Từ chối');
+            this.reject.emit(data);
+          }
+          break;
+        case 'EPT40106':
+          {
+            //alert('Thu hồi');
+            this.undo.emit(data);
+          }
+          break;
+      }
+    }
 
-  lviewEdit(data?, mfuncName?) {
-    if (data) {
-      this.setPopupTitle.emit(mfuncName);
-      this.edit.emit(data);
-    }
   }
+  // lviewRelease(data?) {
+  //   if (data) {
+  //     this.release.emit(data);
+  //   }
+  // }
 
-  lviewDelete(data?) {
-    if (data) {
-      this.delete.emit(data);
-    }
-  }
-  lviewCopy(data?, mfuncName?) {
-    if (data) {
-      this.setPopupTitle.emit(mfuncName);
-      this.copy.emit(data);
-    }
-  }
+  // lviewReschedule(data?, mfuncName?) {
+  //   if (data) {
+  //     this.setPopupTitleOption.emit(mfuncName);
+  //     this.reschedule.emit(data);
+  //   }
+  // }
+
+  // lviewInvite(data?, mfuncName?) {
+  //   if (data) {
+  //     this.setPopupTitleOption.emit(mfuncName);
+  //     this.invite.emit(data);
+  //   }
+  // }
+
+  // lviewCancel(data?) {
+  //   if (data) {
+  //     this.cancel.emit(data);
+  //   }
+  // }
+
+  // lviewEdit(data?, mfuncName?) {
+  //   if (data) {
+  //     this.setPopupTitle.emit(mfuncName);
+  //     this.edit.emit(data);
+  //   }
+  // }
+
+  // lviewDelete(data?) {
+  //   if (data) {
+  //     this.delete.emit(data);
+  //   }
+  // }
+  // lviewCopy(data?, mfuncName?) {
+  //   if (data) {
+  //     this.setPopupTitle.emit(mfuncName);
+  //     this.copy.emit(data);
+  //   }
+  // }
   changeDataMF(event, data: any) {
-    if (event != null && data != null) {
+    if ((this.type == '1')) {
+      if (event != null && data != null) {
+      }
       if (data.approveStatus == '1') {
         event.forEach((func) => {
           //Mới tạo
@@ -365,6 +416,40 @@ export class BookingRoomViewDetailComponent
             func.disabled = true;
           }
         });
+      }
+    }
+    else if(this.type=='2'){
+      if (event != null && data != null) {
+        event.forEach((func) => {
+          if (func.functionID == 'SYS04' /*Copy*/) {
+            func.disabled = true;
+          }
+        });
+        if (data.approveStatus == '3') {
+          event.forEach((func) => {
+            if (
+              func.functionID == 'EPT40101' /*MF Duyệt*/ ||
+              func.functionID == 'EPT40105' /*MF từ chối*/
+            ) {
+              func.disabled = false;
+            }
+            if (func.functionID == 'EPT40106' /*MF Thu Hồi*/) {
+              func.disabled = true;
+            }
+          });
+        } else {
+          event.forEach((func) => {
+            if (
+              func.functionID == 'EPT40101' /*MF Duyệt*/ ||
+              func.functionID == 'EPT40105' /*MF từ chối*/
+            ) {
+              func.disabled = true;
+            }
+            if (func.functionID == 'EPT40106' /*MF Thu Hồi*/) {
+              func.disabled = false;
+            }
+          });
+        }
       }
     }
   }

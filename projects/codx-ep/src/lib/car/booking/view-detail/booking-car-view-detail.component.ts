@@ -11,9 +11,15 @@ import {
   ViewChild,
 } from '@angular/core';
 import { editAlert } from '@syncfusion/ej2-angular-spreadsheet';
-import { AuthService, DataRequest, UIComponent, ViewsComponent } from 'codx-core';
+import {
+  AuthService,
+  DataRequest,
+  UIComponent,
+  ViewsComponent,
+} from 'codx-core';
 import moment from 'moment';
-import { CodxEpService } from '../../../codx-ep.service';import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { CodxEpService } from '../../../codx-ep.service';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Permission } from '@shared/models/file.model';
 
 @Component({
@@ -21,17 +27,21 @@ import { Permission } from '@shared/models/file.model';
   templateUrl: 'booking-car-view-detail.component.html',
   styleUrls: ['booking-car-view-detail.component.scss'],
 })
-export class BookingCarViewDetailComponent extends UIComponent implements OnChanges {
-  @ViewChild('itemDetailTemplate') itemDetailTemplate;  
+export class BookingCarViewDetailComponent
+  extends UIComponent
+  implements OnChanges
+{
+  @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('subTitleHeader') subTitleHeader;
   @ViewChild('attachment') attachment;
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
-  @Output('copy') copy: EventEmitter<any> = new EventEmitter();  
-  @Output('release') release: EventEmitter<any> = new EventEmitter();  
-  @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
+  @Output('copy') copy: EventEmitter<any> = new EventEmitter();
+  @Output('release') release: EventEmitter<any> = new EventEmitter();
+  @Output('delete') delete: EventEmitter<any> = new EventEmitter();
   @Output('cancel') cancel: EventEmitter<any> = new EventEmitter();
-  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
+  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
+    new EventEmitter();
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -40,45 +50,44 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   @Input() hideMF = false;
   @Input() hideFooter = false;
   firstLoad = true;
-  
+
   tabControl: TabModel[] = [];
   id: string;
   itemDetailDataStt: any;
   itemDetailStt: any;
-  active = 1;  
-  routerRecID:any;
-  recID:any;
-  listFilePermission=[];
-  isEdit=false;
+  active = 1;
+  routerRecID: any;
+  recID: any;
+  listFilePermission = [];
+  allowUploadFile = false;
   constructor(
-    private injector: Injector,    
+    private injector: Injector,
     private authService: AuthService,
     private codxEpService: CodxEpService
   ) {
-    super(injector);    
+    super(injector);
     this.routerRecID = this.router.snapshot.params['id'];
-    if(this.routerRecID!=null){
-      this.hideFooter=true;
+    if (this.routerRecID != null) {
+      this.hideFooter = true;
     }
   }
 
   onInit(): void {
     this.itemDetailStt = 1;
-    let tempRecID:any;
-    if(this.routerRecID!=null){
-      tempRecID=this.routerRecID;
+    let tempRecID: any;
+    if (this.routerRecID != null) {
+      tempRecID = this.routerRecID;
+    } else {
+      tempRecID = this.itemDetail?.currentValue?.recID;
     }
-    else{
-      tempRecID=this.itemDetail?.currentValue?.recID
-    }
-      this.detectorRef.detectChanges();
-      this.setHeight();
+    this.detectorRef.detectChanges();
+    this.setHeight();
   }
   ngAfterViewInit(): void {
     this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-      { name: 'Comment', textDefault: 'Bình luận', isActive: false },      
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
   }
@@ -95,23 +104,23 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
-            this.listFilePermission=[];
-            if(res.bookingAttendees!=null && res.bookingAttendees!=''){
-              let listAttendees = res.bookingAttendees.split(";");
+            this.listFilePermission = [];
+            if (res?.bookingAttendees != null && res?.bookingAttendees != '') {
+              let listAttendees = res.bookingAttendees.split(';');
               listAttendees.forEach((item) => {
-                if(item!=''){
-                  let tmpPer= new Permission()
-                  tmpPer.objectID= item;//
-                  tmpPer.objectType= 'U';
-                  tmpPer.read= true;
-                  tmpPer.share=  true;
-                  tmpPer.download=  true;
-                  tmpPer.isActive=  true;
+                if (item != '') {
+                  let tmpPer = new Permission();
+                  tmpPer.objectID = item; //
+                  tmpPer.objectType = 'U';
+                  tmpPer.read = true;
+                  tmpPer.share = true;
+                  tmpPer.download = true;
+                  tmpPer.isActive = true;
                   this.listFilePermission.push(tmpPer);
-                }                
+                }
               });
-            } 
-            if (res.listApprovers != null && res.listApprovers.length>0) {
+            }
+            if (res?.listApprovers != null && res?.listApprovers.length > 0) {
               res.listApprovers.forEach((item) => {
                 if (item != '') {
                   let tmpPer = new Permission();
@@ -124,16 +133,17 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
                   this.listFilePermission.push(tmpPer);
                 }
               });
-              this.detectorRef.detectChanges();
             }
-            if(this.itemDetail?.createdBy==this.authService.userValue.userID){
+            this.allowUploadFile = false;
+            for (let u of res.bookingAttendees) {
+              if (
+                res?.createdBy == this.authService?.userValue?.userID ||
+                this.authService?.userValue?.userID == u?.userID
+              ) {
+                this.allowUploadFile = true;
+              }
+            }
 
-              this.isEdit = true;
-            }
-            else{
-              
-              this.isEdit = false;
-            }
             this.detectorRef.detectChanges();
           }
         });
@@ -143,50 +153,50 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
     this.active = 1;
   }
 
-  childClickMF(event, data) {   
+  childClickMF(event, data) {
     switch (event?.functionID) {
       case 'SYS02': //Xoa
         this.lviewDelete(data);
         break;
 
       case 'SYS03': //Sua.
-        this.lviewEdit(data,event.text);
+        this.lviewEdit(data, event.text);
         break;
       case 'SYS04': //copy.
-        this.lviewCopy(data,event.text);
+        this.lviewCopy(data, event.text);
         break;
       case 'EP7T1101': //Gửi duyệt
         this.lviewRelease(data);
         break;
-        case 'EP7T1102': //Hủy gửi duyệt
+      case 'EP7T1102': //Hủy gửi duyệt
         this.lviewCancel(data);
         break;
     }
   }
   lviewCancel(data?) {
-    if (data) {      
+    if (data) {
       this.cancel.emit(data);
     }
   }
   lviewRelease(data?) {
-    if (data) {      
+    if (data) {
       this.release.emit(data);
     }
   }
-  lviewEdit(data?,mfuncName?) {
-    if (data) {  
-      this.setPopupTitle.emit(mfuncName);    
+  lviewEdit(data?, mfuncName?) {
+    if (data) {
+      this.setPopupTitle.emit(mfuncName);
       this.edit.emit(data);
     }
   }
   lviewDelete(data?) {
-    if (data) {      
+    if (data) {
       this.delete.emit(data);
     }
   }
-  lviewCopy(data?,mfuncName?) {
-    if (data) {      
-      this.setPopupTitle.emit(mfuncName); 
+  lviewCopy(data?, mfuncName?) {
+    if (data) {
+      this.setPopupTitle.emit(mfuncName);
       this.copy.emit(data);
     }
   }
@@ -205,8 +215,8 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
             func.disabled = false;
           }
           if (
-            //Ẩn: hủy 
-            func.functionID == 'EP7T1102' /*MF hủy*/ 
+            //Ẩn: hủy
+            func.functionID == 'EP7T1102' /*MF hủy*/
           ) {
             func.disabled = true;
           }
@@ -215,15 +225,16 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
         event.forEach((func) => {
           //Đã duyệt
           if (
-            // Hiện: Chép 
+            // Hiện: Chép
             func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - duyệt - hủy 
+          if (
+            //Ẩn: sửa - xóa - duyệt - hủy
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP7T1101' /*MF gửi duyệt*/||
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/ ||
             func.functionID == 'EP7T1102' /*MF hủy*/
           ) {
             func.disabled = true;
@@ -232,14 +243,16 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
       } else if (data.approveStatus == '3') {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép - hủy
-          func.functionID == 'SYS04' /*MF chép*/||
-          func.functionID == 'EP7T1102' /*MF hủy*/
+          if (
+            //Hiện: chép - hủy
+            func.functionID == 'SYS04' /*MF chép*/ ||
+            func.functionID == 'EP7T1102' /*MF hủy*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - gửi duyệt
-            
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt
+
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP7T1101' /*MF gửi duyệt*/
@@ -247,37 +260,39 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
             func.disabled = true;
           }
         });
-      }
-      else if (data.approveStatus == '4') {
+      } else if (data.approveStatus == '4') {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép 
-          func.functionID == 'SYS04' /*MF chép*/
+          if (
+            //Hiện: chép
+            func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - gửi duyệt - hủy          
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt - hủy
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'EP7T1101' /*MF gửi duyệt*/||
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/ ||
             func.functionID == 'EP7T1102' /*MF hủy*/
           ) {
             func.disabled = true;
           }
         });
-      }
-      else {
+      } else {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép 
-          func.functionID == 'EP7T1101' /*MF gửi duyệt*/||       
-          func.functionID == 'SYS02' /*MF sửa*/ ||
-          func.functionID == 'SYS03' /*MF xóa*/ ||
-          func.functionID == 'SYS04' /*MF chép*/
+          if (
+            //Hiện: chép
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/ ||
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - gửi duyệt - hủy   
+          if (
+            //Ẩn: sửa - xóa - gửi duyệt - hủy
             func.functionID == 'EP7T1102' /*MF hủy*/
           ) {
             func.disabled = true;
@@ -285,17 +300,16 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
         });
       }
     }
-  
   }
-  sameDayCheck(sDate:any, eDate:any){
-    return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+  sameDayCheck(sDate: any, eDate: any) {
+    return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
   }
-  showHour(date:any){
-    let temp= new Date(date);
+  showHour(date: any) {
+    let temp = new Date(date);
     let time =
-          ('0' + temp.getHours()).toString().slice(-2) +
-          ':' +
-          ('0' + temp.getMinutes()).toString().slice(-2);
+      ('0' + temp.getHours()).toString().slice(-2) +
+      ':' +
+      ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
   clickChangeItemDetailDataStatus(stt) {

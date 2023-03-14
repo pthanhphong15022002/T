@@ -5,6 +5,7 @@ import {
   OnInit,
   Optional,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { CallFuncService, DialogData, DialogModel, DialogRef } from 'codx-core';
 import { TabModel } from '../../models/models';
@@ -15,6 +16,7 @@ import { CodxDpService } from '../../codx-dp.service';
   selector: 'lib-popup-views-details-process',
   templateUrl: './popup-views-details-process.component.html',
   styleUrls: ['./popup-views-details-process.component.scss'],
+  encapsulation:ViewEncapsulation.None
 })
 export class PopupViewsDetailsProcessComponent implements OnInit {
   dialog: DialogRef;
