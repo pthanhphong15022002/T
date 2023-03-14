@@ -190,6 +190,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   jobType: any;
   actionStep = '';
   isSaveStep = false;
+  processNameBefore = '';
   //end stage-nvthuan
   moreDefaut = {
     share: true,
@@ -263,6 +264,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     if (this.action == 'edit') {
       // this.showID = true;
+      this.processNameBefore = this.process?.processName;
       this.permissions = this.process.permissions;
       if (this.permissions.length > 0) {
         var perm = this.permissions.filter((x) => x.roleType == 'P');
@@ -620,8 +622,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
+  async checkExitsName(){
+    if(this.processNameBefore.trim() == this.process?.processName.trim()){
+      return false;
+    }
+    let check = await this.checkExitsProcessName(this.process?.processName, this.process?.recID);
+      return check ? true : false;
+  }
+
   //Tiếp tục qua tab
   async continue(currentTab) {
+    if(currentTab == 0){
+      let check = await this.checkExitsName();
+      if(check){
+        this.notiService.notifyCode('DP021');
+        return
+      }else{
+        this.processNameBefore = this.process?.processName;
+      }
+    }
     if (this.currentTab > 2) return;
     let oldNode = currentTab;
     let newNode = oldNode + 1;
@@ -2017,7 +2036,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           case 'SYS04':
             break;
           case 'SYS003':
-            if (type == 'step') res.disabled = true;
             break;
           case 'DP12':
             if (type != 'group') res.disabled = true;
@@ -2390,18 +2408,27 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     return { 'background-color': color?.color };
   }
 
-  toggleTask(id) {
-    let elementGroup = document.getElementById(id);
+  toggleTask(e,id) {
+    let elementGroup = document.getElementById('group' + id.toString());
+    let children = e.currentTarget.children[0];
     let isClose = elementGroup.classList.contains('hiddenTask');
     if (isClose) {
       elementGroup.classList.remove('hiddenTask');
       elementGroup.classList.add('showTask');
+      children.classList.remove('icon-horizontal_rule');
+      children.classList.add('icon-add');
     } else {
       elementGroup.classList.remove('showTask');
       elementGroup.classList.add('hiddenTask');
+      children.classList.remove('icon-add');
+      children.classList.add('icon-horizontal_rule');
     }
   }
 
+  async checkExitsProcessName(processName, processID){
+    let check =await firstValueFrom(this.dpService.checkExitsName([processName, processID]));
+    return check;
+  }
   //#End stage -- nvthuan
 
   //#region for reason successful/failed
