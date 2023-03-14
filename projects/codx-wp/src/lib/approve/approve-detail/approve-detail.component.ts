@@ -6,7 +6,7 @@ import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/
 import { PopupEditComponent } from '../../news/popup/popup-edit/popup-edit.component';
 
 @Component({
-  selector: 'approve-view-detail',
+  selector: 'wp-approve-view-detail',
   templateUrl: './approve-detail.component.html',
   styleUrls: ['./approve-detail.component.css']
 })
@@ -42,6 +42,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
 
     ) { }
   ngOnInit(): void {
+    debugger
     this.getPostInfor(this.objectID);
     this.cache.functionList(this.funcID).subscribe((func: any) => 
       {
@@ -58,6 +59,8 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
       this.getPostInfor(this.objectID);
     }
   }
+
+  hideMFC:boolean = false;
   // get data detail
   getPostInfor(objectID:string){
     if(objectID)
@@ -71,7 +74,9 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
         .subscribe((res:any) => {
           if(res)
           {
+            debugger  
             this.data = JSON.parse(JSON.stringify(res));
+            this.hideMFC = this.data.approvalStatus == '5';
             this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
             this.dt.detectChanges();
           }

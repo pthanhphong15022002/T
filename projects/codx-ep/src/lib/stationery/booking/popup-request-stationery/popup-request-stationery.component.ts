@@ -376,7 +376,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.data.issueStatus = this.dialogAddBookingStationery.value.issueStatus;
     if (this.approvalRule == '0' && approval) {
       this.data.approveStatus = '5';
-      this.data.status = '5';
     }
     this.data.approveStatus = this.data.approveStatus ?? '1';
     this.data.status = this.data.status ?? '1';
@@ -425,7 +424,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
                         if (res?.msgCodeError == null && res?.rowCount >= 0) {
                           this.notificationsService.notifyCode('ES007');
                           item.approveStatus = '3';
-                          item.status = '3';
                           item.write = false;
                           item.delete = false;
                           (this.dialogRef.dataService as CRUDService)
@@ -453,7 +451,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
                   )
                   .subscribe(res);
                 item.approveStatus = '5';
-                item.status = '5';
                 item.write = false;
                 item.delete = false;
               });

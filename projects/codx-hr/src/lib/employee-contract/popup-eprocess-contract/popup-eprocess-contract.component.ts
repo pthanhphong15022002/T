@@ -1,3 +1,4 @@
+import { T } from '@angular/cdk/keycodes';
 import {
   ChangeDetectorRef,
   Component,
@@ -70,6 +71,9 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
+    if(this.actionType == 'edit'){
+      this.employeeObj = this.data.emp
+    }
   }
 
   onInit(): void {
@@ -165,6 +169,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
         if (res && res[0]) {
           //code test
           this.notify.notifyCode('SYS006');
+          res[0].emp = this.employeeObj;
           this.dialog && this.dialog.close(res);
           this.data = res;
         }
@@ -173,6 +178,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
       this.hrSevice.editEContract(this.data).subscribe((res) => {
         if (res && res[0]) {
           this.notify.notifyCode('SYS007');
+          res[0].emp = this.employeeObj;
           this.dialog && this.dialog.close(res);
         }
       });
@@ -271,7 +277,20 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   }
 
   handleSelectEmp(evt){
-
+    if(evt.data != null){
+      this.employeeId = evt.data
+      let empRequest = new DataRequest();
+      empRequest.entityName = 'HR_Employees';
+      empRequest.dataValues = this.employeeId;
+      empRequest.predicates = 'EmployeeID=@0';
+      empRequest.pageLoading = false;
+      this.hrSevice.loadData('HR', empRequest).subscribe((emp) => {
+        if (emp[1] > 0) {
+          this.employeeObj = emp[0][0]
+          console.log('employee cua form', this.employeeObj);
+          
+        }
+      });
+    }
   }
-
 }

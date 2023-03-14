@@ -119,6 +119,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashpayment);
+    console.log(this.form);
   }
   //#endregion
 
@@ -129,7 +130,10 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
         this.deleteRow(data);
         break;
       case 'SYS03':
-        this.editRow(data);
+        //this.editRow(data);
+        break;
+      case 'SYS04':
+        this.copyRow(data);
         break;
     }
   }
@@ -273,7 +277,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       ])
       .subscribe((res) => {
         if (res) {
-          this.grid.addRow(data, idx);
+          this.grid.addRow(res, idx);
         }
       });
   }
@@ -283,8 +287,15 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
     this.grid.deleteRow(data);
   }
 
-  editRow(data){
-    // this.grid.upda(data.rowNo);
+  editRow(data) {
+    this.grid.updateRow(data.rowNo, data);
+  }
+
+  copyRow(data){
+    let idx = this.grid.dataSource.length;
+    data.rowNo = idx + 1;
+    data.recID = Util.uid();
+    this.grid.addRow(data, idx);
   }
 
   setDefault(o) {
@@ -301,7 +312,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
       this.validate = 0;
       return;
     } else {
-      let data = this.form.data;
       this.cashpaymentline = this.grid.dataSource;
       if (this.formType == 'add' || this.formType == 'copy') {
         this.dialog.dataService
@@ -310,7 +320,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             opt.className = 'CashPaymentsBusiness';
             opt.assemblyName = 'AC';
             opt.service = 'AC';
-            opt.data = [data];
+            opt.data = [this.cashpayment];
             return true;
           })
           .subscribe((res) => {
@@ -336,7 +346,7 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
             opt.className = 'CashPaymentsBusiness';
             opt.assemblyName = 'AC';
             opt.service = 'AC';
-            opt.data = [data];
+            opt.data = [this.cashpayment];
             return true;
           })
           .subscribe((res) => {
