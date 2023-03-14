@@ -65,6 +65,10 @@ export class PopupMoveStageComponent implements OnInit {
   owner = '';
   stepOld: any;
   firstInstance: any;
+  listTaskGroup:any;
+  listTask:any;
+  listTree:any;
+  isShow: boolean = true;
   constructor(
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -90,7 +94,7 @@ export class PopupMoveStageComponent implements OnInit {
       );
     }
     this.stepIdOld = this.instance.stepID;
-    this.listStep = JSON.parse(JSON.stringify(dt?.data.instanceStep));
+   // this.listStep = JSON.parse(JSON.stringify(dt?.data.instanceStep));
     this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.listStepCbx));
     this.instancesStepOld = this.listStepsCbx.filter(
       (x) => x.stepID === this.stepIdOld
@@ -105,6 +109,9 @@ export class PopupMoveStageComponent implements OnInit {
       }
     });
     // this.loadListUser(this.instance.permissions);
+    this.listTask = this.instancesStepOld.tasks.filter(x=> x.progress < 100);
+    this.listTaskGroup = this.instancesStepOld.taskGroups.filter(x=> x.progress < 100);
+    this.listTree = this.updateDateForTree(this.listTaskGroup,this.listTask);
   }
 
   ngOnInit(): void {
@@ -234,5 +241,51 @@ export class PopupMoveStageComponent implements OnInit {
   eventUser(e) {
     this.owner = e.id;
     // if (this.owner != null) this.getNameAndPosition(this.owner);
+  }
+  checkAllValue($event){
+
+  }
+
+  buildTree(parents, children) {
+    const tree = [];
+  
+    const lookup = parents.reduce((acc, parent) => {
+      acc[parent.refID] = parent;
+      parent.children = [];
+      return acc;
+    }, {});
+
+    children.forEach(child => {
+      const parentId = child.taskGroupID;
+      if (parentId in lookup) {
+        lookup[parentId].children.push(child);
+      }
+    });
+  
+    Object.keys(lookup).forEach(key => {
+      const parent = lookup[key];
+      if (!parent.taskGroupID) {
+        tree.push(parent);
+      }
+    });
+  
+    return tree;
+  }
+  
+  updateDateForTree(parents, children){
+    children.forEach(child => {
+      if (child.parentId === null) {
+        parents.push(child);
+      }
+    });
+    return this.buildTree(parents, children);
+  }
+  myFunction($event){
+//     const open = document.getElementById('open')
+// const container = document.querySelector('.container')
+
+// open.addEventListener('click', () => container.classList.add('show-nav'))
+//     debugger;
+    this.isShow = true
   }
 }

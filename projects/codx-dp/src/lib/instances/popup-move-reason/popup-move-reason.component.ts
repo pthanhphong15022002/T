@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { AuthStore, CacheService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxDpService } from '../../codx-dp.service';
-import { DP_Instances, DP_Instances_Steps, DP_Instances_Steps_Reasons, DP_Steps_Reasons } from '../../models/models';
+import { DP_Instances, DP_Instances_Steps, DP_Instances_Steps_Reasons, DP_Steps, DP_Steps_Reasons } from '../../models/models';
 
 @Component({
   selector: 'lib-popup-move-reason',
@@ -27,10 +27,10 @@ export class PopupMoveReasonComponent implements OnInit {
   moveProccess: string = '';
   memoStep:string = '';
 
-  listReason: DP_Instances_Steps_Reasons[]=[];
+  listReason: DP_Steps_Reasons[]=[];
 
   listReasonClick: DP_Instances_Steps_Reasons[]=[];
-  reasonStep = new DP_Instances_Steps();
+  reasonStep = new DP_Steps();
   reason = new DP_Instances_Steps_Reasons();
   instances = new DP_Instances();
   listStep : DP_Instances_Steps_Reasons[]=[];
@@ -69,7 +69,7 @@ export class PopupMoveReasonComponent implements OnInit {
     this.isReason = dt?.data?.isReason;
 
     this.listCbxProccess = dt?.data?.listProccessCbx;
-    this.moveProccess =  this.listCbxProccess[0].recID;
+    this.moveProccess =  this.listCbxProccess.filter(x=>x.recID === this.reasonStep.newProcessID )[0].recID;
 
   }
 
@@ -109,8 +109,8 @@ export class PopupMoveReasonComponent implements OnInit {
   }
   checkValue($event,data){
     if($event && $event.currentTarget.checked){
-        var reason = this.handleReason(data);
-        this.listReasonClick.push(reason);
+       var reason = this.handleReason(data);
+      this.listReasonClick.push(reason);
     }
     else {
       let idx = this.listReasonClick.findIndex(x=> x.reasonName  === data.reasonName);
@@ -124,13 +124,15 @@ export class PopupMoveReasonComponent implements OnInit {
   }
 
   handleReason(
-    reason: DP_Instances_Steps_Reasons
+    stepReason:any
   ) {
-    reason.processID = this.instances.processID;
-    reason.stepID = this.reasonStep.stepID;
-    reason.instanceID = this.instances.recID;
-    reason.createdBy = this.userId;
-    reason.reasonType = this.isReason ? '1' : '2';
+    var reason = new DP_Instances_Steps_Reasons();
+     reason.processID = this.instances.processID;
+     reason.stepID = this.reasonStep.recID;
+     reason.reasonName = stepReason.reasonName;
+     reason.instanceID = this.instances.recID;
+     reason.createdBy = this.userId;
+     reason.reasonType = this.reasonStep.isSuccessStep ? '1' : '2';
     return reason;
   }
 
