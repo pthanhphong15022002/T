@@ -32,21 +32,9 @@
   <!-- begin:: TOPBAR -->
   <ng-template #headerRightBar>
     <!-- CHAT -->
-    <div
-      class="d-flex align-items-center"
-      [ngClass]="codxService.toolbarButtonMarginClass"
-    >
-      <!-- <codx-chat-list></codx-chat-list> -->
-    </div>
-    <!-- NOTIFICATIONS -->
-    <!-- <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
-      <div class="btn btn-icon btn-active-light-primary position-relative"
-        [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_notify_toggle">
-        <span [inlineSVG]="
-            './assets/themes/sys/default/img/header_notifications.svg'
-          " class="svg-icon" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
-      </div>
-    </div> -->
+
+
+    <codx-chat></codx-chat>
 
     <codx-notify-drawer></codx-notify-drawer>
     <codx-activies-approval-list></codx-activies-approval-list>
