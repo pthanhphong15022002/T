@@ -2,9 +2,9 @@
 	background-color: #d8d8d8;
 	border-radius: 20px;
 	position: relative;
-	margin: 15px 0;
-	height: 30px;
-	width: 300px;
+	margin-bottom: 10px;
+	height: 20px;
+	width: 150px;
 }
 
 .progress-done {
@@ -180,10 +180,13 @@
 }
 
 .view-step-box {
-	  overflow: auto;
-	  margin-top: 8px;
-	  border-top: 1px var(--gray-100) solid;
-	  padding-top: 5px;
-	  clear: both;
-  }
+	overflow: auto;
+	border-top: 1px var(--gray-100) solid;
+	padding-top: 5px;
+	clear: both;
+}
 
+codx-instances codx-detail-tmp .codx-detail-main{
+	padding-bottom: 0!important;
+	background-color: #FF9472;
+}
