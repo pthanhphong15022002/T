@@ -92,6 +92,7 @@ export class BookingStationeryViewDetailComponent
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            this.listFilePermission=[];
             let tmpPer = new Permission();
             tmpPer.objectID = this.itemDetail.createdBy;
             tmpPer.objectType = 'U';

@@ -116,8 +116,9 @@
 <ng-template #footerTmp let-data> </ng-template>
 
 <ng-template #panelRightRef>
-  <approval-room-view-detail
+  <booking-room-view-detail2
     #viewdetail
+    [type]="'2'"
     [itemDetail]="itemDetail"
     [funcID]="funcID"
     [formModel]="formModel"
@@ -126,7 +127,7 @@
     (undo)="undo($event)"
     (updateStatus)="updateStatus($event)"
   >
-  </approval-room-view-detail>
+  </booking-room-view-detail2>
 </ng-template>
 
 <!-- Other -->

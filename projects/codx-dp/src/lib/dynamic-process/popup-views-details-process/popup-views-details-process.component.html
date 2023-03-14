@@ -2,7 +2,7 @@
   <div class="py-2 mx-6 popup-process-header">
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
-        <span class="text-dark fw-bold fs-3 me-6" #processName>{{
+        <span class="text-dark fw-bold fs-4 me-4" #processName>{{
           process.processName
             | formatvalue
               : dialog.formModel
@@ -12,7 +12,7 @@
               : "grvDPProcesses"
             | async
         }}</span>
-        <span (click)="showGuide(p)">
+        <span class="mt-1" (click)="showGuide(p)">
           <span
             class="icon-event_notes text-hover-primary cursor-pointer"       
             [ngbPopover]="popperMemo"
@@ -26,7 +26,7 @@
       </div>
       <div>
         <span class="me-5">
-          <span>
+          <span class="text-gray-500">
             <codx-label
               name="lblApplicable"
               [formName]="'DPProcesses'"
@@ -44,43 +44,38 @@
             ></codx-vll>
           </span>
         </span>
-        <button
-          class="btn text-dark-75 text-hover-danger cursor-pointer px-0"
+        <button type="button"
+          class="btn btn-icon btn-light"
           (click)="closeDetailInstance(process)"
         >
           <span class="icon-close icon-18"></span>
         </button>
       </div>
     </div>
+    <div class="d-flex tab-header">
+      <ng-container *ngFor="let item of tabControl; let i = index">
+        <a
+          [class]="
+            'tab-item text-dark fw-bold' +
+            ' ' +
+            (item.isActive ? 'tab-active' : '')
+          "
+        >
+          <codx-label
+            [name]="'lbl' + item.name"
+            [formName]="'SYS'"
+            [default]="item.textDefault"
+            (click)="clickMenu(item)"
+          >
+          </codx-label>
+        </a>
+      </ng-container>
+    </div>
   </div>
   <!-- </div> -->
-  <div class="w-100 view-details-main pt-4 bg-gray-100">
-    <div class="view-details-header rounded-4 bg-body scroll-y px-6 h-100">
-      <div class="d-flex align-items-center justify-content-between mt-3">
-        <!-- <div class="d-flex flex-column">
-          Nội dung cần thêm - có thì thêm kpo có thì bỏ đi
-        </div> -->
-        <div class="d-flex tab-header">
-          <ng-container *ngFor="let item of tabControl; let i = index">
-            <a
-              [class]="
-                'tab-item text-dark fw-bold' +
-                ' ' +
-                (item.isActive ? 'tab-active' : '')
-              "
-            >
-              <codx-label
-                [name]="'lbl' + item.name"
-                [formName]="'SYS'"
-                [default]="item.textDefault"
-                (click)="clickMenu(item)"
-              >
-              </codx-label>
-            </a>
-          </ng-container>
-        </div>
-      </div>
-      <div class="view-details-content m-0 mt-1">
+  <div class="w-100 view-details-main pt-3 bg-gray-100">
+    <div class="dp-process-main rounded-3 bg-body scroll-y py-3 mx-5 h-100">
+      <div class="view-details-content m-0">
         <div
           class="process-views-detail"
           data-kt-scroll="true"
