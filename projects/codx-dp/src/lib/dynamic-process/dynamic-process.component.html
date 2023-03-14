@@ -71,18 +71,16 @@
 
         </div>
         <div class="footerCard-item">
-          <div class="d-flex justify-content-start mt-1">
-            <div class="me-2 mt-1"><span class="icon-adjust"></span></div>
-            <div class="me-2 mt-1">
-              {{ getNameAppyFor(data?.applyFor) }}
+          <div class="d-flex align-items-center justify-content-between mt-2">
+            <div class="d-flex align-items-center">
+              <span class="icon-adjust icon-16 me-2"></span>
+              <span class="text-gray-700">
+                {{ getNameAppyFor(data?.applyFor) }}
+              </span>
             </div>
-            <div class="ms-auto">
-              <div class="me-2 mt-1">
-                <!-- Format tam -->
-                <span class="icon-access_alarm icon-14">
-                  {{ data.createdOn | date : "dd/MM/yyyy" }}
-                </span>
-              </div>
+            <div class="d-flex align-items-center">
+              <span class="icon-access_alarm icon-16 me-2"></span>
+              <span class="text-gray-700">{{ data.createdOn | date : "dd/MM/yyyy" }}</span>
             </div>
           </div>
         </div>

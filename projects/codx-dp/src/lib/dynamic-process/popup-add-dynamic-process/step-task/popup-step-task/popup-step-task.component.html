@@ -63,7 +63,7 @@
             [dataSource]="taskGroupList"
             [fields]="fieldsGroup"
             [value]="stepsTasks?.taskGroupID"
-            (valueChange)="filterText($event, 'taskGroupID')"
+            (valueChange)="changeCombobox($event, 'taskGroupID')"
             [readonly]="taskGroupID"
           ></ejs-dropdownlist>
         </div>
