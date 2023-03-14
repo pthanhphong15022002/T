@@ -391,59 +391,6 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         if (res && res[0]) {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
-
-          //send mail FE
-          // if (this.param?.ConfirmControl == '1')
-          //   this.tmSv
-          //     .sendAlertMail(taskParent?.recID, 'TM_0008', this.functionID)
-          //     .subscribe();
-          // else
-          //   this.tmSv
-          //     .sendAlertMail(taskParent?.recID, 'TM_0001', this.functionID)
-          //     .subscribe();
-
-          //lưu his giao việc da chuyen vao BE -Thao chuyen - 22/2/2023
-          // var taskParent = res[1][0];
-          // var objectType = this.formModel.entityName;
-          // var objectID = this.task.refID;
-          // this.api
-          //   .execSv<any>(
-          //     'SYS',
-          //     'AD',
-          //     'UsersBusiness',
-          //     'LoadUserListByIDAsync',
-          //     JSON.stringify(taskParent.assignTo.split(';'))
-          //   )
-          //   .subscribe((users) => {
-          //     if (users?.length > 0) {
-          //       var dataObj = [];
-          //       users.forEach((user) => {
-          //         dataObj.push({
-          //           objectType: objectType,
-          //           objectID: user.userID,
-          //           objectName: user.userName,
-          //         });
-          //       });
-
-          //       var tmpHistorry = {
-          //         objectType: objectType,
-          //         objectID: objectID,
-          //         actionType: 'T',
-          //         functionID: this.formModel.funcID,
-          //         sendToObjects: dataObj,
-          //       };
-
-          //       this.api
-          //         .execSv<any>(
-          //           'BG',
-          //           'ERM.Business.BG',
-          //           'TrackLogsBusiness',
-          //           'InsertAsync',
-          //           tmpHistorry
-          //         )
-          //         .subscribe();
-          //     }
-          //   });
         } else {
           this.notiService.notifyCode('TM038');
           this.dialog.close();
@@ -516,6 +463,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     var listUserID = '';
     var listPositionID = '';
     var listEmployeeID = '';
+    var listGroupMembersID = '';
     if (!e && e?.length == 0) return;
     e.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -533,6 +481,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
             break;
           case 'RE':
             listEmployeeID += obj.id + ';';
+            break;
+          case 'UG':
+            listGroupMembersID += obj.id + ';';
             break;
         }
       }
@@ -579,6 +530,16 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
             this.valueSelectUser(assignTo);
           } else this.notiService.notifyCode('TM066');
         });
+    }
+    if (listGroupMembersID != ''){
+      listGroupMembersID = listGroupMembersID.substring(0, listGroupMembersID.length - 1);
+      this.tmSv
+      .getListUserIDByListGroupID(listEmployeeID)
+      .subscribe((res) => {
+        if (res && res?.length > 0) {
+          this.valueSelectUser(res);
+        }
+      });
     }
   }
 
@@ -749,7 +710,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           var param = JSON.parse(res.dataValue);
           if (param.Accountable == '1') this.accountable = true;
           else this.accountable = false;
-          var param = JSON.parse(res.dataValue);
+          //var param = JSON.parse(res.dataValue);
           this.param = param;
           this.taskType = param?.TaskType;
           if (this.param?.PlanControl == '1' && this.task.startDate == null) {

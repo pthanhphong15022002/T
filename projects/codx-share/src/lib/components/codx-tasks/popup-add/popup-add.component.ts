@@ -693,6 +693,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var listUserID = '';
     var listPositionID = '';
     var listEmployeeID = '';
+    var listGroupMembersID = '';
     if (!e || e?.length == 0) return;
     e.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -711,6 +712,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           case 'RE':
             listEmployeeID += obj.id + ';';
             break;
+          case 'UG':
+            listGroupMembersID += obj.id + ';';
+              break;
         }
       }
     });
@@ -754,6 +758,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             this.valueSelectUser(res[0]);
           } else this.notiService.notifyCode('TM066');
         });
+    }
+    if (listGroupMembersID != ''){
+      listGroupMembersID = listGroupMembersID.substring(0, listGroupMembersID.length - 1);
+      this.tmSv
+      .getListUserIDByListGroupID(listEmployeeID)
+      .subscribe((res) => {
+        if (res && res?.length > 0) {
+          this.valueSelectUser(res);
+        }
+      });
     }
   }
 

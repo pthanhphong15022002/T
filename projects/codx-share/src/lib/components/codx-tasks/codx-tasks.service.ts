@@ -66,6 +66,16 @@ export class CodxTasksService {
     );  
   }
 
+  getListUserIDByListGroupID(listGroupID){
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'GroupMembersBusiness',
+      'GetListUserIDByListGroupIDAsync',
+      listGroupID
+    );  
+  }
+
   //update status
   setStatusTask(
     funcID: string,
