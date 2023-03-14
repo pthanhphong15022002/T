@@ -423,6 +423,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
             this.imageUpload
               .updateFileDirectReload(res.update.userID)
               .subscribe((result) => {
+                debugger
                 if (result) {
                   this.loadData.emit();
                 }
