@@ -73,10 +73,10 @@
                 </div>
                 <div class="text-gray-700 mt-1">
                     <span class="me-1">
-                        <codx-label [formModel]="view.formModel" fiedName="JobGroup" default="Chức vụ:">
+                        <codx-label [formModel]="view.formModel" fiedName="JobLevel" default="Chức vụ:">
                         </codx-label>
                     </span>
-                    <span class="text-dark" *ngIf="data.jobGroup">{{data.jobGroup}}
+                    <span class="text-dark" *ngIf="data.jobLevel">{{ data?.jobLevel | formatvalue : view.formModel : "jobLevel" | async }}
                     </span>
                 </div>
             </div>
