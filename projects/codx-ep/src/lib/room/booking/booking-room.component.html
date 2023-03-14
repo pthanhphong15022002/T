@@ -123,8 +123,9 @@
 <ng-template #footerTmp let-data> </ng-template>
 
 <ng-template #panelRightRef>
-  <booking-room-view-detail
+  <booking-room-view-detail2
     #viewdetail
+    [type]="'1'"
     [itemDetail]="itemDetail"
     [funcID]="funcID"
     [formModel]="formModel"
@@ -137,7 +138,7 @@
     (delete)="delete($event)"
     (setPopupTitle)="setPopupTitle($event)"
     (setPopupTitleOption)="setPopupTitleOption($event)"
-  ></booking-room-view-detail>
+  ></booking-room-view-detail2>
 </ng-template>
 
 <!-- Other -->
