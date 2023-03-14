@@ -25,9 +25,10 @@ export class NewsTagComponent extends UIComponent {
   @ViewChild('listview') listview: CodxListviewComponent;
 
   constructor
-    (
-      private injector: Injector
-    ) {
+  (
+    private injector: Injector
+  ) 
+  {
     super(injector);
   }
   ngAfterViewInit(): void {
@@ -46,7 +47,7 @@ export class NewsTagComponent extends UIComponent {
   onInit() {
     this.funcID = this.router.snapshot.params["funcID"];
     this.router.params.subscribe((param:any) => {
-      this.tagName = this.router.snapshot.params["tagName"];
+      this.tagName = param["tagName"];
       this.dataValues = this.tagName;
     })
     this.loadDataAsync();

@@ -68,18 +68,18 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   funcIDName = '';
   columnsGrid: any;
   popupClosed = true;
-  
-  listCar=[];  
-  listReason=[];  
-  listAttendees=[];  
+
+  listCar=[];
+  listReason=[];
+  listAttendees=[];
   listItem=[];
   tempReasonName='';
-  tempCarName='';  
+  tempCarName='';
   tempAttendees='';
-  selectBookingItems=[];  
+  selectBookingItems=[];
   selectBookingAttendees='';
   listDriver: any[];
-  tempDriverName='';  
+  tempDriverName='';
   driverName='';
   queryParams: any;
   navigated=false;
@@ -118,7 +118,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     if(res==true){
       this.isAdmin=true;
     }
-    else{        
+    else{
       this.isAdmin=false;
     }
   })
@@ -186,24 +186,24 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       if(res){
         this.listCar=[];
         this.listCar=res;
-      }        
+      }
     });
     this.codxEpService.getListResource('3').subscribe((res:any)=>{
       if(res){
         this.listDriver=[];
         this.listDriver=res;
-      }        
+      }
     });
     this.codxEpService.getListReason('EP_BookingCars').subscribe((res:any)=>{
       if(res){
         this.listReason=[];
         this.listReason=res;
-      }        
+      }
     });
   }
 
   ngAfterViewInit(): void {
-    
+
     this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
     this.views = [
       {
@@ -213,7 +213,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         request2: this.modelResource,
         request: this.request,
         //toolbarTemplate: this.footerButton,
-        showSearchBar: false,        
+        showSearchBar: false,
         showFilter:false,
         model: {
           //panelLeftRef:this.panelLeft,
@@ -247,19 +247,22 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       },
     }
     ];
-    if(this.queryParams?.predicate && this.queryParams?.dataValue){    
+    if(this.queryParams?.predicate && this.queryParams?.dataValue){
       this.codxEpService.getBookingByRecID(this.queryParams?.dataValue).subscribe((res:any)=>{
         if(res){
           setInterval(()=> this.navigate(res.startDate),2000);
         }
       });
-    }  
+    }
     this.detectorRef.detectChanges();
   }
   onActionClick(evt?) {
     if (evt.type == 'add' && evt.data?.resourceId!=null) {
       this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(evt.data);
+    }
+    if(evt.type == 'doubleClick'){
+      this.edit(evt.data);
     }
   }
   navigate(date) {
@@ -269,7 +272,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         if((window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj.first.element.id=='Schedule'){
           (window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj.first.selectedDate = new Date(date);
           this.navigated=true;
-        }        
+        }
       }
     }
   }
@@ -288,8 +291,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
             func.disabled = false;
           }
           if (
-            //Ẩn: hủy 
-            func.functionID == 'EP7T1102' /*MF hủy*/ 
+            //Ẩn: hủy
+            func.functionID == 'EP7T1102' /*MF hủy*/
           ) {
             func.disabled = true;
           }
@@ -298,12 +301,12 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         event.forEach((func) => {
           //Đã duyệt
           if (
-            // Hiện: Chép 
+            // Hiện: Chép
             func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - duyệt - hủy 
+          if (//Ẩn: sửa - xóa - duyệt - hủy
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP7T1101' /*MF gửi duyệt*/||
@@ -322,7 +325,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
             func.disabled = false;
           }
           if (//Ẩn: sửa - xóa - gửi duyệt
-            
+
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP7T1101' /*MF gửi duyệt*/
@@ -334,12 +337,12 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       else if (data.approveStatus == '4') {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép 
+          if ( //Hiện: chép
           func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - gửi duyệt - hủy          
+          if (//Ẩn: sửa - xóa - gửi duyệt - hủy
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP7T1101' /*MF gửi duyệt*/||
@@ -352,15 +355,15 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       else {
         event.forEach((func) => {
           //Gửi duyệt
-          if ( //Hiện: chép 
-          func.functionID == 'EP7T1101' /*MF gửi duyệt*/||   
+          if ( //Hiện: chép
+          func.functionID == 'EP7T1101' /*MF gửi duyệt*/||
           func.functionID == 'SYS02' /*MF sửa*/ ||
           func.functionID == 'SYS03' /*MF xóa*/ ||
           func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
-          if (//Ẩn: sửa - xóa - gửi duyệt - hủy       
+          if (//Ẩn: sửa - xóa - gửi duyệt - hủy
             func.functionID == 'EP7T1102' /*MF hủy*/
           ) {
             func.disabled = true;
@@ -368,9 +371,9 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         });
       }
     }
-  
+
   }
-  
+
   clickMF(event, data) {
     this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
@@ -421,7 +424,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-  
+
 
   changeItemDetail(event) {
     this.itemDetail = event?.data;
@@ -431,7 +434,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
   release(data: any) {
     if (
-      this.authService.userValue.userID != data?.owner 
+      this.authService.userValue.userID != data?.owner
       //&& !this.authService.userValue.administrator
     ) {
       this.notificationsService.notifyCode('TM052');
@@ -454,23 +457,23 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
               data.approveStatus = '3';
               data.write = false;
               data.delete = false;
-              this.view.dataService.update(data).subscribe();    
+              this.view.dataService.update(data).subscribe();
 
             } else {
-              this.notificationsService.notifyCode(res?.msgCodeError);              
+              this.notificationsService.notifyCode(res?.msgCodeError);
             }
           });
       });
-    }    
+    }
     else
     {
       data.approveStatus = '5';
       data.write = false;
       data.delete = false;
-      this.view.dataService.update(data).subscribe(); 
+      this.view.dataService.update(data).subscribe();
       this.notificationsService.notifyCode('ES007');
       this.codxEpService.afterApprovedManual(this.formModel.entityName, data.recID,'5').subscribe();
-      
+
     }
   }
   addNew(evt?) {
@@ -575,7 +578,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         return;
       }
     }
-    this.view.dataService.delete([deleteItem]).subscribe((res) => {   
+    this.view.dataService.delete([deleteItem]).subscribe((res) => {
     });
   }
   sameDayCheck(sDate: any, eDate: any) {
@@ -595,7 +598,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  
+
 
   onSelect(obj: any) {
     //console.log(obj);

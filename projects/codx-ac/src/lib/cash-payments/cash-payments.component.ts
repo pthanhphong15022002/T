@@ -13,6 +13,7 @@ import {
   CallFuncService,
   DialogModel,
   DialogRef,
+  FormModel,
   RequestOption,
   UIComponent,
   ViewModel,
@@ -37,6 +38,8 @@ export class CashPaymentsComponent extends UIComponent {
   moreFuncName: any;
   funcName: any;
   parentID: string;
+  width: any;
+  height: any;
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
@@ -113,6 +116,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   add() {
+    this.loadscreen();
     this.headerText = this.moreFuncName + ' ' + this.funcName;
     this.view.dataService
       .addNew((o) => this.setDefault(o))
@@ -124,18 +128,30 @@ export class CashPaymentsComponent extends UIComponent {
         let option = new DialogModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.IsFull = true;
+        option.Position.X = 'right';
+        option.Position.Y = 'top';
+        option.IsModal = true;
         this.dialog = this.callfunc.openForm(
           PopAddCashComponent,
           '',
-          null,
-          null,
+          this.width,
+          this.height,
           this.view.funcID,
           obj,
           '',
           option
         );
       });
+  }
+
+  loadscreen() {
+    return new Promise<FormModel>((resolve, rejects) => {
+      var widthscreen = window.innerWidth;
+      const elmnt = document.getElementById('codx-aside');
+      var widthaside = elmnt.offsetWidth;
+      this.height = elmnt.offsetHeight;
+      this.width = widthscreen - widthaside;
+    });
   }
 
   edit(e, data) {
