@@ -119,7 +119,6 @@ export class PopAddCashComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.form.formGroup.patchValue(this.cashpayment);
-    console.log(this.form);
   }
   //#endregion
 
