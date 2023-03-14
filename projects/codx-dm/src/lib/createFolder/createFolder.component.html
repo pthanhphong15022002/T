@@ -499,9 +499,7 @@
         class="btn btn-primary"
         id="btnCreateFolder"
         [disabled]="
-          this.id
-            ? this.updateRight == false || this.propertiesFolder
-            : this.createRight == false || this.propertiesFolder
+          this.id ? (this.updateRight == false || this.propertiesFolder) : (this.createRight == false || this.propertiesFolder)
         "
         (click)="onFolderSave()"
       >

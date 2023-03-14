@@ -102,7 +102,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   fields: Object = { text: 'resourceName', value: 'resourceID' };
   disabledProject = false;
   listResources: string = '';
-  isClickSave =false;
+  isClickSave = false;
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -222,7 +222,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         'EP',
         'ResourcesBusiness',
         'GetListAvailableResourceAsync',
-        ['1', startDate, endDate, this.meeting.recID]
+        ['1', startDate, endDate, this.meeting.recID, false]
       )
       .subscribe((res) => {
         if (res) {
@@ -308,7 +308,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     } else if (this.action == 'edit') {
       op.method = 'UpdateMeetingsAsync';
       op.className = 'MeetingsBusiness';
-      data = [this.meeting, this.functionID];
+      data = [this.meeting, this.lstDelete];
     }
 
     op.data = data;
@@ -450,8 +450,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   async save() {
-    if(this.isClickSave) return;
-    this.isClickSave = true ;
+    if (this.isClickSave) return;
+    this.isClickSave = true;
     if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -564,15 +564,12 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     });
   }
   valueChangeCheckFullDay(e) {
-    this.isFullDay = e.data;
-    if (this.isFullDay) {
+    if (e?.data == true) {
       this.startTime = this.startTimeWork;
       this.endTime = this.endTimeWork;
-    } else {
-      this.endTime = null;
-      this.startTime = null;
     }
     this.setDate();
+    this.changDetec.detectChanges();
   }
 
   fullDayChangeWithTime() {
@@ -849,7 +846,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
   valueUser(resourceID) {
     if (resourceID != '') {
-      if (this.resources != null) {
+      if (this.resources != null && this.resources.length > 0) {
         var user = this.resources;
         var array = resourceID.split(';');
         var id = '';
@@ -915,6 +912,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       });
   }
 
+  lstDelete = [];
   onDeleteUser(index, list: CO_Resources[] = null) {
     if (list == null) {
       if (
@@ -922,6 +920,16 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         this.meeting.resources &&
         this.meeting.resources.length > 0
       ) {
+        var tmp = this.meeting.resources[index];
+        var check = this.lstDelete?.some((x) => x.resourceID == tmp.resourceID);
+
+        if (!check) {
+          var del = {};
+          del['objectID'] = tmp.resourceID;
+          del['objectName'] = tmp.resourceName;
+          del['objectType'] = "U";
+          this.lstDelete.push(del);
+        }
         this.meeting.resources.splice(index, 1);
         this.listUserID.splice(index, 1);
         this.changDetec.detectChanges();
@@ -935,6 +943,12 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       }
     }
   }
+
+  // checkDelete(index){
+  //   if(this.user.userID === this.resources[index].resourceID || this.resources[index].roleType == "A")
+  //     return false;
+  //   return false
+  // }
 
   showPopover(p, userID) {
     if (this.popover) this.popover.close();
@@ -1004,13 +1018,12 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           for (var i = 0; i < this.dayOnWeeks.length; i++) {
             var day = this.dayOnWeeks[i];
             if (day.shiftType == '1') {
-              this.startTimeWork = day.startTime;
-              endShiftType1 = day.endTime;
+              this.startTimeWork = day.startTime.length == 5 ? day.startTime : day.startTime.slice(0, 5);
+              endShiftType1 = day.endTime == 5 ? day.endTime : day.endTime.slice(0, 5);
             }
-
             if (day.shiftType == '2') {
-              this.endTimeWork = day.endTime;
-              starrShiftType2 = day.startTime;
+              this.endTimeWork = day.endTime == 5 ? day.endTime : day.endTime.slice(0, 5);
+              starrShiftType2 = day.startTime.length == 5 ? day.startTime : day.startTime.slice(0, 5);
             }
           }
 

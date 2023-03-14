@@ -22,6 +22,7 @@ import {
   FormModel,
   LayoutAddComponent,
   NotificationsService,
+  RequestOption,
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import {
@@ -38,24 +39,9 @@ export class PopupAddNewHRComponent
   extends UIComponent
   implements AfterViewInit
 {
-  constructor(
-    private inject: Injector,
-    private hrService: CodxHrService,
-    private df: ChangeDetectorRef,
-    private notify: NotificationsService,
-
-    @Optional() dialogData?: DialogData,
-    @Optional() dialogRef?: DialogRef
-  ) {
-    super(inject);
-    this.dialogRef = dialogRef;
-    this.data = this.dialogRef.dataService.dataSelected;
-
-    // this.formModel = ;
-    this.funcID = this.dialogRef.formModel.funcID;
-  }
-  dialogRef: DialogRef;
-  formModel: FormModel;
+  actionType: string;
+  dialog: DialogRef;
+  // formModel: FormModel;
   funcID;
 
   @ViewChild('form', { static: true }) form: LayoutAddComponent;
@@ -90,19 +76,37 @@ export class PopupAddNewHRComponent
     { field: 'trainLevel', error: '' },
   ];
 
-  onInit(): void {
-    //nho xoa
-    this.hrID = 'Dang test';
-    this.cache
-      .gridViewSetup(
-        this.dialogRef.formModel.formName,
-        this.dialogRef.formModel.gridViewName
-      )
-      .subscribe((res) => {
-        this.formModel = res;
-      });
+  constructor(
+    private inject: Injector,
+    private hrService: CodxHrService,
+    private df: ChangeDetectorRef,
+    private notify: NotificationsService,
 
-    //add validator (BA request)
+    @Optional() dialogData?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
+    super(inject);
+    this.dialog = dialog;
+    console.log('dialog', this.dialog);
+
+    this.data = this.dialog.dataService.dataSelected;
+
+    this.actionType = dialogData?.data?.actionType;
+
+    // this.formModel = ;
+    this.funcID = this.dialog.formModel.funcID;
+  }
+
+  onInit(): void {
+    // if(!this.formModel)
+    // this.cache
+    //   .gridViewSetup(
+    //     this.dialog.formModel.formName,
+    //     this.dialog.formModel.gridViewName
+    //   )
+    //   .subscribe((res) => {
+    //     this.formModel = res;
+    //   });
   }
 
   ngAfterViewInit() {
@@ -133,41 +137,44 @@ export class PopupAddNewHRComponent
     this.title = e;
   }
   changeID(e) {}
-  OnSaveForm() {
-    if (this.form.formGroup.valid) {
-      let tmpHR: HR_Employees_Extend = this.form.formGroup.value;
-      this.addEmployeeAsync(tmpHR);
+
+  beforeSave(option: RequestOption) {
+    option.assemblyName = 'ERM.Business.HR';
+    option.className = 'EmployeesBusiness';
+
+    let itemData = this.data;
+    if (this.actionType == 'add') {
+      option.methodName = 'AddEmployeeAsync';
     } else {
-      let controls = this.form.formGroup.controls;
-      let invalidControls = [];
-
-      for (let control in controls) {
-        if (controls[control].invalid) {
-          invalidControls.push(control);
-          let curHR_Validator = this.validateFields.find(
-            (field) => field.field == control
-          );
-          this.notify.notifyCode(curHR_Validator.error);
-        }
-      }
+      if (this.actionType == 'copy') {
+        option.methodName = 'AddNewAsync';
+      } else option.methodName = 'EditAsync';
     }
+
+    option.data = [itemData, this.funcID];
+    return true;
   }
 
-  addEmployeeAsync(employee: any) {
-    if (employee) {
-      this.api
-        .execSv(
-          'HR',
-          'ERM.Business.HR',
-          'EmployeesBusiness',
-          'AddEmployeeAsync',
-          [employee, this.funcID]
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.dialogRef.close(res);
+  onSaveForm() {
+    // if(this.form.formGroup.invalid){
+    //   this.hrService.notifyInvalid(this.form.formGroup, this.form.formModel);
+    //   return;
+    // }
+
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt), 0)
+      .subscribe((res) => {
+        if (res.update || res.save) {
+          let result = res.save;
+
+          if (res.update) {
+            result = res.update;
           }
-        });
-    }
+          this.data = result;
+          this.dialog && this.dialog.close(result);
+        }
+      });
   }
+
+  
 }

@@ -42,34 +42,79 @@
 
     <div class="form-group">
       <div>
-        <codx-label fiedName="taskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
-          default="Công việc chưa hoàn tất">
-        </codx-label>
-        <ul class="tree">
-          <li>Animals
-           <ul>
-            <li>Birds</li>
-            <li>Mammals
-             <ul>
-              <li>Elephant</li>
-              <li>Mouse</li>
-             </ul>
-            </li>
-            <li>Reptiles</li>
-           </ul>
-          </li>
-          <li>Plants
-           <ul>
-            <li>Flowers
-             <ul>
-              <li>Rose</li>
-              <li>Tulip</li>
-             </ul>
-            </li>
-            <li>Trees</li>
-           </ul>
-          </li>
-         </ul>
+        <div class="d-flex justify-content-end">
+          <div class="me-auto">
+            <codx-label fiedName="taskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
+            default="Công việc chưa hoàn tất">
+          </codx-label>
+          </div>
+          <div>
+            <codx-label fiedName="taskGroups" [formModel]="form.formModel" [Group]="form.formGroup"
+            default="Hoàn thành tất cả">
+          </codx-label>
+          </div>
+          <div class="ps-2">
+            <!-- <codx-input type="checkbox"  class="rounded-circle" [checked]="true"
+            (valueChange)="checkAllValue($event)">
+          </codx-input> -->
+            <input
+            class="form-check-input rounded-circle"
+            type="checkbox"
+            (change)="checkAllValue($event)"
+            />
+          </div>
+        </div>
+        <div class="pt-5">
+          <div class="accordion" id="accordion1">
+            <ng-container *ngFor="let item of listTree; let i = index">
+           
+              <ol class="list-unstyled" >
+                <li>
+                  <div class="d-flex justify-content-start pb-1">
+                    <button class="border border-2 h-50"  style="cursor: pointer;"
+                    id="open"
+                    type="button"
+                    (click)="myFunction($event)"
+                    ><i class="icon-add"></i> </button>
+                    <div class="ps-5 mt-1">
+                      {{item.taskGroupName}}
+                    </div>
+                    <div class="ms-auto">
+                      <div class="d-flex justify-content-end">
+                        <div> 
+                          <codx-imgs [isToolTip]="true" [width]="25" [objectId]="'DEV'" ojectType="AD_Users" [numberImages]="1">
+                          </codx-imgs>
+                        </div>
+                        <div class="notify">
+                          <span class="me-3">
+                            <codx-attachment-temp [objectID]="item.refID"></codx-attachment-temp>
+                          </span>
+                        </div>
+                        <div class="notify">
+                          <span class="me-3">
+                            <codx-comment-temp [objectID]="item.recID"></codx-comment-temp>
+                          </span>
+                        </div>
+                        <div>
+                          <input
+                          class="form-check-input rounded-circle"
+                          type="checkbox"
+                          (change)="checkAllValue($event)"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <ul class="tree ms-3" [ngStyle]="{ 'display': isShow ? 'none' : 'block' }">
+                   <li>Elephant</li>
+                   <li>Mouse</li>
+                  </ul>
+                </li>
+              </ol>    
+             </ng-container>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -7,7 +7,7 @@
 <ng-template #itemTemplate let-data>
     <ng-container *ngIf="data.transType == '1'; else transType2">
         <codx-temp-full [dataItem]="data" cardCss="card-template border-bottom p-3" [typeMF]="'hover'"
-            [formModel]="view.formModel" (clickMF)="clickMF($event,data)" [imageId]="data.itemID"
+            [formModel]="view.formModel" (clickMF)="clickMF($event,data)" [imageId]="data.userID"
             imageObjType="AD_Users" imageReferType="image" imgCss="me-3" [title]="data.userName"
             [desc]="data.transType | vll:'L1422':'text' | async" [status]="data.status" [statusVll]="'L1428'"
             [date]="data.createdOn" [bookmark]="false">
