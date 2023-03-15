@@ -55,5 +55,6 @@ export class CashReceipts {
   voucherDate: any;
   voucherNo: any;
   voucherTime: any;
+  voucherType:any
   write: any;
 }

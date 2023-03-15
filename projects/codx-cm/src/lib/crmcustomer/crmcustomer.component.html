@@ -19,11 +19,11 @@
     </span>
     <div class="mb-2">
       <span class="icon-phone_android text-primary icon-16 me-1"></span>
-      <span class="text-gray-700 text-primary">0702411141</span>
+      <span class="text-gray-900 text-primary">0702411141</span>
     </div>
     <div class="mb-2">
-      <span class="icon-email icon-16 me-1 text-gray-500"></span>
-      <span class="text-gray-700">tdnphuck42@gmail.com</span>
+      <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
+      <span class="text-gray-900">tdnphuck42@gmail.com</span>
     </div>
   </div>
 </ng-template>
@@ -54,9 +54,19 @@
   </codx-temp-full>
 </ng-template>
 <ng-template #descTmp let-data>
-  <div>
-    <span class="icon-email icon-16 me-1 text-gray-500"></span>
-    <span>Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
+  <div class="d-flex flex-column">
+    <div class="mt-1">
+      <span class="icon-phone_android text-primary icon-16 me-1"></span>
+      <span class="text-gray-900 text-primary">0702411141</span>
+    </div>
+    <div class="mt-1">
+      <span class="icon-email text-primary icon-16 me-1 text-gray-500"></span>
+      <span class="text-gray-900 text-primary">tdnphuck42@gmail.com</span>
+    </div>
+    <div class="mt-1">
+      <span class="icon-location_on icon-16 me-1 text-gray-500"></span>
+      <span>Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
+    </div>
   </div>
 </ng-template>
 <ng-template #footer let-data>
@@ -78,7 +88,6 @@
 <!--list details tempfull-->
 <!--Detail-->
 <ng-template #templateDetail>
-  <codx-crmcustomer-detail [dataService]="view.dataService" [formModel]="view.formModel"
-    [dataSelected]="dataSelected">
+  <codx-crmcustomer-detail [dataService]="view.dataService" [formModel]="view.formModel" [dataSelected]="dataSelected">
   </codx-crmcustomer-detail>
 </ng-template>
