@@ -5,6 +5,7 @@ import {
 } from './../../models/CO_MeetingTemplates.model';
 import {
   CO_Meetings,
+  CO_Permissions,
   CO_Resources,
   EP_BookingAttendees,
   EP_Boooking,
@@ -69,7 +70,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   endDate: any;
   action: any;
   linkURL = '';
-  resources: CO_Resources[] = [];
+  permissions: CO_Permissions[] = [];
   listUserID = [];
   template = new CO_MeetingTemplates();
   listRoles: any;
@@ -101,7 +102,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   reminder: any;
   fields: Object = { text: 'resourceName', value: 'resourceID' };
   disabledProject = false;
-  listResources: string = '';
+  listPermissions: string = '';
   isClickSave = false;
   constructor(
     private changDetec: ChangeDetectorRef,
@@ -121,7 +122,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.action = dt.data[0];
     this.titleAction = dt.data[1];
     this.disabledProject = dt.data[2];
-    this.listResources = dt?.data[3];
+    this.listPermissions = dt?.data[3];
     this.functionID = this.dialog.formModel.funcID;
 
     this.cache
@@ -153,9 +154,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     if (this.action == 'add' || this.action == 'copy') {
       let listUser = this.user?.userID;
 
-      if (this.listResources) {
-        if (!this.listResources.split(';').includes(listUser))
-          listUser += ';' + this.listResources;
+      if (this.listPermissions) {
+        if (!this.listPermissions.split(';').includes(listUser))
+          listUser += ';' + this.listPermissions;
       }
       this.getListUser(listUser);
     }
@@ -173,18 +174,18 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     if (this.action == 'add') {
       this.meeting.meetingType = '1';
-      this.resources = [];
+      this.permissions = [];
     } else if (this.action == 'edit') {
       // this.setTimeEdit();
 
       this.showLabelAttachment = this.meeting?.attachments > 0 ? true : false;
-      this.resources = this.meeting.resources;
-      if (this.resources?.length > 0) {
-        this.resources.forEach((obj) => this.listUserID.push(obj.resourceID));
+      this.permissions = this.meeting.permissions;
+      if (this.permissions?.length > 0) {
+        this.permissions.forEach((obj) => this.listUserID.push(obj.objectID));
       }
     } else if (this.action == 'copy') {
       this.meeting.meetingType = '1';
-      this.resources = [];
+      this.permissions = [];
       // this.setTimeEdit();
     }
     if (this.meeting.templateID) {
@@ -424,7 +425,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.tmSv
       .getResourcesTrackEvent(
         this.meeting.meetingID,
-        this.meeting.resources,
+        this.meeting.permissions,
         this.meeting.startDate,
         this.meeting.endDate
       )
@@ -543,7 +544,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     {
       icon: 'icon-person',
       text: 'Người tham gia',
-      name: 'Resources',
+      name: 'Permissions',
     },
     { icon: 'icon-playlist_add_check', text: 'Mở rộng', name: 'Open' },
     { icon: 'icon-work_outline', text: 'Công việc review', name: 'Job' },
@@ -559,8 +560,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   valueCbx(id, e) {
-    this.meeting.resources.forEach((res) => {
-      if (res.resourceID == id) res.taskControl = e.data;
+    this.meeting.permissions.forEach((res) => {
+      if (res.objectID == id) res.taskControl = e.data;
     });
   }
   valueChangeCheckFullDay(e) {
@@ -585,8 +586,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(event) {
-    if (event?.field === 'resources') {
-      this.meeting.resources = event.data[0];
+    if (event?.field === 'permissions') {
+      this.meeting.permissions = event.data[0];
     } else {
       if (event.data instanceof Object) {
         this.meeting[event.field] = event.data.value;
@@ -846,13 +847,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
   valueUser(resourceID) {
     if (resourceID != '') {
-      if (this.resources != null && this.resources.length > 0) {
-        var user = this.resources;
+      if (this.permissions != null && this.permissions.length > 0) {
+        var user = this.permissions;
         var array = resourceID.split(';');
         var id = '';
         var arrayNew = [];
         user.forEach((e) => {
-          id += e.resourceID + ';';
+          id += e.objectID + ';';
         });
         if (id != '') {
           id = id.substring(0, id.length - 1);
@@ -890,47 +891,69 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (res && res.length > 0) {
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
-            var tmpResource = new CO_Resources();
+            var tmpResource = new CO_Permissions();
             if (emp.userID == this.user.userID) {
-              tmpResource.resourceID = emp?.userID;
-              tmpResource.resourceName = emp?.userName;
+              tmpResource.objectID = emp?.userID;
+              tmpResource.objectName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
               tmpResource.roleType = 'A';
               tmpResource.taskControl = true;
-              this.resources.push(tmpResource);
+              tmpResource.objectType = 'U';
+              this.setPermissions(tmpResource, 'A');
+              this.permissions.push(tmpResource);
             } else {
-              tmpResource.resourceID = emp?.userID;
-              tmpResource.resourceName = emp?.userName;
+              tmpResource.objectID = emp?.userID;
+              tmpResource.objectName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
               tmpResource.roleType = 'P';
               tmpResource.taskControl = true;
-              this.resources.push(tmpResource);
+              tmpResource.objectType = 'U';
+              this.setPermissions(tmpResource, 'P');
+
+              this.permissions.push(tmpResource);
             }
-            this.meeting.resources = this.resources;
+            this.meeting.permissions = this.permissions;
           }
         }
       });
   }
 
+  setPermissions(tmpResource: CO_Permissions, roleType) {
+    if (roleType == 'A') {
+      tmpResource.full = true;
+      tmpResource.read = true;
+      tmpResource.create = true;
+      tmpResource.update = true;
+      tmpResource.assign = true;
+      tmpResource.delete = true;
+      tmpResource.share = true;
+      tmpResource.upload = true;
+      tmpResource.download = true;
+    } else if (roleType == 'S') {
+      tmpResource.download = true;
+      tmpResource.update = true;
+      tmpResource.read = true;
+    } else {
+      tmpResource.read = true;
+      tmpResource.download = true;
+    }
+  }
+
   lstDelete = [];
-  onDeleteUser(index, list: CO_Resources[] = null) {
+  onDeleteUser(index, list: CO_Permissions[] = null) {
     if (list == null) {
       if (
         this.meeting &&
-        this.meeting.resources &&
-        this.meeting.resources.length > 0
+        this.meeting.permissions &&
+        this.meeting.permissions.length > 0
       ) {
-        var tmp = this.meeting.resources[index];
-        var check = this.lstDelete?.some((x) => x.resourceID == tmp.resourceID);
+        var tmp = this.meeting.permissions[index];
+        var check = this.lstDelete?.some((x) => x.objectID == tmp.objectID);
 
         if (!check) {
-          var del = {};
-          del['objectID'] = tmp.resourceID;
-          del['objectName'] = tmp.resourceName;
-          del['objectType'] = "U";
-          this.lstDelete.push(del);
+          this.lstDelete.push(tmp);
         }
-        this.meeting.resources.splice(index, 1);
+        this.meeting.permissions.splice(index, 1);
         this.listUserID.splice(index, 1);
         this.changDetec.detectChanges();
       } else {
@@ -958,8 +981,12 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   selectRoseType(idUserSelected, value) {
-    this.meeting.resources.forEach((res) => {
-      if (res.resourceID == idUserSelected) res.roleType = value;
+    this.meeting.permissions.forEach((res) => {
+      if (res.objectID == idUserSelected) {
+        res.roleType = value;
+        res.objectType = "U";
+        this.setPermissions(res, value);
+      }
     });
     this.changDetec.detectChanges();
 
@@ -1018,12 +1045,20 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           for (var i = 0; i < this.dayOnWeeks.length; i++) {
             var day = this.dayOnWeeks[i];
             if (day.shiftType == '1') {
-              this.startTimeWork = day.startTime.length == 5 ? day.startTime : day.startTime.slice(0, 5);
-              endShiftType1 = day.endTime == 5 ? day.endTime : day.endTime.slice(0, 5);
+              this.startTimeWork =
+                day.startTime.length == 5
+                  ? day.startTime
+                  : day.startTime.slice(0, 5);
+              endShiftType1 =
+                day.endTime == 5 ? day.endTime : day.endTime.slice(0, 5);
             }
             if (day.shiftType == '2') {
-              this.endTimeWork = day.endTime == 5 ? day.endTime : day.endTime.slice(0, 5);
-              starrShiftType2 = day.startTime.length == 5 ? day.startTime : day.startTime.slice(0, 5);
+              this.endTimeWork =
+                day.endTime == 5 ? day.endTime : day.endTime.slice(0, 5);
+              starrShiftType2 =
+                day.startTime.length == 5
+                  ? day.startTime
+                  : day.startTime.slice(0, 5);
             }
           }
 
@@ -1065,11 +1100,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     booking.refID = data.recID; //mã lí do cuộc họp
     //tạo ds người tham gia cho EP
     let bookingAttendees = [];
-    data.resources.forEach((item) => {
+    data.permissions.forEach((item) => {
       let attender = new EP_BookingAttendees();
-      attender.userID = item.resourceID;
+      attender.userID = item.objectID;
       attender.roleType = item.roleType;
-      attender.userName = item.resourceName;
+      attender.userName = item.objectName;
       // attender.optional = item.optional;
       // attender.status = item.status;
       bookingAttendees.push(attender);

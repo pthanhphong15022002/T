@@ -69,6 +69,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() proccesNameMove: any;
   @Input() lstIDInvo: any;
   @Input() isClosed = false;
+  @Input() showColumnControl = 1 ;
   @Output() saveAssign = new EventEmitter<any>();;
   dateActual: any;
   startDate: any;
