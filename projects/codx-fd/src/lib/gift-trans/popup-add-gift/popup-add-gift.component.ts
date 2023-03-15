@@ -40,7 +40,6 @@ export class PopupAddGiftComponent implements OnInit {
   maxQuantity: number = 0;
   dg: any;
 
-
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
