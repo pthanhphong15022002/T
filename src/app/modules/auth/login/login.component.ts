@@ -109,8 +109,7 @@ export class LoginComponent implements OnInit, OnDestroy {
               // }
             }
           });
-      }
-      if (params.id && params.id == 'changePass') {
+      } else if (params.id && params.id == 'changePass') {
         this.mode = params.id;
         this.user = this.auth.get();
         this.email = this.user.email;
