@@ -382,8 +382,7 @@ export class InstanceDetailComponent implements OnInit {
     let classFooter = document.getElementsByClassName('codx-detail-footer')[0];
     let heightFT = classFooter.clientHeight;
 
-    var maxHeight = heightVD - heightHD - heightFT ;
-
+    var maxHeight = heightVD - heightHD - heightFT- 45 ;
     var div = document.getElementById('viewModeDetail');
     if (div) {
       div.style.setProperty('max-height', maxHeight + 'px', 'important');
