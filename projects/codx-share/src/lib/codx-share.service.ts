@@ -86,7 +86,8 @@ export class CodxShareService {
     var funcID = val?.functionID;
     switch (funcID) {
       //Giao việc
-      case 'ODT1013': {
+      case 'ODT1013':
+      case "ODT52013": {
         var task = new TM_Tasks();
         task.refID = data?.recID;
         task.refType = formModel.entityName;
