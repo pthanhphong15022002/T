@@ -171,6 +171,7 @@
           <ng-container *ngIf="tmpTeps">
             <codx-stages-detail
               [dataStep]="tmpTeps"
+              [showColumnControl]="showColumnControl(tmpTeps.stepID)"
               [formModel]="formModel"
               [currentStep]="currentNameStep"
               [stepID]="dataSelect.stepID"
@@ -194,6 +195,7 @@
             <codx-field-detail
               *ngIf="item?.fields?.length > 0"
               [dataStep]="item"
+              [showColumnControl]="showColumnControl(item.stepID)"
               [isUpdate]="dataSelect.write"
               [isClosed]="dataSelect.closed"
             ></codx-field-detail>
