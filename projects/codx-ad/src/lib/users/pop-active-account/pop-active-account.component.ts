@@ -62,4 +62,8 @@ export class PopActiveAccountComponent extends UIComponent {
       this.notify.notifyCode('SYS034');
     });
   }
+
+  closePopup() {
+    this.dialog.close();
+  }
 }
