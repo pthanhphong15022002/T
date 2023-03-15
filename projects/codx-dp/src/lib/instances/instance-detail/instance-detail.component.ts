@@ -375,14 +375,14 @@ export class InstanceDetailComponent implements OnInit {
   rollHeight() {
     let classViewDetail =
       document.getElementsByClassName('codx-detail-main')[0];
+    if(!classViewDetail)  return;
     let heightVD = classViewDetail.clientHeight;
     let classHeader = document.getElementsByClassName('codx-detail-header')[0];
     let heightHD = classHeader.clientHeight;
     let classFooter = document.getElementsByClassName('codx-detail-footer')[0];
     let heightFT = classFooter.clientHeight;
 
-    var maxHeight = heightVD - heightHD - heightFT;
-
+    var maxHeight = heightVD - heightHD - heightFT- 45 ;
     var div = document.getElementById('viewModeDetail');
     if (div) {
       div.style.setProperty('max-height', maxHeight + 'px', 'important');

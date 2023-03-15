@@ -27,7 +27,7 @@ import { InstancesComponent } from '../instances.component';
 @Component({
   selector: 'lib-popup-move-stage',
   templateUrl: './popup-move-stage.component.html',
-  styleUrls: ['./popup-move-stage.component.css'],
+  styleUrls: ['./popup-move-stage.component.scss'],
 })
 export class PopupMoveStageComponent implements OnInit {
   dialog: any;
@@ -135,7 +135,7 @@ export class PopupMoveStageComponent implements OnInit {
   getStepByStepIDAndInID(insID, stepID) {
     this.dpSv.getStepByStepIDAndInID(insID, stepID).subscribe((res) => {
       if (res) {
-        this.updateDataInstance(res);
+    //    this.updateDataInstance(res);
         this.stepCurrent = res;
         var i = -1;
         this.assignControl = this.stepCurrent.assignControl;
@@ -224,8 +224,8 @@ export class PopupMoveStageComponent implements OnInit {
       this.instancesStepOld.owner = this.owner;
       this.instancesStepOld.stepID = this.stepIdClick;
     }
-    this.upadteProgessIsDone(this.listTaskDone, this.listTask, 'task');
-    this.upadteProgessIsDone(this.listTaskGroupDone, this.listTaskGroup, 'taskGroup');
+    // this.upadteProgessIsDone(this.listTaskDone, this.listTask, 'task');
+    // this.upadteProgessIsDone(this.listTaskGroupDone, this.listTaskGroup, 'taskGroup');
 
     var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
     this.codxDpService.moveStageByIdInstance(data).subscribe((res) => {
