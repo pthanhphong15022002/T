@@ -1,3 +1,4 @@
+import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import { T } from '@angular/cdk/keycodes';
 import {
   ChangeDetectorRef,
@@ -43,6 +44,8 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
   lstSubContract: any;
   headerText: string;
   employeeObj: any;
+  fmSubContract: FormModel;
+  
 
   dataCbxContractType: any;
   @ViewChild('form') form: CodxFormComponent;
@@ -50,6 +53,7 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     private injector: Injector,
     private cr: ChangeDetectorRef,
     private notify: NotificationsService,
+    private df: ChangeDetectorRef,
     private hrSevice: CodxHrService,
     private codxShareService: CodxShareService,
     private callfunc: CallFuncService,
@@ -74,6 +78,11 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     if(this.actionType == 'edit'){
       this.employeeObj = this.data.emp
     }
+
+    this.fmSubContract = new FormModel();
+    this.fmSubContract.entityName = 'HR_EContracts';
+    this.fmSubContract.gridViewName = 'grvEContractsPL';
+    this.fmSubContract.formName = 'EContracts';
   }
 
   onInit(): void {
@@ -252,30 +261,6 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
     }
   }
 
-  handleSubContract(headerText : string, actionType: string, data: any) {
-    let optionSub = new SidebarModel();
-    optionSub.Width = '550px';
-    optionSub.zIndex = 1001;
-    let popupSubContract = this.callfc.openForm(
-      PopupSubEContractComponent,
-      '',
-      550,
-      screen.height,
-      '',
-      {
-        employeeId: this.data.employeeID,
-        contractNo: this.data.contractNo,
-        actionType: actionType,
-        dataObj: data,
-        headerText: headerText,
-      }
-    );
-    popupSubContract.closed.subscribe((res) => {
-      if (res) {
-      }
-    });
-  }
-
   handleSelectEmp(evt){
     if(evt.data != null){
       this.employeeId = evt.data
@@ -292,5 +277,76 @@ export class PopupEProcessContractComponent extends UIComponent implements OnIni
         }
       });
     }
+  }
+
+  clickMFSubContract(evt, data){
+      switch (evt.functionID) {
+        case 'SYS02':
+          this.notify.alertCode('SYS030').subscribe((x) => {
+            if (x.event?.status == 'Y') {
+              this.hrSevice.deleteEContract(data).subscribe((res) => {
+                if(res != null){
+                  this.notify.notifyCode('SYS008');
+                  let i = this.lstSubContract.indexOf(data)
+                  if(i != -1){
+                    this.lstSubContract.splice(i, 1);
+                  }
+                  this.df.detectChanges();
+                }
+              })
+            }
+          })
+
+          break;
+        case 'SYS03':
+          this.handleSubContract(evt.text, 'edit', data)
+          break;
+        case 'SYS04':
+          this.copyValue(evt.text, data)
+          break;
+    }
+  }
+
+
+  copyValue(actionHeaderText, data){
+    this.hrSevice
+    .copy(data, this.fmSubContract, 'RecID')
+    .subscribe((res) => {
+      this.handleSubContract(actionHeaderText, 'copy', res);
+    });
+  }
+
+  handleSubContract(actionHeaderText: string, actionType: string, data: any) {
+    let optionSub = new SidebarModel();
+    optionSub.Width = '550px';
+    optionSub.zIndex = 1001;
+    let popupSubContract = this.callfc.openForm(
+      PopupSubEContractComponent,
+      '',
+      550,
+      screen.height,
+      '',
+      {
+        employeeId: this.data.employeeID,
+        contractNo: this.data.contractNo,
+        actionType: actionType,
+        dataObj: data,
+        headerText: actionHeaderText + 'Phụ lục hợp đồng lao động',
+      }
+    );
+    popupSubContract.closed.subscribe((res) => {
+      if (res.event) {
+        if(actionType == 'add'){
+          this.lstSubContract.push(res.event[0]);
+          this.df.detectChanges();
+        }
+        else if(actionType == 'edit'){
+          debugger
+          let index = this.lstSubContract.indexOf(data);
+          this.lstSubContract[index] = res.event[0];
+          this.df.detectChanges();
+        }
+      }
+    });
   }
 }

@@ -10,7 +10,7 @@
     [footer]="tabs"
   >
     <ng-template #header>
-      <div class="container_detail mt-2 mb-2">
+      <div class="container_detail mt-2">
         <div class="d-flex justify-content-between">
           <div class="d-flex flex-column">
             <h3 class="mb-0">
@@ -24,6 +24,20 @@
                 [value]="dataSelect?.tags"
               >
               </codx-tag>
+            </div>
+            <div class="d-flex align-items-start">
+              <div class="me-2">
+                <codx-label
+                  class="text-gray-500 text-nowrap"
+                  fiedName="Memo"
+                  [formModel]="formModel"
+                  default="Mô tả: "
+                ></codx-label>
+              </div>
+              <div class="text-dark"
+                *ngIf="dataSelect?.memo"
+                [innerHTML]="sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)"
+              ></div>
             </div>
             <!-- <div class="mb-6">
               <div class="d-flex align-items-center mb-1">
@@ -97,22 +111,10 @@
           </div>
         </div>
       </div>
-      <div class="d-flex align-items-start">
-        <div class="me-3" style="white-space: nowrap">
-          <codx-label
-            class="text-dark"
-            fiedName="Memo"
-            [formModel]="formModel"
-            default="Mô tả: "
-          ></codx-label>
-        </div>
-        <div class="text"
-          *ngIf="dataSelect?.memo"
-          [innerHTML]="sanitizer.bypassSecurityTrustHtml(dataSelect?.memo)"
-        ></div>
-      </div>
-      <div class="d-flex justify-content-end">
+      
+      <div class="d-flex justify-content-end instance-select">
         <codx-input
+          class="no-boder"
           type="valuelist"
           refValue="DP034"
           [crrValue]="viewModelDetail"
@@ -169,6 +171,7 @@
           <ng-container *ngIf="tmpTeps">
             <codx-stages-detail
               [dataStep]="tmpTeps"
+              [showColumnControl]="showColumnControl(tmpTeps.stepID)"
               [formModel]="formModel"
               [currentStep]="currentNameStep"
               [stepID]="dataSelect.stepID"
@@ -192,6 +195,7 @@
             <codx-field-detail
               *ngIf="item?.fields?.length > 0"
               [dataStep]="item"
+              [showColumnControl]="showColumnControl(item.stepID)"
               [isUpdate]="dataSelect.write"
               [isClosed]="dataSelect.closed"
             ></codx-field-detail>

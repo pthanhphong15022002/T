@@ -31,18 +31,14 @@
     <div class="form-group">
       <div class="text-primary mb-1">
         <codx-label
-          fiedName="StepName"
+          fiedName="StepName"      
           [formModel]="form?.formModel"
-          default="Thuộc giai đoạn/nhóm"
+          default="Thuộc giai đoạn"
         >
         </codx-label>
       </div>
       <div>
         <codx-label [default]="stepName"> </codx-label>
-        <span *ngIf="taskGroupName"> > </span>
-        <span style="font-weight: 500">
-          {{ taskGroupName }}
-        </span>
       </div>
     </div>
     <!--End Link group -->

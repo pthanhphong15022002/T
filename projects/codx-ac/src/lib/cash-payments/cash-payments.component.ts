@@ -40,6 +40,7 @@ export class CashPaymentsComponent extends UIComponent {
   parentID: string;
   width: any;
   height: any;
+  innerWidth: any;
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
@@ -65,7 +66,9 @@ export class CashPaymentsComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.innerWidth = window.innerWidth;
+  }
 
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
@@ -135,7 +138,7 @@ export class CashPaymentsComponent extends UIComponent {
           PopAddCashComponent,
           '',
           this.width,
-          this.height,
+          969,
           this.view.funcID,
           obj,
           '',
@@ -143,18 +146,8 @@ export class CashPaymentsComponent extends UIComponent {
         );
       });
   }
-
-  loadscreen() {
-    return new Promise<FormModel>((resolve, rejects) => {
-      var widthscreen = window.innerWidth;
-      const elmnt = document.getElementById('codx-aside');
-      var widthaside = elmnt.offsetWidth;
-      this.height = elmnt.offsetHeight;
-      this.width = widthscreen - widthaside;
-    });
-  }
-
   edit(e, data) {
+    this.loadscreen();
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -168,12 +161,13 @@ export class CashPaymentsComponent extends UIComponent {
         let option = new DialogModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.IsFull = true;
+        option.Position.X = 'right';
+        option.Position.Y = 'top';
         this.dialog = this.callfunc.openForm(
           PopAddCashComponent,
           '',
-          null,
-          null,
+          this.width,
+          this.height,
           this.view.funcID,
           obj,
           '',
@@ -182,6 +176,7 @@ export class CashPaymentsComponent extends UIComponent {
       });
   }
   copy(e, data) {
+    this.loadscreen();
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -195,12 +190,13 @@ export class CashPaymentsComponent extends UIComponent {
         let option = new DialogModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.IsFull = true;
+        option.Position.X = 'right';
+        option.Position.Y = 'top';
         this.dialog = this.callfunc.openForm(
           PopAddCashComponent,
           '',
-          null,
-          null,
+          this.width,
+          this.height,
           this.view.funcID,
           obj,
           '',
@@ -233,6 +229,14 @@ export class CashPaymentsComponent extends UIComponent {
   //#endregion
 
   //#region Function
+  loadscreen() {
+    return new Promise<FormModel>((resolve, rejects) => {
+      const elmnt = document.getElementById('codx-aside');
+      var widthaside = elmnt.offsetWidth;
+      this.height = elmnt.offsetHeight;
+      this.width = this.innerWidth - widthaside;
+    });
+  }
   beforeDelete(opt: RequestOption, data) {
     opt.methodName = 'DeleteAsync';
     opt.className = 'CashPaymentsBusiness';

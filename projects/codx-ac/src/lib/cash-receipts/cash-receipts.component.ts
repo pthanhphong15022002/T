@@ -57,6 +57,7 @@ export class CashReceiptsComponent extends UIComponent {
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) this.funcName = res.defaultName;
+      this.view.dataService.setPredicates(['JournalNo=@0'], [this.funcName]).subscribe();
     });
     this.views = [
       {

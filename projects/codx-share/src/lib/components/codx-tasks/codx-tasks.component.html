@@ -137,13 +137,12 @@
         *ngIf="setting?.countObjects"
         class="d-flex align-items-end me-2 codx-badge"
       >
-        <div class="d-flex align-items-center position-relative me-4">
-          <span class="icon-mode_comment icon-20 text-gray-400"></span>
-          <span
-            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
-            >{{ data?.comments }}</span
-          >
-        </div>
+        <codx-comment-temp
+          [objectID]="data.recID"
+          [viewType]="3"
+          [openViewPopup]="false"
+        ></codx-comment-temp>
+
         <div class="d-flex align-items-center position-relative me-4">
           <span class="icon-check_box icon-20 text-gray-400"></span>
           <span
@@ -151,15 +150,17 @@
             >{{ data?.todo }}</span
           >
         </div>
-        <div class="d-flex align-items-center position-relative me-4">
-          <span class="icon-attach_file icon-20 text-gray-400"></span>
-          <span
-            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
-            >{{ data?.attachments }}</span
-          >
-        </div>
+        <codx-attachment-temp
+          [objectID]="data?.recID"
+          [formModel]="view.formModel"
+          [viewType]="3"
+          [openViewPopup]="false"
+        ></codx-attachment-temp>
       </div>
-      <div class="symbol-group symbol-hover justify-content-end" id="{{data.taskID}}">
+      <div
+        class="symbol-group symbol-hover justify-content-end"
+        id="{{ data.taskID }}"
+      >
         <ng-container
           *ngIf="
             data.category == '3' &&
@@ -169,13 +170,13 @@
             else avatTemplate
           "
         >
-          <codx-imgs 
+          <codx-imgs
             [width]="30"
             [objectId]="data.assignTo"
             objectType="AD_Users"
             [numberImages]="3"
             (mouseenter)="popoverEmpList(popoverList, data)"
-            (mouseleave)="popoverEmpList(null,data,false)"
+            (mouseleave)="popoverEmpList(null, data, false)"
             [ngbPopover]="popEmpList"
             popoverClass="taskPopoverClass"
             #popoverList="ngbPopover"
@@ -464,9 +465,9 @@
     </div>
     <div
       *ngIf="data.category == '3'"
-      id="{{data.taskID}}"
+      id="{{ data.taskID }}"
       (mouseenter)="popoverEmpList(popoverList, data)"
-      (mouseleave)="popoverEmpList(null,data,false)"
+      (mouseleave)="popoverEmpList(null, data, false)"
       [ngbPopover]="popEmpList"
       popoverClass="taskPopoverClass"
       #popoverList="ngbPopover"
@@ -497,100 +498,98 @@
 </ng-template>
 
 <ng-template #popEmpList>
-
-    <div class="fw-bold mb-1">
-      <codx-label
-        name="AssignmentList"
-        formName="Tasks"
-        default="Danh sách phân công cho"
-      ></codx-label>
-      <span class="">{{ "(" + countResource + ")" }}</span>
-    </div>
-    <div class="mb-1">
-      <codx-searchbar
-        *ngIf="countResource > 10"
-        (searchEvent)="searchName($event)"
-      ></codx-searchbar>
-    </div>
-    <div class="mt-1 w-100">
-      <div class="float-left justify-content-end me-2">
-        <ng-container *ngFor="let item of listRoles">
-          <div class="d-flex align-items-center me-2">
-            <span class="me-1"
-              ><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt=""
-            /></span>
-            <div class="fs-8 text-gray-500 text-nowrap mt-1">
-              {{ item.text }}
-            </div>
-          </div>
-        </ng-container>
-      </div>
-    </div>
-    <div class="listuser-box">
-      <div
-        class="d-flex align-items-start user-card py-2"
-        *ngFor="let item of listTaskResousceSearch"
-      >
-        <div class="me-3">
-          <div style="position: relative">
-            <codx-img
-              [width]="30"
-              [objectId]="item?.resourceID"
-              objectType="AD_Users"
-            >
-            </codx-img>
-            <div style="position: absolute; right: 0px; bottom: 0px">
-              <ng-container *ngFor="let role of listRoles">
-                <ng-container *ngIf="role.value == item.roleType">
-                  <span
-                    ><img
-                      src="/assets/themes/tm/default/img/{{ role.icon }}"
-                      alt=""
-                  /></span>
-                </ng-container>
-              </ng-container>
-            </div>
+  <div class="fw-bold mb-1">
+    <codx-label
+      name="AssignmentList"
+      formName="Tasks"
+      default="Danh sách phân công cho"
+    ></codx-label>
+    <span class="">{{ "(" + countResource + ")" }}</span>
+  </div>
+  <div class="mb-1">
+    <codx-searchbar
+      *ngIf="countResource > 10"
+      (searchEvent)="searchName($event)"
+    ></codx-searchbar>
+  </div>
+  <div class="mt-1 w-100">
+    <div class="float-left justify-content-end me-2">
+      <ng-container *ngFor="let item of listRoles">
+        <div class="d-flex align-items-center me-2">
+          <span class="me-1"
+            ><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt=""
+          /></span>
+          <div class="fs-8 text-gray-500 text-nowrap mt-1">
+            {{ item.text }}
           </div>
         </div>
-        <div class="d-flex flex-column flex-grow-1">
-          <div class="text-dark fw-bold">{{ item?.resourceName }}</div>
-          <div class="text-gray-700 fs-7">{{ item?.positionName }}</div>
-          <div class="text-gray-500 fs-7">{{ item?.memo }}</div>
-          <!-- || item?.roleType == 'A'  trước đó có A mà giờ ko A vì a ko thực hiện => ko status ? ?? thương-->
-          <div
-            class="d-flex align-items-center mt-1"
-            *ngIf="item?.roleType == 'R' || item?.roleType == 'A'"
+      </ng-container>
+    </div>
+  </div>
+  <div class="listuser-box">
+    <div
+      class="d-flex align-items-start user-card py-2"
+      *ngFor="let item of listTaskResousceSearch"
+    >
+      <div class="me-3">
+        <div style="position: relative">
+          <codx-img
+            [width]="30"
+            [objectId]="item?.resourceID"
+            objectType="AD_Users"
           >
-            <div class="d-flex align-items-end me-2 codx-badge">
-              <span>
-                <codx-vll
-                  [name]="'TM004'"
-                  [field]="'Status'"
-                  [value]="item?.status"
-                  [showText]="true"
-                  [showBgColor]="true"
-                  class="badge badge-light badge-md fs-7 me-2"
-                >
-                </codx-vll>
-              </span>
-              <span>
-                <span class="text-gray-700" #dueDate>{{
-                  item.dueDate
-                    | formatvalue
-                      : view.formModel
-                      : "dueDate"
-                      : dueDate
-                      : "Tasks"
-                      : "grvTasks"
-                    | async
-                }}</span>
-              </span>
-            </div>
+          </codx-img>
+          <div style="position: absolute; right: 0px; bottom: 0px">
+            <ng-container *ngFor="let role of listRoles">
+              <ng-container *ngIf="role.value == item.roleType">
+                <span
+                  ><img
+                    src="/assets/themes/tm/default/img/{{ role.icon }}"
+                    alt=""
+                /></span>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="text-dark fw-bold">{{ item?.resourceName }}</div>
+        <div class="text-gray-700 fs-7">{{ item?.positionName }}</div>
+        <div class="text-gray-500 fs-7">{{ item?.memo }}</div>
+        <!-- || item?.roleType == 'A'  trước đó có A mà giờ ko A vì a ko thực hiện => ko status ? ?? thương-->
+        <div
+          class="d-flex align-items-center mt-1"
+          *ngIf="item?.roleType == 'R' || item?.roleType == 'A'"
+        >
+          <div class="d-flex align-items-end me-2 codx-badge">
+            <span>
+              <codx-vll
+                [name]="'TM004'"
+                [field]="'Status'"
+                [value]="item?.status"
+                [showText]="true"
+                [showBgColor]="true"
+                class="badge badge-light badge-md fs-7 me-2"
+              >
+              </codx-vll>
+            </span>
+            <span>
+              <span class="text-gray-700" #dueDate>{{
+                item.dueDate
+                  | formatvalue
+                    : view.formModel
+                    : "dueDate"
+                    : dueDate
+                    : "Tasks"
+                    : "grvTasks"
+                  | async
+              }}</span>
+            </span>
           </div>
         </div>
       </div>
     </div>
- 
+  </div>
 </ng-template>
 
 <ng-template #baseHeaderRightTmp let-data>

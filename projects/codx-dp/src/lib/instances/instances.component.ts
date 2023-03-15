@@ -734,9 +734,12 @@ export class InstancesComponent
   // end code
 
   #region;
-  moveStage(dataMore, data, instanceStep) {
+  moveStage(dataMore, data, listStepCbx) {
     if (!this.isClick) {
       return;
+    }
+    if(listStepCbx.length == 0 || listStepCbx == null) {
+      listStepCbx = this.listSteps;
     }
     this.isClick = false;
     this.crrStepID = data.stepID;
@@ -753,20 +756,23 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
+            var stepReason = {
+              isUseFail:this.isUseFail,
+              isUseSuccess:this.isUseSuccess
+            }
             var obj = {
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
               instance: data,
-              listStepCbx: this.listSteps,
-              instanceStep: instanceStep,
+              listStepCbx: listStepCbx,
               stepIdClick: this.stepIdClick,
-              // stepReason: stepReason1
+              stepReason: stepReason
             };
             var dialogMoveStage = this.callfc.openForm(
               PopupMoveStageComponent,
               '',
+              850,
               900,
-              950,
               '',
               obj
             );
@@ -789,6 +795,7 @@ export class InstancesComponent
                 this.detailViewInstance.instance = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
                 this.view.dataService.update(data).subscribe();
+                if (this.kanban) this.kanban.updateCard(data);
                 this.detectorRef.detectChanges();
               }
             });
@@ -853,6 +860,7 @@ export class InstancesComponent
                 this.dataSelected = data;
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.view.dataService.update(data).subscribe();
+                if (this.kanban) this.kanban.updateCard(data);
                 this.detectorRef.detectChanges();
               }
             });
@@ -893,7 +901,7 @@ export class InstancesComponent
       .map((x) => x.stepName)[0];
   }
   clickMoreFunc(e) {
-    //   this.lstStepInstances = e.lstStepInstance;
+    this.lstStepInstances = e.lstStepCbx;
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {

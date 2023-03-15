@@ -16,6 +16,7 @@ import { ApiHttpService, CallFuncService, DialogModel } from 'codx-core';
 })
 export class CodxCommentTempComponent implements OnInit {
   @Input() objectID: string = null;
+  @Input() viewType = '0'; // Thảo customview
   @Input() zIndex: number = 0; // Thảo truyền z index
   @Input() openViewPopup = true ;// Thảo truyền ko cho click
   lstData: any[] = [];
