@@ -186,8 +186,8 @@ export class FileService implements OnDestroy {
         return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM , folder, folderID , folderName,parentID,idField]);
     }
 
-    UpdateRequestAsync(id: string, objectID: string, status: string, isActive: boolean): Observable<any> {
-        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "UpdateRequestAsync", [id, objectID, status, isActive]);
+    UpdateRequestAsync(id: string, objectID: string, status: string, isActive: boolean , funcID: string = ""): Observable<any> {
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "UpdateRequestAsync", [id, objectID, status, isActive,funcID]);
     }
 
     updateVersionFile(file: FileUpload): Observable<any> {
