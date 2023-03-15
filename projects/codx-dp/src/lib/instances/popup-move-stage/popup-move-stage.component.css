@@ -45,7 +45,7 @@ ul.tree li:last-child:before {
   border-left: 1px dashed #ccc;
 }
 /* li{
-  list-style: none; 
+  list-style: none;
 } */
 
 .hidden{
@@ -60,30 +60,6 @@ ul.tree li:last-child:before {
   align-items: center;
   margin: 0 5px;
   position: relative;
-
-  .text {
-
-    font-weight: 600;
-  }
-
-  .text-mes {
-    position: absolute;
-    top: 3px;
-    right: -10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #2392ef;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-
-    span {
-      font-size: 12px;
-      color: white;
-      font-weight: 600;
-    }
-  }
 }
 .btnCustom{
   display: flex;
@@ -103,3 +79,27 @@ ul.tree li:last-child:before {
   justify-content: center;
   align-items: center;
 }
+.text {
+
+  font-weight: 600;
+}
+
+.text-mes {
+  position: absolute;
+  top: 3px;
+  right: -10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2392ef;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+
+
+}
+/* .span {
+  font-size: 12px;
+  color: white;
+  font-weight: 600;
+} */
