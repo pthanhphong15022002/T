@@ -60,7 +60,8 @@
             <input
             class="form-check-input rounded-circle"
             type="checkbox"
-
+            [checked]="isCheckAll"
+            (change)="checkAllValue($event,'all','custom')"
 
             />
           </div>
@@ -75,8 +76,8 @@
                     <button class="btn btn-outline-secondary btnCustom" style="cursor: pointer;"
                     id="open"
                     type="button"
-
-                    ><i [id]="'parent'+i" class="icon-remove" style="padding: 0.35rem;"></i> </button>
+                    (click)="myFunction($event,i)"
+                    ><i [id]="'parent'+i" [class]="item.children.length > 0 ?'icon-remove':'icon-add' " style="padding: 0.35rem;"></i> </button>
                     <div class="ps-5 mt-1">
                       {{item.taskGroupName}}
                     </div>
@@ -100,7 +101,8 @@
                           <input
                           class="form-check-input rounded-circle"
                           type="checkbox"
-
+                          [checked]="isCheckAll"
+                          (change)="checkAllValue($event,item,'taskGroup')"
 
                           />
                         </div>
@@ -114,9 +116,11 @@
                               <div class="d-flex justify-content-start">
                                 <div
                                 class="icon-container"
+                                [ngStyle]="getColor(task)"
                               >
                                 <span
                                   class="icon-18 text-primary-600 py-2"
+                                  [ngClass]="getIconTask(task)"
                                  ></span>
                               </div>
                                 <div class="ps-5 mt-1"> {{task.taskName}}</div>
@@ -140,7 +144,8 @@
                                       <input
                                       class="form-check-input rounded-circle"
                                       type="checkbox"
-
+                                      [checked]="isCheckAll"
+                                      (change)="checkAllValue($event,task,'task')"
 
                                       />
                                     </div>
