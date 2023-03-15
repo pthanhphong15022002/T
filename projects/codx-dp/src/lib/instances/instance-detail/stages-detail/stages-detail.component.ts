@@ -561,6 +561,8 @@ export class StagesDetailComponent implements OnInit {
         taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
         this.taskGroupList.push(taskGroup);
       }
+      console.log( this.taskGroupList);
+      
       this.taskList = step['tasks'];
     }
   }
