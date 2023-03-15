@@ -69,7 +69,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() proccesNameMove: any;
   @Input() lstIDInvo: any;
   @Input() isClosed = false;
-  @Output() saveAssign = new EventEmitter<any>();;
+  @Output() saveAssign = new EventEmitter<any>();
   dateActual: any;
   startDate: any;
   progress: string = '0';
@@ -82,6 +82,7 @@ export class StagesDetailComponent implements OnInit {
   // taskGroup: DP_Instances_Steps_TaskGroups;
   grvTaskGroupsForm: FormModel;
   dataProgress: any;
+  dataProgressClone: any;
   dataProgressCkeck: any;
   showLabelAttachment = false;
   user;
@@ -122,7 +123,6 @@ export class StagesDetailComponent implements OnInit {
   listReasonStep: DP_Instances_Steps_Reasons[] = [];
   listReasonsClick: DP_Instances_Steps_Reasons[] = [];
   dialogPopupReason: DialogRef;
-  
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   titleReason: any;
@@ -463,16 +463,16 @@ export class StagesDetailComponent implements OnInit {
         this.viewTask(task);
         break;
       case 'DP13':
-        this.assignTask(e.data,task)
-      break;
+        this.assignTask(e.data, task);
+        break;
     }
   }
   //giao viec
-  assignTask(moreFunc,data){
+  assignTask(moreFunc, data) {
     var task = new TM_Tasks();
-    task.taskName = data.taskName ;
+    task.taskName = data.taskName;
     task.refID = data?.recID;
-    task.refType = "DP_Instance";
+    task.refType = 'DP_Instance';
     task.dueDate = data?.endDate;
     let assignModel: AssignTaskModel = {
       vllRole: 'TM001',
@@ -489,27 +489,27 @@ export class StagesDetailComponent implements OnInit {
       option
     );
     dialogAssign.closed.subscribe((e) => {
-      var doneSave = false ;
-      if(e && e.event!=null){
-        doneSave = true ;
+      var doneSave = false;
+      if (e && e.event != null) {
+        doneSave = true;
       }
       this.saveAssign.emit(doneSave);
-    })
+    });
   }
   //View task
   viewTask(data?: any, type?: string) {
-    let listTaskConvert = this.taskList?.map(item => {
-      return{
+    let listTaskConvert = this.taskList?.map((item) => {
+      return {
         ...item,
         name: item?.taskName,
         type: item?.taskType,
-      }
-    })
+      };
+    });
     let value = JSON.parse(JSON.stringify(data));
     value['name'] = value['taskName'] || value['taskGroupName'];
     value['type'] = value['taskType'] || type;
     if (data) {
-      this.callfc.openForm(ViewJobComponent, '', 700, 550, '', {
+      this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
         value: value,
         listValue: listTaskConvert,
       });
@@ -538,7 +538,7 @@ export class StagesDetailComponent implements OnInit {
 
   //taskGroup
   groupByTask(data) {
-    let step = JSON.parse(JSON.stringify(data));    
+    let step = JSON.parse(JSON.stringify(data));
     if (!step['isSuccessStep'] && !step['isFailStep']) {
       const taskGroupList = step?.tasks.reduce((group, product) => {
         const { taskGroupID } = product;
@@ -580,7 +580,7 @@ export class StagesDetailComponent implements OnInit {
         this.openTypeTask();
         break;
       case 'DP12':
-        this.viewTask(data,'G');
+        this.viewTask(data, 'G');
         break;
     }
   }
@@ -704,7 +704,8 @@ export class StagesDetailComponent implements OnInit {
   }
   openUpdateProgress(data?: any) {
     if (data) {
-      this.dataProgress = data;
+      this.dataProgress = JSON.parse(JSON.stringify(data));
+      this.dataProgressClone = data;
     }
     this.popupUpdateProgress = this.callfc.openForm(
       this.updateProgress,
@@ -721,12 +722,36 @@ export class StagesDetailComponent implements OnInit {
     }
   }
 
-  handelProgress() {
-    if (this.dataProgress['taskGroupID'] === undefined) {
-      this.updateProgressGroupTask();
-    } else {
-      this.updateProgressTask();
+  async handelProgress() {
+    if (this.dataProgress?.progress == 100 && !this.dataProgress?.actualEnd) {
+      this.notiService.notifyCode('SYS009', 0, 'Ngày hoàn thành thực tế');
+      return;
     }
+    if (this.attachment && this.attachment.fileUploadList.length) {
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          this.dataProgressClone['progress'] = this.dataProgress['progress'];
+          this.dataProgressClone['actualEnd'] = this.dataProgress['actualEnd'];
+          this.dataProgressClone['note'] = this.dataProgress['note'];
+          if (this.dataProgress['taskGroupID'] === undefined) {
+            this.updateProgressGroupTask();
+          } else {
+            this.updateProgressTask();
+          }
+        }
+      });
+    }else{
+      this.dataProgressClone['progress'] = this.dataProgress['progress'];
+          this.dataProgressClone['actualEnd'] = this.dataProgress['actualEnd'];
+          this.dataProgressClone['note'] = this.dataProgress['note'];
+          if (this.dataProgress['taskGroupID'] === undefined) {
+            this.updateProgressGroupTask();
+          } else {
+            this.updateProgressTask();
+          }
+    }
+
+   
   }
 
   updateProgressGroupTask() {
