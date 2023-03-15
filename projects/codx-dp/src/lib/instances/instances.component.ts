@@ -795,6 +795,7 @@ export class InstancesComponent
                 this.detailViewInstance.instance = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
                 this.view.dataService.update(data).subscribe();
+                if (this.kanban) this.kanban.updateCard(data);
                 this.detectorRef.detectChanges();
               }
             });
@@ -859,6 +860,7 @@ export class InstancesComponent
                 this.dataSelected = data;
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.view.dataService.update(data).subscribe();
+                if (this.kanban) this.kanban.updateCard(data);
                 this.detectorRef.detectChanges();
               }
             });

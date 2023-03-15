@@ -27,7 +27,7 @@ import { InstancesComponent } from '../instances.component';
 @Component({
   selector: 'lib-popup-move-stage',
   templateUrl: './popup-move-stage.component.html',
-  styleUrls: ['./popup-move-stage.component.css'],
+  styleUrls: ['./popup-move-stage.component.scss'],
 })
 export class PopupMoveStageComponent implements OnInit {
   dialog: any;
@@ -148,7 +148,6 @@ export class PopupMoveStageComponent implements OnInit {
         if(this.isStopData) {
           var data = JSON.parse(JSON.stringify(res));
           this.updateDataInstance(data);
-          console.table(this.listTree);
           this.isStopData = false;
         }
 
@@ -234,18 +233,8 @@ export class PopupMoveStageComponent implements OnInit {
       this.instancesStepOld.owner = this.owner;
       this.instancesStepOld.stepID = this.stepIdClick;
     }
-    if(this.stepIdClick === this.stepIdOld) {
-      this.stepIdOld = '';
-    }
-
-    if( this.listTask.length > 0  || this.listTask.length > 0 ) {
-      this.listTask != null && this.upadteProgessIsDone(this.listTaskDone, this.listTask, 'task');
-      this.listTaskGroup != null && this.upadteProgessIsDone(this.listTaskGroupDone, this.listTaskGroup, 'taskGroup');
-
-      if(this.listTask.length === this.listTaskDone.length && this.listTaskGroupDone.length === this.listTaskGroup.length ){
-        this.instancesStepOld.progress = 100;
-      }
-    }
+    this.upadteProgessIsDone(this.listTaskDone, this.listTask, 'task');
+    this.upadteProgessIsDone(this.listTaskGroupDone, this.listTaskGroup, 'taskGroup');
 
     var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
     this.codxDpService.moveStageByIdInstance(data).subscribe((res) => {

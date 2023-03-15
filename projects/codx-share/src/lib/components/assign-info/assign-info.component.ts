@@ -4,6 +4,7 @@ import {
   CacheService,
   CallFuncService,
   DialogData,
+  DialogModel,
   DialogRef,
   NotificationsService,
   UrlUtil,
@@ -587,7 +588,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     }
     var arrUser = listUser.split(';');
     if (!this.listUser) this.listUser = [];
-    var crrRole =this.crrRole 
+    var crrRole = this.crrRole;
     this.api
       .execSv<any>(
         'HR',
@@ -924,7 +925,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   openControlShare(controlShare: any, roleType) {
     this.crrRole = roleType;
     if (controlShare) {
-      this.callFC.openForm(controlShare, '', 450, 600);
+      let option = new DialogModel();
+      option.zIndex = 1010;
+      this.callFC.openForm(controlShare, '', 450, 600, '', null, '', option);
     }
   }
 }
