@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, AfterViewInit, HostListener, ViewChild, ElementRef, AfterContentInit } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { interval } from 'rxjs';
 import { WP_Messages } from '../../models/WP_Messages.model';
 import { SignalRService } from '../../services/signalr.service';
 
@@ -23,7 +24,6 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   message:WP_Messages = null;
   page:number = 0;
   pageIndex:number = 0;
-  yValue:number = 0;
   group:any = null;
   @ViewChild("chatBoxBody") chatBoxBody:ElementRef<HTMLDivElement>;
   constructor
@@ -50,18 +50,21 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
 
   ngAfterViewInit(): void {
     // scroll up data
-    if(this.chatBoxBody){
-      setTimeout(() => {
-        this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight)
-        this.yValue = this.chatBoxBody.nativeElement.scrollHeight;
-      },100)
-    }
+    let itv = setInterval(() => {
+      if(this.chatBoxBody && this.chatBoxBody.nativeElement.scrollHeight){
+        this.chatBoxBody.nativeElement.scrollTo(0,700);
+        clearInterval(itv);
+      }
+    },200);
     //receiver message
     this.signalR.reciverChat.subscribe((res:any) => {
       if(res.groupID === this.groupID)
       {
         let data = JSON.parse(JSON.stringify(res));
         this.arrMessages.push(data);
+        setTimeout(()=>{
+          this.chatBoxBody.nativeElement.scrollTo(0,this.chatBoxBody.nativeElement.scrollHeight);
+        },100)
         this.dt.detectChanges();
       }
     });
@@ -85,24 +88,24 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
       "GetMessageByGroupIDAsync",
       [this.groupID,this.pageIndex])
       .subscribe((res:any[]) => {
-        if(res[1] > 0)
-        {
-          this.arrMessages = res[0];
-        }
+        this.arrMessages = res[0];
+        this.page = Math.ceil(res[1]/20);
+        this.pageIndex++;
       });
   }
   // scroll up load data
-  scroll(){
-    let _y = this.chatBoxBody.nativeElement.scrollTop;
-    if(_y < this.yValue && _y <= 50){
-      this.getDataChat();
+  loading:boolean = false;
+  scroll(element:HTMLElement){
+    if(!this.loading && element.scrollTop <= 100){
+      this.getHistoryChat();
     }
-    this.yValue = _y;
   }
+
   // get list chat
-  getDataChat(){
-    if(this.pageIndex < this.page){
-      this.pageIndex = this.pageIndex + 1;
+  getHistoryChat(){
+    if(this.pageIndex <= this.page){
+      this.loading = true;
+      this.pageIndex++
       this.api.execSv(
         "WP",
         "ERM.Business.WP",
@@ -114,13 +117,14 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
           {
             let _messgae = res[0];
             this.arrMessages = _messgae.concat(this.arrMessages);
+            this.loading = false;
+            this.dt.detectChanges();
           }
         });
     }
   }
   // close 
   closeChatBox(){
-    debugger
     let elementContainer = document.querySelector(".container-chat");
     if(elementContainer){
       let element = document.getElementById(this.group.groupID);
@@ -136,9 +140,11 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   }
   // send message
   sendMessage(){
-    let jsMessage = JSON.stringify(this.message);
-    this.signalR.sendData(jsMessage,"SendMessageToGroup");
+    if(this.message.message.trim()){
+      this.signalR.sendData(JSON.stringify(this.message),"SendMessageToGroup");
+    }
     this.message.message = "";
+
   }
   
   // check tag name 

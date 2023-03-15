@@ -86,6 +86,7 @@ export class CodxDMService {
   public parentFull = true;
   public parentCreate = true;
   public parentRead = true;
+  public versionControl = true;
   public parentUpdate = true;
   public parentShare = true;
   public parentDownload = true;
@@ -826,7 +827,8 @@ export class CodxDMService {
               if (!data.create) e[i].isblur = true; // duoc view
               break;
             case 'DMT0218': // quan ly version
-              if (!data.write || !data.revision) e[i].isblur = true; // duoc view
+              if(!data.write || !data.revision) e[i].isblur = true; // duoc view
+              if(!data.folderId && this.versionControl) e[i].isblur = false;
               break;
 
             // case "DMT0220": // persmission file

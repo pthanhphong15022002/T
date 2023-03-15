@@ -126,6 +126,11 @@ export class NewsComponent extends UIComponent implements AfterContentInit {
   }
   // get data async
   loadDataAsync(category: string) {
+    this.page = 0;
+    this.pageIndex = 0;
+    this.posts = [];
+    this.videos = [];
+    this.slides = [];
     this.getPostAsync(category);
     this.getVideoAsync(category,this.pageIndex);
   }
@@ -160,38 +165,49 @@ export class NewsComponent extends UIComponent implements AfterContentInit {
         .subscribe((res:any[]) => {
           let data = res[0];
           let total = res[1];
-          this.page = Math.ceil(total/6);
-          if(this.scrolled)
-          {
-            this.videos = this.videos.concat(data);
-            this.scrolled = false;
-            this.carousel.pause();
-            let slideIndex = this.slides.length;
-            for (let index = 0; index < data.length; index+=3) {
-              this.slides[slideIndex] = [];
-              this.slides[slideIndex] = data.slice(index,index+3);
-              slideIndex++;
+          if(data.length > 0){
+            this.page = Math.ceil(total/6);
+            if(this.scrolled){
+              this.videos = this.videos.concat(data);
+              this.scrolled = false;
+              this.carousel.pause();
+              let slideIndex = this.slides.length;
+              for (let index = 0; index < data.length; index+=3) {
+                this.slides[slideIndex] = [];
+                this.slides[slideIndex] = data.slice(index,index+3);
+                slideIndex++;
+              }
+              this.scrolled = false;
+              this.detectorRef.detectChanges();
             }
+            else{
+              this.videos = JSON.parse(JSON.stringify(data));
+              let slide = 0;
+                for (let index = 0; index < this.videos.length; index += 3) {
+                  this.slides[slide] = [];
+                  this.slides[slide] = this.videos.slice(index,index+3);
+                  slide ++;
+                }
+                let ins = setInterval(()=>{
+                  if(this.carousel){
+                    this.showNavigation = this.page >= 1 ? true : false;
+                    this.carousel.pause();
+                    this.detectorRef.detectChanges();
+                    clearInterval(ins);
+                  }
+                },100);
+            }
+            this.pageIndex += 1;
           }
           else
           {
-            this.videos = JSON.parse(JSON.stringify(data));
-            let slide = 0;
-            for (let index = 0; index < this.videos.length; index += 3) {
-              this.slides[slide] = [];
-              this.slides[slide] = this.videos.slice(index,index+3);
-              slide ++;
-            }
-            let ins = setInterval(()=>{
-              if(this.carousel){
-                this.showNavigation = this.page >= 1 ? true : false;
-                this.carousel.pause();
-                this.detectorRef.detectChanges();
-                clearInterval(ins);
-              }
-            },100)
+            this.videos = [];
+            this.slides = [];
+            this.page = 0;
+            this.pageIndex = 0;
+            this.showNavigation = false;
+            this.detectorRef.detectChanges();
           }
-          this.pageIndex += 1;
         });
   }
 
@@ -199,9 +215,6 @@ export class NewsComponent extends UIComponent implements AfterContentInit {
 
   // slideChange
   slideChange(slideEvent:NgbSlideEvent){
-    // if(slideEvent.paused){
-    //   this.carousel.cycle();
-    // }
     if(slideEvent.source === NgbSlideEventSource.ARROW_RIGHT && this.pageIndex < this.page){
       this.scrolled = true;
       this.getVideoAsync(this.category,this.pageIndex);

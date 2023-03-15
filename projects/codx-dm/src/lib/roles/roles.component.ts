@@ -597,7 +597,6 @@ export class RolesComponent implements OnInit {
   }
 
   onSaveRight() {
-    debugger
     if (this.endDate != null && this.endDate < this.startDate) {
       //  $('#endDateRole').addClass('form-control is-invalid');
       this.changeDetectorRef.detectChanges();

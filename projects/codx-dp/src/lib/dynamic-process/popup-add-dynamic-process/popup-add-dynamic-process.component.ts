@@ -2450,7 +2450,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   turnOnReason($event, view: string) {
-    debugger;
     if (view === this.viewStepReasonSuccess) {
       if ($event.field === 'isUsed' && $event.component.checked === true) {
         this.stepSuccess.isUsed = true;

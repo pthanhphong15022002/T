@@ -201,13 +201,6 @@ export class CodxTasksComponent
     this.request.idField = 'taskID';
     this.request.dataObj = this.dataObj;
 
-    // this.requestSchedule = new ResourceModel();
-    // this.requestSchedule.service = 'TM';
-    // this.requestSchedule.assemblyName = 'TM';
-    // this.requestSchedule.className = 'TaskBusiness';
-    // this.requestSchedule.method = 'GetTasksWithScheduleAsync';
-    // this.requestSchedule.idField = 'taskID';
-
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
     this.requestTree.assemblyName = 'TM';
