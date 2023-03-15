@@ -1,29 +1,63 @@
-<div *ngIf="viewType=='0'" (click)="openViewPopup? openPopup():''">
-    <div class="d-flex align-items-center {{countData>0 ? 'text-success' : 'text-gray-600'}}">
-        <div class="me-1" ><i
-                class="text-hover-primary icon-attach_file icon-16 text-dark cursor-pointer"></i></div>
-        <div>{{countData}}</div>
+<div *ngIf="viewType == '0'" (click)="openViewPopup ? openPopup() : ''">
+  <div
+    class="d-flex align-items-center {{
+      countData > 0 ? 'text-success' : 'text-gray-600'
+    }}"
+  >
+    <div class="me-1">
+      <i
+        class="text-hover-primary icon-attach_file icon-16 text-dark cursor-pointer"
+      ></i>
     </div>
+    <div>{{ countData }}</div>
+  </div>
 </div>
 
-<div *ngIf="viewType=='1' && (count>0||countData > 0)">
-    <div (click)="openViewPopup? openPopup():''">
-        <span class="icon-attach_file icon-18"> </span>
-        <span class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary">
-            {{count>0? count :countData}}</span>
-    </div>
+<div
+  *ngIf="viewType == '1' && (count > 0 || countData > 0)"
+  (click)="openViewPopup ? openPopup() : ''"
+>
+  <span class="icon-attach_file icon-18"> </span>
+  <span
+    class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary"
+  >
+    {{ count > 0 ? count : countData }}</span
+  >
 </div>
-<div *ngIf="viewType=='2'">
-    <div (click)="openViewPopup? openPopup():''">
-        <span class="icon-attach_file icon-18"> </span>
-        <span class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary">
-            {{ countData}}</span>
-    </div>
+
+<div *ngIf="viewType == '2'" (click)="openViewPopup ? openPopup() : ''">
+  <span class="icon-attach_file icon-18"> </span>
+  <span
+    class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary"
+  >
+    {{ countData }}</span
+  >
 </div>
+
+<div
+  *ngIf="viewType == '3'"
+  (click)="openViewPopup ? openPopup() : ''"
+  class="d-flex align-items-center position-relative me-4"
+>
+  <span class="icon-attach_file icon-20 text-gray-400"></span>
+  <span
+    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
+    >{{ countData }}</span
+  >
+</div>
+
 <ng-template #tmpListItem let-dialog>
-    <codx-form [body]="body" [dialog]="dialog" headerText="Danh sách file đính kèm">
-    </codx-form>
-    <ng-template #body>
-        <codx-thumbnail class="popup-attachment" [files]="lstFile" [formModel]="formModel"></codx-thumbnail>
-    </ng-template>
+  <codx-form
+    [body]="body"
+    [dialog]="dialog"
+    headerText="Danh sách file đính kèm"
+  >
+  </codx-form>
+  <ng-template #body>
+    <codx-thumbnail
+      class="popup-attachment"
+      [files]="lstFile"
+      [formModel]="formModel"
+    ></codx-thumbnail>
+  </ng-template>
 </ng-template>

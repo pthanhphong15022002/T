@@ -158,7 +158,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS006');
-            debugger
             this.EAppointionObj = p;
             this.successFlag = true;
           this.dialog && this.dialog.close(this.EAppointionObj);

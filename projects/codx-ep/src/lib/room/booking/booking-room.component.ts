@@ -199,7 +199,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
                 field: 'bookingOn',
                 template: this.gridBookingOn,
                 headerText: this.grView?.bookingOn?.headerText,
-
               },
               {
                 field: 'resourceID',
@@ -213,7 +212,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
               {
                 field: 'title',
                 template: this.gridHost,
-                headerText: "Người chủ trì",
+                headerText: 'Người chủ trì',
               },
               {
                 field: 'startDate',
@@ -230,16 +229,14 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
                 headerText: this.grView?.requester?.headerText,
               },
             ];
-            this.views.push(
-              {
-                sameData: true,
-                type: ViewType.grid,
-                active: false,
-                model: {
-                  resources: this.columnGrids,
-                },
+            this.views.push({
+              sameData: true,
+              type: ViewType.grid,
+              active: false,
+              model: {
+                resources: this.columnGrids,
               },
-            )
+            });
           }
         });
     }
@@ -254,7 +251,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         textAlign: 'center',
       },
     ];
-    
+
     this.views = [
       {
         sameData: false,
@@ -286,7 +283,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
         },
-      },      
+      },
     ];
     if (this.queryParams?.predicate && this.queryParams?.dataValue) {
       this.codxEpService
@@ -464,6 +461,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(event.data);
     }
+    if (event.type == 'doubleClick' || event.type == 'edit') {
+      this.edit(event.data);
+    }
   }
   clickMF(event, data) {
     this.popupTitle = event?.text + ' ' + this.funcIDName;
@@ -539,7 +539,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       this.notificationsService.notifyCode('TM052');
       return;
     }
-
     this.codxEpService
       .cancel(data?.recID, '', this.formModel.entityName)
       .subscribe((res: any) => {
@@ -775,7 +774,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         meetingStartDate,
         meetingStartTime
       )
-      .then((url) => {
+      .subscribe((url) => {
         if (url) {
           window.open(url, '_blank');
         }

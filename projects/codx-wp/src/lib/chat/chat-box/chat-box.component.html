@@ -45,7 +45,7 @@
                 </div>   
             </div>
         </div>
-        <div #chatBoxBody class="chat-box-body" (scroll)="scroll()">
+        <div #chatBoxBody class="chat-box-body" (scroll)="scroll(chatBoxBody)">
             <ng-container *ngFor="let item of arrMessages; let index = i">
                 <div class="codx-message" [class.justify-content-end]="item.createdBy == user.userID">
                     <span class="message-img" *ngIf="item.createdBy != user.userID">

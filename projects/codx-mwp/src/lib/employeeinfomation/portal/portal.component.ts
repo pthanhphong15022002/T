@@ -77,7 +77,6 @@ export class PortalComponent extends UIComponent {
     super(inject);
     this.funcID = this.routeActive.snapshot.params['funcID'];
     this.user = this.auth.get();
-
     console.log(
       'userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr',
       this.user
@@ -2015,58 +2014,6 @@ export class PortalComponent extends UIComponent {
         .setPredicates([this.filterEBenefitPredicates], [''])
         .subscribe();
     }
-    // this.filterEBenefitPredicates = '';
-    // if (
-    //   this.filterByBenefitIDArr.length > 0 &&
-    //   this.startDateEBenefitFilterValue != null
-    // ) {
-    //   this.filterEBenefitPredicates = '(';
-    //   let i = 0;
-    //   for (i; i < this.filterByBenefitIDArr.length; i++) {
-    //     if (i > 0) {
-    //       this.filterEBenefitPredicates += ' or ';
-    //     }
-    //     this.filterEBenefitPredicates += `BenefitID==@${i}`;
-    //   }
-    //   this.filterEBenefitPredicates += ') ';
-    //   this.filterEBenefitPredicates += `and (EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}")`;
-    //   (this.grid.dataService as CRUDService)
-    //     .setPredicates(
-    //       [this.filterEBenefitPredicates],
-    //       [this.filterByBenefitIDArr.join(';')]
-    //     )
-    //     .subscribe((item) => {});
-    // } else if (
-    //   (this.filterByBenefitIDArr.length > 0 &&
-    //     this.startDateEBenefitFilterValue == undefined) ||
-    //   this.startDateEBenefitFilterValue == null
-    // ) {
-    //   let i = 0;
-    //   for (i; i < this.filterByBenefitIDArr.length; i++) {
-    //     if (i > 0) {
-    //       this.filterEBenefitPredicates += ' or ';
-    //     }
-    //     this.filterEBenefitPredicates += `BenefitID==@${i}`;
-    //   }
-
-    //   (this.grid.dataService as CRUDService)
-    //     .setPredicates(
-    //       [this.filterEBenefitPredicates],
-    //       [this.filterByBenefitIDArr.join(';')]
-    //     )
-    //     .subscribe((item) => {
-    //       console.log('item tra ve sau khi loc 2', item);
-    //     });
-    // } else if (this.startDateEBenefitFilterValue != null) {
-    //   (this.grid.dataService as CRUDService)
-    //     .setPredicates(
-    //       [
-    //         `EffectedDate>="${this.startDateEBenefitFilterValue}" and EffectedDate<="${this.endDateEBenefitFilterValue}"`,
-    //       ],
-    //       []
-    //     )
-    //     .subscribe((item) => {});
-    // }
   }
 
   valueChangeYearFilterBenefit(evt) {
@@ -2261,60 +2208,6 @@ export class PortalComponent extends UIComponent {
         .setPredicates([this.filterEAssetPredicates], [''])
         .subscribe();
     }
-    // this.filterEAssetPredicates = '';
-    // if (
-    //   this.filterByAssetCatIDArr.length > 0 &&
-    //   this.startDateEAssetFilterValue != null
-    // ) {
-    //   this.filterEAssetPredicates = '(';
-    //   let i = 0;
-    //   for (i; i < this.filterByAssetCatIDArr.length; i++) {
-    //     if (i > 0) {
-    //       this.filterEAssetPredicates += ' or ';
-    //     }
-    //   }
-    //   this.filterEAssetPredicates += ') ';
-    //   (this.eAssetGrid.dataService as CRUDService)
-    //     .setPredicates(
-    //       [this.filterEAssetPredicates],
-    //       [this.filterByAssetCatIDArr.join(';')]
-    //     )
-    //     .subscribe((item) => {
-    //       console.log('item tra ve sau khi loc 1', item);
-    //     });
-    // } else if (
-    //   (this.filterByAssetCatIDArr.length > 0 &&
-    //     this.startDateEAssetFilterValue == undefined) ||
-    //   this.startDateEAssetFilterValue == null
-    // ) {
-    //   let i = 0;
-    //   for (i; i < this.filterByAssetCatIDArr.length; i++) {
-    //     if (i > 0) {
-    //       this.filterEAssetPredicates += ' or ';
-    //     }
-    //     this.filterEAssetPredicates += `AssetCategory==@${i}`;
-    //   }
-
-    //   (this.eAssetGrid.dataService as CRUDService)
-    //     .setPredicates(
-    //       [this.filterEAssetPredicates],
-    //       [this.filterByAssetCatIDArr.join(';')]
-    //     )
-    //     .subscribe((item) => {
-    //       console.log('item tra ve sau khi loc 2', item);
-    //     });
-    // } else if (this.startDateEAssetFilterValue != null) {
-    //   (this.eAssetGrid.dataService as CRUDService)
-    //     .setPredicates(
-    //       [
-    //         `IssuedDate>="${this.startDateEAssetFilterValue}" and IssuedDate<="${this.endDateEAssetFilterValue}"`,
-    //       ],
-    //       []
-    //     )
-    //     .subscribe((item) => {
-    //       console.log('item tra ve sau khi loc 3', item);
-    //     });
-    // }
   }
   valueChangeYearFilterAward(evt) {
     if (evt.formatDate == undefined && evt.toDate == undefined) {
@@ -2449,50 +2342,6 @@ export class PortalComponent extends UIComponent {
         )
         .subscribe();
     }
-    // this.filterESkillPredicates = '';
-    // if (
-    //   this.filterByESkillIDArr.length > 0 &&
-    //   this.startDateESkillFilterValue != null
-    // ) {
-    //   this.filterESkillPredicates = '(';
-    //   let i = 0;
-    //   for (i; i < this.filterByESkillIDArr.length; i++) {
-    //     if (i > 0) {
-    //       this.filterESkillPredicates += ' or ';
-    //     }
-    //     this.filterESkillPredicates += `SkillID==@${i}`;
-    //   }
-    //   this.filterESkillPredicates += ') ';
-    //   (this.skillGrid.dataService as CRUDService)
-    //     .setPredicates(
-    //       [this.filterESkillPredicates],
-    //       [this.filterByESkillIDArr.join(';')]
-    //     )
-    //     .subscribe((item) => {
-    //       console.log('item tra ve sau khi loc 1', item);
-    //     });
-    // } else if (
-    //   (this.filterByESkillIDArr.length > 0 &&
-    //     this.startDateESkillFilterValue == undefined) ||
-    //   this.startDateESkillFilterValue == null
-    // ) {
-    //   let i = 0;
-    //   for (i; i < this.filterByESkillIDArr.length; i++) {
-    //     if (i > 0) {
-    //       this.filterESkillPredicates += ' or ';
-    //     }
-    //     this.filterESkillPredicates += `SkillID==@${i}`;
-    //   }
-
-    //   (this.skillGrid.dataService as CRUDService)
-    //     .setPredicates(
-    //       [this.filterESkillPredicates],
-    //       [this.filterByESkillIDArr.join(';')]
-    //     )
-    //     .subscribe((item) => {
-    //       console.log('item tra ve sau khi loc 2', item);
-    //     });
-    // }
   }
 
   valueChangFilterContract(evt) {
