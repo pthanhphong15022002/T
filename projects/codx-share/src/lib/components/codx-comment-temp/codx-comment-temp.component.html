@@ -1,9 +1,18 @@
-<div (click)="openViewPopup? openPopup():''">
+<div *ngIf="viewType=='0'" (click)="openViewPopup? openPopup():''">
     <div class="d-flex align-items-center {{countData > 0 ? 'text-success' : 'text-gray-600'}}">
         <div class="me-1" ><i class="text-hover-primary icon-mode_comment icon-16 text-dark cursor-pointer "></i>
         </div>
         <div>{{countData}}</div>
     </div>
+</div>
+<div *ngIf="viewType=='3'" (click)="openViewPopup? openPopup():''">
+  <div class="d-flex align-items-center position-relative me-4">
+    <span class="icon-mode_comment icon-20 text-gray-400"></span>
+    <span
+      class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
+      >{{ countData }}</span
+    >
+  </div>
 </div>
 <ng-template #tmpListItem let-dialog>
     <div class="container p-4">

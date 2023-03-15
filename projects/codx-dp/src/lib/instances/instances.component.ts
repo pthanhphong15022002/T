@@ -109,6 +109,8 @@ export class InstancesComponent
   viewModeDetail = 'S';
   totalInstance: number = 0;
   itemSelected: any;
+  stepSuccess:any;
+  stepFail:any;
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private inject: Injector,
@@ -130,13 +132,10 @@ export class InstancesComponent
         });
     });
     this.dataProccess = dt?.data?.data;
-    this.isUseSuccess = this.dataProccess.steps.filter(
-      (x) => x.isSuccessStep
-    )[0].isUsed;
-    this.isUseFail = this.dataProccess.steps.filter(
-      (x) => x.isFailStep
-    )[0].isUsed;
-    this.getListCbxProccess(this.dataProccess?.applyFor);
+    this.stepSuccess = this.dataProccess.steps.filter( (x) => x.isSuccessStep)[0];
+    this.stepFail = this.dataProccess.steps.filter( (x) => x.isFailStep)[0];
+    this.isUseSuccess = this.stepSuccess.isUsed;
+    this.isUseFail = this.stepFail.isUsed;
   }
   ngAfterViewInit(): void {
     this.viewMode = this.dataProccess.viewMode ?? 6; //dang lỗi nên gán cứng
@@ -213,6 +212,7 @@ export class InstancesComponent
     this.resourceKanban.className = 'ProcessesBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
+    this.getListCbxProccess(this.dataProccess?.applyFor);
   }
 
   click(evt: ButtonModel) {
@@ -753,7 +753,6 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            debugger;
             var obj = {
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
@@ -761,12 +760,13 @@ export class InstancesComponent
               listStepCbx: this.listSteps,
               instanceStep: instanceStep,
               stepIdClick: this.stepIdClick,
+              // stepReason: stepReason1
             };
             var dialogMoveStage = this.callfc.openForm(
               PopupMoveStageComponent,
               '',
-              800,
-              600,
+              850,
+              900,
               '',
               obj
             );
@@ -814,8 +814,8 @@ export class InstancesComponent
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
             let reason = isMoveSuccess
-              ? this.listSteps[this.listSteps.findIndex((x) => x.isSuccessStep)]
-              : this.listSteps[this.listSteps.findIndex((x) => x.isFailStep)];
+              ? this.stepSuccess
+              : this.stepFail;
             var obj = {
               dataMore: dataMore,
               headerTitle: fun.defaultName,
@@ -908,6 +908,7 @@ export class InstancesComponent
           processName: data.datas[0].default,
         };
         this.listProccessCbx.unshift(obj);
+        this.listProccessCbx = this.listProccessCbx.filter(x => x !== this.dataProccess.recID );
       });
     });
   }

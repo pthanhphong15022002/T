@@ -258,6 +258,14 @@ export class CodxDpService {
       data
     );
   }
+  checkExitsName(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'isExitNameProcessAsync',
+      data
+    );
+  }
   updateDataDrop(data) {
     return this.api.exec<any>(
       'DP',

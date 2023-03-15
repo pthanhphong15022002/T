@@ -40,7 +40,7 @@
   </div>
 
   <hr />
-  <div class="d-flex mt-1 mb-2 me-6">
+  <div class="d-flex mt-1 mb-2 me-6" *ngIf="gridViewSetup?.reasonID?.allowPopup">
     <codx-label name="lblReason" default="Lí do" class="fw-bold text-nowrap"></codx-label>
     <span class="me-2 fw-bold">:</span>
     <span class="text-gray-800 text-break">
@@ -82,7 +82,13 @@
       <codx-label name="lblAttachment"  default="Tài liệu đính kèm"></codx-label>
     </span>
   </ng-template>
-  
+  <div class="d-flex  mb-2">
+    <codx-label name="lblHost" default="Người chủ trì" class="fw-bold text-nowrap"></codx-label>
+    <span class="me-2 fw-bold">:</span>
+    <span class="text-gray-800 text-break">
+      {{ data?.host }}
+    </span>
+  </div>
   <div class="d-flex mb-2">
     <div class="d-flex text-dark me-6">
       <codx-label name="lblAttendees" default="Người tham gia" class="fw-bold text-nowrap">

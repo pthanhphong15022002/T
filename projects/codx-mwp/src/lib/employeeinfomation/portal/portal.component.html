@@ -16,13 +16,6 @@
             <div class="profile-bg"></div>
             <div class="d-flex flex-column text-center mx-4 profile-info">
               <div class="mb-4 d-flex justify-content-center align-items-top">
-                <!-- <span
-                  type="button"
-                  class="btn btn-icon btn-light-primary rounded-circle"
-                  (click)="previousEmp()"
-                >
-                  <i class="icon-arrow_back_ios icon-16"></i>
-                </span> -->
                 <div class="d-flex justify-content-center">
                   <div class="position-relative mt-6">
                     <codx-img
@@ -483,289 +476,6 @@
         </div>
       </div>
     </div>
-    <!-- <div ngbDropdown class="emp-check-add">
-      <div ngbDropdownMenu class="min-w-200px">
-        <div class="card card-flush">
-          <div class="d-flex flex-column" *ngIf="lstBtnAdd">
-            <ng-container *ngFor="let item of lstBtnAdd">
-              <a class="w-100 btn btn-flex btn-active-light-primary">
-                <div class="d-flex align-items-bottom">
-                  <span class="icon-person icon-18 me-2"></span>
-                  <div class="fw-bold">{{ item.customName }}</div>
-                </div>
-              </a>
-            </ng-container>
-          </div>
-          <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030202'">
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Hồ sơ lưu trữ"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-          </div>
-          <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030203'">
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Lương cơ bản"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Lương chức danh"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Phụ cấp"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Thu nhập khác"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Khấu trừ khác"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Tài sản cấp phát"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-          </div>
-          <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030204'">
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Hợp đồng lao động"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Bổ nhiệm - Điều chuyển"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Nghỉ phép"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lblBusinessTravel"
-                default="Công tác"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Kinh nghiệm trước đây"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-          </div>
-          <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030205'">
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Bằng cấp"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Chứng chỉ"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Kỹ năng"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Đào tạo"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-          </div>
-          <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030206'">
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Khen thưởng"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Kỷ luật"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-          </div>
-          <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030207'">
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Khám sức khỏe"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Xóa khám sức khỏe"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Tiêm vaccine"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Bệnh nghề nghiệp"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex btn btn-hover-primary">
-              <span
-                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
-              <codx-label
-                fiedName="lbl"
-                default="Tai nạn lao động"
-                [formModel]="eInfoFormModel"
-              >
-              </codx-label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
   </div>
 </ng-template>
 
@@ -2366,11 +2076,11 @@
 
             <div class="" *ngIf="ViewAllEBasicSalaryFlag">
               <div class="d-flex align-items-center mt-7 mb-3">
-                <span class="icon-i-filter-right icon-20 me-2"></span>
+                <span class="icon-i-filter-right icon-20 me-2 text-success"></span>
                 <div class="d-flex align-items-center me-3">
                   <codx-label
                     default="Chi tiết"
-                    class="fw-bold text-uppercase fs-5 text-gray-600"
+                    class="fw-bold text-uppercase fs-5 text-success"
                   >
                   </codx-label>
                   <span class="text-gray-500 mx-2"> | </span>
@@ -2502,11 +2212,11 @@
 
             <div class="" *ngIf="ViewAllEJobSalaryFlag">
               <div class="d-flex align-items-center mt-7 mb-3">
-                <span class="icon-i-filter-right icon-20 me-2"></span>
+                <span class="icon-i-filter-right icon-20 me-2 text-success"></span>
                 <div class="d-flex align-items-center me-3">
                   <codx-label
                     default="Chi tiết"
-                    class="fw-bold text-uppercase fs-5 text-gray-600"
+                    class="fw-bold text-uppercase fs-5 text-success"
                   >
                   </codx-label>
                   <span class="text-gray-500 mx-2"> | </span>
@@ -2543,12 +2253,6 @@
                 <span class="icon-attach_money icon-20 me-2"></span>
               </div>
               <div class="fs-5 fw-bold text-uppercase mt-1">
-                <!-- <codx-label
-                    name="lblSalary&Benefit"
-                    [formModel]="eInfoFormModel"
-                    [default]="getFormHeader(benefitFuncID)"
-                  >
-                  </codx-label> -->
                 {{ getFormHeader(benefitFuncID) }}
               </div>
             </div>
@@ -2624,11 +2328,11 @@
               class="d-flex justify-content-between align-items-center mt-6 mb-3"
             >
               <div class="d-flex align-items-center">
-                <span class="icon-i-filter-right icon-20 me-2"></span>
+                <span class="icon-i-filter-right icon-20 me-2 text-success"></span>
                 <div class="d-flex align-items-center me-3">
                   <codx-label
                     default="Chi tiết"
-                    class="fw-bold text-uppercase fs-5 text-gray-600"
+                    class="fw-bold text-uppercase fs-5 text-success"
                   >
                   </codx-label>
                   <span class="text-gray-500 mx-2"> | </span>
@@ -2739,11 +2443,11 @@
           <div *ngIf="ViewAllEAssetFlag == true">
             <div class="d-flex justify-content-between mt-6 mb-3">
               <div class="d-flex align-items-center">
-                <span class="icon-i-filter-right icon-20 me-2"></span>
+                <span class="icon-i-filter-right icon-20 me-2 text-success"></span>
                 <div class="d-flex align-items-center me-3">
                   <codx-label
                     default="Chi tiết"
-                    class="fw-bold text-uppercase fs-5 text-gray-600"
+                    class="fw-bold text-uppercase fs-5 text-success"
                   >
                   </codx-label>
                   <span class="text-gray-500 mx-2"> | </span>
@@ -3150,10 +2854,10 @@
         <div class="" *ngIf="ViewAllEContractFlag">
           <div class="d-flex justify-content-between mb-3 mt-5">
             <div class="d-flex align-items-center me-3">
-              <span class="icon-i-filter-right icon-20 me-2"></span>
+              <span class="icon-i-filter-right icon-20 me-2 text-success"></span>
               <codx-label
                 default="Chi tiết"
-                class="fw-bold text-uppercase fs-5 text-gray-600"
+                class="fw-bold text-uppercase fs-5 text-success"
               >
               </codx-label>
               <span class="text-gray-500 mx-2"> | </span>
@@ -3276,7 +2980,7 @@
               </div>
 
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
-                {{ getFormHeader("HRTEM0602") }}
+                {{ getFormHeader(eCertificateFuncID) }}
               </div>
               <span class="text-gray-500 mx-2">|</span>
               <span class="text-dark">({{ eCertificateRowCount }})</span>
@@ -3386,11 +3090,11 @@
             <div *ngIf="ViewAllEskillFlag">
               <div class="d-flex justify-content-between mt-9 mb-3">
                 <div class="d-flex align-items-center">
-                  <span class="icon-i-filter-right icon-20 me-2"></span>
+                  <span class="icon-i-filter-right icon-20 me-2 text-success"></span>
                   <div class="d-flex align-items-center me-3">
                     <codx-label
                       default="Chi tiết"
-                      class="fw-bold text-uppercase fs-5 text-gray-600"
+                      class="fw-bold text-uppercase fs-5 text-success"
                     >
                     </codx-label>
                     <span class="text-gray-500 mx-2"> | </span>
@@ -3452,7 +3156,7 @@
               </div>
 
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
-                {{ getFormHeader("HRTEM0604") }}
+                {{ getFormHeader(eTrainCourseFuncID) }}
               </div>
               <span class="text-gray-500 mx-2">|</span>
               <span class="text-dark">
@@ -3617,7 +3321,7 @@
               </div>
 
               <div class="fs-5 fw-bold text-uppercase text-primary mt-1">
-                {{ getFormHeader("HRTEM0702") }}
+                {{ getFormHeader(eDisciplineFuncID) }}
               </div>
               <span class="text-gray-500 mx-2">|</span>
               <span class="text-dark">
@@ -4601,16 +4305,6 @@
       </span>
     </div>
   </div>
-  <!-- <div>
-    <i class="icon-calendar_today text-primary"></i>
-    {{ data?.awardDate | fmDT }}
-    <i
-      class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"
-    ></i>
-    <i class="icon-year"></i>
-    {{ data?.inYear | formatvalue : awardFormModel : "inYear" | async }}
-  </div>
- -->
 </ng-template>
 
 <ng-template #templateAwardGridCol3 let-data>

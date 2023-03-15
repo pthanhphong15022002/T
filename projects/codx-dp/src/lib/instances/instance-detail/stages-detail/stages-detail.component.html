@@ -162,10 +162,10 @@
         </codx-label>
       </div>
       <div class="group-button">
-        <button class="button-custom" (click)="openPopupTaskGroup()">
+        <button type="button" (click)="openPopupTaskGroup()">
           <span
-            [ngClass]="!this.isCreate || isClosed? '': 'icon-add icon-20 text-primary-600 py-2'"
-            style="font-weight: 500"></span>
+            [ngClass]="!this.isCreate || isClosed? '': 'icon-add icon-18 me-2'"
+            ></span>
         </button>
         <button class="button-custom" (click)="openTypeTask()">
           <span
@@ -198,7 +198,7 @@
                 [cdkDragData]="taskList"
                 [cdkDragStartDelay]="100"
                 [cdkDragDisabled]="true">
-                <div class="card-job">
+                <div class="card-job stages-task">
                   <div
                     *ngIf="taskList?.recID"
                     class="d-flex align-items-center justify-content-between">
@@ -209,30 +209,26 @@
                       <div
                         class="d-flex justify-content-center align-items-center
                         cursor-pointer"
-                        style="
-                        border: 1px solid #6c757d;
-                        width: 25px;
-                        height: 25px;
-                        "
                         (click)="toggleTask('group' + taskList?.recID)">
                         <!-- <span style="font-size: 30px; font-weight: 400; color: #6c757d">-</span> -->
-                        <span
-                          style="
-                          font-size: 20px;
-                          font-weight: 400;
-                          color: #6c757d;
-                          ">+</span>
+                        <span class="me-4">
+                          <button
+                            type="button"
+                            class="btn btn-icon btn-light-primary"
+                          >
+                          <i class="icon-add icon-18"></i>
+                          </button>
+                          </span>
                       </div>
+                      ...
                       <div class="steplist-hearder ms-5">
-                        <div>
-                          <span
-                            class=""
-                            style="font-size: 1.2rem; font-weight: 500">{{
-                            taskList?.taskGroupName }}</span>
+                        <div class="text-dark fw-bold fs-6">
+                          {{
+                            taskList?.taskGroupName }}
                         </div>
                         <div
-                          class=""
-                          style="font-weight: 400; font-size: 1.1rem">
+                          class="text-gray-500"
+                          >
                           <codx-label
                             class="title"
                             fiedName="updateTime"
@@ -290,28 +286,21 @@
                             <div
                               class="d-flex justify-content-start
                               align-items-center"
-                              style="font-size: 1rem">
+                              >
                               <!-- icon task -->
                               <div
-                                class="icon-container"
+                                class="icon-container me-3"
                                 [ngStyle]="getColor(task)">
                                 <span
-                                  class="icon-20 text-primary-600 py-2"
+                                  class="icon-18 text-primary-600"
                                   [ngClass]="getIconTask(task)"></span>
                               </div>
-                              <div class="steplist-hearder ms-3">
-                                <div>
-                                  <span
-                                    class=""
-                                    style="font-size: 1.2rem; font-weight: 500">{{
+                              <div class="steplist-hearder">
+                                <div class="text-dark fw-bold fs-6">
+                                  <span>{{
                                     task?.taskName }}</span>
                                 </div>
-                                <div
-                                  class=""
-                                  style="font-weight: 400; font-size: 1.1rem">
-                                  <div
-                                    class=""
-                                    style="font-weight: 400; font-size: 1.1rem">
+                                <div class="text-gray-600">
                                     <codx-label
                                       class="title"
                                       fiedName="updateTime"
@@ -326,7 +315,6 @@
                                     <span *ngIf="taskList?.note">,
                                       {{taskList?.note}}</span>
                                   </div>
-                                </div>
                               </div>
                             </div>
                             <div class="ms-5">
@@ -395,37 +383,31 @@
           </div>
         </div>
       </div>
-      <div class="d-flex justify-content-center pb-3">
-        <div class="me-2">
-          <button
-            class="btn btn-outline-primary btn-sm pb-5 d-flex align-items-center justify-content-between"
-            (click)="openPopupTaskGroup()"
-          >
-            <span class="icon-add icon-20 text-primary-600 py-2"></span>
-            <codx-label
-              class="text-primary-600"
-              [name]="'lblAddGroup'"
-              [formName]="'DPStepsFields'"
-              [gridViewName]="'grvDPStepsFields'"
-              [default]="'Thêm nhóm công việc'"
-            ></codx-label>
-          </button>
-        </div>
-        <div class="ms-2">
-          <button
-            class="btn btn-outline-primary btn-sm pb-5 d-flex align-items-center justify-content-between"
-            (click)="openTypeTask()"
-          >
-            <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
-            <codx-label
-              class="text-primary-600"
-              [name]="'lblAddTask'"
-              [formName]="'DPStepsFields'"
-              [gridViewName]="'grvDPStepsFields'"
-              [default]="'Thêm công việc'"
-            ></codx-label>
-          </button>
-        </div>
+      <div class="d-flex justify-content-center">
+        <button type="button"
+          class="btn btn-outline-primary me-2"
+          (click)="openPopupTaskGroup()"
+        >
+          <i class="icon-add icon-18 text-primary"></i>
+          <codx-label
+            [name]="'lblAddGroup'"
+            [formName]="'DPStepsFields'"
+            [gridViewName]="'grvDPStepsFields'"
+            [default]="'Thêm nhóm công việc'"
+          ></codx-label>
+        </button>
+        <button type="button"
+          class="btn btn-outline-primary"
+          (click)="openTypeTask()"
+        >
+          <i class="icon-add_task icon-18 text-primary"></i>
+          <codx-label
+            [name]="'lblAddTask'"
+            [formName]="'DPStepsFields'"
+            [gridViewName]="'grvDPStepsFields'"
+            [default]="'Thêm công việc'"
+          ></codx-label>
+        </button>
       </div>
     </div>
   </div>
@@ -598,9 +580,7 @@
       <div
         class="d-flex justify-content-between"
         *ngIf="
-        instance?.refID !== guidEmpty &&
-        instance?.refID !== null &&
-        instance?.refID !== ''
+        !!proccesNameMove 
         ">
         <div>
           <codx-label default="Quy trình được chuyển đến"></codx-label>

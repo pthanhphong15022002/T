@@ -52,7 +52,12 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
-
+  @ViewChild('gridResourceName') gridResourceName: TemplateRef<any>;
+  @ViewChild('gridHost') gridHost: TemplateRef<any>;
+  @ViewChild('gridMF') gridMF: TemplateRef<any>;
+  @ViewChild('gridBookingOn') gridBookingOn: TemplateRef<any>;
+  @ViewChild('gridStartDate') gridStartDate: TemplateRef<any>;
+  @ViewChild('gridEndDate') gridEndDate: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   // Lấy dữ liệu cho view
   showToolBar = 'true';
@@ -98,6 +103,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   columnGrids = [];
   isAdmin = false;
   grView: any;
+  isAfterRender = false;
   constructor(
     private injector: Injector,
     private callFuncService: CallFuncService,
@@ -131,6 +137,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       }
     });
 
+<<<<<<< HEAD
     this.cache
       .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
       .subscribe((grv) => {
@@ -139,6 +146,8 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         }
       });
 
+=======
+>>>>>>> 31802398b0553a0ce72cfbc1d57ad33300ca0c96
     //lấy list booking để vẽ schedule
     this.request = new ResourceModel();
     this.request.assemblyName = 'EP';
@@ -182,10 +191,86 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       id: 'btnAdd',
     };
   }
+  onLoading(evt: any) {
+    if (this.formModel) {
+      this.cache
+        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+        .subscribe((grv) => {
+          if (grv) {
+            this.grView = Util.camelizekeyObj(grv);
+            this.columnGrids = [
+              {
+                field: '',
+                headerText: '',
+                width: 40,
+                template: this.gridMF,
+                textAlign: 'center',
+              },
+              {
+                field: 'bookingOn',
+                template: this.gridBookingOn,
+                headerText: this.grView?.bookingOn?.headerText,
 
+              },
+              {
+                field: 'resourceID',
+                template: this.gridResourceName,
+                headerText: this.grView?.resourceID?.headerText,
+              },
+              {
+                field: 'title',
+                headerText: this.grView?.title?.headerText,
+              },
+              {
+                field: 'title',
+                template: this.gridHost,
+                headerText: "Người chủ trì",
+              },
+              {
+                field: 'startDate',
+                template: this.gridStartDate,
+                headerText: this.grView?.startDate?.headerText,
+              },
+              {
+                field: 'endDate',
+                template: this.gridEndDate,
+                headerText: this.grView?.endDate?.headerText,
+              },
+              {
+                field: 'requester',
+                headerText: this.grView?.requester?.headerText,
+              },
+            ];
+            this.views.push(
+              {
+                sameData: true,
+                type: ViewType.grid,
+                active: false,
+                model: {
+                  resources: this.columnGrids,
+                },
+              },
+            )
+          }
+        });
+    }
+  }
   ngAfterViewInit(): void {
+<<<<<<< HEAD
     this.view.dataService.methodDelete = 'DeleteBookingAsync';
     this.columnGrids = [];
+=======
+    this.columnGrids = [
+      {
+        field: '',
+        headerText: '',
+        width: 40,
+        template: this.gridMF,
+        textAlign: 'center',
+      },
+    ];
+
+>>>>>>> 31802398b0553a0ce72cfbc1d57ad33300ca0c96
     this.views = [
       {
         sameData: false,
@@ -218,6 +303,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           panelRightRef: this.panelRight,
         },
       },
+<<<<<<< HEAD
       {
         sameData: true,
         type: ViewType.grid,
@@ -226,6 +312,8 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           resources: this.columnGrids,
         },
       },
+=======
+>>>>>>> 31802398b0553a0ce72cfbc1d57ad33300ca0c96
     ];
     if (this.queryParams?.predicate && this.queryParams?.dataValue) {
       this.codxEpService
@@ -403,6 +491,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(event.data);
     }
+    if(event.type == 'doubleClick' || event.type == 'edit'){
+      this.edit(event.data);
+    }
   }
   clickMF(event, data) {
     this.popupTitle = event?.text + ' ' + this.funcIDName;
@@ -478,6 +569,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       this.notificationsService.notifyCode('TM052');
       return;
     }
+<<<<<<< HEAD
     // this.notificationsService.alertCode('ES015').subscribe((x) => {
     //   if (x.event?.status == 'Y') {
     //     if (data.approveStatus == '1') {
@@ -504,6 +596,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     //     }
     //   }
     // })
+=======
+
+>>>>>>> 31802398b0553a0ce72cfbc1d57ad33300ca0c96
     this.codxEpService
       .cancel(data?.recID, '', this.formModel.entityName)
       .subscribe((res: any) => {
@@ -696,6 +791,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
 
   delete(evt?) {
+    this.view.dataService.methodDelete = 'DeleteBookingAsync';
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;

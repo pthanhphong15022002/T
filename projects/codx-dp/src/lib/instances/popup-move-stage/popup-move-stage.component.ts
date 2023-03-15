@@ -65,6 +65,15 @@ export class PopupMoveStageComponent implements OnInit {
   owner = '';
   stepOld: any;
   firstInstance: any;
+  listTaskGroup: any;
+  listTask: any;
+  listTaskGroupDone: any;
+  listTaskDone: any;
+  listTree: any;
+  listTypeTask: any;
+  isShow: boolean = true;
+  isCheckAll: boolean = false;
+
   constructor(
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -90,13 +99,17 @@ export class PopupMoveStageComponent implements OnInit {
       );
     }
     this.stepIdOld = this.instance.stepID;
-    this.listStep = JSON.parse(JSON.stringify(dt?.data.instanceStep));
+    // this.listStep = JSON.parse(JSON.stringify(dt?.data.instanceStep));
     this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.listStepCbx));
     this.instancesStepOld = this.listStepsCbx.filter(
       (x) => x.stepID === this.stepIdOld
     )[0];
-    this.IdFail = this.listStepsCbx[this.listStepsCbx.findIndex(x=>x.isFailStep)]?.stepID ?? '';
-    this.IdSuccess = this.listStepsCbx[this.listStepsCbx.findIndex(x=>x.isSuccessStep)]?.stepID ?? '';
+    this.IdFail =
+      this.listStepsCbx[this.listStepsCbx.findIndex((x) => x.isFailStep)]
+        ?.stepID ?? '';
+    this.IdSuccess =
+      this.listStepsCbx[this.listStepsCbx.findIndex((x) => x.isSuccessStep)]
+        ?.stepID ?? '';
     this.stepIdClick = JSON.parse(JSON.stringify(dt?.data?.stepIdClick));
     this.getStepByStepIDAndInID(this.instance?.recID, this.stepIdOld);
     this.dpSv.getFirstIntance(this.instance?.processID).subscribe((res) => {
@@ -105,6 +118,22 @@ export class PopupMoveStageComponent implements OnInit {
       }
     });
     // this.loadListUser(this.instance.permissions);
+    this.cache.valueList('DP004').subscribe((res) => {
+      if (res.datas) {
+        this.listTypeTask = res?.datas;
+        this.listTask = this.instancesStepOld.tasks.filter(
+          (x) => x.progress < 100
+        );
+        this.listTaskGroup = this.instancesStepOld.taskGroups.filter(
+          (x) => x.progress < 100
+        );
+        this.listTree = this.updateDateForTree(
+          this.listTaskGroup,
+          this.listTask
+        );
+        console.table(this.listTree);
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -234,5 +263,100 @@ export class PopupMoveStageComponent implements OnInit {
   eventUser(e) {
     this.owner = e.id;
     // if (this.owner != null) this.getNameAndPosition(this.owner);
+  }
+
+  buildTree(parents, children) {
+    const tree = [];
+
+    const lookup = parents.reduce((acc, parent) => {
+      acc[parent.refID] = parent;
+      parent.children = [];
+      return acc;
+    }, {});
+
+    children.forEach((child) => {
+      const parentId = child.taskGroupID;
+      if (parentId in lookup) {
+        lookup[parentId].children.push(child);
+      }
+    });
+
+    Object.keys(lookup).forEach((key) => {
+      const parent = lookup[key];
+      if (!parent.taskGroupID) {
+        tree.push(parent);
+      }
+    });
+
+    return tree;
+  }
+
+  updateDateForTree(parents, children) {
+    children.forEach((child) => {
+      if (child.parentId === null) {
+        parents.push(child);
+      }
+    });
+    return this.buildTree(parents, children);
+  }
+  myFunction($event, index) {
+    let children = document.getElementById('children' + index);
+    let parent = document.getElementById('parent' + index);
+    if (children.classList[2] === 'show') {
+      children.classList.remove('show');
+      children.classList.add('hidden');
+
+      parent.classList.remove('icon-remove');
+      parent.classList.add('icon-add');
+
+    } else {
+      children.classList.remove('hidden');
+      children.classList.add('show');
+      parent.classList.remove('icon-add');
+      parent.classList.add('icon-remove');
+
+    }
+  }
+  checkAllValue($event, data, view) {
+    if($event && view == 'custom' ) {
+      if($event.target.checked) {
+        this.isCheckAll = $event.target.checked;
+        this.listTaskGroupDone = this.listTaskGroup;
+        this.listTaskDone = this.listTask;
+      }
+      else {
+        this.isCheckAll = $event.target.checked;
+        this.listTaskGroupDone = [];
+        this.listTaskDone = [];
+      }
+    }
+    else if ($event && view == 'taskGroup' ) {
+      if($event.target.checked) {
+        this.listTaskGroupDone.push(data);
+      }
+      else {
+        let idx = this.listTaskGroupDone.findIndex((x) => x.recID === data.recID);
+        if (idx >= 0) this.listTaskGroupDone.splice(idx, 1);
+      }
+
+    }
+    else if ($event && view == 'task' ) {
+      if($event.target.checked) {
+        this.listTaskDone.push(data);
+      }
+      else {
+        let idx = this.listTaskDone.findIndex((x) => x.recID === data.recID);
+        if (idx >= 0) this.listTaskDone.splice(idx, 1);
+      }
+    }
+  }
+
+  getIconTask(task) {
+    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    return color?.icon;
+  }
+  getColor(task) {
+    let color = this.listTypeTask?.find((x) => x.value === task.taskType);
+    return { 'background-color': color?.color };
   }
 }

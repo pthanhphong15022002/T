@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { CacheService, FormModel } from 'codx-core';
 import { firstValueFrom } from 'rxjs';
 
@@ -8,287 +8,15 @@ import { firstValueFrom } from 'rxjs';
   styleUrls: ['./codx-show-task.component.scss'],
 })
 export class CodxShowTaskComponent implements OnInit {
+  @Input() dataSource: any;
+  @Input() formModel: FormModel;
+
+  data: any;
+
+  dateFomat = 'dd/MM/yyyy';
+  dateTimeFomat = 'HH:mm - dd/MM/yyyy';
   listTypeTask = [];
   grvMoreFunction: FormModel;
-  taskGroupList = [
-    {
-      assign: true,
-      createdBy: 'ADMIN',
-      createdOn: '2023-03-13T08:33:43.955+07:00',
-      delete: true,
-      durationDay: 0,
-      durationHour: 14,
-      id: '640e7d77ab1857a918161d00',
-      includeTables: null,
-      indexNo: 1,
-      interval: '1',
-      memo: '<p><span>tiến hành xây dựng CSDL</span><br></p>',
-      modifiedBy: null,
-      modifiedOn: null,
-      recID: '59077c30-98c9-46e2-be2c-df5c5f223a89',
-      share: true,
-      statusCodeID: null,
-      stepID: '193854fa-b9e2-4baf-b0c2-526afd9b3031',
-      taskGroupName: 'Thu tập từ người dùng ',
-      unbounds: null,
-      updateColumns: '',
-      write: true,
-      roles: [
-        {
-          assign: true,
-          createdBy: null,
-          createdOn: '2023-03-13T08:33:43.957+07:00',
-          delete: true,
-          id: '640e7d77ab1857a918161d01',
-          includeTables: null,
-          modifiedBy: null,
-          modifiedOn: null,
-          objectID: '2207130006',
-          objectName: 'Nguyễn Thị Thanh Dung',
-          objectType: 'U',
-          recID: '16e1aa3d-c13f-11ed-949d-00155d035517',
-          roleType: '',
-          share: true,
-          taskGroupID: '59077c30-98c9-46e2-be2c-df5c5f223a89',
-          unbounds: null,
-          updateColumns: '',
-          write: true,
-        },
-      ],
-      task: [
-        {
-          assign: true,
-          assignControl: '0',
-          attachments: 0,
-          callType: '1',
-          createTask: false,
-          createTaskControl: null,
-          createdBy: null,
-          createdOn: '2023-03-13T08:33:43.963+07:00',
-          delete: true,
-          dependOnTasks: null,
-          dependRule: '1',
-          durationDay: 0,
-          durationHour: 1,
-          id: '640e7d77ab1857a918161d04',
-          includeTables: null,
-          indexNo: 1,
-          interval: '1',
-          isOnline: true,
-          memo: null,
-          modifiedBy: 'ADMIN',
-          modifiedOn: '2023-03-13T08:49:17.513+07:00',
-          parentID: '',
-          recID: 'a959dd13-c4b3-49a4-8cbb-0031efb17d96',
-          reference: null,
-          reminderBy: '1',
-          reminders: null,
-          requireCompleted: false,
-          share: true,
-          statusCodeID: null,
-          stepID: '193854fa-b9e2-4baf-b0c2-526afd9b3031',
-          stop: false,
-          taskGroupID: '59077c30-98c9-46e2-be2c-df5c5f223a89',
-          taskName: 'Cuộc họp trước khi bắt đầu',
-          taskType: 'M',
-          unbounds: null,
-          updateColumns: '',
-          write: true,
-          roles: [
-            {
-              assign: true,
-              createdBy: null,
-              createdOn: '2023-03-13T08:33:43.965+07:00',
-              delete: true,
-              id: '640e7d77ab1857a918161d05',
-              includeTables: null,
-              modifiedBy: null,
-              modifiedOn: null,
-              objectID: '2207130006',
-              objectName: 'Nguyễn Thị Thanh Dung',
-              objectType: 'U',
-              recID: '16e1aa41-c13f-11ed-949d-00155d035517',
-              roleType: 'O',
-              share: true,
-              taskID: '00000000-0000-0000-0000-000000000000',
-              unbounds: null,
-              updateColumns: '',
-              write: true,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      assign: true,
-      createdBy: 'ADMIN',
-      createdOn: '2023-03-13T08:33:43.955+07:00',
-      delete: true,
-      durationDay: 0,
-      durationHour: 14,
-      id: '640e7d77ab1857a918161d00',
-      includeTables: null,
-      indexNo: 1,
-      interval: '1',
-      memo: '<p><span>tiến hành xây dựng CSDL</span><br></p>',
-      modifiedBy: null,
-      modifiedOn: null,
-      recID: '59077c30-98c9-46e2-be2c-df5c5f223a89',
-      share: true,
-      statusCodeID: null,
-      stepID: '193854fa-b9e2-4baf-b0c2-526afd9b3031',
-      taskGroupName: 'Thu tập từ người dùng ',
-      unbounds: null,
-      updateColumns: '',
-      write: true,
-      roles: [
-        {
-          assign: true,
-          createdBy: null,
-          createdOn: '2023-03-13T08:33:43.957+07:00',
-          delete: true,
-          id: '640e7d77ab1857a918161d01',
-          includeTables: null,
-          modifiedBy: null,
-          modifiedOn: null,
-          objectID: '2207130006',
-          objectName: 'Nguyễn Thị Thanh Dung',
-          objectType: 'U',
-          recID: '16e1aa3d-c13f-11ed-949d-00155d035517',
-          roleType: '',
-          share: true,
-          taskGroupID: '59077c30-98c9-46e2-be2c-df5c5f223a89',
-          unbounds: null,
-          updateColumns: '',
-          write: true,
-        },
-      ],
-      task: [
-        {
-          assign: true,
-          assignControl: '0',
-          attachments: 0,
-          callType: '1',
-          createTask: false,
-          createTaskControl: null,
-          createdBy: null,
-          createdOn: '2023-03-13T08:33:43.963+07:00',
-          delete: true,
-          dependOnTasks: null,
-          dependRule: '1',
-          durationDay: 0,
-          durationHour: 1,
-          id: '640e7d77ab1857a918161d04',
-          includeTables: null,
-          indexNo: 1,
-          interval: '1',
-          isOnline: true,
-          memo: null,
-          modifiedBy: 'ADMIN',
-          modifiedOn: '2023-03-13T08:49:17.513+07:00',
-          parentID: '',
-          recID: 'a959dd13-c4b3-49a4-8cbb-0031efb17d96',
-          reference: null,
-          reminderBy: '1',
-          reminders: null,
-          requireCompleted: false,
-          share: true,
-          statusCodeID: null,
-          stepID: '193854fa-b9e2-4baf-b0c2-526afd9b3031',
-          stop: false,
-          taskGroupID: '59077c30-98c9-46e2-be2c-df5c5f223a89',
-          taskName: 'Cuộc họp trước khi bắt đầu',
-          taskType: 'M',
-          unbounds: null,
-          updateColumns: '',
-          write: true,
-          roles: [
-            {
-              assign: true,
-              createdBy: null,
-              createdOn: '2023-03-13T08:33:43.965+07:00',
-              delete: true,
-              id: '640e7d77ab1857a918161d05',
-              includeTables: null,
-              modifiedBy: null,
-              modifiedOn: null,
-              objectID: '2207130006',
-              objectName: 'Nguyễn Thị Thanh Dung',
-              objectType: 'U',
-              recID: '16e1aa41-c13f-11ed-949d-00155d035517',
-              roleType: 'O',
-              share: true,
-              taskID: '00000000-0000-0000-0000-000000000000',
-              unbounds: null,
-              updateColumns: '',
-              write: true,
-            },
-          ],
-        },
-        {
-          assign: true,
-          assignControl: '0',
-          attachments: 0,
-          callType: '1',
-          createTask: false,
-          createTaskControl: null,
-          createdBy: null,
-          createdOn: '2023-03-13T08:33:43.963+07:00',
-          delete: true,
-          dependOnTasks: null,
-          dependRule: '1',
-          durationDay: 0,
-          durationHour: 1,
-          id: '640e7d77ab1857a918161d04',
-          includeTables: null,
-          indexNo: 1,
-          interval: '1',
-          isOnline: true,
-          memo: null,
-          modifiedBy: 'ADMIN',
-          modifiedOn: '2023-03-13T08:49:17.513+07:00',
-          parentID: '',
-          recID: 'a959dd13-c4b3-49a4-8cbb-0031efb17d96',
-          reference: null,
-          reminderBy: '1',
-          reminders: null,
-          requireCompleted: false,
-          share: true,
-          statusCodeID: null,
-          stepID: '193854fa-b9e2-4baf-b0c2-526afd9b3031',
-          stop: false,
-          taskGroupID: '59077c30-98c9-46e2-be2c-df5c5f223a89',
-          taskName: 'Cuộc họp trước khi bắt đầu',
-          taskType: 'M',
-          unbounds: null,
-          updateColumns: '',
-          write: true,
-          roles: [
-            {
-              assign: true,
-              createdBy: null,
-              createdOn: '2023-03-13T08:33:43.965+07:00',
-              delete: true,
-              id: '640e7d77ab1857a918161d05',
-              includeTables: null,
-              modifiedBy: null,
-              modifiedOn: null,
-              objectID: '2207130006',
-              objectName: 'Nguyễn Thị Thanh Dung',
-              objectType: 'U',
-              recID: '16e1aa41-c13f-11ed-949d-00155d035517',
-              roleType: 'O',
-              share: true,
-              taskID: '00000000-0000-0000-0000-000000000000',
-              unbounds: null,
-              updateColumns: '',
-              write: true,
-            },
-          ],
-        },
-      ],
-    },
-  ];
   moreDefaut = {
     share: true,
     write: true,
@@ -300,13 +28,16 @@ export class CodxShowTaskComponent implements OnInit {
     private cache: CacheService,
   ) {}
 
-  async ngOnInit(): Promise<void> {
+  async ngOnInit(){
     this.grvMoreFunction = await this.getFormModel('DPT0402');
-    this.cache.valueList('DP004').subscribe((res) => {
-      if (res.datas) {
-        this.listTypeTask = res?.datas;
-      }
-    });
+  }
+
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    if (changes?.dataSource?.currentValue) {
+      let data = await firstValueFrom(this.cache.valueList('DP004'));
+      this.listTypeTask = data['datas'];
+      await this.groupByTask(this.dataSource); 
+    }
   }
 
   getIconTask(task) {
@@ -326,6 +57,26 @@ export class CodxShowTaskComponent implements OnInit {
     formModel['entityName'] = f?.entityName;
     formModel['funcID'] = functionID;
     return formModel;
+  }
+
+   async groupByTask(data) {  
+    if (data && !data['isSuccessStep'] && !data['isFailStep']) {
+      console.log(data?.tasks);
+      
+      const taskGroupList = data?.tasks?.reduce((group, product) => {
+        const { taskGroupID } = product;
+        group[taskGroupID] = group[taskGroupID] ?? [];
+        group[taskGroupID].push(product);
+        return group;
+      }, {});
+      const taskGroupConvert = data['taskGroups'].map((taskGroup) => {
+        return {
+          ...taskGroup,
+          task: taskGroupList[taskGroup['refID']] ?? [],
+        };
+      });
+      data['taskGroups'] = taskGroupConvert;
+    }
   }
 
 }
