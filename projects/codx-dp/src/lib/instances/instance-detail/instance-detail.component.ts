@@ -114,7 +114,9 @@ export class InstanceDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    
+  }
 
   ngAfterViewInit(): void {
     this.rollHeight();
@@ -135,7 +137,7 @@ export class InstanceDetailComponent implements OnInit {
           this.dataSelect.recID,
           this.dataSelect.processID
         );
-        this.rollHeight();
+       // this.rollHeight();
       }
     }
   }
@@ -382,7 +384,7 @@ export class InstanceDetailComponent implements OnInit {
     let classFooter = document.getElementsByClassName('codx-detail-footer')[0];
     let heightFT = classFooter.clientHeight;
 
-    var maxHeight = heightVD - heightHD - heightFT- 45 ;
+    var maxHeight = heightVD - heightHD - heightFT- 20 ;
     var div = document.getElementById('viewModeDetail');
     if (div) {
       div.style.setProperty('max-height', maxHeight + 'px', 'important');
