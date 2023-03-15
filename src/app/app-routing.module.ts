@@ -12,7 +12,7 @@ import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components
 import { TenantsComponent } from '@modules/auth/tenants/tenants.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 
-var childRoutes = [
+var childRoutes: Routes = [
   {
     path: 'auth',
     loadChildren: () =>
@@ -41,11 +41,6 @@ var childRoutes = [
       import('projects/codx-dp/src/lib/codx-dp.module').then(
         (m) => m.CodxDpModule
       ),
-  },
-  {
-    path: 'error',
-    loadChildren: () =>
-      import('./pages/errors/errors.module').then((m) => m.ErrorsModule),
   },
   {
     path: 'tm',
@@ -217,18 +212,17 @@ var childRoutes = [
     ],
   },
   {
+    path: 'error',
+    loadChildren: () =>
+      import('./pages/errors/errors.module').then((m) => m.ErrorsModule),
+  },
+  {
     path: 'viewfile',
     component: ViewFileDialogComponent,
   },
   {
     path: 'sos',
     component: SosComponent,
-  },
-
-  {
-    path: '',
-    redirectTo: 'wp',
-    pathMatch: 'full',
   },
   {
     path: 'tn',
@@ -237,6 +231,11 @@ var childRoutes = [
       import('projects/codx-tn/src/lib/codx-tn.module').then(
         (m) => m.CodxTnModule
       ),
+  },
+  {
+    path: '',
+    redirectTo: 'wp',
+    pathMatch: 'full',
   },
   { path: '**', redirectTo: 'error/404' },
 ];
@@ -247,7 +246,6 @@ export const routes: Routes = [
     component: LayoutTenantComponent,
     children: [{ path: '', component: TenantsComponent }],
   },
-
   {
     path: 'auth',
     loadChildren: () =>
@@ -263,7 +261,7 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
 ];
-export const routes1: Routes = environment.saas == 1 ? routes : childRoutes;
+//export const routes1: Routes = environment.saas == 1 ? routes : childRoutes;
 
 @NgModule({
   imports: [

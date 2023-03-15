@@ -21,124 +21,81 @@
 
 <ng-template #header2>
   <codx-label
-    fiedName="lblInventoryHeader"
+    fiedName="inventModelID"
     [formModel]="view.formModel"
-    default="Thiết lập tồn kho"
   ></codx-label>
 </ng-template>
 
 <ng-template #header3>
-  <codx-label
-    fiedName="lblUnitConversionHeader"
-    [formModel]="view.formModel"
-    default="Đơn vị tính quy đổi"
-  ></codx-label>
-</ng-template>
-
-<ng-template #header4>
-  <codx-label
-    fiedName="lblStatusHeader"
-    [formModel]="view.formModel"
-    default="Tình trạng"
-  ></codx-label>
+  <codx-label fiedName="dimGroupID" [formModel]="view.formModel"></codx-label>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
   <tr>
     <td>
-      <div class="fw-bold mb-1">{{ data?.itemName }}</div>
-      <div class="fs-8 mb-3">
-        <div class="mb-1">
-          <codx-label
-            fiedName="itemID"
-            [formModel]="view.formModel"
-          ></codx-label
-          >:&nbsp;
-          {{ data?.itemID }} &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp;
-          <codx-label
-            fiedName="itemGroupID"
-            [formModel]="view.formModel"
-          ></codx-label
-          >:&nbsp;
-          <span class="text-primary">{{ data?.itemGroupID }}</span>
-          &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-          <codx-label
-            fiedName="productLineID"
-            [formModel]="view.formModel"
-          ></codx-label
-          >:&nbsp;
-          <span class="text-primary">{{ data?.productLineID }}</span>
-        </div>
+      <div class="d-flex gap-3 align-items-center">
         <div>
-          <codx-vll
-            [showText]="true"
-            [showBgColor]="true"
-            name="AC018"
-            [value]="data?.itemType"
-            class="badge badge-danger"
+          <codx-img
+            [funcId]="view.formModel.funcID"
+            [objectId]="data?.itemID"
+            [objectType]="view.formModel.entityName"
+            [width]="75"
+            [imgOn]="data?.modifiedOn"
+            [isDefaulImg]="true"
+            imageType="square"
           >
-          </codx-vll>
-          &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-          <codx-label
-            fiedName="inventModelID"
-            [formModel]="view.formModel"
-          ></codx-label
-          >:&nbsp;
-          {{ getInventoryModelById(data?.inventModelID) }}
-          &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-          <codx-label
-            fiedName="dimGroupID"
-            [formModel]="view.formModel"
-          ></codx-label
-          >:&nbsp;
-          {{ getDimGroupNameById(data?.dimGroupID) }}
+          </codx-img>
+        </div>
+
+        <div>
+          <div class="fw-bold mb-1">
+            {{ data?.itemName }} - {{ data?.itemID }}
+          </div>
+          <div class="fs-8 mb-3">
+            <div class="mb-1">
+              <codx-label
+                fiedName="itemGroupID"
+                [formModel]="view.formModel"
+              ></codx-label
+              >:&nbsp;
+              <span class="text-primary">{{ data?.itemGroupID }}</span>
+              &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+              <codx-label
+                fiedName="productLineID"
+                [formModel]="view.formModel"
+              ></codx-label
+              >:&nbsp;
+              <span class="text-primary">{{ data?.productLineID }}</span>
+            </div>
+              <codx-vll
+                [showText]="true"
+                [showBgColor]="true"
+                name="AC018"
+                [value]="data?.itemType"
+                class="badge badge-danger"
+              >
+              </codx-vll>
+          </div>
         </div>
       </div>
     </td>
     <td class="fs-8">
-      <div class="mb-1">
-        <codx-label fiedName="umid" [formModel]="view.formModel"></codx-label
-        >:&nbsp; <b>{{ data?.umid }}</b>
-      </div>
-      <div class="mb-3">
-        <codx-label
-          fiedName="warehouseID"
-          [formModel]="view.formModel"
-        ></codx-label
-        >:&nbsp;
-        <b>{{ getWarehouseNameById(data?.warehouseID) }}</b>
-        &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-        <codx-label
-          fiedName="locationID"
-          [formModel]="view.formModel"
-        ></codx-label
-        >:&nbsp;
-        <b>{{ getLocationNameById(data?.locationID) }}</b>
-      </div>
-    </td>
-    <td class="d-flex justify-content-between mb-3">
-      <div>
-        <div *ngFor="let conversion of data?.umConversions" class="fw-bold">
-          1 {{ conversion?.fromUMID }} = {{ conversion?.conversion }}
-          {{ conversion?.toUMID }}
-        </div>
-      </div>
-      <div *ngIf="data?.cwItem" class="badge badge-info align-self-start">
-        CW
-      </div>
+      <codx-label
+        fiedName="lblPricingMethod"
+        [formModel]="view.formModel"
+        default="Phương pháp tính giá"
+      ></codx-label
+      >:&nbsp;
+      <b>{{ getInventoryModelById(data?.inventModelID) }}</b>
     </td>
     <td class="fs-8">
-      <div class="mb-3 text-center">
-        <div class="badge badge-warning mb-1">
-          {{ data?.stop ? "Ngưng sử dụng" : "Còn sử dụng " }}
-        </div>
-        <div class="mb-1">
-          {{ data?.createdOn | date : "dd/MM/yyyy, hh:mm" }}
-        </div>
-        <div class="fw-bold">
-          {{ data?.createdBy }}
-        </div>
-      </div>
+      <codx-label
+        fiedName="lblFollow"
+        [formModel]="view.formModel"
+        default="Theo dõi"
+      ></codx-label
+      >:&nbsp;
+      {{ getDimGroupNameById(data?.dimGroupID) }}
     </td>
     <td>
       <codx-mfunc
