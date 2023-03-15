@@ -1,23 +1,42 @@
-<div class="container d-flex flex-column justify-content-between">
-  <div class="title">
-    <codx-label [default]="'Kích hoạt tài khoản'" [name]="'lblActiveTenant'">
-    </codx-label>
+<div class="container d-flex flex-column py-4 px-0">
+  <div
+    class="d-flex align-items-center justify-content-between pb-3 border-bottom px-6"
+  >
+    <div class="title fw-bold fs-5 text-dark">
+      <codx-label [default]="'Kích hoạt tài khoản'" [name]="'lblActiveTenant'">
+      </codx-label>
+    </div>
+    <button
+      (click)="closePopup()"
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary"
+    >
+      <i class="icon-close icon-18"></i>
+    </button>
   </div>
-  <div class="body">
-    <codx-label [default]="'Email'" [name]="'lblEmailAccount'"> </codx-label>
+  <div class="body px-6">
+    <div class="text-dark fw-bold mt-5 mb-1">
+      <codx-label [default]="'Email'" [name]="'lblEmailAccount'"> </codx-label>
+    </div>
     <div class="emailTmp d-flex">
-      <div class="email flex-grow-1">
+      <div class="email w-100">
         <codx-input type="text" [disabled]="true" [crrValue]="user?.email">
         </codx-input>
       </div>
-      <button (click)="copyToClipboard()">
-        <codx-label [default]="'Copy'" [name]="'lblCopyClipboard'">
-        </codx-label>
-      </button>
+      <span id="cpmail">
+        <button
+          type="button"
+          class="btn btn-light-primary"
+          (click)="copyToClipboard()"
+        >
+          <codx-label [default]="'Copy'" [name]="'lblCopyClipboard'">
+          </codx-label>
+        </button>
+      </span>
     </div>
   </div>
-  <div class="business d-flex justify-content-end">
-    <button (click)="resendMail()">
+  <div class="business d-flex justify-content-center mt-7 px-6">
+    <button type="button" class="btn btn-primary" (click)="resendMail()">
       <codx-label
         [default]="'Gửi lại mail kích hoạt'"
         [name]="'lblResendActiveMail'"

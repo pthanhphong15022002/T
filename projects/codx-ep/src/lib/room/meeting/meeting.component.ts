@@ -88,7 +88,7 @@ export class MeetingComponent extends UIComponent {
         this.meetingDuration,
         this.meetingPassword
       )
-      .then((url) => {
+      .subscribe((url) => {
         this.meetingUrl = url;
         this.detectorRef.detectChanges();
         return url;

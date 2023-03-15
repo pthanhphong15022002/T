@@ -33,7 +33,7 @@ export class ForgotPasswordDefaultComponent implements OnInit, AfterViewInit {
   enableCaptcha = 0;
   // private fields
   constructor() {
-    this.enableCaptcha = environment.reCaptchaEnable;
+    this.enableCaptcha = environment.captchaEnable;
     if (this.enableCaptcha == 0) {
       this.captChaValid = true;
     }
