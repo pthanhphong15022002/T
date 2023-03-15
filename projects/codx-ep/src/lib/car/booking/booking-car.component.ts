@@ -17,6 +17,7 @@ import {
   NotificationsService,
   AuthService,
   CodxScheduleComponent,
+  Util,
 } from 'codx-core';
 import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
@@ -40,6 +41,14 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
+
+  
+  @ViewChild('gridResourceName') gridResourceName: TemplateRef<any>;
+  @ViewChild('gridHost') gridHost: TemplateRef<any>;
+  @ViewChild('gridMF') gridMF: TemplateRef<any>;
+  @ViewChild('gridBookingOn') gridBookingOn: TemplateRef<any>;
+  @ViewChild('gridStartDate') gridStartDate: TemplateRef<any>;
+  @ViewChild('gridEndDate') gridEndDate: TemplateRef<any>;
   showToolBar = 'true';
   service = 'EP';
   assemblyName = 'EP';
@@ -85,6 +94,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   navigated=false;
   columnGrids: any;
   isAdmin: boolean;
+  grView: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -201,10 +211,85 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       }        
     });
   }
+  onLoading(evt: any) {
+    if (this.formModel) {
+      this.cache
+        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+        .subscribe((grv) => {
+          if (grv) {
+            this.grView = Util.camelizekeyObj(grv);
+            this.columnGrids = [
+              {
+                field: '',
+                headerText: '',
+                width: 40,
+                template: this.gridMF,
+                textAlign: 'center',
+              },
+              {
+                field: 'bookingOn',
+                template: this.gridBookingOn,
+                headerText: this.grView?.bookingOn?.headerText,
 
+              },
+              {
+                field: 'resourceID',
+                template: this.gridResourceName,
+                headerText: this.grView?.resourceID?.headerText,
+              },
+              {
+                field: 'title',
+                headerText: this.grView?.title?.headerText,
+              },
+              {
+                field: 'startDate',
+                template: this.gridStartDate,
+                headerText: this.grView?.startDate?.headerText,
+              },
+              {
+                field: 'endDate',
+                template: this.gridEndDate,
+                headerText: this.grView?.endDate?.headerText,
+              },
+              {
+                field: 'requester',
+                headerText: this.grView?.requester?.headerText,
+              },
+              {
+                field: 'address',
+                headerText: this.grView?.address?.headerText,
+              },
+              {
+                field: 'phone',
+                headerText: this.grView?.phone?.headerText,
+              },
+            ];
+            this.views.push(
+              {
+                sameData: true,
+                type: ViewType.grid,
+                active: false,
+                model: {
+                  resources: this.columnGrids,
+                },
+              },
+            )
+          }
+        });
+    }
+  }
   ngAfterViewInit(): void {
     
     this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
+    this.columnGrids = [
+      {
+        field: '',
+        headerText: '',
+        width: 40,
+        template: this.gridMF,
+        textAlign: 'center',
+      },
+    ];
     this.views = [
       {
         sameData: false,
@@ -237,15 +322,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
           template: this.template,
           panelRightRef: this.panelRight,
         },
-      },
-      {
-        sameData: true,
-      type: ViewType.grid,
-      active: true,
-      model: {
-        resources: this.columnGrids,
-      },
-    }
+      }
+    
     ];
     if(this.queryParams?.predicate && this.queryParams?.dataValue){    
       this.codxEpService.getBookingByRecID(this.queryParams?.dataValue).subscribe((res:any)=>{
