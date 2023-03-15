@@ -535,7 +535,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     tmpResource.quantity = 1;
     tmpResource.itemName = data?.resourceName;
     tmpResource.umid = data?.umid;
-    tmpResource.umName = data?.umid;
+    tmpResource.umName = data?.umName;
     tmpResource.objectType = 'EP_Resources';
     tmpResource.objectID = data?.recID;
 
