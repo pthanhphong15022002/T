@@ -765,8 +765,8 @@ export class InstancesComponent
             var dialogMoveStage = this.callfc.openForm(
               PopupMoveStageComponent,
               '',
+              850,
               900,
-              950,
               '',
               obj
             );
