@@ -254,7 +254,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         textAlign: 'center',
       },
     ];
-    
+
     this.views = [
       {
         sameData: false,
@@ -286,7 +286,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
         },
-      },      
+      },
     ];
     if (this.queryParams?.predicate && this.queryParams?.dataValue) {
       this.codxEpService
@@ -463,6 +463,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     if (event.type == 'add' && event.data?.resourceId != null) {
       this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(event.data);
+    }
+    if(event.type == 'doubleClick' || event.type == 'edit'){
+      this.edit(event.data);
     }
   }
   clickMF(event, data) {

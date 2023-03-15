@@ -522,7 +522,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   getItemQty(itemID) {
-    let item = this.cart.filter((x) => x.itemID == itemID);
+    let item = this.cart.filter((x) => x.resourceID == itemID);
     if (item.length == 0) {
       return 0;
     }

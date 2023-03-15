@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild 
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Thickness } from '@syncfusion/ej2-charts';
-import { ApiHttpService, CacheService, CallFuncService, AuthService, NotificationsService, DialogRef, DialogData, CRUDService } from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, AuthService, NotificationsService, DialogRef, DialogData, CRUDService, CodxFormComponent } from 'codx-core';
 import { tmpAddGiftTrans } from '../../models/tmpAddGiftTrans.model';
 
 @Component({
@@ -11,23 +11,36 @@ import { tmpAddGiftTrans } from '../../models/tmpAddGiftTrans.model';
   styleUrls: ['./popup-add-gift.component.scss']
 })
 export class PopupAddGiftComponent implements OnInit {
-
-  user: any = null;
+  @ViewChild("popupViewCard") popupViewCard: TemplateRef<any>;
+  giftTrans = new tmpAddGiftTrans();
   dialogRef: DialogRef = null;
   form: FormGroup = null;
-  transType: string = "3";
+
+  lstPattern: any[] = [];
+
   isSharePortal: boolean = true;
+  showNavigationArrows: boolean = false;
+
+  funcID: string = null;
+  title: string = null;
+  transType: string = "3";
+  cardTypeDefault: string = "6";
+  patternIDSeleted: string = null;
+  userReciver: string = "";
+  userReceiverName: string = "";
+
+  user: any = null;
   myWallet: any = null;
   reciverWallet: any = null;
   gift: any = null;
+  patternSelected: any;
+
   quantity: number = 0;
   amount: number = 0
   maxQuantity: number = 0;
-  cardTypeDefault: string = "6";
-  @ViewChild("popupViewCard") popupViewCard: TemplateRef<any>;
-  patternSelected: any;
-  showNavigationArrows: boolean = false;
-  giftTrans = new tmpAddGiftTrans();
+  dg: any;
+
+
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -36,10 +49,12 @@ export class PopupAddGiftComponent implements OnInit {
     private auth: AuthService,
     private notifySV: NotificationsService,
     private route: ActivatedRoute,
+    private activeRouter: ActivatedRoute,
     @Optional() dialogRef?: DialogRef,
     @Optional() dd?: DialogData) {
     this.dialogRef = dialogRef;
     this.user = this.auth.userValue;
+    this.funcID = dd.data;
   }
 
   ngOnInit(): void {
@@ -47,29 +62,38 @@ export class PopupAddGiftComponent implements OnInit {
     this.innitForm();
     this.getMyWalletInfor();
     this.getDataPattern(this.cardTypeDefault);
-    this.route.params.subscribe((param: any) => {
-      if (param) {
-        this.giftTrans.EntityName = "FD_GiftTrans";
-        this.giftTrans.EntityPer = "FD_GiftTrans";
-        this.giftTrans.FunctionID = param["funcID"]
-      }
-    })
+    this.giftTrans.EntityName = "FD_GiftTrans";
+    this.giftTrans.EntityPer = "FD_GiftTrans";
+    this.giftTrans.FunctionID = this.funcID;
+
+    // this.route.params.subscribe((param: any) => {
+    //   if (param) {
+    //     this.giftTrans.EntityName = "FD_GiftTrans";
+    //     this.giftTrans.EntityPer = "FD_GiftTrans";
+    //     this.giftTrans.FunctionID = this.funcID;
+    //   }
+    // })
+
+    this.cache.functionList(this.funcID)
+      .subscribe((func: any) => {
+        if (func && func?.formName && func?.gridViewName && func?.entityName && func?.description) {
+          this.title = func.description;
+        }
+      })
   }
 
-
-  lstPattern: any[] = [];
   getDataPattern(cardType: string) {
     if (!cardType) return;
     this.api.execSv("FD", "ERM.Business.FD", "PatternsBusiness", "GetPatternsAsync", [cardType])
       .subscribe((res: any) => {
         if (res) {
           console.log('pattern:', res);
-
           this.lstPattern = res;
           this.dt.detectChanges();
         }
       });
   }
+
   innitForm() {
     this.form = new FormGroup({
       userID: new FormControl(""),
@@ -84,7 +108,6 @@ export class PopupAddGiftComponent implements OnInit {
 
   resetForm() { }
 
-
   valueChange(event: any) {
     if (!event) return;
     let data = event.data;
@@ -92,16 +115,25 @@ export class PopupAddGiftComponent implements OnInit {
     switch (field) {
       case 'userID':
         this.giftTrans.UserID = data;
+        if (data) {
+          this.userReciver = data;
+          this.userReceiverName = event.component.itemsSelected[0].UserName;
+          this.form.patchValue({ receiver: this.userReciver });
+        }
         break;
+
       case 'transType3':
         this.giftTrans.TransType = "3";
         break;
+
       case 'transType4':
         this.giftTrans.TransType = "4";
         break;
+
       case 'itemID':
         this.giftTrans.ItemID = data;
         break;
+
       case 'quantity':
         if (!this.giftTrans || !this.giftTrans.ItemID) {
           this.notifySV.notify("Vui lòng chọn quà tặng");
@@ -109,23 +141,29 @@ export class PopupAddGiftComponent implements OnInit {
         }
         this.giftTrans.Quantity = data;
         break;
+
       case 'status':
         if (data) {
           this.giftTrans.Status = "3";
         }
         this.giftTrans.Status = "1";
         break;
-      case 'siutuation':
+
+      case 'situation':
         this.giftTrans.Situation = data;
+        this.form.patchValue({ situation: data });
         break;
+
       case 'isSharePortal':
         this.isSharePortal = data;
         break;
+
       default:
         break;
     }
     this.dt.detectChanges();
   }
+
   save() {
     this.api.execSv("FD", "ERM.Business.FD", "GiftTransBusiness", "AddGiftTransAsync", [this.giftTrans, this.isSharePortal])
       .subscribe((res: any) => {
@@ -182,8 +220,8 @@ export class PopupAddGiftComponent implements OnInit {
       });
   }
 
-  patternIDSeleted: string = null;
   selectedPattern(pattern: any) {
+    console.log(pattern);
     if (!pattern) return;
     if (this.patternIDSeleted = pattern.patternID) {
       this.patternIDSeleted = "";

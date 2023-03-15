@@ -104,9 +104,9 @@
                     class="nav-link fw-bold cursor-pointer active"
                     [ngClass]="{ active: item?.resourceID == groupID }"
                     (click)="filterStationery(item?.resourceID)"
-                    >{{ item?.resourceName }}</span>
-                    <!-- <span> ({{ item?.qtyItems }})</span> -->
-                  
+                    >{{ item?.resourceName }}</span
+                  >
+                  <!-- <span> ({{ item?.qtyItems }})</span> -->
                 </li>
               </ul>
             </div>
@@ -429,7 +429,11 @@
                 <div class="d-flex flex-row flex-grow-1 text-gray-600 lh-1">
                   <codx-label name="lblUMID" default="Đơn vị tính"></codx-label
                   >:
-                  <span class="d-block ms-2 fw-bold">{{ item?.umName }}</span>
+                  <span class="d-block ms-2 fw-bold">{{
+                    item?.umName != null && item?.umName != ""
+                      ? item.umName
+                      : item.umid
+                  }}</span>
                 </div>
               </div>
             </div>

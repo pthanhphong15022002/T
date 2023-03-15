@@ -62,5 +62,6 @@ export class CashPayment {
     voucherDate: any
     voucherNo: any
     voucherTime: any
+    voucherType:any
     write: any
 }
