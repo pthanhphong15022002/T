@@ -522,7 +522,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   getItemQty(itemID) {
-    let item = this.cart.filter((x) => x.resourceID == itemID);
+    let item = this.cart.filter((x) => x.itemID == itemID);
     if (item.length == 0) {
       return 0;
     }
@@ -554,12 +554,10 @@ export class PopupRequestStationeryComponent extends UIComponent {
       this.cart.filter((item: any) => {
         if (item.itemID == tmpResource.itemID) {
           item.quantity = item.quantity + 1;
-          item.itemName = item.resourceName;
+          item.itemName = item.itemName;
         }
       });
     } else {
-      tmpResource.quantity = 1;
-      tmpResource.itemName = data?.resourceName;
       this.cart.push(tmpResource);
     }
     this.detectorRef.detectChanges();
