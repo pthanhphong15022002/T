@@ -216,7 +216,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           Validators.maxLength(100),
         ]),
       ],
-      captCha: ['', Validators.compose([Validators.required])],
+      //captCha: ['', Validators.compose([Validators.required])],
     });
 
     this.changePassForm = this.fb.group(
@@ -253,7 +253,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             Validators.maxLength(100),
           ]),
         ],
-        captCha: ['', Validators.compose([Validators.required])],
+        //captCha: ['', Validators.compose([Validators.required])],
       },
       { validators: this.checkPasswords }
     );
@@ -283,7 +283,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             Validators.maxLength(100),
           ]),
         ],
-        captCha: ['', Validators.compose([Validators.required])],
+        //captCha: ['', Validators.compose([Validators.required])],
       },
       { validators: this.checkPasswords }
     );
