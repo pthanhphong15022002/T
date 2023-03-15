@@ -60,8 +60,7 @@
             <input
             class="form-check-input rounded-circle"
             type="checkbox"
-            [checked]="isCheckAll"
-            (change)="checkAllValue($event,'all','custom')"
+
 
             />
           </div>
@@ -69,21 +68,21 @@
         <div class="pt-5">
           <div class="accordion" id="accordion1">
             <ng-container *ngFor="let item of listTree; let i = index">
-           
+
               <ol class="list-unstyled" >
                 <li>
                   <div class="d-flex justify-content-start pb-1">
                     <button class="btn btn-outline-secondary btnCustom" style="cursor: pointer;"
                     id="open"
                     type="button"
-                    (click)="myFunction($event,i)"
+
                     ><i [id]="'parent'+i" class="icon-remove" style="padding: 0.35rem;"></i> </button>
                     <div class="ps-5 mt-1">
                       {{item.taskGroupName}}
                     </div>
                     <div class="ms-auto">
                       <div class="d-flex justify-content-end">
-                        <div> 
+                        <div>
                           <codx-imgs [isToolTip]="true" [width]="25" [objectId]="'DEV'" ojectType="AD_Users" [numberImages]="1">
                           </codx-imgs>
                         </div>
@@ -101,8 +100,8 @@
                           <input
                           class="form-check-input rounded-circle"
                           type="checkbox"
-                          [checked]="isCheckAll"
-                          (change)="checkAllValue($event,item.recID,'taskGroup')"
+
+
                           />
                         </div>
                       </div>
@@ -115,15 +114,15 @@
                               <div class="d-flex justify-content-start">
                                 <div
                                 class="icon-container"
-                                [ngStyle]="getColor(task)">
+                              >
                                 <span
                                   class="icon-18 text-primary-600 py-2"
-                                  [ngClass]="getIconTask(task)"></span>
+                                 ></span>
                               </div>
                                 <div class="ps-5 mt-1"> {{task.taskName}}</div>
                                 <div class="ms-auto">
                                   <div class="d-flex justify-content-end">
-                                    <div> 
+                                    <div>
                                       <codx-imgs [isToolTip]="true" [width]="25" [objectId]="'DEV'" ojectType="AD_Users" [numberImages]="1">
                                       </codx-imgs>
                                     </div>
@@ -141,19 +140,19 @@
                                       <input
                                       class="form-check-input rounded-circle"
                                       type="checkbox"
-                                      [checked]="isCheckAll"
-                                      (change)="checkAllValue($event,task.recID,'task')"
+
+
                                       />
                                     </div>
                                   </div>
-                                </div>       
+                                </div>
                               </div>
                           </div>
                          </li>
                       </ng-container>
                     </ul>
                 </li>
-              </ol>    
+              </ol>
              </ng-container>
           </div>
         </div>
