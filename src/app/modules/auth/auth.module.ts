@@ -63,7 +63,7 @@ import {
     {
       provide: RECAPTCHA_SETTINGS,
       useValue: {
-        siteKey: environment.reCaptchaKey,
+        siteKey: environment.captchaKey,
       } as RecaptchaSettings,
     },
   ],
