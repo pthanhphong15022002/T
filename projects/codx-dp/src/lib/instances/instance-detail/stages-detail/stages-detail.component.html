@@ -120,6 +120,7 @@
   ">
   <codx-field-detail
     [dataStep]="dataStep"
+    [showColumnControl]="showColumnControl"
     [titleDefault]="titleDefault"
     [isUpdate]="isUpdate"
     [isClosed]="isClosed">
@@ -384,34 +385,30 @@
         </div>
       </div>
       <div class="d-flex justify-content-center">
-        <div class="me-2">
-          <button type="button"
-            class="btn btn-outline-primary btn-sm"
-            (click)="openPopupTaskGroup()"
-          >
-            <i class="icon-add icon-18 me-2"></i>
-            <codx-label
-              [name]="'lblAddGroup'"
-              [formName]="'DPStepsFields'"
-              [gridViewName]="'grvDPStepsFields'"
-              [default]="'Thêm nhóm công việc'"
-            ></codx-label>
-          </button>
-        </div>
-        <div class="ms-2">
-          <button type="button"
-            class="btn btn-outline-primary btn-sm"
-            (click)="openTypeTask()"
-          >
-            <i class="icon-add_task icon-18 me-2"></i>
-            <codx-label
-              [name]="'lblAddTask'"
-              [formName]="'DPStepsFields'"
-              [gridViewName]="'grvDPStepsFields'"
-              [default]="'Thêm công việc'"
-            ></codx-label>
-          </button>
-        </div>
+        <button type="button"
+          class="btn btn-outline-primary me-2"
+          (click)="openPopupTaskGroup()"
+        >
+          <i class="icon-add icon-18 text-primary"></i>
+          <codx-label
+            [name]="'lblAddGroup'"
+            [formName]="'DPStepsFields'"
+            [gridViewName]="'grvDPStepsFields'"
+            [default]="'Thêm nhóm công việc'"
+          ></codx-label>
+        </button>
+        <button type="button"
+          class="btn btn-outline-primary"
+          (click)="openTypeTask()"
+        >
+          <i class="icon-add_task icon-18 text-primary"></i>
+          <codx-label
+            [name]="'lblAddTask'"
+            [formName]="'DPStepsFields'"
+            [gridViewName]="'grvDPStepsFields'"
+            [default]="'Thêm công việc'"
+          ></codx-label>
+        </button>
       </div>
     </div>
   </div>

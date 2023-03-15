@@ -734,7 +734,7 @@ export class InstancesComponent
   // end code
 
   #region;
-  moveStage(dataMore, data, instanceStep) {
+  moveStage(dataMore, data, listStepCbx) {
     if (!this.isClick) {
       return;
     }
@@ -757,16 +757,15 @@ export class InstancesComponent
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
               instance: data,
-              listStepCbx: this.listSteps,
-              instanceStep: instanceStep,
+              listStepCbx: listStepCbx,
               stepIdClick: this.stepIdClick,
               // stepReason: stepReason1
             };
             var dialogMoveStage = this.callfc.openForm(
               PopupMoveStageComponent,
               '',
+              850,
               900,
-              950,
               '',
               obj
             );
@@ -893,7 +892,7 @@ export class InstancesComponent
       .map((x) => x.stepName)[0];
   }
   clickMoreFunc(e) {
-    //   this.lstStepInstances = e.lstStepInstance;
+    this.lstStepInstances = e.lstStepCbx;
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {

@@ -412,17 +412,17 @@
             <div class="d-flex flex-row">
               <div class="me-3">
                 <codx-img
-                  [objectId]="item.recID"
+                  [objectId]="item.objectID"
                   imageType="circle"
                   width="35"
                   objectType="EP_Resources"
-                  [objectName]="item.itemName"
+                  [objectName]="item?.itemName"
                 ></codx-img>
               </div>
               <div class="me-2">
                 <div class="d-flex justify-content-start">
                   <span class="fw-bold">{{
-                    item?.itemName ? item?.itemName : item?.resourceName
+                    item?.itemName 
                   }}</span>
                 </div>
 
@@ -447,7 +447,7 @@
                 field="quantity"
                 [crrValue]="item?.quantity"
                 (valueChange)="
-                  valueChangeQtyStationery($event, item?.resourceID)
+                  valueChangeQtyStationery($event, item?.itemID)
                 "
               >
               </codx-input>
@@ -457,7 +457,7 @@
                 <span
                   class="icon-close"
                   role="button"
-                  (click)="deleteStationery(item.id)"
+                  (click)="deleteStationery(item?.itemID)"
                 ></span>
               </div>
             </div>

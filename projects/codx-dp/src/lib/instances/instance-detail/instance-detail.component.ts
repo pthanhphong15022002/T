@@ -42,7 +42,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() stepName: string;
   @Input() progress = '0';
   @Input() dataSelect: any;
-  @Input() listStepNew: any;
+  @Input() listStepsProcess: any;
   @Input() listCbxProccess: any;
   @Input() viewModelDetail = 'S';
   @ViewChild('viewDetailsItem') viewDetailsItem;
@@ -61,7 +61,7 @@ export class InstanceDetailComponent implements OnInit {
   value: Number = 30;
   cornerRadius: Number = 30;
   idCbx = 'S';
-  listStepUpdate: any;
+  listStepInstance: any;
   instanceStatus: any;
   currentStep = 0;
   instance: any;
@@ -146,6 +146,7 @@ export class InstanceDetailComponent implements OnInit {
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {
         this.loadTree(res);
+        this.listStepInstance = JSON.parse(JSON.stringify(res));
         this.listSteps = res;
         var total = 0;
         for (var i = 0; i < this.listSteps.length; i++) {
@@ -235,8 +236,7 @@ export class InstanceDetailComponent implements OnInit {
     this.moreFunctionEvent.emit({
       e: e,
       data: data,
-      lstStepCbx: this.listStepNew,
-      lstStepInstance: this.listSteps,
+      lstStepCbx: this.listStepInstance,
     });
     // console.log(e);
     // switch (e.functionID) {
@@ -252,7 +252,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
-    this.changeMF.emit({ e: e, data: data, listStepCbx: this.listStepNew });
+    this.changeMF.emit({ e: e, data: data, listStepCbx: this.listSteps });
     // console.log(e);
     // if (e) {
     //   e.forEach((element) => {
@@ -344,8 +344,8 @@ export class InstanceDetailComponent implements OnInit {
     return 'step';
   }
   getReasonByStepId(stepId: string) {
-    var idx = this.listStepNew.findIndex((x) => x.stepID === stepId);
-    return this.listStepNew[idx];
+    var idx = this.listSteps.findIndex((x) => x.stepID === stepId);
+    return this.listSteps[idx];
   }
   getStepNameIsComlepte(data) {
     var idx = this.listSteps.findIndex(
@@ -402,7 +402,15 @@ export class InstanceDetailComponent implements OnInit {
       });
     }
   }
-  saveAssign(e){
-    if(e) this.loadTree(this.listSteps);
+  saveAssign(e) {
+    if (e) this.loadTree(this.listSteps);
+  }
+  showColumnControl(stepID) {
+    if (this.listStepsProcess?.length > 0) {
+      var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
+      if (idx == -1) return 1;
+      return this.listStepsProcess[idx]?.showColumnControl;
+    }
+    return 1;
   }
 }

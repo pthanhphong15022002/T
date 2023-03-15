@@ -1888,4 +1888,22 @@ export class CodxTasksComponent
       });
   }
   //#endregion schedule
+
+  getDataAsync(pObjectID: string) {
+    if (pObjectID) {
+      this.api
+        .execSv(
+          'DM',
+          'ERM.Business.DM',
+          'FileBussiness',
+          'GetFilesByIbjectIDAsync',
+          pObjectID
+        )
+        .subscribe((res: any) => {
+          if (res.length > 0) {
+            return res.length;
+          }
+        });
+    }
+  }
 }
