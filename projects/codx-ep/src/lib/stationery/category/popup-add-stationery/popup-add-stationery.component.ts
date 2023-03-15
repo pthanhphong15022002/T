@@ -114,7 +114,7 @@ export class PopupAddStationeryComponent
         }
       });
 
-    this.epService.getQuota(this.data.resourceID).subscribe((res) => {
+    this.epService.getQuotaByID(this.data.resourceID).subscribe((res) => {
       if (res) {
         this.quota = res;
       }
