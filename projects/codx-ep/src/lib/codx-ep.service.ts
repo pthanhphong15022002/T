@@ -638,17 +638,13 @@ export class CodxEpService {
       [startDate, endDate, resourceID, recID]
     );
   }
-<<<<<<< HEAD
+
   bookingAttendeesValidator(
     listAttendees: any,
     startDate: string,
     endDate: string,
     recID: any
   ) {
-=======
-
-  bookingAttendeesValidator(listAttendees:any,startDate: string, endDate: string,recID:any) {
->>>>>>> 31802398b0553a0ce72cfbc1d57ad33300ca0c96
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
@@ -657,12 +653,8 @@ export class CodxEpService {
       [listAttendees, startDate, endDate, recID]
     );
   }
-<<<<<<< HEAD
-  getBookingItems(recID: any) {
-=======
 
-  getBookingItems(recID:any) {
->>>>>>> 31802398b0553a0ce72cfbc1d57ad33300ca0c96
+  getBookingItems(recID: any) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
@@ -797,7 +789,7 @@ export class CodxEpService {
       'EPParameters'
     );
   }
-  
+
   getEPRoomSetting(category: any) {
     return this.api.execSv(
       'SYS',

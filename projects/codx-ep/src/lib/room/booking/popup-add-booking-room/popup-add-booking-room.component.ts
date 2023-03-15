@@ -577,11 +577,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         .subscribe((res: any) => {
           if (res) {
             res.forEach((item) => {
-<<<<<<< HEAD
               let tmpSta = new BookingItems();
               (tmpSta.itemID = item?.itemID),
                 (tmpSta.quantity = item?.quantity),
-                (tmpSta.text = item?.itemName),
+                (tmpSta.itemName = item?.itemName),
                 (tmpSta.umid = item?.umid),
                 (tmpSta.umName =
                   item?.umName != null && item?.umName != ''
@@ -590,17 +589,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                 (tmpSta.objectType = 'EP_Resources'),
                 (tmpSta.objectID = item?.resourceRecID),
                 this.lstStationery.push(tmpSta);
-=======
-              let tmpSta=new BookingItems()
-              tmpSta.itemID= item?.itemID,
-              tmpSta.quantity= item?.quantity,
-              tmpSta.itemName= item?.itemName,
-              tmpSta.umid= item?.umid,
-              tmpSta.umName= item?.umName !=null && item?.umName!=""? item?.umName : item?.umid,
-              tmpSta.objectType='EP_Resources',
-              tmpSta.objectID= item?.resourceRecID,      
-              this.lstStationery.push(tmpSta);
->>>>>>> 31802398b0553a0ce72cfbc1d57ad33300ca0c96
             });
             this.changeDetectorRef.detectChanges();
           }
@@ -870,15 +858,19 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             this.returnData = res.save;
           }
           if (this.returnData?.recID && this.returnData?.attachments > 0) {
-            if ( this.attachment.fileUploadList && this.attachment.fileUploadList.length > 0 ) {
+            if (
+              this.attachment.fileUploadList &&
+              this.attachment.fileUploadList.length > 0
+            ) {
               this.attachment.addPermissions = this.listFilePermission;
               this.attachment.objectId = this.returnData?.recID;
-              (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
+              (await this.attachment.saveFilesObservable()).subscribe(
+                (item2: any) => {
                   if (item2?.status == 0) {
-                    this.fileAdded(item2);                    
+                    this.fileAdded(item2);
                   }
                   if (approval) {
-                    this.startRelease()
+                    this.startRelease();
                   } else {
                     this.dialogRef && this.dialogRef.close(this.returnData);
                   }
@@ -887,7 +879,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             }
           } else {
             if (approval) {
-              this.startRelease()
+              this.startRelease();
             } else {
               this.dialogRef && this.dialogRef.close(this.returnData);
             }
@@ -897,7 +889,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         }
       });
   }
-  startRelease(){
+  startRelease() {
     if (this.approvalRule != '0') {
       this.codxEpService
         .getCategoryByEntityName(this.formModel.entityName)
@@ -918,20 +910,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                 (this.dialogRef.dataService as CRUDService)
                   .update(this.returnData)
                   .subscribe();
-                this.dialogRef &&
-                  this.dialogRef.close(this.returnData);
+                this.dialogRef && this.dialogRef.close(this.returnData);
               } else {
-                this.notificationsService.notifyCode(
-                  res?.msgCodeError
-                );
+                this.notificationsService.notifyCode(res?.msgCodeError);
                 // Thêm booking thành công nhưng gửi duyệt thất bại
-                this.dialogRef &&
-                  this.dialogRef.close(this.returnData);
+                this.dialogRef && this.dialogRef.close(this.returnData);
               }
             });
         });
-    } 
-    else {
+    } else {
       this.notificationsService.notifyCode('ES007');
       this.codxEpService
         .afterApprovedManual(
@@ -1212,27 +1199,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       return;
     }
     event.dataSelected.forEach((item) => {
-<<<<<<< HEAD
       let tmpSta = new BookingItems();
       (tmpSta.itemID = item.ResourceID),
         (tmpSta.quantity = this.attendeesNumber),
-        (tmpSta.text = item.ResourceName),
+        (tmpSta.itemName = item.ResourceName),
         (tmpSta.umid = item.UMID),
         (tmpSta.umName = item.UMID), //Chờ cập nhật thành tên đơn vị tính
         (tmpSta.objectType = 'EP_Resources'),
         (tmpSta.objectID = item.RecID),
         this.lstStationery.push(tmpSta);
-=======
-      let tmpSta=new BookingItems()
-      tmpSta.itemID= item.ResourceID,
-      tmpSta.quantity= this.attendeesNumber,
-      tmpSta.itemName= item.ResourceName,
-      tmpSta.umid= item.UMID,
-      tmpSta.umName= item.UMID,//Chờ cập nhật thành tên đơn vị tính
-      tmpSta.objectType='EP_Resources',
-      tmpSta.objectID= item.RecID,      
-      this.lstStationery.push(tmpSta);
->>>>>>> 31802398b0553a0ce72cfbc1d57ad33300ca0c96
     });
     this.lstStationery = [
       ...new Map(
