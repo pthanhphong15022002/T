@@ -27,7 +27,7 @@ import { InstancesComponent } from '../instances.component';
 @Component({
   selector: 'lib-popup-move-stage',
   templateUrl: './popup-move-stage.component.html',
-  styleUrls: ['./popup-move-stage.component.css'],
+  styleUrls: ['./popup-move-stage.component.scss'],
 })
 export class PopupMoveStageComponent implements OnInit {
   dialog: any;
