@@ -569,6 +569,7 @@ export class CodxEpService {
       [recID, status, reasonID, comment, '']
     );
   }
+
   undo(recID: string) {
     return this.api.execSv(
       'ES',
@@ -578,6 +579,7 @@ export class CodxEpService {
       [recID]
     );
   }
+
   cancel(recID: string, comment: string, entityName: string) {
     return this.api.execSv(
       'EP',
@@ -587,6 +589,7 @@ export class CodxEpService {
       [recID, comment, entityName]
     );
   }
+
   getCategoryByEntityName(entityName: string) {
     return this.api.execSv(
       'ES',
@@ -616,6 +619,7 @@ export class CodxEpService {
       isAdmin == true
     );
   }
+
   checkDuplicateBooking(
     startDate: string,
     endDate: string,
@@ -630,6 +634,7 @@ export class CodxEpService {
       [startDate, endDate, resourceID, recID]
     );
   }
+
   bookingAttendeesValidator(listAttendees:any,startDate: string, endDate: string,recID:any) {
     return this.api.execSv(
       'EP',
@@ -639,12 +644,14 @@ export class CodxEpService {
       [listAttendees,startDate, endDate, recID]
     );
   }
+
   getBookingItems(recID:any) {
     return this.api.execSv(
       'EP', 'ERM.Business.EP', 'BookingItemsBusiness', 'GetAsync', 
       [recID]
     );
   }
+
   getAvailableResources(
     resourceType: string,
     startDate: string,
@@ -750,6 +757,7 @@ export class CodxEpService {
       'Calendar'
     );
   }
+
   getCalendarWeekdays(calendarID: any) {
     return this.api.execSv(
       'BS',
@@ -759,6 +767,7 @@ export class CodxEpService {
       [calendarID]
     );
   }
+
   getEPSetting() {
     return this.api.execSv(
       'SYS',
@@ -768,6 +777,7 @@ export class CodxEpService {
       'EPParameters'
     );
   }
+  
   getEPRoomSetting(category: any) {
     return this.api.execSv(
       'SYS',
