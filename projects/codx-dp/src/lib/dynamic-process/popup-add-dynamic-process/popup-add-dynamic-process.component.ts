@@ -323,18 +323,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    // this.updateNodeStatus(0,1);
-    this.grvMoreFunction = await this.getFormModel('DPT040102');
-    console.log(this.grvMoreFunction);
-    
-    this.grvMoreFunction = {
-      entityName: 'DP_Instances_Steps_Tasks',
-      formName: 'DPInstancesStepsTasks',
-      gridViewName: 'grvDPInstancesStepsTasks',
-      entityPer: 'DP_Instance',
-      funcID: 'DPT04',
-    };
-    
+    this.grvMoreFunction = await this.getFormModel('DPT040102');   
     this.grvStep = await this.getFormModel('DPS0103');
     this.getTitleStepViewSetup();
     this.initForm();
@@ -1629,7 +1618,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     } else {
       this.headerText = 'Sửa Giai Đoạn';
       this.stepNew = JSON.parse(JSON.stringify(step));
-      this.stepName = this.step['stepName'];
+      this.stepName = this.stepNew['stepName'];
     }
     this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
   }
@@ -1706,7 +1695,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (this.action == 'edit') {
         this.stepListAdd.push(JSON.parse(JSON.stringify(this.stepNew)));
       }
-      this.viewStepSelect(this.stepNew);
+      // this.viewStepSelect(this.stepNew);
     } else {
       this.titleViewStepCrr = this.stepNew?.stepName;
       this.step['stepName'] = this.stepNew['stepName'];
@@ -1944,17 +1933,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       if (x.event && x.event.status == 'Y') {
         // delete view
         let indexView = taskList.findIndex(
-          (taskGroup) => (taskGroup.recID = task.recID)
+          (taskGroup) => (taskGroup.recID == task.recID)
         );
         if (indexView >= 0) {
           taskList.splice(indexView, 1);
         }
         this.setIndex(taskList, 'indexNo');
         let indexDb = this.taskList.findIndex(
-          (taskFind) => (taskFind.recID = task.recID)
+          (taskFind) => (taskFind.recID == task.recID)
         );
         if (indexDb >= 0) {
-          this.taskList.splice(indexView, 1);
+          this.taskList.splice(indexDb, 1);
         }
       }
     });
@@ -2023,7 +2012,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  clickMFStep(e: any, data?: any) {
+  clickMFStep(e: any, data: any) {
     switch (e.functionID) {
       case 'SYS02':
         this.deleteStep(data);
@@ -2402,7 +2391,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     value['type'] = value['taskType'] || type;
     value['refID'] = value['recID'];
     if (data) {
-      this.callfc.openForm(ViewJobComponent, '', 700, 550, '', {
+      this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
         value: value,
         listValue: listTaskConvert,
       });

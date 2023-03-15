@@ -14,6 +14,8 @@ import { PopupEContractComponent } from '../employee-profile/popup-econtract/pop
 })
 export class EmployeeContractComponent extends UIComponent {
   @ViewChild('templateList') itemTemplate?: TemplateRef<any>;
+  @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
+  @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   @ViewChild('eInfoTemplate') eInfoTemplate?: TemplateRef<any>;
   @ViewChild('contractTemplate') contractTemplate?: TemplateRef<any>;
@@ -69,7 +71,16 @@ export class EmployeeContractComponent extends UIComponent {
           template: this.itemTemplate,
           headerTemplate: this.headerTemplate
         }
-      }
+      },
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.itemTemplateListDetail,
+          panelRightRef: this.panelRightListDetail,
+        },
+      },
     ]
     console.log('view cua e contract', this.view);
     this.view.dataService.methodDelete = 'DeleteEContractAsync';

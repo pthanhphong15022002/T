@@ -131,7 +131,7 @@
                           formControlName="captCha"
                         ></re-captcha>
                         <button
-                          [disabled]="!captChaValid"
+                          [disabled]="loginForm.invalid"
                           type="submit"
                           class="btn btn-primary fw-bold px-6 py-3"
                         >
