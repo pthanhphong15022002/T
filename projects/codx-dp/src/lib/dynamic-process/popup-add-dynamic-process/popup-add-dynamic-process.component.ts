@@ -324,7 +324,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     // this.updateNodeStatus(0,1);
-    this.grvMoreFunction = await this.getFormModel('DPT0402');
+    this.grvMoreFunction = await this.getFormModel('DPT040102');
+    console.log(this.grvMoreFunction);
+    
+    this.grvMoreFunction = {
+      entityName: 'DP_Instances_Steps_Tasks',
+      formName: 'DPInstancesStepsTasks',
+      gridViewName: 'grvDPInstancesStepsTasks',
+      entityPer: 'DP_Instance',
+      funcID: 'DPT04',
+    };
+    
     this.grvStep = await this.getFormModel('DPS0103');
     this.getTitleStepViewSetup();
     this.initForm();
@@ -2450,7 +2460,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   turnOnReason($event, view: string) {
-    debugger;
     if (view === this.viewStepReasonSuccess) {
       if ($event.field === 'isUsed' && $event.component.checked === true) {
         this.stepSuccess.isUsed = true;

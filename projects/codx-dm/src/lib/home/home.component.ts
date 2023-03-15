@@ -351,6 +351,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.getDataFolder(this.dmSV.folderID);
       }
     })
+    this.getParaSetting();
     // this.dmSV.isNodeSelect.subscribe((res) => {
     //   if (res) {
     //     var tree = this.codxview?.currentView?.currentComponent?.treeView;
@@ -507,6 +508,12 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     // });
   }
 
+  getParaSetting()
+  {
+    this.api.execSv("SYS","SYS","SettingValuesBusiness","GetParameterByFDAsync",['DMParameters',null,"1"]).subscribe((item : any)=>{
+      if(item) this.dmSV.paraSetting = JSON.parse(item);
+    })
+  }
   ngAfterViewInit(): void {
     this.cache.valueList('SYS025').subscribe((item) => {
       if (item) {
@@ -940,7 +947,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   onSelectionChanged($data) {
-    debugger
     ScrollComponent.reinitialization();
     this.scrollTop();
     if (!$data || !$data?.data) return
@@ -1000,7 +1006,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.dmSV.parentFolderId = item.parentId;
         this.dmSV.parentFolder.next(item);
         this.dmSV.level = item.level;
-        //this.dmSV.getRight(item);
+        this.dmSV.getRight(item);
         this.dmSV.folderID = id;
         this.dmSV.folderId.next(id);
         this.getDataFolder(id);

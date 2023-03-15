@@ -73,8 +73,8 @@
             </div>
         </div>
         <div class="form-group">
-            <codx-label [formModel]="dialogRef.formModel" name="lblSiutuation" default="Nội dung"></codx-label>
-            <codx-input [crrValue]="giftTrans.Situation" type="textarea" field="siutuation" name="siutuation"
+            <codx-label [formModel]="dialogRef.formModel" name="lblSituation" default="Nội dung"></codx-label>
+            <codx-input [crrValue]="giftTrans.Situation" type="textarea" field="situation" name="situation"
                 [disabled]="giftTrans.TransType == '4'" (valueChange)="valueChange($event)">
             </codx-input>
         </div>
@@ -105,20 +105,22 @@
                                         <ng-container *ngIf="idxChild >= (i * 4) && idxChild < (i + 1 * 4)">
                                             <div class="fd-parttern-item mx-5 position-relative">
                                                 <ng-container *ngIf="itemChild.backgroundColor;else noBackgroundColor">
-                                                    <div class="w-100 h-100 rounded-2"
-                                                        [style.background-color]="itemChild.backgroundColor"
-                                                        (click)="selectCard(itemChild)">
+                                                    <div [class.selected-pattern]="patternIDSeleted == item.patternID"
+                                                        class="position-relative d-flex justify-content-between align-items-center "
+                                                        [style.background-color]="item.backgroundColor"
+                                                        style="height: 120px; width: 80px;" (click)="selectCard(item)">
                                                     </div>
                                                 </ng-container>
                                                 <ng-template #noBackgroundColor>
-                                                    <codx-img [objectId]="itemChild.recID"
-                                                        [funcId]="giftTrans.FunctionID" [isDefaulImg]="true"
-                                                        referType="image" [imageType]="'square'"
-                                                        objectType="FD_Patterns" [width]="800"
-                                                        (click)="selectCard(itemChild)">
-                                                    </codx-img>
+                                                    <div
+                                                        class=" d-flex justify-content-between align-items-center h-120px w-80px border ">
+                                                        <codx-img class=" h-120px w-80px border-radius-large"
+                                                            [objectId]="item.patternID" objectType="FD_Patterns"
+                                                            [width]="165" (click)="selectCard(item)">
+                                                        </codx-img>
+                                                    </div>
                                                 </ng-template>
-                                                <i *ngIf="itemChild.recID == patternSelected.recID"
+                                                <i *ngIf="patternSelected && itemChild.recID == patternSelected.recID"
                                                     class="icon-check_circle pattern-selected"></i>
                                             </div>
                                         </ng-container>
@@ -174,7 +176,8 @@
     <div class="fd-preview-card">
         <div class="fd-preview-card-background">
             <ng-container *ngIf="patternSelected.backgroundColor ; else havePattern">
-                <div class="w-100 h-100" [style.background-color]="patternSelected.backgroundColor"></div>
+                <div class="w-100 h-100" [style.background-color]="patternSelected.backgroundColor"
+                    style="height:498px!important"></div>
             </ng-container>
             <ng-template #havePattern>
                 <codx-img [objectId]="patternSelected.recID" [funcId]="giftTrans.FunctionID" [isDefaulImg]="true"
@@ -189,7 +192,7 @@
                 </button>
             </div>
             <div class="d-flex justify-content-center">
-                <!-- <h2 class="fw-bolder">{{title}}</h2> -->
+                <h2 class="fw-bolder">{{title}}</h2>
             </div>
             <div class="p-3">
                 <div class="d-flex align-items-center justify-content-center my-4">
@@ -199,12 +202,12 @@
                     <span class="pic-send mx-3">
                         <img alt="Pic" src="/assets/themes/fd/default/img/img_SendCard.svg">
                     </span>
-                    <!-- <codx-img [objectId]="userReciver" [objectType]="'AD_Users'" [objectName]="userReciverName"
+                    <codx-img [objectId]="userReciver" [objectType]="'AD_Users'" [objectName]="userReceiverName"
                         [isDefaulImg]="true" [width]="35">
-                    </codx-img> -->
+                    </codx-img>
                 </div>
                 <div class="d-flex justify-content-center p-6">
-                    <div [innerHTML]="form.controls['situation'].value"></div>
+                    <div [innerHTML]="giftTrans.Situation"></div>
                 </div>
                 <div class="d-flex align-items-center justify-content-center my-4">
                     <!-- <ng-cintainer *ngIf="rating">

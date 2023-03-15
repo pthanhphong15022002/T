@@ -9,6 +9,11 @@
                 [formModel]="form.formModel" (valueChange)="valueChange($event)">
             </codx-input>
         </div>
+
+        <div class="ms-3">
+            <codx-input [Group]="form.formGroup" field="voucherType" [formModel]="form.formModel">
+            </codx-input>
+        </div>
     </ng-container>
 </ng-template>
 <ng-template #body>
@@ -59,11 +64,20 @@
                     <div class="col-4">
                         <!-- Sổ quỹ tiền mặt -->
                         <div class="form-group">
-                            <codx-label fiedName="CashBookID" [formModel]="form.formModel">
-                            </codx-label>
-                            <codx-input [Group]="form.formGroup" [crrValue]="cashreceipts.cashBookID"
-                                field="cashBookID" [formModel]="form.formModel" (valueChange)="valueChange($event)">
-                            </codx-input>
+                            <ng-container *ngIf="form.formModel.funcID === 'ACT0401'">
+                                <codx-label fiedName="CashBookID" [formModel]="form.formModel">
+                                </codx-label>
+                                <codx-input [Group]="form.formGroup" [crrValue]="cashreceipts.cashBookID"
+                                    field="cashBookID" [formModel]="form.formModel" (valueChange)="valueChange($event)">
+                                </codx-input>
+                            </ng-container>
+                            <ng-container *ngIf="form.formModel.funcID === 'ACT0428'">
+                                <codx-label fiedName="bankAccount" [formModel]="form.formModel">
+                                </codx-label>
+                                <codx-input [Group]="form.formGroup"
+                                    field="bankAccount" [formModel]="form.formModel">
+                                </codx-input>
+                            </ng-container>
                         </div>
                     </div>
                     <div class="col-2">

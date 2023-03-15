@@ -226,8 +226,8 @@
 }
 
 .icon-container {
-  height: 40px;
-  width: 40px;
+  height: 36px;
+  width: 36px;
   border-radius: 50%;
   background-color: #e4e4e4;
   display: flex;
@@ -283,4 +283,48 @@
   font-weight: 700 !important;
   margin-bottom: 5px !important;
 }
-// End Drop drap -- nvthuan
+
+
+.card-job.stages-task{
+  border: 1px transparent solid;
+  position: relative;
+}
+
+.card-job.stages-task:has(.task-groups){
+
+  &::before{
+    display: block;
+    content: "";
+    width: 10px;
+    border-left: 1px var(--gray-300) dotted;
+    position: absolute;
+    top: 20px;
+    left: 15px;
+    bottom: 0;
+  }
+  .cdk-drop-list.task .cdk-drag.drap-drop{
+    position: relative;
+  }
+  .cdk-drop-list.task .cdk-drag.drap-drop::before{
+    display: block;
+    content: "";
+    width: 30px;
+    border-top: 1px var(--gray-300) dotted;
+    position: absolute;
+    top: 20px;
+    left: -28px;
+    height: 10px;
+  }
+  
+  .cdk-drop-list.task .cdk-drag.drap-drop:last-child:after{
+    display: block;
+    content: "";
+    width: 1px;
+    background-color: var(--bg-body);
+    position: absolute;
+    top: 22px;
+    left: -30px;
+    height: 90%;
+  }
+}
+
