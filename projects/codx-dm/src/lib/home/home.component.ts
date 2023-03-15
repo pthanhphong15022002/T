@@ -511,11 +511,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   getParaSetting()
   {
     this.api.execSv("SYS","SYS","SettingValuesBusiness","GetParameterByFDAsync",['DMParameters',null,"1"]).subscribe((item : any)=>{
-      if(item)
-      {
-        var j = JSON.parse(item)
-        this.dmSV.versionControl = j?.VersionControl;
-      }
+      if(item) this.dmSV.paraSetting = JSON.parse(item);
     })
   }
   ngAfterViewInit(): void {

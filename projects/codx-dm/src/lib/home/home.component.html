@@ -219,7 +219,7 @@
   <ng-container *ngIf="!textSearch && data && data[0] != null && data[0].isDelete">
     <div class="nondata-container w-100 mb-2">
       <div class="d-flex justify-content-between page-heading align-items-center p-2">
-        <div class="fw-bold ms-2">{{ dmSV.titleEmptyTrash30 }}</div>
+        <div class="fw-bold ms-2">{{ dmSV.titleEmptyTrash30 + " " + dmSV.paraSetting.OldDays + " ngày" }}</div>
         <div class="cursor-pointer">
           <div class="div-btn-delete d-flex justify-content-center align-items-center cursor-pointer" (click)="this.dmSV.emptyTrash()" title="Dọn sạch thùng rác"><i class="far fa-trash-alt fs-4" ></i></div>
         </div>

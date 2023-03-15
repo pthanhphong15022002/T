@@ -67,14 +67,14 @@
               >:&nbsp;
               <span class="text-primary">{{ data?.productLineID }}</span>
             </div>
-              <codx-vll
-                [showText]="true"
-                [showBgColor]="true"
-                name="AC018"
-                [value]="data?.itemType"
-                class="badge badge-danger"
-              >
-              </codx-vll>
+            <codx-vll
+              [showText]="true"
+              [showBgColor]="true"
+              name="AC018"
+              [value]="data?.itemType"
+              class="badge badge-danger"
+            >
+            </codx-vll>
           </div>
         </div>
       </div>
@@ -95,7 +95,7 @@
         default="Theo dõi"
       ></codx-label
       >:&nbsp;
-      {{ getDimGroupNameById(data?.dimGroupID) }}
+      <b>{{ getDimGroupNameById(data?.dimGroupID) }}</b>
     </td>
     <td>
       <codx-mfunc
