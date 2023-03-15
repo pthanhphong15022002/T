@@ -1,3 +1,4 @@
+import { CO_Permissions } from './../models/CO_Meetings.model';
 import { CodxTMService } from './../codx-tm.service';
 import {
   Component,
@@ -92,8 +93,8 @@ export class TMMeetingsComponent
 
   gridView: any;
   param: any;
-  resources: CO_Resources[] = [];
-  resourceID: any;
+  permissions: CO_Permissions[] = [];
+  objectID: any;
   urlView = '';
   dataValue = '';
   formName = '';
@@ -242,15 +243,19 @@ export class TMMeetingsComponent
     if (e) {
       e.forEach((x) => {
         // an edit và delete
-        if ((x.functionID == 'SYS02' || x.functionID == 'SYS03') && data?.createdBy != this.user?.userID  && !this.user?.administrator) {
-          x.disabled = true;
-        }
+        // if ((x.functionID == 'SYS02' || x.functionID == 'SYS03') && data?.createdBy != this.user?.userID  && !this.user?.administrator) {
+        //   x.disabled = true;
+        // }
         //an giao viec
         if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
       });
     }
+  }
+
+  changeMF(e){
+    this.changeDataMF(e.e, e.data);
   }
   //#region schedule
 
@@ -259,14 +264,14 @@ export class TMMeetingsComponent
     subject: { name: 'meetingName' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
-    resources: { name: 'resources' },
+    permissions: { name: 'permissions' },
   };
   resourceField = {
-    Name: 'Resources',
-    Field: 'resourceID',
-    IdField: 'resourceID',
-    TextField: 'resourceName',
-    Title: 'Resources',
+    Name: 'Permissions',
+    Field: 'objectID',
+    IdField: 'objectID',
+    TextField: 'objectName',
+    Title: 'Permissions',
   };
 
   getCellContent(evt: any) {
@@ -391,19 +396,19 @@ export class TMMeetingsComponent
 
   getResourceID(data) {
     var resources = [];
-    this.resourceID = '';
-    resources = data.resources;
+    this.objectID = '';
+    resources = data.permissions;
     var id = '';
     if (resources != null) {
       resources.forEach((e) => {
-        id += e.resourceID + ';';
+        id += e.objectID + ';';
       });
     }
 
     if (id != '') {
-      this.resourceID = id.substring(0, id.length - 1);
+      this.objectID = id.substring(0, id.length - 1);
     }
-    return this.resourceID;
+    return this.objectID;
   }
 
   getDate(data) {

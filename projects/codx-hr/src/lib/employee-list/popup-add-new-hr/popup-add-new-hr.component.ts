@@ -41,6 +41,8 @@ export class PopupAddNewHRComponent
 {
   actionType: string;
   dialog: DialogRef;
+  oldEmployeeID: string;
+
   // formModel: FormModel;
   funcID;
 
@@ -90,8 +92,11 @@ export class PopupAddNewHRComponent
     console.log('dialog', this.dialog);
 
     this.data = this.dialog.dataService.dataSelected;
-
+    // this.isEdit = dialogData?.data.isEdit != null ? true : false;
+    this.oldEmployeeID = dialogData.data.oldEmployeeID;
     this.actionType = dialogData?.data?.actionType;
+    console.log('olddddID popup', this.oldEmployeeID);
+    
 
     // this.formModel = ;
     this.funcID = this.dialog.formModel.funcID;
@@ -147,8 +152,13 @@ export class PopupAddNewHRComponent
       option.methodName = 'AddEmployeeAsync';
     } else {
       if (this.actionType == 'copy') {
-        option.methodName = 'AddNewAsync';
-      } else option.methodName = 'EditAsync';
+        option.methodName = 'AddEmployeeAsync';
+      } else {
+        
+        option.methodName = 'UpdateEmpInfoAsync';
+        option.data = [itemData, this.oldEmployeeID];
+        return true;
+      }
     }
 
     option.data = [itemData, this.funcID];
@@ -160,7 +170,6 @@ export class PopupAddNewHRComponent
     //   this.hrService.notifyInvalid(this.form.formGroup, this.form.formModel);
     //   return;
     // }
-
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
@@ -170,11 +179,11 @@ export class PopupAddNewHRComponent
           if (res.update) {
             result = res.update;
           }
+          console.log('resulttttt', result);
+
           this.data = result;
           this.dialog && this.dialog.close(result);
         }
       });
   }
-
-  
 }

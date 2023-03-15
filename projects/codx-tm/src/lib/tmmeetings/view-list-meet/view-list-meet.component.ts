@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, ViewChild } from '@angular/core';
-import { CO_Resources } from './../../models/CO_Meetings.model';
+import { CO_Resources, CO_Permissions } from './../../models/CO_Meetings.model';
 import {
   Component,
   EventEmitter,
@@ -29,7 +29,7 @@ export class ViewListMeetComponent implements OnInit {
   @Input() data?: any;
   @Input() formModel?: FormModel;
   @Input() user?: any;
-
+  @Output() changeMF = new EventEmitter<any>();
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() viewDetail = new EventEmitter<any>();
   @ViewChild('view') view!: ViewsComponent;
@@ -38,8 +38,8 @@ export class ViewListMeetComponent implements OnInit {
   day: any;
   startTime: any;
   endTime: any;
-  resources: CO_Resources[] = [];
-  resourceID: any;
+  permissions: CO_Permissions[] = [];
+  objectID: any;
   popoverCrr: any;
   countResource = 0;
   dialog: any;
@@ -70,27 +70,16 @@ export class ViewListMeetComponent implements OnInit {
     this.clickMoreFunction.emit({ e: e, data: dt });
   }
   changeDataMF(e: any, data: any) {
-    if (e) {
-      e.forEach((x) => {
-        // an edit và delete 
-        if ((x.functionID == 'SYS02' || x.functionID == 'SYS03') && data?.createdBy != this.user?.userID  && !this.user?.administrator) {
-          x.disabled = true;
-        }
-        //an giao viec
-        if (x.functionID == 'SYS005') {
-          x.disabled = true;
-        }
-      });
-    }
+    this.changeMF.emit({e: e, data: data});
   }
   getResourceID() {
-    this.resources = this.data.resources;
+    this.permissions = this.data.permissions;
     var id = '';
-    this.resources.forEach((e) => {
-      id += e.resourceID + ';';
+    this.permissions.forEach((e) => {
+      id += e.objectID + ';';
     });
     if (id != '') {
-      this.resourceID = id.substring(0, id.length - 1);
+      this.objectID = id.substring(0, id.length - 1);
     }
   }
 

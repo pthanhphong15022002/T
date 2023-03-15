@@ -1,6 +1,7 @@
 import { CodxTMService } from './../../codx-tm.service';
 import {
   CO_Meetings,
+  CO_Permissions,
   EP_BookingAttendees,
 } from './../../models/CO_Meetings.model';
 import {
@@ -11,7 +12,14 @@ import {
   NotificationsService,
   CodxFormComponent,
 } from 'codx-core';
-import { Component, OnInit, Optional, ChangeDetectorRef, ViewChild, TemplateRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Optional,
+  ChangeDetectorRef,
+  ViewChild,
+  TemplateRef,
+} from '@angular/core';
 import { CO_Resources } from '../../models/CO_Meetings.model';
 import { FormsModule } from '@angular/forms';
 
@@ -26,10 +34,10 @@ export class PopupAddResourcesComponent implements OnInit {
   dialog: any;
   title = '';
   listRoles: any;
-  resources: CO_Resources[] = [];
+  permissions: CO_Permissions[] = [];
   popover: any;
   idUserSelected: any;
-  lstResources : CO_Resources[] = [];
+  lstPermissions: CO_Permissions[] = [];
   data: any;
   funcID: any;
   constructor(
@@ -52,7 +60,7 @@ export class PopupAddResourcesComponent implements OnInit {
         this.listRoles = res.datas;
       }
     });
-    this.resources = this.meeting.resources;
+    this.permissions = this.meeting.permissions;
   }
 
   ngOnInit(): void {}
@@ -62,17 +70,24 @@ export class PopupAddResourcesComponent implements OnInit {
     this.api
       .callSv('CO', 'CO', 'MeetingsBusiness', 'UpdateResourcesMeetingAsync', [
         this.meeting.meetingID,
-        this.meeting.resources,
+        this.meeting.permissions,
       ])
       .subscribe((res) => {
         if (res.msgBodyData[0] != null) {
           this.dialog.close(this.meeting);
           this.AddResourcesToBookingAttendees(
             this.meeting.recID,
-            this.meeting.resources
+            this.meeting.permissions
           );
-          if(this.lstResources != null && this.lstResources.length > 0){
-            this.tmSv.SendMailNewResources(this.meeting.recID, 'TM_0023', this.funcID, this.lstResources).subscribe();
+          if (this.lstPermissions != null && this.lstPermissions.length > 0) {
+            this.tmSv
+              .SendMailNewResources(
+                this.meeting.recID,
+                'TM_0023',
+                this.funcID,
+                this.lstPermissions
+              )
+              .subscribe();
           }
           this.noti.notifyCode('SYS034');
         } else {
@@ -146,13 +161,13 @@ export class PopupAddResourcesComponent implements OnInit {
 
   valueUser(resourceID) {
     if (resourceID != '') {
-      if (this.resources != null) {
-        var user = this.resources;
+      if (this.permissions != null) {
+        var user = this.permissions;
         var array = resourceID.split(';');
         var id = '';
         var arrayNew = [];
         user.forEach((e) => {
-          id += e.resourceID + ';';
+          id += e.objectID + ';';
         });
         if (id != '') {
           id = id.substring(0, id.length - 1);
@@ -188,16 +203,17 @@ export class PopupAddResourcesComponent implements OnInit {
         if (res && res.length > 0) {
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
-            var tmpResource = new CO_Resources();
-
-            tmpResource.resourceID = emp?.userID;
-            tmpResource.resourceName = emp?.userName;
+            var tmpResource = new CO_Permissions();
+            tmpResource.objectID = emp?.userID;
+            tmpResource.objectName = emp?.userName;
             tmpResource.positionName = emp?.positionName;
             tmpResource.roleType = 'P';
+            tmpResource.objectType == 'U';
             tmpResource.taskControl = true;
-            this.resources.push(tmpResource);
-            this.lstResources.push(tmpResource);
-            this.meeting.resources = this.resources;
+            this.setPermissions(tmpResource, 'P');
+            this.permissions.push(tmpResource);
+            this.lstPermissions.push(tmpResource);
+            this.meeting.permissions = this.permissions;
           }
         }
       });
@@ -205,8 +221,8 @@ export class PopupAddResourcesComponent implements OnInit {
 
   valueCbx(id, e) {
     console.log(e);
-    this.meeting.resources.forEach((res) => {
-      if (res.resourceID == id) res.taskControl = e.data;
+    this.meeting.permissions.forEach((res) => {
+      if (res.objectID == id) res.taskControl = e.data;
     });
   }
   //#endregion
@@ -220,13 +236,39 @@ export class PopupAddResourcesComponent implements OnInit {
   }
 
   selectRoseType(idUserSelected, value) {
-    this.meeting.resources.forEach((res) => {
-      if (res.resourceID == idUserSelected) res.roleType = value;
+    this.meeting.permissions.forEach((res) => {
+      if (res.objectID == idUserSelected) {
+        res.roleType = value;
+        res.objectType = "U";
+        this.setPermissions(res, value);
+      }
     });
     this.changeDetec.detectChanges();
 
     this.popover.close();
   }
 
+  setPermissions(tmpResource: CO_Permissions, roleType) {
+    if (roleType == 'A') {
+      tmpResource.full = true;
+      tmpResource.read = true;
+      tmpResource.allowPermit = true;
+      tmpResource.publish = true;
+      tmpResource.create = true;
+      tmpResource.update = true;
+      tmpResource.assign = true;
+      tmpResource.delete = true;
+      tmpResource.share = true;
+      tmpResource.upload = true;
+      tmpResource.download = true;
+    } else if (roleType == 'S') {
+      tmpResource.download = true;
+      tmpResource.update = true;
+      tmpResource.read = true;
+    } else {
+      tmpResource.read = true;
+      tmpResource.download = true;
+    }
+  }
   //#endregion
 }

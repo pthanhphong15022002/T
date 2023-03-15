@@ -140,6 +140,7 @@
 >
   <codx-field-detail
     [dataStep]="dataStep"
+    [showColumnControl]="showColumnControl"
     [titleDefault]="titleDefault"
     [isUpdate]="isUpdate"
     [isClosed]="isClosed"
@@ -673,7 +674,11 @@
         </div>
         <span class="text-gray-600">{{ stepNameEnd }}</span>
       </div>
-      <div class="d-flex justify-content-between" *ngIf="!!proccesNameMove">
+      <div
+        class="d-flex justify-content-between"
+        *ngIf="
+        !!proccesNameMove
+        ">
         <div>
           <codx-label default="Quy trình được chuyển đến"></codx-label>
         </div>
