@@ -36,6 +36,7 @@ import {
   CRUDService,
   AlertConfirmInputConfig,
   DialogModel,
+  DataRequest,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -56,6 +57,7 @@ import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-gr
 import { paste } from '@syncfusion/ej2-angular-richtexteditor';
 import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-dynamic.component';
 import { lastValueFrom, firstValueFrom } from 'rxjs';
+import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -205,6 +207,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   vllType = 'DP022';
   dataChild = [];
   instanceNoEx: string = '';
+  listTemp = [];
+  tempCrr :any
   //end data Test
   isShowstage = true;
   titleAdd = 'Thêm';
@@ -1365,7 +1369,31 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
+  //Bieu mau
+  clickViewTemp(temp) {}
 
+  addTemplet(){
+    var gridModel = new DataRequest();
+    gridModel.formName = this.dialog.formModel.formName;
+    gridModel.entityName = this.dialog.formModel.entityName;
+    gridModel.funcID = this.dialog.formModel.funcID;
+    gridModel.gridViewName = this.dialog.formModel.gridViewName;
+    gridModel.page = this.dialog.dataService.request.page;
+    gridModel.pageSize = this.dialog.dataService.request.pageSize;
+    gridModel.predicate = this.dialog.dataService.request.predicates;
+    gridModel.dataValue = this.dialog.dataService.request.dataValues;
+    gridModel.entityPermission = this.dialog.formModel.entityPer;
+    //
+    this.callfc.openForm(
+      CodxImportComponent,
+      null,
+      null,
+      800,
+      '',
+      [gridModel, this.process.recID],
+      null
+    );
+  }
   //#region Trường tùy chỉnh
   clickShow(e, id) {
     let children = e.currentTarget.children[0];
