@@ -55,10 +55,17 @@
 /***/
 .popup-process-detail {
     codx-views>.container-fluid {
-        height: calc(100vh - 138px) !important;
+        height: calc(100vh - 110px) !important;
         overflow: hidden;
-        overflow-y: auto;
+    }
+    .process-views-detail {
+        height: calc(100vh - 68px) !important;
+        overflow: hidden;
 
+    }
+
+    .view-details-main {
+        height: calc(100vh - 52px);
     }
 
     .toolbar {
@@ -66,26 +73,10 @@
         align-items: center;
         padding: 0 0 0.5rem 0;
     }
-
-    .process-views-detail {
-        height: calc(100vh - 98px) !important;
-        overflow: hidden;
-
-
-
-        .card-body.fillter-card-body.scroll-y {
-            height: calc(100vh - 342px) !important;
-        }
-
-        .view-details-content {
-            height: calc(100% - 42px) !important;
-        }
-
+    .e-splitter .e-split-bar.e-split-bar-horizontal {
+        background: var(--gray-150);
     }
-
-    .view-details-main {
-        height: calc(100vh - 82px);
-    }
+   
 }
 .dp-process-main{
 
@@ -103,11 +94,13 @@
     ejs-kanban{
         height: 100%;
     }
+    .e-pane.e-pane-horizontal codx-listview .card-body{
+        padding: 10px 5px 10px 10px!important;
+    }
 }
 
 .process-views-detail .codx-detail-main{
     padding-bottom: 0;
-    padding-left: 0!important;
 }
 .popup-process-detail{
    .tab-footer {
@@ -115,7 +108,5 @@
     }
 }
 #viewModeDetail{
-    padding-bottom: 40px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-right: 5px;
 }

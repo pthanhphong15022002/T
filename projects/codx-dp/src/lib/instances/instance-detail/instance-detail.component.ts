@@ -42,10 +42,11 @@ export class InstanceDetailComponent implements OnInit {
   @Input() stepName: string;
   @Input() progress = '0';
   @Input() dataSelect: any;
-  @Input() listStepNew: any;
+  @Input() listStepsProcess: any;
   @Input() listCbxProccess: any;
   @Input() viewModelDetail = 'S';
   @ViewChild('viewDetailsItem') viewDetailsItem;
+  @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = [];
   @ViewChild('viewDetail') viewDetail;
   id: any;
@@ -61,7 +62,7 @@ export class InstanceDetailComponent implements OnInit {
   value: Number = 30;
   cornerRadius: Number = 30;
   idCbx = 'S';
-  listStepUpdate: any;
+  listStepInstance: any;
   instanceStatus: any;
   currentStep = 0;
   instance: any;
@@ -114,7 +115,7 @@ export class InstanceDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngAfterViewInit(): void {
     this.rollHeight();
@@ -135,7 +136,7 @@ export class InstanceDetailComponent implements OnInit {
           this.dataSelect.recID,
           this.dataSelect.processID
         );
-        this.rollHeight();
+        // this.rollHeight();
       }
     }
   }
@@ -146,6 +147,7 @@ export class InstanceDetailComponent implements OnInit {
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {
         this.loadTree(res);
+        this.listStepInstance = JSON.parse(JSON.stringify(res));
         this.listSteps = res;
         var total = 0;
         for (var i = 0; i < this.listSteps.length; i++) {
@@ -161,8 +163,8 @@ export class InstanceDetailComponent implements OnInit {
           total += data.progress;
           stepNo = i + 1;
         }
-        if (this.listSteps != null && this.listSteps.length > 0) {
-          this.progress = (total / this.listSteps.length).toFixed(1).toString();
+        if (this.listSteps != null && (this.listSteps.length - 2) > 0) {
+          this.progress = (total / (this.listSteps.length - 2)).toFixed(1).toString();
         } else {
           this.progress = '0';
         }
@@ -198,10 +200,10 @@ export class InstanceDetailComponent implements OnInit {
       return x.stepNo > 0 && y.stepNo > 0
         ? x.stepNo - y.stepNo
         : x.stepNo > 0
-        ? -1
-        : y.stepNo > 0
-        ? 1
-        : x.stepNo - y.stepNo;
+          ? -1
+          : y.stepNo > 0
+            ? 1
+            : x.stepNo - y.stepNo;
     });
     ins = listStep
       .reduce((result, x) => {
@@ -235,8 +237,7 @@ export class InstanceDetailComponent implements OnInit {
     this.moreFunctionEvent.emit({
       e: e,
       data: data,
-      lstStepCbx: this.listStepNew,
-      lstStepInstance: this.listSteps,
+      lstStepCbx: this.listStepInstance,
     });
     // console.log(e);
     // switch (e.functionID) {
@@ -252,7 +253,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
-    this.changeMF.emit({ e: e, data: data, listStepCbx: this.listStepNew });
+    this.changeMF.emit({ e: e, data: data, listStepCbx: this.listSteps });
     // console.log(e);
     // if (e) {
     //   e.forEach((element) => {
@@ -295,7 +296,7 @@ export class InstanceDetailComponent implements OnInit {
   //   this.changeDetec.detectChanges();
   // }
 
-  setHTMLCssStages(oldStage, newStage) {}
+  setHTMLCssStages(oldStage, newStage) { }
 
   //ganttchar
   getDataGanttChart(instanceID, processID) {
@@ -344,8 +345,8 @@ export class InstanceDetailComponent implements OnInit {
     return 'step';
   }
   getReasonByStepId(stepId: string) {
-    var idx = this.listStepNew.findIndex((x) => x.stepID === stepId);
-    return this.listStepNew[idx];
+    var idx = this.listSteps.findIndex((x) => x.stepID === stepId);
+    return this.listSteps[idx];
   }
   getStepNameIsComlepte(data) {
     var idx = this.listSteps.findIndex(
@@ -365,7 +366,7 @@ export class InstanceDetailComponent implements OnInit {
   clickDetailGanchart(recID) {
     let data = this.ganttDsClone?.find((item) => item.recID === recID);
     if (data) {
-      this.callfc.openForm(ViewJobComponent, '', 700, 550, '', {
+      this.callfc.openForm(ViewJobComponent, '', 800, 550, '', {
         value: data,
         listValue: this.ganttDsClone,
       });
@@ -373,16 +374,19 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   rollHeight() {
-    let classViewDetail =
-      document.getElementsByClassName('codx-detail-main')[0];
+    let classViewDetail: any;
+    var heighOut = 20
+    if ((this.viewType == 'd')) {
+      classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
+    }
+    if (!classViewDetail) return;
     let heightVD = classViewDetail.clientHeight;
     let classHeader = document.getElementsByClassName('codx-detail-header')[0];
     let heightHD = classHeader.clientHeight;
     let classFooter = document.getElementsByClassName('codx-detail-footer')[0];
     let heightFT = classFooter.clientHeight;
 
-    var maxHeight = heightVD - heightHD - heightFT;
-
+    var maxHeight = heightVD - heightHD - heightFT - heighOut;
     var div = document.getElementById('viewModeDetail');
     if (div) {
       div.style.setProperty('max-height', maxHeight + 'px', 'important');
@@ -402,7 +406,18 @@ export class InstanceDetailComponent implements OnInit {
       });
     }
   }
-  saveAssign(e){
-    if(e) this.loadTree(this.listSteps);
+  saveAssign(e) {
+    if (e) { 
+      this.loadTree(this.listSteps);
+      this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
+    };
+  }
+  showColumnControl(stepID) {
+    if (this.listStepsProcess?.length > 0) {
+      var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
+      if (idx == -1) return 1;
+      return this.listStepsProcess[idx]?.showColumnControl;
+    }
+    return 1;
   }
 }

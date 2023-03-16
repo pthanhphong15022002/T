@@ -9,6 +9,9 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-between">
+    <div>
+
+    </div>
     <button
       type="button"
       class="btn btn-primary ms-1"
@@ -48,7 +51,7 @@
 
   <div class="form-group">
     <div>
-      <codx-label fiedName="owner" [formModel]="form.formModel" default="Người tham gia">
+      <codx-label fiedName="owner" [formModel]="form.formModel" default="Người phụ trách">
       </codx-label>
     </div>
     <codx-popup-participants [lstParticipants]="lstParticipants" [dialog]="dialog" [isType]="'I'"

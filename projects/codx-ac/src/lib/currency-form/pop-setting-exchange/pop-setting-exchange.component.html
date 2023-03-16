@@ -6,30 +6,53 @@
     <div class="mt-5 mb-3">
       <codx-label class="text-primary fw-bold fs-6" [formModel]="form.formModel" fiedName="Calculation"></codx-label>
     </div>
-    <div class="d-flex align-items-start mb-3">
-      <div class="me-2">
-        <codx-input type="switch" field="calculation" [checked]="calculation" (valueChange)="valueChangelb($event)">
-        </codx-input>
+    <div class="row">
+      <div class="col-5">
+          <div class="d-flex align-items-top mb-2">
+              <div class="me-2">
+                <codx-input name="currentdate" [formModel]="form.formModel" class="check-circle"
+               [checked]="currentdate" [disabled]="currentdate" field="calculation" (valueChange)="valueChangeCalculation($event)">
+                </codx-input>
+              </div>
+              <codx-label [formModel]="form.formModel" fiedName="Calculation" default="Ngày chính xác"></codx-label>
+          </div>
       </div>
-      <div class="text-dark">
-        <div *ngIf="calculation">
-          <codx-label [formModel]="form.formModel" fiedName="Calculation" default="Ngày chính xác"></codx-label>
-        </div>
-        <div *ngIf="!calculation">
-          <codx-label [formModel]="form.formModel" fiedName="Calculation" default="Ngày gần nhất"></codx-label>
-        </div>
+      <div class="col-5">
+          <div class="d-flex align-items-top mb-2">
+              <div class="me-2">
+                <codx-input name="forwarddate" [formModel]="form.formModel" class="check-circle"
+                [checked]="forwarddate" [disabled]="forwarddate" field="calculation" (valueChange)="valueChangeCalculation($event)">
+                </codx-input>
+              </div>
+              <codx-label [formModel]="form.formModel" fiedName="Calculation" default="Ngày gần nhất"></codx-label>
+          </div>
       </div>
-    </div>
+  </div>
     <div class="mt-5 mb-3">
       <codx-label class="text-primary fw-bold fs-6" [formModel]="form.formModel" fiedName="Multi"></codx-label>
     </div>
-    <div class="d-flex align-items-start">
-      <div class="me-2" id="boxexchange">
-        <codx-input type="switch" field="multi" [checked]="currencies.multi" (valueChange)="valueChange($event)">
-        </codx-input>
+    <div class="row">
+      <div class="col-5">
+          <div class="d-flex align-items-top mb-2">
+              <div class="me-2">
+                <codx-input name="multiplication" [formModel]="form.formModel" class="check-circle"
+               [checked]="multiplication" [disabled]="multiplication" field="multi" (valueChange)="valueChangeMulti($event)">
+                </codx-input>
+              </div>
+              <codx-label [formModel]="form.formModel" fiedName="Multi" default="Nhân"></codx-label>
+          </div>
       </div>
-      <div class="text-dark">Nhân tỷ giá</div>
-    </div>
+      <div class="col-5">
+          <div class="d-flex align-items-top mb-2">
+              <div class="me-2">
+                <codx-input name="division" [formModel]="form.formModel" class="check-circle"
+                [checked]="division" [disabled]="division" field="multi" (valueChange)="valueChangeMulti($event)">
+                </codx-input>
+              </div>
+              <codx-label [formModel]="form.formModel" fiedName="Multi" default="Chia"></codx-label>
+          </div>
+      </div>
+  </div>
   </ng-container>
 </ng-template>
 <ng-template #footer>

@@ -42,6 +42,7 @@ import { PopupAddGroupComponent } from './chat/chat-list/popup/popup-add-group/p
 import { LayoutChatComponent } from './layout-chat/layout-chat.component';
 import { ChatBoxComponent } from './chat/chat-box/chat-box.component';
 import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
+import { ChatContainerComponent } from './chat/chat-container/chat-container.component';
 
 export const routes: Routes = [
   {
@@ -130,7 +131,8 @@ const Component: Type<any>[] = [
   LayoutChatComponent,
   ChatBoxComponent,
   ApproveComponent,
-  ApproveDetailComponent
+  ApproveDetailComponent,
+  ChatContainerComponent
 ];
 
 @NgModule({

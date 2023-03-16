@@ -13,7 +13,6 @@
   [data]="data"
 >
 </codx-layout-add>
-
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-primary" (click)="onSaveForm()">
@@ -49,8 +48,10 @@
           <codx-label [formModel]="form.formModel" fiedName="employeeID">
           </codx-label>
           <codx-input
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
+            [disabled]="isEdit"
+            type="text"
+            [crrValue]="data?.employeeID"
+            (valueChange)="valueChange($event)"
             field="employeeID"
           >
           </codx-input>

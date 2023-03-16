@@ -4,6 +4,7 @@
   [body]="body"
   [formModel]="formModel"
   [footer]="footer"
+  [openMore]="'true'"
   [dialog]="dialog"
   [data]="data"
   *ngIf="isAfterRender"
@@ -47,8 +48,9 @@
           <codx-vll
           class="badge badge-sm"
           [name]="'HR001'"
-          [value]="data.emp.gender"
-          [showText]="true"
+          [value]="data?.emp?.gender"
+          [showText]="false"
+          [showIcon]="true"
           [showBgColor]="true"
         >
         </codx-vll>
@@ -59,7 +61,7 @@
               <span>
                 {{ data.emp.employeeName }}
               </span>
-              <i class="icon-accessibility"></i>
+              <i class="icon-qr_code_scanner icon-14 me-1"></i>
               <span>
                 {{ data.emp.employeeID }}
               </span>
@@ -252,11 +254,12 @@
       <ng-container *ngFor="let item of lstSubContract">
           <codx-temp-full
             cardCss="card codx_cardcenter p-3"
-            [imageId]="item.recID"
+            [imageId]="item?.recID"
             [imageObjType]="'HR_EContract'"
             [imageWidth]="40"
             [formModel]="formModel"
-            [hideMF]="true"
+            [typeMF]="'hover'"
+            (clickMF)="clickMFSubContract($event, item)"
             [titleTmp]="titleTmp"
             [dataItem]="item"
           >
