@@ -139,7 +139,9 @@ export class CodxEmailComponent implements OnInit {
       this.isInside = false;
     });
   }
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    // this.richtexteditor.control.angularValue = this.data?.message;
+  }
 
   click() {
     this.isInside = true;
@@ -421,8 +423,8 @@ export class CodxEmailComponent implements OnInit {
       this.codxService.notifyInvalid(this.dialogETemplate, this.formModel);
       return;
     }
-    this.data.message = this.setMessage(this.data.message);
-    this.dialogETemplate.patchValue({ message: this.data.message });
+    // this.data.message = this.setMessage(this.data.message);
+    // this.dialogETemplate.patchValue({ message: this.data.message });
     let lstSento = [
       ...this.lstFrom,
       ...this.lstTo,
@@ -835,6 +837,8 @@ export class CodxEmailComponent implements OnInit {
   }
 
   insert(data: any) {
+    console.log('message',this.data.message);
+    console.log('before angularvalue', this.richtexteditor.control.angularValue);
     if (data && data != null) {
       this.saveSelection = this.selection.save(this.range, document);
       this.saveSelection.restore();
@@ -860,9 +864,12 @@ export class CodxEmailComponent implements OnInit {
       // this.richtexteditor.control.executeCommand('fontColor', 'black');
 
       this.range = this.selection.getRange(document);
+
+
       this.data.message = this.richtexteditor.control.angularValue;
 
-      console.log(this.richtexteditor.control.angularValue);
+      console.log('control',this.richtexteditor);
+      console.log('angularvalue', this.richtexteditor.control.angularValue);
       
       this.dialogETemplate.patchValue({ message: this.data.message });
 
@@ -876,6 +883,7 @@ export class CodxEmailComponent implements OnInit {
   isInside: boolean = false;
 
   clickDataView(event = null) {
+    this.richtexteditor.control.angularValue = this.data?.message;
     this.isInside = true;
     this.show = !this.show;
     // let crrWidth = (this.textarea.nativeElement as HTMLElement).offsetWidth;

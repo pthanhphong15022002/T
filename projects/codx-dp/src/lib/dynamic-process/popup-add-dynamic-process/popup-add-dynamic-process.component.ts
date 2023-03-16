@@ -36,6 +36,7 @@ import {
   CRUDService,
   AlertConfirmInputConfig,
   DialogModel,
+  DataRequest,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -56,6 +57,7 @@ import { StepTaskGroupComponent } from './step-task/step-task-group/step-task-gr
 import { paste } from '@syncfusion/ej2-angular-richtexteditor';
 import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-dynamic.component';
 import { lastValueFrom, firstValueFrom } from 'rxjs';
+import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -124,8 +126,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   checkedSat: boolean = false;
   checkedSun: boolean = false;
   isClick: boolean = false;
-  stepNameSuccess: string = 'Thành công';
-  stepNameFail: string = 'Thất bại';
+  stepNameSuccess: string = '';
+  stepNameFail: string = '';
   reasonName: string = '';
   dataValueview: string = '';
   reasonAction: any;
@@ -148,8 +150,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly gridViewNameSteps: string = 'grvDPSteps';
   readonly formDurationCtrl: string = 'DurationControl';
   readonly formLeaTimeCtrl: string = 'LeadtimeControl';
-  readonly formEdit: string = 'edit'; // form edit
-  readonly formAdd: string = 'add'; // form add
+  readonly formEdit: string = 'edit'; // form edit for poup reason
+  readonly formAdd: string = 'add'; // form add for poup reason
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
@@ -172,6 +174,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
   listFileTask: string[] = [];
+  listIconReason=[];
+  iconReasonSuccess:any;
+  iconReasonFail:any;
 
   dayStep = 0;
   hourStep = 0;
@@ -205,6 +210,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   vllType = 'DP022';
   dataChild = [];
   instanceNoEx: string = '';
+  listTemp = [];
+  tempCrr :any
   //end data Test
   isShowstage = true;
   titleAdd = 'Thêm';
@@ -243,6 +250,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.titleAction = dt.data.titleAction;
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     if (this.action === 'copy') {
+      this.instanceNoSetting = this.process.instanceNoSetting ;
       this.listClickedCoppy = dt.data.conditionCopy;
       (this.oldIdProccess = dt.data.oldIdProccess),
         (this.newIdProccess = dt.data.newIdProccess),
@@ -272,7 +280,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         var perm = this.permissions.filter((x) => x.roleType == 'P');
         this.lstParticipants = perm;
       }
-      this.processTab = 2;
+      this.processTab = 3;
       this.getAvatar(this.process);
       this.instanceNoSetting = this.process.instanceNoSetting;
     } else if (this.action == 'add') {
@@ -306,6 +314,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.autoHandleStepReason();
     this.loadCbxProccess();
     this.getVllFormat();
+    this.getIconReason();
   }
 
   setDefaultOwner() {
@@ -728,6 +737,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.currentTab++;
         break;
       case 2:
+        this.newNode = newNode;
+        this.oldNode = oldNode;
+        this.updateNodeStatus(oldNode, newNode);
+        this.currentTab++;
+        this.processTab++;
+        break;
+      case 3:
         this.updateNodeStatus(oldNode, newNode);
         this.currentTab++;
         this.processTab++;
@@ -1358,7 +1374,31 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
+  //Bieu mau
+  clickViewTemp(temp) {}
 
+  addTemplet(){
+    var gridModel = new DataRequest();
+    gridModel.formName = this.dialog.formModel.formName;
+    gridModel.entityName = this.dialog.formModel.entityName;
+    gridModel.funcID = this.dialog.formModel.funcID;
+    gridModel.gridViewName = this.dialog.formModel.gridViewName;
+    gridModel.page = this.dialog.dataService.request.page;
+    gridModel.pageSize = this.dialog.dataService.request.pageSize;
+    gridModel.predicate = this.dialog.dataService.request.predicates;
+    gridModel.dataValue = this.dialog.dataService.request.dataValues;
+    gridModel.entityPermission = this.dialog.formModel.entityPer;
+    //
+    this.callfc.openForm(
+      CodxImportComponent,
+      null,
+      null,
+      800,
+      '',
+      [gridModel, this.process.recID],
+      null
+    );
+  }
   //#region Trường tùy chỉnh
   clickShow(e, id) {
     let children = e.currentTarget.children[0];
@@ -1490,6 +1530,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   deleteCustomField(field) {
+    this.fieldCrr = field ;
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
         // this.step.fields.splice(field.sorting - 1, 1);
@@ -1767,7 +1808,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.popupGroupJob.closed.subscribe((res) => {
       if (res?.event) {
         this.saveGroupTask(type, taskGroup, data);
-        this.sumTimeStep();
       }
     });
   }
@@ -1807,6 +1847,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       }
       this.taskGroupList.splice(index - 1, 0, taskGroup);
+      this.sumTimeStep();
       // add role vào step
       this.addRole(taskGroup['roles'][0]);
     } else {
@@ -1823,6 +1864,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       ) {
         this.addRole(taskGroup['roles'][0], this.roleGroupTaskOld[0]);
       }
+      this.sumTimeStep();
     }
   }
 
@@ -1924,6 +1966,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               }
               this.addRole(data['roles'][0], roleOld[0]);
             }
+            this.sumTimeStep();
           }
         });
         this.groupTaskID = null;
@@ -1949,6 +1992,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (indexDb >= 0) {
           this.taskList.splice(indexDb, 1);
         }
+        this.sumTimeStep();
       }
     });
   }
@@ -2017,6 +2061,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   clickMFStep(e: any, data: any) {
+    debugger;
     switch (e.functionID) {
       case 'SYS02':
         this.deleteStep(data);
@@ -2892,6 +2937,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         });
         this.viewStepSelect(this.stepList[0]);
+      }
+    });
+  }
+  getIconReason(){
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        this.iconReasonSuccess = res.datas.filter(x=> x.value === 'S')[0];
+        this.iconReasonFail = res.datas.filter(x=> x.value === 'F')[0];
+        this.stepNameSuccess = this.iconReasonSuccess?.text;
+        this.stepNameFail = this.iconReasonFail?.text;
       }
     });
   }

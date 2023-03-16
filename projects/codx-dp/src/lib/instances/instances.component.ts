@@ -27,7 +27,12 @@ import {
   RequestOption,
   Util,
   NotificationsService,
+  DataRequest,
+  AlertConfirmInputConfig,
 } from 'codx-core';
+import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
+import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Instances } from '../models/models';
 import { InstanceDetailComponent } from './instance-detail/instance-detail.component';
@@ -109,9 +114,9 @@ export class InstancesComponent
   viewModeDetail = 'S';
   totalInstance: number = 0;
   itemSelected: any;
-  stepSuccess:any;
-  stepFail:any;
-  viewType ='d'
+  stepSuccess: any;
+  stepFail: any;
+  viewType = 'd';
 
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
@@ -134,8 +139,10 @@ export class InstancesComponent
         });
     });
     this.dataProccess = dt?.data?.data;
-    this.stepSuccess = this.dataProccess.steps.filter( (x) => x.isSuccessStep)[0];
-    this.stepFail = this.dataProccess.steps.filter( (x) => x.isFailStep)[0];
+    this.stepSuccess = this.dataProccess.steps.filter(
+      (x) => x.isSuccessStep
+    )[0];
+    this.stepFail = this.dataProccess.steps.filter((x) => x.isFailStep)[0];
     this.isUseSuccess = this.stepSuccess.isUsed;
     this.isUseFail = this.stepFail.isUsed;
   }
@@ -178,7 +185,10 @@ export class InstancesComponent
       showInstanceControl: this.process?.showInstanceControl
         ? this.process?.showInstanceControl
         : '2',
-      hiddenInstanceReason: this.getListStatusInstance(this.isUseSuccess, this.isUseFail),
+      hiddenInstanceReason: this.getListStatusInstance(
+        this.isUseSuccess,
+        this.isUseFail
+      ),
     };
 
     // if(this.process.steps != null && this.process.steps.length > 0){
@@ -467,6 +477,14 @@ export class InstancesComponent
       case 'DP15':
         this.openOrClosed(data, false);
         break;
+      //export File
+      case 'DP16':
+        this.exportFile();
+        break;
+      //trinh kí File
+      case 'DP17':
+        this.approvalTrans('tes1', 'test2');
+        break;
     }
   }
 
@@ -571,7 +589,8 @@ export class InstancesComponent
             break;
           case 'DP02':
             let isUpdateFail = data.write;
-            if ( !isUpdateFail ||
+            if (
+              !isUpdateFail ||
               (data.status !== '1' && data.status !== '2') ||
               data.closed ||
               !this.isUseFail
@@ -582,7 +601,8 @@ export class InstancesComponent
             break;
           case 'DP10':
             let isUpdateSuccess = data.write;
-            if ( !isUpdateSuccess ||
+            if (
+              !isUpdateSuccess ||
               (data.status !== '1' && data.status !== '2') ||
               data.closed ||
               !this.isUseSuccess
@@ -668,7 +688,7 @@ export class InstancesComponent
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
-    this.viewType ='p' ;
+    this.viewType = 'p';
     let popup = this.callFunc.openForm(
       this.popDetail,
       '',
@@ -679,9 +699,9 @@ export class InstancesComponent
       '',
       option
     );
-    popup.closed.subscribe(e=>{
-      this.viewType ='d' ;
-    })
+    popup.closed.subscribe((e) => {
+      this.viewType = 'd';
+    });
   }
 
   dropInstance(data) {
@@ -744,7 +764,7 @@ export class InstancesComponent
     if (!this.isClick) {
       return;
     }
-    if(listStepCbx.length == 0 || listStepCbx == null) {
+    if (listStepCbx.length == 0 || listStepCbx == null) {
       listStepCbx = this.listSteps;
     }
     this.isClick = false;
@@ -763,16 +783,16 @@ export class InstancesComponent
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
             var stepReason = {
-              isUseFail:this.isUseFail,
-              isUseSuccess:this.isUseSuccess
-            }
+              isUseFail: this.isUseFail,
+              isUseSuccess: this.isUseSuccess,
+            };
             var obj = {
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
               instance: data,
               listStepCbx: listStepCbx,
               stepIdClick: this.stepIdClick,
-              stepReason: stepReason
+              stepReason: stepReason,
             };
             var dialogMoveStage = this.callfc.openForm(
               PopupMoveStageComponent,
@@ -826,9 +846,7 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            let reason = isMoveSuccess
-              ? this.stepSuccess
-              : this.stepFail;
+            let reason = isMoveSuccess ? this.stepSuccess : this.stepFail;
             var obj = {
               dataMore: dataMore,
               headerTitle: fun.defaultName,
@@ -857,8 +875,8 @@ export class InstancesComponent
                 //xu ly data đổ về
                 data = e.event.instance;
                 this.listStepInstances = e.event.listStep;
-                if(data.refID !== this.guidEmpty) {
-                  this.valueListID.emit(data.refID)
+                if (data.refID !== this.guidEmpty) {
+                  this.valueListID.emit(data.refID);
                 }
                 if (e.event.isReason != null) {
                   this.moveReason(null, data, e.event.isReason);
@@ -922,7 +940,9 @@ export class InstancesComponent
           processName: data.datas[0].default,
         };
         this.listProccessCbx.unshift(obj);
-        this.listProccessCbx = this.listProccessCbx.filter(x => x !== this.dataProccess.recID );
+        this.listProccessCbx = this.listProccessCbx.filter(
+          (x) => x !== this.dataProccess.recID
+        );
       });
     });
   }
@@ -932,18 +952,100 @@ export class InstancesComponent
     return total;
   }
 
-  getListStatusInstance(isSuccess: boolean, isFail: boolean){
-    if(!isSuccess && !isFail)
-    {
+  getListStatusInstance(isSuccess: boolean, isFail: boolean) {
+    if (!isSuccess && !isFail) {
       return '1;2';
-    }
-    else if(!isSuccess) {
+    } else if (!isSuccess) {
       return '3;4';
-    }
-    else if(!isFail) {
+    } else if (!isFail) {
       return '5;6';
     }
     return '';
   }
   #endregion;
+
+  //Export file
+  exportFile() {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //
+    this.callfc.openForm(
+      CodxExportComponent,
+      null,
+      null,
+      800,
+      '',
+      [gridModel, this.dataSelected.recID],
+      null
+    );
+  }
+  //Xét duyệt
+  approvalTrans(processID: any, datas: any) {
+    // this.api
+    //   .execSv(
+    //     'ES',
+    //     'ES',
+    //     'ApprovalTransBusiness',
+    //     'GetCategoryByProcessIDAsync',
+    //     processID
+    //   )
+    //   .subscribe((res2: any) => {
+    // let dialogModel = new DialogModel();
+    // dialogModel.IsFull = true;
+    // dialogModel.zIndex=1010 ;
+    //trình ký
+    //  if (res2?.eSign == true) {
+    //let signFile = new ES_SignFile();
+    // signFile.recID = datas.recID;
+    //  signFile.title = datas.title;
+    // signFile.categoryID = res2?.categoryID;
+    //signFile.refId = datas.recID;
+    // signFile.refDate = datas.refDate;
+    //signFile.refNo = datas.refNo;
+    //signFile.priority = datas.urgency;
+    // signFile.refType = this.formModel?.entityName;
+    //signFile.files = [];
+    // if (this.data?.files) {
+    //   for (var i = 0; i < this.data?.files.length; i++) {
+    //     var file = new File();
+    //     file.fileID = this.data?.files[i].recID;
+    //     file.fileName = this.data?.files[i].fileName;
+    //     file.eSign = true;
+    //     signFile.files.push(file);
+    //   }
+    // }
+    // let dialogApprove = this.callfc.openForm(
+    //   PopupAddSignFileComponent,
+    //   'Chỉnh sửa',
+    //   700,
+    //   650,
+    //   '',
+    //   {
+    //     oSignFile: signFile,
+    //     // files: this.data?.files,
+    //     //  cbxCategory: this.gridViewSetup['CategoryID']?.referedValue,
+    //     disableCateID: true,
+    //     formModel: this.view?.currentView?.formModel,
+    //   },
+    //   '',
+    //   dialogModel
+    // );
+    // dialogApprove.closed.subscribe((res) => {
+    //   if (res.event && res.event?.approved == true) {
+    //   }
+    // });
+    //this.callfunc.openForm();
+    // } else if (res2?.eSign == false) {
+    // }
+    //xét duyệt
+    // });
+  }
 }
