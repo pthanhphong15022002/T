@@ -310,6 +310,8 @@ export class InstanceDetailComponent implements OnInit {
           this.ganttDs = res;
           this.ganttDsClone = JSON.parse(JSON.stringify(this.ganttDs));
           this.changeDetec.detectChanges();
+          console.table(this.ganttDsClone);
+          
         }
       });
   }

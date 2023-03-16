@@ -260,12 +260,22 @@
 
     codx-header.header.align-items-stretch{
         .btn.btn-active-light-primary {
-            color: var(--title-color);
             border-color: var(--border-light) !important;
             background-color: var(--primary-lighter) !important;
-
             .svg-icon svg [fill]:not(.permanent):not(g) {
-                fill: var(--primary-dark);
+                fill: var(--primary-dark)!important;
+                fill-opacity: 1!important;
+                opacity: 1!important;
+            }
+            .svg-icon svg{
+                opacity: 1!important;
+                fill-opacity: 1!important;
+                path{
+                    opacity: 1!important;
+                }
+                g{
+                    opacity: 1!important;
+                }
             }
         }
         .btn.btn-active-light-primary:hover{

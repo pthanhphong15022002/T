@@ -84,7 +84,7 @@
                 <span
                   [ngStyle]="
                     +progress < 20
-                      ? { position: 'relative', left: '7px' }
+                      ? { position: 'relative', left: '15px' }
                       : {}
                   "
                   >{{ progress || 0 }}%</span
@@ -138,11 +138,11 @@
           ></codx-gantt-chart>
           <ng-template #ganttItems let-data>
             <div
-              class=""
+              class="d-flex justify-content-center align-items-center"
               (click)="clickDetailGanchart(data.recID)"
-              [ngStyle]="{ 'background-color': getColor(data.recID) }"
+              [ngStyle]="{ 'background-color': getColor(data.recID), 'min-height': '35px', 'border-radius': '5px' }"
             >
-              <div class="fw-bold text-dark">{{ data.name }}</div>
+              <div class="fw-bold text-dark line-clamp line-clamp-1 px-1">{{ data.name }}</div>
             </div>
           </ng-template>
 

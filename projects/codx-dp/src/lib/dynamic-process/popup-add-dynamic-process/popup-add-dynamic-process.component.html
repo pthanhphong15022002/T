@@ -181,7 +181,7 @@
     <div class="stepper-body pt-2 w-100">
       <div class="card shadow-none border-0 rounded-0 mx-auto w-1200px h-100">
         <div class="mt-6 pb-3 tab-pane-header px-9 border-bottom">
-          <h2 *ngIf="currentTab != 1" class="h2-title">
+          <h2 *ngIf="currentTab != 1 && currentTab != 3" class="h2-title">
             <codx-label
               *ngIf="currentTab == 0"
               name="lblGeneral"
@@ -202,12 +202,14 @@
             [ngTemplateOutlet]="stageHeader"
           ></ng-container>
           <ng-container
-          *ngIf="currentTab == 3"
-          [ngTemplateOutlet]="stageHeaderFormTemp"
-        ></ng-container>
+            *ngIf="currentTab == 3"
+            [ngTemplateOutlet]="headerFormTemp"
+          ></ng-container>
         </div>
         <div
-          [ngClass]="currentTab == 1 || currentTab == 3 ? 'scroll-stask' : 'scroll-y'"
+          [ngClass]="
+            currentTab == 1 || currentTab == 3 ? 'scroll-stask' : 'scroll-y'
+          "
           class="dp-step pt-4 px-5 mx-1"
           data-kt-scroll="true"
           data-kt-scroll-activate="{default: true}"
@@ -244,7 +246,7 @@
             </div>
             <div
               class="tab-pane fade"
-              id="pane_3"
+              id="pane_4"
               [ngClass]="currentTab == 3 ? 'active show' : ''"
             >
               <ng-container [ngTemplateOutlet]="dynamicFormTemp"></ng-container>
@@ -1215,8 +1217,31 @@
 </ng-template>
 
 <!-- Biểu mẫu -->
-<ng-template #dynamicFormTemp> </ng-template>
-<ng-template #stageHeaderFormTemp>
+<ng-template #dynamicFormTemp>
+  <div class="background-stage dp-step">
+    <div class="stage-body d-flex">
+      <div class="stage-body-left w-300px minw-300px pe-1">
+        <div class="example-list stage-body-left-main">
+          <div
+            *ngFor="let itemTemp of listTemp; let i = index"
+            class="list-stage example-box drap-drop cursor-pointer border-bottom has-action-menu"
+            [ngClass]="itemTemp?.recID === tempCrr?.recID ? 'click' : ''"
+            (click)="clickViewTemp(itemTemp)"
+          >
+            <div class="order">{{ i + 1 }}</div>
+            <div class="d-flex flex-column">
+              <div class="fw-bold text-dark">
+                {{ itemTemp?.templateName }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #headerFormTemp>
   <div class="d-flex justify-content-between align-items-center">
     <h2 class="h2-title">
       <codx-label
@@ -1225,74 +1250,15 @@
         default="Biểu mẫu"
       ></codx-label>
     </h2>
+    <button
+      type="button"
+      class="btn btn-primary d-flex align-items-center me-2 btn-sm"
+       (click)="addTemplet()"
+    >
+      <i class="icon-add icon-18"></i>
+      <codx-label [name]="'lblAdd'" [default]="'Thêm'"></codx-label>
+    </button>
   </div>
-  <ng-template #stage>
-    <div class="background-stage dp-step">
-      <div class="stage-body d-flex">
-        <div class="stage-body-left w-300px minw-300px pe-1">
-          <div
-            class="fw-bold fs-4 text-dark pb-2 mb-1 border-bottom stage-header d-flex align-items-center justify-content-between"
-          >
-            <codx-label fiedName="step" default="Giai đoạn"></codx-label>
-            <button
-              type="button"
-              class="btn btn-primary d-flex align-items-center me-2 btn-sm"
-              (click)="openPopupStep('add')"
-            >
-              <i class="icon-add icon-18"></i>
-              <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>
-            </button>
-          </div>
-          <div
-            class="example-list stage-body-left-main"
-          >
-            <div
-              *ngFor="let itemStep of stepList; let i = index"
-              class="list-stage example-box drap-drop cursor-pointer border-bottom has-action-menu"
-              [ngClass]="itemStep?.recID === step?.recID ? 'click' : ''"
-              (click)="
-                clickViewStep($event, viewStepCustom, itemStep ?? strEmpty)
-              "
-            >
-              <div class="order">{{ i + 1 }}</div>
-              <div class="d-flex flex-column">
-                <div class="fw-bold text-dark">{{ itemStep?.stepName }}</div>
-  
-                <div class="text-gray-500">
-                  Thời hạn:
-                  <span class="text-gray-700">{{
-                    itemStep?.durationDay || 0
-                  }}</span>
-                  ngày
-                  <span class="text-gray-700">{{
-                    itemStep?.durationHour || 0
-                  }}</span>
-                  giờ
-                </div>
-                <div class="text-gray-500">
-                  <codx-label
-                    fiedName="task"
-                    [formModel]="dialog.formModel"
-                    [default]="'Công việc:'"
-                  ></codx-label>
-                  <span class="text-gray-700">{{ itemStep?.tasks?.length }}</span>
-                </div>
-              </div>
-              <codx-mfunc
-                *ngIf="viewStepCrr == viewStepCustom"
-                [formModel]="grvMoreFunction"
-                (clickMF)="clickMFStep($event, itemStep)"
-                [dataItem]="moreDefaut"
-                [type]="'hover'"
-                (changeDataMF)="changeDataMF($event, 'step')"
-              >
-              </codx-mfunc>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-template>
 </ng-template>
 <!-- Thiết lập giai đoạn của nvthuan + Bảo -->
 
@@ -1319,7 +1285,7 @@
             (click)="openPopupStep('add')"
           >
             <i class="icon-add icon-18"></i>
-            <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>
+            <codx-label [name]="'lblAdd'" [default]="'Thêm'"></codx-label>
           </button>
         </div>
         <div
