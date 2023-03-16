@@ -165,7 +165,5 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
 
 
   close(){
-    debugger
-    this.dropdown.close();
   }
 }

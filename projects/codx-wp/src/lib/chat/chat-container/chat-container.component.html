@@ -1,12 +1,26 @@
-<div class="codx-chat-container">
-    <div class="chat-content">
-        <div class="box-chats" id="boxChats">
-        </div>
-        <div class="box-chat-list">
-            <ng-container *ngFor="let item of groups">
-                
-            </ng-container>
-        </div>
+<div class="chat-container">
+    <div class="chat-container-boxchat" id="chat-container-boxchat">
+        <ng-container *ngFor="let item of lstGroupActive">
+            <codx-chat-box #codxChatBox 
+                [id]="item" 
+                [groupID]="item" 
+                (close)="removeGroup(item,codxChatBox)"
+                (collapse)="collapse(item,codxChatBox)">
+            </codx-chat-box>
+        </ng-container>
+    </div>
+    <div class="chat-container-boxchat-more">
+        <ng-container *ngFor="let item of lstGroupCollapse">
+            <div (click)="activeGroup(item)">
+                <codx-img
+                [classList]="'cursor-pointer'"
+                [objectId]="item.objectID" 
+                [objectName]="item.objectName" 
+                [objectType]="item.objectType" 
+                [width]="40">
+            </codx-img>
+            </div>
+        </ng-container>
     </div>
 </div>
 

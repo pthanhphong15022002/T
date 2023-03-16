@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, AfterViewInit, HostListener, ViewChild, ElementRef, AfterContentInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, AfterViewInit, HostListener, ViewChild, ElementRef, AfterContentInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { interval } from 'rxjs';
@@ -10,13 +10,18 @@ import { SignalRService } from '../../services/signalr.service';
   templateUrl: './chat-box.component.html',
   styleUrls: ['./chat-box.component.scss']
 })
-export class ChatBoxComponent implements OnInit, AfterViewInit{
+export class ChatBoxComponent implements OnInit, AfterViewInit,OnDestroy{
 
-  @HostListener('click', ['$event'])
-  onClick(event:any) {
-    this.isChatBox(event.target);
-    this.checkActive(this.groupID);
-  }
+  // @HostBinding('style') get myStyle(): SafeStyle {
+  //   return this.sanitizer.bypassSecurityTrustStyle(`
+  //   height: 500px;
+  //   position: absolute;
+  //   top: -500px;`);
+  // }
+
+  @Output() close = new EventEmitter<any>();
+  @Output() collapse = new EventEmitter<any>();
+
   @Input() groupID:any;
 
   user:any = {};
@@ -39,6 +44,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     this.user = this.auth.get();
     this.message = new WP_Messages();
   }
+  
   
  
 
@@ -68,6 +74,9 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
         this.dt.detectChanges();
       }
     });
+  }
+
+  ngOnDestroy(): void {
   }
   // get group infor
   getGroupInfo(){
@@ -125,11 +134,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   }
   // close 
   closeChatBox(){
-    let elementContainer = document.querySelector(".container-chat");
-    if(elementContainer){
-      let element = document.getElementById(this.group.groupID);
-      element.remove();
-    }
+    this.close.emit(this.groupID);
   }
   // value Change
   valueChange(event:any){
@@ -173,5 +178,9 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
         });
       }
     }
+  }
+  // collapse box chat
+  collapsed(){
+    this.collapse.emit(this.groupID);
   }
 }

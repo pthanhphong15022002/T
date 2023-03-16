@@ -1,4 +1,5 @@
-import { ApplicationRef, ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, Component, HostBinding, Input, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { ApiHttpService } from 'codx-core';
 import { SignalRService } from '../../services/signalr.service';
 import { ChatBoxComponent } from '../chat-box/chat-box.component';
@@ -7,17 +8,28 @@ declare var window: any;
 @Component({
   selector: 'codx-chat-container',
   templateUrl: './chat-container.component.html',
-  styleUrls: ['./chat-container.component.scss']
+  styleUrls: ['./chat-container.component.scss'],
+
 })
 export class ChatContainerComponent implements OnInit {
-
-  groups:any[] = [];
-  lstGroupID:Array<string> = [];
+  @HostBinding('style') get myStyle(): SafeStyle {
+    return this.sanitizer.bypassSecurityTrustStyle(`
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: end;`);
+  }
+  lstGroupActive:Array<any> = [];
+  lstGroupCollapse:Array<any> = [];
   constructor
   (
     private api:ApiHttpService,
     private signalRSV:SignalRService,
     private applicationRef:ApplicationRef,
+    private sanitizer: DomSanitizer,
     private dt:ChangeDetectorRef
   ) 
   {
@@ -33,51 +45,92 @@ export class ChatContainerComponent implements OnInit {
     // active new group
     this.signalRSV.activeNewGroup.subscribe((res:any) => {
       if(res){
-        this.addBoxChat(res.groupID);
+        this.handleBoxChat(res.groupID);
       }
     });
     // active group
     this.signalRSV.activeGroup.subscribe((res:any) => {
       if(res)
       {
-        let isOpenBoxChat = this.checkBoxChat(res.groupID);
-        if(!isOpenBoxChat){
-          this.addBoxChat(res.groupID);
-        }
+        this.handleBoxChat(res.groupID);
       }
     });
     //receiver message
     this.signalRSV.reciverChat.subscribe((res:any) => {
       if(res.groupID){
-        let isOpenBoxChat = this.checkBoxChat(res.groupID);
-        if(!isOpenBoxChat){
-          this.addBoxChat(res.groupID);
-        }
+        this.handleBoxChat(res.groupID);         
       }
     });
   }
 
-  // add box chat
-  addBoxChat(groupID:any){
-
-
-    let viewRef = this.boxChatItem?.createEmbeddedView({ $implicit: groupID });
-    this.applicationRef.attachView(viewRef);
-    viewRef?.detectChanges();
-    let boxChat = viewRef?.rootNodes[0];
-    boxChat?.setAttribute('id',groupID);
-    document.querySelector('#boxChats')?.appendChild(boxChat);
+  // handle box chat
+  handleBoxChat(groupID:any){
+    let isOpen = this.lstGroupActive.some(x=>x == groupID);
+    if(!isOpen){
+      if(this.lstGroupActive.length == 2){
+        let id = this.lstGroupActive.shift();
+        let ele = document.getElementById(id);
+        let codxBoxChat = window.ng.getComponent(ele);
+        let item = 
+        {
+          id:codxBoxChat.groupID,
+          objectID:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
+          objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
+          objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
+        }
+        this.lstGroupCollapse.push(item);
+      }
+      this.lstGroupActive.push(groupID);
+    }
+    this.dt.detectChanges();
+    
+  }
+  //removeGroup(item)
+  removeGroup(id:string,ele:ChatBoxComponent){
+    let index = this.lstGroupActive.findIndex(x => x == id); 
+    this.lstGroupActive.splice(index, 1);
+    if(this.lstGroupCollapse.length > 0){
+      let group = this.lstGroupCollapse.pop();
+      this.lstGroupActive.push(group.id);
+    }
+    ele.ngOnDestroy();
     this.dt.detectChanges();
   }
-
-  // check box chat
-  checkBoxChat(groupID:string):boolean {
+  // collapse box chat
+  collapse(id:string,codxBoxChat:ChatBoxComponent){
+    let index = this.lstGroupActive.findIndex(x => x == id); 
+    this.lstGroupActive.splice(index, 1);
+    let item = 
+        {
+          id:codxBoxChat.groupID,
+          objectID:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
+          objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
+          objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
+        }
+    this.lstGroupCollapse.push(item);
+    codxBoxChat.ngOnDestroy();
+    this.dt.detectChanges();
+  }
+  //
+  activeGroup(group:any){
     debugger
-    let boxChats = document.getElementsByTagName("codx-chat-box");
-    if(Array.isArray(boxChats)){
-      return boxChats.some(x => x.id === groupID);
+    if(this.lstGroupActive.length == 2){
+      let id = this.lstGroupActive.shift();
+      let ele = document.getElementById(id);
+      let codxBoxChat = window.ng.getComponent(ele);
+      let item = 
+      {
+        id:codxBoxChat.groupID,
+        objectID:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupID2 : codxBoxChat.group.groupID,
+        objectName:codxBoxChat.group.groupType === '1' ? codxBoxChat.group.groupName2 : codxBoxChat.group.groupName,
+        objectType:codxBoxChat.group.groupType === '1' ? 'AD_Users':'WP_Groups'  
+      }
+      this.lstGroupCollapse.push(item);
     }
-    return false;
+    this.lstGroupActive.push(group.id);
+    let index = this.lstGroupCollapse.findIndex(x => x.id == group.id); 
+    this.lstGroupCollapse.splice(index, 1);
+    this.dt.detectChanges();
   }
 }
 

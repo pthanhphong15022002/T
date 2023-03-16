@@ -1,25 +1,27 @@
-.codx-chat-container{
+
+.chat-container{
     width: 100%;
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    left: 0;
     display: flex;
     justify-content: end;
-}
-.chat-content{
-    width: 700px;
-    display: flex;
     position: relative;
 }
-.box-chats{
-    width: 90%;
+.chat-container-boxchat{
+    width: 95%;
     height: 0;
     display: flex;
     justify-content: end;
+    flex-direction: row-reverse;
     position: absolute;
     top: -500px;
+    right: 50px;
 }
-.box-chat-list{
-    width: 10%;
+.chat-container-boxchat-more{
+    width: 5%;
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse;
+    flex-wrap: wrap;
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
 }
