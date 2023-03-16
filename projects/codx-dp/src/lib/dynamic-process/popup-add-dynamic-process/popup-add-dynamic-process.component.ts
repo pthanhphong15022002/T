@@ -1693,7 +1693,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     if (this.actionStep == 'add' || this.actionStep == 'copy') {
       this.stepNew['stepName'] = this.stepName;
-      this.stepList.push(JSON.parse(JSON.stringify(this.stepNew)));     
+      this.stepList.push(JSON.parse(JSON.stringify(this.stepNew)));   
+      this.viewStepSelect(
+        this.stepList.length > 0
+          ? this.stepList[this.stepList?.length - 1 || 0]
+          : []
+      );  
     } else {
       this.stepNew['stepName'] = this.stepName;
       this.stepNew['modifiedOn'] = new Date();
@@ -1713,7 +1718,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.setIndex(this.stepList, 'stepNo');
           this.viewStepSelect(
             this.stepList.length > 0
-              ? this.stepList[this.stepList?.length || 0]
+              ? this.stepList[this.stepList?.length - 1 || 0]
               : []
           );
         }
