@@ -1,0 +1,15 @@
+<div class="codx-chat-container">
+    <div class="chat-content">
+        <div class="box-chats" id="boxChats">
+        </div>
+        <div class="box-chat-list">
+            <ng-container *ngFor="let item of groups">
+                
+            </ng-container>
+        </div>
+    </div>
+</div>
+
+<ng-template #boxChatItem let-id>
+    <codx-chat-box [groupID]="id"></codx-chat-box>
+  </ng-template>
