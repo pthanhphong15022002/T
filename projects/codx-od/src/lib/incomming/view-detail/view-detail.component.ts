@@ -1115,7 +1115,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
   //Hủy yêu cầu xét duyệt
   cancelAproval(data: any) {
-    debugger
     //Có thiết lập duyệt
     if (data.bsCategory) {
       this.api
