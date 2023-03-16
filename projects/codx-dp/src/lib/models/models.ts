@@ -77,6 +77,7 @@ export class DP_Processes_Permission {
   approvedBy: String;
   approveStatus: String;
   approvedOn: Date;
+  isActive: boolean = true;
 
 }
 
@@ -311,7 +312,7 @@ export class DP_Instances_Permissions {
   // approveStatus:	; chưa có type
   // startDate:	; chưa có type
   // endDate:	; chưa có type
-  // isActive:	; chưa có type
+  isActive: boolean = true;
 }
 
 export class DP_Instances_Steps {
