@@ -247,6 +247,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.titleAction = dt.data.titleAction;
     this.process = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     if (this.action === 'copy') {
+      this.instanceNoSetting = this.process.instanceNoSetting ;
       this.listClickedCoppy = dt.data.conditionCopy;
       (this.oldIdProccess = dt.data.oldIdProccess),
         (this.newIdProccess = dt.data.newIdProccess),
@@ -1803,7 +1804,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.popupGroupJob.closed.subscribe((res) => {
       if (res?.event) {
         this.saveGroupTask(type, taskGroup, data);
-        this.sumTimeStep();
       }
     });
   }
@@ -1843,6 +1843,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       }
       this.taskGroupList.splice(index - 1, 0, taskGroup);
+      this.sumTimeStep();
       // add role vào step
       this.addRole(taskGroup['roles'][0]);
     } else {
@@ -1859,6 +1860,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       ) {
         this.addRole(taskGroup['roles'][0], this.roleGroupTaskOld[0]);
       }
+      this.sumTimeStep();
     }
   }
 
@@ -1960,6 +1962,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               }
               this.addRole(data['roles'][0], roleOld[0]);
             }
+            this.sumTimeStep();
           }
         });
         this.groupTaskID = null;
@@ -1985,6 +1988,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (indexDb >= 0) {
           this.taskList.splice(indexDb, 1);
         }
+        this.sumTimeStep();
       }
     });
   }
