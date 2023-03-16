@@ -41,12 +41,15 @@
                         </ng-template>
                     </div>
                     <div>
-                        <ng-container *ngIf="data.departmentName">
+                        <ng-container *ngIf="data.departmentName && data.orgUnitID!= data.departmentID; else noDepartment">
                             <span>{{data.departmentName}}</span>
                         </ng-container>
                         <ng-template #noDepartmentName>
                             <codx-label [formModel]="view.formModel" fiedName="DepartmentID"></codx-label>
                         </ng-template>
+                        <ng-template #noDepartment>
+                            <span *ngIf="data.companyID">{{ data.companyID | formatvalue : view.formModel : "companyID" | async }}</span>
+                          </ng-template>
                     </div>
                     <ng-container *ngIf="isCorporation">
                        <div>

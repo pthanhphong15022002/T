@@ -252,6 +252,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listValueCopy.findIndex((x) => x === '2') !== -1
           ? this.process.permissions
           : [];
+      this.permissions = this.process.permissions;
+      this.setDefaultOwner();
+
       // copy file image
       // this.process.recID = this.oldIdProccess;
       this.listValueCopy.findIndex((x) => x === '3') !== -1 &&
@@ -317,7 +320,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     perm.edit = true;
     perm.delete = true;
     perm.roleType = 'O';
-    this.permissions.push(perm);
+    this.permissions = this.checkUserPermission(this.permissions, perm);
     this.process.permissions = this.permissions;
   }
 
@@ -441,6 +444,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             .subscribe((totalInstance) => {
               if (totalInstance) {
                 res.update.totalInstance = totalInstance;
+                this.dialog.close(res.update);
+              } else {
+                res.update.totalInstance = 0;
                 this.dialog.close(res.update);
               }
             });
@@ -856,6 +862,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.edit = true;
             // perm.publish = true;
             perm.delete = true;
+            perm.isActive = true;
             perm.roleType = 'O';
             this.permissions = this.checkUserPermission(this.permissions, perm);
           }
@@ -883,6 +890,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.create = true;
             perm.assign = false;
             perm.edit = false;
+            perm.isActive = true;
+
             // perm.publish = false;
             perm.delete = false;
 
@@ -915,6 +924,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.create = false;
             perm.assign = false;
             perm.edit = false;
+            perm.isActive = true;
             // perm.publish = false;
             perm.delete = false;
             this.permissions = this.checkUserPermission(this.permissions, perm);
@@ -956,6 +966,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.read = true;
             perm.create = true;
             perm.assign = false;
+            perm.isActive = true;
             perm.edit = false;
             // perm.publish = false;
             perm.delete = false;
@@ -1703,6 +1714,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.actionStep == 'add' || this.actionStep == 'copy') {
       this.stepNew['stepName'] = this.stepName;
       this.stepList.push(JSON.parse(JSON.stringify(this.stepNew)));
+      this.viewStepSelect(
+        this.stepList.length > 0
+          ? this.stepList[this.stepList?.length - 1 || 0]
+          : []
+      );
     } else {
       this.stepNew['stepName'] = this.stepName;
       this.stepNew['modifiedOn'] = new Date();
@@ -1722,7 +1738,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.setIndex(this.stepList, 'stepNo');
           this.viewStepSelect(
             this.stepList.length > 0
-              ? this.stepList[this.stepList?.length || 0]
+              ? this.stepList[this.stepList?.length - 1 || 0]
               : []
           );
         }
