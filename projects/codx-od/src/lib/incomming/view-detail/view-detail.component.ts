@@ -144,7 +144,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       this.data = changes.data?.currentValue;
       if (!this.data) this.data = {};
       //this.getDataValuelist();
-      //this.getPermission(this.data.recID);
+      this.getPermission(this.data.recID);
       this.ref.detectChanges();
     }
     if (
