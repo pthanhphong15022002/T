@@ -258,6 +258,23 @@
         background-color: var(--scrollbar-thumb) !important;
     }
 
+    codx-header.header.align-items-stretch{
+        .btn.btn-active-light-primary {
+            border-color: var(--border-light) !important;
+            background-color: var(--primary-lighter) !important;
+            .svg-icon svg [fill]:not(.permanent):not(g) {
+                fill: var(--primary-dark)!important;
+
+            }
+
+        }
+        .btn.btn-active-light-primary:hover{
+            border-color: var(--primary) !important;
+            background-color: var(--primary) !important;
+
+        }
+    }
+
     .aside {
         &.aside-light {
             background-color: var(--primary-darker);

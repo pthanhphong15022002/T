@@ -1038,7 +1038,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           title: val?.data.customName,
           vllShare: 'TM003',
           task: task,
-          referedData: data,
+          referedData: datas,
           referedFunction: val.data,
         };
         option.DataService = this.view.dataService;

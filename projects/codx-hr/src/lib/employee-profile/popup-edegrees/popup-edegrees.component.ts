@@ -171,10 +171,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
           ) {
             this.degreeObj.issuedDate = null;
           }
-          if(this.degreeObj.trainFromDate == null)
-          this.isNullFrom = false;
-          if(this.degreeObj.trainToDate == null)
-          this.isNullTo = false;
+          if (this.degreeObj.trainFromDate == null) this.isNullFrom = false;
+          if (this.degreeObj.trainToDate == null) this.isNullTo = false;
 
           this.formModel.currentData = this.degreeObj;
           this.formGroup.patchValue(this.degreeObj);
@@ -182,13 +180,13 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
           this.isAfterRender = true;
         }
       });
-      if(this.degreeObj){
-        this.fromDateFormat = this.getFormatDate(this.degreeObj.trainFrom);
-        this.toDateFormat = this.getFormatDate(this.degreeObj.trainTo);
-      } else {
-        this.fromDateFormat = this.getFormatDate(null);
-        this.toDateFormat = this.getFormatDate(null);
-      }
+    if (this.degreeObj) {
+      this.fromDateFormat = this.getFormatDate(this.degreeObj.trainFrom);
+      this.toDateFormat = this.getFormatDate(this.degreeObj.trainTo);
+    } else {
+      this.fromDateFormat = this.getFormatDate(null);
+      this.toDateFormat = this.getFormatDate(null);
+    }
   }
 
   onInit(): void {
@@ -305,12 +303,13 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     }
   }
 
-  getFormatDate(trainFrom : string){
+  getFormatDate(trainFrom: string) {
     let resultDate = '';
-    if(trainFrom){
+    if (trainFrom) {
       let arrDate = trainFrom.split('/');
-      resultDate = arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
-      return resultDate
-    } else return resultDate = 'y';
+      resultDate =
+        arrDate.length === 1 ? 'y' : arrDate.length === 2 ? 'm' : 'd';
+      return resultDate;
+    } else return (resultDate = 'y');
   }
 }

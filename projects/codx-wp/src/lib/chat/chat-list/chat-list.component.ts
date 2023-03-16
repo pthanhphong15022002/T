@@ -34,8 +34,6 @@ import { PopupAddGroupComponent } from './popup/popup-add-group/popup-add-group.
   styleUrls: ['./chat-list.component.css'],
 })
 export class ChatListComponent implements OnInit, AfterViewInit {
-  
-  
   funcID: string = 'WPT11';
   function: any = null;
   formModel: FormModel = null;
@@ -149,6 +147,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   
    //select goup chat
    selectItem(group: any){
+    debugger
     group.isRead = true;
     group.messageMissed = 0;
     this.signalRSV.sendData(group,"ActiveGroupAsync");
