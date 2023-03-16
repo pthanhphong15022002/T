@@ -242,6 +242,16 @@ export class CodxShareService {
     );
   }
 
+  loadData(service: string, dataRequest: DataRequest = null) {
+    return this.api.execSv<any>(
+      service,
+      'ERM.Business.Core',
+      'DataBusiness',
+      'LoadDataAsync',
+      [dataRequest]
+    );
+  }
+
   getFormGroup(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
       this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
