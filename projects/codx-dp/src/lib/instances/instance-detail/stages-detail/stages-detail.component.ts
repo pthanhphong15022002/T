@@ -963,7 +963,11 @@ export class StagesDetailComponent implements OnInit {
   }
 
   changeValueInput(event, data) {
-    data[event?.field] = event?.data;
+    if(event?.field == 'progress' && !event?.data){
+      data[event?.field] = 0;
+    }else{
+      data[event?.field] = event?.data;
+    }
   }
 
   changeValueDate(event, data) {
