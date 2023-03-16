@@ -22,8 +22,6 @@ import {
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 
-import { EditWeight } from '../../model/okr.model';
-import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
 import { OMCONST } from '../../codx-om.constant';
 
 @Component({

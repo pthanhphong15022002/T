@@ -94,7 +94,7 @@
               *ngIf="!item?.comment"
               #comment
               [innerHTML]="
-                item.comment
+                item?.comment
                   | formatvalue
                     : form.formModel
                     : 'comment'
@@ -121,7 +121,7 @@
             <div
               #activedOn
               [innerHTML]="
-                item.activedOn
+                item?.activedOn
                   | formatvalue
                     : form.formModel
                     : 'activedOn'

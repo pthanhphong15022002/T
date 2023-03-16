@@ -29,14 +29,8 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { OMCONST } from '../../codx-om.constant';
 import { CodxOmService } from '../../codx-om.service';
-import { ChartSettings } from '../../model/chart.model';
-import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
-import { PopupOKRWeightComponent } from '../popup-okr-weight/popup-okr-weight.component';
-import { link } from 'fs';
-
 @Component({
   selector: 'popup-assignment-okr',
   templateUrl: './popup-assignment-okr.component.html',
