@@ -413,7 +413,7 @@ export class PopupMoveStageComponent implements OnInit {
 
   removeReasonInSteps(stepReason, listStepCbx){
     stepReason.isUseFail && this.removeItemFail(listStepCbx);
-    stepReason.isUpdateSuccess && this.removeItemSuccess(listStepCbx);
+    stepReason.isUseSuccess && this.removeItemSuccess(listStepCbx);
   }
 
 }
