@@ -40,6 +40,7 @@ export class CashPaymentsComponent extends UIComponent {
   parentID: string;
   width: any;
   height: any;
+  innerWidth: any;
   tabItem: any = [
     { text: 'Thông tin chứng từ', iconCss: 'icon-info' },
     { text: 'Chi tiết bút toán', iconCss: 'icon-format_list_numbered' },
@@ -65,7 +66,9 @@ export class CashPaymentsComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.innerWidth = window.innerWidth;
+  }
 
   ngAfterViewInit() {
     this.cache.functionList(this.view.funcID).subscribe((res) => {
@@ -135,7 +138,7 @@ export class CashPaymentsComponent extends UIComponent {
           PopAddCashComponent,
           '',
           this.width,
-          this.height,
+          969,
           this.view.funcID,
           obj,
           '',
@@ -228,11 +231,10 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Function
   loadscreen() {
     return new Promise<FormModel>((resolve, rejects) => {
-      var widthscreen = window.innerWidth;
       const elmnt = document.getElementById('codx-aside');
       var widthaside = elmnt.offsetWidth;
       this.height = elmnt.offsetHeight;
-      this.width = widthscreen - widthaside;
+      this.width = this.innerWidth - widthaside;
     });
   }
   beforeDelete(opt: RequestOption, data) {

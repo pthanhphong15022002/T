@@ -1013,12 +1013,12 @@ export class CodxDMService {
     recId: string,
     id: string,
     status: string,
-    isActive: boolean
+    isActive: boolean,
   ) {
     //
     if (type == 'file') {
       this.fileService
-        .UpdateRequestAsync(recId, id, status, isActive)
+        .UpdateRequestAsync(recId, id, status, isActive , this.idMenuActive)
         .subscribe(async (res) => {
           let list = this.listFiles;
           var idTemplate = this.idMenuActive;

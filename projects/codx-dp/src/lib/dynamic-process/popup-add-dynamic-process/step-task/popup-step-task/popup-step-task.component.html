@@ -359,6 +359,13 @@
           default="Vai trò/bộ phận thực hiện"
         >
         </codx-label>
+        <!-- <codx-share
+            [multiple]="false"
+            [listCombobox]="listCombobox"
+            (eventApply)="changeRoler($event, participant, 'P')"
+            [listName]="vllShare"
+          >
+        </codx-share> -->
         <codx-input
           class="w-100"
           type="Share"
@@ -367,6 +374,7 @@
           [dataShared]="[]"
           [multiple]="false"
           [showInput]="false"
+          [listCombobox]="listCombobox"
           (valueChange)="changeRoler($event, participant, 'P')"
         >
         </codx-input>
@@ -550,15 +558,12 @@
 
 <ng-template #comboboxMulti let-data="dataSource">
   <div class="combobox-multi" #inputContainer>
-    <div class="input-container">
-      <input
-        #input
-        type="text"
-        class="combobox"
-        [value]="valueInput"
-        (click)="showCombobox()"
-      />
-      <span class="icon-expand_more"></span>
+    <div>
+      <div class="e-float-input e-input-group cursor-pointer m-0" (click)="showCombobox()">
+        <input type="text" [value]="valueInput" class="cursor-pointer">
+        <span class="e-float-line"></span>
+        <span class="e-input-group-icon e-spin-down" ></span>
+    </div>
     </div>
     <div class="select" *ngIf="show">
       <ul>

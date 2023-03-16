@@ -744,6 +744,9 @@ export class InstancesComponent
     if (!this.isClick) {
       return;
     }
+    if(listStepCbx.length == 0 || listStepCbx == null) {
+      listStepCbx = this.listSteps;
+    }
     this.isClick = false;
     this.crrStepID = data.stepID;
     let option = new SidebarModel();
@@ -759,13 +762,17 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
+            var stepReason = {
+              isUseFail:this.isUseFail,
+              isUseSuccess:this.isUseSuccess
+            }
             var obj = {
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
               instance: data,
               listStepCbx: listStepCbx,
               stepIdClick: this.stepIdClick,
-              // stepReason: stepReason1
+              stepReason: stepReason
             };
             var dialogMoveStage = this.callfc.openForm(
               PopupMoveStageComponent,

@@ -52,10 +52,18 @@
         [imageObjType]="view.formModel.entityName"
         [imgOn]="data?.modifiedOn"
         [imageObjName]="data.employeeName"
-        [title]="data?.employeeName | formatvalue : view.formModel : 'employeeName' | async"
-        [subTitle]="data?.positionID | formatvalue : view.formModel : 'positionID' | async"
+        [title]="
+          data?.employeeName
+            | formatvalue : view.formModel : 'employeeName'
+            | async
+        "
+        [subTitle]="
+          data?.positionID | formatvalue : view.formModel : 'positionID' | async
+        "
         [dataItem]="data"
-        [desc]=" data?.birthday | formatvalue : view.formModel : 'birthday' | async"
+        [desc]="
+          data?.birthday | formatvalue : view.formModel : 'birthday' | async
+        "
         [footer]="footer"
         [typeMF]="'hover'"
         (clickMF)="clickMF($event, data)"
@@ -70,7 +78,7 @@
     <span class="icon-email icon-16 me-2"> </span>
     <span class="text-dark fw-bold">
       <span #email>{{
-        data.email | formatvalue: view.formModel:"email":email | async
+        data.email | formatvalue : view.formModel : "email" : email | async
       }}</span>
     </span>
   </div>
@@ -78,7 +86,7 @@
     <span class="icon-phone_android icon-16 me-2"></span>
     <span class="text-dark fw-bold">
       <span #phone>{{
-        data.phone | formatvalue: view.formModel:"phone":phone | async
+        data.phone | formatvalue : view.formModel : "phone" : phone | async
       }}</span>
     </span>
   </div>
@@ -117,27 +125,43 @@
               *ngIf="data.gender"
               [style.background]="data.genderColor"
             >
-              {{ data.gender | vll: "HR001":"text" | async }}
+              {{ data.gender | vll : "HR001" : "text" | async }}
             </div>
           </div>
 
           <span class="text-dark">
-            <span #positionName>{{ data?.positionID | formatvalue : view.formModel : "positionID" | async }}</span>
+            <span #positionName>{{
+              data?.positionID
+                | formatvalue : view.formModel : "positionID"
+                | async
+            }}</span>
           </span>
 
           <span class="text-dark">
-            <span #organizationName>{{ data?.orgUnitID | formatvalue : view.formModel : "orgUnitID" | async }}</span>
+            <span #organizationName>{{
+              data?.orgUnitID
+                | formatvalue : view.formModel : "orgUnitID"
+                | async
+            }}</span>
           </span>
 
           <div>
             <span class="text-dark">
-              <span #departmentName>{{ data?.departmentID | formatvalue : view.formModel : "departmentID" | async }}</span>
+              <span #departmentName>{{
+                data?.departmentID
+                  | formatvalue : view.formModel : "departmentID"
+                  | async
+              }}</span>
             </span>
 
             <span class="text-gray-400"> | </span>
 
             <span class="text-dark">
-              <span #divisionName>{{ data?.divisionID | formatvalue : view.formModel : "divisionID" | async }}</span>
+              <span #divisionName>{{
+                data?.divisionID
+                  | formatvalue : view.formModel : "divisionID"
+                  | async
+              }}</span>
             </span>
           </div>
         </div>
@@ -153,7 +177,7 @@
         <span class="icon-email icon-16 text-gray-800 me-1"></span>
         <span class="text-dark fw-bold">
           <span #email>{{
-            data.email | formatvalue: view.formModel:"email":email | async
+            data.email | formatvalue : view.formModel : "email" : email | async
           }}</span>
         </span>
       </div>
@@ -161,7 +185,7 @@
         <span class="icon-phone_android icon-16 text-gray-800 me-1"></span>
         <span class="text-dark fw-bold">
           <span #phone>{{
-            data.phone | formatvalue: view.formModel:"phone":phone | async
+            data.phone | formatvalue : view.formModel : "phone" : phone | async
           }}</span>
         </span>
       </div>
@@ -169,7 +193,9 @@
         <span class="icon-place icon-16 text-gray-800 me-1"></span>
         <span class="text-dark fw-bold">
           <span #street>{{
-            data.street | formatvalue: view.formModel:"street":street | async
+            data.street
+              | formatvalue : view.formModel : "street" : street
+              | async
           }}</span>
         </span>
       </div>
@@ -191,7 +217,7 @@
         <span class="text-dark fw-bold">
           <span #birthday>{{
             data.birthday
-              | formatvalue: view.formModel:"birthday":birthday
+              | formatvalue : view.formModel : "birthday" : birthday
               | async
           }}</span>
         </span>
@@ -206,7 +232,11 @@
         </span>
 
         <span class="text-dark fw-bold">
-          <span #birthPlace>{{ data?.birthPlace | formatvalue : view.formModel : "birthPlace" | async }}</span>
+          <span #birthPlace>{{
+            data?.birthPlace
+              | formatvalue : view.formModel : "birthPlace"
+              | async
+          }}</span>
         </span>
       </div>
       <div class="align-items-center fs-7">
@@ -221,7 +251,7 @@
         <span class="text-dark fw-bold">
           <span #education>{{
             data.education
-              | formatvalue: view.formModel:"education":education
+              | formatvalue : view.formModel : "education" : education
               | async
           }}</span>
         </span>
@@ -234,11 +264,27 @@
   <div (dblclick)="doubleClick(data)">
     <div class="d-flex flex-column employee-info">
       <div class="d-flex">
+        <codx-vll
+          field="Status"
+          [formModel]="view.formModel"
+          [value]="data.status"
+          [showBgColor]="true"
+          [showIcon]="false"
+          [showText]="true"
+        >
+        </codx-vll>
         <span
+          #statusName
           class="badge badge-success badge-sm badge-inline"
           [style.background]="data.statusColor"
         >
-          {{ data.statusName }}
+          <!-- {{ data?.statusName | formatvalue : HRT03a : "statusName" | async }} -->
+          <!-- {{
+            data.statusName
+              | formatvalue: view.formModel: "statusName" : statusName
+              | async
+          }} -->
+          {{ data?.status | formatvalue : view.formModel : "status" | async }}
         </span>
       </div>
 
@@ -255,7 +301,7 @@
           <span class="text-gray-800">
             <span #joinedOn>{{
               data.joinedOn
-                | formatvalue: view.formModel:"joinedOn":joinedOn
+                | formatvalue : view.formModel : "joinedOn" : joinedOn
                 | async
             }}</span>
           </span>
