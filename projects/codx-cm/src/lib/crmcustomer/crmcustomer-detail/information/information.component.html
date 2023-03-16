@@ -1,117 +1,226 @@
-<ng-container *ngIf="isCheckView">
-  <div class="col-6">
-    <div class="d-flex flex-column">
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label class="" fieldName="" default="Tên viết tắt:"></codx-label>
+<ng-container *ngIf="funcID == 'CM0101';then customers
+  else contacts">
+</ng-container>
+
+<ng-template #customers>
+  <div class="row">
+    <div class="col-6">
+      <div class="d-flex flex-column">
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Tên viết tắt:"></codx-label>
+          </div>
+          <div class="col-6">
+            LVU
+          </div>
         </div>
-        <div class="col-6">
-          LVU
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Mã số thuế:"></codx-label>
+          </div>
+          <div class="col-6">
+            123456789
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Ngày thành lập:"></codx-label>
+          </div>
+          <div class="col-6">
+            03/02/1994
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Website:"></codx-label>
+          </div>
+          <div class="col-6">
+            facebook.com/phuctdn
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Nguồn khách hàng:"></codx-label>
+          </div>
+          <div class="col-6">
+            Khách hàng tự tìm đến
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Là khách hàng từ:"></codx-label>
+          </div>
+          <div class="col-6">
+            30/02/2023
+          </div>
         </div>
       </div>
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label class="" fieldName="" default="Mã số thuế:"></codx-label>
+    </div>
+    <div class="col-6">
+      <div class="d-flex flex-column">
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Quy mô nhân sự:"></codx-label>
+          </div>
+          <div class="col-6">
+            Trên 1000
+          </div>
         </div>
-        <div class="col-6">
-          123456789
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Loại hình:"></codx-label>
+          </div>
+          <div class="col-6">
+            Doanh nghiệp
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label class="" fieldName="" default="Ngày thành lập:"></codx-label>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Lĩnh vực hoạt động:"></codx-label>
+          </div>
+          <div class="col-6">
+            Dịch vụ
+          </div>
         </div>
-        <div class="col-6">
-          03/02/1994
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Ngành nghề:"></codx-label>
+          </div>
+          <div class="col-6">
+            Dịch vụ cung ứng phần mềm
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label class="" fieldName="" default="Website:"></codx-label>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Doanh thu:"></codx-label>
+          </div>
+          <div class="col-6">
+            3,000,000,000
+          </div>
         </div>
-        <div class="col-6">
-          facebook.com/phuctdn
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Tài khoản ngân hàng:"></codx-label>
+          </div>
+          <div class="col-6">
+            0123456789
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label class="" fieldName="" default="Nguồn khách hàng:"></codx-label>
-        </div>
-        <div class="col-6">
-          Khách hàng tự tìm đến
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label class="" fieldName="" default="Là khách hàng từ:"></codx-label>
-        </div>
-        <div class="col-6">
-          30/02/2023
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Mở tại ngân hàng:"></codx-label>
+          </div>
+          <div class="col-6">
+            BIDV
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-6">
-    <div class="d-flex flex-column">
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label class="" fieldName="" default="Quy mô nhân sự:"></codx-label>
+</ng-template>
+
+<ng-template #contacts>
+  <div class="row">
+    <div class="col-6">
+      <div class="d-flex flex-column">
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Ngày sinh:"></codx-label>
+          </div>
+          <div class="col-6">
+            23/04/19999
+          </div>
         </div>
-        <div class="col-6">
-          Trên 1000
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Website:"></codx-label>
+          </div>
+          <div class="col-6">
+            facebook.com/phuctdn
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Nguồn khách hàng:"></codx-label>
+          </div>
+          <div class="col-6">
+            Khách hàng tự tìm đến
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Không gọi điện:"></codx-label>
+          </div>
+          <div class="col-6">
+            <codx-input class="test-check" type="switch" style="width:100%" [checked]="true" field="full"
+              [disabled]="true">
+            </codx-input>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Không gửi mail:"></codx-label>
+          </div>
+          <div class="col-6">
+            <codx-input class="test-check" type="switch" style="width:100%" [checked]="false" field="full"
+              [disabled]="true">
+            </codx-input>
+          </div>
         </div>
       </div>
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label class="" fieldName="" default="Loại hình:"></codx-label>
+    </div>
+    <div class="col-6">
+      <div class="d-flex flex-column">
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Tổ chức:"></codx-label>
+          </div>
+          <div class="col-6">
+            Công ty CPTH Lạc Việt
+          </div>
         </div>
-        <div class="col-6">
-          Doanh nghiệp
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Chức danh:"></codx-label>
+          </div>
+          <div class="col-6">
+            Trưởng phòng mua hàng
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label class="" fieldName="" default="Lĩnh vực hoạt động:"></codx-label>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Lĩnh vực hoạt động:"></codx-label>
+          </div>
+          <div class="col-6">
+            Dịch vụ
+          </div>
         </div>
-        <div class="col-6">
-          Dịch vụ
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Ngành nghề:"></codx-label>
+          </div>
+          <div class="col-6">
+            Dịch vụ cung ứng phần mềm
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label class="" fieldName="" default="Ngành nghề:"></codx-label>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Tài khoản ngân hàng:"></codx-label>
+          </div>
+          <div class="col-6">
+            0123456789
+          </div>
         </div>
-        <div class="col-6">
-          Dịch vụ cung ứng phần mềm
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label class="" fieldName="" default="Doanh thu:"></codx-label>
-        </div>
-        <div class="col-6">
-          3,000,000,000
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label class="" fieldName="" default="Tài khoản ngân hàng:"></codx-label>
-        </div>
-        <div class="col-6">
-          0123456789
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label class="" fieldName="" default="Mở tại ngân hàng:"></codx-label>
-        </div>
-        <div class="col-6">
-          BIDV
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label class="text-gray-300" fieldName="" default="Mở tại ngân hàng:"></codx-label>
+          </div>
+          <div class="col-6">
+            BIDV
+          </div>
         </div>
       </div>
     </div>
   </div>
-</ng-container>
-<ng-container *ngIf="!isCheckView">
-  Testtttt
-</ng-container>
+</ng-template>
+
