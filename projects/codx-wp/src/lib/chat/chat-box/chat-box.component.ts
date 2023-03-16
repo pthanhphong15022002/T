@@ -18,7 +18,11 @@ export class ChatBoxComponent implements OnInit, AfterViewInit,OnDestroy{
   //   position: absolute;
   //   top: -500px;`);
   // }
-
+  @HostListener('click', ['$event'])
+  onClick(event:any) {
+    this.isChatBox(event.target);
+    this.checkActive(this.groupID);
+  }
   @Output() close = new EventEmitter<any>();
   @Output() collapse = new EventEmitter<any>();
 

@@ -113,7 +113,6 @@ export class ChatContainerComponent implements OnInit {
   }
   //
   activeGroup(group:any){
-    debugger
     if(this.lstGroupActive.length == 2){
       let id = this.lstGroupActive.shift();
       let ele = document.getElementById(id);

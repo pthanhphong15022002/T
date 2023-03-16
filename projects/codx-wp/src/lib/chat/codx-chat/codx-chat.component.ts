@@ -1,6 +1,6 @@
 import { AfterViewInit, ApplicationRef, ChangeDetectorRef, Component, HostBinding, Injector, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
-import { CodxService, CallFuncService, ApiHttpService, DataService, FormModel, AuthStore, CacheService, NotificationsService, DialogModel,  } from 'codx-core';
+import { CodxService, CallFuncService, ApiHttpService, DataService, FormModel, AuthStore, CacheService, NotificationsService, DialogModel, AlertConfirmComponent, AlertConfirmConfig,  } from 'codx-core';
 import { PopupAddGroupComponent } from '../chat-list/popup/popup-add-group/popup-add-group.component';
 import { ChatListComponent } from '../chat-list/chat-list.component';
 import { ChatBoxComponent } from '../chat-box/chat-box.component';
@@ -124,7 +124,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
         PopupAddGroupComponent,
         '',
         0,
-        0,
+        window.innerHeight,
         this.function.funcID,
         data,
         '',
@@ -140,8 +140,14 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
   }
   // check read all
   clickReadAll(){
-    this.listChat.readAllMessage();
-    this.totalMessage = 0;
+    this.notifySV.alertCode("Đánh dấu xem tất cả?").subscribe((res:any) =>{
+      debugger
+      if(res.event.status === 'Y')
+      {
+        this.listChat.readAllMessage();
+        this.totalMessage = 0;
+      }
+    });
   }
   // searrch
   search(event: any) {
