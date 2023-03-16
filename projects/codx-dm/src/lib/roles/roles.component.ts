@@ -221,6 +221,7 @@ export class RolesComponent implements OnInit {
   objectUpdate = {};
   fieldUpdate = "";
   data: any;
+  isNewFolder = false;
   @ViewChild('fileNameCtrl') fileNameCtrl;
   constructor(
     private domSanitizer: DomSanitizer,
@@ -242,20 +243,18 @@ export class RolesComponent implements OnInit {
 
     //   this.read = true;
     this.data = data.data;
-    if (this.data[0] == "1")
-      this.modePermission = true;
-    else
-      this.modePermission = false;
-    if (this.data[2])
-      this.codxView = this.data[2];
+    if (this.data[0] == "1") this.modePermission = true;
+    else this.modePermission = false;
+    if (this.data[2]) this.codxView = this.data[2];
     this.fileEditing = JSON.parse(JSON.stringify(this.dmSV.dataFileEditing));
     this.id = this.fileEditing.recID;
     this.folderName = this.fileEditing.folderName
-    if (this.fileEditing.folderName != null) {
+    debugger
+    if (this.fileEditing.fileName ) this.type = 'file';
+    else {
+      if(!this.fileEditing.folderName) this.isNewFolder = true;
       this.type = 'folder';
     }
-    else
-      this.type = 'file';
 
     this.user = this.auth.get();
     this.dialog = dialog;
@@ -549,41 +548,41 @@ export class RolesComponent implements OnInit {
       .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
       .closed.subscribe((x) => {
         if (x.event.status == 'Y') {
+          debugger
           if (list == null) {
             if (this.fileEditing && this.fileEditing.permissions && this.fileEditing.permissions.length > 0) {
               this.fileEditing.permissions.splice(index, 1);//remove element from array
               this.currentPemission = 0;
-              if (this.userID && this.userID.toLocaleLowerCase() != "admin") {
+              if (this.userID && this.userID.toLocaleLowerCase() != "admin" && !this.isNewFolder) {
                 var check = this.fileEditing.permissions.filter(x => x.objectID == this.userID && x.objectType != "1" && x.objectType != "7");
                 var checkEveryOne = this.fileEditing.permissions.filter(x => x.objectType == "9");
                 if (check.length == 0 && checkEveryOne.length == 0) this.fileEditing.assign = false;
               }
-              this.changePermission(0);
+              if(!this.isNewFolder) this.changePermission(0);
             }
           }
-          else {
-            if (list && list.length > 0) {
-              list.splice(index, 1);//remove element from array
-              this.changeDetectorRef.detectChanges();
-            }
-          }
+          else if(list && list.length > 0) list.splice(index, 1);//remove element from array
 
-          if (this.type == "file") {
-            this.onSaveEditingFile();
-          }
+          if (this.type == "file") this.onSaveEditingFile();
           else {
             this.fileEditing.folderName = this.folderName;
             this.fileEditing.folderID = this.dmSV.getFolderId();
             this.fileEditing.recID = this.id;
-            this.folderService.updateFolder(this.fileEditing).subscribe(res => {
-              if(res)
-              {
-                this.fileEditing = res.data;
-                this.codxView?.dataService.update(this.fileEditing).subscribe();
-                this.changePermission(0);
-              }
-            });
+            if(!this.isNewFolder)
+            {
+              this.folderService.updateFolder(this.fileEditing).subscribe(res => {
+                if(res)
+                {
+                  this.fileEditing = res.data;
+                  this.codxView?.dataService.update(this.fileEditing).subscribe();
+                  this.changePermission(0);
+                  this.changeDetectorRef.detectChanges();
+                }
+              });
+            }
+            //else this.fileEditing.permissions[0].assign = this.assign;
           }
+          this.changeDetectorRef.detectChanges();
         };
       });
   }
