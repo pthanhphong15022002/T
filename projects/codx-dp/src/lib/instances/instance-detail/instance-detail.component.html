@@ -138,11 +138,11 @@
           ></codx-gantt-chart>
           <ng-template #ganttItems let-data>
             <div
-              class=""
+              class="d-flex justify-content-center align-items-center"
               (click)="clickDetailGanchart(data.recID)"
-              [ngStyle]="{ 'background-color': getColor(data.recID) }"
+              [ngStyle]="{ 'background-color': getColor(data.recID), 'min-height': '35px', 'border-radius': '5px' }"
             >
-              <div class="fw-bold text-dark">{{ data.name }}</div>
+              <div class="fw-bold text-dark line-clamp line-clamp-1 px-1">{{ data.name }}</div>
             </div>
           </ng-template>
 
