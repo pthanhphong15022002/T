@@ -320,7 +320,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     perm.edit = true;
     perm.delete = true;
     perm.roleType = 'O';
-    this.permissions.push(perm);
+    this.permissions = this.checkUserPermission(this.permissions, perm);
     this.process.permissions = this.permissions;
   }
 
