@@ -403,8 +403,9 @@
       </codx-temp-full> -->
     </td>
     <td class="rowphoto">
-      <div class="padding">
-        {{ data.createdOn | fmDT: "dmy" }}
+      <div class="padding" [innerHTML]="
+      data.createdOn | formatvalue : view.formModel : 'CreatedOn' | async
+      ">
       </div>
     </td>
     <td class="rowphoto">

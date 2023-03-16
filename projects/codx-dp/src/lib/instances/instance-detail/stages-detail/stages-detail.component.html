@@ -343,11 +343,14 @@
                                     [formModel]="frmModel"
                                   >
                                   </codx-label>
-                                  <span>
+                                  <!-- <span [innerHTML]="task?.modifiedOn | formatvalue: frmModel : 'ModifiedOn' | async"> -->
+                                    <!-- <span>{{task?.modifiedOn | formatvalue: frmModel: "modifiedOn"| async}}</span> -->
+                                    <span>
                                     {{
                                       task?.modifiedOn || task?.createdOn
                                         | date : dateTimeFomat
-                                    }}</span
+                                    }}
+                                  </span
                                   >
                                   <span *ngIf="taskList?.note"
                                     >, {{ taskList?.note }}</span
@@ -551,7 +554,6 @@
           [min]="0"
           [max]="100"
           [showSpinButton]="true"
-          [disabled]="disabledProgressInput"
         >
         </codx-input>
       </div>

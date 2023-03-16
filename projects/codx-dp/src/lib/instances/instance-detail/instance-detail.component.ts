@@ -46,6 +46,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() listCbxProccess: any;
   @Input() viewModelDetail = 'S';
   @ViewChild('viewDetailsItem') viewDetailsItem;
+  @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = [];
   @ViewChild('viewDetail') viewDetail;
   id: any;
@@ -114,9 +115,7 @@ export class InstanceDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    
-  }
+  ngOnInit(): void { }
 
   ngAfterViewInit(): void {
     this.rollHeight();
@@ -137,7 +136,7 @@ export class InstanceDetailComponent implements OnInit {
           this.dataSelect.recID,
           this.dataSelect.processID
         );
-       // this.rollHeight();
+        // this.rollHeight();
       }
     }
   }
@@ -164,8 +163,8 @@ export class InstanceDetailComponent implements OnInit {
           total += data.progress;
           stepNo = i + 1;
         }
-        if (this.listSteps != null && this.listSteps.length > 0) {
-          this.progress = (total / this.listSteps.length).toFixed(1).toString();
+        if (this.listSteps != null && (this.listSteps.length - 2) > 0) {
+          this.progress = (total / (this.listSteps.length - 2)).toFixed(1).toString();
         } else {
           this.progress = '0';
         }
@@ -201,10 +200,10 @@ export class InstanceDetailComponent implements OnInit {
       return x.stepNo > 0 && y.stepNo > 0
         ? x.stepNo - y.stepNo
         : x.stepNo > 0
-        ? -1
-        : y.stepNo > 0
-        ? 1
-        : x.stepNo - y.stepNo;
+          ? -1
+          : y.stepNo > 0
+            ? 1
+            : x.stepNo - y.stepNo;
     });
     ins = listStep
       .reduce((result, x) => {
@@ -297,7 +296,7 @@ export class InstanceDetailComponent implements OnInit {
   //   this.changeDetec.detectChanges();
   // }
 
-  setHTMLCssStages(oldStage, newStage) {}
+  setHTMLCssStages(oldStage, newStage) { }
 
   //ganttchar
   getDataGanttChart(instanceID, processID) {
@@ -375,16 +374,19 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   rollHeight() {
-    let classViewDetail =
-      document.getElementsByClassName('codx-detail-main')[0];
-    if(!classViewDetail)  return;
+    let classViewDetail: any;
+    var heighOut = 20
+    if ((this.viewType == 'd')) {
+      classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
+    }
+    if (!classViewDetail) return;
     let heightVD = classViewDetail.clientHeight;
     let classHeader = document.getElementsByClassName('codx-detail-header')[0];
     let heightHD = classHeader.clientHeight;
     let classFooter = document.getElementsByClassName('codx-detail-footer')[0];
     let heightFT = classFooter.clientHeight;
 
-    var maxHeight = heightVD - heightHD - heightFT- 20 ;
+    var maxHeight = heightVD - heightHD - heightFT - heighOut;
     var div = document.getElementById('viewModeDetail');
     if (div) {
       div.style.setProperty('max-height', maxHeight + 'px', 'important');
@@ -405,7 +407,10 @@ export class InstanceDetailComponent implements OnInit {
     }
   }
   saveAssign(e) {
-    if (e) this.loadTree(this.listSteps);
+    if (e) { 
+      this.loadTree(this.listSteps);
+      this.GetStepsByInstanceIDAsync(this.id, this.dataSelect.processID);
+    };
   }
   showColumnControl(stepID) {
     if (this.listStepsProcess?.length > 0) {

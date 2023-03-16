@@ -126,6 +126,8 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     offset: 0,
   };
   listAssign: any;
+  groupModel: any;
+  isCollapsed=false;
 
   load(args: ILoadedEventArgs): void {
     // custom code start
@@ -154,6 +156,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     this.title = dialogData.data[1];
     this.krParentID = dialogData.data[2];
     this.headerText = dialogData?.data[3];
+    this.groupModel = dialogData?.data[4];
     this.formModel=dialogRef.formModel;
 
     
@@ -246,7 +249,26 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   getItemOKRAssign(i: any, recID: any) {
     this.openAccordionAssign[i] = !this.openAccordionAssign[i];
   }
-
+  collapeKR(collapsed: boolean) {
+    this.collapedData(this.listAlign,collapsed);
+    this.collapedData(this.listAssign,collapsed);
+    
+    this.isCollapsed = collapsed;
+  }
+  collapedData(data:any,collapsed:any){
+    data.forEach((ob) => {
+      ob.isCollapse = collapsed;
+    });
+    this.detectorRef.detectChanges();
+    data.forEach((ob) => {
+      if (ob.items != null && ob.items.length > 0) {
+        ob.items.forEach((kr) => {
+          kr.isCollapse = collapsed;
+        });
+      }
+    });
+    this.detectorRef.detectChanges();
+  }
   //#region Chart
   getChartData() {
     let krDetail = this.dataKR;
@@ -340,31 +362,46 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Logic Func------------------------//
-  checkIn(evt: any, kr: any) {
-    this.formModelCheckin.entityName = 'OM_OKRs.CheckIns';
-    this.formModelCheckin.entityPer = 'OM_OKRs.CheckIns';
-    this.formModelCheckin.gridViewName = 'grvOKRs.CheckIns';
-    this.formModelCheckin.formName = 'OKRs.CheckIns';
-    this.dialogCheckIn = this.callfc.openForm(
+  // checkIn(evt: any, kr: any) {
+  //   this.formModelCheckin.entityName = 'OM_OKRs.CheckIns';
+  //   this.formModelCheckin.entityPer = 'OM_OKRs.CheckIns';
+  //   this.formModelCheckin.gridViewName = 'grvOKRs.CheckIns';
+  //   this.formModelCheckin.formName = 'OKRs.CheckIns';
+  //   this.dialogCheckIn = this.callfc.openForm(
+  //     PopupCheckInComponent,
+  //     '',
+  //     800,
+  //     500,
+  //     'OMT01',
+  //     [kr, this.formModelCheckin]
+  //   );
+  //   this.dialogCheckIn.closed.subscribe((res) => {
+  //     if (res && res.event) {
+  //       this.dataKR = res.event;
+  //       this.totalProgress = this.dataKR.progress;
+  //       this.progressHistory.unshift(this.totalProgress);
+  //       this.dataKR.map((item: any) => {
+  //         if (item.recID == res.event.parentID) {
+  //           item = res.event;
+  //         }
+  //       });
+  //     }
+  //     this.detectorRef.detectChanges();
+  //   });
+  // }
+  checkIn(kr: any) {
+    let popupTitle= 'Cập nhật tiến độ';
+    let dialogCheckIn = this.callfc.openForm(
       PopupCheckInComponent,
       '',
-      650,
+      800,
       500,
-      'OMT01',
-      [kr, this.formModelCheckin]
+      '',
+      [kr, popupTitle, { ...this.groupModel?.checkInsModel }]
     );
-    this.dialogCheckIn.closed.subscribe((res) => {
+    dialogCheckIn.closed.subscribe((res) => {
       if (res && res.event) {
-        this.dataKR = res.event;
-        this.totalProgress = this.dataKR.progress;
-        this.progressHistory.unshift(this.totalProgress);
-        this.dataKR.map((item: any) => {
-          if (item.recID == res.event.parentID) {
-            item = res.event;
-          }
-        });
       }
-      this.detectorRef.detectChanges();
     });
   }
 

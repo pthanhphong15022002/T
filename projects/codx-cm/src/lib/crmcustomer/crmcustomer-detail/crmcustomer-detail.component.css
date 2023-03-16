@@ -1,0 +1,10 @@
+.view-step-box {
+	overflow: hidden;
+	border-top: 1px var(--gray-100) solid;
+	padding-top: 10px;
+	clear: both;
+}
+codx-crmcustomer codx-crmcustomer-detail .codx-detail-main{
+	padding-bottom: 0!important;
+	background-color: #FF9472;
+}

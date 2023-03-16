@@ -1,8 +1,8 @@
 <div class="tm-meeting">
   <codx-views #view [funcID]="funcID" service="CO" assemblyName="ERM.Business.CO" entityName="CO_Meetings"
-    [views]="views" [button]="showButtonAdd ? button : null" className="MeetingsBusiness" method="GetListMeetingsAsync"
-    (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="meetingID"
-    (onActions)="onActions($event)">
+    [views]="views" [button]="showButtonAdd ? button : null" className="MeetingsBusiness"
+    method="GetListMeetingsCalendarAsync" (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs"
+    [autoLoad]="true" idField="meetingID" (onActions)="onActions($event)">
   </codx-views>
 
   <!-- view-list -->
@@ -139,17 +139,9 @@
 
 <ng-template #contentTmp let-data>
   <div>
-    <h5 #meetingName>
-      {{
-      data.meetingName
-      | formatvalue
-      : view.formModel
-      : "meetingName"
-      : meetingName
-      : "Meetings"
-      : "grvMeetings"
-      | async
-      }}
+    <h5 [innerHTML]="
+    data.meetingName | formatvalue : view.formModel : 'MeetingName' | async
+    ">
     </h5>
   </div>
 
@@ -157,15 +149,10 @@
     <div class="d-flex me-6">
       <i class="icon-calendar_today icon-16 me-2"></i>
       <span class="ms-1 fw-bold">
-        <span #startDate class="text-gray-700">{{
-          data.startDate | formatvalue
-          : view.formModel
-          : "startDate"
-          : startDate
-          : "Meetings"
-          : "grvMeetings"
-          | async
-          }}</span>
+        <span class="text-gray-700" [innerHTML]="
+        data.startDate | formatvalue : view.formModel : 'StartDate' | async
+        ">
+          </span>
         <span *ngIf="data.startDate" class="fw-bold p-2" [innerHtml]="'( ' + getDate(data) + ')'"></span>
       </span>
     </div>
@@ -183,11 +170,9 @@
         <span [innerHTML]="data?.memo" (mouseenter)="popoverMemo.open()" (mouseover)="popoverMemo.close()"
           [ngbPopover]="tooltipMemo" popoverClass="empPopoverClass" #popoverMemo="ngbPopover"
           placement="left bottom top right" container="body"></span>
-        <span #memo *ngIf="!data?.memo">{{
-          data?.memo
-          | formatvalue: view.formModel:"memo":memo:"Meetings":"grvMeetings"
-          | async
-          }}</span>
+        <span *ngIf="!data?.memo" [innerHTML]="
+        data.memo | formatvalue : view.formModel : 'Memo' | async
+        "></span>
       </span>
     </span>
   </div>
@@ -203,7 +188,9 @@
   </div>
 
   <ng-template #tooltipMemo>
-    <div [innerHTML]="data?.memo"></div>
+    <div [innerHTML]="
+    data.memo | formatvalue : view.formModel : 'Memo' | async
+    "></div>
   </ng-template>
 </ng-template>
 
