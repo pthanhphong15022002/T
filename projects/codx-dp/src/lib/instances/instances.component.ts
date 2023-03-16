@@ -111,6 +111,8 @@ export class InstancesComponent
   itemSelected: any;
   stepSuccess:any;
   stepFail:any;
+  viewType ='d'
+
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private inject: Injector,
@@ -666,6 +668,7 @@ export class InstancesComponent
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
+    this.viewType ='p' ;
     let popup = this.callFunc.openForm(
       this.popDetail,
       '',
@@ -676,6 +679,9 @@ export class InstancesComponent
       '',
       option
     );
+    popup.closed.subscribe(e=>{
+      this.viewType ='d' ;
+    })
   }
 
   dropInstance(data) {
@@ -738,6 +744,9 @@ export class InstancesComponent
     if (!this.isClick) {
       return;
     }
+    if(listStepCbx.length == 0 || listStepCbx == null) {
+      listStepCbx = this.listSteps;
+    }
     this.isClick = false;
     this.crrStepID = data.stepID;
     let option = new SidebarModel();
@@ -753,13 +762,17 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
+            var stepReason = {
+              isUseFail:this.isUseFail,
+              isUseSuccess:this.isUseSuccess
+            }
             var obj = {
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
               instance: data,
               listStepCbx: listStepCbx,
               stepIdClick: this.stepIdClick,
-              // stepReason: stepReason1
+              stepReason: stepReason
             };
             var dialogMoveStage = this.callfc.openForm(
               PopupMoveStageComponent,

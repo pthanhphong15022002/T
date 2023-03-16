@@ -14,8 +14,11 @@ export class PopSettingExchangeComponent implements OnInit {
   dialog!: DialogRef;
   currencies: Currency;
   calculation : any;
+  currentdate:any;
+  forwarddate:any;
   data:any;
-  calculationName:any;
+  multiplication:any;
+  division:any;
   constructor(
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
@@ -23,11 +26,16 @@ export class PopSettingExchangeComponent implements OnInit {
   ) { 
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
-    this.currencies = dialog.dataService!.dataSelected;
-    if (this.currencies.calculation == '0') {
-      this.calculation = false;
+    this.currencies = dialogData.data?.data;
+    if (this.currencies.calculation == '1') {
+      this.currentdate = true;
     }else{
-      this.calculation = true;
+      this.forwarddate = true;
+    }
+    if (this.currencies.multi) {
+      this.multiplication = true;
+    }else{
+      this.division = true;
     }
   }
   //#endregion
@@ -38,17 +46,35 @@ export class PopSettingExchangeComponent implements OnInit {
   //#endregion
 
   //#region Function
-  valueChangelb(e: any) {
-    if (e.data) {
-      this.currencies[e.field] = '1';
-      this.calculation = true;
+  valueChangeCalculation(e: any) {
+    if (e.component.name == 'currentdate') {
+      if (e.data) {
+        this.currentdate = e.data;  
+        this.forwarddate = false;
+        this.currencies[e.field] = '1'; 
+      }
     }else{
-      this.currencies[e.field] = '0';
-      this.calculation = false;
+      if (e.data) {
+        this.forwarddate = e.data;  
+        this.currentdate = false;
+        this.currencies[e.field] = '2'; 
+      }
     }
   }
-  valueChange(e: any) {
-      this.currencies[e.field] = e.data;
+  valueChangeMulti(e: any) {
+    if (e.component.name == 'multiplication') {
+      if (e.data) {
+        this.multiplication = e.data;  
+        this.division = false;
+        this.currencies[e.field] = true; 
+      }
+    }else{
+      if (e.data) {
+        this.division = e.data;  
+        this.multiplication = false;
+        this.currencies[e.field] = false; 
+      }
+    }
   }
   //#endregion
   

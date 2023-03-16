@@ -19,7 +19,8 @@ export class ViewJobComponent implements OnInit {
   dialog!: DialogRef;
   dataInput = {}; //format về như vậy {recID,name,startDate,type, roles, durationHour, durationDay,parentID }
   type = '';
-  listOwner = [];
+  owner = [];
+  participant = [];
   listDataInput = [];
   listTypeTask = [];
   listDataLink = [];
@@ -40,7 +41,6 @@ export class ViewJobComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.listOwner = this.dataInput['roles'] || [];
     if (this.dataInput['parentID']) {
       this.listDataInput?.forEach((task) => {
         if (this.dataInput['parentID']?.includes(task.refID)) {
@@ -61,6 +61,12 @@ export class ViewJobComponent implements OnInit {
         this.title = type['text'];
       }
     });
+
+    this.owner = this.dataInput['roles']?.filter((role) => role.roleType === 'O') || [];
+    this.participant = this.dataInput['roles']?.filter((role) => role.roleType === 'P') || [];
+    console.log(this.owner);
+    
+
   }
 
   getModeFunction() {

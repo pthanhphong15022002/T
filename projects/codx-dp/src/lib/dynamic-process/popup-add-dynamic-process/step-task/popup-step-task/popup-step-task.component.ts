@@ -68,6 +68,13 @@ export class PopupJobComponent implements OnInit {
   view = [];
   step: DP_Steps;
   listFileTask: string[] = [];
+  listCombobox = {
+    U: 'Share_Users_Sgl',
+    P: 'Share_Positions_Sgl',
+    R: 'Share_UserRoles_Sgl',
+    D: 'Share_Departments_Sgl',
+    O: 'Share_OrgUnits_Sgl',
+  };
   constructor(
     private cache: CacheService,
     private callfunc: CallFuncService,

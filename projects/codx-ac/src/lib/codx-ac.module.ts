@@ -62,6 +62,8 @@ import { CashTransfersComponent } from './cash-transfers/cash-transfers.componen
 import { PopupAddCashTransferComponent } from './cash-transfers/popup-add-cash-transfer/popup-add-cash-transfer.component';
 import { CashReceiptsComponent } from './cash-receipts/cash-receipts.component';
 import { PopAddReceiptsComponent } from './cash-receipts/pop-add-receipts/pop-add-receipts.component';
+import { PurchaseinvoicesComponent } from './purchaseinvoices/purchaseinvoices.component';
+import { PopAddPurchaseComponent } from './purchaseinvoices/pop-add-purchase/pop-add-purchase.component';
 
 export const routes: Routes = [
   {
@@ -75,6 +77,10 @@ export const routes: Routes = [
       {
         path: 'cashreceipts/:funcID',
         component: CashReceiptsComponent,
+      },
+      {
+        path: 'purchaseinvoices/:funcID',
+        component: PurchaseinvoicesComponent,
       },
       {
         path: 'journalnames/:funcID',
@@ -196,6 +202,8 @@ export const routes: Routes = [
     PopupAddCashTransferComponent,
     CashReceiptsComponent,
     PopAddReceiptsComponent,
+    PurchaseinvoicesComponent,
+    PopAddPurchaseComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

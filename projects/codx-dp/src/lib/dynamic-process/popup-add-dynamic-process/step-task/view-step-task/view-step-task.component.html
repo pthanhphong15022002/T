@@ -71,25 +71,56 @@
 
     <div class="d-flex align-items-center">
       <codx-label
+        *ngIf="type == 'M'"
+        class="h4 font-weight-400"
+        fiedName="roles"
+        [formModel]="frmModel"
+        default="Người chủ trì"
+        style="min-width: 120px;"
+      >
+      </codx-label>
+      <div>
+        <ng-container
+          *ngIf="owner.length > 0"
+          [ngTemplateOutlet]="showUser"
+          [ngTemplateOutletContext]="{ users: owner }"
+        ></ng-container>
+      </div>
+    </div>
+    <div class="d-flex align-items-center">
+      <codx-label
+        *ngIf="type == 'M'"
+        class="h4 font-weight-400"
+        fiedName="roles"
+        [formModel]="frmModel"
+        default="Người tham gia"
+        style="min-width: 120px;"
+      >
+      </codx-label>
+      <codx-label
+        *ngIf="type != 'M'"
         class="h4 font-weight-400 me-2"
         fiedName="roles"
         [formModel]="frmModel"
-        default="Người phụ trách"
+        default="Vai trò/bộ phận thực hiện"
       >
       </codx-label>
       <!-- <h4 class="m-5 ms-0">Vai trò thực hiện</h4> -->
       <div>
         <ng-container
-          *ngIf="listOwner.length > 0"
+          *ngIf="participant.length > 0"
           [ngTemplateOutlet]="showUser"
-          [ngTemplateOutletContext]="{ users: listOwner }"
+          [ngTemplateOutletContext]="{ users: participant }"
         ></ng-container>
       </div>
     </div>
 
     <hr />
 
-    <div class="d-flex justify-content-start align-items-center" *ngIf="type!== 'G'">
+    <div
+      class="d-flex justify-content-start align-items-center"
+      *ngIf="type !== 'G'"
+    >
       <codx-label
         class="h4 font-weight-400 me-3"
         fiedName="memo"
@@ -116,7 +147,7 @@
         </codx-attachment>
       </div>
     </div>
-    <hr *ngIf="type!== 'G'" />
+    <hr *ngIf="type !== 'G'" />
 
     <div>
       <codx-label
@@ -184,7 +215,7 @@
         </span>
         <div>
           <h4 class="m-0">{{ item?.objectName }}</h4>
-          <span class="text-primary-400"> {{ item?.roleType }} </span>
+          <!-- <span class="text-primary-400"> {{ item?.roleType }} </span> -->
         </div>
       </div>
     </ng-container>

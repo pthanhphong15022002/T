@@ -1,0 +1,192 @@
+<codx-form #form [subHeader]="subHeader" [body]="body" [footer]="footer" [formModel]="dialog.formModel"
+  [dialog]="dialog" [data]="purchaseinvoices" subToolbarCss="text-end" [subToolbar]="subToolbar">
+</codx-form>
+<ng-template #subHeader>
+    <ng-container *ngIf="form?.formGroup">
+      
+    </ng-container>
+  </ng-template>
+  <ng-template #body>
+    <div class="card-add" #cardbodyRef>
+        <ejs-tab #cashRef>
+          <e-tabitems>
+            <!-- Tab thông tin chứng từ -->
+            <e-tabitem>
+              <ng-template #headerText>
+                <div class="d-flex align-items-top">
+                  <i class="icon-info icon-18 me-2"></i>
+                  <div class="fw-bold fs-6 text-uppercase">Thông tin chứng từ</div>
+              </div>
+              </ng-template>
+              <ng-template #content>
+                <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
+              </ng-template>
+            </e-tabitem>
+            <!-- Tab Thông tin hóa đơn -->
+            <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-top">
+                    <i class="icon-description icon-18 me-2"></i>
+                    <div class="fw-bold fs-6 text-uppercase">Thông tin hóa đơn</div>
+                </div>
+                </ng-template>
+                <ng-template #content>
+                  <ng-container *ngTemplateOutlet="tabBill"></ng-container>
+                </ng-template>
+              </e-tabitem>
+          </e-tabitems>
+        </ejs-tab>
+        <br />
+        <ejs-tab>
+          <e-tabitems>
+            <!-- Tab chi tiết bút toán -->
+            <e-tabitem>
+              <ng-template #headerText>
+                <div class="d-flex align-items-top">
+                  <i class="icon-format_list_numbered icon-18 me-2"></i>
+                  <span class="fw-bold fs-6 text-uppercase">Chi tiết</span>                         
+              </div>
+              </ng-template>
+              <ng-template #content>
+                <ng-container *ngTemplateOutlet="tabCashPaymentLine"></ng-container>
+              </ng-template>
+            </e-tabitem>
+            <!-- Tab Thông tin hóa đơn -->
+            <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-top">
+                    <i class="icon-description icon-18 me-2"></i>
+                    <div class="fw-bold fs-6 text-uppercase">Thông tin hóa đơn</div>
+                </div>
+                </ng-template>
+                <ng-template #content>
+                  <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
+                </ng-template>
+              </e-tabitem>
+          </e-tabitems>
+        </ejs-tab>
+        <div class="row mb-2">
+          <ng-container *ngTemplateOutlet="addLine"></ng-container>
+        </div>
+      </div>
+  </ng-template>
+  <ng-template #subToolbar>
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex justify-content-start mt-1 me-2">
+          <div class="card-title">
+            <div class="d-flex flex-column">
+              <div class="dialog-title line-clamp line-clamp-1 me-3 text-uppercase">{{headerText}}</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-8" *ngIf="form?.formGroup">
+              <codx-input [Group]="form.formGroup" field="status" [formModel]="form.formModel"
+                >
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end mt-1 me-3">
+          <div *ngIf="formType != 'edit'" class="ms-2">
+            <button type="button" class="btn btn-light-primary">
+              <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
+            </button>
+          </div>
+          <div class="ms-2">
+            <button type="button" class="btn btn-primary" style="min-width: 60px">
+              <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
+                [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
+            </button>
+          </div>
+        </div>
+      </div>
+  </ng-template>
+  <ng-template #tabBasic>
+    <ng-container *ngIf="form?.formGroup">
+        <div class="row mt-5">
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-4">
+                        <!-- Mã nhà cung cấp -->
+                        <div class="form-group">
+                            <codx-label fiedName="ObjectID" [formModel]="form.formModel">
+                            </codx-label>
+                            <codx-input [Group]="form.formGroup" [crrValue]=""
+                                field="objectID" [formModel]="form.formModel">
+                            </codx-input>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                          <!-- Địa chỉ -->
+                          <div class="form-group">
+                            <codx-label fiedName="PaymentAmt" [formModel]="form.formModel">
+                            </codx-label>
+                            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="paymentAmt"
+                            [min]="0"></codx-input>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+                <div class="row">
+                    
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="row">
+                    <!-- Tiền tệ -->
+                    <!-- <div class="col-6">
+                        <div class="form-group">
+                            <codx-label fiedName="CurrencyID" [formModel]="form.formModel">
+                            </codx-label>
+                            <codx-input [Group]="form.formGroup" field="currencyID" [formModel]="form.formModel"
+                              (valueChange)="valueChange($event)">
+                            </codx-input>
+                        </div>
+                    </div> -->
+                    <!-- Tỷ giá -->
+                    <!-- <div class="col-6">
+                        <div class="form-group">
+                            <codx-label fiedName="ExchangeRate" [formModel]="form.formModel">
+                            </codx-label>
+                            <codx-input [Group]="form.formGroup" [crrValue]="cashreceipts.exchangeRate"
+                                field="exchangeRate" [formModel]="form.formModel" (valueChange)="valueChange($event)">
+                            </codx-input>
+                        </div>
+                    </div> -->
+                </div>
+                <!-- Ngày chứng từ -->
+                <!-- <div class="form-group">
+                    <codx-label fiedName="VoucherDate" [formModel]="form.formModel">
+                    </codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                        [crrValue]="cashreceipts.voucherDate" field="voucherDate"
+                        (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div> -->
+                <!-- Số chứng từ -->
+                <!-- <div class="form-group">
+                    <codx-label fiedName="VoucherNo" [formModel]="form.formModel">
+                    </codx-label>
+                    <codx-input [Group]="form.formGroup" [crrValue]="cashreceipts.voucherNo" field="voucherNo"
+                        [formModel]="form.formModel" (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div> -->
+            </div>
+        </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #tabBill>
+    
+  </ng-template>
+  <ng-template #tabCashPaymentLine>
+    
+  </ng-template>
+  <ng-template #addLine>
+    
+  </ng-template>
+  <ng-template #footer>
+    
+  </ng-template>
+ 
