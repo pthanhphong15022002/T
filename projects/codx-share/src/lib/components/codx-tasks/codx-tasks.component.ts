@@ -1736,10 +1736,11 @@ export class CodxTasksComponent
           let type = this.view.views[index].type;
           if (type == 7 || type == 8) {
             // calender + schedule
-            // if (Array.isArray(e.data)) {
-            //  this.view.currentView['schedule'].applyFilter(e.data)
-            
-            
+            if (Array.isArray(e.data)) {
+              this.view.currentView['schedule'].applyFilter(e.data);
+            }
+
+            //if (Array.isArray(e.data)) {
             //   e.data.forEach((filter: any) => {
             //     if (
             //       !this.view.currentView['schedule'].dataService.filter.filters
@@ -1752,7 +1753,7 @@ export class CodxTasksComponent
             //     ].dataService.filter.filters[0].filters.push(filter);
             //   });
             //   this.view.currentView['schedule'].refresh();
-          //  }
+            //  }
           }
         }
         break;
