@@ -576,7 +576,7 @@ export class RolesComponent implements OnInit {
                   this.fileEditing = res.data;
                   this.codxView?.dataService.update(this.fileEditing).subscribe();
                   this.changePermission(0);
-                  this.changeDetectorRef.detectChanges();
+                  this.dmSV.fileEditing.next(this.fileEditing);
                 }
               });
             }
