@@ -137,9 +137,16 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     // }
     this.codxOmService.checkInKR(this.dataKR.recID, this.checkIns).subscribe((res:any)=>{
       if(res){
-        this.notificationsService.notifyCode('SYS034');
-        //res.checkIns=Array.from(res.checkIns).reverse();
-        this.dialogRef && this.dialogRef.close(res)
+        this.codxOmService.calculatorProgressOfPlan([this.dataKR?.transID]).subscribe((listPlan:any)=>{
+          if(listPlan!=null){
+            this.notificationsService.notifyCode('SYS034');
+            this.dialogRef && this.dialogRef.close(listPlan);
+          }
+          else{
+            this.dialogRef && this.dialogRef.close(res);
+          }
+        })
+
       }
     })
   }
