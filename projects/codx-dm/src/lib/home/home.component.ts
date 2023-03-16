@@ -94,6 +94,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   isScrollSearch = true;
   maxHeightScroll = 500;
   pageSearch = 1;
+  hideMF = false;
   //loadedFile: boolean;
   //loadedFolder: boolean;
   //page = 1;
@@ -350,6 +351,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       {
         this.refeshData();
         this.getDataFolder(this.dmSV.folderID);
+        if(this.fileService.options.favoriteID == "3") this.hideMF = true;
+        else this.hideMF = false;
       }
     })
     this.getParaSetting();
@@ -605,6 +608,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
    
     this.route.params.subscribe((params) => {
       if (params?.funcID) {
+        this.hideMF = false;
         this.funcID = params?.funcID;
         this.dmSV.folderID = '';
         this.dmSV.idMenuActive =  this.funcID;
@@ -626,7 +630,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.viewActive.model.panelLeftHide = false;
           this.view.viewChange(this.viewActive);
         }
-        else if(this.funcID == "DMT06" || this.funcID == "DMT07")
+        else if(this.funcID == "DMT06" || this.funcID == "DMT07" || this.funcID == "DMT08")
         {
           this.views[2].model.panelLeftHide = true;
           this.view.viewChange(this.views[2]);
