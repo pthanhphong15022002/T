@@ -46,6 +46,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() listCbxProccess: any;
   @Input() viewModelDetail = 'S';
   @ViewChild('viewDetailsItem') viewDetailsItem;
+  @Input() viewType = 'd';
   @Input() listSteps: DP_Instances_Steps[] = [];
   @ViewChild('viewDetail') viewDetail;
   id: any;
@@ -114,9 +115,7 @@ export class InstanceDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.rollHeight();
@@ -137,7 +136,7 @@ export class InstanceDetailComponent implements OnInit {
           this.dataSelect.recID,
           this.dataSelect.processID
         );
-       // this.rollHeight();
+        // this.rollHeight();
       }
     }
   }
@@ -375,16 +374,19 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   rollHeight() {
-    let classViewDetail =
-      document.getElementsByClassName('codx-detail-main')[0];
-    if(!classViewDetail)  return;
+    let classViewDetail: any;
+    var heighOut = 20
+    if ((this.viewType == 'd')){
+      classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
+    }
+    if (!classViewDetail) return;
     let heightVD = classViewDetail.clientHeight;
     let classHeader = document.getElementsByClassName('codx-detail-header')[0];
     let heightHD = classHeader.clientHeight;
     let classFooter = document.getElementsByClassName('codx-detail-footer')[0];
     let heightFT = classFooter.clientHeight;
 
-    var maxHeight = heightVD - heightHD - heightFT- 20 ;
+    var maxHeight = heightVD - heightHD - heightFT - heighOut;
     var div = document.getElementById('viewModeDetail');
     if (div) {
       div.style.setProperty('max-height', maxHeight + 'px', 'important');

@@ -493,8 +493,35 @@ export class VersionComponent implements OnInit {
             files[index].fileName = res.data.fileName;
             files[index].thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";//res.data.thumbnail;
             that.displayThumbnail(res.data);
-            this.dmSV.ChangeData.next(true);
+            //this.dmSV.ChangeData.next(true);
           }
+          var appName = environment.appName; // Tam thoi de hard
+          var uploadFile = fileItem.item.rawFile;
+          var sizeInBytes = fileItem.fileSize; // uploadFile.size;
+          var chunSizeInfBytes = this.dmSV.ChunkSizeInKB * 1024;
+          var numOfChunks = Math.floor(fileItem.fileSize / chunSizeInfBytes);
+          if (fileItem.fileSize % chunSizeInfBytes > 0) {
+            numOfChunks++;
+          }
+
+          //api/lv-docs/files/upload
+          for (var i = 0; i < numOfChunks; i++) {
+            var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
+            var end = start + chunSizeInfBytes; //Vị trí cuối
+            if (end > sizeInBytes) end = sizeInBytes; //Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+            var blogPart = uploadFile.slice(start, end); //Lấy dữ liệu của chunck dựa vào đầu cuối
+            var fileChunk = new File([blogPart], uploadFile.name, {
+              type: uploadFile.type,
+            }); //Gói lại thành 1 file chunk để upload
+            var uploadChunk = await lvFileClientAPI.formPostWithToken(
+              `api/${appName}/files/upload`,
+              {
+                FilePart: fileChunk,
+                UploadId: fileItem.uploadId,
+                Index: i,
+              }
+            );
+          }  
           // thumbmail
           that.dmSV.listFiles = files;
           that.changeDetectorRef.detectChanges();
@@ -503,33 +530,7 @@ export class VersionComponent implements OnInit {
         that.notificationsService.notify(res.message);
       });
 
-      var appName = environment.appName; // Tam thoi de hard
-      var uploadFile = fileItem.item.rawFile;
-      var sizeInBytes = fileItem.fileSize; // uploadFile.size;
-      var chunSizeInfBytes = this.dmSV.ChunkSizeInKB * 1024;
-      var numOfChunks = Math.floor(fileItem.fileSize / chunSizeInfBytes);
-      if (fileItem.fileSize % chunSizeInfBytes > 0) {
-        numOfChunks++;
-      }
-
-      //api/lv-docs/files/upload
-      for (var i = 0; i < numOfChunks; i++) {
-        var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
-        var end = start + chunSizeInfBytes; //Vị trí cuối
-        if (end > sizeInBytes) end = sizeInBytes; //Nếu điểm cắt cuối vượt quá kích thước file chặn lại
-        var blogPart = uploadFile.slice(start, end); //Lấy dữ liệu của chunck dựa vào đầu cuối
-        var fileChunk = new File([blogPart], uploadFile.name, {
-          type: uploadFile.type,
-        }); //Gói lại thành 1 file chunk để upload
-        var uploadChunk = await lvFileClientAPI.formPostWithToken(
-          `api/${appName}/files/upload`,
-          {
-            FilePart: fileChunk,
-            UploadId: fileItem.uploadId,
-            Index: i,
-          }
-        );
-      }  
+      
     }
     else {
       this.notificationsService.notify(this.titleUploadFile);
