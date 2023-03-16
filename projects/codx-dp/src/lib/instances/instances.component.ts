@@ -28,7 +28,10 @@ import {
   Util,
   NotificationsService,
   DataRequest,
+  AlertConfirmInputConfig,
 } from 'codx-core';
+import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
+import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Instances } from '../models/models';
@@ -477,6 +480,10 @@ export class InstancesComponent
       //export File
       case 'DP16':
         this.exportFile();
+        break;
+      //trinh kí File
+      case 'DP17':
+        this.approvalTrans('tes1', 'test2');
         break;
     }
   }
@@ -979,5 +986,66 @@ export class InstancesComponent
       [gridModel, this.dataSelected.recID],
       null
     );
+  }
+  //Xét duyệt
+  approvalTrans(processID: any, datas: any) {
+    // this.api
+    //   .execSv(
+    //     'ES',
+    //     'ES',
+    //     'ApprovalTransBusiness',
+    //     'GetCategoryByProcessIDAsync',
+    //     processID
+    //   )
+    //   .subscribe((res2: any) => {
+    // let dialogModel = new DialogModel();
+    // dialogModel.IsFull = true;
+    // dialogModel.zIndex=1010 ;
+    //trình ký
+    //  if (res2?.eSign == true) {
+    //let signFile = new ES_SignFile();
+    // signFile.recID = datas.recID;
+    //  signFile.title = datas.title;
+    // signFile.categoryID = res2?.categoryID;
+    //signFile.refId = datas.recID;
+    // signFile.refDate = datas.refDate;
+    //signFile.refNo = datas.refNo;
+    //signFile.priority = datas.urgency;
+    // signFile.refType = this.formModel?.entityName;
+    //signFile.files = [];
+    // if (this.data?.files) {
+    //   for (var i = 0; i < this.data?.files.length; i++) {
+    //     var file = new File();
+    //     file.fileID = this.data?.files[i].recID;
+    //     file.fileName = this.data?.files[i].fileName;
+    //     file.eSign = true;
+    //     signFile.files.push(file);
+    //   }
+    // }
+    // let dialogApprove = this.callfc.openForm(
+    //   PopupAddSignFileComponent,
+    //   'Chỉnh sửa',
+    //   700,
+    //   650,
+    //   '',
+    //   {
+    //     oSignFile: signFile,
+    //     // files: this.data?.files,
+    //     //  cbxCategory: this.gridViewSetup['CategoryID']?.referedValue,
+    //     disableCateID: true,
+    //     formModel: this.view?.currentView?.formModel,
+    //   },
+    //   '',
+    //   dialogModel
+    // );
+    // dialogApprove.closed.subscribe((res) => {
+    //   if (res.event && res.event?.approved == true) {
+    //   }
+    // });
+    //this.callfunc.openForm();
+    // } else if (res2?.eSign == false) {
+    // }
+    //xét duyệt
+    // });
   }
 }

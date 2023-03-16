@@ -278,12 +278,6 @@
           class="badge badge-success badge-sm badge-inline"
           [style.background]="data.statusColor"
         >
-          <!-- {{ data?.statusName | formatvalue : HRT03a : "statusName" | async }} -->
-          <!-- {{
-            data.statusName
-              | formatvalue: view.formModel: "statusName" : statusName
-              | async
-          }} -->
           {{ data?.status | formatvalue : view.formModel : "status" | async }}
         </span>
       </div>

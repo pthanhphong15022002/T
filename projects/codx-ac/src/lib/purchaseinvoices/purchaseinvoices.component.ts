@@ -78,14 +78,14 @@ export class PurchaseinvoicesComponent extends UIComponent {
     }
   }
   setDefault(o) {
-    return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
+    return this.api.exec('PS', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
       this.parentID,
     ]);
   }
   add() {
     this.headerText = this.funcName;
     this.view.dataService
-      .addNew()
+      .addNew((o) => this.setDefault(o))
       .subscribe((res: any) => {
         var obj = {
           formType: 'add',
@@ -107,12 +107,4 @@ export class PurchaseinvoicesComponent extends UIComponent {
         );
       });
   }
-  // loadscreen() {
-  //   return new Promise<FormModel>((resolve, rejects) => {
-  //     const elmnt = document.getElementById('codx-aside');
-  //     var widthaside = elmnt.offsetWidth;
-  //     this.height = elmnt.offsetHeight;
-  //     this.width = this.innerWidth - widthaside;
-  //   });
-  // }
 }

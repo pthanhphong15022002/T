@@ -45,10 +45,25 @@ export const OMCONST = {
     Edit: 'SYS03',
     Copy: 'SYS04',
     //Plan
-    ReleasePlan:'OMT011',
-    UnReleasePlan:'OMT012',
-    PlanWeight:'OMT013',
-    SharesPlan:'OMT014',
+    ReleasePlanCOMP:'OMT011',
+    UnReleasePlanCOMP:'OMT012',
+    PlanWeightCOMP:'OMT013',
+    SharesPlanCOMP:'OMT014',
+    //Plan
+    ReleasePlanDEPT:'OMT021',
+    UnReleasePlanDEPT:'OMT022',
+    PlanWeightDEPT:'OMT023',
+    SharesPlanDEPT:'OMT024',
+    //Plan
+    ReleasePlanORG:'OMT031',
+    UnReleasePlanORG:'OMT032',
+    PlanWeightORG:'OMT033',
+    SharesPlanORG:'OMT034',
+    //Plan
+    ReleasePlanPER:'OMT041',
+    UnReleasePlanPER:'OMT042',
+    PlanWeightPER:'OMT043',
+    SharesPlanPER:'OMT044',
     //OB
     OBDetail: 'OMT101',
     OBAssign: 'OMT102',
