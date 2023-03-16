@@ -719,6 +719,16 @@ export class CodxEpService {
       data
     );
   }
+  
+  getListUserIDByListGroupID(listGroupID){
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'GroupMembersBusiness',
+      'GetListUserIDByListGroupIDAsync',
+      listGroupID
+    );  
+  }
 
   getListUserIDByListPositionsID(listPositionID) {
     return this.api.execSv<any>(
