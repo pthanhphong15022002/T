@@ -111,6 +111,8 @@ export class InstancesComponent
   itemSelected: any;
   stepSuccess:any;
   stepFail:any;
+  viewType ='d'
+
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private inject: Injector,
@@ -666,6 +668,7 @@ export class InstancesComponent
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
+    this.viewType ='p' ;
     let popup = this.callFunc.openForm(
       this.popDetail,
       '',
@@ -676,6 +679,9 @@ export class InstancesComponent
       '',
       option
     );
+    popup.closed.subscribe(e=>{
+      this.viewType ='d' ;
+    })
   }
 
   dropInstance(data) {
