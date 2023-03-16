@@ -115,7 +115,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
   }
 
   ngAfterViewInit(): void {
@@ -164,8 +164,8 @@ export class InstanceDetailComponent implements OnInit {
           total += data.progress;
           stepNo = i + 1;
         }
-        if (this.listSteps != null && this.listSteps.length > 0) {
-          this.progress = (total / this.listSteps.length).toFixed(1).toString();
+        if (this.listSteps != null && (this.listSteps.length - 2) > 0) {
+          this.progress = (total / (this.listSteps.length - 2)).toFixed(1).toString();
         } else {
           this.progress = '0';
         }

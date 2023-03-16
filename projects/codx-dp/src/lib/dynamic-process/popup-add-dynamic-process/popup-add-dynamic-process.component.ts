@@ -326,7 +326,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // this.updateNodeStatus(0,1);
     this.grvMoreFunction = await this.getFormModel('DPT040102');
     console.log(this.grvMoreFunction);
-    
+
     this.grvMoreFunction = {
       entityName: 'DP_Instances_Steps_Tasks',
       formName: 'DPInstancesStepsTasks',
@@ -334,7 +334,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       entityPer: 'DP_Instance',
       funcID: 'DPT04',
     };
-    
+
     this.grvStep = await this.getFormModel('DPS0103');
     this.getTitleStepViewSetup();
     this.initForm();
@@ -859,6 +859,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.edit = true;
             // perm.publish = true;
             perm.delete = true;
+            perm.isActive = true;
             perm.roleType = 'O';
             this.permissions = this.checkUserPermission(this.permissions, perm);
           }
@@ -886,6 +887,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.create = true;
             perm.assign = false;
             perm.edit = false;
+            perm.isActive = true;
+
             // perm.publish = false;
             perm.delete = false;
 
@@ -918,6 +921,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.create = false;
             perm.assign = false;
             perm.edit = false;
+            perm.isActive = true;
             // perm.publish = false;
             perm.delete = false;
             this.permissions = this.checkUserPermission(this.permissions, perm);
@@ -959,6 +963,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             perm.read = true;
             perm.create = true;
             perm.assign = false;
+            perm.isActive = true;
             perm.edit = false;
             // perm.publish = false;
             perm.delete = false;
@@ -1597,7 +1602,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               task: taskGroupList[taskGroup['recID']] ?? [],
             };
           });
-          step['taskGroups'] = taskGroupConvert;        
+          step['taskGroups'] = taskGroupConvert;
 
           if (step['taskGroups']?.length > 0 || step['tasks']?.length > 0) {
             let taskGroup = new DP_Steps_TaskGroups();
@@ -2853,7 +2858,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.listCbxProccess.unshift(obj);
             if(this.action === 'edit') {
               this.listCbxProccess = this.listCbxProccess.filter(x => x.recID !== this.process?.recID );
-            } 
+            }
           }
         });
     });
