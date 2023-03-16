@@ -23,7 +23,10 @@
 erm-quick-links-inner .dropdown-menu {
   width: 450px !important;
 }
-
+.place-holder{
+  opacity: .65;
+  font-style: italic;
+}
 /***** end theme ****/
 ::-webkit-scrollbar {
   width: 0.4rem!important;
@@ -56,6 +59,8 @@ codx-view-list-detail {
   }
 
 }
+
+
 /** custom bootstrap  **/
 .rounded-4 {
   border-radius: 1rem !important;
@@ -1681,8 +1686,8 @@ codx-dropdown-calendar{
 // }
 
 codx-view-list-detail .codx-detail-footer .badge.badge-sm {
-  margin-top: 2px;
-  margin-left: -3px;
+  margin-top: 4px;
+  margin-left: -5px;
   padding-left: 1px !important;
   padding-right: 1px !important;
   font-size: 10px !important;
