@@ -1174,7 +1174,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
           height: 200, //Kích thước của file ảnh Thum bề dọc
         },
         IsPublic: true,
-        ThumbConstraints: '30,60,120,300,500,600',
+        ThumbConstraints: '60,200,450,900',
       },
     })
   }

@@ -20,8 +20,10 @@
     <div class="w-25">
       <div class="d-flex align-items-start">
         <span
-        *ngIf="data?.isCurrent == true"
-          class="bullet bullet-vertical d-flex align-items-center min-h-100px me-3 bg-primary"
+        class="bullet bullet-vertical d-flex align-items-center min-h-50px mh-100 me-4"
+        [class]="
+          data.isCurrent ? 'bg-primary' : 'bg-transparent'
+        "
         >
         </span>
         <div class="d-flex flex-column">
@@ -38,7 +40,8 @@
           class="badge badge-sm"
           [name]="'HR001'"
           [value]="data?.emp?.gender"
-          [showText]="true"
+          [showText]="false"
+          [showIcon]="true"
           [showBgColor]="true"
         >
         </codx-vll>
@@ -49,7 +52,7 @@
               <span>
                 {{ data?.emp?.employeeName }}
               </span>
-              <i class="icon-accessibility"></i>
+              <i class="icon-qr_code_scanner icon-14 me-1"></i>
               <span>
                 {{ data?.emp?.employeeID }}
               </span>
@@ -110,10 +113,10 @@
 </ng-template>
 
 <ng-template #headerTemplate let-data>
-  <div class="w-25">Nhân viên</div>
-  <div class="w-25">Hợp đồng</div>
-  <div class="w-25">Đính kèm</div>
-  <div class="w-25">Tình trạng</div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">Nhân viên</div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">Hợp đồng</div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">Đính kèm</div>
+  <div class="w-25 text-primary p-3 fs-5 fw-500">Tình trạng</div>
 </ng-template>
 
 <ng-template #eInfoTemplate let-data>

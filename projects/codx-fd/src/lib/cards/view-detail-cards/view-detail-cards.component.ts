@@ -10,21 +10,17 @@ import { CardType, Valuelist } from '../../models/model';
   styleUrls: ['./view-detail-cards.component.scss']
 })
 export class ViewDetailCardsComponent implements OnInit, OnChanges {
-
   @Input() cardID: string = "";
   @Input() cardType: string = "";
   @Input() formModel: FormModel;
   @Input() ratingVLL: string = "";
-  data: any = null;
+
   isShowCard: boolean = true;
+
+  data: any = null;
   behavior: any[] = [];
-  constructor
-    (
-      private api: ApiHttpService,
-      private route: ActivatedRoute,
-      private cache: CacheService,
-      private dt: ChangeDetectorRef
-    ) {
+
+  constructor(private api: ApiHttpService, private route: ActivatedRoute, private cache: CacheService, private dt: ChangeDetectorRef) {
 
   }
 
@@ -44,26 +40,25 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
       this.dt.detectChanges();
       return;
     }
-    this.api
-      .execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCardInforAsync", [this.cardID])
-      .subscribe((res) => {
-        if (res) {
-          console.log(res);
-          this.data = res;
-          this.behavior = [];
-          if (this.data.behaviorName) {
-            if (this.data.behaviorName.includes(';')) {
-              let lstB = this.data.behaviorName.split(';');
-              for (let i = 0; i < lstB.length; i++) {
-                const element = lstB[i];
-                this.behavior.push(element);
-              }
-            } else {
-              this.behavior.push(this.data.behaviorName);
+
+    this.api.execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCardInforAsync", [this.cardID]).subscribe((res) => {
+      if (res) {
+        console.log(res);
+        this.data = res;
+        this.behavior = [];
+        if (this.data.behaviorName) {
+          if (this.data.behaviorName.includes(';')) {
+            let lstB = this.data.behaviorName.split(';');
+            for (let i = 0; i < lstB.length; i++) {
+              const element = lstB[i];
+              this.behavior.push(element);
             }
+          } else {
+            this.behavior.push(this.data.behaviorName);
           }
-          this.dt.detectChanges();
         }
-      });
+        this.dt.detectChanges();
+      }
+    });
   }
 }

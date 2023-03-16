@@ -30,10 +30,13 @@ import {
 } from 'codx-core';
 import { ES_SignFile, File } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
+import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { CodxOdService } from '../../codx-od.service';
 import {
   convertHtmlAgency2,
@@ -1022,15 +1025,55 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         });
         break;
       }
-      default: {
-        this.shareService.defaultMoreFunc(
-          val,
-          datas,
-          this.afterSaveTask,
-          this.view.formModel,
-          this.view.dataService,
-          that
+      //Giao việc
+      case 'ODT1013':
+      case "ODT52013": {
+        var task = new TM_Tasks();
+        task.refID = datas?.recID;
+        task.refType = this.formModel.entityName;
+
+        let option = new SidebarModel();
+        let assignModel: AssignTaskModel = {
+          vllRole: 'TM002',
+          title: val?.data.customName,
+          vllShare: 'TM003',
+          task: task,
+          referedData: data,
+          referedFunction: val.data,
+        };
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '550px';
+        let dialog = this.callfunc.openSide(
+          AssignInfoComponent,
+          assignModel,
+          option
         );
+        dialog.closed.subscribe((e) => {
+          if (e?.event && e?.event[0]) {
+            datas.status = '3';
+            // debugger;
+            // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
+            //   if(item) that.data.tasks= item;
+            // })
+            that.odService.updateDispatch(datas , "", false).subscribe((item) => {
+              if (item.status == 0) {
+                that.view.dataService.update(e.data).subscribe();
+              } else that.notifySvr.notify(item.message);
+            });
+          }
+        });
+        break;
+      }
+      default: {
+        // this.shareService.defaultMoreFunc(
+        //   val,
+        //   datas,
+        //   this.afterSaveTask,
+        //   this.view.formModel,
+        //   this.view.dataService,
+        //   that
+        // );
         break;
       }
     }

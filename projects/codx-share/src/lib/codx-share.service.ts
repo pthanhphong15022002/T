@@ -84,42 +84,9 @@ export class CodxShareService {
     that: any = null
   ) {
     var funcID = val?.functionID;
-    switch (funcID) {
-      //Giao việc
-      case 'ODT1013': {
-        var task = new TM_Tasks();
-        task.refID = data?.recID;
-        task.refType = formModel.entityName;
-
-        let option = new SidebarModel();
-        let assignModel: AssignTaskModel = {
-          vllRole: 'TM002',
-          title: val?.data.customName,
-          vllShare: 'TM003',
-          task: task,
-          referedData: data,
-          referedFunction: val.data,
-        };
-        option.DataService = dataService;
-        option.FormModel = formModel;
-        option.Width = '550px';
-        let dialog = this.callfunc.openSide(
-          AssignInfoComponent,
-          assignModel,
-          option
-        );
-        dialog.closed.subscribe((e) => {
-          if (afterSave && e?.event && e?.event[0]) {
-            var result = {
-              funcID: funcID,
-              result: e?.event,
-              data: data,
-            };
-            afterSave(result, that);
-          }
-        });
-        break;
-      }
+    switch (funcID) 
+    {
+     
     }
   }
 
