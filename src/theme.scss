@@ -258,6 +258,45 @@
         background-color: var(--scrollbar-thumb) !important;
     }
 
+    codx-header.header.align-items-stretch{
+        .btn.btn-active-light-primary {
+            border-color: var(--border-light) !important;
+            background-color: var(--primary-lighter) !important;
+            .svg-icon svg [fill]:not(.permanent):not(g) {
+                fill: var(--primary-dark)!important;
+                fill-opacity: 1!important;
+                opacity: 1!important;
+            }
+            .svg-icon svg{
+                opacity: 1!important;
+                fill-opacity: 1!important;
+                path{
+                    opacity: 1!important;
+                }
+                g{
+                    opacity: 1!important;
+                }
+            }
+        }
+        .btn.btn-active-light-primary:hover{
+            border-color: var(--primary) !important;
+            background-color: var(--primary) !important;
+            .svg-icon svg [fill]:not(.permanent):not(g) {
+                fill: var(--primary-inverse)!important;
+                fill-opacity: 1!important;
+              
+            }
+            .svg-icon svg{
+                path{
+                    opacity: 1!important;
+                }
+                g{
+                    opacity: 1!important;
+                }
+            }
+        }
+    }
+
     .aside {
         &.aside-light {
             background-color: var(--primary-darker);

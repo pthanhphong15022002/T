@@ -228,7 +228,7 @@ export class CalendarNotesComponent
             if (this.WP_Notes) {
               this.countNotePin = 0;
               this.codxShareSV.getDataWP_Notes_IsPin().subscribe((res: any) => {
-                if (res && res.length > 0) this.countNotePin = res.length;
+                if (res?.length > 0) this.countNotePin = res.length;
               });
             }
           } else if (type == 'edit') {
