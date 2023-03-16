@@ -375,10 +375,12 @@ export class PopupMoveStageComponent implements OnInit {
     if (idx >= 0) list.splice(idx, 1);
   }
   removeItemSuccess(list) {
+    debugger;
     let idx = list.findIndex((x) => x.isSuccessStep);
     if (idx >= 0) list.splice(idx, 1);
   }
   removeItemFail(list) {
+    debugger;
     let idx = list.findIndex((x) => x.isFailStep);
     if (idx >= 0) list.splice(idx, 1);
   }
@@ -412,8 +414,8 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   removeReasonInSteps(stepReason, listStepCbx){
-    stepReason.isUseFail && this.removeItemFail(listStepCbx);
-    stepReason.isUseSuccess && this.removeItemSuccess(listStepCbx);
+    // !stepReason.isUseFail && this.removeItemFail(listStepCbx);
+    // !stepReason.isUseSuccess && this.removeItemSuccess(listStepCbx);
   }
 
 }
