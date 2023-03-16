@@ -2953,11 +2953,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
         this.stepNameSuccess = this.iconReasonSuccess?.text;
         this.stepNameFail = this.iconReasonFail?.text;
-        this.stepNameReason = reasonValue.text;
-
-        this.stepNameSuccess = 'successs';
-        this.stepNameFail = 'fail';
-        this.stepNameReason = 'reason';
+        this.stepNameReason = reasonValue?.text;
         this.changeDetectorRef.detectChanges();
       }
     });
