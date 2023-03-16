@@ -124,8 +124,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   checkedSat: boolean = false;
   checkedSun: boolean = false;
   isClick: boolean = false;
-  stepNameSuccess: string = 'Thành công';
-  stepNameFail: string = 'Thất bại';
+  stepNameSuccess: string = '';
+  stepNameFail: string = '';
   reasonName: string = '';
   dataValueview: string = '';
   reasonAction: any;
@@ -148,8 +148,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly gridViewNameSteps: string = 'grvDPSteps';
   readonly formDurationCtrl: string = 'DurationControl';
   readonly formLeaTimeCtrl: string = 'LeadtimeControl';
-  readonly formEdit: string = 'edit'; // form edit
-  readonly formAdd: string = 'add'; // form add
+  readonly formEdit: string = 'edit'; // form edit for poup reason
+  readonly formAdd: string = 'add'; // form add for poup reason
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
@@ -172,6 +172,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
   listFileTask: string[] = [];
+  listIconReason=[];
+  iconReasonSuccess:any;
+  iconReasonFail:any;
 
   dayStep = 0;
   hourStep = 0;
@@ -303,6 +306,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.autoHandleStepReason();
     this.loadCbxProccess();
     this.getVllFormat();
+    this.getIconReason();
   }
 
   setDefaultOwner() {
@@ -335,7 +339,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.listTypeTask = res?.datas;
       }
     });
-
   }
 
   ngAfterViewInit(): void {
@@ -1702,12 +1705,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     if (this.actionStep == 'add' || this.actionStep == 'copy') {
       this.stepNew['stepName'] = this.stepName;
-      this.stepList.push(JSON.parse(JSON.stringify(this.stepNew)));   
+      this.stepList.push(JSON.parse(JSON.stringify(this.stepNew)));
       this.viewStepSelect(
         this.stepList.length > 0
           ? this.stepList[this.stepList?.length - 1 || 0]
           : []
-      );  
+      );
     } else {
       this.stepNew['stepName'] = this.stepName;
       this.stepNew['modifiedOn'] = new Date();
@@ -2013,6 +2016,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   clickMFStep(e: any, data: any) {
+    debugger;
     switch (e.functionID) {
       case 'SYS02':
         this.deleteStep(data);
@@ -2884,6 +2888,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         });
         this.viewStepSelect(this.stepList[0]);
+      }
+    });
+  }
+  getIconReason(){
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        this.iconReasonSuccess = res.datas.filter(x=> x.value === 'S')[0];
+        this.iconReasonFail = res.datas.filter(x=> x.value === 'F')[0];
+        this.stepNameSuccess = this.iconReasonSuccess?.text;
+        this.stepNameFail = this.iconReasonFail?.text;
       }
     });
   }
