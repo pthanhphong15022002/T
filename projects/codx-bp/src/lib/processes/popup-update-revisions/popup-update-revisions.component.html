@@ -1,31 +1,52 @@
-<codx-form [headerText]="titleAction" [subHeader]="subHeader" [formModel]="dialog.formModel" [data]="process"
-  [body]="body" [footer]="footer" [dialog]="dialog" #form>
+<codx-form
+  [headerText]="titleAction"
+  [subHeader]="subHeader"
+  [formModel]="dialog.formModel"
+  [data]="process"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  #form
+>
   <ng-template #body>
     <div *ngFor="let item of revisions; let i = index">
-      <div class="d-flex flex-row pb-3 mt-3 border-bottom justify-content-between">
+      <div
+        class="d-flex flex-row pb-3 mt-3 border-bottom justify-content-between"
+      >
         <div class="d-flex align-items-start w-100">
           <span class="me-2 icon-18 icon-history"></span>
           <div class="d-flex flex-column w-100">
             <div class="pb-1">
-              <div class="button-version" *ngIf="item.versionNo.startsWith('V0'); else firstVersionNo">
-                  <span class="text-dark fw-bold fs-5 button-version cursor-pointer" (click)="getProcessesStep(item)">
-                    {{firstNameVersion}}
-                  </span>
+              <div
+                class="button-version"
+                *ngIf="item.versionNo.startsWith('V0'); else firstVersionNo"
+              >
+                <span
+                  class="text-dark fw-bold fs-5 button-version cursor-pointer"
+                  (click)="getProcessesStep(item)"
+                >
+                  {{ firstNameVersion }}
+                </span>
               </div>
               <ng-template #firstVersionNo>
-                <div class="text-dark fw-bold fs-5 button-version cursor-pointer" (click)="getProcessesStep(item)">
-                  <span>{{item.versionName}}:</span>
-                  <span #versionNo>
-                    {{
-                    item?.versionNo
-                    | formatvalue
-                    : form.formModel
-                    : "versionNo"
-                    : versionNo
-                    : "Processes"
-                    : "grvProcesses"
-                    | async
-                    }}
+                <div
+                  class="text-dark fw-bold fs-5 button-version cursor-pointer"
+                  (click)="getProcessesStep(item)"
+                >
+                  <span>{{ item.versionName }}:</span>
+                  <span
+                    #versionNo
+                    [innerHTML]="
+                      item?.versionNo
+                        | formatvalue
+                          : form.formModel
+                          : 'versionNo'
+                          : versionNo
+                          : 'Processes'
+                          : 'grvProcesses'
+                        | async
+                    "
+                  >
                   </span>
                 </div>
               </ng-template>
@@ -33,58 +54,83 @@
             <div class="pb-1 d-flex">
               <ng-container *ngIf="isCheckNotUserNameLogin; else elseNotDone">
                 <div *ngFor="let itemUser of listUserShow">
-                  <span class="text-primary" *ngIf="itemUser.userID==item.createdBy && itemUser.postion==i">
-                    <codx-label name="lblCreatedBy" formName="ProcessRevisions"
-                    gridViewName="grvProcessRevisions" default="Cập nhật bởi"></codx-label>, {{ itemUser.userName }}
+                  <span
+                    class="text-primary"
+                    *ngIf="
+                      itemUser.userID == item.createdBy && itemUser.postion == i
+                    "
+                  >
+                    <codx-label
+                      name="lblCreatedBy"
+                      formName="ProcessRevisions"
+                      gridViewName="grvProcessRevisions"
+                      default="Cập nhật bởi"
+                    ></codx-label
+                    >, {{ itemUser.userName }}
                   </span>
                 </div>
               </ng-container>
               <ng-template #elseNotDone>
                 <span class="text-primary">
-                  <codx-label name="lblCreatedBy" formName="ProcessRevisions"
-                    gridViewName="grvProcessRevisions" default="Cập nhật bởi"></codx-label>, {{ userNameLogin }}
+                  <codx-label
+                    name="lblCreatedBy"
+                    formName="ProcessRevisions"
+                    gridViewName="grvProcessRevisions"
+                    default="Cập nhật bởi"
+                  ></codx-label
+                  >, {{ userNameLogin }}
                 </span>
               </ng-template>
               <span class="text-gray-500 mx-1"> |</span>
               <span class="text-primary">
-                {{item.createdOn| timefrom}}
+                {{ item.createdOn | timefrom }}
               </span>
             </div>
-            <div *ngIf="item?.comment" [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.comment)"></div>
-            <div *ngIf="!item?.comment" #comment>
-              {{
+            <div
+              *ngIf="item?.comment"
+              [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.comment)"
+            ></div>
+            <div
+              *ngIf="!item?.comment"
+              #comment
+              [innerHTML]="
                 item.comment
-                | formatvalue
-                : form.formModel
-                : "comment"
-                : comment
-                : "ProcessRevisions"
-                : "grvProcessRevisions"
-                | async
-                }}
-            </div>
+                  | formatvalue
+                    : form.formModel
+                    : 'comment'
+                    : comment
+                    : 'ProcessRevisions'
+                    : 'grvProcessRevisions'
+                  | async
+              "
+            ></div>
           </div>
         </div>
 
         <div class="d-flex flex-column w-125px min-w-125px px-3 ms-6">
           <div class="justify-content-end mb-2">
-            <codx-label fiedName="ActivedOn" formName="ProcessRevisions"
-              gridViewName="grvProcessRevisions" default="Ngày hiệu lực">
+            <codx-label
+              fiedName="ActivedOn"
+              formName="ProcessRevisions"
+              gridViewName="grvProcessRevisions"
+              default="Ngày hiệu lực"
+            >
             </codx-label>
           </div>
           <div class="justify-content-end">
-            <div #activedOn>
-              {{
-              item.activedOn | formatvalue
-              : form.formModel
-              : "activedOn"
-              : activedOn
-              : "Processes"
-              : "grvProcesses"
-              | async
-              }}
-            </div>
-
+            <div
+              #activedOn
+              [innerHTML]="
+                item.activedOn
+                  | formatvalue
+                    : form.formModel
+                    : 'activedOn'
+                    : activedOn
+                    : 'Processes'
+                    : 'grvProcesses'
+                  | async
+              "
+            ></div>
           </div>
         </div>
       </div>
@@ -94,7 +140,11 @@
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <button type="button" class="btn btn-primary" (click)="onClose()">
-        <codx-label name="Save" [formModel]="form.formModel" default="Ok"></codx-label>
+        <codx-label
+          name="Save"
+          [formModel]="form.formModel"
+          default="Ok"
+        ></codx-label>
       </button>
     </div>
   </ng-template>

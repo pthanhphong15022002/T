@@ -391,6 +391,7 @@ export class StagesDetailComponent implements OnInit {
                 this.taskGroupList[progress?.indexGroup]['progress'] =
                   progress?.average; // cập nhật tiến độ của cha
                 this.calculateProgressStep();
+                this.saveAssign.emit(true);
               }
             });
         } else {
@@ -400,6 +401,7 @@ export class StagesDetailComponent implements OnInit {
               if (taskData?.taskGroupID != taskGroupIdOld) {
                 this.changeGroupTask(taskData, taskGroupIdOld);
                 this.notiService.notifyCode('SYS007');
+                this.saveAssign.emit(true);
               }
             }
           });
@@ -427,6 +429,7 @@ export class StagesDetailComponent implements OnInit {
             progress.indexTask,
             1
           );
+          this.saveAssign.emit(true);
           this.notiService.notifyCode('SYS008');
           this.calculateProgressStep();
         }
@@ -665,6 +668,7 @@ export class StagesDetailComponent implements OnInit {
             this.notiService.notifyCode('SYS006');
             this.taskGroupList.splice(index - 1, 0, value);
             this.calculateProgressStep();
+            this.saveAssign.emit(true);
           }
         });
     } else {
@@ -675,6 +679,7 @@ export class StagesDetailComponent implements OnInit {
           this.notiService.notifyCode('SYS007');
           await this.copyValue(value, dataOld);
           this.calculateProgressStep();
+          this.saveAssign.emit(true);
         }
       });
     }
@@ -692,6 +697,7 @@ export class StagesDetailComponent implements OnInit {
             this.taskGroupList.splice(index, 1);
             this.notiService.notifyCode('SYS008');
             this.calculateProgressStep();
+            this.saveAssign.emit(true);
           }
         });
       }
@@ -765,6 +771,7 @@ export class StagesDetailComponent implements OnInit {
         this.notiService.notifyCode('SYS006');
         this.popupUpdateProgress.close();
         this.calculateProgressStep();
+        this.saveAssign.emit(true);
       }
     });
   }
@@ -778,6 +785,7 @@ export class StagesDetailComponent implements OnInit {
         this.notiService.notifyCode('SYS007');
         this.popupUpdateProgress.close();
         this.calculateProgressStep();
+        this.saveAssign.emit(true);
       } else {
         this.popupUpdateProgress.close();
       }
