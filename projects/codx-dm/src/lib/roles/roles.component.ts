@@ -249,7 +249,6 @@ export class RolesComponent implements OnInit {
     this.fileEditing = JSON.parse(JSON.stringify(this.dmSV.dataFileEditing));
     this.id = this.fileEditing.recID;
     this.folderName = this.fileEditing.folderName
-    debugger
     if (this.fileEditing.fileName ) this.type = 'file';
     else {
       if(!this.fileEditing.folderName) this.isNewFolder = true;
@@ -548,7 +547,6 @@ export class RolesComponent implements OnInit {
       .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
       .closed.subscribe((x) => {
         if (x.event.status == 'Y') {
-          debugger
           if (list == null) {
             if (this.fileEditing && this.fileEditing.permissions && this.fileEditing.permissions.length > 0) {
               this.fileEditing.permissions.splice(index, 1);//remove element from array
@@ -576,7 +574,7 @@ export class RolesComponent implements OnInit {
                   this.fileEditing = res.data;
                   this.codxView?.dataService.update(this.fileEditing).subscribe();
                   this.changePermission(0);
-                  this.changeDetectorRef.detectChanges();
+                  this.dmSV.fileEditing.next(this.fileEditing);
                 }
               });
             }

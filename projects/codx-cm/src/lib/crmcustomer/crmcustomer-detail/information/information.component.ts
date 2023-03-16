@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'codx-information',
@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InformationComponent implements OnInit {
 
-  isCheckView = true;
+  @Input() funcID = 'CM0101'; //True - Khách hàng; False - Liên hệ
 
   constructor() { }
 

@@ -126,8 +126,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   checkedSat: boolean = false;
   checkedSun: boolean = false;
   isClick: boolean = false;
-  stepNameSuccess: string = 'Thành công';
-  stepNameFail: string = 'Thất bại';
+  stepNameSuccess: string = '';
+  stepNameFail: string = '';
   reasonName: string = '';
   dataValueview: string = '';
   reasonAction: any;
@@ -150,8 +150,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly gridViewNameSteps: string = 'grvDPSteps';
   readonly formDurationCtrl: string = 'DurationControl';
   readonly formLeaTimeCtrl: string = 'LeadtimeControl';
-  readonly formEdit: string = 'edit'; // form edit
-  readonly formAdd: string = 'add'; // form add
+  readonly formEdit: string = 'edit'; // form edit for poup reason
+  readonly formAdd: string = 'add'; // form add for poup reason
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
 
@@ -174,6 +174,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
   listFileTask: string[] = [];
+  listIconReason=[];
+  iconReasonSuccess:any;
+  iconReasonFail:any;
 
   dayStep = 0;
   hourStep = 0;
@@ -311,6 +314,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.autoHandleStepReason();
     this.loadCbxProccess();
     this.getVllFormat();
+    this.getIconReason();
   }
 
   setDefaultOwner() {
@@ -2932,6 +2936,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         });
         this.viewStepSelect(this.stepList[0]);
+      }
+    });
+  }
+  getIconReason(){
+    this.cache.valueList('DP036').subscribe((res) => {
+      if (res.datas) {
+        this.iconReasonSuccess = res.datas.filter(x=> x.value === 'S')[0];
+        this.iconReasonFail = res.datas.filter(x=> x.value === 'F')[0];
+        this.stepNameSuccess = this.iconReasonSuccess?.text;
+        this.stepNameFail = this.iconReasonFail?.text;
       }
     });
   }

@@ -441,7 +441,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     });
   }
   openFormFuncID(val: any, datas: any = null, isData = false) {
-    debugger
     let that = this;
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
@@ -1116,7 +1115,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
   //Hủy yêu cầu xét duyệt
   cancelAproval(data: any) {
-    debugger
     //Có thiết lập duyệt
     if (data.bsCategory) {
       this.api
