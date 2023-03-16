@@ -1843,8 +1843,12 @@ erm-quick-links-inner .dropdown-menu{
   overflow: auto;
 }
 
-
-
+lib-dynamic-process .card-header.m-h-auto.p-0{
+  border: 0;
+}
+.card.rounded-2 .codx-image {
+  border-radius: 0.4rem 0.4rem 0 0!important;
+}
 .codx-form > .card-body, .e-dialog > .e-dlg-content .card-body {
   margin-right: 2px;
 }
