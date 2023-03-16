@@ -7,9 +7,12 @@
 }
 .chat-list-header{
     height: 100px;
+    max-height: 100px;
+
 }
 .chat-list-body{
     height: 500px;
+    max-height: 500px;
 }
 .chat-list-header_func{
     margin: 0px;
