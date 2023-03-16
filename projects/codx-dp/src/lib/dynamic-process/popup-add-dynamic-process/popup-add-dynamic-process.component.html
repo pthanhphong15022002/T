@@ -1294,31 +1294,7 @@
               >
               </codx-input>
             </div>
-            <div *ngIf="isSwitchReason && viewStepCrr  === viewStepReasonFail ">
-              <codx-input
-                class="test-check"
-                type="switch"
-                style="width: 100%"
-                field="isUsed"
-                [checked]="stepFail?.isUsed ?? true"
-                [crrValue]="stepFail?.isUsed"
-                (valueChange)="turnOnReason($event,viewStepReasonFail)"
-              >
-              </codx-input>
-            </div>
             <!-- more function step -->
-            <div *ngIf="isSwitchReason && viewStepCrr === viewStepReasonSuccess">
-              <codx-input
-                class="test-check"
-                type="switch"
-                style="width: 100%"
-                field="isUsed"
-                [checked]="stepSuccess?.isUsed ?? true"
-                [crrValue]="stepSuccess?.isUsed"
-                (valueChange)="turnOnReason($event, viewStepReasonSuccess)"
-              >
-              </codx-input>
-            </div>
             <div *ngIf="isSwitchReason && viewStepCrr === viewStepReasonFail">
               <codx-input
                 class="test-check"

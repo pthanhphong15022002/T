@@ -322,7 +322,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.grvMoreFunction = await this.getFormModel('DPT040102');   
+    this.grvMoreFunction = await this.getFormModel('DPT040102');
     this.grvStep = await this.getFormModel('DPS0103');
     this.getTitleStepViewSetup();
     this.initForm();
@@ -442,6 +442,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             .subscribe((totalInstance) => {
               if (totalInstance) {
                 res.update.totalInstance = totalInstance;
+                this.dialog.close(res.update);
+              }
+              else {
                 this.dialog.close(res.update);
               }
             });
@@ -1585,7 +1588,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               task: taskGroupList[taskGroup['recID']] ?? [],
             };
           });
-          step['taskGroups'] = taskGroupConvert;        
+          step['taskGroups'] = taskGroupConvert;
 
           if (step['taskGroups']?.length > 0 || step['tasks']?.length > 0) {
             let taskGroup = new DP_Steps_TaskGroups();
@@ -1693,7 +1696,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     if (this.actionStep == 'add' || this.actionStep == 'copy') {
       this.stepNew['stepName'] = this.stepName;
-      this.stepList.push(JSON.parse(JSON.stringify(this.stepNew)));     
+      this.stepList.push(JSON.parse(JSON.stringify(this.stepNew)));
     } else {
       this.stepNew['stepName'] = this.stepName;
       this.stepNew['modifiedOn'] = new Date();
@@ -2824,7 +2827,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.listCbxProccess.unshift(obj);
             if(this.action === 'edit') {
               this.listCbxProccess = this.listCbxProccess.filter(x => x.recID !== this.process?.recID );
-            } 
+            }
           }
         });
     });
