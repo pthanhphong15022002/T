@@ -3,7 +3,7 @@
     [footer]="tabs">
     <ng-template #header let-data>
       <div class="container_detail mt-3">
-        <div class="d-flex flex-grow-1 mb-4">
+        <div class="d-flex flex-grow-1 mb-4" *ngIf="funcID == 'CM0101'">
           <div class="me-3">
             <codx-img [objectId]="
               dataSelected.recID
@@ -29,8 +29,8 @@
             </div>
           </div>
         </div>
-        <div class="d-flex align-items-start">
-          <div class="me-3" style="white-space: nowrap">
+        <div [ngClass]="funcID == 'CM0101' ? 'd-flex align-items-start' : ''">
+          <div class="me-3" style="white-space: nowrap" *ngIf="funcID == 'CM0101'">
             <codx-label class="text-dark" fiedName="Memo" [formModel]="formModel" default="Liên hệ: "></codx-label>
           </div>
           <div class="d-flex flex-grow-1 mb-4">
@@ -43,19 +43,28 @@
               </codx-img>
             </div>
             <div class="d-flex flex-column flex-grow-1">
-              <div class="d-flex flex-column">
-                <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
-                  Trương Đặng Ngọc Phúc
+              <div [ngClass]="funcID == 'CM0102' ? 'd-flex justify-content-between' : ''">
+                <div class="d-flex flex-column">
+                  <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+                    Trương Đặng Ngọc Phúc
+                  </div>
+                  <div class="d-flex align-items-start me-4 mb-1">
+                    <div class="me-3">
+                      <span class="icon-phone_android text-primary icon-16 me-1"></span>
+                      <span class="text-gray-900">0702411141</span>
+                    </div>
+                    <div>
+                      <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
+                      <span class="text-gray-900">tdnphuck42@gmail.com</span>
+                    </div>
+                  </div>
+                  <div class="me-4 mb-1" *ngIf="funcID == 'CM0102'">
+                    <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
+                    <span class="text-gray-900">Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
+                  </div>
                 </div>
-                <div class="d-flex align-items-start me-4 mb-1">
-                  <div class="me-3">
-                    <span class="icon-phone_android text-primary icon-16 me-1"></span>
-                    <span class="text-gray-900">0702411141</span>
-                  </div>
-                  <div>
-                    <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
-                    <span class="text-gray-900">tdnphuck42@gmail.com</span>
-                  </div>
+                <div *ngIf="funcID == 'CM0102'" class="d-flex flex-column align-items-start">
+                  Tag
                 </div>
               </div>
             </div>
@@ -70,7 +79,8 @@
                       ' ' +
                       (item.isActive ? 'tab-active' : '')
                     ">
-                  <span [class]="item.isActive ? (item.icon + ' text-primary' + ' icon-16 me-1 text-gray-800') : (item.icon + ' icon-16 me-1 text-gray-800')"></span>
+                  <span
+                    [class]="item.isActive ? (item.icon + ' text-primary' + ' icon-16 me-1 text-gray-800') : (item.icon + ' icon-16 me-1 text-gray-800')"></span>
                   <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
                     (click)="clickMenu(item)">
                   </codx-label>
@@ -78,36 +88,33 @@
               </ng-container>
             </div>
           </div>
-          <hr />
-
         </div>
       </div>
     </ng-template>
     <ng-template #body let-data>
-      <div class="view-details-content m-0 mt-2">
-        <div class="process-views-detail" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
-          data-kt-scroll-height="auto" data-kt-scroll-dependencies=".popup-process-header"
-          data-kt-scroll-wrappers=".process-body .no-header" [attr.data-kt-scroll-offset]="'0px'">
-          <ng-container *ngIf="nameDetail == 'Information'">
+      <div id="viewModeDetail" class="view-step-box">
+        <ng-container *ngIf="nameDetail == 'Information'">
             <div class="d-flex flex-column">
               <div class="mb-3">
-                <div class="mb-2">
+                <div class="mb-3">
                   <codx-label class="text-dark fw-bold" name="lblInformation" default="Thông tin chung">
                   </codx-label>
                 </div>
-                <codx-information></codx-information>
+                <codx-information [funcID]="funcID"></codx-information>
               </div>
               <div class="mb-3">
-                <div class="mb-2">
+                <div class="mb-3">
                   <codx-label class="text-dark fw-bold" name="lblMemo" default="Mô tả">
                   </codx-label>
                 </div>
                 <div>
-                  Được biết, anh và 2 người bạn của mình không những mừng 100$ rồi quẩy các kiểu con đà điểu tại đám cưới mà còn ăn no nê, chén chú chén anh “23 zô 23 zô, uống bao nhiêu, uống hết…”, say tới bến cùng quan viên 2 họ đến nỗi cô dâu xúc động khóc hết nước mắt…
+                  Được biết, anh và 2 người bạn của mình không những mừng 100$ rồi quẩy các kiểu con đà điểu tại đám
+                  cưới mà còn ăn no nê, chén chú chén anh “23 zô 23 zô, uống bao nhiêu, uống hết…”, say tới bến cùng
+                  quan viên 2 họ đến nỗi cô dâu xúc động khóc hết nước mắt…
                 </div>
               </div>
               <div class="mb-3">
-                <div class="mb-2">
+                <div class="mb-3">
                   <codx-label class="text-dark fw-bold" name="lblAddress" default="Thông tin địa chỉ">
                   </codx-label>
                 </div>
@@ -118,16 +125,21 @@
             </div>
           </ng-container>
           <ng-container *ngIf="nameDetail == 'Contact'">
-            <ng-container>Liên hệ </ng-container>
+            <ng-container [ngTemplateOutlet]="contacts">
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="nameDetail == 'Task'">
+            <ng-container>Công việc </ng-container>
           </ng-container>
           <ng-container *ngIf="nameDetail == 'Opportunity'">
-            <ng-container>Cơ hội </ng-container>
+            <ng-container [ngTemplateOutlet]="opportunity">
+            </ng-container>
           </ng-container>
           <ng-container *ngIf="nameDetail == 'Product'">
-            <ng-container>Sản phẩm đã mua </ng-container>
+            <ng-container [ngTemplateOutlet]="product">
+            </ng-container>
           </ng-container>
         </div>
-      </div>
     </ng-template>
     <ng-template #tabs let-data>
       <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel" [TabControl]="tabControl"
@@ -135,3 +147,123 @@
     </ng-template>
   </codx-detail-tmp>
 </ng-container>
+
+<ng-template #contacts>
+  <div class="row mb-2">
+    <div class="col-4 d-flex">
+      <div class="me-3">
+        <codx-img [objectId]="
+          dataSelected.recID
+          " [objectName]="
+          dataSelected?.processName
+          " objectType="AD_Users" [width]="35">
+        </codx-img>
+      </div>
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex flex-column">
+            <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
+              {{dataSelected?.processName}}
+            </div>
+            <div class="me-4">
+              <span class="icon-location_on icon-16 me-1 text-gray-700"></span>
+              <span class="text-gray-900">Xã phú mậu, thành phố Huế, Thừa thiên Huế</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4 d-flex flex-column">
+      <div class="mb-1">
+        <span class="icon-phone_android text-primary icon-16 me-1"></span>
+        <span class="text-gray-900">0702411141</span>
+      </div>
+      <div>
+        <span class="icon-print_disabled icon-16 me-1 text-gray-500"></span>
+        <span class="text-gray-900">tdnphuck42@gmail.com</span>
+      </div>
+    </div>
+    <div class="col-4 d-flex flex-column">
+      <div class="mb-1">
+        Liên hệ đặt hàng
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #opportunity>
+  <div class="d-flex justify-content-between">
+    <div class="d-flex flex-column">
+      <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+        Trương Đặng Ngọc Phúc
+      </div>
+      <div class="d-flex align-items-start me-4 mb-1">
+        <div class="me-3">
+          <span class="icon-money icon-16 me-1"></span>
+          <codx-label class="text-gray-600" name="lblNumber" default="Doanh số kỳ vọng: "></codx-label>
+          <span class="ms-1">50.000.000 VND</span>
+        </div>
+        <div>
+          <span class="">%</span>
+          <codx-label class="text-gray-600" name="lblNumber" default="Tỷ lệ thành công: "></codx-label>
+          <span class="ms-1">70%</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex align-items-top">
+      <div class="d-flex flex-column">
+        <div class="badge badge-primary">Giới thiệu sản phẩm</div>
+        <div class="ms-5">
+          <span class="icon-money icon-16 me-1"></span>
+          <span class="text-gray-500 my-2">23/04/2023</span>
+        </div>
+      </div>
+      <div class="ms-3">
+        <codx-imgs
+          [isToolTip]="true"
+          [width]="35"
+          [objectId]="'ADMIN'"
+          ojectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #product>
+  <div class="row mb-2">
+    <div class="col-4 d-flex">
+      <div class="me-3">
+        <h3>1</h3>
+      </div>
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex flex-column">
+            <div class="fw-bold fs-6 text-dark codx-text-overflow-1line mb-1">
+              Văn phòng ABC
+            </div>
+            <div class="me-4">
+              <span class="text-gray-500">Dịch vụ cho thuê văn phòng</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4 d-flex flex-column">
+      <div class="">
+        <span class="icon-shopping_bag icon-16 me-2"></span>
+        <codx-label class="text-gray-500" name="lblQuantity" default="Số lượng: "></codx-label>
+        <span class="me-2">12 cái</span>
+      </div>
+    </div>
+    <div class="col-4 d-flex flex-column">
+      <div class="">
+        <span class="icon-attach_money icon-16 me-2"></span>
+        <codx-label class="text-gray-500" name="lblQuantity" default="Doanh thu: "></codx-label>
+        <span class="me-2">50.000.000 VND</span>
+      </div>
+    </div>
+  </div>
+</ng-template>

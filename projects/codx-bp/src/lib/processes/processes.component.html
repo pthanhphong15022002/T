@@ -32,14 +32,7 @@
               (mouseenter)="PopoverDetail($event, p, data)" (mouseleave)="p.close()" placement="bottom right top"
               [popoverClass]="data.recID">
               {{
-              data?.processName
-              | formatvalue
-              : view.formModel
-              : "processName"
-              : processName
-              : "Processes"
-              : "grvProcesses"
-              | async
+              data.processName
               }}
             </div>
           </div>
@@ -58,17 +51,10 @@
         <div class="d-flex align-items-center mt-1">
           <div class="badge badge-white me-3">{{ data?.versionNo }}</div>
           <div class="d-flex align-items-center card-icon-nowrap">
-            <span class="me-1 icon-16 icon-access_alarm"></span><span class="line-clamp" #activedOn>
-              {{
-              data.activedOn
-              | formatvalue
-              : view.formModel
-              : "activedOn"
-              : activedOn
-              : "Processes"
-              : "grvProcesses"
-              | async
-              }}
+            <span class="me-1 icon-16 icon-access_alarm"></span><span class="line-clamp" [innerHTML]="
+            data.activedOn | formatvalue : view.formModel : 'ActivedOn' | async
+            ">
+
             </span>
           </div>
         </div>
@@ -139,13 +125,7 @@
             placement="bottom right top" [popoverClass]="data.recID">
             {{
             data?.processName
-            | formatvalue
-            : view.formModel
-            : "processName"
-            : processName
-            : "Processes"
-            : "grvProcesses"
-            | async
+
             }}
           </div>
         </div>
@@ -202,64 +182,27 @@
       </div>
     </td>
     <td class="rowphoto">
-      <div #versionNo>
-        {{
-        data.versionNo
-        | formatvalue
-        : view.formModel
-        : "versionNo"
-        : versionNo
-        : "Processes"
-        : "grvProcesses"
-        | async
-        }}
+      <div [innerHTML]="
+      data.versionNo | formatvalue : view.formModel : 'VersionNo' | async
+      ">
       </div>
     </td>
     <td class="rowphoto" (mouseenter)="closePopover()">
-      <div #activedOn>
-        {{
-        data.activedOn
-        | formatvalue
-        : view.formModel
-        : "activedOn"
-        : activedOn
-        : "Processes"
-        : "grvProcesses"
-        | async
-        }}
+      <div [innerHTML]="
+      data.activedOn | formatvalue : view.formModel : 'ActivedOn' | async
+      ">
+
       </div>
     </td>
     <td class="rowphoto">
       <div *ngIf="data.memo">
-        <div class="line-clamp process-name" #memo [ngbPopover]="setTextPopover(data?.memo)" #p="ngbPopover"
+        <div class="line-clamp process-name" [ngbPopover]="setTextPopover(data?.memo)" #p="ngbPopover"
           [openDelay]="500" (mouseenter)="PopoverDetail($event,p, data)" (mouseleave)="p.close()"
-          placement="bottom right top" [popoverClass]="data.recID" [ngClass]="data.recID">
-          {{
-          data?.memo
-          | formatvalue
-          : view.formModel
-          : "memo"
-          : memo
-          : "Processes"
-          : "grvProcesses"
-          | async
-          }}
+          placement="bottom right top" [popoverClass]="data.recID" [ngClass]="data.recID" >
+          <span [innerHTML]="
+          data.memo | formatvalue : view.formModel : 'Memo' | async
+          "></span>
         </div>
-      </div>
-      <div *ngIf="!data.memo">
-        <div #memo>
-          {{
-          data?.memo
-          | formatvalue
-          : view.formModel
-          : "memo"
-          : memo
-          : "Processes"
-          : "grvProcesses"
-          | async
-          }}
-        </div>
-
       </div>
     </td>
     <td class="rowphoto" (mouseenter)="closePopover()">
@@ -390,12 +333,10 @@
             <!--begin::Author-->
             <div class="d-flex align-items-center justify-content-center">
               <div class="d-flex align-items-center card-icon-nowrap me-3">
-                <span class="me-1 icon-16 icon-access_alarm"></span><span class="line-clamp" #activedOn>
-                  {{
-                  item?.activedOn
-                  | formatvalue : view.formModel : "activedOn" : activedOn
-                  | async
-                  }}
+                <span class="me-1 icon-16 icon-access_alarm"></span><span class="line-clamp" [innerHTML]="
+                item.activedOn | formatvalue : view.formModel : 'ActivedOn' | async
+                ">
+
                 </span>
               </div>
               <div class="d-flex align-items-center card-icon-nowrap px-4 me-2">
