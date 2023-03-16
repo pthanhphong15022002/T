@@ -195,6 +195,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   actionStep = '';
   isSaveStep = false;
   processNameBefore = '';
+  strDay = ' ngày ';
+  strHour = ' giờ ';
   //end stage-nvthuan
   moreDefaut = {
     share: true,

@@ -1305,7 +1305,7 @@
           >
             <div class="order">{{ i + 1 }}</div>
             <div class="d-flex flex-column">
-              <div class="fw-bold text-dark">{{ itemStep?.stepName }}</div>
+              <div class="fw-bold text-dark line-clamp line-clamp-1">{{ itemStep?.stepName }}</div>
 
               <div class="text-gray-500">
                 Thời hạn:
@@ -1460,6 +1460,7 @@
             <codx-label
               fiedName="taskMemo"
               default="Công việc mặc định người phụ trách phải thực hiện trong giai đoạn"
+              [formModel]="dialog.formModel"
             >
             </codx-label>
           </div>
@@ -1470,12 +1471,13 @@
               <codx-label
                 fiedName="taskMemo"
                 default="Thời hạn công việc so với giai đoạn"
+                [formModel]="dialog.formModel"
               >
               </codx-label>
             </div>
             <div class="text-primary">
-              {{ dayStep }} ngày {{ hourStep }} giờ /
-              {{ step?.durationDay }} ngày {{ step?.durationHour }} giờ
+              {{ dayStep + strDay + hourStep + strHour}}/
+              {{ step?.durationDay + strDay + step?.durationHour + strHour }}
             </div>
           </div>
           <div class="d-flex align-items-center ms-5">
