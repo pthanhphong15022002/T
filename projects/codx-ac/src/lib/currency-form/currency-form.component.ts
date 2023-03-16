@@ -155,14 +155,6 @@ export class CurrencyFormComponent extends UIComponent {
           option
         );
       });
-    this.dialog.closed.subscribe((x) => {
-      if (x.event == null && this.view.dataService.hasSaved)
-        this.view.dataService
-          .delete([this.view.dataService.dataSelected])
-          .subscribe((x) => {
-            this.dt.detectChanges();
-          });
-    });
   }
   copy(e, data) {
     if (data) {
@@ -185,14 +177,6 @@ export class CurrencyFormComponent extends UIComponent {
           option
         );
       });
-    this.dialog.closed.subscribe((x) => {
-      if (x.event == null && this.view.dataService.hasSaved)
-        this.view.dataService
-          .delete([this.view.dataService.dataSelected])
-          .subscribe((x) => {
-            this.dt.detectChanges();
-          });
-    });
   }
   delete(data) {
     if (data) {

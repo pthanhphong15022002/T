@@ -27,7 +27,9 @@ import {
   RequestOption,
   Util,
   NotificationsService,
+  DataRequest,
 } from 'codx-core';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Instances } from '../models/models';
 import { InstanceDetailComponent } from './instance-detail/instance-detail.component';
@@ -109,8 +111,10 @@ export class InstancesComponent
   viewModeDetail = 'S';
   totalInstance: number = 0;
   itemSelected: any;
-  stepSuccess:any;
-  stepFail:any;
+  stepSuccess: any;
+  stepFail: any;
+  viewType = 'd';
+
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   constructor(
     private inject: Injector,
@@ -132,8 +136,10 @@ export class InstancesComponent
         });
     });
     this.dataProccess = dt?.data?.data;
-    this.stepSuccess = this.dataProccess.steps.filter( (x) => x.isSuccessStep)[0];
-    this.stepFail = this.dataProccess.steps.filter( (x) => x.isFailStep)[0];
+    this.stepSuccess = this.dataProccess.steps.filter(
+      (x) => x.isSuccessStep
+    )[0];
+    this.stepFail = this.dataProccess.steps.filter((x) => x.isFailStep)[0];
     this.isUseSuccess = this.stepSuccess.isUsed;
     this.isUseFail = this.stepFail.isUsed;
   }
@@ -176,7 +182,10 @@ export class InstancesComponent
       showInstanceControl: this.process?.showInstanceControl
         ? this.process?.showInstanceControl
         : '2',
-      hiddenInstanceReason: this.getListStatusInstance(this.isUseSuccess, this.isUseFail),
+      hiddenInstanceReason: this.getListStatusInstance(
+        this.isUseSuccess,
+        this.isUseFail
+      ),
     };
 
     // if(this.process.steps != null && this.process.steps.length > 0){
@@ -465,6 +474,10 @@ export class InstancesComponent
       case 'DP15':
         this.openOrClosed(data, false);
         break;
+      //export File
+      case 'DP16':
+        this.exportFile();
+        break;
     }
   }
 
@@ -569,7 +582,8 @@ export class InstancesComponent
             break;
           case 'DP02':
             let isUpdateFail = data.write;
-            if ( !isUpdateFail ||
+            if (
+              !isUpdateFail ||
               (data.status !== '1' && data.status !== '2') ||
               data.closed ||
               !this.isUseFail
@@ -580,7 +594,8 @@ export class InstancesComponent
             break;
           case 'DP10':
             let isUpdateSuccess = data.write;
-            if ( !isUpdateSuccess ||
+            if (
+              !isUpdateSuccess ||
               (data.status !== '1' && data.status !== '2') ||
               data.closed ||
               !this.isUseSuccess
@@ -666,6 +681,7 @@ export class InstancesComponent
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
+    this.viewType = 'p';
     let popup = this.callFunc.openForm(
       this.popDetail,
       '',
@@ -676,6 +692,9 @@ export class InstancesComponent
       '',
       option
     );
+    popup.closed.subscribe((e) => {
+      this.viewType = 'd';
+    });
   }
 
   dropInstance(data) {
@@ -734,9 +753,12 @@ export class InstancesComponent
   // end code
 
   #region;
-  moveStage(dataMore, data, instanceStep) {
+  moveStage(dataMore, data, listStepCbx) {
     if (!this.isClick) {
       return;
+    }
+    if (listStepCbx.length == 0 || listStepCbx == null) {
+      listStepCbx = this.listSteps;
     }
     this.isClick = false;
     this.crrStepID = data.stepID;
@@ -753,20 +775,23 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
+            var stepReason = {
+              isUseFail: this.isUseFail,
+              isUseSuccess: this.isUseSuccess,
+            };
             var obj = {
               stepName: this.getStepNameById(data.stepID),
               formModel: formMD,
               instance: data,
-              listStepCbx: this.listSteps,
-              instanceStep: instanceStep,
+              listStepCbx: listStepCbx,
               stepIdClick: this.stepIdClick,
-              // stepReason: stepReason1
+              stepReason: stepReason,
             };
             var dialogMoveStage = this.callfc.openForm(
               PopupMoveStageComponent,
               '',
+              850,
               900,
-              950,
               '',
               obj
             );
@@ -789,6 +814,7 @@ export class InstancesComponent
                 this.detailViewInstance.instance = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
                 this.view.dataService.update(data).subscribe();
+                if (this.kanban) this.kanban.updateCard(data);
                 this.detectorRef.detectChanges();
               }
             });
@@ -813,9 +839,7 @@ export class InstancesComponent
             formMD.entityName = fun.entityName;
             formMD.formName = fun.formName;
             formMD.gridViewName = fun.gridViewName;
-            let reason = isMoveSuccess
-              ? this.stepSuccess
-              : this.stepFail;
+            let reason = isMoveSuccess ? this.stepSuccess : this.stepFail;
             var obj = {
               dataMore: dataMore,
               headerTitle: fun.defaultName,
@@ -844,8 +868,8 @@ export class InstancesComponent
                 //xu ly data đổ về
                 data = e.event.instance;
                 this.listStepInstances = e.event.listStep;
-                if(data.refID !== this.guidEmpty) {
-                  this.valueListID.emit(data.refID)
+                if (data.refID !== this.guidEmpty) {
+                  this.valueListID.emit(data.refID);
                 }
                 if (e.event.isReason != null) {
                   this.moveReason(null, data, e.event.isReason);
@@ -853,6 +877,7 @@ export class InstancesComponent
                 this.dataSelected = data;
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.view.dataService.update(data).subscribe();
+                if (this.kanban) this.kanban.updateCard(data);
                 this.detectorRef.detectChanges();
               }
             });
@@ -893,7 +918,7 @@ export class InstancesComponent
       .map((x) => x.stepName)[0];
   }
   clickMoreFunc(e) {
-    //   this.lstStepInstances = e.lstStepInstance;
+    this.lstStepInstances = e.lstStepCbx;
     this.clickMF(e.e, e.data);
   }
   changeMF(e) {
@@ -908,7 +933,9 @@ export class InstancesComponent
           processName: data.datas[0].default,
         };
         this.listProccessCbx.unshift(obj);
-        this.listProccessCbx = this.listProccessCbx.filter(x => x !== this.dataProccess.recID );
+        this.listProccessCbx = this.listProccessCbx.filter(
+          (x) => x !== this.dataProccess.recID
+        );
       });
     });
   }
@@ -918,18 +945,39 @@ export class InstancesComponent
     return total;
   }
 
-  getListStatusInstance(isSuccess: boolean, isFail: boolean){
-    if(!isSuccess && !isFail)
-    {
+  getListStatusInstance(isSuccess: boolean, isFail: boolean) {
+    if (!isSuccess && !isFail) {
       return '1;2';
-    }
-    else if(!isSuccess) {
+    } else if (!isSuccess) {
       return '3;4';
-    }
-    else if(!isFail) {
+    } else if (!isFail) {
       return '5;6';
     }
     return '';
   }
   #endregion;
+
+  //Export file
+  exportFile() {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //
+    this.callfc.openForm(
+      CodxExportComponent,
+      null,
+      null,
+      800,
+      '',
+      [gridModel, this.dataSelected.recID],
+      null
+    );
+  }
 }

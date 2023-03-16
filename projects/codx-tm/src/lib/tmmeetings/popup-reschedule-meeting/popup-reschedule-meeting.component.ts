@@ -80,7 +80,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
     this.tmSv
       .getResourcesTrackEvent(
         this.meeting.meetingID,
-        this.meeting.resources,
+        this.meeting.permissions,
         this.meeting.startDate.toUTCString(),
         this.meeting.endDate.toUTCString()
       )
