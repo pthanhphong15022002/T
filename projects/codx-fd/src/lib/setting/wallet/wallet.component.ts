@@ -61,6 +61,7 @@ export class WalletComponent extends UIComponent implements OnInit {
       if (res) this.functionList = res;
     });
   }
+
   onInit(): void {
     this.LoadData();
     this.LoadDataPolicies('2');
@@ -82,12 +83,15 @@ export class WalletComponent extends UIComponent implements OnInit {
         }
       });
   }
+
   getItems(category) {
     return this.policyList.filter((item) => item.category === category);
   }
+
   backLocation() {
     this.location.back();
   }
+
   LoadDetailPolicy(category, recID) {
     this.codxService.navigate('', 'fd/detailpolicy', {
       type: 'wallet',
@@ -97,15 +101,18 @@ export class WalletComponent extends UIComponent implements OnInit {
       recID: recID,
     });
   }
+
   changValueListPopup(e) {
     this.objectUpdateCoin[e.field] = e.data;
     this.fieldUpdateCoin = e.field;
   }
+
   valueChangeVoucher(e) {
     if (e) {
       this.objectUpdateCoin[e.field] = e.data;
     }
   }
+
   valueChange(e) {
     if (e) {
       var dt = e.data == true ? '1' : '0';
@@ -117,19 +124,23 @@ export class WalletComponent extends UIComponent implements OnInit {
       this.handleSaveParameter();
     }
   }
+
   onSavePopupCombobx() {
     // this.objectUpdateCoin['MaxCoinsForEGift'] = this.quantity.MaxCoinsForEGift;
     // this.objectUpdateCoin['MaxCoinsForEGiftPeriod'] =
     //   this.quantity.MaxCoinsForEGiftPeriod;
     this.onSaveCMParameter(this.objectUpdateCoin);
   }
+
   emptyObjectUpdate() {
     this.objectUpdateCoin = {};
     this.modalService.dismissAll();
   }
+
   // handleTrueFalse(value) {
   //   return value == '1' ? true : false;
   // }
+
   title: any;
   description: any;
   field: any;
@@ -224,6 +235,7 @@ export class WalletComponent extends UIComponent implements OnInit {
     //   queryParams: { funcID: 'FED204', page: page },
     // });
   }
+
   openFormChangeCoin(content, typeContent) {
     this.fieldUpdateCoin = typeContent;
     this.objectUpdateCoin[this.fieldUpdateCoin] =
@@ -246,51 +258,41 @@ export class WalletComponent extends UIComponent implements OnInit {
   getdatas(category) {
     return this.policyList.filter((data) => data.category === category);
   }
+
   handleSaveParameter() {
     this.onSaveCMParameter(this.objectUpdateCoin);
   }
+
   onSaveCMParameter(objectUpdate) {
     this.api
-      .callSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'SaveParamsOfPolicyAsync',
-        ['FDParameters', null, JSON.stringify(objectUpdate)]
-      )
-      .subscribe((res) => {
-        if (res && res.msgBodyData.length > 0) {
-          if (res.msgBodyData[0] === true) {
-            for (const property in objectUpdate) {
-              this.quantity[property] = objectUpdate[property];
+      .callSv('SYS', 'ERM.Business.SYS', 'SettingValuesBusiness', 'SaveParamsOfPolicyAsync',
+        ['FDParameters', null, JSON.stringify(objectUpdate)]).subscribe((res) => {
+          if (res && res.msgBodyData.length > 0) {
+            if (res.msgBodyData[0] === true) {
+              for (const property in objectUpdate) {
+                this.quantity[property] = objectUpdate[property];
+              }
+              this.changedr.detectChanges();
+              this.objectUpdateCoin = {};
             }
-            this.changedr.detectChanges();
-            this.objectUpdateCoin = {};
           }
-        }
-      });
+        });
     this.modalService.dismissAll();
   }
 
   LoadDataPolicies(category) {
     let applyFor = '1';
     let cardType = null;
-    this.api
-      .call(
-        'ERM.Business.FD',
-        'SettingsBusiness',
-        'GetDataForPolicyCoinDedicationAsync',
-        [cardType, category, applyFor]
-      )
-      .subscribe((res) => {
+    this.api.call('ERM.Business.FD', 'SettingsBusiness', 'GetDataForPolicyCoinDedicationAsync',
+      [cardType, category, applyFor]).subscribe((res) => {
         if (res && res.msgBodyData.length > 0) {
           this.policyList = [...this.policyList, ...res.msgBodyData[0]];
         }
       });
   }
+
   openPopupSettingCycleRun(applyFor) {
-    this.scheduledTasks =
-      applyFor == '4' ? this.scheduledTasks_CoCoin : this.scheduledTasks_KuDos;
+    this.scheduledTasks = applyFor == '4' ? this.scheduledTasks_CoCoin : this.scheduledTasks_KuDos;
     this.applyFor = applyFor;
     this.changedr.markForCheck();
     var obj = {
@@ -299,46 +301,32 @@ export class WalletComponent extends UIComponent implements OnInit {
     let option = new DialogModel();
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
-    this.callfc.openForm(
-      SettingCycleComponent,
-      '',
-      600,
-      400,
-      '',
-      obj,
-      '',
-      option
-    );
+    this.callfc.openForm(SettingCycleComponent, '', 600, 400, '', obj, '', option);
   }
+
   saveSettingCycleRun() {
-    this.api
-      .execSv('SYS', 'AD', 'ScheduledTasksBusiness', 'AddUpdateAsync', [
-        this.scheduledTasks,
-      ])
-      .subscribe((result) => {
-        if (result) {
-        }
-      });
+    this.api.execSv('SYS', 'AD', 'ScheduledTasksBusiness', 'AddUpdateAsync', [this.scheduledTasks,]).subscribe((result) => {
+      if (result) {
+      }
+    });
   }
+
   getSettingRunPolicyCoCoin() {
     this.getSettingRunPolicy('4').subscribe((result) => {
       this.scheduledTasks_CoCoin = result;
     });
   }
+
   getSettingRunPolicyKuDos() {
     this.getSettingRunPolicy('5').subscribe((result) => {
       this.scheduledTasks_KuDos = result;
     });
   }
+
   getSettingRunPolicy(applyFor: string) {
-    return this.api.execSv<any>(
-      'SYS',
-      'AD',
-      'AlertRulesBusiness',
-      'GetSettingRunPolicyAsync',
-      ['RefreshWallet', applyFor]
-    );
+    return this.api.execSv<any>('SYS', 'AD', 'AlertRulesBusiness', 'GetSettingRunPolicyAsync', ['RefreshWallet', applyFor]);
   }
+
   valueChangePolicyCoin(applyFor) {
     if (applyFor == '4') {
       var coCoin = JSON.parse(JSON.stringify(this.scheduledTasks_CoCoin));

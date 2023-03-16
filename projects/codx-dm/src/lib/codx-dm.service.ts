@@ -60,7 +60,7 @@ export class CodxDMService {
   public titelRenamemessage = 'Bạn có muốn lưu với tên {0} không ?';
   public FOLDER_NAME = 'DM'; //"QUẢN LÝ TÀI LIỆU CÁ NHÂN";
   public titleEmptyTrash30 =
-    'Các mục trong thùng rác sẽ xóa vĩnh viễn trong 30 ngày';
+    'Các mục trong thùng rác sẽ xóa vĩnh viễn trong';
     public titleDeleteeMessage =
     'Bạn có muốn xóa hẳn {0} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?';
   public titleEmptyAction = 'Dọn sạch thùng rác';
@@ -86,7 +86,7 @@ export class CodxDMService {
   public parentFull = true;
   public parentCreate = true;
   public parentRead = true;
-  public versionControl = true;
+  public paraSetting : any;
   public parentUpdate = true;
   public parentShare = true;
   public parentDownload = true;
@@ -828,7 +828,7 @@ export class CodxDMService {
               break;
             case 'DMT0218': // quan ly version
               if(!data.write || !data.revision) e[i].isblur = true; // duoc view
-              if(!data.folderId && this.versionControl) e[i].isblur = false;
+              if(!data.folderId && this.paraSetting.VersionControl) e[i].isblur = false;
               break;
 
             // case "DMT0220": // persmission file
@@ -1013,12 +1013,12 @@ export class CodxDMService {
     recId: string,
     id: string,
     status: string,
-    isActive: boolean
+    isActive: boolean,
   ) {
     //
     if (type == 'file') {
       this.fileService
-        .UpdateRequestAsync(recId, id, status, isActive)
+        .UpdateRequestAsync(recId, id, status, isActive , this.idMenuActive)
         .subscribe(async (res) => {
           let list = this.listFiles;
           var idTemplate = this.idMenuActive;
@@ -1031,6 +1031,7 @@ export class CodxDMService {
               (d) => d.id.toString() === id.toString()
             ); //find index in your array
             if (index > -1) {
+              this.deleteFileView.next(list[index].recID);
               list.splice(index, 1); //remove element from array
               // this.dmSV.changeData(null, list, id);
               //   this.listFiles.next(list);
@@ -1047,6 +1048,7 @@ export class CodxDMService {
                 (d) => d.id.toString() === id.toString()
               ); //find index in your array
               if (index > -1) {
+                this.deleteFileView.next(list[index].recID);
                 list.splice(index, 1); //remove element from array
                 this.listFiles = list;
                 //   this.changeDetectorRef.detectChanges();
@@ -1068,7 +1070,7 @@ export class CodxDMService {
               // this.changeDetectorRef.detectChanges();
               //this.changeDetectorRef.detectChanges();
               this.notificationsService.notify(res.message);
-              this.ChangeData.next(true);
+              //this.ChangeData.next(true);
             }
           }
         });

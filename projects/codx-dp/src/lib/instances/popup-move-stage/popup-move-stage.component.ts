@@ -27,7 +27,7 @@ import { InstancesComponent } from '../instances.component';
 @Component({
   selector: 'lib-popup-move-stage',
   templateUrl: './popup-move-stage.component.html',
-  styleUrls: ['./popup-move-stage.component.css'],
+  styleUrls: ['./popup-move-stage.component.scss'],
 })
 export class PopupMoveStageComponent implements OnInit {
   dialog: any;
@@ -73,7 +73,10 @@ export class PopupMoveStageComponent implements OnInit {
   listTypeTask: any;
   isShow: boolean = true;
   isCheckAll: boolean = false;
+  isUseReason:any;
+  isStopData: boolean = true;
 
+  readonly oneHundredNumber: number = 100;
   constructor(
     private codxDpService: CodxDpService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -87,6 +90,7 @@ export class PopupMoveStageComponent implements OnInit {
     this.dialog = dialog;
     this.formModel = dt?.data.formModel;
     this.stepName = dt?.data.stepName;
+    this.isUseReason = dt?.data.stepReason;
     this.headerText = 'Chuyển tiếp giai đoạn'; //  gán sau button add
     this.viewClick = this.viewKanban;
     this.instance = JSON.parse(JSON.stringify(dt?.data.instance));
@@ -99,11 +103,9 @@ export class PopupMoveStageComponent implements OnInit {
       );
     }
     this.stepIdOld = this.instance.stepID;
+
     // this.listStep = JSON.parse(JSON.stringify(dt?.data.instanceStep));
     this.listStepsCbx = JSON.parse(JSON.stringify(dt?.data?.listStepCbx));
-    this.instancesStepOld = this.listStepsCbx.filter(
-      (x) => x.stepID === this.stepIdOld
-    )[0];
     this.IdFail =
       this.listStepsCbx[this.listStepsCbx.findIndex((x) => x.isFailStep)]
         ?.stepID ?? '';
@@ -121,23 +123,14 @@ export class PopupMoveStageComponent implements OnInit {
     this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
         this.listTypeTask = res?.datas;
-        this.listTask = this.instancesStepOld.tasks.filter(
-          (x) => x.progress < 100
-        );
-        this.listTaskGroup = this.instancesStepOld.taskGroups.filter(
-          (x) => x.progress < 100
-        );
-        this.listTree = this.updateDateForTree(
-          this.listTaskGroup,
-          this.listTask
-        );
-        console.table(this.listTree);
       }
     });
   }
 
   ngOnInit(): void {
+    this.removeReasonInSteps(this.listStepsCbx,this.isUseReason);
     this.autoClickedSteps(this.listStepsCbx, this.stepName);
+
   }
 
   getNameAndPosition(id) {
@@ -152,6 +145,12 @@ export class PopupMoveStageComponent implements OnInit {
   getStepByStepIDAndInID(insID, stepID) {
     this.dpSv.getStepByStepIDAndInID(insID, stepID).subscribe((res) => {
       if (res) {
+        if(this.isStopData) {
+          var data = JSON.parse(JSON.stringify(res));
+          this.updateDataInstance(data);
+          this.isStopData = false;
+        }
+
         this.stepCurrent = res;
         var i = -1;
         this.assignControl = this.stepCurrent.assignControl;
@@ -195,13 +194,31 @@ export class PopupMoveStageComponent implements OnInit {
     });
   }
 
-  onSave() {
-    if (this.stepIdClick === this.stepIdOld) {
-      this.notiService.notifyCode('DP001');
-      return;
-    } else {
-      this.beforeSave();
+  updateDataInstance(data: any) {
+    this.instancesStepOld = data;
+    this.listTask = this.instancesStepOld.tasks.filter(
+      (x) => x.progress < this.oneHundredNumber
+    );
+    this.listTaskGroup = this.instancesStepOld.taskGroups.filter(
+      (x) => x.progress < this.oneHundredNumber
+    );
+    if((this.listTask.length > 0 && this.listTask) || (this.listTaskGroup.length > 0 && this.listTaskGroup)) {
+      this.listTree = this.updateDateForTree(
+        this.listTaskGroup,
+        this.listTask
+      );
     }
+
+  }
+
+  onSave() {
+    // if (this.stepIdClick === this.stepIdOld) {
+    //   this.notiService.notifyCode('DP001');
+    //   return;
+    // } else {
+
+    // }
+    this.beforeSave();
   }
   beforeSave() {
     if (
@@ -216,6 +233,8 @@ export class PopupMoveStageComponent implements OnInit {
       this.instancesStepOld.owner = this.owner;
       this.instancesStepOld.stepID = this.stepIdClick;
     }
+    this.upadteProgessIsDone(this.listTaskDone, this.listTask, 'task');
+    this.upadteProgessIsDone(this.listTaskGroupDone, this.listTaskGroup, 'taskGroup');
 
     var data = [this.instance.recID, this.stepIdOld, this.instancesStepOld];
     this.codxDpService.moveStageByIdInstance(data).subscribe((res) => {
@@ -236,20 +255,26 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   valueChange($event) {
-    // if ($event) {
-    //   this.instancesStepOld[$event.field] = $event.data;
-    // }
+    if ($event) {
+      this.instancesStepOld[$event.field] = $event.data;
+    }
     this.changeDetectorRef.detectChanges();
   }
 
-  changeTime($event) {}
+  changeTime($event) { }
 
   autoClickedSteps(listStep: any, stepName: string) {
     let idx = listStep.findIndex((x) => x.stepID === this.stepIdOld);
-    this.stepIdClick = listStep[idx + 1]?.stepID;
+    if(idx > -1 && idx !== listStep.length-1) {
+      this.stepIdClick = listStep[idx + 1]?.stepID;
+    }
+    else {
+      this.stepIdClick = this.stepIdOld;
+    }
+
   }
   cbxChange($event) {
-    if ($event) {
+    if ($event && this.stepIdClick !== $event ) {
       this.stepIdClick = $event;
       this.getStepByStepIDAndInID(this.instance.recID, this.stepIdClick);
       this.changeDetectorRef.detectChanges();
@@ -292,11 +317,11 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   updateDateForTree(parents, children) {
-    children.forEach((child) => {
-      if (child.parentId === null) {
-        parents.push(child);
+    for(let item of children) {
+      if(item?.taskGroupID === null || item?.taskGroupID === undefined || item?.taskGroupID === ''){
+        parents.push(item);
       }
-    });
+    }
     return this.buildTree(parents, children);
   }
   myFunction($event, index) {
@@ -318,8 +343,8 @@ export class PopupMoveStageComponent implements OnInit {
     }
   }
   checkAllValue($event, data, view) {
-    if($event && view == 'custom' ) {
-      if($event.target.checked) {
+    if ($event && view == 'custom') {
+      if ($event.target.checked) {
         this.isCheckAll = $event.target.checked;
         this.listTaskGroupDone = this.listTaskGroup;
         this.listTaskDone = this.listTask;
@@ -330,27 +355,53 @@ export class PopupMoveStageComponent implements OnInit {
         this.listTaskDone = [];
       }
     }
-    else if ($event && view == 'taskGroup' ) {
-      if($event.target.checked) {
-        this.listTaskGroupDone.push(data);
-      }
-      else {
-        let idx = this.listTaskGroupDone.findIndex((x) => x.recID === data.recID);
-        if (idx >= 0) this.listTaskGroupDone.splice(idx, 1);
-      }
+    else if ($event && view == 'taskGroup') {
+      $event.target.checked && this.addItem(this.listTaskGroupDone, data);
+      !$event.target.checked && this.removeItem(this.listTaskGroupDone, data.recID);
 
     }
-    else if ($event && view == 'task' ) {
-      if($event.target.checked) {
-        this.listTaskDone.push(data);
-      }
-      else {
-        let idx = this.listTaskDone.findIndex((x) => x.recID === data.recID);
-        if (idx >= 0) this.listTaskDone.splice(idx, 1);
-      }
+    else if ($event && view == 'task') {
+      $event.target.checked && this.addItem(this.listTaskDone, data);
+      !$event.target.checked && this.removeItem(this.listTaskDone, data.recID);
     }
   }
 
+  addItem(list: any, data) {
+    list.push(data)
+  }
+
+  removeItem(list, id) {
+    let idx = list.findIndex((x) => x.recID === id);
+    if (idx >= 0) list.splice(idx, 1);
+  }
+  removeItemSuccess(list) {
+    let idx = list.findIndex((x) => x.isSuccessStep);
+    if (idx >= 0) list.splice(idx, 1);
+  }
+  removeItemFail(list) {
+    let idx = list.findIndex((x) => x.isFailStep);
+    if (idx >= 0) list.splice(idx, 1);
+  }
+  upadteProgessIsDone(listDone, listNow, view) {
+    const map = new Map();
+    listDone.forEach(item => {
+      map.set(item.recID, item.progress);
+    });
+    listNow.forEach(item => {
+      if (map.has(item.recID)) {
+        item.progress = 100;
+        item.actualEnd = (new Date()).toISOString()
+      }
+    });
+    if (view === 'task') {
+      this.instancesStepOld.tasks = listNow;
+    }
+    else {
+
+      this.instancesStepOld.taskGroups = listNow;
+    }
+
+  }
   getIconTask(task) {
     let color = this.listTypeTask?.find((x) => x.value === task.taskType);
     return color?.icon;
@@ -359,4 +410,10 @@ export class PopupMoveStageComponent implements OnInit {
     let color = this.listTypeTask?.find((x) => x.value === task.taskType);
     return { 'background-color': color?.color };
   }
+
+  removeReasonInSteps(stepReason, listStepCbx){
+    // !stepReason.isUseFail && this.removeItemFail(listStepCbx);
+    // !stepReason.isUseSuccess && this.removeItemSuccess(listStepCbx);
+  }
+
 }

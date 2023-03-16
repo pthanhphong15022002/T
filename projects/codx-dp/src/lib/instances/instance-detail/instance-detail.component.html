@@ -1,5 +1,6 @@
 <ng-container *ngIf="dataSelect?.recID">
   <codx-detail-tmp
+    style="height:100%"
     [header]="header"
     [formModel]="formModel"
     [body]="body"
@@ -82,8 +83,8 @@
               >
                 <span
                   [ngStyle]="
-                    +progress < 5
-                      ? { position: 'relative', left: '15px' }
+                    +progress < 20
+                      ? { position: 'relative', left: '7px' }
                       : {}
                   "
                   >{{ progress || 0 }}%</span
@@ -171,6 +172,7 @@
           <ng-container *ngIf="tmpTeps">
             <codx-stages-detail
               [dataStep]="tmpTeps"
+              [showColumnControl]="showColumnControl(tmpTeps.stepID)"
               [formModel]="formModel"
               [currentStep]="currentNameStep"
               [stepID]="dataSelect.stepID"
@@ -194,6 +196,7 @@
             <codx-field-detail
               *ngIf="item?.fields?.length > 0"
               [dataStep]="item"
+              [showColumnControl]="showColumnControl(item.stepID)"
               [isUpdate]="dataSelect.write"
               [isClosed]="dataSelect.closed"
             ></codx-field-detail>

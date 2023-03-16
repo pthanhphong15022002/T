@@ -1,6 +1,6 @@
 <div class="tm-meeting">
   <codx-views #view [funcID]="funcID" service="CO" assemblyName="ERM.Business.CO" entityName="CO_Meetings"
-    [views]="views" [button]="showButtonAdd ? button : null" className="MeetingsBusiness" method="GetListMeetingsAsync"
+    [views]="views" [button]="showButtonAdd ? button : null" className="MeetingsBusiness" method="GetListMeetingsCalendarAsync"
     (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="meetingID"
     (onActions)="onActions($event)">
   </codx-views>
@@ -8,7 +8,7 @@
   <!-- view-list -->
   <ng-template #itemViewList let-data>
     <lib-view-list-meet [formModel]="view.formModel" [data]="data" [user]="user" (clickMoreFunction)="receiveMF($event)"
-      [itemSelected]="itemSelected" (viewDetail)="viewDetail($event)">
+      [itemSelected]="itemSelected" (viewDetail)="viewDetail($event)" (changeMF)="changeMF($event)">
     </lib-view-list-meet>
   </ng-template>
   <!-- view-list -->
@@ -110,11 +110,11 @@
 
 <!-- tách riêng để dễ fix sau này -->
 <ng-template #cardImgFooter let-data let-setting="setting">
-  <div *ngIf="setting?.resources" class="d-flex justify-content-center h-75px">
+  <div *ngIf="setting?.permissions" class="d-flex justify-content-center h-75px">
     <codx-imgs [objectId]="getResourceID(data)" objectType="AD_Users" [width]="30" [numberImages]="3">
     </codx-imgs>
   </div>
-  <div *ngIf="!setting?.resources" class="d-flex justify-content-center h-50px"></div>
+  <div *ngIf="!setting?.permissions" class="d-flex justify-content-center h-50px"></div>
   <div class="footer-tag">
     <div class="d-flex align-items-center justify-content-between">
       <div class="tag-1line" *ngIf="data.tags && setting?.tags">
@@ -193,7 +193,7 @@
   </div>
   <div class="d-flex mb-2">
     <div class="d-flex text-dark me-6">
-      <codx-label name="lblResources" default="Người tham gia : " class="text-gray-600 me-4">
+      <codx-label name="lblPermissions" default="Người tham gia : " class="text-gray-600 me-4">
       </codx-label>
       <div class="d-flex justify-content-end">
         <codx-imgs [objectId]="getResourceID(data)" objectType="AD_Users" [width]="30" [numberImages]="3">

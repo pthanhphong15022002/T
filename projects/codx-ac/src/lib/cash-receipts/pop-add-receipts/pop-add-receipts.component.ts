@@ -242,6 +242,10 @@ export class PopAddReceiptsComponent extends UIComponent implements OnInit {
     var keymodel = Object.keys(this.cashreceipts);
     for (let index = 0; index < keygrid.length; index++) {
       if (this.gridViewSetup[keygrid[index]].isRequire == true) {
+        if (keygrid[index] === "CashBookID" && this.form.formModel.funcID === "ACT0428") {
+          continue;
+        }
+
         for (let i = 0; i < keymodel.length; i++) {
           if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
             if (

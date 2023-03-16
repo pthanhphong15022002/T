@@ -1058,7 +1058,7 @@
               </div>
 
               <div *ngIf="item?.fields?.length > 0">
-                <div class="class-field p-2">
+                <div class="class-field p-2 row">
                   <ng-container *ngFor="let item1 of item?.fields">
                     <div
                       class="col-{{
@@ -1294,31 +1294,7 @@
               >
               </codx-input>
             </div>
-            <div *ngIf="isSwitchReason && viewStepCrr  === viewStepReasonFail ">
-              <codx-input
-                class="test-check"
-                type="switch"
-                style="width: 100%"
-                field="isUsed"
-                [checked]="stepFail?.isUsed ?? true"
-                [crrValue]="stepFail?.isUsed"
-                (valueChange)="turnOnReason($event,viewStepReasonFail)"
-              >
-              </codx-input>
-            </div>
             <!-- more function step -->
-            <div *ngIf="isSwitchReason && viewStepCrr === viewStepReasonSuccess">
-              <codx-input
-                class="test-check"
-                type="switch"
-                style="width: 100%"
-                field="isUsed"
-                [checked]="stepSuccess?.isUsed ?? true"
-                [crrValue]="stepSuccess?.isUsed"
-                (valueChange)="turnOnReason($event, viewStepReasonSuccess)"
-              >
-              </codx-input>
-            </div>
             <div *ngIf="isSwitchReason && viewStepCrr === viewStepReasonFail">
               <codx-input
                 class="test-check"
@@ -1692,7 +1668,7 @@
       [Group]=""
       type="text"
       [crrValue]="stepName"
-      (valueChange)="changeValueInput($event, stepNew)"
+      (valueChange)="changeNameStep($event)"
     >
     </codx-input>
 
