@@ -445,6 +445,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                 this.dialog.close(res.update);
               }
               else {
+                res.update.totalInstance = 0;
                 this.dialog.close(res.update);
               }
             });

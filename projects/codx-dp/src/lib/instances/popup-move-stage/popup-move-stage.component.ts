@@ -375,12 +375,10 @@ export class PopupMoveStageComponent implements OnInit {
     if (idx >= 0) list.splice(idx, 1);
   }
   removeItemSuccess(list) {
-    debugger;
     let idx = list.findIndex((x) => x.isSuccessStep);
     if (idx >= 0) list.splice(idx, 1);
   }
   removeItemFail(list) {
-    debugger;
     let idx = list.findIndex((x) => x.isFailStep);
     if (idx >= 0) list.splice(idx, 1);
   }
